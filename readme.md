@@ -2,7 +2,7 @@
 
 # Welcome to GeoTagNinja
 
-GeoTagNinja is an open-source geotagger for Windows. It's a lightweight an open-source (written from scratch) reminiscent of GeoSetter, which hasn't been updated for a longer while and is now a little obsolete as it is using IE and other technologies that are becoming increasingly ageing.
+GeoTagNinja is an open-source geotagger for Windows. It's a lightweight an open-source (written from scratch) reminiscent of GeoSetter, which hasn't been updated for a longer while and is now a little obsolete as it's using IE and other technologies that are becoming increasingly ageing.
 GTN uses [exifTool](https://exifTool.org/) to read and write EXIF info. This also sets the limitations and capabilities. If exifTool can read/write a file, chances are so can GTN.
 There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP1ZG7mH-I) if you feel like watching it. Download the two setup files (setup.exe and the msi file) from [Releases](https://github.com/nemethviktor/GeoTagNinja/releases) - click on Assets if they are not showing.
 
