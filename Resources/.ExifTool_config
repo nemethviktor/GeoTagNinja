@@ -1,0 +1,7 @@
+# exiftool config file
+%Image::ExifTool::UserDefined::Options = (
+    CoordFormat => '%+.6f',  # change default GPS coordinate format
+    GeoMaxHDOP => 4,        # ignore GPS fixes with HDOP > 4
+    RequestAll => 3,        # request additional tags not normally generated
+);  
+#end
