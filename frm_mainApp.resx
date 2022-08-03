@@ -147,6 +147,28 @@
         iAAAAABJRU5ErkJggg==
 </value>
   </data>
+  <data name="btn_EditFile.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADaSURBVDhP1Y87CsJAFEXTaOEOpskfi1imDhg3IIpB1H1Y
+        uBKtbNyE6xHjB92AgnoGXiCIo7ERvHBgkrln5o3100RRVFdKNeTzu3iel9m2fYS967pT+V0tCEMO2DmO
+        k4Kr15UnKcltblfQgUMcxzWpmPMs6wn0NwykYg6lTORUy6wTyGEiFXMKWcYty2OpmPNK5ilb3/dHUjGH
+        chPOxdjy5hy5L5X3obyEG8wg4YAN9GT7fbjRgwviXR/C2CfoyvbnIM21zI1XxFUQBC3ZqhbkNSzCMAzk
+        11/Esh5l9z/lISGRogAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="btn_RemoveGeoData.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFJSURBVDhPYzjCJV56mFvcgQEKQGyQGJRLGBzmEbU5zCn6
+        8ii3uBMyGypNHADZCtIIxkiuIRpQZMARHhFbmLPJ8gLFgQgDioqK94H4LxAnQYWwAqD8fyi+DxWCAJAg
+        lAkCzEB+NRAfB+IdCgoKW4H0BDk5OUGoPLp6VAEgexEQN6uoqLArKyvLgjQC+SFAfE5eXp4Dqga7AUDb
+        zIHsfVpaWjxA+hgQzwBqugWkXYB4IlA+Flk9HMAEgHQVEBcDcQoQN0LFtgOxnpKSUiLQgHqoGE4DGoA4
+        B0pnQsVuADXKg8SAhkRCxXAa4A3E64HOtgDii0D2fCDeBhXbbGxszIqsHg6QBJiA7P1AG0uBgScJCkB7
+        e3sWIF8dKMcIUYLfAAZxcXFuIL8baONpIL0PqHkrEOdCpcEAmwGghAROJFAhrACmBqSegYGBAQCyvn4c
+        p/dBJwAAAABJRU5ErkJggg==
+</value>
+  </data>
   <metadata name="tsr_FolderControl.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>125, 3</value>
   </metadata>

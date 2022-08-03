@@ -42,6 +42,8 @@ namespace GeoTagNinja
             this.tmi_File = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_SaveAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_EditFiles = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_File_CopyGeoData = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_File_PasteGeoData = new System.Windows.Forms.ToolStripMenuItem();
             this.tss_ToolStripSeparator_Main = new System.Windows.Forms.ToolStripSeparator();
             this.tmi_File_Quit = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_Settings = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,6 +58,7 @@ namespace GeoTagNinja
             this.tsr_MainAppToolStrip = new System.Windows.Forms.ToolStrip();
             this.btn_SaveFiles = new System.Windows.Forms.ToolStripButton();
             this.btn_Refresh_lvwFileList = new System.Windows.Forms.ToolStripButton();
+            this.btn_EditFile = new System.Windows.Forms.ToolStripButton();
             this.tsr_FolderControl = new System.Windows.Forms.ToolStrip();
             this.tbx_FolderName = new System.Windows.Forms.ToolStripTextBox();
             this.btn_OneFolderUp = new System.Windows.Forms.ToolStripButton();
@@ -63,8 +66,7 @@ namespace GeoTagNinja
             this.btn_loctToFile = new System.Windows.Forms.Button();
             this.lbl_ParseProgress = new System.Windows.Forms.Label();
             this.pbx_imagePreview = new System.Windows.Forms.PictureBox();
-            this.tmi_File_CopyGeoData = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_File_PasteGeoData = new System.Windows.Forms.ToolStripMenuItem();
+            this.btn_RemoveGeoData = new System.Windows.Forms.ToolStripButton();
             this.mns_MenuStrip.SuspendLayout();
             this.tct_Main.SuspendLayout();
             this.tpg_Map.SuspendLayout();
@@ -159,7 +161,7 @@ namespace GeoTagNinja
             // 
             this.tmi_File_SaveAll.Name = "tmi_File_SaveAll";
             this.tmi_File_SaveAll.ShortcutKeyDisplayString = "CTRL+S";
-            this.tmi_File_SaveAll.Size = new System.Drawing.Size(243, 22);
+            this.tmi_File_SaveAll.Size = new System.Drawing.Size(275, 22);
             this.tmi_File_SaveAll.Text = "tmi_File_SaveAll";
             this.tmi_File_SaveAll.Click += new System.EventHandler(this.tmi_File_SaveAll_Click);
             // 
@@ -167,20 +169,36 @@ namespace GeoTagNinja
             // 
             this.tmi_File_EditFiles.Name = "tmi_File_EditFiles";
             this.tmi_File_EditFiles.ShortcutKeyDisplayString = "CTLR+Enter";
-            this.tmi_File_EditFiles.Size = new System.Drawing.Size(243, 22);
+            this.tmi_File_EditFiles.Size = new System.Drawing.Size(275, 22);
             this.tmi_File_EditFiles.Text = "tmi_File_EditFiles";
             this.tmi_File_EditFiles.Click += new System.EventHandler(this.tmi_File_EditFiles_Click);
+            // 
+            // tmi_File_CopyGeoData
+            // 
+            this.tmi_File_CopyGeoData.Name = "tmi_File_CopyGeoData";
+            this.tmi_File_CopyGeoData.ShortcutKeyDisplayString = "Sh + CTRL+C";
+            this.tmi_File_CopyGeoData.Size = new System.Drawing.Size(275, 22);
+            this.tmi_File_CopyGeoData.Text = "tmi_File_CopyGeoData";
+            this.tmi_File_CopyGeoData.Click += new System.EventHandler(this.tmi_File_CopyGeoData_Click);
+            // 
+            // tmi_File_PasteGeoData
+            // 
+            this.tmi_File_PasteGeoData.Name = "tmi_File_PasteGeoData";
+            this.tmi_File_PasteGeoData.ShortcutKeyDisplayString = "Sh + CTRL + V";
+            this.tmi_File_PasteGeoData.Size = new System.Drawing.Size(275, 22);
+            this.tmi_File_PasteGeoData.Text = "tmi_File_PasteGeoData";
+            this.tmi_File_PasteGeoData.Click += new System.EventHandler(this.tmi_File_PasteGeoData_Click);
             // 
             // tss_ToolStripSeparator_Main
             // 
             this.tss_ToolStripSeparator_Main.Name = "tss_ToolStripSeparator_Main";
-            this.tss_ToolStripSeparator_Main.Size = new System.Drawing.Size(240, 6);
+            this.tss_ToolStripSeparator_Main.Size = new System.Drawing.Size(272, 6);
             // 
             // tmi_File_Quit
             // 
             this.tmi_File_Quit.Name = "tmi_File_Quit";
             this.tmi_File_Quit.ShortcutKeyDisplayString = "ALT+F4";
-            this.tmi_File_Quit.Size = new System.Drawing.Size(243, 22);
+            this.tmi_File_Quit.Size = new System.Drawing.Size(275, 22);
             this.tmi_File_Quit.Text = "tmi_File_Quit";
             this.tmi_File_Quit.Click += new System.EventHandler(this.tmi_File_Quit_Click);
             // 
@@ -279,7 +297,9 @@ namespace GeoTagNinja
             this.tsr_MainAppToolStrip.ImageScalingSize = new System.Drawing.Size(0, 0);
             this.tsr_MainAppToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btn_SaveFiles,
-            this.btn_Refresh_lvwFileList});
+            this.btn_Refresh_lvwFileList,
+            this.btn_EditFile,
+            this.btn_RemoveGeoData});
             this.tsr_MainAppToolStrip.Location = new System.Drawing.Point(0, 24);
             this.tsr_MainAppToolStrip.Name = "tsr_MainAppToolStrip";
             this.tsr_MainAppToolStrip.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
@@ -309,6 +329,17 @@ namespace GeoTagNinja
             this.btn_Refresh_lvwFileList.Text = "btn_Refresh_lvwFileList";
             this.btn_Refresh_lvwFileList.ToolTipText = "btn_Refresh_lvwFileList";
             this.btn_Refresh_lvwFileList.Click += new System.EventHandler(this.btn_Refresh_lvwFileList_Click);
+            // 
+            // btn_EditFile
+            // 
+            this.btn_EditFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btn_EditFile.Image = ((System.Drawing.Image)(resources.GetObject("btn_EditFile.Image")));
+            this.btn_EditFile.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btn_EditFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_EditFile.Name = "btn_EditFile";
+            this.btn_EditFile.Size = new System.Drawing.Size(23, 22);
+            this.btn_EditFile.Text = "btn_EditFile";
+            this.btn_EditFile.Click += new System.EventHandler(this.btn_EditFile_Click);
             // 
             // tsr_FolderControl
             // 
@@ -386,21 +417,16 @@ namespace GeoTagNinja
             this.pbx_imagePreview.TabIndex = 18;
             this.pbx_imagePreview.TabStop = false;
             // 
-            // tmi_File_CopyGeoData
+            // btn_RemoveGeoData
             // 
-            this.tmi_File_CopyGeoData.Name = "tmi_File_CopyGeoData";
-            this.tmi_File_CopyGeoData.ShortcutKeyDisplayString = "Sh + CTRL+C";
-            this.tmi_File_CopyGeoData.Size = new System.Drawing.Size(275, 22);
-            this.tmi_File_CopyGeoData.Text = "tmi_File_CopyGeoData";
-            this.tmi_File_CopyGeoData.Click += new System.EventHandler(this.tmi_File_CopyGeoData_Click);
-            // 
-            // tmi_File_PasteGeoData
-            // 
-            this.tmi_File_PasteGeoData.Name = "tmi_File_PasteGeoData";
-            this.tmi_File_PasteGeoData.ShortcutKeyDisplayString = "Sh + CTRL + V";
-            this.tmi_File_PasteGeoData.Size = new System.Drawing.Size(275, 22);
-            this.tmi_File_PasteGeoData.Text = "tmi_File_PasteGeoData";
-            this.tmi_File_PasteGeoData.Click += new System.EventHandler(this.tmi_File_PasteGeoData_Click);
+            this.btn_RemoveGeoData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btn_RemoveGeoData.Image = ((System.Drawing.Image)(resources.GetObject("btn_RemoveGeoData.Image")));
+            this.btn_RemoveGeoData.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btn_RemoveGeoData.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_RemoveGeoData.Name = "btn_RemoveGeoData";
+            this.btn_RemoveGeoData.Size = new System.Drawing.Size(23, 22);
+            this.btn_RemoveGeoData.Text = "btn_RemoveGeoData";
+            this.btn_RemoveGeoData.Click += new System.EventHandler(this.btn_RemoveGeoData_Click);
             // 
             // frm_MainApp
             // 
@@ -478,6 +504,8 @@ namespace GeoTagNinja
         private ToolStripButton btn_SaveFiles;
         private ToolStripMenuItem tmi_File_CopyGeoData;
         private ToolStripMenuItem tmi_File_PasteGeoData;
+        private ToolStripButton btn_EditFile;
+        private ToolStripButton btn_RemoveGeoData;
     }
 }
 

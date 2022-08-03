@@ -783,7 +783,6 @@ namespace GeoTagNinja
         }
         private void btn_loctToFile_Click(object sender, EventArgs e)
         {
-
             string strParsedLat = tbx_lat.Text.Replace(',', '.');
             string strParsedLng = tbx_lng.Text.Replace(',', '.');
             double parsedLat;
@@ -799,19 +798,23 @@ namespace GeoTagNinja
                 {
                     foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                     {
-                        // Latitude
-                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                        dr_FileDataRow["filePath"] = lvi.Text;
-                        dr_FileDataRow["settingId"] = "GPSLatitude";
-                        dr_FileDataRow["settingValue"] = strParsedLat;
-                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                        // don't do folders...
+                        if (File.Exists(Path.Combine(folderName, lvi.Text)))
+                        {
+                            // Latitude
+                            dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                            dr_FileDataRow["filePath"] = lvi.Text;
+                            dr_FileDataRow["settingId"] = "GPSLatitude";
+                            dr_FileDataRow["settingValue"] = strParsedLat;
+                            dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
 
-                        // Longitude
-                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                        dr_FileDataRow["filePath"] = lvi.Text;
-                        dr_FileDataRow["settingId"] = "GPSLongitude";
-                        dr_FileDataRow["settingValue"] = strParsedLng;
-                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                            // Longitude
+                            dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                            dr_FileDataRow["filePath"] = lvi.Text;
+                            dr_FileDataRow["settingId"] = "GPSLongitude";
+                            dr_FileDataRow["settingValue"] = strParsedLng;
+                            dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                        }
                     }
                 }
             }
@@ -1047,6 +1050,88 @@ namespace GeoTagNinja
                 btn_ts_Refresh_lvwFileList_Click(this, new EventArgs());
             }
         }
+        private void btn_EditFile_Click(object sender, EventArgs e)
+        {
+            Helper.ExifShowEditFrm();
+        }
+        private void btn_RemoveGeoData_Click(object sender, EventArgs e)
+        {
+            DataRow dr_FileDataRow;
+
+            if (lvw_FileList.SelectedItems.Count > 0)
+            {
+                foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
+                {
+                    // don't do folders...
+                    if (File.Exists(Path.Combine(folderName, lvi.Text)))
+                    {
+                        // Latitude
+                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                        dr_FileDataRow["filePath"] = lvi.Text;
+                        dr_FileDataRow["settingId"] = "GPSLatitude";
+                        dr_FileDataRow["settingValue"] = "";
+                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+
+                        // Longitude
+                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                        dr_FileDataRow["filePath"] = lvi.Text;
+                        dr_FileDataRow["settingId"] = "GPSLongitude";
+                        dr_FileDataRow["settingValue"] = "";
+                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+
+                        // CountryCode
+                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                        dr_FileDataRow["filePath"] = lvi.Text;
+                        dr_FileDataRow["settingId"] = "CountryCode";
+                        dr_FileDataRow["settingValue"] = "";
+                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+
+                        // Country
+                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                        dr_FileDataRow["filePath"] = lvi.Text;
+                        dr_FileDataRow["settingId"] = "Country";
+                        dr_FileDataRow["settingValue"] = "";
+                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+
+                        // City
+                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                        dr_FileDataRow["filePath"] = lvi.Text;
+                        dr_FileDataRow["settingId"] = "City";
+                        dr_FileDataRow["settingValue"] = "";
+                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+
+                        // State
+                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                        dr_FileDataRow["filePath"] = lvi.Text;
+                        dr_FileDataRow["settingId"] = "State";
+                        dr_FileDataRow["settingValue"] = "";
+                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+
+                        // Sub_location
+                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                        dr_FileDataRow["filePath"] = lvi.Text;
+                        dr_FileDataRow["settingId"] = "Sub_location";
+                        dr_FileDataRow["settingValue"] = "";
+                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+
+                        // Altitude
+                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                        dr_FileDataRow["filePath"] = lvi.Text;
+                        dr_FileDataRow["settingId"] = "GPSAltitude";
+                        dr_FileDataRow["settingValue"] = "";
+                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+
+                        // Force-remove stuff --> https://exiftool.org/forum/index.php?topic=6037.0
+                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                        dr_FileDataRow["filePath"] = lvi.Text;
+                        dr_FileDataRow["settingId"] = "gps*";
+                        dr_FileDataRow["settingValue"] = "";
+                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                    }
+                }
+            }
+            Helper.LwvUpdateRow();
+        }
         private async void tbx_FolderName_KeyDown(object sender, KeyEventArgs e)
         {
 
@@ -1189,7 +1274,7 @@ namespace GeoTagNinja
                 if (File.Exists(fileNameWithPath) && lvw_FileList.SelectedItems[0].SubItems.Count > 1)
                 {
                     var firstSelectedItem = lvw_FileList.SelectedItems[0].SubItems[lvw_FileList.Columns["clh_Coordinates"].Index].Text;
-                    if (firstSelectedItem != "-")
+                    if (firstSelectedItem != "-" && firstSelectedItem != "")
                     {
                         string strLat = lvw_FileList.SelectedItems[0].SubItems[lvw_FileList.Columns["clh_Coordinates"].Index].Text.Split(';')[0].Replace(',', '.');
                         string strLng = lvw_FileList.SelectedItems[0].SubItems[lvw_FileList.Columns["clh_Coordinates"].Index].Text.Split(';')[1].Replace(',', '.');
@@ -1202,7 +1287,6 @@ namespace GeoTagNinja
                             this.tbx_lng.Text = strLng;
                             NavigateMapGo();
                         }
-
                     }
                     else
                     {
@@ -1329,27 +1413,7 @@ namespace GeoTagNinja
             // control enter
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Enter)
             {
-                int i = 0;
-                frm_editFileData frm_editFileData = new();
-                frm_editFileData.lvw_FileListEditImages.Items.Clear();
-                foreach (ListViewItem selectedItem in lvw_FileList.SelectedItems)
-                {
-                    if (File.Exists(Path.Combine(tbx_FolderName.Text, selectedItem.Text)))
-                    {
-                        folderName = tbx_FolderName.Text;
-                        frm_editFileData.lvw_FileListEditImages.Items.Add(selectedItem.Text);
-                        i++;
-                    }
-                }
-                e.Handled = true;
-                if (i > 0)
-                {
-                    frm_editFileData.ShowDialog();
-                }
-                else
-                {
-                    MessageBox.Show("Your files seem to have disappeared.");
-                }
+                Helper.ExifShowEditFrm();
             }
 
             // backspace

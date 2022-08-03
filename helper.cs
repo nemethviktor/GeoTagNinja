@@ -1212,6 +1212,15 @@ namespace GeoTagNinja
                     // add tags to argsFile
                     foreach (DataRow row in dt_objectTagNames_OutWithData.Rows)
                     {
+                        bool deleteAllGPSData = false;
+                        // this is prob not the best way to go around this....
+                        foreach(DataRow drFileTags in dt_FileWriteQueue.Rows)
+                        {
+                            if (drFileTags[1] == @"gps*")
+                            {
+                                deleteAllGPSData = true;
+                            }
+                        }
                         // xml only if needed
                         if (writeXMLTags)
                         {
@@ -1246,7 +1255,7 @@ namespace GeoTagNinja
                                         }
                                     }
                                 }
-                                else
+                                else // delete tag
                                 {
                                     exifArgs += "-" + exiftoolTagName + "=" + Environment.NewLine;
                                     //if lat/long then add Ref. 
@@ -1307,15 +1316,21 @@ namespace GeoTagNinja
                                     }
                                 }
                             }
-                            else
+                            else //delete tag
                             {
                                 exifArgs += "-" + exiftoolTagName + "=" + Environment.NewLine;
-                                //if lat/long then add Ref. 
                             }
+                        }
+
+                        // delete-all-gps has to come separetely as it's no a standard tag
+                        // arguably this could come entirely separately and we could ignore everything else above but in reality
+                        // this only deletes GPS stuff not IPTC (cities etc) so i think this is safer even if a tiny bit slower.
+                        if (deleteAllGPSData)
+                        {
+                            exifArgs += "-gps*=" + Environment.NewLine;
                         }
                     }
                     
-
                     if (overwriteOriginal)
                     {
                         exifArgs += "-overwrite_original_in_place" + Environment.NewLine;
@@ -1679,6 +1694,30 @@ namespace GeoTagNinja
             }
             return dt_Return;
         }
+        internal static void ExifShowEditFrm()
+        {
+            int i = 0;
+            frm_editFileData frm_editFileData = new();
+            frm_editFileData.lvw_FileListEditImages.Items.Clear();
+            frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
+            foreach (ListViewItem selectedItem in frm_mainAppInstance.lvw_FileList.SelectedItems)
+            {
+                if (File.Exists(Path.Combine(frm_mainAppInstance.tbx_FolderName.Text, selectedItem.Text)))
+                {
+                    frm_MainApp.folderName = frm_mainAppInstance.tbx_FolderName.Text;
+                    frm_editFileData.lvw_FileListEditImages.Items.Add(selectedItem.Text);
+                    i++;
+                }
+            }
+            if (i > 0)
+            {
+                frm_editFileData.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Your files seem to have disappeared.");
+            }
+        }
         #endregion
         #region FSO interaction
         internal static string FsoGetParent(string path)
@@ -1753,20 +1792,18 @@ namespace GeoTagNinja
                 try
                 {
                     lvi = frm_mainAppInstance.lvw_FileList.FindItemWithText(dr_ThisDataRow[0].ToString());
-                    try
+                    // theoretically we'd want to update the columns for each tag but for example when removing all data
+                    // this becomes tricky bcs we're also firing a "-gps*=" tag.
+                    if (lvchs["clh_" + dr_ThisDataRow[1].ToString()] != null)
                     {
                         lvi.ForeColor = Color.Red;
                         lvi.SubItems[lvchs["clh_" + dr_ThisDataRow[1].ToString()].Index].Text = dr_ThisDataRow[2].ToString();
                         //break;
                     }
-                    catch (NullReferenceException)
-                    {
-                        MessageBox.Show("No column with name " + "clh_" + dr_ThisDataRow[1].ToString());
-                    }
+                    
                     tmpCoordinates = lvi.SubItems[lvchs["clh_GPSLatitude"].Index].Text + ";" + lvi.SubItems[lvchs["clh_GPSLongitude"].Index].Text;
                     lvi.SubItems[lvchs["clh_Coordinates"].Index].Text = tmpCoordinates != ";" ? tmpCoordinates : "";
                 }
-
                 catch
                 {
 
