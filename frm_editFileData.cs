@@ -350,17 +350,16 @@ namespace GeoTagNinja
                     }
                     break;
                 default:
-                    MessageBox.Show("This will be a bug. My bad. Can you report this to the dev and that the 'sender' was " + ((Button)sender).Name, "Uh oh...",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_editFileData_ErrorInvalidSender") + ((Button)sender).Name, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
             }
             if (Helper.s_APIOkay)
             {
-                MessageBox.Show("Data updated.");
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_editFileData_InfoDataUpdated"), "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                MessageBox.Show("The app encountered errors communicating with the API. If you got an Unauthorised error, pls set your username as password in the settings.");
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_editFileData_ErrorAPIError"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private async void lvw_FileListEditImages_MouseClick(object sender, MouseEventArgs e)
@@ -374,10 +373,8 @@ namespace GeoTagNinja
             }
             else
             {
-                MessageBox.Show("Your files seem to have disappeared.");
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_editFileData_WarningFileDisappeared"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
-
         }
         private void btn_OK_Click(object sender, EventArgs e)
         {
@@ -423,7 +420,7 @@ namespace GeoTagNinja
                     string strSndrText = sndr.Text.Replace(',', '.');
                     if (!frm_editFileDataNowRemovingGeoData && sndr.Parent.Name == "gbx_GPSData" && double.TryParse(strSndrText, NumberStyles.Any, CultureInfo.InvariantCulture, out double dbl) == false)
                     {
-                        MessageBox.Show("This needs to have numbers only. Will default to zero.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_editFileData_WarningLatLongMustBeNumbers"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         // find a valid number
                         sndr.Text = "0.0";
                     }

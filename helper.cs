@@ -297,7 +297,7 @@ namespace GeoTagNinja
                 s_ArcGIS_APIKey = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_ARCGIS_APIKey");
                 if (s_ArcGIS_APIKey == null || s_ArcGIS_APIKey == "")
                 {
-                    //MessageBox.Show("You'll need to provide an ArcGIS API Key in the Settings for the app to work properly.");
+                    //MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_WarningNoARCGISKey"), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch
@@ -595,7 +595,14 @@ namespace GeoTagNinja
             }
             return result;
         }
-
+        internal static string GenericGetMessageBoxText(string messageBoxName)
+        {
+            return Helper.DataReadSQLiteObjectText(
+                        languageName: frm_MainApp.appLanguage,
+                        objectType: "messageBox",
+                        objectName: messageBoxName
+                        );
+        }
         #endregion
         #region Exif Related
         internal static string ExifGetExifDataPoint(DataTable dtFileExif, string dataPoint)
@@ -849,7 +856,7 @@ namespace GeoTagNinja
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("asyncExifTool.ExecuteAsync failed: " + ex.Message);
+                        MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         exifToolResult = null;
                     }
                     string[] exifToolResultArr = Convert.ToString(exifToolResult).Split(
@@ -885,7 +892,7 @@ namespace GeoTagNinja
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("asyncExifTool.ExecuteAsync failed: " + ex.Message);
+                            MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             exifToolResult = null;
                         }
                         string[] exifToolResultArrXMP = Convert.ToString(exifToolResult).Split(
@@ -1216,7 +1223,7 @@ namespace GeoTagNinja
                         // this is prob not the best way to go around this....
                         foreach (DataRow drFileTags in dt_FileWriteQueue.Rows)
                         {
-                            if (drFileTags[1] == @"gps*")
+                            if (drFileTags[1].ToString() == @"gps*")
                             {
                                 deleteAllGPSData = true;
                             }
@@ -1440,9 +1447,9 @@ namespace GeoTagNinja
                     s_GeoNames_UserName = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_UserName");
                     s_GeoNames_Pwd = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_Pwd");
                 }
-                catch
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Failed to read default values from SQL");
+                    MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_ErrorCantReadDefaultSQLiteDB") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
@@ -1464,8 +1471,7 @@ namespace GeoTagNinja
             else
             {
                 s_APIOkay = false;
-                MessageBox.Show("GeoNames API Returned the following response:" + response_Toponomy.StatusCode.ToString(), "Uh oh...",
-                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_WarningGeoNamesAPIResponse") + response_Toponomy.StatusCode.ToString(), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             return returnVal;
         }
@@ -1478,9 +1484,9 @@ namespace GeoTagNinja
                     s_GeoNames_UserName = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_UserName");
                     s_GeoNames_Pwd = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_Pwd");
                 }
-                catch
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Failed to read default values from SQL");
+                    MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_ErrorCantReadDefaultSQLiteDB") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             geoTagNinja.GeoResponseAltitude returnVal = new();
@@ -1501,8 +1507,7 @@ namespace GeoTagNinja
             else
             {
                 s_APIOkay = false;
-                MessageBox.Show("GeoNames API Returned the following response:" + response_Altitude.StatusCode.ToString(), "Uh oh...",
-                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_WarningGeoNamesAPIResponse") + response_Altitude.StatusCode.ToString(), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             return returnVal;
         }
@@ -1715,7 +1720,7 @@ namespace GeoTagNinja
             }
             else
             {
-                MessageBox.Show("Your files seem to have disappeared.");
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_WarningFileDisappeared"), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         internal static void ExifRemoveLocationData(string senderName)
@@ -1848,7 +1853,7 @@ namespace GeoTagNinja
             // check if there's anything in the write-Q
             if (frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Count > 0)
             {
-                DialogResult dialogResult = MessageBox.Show("Some data has been changed - want to save? \nData will be discarded if you click No)", "Oustanding Data", MessageBoxButtons.YesNoCancel);
+                DialogResult dialogResult = MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_QuestionFileQIsNotEmpty"), "Info", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Yes)
                 {
                     await ExifWriteExifToFile();
@@ -1965,7 +1970,7 @@ namespace GeoTagNinja
             }
             else
             {
-                MessageBox.Show("This will only work if you have one and only one file selected.");
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_WarningTooManyFilesSelected"), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         internal static void LwvPasteGeoData()
@@ -2003,7 +2008,7 @@ namespace GeoTagNinja
             }
             else
             {
-                MessageBox.Show("Nothing to paste.");
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_WarningNothingToPaste"), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         #endregion

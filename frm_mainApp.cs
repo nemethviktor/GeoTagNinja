@@ -39,7 +39,7 @@ namespace GeoTagNinja
         internal static DataTable objectTagNames_In;
         internal static DataTable objectTagNames_Out;
         internal static string folderName;
-        internal static string appLanguage;
+        internal static string appLanguage = "english"; // default to english 
         internal static string[] allExtensions = new[]
         // leave the \t in!
             {
@@ -121,9 +121,6 @@ namespace GeoTagNinja
             asyncExifTool.Initialize();
             #endregion
             #region Load Settings
-            //
-
-
             // load all settings
             try
             {
@@ -132,7 +129,7 @@ namespace GeoTagNinja
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Can't create SQLite database " + ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorCantCreateSQLiteDB") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
 
@@ -143,7 +140,7 @@ namespace GeoTagNinja
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Created but can't write SQLite database " + ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorCantWriteSQLiteDB") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
             // read language and objectnames
@@ -163,7 +160,7 @@ namespace GeoTagNinja
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Loading data from SQL Failed: " + ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorCantLoadSQLiteDB") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
             // get some defaults
@@ -181,9 +178,9 @@ namespace GeoTagNinja
                     settingId: "tbx_GeoNames_Pwd"
                     );
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Failed to read default values from SQL");
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorCantReadDefaultSQLiteDB") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             // check webView2 is available
             try
@@ -193,7 +190,7 @@ namespace GeoTagNinja
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error loading webview2 - Have you installed it? " + ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorCantLoadWebView2") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
 
@@ -204,17 +201,17 @@ namespace GeoTagNinja
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error in frm_mainApp.InitializeComponent - contact the developer pls. " + ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorInitializeComponent") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            // get double-buffering
+            // get double-buffering to avoid flickering listviews
             try
             {
                 ControlExtensions.DoubleBuffered(lvw_FileList, true);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("DoubleBuffer Error: " + ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorDoubleBuffer") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             // get objectnames (col names, etc.)
@@ -240,7 +237,7 @@ namespace GeoTagNinja
             }
             catch (Exception ex)
             {
-                MessageBox.Show("There was an error reading the language file and assigning columnheaders. Pls contac the dev. " + ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorLanguageFileColumnHeaders") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); 
             }
             #endregion
             this.FormClosing += new FormClosingEventHandler(frm_MainApp_FormClosing);
@@ -288,7 +285,7 @@ namespace GeoTagNinja
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error clearning the filedata-Q tables. " + ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorClearingFileDataQTables") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             try { Helper.FsoCleanUpUserFolder(); } catch { }
 
@@ -299,7 +296,7 @@ namespace GeoTagNinja
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorResizingColumns") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             wbv_MapArea.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
@@ -317,7 +314,7 @@ namespace GeoTagNinja
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorSettingStartupFolder") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             if (val_StartupFolder == null)
             {
@@ -446,7 +443,7 @@ namespace GeoTagNinja
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorInitializeWebViewEnsureCoreWebView2Async") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             try
@@ -455,7 +452,7 @@ namespace GeoTagNinja
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorInitializeWebViewIsWebMessageEnabled") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             string HTMLCode = "";
@@ -465,7 +462,7 @@ namespace GeoTagNinja
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorInitializeWebViewReadHTMLFile") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             try
@@ -483,7 +480,7 @@ namespace GeoTagNinja
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             try
@@ -499,7 +496,7 @@ namespace GeoTagNinja
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorInitializeWebViewReplaceStringInHTMLFile") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             try
@@ -508,16 +505,16 @@ namespace GeoTagNinja
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
+        
             try
             {
                 wbv_MapArea.WebMessageReceived += wbv_MapArea_WebMessageReceived;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorInitializeWebViewWebMessageReceived") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -528,7 +525,7 @@ namespace GeoTagNinja
             // check if there is any data in the write-Q
             if (dt_fileDataToWriteStage3ReadyToWrite.Rows.Count > 0)
             {
-                DialogResult dialogResult = MessageBox.Show("Some data has been changed - want to save? \nData will be discarded if you click No", "Oustanding Data", MessageBoxButtons.YesNo);
+                DialogResult dialogResult = MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_QuestionFileQIsNotEmpty"), "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Yes)
                 {
                     await Helper.ExifWriteExifToFile();
@@ -823,7 +820,7 @@ namespace GeoTagNinja
             {
                 if (lvw_FileList.SelectedItems.Count > 0)
                 {
-                    DialogResult dialogResult = MessageBox.Show("Do you want to also assign Altitude & Toponomy values? \n If you pick No, your lat/long data may become out of sync with any embedded toponomy data.", "Question", MessageBoxButtons.YesNo);
+                    DialogResult dialogResult = MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_QuestionAddToponomy"), "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                     {
                         // don't do folders...
@@ -904,7 +901,7 @@ namespace GeoTagNinja
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorNavigateMapGoHTMLCode") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             string strLatCoordinate = this.tbx_lat.Text.Replace(',', '.');
@@ -994,14 +991,14 @@ namespace GeoTagNinja
                         folderName = tbx_FolderName.Text;
                         lvwFileList_LoadOrUpdate();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("The folder you entered doesn't seem valid");
+                        MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorInvalidFolder") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("The folder you entered doesn't seem valid");
+                    MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorInvalidFolder"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -1155,13 +1152,7 @@ namespace GeoTagNinja
                     );
                 if (dontShowIncompatibleFileWarningAgainInSQL != "true")
                 {
-                    DialogResult dontShowIncompatibleFileWarningAgain = MessageBox.Show("""
-                                Your folder and/or file list contains nonstandard characters.
-                                These will need to be run in 'compatibility mode', which is slower. 
-                                Suggesting renaming your path and/or files if you have a large number of item.
-
-                                Press OK to continue and be reminded again or Cancel to continue and not be reminded again about this.
-                                """,
+                    DialogResult dontShowIncompatibleFileWarningAgain = MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_QuestionDontShowIncompatibleFileWarningAgain"),
                                 "Nonstandard paths", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
                     if (dontShowIncompatibleFileWarningAgain == DialogResult.Cancel)
                     {
@@ -1273,7 +1264,7 @@ namespace GeoTagNinja
                 }
                 else
                 {
-                    MessageBox.Show("File no longer appears to exist.", "File missing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorFileGoneMissing" + fileNameWithPath), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -1309,8 +1300,8 @@ namespace GeoTagNinja
             else
             {
                 this.lvw_FileList.SelectedItems.Clear();
-                MessageBox.Show("No Item is selected");
-            }
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_WarningNoItemSelected"), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
         }
         private async void lvw_FileList_KeyDown(object sender, KeyEventArgs e)
         {
@@ -1376,7 +1367,7 @@ namespace GeoTagNinja
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show("The folder you entered doesn't seem valid");
+                            MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorInvalidFolder"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }

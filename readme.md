@@ -27,10 +27,10 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 - [TODO] Add a setting for cleaning local api data on start/exit
 
 - [half] Add copy-paste functionality - kinda done but no choices as to what to paste.
-- [half] Language support. MessageBoxes are still hard-coded. I'd personally vote for leaving this till a bit later once the app is more complete.
 - [later] Destination stuff not working atm, todo.
 - [later] Column reorg.
 - [later] add time-shift capabilities
+- [done] Language support
 - [done] Get All From Web
 - [done] Check webview2 is available
 - [done] Add map-to-image function
@@ -48,7 +48,7 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 -- Alternatively you can enable [this](https://stackoverflow.com/questions/56419639/what-does-beta-use-unicode-utf-8-for-worldwide-language-support-actually-do) feature if you're running v1903 Windows 10 or later but it may have some unwanted effects so keep an eye out for changes caused by it. 
 - Multi-select doesn't show on the map. I don't know how to do it.
 - For UK the API returns city/sublocation in an odd way. this has been *probably* fixed in code but do test.
-- Language support has not beed tested at all and is most likely "imperfect". Most specifically messageboxes are hardcoded. This has been low priority in lieu of the likelyhood of extension of capabilities in the near future.
+- Language support should generally be okay but since the app is constantly evolving at this stage I'd prob vote against spending time on adding in a new language just yet.
 - Listview columns hiding/reorg capability is lacking. 
 -- On a related note there is an attempt to clean up the user folder (C:\Users\username\AppData\Roaming\GeoTagNinja\) on application exit but it might fail due to a file lock. This doesn't crash the app but some files may remain, they'll be cleaned up the next time the app runs.
 - Sometimes a number of cmd.exe handles remain open. Not sure why but they only consume about 800kbytes of memory each so while not great, not terrible. You can force-kill them with "taskkill /f /im cmd.exe" ; I didn't want to put that into the code as it kills _all_ cmd instances regardless of what conjured them up so it would kill any instances you're otherwise running.
@@ -58,15 +58,14 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 
 ## When reporting bugs please specify
 
-- the OS's version
-- the OS's language
-- full path of your photo if the bug is related to exif tagging
-- possibly upload the picture somewhere if not sensitive so i can test
-
+- The OS's version
+- The OS's language
+- Full path of your photo if the bug is related to exif tagging
+- Possibly upload the picture somewhere if not sensitive so I can test
 
 ## System Requirements
 
 - Windows 7+ is needed. The WebView2 installer runs along Setup. Should you need separately, it's available [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703) - the installer should take care of it tho'.
-- sqlite is running x86 but fwiw the app isn't really memory-hungry so it will do. Chances are if you're still on a 1st-gen Intel Core you're not on Windows 7. Hopefully.
+- SQLite is running x86 but fwiw the app isn't really memory-hungry so it will do. Chances are if you're still on a 1st-gen Intel Core you're not on Windows 7. Hopefully.
 - You'll need an ArcGIS API key to use the map search functionality. Register for free [here](https://developers.arcgis.com/)
 - You'll need a geoNames username and password to use toponomy search. Register for free [here](https://www.geonames.org/)
