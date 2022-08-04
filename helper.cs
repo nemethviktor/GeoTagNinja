@@ -977,7 +977,7 @@ namespace GeoTagNinja
 
                 }
                 File.AppendAllText(argsFile, "-progress" + Environment.NewLine);
-                
+
             }
             File.AppendAllText(argsFile, "-execute" + Environment.NewLine);
             ///////////////
@@ -1028,7 +1028,7 @@ namespace GeoTagNinja
                 p.BeginErrorReadLine();
                 p.WaitForExit();
                 p.Close();
-                if(s_ErrorMsg != "")
+                if (s_ErrorMsg != "")
                 {
                     MessageBox.Show(s_ErrorMsg);
                 }
@@ -1214,7 +1214,7 @@ namespace GeoTagNinja
                     {
                         bool deleteAllGPSData = false;
                         // this is prob not the best way to go around this....
-                        foreach(DataRow drFileTags in dt_FileWriteQueue.Rows)
+                        foreach (DataRow drFileTags in dt_FileWriteQueue.Rows)
                         {
                             if (drFileTags[1] == @"gps*")
                             {
@@ -1232,11 +1232,11 @@ namespace GeoTagNinja
                                 {
                                     exifArgs += "-" + exiftoolTagName + "=" + updateExifVal + Environment.NewLine;
                                     //if lat/long then add Ref. 
-                                    if(exiftoolTagName == "exif:GPSLatitude" || exiftoolTagName == "exif:GPSDestLatitude")
+                                    if (exiftoolTagName == "exif:GPSLatitude" || exiftoolTagName == "exif:GPSDestLatitude")
                                     {
-                                        if(updateExifVal.Substring(0,1) == "-")
+                                        if (updateExifVal.Substring(0, 1) == "-")
                                         {
-                                            exifArgs += "-" + exiftoolTagName+"Ref" + "=" + "South"+ Environment.NewLine;
+                                            exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "South" + Environment.NewLine;
                                         }
                                         else
                                         {
@@ -1263,7 +1263,7 @@ namespace GeoTagNinja
                                     {
                                         if (updateExifVal.Substring(0, 1) == "-")
                                         {
-                                            exifArgs += "-" + exiftoolTagName + "Ref" + "=" +Environment.NewLine;
+                                            exifArgs += "-" + exiftoolTagName + "Ref" + "=" + Environment.NewLine;
                                         }
                                         else
                                         {
@@ -1274,11 +1274,11 @@ namespace GeoTagNinja
                                     {
                                         if (updateExifVal.Substring(0, 1) == "-")
                                         {
-                                            exifArgs += "-" + exiftoolTagName + "Ref" + "="  + Environment.NewLine;
+                                            exifArgs += "-" + exiftoolTagName + "Ref" + "=" + Environment.NewLine;
                                         }
                                         else
                                         {
-                                            exifArgs += "-" + exiftoolTagName + "Ref" + "="  + Environment.NewLine;
+                                            exifArgs += "-" + exiftoolTagName + "Ref" + "=" + Environment.NewLine;
                                         }
                                     }
                                 }
@@ -1330,7 +1330,7 @@ namespace GeoTagNinja
                             exifArgs += "-gps*=" + Environment.NewLine;
                         }
                     }
-                    
+
                     if (overwriteOriginal)
                     {
                         exifArgs += "-overwrite_original_in_place" + Environment.NewLine;
@@ -1718,6 +1718,112 @@ namespace GeoTagNinja
                 MessageBox.Show("Your files seem to have disappeared.");
             }
         }
+        internal static void ExifRemoveLocationData(string senderName)
+        {
+            DataRow dr_FileDataRow;
+            if (senderName == "frm_editFileData")
+            {
+                // for the time being i'll leave this as "remove data from the active selection file" rather than "all".
+                frm_editFileData frm_editFileDataInstance = (frm_editFileData)Application.OpenForms["frm_editFileData"];
+                
+                // setting this to True prevents the code from checking the values are valid numbers.
+                frm_editFileData.frm_editFileDataNowRemovingGeoData = true;
+                frm_editFileDataInstance.tbx_GPSLatitude.Text = ""; 
+                frm_editFileDataInstance.tbx_GPSLongitude.Text = "";
+                frm_editFileDataInstance.tbx_GPSAltitude.Text = "";
+                frm_editFileDataInstance.tbx_City.Text = "";
+                frm_editFileDataInstance.tbx_State.Text = "";
+                frm_editFileDataInstance.tbx_Sub_location.Text = "";
+                frm_editFileDataInstance.cbx_CountryCode.Text = "";
+                frm_editFileDataInstance.cbx_Country.Text = "";
+                frm_editFileData.frm_editFileDataNowRemovingGeoData = false;
+                // no need to write back to sql because it's done automatically on textboxChange except for "special tag"
+
+                dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage1PreQueue.NewRow();
+                dr_FileDataRow["filePath"] = frm_editFileDataInstance.lvw_FileListEditImages.SelectedItems[0].Text;
+                dr_FileDataRow["settingId"] = "gps*";
+                dr_FileDataRow["settingValue"] = "";
+                frm_MainApp.dt_fileDataToWriteStage1PreQueue.Rows.Add(dr_FileDataRow);
+            }
+            else if (senderName == "frm_mainApp")
+            {
+                frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
+
+                if (frm_mainAppInstance.lvw_FileList.SelectedItems.Count > 0)
+                {
+                    foreach (ListViewItem lvi in frm_mainAppInstance.lvw_FileList.SelectedItems)
+                    {
+                        // don't do folders...
+                        if (File.Exists(Path.Combine(frm_MainApp.folderName, lvi.Text)))
+                        {
+                            // Latitude
+                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                            dr_FileDataRow["filePath"] = lvi.Text;
+                            dr_FileDataRow["settingId"] = "GPSLatitude";
+                            dr_FileDataRow["settingValue"] = "";
+                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+
+                            // Longitude
+                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                            dr_FileDataRow["filePath"] = lvi.Text;
+                            dr_FileDataRow["settingId"] = "GPSLongitude";
+                            dr_FileDataRow["settingValue"] = "";
+                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+
+                            // CountryCode
+                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                            dr_FileDataRow["filePath"] = lvi.Text;
+                            dr_FileDataRow["settingId"] = "CountryCode";
+                            dr_FileDataRow["settingValue"] = "";
+                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+
+                            // Country
+                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                            dr_FileDataRow["filePath"] = lvi.Text;
+                            dr_FileDataRow["settingId"] = "Country";
+                            dr_FileDataRow["settingValue"] = "";
+                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+
+                            // City
+                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                            dr_FileDataRow["filePath"] = lvi.Text;
+                            dr_FileDataRow["settingId"] = "City";
+                            dr_FileDataRow["settingValue"] = "";
+                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+
+                            // State
+                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                            dr_FileDataRow["filePath"] = lvi.Text;
+                            dr_FileDataRow["settingId"] = "State";
+                            dr_FileDataRow["settingValue"] = "";
+                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+
+                            // Sub_location
+                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                            dr_FileDataRow["filePath"] = lvi.Text;
+                            dr_FileDataRow["settingId"] = "Sub_location";
+                            dr_FileDataRow["settingValue"] = "";
+                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+
+                            // Altitude
+                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                            dr_FileDataRow["filePath"] = lvi.Text;
+                            dr_FileDataRow["settingId"] = "GPSAltitude";
+                            dr_FileDataRow["settingValue"] = "";
+                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+
+                            // Force-remove stuff --> https://exiftool.org/forum/index.php?topic=6037.0
+                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                            dr_FileDataRow["filePath"] = lvi.Text;
+                            dr_FileDataRow["settingId"] = "gps*";
+                            dr_FileDataRow["settingValue"] = "";
+                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                        }
+                    }
+                }
+                Helper.LwvUpdateRow();
+            }
+        }
         #endregion
         #region FSO interaction
         internal static string FsoGetParent(string path)
@@ -1800,7 +1906,7 @@ namespace GeoTagNinja
                         lvi.SubItems[lvchs["clh_" + dr_ThisDataRow[1].ToString()].Index].Text = dr_ThisDataRow[2].ToString();
                         //break;
                     }
-                    
+
                     tmpCoordinates = lvi.SubItems[lvchs["clh_GPSLatitude"].Index].Text + ";" + lvi.SubItems[lvchs["clh_GPSLongitude"].Index].Text;
                     lvi.SubItems[lvchs["clh_Coordinates"].Index].Text = tmpCoordinates != ";" ? tmpCoordinates : "";
                 }

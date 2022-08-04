@@ -4,7 +4,7 @@
 
 GeoTagNinja is an open-source geotagger for Windows. It's a lightweight an open-source (written from scratch) reminiscent of GeoSetter, which hasn't been updated for a longer while and is now a little obsolete as it's using IE and other technologies that are becoming increasingly ageing.
 GTN uses [exifTool](https://exifTool.org/) to read and write EXIF info. This also sets the limitations and capabilities. If exifTool can read/write a file, chances are so can GTN.
-There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP1ZG7mH-I) if you feel like watching it. Download the two setup files (setup.exe and the msi file) from [Releases](https://github.com/nemethviktor/GeoTagNinja/releases) - click on Assets if they are not showing.
+There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP1ZG7mH-I) if you feel like watching it. Download the .msi file from [Releases](https://github.com/nemethviktor/GeoTagNinja/releases) - click on Assets if they are not showing.
 
 ## Things to Note, Usage and Testing
 
@@ -55,6 +55,14 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 - Pressing Get From Web either in Edit mode or on the map will always set the affected file to write-queue even if the values don't actually change.
 - Preview images don't respect orientation.
 - If user zooms "too far out" on Map they will get odd longitude values. The code handles this internally but map feedback is what it is.
+
+## When reporting bugs please specify
+
+- the OS's version
+- the OS's language
+- full path of your photo if the bug is related to exif tagging
+- possibly upload the picture somewhere if not sensitive so i can test
+
 
 ## System Requirements
 

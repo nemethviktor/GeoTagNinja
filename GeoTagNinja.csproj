@@ -234,6 +234,7 @@
     <AdditionalFiles Include="Resources\objectMapping.sqlite">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AdditionalFiles>
+    <None Include="changelog.md" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

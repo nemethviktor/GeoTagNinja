@@ -17,9 +17,9 @@ namespace GeoTagNinja
 {
     public partial class frm_editFileData : Form
     {
-
         #region Variables
-        private bool _nowLoadingFileData;
+        internal static bool frm_editFileDataNowLoadingFileData;
+        internal static bool frm_editFileDataNowRemovingGeoData;
         #endregion
         public frm_editFileData()
         {
@@ -31,7 +31,8 @@ namespace GeoTagNinja
         }
         private async void frm_editFileData_Load(object sender, EventArgs e)
         {
-            _nowLoadingFileData = true;
+            frm_editFileDataNowLoadingFileData = true;
+            frm_editFileDataNowRemovingGeoData = false;
 
             this.clh_FileName.Width = -2;
             this.lvw_FileListEditImages.Items[0].Selected = true;
@@ -52,7 +53,7 @@ namespace GeoTagNinja
         }
         private void lvw_FileListEditImagesGetData()
         {
-            _nowLoadingFileData = true;
+            frm_editFileDataNowLoadingFileData = true;
             string folderName = frm_MainApp.folderName;
             string fileName = lvw_FileListEditImages.SelectedItems[0].Text;
             string tempStr;
@@ -174,7 +175,7 @@ namespace GeoTagNinja
             }
 
             // done load
-            _nowLoadingFileData = false;
+            frm_editFileDataNowLoadingFileData = false;
         }
         #region object events
         private void btn_getFromWeb_Click(object sender, EventArgs e)
@@ -229,7 +230,6 @@ namespace GeoTagNinja
                                     tbx_Sub_location.Text = dt_Toponomy.Rows[0]["Sub_location"].ToString();
                                     cbx_CountryCode.Text = dt_Toponomy.Rows[0]["CountryCode"].ToString();
                                     cbx_Country.Text = dt_Toponomy.Rows[0]["Country"].ToString();
-
                                 }
                                 // no need to write back to sql because it's done automatically on textboxChange
                             }
@@ -405,11 +405,14 @@ namespace GeoTagNinja
             frm_MainApp.dt_fileDataToWriteStage2QueuePendingSave.Rows.Clear();
             this.Hide();
         }
+        private void btn_RemoveGeoData_Click(object sender, EventArgs e)
+        {
+            Helper.ExifRemoveLocationData("frm_editFileData");
+        }
         #region object text change handlers
         private void tbx_cbx_Any_TextChanged(object sender, EventArgs e)
         {
-
-            if (_nowLoadingFileData == false)
+            if (frm_editFileDataNowLoadingFileData == false)
             {
                 Control sndr = (Control)sender;
 
@@ -418,9 +421,9 @@ namespace GeoTagNinja
                 if (dv_PreviousText[0]["settingValue"].ToString() != sndr.Text)
                 {
                     string strSndrText = sndr.Text.Replace(',', '.');
-                    if (sndr.Parent.Name == "gbx_GPSData" && double.TryParse(strSndrText, NumberStyles.Any, CultureInfo.InvariantCulture, out double dbl) == false)
+                    if (!frm_editFileDataNowRemovingGeoData && sndr.Parent.Name == "gbx_GPSData" && double.TryParse(strSndrText, NumberStyles.Any, CultureInfo.InvariantCulture, out double dbl) == false)
                     {
-                        MessageBox.Show("This needs to have numbers only. Will default to zero. \n If you tried to enter a negative value just do write the number first and then stick the minus sign at the beginning. It's trying to parse as a number and a minus sign on its own isn't a number.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("This needs to have numbers only. Will default to zero.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         // find a valid number
                         sndr.Text = "0.0";
                     }
