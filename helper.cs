@@ -1103,6 +1103,51 @@ namespace GeoTagNinja
                 // nothing. errors should have already come up
             }
         }
+        internal static async void ExifGetExifToolVersion()
+        {
+            frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
+            IEnumerable<string> exifToolCommand = Enumerable.Empty<string>();
+            List<string> commonArgList = new()
+            {   "-ver",
+            };
+
+            foreach (string arg in commonArgList)
+            {
+                exifToolCommand = exifToolCommand.Concat(new[] { arg
+                });
+            }
+            CancellationToken ct = CancellationToken.None;
+            string exifToolResult;
+
+            try
+            {
+                exifToolResult = await frm_mainAppInstance.asyncExifTool.ExecuteAsync(exifToolCommand);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                exifToolResult = null;
+            }
+            string[] exifToolResultArr = Convert.ToString(exifToolResult).Split(
+                     new string[] { "\r\n", "\r", "\n" },
+                     StringSplitOptions.None
+                 ).Distinct().ToArray();
+            ;
+
+            foreach (string exifToolReturnStr in exifToolResultArr)
+            {
+                if (exifToolReturnStr is not null && exifToolReturnStr.Length > 0)
+                {
+                    //this only returns something like "12.42" and that's all
+                    Helper.DataWriteSQLiteSettings(
+                        tableName: "settings",
+                        settingTabPage: "generic",
+                        settingId: "exifToolVer",
+                        settingValue: exifToolReturnStr
+                        );
+                }
+            }
+        }
         internal static async Task ExifGetImagePreviews(string fileName)
         {
             #region ExifToolConfiguration
@@ -1438,7 +1483,7 @@ namespace GeoTagNinja
                 frm_MainApp.HandlerUpdateLabelText(frm_mainAppInstance.lbl_ParseProgress, "Ready.");
             }
         }
-        internal static geoTagNinja.GeoResponseToponomy ExifGetGeoDataFromWebToponomy(string latitude, string longitude)
+        internal static geoTagNinja.GeoResponseToponomy API_ExifGetGeoDataFromWebToponomy(string latitude, string longitude)
         {
             if (s_GeoNames_UserName == null)
             {
@@ -1475,7 +1520,7 @@ namespace GeoTagNinja
             }
             return returnVal;
         }
-        internal static geoTagNinja.GeoResponseAltitude ExifGetGeoDataFromWebAltitude(string latitude, string longitude)
+        internal static geoTagNinja.GeoResponseAltitude API_ExifGetGeoDataFromWebAltitude(string latitude, string longitude)
         {
             if (s_GeoNames_UserName == null)
             {
@@ -1511,7 +1556,53 @@ namespace GeoTagNinja
             }
             return returnVal;
         }
-        internal static DataTable ExifGetToponomyFromWeb(string lat, string lng)
+        internal static geoTagNinja.ExifToolVerQueryResponse API_ExifGetExifToolVersionFromWeb()
+        {
+            geoTagNinja.ExifToolVerQueryResponse returnVal = new();
+            var client = new RestClient("https://fastapi.metacpan.org/")
+            {
+                Authenticator = new HttpBasicAuthenticator("demo", "demo")
+            };
+            var request_ExifToolVersionQuery = new RestRequest("v1/release/_search?q=Image-ExifTool%20AND%20status:latest&fields=name,status,version&size=1", Method.Get);
+            var response_ExifToolVerQuery = client.ExecuteGet(request_ExifToolVersionQuery);
+            if (response_ExifToolVerQuery.StatusCode.ToString() == "OK")
+            {
+                s_APIOkay = true;
+                var data = (JObject)JsonConvert.DeserializeObject(response_ExifToolVerQuery.Content);
+                var exifToolVerQueryResponse = geoTagNinja.ExifToolVerQueryResponse.FromJson(data.ToString());
+                returnVal = exifToolVerQueryResponse;
+            }
+            else
+            {
+                s_APIOkay = false;
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_WarningExifToolVerAPIResponse") + response_ExifToolVerQuery.StatusCode.ToString(), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            return returnVal;
+        }
+        internal static geoTagNinja.GtnReleasesApiResponse API_GenericGetGTNVersionFromWeb()
+        {
+            geoTagNinja.GtnReleasesApiResponse returnVal = new();
+            var client = new RestClient("https://api.github.com/")
+            {
+                Authenticator = new HttpBasicAuthenticator("demo", "demo")
+            };
+            var request_GTNVersionQuery = new RestRequest("repos/nemethviktor/GeoTagNinja/releases", Method.Get);
+            var response_GTNVersionQuery = client.ExecuteGet(request_GTNVersionQuery);
+            if (response_GTNVersionQuery.StatusCode.ToString() == "OK")
+            {
+                s_APIOkay = true;
+                var data = (JArray)JsonConvert.DeserializeObject(response_GTNVersionQuery.Content);
+                var gtnReleasesApiResponse = geoTagNinja.GtnReleasesApiResponse.FromJson(data.ToString());
+                returnVal = gtnReleasesApiResponse[0]; // latest only
+            }
+            else
+            {
+                s_APIOkay = false;
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_WarningGTNVerAPIResponse") + response_GTNVersionQuery.StatusCode.ToString(), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            return returnVal;
+        }
+        internal static DataTable DTFromAPIExifGetToponomyFromWeb(string lat, string lng)
         {
             DataTable dt_Return = new DataTable();
             dt_Return.Clear();
@@ -1564,7 +1655,7 @@ namespace GeoTagNinja
             // read from API
             else if (s_APIOkay)
             {
-                ReadJsonToponomy = ExifGetGeoDataFromWebToponomy(
+                ReadJsonToponomy = API_ExifGetGeoDataFromWebToponomy(
                         latitude: lat.ToString(),
                         longitude: lng.ToString()
                         );
@@ -1634,7 +1725,7 @@ namespace GeoTagNinja
             }
             return dt_Return;
         }
-        internal static DataTable ExifGetAltitudeFromWeb(string lat, string lng)
+        internal static DataTable DTFromAPIExifGetAltitudeFromWeb(string lat, string lng)
         {
             DataTable dt_Return = new DataTable();
             dt_Return.Clear();
@@ -1655,7 +1746,7 @@ namespace GeoTagNinja
             else if (s_APIOkay)
             {
                 geoTagNinja.GeoResponseAltitude readJson_Altitude;
-                readJson_Altitude = ExifGetGeoDataFromWebAltitude(
+                readJson_Altitude = API_ExifGetGeoDataFromWebAltitude(
                     latitude: lat.ToString(),
                     longitude: lng.ToString()
                     );
@@ -1699,6 +1790,60 @@ namespace GeoTagNinja
             }
             return dt_Return;
         }
+        internal static DataTable DTFromAPI_GetExifToolVersion()
+        {
+            DataTable dt_Return = new DataTable();
+            dt_Return.Clear();
+            dt_Return.Columns.Add("version");
+
+            string apiVersion = "";
+            
+            if (s_APIOkay)
+            {
+                geoTagNinja.ExifToolVerQueryResponse readJson_ExifToolVer;
+                readJson_ExifToolVer = API_ExifGetExifToolVersionFromWeb();
+                if (readJson_ExifToolVer.Hits != null)
+                {
+                    apiVersion = readJson_ExifToolVer.Hits.HitsHits[0].Fields.Version.ToString(); 
+                }
+                // this will be a null value if Unauthorised, we'll ignore that.
+            }
+
+            if (s_APIOkay)
+            {
+                DataRow dr_ReturnRow = dt_Return.NewRow();
+                dr_ReturnRow["version"] = apiVersion;
+                dt_Return.Rows.Add(dr_ReturnRow);
+            }
+            return dt_Return;
+        }
+        internal static DataTable DTFromAPI_GetGTNVersion()
+        {
+            DataTable dt_Return = new DataTable();
+            dt_Return.Clear();
+            dt_Return.Columns.Add("version");
+
+            string apiVersion = "";
+
+            if (s_APIOkay)
+            {
+                geoTagNinja.GtnReleasesApiResponse readJson_GTNVer;
+                readJson_GTNVer = API_GenericGetGTNVersionFromWeb();
+                if (readJson_GTNVer.TagName != null)
+                {
+                    apiVersion = readJson_GTNVer.TagName.ToString();
+                }
+                // this will be a null value if Unauthorised, we'll ignore that.
+            }
+
+            if (s_APIOkay)
+            {
+                DataRow dr_ReturnRow = dt_Return.NewRow();
+                dr_ReturnRow["version"] = apiVersion;
+                dt_Return.Rows.Add(dr_ReturnRow);
+            }
+            return dt_Return;
+        }
         internal static void ExifShowEditFrm()
         {
             int i = 0;
@@ -1730,10 +1875,10 @@ namespace GeoTagNinja
             {
                 // for the time being i'll leave this as "remove data from the active selection file" rather than "all".
                 frm_editFileData frm_editFileDataInstance = (frm_editFileData)Application.OpenForms["frm_editFileData"];
-                
+
                 // setting this to True prevents the code from checking the values are valid numbers.
                 frm_editFileData.frm_editFileDataNowRemovingGeoData = true;
-                frm_editFileDataInstance.tbx_GPSLatitude.Text = ""; 
+                frm_editFileDataInstance.tbx_GPSLatitude.Text = "";
                 frm_editFileDataInstance.tbx_GPSLongitude.Text = "";
                 frm_editFileDataInstance.tbx_GPSAltitude.Text = "";
                 frm_editFileDataInstance.tbx_City.Text = "";

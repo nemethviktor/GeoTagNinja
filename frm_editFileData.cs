@@ -200,7 +200,7 @@ namespace GeoTagNinja
 
                     if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                     {
-                        dt_Toponomy = Helper.ExifGetToponomyFromWeb(strGPSLatitude, strGPSLongitude);
+                        dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWeb(strGPSLatitude, strGPSLongitude);
 
                         tbx_City.Text = dt_Toponomy.Rows[0]["City"].ToString();
                         tbx_State.Text = dt_Toponomy.Rows[0]["State"].ToString();
@@ -222,7 +222,7 @@ namespace GeoTagNinja
 
                             if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                             {
-                                dt_Toponomy = Helper.ExifGetToponomyFromWeb(strGPSLatitude, strGPSLongitude);
+                                dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWeb(strGPSLatitude, strGPSLongitude);
                                 if (dt_Toponomy.Rows.Count > 0)
                                 {
                                     tbx_City.Text = dt_Toponomy.Rows[0]["City"].ToString();
@@ -241,7 +241,7 @@ namespace GeoTagNinja
                             strGPSLongitude = frm_MainAppInstance.lvw_FileList.FindItemWithText(fileName).SubItems[frm_MainAppInstance.lvw_FileList.Columns["clh_GPSLongitude"].Index].Text.Replace(',', '.');
                             if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                             {
-                                dt_Toponomy = Helper.ExifGetToponomyFromWeb(strGPSLatitude, strGPSLongitude);
+                                dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWeb(strGPSLatitude, strGPSLongitude);
                                 if (dt_Toponomy.Rows.Count > 0)
                                 {
                                     string CountryCode = dt_Toponomy.Rows[0]["CountryCode"].ToString();
@@ -298,7 +298,7 @@ namespace GeoTagNinja
 
                     if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                     {
-                        dt_Altitude = Helper.ExifGetAltitudeFromWeb(strGPSLatitude, strGPSLongitude);
+                        dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWeb(strGPSLatitude, strGPSLongitude);
                         if (dt_Altitude.Rows.Count > 0)
                         {
                             tbx_GPSAltitude.Text = dt_Altitude.Rows[0]["Altitude"].ToString();
@@ -319,7 +319,7 @@ namespace GeoTagNinja
 
                             if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                             {
-                                dt_Altitude = Helper.ExifGetAltitudeFromWeb(strGPSLatitude, strGPSLongitude);
+                                dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWeb(strGPSLatitude, strGPSLongitude);
                                 if (dt_Altitude.Rows.Count > 0)
                                 {
                                     tbx_GPSAltitude.Text = dt_Altitude.Rows[0]["Altitude"].ToString();
@@ -334,7 +334,7 @@ namespace GeoTagNinja
                             strGPSLongitude = frm_MainAppInstance.lvw_FileList.FindItemWithText(fileName).SubItems[frm_MainAppInstance.lvw_FileList.Columns["clh_GPSLongitude"].Index].Text.Replace(',', '.'); ;
                             if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                             {
-                                dt_Altitude = Helper.ExifGetAltitudeFromWeb(strGPSLatitude, strGPSLongitude);
+                                dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWeb(strGPSLatitude, strGPSLongitude);
                                 if (dt_Altitude.Rows.Count > 0)
                                 {
                                     string Altitude = dt_Altitude.Rows[0]["Altitude"].ToString();

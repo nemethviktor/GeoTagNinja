@@ -187,6 +187,7 @@
     <Compile Include="frm_aboutBox.Designer.cs">
       <DependentUpon>frm_aboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="helper_exifToolVerQueryResponse.cs" />
     <Compile Include="helper_geoResponse.cs" />
     <Compile Include="frm_editFileData.cs">
       <SubType>Form</SubType>
@@ -207,6 +208,7 @@
       <DependentUpon>frm_Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="helper.cs" />
+    <Compile Include="helper_gitHubAPIResponse.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="frm_aboutBox.resx">

@@ -237,7 +237,7 @@ namespace GeoTagNinja
             }
             catch (Exception ex)
             {
-                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorLanguageFileColumnHeaders") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); 
+                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorLanguageFileColumnHeaders") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             #endregion
             this.FormClosing += new FormClosingEventHandler(frm_MainApp_FormClosing);
@@ -426,6 +426,50 @@ namespace GeoTagNinja
                 this.tbx_lng.Text = "-77.016389";
             }
             NavigateMapGo();
+
+            #region query current & newest exifTool version
+            // get current & newest exiftool version -- do this here at the end so it doesn't hold up the process
+            // exiftool doesn't get released (proper) to github...technically we could query https://api.github.com/repos/exiftool/exiftool/tags
+            // but i'm not sure that's particularly safe in case he ever changes the tags (unlikely tho')
+            Helper.ExifGetExifToolVersion();
+            string currentExifToolVersion = Helper.DataReadSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: "generic",
+                    settingId: "exifToolVer"
+                    );
+
+
+            Helper.s_APIOkay = true;
+            DataTable dt_APIExifToolVersion = Helper.DTFromAPI_GetExifToolVersion();
+            string newestExifToolVersion = dt_APIExifToolVersion.Rows[0]["version"].ToString();
+            if (currentExifToolVersion != newestExifToolVersion)
+            {
+                if (MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_InfoNewExifToolVersionExists") + newestExifToolVersion, "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                {
+                    System.Diagnostics.Process.Start("https://exiftool.org/exiftool-" + newestExifToolVersion + ".zip");
+                }
+            }
+            #endregion
+            #region query current & newest GTN version
+            // current version may be something like "0.5.8251.40825"
+            string currentGTNVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            // don't run this in debug mode. currentGTNVersion is dependent on the # of days since 1/1/2000 basically.
+            // so each time i make a new build this updates and the query triggers a messagebox...which for me is a bit useless.
+            #if !DEBUG
+                Helper.s_APIOkay = true;
+                DataTable dt_APIGTNVersion = Helper.DTFromAPI_GetGTNVersion();
+                // newest may be something like "v0.5.8251"
+                string newestGTNVersion = dt_APIGTNVersion.Rows[0]["version"].ToString().Replace("v", "");
+                if (!currentGTNVersion.Contains(newestGTNVersion))
+                    {
+                        if (MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_InfoNewGTNVersionExists") + newestGTNVersion, "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                        {
+                            System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dt_APIGTNVersion.Rows[0]["version"].ToString() + "/GeoTagNinja_Setup.msi");
+                        }
+                    }
+            #endif
+            #endregion
         }
         private async Task InitialiseWebView()
         {
@@ -507,7 +551,7 @@ namespace GeoTagNinja
             {
                 MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        
+
             try
             {
                 wbv_MapArea.WebMessageReceived += wbv_MapArea_WebMessageReceived;
@@ -831,8 +875,8 @@ namespace GeoTagNinja
                             if (dialogResult == DialogResult.Yes)
                             {
                                 Helper.s_APIOkay = true;
-                                dt_Toponomy = Helper.ExifGetToponomyFromWeb(strParsedLat, strParsedLng);
-                                dt_Altitude = Helper.ExifGetAltitudeFromWeb(strParsedLat, strParsedLng);
+                                dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWeb(strParsedLat, strParsedLng);
+                                dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWeb(strParsedLat, strParsedLng);
                                 if (Helper.s_APIOkay)
                                 {
                                     string CountryCode = dt_Toponomy.Rows[0]["CountryCode"].ToString();
@@ -1301,7 +1345,7 @@ namespace GeoTagNinja
             {
                 this.lvw_FileList.SelectedItems.Clear();
                 MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_WarningNoItemSelected"), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+            }
         }
         private async void lvw_FileList_KeyDown(object sender, KeyEventArgs e)
         {
