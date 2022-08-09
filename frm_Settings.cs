@@ -5,21 +5,25 @@ using System.Windows.Forms;
 using System.Data.SQLite;
 using System.Drawing;
 using System.IO;
+using System.Data;
 
 namespace GeoTagNinja
 {
     public partial class frm_Settings : Form
     {
-        
         private bool nowLoadingSettingsData;
-        static List<AppSettings> appSettings_settings = new();
+        /// <summary>
+        /// This Form provides an interface for the user to edit various app and file-specific settings.
+        /// </summary>
         public frm_Settings()
         {
             InitializeComponent();
 
-            
+            // this one is largely resonsible for disabling the detection of "new" (changed) data. (ie when going from "noting" to "something")
             nowLoadingSettingsData = true;
-            Helper_NonStatic Helper_nonstatic = new Helper_NonStatic(); 
+            Helper_NonStatic Helper_nonstatic = new Helper_NonStatic();
+
+            // Gets the various controls' labels and values (eg "latitude" and "51.002")
             IEnumerable<Control> c = Helper_nonstatic.GetAllControls(this);
             foreach (Control cItem in c)
             {
@@ -67,17 +71,18 @@ namespace GeoTagNinja
             }
             nowLoadingSettingsData = false;
         }
-        public class AppSettings
-        {
-            public string SettingTabPage { get; set; }
-            public string SettingId { get; set; }
-            public string SettingValue { get; set; }
-        }
+        /// <summary>
+        /// Handles loading the basic values into Settings when the user opens the Form
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void Frm_Settings_Load(object sender, EventArgs e)
         {
             // set basics
             CancelButton = btn_Cancel;
             AcceptButton = btn_OK;
+
+            // this one is largely resonsible for disabling the detection of "new" (changed) data. (ie when going from "noting" to "something
             nowLoadingSettingsData = true;
 
             // load file extensions
@@ -85,27 +90,6 @@ namespace GeoTagNinja
             foreach (string ext in frm_MainApp.allExtensions)
             {
                 lbx_fileExtensions.Items.Add(ext);
-            }
-
-            appSettings_settings.Clear();
-            // read data into a list from sqlite
-            using (var dbcon = new SQLiteConnection("Data Source=" + Helper.s_settingsDataBasePath))
-            {
-                dbcon.Open();
-
-                var command = dbcon.CreateCommand();
-                command.CommandText = @"SELECT * FROM settings;";
-
-                using var reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    appSettings_settings.Add(new AppSettings()
-                    {
-                        SettingTabPage = reader.GetString(0),
-                        SettingId = reader.GetString(1),
-                        SettingValue = reader.GetString(2)
-                    }); ;
-                }
             }
 
             // get values by name
@@ -119,27 +103,43 @@ namespace GeoTagNinja
                         {
                             try
                             {
-                                box.Text = appSettings_settings.First(item => item.SettingId == subctrl.Name && item.SettingTabPage == ctrl.Name).SettingValue;
+                                box.Text = Helper.DataReadSQLiteSettings(
+                                    tableName: "settings",
+                                    settingTabPage: ctrl.Name,
+                                    settingId: subctrl.Name
+                                    );
+
                             }
                             catch (InvalidOperationException) // nonesuch
                             {
                                 box.Text = "";
                             }
                         }
-                        else if (subctrl is CheckBox)
-                        {
-                            // this never actually fires. Load only loads the first tabpage, which has none of these.
-                        }
+                        //else if (subctrl is CheckBox)
+                        //{
+                        //    // this never actually fires. Load only loads the first tabpage, which has none of these.
+                        //}
                     }
                 }
             }
             nowLoadingSettingsData = false;
         }
+        /// <summary>
+        /// Handles the event where user clicks Cancel. Clears pre-Q and hides form.
+        /// ...Should be updated to use DTs rather than actual tables but it's low-pri.
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void Btn_Cancel_Click(object sender, EventArgs e)
         {
             Helper.DataDeleteSQLitesettingsToWritePreQueue();
             this.Hide();
         }
+        /// <summary>
+        /// Handles the event where user clicks OK. Writes settings to SQLite and refreshes data where necessary.
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void Btn_OK_Click(object sender, EventArgs e)
         {
             // push data back into sqlite
@@ -161,6 +161,11 @@ namespace GeoTagNinja
 
             this.Hide();
         }
+        /// <summary>
+        /// Handles the event when user clicks to browse for a default startup folder.
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void Pbx_Browse_Startup_Folder_Click(object sender, EventArgs e)
         {
             if (fbd_StartupFolder.ShowDialog() == DialogResult.OK)
@@ -168,6 +173,13 @@ namespace GeoTagNinja
                 tbx_Startup_Folder.Text = fbd_StartupFolder.SelectedPath;
             }
         }
+        /// <summary>
+        /// This handles the listbox in the file-specific tab. Basically for each file type we have different settings
+        /// ...such as for JPGs (probably) don't create a sidecar XMP but for RAW files (probably) do.
+        /// ...This pairs up the file extensions with their setting values.
+        /// </summary>
+        /// <param name="sender">SettingTabPage name</param>
+        /// <param name="e">Unused</param>
         private void Lbx_fileExtensions_SelectedIndexChanged(object sender, EventArgs e)
         {
             nowLoadingSettingsData = true;
@@ -199,7 +211,12 @@ namespace GeoTagNinja
                         // if not....
                         try
                         {
-                            tmpCtrlVal = appSettings_settings.First(item => item.SettingTabPage == ((Control)sender).Parent.Name && item.SettingId == tmpCtrlName).SettingValue;
+                            tmpCtrlVal = Helper.DataReadSQLiteSettings(
+                                    tableName: "settings",
+                                    settingTabPage: ((Control)sender).Parent.Name,
+                                    settingId: tmpCtrlName
+                                    );
+
                             box.Checked = bool.Parse(tmpCtrlVal);
                         }
                         catch (InvalidOperationException) // nonesuch
@@ -240,6 +257,11 @@ namespace GeoTagNinja
             }
             nowLoadingSettingsData = false;
         }
+        /// <summary>
+        /// Sets the default selection to the first item in fileOptions
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void Pg_fileoptions_Enter(object sender, EventArgs e)
         {
             // at this point lbx_fileExtensions.SelectedIndex == 0;
@@ -248,18 +270,30 @@ namespace GeoTagNinja
                 lbx_fileExtensions.SelectedIndex = 0;
             }
         }
+        /// <summary>
+        /// Handles the event when the "settings" tab gets activated (technically this fires before that)
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void Tab_Settings_Selecting(object sender, TabControlCancelEventArgs e)
         {
             // this is for the "new" selected page
             nowLoadingSettingsData = true;
         }
+        /// <summary>
+        /// Handles the event when the "settings" tab gets deactivated (technically this fires before that)
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void Tab_Settings_Deselecting(object sender, TabControlCancelEventArgs e)
         {
             nowLoadingSettingsData = false;
-            // this is for the "ex" selected page
-            // this is obsolete but i'm leaving it in for now
-            // TabPage ctrl = (sender as TabControl).SelectedTab;
         }
+        /// <summary>
+        /// Handles the event where any checkbox's true/false value changes. If changed makes them bold and queues up for saving.
+        /// </summary>
+        /// <param name="sender">The Control in question</param>
+        /// <param name="e">Unused</param>
         private void Any_cbx_CheckStateChanged(object sender, EventArgs e)
         {
             if (!nowLoadingSettingsData)
@@ -279,6 +313,11 @@ namespace GeoTagNinja
                     );
             }
         }
+        /// <summary>
+        /// Handles the event where any textbox's value changes. If changed makes them bold and queues up for saving.
+        /// </summary>
+        /// <param name="sender">The Control in question</param>
+        /// <param name="e">Unused</param>
         private void Any_tbx_TextChanged(object sender, EventArgs e)
         {
             if (!nowLoadingSettingsData)

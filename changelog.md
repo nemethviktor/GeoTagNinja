@@ -1,8 +1,11 @@
 ﻿# GeoTagNinja Changelog
 
 v0.5.82xx [202208xx]
+- [WIP] Time shift groundwork.
 - Added check for exifTool version change tracking
 - Added check for GeoTagNinja version change tracking
+- Added (better) commentary to the code
+- Bugfixes
 
 v0.5.8251 [20220804]
 - Added "Remove GeoData" to main form as well as Edit form

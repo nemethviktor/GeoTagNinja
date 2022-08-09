@@ -21,6 +21,9 @@ namespace GeoTagNinja
         internal static bool frm_editFileDataNowLoadingFileData;
         internal static bool frm_editFileDataNowRemovingGeoData;
         #endregion
+        /// <summary>
+        /// This Form provides an interface for the user to edit various bits of Exif data in images.
+        /// </summary>
         public frm_editFileData()
         {
             // set basics
@@ -29,6 +32,13 @@ namespace GeoTagNinja
 
             InitializeComponent();
         }
+        /// <summary>
+        /// Fires when loading the form. Sets defaults for the listview and makes sure the app is ready to read the file data
+        /// ...w/o marking changes to textboxes (aka when a value changes the textbox formatting will generally turn to bold but
+        /// ...when going from "nothing" to "something" that's obviously a change and we don't want that.)
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private async void frm_editFileData_Load(object sender, EventArgs e)
         {
             frm_editFileDataNowLoadingFileData = true;
@@ -51,6 +61,10 @@ namespace GeoTagNinja
             lvw_FileListEditImagesGetData();
             await pbx_imgPreviewPicGenerator(lvw_FileListEditImages.Items[0].Text);
         }
+        /// <summary>
+        /// Gets the text values for the Controls in the Form - for labels/buttons etc this is their "language" (eg. English) label (e.g. "Latitude")
+        /// ... for textboxes etc this is the value (e.g. "51.002")
+        /// </summary>
         private void lvw_FileListEditImagesGetData()
         {
             frm_editFileDataNowLoadingFileData = true;
@@ -178,6 +192,13 @@ namespace GeoTagNinja
             frm_editFileDataNowLoadingFileData = false;
         }
         #region object events
+        /// <summary>
+        /// Pulls data for the various "Get (All) From Web" buttons depending which actual button has been pressed. 
+        /// The TLDR logic is that if it's not the "All" button then we only read the currently active file else we read all
+        /// ...but ofc the currently not visible files' data doesn't show to the user so that goes into the holding tables.
+        /// </summary>
+        /// <param name="sender">The object that has been interacted with</param>
+        /// <param name="e">Unused</param>
         private void btn_getFromWeb_Click(object sender, EventArgs e)
         {
             double parsedLat;
@@ -200,7 +221,7 @@ namespace GeoTagNinja
 
                     if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                     {
-                        dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWeb(strGPSLatitude, strGPSLongitude);
+                        dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWebOrSQL(strGPSLatitude, strGPSLongitude);
 
                         tbx_City.Text = dt_Toponomy.Rows[0]["City"].ToString();
                         tbx_State.Text = dt_Toponomy.Rows[0]["State"].ToString();
@@ -222,7 +243,7 @@ namespace GeoTagNinja
 
                             if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                             {
-                                dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWeb(strGPSLatitude, strGPSLongitude);
+                                dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWebOrSQL(strGPSLatitude, strGPSLongitude);
                                 if (dt_Toponomy.Rows.Count > 0)
                                 {
                                     tbx_City.Text = dt_Toponomy.Rows[0]["City"].ToString();
@@ -241,7 +262,7 @@ namespace GeoTagNinja
                             strGPSLongitude = frm_MainAppInstance.lvw_FileList.FindItemWithText(fileName).SubItems[frm_MainAppInstance.lvw_FileList.Columns["clh_GPSLongitude"].Index].Text.Replace(',', '.');
                             if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                             {
-                                dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWeb(strGPSLatitude, strGPSLongitude);
+                                dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWebOrSQL(strGPSLatitude, strGPSLongitude);
                                 if (dt_Toponomy.Rows.Count > 0)
                                 {
                                     string CountryCode = dt_Toponomy.Rows[0]["CountryCode"].ToString();
@@ -298,7 +319,7 @@ namespace GeoTagNinja
 
                     if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                     {
-                        dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWeb(strGPSLatitude, strGPSLongitude);
+                        dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWebOrSQL(strGPSLatitude, strGPSLongitude);
                         if (dt_Altitude.Rows.Count > 0)
                         {
                             tbx_GPSAltitude.Text = dt_Altitude.Rows[0]["Altitude"].ToString();
@@ -319,7 +340,7 @@ namespace GeoTagNinja
 
                             if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                             {
-                                dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWeb(strGPSLatitude, strGPSLongitude);
+                                dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWebOrSQL(strGPSLatitude, strGPSLongitude);
                                 if (dt_Altitude.Rows.Count > 0)
                                 {
                                     tbx_GPSAltitude.Text = dt_Altitude.Rows[0]["Altitude"].ToString();
@@ -334,7 +355,7 @@ namespace GeoTagNinja
                             strGPSLongitude = frm_MainAppInstance.lvw_FileList.FindItemWithText(fileName).SubItems[frm_MainAppInstance.lvw_FileList.Columns["clh_GPSLongitude"].Index].Text.Replace(',', '.'); ;
                             if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                             {
-                                dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWeb(strGPSLatitude, strGPSLongitude);
+                                dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWebOrSQL(strGPSLatitude, strGPSLongitude);
                                 if (dt_Altitude.Rows.Count > 0)
                                 {
                                     string Altitude = dt_Altitude.Rows[0]["Altitude"].ToString();
@@ -362,6 +383,11 @@ namespace GeoTagNinja
                 MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_editFileData_ErrorAPIError"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        /// <summary>
+        /// Handles when user clicks on the listview and generates data for the target item (file)
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private async void lvw_FileListEditImages_MouseClick(object sender, MouseEventArgs e)
         {
             if (File.Exists(Path.Combine(folderName, lvw_FileListEditImages.SelectedItems[0].Text)))
@@ -376,6 +402,11 @@ namespace GeoTagNinja
                 MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_editFileData_WarningFileDisappeared"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+        /// <summary>
+        /// Handles when user clicks on the OK button. Moves the data from holding table 1 to 3 and updates the main listview
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void btn_OK_Click(object sender, EventArgs e)
         {
             // move data from temp-queue to write-queue
@@ -388,13 +419,18 @@ namespace GeoTagNinja
                 }
 
                 // update listview w new data
-                Helper.LwvUpdateRow();
+                Helper.LwvUpdateRowFromDTWriteStage3ReadyToWrite();
 
                 // drop from q
                 frm_MainApp.dt_fileDataToWriteStage1PreQueue.Rows.Clear();
             }
             frm_MainApp.dt_fileDataToWriteStage2QueuePendingSave.Rows.Clear();
         }
+        /// <summary>
+        /// Handles when user clicks Cancel. Clears holding tables 1 & 2.
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void btn_Cancel_Click(object sender, EventArgs e)
         {
             // clear the queues
@@ -402,11 +438,21 @@ namespace GeoTagNinja
             frm_MainApp.dt_fileDataToWriteStage2QueuePendingSave.Rows.Clear();
             this.Hide();
         }
+        /// <summary>
+        /// Handles when user requests removal of all geodata from selected img. 
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void btn_RemoveGeoData_Click(object sender, EventArgs e)
         {
             Helper.ExifRemoveLocationData("frm_editFileData");
         }
         #region object text change handlers
+        /// <summary>
+        /// Handles changes in textboxes and dropdowns. Compares "old" and "new" data and if they mismatch formats Control as bold.
+        /// </summary>
+        /// <param name="sender">The Control whose Text has been changed</param>
+        /// <param name="e">Unused</param>
         private void tbx_cbx_Any_TextChanged(object sender, EventArgs e)
         {
             if (frm_editFileDataNowLoadingFileData == false)
@@ -465,11 +511,21 @@ namespace GeoTagNinja
             }
         }
         #endregion
+        /// <summary>
+        /// Obsolete
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void tbx_cbx_Any_Enter(object sender, EventArgs e)
         {
             //previousText = this.Text;
         }
         #endregion
+        /// <summary>
+        /// Attempts to generate preview image for the image that was clicked on. 
+        /// </summary>
+        /// <param name="fileName">Name (path) of the file that was clicked on.</param>
+        /// <returns></returns>
         private static async Task pbx_imgPreviewPicGenerator(string fileName)
         {
 

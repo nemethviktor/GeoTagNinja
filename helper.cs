@@ -35,6 +35,9 @@ namespace GeoTagNinja
         #endregion
         #region SQL 
         #region Database Creation SQL & Startup Checks
+        /// <summary>
+        /// Creates the SQLite DB if it doesn't exist yet
+        /// </summary>
         internal static void DataCreateSQLiteDB()
         {
             try
@@ -109,6 +112,9 @@ namespace GeoTagNinja
 
             }
         }
+        /// <summary>
+        /// Fills the SQLite database with defaults (such as file-type-specific settings
+        /// </summary>
         internal static void DataWriteSQLiteSettingsDefaultSettings()
         {
             string[] controlNamesToAdd = new string[] {
@@ -166,6 +172,15 @@ namespace GeoTagNinja
         }
         #endregion
         #region objectMapping SQL
+        /// <summary>
+        /// Reads the ObjectMapping data - basically this is to associate (exif) tags with column header names and button names
+        /// The logic is that if we have for example an exif tag "FValue" then the column header representing that will be also "clh_FValue" etc
+        /// This also pulls tags "in and out" associations. Admittedly I don't always grasp the myriad of exif tags and their logic so ...
+        /// ... in the code some of this will be merged elsewhere.
+        /// </summary>
+        /// <param name="tableName">Can be the objectNames_In or _Out table </param>
+        /// <param name="orderBy">A priority-order. Defaults to the first column (alpha)</param>
+        /// <returns>A DataTable with the SQL data.</returns>
         internal static DataTable DataReadSQLiteObjectMapping(string tableName, string orderBy = "1")
         {
             try
@@ -192,6 +207,11 @@ namespace GeoTagNinja
                 return null;
             }
         }
+        /// <summary>
+        /// Reads the ObjectMappingData for the purposes of passing it to exifTool. Admittedly this could be merged with the one above ...
+        /// ... or replace it altogether but at the time of writing the initial code they were separate entities and then i left them as is.
+        /// </summary>
+        /// <returns>A DataTable with the complete list of tags stored in the database w/o filter.</returns>
         internal static DataTable DataReadSQLiteObjectMappingTagsToPass()
         {
             using SQLiteConnection sqliteDB = new("Data Source=" + Path.Combine(frm_MainApp.resourcesFolderPath, "objectMapping.sqlite"));
@@ -215,6 +235,13 @@ namespace GeoTagNinja
         }
         #endregion
         #region Settings SQL
+        /// <summary>
+        /// Reads the user-settings and returns them to the app (such as say default starting folder.)
+        /// </summary>
+        /// <param name="tableName">This will generally be "settings" (but could be applayout as well). Remainder of an older design where I had tables for data lined up to be saved</param>
+        /// <param name="settingTabPage">This lines up with the tab name on the Settings form</param>
+        /// <param name="settingId">Name of the SettingID for which data is requested</param>
+        /// <returns>String - the value of the given SettingID</returns>
         internal static string DataReadSQLiteSettings(string tableName, string settingTabPage, string settingId)
         {
             string? returnString = null;
@@ -244,6 +271,13 @@ namespace GeoTagNinja
 
             return returnString;
         }
+        /// <summary>
+        /// Similar to the one above (which reads the data) - this one writes it.
+        /// </summary>
+        /// <param name="tableName">This will generally be "settings" (but could be applayout as well). Remainder of an older design where I had tables for data lined up to be saved</param>
+        /// <param name="settingTabPage">This lines up with the tab name on the Settings form</param>
+        /// <param name="settingId">Name of the SettingID for which data is requested</param>
+        /// <param name="settingValue">The value to be stored.</param>
         internal static void DataWriteSQLiteSettings(string tableName, string settingTabPage, string settingId, string settingValue)
         {
             using SQLiteConnection sqliteDB = new("Data Source=" + s_settingsDataBasePath);
@@ -260,6 +294,12 @@ namespace GeoTagNinja
             sqlCommandStr.Parameters.AddWithValue("@settingValue", settingValue);
             sqlCommandStr.ExecuteNonQuery();
         }
+        /// <summary>
+        /// Transfers data from the "write queue" to the actual table. This is executed when the user presses the OK button in settings...
+        /// ... until then the data is kept in the pre-queue table. ...
+        /// The "main" table (file data table) used to have the same logic but that was converted to in-memory DataTables as writing up to thousands of tags...
+        /// ... was very inefficient. Since settings only write a few tags I didn't bother doing the same. Boo me.
+        /// </summary>
         internal static void DataTransferSQLiteSettings()
         {
             using SQLiteConnection sqliteDB = new("Data Source=" + s_settingsDataBasePath);
@@ -273,6 +313,10 @@ namespace GeoTagNinja
             SQLiteCommand sqlToRun = new(sqlCommandStr, sqliteDB);
             sqlToRun.ExecuteNonQuery();
         }
+        /// <summary>
+        /// Deletes the data in the "write queue" table. Gets executed if the user presses ok/cancel on the settings form.
+        /// Obvs if they press OK then DataTransferSQLiteSettings fires first.
+        /// </summary>
         internal static void DataDeleteSQLitesettingsToWritePreQueue()
         {
             using SQLiteConnection sqliteDB = new("Data Source=" + s_settingsDataBasePath);
@@ -290,6 +334,10 @@ namespace GeoTagNinja
             SQLiteCommand sqlToRun = new(sqlCommandStr, sqliteDB);
             sqlToRun.ExecuteNonQuery();
         }
+        /// <summary>
+        /// Reads a single value (the ARCGIS key) from Settings. Admittedly redundant. Remnant of the early design. Should be changed into something more efficient.
+        /// </summary>
+        /// <returns>The ARCGIS API key value from Settings</returns>
         internal static string DataSelectTbxARCGIS_APIKey_FromSQLite()
         {
             try
@@ -308,6 +356,13 @@ namespace GeoTagNinja
         }
         #endregion
         #region language SQL
+        /// <summary>
+        /// Reads the language value of a specific item from the database.
+        /// </summary>
+        /// <param name="languageName">e.g "English"</param>
+        /// <param name="objectType">e.g. "button" or "columnheader"</param>
+        /// <param name="objectName">This is the name of the object e.g. "btn_OK"</param>
+        /// <returns>The value of the object's labal in the given language. E.g. for btn_Cancel this will be "Cancel"</returns>
         internal static string DataReadSQLiteObjectText(string languageName, string objectType, string objectName)
         {
             string returnString = "";
@@ -361,6 +416,14 @@ namespace GeoTagNinja
 
             return returnString;
         }
+        /// <summary>
+        /// Generally identical to the above but with an "actionType" - basically a parameter/breakdown.
+        /// </summary>
+        /// <param name="languageName">e.g "English"</param>
+        /// <param name="objectType">e.g. "button" or "columnheader"</param>
+        /// <param name="actionType">e.g. "reading" or "writing". </param>
+        /// <param name="objectName">This is the name of the object e.g. "btn_OK"</param>
+        /// <returns>The value of the object's labal in the given language. E.g. for btn_Cancel this will be "Cancel"</returns>
         internal static string DataReadSQLiteObjectText(string languageName, string objectType, string actionType, string objectName)
         {
             string returnString = "";
@@ -422,6 +485,14 @@ namespace GeoTagNinja
         }
         #endregion
         #region Toponomy 
+        /// <summary>
+        /// Attempts to read SQLite to see if the toponomy data exists. The idea is that a particular location on the planet isn't likely to change so ...
+        /// ... it's silly to keep querying the API each time for the same thing. I've explained in the readme but the API I use doesn't really follow political changes...
+        /// ... as of 2022 for example it still returns Ukraine for Crimea. 
+        /// </summary>
+        /// <param name="lat">latitude/longitude. String values; were initially numeric but this caused problems on non-English systems and strings are easier to coerce to work.</param>
+        /// <param name="lng">latitude/longitude. String values; were initially numeric but this caused problems on non-English systems and strings are easier to coerce to work.</param>
+        /// <returns>DataTable with toponomy data if exists</returns>
         internal static DataTable DataReadSQLiteToponomyWholeRow(string lat, string lng)
         {
             using SQLiteConnection sqliteDB = new("Data Source=" + s_settingsDataBasePath);
@@ -444,6 +515,12 @@ namespace GeoTagNinja
             dataTable.Load(reader);
             return dataTable;
         }
+        /// <summary>
+        /// Identical to the above but for altitude data.
+        /// </summary>
+        /// <param name="lat">latitude/longitude. String values; were initially numeric but this caused problems on non-English systems and strings are easier to coerce to work.</param>
+        /// <param name="lng">latitude/longitude. String values; were initially numeric but this caused problems on non-English systems and strings are easier to coerce to work.</param>
+        /// <returns>DataTable with toponomy data if exists</returns>
         internal static DataTable DataReadSQLiteAltitudeWholeRow(string lat, string lng)
         {
             using SQLiteConnection sqliteDB = new("Data Source=" + s_settingsDataBasePath);
@@ -466,6 +543,15 @@ namespace GeoTagNinja
             dataTable.Load(reader);
             return dataTable;
         }
+        /// <summary>
+        /// Writes topopnomy data from the API to SQL for future use. I explained the logic above at DataReadSQLiteToponomyWholeRow.
+        /// </summary>
+        /// <param name="lat">latitude/longitude. String values; were initially numeric but this caused problems on non-English systems and strings are easier to coerce to work.</param>
+        /// <param name="lng">latitude/longitude. String values; were initially numeric but this caused problems on non-English systems and strings are easier to coerce to work.</param>
+        /// <param name="AdminName1">API Response for this particular tag.</param>
+        /// <param name="AdminName2">API Response for this particular tag.</param>
+        /// <param name="ToponymName">API Response for this particular tag.</param>
+        /// <param name="CountryCode">API Response for this particular tag.</param>
         internal static void DataWriteSQLiteToponomyWholeRow(string lat, string lng, string AdminName1 = "", string AdminName2 = "", string ToponymName = "", string CountryCode = "")
         {
             using SQLiteConnection sqliteDB = new("Data Source=" + s_settingsDataBasePath);
@@ -486,6 +572,12 @@ namespace GeoTagNinja
 
             sqlToRun.ExecuteNonQuery();
         }
+        /// <summary>
+        /// Identical to the above but for altitude data
+        /// </summary>
+        /// <param name="lat">latitude/longitude. String values; were initially numeric but this caused problems on non-English systems and strings are easier to coerce to work.</param>
+        /// <param name="lng">latitude/longitude. String values; were initially numeric but this caused problems on non-English systems and strings are easier to coerce to work.</param>
+        /// <param name="Altitude">API Response for this particular tag.</param>
         internal static void DataWriteSQLiteAltitudeWholeRow(string lat, string lng, string Altitude = "")
         {
             using SQLiteConnection sqliteDB = new("Data Source=" + s_settingsDataBasePath);
@@ -505,6 +597,13 @@ namespace GeoTagNinja
         }
         #endregion
         #region Other SQL
+        /// <summary>
+        /// Reads SQL and basically translates between code types. We store ALPHA-2, ALPHA-3 and plain English country names.
+        /// </summary>
+        /// <param name="queryWhat">ALPHA-2, ALPHA-3 and plain English country names</param>
+        /// <param name="inputVal">e.g US or USA or United States of America</param>
+        /// <param name="returnWhat">ALPHA-2, ALPHA-3 and plain English country names</param>
+        /// <returns>ALPHA-2, ALPHA-3 and plain English country names</returns>
         internal static string DataReadSQLiteCountryCodesNames(string queryWhat, string inputVal, string returnWhat)
         {
             string returnString = "";
@@ -537,10 +636,20 @@ namespace GeoTagNinja
         #endregion
         #endregion
         #region Generic
+        /// <summary>
+        /// A "coalesce" function. 
+        /// </summary>
+        /// <param name="strings">Array of string values to be queried</param>
+        /// <returns>The first non-null value</returns>
         internal static string GenericCoalesce(params string[] strings)
         {
             return strings.FirstOrDefault(s => !string.IsNullOrWhiteSpace(s));
         }
+        /// <summary>
+        /// Wrangles the actual coordinate out of a point. (e.g. 4.54 East to -4.54)
+        /// </summary>
+        /// <param name="point">This is a raw coordinate. Could contain numbers or things like "East" on top of numbers</param>
+        /// <returns>Double - an actual coordinate</returns>
         public static double GenericAdjustLatLongNegative(string point)
         {
             string pointOrig = point.ToString().Replace(" ", "").Replace(',', '.');
@@ -550,6 +659,13 @@ namespace GeoTagNinja
 
             return pointVal * multiplier;
         }
+        /// <summary>
+        /// Joins two datatables. Logically similar to a SQL join.
+        /// </summary>
+        /// <param name="t1">Name of input table</param>
+        /// <param name="t2">Name of input table</param>
+        /// <param name="joinOn">Column Name to join on</param>
+        /// <returns>A joined datatable</returns>
         internal static DataTable GenericJoinDataTables(DataTable t1, DataTable t2, params Func<DataRow, DataRow, bool>[] joinOn)
         {
             // via https://stackoverflow.com/a/11505884/3968494
@@ -595,6 +711,12 @@ namespace GeoTagNinja
             }
             return result;
         }
+        /// <summary>
+        /// This is a special member of the objectMapping/Language and really should sit there not here. 
+        /// Messageboxes are a bit more complicate to work with than "simple" objects and this takes their language-value and returns it efficiently
+        /// </summary>
+        /// <param name="messageBoxName">A pseudonym for the messagebox whose value is requested.</param>
+        /// <returns>Messagebox text contents</returns>
         internal static string GenericGetMessageBoxText(string messageBoxName)
         {
             return Helper.DataReadSQLiteObjectText(
@@ -605,7 +727,13 @@ namespace GeoTagNinja
         }
         #endregion
         #region Exif Related
-        internal static string ExifGetExifDataPoint(DataTable dtFileExif, string dataPoint)
+        /// <summary>
+        /// Wrangles data from raw exiftool output to presentable and standardised data.
+        /// </summary>
+        /// <param name="dtFileExif">Raw values tag from exiftool</param>
+        /// <param name="dataPoint">Name of the exiftag we want the data for</param>
+        /// <returns>Standardised exif tag output</returns>
+        internal static string ExifGetStandardisedDataPointFromExif(DataTable dtFileExif, string dataPoint)
         {
             string returnVal = "";
 
@@ -620,7 +748,7 @@ namespace GeoTagNinja
 
             try
             {
-                tryDataValue = ExifGetDataPointFromExif(dtFileExif, dataPoint);
+                tryDataValue = ExifGetRawDataPointFromExif(dtFileExif, dataPoint);
             }
             catch
             {
@@ -635,7 +763,7 @@ namespace GeoTagNinja
                         // we want N instead of North etc.
                         try
                         {
-                            tmpLatLongRefVal = ExifGetDataPointFromExif(dtFileExif, dataPoint + "Ref").Substring(0, 1);
+                            tmpLatLongRefVal = ExifGetRawDataPointFromExif(dtFileExif, dataPoint + "Ref").Substring(0, 1);
                         }
                         catch
                         {
@@ -664,15 +792,15 @@ namespace GeoTagNinja
                     // this is entirely the duplicate of the above
 
                     // check there is lat/long
-                    tmpLatVal = ExifGetDataPointFromExif(dtFileExif, "GPS" + isDest + "Latitude").Replace(',', '.');
-                    tmpLongVal = ExifGetDataPointFromExif(dtFileExif, "GPS" + isDest + "Longitude").Replace(',', '.');
+                    tmpLatVal = ExifGetRawDataPointFromExif(dtFileExif, "GPS" + isDest + "Latitude").Replace(',', '.');
+                    tmpLongVal = ExifGetRawDataPointFromExif(dtFileExif, "GPS" + isDest + "Longitude").Replace(',', '.');
                     if (tmpLatVal == "") { tmpLatVal = "-"; };
                     if (tmpLongVal == "") { tmpLongVal = "-"; };
 
-                    if (ExifGetDataPointFromExif(dtFileExif, "GPS" + isDest + "LatitudeRef").Length > 0 && ExifGetDataPointFromExif(dtFileExif, "GPS" + isDest + "LongitudeRef").Length > 0)
+                    if (ExifGetRawDataPointFromExif(dtFileExif, "GPS" + isDest + "LatitudeRef").Length > 0 && ExifGetRawDataPointFromExif(dtFileExif, "GPS" + isDest + "LongitudeRef").Length > 0)
                     {
-                        tmpLatRefVal = ExifGetDataPointFromExif(dtFileExif, "GPS" + isDest + "LatitudeRef").Substring(0, 1).Replace(',', '.');
-                        tmpLongRefVal = ExifGetDataPointFromExif(dtFileExif, "GPS" + isDest + "LongitudeRef").Substring(0, 1).Replace(',', '.');
+                        tmpLatRefVal = ExifGetRawDataPointFromExif(dtFileExif, "GPS" + isDest + "LatitudeRef").Substring(0, 1).Replace(',', '.');
+                        tmpLongRefVal = ExifGetRawDataPointFromExif(dtFileExif, "GPS" + isDest + "LongitudeRef").Substring(0, 1).Replace(',', '.');
                     }
                     else
                     {
@@ -744,7 +872,7 @@ namespace GeoTagNinja
                         }
                         else
                         {
-                            tryDataValue = tryDataValue.Replace("mm", "").Replace("f/", "").Replace("f", "").Trim();
+                            tryDataValue = tryDataValue.Replace("mm", "").Replace("f/", "").Replace("f", "").Replace("[", "").Replace("]", "").Trim();
                         }
                         if (tryDataValue.Contains("/"))
                         {
@@ -758,7 +886,15 @@ namespace GeoTagNinja
             returnVal = tryDataValue;
             return returnVal;
         }
-        internal static string ExifGetDataPointFromExif(DataTable dtFileExif, string dataPoint)
+        /// <summary>
+        /// This translates between plain English and exiftool tags. For example if the tag we are looking for is "Model" (of the camera)..
+        /// ... this will get all the possible tag names where model-info can sit and extract those from the data. E.g. if we're looking for Model ...
+        /// this will get both EXIF:Model and and XMP:Model - as it does a cartesian join on the objectNames table. 
+        /// </summary>
+        /// <param name="dtFileExif">Raw exiftool outout of all tags</param>
+        /// <param name="dataPoint">Plain English datapoint we're after</param>
+        /// <returns>Value of that datapoint if exists (e.g "Canon EOS 30D") - unwrangled, raw.</returns>
+        internal static string ExifGetRawDataPointFromExif(DataTable dtFileExif, string dataPoint)
         {
             string returnVal = "-";
             string tryDataValue = "-";
@@ -807,6 +943,15 @@ namespace GeoTagNinja
             returnVal = tryDataValue;
             return returnVal;
         }
+        /// <summary>
+        /// This parses the "compatible" file(name)s for exif tags. 
+        /// ... "compatible" here means that the path of the file generally uses English characters only.
+        /// ... "tags" here means the tags required for the software to work (such as GPS stuff), not all the tags in the whole of the file.
+        /// exifToolResult is a direct ouptut of exiftool that gets read into a DT and parsed. This is a fast process and can work line-by-line for
+        /// ... items in the listview that's asking for it.
+        /// </summary>
+        /// <param name="files">List of "compatible" filenames</param>
+        /// <returns>In practice, nothing but it's responsible for sending the updated exif info back to the requester (usually a listview)</returns>
         internal static async Task ExifGetExifFromFilesCompatibleFileNames(List<string> files)
         {
             IEnumerable<string> exifToolCommand = Enumerable.Empty<string>();
@@ -926,7 +1071,7 @@ namespace GeoTagNinja
                         var lvchs = frm_mainAppInstance.ListViewColumnHeaders;
                         for (int i = 1; i < lvi.SubItems.Count; i++)
                         {
-                            string str = ExifGetExifDataPoint(dt_fileExifTable, lvchs[i].Name.Substring(4));
+                            string str = ExifGetStandardisedDataPointFromExif(dt_fileExifTable, lvchs[i].Name.Substring(4));
                             lvi.SubItems[i].Text = str;
                         }
                         lvi.ForeColor = Color.Black;
@@ -936,6 +1081,15 @@ namespace GeoTagNinja
             }
             frm_MainApp.HandlerUpdateLabelText(frm_mainAppInstance.lbl_ParseProgress, "Ready.");
         }
+        /// <summary>
+        /// This parses the "incompatible" file(name)s for exif tags. 
+        /// ... "incompatible" here means that the path of the file does not exclusively use English characters.
+        /// ... "tags" here means the tags required for the software to work (such as GPS stuff), not all the tags in the whole of the file.
+        /// The main difference between this and the "compatible" version is that this calls cmd and then puts the output into a txt file (as part of exiftoolCmd) that gets read back in
+        /// ... this is slower and allows for less control but safer.
+        /// </summary>
+        /// <param name="files">List of "incompatible" filenames</param>
+        /// <returns>In practice, nothing but it's responsible for sending the updated exif info back to the requester (usually a listview)</returns>
         internal static async Task ExifGetExifFromFilesIncompatibleFileNames(List<string> files)
         {
             #region ExifToolConfiguration
@@ -1090,7 +1244,7 @@ namespace GeoTagNinja
                         var lvchs = frm_mainAppInstance.ListViewColumnHeaders;
                         for (int i = 1; i < lvi.SubItems.Count; i++)
                         {
-                            string str = ExifGetExifDataPoint(dt_distinctFileExifTable, lvchs[i].Name.Substring(4));
+                            string str = ExifGetStandardisedDataPointFromExif(dt_distinctFileExifTable, lvchs[i].Name.Substring(4));
                             lvi.SubItems[i].Text = str;
                         }
                         lvi.ForeColor = Color.Black;
@@ -1103,6 +1257,9 @@ namespace GeoTagNinja
                 // nothing. errors should have already come up
             }
         }
+        /// <summary>
+        /// Gets the app version of the current exifTool and updates a static string with the data.
+        /// </summary>
         internal static async void ExifGetExifToolVersion()
         {
             frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
@@ -1134,6 +1291,7 @@ namespace GeoTagNinja
                  ).Distinct().ToArray();
             ;
 
+            // really this should only be 1 row but I copied from the larger code blocks and is easier that way.
             foreach (string exifToolReturnStr in exifToolResultArr)
             {
                 if (exifToolReturnStr is not null && exifToolReturnStr.Length > 0)
@@ -1148,6 +1306,12 @@ namespace GeoTagNinja
                 }
             }
         }
+        /// <summary>
+        /// This generates (technically, extracts) the image previews from files for the user when they click on a filename
+        /// ... in whichever listview.
+        /// </summary>
+        /// <param name="fileName">Path of file for which the preview needs creating</param>
+        /// <returns>Realistically nothing but the process generates the bitmap if possible</returns>
         internal static async Task ExifGetImagePreviews(string fileName)
         {
             #region ExifToolConfiguration
@@ -1210,6 +1374,13 @@ namespace GeoTagNinja
             ///////////////
 
         }
+        /// <summary>
+        /// Writes outstanding exif changes to the files (all files in the queue).
+        /// This logic is very similar to the "incompatible read" above - it's safer. While it's also probably slower
+        /// ... the assumption is that users will read a lot of files but will write proportionately fewer files so 
+        /// ... speed is less of an essence against safety.
+        /// </summary>
+        /// <returns>Reastically nothing but writes the exif tags and updates the listview rows where necessary</returns>
         internal static async Task ExifWriteExifToFile()
         {
             string exifArgs = "";
@@ -1483,6 +1654,12 @@ namespace GeoTagNinja
                 frm_MainApp.HandlerUpdateLabelText(frm_mainAppInstance.lbl_ParseProgress, "Ready.");
             }
         }
+        /// <summary>
+        /// Responsible for pulling the toponomy response for the API
+        /// </summary>
+        /// <param name="latitude">As on the tin.</param>
+        /// <param name="longitude">As on the tin.</param>
+        /// <returns>Structured toponomy response</returns>
         internal static geoTagNinja.GeoResponseToponomy API_ExifGetGeoDataFromWebToponomy(string latitude, string longitude)
         {
             if (s_GeoNames_UserName == null)
@@ -1506,6 +1683,7 @@ namespace GeoTagNinja
 
             var request_Toponomy = new RestRequest("findNearbyPlaceNameJSON?lat=" + latitude + "&lng=" + longitude + "&style=FULL", Method.Get);
             var response_Toponomy = client.ExecuteGet(request_Toponomy);
+            // check API reponse is OK
             if (response_Toponomy.StatusCode.ToString() == "OK")
             {
                 s_APIOkay = true;
@@ -1520,6 +1698,12 @@ namespace GeoTagNinja
             }
             return returnVal;
         }
+        /// <summary>
+        /// Responsible for pulling the altitude response for the API
+        /// </summary>
+        /// <param name="latitude">As on the tin.</param>
+        /// <param name="longitude">As on the tin.</param>
+        /// <returns>Structured altitude response</returns>
         internal static geoTagNinja.GeoResponseAltitude API_ExifGetGeoDataFromWebAltitude(string latitude, string longitude)
         {
             if (s_GeoNames_UserName == null)
@@ -1542,6 +1726,7 @@ namespace GeoTagNinja
 
             var request_Altitude = new RestRequest("srtm1JSON?lat=" + latitude + "&lng=" + longitude, Method.Get);
             var response_Altitude = client.ExecuteGet(request_Altitude);
+            // check API reponse is OK
             if (response_Altitude.StatusCode.ToString() == "OK")
             {
                 s_APIOkay = true;
@@ -1556,11 +1741,16 @@ namespace GeoTagNinja
             }
             return returnVal;
         }
+        /// <summary>
+        /// Responsible for pulling the latest prod-version number of exifTool from metaCPAN
+        /// </summary>
+        /// <returns>The version number of the currently newest exifTool uploaded to metaCPAN</returns>
         internal static geoTagNinja.ExifToolVerQueryResponse API_ExifGetExifToolVersionFromWeb()
         {
             geoTagNinja.ExifToolVerQueryResponse returnVal = new();
             var client = new RestClient("https://fastapi.metacpan.org/")
             {
+                // admittedly no idea how to do this w/o any auth (as it's not needed) but this appears to work.
                 Authenticator = new HttpBasicAuthenticator("demo", "demo")
             };
             var request_ExifToolVersionQuery = new RestRequest("v1/release/_search?q=Image-ExifTool%20AND%20status:latest&fields=name,status,version&size=1", Method.Get);
@@ -1579,11 +1769,16 @@ namespace GeoTagNinja
             }
             return returnVal;
         }
+        /// <summary>
+        /// Responsible for pulling the latest release of GTN from gitHub
+        /// </summary>
+        /// <returns>The version number of the latest GTN release</returns>
         internal static geoTagNinja.GtnReleasesApiResponse API_GenericGetGTNVersionFromWeb()
         {
             geoTagNinja.GtnReleasesApiResponse returnVal = new();
             var client = new RestClient("https://api.github.com/")
             {
+                // admittedly no idea how to do this w/o any auth (as it's not needed) but this appears to work.
                 Authenticator = new HttpBasicAuthenticator("demo", "demo")
             };
             var request_GTNVersionQuery = new RestRequest("repos/nemethviktor/GeoTagNinja/releases", Method.Get);
@@ -1602,7 +1797,13 @@ namespace GeoTagNinja
             }
             return returnVal;
         }
-        internal static DataTable DTFromAPIExifGetToponomyFromWeb(string lat, string lng)
+        /// <summary>
+        /// Performs a search in the local SQLite database for cached toponomy info and if finds it, returns that, else queries the API
+        /// </summary>
+        /// <param name="lat">latitude/longitude to be queried</param>
+        /// <param name="lng">latitude/longitude to be queried</param>
+        /// <returns>See summary. Returns the toponomy info either from SQLite if available or the API in DataTable for further processing</returns>
+        internal static DataTable DTFromAPIExifGetToponomyFromWebOrSQL(string lat, string lng)
         {
             DataTable dt_Return = new DataTable();
             dt_Return.Clear();
@@ -1725,7 +1926,13 @@ namespace GeoTagNinja
             }
             return dt_Return;
         }
-        internal static DataTable DTFromAPIExifGetAltitudeFromWeb(string lat, string lng)
+        /// <summary>
+        /// Performs a search in the local SQLite database for cached altitude info and if finds it, returns that, else queries the API
+        /// </summary>
+        /// <param name="lat">latitude/longitude to be queried</param>
+        /// <param name="lng">latitude/longitude to be queried</param>
+        /// <returns>See summary. Returns the altitude info either from SQLite if available or the API in DataTable for further processing</returns>
+        internal static DataTable DTFromAPIExifGetAltitudeFromWebOrSQL(string lat, string lng)
         {
             DataTable dt_Return = new DataTable();
             dt_Return.Clear();
@@ -1790,6 +1997,10 @@ namespace GeoTagNinja
             }
             return dt_Return;
         }
+        /// <summary>
+        /// Converts the API response from metaCPAN (to check exifTool's newest version) to a DataTable
+        /// </summary>
+        /// <returns>A Datatable with (hopefully) one row of data containing the newest exifTool version</returns>
         internal static DataTable DTFromAPI_GetExifToolVersion()
         {
             DataTable dt_Return = new DataTable();
@@ -1797,14 +2008,14 @@ namespace GeoTagNinja
             dt_Return.Columns.Add("version");
 
             string apiVersion = "";
-            
+
             if (s_APIOkay)
             {
                 geoTagNinja.ExifToolVerQueryResponse readJson_ExifToolVer;
                 readJson_ExifToolVer = API_ExifGetExifToolVersionFromWeb();
                 if (readJson_ExifToolVer.Hits != null)
                 {
-                    apiVersion = readJson_ExifToolVer.Hits.HitsHits[0].Fields.Version.ToString(); 
+                    apiVersion = readJson_ExifToolVer.Hits.HitsHits[0].Fields.Version.ToString();
                 }
                 // this will be a null value if Unauthorised, we'll ignore that.
             }
@@ -1817,6 +2028,11 @@ namespace GeoTagNinja
             }
             return dt_Return;
         }
+        /// <summary>
+        /// Converts the API response from gitHub (to check GTN's newest version) to a DataTable
+        /// Actually the reason why this might be indicated as 0 references is because this doesn't run in Debug mode.
+        /// </summary>
+        /// <returns>A Datatable with (hopefully) one row of data containing the newest GTN version</returns>
         internal static DataTable DTFromAPI_GetGTNVersion()
         {
             DataTable dt_Return = new DataTable();
@@ -1844,30 +2060,52 @@ namespace GeoTagNinja
             }
             return dt_Return;
         }
+        /// <summary>
+        /// Loads up the Edit (file exif data) Form.
+        /// </summary>
         internal static void ExifShowEditFrm()
         {
-            int i = 0;
+            int overallCount = 0;
+            int fileCount = 0;
+            int folderCount = 0;
             frm_editFileData frm_editFileData = new();
             frm_editFileData.lvw_FileListEditImages.Items.Clear();
             frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
             foreach (ListViewItem selectedItem in frm_mainAppInstance.lvw_FileList.SelectedItems)
             {
+                // only deal with files, not folders
                 if (File.Exists(Path.Combine(frm_mainAppInstance.tbx_FolderName.Text, selectedItem.Text)))
                 {
+                    overallCount++;
                     frm_MainApp.folderName = frm_mainAppInstance.tbx_FolderName.Text;
                     frm_editFileData.lvw_FileListEditImages.Items.Add(selectedItem.Text);
-                    i++;
+                    fileCount++;
+                }
+                else if (Directory.Exists(Path.Combine(frm_mainAppInstance.tbx_FolderName.Text, selectedItem.Text)))
+                {
+                    overallCount++;
+                    folderCount++;
                 }
             }
-            if (i > 0)
+            if (fileCount > 0)
             {
                 frm_editFileData.ShowDialog();
             }
+            // basically if the user only selected folders, do nothing
+            else if (overallCount == folderCount + fileCount)
+            {
+                //nothing.
+            }
+            // we appear to have lost a file or two.
             else
             {
                 MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_WarningFileDisappeared"), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+        /// <summary>
+        /// Queues up a command to remove existing geo-data. Depending on the sender this can be for one or many files.
+        /// </summary>
+        /// <param name="senderName">At this point this can either be the main listview or the one from Edit (file) data</param>
         internal static void ExifRemoveLocationData(string senderName)
         {
             DataRow dr_FileDataRow;
@@ -1971,11 +2209,17 @@ namespace GeoTagNinja
                         }
                     }
                 }
-                Helper.LwvUpdateRow();
+                Helper.LwvUpdateRowFromDTWriteStage3ReadyToWrite();
             }
         }
         #endregion
         #region FSO interaction
+        /// <summary>
+        /// Gets the parent folder of the current path (used when user wants to move a folder up.)
+        /// We can't just do a "cd.." because top level folders don't handle that logic well.
+        /// </summary>
+        /// <param name="path">The "current" path from which the user wants to move one level up</param>
+        /// <returns>Parent path string of "current" path (as described above)</returns>
         internal static string FsoGetParent(string path)
         {
             var dir = new DirectoryInfo(path);
@@ -1991,6 +2235,11 @@ namespace GeoTagNinja
 
             return parentName;
         }
+        /// <summary>
+        /// When the user leaves the current folder (or refreshes it) we check if there is anything in the write-queue
+        /// If the Q is empty we do as the user requested, else ask user if they want to write the data in the Q or discard it.
+        /// </summary>
+        /// <returns>Realistically nothing but it sets s_changeFolderIsOkay according to the user input and circumstances</returns>
         internal static async Task FsoCheckOutstandingFiledataOkayToChangeFolderAsync()
         {
             s_changeFolderIsOkay = false;
@@ -2015,6 +2264,10 @@ namespace GeoTagNinja
                 s_changeFolderIsOkay = true;
             }
         }
+        /// <summary>
+        /// This is called mostly on app exit and start - delete any remaining files such as image previews, txt files and 
+        /// ... anything else that isn't an sqlite file.
+        /// </summary>
         internal static void FsoCleanUpUserFolder()
         {
             DirectoryInfo di = new DirectoryInfo(frm_MainApp.userDataFolderPath);
@@ -2031,11 +2284,13 @@ namespace GeoTagNinja
                         // nothing
                     }
             }
-
         }
         #endregion
         #region lvw_FileList
-        internal static void LwvUpdateRow()
+        /// <summary>
+        /// Updates the data sitting in the main listview if there is anything outstanding in dt_fileDataToWriteStage3ReadyToWrite for the file
+        /// </summary>
+        internal static void LwvUpdateRowFromDTWriteStage3ReadyToWrite()
         {
             frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
             var lvchs = frm_mainAppInstance.ListViewColumnHeaders;
@@ -2062,11 +2317,14 @@ namespace GeoTagNinja
                 }
                 catch
                 {
-
+                    // nothing. 
                 }
                 Application.DoEvents();
             }
         }
+        /// <summary>
+        /// This drives the logic for "copying" (as in copy-paste) the geodata from one file to others.
+        /// </summary>
         internal static void LwvCopyGeoData()
         {
             frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
@@ -2108,7 +2366,6 @@ namespace GeoTagNinja
                             dr_FileDataRow["settingId"] = clh.Name.Substring(4);
                             dr_FileDataRow["settingValue"] = lvi.SubItems[clh.Index].Text;
                             frm_MainApp.dt_fileDataCopyPool.Rows.Add(dr_FileDataRow);
-
                         }
                     }
                 }
@@ -2118,6 +2375,10 @@ namespace GeoTagNinja
                 MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_WarningTooManyFilesSelected"), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+        /// <summary>
+        /// This drives the logic for "pasting" (as in copy-paste) the geodata from one file to others.
+        /// See further comments inside
+        /// </summary>
         internal static void LwvPasteGeoData()
         {
             frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
@@ -2149,7 +2410,7 @@ namespace GeoTagNinja
                     }
                 }
                 // push to lvw
-                Helper.LwvUpdateRow();
+                Helper.LwvUpdateRowFromDTWriteStage3ReadyToWrite();
             }
             else
             {
@@ -2161,6 +2422,10 @@ namespace GeoTagNinja
     internal class Helper_NonStatic
     {
         #region Generic
+        /// <summary>
+        /// Generic summary: these return each subcontrol for a given parent control, for example all buttons in a tabPage etc.
+        /// </summary>
+
         // via https://stackoverflow.com/a/3426721/3968494
         internal IEnumerable<Control> GetAllControls(Control control, Type type)
         {

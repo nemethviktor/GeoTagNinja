@@ -256,6 +256,7 @@
     <None Include="Resources\Languages\English.sqlite">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\readme.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

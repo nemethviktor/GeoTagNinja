@@ -20,6 +20,9 @@ namespace GeoTagNinja
 {
     public partial class frm_MainApp : Form
     {
+        /// <summary>
+        /// These two make the elements of the main listview accessible to other classes.
+        /// </summary>
         public ListView.ListViewItemCollection ListViewItems
         {
             get { return lvw_FileList.Items; }
@@ -40,8 +43,13 @@ namespace GeoTagNinja
         internal static DataTable objectTagNames_Out;
         internal static string folderName;
         internal static string appLanguage = "english"; // default to english 
+
+        /// <summary>
+        /// this one basically handles what extensions we work with.
+        /// the actual list is used for file-specific Settings as well as the general running of the app
+        /// leave the \t in!
+        /// </summary>
         internal static string[] allExtensions = new[]
-        // leave the \t in!
             {
             "arq	Sony Alpha Pixel-Shift RAW (TIFF-based)"
             ,"arw	Sony Alpha RAW (TIFF-based)"
@@ -101,9 +109,12 @@ namespace GeoTagNinja
         #endregion
         #region Methods
         #region Form/App Related
+        /// <summary>
+        /// This is the main Form for the app. This particular section handles the initialisation of the form and loading various defaults.
+        /// </summary>
         public frm_MainApp()
         {
-            // initialise exifTool
+            // initialise exifTool - leave as-is
             #region ExifToolConfiguration
             var exifToolExe = Path.Combine(frm_MainApp.resourcesFolderPath, "exiftool.exe");
 
@@ -271,6 +282,11 @@ namespace GeoTagNinja
             dt_fileDataToWriteStage3ReadyToWrite.Columns.Add("settingValue");
             #endregion
         }
+        /// <summary>
+        /// Handles the initial loading - adds various elements and ensures the app functions.
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private async void frm_MainApp_Load(object sender, EventArgs e)
         {
 
@@ -471,12 +487,14 @@ namespace GeoTagNinja
             #endif
             #endregion
         }
+        /// <summary>
+        /// Initialises the map in the app and browses to the default or last-used location.
+        /// </summary>
+        /// <returns></returns>
         private async Task InitialiseWebView()
         {
-
             try
             {
-
                 // silly thing dumps the folder by default right into Program Files where it can't write further due to permission issues
                 // need to move it elsewhere.
 
@@ -499,6 +517,7 @@ namespace GeoTagNinja
                 MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorInitializeWebViewIsWebMessageEnabled") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+            // read the "map.html" file.
             string HTMLCode = "";
             try
             {
@@ -527,6 +546,7 @@ namespace GeoTagNinja
                 MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+            // replace hard-coded values in the html code
             try
             {
                 if (Helper.s_ArcGIS_APIKey == null)
@@ -543,6 +563,7 @@ namespace GeoTagNinja
                 MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorInitializeWebViewReplaceStringInHTMLFile") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+            // show the decoded location on the map
             try
             {
                 wbv_MapArea.NavigateToString(HTMLCode);
@@ -562,7 +583,12 @@ namespace GeoTagNinja
             }
 
         }
-        // code to deal with actions preceding app close
+        /// <summary>
+        /// When the app closes we want to make sure there's nothing in the write-queue.
+        /// ...once that's dealt with we write the details of the app layout (e.g. column widths) to sqlite.
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private async void frm_MainApp_FormClosing(System.Object sender, System.Windows.Forms.FormClosingEventArgs e)
         {
 
@@ -603,8 +629,10 @@ namespace GeoTagNinja
             // force it otherwise it keeps a lock on for a few seconds.
             asyncExifTool.Dispose();
         }
-        // this is to deal with the icons in listview
-        // from https://stackoverflow.com/a/37806517/3968494
+        /// <summary>
+        /// this is to deal with the icons in listview
+        /// from https://stackoverflow.com/a/37806517/3968494
+        /// </summary>
         static class NativeMethods
         {
             public const uint LVM_FIRST = 0x1000;
@@ -658,11 +686,19 @@ namespace GeoTagNinja
         }
         #endregion
         #region Resizing Stuff
+        /// <summary>
+        /// When the app resizes automatically this adjusts the elements to fit the view.
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void frm_MainApp_SizeChanged(object sender, EventArgs e)
         {
             VisualResizeAppElements(this);
         }
-        // code to deal with visual states on load and resize.
+        /// <summary>
+        /// Identical to the above but this is the one actually executing
+        /// </summary>
+        /// <param name="frm_mainApp">Make a guess</param>
         private void VisualResizeAppElements(frm_MainApp frm_mainApp)
         {
             frm_mainApp.tsr_MainAppToolStrip.Top = Convert.ToInt16(mns_MenuStrip.Bottom + 2);
@@ -716,10 +752,13 @@ namespace GeoTagNinja
             frm_mainApp.lbl_ParseProgress.Left = frm_mainApp.lvw_FileList.Left;
             frm_mainApp.lbl_ParseProgress.Width = frm_mainApp.lvw_FileList.Width;
         }
-        // code to deal with reading lvw_FileList's column widths
+        /// <summary>
+        /// Reads the widths of individual CLHs from SQL, if not found assigns them "auto" (-2)
+        /// </summary>
+        /// <param name="frm_mainApp">Make a guess</param>
+        /// <exception cref="InvalidOperationException">If it encounters a missingCLH</exception>
         private void VisualReadLvw_FileList_ColWidth(frm_MainApp frm_mainApp)
         {
-
             string settingIdToSend;
             int colWidth = 0;
             // logic: see if it's in SQL first...if not then set to Auto
@@ -764,6 +803,10 @@ namespace GeoTagNinja
                 }
             }
         }
+        /// <summary>
+        /// Sends the CLH width to SQL for writing.
+        /// </summary>
+        /// <param name="frm_mainApp">Make a guess</param>
         private void VisualWriteLvw_FileList_ColWidth(frm_MainApp frm_mainApp)
         {
 
@@ -789,6 +832,14 @@ namespace GeoTagNinja
             public double lat { get; set; }
             public double lng { get; set; }
         }
+        /// <summary>
+        /// Provides an interaction layer between the map and the app. The reason why we're using string instead of proper numbers
+        /// ... is that the API only deals with English-formatted numbers whereas we can't force that necessarily on the user if they have
+        /// ... other Culture setting. 
+        /// ... Also if the user zooms out too much they can click on a map-area (coordinate) that's not "real" so we are dealing with that in this code.
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void wbv_MapArea_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
             var JsonString = e.WebMessageAsJson;
@@ -801,6 +852,7 @@ namespace GeoTagNinja
             double dblLng;
             double.TryParse(strLat, NumberStyles.Any, CultureInfo.InvariantCulture, out dblLat); // trust me i hate this f...king culture thing as much as possible...
             double.TryParse(strLng, NumberStyles.Any, CultureInfo.InvariantCulture, out dblLng); // trust me i hate this f...king culture thing as much as possible...
+            // if the user zooms out too much they can encounter an "unreal" coordinate.
             if (dblLng < -180)
             {
                 dblLng = 180 - (Math.Abs(dblLng) % 180);
@@ -814,14 +866,29 @@ namespace GeoTagNinja
             this.tbx_lng.Text = Math.Round(dblLng, 6).ToString().Replace(',', '.');
 
         }
+        /// <summary>
+        /// Needed for the proper functioning of webview2
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void webView_CoreWebView2InitializationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs e)
         {
 
         }
+        /// <summary>
+        /// Handles the clicking on Go button
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void btn_NavigateMapGo_Click(object sender, EventArgs e)
         {
             NavigateMapGo();
         }
+        /// <summary>
+        /// Handles the clicking on "ToFile" button. See comments above re: why we're using strings (culture-related issue)
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void btn_loctToFile_Click(object sender, EventArgs e)
         {
             string strParsedLat = tbx_lat.Text.Replace(',', '.');
@@ -875,8 +942,8 @@ namespace GeoTagNinja
                             if (dialogResult == DialogResult.Yes)
                             {
                                 Helper.s_APIOkay = true;
-                                dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWeb(strParsedLat, strParsedLng);
-                                dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWeb(strParsedLat, strParsedLng);
+                                dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWebOrSQL(strParsedLat, strParsedLng);
+                                dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWebOrSQL(strParsedLat, strParsedLng);
                                 if (Helper.s_APIOkay)
                                 {
                                     string CountryCode = dt_Toponomy.Rows[0]["CountryCode"].ToString();
@@ -931,13 +998,16 @@ namespace GeoTagNinja
                             }
                         }
                     }
-                    Helper.LwvUpdateRow();
+                    Helper.LwvUpdateRowFromDTWriteStage3ReadyToWrite();
                 }
             }
         }
+        /// <summary>
+        /// Handles the navigation to a coordinate on the map. Replaces hard-coded values w/ user-provided ones
+        /// ... and executes the navigation action.
+        /// </summary>
         private void NavigateMapGo()
         {
-
             string HTMLCode = "";
             try
             {
@@ -964,26 +1034,43 @@ namespace GeoTagNinja
         }
         #endregion
         #region Menu Stuff
-        // menu stuff
+        /// <summary>
+        /// Handles the tmi_Settings_Settings_Click event -> brings up the Settings Form
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void tmi_Settings_Settings_Click(object sender, EventArgs e)
         {
             frm_Settings frm_Settings = new();
             frm_Settings.ShowDialog();
         }
+        /// <summary>
+        /// Handles the tmi_Help_About_Click event -> brings up the About Form
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void tmi_Help_About_Click(object sender, EventArgs e)
         {
             frm_aboutBox frm_aboutBox = new();
             frm_aboutBox.ShowDialog();
         }
+        /// <summary>
+        /// Handles the tmi_File_Quit_Click event -> cleans the user-folder then quits the app
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void tmi_File_Quit_Click(object sender, EventArgs e)
         {
-
             Helper.FsoCleanUpUserFolder();
             Application.Exit();
         }
+        /// <summary>
+        /// Handles the tmi_File_SaveAll_Click event -> triggers the file-save process
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private async void tmi_File_SaveAll_Click(object sender, EventArgs e)
         {
-
             // i think having an Item active can cause a lock on it
             lvw_FileList.SelectedItems.Clear();
             // also the problem here is that the exiftoolAsync can still be running and locking the file.
@@ -991,6 +1078,11 @@ namespace GeoTagNinja
             await Helper.ExifWriteExifToFile();
             dt_fileDataToWriteStage3ReadyToWrite.Rows.Clear();
         }
+        /// <summary>
+        /// Handles the tmi_File_EditFiles_Click event -> opens the File Edit Form
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void tmi_File_EditFiles_Click(object sender, EventArgs e)
         {
             frm_editFileData frm_editFileData = new();
@@ -1005,19 +1097,34 @@ namespace GeoTagNinja
             }
             frm_editFileData.ShowDialog();
         }
+        /// <summary>
+        /// Handles the tmi_File_CopyGeoData_Click event -> triggers LwvCopyGeoData 
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void tmi_File_CopyGeoData_Click(object sender, EventArgs e)
         {
             Helper.LwvCopyGeoData();
         }
+        /// <summary>
+        /// Handles the tmi_File_PasteGeoData_Click event -> triggers LwvPasteGeoData
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void tmi_File_PasteGeoData_Click(object sender, EventArgs e)
         {
             Helper.LwvPasteGeoData();
         }
         #endregion
         #region TaskBar Stuff
+        /// <summary>
+        /// Handles the btn_Refresh_lvwFileList_Click event -> checks if there is anything in the write-Q
+        /// ... then cleans up the user-folder and triggers lvwFileList_LoadOrUpdate
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private async void btn_Refresh_lvwFileList_Click(object sender, EventArgs e)
         {
-
             Helper.s_changeFolderIsOkay = false;
             await Helper.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
             if (Helper.s_changeFolderIsOkay)
@@ -1046,6 +1153,11 @@ namespace GeoTagNinja
                 }
             }
         }
+        /// <summary>
+        /// Generally similar to the above.(btn_Refresh_lvwFileList_Click)
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private async void btn_ts_Refresh_lvwFileList_Click(object sender, EventArgs e)
         {
             Helper.s_changeFolderIsOkay = false;
@@ -1055,6 +1167,12 @@ namespace GeoTagNinja
                 btn_Refresh_lvwFileList_Click(this, new EventArgs());
             }
         }
+        /// <summary>
+        /// Handles the btn_OneFolderUp_Click event -> Ensures the write-Q is emtpy, that the parent folder exists and 
+        /// ... if all's well then moves folder. On error moves to C:\
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private async void btn_OneFolderUp_Click(object sender, EventArgs e)
         {
             Helper.s_changeFolderIsOkay = false;
@@ -1091,17 +1209,32 @@ namespace GeoTagNinja
                 btn_ts_Refresh_lvwFileList_Click(this, new EventArgs());
             }
         }
+        /// <summary>
+        /// Handles the btn_EditFile_Click event -> shows the Edit File Form
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void btn_EditFile_Click(object sender, EventArgs e)
         {
             Helper.ExifShowEditFrm();
         }
+        /// <summary>
+        /// Handles the btn_RemoveGeoData_Click event -> calls Helper.ExifRemoveLocationData to remove GeoData from all selected files
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private void btn_RemoveGeoData_Click(object sender, EventArgs e)
         {
             Helper.ExifRemoveLocationData("frm_mainApp");
         }
+        /// <summary>
+        /// Handles various keypress events. -> currently for tbx_FolderName when pressing Enter it will move to the folder
+        /// ... if value is a folder subject to the usual "move folder" requirements.
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private async void tbx_FolderName_KeyDown(object sender, KeyEventArgs e)
         {
-
             if (e.KeyCode == Keys.Enter)
             {
                 Helper.s_changeFolderIsOkay = false;
@@ -1112,6 +1245,11 @@ namespace GeoTagNinja
                 }
             }
         }
+        /// <summary>
+        /// Handles the btn_SaveFiles_Click event -> triggers ExifWriteExifToFile
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private async void btn_SaveFiles_Click(object sender, EventArgs e)
         {
 
@@ -1124,12 +1262,17 @@ namespace GeoTagNinja
         }
         #endregion
         #region lvw_FileList Interaction
+        /// <summary>
+        /// Responsible for updating the main listview. For each file depending on the "compatible" or "incompatible" naming
+        /// ... it assigns the outstanding files according to compatibility and then runs the respective exiftool commands
+        /// </summary>
         private async void lvwFileList_LoadOrUpdate()
         {
             List<string> listOfAysncCompatibleItems = new List<string>();
             List<string> listOfAysncIncompatibleItems = new List<string>();
             List<string> listOfNonUTF8Items = new List<string>();
 
+            // this shoudn't really happen but just in case
             if (folderName is null)
             {
                 if (Directory.Exists(tbx_FolderName.Text))
@@ -1143,6 +1286,7 @@ namespace GeoTagNinja
                 folderName = tbx_FolderName.Text;
             }
 
+            // list folders and stick them at the beginning of the listview
             var dirs = System.IO.Directory
                 .GetDirectories(folderName)
                 .ToList();
@@ -1154,6 +1298,7 @@ namespace GeoTagNinja
                 allowedExtensions[i] = allExtensions[i].Split('\t').First();
             }
 
+            // list files that have whitelisted extensions
             var files = System.IO.Directory
                 .GetFiles(folderName)
                 .Where(file => allowedExtensions.Any(file.ToLower().EndsWith))
@@ -1164,7 +1309,7 @@ namespace GeoTagNinja
             {
                 lvw_FileList_addListItem(Path.GetFileName(currentDir));
             }
-            //int i = 1;
+            
             foreach (string currentFile in files)
             {
                 string fileNameToTest = Path.Combine(currentFile);
@@ -1225,6 +1370,12 @@ namespace GeoTagNinja
             frm_MainApp.HandlerUpdateLabelText(lbl_ParseProgress, "Ready. Files: Total: " + files.Count.ToString() + " Geodata: " + filesWithGeoData.ToString());
 
         }
+        /// <summary>
+        /// Handles the lvw_FileList_Click event -> if the file that has been clicked on has geodata, it shows its location on the map
+        /// ... also generates a preview for the file if there is one.
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private async void lvw_FileList_Click(object sender, EventArgs e)
         {
 
@@ -1312,9 +1463,14 @@ namespace GeoTagNinja
                 }
             }
         }
+        /// <summary>
+        /// Handles the lvw_FileList_MouseDoubleClick event -> if user clicked on a folder then enter, if a file then edit
+        /// ... else warn and don't do anything.
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
         private async void lvw_FileList_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-
             ListViewHitTestInfo info = lvw_FileList.HitTest(e.X, e.Y);
             ListViewItem item = info.Item;
 
@@ -1347,10 +1503,14 @@ namespace GeoTagNinja
                 MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_WarningNoItemSelected"), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+        /// <summary>
+        /// Handles the various keypress combinations. See inline comments for details.
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">The key pressed</param>
         private async void lvw_FileList_KeyDown(object sender, KeyEventArgs e)
         {
-
-            // control A
+            // control A -> select all
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
             {
                 foreach (ListViewItem item in lvw_FileList.Items)
@@ -1359,34 +1519,35 @@ namespace GeoTagNinja
                 }
             }
 
-            // shift control c
+            // Shift Control C -> copy details
             else if (e.Control && e.Shift && e.KeyCode == Keys.C)
             {
                 Helper.LwvCopyGeoData();
             }
 
-            // shift control v
+            // Shift Control V -> paste details
             else if (e.Control && e.Shift && e.KeyCode == Keys.V)
             {
                 Helper.LwvPasteGeoData();
             }
 
-            // control enter
+            // Control Enter -> Edit File
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Enter)
             {
                 Helper.ExifShowEditFrm();
             }
 
-            // backspace
+            // Backspace -> Up one folder
             else if (e.KeyCode == Keys.Back)
             {
                 btn_OneFolderUp_Click(sender, e);
             }
 
-            // enter 
+            // Enter  -> enter if folder
             else if (e.KeyCode == Keys.Enter)
             {
                 string folderToEnter = lvw_FileList.SelectedItems[0].Text;
+                // enter if folder
                 if (Directory.Exists(Path.Combine(folderName, folderToEnter)))
                 {
                     folderToEnter = (Path.Combine(folderName, folderToEnter));
@@ -1417,7 +1578,7 @@ namespace GeoTagNinja
                 }
             }
 
-            // f5
+            // F5 -> Refresh folder
             else if (e.KeyCode == Keys.F5)
             {
                 btn_Refresh_lvwFileList_Click(sender, e);
@@ -1428,7 +1589,7 @@ namespace GeoTagNinja
 
             }
 
-            // ctrl+s
+            // Control S -> Save files
             else if (e.Control && e.KeyCode == Keys.S)
             {
                 // i think having an Item active can cause a lock on it
@@ -1438,6 +1599,10 @@ namespace GeoTagNinja
                 dt_fileDataToWriteStage3ReadyToWrite.Rows.Clear();
             }
         }
+        /// <summary>
+        /// Adds a new listitem to lvw_FileList listview
+        /// </summary>
+        /// <param name="fileName">Name of file to be added</param>
         private void lvw_FileList_addListItem(string fileName)
         {
             List<string> subItemList = new();
@@ -1487,7 +1652,6 @@ namespace GeoTagNinja
                 {
                     if (columnHeader.Name != "clh_FileName")
                     {
-                        //subItemList.Add(Helper.exif_getExifDataPoint(fileName, columnHeader.Name.Substring(4)));
                         subItemList.Add("-");
                     }
                 }
@@ -1504,6 +1668,7 @@ namespace GeoTagNinja
             // TLDR if Windows User has "show extensions" set to OFF in Windows Explorer, they won't show here either.
             // The repercussions of that is w/o an extension fileinfo.exists will return false and exiftool won't run/find it.
 
+            // With that in mind if we're missing the extension then we'll force it back on.
             string fileExtension = Path.GetExtension(Path.Combine(folderName, fileName));
             if (fileExtension != null && fileExtension != "")
             {
@@ -1528,6 +1693,11 @@ namespace GeoTagNinja
             }
             lvw_FileList.Items.Add(lvi).SubItems.AddRange(subItemList.ToArray());
         }
+        /// <summary>
+        /// Handles the lvw_FileList_SelectedIndexChanged event -> Triggers lvw_FileList_Click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void lvw_FileList_SelectedIndexChanged(object sender, EventArgs e)
         {
             lvw_FileList_Click(sender, e);
@@ -1535,8 +1705,15 @@ namespace GeoTagNinja
         #endregion
         #endregion
         #region handlers
+        /// <summary>
+        /// Deals with invoking the listview (from outside the thread) and updating the colour of a particular row (Item) to the assigned colour.
+        /// </summary>
+        /// <param name="lvw">The listView Control that needs updating. Most likely the one in the main Form</param>
+        /// <param name="item">The particular listViewItem that needs updating</param>
+        /// <param name="color">Parameter to assign a particular colour (prob red or black) to the whole row</param>
         internal static void HandlerUpdateItemColour(ListView lvw, string item, Color color)
         {
+            // If the current thread is not the UI thread, InvokeRequired will be true
             if (lvw.InvokeRequired)
             {
                 lvw.Invoke((Action)(() => HandlerUpdateItemColour(lvw, item, color)));
@@ -1548,6 +1725,11 @@ namespace GeoTagNinja
                 itemToModify.ForeColor = color;
             }
         }
+        /// <summary>
+        /// Updates the Text of any Label from outside the thread.
+        /// </summary>
+        /// <param name="label">The Label Control that needs updating</param>
+        /// <param name="text">The Text that will be assigned</param>
         internal static void HandlerUpdateLabelText(Label label, string text)
         {
             // If the current thread is not the UI thread, InvokeRequired will be true
@@ -1566,6 +1748,13 @@ namespace GeoTagNinja
     }
     public static class ControlExtensions
     {
+        /// <summary>
+        /// Makes sure the Control in question gets doubleBufferPropertyInfo enabled/disabled. 
+        /// ...Realistically we're using this to assign doubleBufferPropertyInfo = enabled to the main listView.
+        /// ...This helps stop the flickering on updating the various data points and/or rows (Items).
+        /// </summary>
+        /// <param name="control">The Control that needs the value assigned</param>
+        /// <param name="enable">Bool true or false (aka on or off)</param>
         public static void DoubleBuffered(this Control control, bool enable)
         {
             var doubleBufferPropertyInfo = control.GetType().GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);

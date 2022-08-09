@@ -99,6 +99,41 @@ namespace geoTagNinja
     {
         public static GeoResponseAltitude FromJson(string Json) => JsonConvert.DeserializeObject<GeoResponseAltitude>(Json, geoTagNinja.Converter.Settings);
     }
+    public partial class GeoResponseTimeZone
+    {
+        [JsonProperty("sunrise", NullValueHandling = NullValueHandling.Ignore)]
+        public string Sunrise { get; set; }
+
+        [JsonProperty("lng", NullValueHandling = NullValueHandling.Ignore)]
+        public double? Lng { get; set; }
+
+        [JsonProperty("countryCode", NullValueHandling = NullValueHandling.Ignore)]
+        public string CountryCode { get; set; }
+
+        [JsonProperty("gmtOffset", NullValueHandling = NullValueHandling.Ignore)]
+        public long? GmtOffset { get; set; }
+
+        [JsonProperty("rawOffset", NullValueHandling = NullValueHandling.Ignore)]
+        public long? RawOffset { get; set; }
+
+        [JsonProperty("sunset", NullValueHandling = NullValueHandling.Ignore)]
+        public string Sunset { get; set; }
+
+        [JsonProperty("timezoneId", NullValueHandling = NullValueHandling.Ignore)]
+        public string TimezoneId { get; set; }
+
+        [JsonProperty("dstOffset", NullValueHandling = NullValueHandling.Ignore)]
+        public long? DstOffset { get; set; }
+
+        [JsonProperty("countryName", NullValueHandling = NullValueHandling.Ignore)]
+        public string CountryName { get; set; }
+
+        [JsonProperty("time", NullValueHandling = NullValueHandling.Ignore)]
+        public string Time { get; set; }
+
+        [JsonProperty("lat", NullValueHandling = NullValueHandling.Ignore)]
+        public double? Lat { get; set; }
+    }
     public static class Serialize
     {
         public static string ToJson(this GeoResponseToponomy self) => JsonConvert.SerializeObject(self, geoTagNinja.Converter.Settings);
