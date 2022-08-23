@@ -5,6 +5,7 @@ v0.5.82xx [202208xx]
 - Added check for exifTool version change tracking
 - Added check for GeoTagNinja version change tracking
 - Added (better) commentary to the code
+- Changed Settings/Edit Forms' behaviour not to block other windows.
 - Bugfixes
 
 v0.5.8251 [20220804]

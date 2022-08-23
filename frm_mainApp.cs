@@ -15,6 +15,8 @@ using Microsoft.Web.WebView2.Core;
 using System.Text;
 using CoenM.ExifToolLib;
 using System.Globalization;
+using System.Data.Entity.Infrastructure.Pluralization;
+using Microsoft.Web.WebView2.WinForms;
 
 namespace GeoTagNinja
 {
@@ -43,6 +45,8 @@ namespace GeoTagNinja
         internal static DataTable objectTagNames_Out;
         internal static string folderName;
         internal static string appLanguage = "english"; // default to english 
+        internal frm_Settings FrmSettings;
+        internal frm_editFileData FrmEditFileData;
 
         /// <summary>
         /// this one basically handles what extensions we work with.
@@ -438,10 +442,12 @@ namespace GeoTagNinja
             if (tbx_lat.Text == "" || tbx_lat.Text == "0")
             {
                 // NASA HQ
-                this.tbx_lat.Text = "38.883056";
-                this.tbx_lng.Text = "-77.016389";
+                string defaultLat = "38.883056";
+                string defaultLng = "-77.016389";
+                this.tbx_lat.Text = defaultLat;
+                this.tbx_lng.Text = defaultLng;
             }
-            NavigateMapGo();
+            NavigateMapGo(tbx_lat.Text, tbx_lng.Text);
 
             #region query current & newest exifTool version
             // get current & newest exiftool version -- do this here at the end so it doesn't hold up the process
@@ -473,17 +479,17 @@ namespace GeoTagNinja
             // don't run this in debug mode. currentGTNVersion is dependent on the # of days since 1/1/2000 basically.
             // so each time i make a new build this updates and the query triggers a messagebox...which for me is a bit useless.
             #if !DEBUG
-                Helper.s_APIOkay = true;
-                DataTable dt_APIGTNVersion = Helper.DTFromAPI_GetGTNVersion();
-                // newest may be something like "v0.5.8251"
-                string newestGTNVersion = dt_APIGTNVersion.Rows[0]["version"].ToString().Replace("v", "");
-                if (!currentGTNVersion.Contains(newestGTNVersion))
-                    {
-                        if (MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_InfoNewGTNVersionExists") + newestGTNVersion, "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                        Helper.s_APIOkay = true;
+                        DataTable dt_APIGTNVersion = Helper.DTFromAPI_GetGTNVersion();
+                        // newest may be something like "v0.5.8251"
+                        string newestGTNVersion = dt_APIGTNVersion.Rows[0]["version"].ToString().Replace("v", "");
+                        if (!currentGTNVersion.Contains(newestGTNVersion))
                         {
-                            System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dt_APIGTNVersion.Rows[0]["version"].ToString() + "/GeoTagNinja_Setup.msi");
+                            if (MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_InfoNewGTNVersionExists") + newestGTNVersion, "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                            {
+                                System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dt_APIGTNVersion.Rows[0]["version"].ToString() + "/GeoTagNinja_Setup.msi");
+                            }
                         }
-                    }
             #endif
             #endregion
         }
@@ -882,7 +888,7 @@ namespace GeoTagNinja
         /// <param name="e">Unused</param>
         private void btn_NavigateMapGo_Click(object sender, EventArgs e)
         {
-            NavigateMapGo();
+            NavigateMapGo(this.tbx_lat.Text.ToString(), this.tbx_lng.Text.ToString());
         }
         /// <summary>
         /// Handles the clicking on "ToFile" button. See comments above re: why we're using strings (culture-related issue)
@@ -1006,7 +1012,7 @@ namespace GeoTagNinja
         /// Handles the navigation to a coordinate on the map. Replaces hard-coded values w/ user-provided ones
         /// ... and executes the navigation action.
         /// </summary>
-        private void NavigateMapGo()
+        internal void NavigateMapGo(string strLatCoordinate, string strLngCoordinate)
         {
             string HTMLCode = "";
             try
@@ -1018,8 +1024,8 @@ namespace GeoTagNinja
                 MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorNavigateMapGoHTMLCode") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            string strLatCoordinate = this.tbx_lat.Text.Replace(',', '.');
-            string strLngCoordinate = this.tbx_lng.Text.Replace(',', '.');
+            strLatCoordinate = strLatCoordinate.Replace(',', '.');
+            strLngCoordinate = strLngCoordinate.Replace(',', '.');
 
             if (Helper.s_ArcGIS_APIKey == null)
             {
@@ -1041,8 +1047,13 @@ namespace GeoTagNinja
         /// <param name="e">Unused</param>
         private void tmi_Settings_Settings_Click(object sender, EventArgs e)
         {
-            frm_Settings frm_Settings = new();
-            frm_Settings.ShowDialog();
+            FrmSettings = new frm_Settings();
+            FrmSettings.Text = Helper.DataReadSQLiteObjectText(
+                languageName: appLanguage,
+                objectType: "Form",
+                objectName: "frm_Settings"
+                );
+            FrmSettings.ShowDialog();
         }
         /// <summary>
         /// Handles the tmi_Help_About_Click event -> brings up the About Form
@@ -1085,17 +1096,22 @@ namespace GeoTagNinja
         /// <param name="e">Unused</param>
         private void tmi_File_EditFiles_Click(object sender, EventArgs e)
         {
-            frm_editFileData frm_editFileData = new();
-            frm_editFileData.lvw_FileListEditImages.Items.Clear();
+            FrmEditFileData = new frm_editFileData();
+            FrmEditFileData.lvw_FileListEditImages.Items.Clear();
             foreach (ListViewItem selectedItem in lvw_FileList.SelectedItems)
             {
                 if (System.IO.File.Exists(Path.Combine(tbx_FolderName.Text, selectedItem.Text)))
                 {
                     folderName = tbx_FolderName.Text;
-                    frm_editFileData.lvw_FileListEditImages.Items.Add(selectedItem.Text);
+                    FrmEditFileData.lvw_FileListEditImages.Items.Add(selectedItem.Text);
                 }
             }
-            frm_editFileData.ShowDialog();
+            FrmEditFileData.Text = Helper.DataReadSQLiteObjectText(
+                languageName: appLanguage,
+                objectType: "Form",
+                objectName: "frm_editFileData"
+                );
+            FrmEditFileData.ShowDialog();
         }
         /// <summary>
         /// Handles the tmi_File_CopyGeoData_Click event -> triggers LwvCopyGeoData 
@@ -1309,7 +1325,7 @@ namespace GeoTagNinja
             {
                 lvw_FileList_addListItem(Path.GetFileName(currentDir));
             }
-            
+
             foreach (string currentFile in files)
             {
                 string fileNameToTest = Path.Combine(currentFile);
@@ -1378,90 +1394,7 @@ namespace GeoTagNinja
         /// <param name="e">Unused</param>
         private async void lvw_FileList_Click(object sender, EventArgs e)
         {
-
-            if (lvw_FileList.SelectedItems.Count > 0)
-            {
-                // make sure file still exists. just in case someone deleted it elsewhere
-                string fileNameWithPath = Path.Combine(folderName, lvw_FileList.SelectedItems[0].Text);
-                if (File.Exists(fileNameWithPath) && lvw_FileList.SelectedItems[0].SubItems.Count > 1)
-                {
-                    var firstSelectedItem = lvw_FileList.SelectedItems[0].SubItems[lvw_FileList.Columns["clh_Coordinates"].Index].Text;
-                    if (firstSelectedItem != "-" && firstSelectedItem != "")
-                    {
-                        string strLat = lvw_FileList.SelectedItems[0].SubItems[lvw_FileList.Columns["clh_Coordinates"].Index].Text.Split(';')[0].Replace(',', '.');
-                        string strLng = lvw_FileList.SelectedItems[0].SubItems[lvw_FileList.Columns["clh_Coordinates"].Index].Text.Split(';')[1].Replace(',', '.');
-
-                        double parsedLat;
-                        double parsedLng;
-                        if (double.TryParse(strLat, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strLng, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
-                        {
-                            this.tbx_lat.Text = strLat;
-                            this.tbx_lng.Text = strLng;
-                            NavigateMapGo();
-                        }
-                    }
-                    else
-                    {
-                        this.tbx_lat.Text = "0";
-                        this.tbx_lng.Text = "0";
-                        NavigateMapGo();
-                    }
-                }
-                this.pbx_imagePreview.Image = null;
-
-                // via https://stackoverflow.com/a/8701748/3968494
-                if (File.Exists(fileNameWithPath))
-                {
-                    // don't try to do this when a thousand files are selected....
-                    if (lvw_FileList.SelectedItems.Count == 1)
-                    {
-                        Image img;
-
-                        FileInfo fi = new(fileNameWithPath);
-                        if (fi.Extension == ".jpg")
-                        {
-                            using (var bmpTemp = new Bitmap(fileNameWithPath))
-                            {
-                                img = new Bitmap(bmpTemp);
-                                this.pbx_imagePreview.Image = img;
-                            }
-                        }
-                        else
-                        {
-                            string generatedFileName = Path.Combine(frm_MainApp.userDataFolderPath, lvw_FileList.SelectedItems[0].Text + ".jpg");
-                            // don't run the thing again if file has already been generated
-                            if (!File.Exists(generatedFileName))
-                            {
-                                await Helper.ExifGetImagePreviews(fileNameWithPath);
-                            }
-                            //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
-                            if (File.Exists(generatedFileName))
-                            {
-                                using (var bmpTemp = new Bitmap(generatedFileName))
-                                {
-                                    try
-                                    {
-                                        img = new Bitmap(bmpTemp);
-                                        this.pbx_imagePreview.Image = img;
-                                    }
-                                    catch
-                                    {
-                                        // nothing.
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                else if (Directory.Exists(fileNameWithPath))
-                {
-                    // nothing.
-                }
-                else
-                {
-                    MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorFileGoneMissing" + fileNameWithPath), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
+            await Helper.LvwItemClickNavigate();
         }
         /// <summary>
         /// Handles the lvw_FileList_MouseDoubleClick event -> if user clicked on a folder then enter, if a file then edit
@@ -1491,10 +1424,15 @@ namespace GeoTagNinja
                 // if this is a file
                 else if (File.Exists(Path.Combine(tbx_FolderName.Text, item.Text)))
                 {
-                    frm_editFileData frm_editFileData = new();
+                    FrmEditFileData = new frm_editFileData();
                     folderName = tbx_FolderName.Text;
-                    frm_editFileData.lvw_FileListEditImages.Items.Add(item.Text);
-                    frm_editFileData.ShowDialog();
+                    FrmEditFileData.lvw_FileListEditImages.Items.Add(item.Text);
+                    FrmEditFileData.Text = Helper.DataReadSQLiteObjectText(
+                        languageName: appLanguage,
+                        objectType: "Form",
+                        objectName: "frm_editFileData"
+                        );
+                    FrmEditFileData.ShowDialog();
                 }
             }
             else

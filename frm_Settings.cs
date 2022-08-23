@@ -334,6 +334,6 @@ namespace GeoTagNinja
                     );
             }
         }
-
+        
     }
 }

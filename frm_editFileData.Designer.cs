@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_editFileData));
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.btn_OK = new System.Windows.Forms.Button();
             this.pbx_imgPreview = new System.Windows.Forms.PictureBox();
@@ -35,6 +36,7 @@
             this.clh_FileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tpg_Location = new System.Windows.Forms.TabPage();
             this.gbx_LocationData = new System.Windows.Forms.GroupBox();
+            this.btn_RemoveGeoData = new System.Windows.Forms.Button();
             this.btn_getAllFromWeb_Toponomy = new System.Windows.Forms.Button();
             this.btn_getFromWeb_Toponomy = new System.Windows.Forms.Button();
             this.tbx_Sub_location = new System.Windows.Forms.TextBox();
@@ -60,7 +62,6 @@
             this.btn_getAllFromWeb_Altitude = new System.Windows.Forms.Button();
             this.lbl_Decimal = new System.Windows.Forms.Label();
             this.tcr_EditData = new System.Windows.Forms.TabControl();
-            this.btn_RemoveGeoData = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_imgPreview)).BeginInit();
             this.tpg_Location.SuspendLayout();
             this.gbx_LocationData.SuspendLayout();
@@ -126,9 +127,9 @@
             this.tpg_Location.Controls.Add(this.gbx_LocationData);
             this.tpg_Location.Controls.Add(this.gbx_GPSData);
             this.tpg_Location.Location = new System.Drawing.Point(4, 22);
-            this.tpg_Location.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpg_Location.Margin = new System.Windows.Forms.Padding(2);
             this.tpg_Location.Name = "tpg_Location";
-            this.tpg_Location.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpg_Location.Padding = new System.Windows.Forms.Padding(2);
             this.tpg_Location.Size = new System.Drawing.Size(390, 456);
             this.tpg_Location.TabIndex = 0;
             this.tpg_Location.Text = "tpg_Location";
@@ -150,13 +151,23 @@
             this.gbx_LocationData.Controls.Add(this.lbl_Country);
             this.gbx_LocationData.Controls.Add(this.lbl_CountryCode);
             this.gbx_LocationData.Location = new System.Drawing.Point(13, 214);
-            this.gbx_LocationData.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.gbx_LocationData.Margin = new System.Windows.Forms.Padding(2);
             this.gbx_LocationData.Name = "gbx_LocationData";
-            this.gbx_LocationData.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.gbx_LocationData.Padding = new System.Windows.Forms.Padding(2);
             this.gbx_LocationData.Size = new System.Drawing.Size(364, 229);
             this.gbx_LocationData.TabIndex = 1;
             this.gbx_LocationData.TabStop = false;
             this.gbx_LocationData.Text = "gbx_LocationData";
+            // 
+            // btn_RemoveGeoData
+            // 
+            this.btn_RemoveGeoData.Location = new System.Drawing.Point(14, 198);
+            this.btn_RemoveGeoData.Name = "btn_RemoveGeoData";
+            this.btn_RemoveGeoData.Size = new System.Drawing.Size(324, 23);
+            this.btn_RemoveGeoData.TabIndex = 13;
+            this.btn_RemoveGeoData.Text = "btn_RemoveGeoData";
+            this.btn_RemoveGeoData.UseVisualStyleBackColor = true;
+            this.btn_RemoveGeoData.Click += new System.EventHandler(this.btn_RemoveGeoData_Click);
             // 
             // btn_getAllFromWeb_Toponomy
             // 
@@ -799,9 +810,9 @@
             this.gbx_GPSData.Controls.Add(this.btn_getAllFromWeb_Altitude);
             this.gbx_GPSData.Controls.Add(this.lbl_Decimal);
             this.gbx_GPSData.Location = new System.Drawing.Point(13, 42);
-            this.gbx_GPSData.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.gbx_GPSData.Margin = new System.Windows.Forms.Padding(2);
             this.gbx_GPSData.Name = "gbx_GPSData";
-            this.gbx_GPSData.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.gbx_GPSData.Padding = new System.Windows.Forms.Padding(2);
             this.gbx_GPSData.Size = new System.Drawing.Size(364, 157);
             this.gbx_GPSData.TabIndex = 0;
             this.gbx_GPSData.TabStop = false;
@@ -913,21 +924,11 @@
             // 
             this.tcr_EditData.Controls.Add(this.tpg_Location);
             this.tcr_EditData.Location = new System.Drawing.Point(290, 11);
-            this.tcr_EditData.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tcr_EditData.Margin = new System.Windows.Forms.Padding(2);
             this.tcr_EditData.Name = "tcr_EditData";
             this.tcr_EditData.SelectedIndex = 0;
             this.tcr_EditData.Size = new System.Drawing.Size(398, 482);
             this.tcr_EditData.TabIndex = 0;
-            // 
-            // btn_RemoveGeoData
-            // 
-            this.btn_RemoveGeoData.Location = new System.Drawing.Point(14, 198);
-            this.btn_RemoveGeoData.Name = "btn_RemoveGeoData";
-            this.btn_RemoveGeoData.Size = new System.Drawing.Size(324, 23);
-            this.btn_RemoveGeoData.TabIndex = 13;
-            this.btn_RemoveGeoData.Text = "btn_RemoveGeoData";
-            this.btn_RemoveGeoData.UseVisualStyleBackColor = true;
-            this.btn_RemoveGeoData.Click += new System.EventHandler(this.btn_RemoveGeoData_Click);
             // 
             // frm_editFileData
             // 
@@ -937,18 +938,20 @@
             this.AutoSize = true;
             this.CancelButton = this.btn_Cancel;
             this.ClientSize = new System.Drawing.Size(695, 533);
-            this.ControlBox = false;
             this.Controls.Add(this.lvw_FileListEditImages);
             this.Controls.Add(this.pbx_imgPreview);
             this.Controls.Add(this.btn_OK);
             this.Controls.Add(this.btn_Cancel);
             this.Controls.Add(this.tcr_EditData);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(2);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(20, 490);
             this.Name = "frm_editFileData";
+            this.ShowInTaskbar = false;
             this.Text = "Edit Data";
-            this.TopMost = true;
             this.Load += new System.EventHandler(this.frm_editFileData_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbx_imgPreview)).EndInit();
             this.tpg_Location.ResumeLayout(false);

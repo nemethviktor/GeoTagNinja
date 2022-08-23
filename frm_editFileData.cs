@@ -407,15 +407,29 @@ namespace GeoTagNinja
         /// </summary>
         /// <param name="sender">Unused</param>
         /// <param name="e">Unused</param>
-        private void btn_OK_Click(object sender, EventArgs e)
+        private async void btn_OK_Click(object sender, EventArgs e)
         {
             // move data from temp-queue to write-queue
             if (frm_MainApp.dt_fileDataToWriteStage1PreQueue.Rows.Count > 0)
             {
                 // transfer data from 1 to 3
-                foreach (DataRow dr in dt_fileDataToWriteStage1PreQueue.Rows)
+                foreach (DataRow drS1 in dt_fileDataToWriteStage1PreQueue.Rows)
                 {
-                    frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr.ItemArray);
+                    // any existing instance of this particular combination needs to be deleted...
+                    // eg if we type "50" as a value then w/o this we'd end up with a "5" row and a "50" row.
+                    for (int i = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Count - 1; i >= 0; i--)
+                    {
+                        DataRow drS3 = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows[i];
+                        if (
+                            drS3["filePath"].ToString() == drS1["filePath"].ToString() &&
+                            drS3["settingId"].ToString() == drS1["settingId"].ToString()
+                            )
+                        {
+                            drS3.Delete();
+                        }
+                    }
+                    frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.AcceptChanges();
+                    frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(drS1.ItemArray);
                 }
 
                 // update listview w new data
@@ -425,6 +439,10 @@ namespace GeoTagNinja
                 frm_MainApp.dt_fileDataToWriteStage1PreQueue.Rows.Clear();
             }
             frm_MainApp.dt_fileDataToWriteStage2QueuePendingSave.Rows.Clear();
+            // re-center map on new data.
+            frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
+            
+            await Helper.LvwItemClickNavigate();
         }
         /// <summary>
         /// Handles when user clicks Cancel. Clears holding tables 1 & 2.
@@ -466,9 +484,13 @@ namespace GeoTagNinja
                     string strSndrText = sndr.Text.Replace(',', '.');
                     if (!frm_editFileDataNowRemovingGeoData && sndr.Parent.Name == "gbx_GPSData" && double.TryParse(strSndrText, NumberStyles.Any, CultureInfo.InvariantCulture, out double dbl) == false)
                     {
-                        MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_editFileData_WarningLatLongMustBeNumbers"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        // find a valid number
-                        sndr.Text = "0.0";
+                        // don't warn on a single "-" as that could be a lead-up to a negative number
+                        if(strSndrText != "-")
+                        {
+                            MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_editFileData_WarningLatLongMustBeNumbers"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            // find a valid number
+                            sndr.Text = "0.0";
+                        }
                     }
                     else
                     {
@@ -501,6 +523,21 @@ namespace GeoTagNinja
                                 this.cbx_CountryCode.Text = sqliteText;
                             }
                         }
+                        // any existing instance of this particular combination needs to be deleted...
+                        // eg if we type "50" as a value then w/o this we'd end up with a "5" row and a "50" row.
+                        for (int i = frm_MainApp.dt_fileDataToWriteStage1PreQueue.Rows.Count - 1; i >= 0; i--)
+                        {
+                            DataRow dr = frm_MainApp.dt_fileDataToWriteStage1PreQueue.Rows[i];
+                            if (
+                                dr["filePath"].ToString() == lvw_FileListEditImages.SelectedItems[0].Text &&
+                                dr["settingId"].ToString() == sndr.Name.Substring(4)
+                                )
+                            {
+                                dr.Delete();
+                            }
+                        }
+                        frm_MainApp.dt_fileDataToWriteStage1PreQueue.AcceptChanges();
+
                         dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage1PreQueue.NewRow();
                         dr_FileDataRow["filePath"] = lvw_FileListEditImages.SelectedItems[0].Text;
                         dr_FileDataRow["settingId"] = sndr.Name.Substring(4);

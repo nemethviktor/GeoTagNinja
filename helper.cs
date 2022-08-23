@@ -2417,6 +2417,97 @@ namespace GeoTagNinja
                 MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_WarningNothingToPaste"), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+        /// <summary>
+        /// Extracted method for navigating to a set of coordinates on the map.
+        /// </summary>
+        /// <returns>Nothing in reality</returns>
+        internal async static Task LvwItemClickNavigate()
+        {
+            frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
+            if (frm_mainAppInstance.lvw_FileList.SelectedItems.Count == 1)
+            {
+                // make sure file still exists. just in case someone deleted it elsewhere
+                string fileNameWithPath = Path.Combine(frm_MainApp.folderName, frm_mainAppInstance.lvw_FileList.SelectedItems[0].Text);
+                if (File.Exists(fileNameWithPath) && frm_mainAppInstance.lvw_FileList.SelectedItems[0].SubItems.Count > 1)
+                {
+                    var firstSelectedItem = frm_mainAppInstance.lvw_FileList.SelectedItems[0].SubItems[frm_mainAppInstance.lvw_FileList.Columns["clh_Coordinates"].Index].Text;
+                    if (firstSelectedItem != "-" && firstSelectedItem != "")
+                    {
+                        string strLat = frm_mainAppInstance.lvw_FileList.SelectedItems[0].SubItems[frm_mainAppInstance.lvw_FileList.Columns["clh_Coordinates"].Index].Text.Split(';')[0].Replace(',', '.');
+                        string strLng = frm_mainAppInstance.lvw_FileList.SelectedItems[0].SubItems[frm_mainAppInstance.lvw_FileList.Columns["clh_Coordinates"].Index].Text.Split(';')[1].Replace(',', '.');
+
+                        double parsedLat;
+                        double parsedLng;
+                        if (double.TryParse(strLat, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strLng, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
+                        {
+                            frm_mainAppInstance.tbx_lat.Text = strLat;
+                            frm_mainAppInstance.tbx_lng.Text = strLng;
+                            frm_mainAppInstance.NavigateMapGo(strLat, strLng);
+                        }
+                    }
+                    else
+                    {
+                        frm_mainAppInstance.tbx_lat.Text = "0";
+                        frm_mainAppInstance.tbx_lng.Text = "0";
+                        frm_mainAppInstance.NavigateMapGo("0", "0");
+                    }
+                }
+                frm_mainAppInstance.pbx_imagePreview.Image = null;
+
+                // via https://stackoverflow.com/a/8701748/3968494
+                if (File.Exists(fileNameWithPath))
+                {
+                    // don't try to do this when a thousand files are selected....
+                    if (frm_mainAppInstance.lvw_FileList.SelectedItems.Count == 1)
+                    {
+                        Image img;
+
+                        FileInfo fi = new(fileNameWithPath);
+                        if (fi.Extension == ".jpg")
+                        {
+                            using (var bmpTemp = new Bitmap(fileNameWithPath))
+                            {
+                                img = new Bitmap(bmpTemp);
+                                frm_mainAppInstance.pbx_imagePreview.Image = img;
+                            }
+                        }
+                        else
+                        {
+                            string generatedFileName = Path.Combine(frm_MainApp.userDataFolderPath, frm_mainAppInstance.lvw_FileList.SelectedItems[0].Text + ".jpg");
+                            // don't run the thing again if file has already been generated
+                            if (!File.Exists(generatedFileName))
+                            {
+                                await Helper.ExifGetImagePreviews(fileNameWithPath);
+                            }
+                            //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
+                            if (File.Exists(generatedFileName))
+                            {
+                                using (var bmpTemp = new Bitmap(generatedFileName))
+                                {
+                                    try
+                                    {
+                                        img = new Bitmap(bmpTemp);
+                                        frm_mainAppInstance.pbx_imagePreview.Image = img;
+                                    }
+                                    catch
+                                    {
+                                        // nothing.
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (Directory.Exists(fileNameWithPath))
+                {
+                    // nothing.
+                }
+                else
+                {
+                    MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorFileGoneMissing" + fileNameWithPath), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
         #endregion
     }
     internal class Helper_NonStatic

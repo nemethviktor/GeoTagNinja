@@ -66,7 +66,7 @@
             this.tct_Settings.Controls.Add(this.tpg_Application);
             this.tct_Settings.Controls.Add(this.tpg_FileOptions);
             this.tct_Settings.Location = new System.Drawing.Point(16, 12);
-            this.tct_Settings.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tct_Settings.Margin = new System.Windows.Forms.Padding(2);
             this.tct_Settings.Name = "tct_Settings";
             this.tct_Settings.SelectedIndex = 0;
             this.tct_Settings.Size = new System.Drawing.Size(605, 428);
@@ -91,9 +91,9 @@
             this.tpg_Application.Controls.Add(this.tbx_GeoNames_UserName);
             this.tpg_Application.Controls.Add(this.tbx_ARCGIS_APIKey);
             this.tpg_Application.Location = new System.Drawing.Point(4, 22);
-            this.tpg_Application.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpg_Application.Margin = new System.Windows.Forms.Padding(2);
             this.tpg_Application.Name = "tpg_Application";
-            this.tpg_Application.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpg_Application.Padding = new System.Windows.Forms.Padding(2);
             this.tpg_Application.Size = new System.Drawing.Size(597, 402);
             this.tpg_Application.TabIndex = 0;
             this.tpg_Application.Text = "tpg_Application";
@@ -131,7 +131,7 @@
             // 
             this.pbx_Browse_Startup_Folder.Image = ((System.Drawing.Image)(resources.GetObject("pbx_Browse_Startup_Folder.Image")));
             this.pbx_Browse_Startup_Folder.Location = new System.Drawing.Point(527, 24);
-            this.pbx_Browse_Startup_Folder.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pbx_Browse_Startup_Folder.Margin = new System.Windows.Forms.Padding(2);
             this.pbx_Browse_Startup_Folder.Name = "pbx_Browse_Startup_Folder";
             this.pbx_Browse_Startup_Folder.Size = new System.Drawing.Size(16, 16);
             this.pbx_Browse_Startup_Folder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -192,7 +192,7 @@
             // tbx_Startup_Folder
             // 
             this.tbx_Startup_Folder.Location = new System.Drawing.Point(136, 20);
-            this.tbx_Startup_Folder.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tbx_Startup_Folder.Margin = new System.Windows.Forms.Padding(2);
             this.tbx_Startup_Folder.Name = "tbx_Startup_Folder";
             this.tbx_Startup_Folder.ReadOnly = true;
             this.tbx_Startup_Folder.Size = new System.Drawing.Size(372, 20);
@@ -202,7 +202,7 @@
             // tbx_GeoNames_Pwd
             // 
             this.tbx_GeoNames_Pwd.Location = new System.Drawing.Point(136, 197);
-            this.tbx_GeoNames_Pwd.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tbx_GeoNames_Pwd.Margin = new System.Windows.Forms.Padding(2);
             this.tbx_GeoNames_Pwd.Name = "tbx_GeoNames_Pwd";
             this.tbx_GeoNames_Pwd.PasswordChar = '*';
             this.tbx_GeoNames_Pwd.Size = new System.Drawing.Size(372, 20);
@@ -212,7 +212,7 @@
             // tbx_GeoNames_UserName
             // 
             this.tbx_GeoNames_UserName.Location = new System.Drawing.Point(136, 173);
-            this.tbx_GeoNames_UserName.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tbx_GeoNames_UserName.Margin = new System.Windows.Forms.Padding(2);
             this.tbx_GeoNames_UserName.Name = "tbx_GeoNames_UserName";
             this.tbx_GeoNames_UserName.Size = new System.Drawing.Size(372, 20);
             this.tbx_GeoNames_UserName.TabIndex = 3;
@@ -221,7 +221,7 @@
             // tbx_ARCGIS_APIKey
             // 
             this.tbx_ARCGIS_APIKey.Location = new System.Drawing.Point(136, 92);
-            this.tbx_ARCGIS_APIKey.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tbx_ARCGIS_APIKey.Margin = new System.Windows.Forms.Padding(2);
             this.tbx_ARCGIS_APIKey.Name = "tbx_ARCGIS_APIKey";
             this.tbx_ARCGIS_APIKey.PasswordChar = '*';
             this.tbx_ARCGIS_APIKey.Size = new System.Drawing.Size(372, 20);
@@ -236,9 +236,9 @@
             this.tpg_FileOptions.Controls.Add(this.ckb_AddXMPSideCar);
             this.tpg_FileOptions.Controls.Add(this.lbx_fileExtensions);
             this.tpg_FileOptions.Location = new System.Drawing.Point(4, 22);
-            this.tpg_FileOptions.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpg_FileOptions.Margin = new System.Windows.Forms.Padding(2);
             this.tpg_FileOptions.Name = "tpg_FileOptions";
-            this.tpg_FileOptions.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpg_FileOptions.Padding = new System.Windows.Forms.Padding(2);
             this.tpg_FileOptions.Size = new System.Drawing.Size(597, 402);
             this.tpg_FileOptions.TabIndex = 1;
             this.tpg_FileOptions.Text = "tpg_FileOptions";
@@ -290,7 +290,7 @@
             this.btn_OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btn_OK.Location = new System.Drawing.Point(490, 459);
-            this.btn_OK.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_OK.Margin = new System.Windows.Forms.Padding(2);
             this.btn_OK.Name = "btn_OK";
             this.btn_OK.Size = new System.Drawing.Size(60, 19);
             this.btn_OK.TabIndex = 5;
@@ -303,7 +303,7 @@
             this.btn_Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btn_Cancel.Location = new System.Drawing.Point(560, 459);
-            this.btn_Cancel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_Cancel.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Cancel.Name = "btn_Cancel";
             this.btn_Cancel.Size = new System.Drawing.Size(60, 19);
             this.btn_Cancel.TabIndex = 6;
@@ -329,13 +329,13 @@
             this.Controls.Add(this.tct_Settings);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Location = new System.Drawing.Point(350, 100);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(20, 490);
             this.Name = "frm_Settings";
+            this.ShowInTaskbar = false;
             this.Text = "frm_Settings";
-            this.TopMost = true;
             this.Load += new System.EventHandler(this.Frm_Settings_Load);
             this.tct_Settings.ResumeLayout(false);
             this.tpg_Application.ResumeLayout(false);
