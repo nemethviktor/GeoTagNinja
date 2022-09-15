@@ -1,5 +1,3 @@
-
-
 # Welcome to GeoTagNinja
 
 GeoTagNinja is an open-source geotagger for Windows. It's a lightweight an open-source (written from scratch) reminiscent of GeoSetter, which hasn't been updated for a longer while and is now a little obsolete as it's using IE and other technologies that are becoming increasingly ageing.
@@ -22,6 +20,12 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 - Pressing Get From Web in Edit mode will always query the lat/long data for the file as in the main listview (the main page, in less geeky terms.). This is a feature. The assumption is that you aren't going to change coordinates manually by typing stuff in and _then_ query data. It's a lot more likely you'll change stuff using the map.
 - If you have Avast running or some other nightmare that tries to capture iframes within apps the app will most likely crash sooner rather than later, at least on the first run. I *think* it should be okay afterwards.
 
+## Building
+
+If you want to build the project probably use Visual Studio - I used v2022 Community. Instead of downloading the source code as zip please pull from Git, you can do that via VS if you want. 
+There are 2 parts to the project. One is the "main" the other is the installer. You'll generally have problems w/ the installer bcs it hasn't been pushed to git so it's going to be missing that half.
+For the "main" project you should be okay without anything separate. It has worked ok for me on a blank VM when pulled from Git. Just build and F5/run.
+
 ## ToDos
 
 - [TODO] Add a setting for cleaning local api data on start/exit
@@ -30,17 +34,6 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 - [later] Destination stuff not working atm, todo.
 - [later] Column reorg.
 - [later] add time-shift capabilities
-- [done] Language support
-- [done] Get All From Web
-- [done] Check webview2 is available
-- [done] Add map-to-image function
-- [done] Add filegroup-specific options --> ascertain default values get respected.
-- [done] Investigate Overwrite. Methinks it's not working.
-- [done] Correct XMP Sidecar process
-- [done] Add "last location" setting
-- [done] Add img preview
-- [done] Cbx country dropdown not working
-- [done] Cbx needs to be synced w country
 
 ## Known Issues
 

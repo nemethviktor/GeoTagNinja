@@ -1615,7 +1615,7 @@ namespace GeoTagNinja
 
                                 }
                             }
-                            else if (data.Data != null && !data.Data.Contains("files updated") && data.Data.Length > 0)
+                            else if (data.Data != null && !data.Data.Contains("files updated") && !data.Data.Contains("files created") && data.Data.Length > 0)
                             {
                                 MessageBox.Show(data.Data);
                             }

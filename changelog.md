@@ -1,6 +1,11 @@
 ﻿# GeoTagNinja Changelog
 
-v0.5.82xx [202208xx]
+v0.5.8293 [20220915]
+- Disabled the notification for "1 new file created" when saving RAW files that don't already have an XMP s/c file. This came up for each file separately and was a bit annoying.
+- Changed max zoom on map to more "zoomier" (from lvl 13 to 19). FWIW I think the new one is the "zoomiest" the system allows.
+- Bugfixes
+
+v0.5.8270 [20220823]
 - [WIP] Time shift groundwork.
 - Added check for exifTool version change tracking
 - Added check for GeoTagNinja version change tracking

@@ -464,7 +464,7 @@ namespace GeoTagNinja
             Helper.s_APIOkay = true;
             DataTable dt_APIExifToolVersion = Helper.DTFromAPI_GetExifToolVersion();
             string newestExifToolVersion = dt_APIExifToolVersion.Rows[0]["version"].ToString();
-            if (currentExifToolVersion != newestExifToolVersion)
+            if (currentExifToolVersion != null && currentExifToolVersion != "" && currentExifToolVersion != newestExifToolVersion)
             {
                 if (MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_InfoNewExifToolVersionExists") + newestExifToolVersion, "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
                 {
