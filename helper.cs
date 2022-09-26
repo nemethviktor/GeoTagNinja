@@ -32,6 +32,8 @@ namespace GeoTagNinja
         internal static bool s_APIOkay = true;
         private static string s_ErrorMsg = "";
         private static readonly string s_doubleQuote = "\"";
+        internal static bool s_ResetMapToZero;
+
         #endregion
         #region SQL 
         #region Database Creation SQL & Startup Checks
@@ -2445,11 +2447,16 @@ namespace GeoTagNinja
                             frm_mainAppInstance.NavigateMapGo(strLat, strLng);
                         }
                     }
-                    else
+                    else if (s_ResetMapToZero)
                     {
                         frm_mainAppInstance.tbx_lat.Text = "0";
                         frm_mainAppInstance.tbx_lng.Text = "0";
                         frm_mainAppInstance.NavigateMapGo("0", "0");
+                    }
+                    // leave as-is (most likely the last photo)
+                    else
+                    {
+                        // don't do anything
                     }
                 }
                 frm_mainAppInstance.pbx_imagePreview.Image = null;

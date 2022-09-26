@@ -115,10 +115,31 @@ namespace GeoTagNinja
                                 box.Text = "";
                             }
                         }
-                        //else if (subctrl is CheckBox)
-                        //{
-                        //    // this never actually fires. Load only loads the first tabpage, which has none of these.
-                        //}
+                        else if (subctrl is CheckBox cbx)
+                        {
+                            try
+                            {
+                                string cbxTempValue;
+                                cbxTempValue = Helper.DataReadSQLiteSettings(
+                                    tableName: "settings",
+                                    settingTabPage: ctrl.Name,
+                                    settingId: subctrl.Name
+                                    );
+                                if(cbxTempValue == "true")
+                                {
+                                    cbx.CheckState = CheckState.Checked;
+                                }
+                                else
+                                {
+                                    cbx.CheckState = CheckState.Unchecked;
+                                }
+
+                            }
+                            catch (InvalidOperationException) // nonesuch
+                            {
+                                cbx.CheckState = CheckState.Unchecked;
+                            }
+                        }
                     }
                 }
             }
@@ -147,6 +168,7 @@ namespace GeoTagNinja
             Helper.DataDeleteSQLitesettingsToWritePreQueue();
 
             // refresh user data
+            string tmpSettingVal;
             Helper.s_ArcGIS_APIKey = Helper.DataSelectTbxARCGIS_APIKey_FromSQLite();
             Helper.s_GeoNames_UserName = Helper.DataReadSQLiteSettings(
                 tableName: "settings",
@@ -158,6 +180,20 @@ namespace GeoTagNinja
                 settingTabPage: "tpg_Application",
                 settingId: "tbx_GeoNames_Pwd"
                 );
+
+            tmpSettingVal = Helper.DataReadSQLiteSettings(
+                tableName: "settings",
+                settingTabPage: "tpg_Application",
+                settingId: "ckb_ResetMapToZero"
+                );
+            if (tmpSettingVal == "true")
+            {
+                Helper.s_ResetMapToZero = true;
+            }
+            else
+            {
+                Helper.s_ResetMapToZero = false;
+            }
 
             this.Hide();
         }
@@ -300,9 +336,16 @@ namespace GeoTagNinja
             {
                 CheckBox txt = (CheckBox)sender;
                 txt.Font = new Font(txt.Font, FontStyle.Bold);
-
+                string tmpCtrlName = "";
                 var lbi = lbx_fileExtensions.SelectedItem;
-                string tmpCtrlName = lbi.ToString().Split('\t').First() + '_' + ((CheckBox)sender).Name.ToString();
+                if (lbi != null)
+                {
+                    tmpCtrlName = lbi.ToString().Split('\t').First() + '_' + ((CheckBox)sender).Name.ToString();
+                }
+                else
+                {
+                    tmpCtrlName = ((CheckBox)sender).Name.ToString();
+                }
 
                 // stick it into settings-Q
                 Helper.DataWriteSQLiteSettings(
@@ -334,6 +377,6 @@ namespace GeoTagNinja
                     );
             }
         }
-        
+
     }
 }
