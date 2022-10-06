@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-using System.Data.SQLite;
 using System.Drawing;
 using System.IO;
-using System.Data;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace GeoTagNinja
 {
@@ -125,7 +123,7 @@ namespace GeoTagNinja
                                     settingTabPage: ctrl.Name,
                                     settingId: subctrl.Name
                                     );
-                                if(cbxTempValue == "true")
+                                if (cbxTempValue == "true")
                                 {
                                     cbx.CheckState = CheckState.Checked;
                                 }

@@ -1,22 +1,19 @@
-﻿using System;
+﻿using CoenM.ExifToolLib;
+using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
-using System.Drawing;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using System.Windows.Media.Imaging;
-using Microsoft.Web.WebView2.Core;
-using System.Text;
-using CoenM.ExifToolLib;
-using System.Globalization;
-using System.Data.Entity.Infrastructure.Pluralization;
-using Microsoft.Web.WebView2.WinForms;
 
 namespace GeoTagNinja
 {
@@ -478,19 +475,19 @@ namespace GeoTagNinja
 
             // don't run this in debug mode. currentGTNVersion is dependent on the # of days since 1/1/2000 basically.
             // so each time i make a new build this updates and the query triggers a messagebox...which for me is a bit useless.
-            #if !DEBUG
-                        Helper.s_APIOkay = true;
-                        DataTable dt_APIGTNVersion = Helper.DTFromAPI_GetGTNVersion();
-                        // newest may be something like "v0.5.8251"
-                        string newestGTNVersion = dt_APIGTNVersion.Rows[0]["version"].ToString().Replace("v", "");
-                        if (!currentGTNVersion.Contains(newestGTNVersion))
-                        {
-                            if (MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_InfoNewGTNVersionExists") + newestGTNVersion, "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
-                            {
-                                System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dt_APIGTNVersion.Rows[0]["version"].ToString() + "/GeoTagNinja_Setup.msi");
-                            }
-                        }
-            #endif
+#if !DEBUG
+            Helper.s_APIOkay = true;
+            DataTable dt_APIGTNVersion = Helper.DTFromAPI_GetGTNVersion();
+            // newest may be something like "v0.5.8251"
+            string newestGTNVersion = dt_APIGTNVersion.Rows[0]["version"].ToString().Replace("v", "");
+            if (!currentGTNVersion.Contains(newestGTNVersion))
+            {
+                if (MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_InfoNewGTNVersionExists") + newestGTNVersion, "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                {
+                    System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dt_APIGTNVersion.Rows[0]["version"].ToString() + "/GeoTagNinja_Setup.msi");
+                }
+            }
+#endif
             #endregion
         }
         /// <summary>

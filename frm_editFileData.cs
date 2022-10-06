@@ -1,17 +1,12 @@
-﻿using RestSharp;
-using RestSharp.Authenticators;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Windows.Forms;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using geoTagNinja;
-using static GeoTagNinja.frm_MainApp;
-using System.IO;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Globalization;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using static GeoTagNinja.frm_MainApp;
 
 namespace GeoTagNinja
 {
@@ -441,7 +436,7 @@ namespace GeoTagNinja
             frm_MainApp.dt_fileDataToWriteStage2QueuePendingSave.Rows.Clear();
             // re-center map on new data.
             frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
-            
+
             await Helper.LvwItemClickNavigate();
         }
         /// <summary>
@@ -485,7 +480,7 @@ namespace GeoTagNinja
                     if (!frm_editFileDataNowRemovingGeoData && sndr.Parent.Name == "gbx_GPSData" && double.TryParse(strSndrText, NumberStyles.Any, CultureInfo.InvariantCulture, out double dbl) == false)
                     {
                         // don't warn on a single "-" as that could be a lead-up to a negative number
-                        if(strSndrText != "-")
+                        if (strSndrText != "-")
                         {
                             MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_editFileData_WarningLatLongMustBeNumbers"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             // find a valid number
