@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_Settings));
             this.tct_Settings = new System.Windows.Forms.TabControl();
             this.tpg_Application = new System.Windows.Forms.TabPage();
+            this.ckb_ResetMapToZero = new System.Windows.Forms.CheckBox();
             this.cbx_Language = new System.Windows.Forms.ComboBox();
             this.rbx_Register_ArcGIS = new System.Windows.Forms.RichTextBox();
             this.rbx_Register_GeoNames = new System.Windows.Forms.RichTextBox();
@@ -52,8 +53,6 @@
             this.btn_OK = new System.Windows.Forms.Button();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.fbd_StartupFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.lbl_ResetMapToZero = new System.Windows.Forms.Label();
-            this.ckb_ResetMapToZero = new System.Windows.Forms.CheckBox();
             this.tct_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).BeginInit();
@@ -80,7 +79,6 @@
             // 
             this.tpg_Application.BackColor = System.Drawing.Color.WhiteSmoke;
             this.tpg_Application.Controls.Add(this.ckb_ResetMapToZero);
-            this.tpg_Application.Controls.Add(this.lbl_ResetMapToZero);
             this.tpg_Application.Controls.Add(this.cbx_Language);
             this.tpg_Application.Controls.Add(this.rbx_Register_ArcGIS);
             this.tpg_Application.Controls.Add(this.rbx_Register_GeoNames);
@@ -101,6 +99,17 @@
             this.tpg_Application.Size = new System.Drawing.Size(597, 402);
             this.tpg_Application.TabIndex = 0;
             this.tpg_Application.Text = "tpg_Application";
+            // 
+            // ckb_ResetMapToZero
+            // 
+            this.ckb_ResetMapToZero.AutoSize = true;
+            this.ckb_ResetMapToZero.Location = new System.Drawing.Point(21, 258);
+            this.ckb_ResetMapToZero.Name = "ckb_ResetMapToZero";
+            this.ckb_ResetMapToZero.Size = new System.Drawing.Size(134, 17);
+            this.ckb_ResetMapToZero.TabIndex = 15;
+            this.ckb_ResetMapToZero.Text = "ckb_ResetMapToZero";
+            this.ckb_ResetMapToZero.UseVisualStyleBackColor = true;
+            this.ckb_ResetMapToZero.CheckStateChanged += new System.EventHandler(this.Any_cbx_CheckStateChanged);
             // 
             // cbx_Language
             // 
@@ -320,27 +329,6 @@
             this.fbd_StartupFolder.Description = "fbd_StartupFolder";
             this.fbd_StartupFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
-            // lbl_ResetMapToZero
-            // 
-            this.lbl_ResetMapToZero.AutoSize = true;
-            this.lbl_ResetMapToZero.Location = new System.Drawing.Point(18, 260);
-            this.lbl_ResetMapToZero.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lbl_ResetMapToZero.Name = "lbl_ResetMapToZero";
-            this.lbl_ResetMapToZero.Size = new System.Drawing.Size(107, 13);
-            this.lbl_ResetMapToZero.TabIndex = 14;
-            this.lbl_ResetMapToZero.Text = "lbl_ResetMapToZero";
-            // 
-            // ckb_ResetMapToZero
-            // 
-            this.ckb_ResetMapToZero.AutoSize = true;
-            this.ckb_ResetMapToZero.Location = new System.Drawing.Point(198, 258);
-            this.ckb_ResetMapToZero.Name = "ckb_ResetMapToZero";
-            this.ckb_ResetMapToZero.Size = new System.Drawing.Size(134, 17);
-            this.ckb_ResetMapToZero.TabIndex = 15;
-            this.ckb_ResetMapToZero.Text = "ckb_ResetMapToZero";
-            this.ckb_ResetMapToZero.UseVisualStyleBackColor = true;
-            this.ckb_ResetMapToZero.CheckStateChanged += new System.EventHandler(this.Any_cbx_CheckStateChanged);
-            // 
             // frm_Settings
             // 
             this.AcceptButton = this.btn_OK;
@@ -397,6 +385,5 @@
         private System.Windows.Forms.ComboBox cbx_Language;
         private System.Windows.Forms.CheckBox ckb_AddXMPIntoFile;
         private System.Windows.Forms.CheckBox ckb_ResetMapToZero;
-        private System.Windows.Forms.Label lbl_ResetMapToZero;
     }
 }

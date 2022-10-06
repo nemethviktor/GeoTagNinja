@@ -42,6 +42,7 @@ namespace GeoTagNinja
         internal static DataTable objectTagNames_Out;
         internal static string folderName;
         internal static string appLanguage = "english"; // default to english 
+        internal static bool dontShowLocToMapDialog;
         internal frm_Settings FrmSettings;
         internal frm_editFileData FrmEditFileData;
 
@@ -934,7 +935,15 @@ namespace GeoTagNinja
             {
                 if (lvw_FileList.SelectedItems.Count > 0)
                 {
-                    DialogResult dialogResult = MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_QuestionAddToponomy"), "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    DialogResult dialogResult = DialogResult.Yes; // can't leave it as null
+                    if (dontShowLocToMapDialog != true)
+                    {
+                        MessageBoxManager.Cancel = "Stop Asking"; // for the time being this will be hard-coded English
+                        MessageBoxManager.Register();
+                        dialogResult = MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_QuestionAddToponomy"), "Info", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                        MessageBoxManager.Unregister();
+                    }
+
                     foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                     {
                         // don't do folders...
@@ -942,8 +951,12 @@ namespace GeoTagNinja
                         {
                             DataTable dt_Toponomy = new();
                             DataTable dt_Altitude = new();
-                            if (dialogResult == DialogResult.Yes)
+                            if (dialogResult == DialogResult.Yes || dialogResult == DialogResult.Cancel || dontShowLocToMapDialog == true)
                             {
+                                if (dialogResult == DialogResult.Cancel)
+                                {
+                                    dontShowLocToMapDialog = true;
+                                }
                                 Helper.s_APIOkay = true;
                                 dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWebOrSQL(strParsedLat, strParsedLng);
                                 dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWebOrSQL(strParsedLat, strParsedLng);

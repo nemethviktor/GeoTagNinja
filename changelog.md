@@ -1,4 +1,8 @@
 ﻿# GeoTagNinja Changelog
+v0.5.8314 [20221006]
+- Added a "don't ask again" button for the "loc-to-file" dialogbox. This is session specific (if you close/restart the app, it will come back again).
+- Minor code cleanup
+
 v0.5.8304 [20220926]
 - Added a new setting to control whether to default to lat/long 0/0 on the map if there is no geodata in the file clicked.
 
