@@ -42,7 +42,7 @@ namespace GeoTagNinja
         internal static DataTable objectTagNames_Out;
         internal static string folderName;
         internal static string appLanguage = "english"; // default to english 
-        internal static bool dontShowLocToMapDialog;
+        internal static string showLocToMapDialogChoice = "default";
         internal frm_Settings FrmSettings;
         internal frm_editFileData FrmEditFileData;
 
@@ -935,86 +935,106 @@ namespace GeoTagNinja
             {
                 if (lvw_FileList.SelectedItems.Count > 0)
                 {
-                    DialogResult dialogResult = DialogResult.Yes; // can't leave it as null
-                    if (dontShowLocToMapDialog != true)
+                    if (!showLocToMapDialogChoice.Contains("_remember"))
                     {
-                        MessageBoxManager.Cancel = "Stop Asking"; // for the time being this will be hard-coded English
-                        MessageBoxManager.Register();
-                        dialogResult = MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_QuestionAddToponomy"), "Info", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                        MessageBoxManager.Unregister();
+                        // via https://stackoverflow.com/a/17385937/3968494
+                        showLocToMapDialogChoice = Helper.GenericCheckboxDialog.ShowDialogWithCheckBox(
+                            labelText: Helper.DataReadSQLiteObjectText(
+                                languageName: appLanguage,
+                                objectType: "Label",
+                                objectName: "lbl_QuestionAddToponomy"
+                                ),
+                            caption: "Info",
+                            checkboxText: Helper.DataReadSQLiteObjectText(
+                                languageName: appLanguage,
+                                objectType: "CheckBox",
+                                objectName: "ckb_QuestionAddToponomyDontAskAgain"
+                                ),
+                            returnCheckboxText: "_remember",
+                            button1Text: Helper.DataReadSQLiteObjectText(
+                                languageName: appLanguage,
+                                objectType: "Button",
+                                objectName: "btn_Yes"
+                                ),
+                            returnButton1Text: "yes",
+                            button2Text: Helper.DataReadSQLiteObjectText(
+                                languageName: appLanguage,
+                                objectType: "Button",
+                                objectName: "btn_No"
+                                ),
+                            returnButton2Text: "no"
+                            );
                     }
-
-                    foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
+                    if (showLocToMapDialogChoice != "default") // basically user can alt+f4 from the box, which is dumb but nonetheless would break the code.
                     {
-                        // don't do folders...
-                        if (File.Exists(Path.Combine(folderName, lvi.Text)))
+                        foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                         {
-                            DataTable dt_Toponomy = new();
-                            DataTable dt_Altitude = new();
-                            if (dialogResult == DialogResult.Yes || dialogResult == DialogResult.Cancel || dontShowLocToMapDialog == true)
+                            // don't do folders...
+                            if (File.Exists(Path.Combine(folderName, lvi.Text)))
                             {
-                                if (dialogResult == DialogResult.Cancel)
+                                DataTable dt_Toponomy = new();
+                                DataTable dt_Altitude = new();
+                                if (showLocToMapDialogChoice.Contains("yes_"))
                                 {
-                                    dontShowLocToMapDialog = true;
-                                }
-                                Helper.s_APIOkay = true;
-                                dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWebOrSQL(strParsedLat, strParsedLng);
-                                dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWebOrSQL(strParsedLat, strParsedLng);
-                                if (Helper.s_APIOkay)
-                                {
-                                    string CountryCode = dt_Toponomy.Rows[0]["CountryCode"].ToString();
-                                    string Country = dt_Toponomy.Rows[0]["Country"].ToString();
-                                    string City = dt_Toponomy.Rows[0]["City"].ToString();
-                                    string State = dt_Toponomy.Rows[0]["State"].ToString();
-                                    string Sub_location = dt_Toponomy.Rows[0]["Sub_location"].ToString();
-                                    string Altitude = dt_Altitude.Rows[0]["Altitude"].ToString();
+                                    Helper.s_APIOkay = true;
+                                    dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWebOrSQL(strParsedLat, strParsedLng);
+                                    dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWebOrSQL(strParsedLat, strParsedLng);
+                                    if (Helper.s_APIOkay)
+                                    {
+                                        string CountryCode = dt_Toponomy.Rows[0]["CountryCode"].ToString();
+                                        string Country = dt_Toponomy.Rows[0]["Country"].ToString();
+                                        string City = dt_Toponomy.Rows[0]["City"].ToString();
+                                        string State = dt_Toponomy.Rows[0]["State"].ToString();
+                                        string Sub_location = dt_Toponomy.Rows[0]["Sub_location"].ToString();
+                                        string Altitude = dt_Altitude.Rows[0]["Altitude"].ToString();
 
-                                    // CountryCode
-                                    dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                                    dr_FileDataRow["filePath"] = lvi.Text;
-                                    dr_FileDataRow["settingId"] = "CountryCode";
-                                    dr_FileDataRow["settingValue"] = CountryCode;
-                                    dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                                        // CountryCode
+                                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                                        dr_FileDataRow["filePath"] = lvi.Text;
+                                        dr_FileDataRow["settingId"] = "CountryCode";
+                                        dr_FileDataRow["settingValue"] = CountryCode;
+                                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
 
-                                    // Country
-                                    dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                                    dr_FileDataRow["filePath"] = lvi.Text;
-                                    dr_FileDataRow["settingId"] = "Country";
-                                    dr_FileDataRow["settingValue"] = Country;
-                                    dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                                        // Country
+                                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                                        dr_FileDataRow["filePath"] = lvi.Text;
+                                        dr_FileDataRow["settingId"] = "Country";
+                                        dr_FileDataRow["settingValue"] = Country;
+                                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
 
-                                    // City
-                                    dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                                    dr_FileDataRow["filePath"] = lvi.Text;
-                                    dr_FileDataRow["settingId"] = "City";
-                                    dr_FileDataRow["settingValue"] = City;
-                                    dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                                        // City
+                                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                                        dr_FileDataRow["filePath"] = lvi.Text;
+                                        dr_FileDataRow["settingId"] = "City";
+                                        dr_FileDataRow["settingValue"] = City;
+                                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
 
-                                    // State
-                                    dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                                    dr_FileDataRow["filePath"] = lvi.Text;
-                                    dr_FileDataRow["settingId"] = "State";
-                                    dr_FileDataRow["settingValue"] = State;
-                                    dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                                        // State
+                                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                                        dr_FileDataRow["filePath"] = lvi.Text;
+                                        dr_FileDataRow["settingId"] = "State";
+                                        dr_FileDataRow["settingValue"] = State;
+                                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
 
-                                    // Sub_location
-                                    dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                                    dr_FileDataRow["filePath"] = lvi.Text;
-                                    dr_FileDataRow["settingId"] = "Sub_location";
-                                    dr_FileDataRow["settingValue"] = Sub_location;
-                                    dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                                        // Sub_location
+                                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                                        dr_FileDataRow["filePath"] = lvi.Text;
+                                        dr_FileDataRow["settingId"] = "Sub_location";
+                                        dr_FileDataRow["settingValue"] = Sub_location;
+                                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
 
-                                    // Altitude
-                                    dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                                    dr_FileDataRow["filePath"] = lvi.Text;
-                                    dr_FileDataRow["settingId"] = "GPSAltitude";
-                                    dr_FileDataRow["settingValue"] = Altitude;
-                                    dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                                        // Altitude
+                                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
+                                        dr_FileDataRow["filePath"] = lvi.Text;
+                                        dr_FileDataRow["settingId"] = "GPSAltitude";
+                                        dr_FileDataRow["settingValue"] = Altitude;
+                                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                                    }
                                 }
                             }
                         }
+                        Helper.LwvUpdateRowFromDTWriteStage3ReadyToWrite();
                     }
-                    Helper.LwvUpdateRowFromDTWriteStage3ReadyToWrite();
                 }
             }
         }

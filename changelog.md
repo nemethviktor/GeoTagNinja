@@ -1,6 +1,6 @@
 ﻿# GeoTagNinja Changelog
-v0.5.8314 [20221006]
-- Added a "don't ask again" button for the "loc-to-file" dialogbox. This is session specific (if you close/restart the app, it will come back again).
+v0.5.8314 [20221006] + v0.5.8318 [20221010]
+- Added a "don't ask again" button for the "loc-to-file" dialogbox. This is session specific (if you close/restart the app, it will come back again). [Updated this logic in the v0.5.8318 release]
 - Minor code cleanup
 
 v0.5.8304 [20220926]
