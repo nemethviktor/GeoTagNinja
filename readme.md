@@ -6,13 +6,13 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 
 ## Things to Note, Usage and Testing
 
+- This is mentioned in Known Issues briefly but just to reiterate: if you have issues with file data not showing please try renaming/moving your files to a "simple" folder like "C:\temp" and make sure your file names don't contain umlauts, special characters and anything "odd". This is a limitation of exifTool.
 - This isn't GeoSetter. I've included the map/toponymy functionality because admittedly that's what I use. For the time being that's it. I am open to requests and commits/contributions from others. Admittedly I'd rather bug-hunt initially and then add in new stuff though. Probably the next step will be time zones and time-setting.
 - My background is SQL and VBA development and contrary to the obvious I've never before written anything in C# or similar. This means that the code is probably a bit ugly, but it works. As for naming conventions, they've been "more or less" followed. An effort has been made. Classes are mostly okay-named and that's that. I'm aware. If someone wants to refactor the whole code, be my guest.
 - Again this isn't GeoSetter and I'm not the guy that wrote it and I don't have access to the source code of it. GeoSetter (I think) used DCRAW/libRAW to read RAW files. The advantage of that is there are native libraries for C# that hook DCRAW and it's fast AF. The disadvantage is that it has a comparatively limited range of file support, e.g. CR3s aren't supported and neither are some others. GTN uses exifTool for everything, which supports a lot more extensions but it has to be called externally each time the user interacts with a file or folder. The most visible disadvantage of this is that it takes a second (or two or three or five) to load up exifTool and the app may appear non-responsive when entering a folder. For the time being this is what it is, be patient and I'm hoping someone in the coder community can make suggestions on how to deal with this. FWIW I've tried having the whole shebang as Static classes and also as non-Static classes and while I settled on the latter I think it makes f.k all difference.
 - I have tried to test reasonably thoroughly but bugs probably remain.
 -- Basically until the program hits version 1 (currently it's v0.x) most probably save your original files before using this. This particularly applies if you happen to be using a non-English version of Windows or if your various file paths contain non-standard characters.
 - As per usual I don't accept any liability for damage and/or any other inconvenience you may suffer while/from using this app, no warranties and/or guarantees. The script is open source and everyone is welcome to read it. 
-- This is detailed in the Known Issues but if you are using non-English filenames then you may want to turn on UTF support in Windows 10. This feature is not available in older Windows versions.
 - During Setup the installer will trigger the webView2 installer as well. This is an Edge/Chromium-based engine that is required to show the map.
 - I'm kinda hoping this won't come up a problem but don't bash me about country names please. I'm thinking disputed country names and areas here. They are ISO standards, the API returns those values, that's it. Being from the UK I do think that the long name of "United Kingdom of Great Britain and Northern Ireland (the)" is a bit lengthy but it is what it is (and it's relatively rarely disputed but for example Crimea does return Ukraine as a value, regardless of what's been going on there since 2014; again, this isn't a statement either way, it's the API reply). 
 -- On this particular note above --> the script won't change existing country details in files unless you explicitly edit them. So it may happen that your existing file has the CountryCode GBR and the Country "United Kingdom", that won't be changed unless you do a "Get From Web" because the CountryCode-to-Country matching only runs in that case. That's a feature, not a bug.
@@ -37,7 +37,8 @@ For the "main" project you should be okay without anything separate. It has work
 
 ## Known Issues
 
-- exifTool has a hard limit of 260 characters for file names including paths. Anything beyond that will fail. Rename your files or temporarily move them to C:\temp if this is an issue. Unicode (e.g. most Chinese and other Asian) characters have an up to 4-byte size per character. This is to say you'll run into errors with these files more often than not.
+- There is a likelyhood that the app will struggle to read file data if your files are kept in folders with accent marks (umlauts, non-standard English characters) in the path and/or filename. This is a limitation of exifTool + cmd. If you encounter a problem, move your files to something like "C:\temp" and see if it works better.
+-- On top of that above exifTool has a hard limit of 260 characters for file names including paths. Anything beyond that will fail. Again, rename your files or temporarily move them to C:\temp if this is an issue. Unicode (e.g. most Chinese and other Asian) characters have an up to 4-byte size per character. This is to say you'll run into errors with these files more often than not.
 -- Alternatively you can enable [this](https://stackoverflow.com/questions/56419639/what-does-beta-use-unicode-utf-8-for-worldwide-language-support-actually-do) feature if you're running v1903 Windows 10 or later but it may have some unwanted effects so keep an eye out for changes caused by it. 
 - Multi-select doesn't show on the map. I don't know how to do it.
 - For UK the API returns city/sublocation in an odd way. this has been *probably* fixed in code but do test.
@@ -51,10 +52,10 @@ For the "main" project you should be okay without anything separate. It has work
 
 ## When reporting bugs please specify
 
-- The OS's version
-- The OS's language
-- Full path of your photo if the bug is related to exif tagging
-- Possibly upload the picture somewhere if not sensitive so I can test
+- The OS's version,
+- The OS's language (incl region such as English/UK or English/USA),
+- Full path of your photo if the bug is related to reading or writing data,
+- Possibly upload the picture somewhere if not sensitive so I can test.
 
 ## System Requirements
 
