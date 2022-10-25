@@ -449,24 +449,34 @@ namespace GeoTagNinja
 
             #region query current & newest exifTool version
             // get current & newest exiftool version -- do this here at the end so it doesn't hold up the process
-            // exiftool doesn't get released (proper) to github...technically we could query https://api.github.com/repos/exiftool/exiftool/tags
-            // but i'm not sure that's particularly safe in case he ever changes the tags (unlikely tho')
-            Helper.ExifGetExifToolVersion();
-            string currentExifToolVersion = Helper.DataReadSQLiteSettings(
+            double currentExifToolVersionLocal = await Helper.ExifGetExifToolVersion();
+            double newestExifToolVersionOnline = Helper.API_ExifGetExifToolVersionFromWeb();
+            double currentExifToolVersionInSQL;
+            string strCurrentExifToolVersionInSQL = Helper.DataReadSQLiteSettings(
                     tableName: "settings",
                     settingTabPage: "generic",
                     settingId: "exifToolVer"
                     );
 
-
-            Helper.s_APIOkay = true;
-            DataTable dt_APIExifToolVersion = Helper.DTFromAPI_GetExifToolVersion();
-            string newestExifToolVersion = dt_APIExifToolVersion.Rows[0]["version"].ToString();
-            if (currentExifToolVersion != null && currentExifToolVersion != "" && currentExifToolVersion != newestExifToolVersion)
+            if (!double.TryParse(strCurrentExifToolVersionInSQL, NumberStyles.Any, CultureInfo.InvariantCulture, out currentExifToolVersionInSQL))
             {
-                if (MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_InfoNewExifToolVersionExists") + newestExifToolVersion, "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                currentExifToolVersionInSQL = currentExifToolVersionLocal;
+            }
+
+            if (newestExifToolVersionOnline > currentExifToolVersionLocal && newestExifToolVersionOnline > currentExifToolVersionInSQL && (currentExifToolVersionLocal + newestExifToolVersionOnline) > 0)
+            {
+                // write current to SQL
+                Helper.DataWriteSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: "generic",
+                    settingId: "exifToolVer",
+                    settingValue: newestExifToolVersionOnline.ToString().Replace(',', '.')
+                    );
+
+                // the newestExifToolVersionOnline.ToString().Replace(',', '.') is needed for non-English culture settings.
+                if (MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_InfoNewExifToolVersionExists") + newestExifToolVersionOnline.ToString().Replace(',', '.'), "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
                 {
-                    System.Diagnostics.Process.Start("https://exiftool.org/exiftool-" + newestExifToolVersion + ".zip");
+                    System.Diagnostics.Process.Start("https://exiftool.org/exiftool-" + newestExifToolVersionOnline.ToString().Replace(',', '.') + ".zip");
                 }
             }
             #endregion

@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -257,7 +258,7 @@ namespace GeoTagNinja
                                 @"WHERE 1=1
                                     AND settingId = @settingId
                                     AND settingTabPage = @settingTabPage
-;"
+                                    ;"
                                 ;
                 SQLiteCommand sqlToRun = new(sqlCommandStr, sqliteDB);
                 sqlToRun.Parameters.AddWithValue("@settingTabPage", settingTabPage);
@@ -1337,10 +1338,16 @@ namespace GeoTagNinja
             }
         }
         /// <summary>
-        /// Gets the app version of the current exifTool and updates a static string with the data.
+        /// Gets the app version of the current exifTool.
+        /// <returns>A double of the current exifTool version.</returns>
         /// </summary>
-        internal static async void ExifGetExifToolVersion()
+        internal static async Task<double> ExifGetExifToolVersion()
         {
+            string exifToolResult;
+            double returnVal = 0.0;
+            bool parsedResult;
+            double parsedDouble = 0.0;
+
             frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
             IEnumerable<string> exifToolCommand = Enumerable.Empty<string>();
             List<string> commonArgList = new()
@@ -1353,7 +1360,6 @@ namespace GeoTagNinja
                 });
             }
             CancellationToken ct = CancellationToken.None;
-            string exifToolResult;
 
             try
             {
@@ -1376,14 +1382,19 @@ namespace GeoTagNinja
                 if (exifToolReturnStr is not null && exifToolReturnStr.Length > 0)
                 {
                     //this only returns something like "12.42" and that's all
-                    Helper.DataWriteSQLiteSettings(
-                        tableName: "settings",
-                        settingTabPage: "generic",
-                        settingId: "exifToolVer",
-                        settingValue: exifToolReturnStr
-                        );
+                    parsedResult = double.TryParse(exifToolReturnStr, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedDouble);
+                    if (parsedResult)
+                    {
+                        returnVal = parsedDouble;
+                    }
+                    else
+                    {
+                        returnVal = 0.0;
+                    }
                 }
             }
+
+            return returnVal;
         }
         /// <summary>
         /// This generates (technically, extracts) the image previews from files for the user when they click on a filename
@@ -1821,31 +1832,34 @@ namespace GeoTagNinja
             return returnVal;
         }
         /// <summary>
-        /// Responsible for pulling the latest prod-version number of exifTool from metaCPAN
+        /// Responsible for pulling the latest prod-version number of exifTool from exiftool.org
         /// </summary>
-        /// <returns>The version number of the currently newest exifTool uploaded to metaCPAN</returns>
-        internal static geoTagNinja.ExifToolVerQueryResponse API_ExifGetExifToolVersionFromWeb()
+        /// <returns>The version number of the currently newest exifTool uploaded to exiftool.org</returns>
+        internal static double API_ExifGetExifToolVersionFromWeb()
         {
-            geoTagNinja.ExifToolVerQueryResponse returnVal = new();
-            var client = new RestClient("https://fastapi.metacpan.org/")
+            double returnVal = 0.0;
+            double parsedDouble = 0.0;
+            string onlineExifToolVer;
+
+            bool parsedResult;
+            try
             {
-                // admittedly no idea how to do this w/o any auth (as it's not needed) but this appears to work.
-                Authenticator = new HttpBasicAuthenticator("demo", "demo")
-            };
-            var request_ExifToolVersionQuery = new RestRequest("v1/release/_search?q=Image-ExifTool%20AND%20status:latest&fields=name,status,version&size=1", Method.Get);
-            var response_ExifToolVerQuery = client.ExecuteGet(request_ExifToolVersionQuery);
-            if (response_ExifToolVerQuery.StatusCode.ToString() == "OK")
-            {
-                s_APIOkay = true;
-                var data = (JObject)JsonConvert.DeserializeObject(response_ExifToolVerQuery.Content);
-                var exifToolVerQueryResponse = geoTagNinja.ExifToolVerQueryResponse.FromJson(data.ToString());
-                returnVal = exifToolVerQueryResponse;
+                onlineExifToolVer = new WebClient().DownloadString("http://exiftool.org/ver.txt");
+                parsedResult = double.TryParse(onlineExifToolVer, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedDouble);
+                if (parsedResult)
+                {
+                    returnVal = parsedDouble;
+                }
+                else
+                {
+                    returnVal = 0.0;
+                };
             }
-            else
+            catch
             {
-                s_APIOkay = false;
-                MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_WarningExifToolVerAPIResponse") + response_ExifToolVerQuery.StatusCode.ToString(), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                returnVal = 0.0;
             }
+
             return returnVal;
         }
         /// <summary>
@@ -2072,37 +2086,6 @@ namespace GeoTagNinja
             {
                 DataRow dr_ReturnRow = dt_Return.NewRow();
                 dr_ReturnRow["Altitude"] = Altitude;
-                dt_Return.Rows.Add(dr_ReturnRow);
-            }
-            return dt_Return;
-        }
-        /// <summary>
-        /// Converts the API response from metaCPAN (to check exifTool's newest version) to a DataTable
-        /// </summary>
-        /// <returns>A Datatable with (hopefully) one row of data containing the newest exifTool version</returns>
-        internal static DataTable DTFromAPI_GetExifToolVersion()
-        {
-            DataTable dt_Return = new DataTable();
-            dt_Return.Clear();
-            dt_Return.Columns.Add("version");
-
-            string apiVersion = "";
-
-            if (s_APIOkay)
-            {
-                geoTagNinja.ExifToolVerQueryResponse readJson_ExifToolVer;
-                readJson_ExifToolVer = API_ExifGetExifToolVersionFromWeb();
-                if (readJson_ExifToolVer.Hits != null)
-                {
-                    apiVersion = readJson_ExifToolVer.Hits.HitsHits[0].Fields.Version.ToString();
-                }
-                // this will be a null value if Unauthorised, we'll ignore that.
-            }
-
-            if (s_APIOkay)
-            {
-                DataRow dr_ReturnRow = dt_Return.NewRow();
-                dr_ReturnRow["version"] = apiVersion;
                 dt_Return.Rows.Add(dr_ReturnRow);
             }
             return dt_Return;
