@@ -1,4 +1,5 @@
 ﻿using CoenM.ExifToolLib;
+using Microsoft.VisualBasic;
 using Microsoft.Web.WebView2.Core;
 using System;
 using System.Collections.Generic;
@@ -445,60 +446,99 @@ namespace GeoTagNinja
                 this.tbx_lat.Text = defaultLat;
                 this.tbx_lng.Text = defaultLng;
             }
-            NavigateMapGo(tbx_lat.Text, tbx_lng.Text);
+            Helper.hs_MapMarkers.Clear();
+            Helper.hs_MapMarkers.Add((tbx_lat.Text.Replace(',', '.'), tbx_lng.Text.Replace(',', '.')));
+            NavigateMapGo();
 
             #region query current & newest exifTool version
-            // get current & newest exiftool version -- do this here at the end so it doesn't hold up the process
-            double currentExifToolVersionLocal = await Helper.ExifGetExifToolVersion();
-            double newestExifToolVersionOnline = Helper.API_ExifGetExifToolVersionFromWeb();
-            double currentExifToolVersionInSQL;
-            string strCurrentExifToolVersionInSQL = Helper.DataReadSQLiteSettings(
+            // check when the last polling took place
+
+            long nowUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
+            long lastCheckUnixTime = 0;
+
+            string strLastOnlineVersionCheck = Helper.DataReadSQLiteSettings(
                     tableName: "settings",
                     settingTabPage: "generic",
-                    settingId: "exifToolVer"
+                    settingId: "onlineVersionCheckDate"
                     );
 
-            if (!double.TryParse(strCurrentExifToolVersionInSQL, NumberStyles.Any, CultureInfo.InvariantCulture, out currentExifToolVersionInSQL))
+            if (strLastOnlineVersionCheck == null)
             {
-                currentExifToolVersionInSQL = currentExifToolVersionLocal;
-            }
-
-            if (newestExifToolVersionOnline > currentExifToolVersionLocal && newestExifToolVersionOnline > currentExifToolVersionInSQL && (currentExifToolVersionLocal + newestExifToolVersionOnline) > 0)
-            {
-                // write current to SQL
+                lastCheckUnixTime = nowUnixTime;
+                // write back to SQL so it doesn't remain blank
                 Helper.DataWriteSQLiteSettings(
                     tableName: "settings",
                     settingTabPage: "generic",
-                    settingId: "exifToolVer",
-                    settingValue: newestExifToolVersionOnline.ToString().Replace(',', '.')
+                    settingId: "onlineVersionCheckDate",
+                    settingValue: nowUnixTime.ToString()
                     );
-
-                // the newestExifToolVersionOnline.ToString().Replace(',', '.') is needed for non-English culture settings.
-                if (MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_InfoNewExifToolVersionExists") + newestExifToolVersionOnline.ToString().Replace(',', '.'), "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
-                {
-                    System.Diagnostics.Process.Start("https://exiftool.org/exiftool-" + newestExifToolVersionOnline.ToString().Replace(',', '.') + ".zip");
-                }
             }
-            #endregion
-            #region query current & newest GTN version
-            // current version may be something like "0.5.8251.40825"
-            string currentGTNVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
-            // don't run this in debug mode. currentGTNVersion is dependent on the # of days since 1/1/2000 basically.
-            // so each time i make a new build this updates and the query triggers a messagebox...which for me is a bit useless.
-#if !DEBUG
-            Helper.s_APIOkay = true;
-            DataTable dt_APIGTNVersion = Helper.DTFromAPI_GetGTNVersion();
-            // newest may be something like "v0.5.8251"
-            string newestGTNVersion = dt_APIGTNVersion.Rows[0]["version"].ToString().Replace("v", "");
-            if (!currentGTNVersion.Contains(newestGTNVersion))
+            else
             {
-                if (MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_InfoNewGTNVersionExists") + newestGTNVersion, "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
-                {
-                    System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dt_APIGTNVersion.Rows[0]["version"].ToString() + "/GeoTagNinja_Setup.msi");
-                }
+                lastCheckUnixTime = long.Parse(strLastOnlineVersionCheck);
             }
+
+            if (nowUnixTime > (lastCheckUnixTime + 604800)) //604800 is a week's worth of seconds
+            {
+                // get current & newest exiftool version -- do this here at the end so it doesn't hold up the process
+                double currentExifToolVersionLocal = await Helper.ExifGetExifToolVersion();
+                double newestExifToolVersionOnline = Helper.API_ExifGetExifToolVersionFromWeb();
+                double currentExifToolVersionInSQL;
+                string strCurrentExifToolVersionInSQL = Helper.DataReadSQLiteSettings(
+                        tableName: "settings",
+                        settingTabPage: "generic",
+                        settingId: "exifToolVer"
+                        );
+
+                if (!double.TryParse(strCurrentExifToolVersionInSQL, NumberStyles.Any, CultureInfo.InvariantCulture, out currentExifToolVersionInSQL))
+                {
+                    currentExifToolVersionInSQL = currentExifToolVersionLocal;
+                }
+
+                if (newestExifToolVersionOnline > currentExifToolVersionLocal && newestExifToolVersionOnline > currentExifToolVersionInSQL && (currentExifToolVersionLocal + newestExifToolVersionOnline) > 0)
+                {
+                    // write current to SQL
+                    Helper.DataWriteSQLiteSettings(
+                        tableName: "settings",
+                        settingTabPage: "generic",
+                        settingId: "exifToolVer",
+                        settingValue: newestExifToolVersionOnline.ToString().Replace(',', '.')
+                        );
+
+                    // the newestExifToolVersionOnline.ToString().Replace(',', '.') is needed for non-English culture settings.
+                    if (MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_InfoNewExifToolVersionExists") + newestExifToolVersionOnline.ToString().Replace(',', '.'), "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                    {
+                        System.Diagnostics.Process.Start("https://exiftool.org/exiftool-" + newestExifToolVersionOnline.ToString().Replace(',', '.') + ".zip");
+                    }
+                }
+                #endregion
+                #region query current & newest GTN version
+                // current version may be something like "0.5.8251.40825"
+                string currentGTNVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+                // don't run this in debug mode. currentGTNVersion is dependent on the # of days since 1/1/2000 basically.
+                // so each time i make a new build this updates and the query triggers a messagebox...which for me is a bit useless.
+#if !DEBUG
+                Helper.s_APIOkay = true;
+                DataTable dt_APIGTNVersion = Helper.DTFromAPI_GetGTNVersion();
+                // newest may be something like "v0.5.8251"
+                string newestGTNVersion = dt_APIGTNVersion.Rows[0]["version"].ToString().Replace("v", "");
+                if (!currentGTNVersion.Contains(newestGTNVersion))
+                {
+                    if (MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_InfoNewGTNVersionExists") + newestGTNVersion, "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                    {
+                        System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dt_APIGTNVersion.Rows[0]["version"].ToString() + "/GeoTagNinja_Setup.msi");
+                    }
+                }
 #endif
+                // write back to SQL
+                Helper.DataWriteSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: "generic",
+                    settingId: "onlineVersionCheckDate",
+                    settingValue: nowUnixTime.ToString()
+                    );
+            }
             #endregion
         }
         /// <summary>
@@ -896,7 +936,9 @@ namespace GeoTagNinja
         /// <param name="e">Unused</param>
         private void btn_NavigateMapGo_Click(object sender, EventArgs e)
         {
-            NavigateMapGo(this.tbx_lat.Text.ToString(), this.tbx_lng.Text.ToString());
+            Helper.hs_MapMarkers.Clear();
+            Helper.hs_MapMarkers.Add((this.tbx_lat.Text.ToString().Replace(',', '.'), this.tbx_lng.Text.ToString().Replace(',', '.')));
+            NavigateMapGo();
         }
         /// <summary>
         /// Handles the clicking on "ToFile" button. See comments above re: why we're using strings (culture-related issue)
@@ -1052,9 +1094,19 @@ namespace GeoTagNinja
         /// Handles the navigation to a coordinate on the map. Replaces hard-coded values w/ user-provided ones
         /// ... and executes the navigation action.
         /// </summary>
-        internal void NavigateMapGo(string strLatCoordinate, string strLngCoordinate)
+        internal void NavigateMapGo()
         {
             string HTMLCode = "";
+            Helper.HTMLAddMarker = "";
+            Helper.minLat = null;
+            Helper.minLng = null;
+            Helper.maxLat = null;
+            Helper.maxLng = null;
+
+            // lazy
+            string strLatCoordinate = "0";
+            string strLngCoordinate = "0";
+
             try
             {
                 HTMLCode = File.ReadAllText(Path.Combine(resourcesFolderPath, "map.html"));
@@ -1064,18 +1116,62 @@ namespace GeoTagNinja
                 MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_ErrorNavigateMapGoHTMLCode") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            strLatCoordinate = strLatCoordinate.Replace(',', '.');
-            strLngCoordinate = strLngCoordinate.Replace(',', '.');
-
             if (Helper.s_ArcGIS_APIKey == null)
             {
                 Helper.s_ArcGIS_APIKey = Helper.DataSelectTbxARCGIS_APIKey_FromSQLite();
-
             }
-            HTMLCode = HTMLCode.Replace("yourApiKey", Helper.s_ArcGIS_APIKey);
+
+            foreach (var locationCoord in Helper.hs_MapMarkers)
+            {
+                Helper.HTMLAddMarker += "var marker = L.marker([" + locationCoord.strLat + ", " + locationCoord.strLng + "]).addTo(map).openPopup();" + "\n";
+                strLatCoordinate = locationCoord.strLat;
+                strLngCoordinate = locationCoord.strLng;
+
+                // set scene for mix/max so map zoom can be set automatically
+                {
+                    if (Helper.minLat == null)
+                    {
+                        Helper.minLat = double.Parse(strLatCoordinate, CultureInfo.InvariantCulture);
+                        Helper.maxLat = Helper.minLat;
+                    }
+
+                    if (double.Parse(strLatCoordinate, CultureInfo.InvariantCulture) < Helper.minLat)
+                    {
+                        Helper.minLat = double.Parse(strLatCoordinate, CultureInfo.InvariantCulture);
+                    }
+
+                    if (double.Parse(strLatCoordinate, CultureInfo.InvariantCulture) > Helper.maxLat)
+                    {
+                        Helper.maxLat = double.Parse(strLatCoordinate, CultureInfo.InvariantCulture);
+                    }
+
+                    if (Helper.minLng == null)
+                    {
+                        Helper.minLng = double.Parse(strLngCoordinate, CultureInfo.InvariantCulture);
+                        Helper.maxLng = Helper.minLng;
+                    }
+
+                    if (double.Parse(strLngCoordinate, CultureInfo.InvariantCulture) < Helper.minLng)
+                    {
+                        Helper.minLng = double.Parse(strLngCoordinate, CultureInfo.InvariantCulture);
+                    }
+
+                    if (double.Parse(strLngCoordinate, CultureInfo.InvariantCulture) > Helper.maxLng)
+                    {
+                        Helper.maxLng = double.Parse(strLngCoordinate, CultureInfo.InvariantCulture);
+                    }
+                }
+            }
+
             HTMLCode = HTMLCode.Replace("replaceLat", strLatCoordinate);
             HTMLCode = HTMLCode.Replace("replaceLng", strLngCoordinate);
+            HTMLCode = HTMLCode.Replace("replaceMinLat", Helper.minLat.ToString().Replace(',', '.'));
+            HTMLCode = HTMLCode.Replace("replaceMinLng", Helper.minLng.ToString().Replace(',', '.'));
+            HTMLCode = HTMLCode.Replace("replaceMaxLat", Helper.maxLat.ToString().Replace(',', '.'));
+            HTMLCode = HTMLCode.Replace("replaceMaxLng", Helper.maxLng.ToString().Replace(',', '.'));
 
+            HTMLCode = HTMLCode.Replace("yourApiKey", Helper.s_ArcGIS_APIKey);
+            HTMLCode = HTMLCode.Replace("{ HTMLAddMarker }", Helper.HTMLAddMarker);
             wbv_MapArea.NavigateToString(HTMLCode);
         }
         #endregion
@@ -1427,16 +1523,6 @@ namespace GeoTagNinja
 
         }
         /// <summary>
-        /// Handles the lvw_FileList_Click event -> if the file that has been clicked on has geodata, it shows its location on the map
-        /// ... also generates a preview for the file if there is one.
-        /// </summary>
-        /// <param name="sender">Unused</param>
-        /// <param name="e">Unused</param>
-        private async void lvw_FileList_Click(object sender, EventArgs e)
-        {
-            await Helper.LvwItemClickNavigate();
-        }
-        /// <summary>
         /// Handles the lvw_FileList_MouseDoubleClick event -> if user clicked on a folder then enter, if a file then edit
         /// ... else warn and don't do anything.
         /// </summary>
@@ -1491,12 +1577,69 @@ namespace GeoTagNinja
             // control A -> select all
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
             {
-                foreach (ListViewItem item in lvw_FileList.Items)
+                Helper.s_NowSelectingAllItems = true;
+
+                for (int i = 0; i < lvw_FileList.Items.Count; i++)
                 {
-                    item.Selected = true;
+                    // so because there is no way to do a proper "select all" w/o looping i only want to run the "navigate" (which is triggered on select-state-change at the end
+                    if (i == lvw_FileList.Items.Count - 1)
+                    {
+                        Helper.s_NowSelectingAllItems = false;
+                    }
+                    lvw_FileList.Items[i].Selected = true;
+                    await Helper.LvwItemClickNavigate();
+                    // for folders and other non-valid items, don't do anything.
+                    if (Helper.hs_MapMarkers.Count > 0)
+                    {
+                        NavigateMapGo();
+                    }
                 }
+
+                // just in case...
+                Helper.s_NowSelectingAllItems = false;
             }
 
+            // Up & Down -> Move
+            else if (e.KeyCode == Keys.Up)
+            {
+                if (lvw_FileList.FocusedItem != null)
+                {
+                    if (lvw_FileList.FocusedItem.Index > 0)
+                    {
+                        int thisItemIndex = lvw_FileList.FocusedItem.Index;
+                        lvw_FileList.Items[thisItemIndex].Selected = false;
+                        //lvw_FileList.FocusedItem = lvw_FileList.Items[thisItemIndex - 1];
+                        lvw_FileList.Items[thisItemIndex - 1].Selected = true;
+
+                        await Helper.LvwItemClickNavigate();
+                        // for folders and other non-valid items, don't do anything.
+                        if (Helper.hs_MapMarkers.Count > 0)
+                        {
+                            NavigateMapGo();
+                        }
+                    }
+                }
+            }
+            else if (e.KeyCode == Keys.Down)
+            {
+                if (lvw_FileList.FocusedItem != null)
+                {
+                    if (lvw_FileList.FocusedItem.Index < lvw_FileList.Items.Count - 1)
+                    {
+                        int thisItemIndex = lvw_FileList.FocusedItem.Index;
+                        lvw_FileList.Items[thisItemIndex].Selected = false;
+                        //lvw_FileList.FocusedItem = lvw_FileList.Items[thisItemIndex + 1];
+                        lvw_FileList.Items[thisItemIndex + 1].Selected = true;
+
+                        await Helper.LvwItemClickNavigate();
+                        // for folders and other non-valid items, don't do anything.
+                        if (Helper.hs_MapMarkers.Count > 0)
+                        {
+                            NavigateMapGo();
+                        }
+                    }
+                }
+            }
             // Shift Control C -> copy details
             else if (e.Control && e.Shift && e.KeyCode == Keys.C)
             {
@@ -1672,13 +1815,21 @@ namespace GeoTagNinja
             lvw_FileList.Items.Add(lvi).SubItems.AddRange(subItemList.ToArray());
         }
         /// <summary>
-        /// Handles the lvw_FileList_SelectedIndexChanged event -> Triggers lvw_FileList_Click
+        /// Watches for the user to lift the mouse button while over the listview. This will trigger the collection of coordinates and map them.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void lvw_FileList_SelectedIndexChanged(object sender, EventArgs e)
+        private async void lvw_FileList_MouseUp(object sender, MouseEventArgs e)
         {
-            lvw_FileList_Click(sender, e);
+            if (!Helper.s_NowSelectingAllItems)
+            {
+                await Helper.LvwItemClickNavigate();
+                // for folders and other non-valid items, don't do anything.
+                if (Helper.hs_MapMarkers.Count > 0)
+                {
+                    NavigateMapGo();
+                }
+            }
         }
         #endregion
         #endregion

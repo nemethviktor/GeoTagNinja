@@ -59,6 +59,7 @@ namespace GeoTagNinja
             this.btn_SaveFiles = new System.Windows.Forms.ToolStripButton();
             this.btn_Refresh_lvwFileList = new System.Windows.Forms.ToolStripButton();
             this.btn_EditFile = new System.Windows.Forms.ToolStripButton();
+            this.btn_RemoveGeoData = new System.Windows.Forms.ToolStripButton();
             this.tsr_FolderControl = new System.Windows.Forms.ToolStrip();
             this.tbx_FolderName = new System.Windows.Forms.ToolStripTextBox();
             this.btn_OneFolderUp = new System.Windows.Forms.ToolStripButton();
@@ -66,7 +67,6 @@ namespace GeoTagNinja
             this.btn_loctToFile = new System.Windows.Forms.Button();
             this.lbl_ParseProgress = new System.Windows.Forms.Label();
             this.pbx_imagePreview = new System.Windows.Forms.PictureBox();
-            this.btn_RemoveGeoData = new System.Windows.Forms.ToolStripButton();
             this.mns_MenuStrip.SuspendLayout();
             this.tct_Main.SuspendLayout();
             this.tpg_Map.SuspendLayout();
@@ -282,10 +282,9 @@ namespace GeoTagNinja
             this.lvw_FileList.TabIndex = 11;
             this.lvw_FileList.UseCompatibleStateImageBehavior = false;
             this.lvw_FileList.View = System.Windows.Forms.View.Details;
-            this.lvw_FileList.SelectedIndexChanged += new System.EventHandler(this.lvw_FileList_SelectedIndexChanged);
-            this.lvw_FileList.Click += new System.EventHandler(this.lvw_FileList_Click);
             this.lvw_FileList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvw_FileList_KeyDown);
             this.lvw_FileList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvw_FileList_MouseDoubleClick);
+            this.lvw_FileList.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lvw_FileList_MouseUp);
             // 
             // clh_FileName
             // 
@@ -340,6 +339,17 @@ namespace GeoTagNinja
             this.btn_EditFile.Size = new System.Drawing.Size(23, 22);
             this.btn_EditFile.Text = "btn_EditFile";
             this.btn_EditFile.Click += new System.EventHandler(this.btn_EditFile_Click);
+            // 
+            // btn_RemoveGeoData
+            // 
+            this.btn_RemoveGeoData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btn_RemoveGeoData.Image = ((System.Drawing.Image)(resources.GetObject("btn_RemoveGeoData.Image")));
+            this.btn_RemoveGeoData.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.btn_RemoveGeoData.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_RemoveGeoData.Name = "btn_RemoveGeoData";
+            this.btn_RemoveGeoData.Size = new System.Drawing.Size(23, 22);
+            this.btn_RemoveGeoData.Text = "btn_RemoveGeoData";
+            this.btn_RemoveGeoData.Click += new System.EventHandler(this.btn_RemoveGeoData_Click);
             // 
             // tsr_FolderControl
             // 
@@ -416,17 +426,6 @@ namespace GeoTagNinja
             this.pbx_imagePreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbx_imagePreview.TabIndex = 18;
             this.pbx_imagePreview.TabStop = false;
-            // 
-            // btn_RemoveGeoData
-            // 
-            this.btn_RemoveGeoData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btn_RemoveGeoData.Image = ((System.Drawing.Image)(resources.GetObject("btn_RemoveGeoData.Image")));
-            this.btn_RemoveGeoData.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.btn_RemoveGeoData.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btn_RemoveGeoData.Name = "btn_RemoveGeoData";
-            this.btn_RemoveGeoData.Size = new System.Drawing.Size(23, 22);
-            this.btn_RemoveGeoData.Text = "btn_RemoveGeoData";
-            this.btn_RemoveGeoData.Click += new System.EventHandler(this.btn_RemoveGeoData_Click);
             // 
             // frm_MainApp
             // 

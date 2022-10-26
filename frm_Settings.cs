@@ -36,15 +36,7 @@ namespace GeoTagNinja
                 }
                 else if (cItem.GetType() == typeof(TextBox) || cItem.GetType() == typeof(ComboBox))
                 {
-                    if (cItem.Name != "cbx_Language")
-                    {
-                        cItem.Text = Helper.DataReadSQLiteSettings(
-                            tableName: "settings",
-                            settingTabPage: cItem.Parent.Name,
-                            settingId: cItem.Name
-                            );
-                    }
-                    else
+                    if (cItem.Name == "cbx_Language")
                     {
                         string resourcesFolderPath = frm_MainApp.resourcesFolderPath;
                         string languagesFolderPath = Path.Combine(frm_MainApp.resourcesFolderPath, "Languages");
@@ -64,6 +56,14 @@ namespace GeoTagNinja
                                     );
                             }
                         }
+                    }
+                    else
+                    {
+                        cItem.Text = Helper.DataReadSQLiteSettings(
+                            tableName: "settings",
+                            settingTabPage: cItem.Parent.Name,
+                            settingId: cItem.Name
+                            );
                     }
                 }
             }
@@ -328,7 +328,7 @@ namespace GeoTagNinja
         /// </summary>
         /// <param name="sender">The Control in question</param>
         /// <param name="e">Unused</param>
-        private void Any_cbx_CheckStateChanged(object sender, EventArgs e)
+        private void Any_ckb_CheckStateChanged(object sender, EventArgs e)
         {
             if (!nowLoadingSettingsData)
             {
@@ -375,6 +375,31 @@ namespace GeoTagNinja
                     );
             }
         }
+        /// <summary>
+        /// Handles the event where any combobox's dropdown/text has changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Any_cbx_TextChanged(object sender, EventArgs e)
+        {
+            if (!nowLoadingSettingsData)
+            {
+                ComboBox cbx = (ComboBox)sender;
+                cbx.Font = new Font(cbx.Font, FontStyle.Bold);
 
+                // stick it into settings-Q
+                Helper.DataWriteSQLiteSettings(
+                    tableName: "settingsToWritePreQueue",
+                    settingTabPage: ((Control)sender).Parent.Name,
+                    settingId: ((ComboBox)sender).Name,
+                    settingValue: ((ComboBox)sender).Text
+                    );
+                // fire a warning if language has changed. 
+                if((((ComboBox)sender).Name) == "cbx_Language") 
+                {
+                    MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_Settings_cbx_Language_TextChanged"), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+        }
     }
 }

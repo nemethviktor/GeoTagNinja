@@ -1,4 +1,13 @@
 ﻿# GeoTagNinja Changelog
+v0.5.8334 [20221026]
+- Bumped exifTool to v12.49
+- Added Multi-Select capability to the map. (i.e. multiple pins now show properly)
+- Partial French translations added in (thanks to pbranly)
+- Update checks will now only happen once a week. No need to spam the world with API requests.
+
+v0.5.8333 [20221025]
+- Changed the logic relating to checking the newest version of exifTool online. The original was querying an API that hadn't been updated for months.
+
 v0.5.8314 [20221006] + v0.5.8318 [20221010]
 - Added a "don't ask again" button for the "loc-to-file" dialogbox. This is session specific (if you close/restart the app, it will come back again). [Updated this logic in the v0.5.8318 release]
 - Minor code cleanup

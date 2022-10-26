@@ -109,7 +109,7 @@
             this.ckb_ResetMapToZero.TabIndex = 15;
             this.ckb_ResetMapToZero.Text = "ckb_ResetMapToZero";
             this.ckb_ResetMapToZero.UseVisualStyleBackColor = true;
-            this.ckb_ResetMapToZero.CheckStateChanged += new System.EventHandler(this.Any_cbx_CheckStateChanged);
+            this.ckb_ResetMapToZero.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
             // cbx_Language
             // 
@@ -119,6 +119,7 @@
             this.cbx_Language.Name = "cbx_Language";
             this.cbx_Language.Size = new System.Drawing.Size(121, 21);
             this.cbx_Language.TabIndex = 13;
+            this.cbx_Language.TextChanged += new System.EventHandler(this.Any_cbx_TextChanged);
             // 
             // rbx_Register_ArcGIS
             // 
@@ -276,7 +277,7 @@
             this.ckb_OverwriteOriginal.TabIndex = 1;
             this.ckb_OverwriteOriginal.Text = "ckb_OverwriteOriginal";
             this.ckb_OverwriteOriginal.UseVisualStyleBackColor = true;
-            this.ckb_OverwriteOriginal.CheckStateChanged += new System.EventHandler(this.Any_cbx_CheckStateChanged);
+            this.ckb_OverwriteOriginal.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
             // ckb_AddXMPSideCar
             // 
@@ -287,7 +288,7 @@
             this.ckb_AddXMPSideCar.TabIndex = 1;
             this.ckb_AddXMPSideCar.Text = "ckb_AddXMPSideCar";
             this.ckb_AddXMPSideCar.UseVisualStyleBackColor = true;
-            this.ckb_AddXMPSideCar.CheckStateChanged += new System.EventHandler(this.Any_cbx_CheckStateChanged);
+            this.ckb_AddXMPSideCar.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
             // lbx_fileExtensions
             // 
