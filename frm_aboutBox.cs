@@ -19,7 +19,7 @@ namespace GeoTagNinja
             InitializeComponent();
             this.Text = String.Format("About {0}", AssemblyTitle);
             this.lbl_ProductName.Text = AssemblyProduct;
-            this.lbl_Version.Text = String.Format("Version {0}", AssemblyVersion);
+            this.lbl_Version.Text = String.Format("Version {0}", Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + "." + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString() + "." + Assembly.GetExecutingAssembly().GetName().Version.Build.ToString(System.Globalization.CultureInfo.InvariantCulture));
             this.lbl_Copyright.Text = AssemblyCopyright;
             this.lbl_CompanyName.Text = AssemblyCompany;
             this.tbx_Description.Text = AssemblyDescription;

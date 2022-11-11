@@ -25,48 +25,32 @@ namespace GeoTagNinja
             IEnumerable<Control> c = Helper_nonstatic.GetAllControls(this);
             foreach (Control cItem in c)
             {
-                if (cItem.GetType() == typeof(Label) || cItem.GetType() == typeof(GroupBox) || cItem.GetType() == typeof(Button) || cItem.GetType() == typeof(CheckBox) || cItem.GetType() == typeof(TabPage) || cItem.GetType() == typeof(RichTextBox))
-                {
-                    // for some reason there is no .Last() being offered here
-                    cItem.Text = Helper.DataReadSQLiteObjectText(
-                        languageName: frm_MainApp.appLanguage,
-                        objectType: (cItem.GetType().ToString().Split('.')[cItem.GetType().ToString().Split('.').Length - 1]),
-                        objectName: cItem.Name
-                        );
-                }
-                else if (cItem.GetType() == typeof(TextBox) || cItem.GetType() == typeof(ComboBox))
-                {
-                    if (cItem.Name == "cbx_Language")
-                    {
-                        string resourcesFolderPath = frm_MainApp.resourcesFolderPath;
-                        string languagesFolderPath = Path.Combine(frm_MainApp.resourcesFolderPath, "Languages");
+                Helper.GenericReturnControlText(cItem: cItem, senderForm: this);
 
-                        string[] files = System.IO.Directory.GetFiles(languagesFolderPath, "*.sqlite");
-                        foreach (string file in files)
-                        {
-                            // this should only come up in debugging not prod but if the database is open in sqliteexpert this pulls in a blank .sqlite file
-                            string fileName = file.Replace(languagesFolderPath, "").Replace(".sqlite", "").Substring(1);
-                            if (fileName.Length > 1)
-                            {
-                                this.cbx_Language.Items.Add(file.Replace(languagesFolderPath, "").Replace(".sqlite", "").Substring(1));
-                                this.cbx_Language.SelectedItem = Helper.DataReadSQLiteSettings(
-                                    tableName: "settings",
-                                    settingTabPage: cItem.Parent.Name,
-                                    settingId: cItem.Name
-                                    );
-                            }
-                        }
-                    }
-                    else
+                if (cItem.Name == "cbx_Language")
+                {
+                    string resourcesFolderPath = frm_MainApp.resourcesFolderPath;
+                    string languagesFolderPath = Path.Combine(frm_MainApp.resourcesFolderPath, "Languages");
+
+                    string[] files = System.IO.Directory.GetFiles(languagesFolderPath, "*.sqlite");
+                    foreach (string file in files)
                     {
-                        cItem.Text = Helper.DataReadSQLiteSettings(
-                            tableName: "settings",
-                            settingTabPage: cItem.Parent.Name,
-                            settingId: cItem.Name
-                            );
+                        // this should only come up in debugging not prod but if the database is open in sqliteexpert this pulls in a blank .sqlite file
+                        string fileName = file.Replace(languagesFolderPath, "").Replace(".sqlite", "").Substring(1);
+                        if (fileName.Length > 1)
+                        {
+                            this.cbx_Language.Items.Add(file.Replace(languagesFolderPath, "").Replace(".sqlite", "").Substring(1));
+                            this.cbx_Language.SelectedItem = Helper.DataReadSQLiteSettings(
+                                tableName: "settings",
+                                settingTabPage: cItem.Parent.Name,
+                                settingId: cItem.Name
+                                );
+                        }
                     }
                 }
             }
+
+
             nowLoadingSettingsData = false;
         }
         /// <summary>
@@ -85,7 +69,7 @@ namespace GeoTagNinja
 
             // load file extensions
             this.lbx_fileExtensions.Items.Clear();
-            foreach (string ext in frm_MainApp.allExtensions)
+            foreach (string ext in ancillary_ListsArrays.allCompatibleExtensions())
             {
                 lbx_fileExtensions.Items.Add(ext);
             }
@@ -117,12 +101,12 @@ namespace GeoTagNinja
                         {
                             try
                             {
-                                string cbxTempValue;
-                                cbxTempValue = Helper.DataReadSQLiteSettings(
+                                var cbxTempValue = Helper.DataReadSQLiteSettings(
                                     tableName: "settings",
                                     settingTabPage: ctrl.Name,
                                     settingId: subctrl.Name
-                                    );
+                                );
+                                
                                 if (cbxTempValue == "true")
                                 {
                                     cbx.CheckState = CheckState.Checked;
@@ -166,7 +150,6 @@ namespace GeoTagNinja
             Helper.DataDeleteSQLitesettingsToWritePreQueue();
 
             // refresh user data
-            string tmpSettingVal;
             Helper.s_ArcGIS_APIKey = Helper.DataSelectTbxARCGIS_APIKey_FromSQLite();
             Helper.s_GeoNames_UserName = Helper.DataReadSQLiteSettings(
                 tableName: "settings",
@@ -179,11 +162,11 @@ namespace GeoTagNinja
                 settingId: "tbx_GeoNames_Pwd"
                 );
 
-            tmpSettingVal = Helper.DataReadSQLiteSettings(
+            var tmpSettingVal = Helper.DataReadSQLiteSettings(
                 tableName: "settings",
                 settingTabPage: "tpg_Application",
                 settingId: "ckb_ResetMapToZero"
-                );
+            );
             if (tmpSettingVal == "true")
             {
                 Helper.s_ResetMapToZero = true;
@@ -228,12 +211,11 @@ namespace GeoTagNinja
                     CheckBox txt = box;
                     txt.Font = new Font(txt.Font, FontStyle.Regular);
                     // see if it's in the settings-change-queue
-                    string tmpCtrlVal;
-                    tmpCtrlVal = Helper.DataReadSQLiteSettings(
+                    var tmpCtrlVal = Helper.DataReadSQLiteSettings(
                         tableName: "settingsToWritePreQueue",
                         settingTabPage: ((Control)sender).Parent.Name,
                         settingId: tmpCtrlName
-                        );
+                    );
 
                     if (tmpCtrlVal != null)
                     {
@@ -395,7 +377,7 @@ namespace GeoTagNinja
                     settingValue: ((ComboBox)sender).Text
                     );
                 // fire a warning if language has changed. 
-                if((((ComboBox)sender).Name) == "cbx_Language") 
+                if ((((ComboBox)sender).Name) == "cbx_Language")
                 {
                     MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_Settings_cbx_Language_TextChanged"), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }

@@ -74,12 +74,7 @@ namespace GeoTagNinja
             {
                 if (cItem.GetType() == typeof(Label) || cItem.GetType() == typeof(GroupBox) || cItem.GetType() == typeof(Button) || cItem.GetType() == typeof(CheckBox) || cItem.GetType() == typeof(TabPage))
                 {
-                    // for some reason there is no .Last() being offered here
-                    cItem.Text = Helper.DataReadSQLiteObjectText(
-                        languageName: frm_MainApp.appLanguage,
-                        objectType: (cItem.GetType().ToString().Split('.')[cItem.GetType().ToString().Split('.').Length - 1]),
-                        objectName: cItem.Name
-                        );
+                    Helper.GenericReturnControlText(cItem: cItem, senderForm: this);
                 }
                 else if (cItem is TextBox || cItem is ComboBox)
                 {
@@ -101,14 +96,12 @@ namespace GeoTagNinja
                     }
                     // stick into sql ("pending save") - this is to see if the data has changed later.
 
-                    DataRow dr_FileDataRow;
-
-                    dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage2QueuePendingSave.NewRow();
-                    dr_FileDataRow["filePath"] = fileName;
-                    dr_FileDataRow["settingId"] = cItem.Name.Substring(4);
-                    dr_FileDataRow["settingValue"] = cItem.Text;
-                    dt_fileDataToWriteStage2QueuePendingSave.Rows.Add(dr_FileDataRow);
-
+                    Helper.GenericUpdateAddToDataTable(
+                                        dt: frm_MainApp.dt_fileDataToWriteStage2QueuePendingSave,
+                                        filePath: fileName,
+                                        settingId: cItem.Name.Substring(4),
+                                        settingValue: cItem.Text
+                                        );
 
                     // overwrite from sql-Q if available
                     // if data was pulled from the map this will sit in the main table, not in Q
@@ -131,11 +124,12 @@ namespace GeoTagNinja
                             cItem.Text = dv_sqlData_F[0]["settingValue"].ToString();
                         }
 
-                        dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage1PreQueue.NewRow();
-                        dr_FileDataRow["filePath"] = lvw_FileListEditImages.SelectedItems[0].Text;
-                        dr_FileDataRow["settingId"] = cItem.Name.Substring(4);
-                        dr_FileDataRow["settingValue"] = cItem.Text;
-                        frm_MainApp.dt_fileDataToWriteStage1PreQueue.Rows.Add(dr_FileDataRow);
+                        Helper.GenericUpdateAddToDataTable(
+                            dt: frm_MainApp.dt_fileDataToWriteStage1PreQueue,
+                            filePath: lvw_FileListEditImages.SelectedItems[0].Text,
+                            settingId: cItem.Name.Substring(4),
+                            settingValue: cItem.Text
+                            );
 
                         if (cItem is TextBox txt)
                         {
@@ -198,7 +192,6 @@ namespace GeoTagNinja
         {
             double parsedLat;
             double parsedLng;
-            DataRow dr_FileDataRow;
 
             DataTable dt_Toponomy = new();
             DataTable dt_Altitude = new();
@@ -211,8 +204,8 @@ namespace GeoTagNinja
             switch (((Button)sender).Name)
             {
                 case "btn_getFromWeb_Toponomy":
-                    strGPSLatitude = tbx_GPSLatitude.Text.Replace(',', '.');
-                    strGPSLongitude = tbx_GPSLongitude.Text.Replace(',', '.');
+                    strGPSLatitude = tbx_GPSLatitude.Text.ToString(CultureInfo.InvariantCulture);
+                    strGPSLongitude = tbx_GPSLongitude.Text.ToString(CultureInfo.InvariantCulture);
 
                     if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                     {
@@ -233,8 +226,8 @@ namespace GeoTagNinja
                         // for "this" file do the same as "normal" getfromweb
                         if (fileName == lvw_FileListEditImages.SelectedItems[0].Text)
                         {
-                            strGPSLatitude = tbx_GPSLatitude.Text.Replace(',', '.');
-                            strGPSLongitude = tbx_GPSLongitude.Text.Replace(',', '.');
+                            strGPSLatitude = tbx_GPSLatitude.Text.ToString(CultureInfo.InvariantCulture);
+                            strGPSLongitude = tbx_GPSLongitude.Text.ToString(CultureInfo.InvariantCulture);
 
                             if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                             {
@@ -253,64 +246,39 @@ namespace GeoTagNinja
                         else
                         {
                             // get lat/long from main listview
-                            strGPSLatitude = frm_MainAppInstance.lvw_FileList.FindItemWithText(fileName).SubItems[frm_MainAppInstance.lvw_FileList.Columns["clh_GPSLatitude"].Index].Text.Replace(',', '.');
-                            strGPSLongitude = frm_MainAppInstance.lvw_FileList.FindItemWithText(fileName).SubItems[frm_MainAppInstance.lvw_FileList.Columns["clh_GPSLongitude"].Index].Text.Replace(',', '.');
+                            strGPSLatitude = frm_MainAppInstance.lvw_FileList.FindItemWithText(fileName).SubItems[frm_MainAppInstance.lvw_FileList.Columns["clh_GPSLatitude"].Index].Text.ToString(CultureInfo.InvariantCulture);
+                            strGPSLongitude = frm_MainAppInstance.lvw_FileList.FindItemWithText(fileName).SubItems[frm_MainAppInstance.lvw_FileList.Columns["clh_GPSLongitude"].Index].Text.ToString(CultureInfo.InvariantCulture);
                             if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                             {
                                 dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWebOrSQL(strGPSLatitude, strGPSLongitude);
                                 if (dt_Toponomy.Rows.Count > 0)
                                 {
-                                    string CountryCode = dt_Toponomy.Rows[0]["CountryCode"].ToString();
-                                    string Country = dt_Toponomy.Rows[0]["Country"].ToString();
-                                    string City = dt_Toponomy.Rows[0]["City"].ToString();
-                                    string State = dt_Toponomy.Rows[0]["State"].ToString();
-                                    string Sub_location = dt_Toponomy.Rows[0]["Sub_location"].ToString();
+                                    List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new List<(string toponomyOverwriteName, string toponomyOverwriteVal)>();
+                                    toponomyOverwrites.Add(("CountryCode", dt_Toponomy.Rows[0]["CountryCode"].ToString()));
+                                    toponomyOverwrites.Add(("Country", dt_Toponomy.Rows[0]["Country"].ToString()));
+                                    toponomyOverwrites.Add(("City", dt_Toponomy.Rows[0]["City"].ToString()));
+                                    toponomyOverwrites.Add(("State", dt_Toponomy.Rows[0]["State"].ToString()));
+                                    toponomyOverwrites.Add(("Sub_location", dt_Toponomy.Rows[0]["Sub_location"].ToString()));
 
-                                    // Send off to SQL
+                                    foreach (var toponomyDetail in toponomyOverwrites)
+                                    {
+                                        Helper.GenericUpdateAddToDataTable(
+                                        dt: frm_MainApp.dt_fileDataToWriteStage1PreQueue,
+                                        filePath: lvi.Text,
+                                        settingId: toponomyDetail.toponomyOverwriteName,
+                                        settingValue: toponomyDetail.toponomyOverwriteVal
+                                        );
+                                    }
 
-                                    // CountryCode
-                                    dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage1PreQueue.NewRow();
-                                    dr_FileDataRow["filePath"] = lvi.Text;
-                                    dr_FileDataRow["settingId"] = "CountryCode";
-                                    dr_FileDataRow["settingValue"] = CountryCode;
-                                    frm_MainApp.dt_fileDataToWriteStage1PreQueue.Rows.Add(dr_FileDataRow);
-
-                                    // Country
-                                    dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage1PreQueue.NewRow();
-                                    dr_FileDataRow["filePath"] = lvi.Text;
-                                    dr_FileDataRow["settingId"] = "Country";
-                                    dr_FileDataRow["settingValue"] = Country;
-                                    frm_MainApp.dt_fileDataToWriteStage1PreQueue.Rows.Add(dr_FileDataRow);
-
-                                    // City
-                                    dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage1PreQueue.NewRow();
-                                    dr_FileDataRow["filePath"] = lvi.Text;
-                                    dr_FileDataRow["settingId"] = "City";
-                                    dr_FileDataRow["settingValue"] = City;
-                                    frm_MainApp.dt_fileDataToWriteStage1PreQueue.Rows.Add(dr_FileDataRow);
-
-                                    // State
-                                    dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage1PreQueue.NewRow();
-                                    dr_FileDataRow["filePath"] = lvi.Text;
-                                    dr_FileDataRow["settingId"] = "State";
-                                    dr_FileDataRow["settingValue"] = State;
-                                    frm_MainApp.dt_fileDataToWriteStage1PreQueue.Rows.Add(dr_FileDataRow);
-
-                                    // Sub_location
-                                    dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage1PreQueue.NewRow();
-                                    dr_FileDataRow["filePath"] = lvi.Text;
-                                    dr_FileDataRow["settingId"] = "Sub_location";
-                                    dr_FileDataRow["settingValue"] = Sub_location;
-                                    frm_MainApp.dt_fileDataToWriteStage1PreQueue.Rows.Add(dr_FileDataRow);
+                                    lvi.ForeColor = Color.Red;
                                 }
                             }
                         }
                     }
-
                     break;
                 case "btn_getFromWeb_Altitude":
-                    strGPSLatitude = tbx_GPSLatitude.Text.Replace(',', '.');
-                    strGPSLongitude = tbx_GPSLongitude.Text.Replace(',', '.');
+                    strGPSLatitude = tbx_GPSLatitude.Text.ToString(CultureInfo.InvariantCulture);
+                    strGPSLongitude = tbx_GPSLongitude.Text.ToString(CultureInfo.InvariantCulture);
 
                     if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                     {
@@ -330,8 +298,8 @@ namespace GeoTagNinja
                         // for "this" file do the same as "normal" getfromweb
                         if (fileName == lvw_FileListEditImages.SelectedItems[0].Text)
                         {
-                            strGPSLatitude = tbx_GPSLatitude.Text.Replace(',', '.');
-                            strGPSLongitude = tbx_GPSLongitude.Text.Replace(',', '.');
+                            strGPSLatitude = tbx_GPSLatitude.Text.ToString(CultureInfo.InvariantCulture);
+                            strGPSLongitude = tbx_GPSLongitude.Text.ToString(CultureInfo.InvariantCulture);
 
                             if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                             {
@@ -346,20 +314,20 @@ namespace GeoTagNinja
                         else
                         {
                             // get lat/long from main listview
-                            strGPSLatitude = frm_MainAppInstance.lvw_FileList.FindItemWithText(fileName).SubItems[frm_MainAppInstance.lvw_FileList.Columns["clh_GPSLatitude"].Index].Text.Replace(',', '.'); ;
-                            strGPSLongitude = frm_MainAppInstance.lvw_FileList.FindItemWithText(fileName).SubItems[frm_MainAppInstance.lvw_FileList.Columns["clh_GPSLongitude"].Index].Text.Replace(',', '.'); ;
+                            strGPSLatitude = frm_MainAppInstance.lvw_FileList.FindItemWithText(fileName).SubItems[frm_MainAppInstance.lvw_FileList.Columns["clh_GPSLatitude"].Index].Text.ToString(CultureInfo.InvariantCulture);
+                            strGPSLongitude = frm_MainAppInstance.lvw_FileList.FindItemWithText(fileName).SubItems[frm_MainAppInstance.lvw_FileList.Columns["clh_GPSLongitude"].Index].Text.ToString(CultureInfo.InvariantCulture);
                             if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
                             {
                                 dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWebOrSQL(strGPSLatitude, strGPSLongitude);
                                 if (dt_Altitude.Rows.Count > 0)
                                 {
                                     string Altitude = dt_Altitude.Rows[0]["Altitude"].ToString();
-
-                                    dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage1PreQueue.NewRow();
-                                    dr_FileDataRow["filePath"] = lvi.Text;
-                                    dr_FileDataRow["settingId"] = "GPSAltitude";
-                                    dr_FileDataRow["settingValue"] = Altitude;
-                                    frm_MainApp.dt_fileDataToWriteStage1PreQueue.Rows.Add(dr_FileDataRow);
+                                    Helper.GenericUpdateAddToDataTable(
+                                        dt: frm_MainApp.dt_fileDataToWriteStage1PreQueue,
+                                        filePath: lvi.Text,
+                                        settingId: "GPSAltitude",
+                                        settingValue: Altitude
+                                        );
                                 }
                             }
                         }
@@ -489,8 +457,6 @@ namespace GeoTagNinja
                     }
                     else
                     {
-                        DataRow dr_FileDataRow;
-
                         sndr.Font = new Font(sndr.Font, FontStyle.Bold);
                         // marry up countrycodes and countrynames
                         string sqliteText;
@@ -518,26 +484,13 @@ namespace GeoTagNinja
                                 this.cbx_CountryCode.Text = sqliteText;
                             }
                         }
-                        // any existing instance of this particular combination needs to be deleted...
-                        // eg if we type "50" as a value then w/o this we'd end up with a "5" row and a "50" row.
-                        for (int i = frm_MainApp.dt_fileDataToWriteStage1PreQueue.Rows.Count - 1; i >= 0; i--)
-                        {
-                            DataRow dr = frm_MainApp.dt_fileDataToWriteStage1PreQueue.Rows[i];
-                            if (
-                                dr["filePath"].ToString() == lvw_FileListEditImages.SelectedItems[0].Text &&
-                                dr["settingId"].ToString() == sndr.Name.Substring(4)
-                                )
-                            {
-                                dr.Delete();
-                            }
-                        }
-                        frm_MainApp.dt_fileDataToWriteStage1PreQueue.AcceptChanges();
 
-                        dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage1PreQueue.NewRow();
-                        dr_FileDataRow["filePath"] = lvw_FileListEditImages.SelectedItems[0].Text;
-                        dr_FileDataRow["settingId"] = sndr.Name.Substring(4);
-                        dr_FileDataRow["settingValue"] = sndr.Text;
-                        frm_MainApp.dt_fileDataToWriteStage1PreQueue.Rows.Add(dr_FileDataRow);
+                        Helper.GenericUpdateAddToDataTable(
+                                        dt: frm_MainApp.dt_fileDataToWriteStage1PreQueue,
+                                        filePath: lvw_FileListEditImages.SelectedItems[0].Text,
+                                        settingId: sndr.Name.Substring(4),
+                                        settingValue: sndr.Text
+                                        );
                     }
                 }
             }

@@ -1,4 +1,22 @@
 ﻿# GeoTagNinja Changelog
+v0.6.8350 [20221111]
+- NEW FEATURE: (experimental for now) -> sync/import GPS Track Files.
+-- Version bump as for new feature.
+- Added the capability to resize the main elements. Their positions aren't saved for now.
+- Added a button to the ToolStrip to "get all from the web" (toponomy & altitude for selected items)
+- Bumped exifTool to v12.50
+- Bugfixes 
+-- Using keyboard/keys on the main grid (listView).
+-- ToolStripButtons' ToolTips now work as intended.
+-- Removing data when sidecar XMPs are enabled now actually removes data from the sidecar XMPs
+-- Code updates re how integers and decimals are handled in various culture settings. (tested on HU and FR)
+-- IDK (i don't know) - so far 39 files have been updated, that is almost everything. I should do proper commits, not one-huge-commit, it is bad practice.
+- Various further fixes and internal enhancements
+- Updated the logic of language file creation
+- Code refactoring
+- Updates to nuGet packages
+- Special thanks to pbranly for very extensive testing.
+
 v0.5.8334 [20221026]
 - Bumped exifTool to v12.49
 - Added Multi-Select capability to the map. (i.e. multiple pins now show properly)

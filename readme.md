@@ -8,6 +8,7 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 
 - This is mentioned in Known Issues briefly but just to reiterate: if you have issues with file data not showing please try renaming/moving your files to a "simple" folder like "C:\temp" and make sure your file names don't contain umlauts, special characters and anything "odd". This is a limitation of exifTool.
 - This isn't GeoSetter. I've included the map/toponymy functionality because admittedly that's what I use. For the time being that's it. I am open to requests and commits/contributions from others. Admittedly I'd rather bug-hunt initially and then add in new stuff though. Probably the next step will be time zones and time-setting.
+- GPX/Track File Import is very experimental atm. Do report bugs please. This functionality is based on [this](https://exiftool.org/geotag.html) exifTool feature so please read as to what it can and can't do (mostly re: file types etc.).
 - My background is SQL and VBA development and contrary to the obvious I've never before written anything in C# or similar. This means that the code is probably a bit ugly, but it works. As for naming conventions, they've been "more or less" followed. An effort has been made. Classes are mostly okay-named and that's that. I'm aware. If someone wants to refactor the whole code, be my guest.
 - Again this isn't GeoSetter and I'm not the guy that wrote it and I don't have access to the source code of it. GeoSetter (I think) used DCRAW/libRAW to read RAW files. The advantage of that is there are native libraries for C# that hook DCRAW and it's fast AF. The disadvantage is that it has a comparatively limited range of file support, e.g. CR3s aren't supported and neither are some others. GTN uses exifTool for everything, which supports a lot more extensions but it has to be called externally each time the user interacts with a file or folder. The most visible disadvantage of this is that it takes a second (or two or three or five) to load up exifTool and the app may appear non-responsive when entering a folder.
 - I have tried to test reasonably thoroughly but bugs probably remain.
@@ -27,8 +28,7 @@ There are 2 parts to the project. One is the "main" the other is the installer. 
 For the "main" project you should be okay without anything separate. It has worked ok for me on a blank VM when pulled from Git. Just build and F5/run.
 
 ## ToDos
-- [TODO] GPX import & sync
-- [TODO] Add a setting for cleaning local api data on start/exit
+- [EXPERIMENTAL] GPX/Tracks import & sync
 
 - [half] Add copy-paste functionality - kinda done but no choices as to what to paste.
 - [later] Destination stuff not working atm, todo.
@@ -62,3 +62,19 @@ For the "main" project you should be okay without anything separate. It has work
 - SQLite is running x86 but fwiw the app isn't really memory-hungry so it will do. Chances are if you're still on a 1st-gen Intel Core you're not on Windows 7. Hopefully.
 - You'll need an ArcGIS API key to use the map search functionality. Register for free [here](https://developers.arcgis.com/)
 - You'll need a geoNames username and password to use toponomy search. Register for free [here](https://www.geonames.org/)
+
+## Possible Issues & Solutions
+
+- You get an "unauthorized" error when pulling data from the GeoNames API:
+	- Make sure you have provided a valid username and password for GeoNames in the Settings. For username _do not_ use your email address but just the username itself. If you think you've done everything correctly, do the following:
+		- If you need screenshots for the below visit [this](https://github.com/nemethviktor/GeoTagNinja/issues/13#issuecomment-1305805110) ticket reply.
+		- Download & install the newest sqlitebrowse from [here](https://download.sqlitebrowser.org/) (any version will do)
+		- Open sqlitebrowser and then in it open the file C:\Users\YOURUSERNAME\AppData\Roaming\GeoTagNinja\database.sqlite
+		- Go to Browse Data
+		- Pick the Settings table
+		- In the filter for the SettingID type in "geo" (or just find the value on the screenshot)
+		- Check that the username and password is what you'd expect to find (check for extraneous spaces pls). If it isn't, open a ticket.
+	- If everything looks as expected then try the following:
+		- In your browser go to http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&lat=47.3&lng=9&username=YOURUSERNAME&password=YOURPASSWORD (replace the username and pwd as required)
+		- You should get a JSON formatted API reply back that visibly looks like a description of a place (likely called Churzegg or some such). If you don't know what that is then have a look [here](https://github.com/nemethviktor/GeoTagNinja/issues/13#issuecomment-1305859987)
+		- If you instead get a reply that it's an invalid user or user account not enabled to use the free webservice then do as instructed/logical.

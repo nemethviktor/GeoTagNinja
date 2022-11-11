@@ -76,18 +76,18 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.Sqlite, Version=6.0.6.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Data.Sqlite.Core.6.0.6\lib\netstandard2.0\Microsoft.Data.Sqlite.dll</HintPath>
+    <Reference Include="Microsoft.Data.Sqlite, Version=6.0.10.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Data.Sqlite.Core.6.0.10\lib\netstandard2.0\Microsoft.Data.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Microsoft.Web.WebView2.Core, Version=1.0.1264.42, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Web.WebView2.1.0.1264.42\lib\net45\Microsoft.Web.WebView2.Core.dll</HintPath>
+    <Reference Include="Microsoft.Web.WebView2.Core, Version=1.0.1418.22, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Web.WebView2.1.0.1418.22\lib\net45\Microsoft.Web.WebView2.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Web.WebView2.WinForms, Version=1.0.1264.42, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Web.WebView2.1.0.1264.42\lib\net45\Microsoft.Web.WebView2.WinForms.dll</HintPath>
+    <Reference Include="Microsoft.Web.WebView2.WinForms, Version=1.0.1418.22, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Web.WebView2.1.0.1418.22\lib\net45\Microsoft.Web.WebView2.WinForms.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Web.WebView2.Wpf, Version=1.0.1264.42, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Web.WebView2.1.0.1264.42\lib\net45\Microsoft.Web.WebView2.Wpf.dll</HintPath>
+    <Reference Include="Microsoft.Web.WebView2.Wpf, Version=1.0.1418.22, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Web.WebView2.1.0.1418.22\lib\net45\Microsoft.Web.WebView2.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -118,11 +118,11 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="RestSharp, Version=108.0.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
-      <HintPath>packages\RestSharp.108.0.1\lib\netstandard2.0\RestSharp.dll</HintPath>
+    <Reference Include="RestSharp, Version=108.0.2.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>packages\RestSharp.108.0.2\lib\netstandard2.0\RestSharp.dll</HintPath>
     </Reference>
-    <Reference Include="SQLitePCLRaw.core, Version=2.1.0.1603, Culture=neutral, PublicKeyToken=1488e028ca7ab535, processorArchitecture=MSIL">
-      <HintPath>packages\SQLitePCLRaw.core.2.1.0\lib\netstandard2.0\SQLitePCLRaw.core.dll</HintPath>
+    <Reference Include="SQLitePCLRaw.core, Version=2.1.2.1721, Culture=neutral, PublicKeyToken=1488e028ca7ab535, processorArchitecture=MSIL">
+      <HintPath>packages\SQLitePCLRaw.core.2.1.2\lib\netstandard2.0\SQLitePCLRaw.core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -154,11 +154,16 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Text.Encodings.Web, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Text.Encodings.Web.6.0.0\lib\net461\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
-    <Reference Include="System.Text.Json, Version=6.0.0.5, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Text.Json.6.0.5\lib\net461\System.Text.Json.dll</HintPath>
+    <Reference Include="System.Text.Json, Version=6.0.0.6, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.Json.6.0.6\lib\net461\System.Text.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
@@ -175,17 +180,27 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="TimeZoneConverter, Version=6.0.1.0, Culture=neutral, PublicKeyToken=e20ab7d0d9479841, processorArchitecture=MSIL">
+      <HintPath>packages\TimeZoneConverter.6.0.1\lib\net462\TimeZoneConverter.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="XmpCore, Version=6.1.10.1, Culture=neutral, PublicKeyToken=961f4f366277b80e, processorArchitecture=MSIL">
       <HintPath>packages\XmpCore.6.1.10.1\lib\net35\XmpCore.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ancillary_ListsArrays.cs" />
     <Compile Include="frm_aboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frm_aboutBox.Designer.cs">
       <DependentUpon>frm_aboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm_importGPX.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm_importGPX.Designer.cs">
+      <DependentUpon>frm_importGPX.cs</DependentUpon>
     </Compile>
     <Compile Include="helper_geoResponse.cs" />
     <Compile Include="frm_editFileData.cs">
@@ -207,6 +222,7 @@
       <DependentUpon>frm_Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="helper.cs" />
+    <Compile Include="helper_geoTagXMLParser.cs" />
     <Compile Include="helper_gitHubAPIResponse.cs" />
     <Compile Include="helper_MessageBoxManager.cs" />
     <Compile Include="Program.cs" />
@@ -216,6 +232,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frm_editFileData.resx">
       <DependentUpon>frm_editFileData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm_importGPX.resx">
+      <DependentUpon>frm_importGPX.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frm_mainApp.resx">
       <DependentUpon>frm_mainApp.cs</DependentUpon>
@@ -299,11 +318,11 @@
     <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
     <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
     <Error Condition="!Exists('packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
-    <Error Condition="!Exists('packages\System.Text.Json.6.0.5\build\System.Text.Json.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\System.Text.Json.6.0.5\build\System.Text.Json.targets'))" />
-    <Error Condition="!Exists('packages\Microsoft.Web.WebView2.1.0.1264.42\build\Microsoft.Web.WebView2.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Web.WebView2.1.0.1264.42\build\Microsoft.Web.WebView2.targets'))" />
+    <Error Condition="!Exists('packages\Microsoft.Web.WebView2.1.0.1418.22\build\Microsoft.Web.WebView2.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Web.WebView2.1.0.1418.22\build\Microsoft.Web.WebView2.targets'))" />
+    <Error Condition="!Exists('packages\System.Text.Json.6.0.6\build\System.Text.Json.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\System.Text.Json.6.0.6\build\System.Text.Json.targets'))" />
   </Target>
   <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <Import Project="packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
-  <Import Project="packages\System.Text.Json.6.0.5\build\System.Text.Json.targets" Condition="Exists('packages\System.Text.Json.6.0.5\build\System.Text.Json.targets')" />
-  <Import Project="packages\Microsoft.Web.WebView2.1.0.1264.42\build\Microsoft.Web.WebView2.targets" Condition="Exists('packages\Microsoft.Web.WebView2.1.0.1264.42\build\Microsoft.Web.WebView2.targets')" />
+  <Import Project="packages\Microsoft.Web.WebView2.1.0.1418.22\build\Microsoft.Web.WebView2.targets" Condition="Exists('packages\Microsoft.Web.WebView2.1.0.1418.22\build\Microsoft.Web.WebView2.targets')" />
+  <Import Project="packages\System.Text.Json.6.0.6\build\System.Text.Json.targets" Condition="Exists('packages\System.Text.Json.6.0.6\build\System.Text.Json.targets')" />
 </Project>

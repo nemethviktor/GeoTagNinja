@@ -1,5 +1,4 @@
 ﻿using CoenM.ExifToolLib;
-using Microsoft.VisualBasic;
 using Microsoft.Web.WebView2.Core;
 using System;
 using System.Collections.Generic;
@@ -15,7 +14,15 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using Button = System.Windows.Forms.Button;
+using CheckBox = System.Windows.Forms.CheckBox;
+using Control = System.Windows.Forms.Control;
+using Label = System.Windows.Forms.Label;
+using ListView = System.Windows.Forms.ListView;
+using ListViewItem = System.Windows.Forms.ListViewItem;
 
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 namespace GeoTagNinja
 {
     public partial class frm_MainApp : Form
@@ -46,62 +53,13 @@ namespace GeoTagNinja
         internal static string showLocToMapDialogChoice = "default";
         internal frm_Settings FrmSettings;
         internal frm_editFileData FrmEditFileData;
+        internal frm_importGPX FrmImportGPX;
 
         /// <summary>
         /// this one basically handles what extensions we work with.
         /// the actual list is used for file-specific Settings as well as the general running of the app
         /// leave the \t in!
         /// </summary>
-        internal static string[] allExtensions = new[]
-            {
-            "arq	Sony Alpha Pixel-Shift RAW (TIFF-based)"
-            ,"arw	Sony Alpha RAW (TIFF-based)"
-            ,"cr2	Canon RAW 2 (TIFF-based) (CR2 spec)"
-            ,"cr3	Canon RAW 3 (QuickTime-based) (CR3 spec)"
-            ,"dcp	DNG Camera Profile (DNG-like)"
-            ,"dng	Digital Negative (TIFF-based)"
-            ,"erf	Epson RAW Format (TIFF-based)"
-            ,"exv	Exiv2 metadata file (JPEG-based)"
-            ,"fff	Hasselblad Flexible File Format (TIFF-based)"
-            ,"gpr	GoPro RAW (DNG-based)"
-            ,"hdp	Windows HD Photo / Media Photo / JPEG XR (TIFF-based)"
-            ,"heic	High Efficiency Image Format (QuickTime-based)"
-            ,"heif	High Efficiency Image Format (QuickTime-based)"
-            ,"hif	High Efficiency Image Format (QuickTime-based)"
-            ,"iiq	Phase One Intelligent Image Quality RAW (TIFF-based)"
-            ,"insp	Insta360 Picture (JPEG-based)"
-            ,"jp2	JPEG 2000 image [Compound/Extended]"
-            ,"jpe	Joint Photographic Experts Group image"
-            ,"jpeg	Joint Photographic Experts Group image"
-            ,"jpf	JPEG 2000 image [Compound/Extended]"
-            ,"jpg	Joint Photographic Experts Group image"
-            ,"jpm	JPEG 2000 image [Compound/Extended]"
-            ,"jpx	JPEG 2000 image [Compound/Extended]"
-            ,"jxl	JPEG XL (codestream and ISO BMFF)"
-            ,"jxr	Windows HD Photo / Media Photo / JPEG XR (TIFF-based)"
-            ,"mef	Mamiya (RAW) Electronic Format (TIFF-based)"
-            ,"mie	Meta Information Encapsulation (MIE specification)"
-            ,"mos	Creo Leaf Mosaic (TIFF-based)"
-            ,"mpo	Extended Multi-Picture format (JPEG with MPF extensions)"
-            ,"mrw	Minolta RAW"
-            ,"nef	Nikon (RAW) Electronic Format (TIFF-based)"
-            ,"nrw	Nikon RAW (2) (TIFF-based)"
-            ,"orf	Olympus RAW Format (TIFF-based)"
-            ,"ori	Olympus RAW Format (TIFF-based)"
-            ,"pef	Pentax (RAW) Electronic Format (TIFF-based)"
-            ,"raf	FujiFilm RAW Format"
-            ,"raw	Kyocera Contax N Digital RAW"
-            ,"rw2	Panasonic RAW 2 (TIFF-based)"
-            ,"rwl	Leica RAW (TIFF-based)"
-            ,"sr2	Sony RAW 2 (TIFF-based)"
-            ,"srw	Samsung RAW format (TIFF-based)"
-            ,"thm	Thumbnail image (JPEG)"
-            ,"tif	QuickTime Image File"
-            ,"tiff	Tagged Image File Format"
-            ,"wdp 	Windows HD Photo / Media Photo / JPEG XR (TIFF-based)"
-            ,"x3f	Sigma/Foveon RAW"
-
-            };
         internal AsyncExifTool asyncExifTool;
 
         internal static DataTable dt_fileDataCopyPool;
@@ -360,7 +318,16 @@ namespace GeoTagNinja
             IEnumerable<Control> c = Helper_nonstatic.GetAllControls(this);
             foreach (Control cItem in c)
             {
-                if (cItem.GetType() == typeof(MenuStrip) || cItem.GetType() == typeof(ToolStripMenuItem) || cItem.GetType() == typeof(Label) || cItem.GetType() == typeof(Button) || cItem.GetType() == typeof(CheckBox) || cItem.GetType() == typeof(TabPage))
+                if (
+                    cItem.GetType() == typeof(MenuStrip) ||
+                    cItem.GetType() == typeof(ToolStrip) ||
+                    cItem.GetType() == typeof(Label) ||
+                    cItem.GetType() == typeof(Button) ||
+                    cItem.GetType() == typeof(CheckBox) ||
+                    cItem.GetType() == typeof(TabPage) ||
+                    cItem.GetType() == typeof(ToolStripButton)
+                    // cItem.GetType() == typeof(ToolTip) // tooltips are not controls.
+                    )
                 {
                     if (cItem.Name == "lbl_ParseProgress")
                     {
@@ -370,6 +337,23 @@ namespace GeoTagNinja
                             actionType: "Normal",
                             objectName: cItem.Name
                             );
+                    }
+                    else if (cItem is ToolStrip)
+                    {
+                        // https://www.codeproject.com/Messages/3329190/How-to-convert-a-Control-into-a-ToolStripButton.aspx
+                        ToolStrip ts = cItem as ToolStrip;
+                        foreach (ToolStripItem tsi in ts.Items)
+                        {
+                            ToolStripButton tsb = tsi as ToolStripButton;
+                            if (tsb != null)
+                            {
+                                tsb.ToolTipText = Helper.DataReadSQLiteObjectText(
+                                    languageName: appLanguage,
+                                    objectType: tsb.GetType().ToString().Split('.').Last(),
+                                    objectName: tsb.Name
+                                    );
+                            }
+                        }
                     }
                     else
                     {
@@ -450,96 +434,8 @@ namespace GeoTagNinja
             Helper.hs_MapMarkers.Add((tbx_lat.Text.Replace(',', '.'), tbx_lng.Text.Replace(',', '.')));
             NavigateMapGo();
 
-            #region query current & newest exifTool version
-            // check when the last polling took place
+            Helper.GenericCheckForNewVersions();
 
-            long nowUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
-            long lastCheckUnixTime = 0;
-
-            string strLastOnlineVersionCheck = Helper.DataReadSQLiteSettings(
-                    tableName: "settings",
-                    settingTabPage: "generic",
-                    settingId: "onlineVersionCheckDate"
-                    );
-
-            if (strLastOnlineVersionCheck == null)
-            {
-                lastCheckUnixTime = nowUnixTime;
-                // write back to SQL so it doesn't remain blank
-                Helper.DataWriteSQLiteSettings(
-                    tableName: "settings",
-                    settingTabPage: "generic",
-                    settingId: "onlineVersionCheckDate",
-                    settingValue: nowUnixTime.ToString()
-                    );
-            }
-            else
-            {
-                lastCheckUnixTime = long.Parse(strLastOnlineVersionCheck);
-            }
-
-            if (nowUnixTime > (lastCheckUnixTime + 604800)) //604800 is a week's worth of seconds
-            {
-                // get current & newest exiftool version -- do this here at the end so it doesn't hold up the process
-                double currentExifToolVersionLocal = await Helper.ExifGetExifToolVersion();
-                double newestExifToolVersionOnline = Helper.API_ExifGetExifToolVersionFromWeb();
-                double currentExifToolVersionInSQL;
-                string strCurrentExifToolVersionInSQL = Helper.DataReadSQLiteSettings(
-                        tableName: "settings",
-                        settingTabPage: "generic",
-                        settingId: "exifToolVer"
-                        );
-
-                if (!double.TryParse(strCurrentExifToolVersionInSQL, NumberStyles.Any, CultureInfo.InvariantCulture, out currentExifToolVersionInSQL))
-                {
-                    currentExifToolVersionInSQL = currentExifToolVersionLocal;
-                }
-
-                if (newestExifToolVersionOnline > currentExifToolVersionLocal && newestExifToolVersionOnline > currentExifToolVersionInSQL && (currentExifToolVersionLocal + newestExifToolVersionOnline) > 0)
-                {
-                    // write current to SQL
-                    Helper.DataWriteSQLiteSettings(
-                        tableName: "settings",
-                        settingTabPage: "generic",
-                        settingId: "exifToolVer",
-                        settingValue: newestExifToolVersionOnline.ToString().Replace(',', '.')
-                        );
-
-                    // the newestExifToolVersionOnline.ToString().Replace(',', '.') is needed for non-English culture settings.
-                    if (MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_InfoNewExifToolVersionExists") + newestExifToolVersionOnline.ToString().Replace(',', '.'), "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
-                    {
-                        System.Diagnostics.Process.Start("https://exiftool.org/exiftool-" + newestExifToolVersionOnline.ToString().Replace(',', '.') + ".zip");
-                    }
-                }
-                #endregion
-                #region query current & newest GTN version
-                // current version may be something like "0.5.8251.40825"
-                string currentGTNVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
-                // don't run this in debug mode. currentGTNVersion is dependent on the # of days since 1/1/2000 basically.
-                // so each time i make a new build this updates and the query triggers a messagebox...which for me is a bit useless.
-#if !DEBUG
-                Helper.s_APIOkay = true;
-                DataTable dt_APIGTNVersion = Helper.DTFromAPI_GetGTNVersion();
-                // newest may be something like "v0.5.8251"
-                string newestGTNVersion = dt_APIGTNVersion.Rows[0]["version"].ToString().Replace("v", "");
-                if (!currentGTNVersion.Contains(newestGTNVersion))
-                {
-                    if (MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_InfoNewGTNVersionExists") + newestGTNVersion, "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
-                    {
-                        System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dt_APIGTNVersion.Rows[0]["version"].ToString() + "/GeoTagNinja_Setup.msi");
-                    }
-                }
-#endif
-                // write back to SQL
-                Helper.DataWriteSQLiteSettings(
-                    tableName: "settings",
-                    settingTabPage: "generic",
-                    settingId: "onlineVersionCheckDate",
-                    settingValue: nowUnixTime.ToString()
-                    );
-            }
-            #endregion
         }
         /// <summary>
         /// Initialises the map in the app and browses to the default or last-used location.
@@ -747,7 +643,11 @@ namespace GeoTagNinja
         /// <param name="e">Unused</param>
         private void frm_MainApp_SizeChanged(object sender, EventArgs e)
         {
-            VisualResizeAppElements(this);
+            // when minimised some heights become 0 value which causes problems with the splitterdistances.
+            if(WindowState != FormWindowState.Minimized)
+            {
+                VisualResizeAppElements(this);
+            }
         }
         /// <summary>
         /// Identical to the above but this is the one actually executing
@@ -755,56 +655,106 @@ namespace GeoTagNinja
         /// <param name="frm_mainApp">Make a guess</param>
         private void VisualResizeAppElements(frm_MainApp frm_mainApp)
         {
+            #region fixed stuff
             frm_mainApp.tsr_MainAppToolStrip.Top = Convert.ToInt16(mns_MenuStrip.Bottom + 2);
             frm_mainApp.tsr_MainAppToolStrip.Left = 5;
 
             frm_mainApp.tsr_FolderControl.Top = Convert.ToInt16(tsr_MainAppToolStrip.Bottom + 2);
             frm_mainApp.tsr_FolderControl.Left = 5;
 
+            // tct is the map page container, currently not split into further pages
             frm_mainApp.tct_Main.Width = Convert.ToInt16(Width * 0.4);
             frm_mainApp.tct_Main.Top = Convert.ToInt16(tsr_FolderControl.Bottom + 2);
             frm_mainApp.tct_Main.Height = Convert.ToInt16(Bottom - tsr_FolderControl.Bottom - 95);
             frm_mainApp.tct_Main.Left = Convert.ToInt16(Width - frm_mainApp.tct_Main.Width - 20);
 
-            // label & textbox arrangements
-            frm_mainApp.lbl_lat.Top = frm_mainApp.tct_Main.Bottom + 2;
-            frm_mainApp.tbx_lat.Top = frm_mainApp.lbl_lat.Top;
-            frm_mainApp.lbl_lat.Left = frm_mainApp.tct_Main.Left;
+
+            #endregion
+            #region splitcontainers
+            frm_mainApp.splitContainerMain.Top = frm_mainApp.tsr_FolderControl.Bottom;
+            frm_mainApp.splitContainerMain.Left = Convert.ToInt16(Left + 20);
+            frm_mainApp.splitContainerMain.Height = Convert.ToInt16((frm_mainApp.Height - frm_mainApp.splitContainerMain.Top));
+            frm_mainApp.splitContainerMain.Width = frm_mainApp.Width - 20 - (Convert.ToInt16(Left + 20));
+            
+            try
+            {
+                frm_mainApp.splitContainerMain.SplitterDistance = Convert.ToInt16(frm_mainApp.splitContainerMain.Width * 0.5);
+                frm_mainApp.splitContainerMain.MaximumSize = new Size(Convert.ToInt16(frm_mainApp.Width * 0.98), Convert.ToInt16((frm_mainApp.Height - frm_mainApp.splitContainerMain.Top) * 0.95));
+
+                // that's the left block
+                frm_mainApp.splitContainerMain.Panel1MinSize = Convert.ToInt16(frm_mainApp.splitContainerMain.Width * 0.15);
+                frm_mainApp.splitContainerLeftTop.SplitterDistance = Convert.ToInt16(frm_mainApp.splitContainerMain.Height * 0.65);
+
+                // that's the right block
+                frm_mainApp.splitContainerMain.Panel2MinSize = Convert.ToInt16(frm_mainApp.splitContainerMain.Width * 0.25);
+
+                frm_mainApp.splitContainerRight.SplitterDistance = Convert.ToInt16(frm_mainApp.splitContainerRight.Height * 0.9);
+            }
+            catch
+            {
+
+            }
+
+            #endregion
+
+            // top left
+            frm_mainApp.lvw_FileList.Top = 0;
+            frm_mainApp.lvw_FileList.Left = 0;
+            frm_mainApp.lvw_FileList.Height = frm_mainApp.splitContainerLeftTop.Panel1.Height;
+            frm_mainApp.lvw_FileList.Width = frm_mainApp.splitContainerLeftTop.Panel1.Width;
+
+            // top right
+            frm_mainApp.tct_Main.Top = 0;
+            frm_mainApp.tct_Main.Left = frm_mainApp.splitContainerRight.Panel1.Left;
+            frm_mainApp.tct_Main.Height = frm_mainApp.splitContainerRight.Panel1.Height;
+            frm_mainApp.tct_Main.Width = frm_mainApp.splitContainerRight.Width;
+
+            // bottom left
+            frm_mainApp.pbx_imagePreview.Top = 0;
+            frm_mainApp.pbx_imagePreview.Left = 0;
+            frm_mainApp.pbx_imagePreview.Height = frm_mainApp.splitContainerLeftBottom.Panel1.Height;
+            frm_mainApp.pbx_imagePreview.Width = frm_mainApp.splitContainerLeftBottom.Panel1.Width;
+
+            frm_mainApp.lbl_ParseProgress.Top = 0;
+            frm_mainApp.lbl_ParseProgress.Left = 0;
+            frm_mainApp.lbl_ParseProgress.Width = frm_mainApp.splitContainerLeftBottom.Panel2.Width;
+            frm_mainApp.splitContainerLeftTop.Panel2MinSize = Convert.ToInt16(frm_mainApp.splitContainerMain.Height * 0.25);
+
+            // bottom right
+            frm_mainApp.lbl_lat.Top = 0;
+            frm_mainApp.tbx_lat.Top = 0;
+            frm_mainApp.lbl_lat.Left = frm_mainApp.splitContainerRight.Left;
             frm_mainApp.tbx_lat.Left = frm_mainApp.lbl_lat.Right + 2;
 
-            frm_mainApp.lbl_lng.Top = frm_mainApp.tct_Main.Bottom + 2;
-            frm_mainApp.tbx_lng.Top = frm_mainApp.lbl_lat.Top;
+            frm_mainApp.lbl_lng.Top = 0;
+            frm_mainApp.tbx_lng.Top = 0;
             frm_mainApp.lbl_lng.Left = frm_mainApp.tbx_lat.Right + 2;
             frm_mainApp.tbx_lng.Left = frm_mainApp.lbl_lng.Right + 2;
 
-            // map buttons
+            frm_mainApp.btn_NavigateMapGo.Top = 0;
             frm_mainApp.btn_NavigateMapGo.Left = frm_mainApp.tbx_lng.Right + 2;
-            frm_mainApp.btn_NavigateMapGo.Top = frm_mainApp.tbx_lng.Top;
+            frm_mainApp.btn_loctToFile.Top = 0;
             frm_mainApp.btn_loctToFile.Left = frm_mainApp.btn_NavigateMapGo.Right + 2;
-            frm_mainApp.btn_loctToFile.Top = frm_mainApp.tbx_lng.Top;
 
-            // fileList
-            frm_mainApp.lvw_FileList.Top = frm_mainApp.tct_Main.Top;
-            frm_mainApp.lvw_FileList.Left = Convert.ToInt16(Left + 20);
-            frm_mainApp.lvw_FileList.Height = Convert.ToInt16((frm_mainApp.tct_Main.Height) * 0.75);
-            frm_mainApp.lvw_FileList.Width = frm_mainApp.tct_Main.Left - 20;
+            // bit manual for now.
+            ttp_loctToFile.SetToolTip(frm_mainApp.btn_loctToFile,
+                Helper.DataReadSQLiteObjectText(
+                languageName: appLanguage,
+                                    objectType: "ToolTip",
+                                    objectName: "ttp_loctToFile"
+                                    )
+                );
 
-            // pbx_imagePreview
-            frm_mainApp.pbx_imagePreview.Top = frm_mainApp.lvw_FileList.Bottom + 5;
-            frm_mainApp.pbx_imagePreview.Left = frm_mainApp.lvw_FileList.Left;
-            frm_mainApp.pbx_imagePreview.Height = Convert.ToInt16((frm_mainApp.tct_Main.Height) * 0.24);
-            frm_mainApp.pbx_imagePreview.Width = Convert.ToInt16((frm_mainApp.pbx_imagePreview.Height) * 1.5); //frm_mainApp.lvw_FileList.Width;
+            ttp_NavigateMapGo.SetToolTip(frm_mainApp.btn_NavigateMapGo,
+                Helper.DataReadSQLiteObjectText(
+                languageName: appLanguage,
+                                    objectType: "ToolTip",
+                                    objectName: "ttp_NavigateMapGo"
+                                    )
+                );
 
-            //frm_mainApp.pnl_PictureBox.Controls.Add(pbx_imagePreview);
-            //frm_mainApp.pnl_PictureBox.Top = frm_mainApp.lvw_FileList.Bottom + 5;
-            //frm_mainApp.pnl_PictureBox.Left = frm_mainApp.lvw_FileList.Left;
-            //frm_mainApp.pnl_PictureBox.Height = Convert.ToInt16((frm_mainApp.tct_Main.Height) * 0.24);
-            //frm_mainApp.pnl_PictureBox.Width = frm_mainApp.lvw_FileList.Width;
 
-            // lbl_ParseProgress
-            frm_mainApp.lbl_ParseProgress.Top = frm_mainApp.btn_NavigateMapGo.Top;
-            frm_mainApp.lbl_ParseProgress.Left = frm_mainApp.lvw_FileList.Left;
-            frm_mainApp.lbl_ParseProgress.Width = frm_mainApp.lvw_FileList.Width;
+
         }
         /// <summary>
         /// Reads the widths of individual CLHs from SQL, if not found assigns them "auto" (-2)
@@ -906,7 +856,7 @@ namespace GeoTagNinja
             double dblLng;
             double.TryParse(strLat, NumberStyles.Any, CultureInfo.InvariantCulture, out dblLat); // trust me i hate this f...king culture thing as much as possible...
             double.TryParse(strLng, NumberStyles.Any, CultureInfo.InvariantCulture, out dblLng); // trust me i hate this f...king culture thing as much as possible...
-            // if the user zooms out too much they can encounter an "unreal" coordinate.
+                                                                                                 // if the user zooms out too much they can encounter an "unreal" coordinate.
             if (dblLng < -180)
             {
                 dblLng = 180 - (Math.Abs(dblLng) % 180);
@@ -953,7 +903,6 @@ namespace GeoTagNinja
             double parsedLng;
             geoTagNinja.GeoResponseToponomy ReadJson_Toponomy = new();
             geoTagNinja.GeoResponseAltitude ReadJson_Altitude = new();
-            DataRow dr_FileDataRow;
 
             // lat/long gets written regardless of update-toponomy-choice
             if (double.TryParse(strParsedLat, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strParsedLng, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
@@ -966,18 +915,20 @@ namespace GeoTagNinja
                         if (File.Exists(Path.Combine(folderName, lvi.Text)))
                         {
                             // Latitude
-                            dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                            dr_FileDataRow["filePath"] = lvi.Text;
-                            dr_FileDataRow["settingId"] = "GPSLatitude";
-                            dr_FileDataRow["settingValue"] = strParsedLat;
-                            dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                            Helper.GenericUpdateAddToDataTable(
+                                        dt: frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite,
+                                        filePath: lvi.Text,
+                                        settingId: "GPSLatitude",
+                                        settingValue: strParsedLat
+                                        );
 
                             // Longitude
-                            dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                            dr_FileDataRow["filePath"] = lvi.Text;
-                            dr_FileDataRow["settingId"] = "GPSLongitude";
-                            dr_FileDataRow["settingValue"] = strParsedLng;
-                            dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                            Helper.GenericUpdateAddToDataTable(
+                                        dt: frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite,
+                                        filePath: lvi.Text,
+                                        settingId: "GPSLongitude",
+                                        settingValue: strParsedLng
+                                        );
                         }
                     }
                 }
@@ -1026,61 +977,33 @@ namespace GeoTagNinja
                             {
                                 DataTable dt_Toponomy = new();
                                 DataTable dt_Altitude = new();
-                                if (showLocToMapDialogChoice.Contains("yes_"))
+                                if (showLocToMapDialogChoice.Contains("yes"))
                                 {
                                     Helper.s_APIOkay = true;
-                                    dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWebOrSQL(strParsedLat, strParsedLng);
-                                    dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWebOrSQL(strParsedLat, strParsedLng);
+                                    dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWebOrSQL(strParsedLat.ToString(CultureInfo.InvariantCulture), strParsedLng.ToString(CultureInfo.InvariantCulture));
+                                    dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWebOrSQL(strParsedLat.ToString(CultureInfo.InvariantCulture), strParsedLng.ToString(CultureInfo.InvariantCulture));
                                     if (Helper.s_APIOkay)
                                     {
-                                        string CountryCode = dt_Toponomy.Rows[0]["CountryCode"].ToString();
-                                        string Country = dt_Toponomy.Rows[0]["Country"].ToString();
-                                        string City = dt_Toponomy.Rows[0]["City"].ToString();
-                                        string State = dt_Toponomy.Rows[0]["State"].ToString();
-                                        string Sub_location = dt_Toponomy.Rows[0]["Sub_location"].ToString();
-                                        string Altitude = dt_Altitude.Rows[0]["Altitude"].ToString();
+                                        List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new List<(string toponomyOverwriteName, string toponomyOverwriteVal)>();
+                                        toponomyOverwrites.Add(("CountryCode", dt_Toponomy.Rows[0]["CountryCode"].ToString()));
+                                        toponomyOverwrites.Add(("Country", dt_Toponomy.Rows[0]["Country"].ToString()));
+                                        toponomyOverwrites.Add(("City", dt_Toponomy.Rows[0]["City"].ToString()));
+                                        toponomyOverwrites.Add(("State", dt_Toponomy.Rows[0]["State"].ToString()));
+                                        toponomyOverwrites.Add(("Sub_location", dt_Toponomy.Rows[0]["Sub_location"].ToString()));
+                                        toponomyOverwrites.Add(("GPSAltitude", dt_Altitude.Rows[0]["Altitude"].ToString()));
 
-                                        // CountryCode
-                                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                                        dr_FileDataRow["filePath"] = lvi.Text;
-                                        dr_FileDataRow["settingId"] = "CountryCode";
-                                        dr_FileDataRow["settingValue"] = CountryCode;
-                                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                                        foreach (var toponomyDetail in toponomyOverwrites)
+                                        {
+                                            Helper.GenericUpdateAddToDataTable(
+                                            dt: frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite,
+                                            filePath: lvi.Text,
+                                            settingId: toponomyDetail.toponomyOverwriteName,
+                                            settingValue: toponomyDetail.toponomyOverwriteVal
+                                            );
 
-                                        // Country
-                                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                                        dr_FileDataRow["filePath"] = lvi.Text;
-                                        dr_FileDataRow["settingId"] = "Country";
-                                        dr_FileDataRow["settingValue"] = Country;
-                                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
-
-                                        // City
-                                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                                        dr_FileDataRow["filePath"] = lvi.Text;
-                                        dr_FileDataRow["settingId"] = "City";
-                                        dr_FileDataRow["settingValue"] = City;
-                                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
-
-                                        // State
-                                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                                        dr_FileDataRow["filePath"] = lvi.Text;
-                                        dr_FileDataRow["settingId"] = "State";
-                                        dr_FileDataRow["settingValue"] = State;
-                                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
-
-                                        // Sub_location
-                                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                                        dr_FileDataRow["filePath"] = lvi.Text;
-                                        dr_FileDataRow["settingId"] = "Sub_location";
-                                        dr_FileDataRow["settingValue"] = Sub_location;
-                                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
-
-                                        // Altitude
-                                        dr_FileDataRow = dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                                        dr_FileDataRow["filePath"] = lvi.Text;
-                                        dr_FileDataRow["settingId"] = "GPSAltitude";
-                                        dr_FileDataRow["settingValue"] = Altitude;
-                                        dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                                        }
+                                        HandlerUpdateLabelText(this.lbl_ParseProgress, "Processing: " + lvi.Text);
+                                        lvi.ForeColor = Color.Red;
                                     }
                                 }
                             }
@@ -1176,46 +1099,7 @@ namespace GeoTagNinja
         }
         #endregion
         #region Menu Stuff
-        /// <summary>
-        /// Handles the tmi_Settings_Settings_Click event -> brings up the Settings Form
-        /// </summary>
-        /// <param name="sender">Unused</param>
-        /// <param name="e">Unused</param>
-        private void tmi_Settings_Settings_Click(object sender, EventArgs e)
-        {
-            FrmSettings = new frm_Settings();
-            FrmSettings.Text = Helper.DataReadSQLiteObjectText(
-                languageName: appLanguage,
-                objectType: "Form",
-                objectName: "frm_Settings"
-                );
-            FrmSettings.ShowDialog();
-        }
-        /// <summary>
-        /// Handles the tmi_Help_About_Click event -> brings up the About Form
-        /// </summary>
-        /// <param name="sender">Unused</param>
-        /// <param name="e">Unused</param>
-        private void tmi_Help_About_Click(object sender, EventArgs e)
-        {
-            frm_aboutBox frm_aboutBox = new();
-            frm_aboutBox.ShowDialog();
-        }
-        /// <summary>
-        /// Handles the tmi_File_Quit_Click event -> cleans the user-folder then quits the app
-        /// </summary>
-        /// <param name="sender">Unused</param>
-        /// <param name="e">Unused</param>
-        private void tmi_File_Quit_Click(object sender, EventArgs e)
-        {
-            Helper.FsoCleanUpUserFolder();
-            Application.Exit();
-        }
-        /// <summary>
-        /// Handles the tmi_File_SaveAll_Click event -> triggers the file-save process
-        /// </summary>
-        /// <param name="sender">Unused</param>
-        /// <param name="e">Unused</param>
+        #region File
         private async void tmi_File_SaveAll_Click(object sender, EventArgs e)
         {
             // i think having an Item active can cause a lock on it
@@ -1267,15 +1151,75 @@ namespace GeoTagNinja
         {
             Helper.LwvPasteGeoData();
         }
+        /// <summary>
+        /// Handles the tmi_File_ImportGPX_Click event -> Brings up the frm_importGPX to import grack files
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <summary>
+        /// Handles the tmi_File_SaveAll_Click event -> triggers the file-save process
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
+        private void tmi_File_ImportGPX_Click(object sender, EventArgs e)
+        {
+            FrmImportGPX = new frm_importGPX();
+            FrmImportGPX.Text = Helper.DataReadSQLiteObjectText(
+                languageName: appLanguage,
+                objectType: "Form",
+                objectName: "frm_importGPX"
+                );
+            FrmImportGPX.ShowDialog();
+        }
+        /// <summary>
+        /// Handles the tmi_File_Quit_Click event -> cleans the user-folder then quits the app
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
+        private void tmi_File_Quit_Click(object sender, EventArgs e)
+        {
+            Helper.FsoCleanUpUserFolder();
+            Application.Exit();
+        }
+        #endregion
+        #region Settings
+        /// <summary>
+        /// Handles the tmi_Settings_Settings_Click event -> brings up the Settings Form
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
+        private void tmi_Settings_Settings_Click(object sender, EventArgs e)
+        {
+            FrmSettings = new frm_Settings();
+            FrmSettings.Text = Helper.DataReadSQLiteObjectText(
+                languageName: appLanguage,
+                objectType: "Form",
+                objectName: "frm_Settings"
+                );
+            FrmSettings.ShowDialog();
+        }
+        #endregion
+        #region Help
+        /// <summary>
+        /// Handles the tmi_Help_About_Click event -> brings up the About Form
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
+        private void tmi_Help_About_Click(object sender, EventArgs e)
+        {
+            frm_aboutBox frm_aboutBox = new();
+            frm_aboutBox.ShowDialog();
+        }
+        #endregion
         #endregion
         #region TaskBar Stuff
         /// <summary>
-        /// Handles the btn_Refresh_lvwFileList_Click event -> checks if there is anything in the write-Q
+        /// Handles the tsb_Refresh_lvwFileList_Click event -> checks if there is anything in the write-Q
         /// ... then cleans up the user-folder and triggers lvwFileList_LoadOrUpdate
         /// </summary>
         /// <param name="sender">Unused</param>
         /// <param name="e">Unused</param>
-        private async void btn_Refresh_lvwFileList_Click(object sender, EventArgs e)
+        private async void tsb_Refresh_lvwFileList_Click(object sender, EventArgs e)
         {
             Helper.s_changeFolderIsOkay = false;
             await Helper.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
@@ -1306,6 +1250,72 @@ namespace GeoTagNinja
             }
         }
         /// <summary>
+        /// Performs a pull of Toponomy & Altitude info for all of the selected files.
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
+        private void tsb_GetAllFromWeb_Click(object sender, EventArgs e)
+        {
+            frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
+            ListView lvw = frm_mainAppInstance.lvw_FileList;
+            if (lvw.SelectedItems.Count > 0)
+            {
+                foreach (ListViewItem lvi in frm_mainAppInstance.lvw_FileList.SelectedItems)
+                {
+                    // don't do folders...
+                    if (File.Exists(Path.Combine(frm_MainApp.folderName, lvi.Text)))
+                    {
+                        string strGPSLatitude = lvi.SubItems[lvw.Columns["clh_GPSLatitude"].Index].Text.ToString(CultureInfo.InvariantCulture);
+                        string strGPSLongitude = lvi.SubItems[lvw.Columns["clh_GPSLongitude"].Index].Text.ToString(CultureInfo.InvariantCulture);
+                        double parsedLat = 0.0;
+                        double parsedLng = 0.0;
+                        if (double.TryParse(strGPSLatitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLat) && double.TryParse(strGPSLongitude, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedLng))
+                        {
+                            DataTable dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWebOrSQL(strGPSLatitude, strGPSLongitude);
+                            if (dt_Toponomy.Rows.Count > 0)
+                            {
+                                // Send off to SQL
+                                List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new List<(string toponomyOverwriteName, string toponomyOverwriteVal)>();
+                                toponomyOverwrites.Add(("CountryCode", dt_Toponomy.Rows[0]["CountryCode"].ToString()));
+                                toponomyOverwrites.Add(("Country", dt_Toponomy.Rows[0]["Country"].ToString()));
+                                toponomyOverwrites.Add(("City", dt_Toponomy.Rows[0]["City"].ToString()));
+                                toponomyOverwrites.Add(("State", dt_Toponomy.Rows[0]["State"].ToString()));
+                                toponomyOverwrites.Add(("Sub_location", dt_Toponomy.Rows[0]["Sub_location"].ToString()));
+
+                                foreach (var toponomyDetail in toponomyOverwrites)
+                                {
+                                    Helper.GenericUpdateAddToDataTable(
+                                        dt: frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite,
+                                        filePath: lvi.Text,
+                                        settingId: toponomyDetail.toponomyOverwriteName,
+                                        settingValue: toponomyDetail.toponomyOverwriteVal
+                                        );
+
+                                    lvi.SubItems[lvw.Columns["clh_" + toponomyDetail.toponomyOverwriteName].Index].Text = toponomyDetail.toponomyOverwriteVal;
+                                }
+                                lvi.ForeColor = Color.Red;
+                                HandlerUpdateLabelText(this.lbl_ParseProgress, "Processing: " + lvi.Text);
+                            }
+                            DataTable dt_Altitude = Helper.DTFromAPIExifGetAltitudeFromWebOrSQL(strGPSLatitude, strGPSLongitude);
+                            if (dt_Altitude.Rows.Count > 0)
+                            {
+                                Helper.GenericUpdateAddToDataTable(
+                                    dt: frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite,
+                                    filePath: lvi.Text,
+                                    settingId: "GPSAltitude",
+                                    settingValue: dt_Altitude.Rows[0]["Altitude"].ToString()
+                                    );
+                                lvi.ForeColor = Color.Red;
+                                HandlerUpdateLabelText(this.lbl_ParseProgress, "Processing: " + lvi.Text);
+                            }
+                        }
+                    }
+                }
+            }
+            //done
+            HandlerUpdateLabelText(this.lbl_ParseProgress, "");
+        }
+        /// <summary>
         /// Generally similar to the above.(btn_Refresh_lvwFileList_Click)
         /// </summary>
         /// <param name="sender">Unused</param>
@@ -1316,7 +1326,7 @@ namespace GeoTagNinja
             await Helper.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
             if (Helper.s_changeFolderIsOkay)
             {
-                btn_Refresh_lvwFileList_Click(this, new EventArgs());
+                tsb_Refresh_lvwFileList_Click(this, new EventArgs());
             }
         }
         /// <summary>
@@ -1362,22 +1372,32 @@ namespace GeoTagNinja
             }
         }
         /// <summary>
-        /// Handles the btn_EditFile_Click event -> shows the Edit File Form
+        /// Handles the tsb_EditFile_Click event -> shows the Edit File Form
         /// </summary>
         /// <param name="sender">Unused</param>
         /// <param name="e">Unused</param>
-        private void btn_EditFile_Click(object sender, EventArgs e)
+        private void tsb_EditFile_Click(object sender, EventArgs e)
         {
             Helper.ExifShowEditFrm();
         }
         /// <summary>
-        /// Handles the btn_RemoveGeoData_Click event -> calls Helper.ExifRemoveLocationData to remove GeoData from all selected files
+        /// Handles the tsb_RemoveGeoData_Click event -> calls Helper.ExifRemoveLocationData to remove GeoData from all selected files
         /// </summary>
         /// <param name="sender">Unused</param>
         /// <param name="e">Unused</param>
-        private void btn_RemoveGeoData_Click(object sender, EventArgs e)
+        private void tsb_RemoveGeoData_Click(object sender, EventArgs e)
         {
             Helper.ExifRemoveLocationData("frm_mainApp");
+        }
+        /// <summary>
+        /// Handles the tsb_ImportGPX_Click event -> shows the frm_importGPX Form
+        /// </summary>
+        /// <param name="sender">Unused</param>
+        /// <param name="e">Unused</param>
+        private void tsb_ImportGPX_Click(object sender, EventArgs e)
+        {
+            frm_importGPX Frm_ImportGPX = new frm_importGPX();
+            Frm_ImportGPX.ShowDialog();
         }
         /// <summary>
         /// Handles various keypress events. -> currently for tbx_FolderName when pressing Enter it will move to the folder
@@ -1398,11 +1418,11 @@ namespace GeoTagNinja
             }
         }
         /// <summary>
-        /// Handles the btn_SaveFiles_Click event -> triggers ExifWriteExifToFile
+        /// Handles the tsb_SaveFiles_Click event -> triggers ExifWriteExifToFile
         /// </summary>
         /// <param name="sender">Unused</param>
         /// <param name="e">Unused</param>
-        private async void btn_SaveFiles_Click(object sender, EventArgs e)
+        private async void tsb_SaveFiles_Click(object sender, EventArgs e)
         {
 
             // i think having an Item active can cause a lock on it
@@ -1443,11 +1463,11 @@ namespace GeoTagNinja
                 .GetDirectories(folderName)
                 .ToList();
 
-            string[] allowedExtensions = new string[allExtensions.Length];
-            Array.Copy(allowedExtensions, allExtensions, 0);
+            string[] allowedExtensions = new string[ancillary_ListsArrays.allCompatibleExtensions().Length];
+            Array.Copy(allowedExtensions, ancillary_ListsArrays.allCompatibleExtensions(), 0);
             for (int i = 0; i < allowedExtensions.Length; i++)
             {
-                allowedExtensions[i] = allExtensions[i].Split('\t').First();
+                allowedExtensions[i] = ancillary_ListsArrays.allCompatibleExtensions()[i].Split('\t').First();
             }
 
             // list files that have whitelisted extensions
@@ -1482,7 +1502,8 @@ namespace GeoTagNinja
 
             if (listOfAysncCompatibleItems.Count > 0)
             {
-                await Helper.ExifGetExifFromFilesCompatibleFileNames(listOfAysncCompatibleItems);
+                Helper.folderEnterLastEpoch = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                await Helper.ExifGetExifFromFilesCompatibleFileNames(listOfAysncCompatibleItems, Helper.folderEnterLastEpoch);
             }
             if (listOfAysncIncompatibleItems.Count > 0)
             {
@@ -1506,7 +1527,8 @@ namespace GeoTagNinja
                     }
                 }
 
-                await Helper.ExifGetExifFromFilesIncompatibleFileNames(listOfAysncIncompatibleItems);
+                Helper.folderEnterLastEpoch = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                await Helper.ExifGetExifFromFilesIncompatibleFileNames(listOfAysncIncompatibleItems, Helper.folderEnterLastEpoch);
             }
             int filesWithGeoData = 0;
             foreach (ListViewItem lvi in lvw_FileList.Items)
@@ -1568,6 +1590,39 @@ namespace GeoTagNinja
             }
         }
         /// <summary>
+        /// Techincally same as lvw_FileList_KeyDown but movement is a bit b...chy with "Down".
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void lvw_FileList_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (
+                e.KeyCode == Keys.PageUp ||
+                e.KeyCode == Keys.PageDown ||
+                e.KeyCode == Keys.Up ||
+                e.KeyCode == Keys.Down ||
+                e.KeyCode == Keys.Home ||
+                e.KeyCode == Keys.End
+                )
+            {
+                if (lvw_FileList.FocusedItem != null)
+                {
+                    await Helper.LvwItemClickNavigate();
+                    // it's easier to call the create-preview here than in the other one because focusedItems misbehave/I don't quite understand it/them
+                    if (File.Exists(Path.Combine(folderName + lvw_FileList.SelectedItems[0].Text)))
+                    {
+                        await Helper.LvwItemCreatePreview(Path.Combine(folderName + lvw_FileList.SelectedItems[0].Text));
+                    }
+
+                    // for folders and other non-valid items, don't do anything.
+                    if (Helper.hs_MapMarkers.Count > 0)
+                    {
+                        NavigateMapGo();
+                    }
+                }
+            }
+        }
+        /// <summary>
         /// Handles the various keypress combinations. See inline comments for details.
         /// </summary>
         /// <param name="sender">Unused</param>
@@ -1581,17 +1636,16 @@ namespace GeoTagNinja
 
                 for (int i = 0; i < lvw_FileList.Items.Count; i++)
                 {
-                    // so because there is no way to do a proper "select all" w/o looping i only want to run the "navigate" (which is triggered on select-state-change at the end
+                    lvw_FileList.Items[i].Selected = true;
+                    // so because there is no way to do a proper "select all" w/o looping i only want to run the "navigate" (which is triggered on select-state-change at the end)
                     if (i == lvw_FileList.Items.Count - 1)
                     {
                         Helper.s_NowSelectingAllItems = false;
-                    }
-                    lvw_FileList.Items[i].Selected = true;
-                    await Helper.LvwItemClickNavigate();
-                    // for folders and other non-valid items, don't do anything.
-                    if (Helper.hs_MapMarkers.Count > 0)
-                    {
-                        NavigateMapGo();
+                        await Helper.LvwItemClickNavigate();
+                        if (Helper.hs_MapMarkers.Count > 0)
+                        {
+                            NavigateMapGo();
+                        }
                     }
                 }
 
@@ -1599,47 +1653,6 @@ namespace GeoTagNinja
                 Helper.s_NowSelectingAllItems = false;
             }
 
-            // Up & Down -> Move
-            else if (e.KeyCode == Keys.Up)
-            {
-                if (lvw_FileList.FocusedItem != null)
-                {
-                    if (lvw_FileList.FocusedItem.Index > 0)
-                    {
-                        int thisItemIndex = lvw_FileList.FocusedItem.Index;
-                        lvw_FileList.Items[thisItemIndex].Selected = false;
-                        //lvw_FileList.FocusedItem = lvw_FileList.Items[thisItemIndex - 1];
-                        lvw_FileList.Items[thisItemIndex - 1].Selected = true;
-
-                        await Helper.LvwItemClickNavigate();
-                        // for folders and other non-valid items, don't do anything.
-                        if (Helper.hs_MapMarkers.Count > 0)
-                        {
-                            NavigateMapGo();
-                        }
-                    }
-                }
-            }
-            else if (e.KeyCode == Keys.Down)
-            {
-                if (lvw_FileList.FocusedItem != null)
-                {
-                    if (lvw_FileList.FocusedItem.Index < lvw_FileList.Items.Count - 1)
-                    {
-                        int thisItemIndex = lvw_FileList.FocusedItem.Index;
-                        lvw_FileList.Items[thisItemIndex].Selected = false;
-                        //lvw_FileList.FocusedItem = lvw_FileList.Items[thisItemIndex + 1];
-                        lvw_FileList.Items[thisItemIndex + 1].Selected = true;
-
-                        await Helper.LvwItemClickNavigate();
-                        // for folders and other non-valid items, don't do anything.
-                        if (Helper.hs_MapMarkers.Count > 0)
-                        {
-                            NavigateMapGo();
-                        }
-                    }
-                }
-            }
             // Shift Control C -> copy details
             else if (e.Control && e.Shift && e.KeyCode == Keys.C)
             {
@@ -1702,7 +1715,7 @@ namespace GeoTagNinja
             // F5 -> Refresh folder
             else if (e.KeyCode == Keys.F5)
             {
-                btn_Refresh_lvwFileList_Click(sender, e);
+                tsb_Refresh_lvwFileList_Click(sender, e);
                 this.lvw_FileList.Items.Clear();
                 folderName = tbx_FolderName.Text;
                 lvwFileList_LoadOrUpdate();
@@ -1872,6 +1885,57 @@ namespace GeoTagNinja
             // If we're running on the UI thread, we'll get here, and can safely update 
             // the label's text.
             label.Text = text;
+        }
+        /// <summary>
+        /// Resizes items when the main Splitter is moved.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void splitContainerMain_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            // top left
+            this.lvw_FileList.Width = this.splitContainerMain.Panel1.Width - 2;
+
+            // bottom left
+            this.pbx_imagePreview.Width = this.splitContainerMain.Panel1.Width - 2;
+            this.lbl_ParseProgress.Width = this.splitContainerMain.Panel1.Width - 2;
+
+            // top right
+            this.tct_Main.Top = 0;
+            this.tct_Main.Left = this.splitContainerRight.Panel1.Left;
+            this.tct_Main.Height = this.splitContainerRight.Panel1.Height;
+            this.tct_Main.Width = this.splitContainerRight.Width;
+
+            // bottom right
+            this.lbl_lat.Top = 0;
+            this.tbx_lat.Top = 0;
+            this.lbl_lat.Left = this.splitContainerRight.Left;
+            this.tbx_lat.Left = this.lbl_lat.Right + 2;
+
+            this.lbl_lng.Top = 0;
+            this.tbx_lng.Top = 0;
+            this.lbl_lng.Left = this.tbx_lat.Right + 2;
+            this.tbx_lng.Left = this.lbl_lng.Right + 2;
+
+            this.btn_NavigateMapGo.Top = 0;
+            this.btn_NavigateMapGo.Left = this.tbx_lng.Right + 2;
+            this.btn_loctToFile.Top = 0;
+            this.btn_loctToFile.Left = this.btn_NavigateMapGo.Right + 2;
+        }
+        /// <summary>
+        /// Resizes items when the left lower Splitter is moved
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void splitContainerLeftTop_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            // top left
+            this.lvw_FileList.Height = this.splitContainerLeftTop.Panel1.Height - 2;
+
+            // bottom left
+            this.splitContainerLeftBottom.Panel1.Top = 0;
+            this.pbx_imagePreview.Top = 0;
+            this.pbx_imagePreview.Height = this.splitContainerLeftBottom.Panel1.Height - 2;
         }
         #endregion
     }

@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Authenticators;
@@ -13,12 +12,30 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
+using geoTagNinja;
+using Application = System.Windows.Forms.Application;
+using Button = System.Windows.Forms.Button;
+using CheckBox = System.Windows.Forms.CheckBox;
+using ComboBox = System.Windows.Forms.ComboBox;
+using Control = System.Windows.Forms.Control;
+using GroupBox = System.Windows.Forms.GroupBox;
+using Image = System.Drawing.Image;
+using Label = System.Windows.Forms.Label;
+using ListView = System.Windows.Forms.ListView;
+using ListViewItem = System.Windows.Forms.ListViewItem;
+using Path = System.IO.Path;
+using RadioButton = System.Windows.Forms.RadioButton;
+using RichTextBox = System.Windows.Forms.RichTextBox;
+using TextBox = System.Windows.Forms.TextBox;
 
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 namespace GeoTagNinja
 {
@@ -32,6 +49,7 @@ namespace GeoTagNinja
         internal static bool s_changeFolderIsOkay = false;
         internal static bool s_APIOkay = true;
         private static string s_ErrorMsg = "";
+        private static string s_OutputMsg = "";
         private static readonly string s_doubleQuote = "\"";
         internal static string HTMLAddMarker;
         internal static HashSet<(string strLat, string strLng)> hs_MapMarkers = new HashSet<(string strLat, string strLng)>();
@@ -41,6 +59,7 @@ namespace GeoTagNinja
         internal static double? maxLng;
         internal static bool s_NowSelectingAllItems = false;
         internal static bool s_ResetMapToZero;
+        internal static long folderEnterLastEpoch = 0;
 
         #endregion
         #region SQL 
@@ -108,12 +127,16 @@ namespace GeoTagNinja
                         SQLiteCommand sqlCommandStr = new(sql, sqliteDB);
                         sqlCommandStr.ExecuteNonQuery();
                         sqliteDB.Close();
-
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message);
                     }
+                }
+                else
+                {
+                    DataDeleteSQLiteToponomy();
+                    DataDeleteSQLiteAltitude();
                 }
             }
             catch (Exception ex)
@@ -137,7 +160,7 @@ namespace GeoTagNinja
             // extension-specific
             foreach (string controlName in controlNamesToAdd)
             {
-                foreach (string ext in frm_MainApp.allExtensions)
+                foreach (string ext in ancillary_ListsArrays.allCompatibleExtensions())
                 {
                     string tmptmpCtrlName = ext.Split('\t').First() + '_'; // 'tis ok as is
                     string tmpCtrlName = tmptmpCtrlName + controlName;
@@ -207,7 +230,7 @@ namespace GeoTagNinja
                 SQLiteCommand sqlToRun = new(sqlCommandStr, sqliteDB);
                 sqlToRun.Parameters.AddWithValue("@orderBy", orderBy);
                 SQLiteDataReader reader = sqlToRun.ExecuteReader();
-                var dataTable = new DataTable();
+                DataTable dataTable = new DataTable();
                 dataTable.Load(reader);
                 return dataTable;
             }
@@ -239,7 +262,7 @@ namespace GeoTagNinja
 
             SQLiteCommand sqlToRun = new(sqlCommandStr, sqliteDB);
             SQLiteDataReader reader = sqlToRun.ExecuteReader();
-            var dataTable = new DataTable();
+            DataTable dataTable = new DataTable();
             dataTable.Load(reader);
             return dataTable;
         }
@@ -272,7 +295,7 @@ namespace GeoTagNinja
                 sqlToRun.Parameters.AddWithValue("@settingTabPage", settingTabPage);
                 sqlToRun.Parameters.AddWithValue("@settingId", settingId);
 
-                using var reader = sqlToRun.ExecuteReader();
+                using SQLiteDataReader reader = sqlToRun.ExecuteReader();
                 while (reader.Read())
                 {
                     returnString = reader.GetString(0);
@@ -394,7 +417,7 @@ namespace GeoTagNinja
                 SQLiteCommand sqlToRun = new(sqlCommandStr, sqliteDB);
                 sqlToRun.Parameters.AddWithValue("@objectName", objectName);
 
-                using var reader = sqlToRun.ExecuteReader();
+                using SQLiteDataReader reader = sqlToRun.ExecuteReader();
                 while (reader.Read())
                 {
                     returnString = reader.GetString(0);
@@ -417,7 +440,7 @@ namespace GeoTagNinja
                 SQLiteCommand sqlToRun = new(sqlCommandStr, sqliteDB);
                 sqlToRun.Parameters.AddWithValue("@objectName", objectName);
 
-                using var reader = sqlToRun.ExecuteReader();
+                using SQLiteDataReader reader = sqlToRun.ExecuteReader();
                 while (reader.Read())
                 {
                     returnString = reader.GetString(0);
@@ -459,7 +482,7 @@ namespace GeoTagNinja
                 sqlToRun.Parameters.AddWithValue("@actionType", actionType);
                 sqlToRun.Parameters.AddWithValue("@objectName", objectName);
 
-                using var reader = sqlToRun.ExecuteReader();
+                using SQLiteDataReader reader = sqlToRun.ExecuteReader();
                 while (reader.Read())
                 {
                     returnString = reader.GetString(0);
@@ -484,7 +507,7 @@ namespace GeoTagNinja
                 sqlToRun.Parameters.AddWithValue("@actionType", actionType);
                 sqlToRun.Parameters.AddWithValue("@objectName", objectName);
 
-                using var reader = sqlToRun.ExecuteReader();
+                using SQLiteDataReader reader = sqlToRun.ExecuteReader();
                 while (reader.Read())
                 {
                     returnString = reader.GetString(0);
@@ -494,7 +517,7 @@ namespace GeoTagNinja
             return returnString;
         }
         #endregion
-        #region Toponomy 
+        #region Toponomy SQL
         /// <summary>
         /// Attempts to read SQLite to see if the toponomy data exists. The idea is that a particular location on the planet isn't likely to change so ...
         /// ... it's silly to keep querying the API each time for the same thing. I've explained in the readme but the API I use doesn't really follow political changes...
@@ -521,7 +544,7 @@ namespace GeoTagNinja
             sqlToRun.Parameters.AddWithValue("@lat", lat);
             sqlToRun.Parameters.AddWithValue("@lng", lng);
             SQLiteDataReader reader = sqlToRun.ExecuteReader();
-            var dataTable = new DataTable();
+            DataTable dataTable = new DataTable();
             dataTable.Load(reader);
             return dataTable;
         }
@@ -549,7 +572,7 @@ namespace GeoTagNinja
             sqlToRun.Parameters.AddWithValue("@lat", lat);
             sqlToRun.Parameters.AddWithValue("@lng", lng);
             SQLiteDataReader reader = sqlToRun.ExecuteReader();
-            var dataTable = new DataTable();
+            DataTable dataTable = new DataTable();
             dataTable.Load(reader);
             return dataTable;
         }
@@ -573,12 +596,46 @@ namespace GeoTagNinja
                                 ;
 
             SQLiteCommand sqlToRun = new(sqlCommandStr, sqliteDB);
-            sqlToRun.Parameters.AddWithValue("@lat", lat.ToString().Replace(',', '.'));
-            sqlToRun.Parameters.AddWithValue("@lng", lng.ToString().Replace(',', '.'));
+            sqlToRun.Parameters.AddWithValue("@lat", lat.ToString(CultureInfo.InvariantCulture));
+            sqlToRun.Parameters.AddWithValue("@lng", lng.ToString(CultureInfo.InvariantCulture));
             sqlToRun.Parameters.AddWithValue("@AdminName1", AdminName1);
             sqlToRun.Parameters.AddWithValue("@AdminName2", AdminName2);
             sqlToRun.Parameters.AddWithValue("@ToponymName", ToponymName);
             sqlToRun.Parameters.AddWithValue("@CountryCode", CountryCode);
+
+            sqlToRun.ExecuteNonQuery();
+        }
+        /// <summary>
+        /// Clears the data from the Toponomy table. Run at session start.
+        /// </summary>
+        internal static void DataDeleteSQLiteToponomy()
+        {
+            using SQLiteConnection sqliteDB = new("Data Source=" + s_settingsDataBasePath);
+            sqliteDB.Open();
+
+            string sqlCommandStr = @"
+                                DELETE FROM toponymyData;"
+                                ;
+
+            SQLiteCommand sqlToRun = new(sqlCommandStr, sqliteDB);
+
+
+            sqlToRun.ExecuteNonQuery();
+        }
+        /// <summary>
+        /// Clears the data from the Altitude table. Run at session start.
+        /// </summary>
+        internal static void DataDeleteSQLiteAltitude()
+        {
+            using SQLiteConnection sqliteDB = new("Data Source=" + s_settingsDataBasePath);
+            sqliteDB.Open();
+
+            string sqlCommandStr = @"
+                                DELETE FROM altitudeData;"
+                                ;
+
+            SQLiteCommand sqlToRun = new(sqlCommandStr, sqliteDB);
+
 
             sqlToRun.ExecuteNonQuery();
         }
@@ -599,9 +656,9 @@ namespace GeoTagNinja
                                 ;
 
             SQLiteCommand sqlToRun = new(sqlCommandStr, sqliteDB);
-            sqlToRun.Parameters.AddWithValue("@lat", lat.ToString().Replace(',', '.'));
-            sqlToRun.Parameters.AddWithValue("@lng", lng.ToString().Replace(',', '.'));
-            sqlToRun.Parameters.AddWithValue("@Altitude", Altitude);
+            sqlToRun.Parameters.AddWithValue("@lat", lat.ToString(CultureInfo.InvariantCulture));
+            sqlToRun.Parameters.AddWithValue("@lng", lng.ToString(CultureInfo.InvariantCulture));
+            sqlToRun.Parameters.AddWithValue("@Altitude", Altitude.ToString(CultureInfo.InvariantCulture));
 
             sqlToRun.ExecuteNonQuery();
         }
@@ -633,7 +690,7 @@ namespace GeoTagNinja
                                 ;
                 SQLiteCommand sqlToRun = new(sqlCommandStr, sqliteDB);
 
-                using (var reader = sqlToRun.ExecuteReader())
+                using (SQLiteDataReader reader = sqlToRun.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -663,9 +720,25 @@ namespace GeoTagNinja
         public static double GenericAdjustLatLongNegative(string point)
         {
             string pointOrig = point.ToString().Replace(" ", "").Replace(',', '.');
-            double pointVal = double.Parse(Regex.Replace(pointOrig, "[SWNE\"-]", ""), NumberStyles.Any, CultureInfo.InvariantCulture);
+            // WGS84 DM --> logic here is, before I have to spend hours digging this crap again...
+            // degree stays as-is, the totality of the rest gets divided by 60.
+            // so 41,53.23922526N becomes 41 + (53.53.23922526)/60) = 41.88732
+            double pointVal = 0.0;
+            if (pointOrig.Count(f => f == '.') == 2)
+            {
+                int degree;
+                double minute;
+                bool degreeParse = int.TryParse(pointOrig.Split('.')[0], NumberStyles.Any, CultureInfo.InvariantCulture, out degree);
+                bool minuteParse = (double.TryParse(Regex.Replace(pointOrig.Split('.')[1] + "." + pointOrig.Split('.')[2], "[SWNE\"-]", ""), NumberStyles.Any, CultureInfo.InvariantCulture, out minute));
+                minute = minute / 60;
+                pointVal = degree + minute;
+            }
+            else
+            {
+                pointVal = double.Parse(Regex.Replace(pointOrig, "[SWNE\"-]", ""), NumberStyles.Any, CultureInfo.InvariantCulture);
+            }
             pointVal = Math.Round(pointVal, 6);
-            var multiplier = (point.Contains("S") || point.Contains("W")) ? -1 : 1; //handle south and west
+            int multiplier = (point.Contains("S") || point.Contains("W")) ? -1 : 1; //handle south and west
 
             return pointVal * multiplier;
         }
@@ -697,9 +770,9 @@ namespace GeoTagNinja
             }
             foreach (DataRow row1 in t1.Rows)
             {
-                var joinRows = t2.AsEnumerable().Where(row2 =>
+                EnumerableRowCollection<DataRow> joinRows = t2.AsEnumerable().Where(row2 =>
                 {
-                    foreach (var parameter in joinOn)
+                    foreach (Func<DataRow, DataRow, bool> parameter in joinOn)
                     {
                         if (!parameter(row1, row2)) return false;
                     }
@@ -813,6 +886,169 @@ namespace GeoTagNinja
                 return returnString;
             }
         }
+        /// <summary>
+        /// This (mostly) sets the various texts for most Controls in various forms, especially labels and buttons/boxes.
+        /// </summary>
+        /// <param name="cItem">The Control whose details need adjusting</param>
+        internal static void GenericReturnControlText(Control cItem, Form senderForm)
+        {
+
+            if (
+                cItem.GetType() == typeof(Label) ||
+                cItem.GetType() == typeof(GroupBox) ||
+                cItem.GetType() == typeof(Button) ||
+                cItem.GetType() == typeof(CheckBox) ||
+                cItem.GetType() == typeof(TabPage) ||
+                cItem.GetType() == typeof(RichTextBox) ||
+                cItem.GetType() == typeof(RadioButton) // ||
+                )
+            {
+                // for some reason there is no .Last() being offered here
+                cItem.Text = Helper.DataReadSQLiteObjectText(
+                    languageName: frm_MainApp.appLanguage,
+                    objectType: (cItem.GetType().ToString().Split('.')[cItem.GetType().ToString().Split('.').Length - 1]),
+                    objectName: cItem.Name
+                    );
+            }
+            else if (cItem.GetType() == typeof(TextBox) || cItem.GetType() == typeof(ComboBox))
+            {
+                if (senderForm.Name == "frm_Settings")
+                {
+                    cItem.Text = Helper.DataReadSQLiteSettings(
+                            tableName: "settings",
+                            settingTabPage: cItem.Parent.Name,
+                            settingId: cItem.Name
+                            );
+                }
+            }
+        }
+        /// <summary>
+        /// A centralised way to interact with datatables containing exif data. Checks if the table already contains an element for the given combination and if so deletes it, then writes the new data.
+        /// </summary>
+        /// <param name="dt">Name of the datatable. Realistically this is one of the three "queue" DTs</param>
+        /// <param name="filePath">Path of file</param>
+        /// <param name="settingId">Name of the column or tag (e.g. GPSLatitude)</param>
+        /// <param name="settingValue">Value to write</param>
+        internal static void GenericUpdateAddToDataTable(DataTable dt, string filePath, string settingId, string settingValue)
+        {
+            // delete any existing rows with the current combination
+            for (int i = dt.Rows.Count - 1; i >= 0; i--)
+            {
+                DataRow thisDr = dt.Rows[i];
+                if (
+                    thisDr["filePath"].ToString() == filePath &&
+                    thisDr["settingId"].ToString() == settingId
+                    )
+                {
+                    thisDr.Delete();
+                }
+            }
+            dt.AcceptChanges();
+
+            // add new
+            DataRow newDr = dt.NewRow();
+            newDr["filePath"] = filePath;
+            newDr["settingId"] = settingId;
+            newDr["settingValue"] = settingValue;
+            dt.Rows.Add(newDr);
+        }
+        /// <summary>
+        /// Checks for new versions of GTN and eT.
+        /// </summary>
+        internal static async void GenericCheckForNewVersions()
+        {
+#if !DEBUG
+            // check when the last polling took place
+            long nowUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
+            long lastCheckUnixTime = 0;
+
+            string strLastOnlineVersionCheck = Helper.DataReadSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: "generic",
+                    settingId: "onlineVersionCheckDate"
+                    );
+
+            if (strLastOnlineVersionCheck == null)
+            {
+                lastCheckUnixTime = nowUnixTime;
+                // write back to SQL so it doesn't remain blank
+                Helper.DataWriteSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: "generic",
+                    settingId: "onlineVersionCheckDate",
+                    settingValue: nowUnixTime.ToString()
+                    );
+            }
+            else
+            {
+                lastCheckUnixTime = long.Parse(strLastOnlineVersionCheck);
+            }
+
+            if (nowUnixTime > (lastCheckUnixTime + 604800)) //604800 is a week's worth of seconds
+            {
+                // get current & newest exiftool version -- do this here at the end so it doesn't hold up the process
+                decimal currentExifToolVersionLocal = await Helper.ExifGetExifToolVersion();
+                decimal newestExifToolVersionOnline = Helper.API_ExifGetExifToolVersionFromWeb();
+                decimal currentExifToolVersionInSQL;
+                string strCurrentExifToolVersionInSQL = Helper.DataReadSQLiteSettings(
+                        tableName: "settings",
+                        settingTabPage: "generic",
+                        settingId: "exifToolVer"
+                        );
+
+                if (!decimal.TryParse(strCurrentExifToolVersionInSQL, NumberStyles.Any, CultureInfo.InvariantCulture, out currentExifToolVersionInSQL))
+                {
+                    currentExifToolVersionInSQL = currentExifToolVersionLocal;
+                }
+
+                if (newestExifToolVersionOnline > currentExifToolVersionLocal && newestExifToolVersionOnline > currentExifToolVersionInSQL && (currentExifToolVersionLocal + newestExifToolVersionOnline) > 0)
+                {
+                    // write current to SQL
+                    Helper.DataWriteSQLiteSettings(
+                        tableName: "settings",
+                        settingTabPage: "generic",
+                        settingId: "exifToolVer",
+                        settingValue: newestExifToolVersionOnline.ToString(CultureInfo.InvariantCulture)
+                        );
+
+                    // the newestExifToolVersionOnline.ToString().Replace(',', '.') is needed for non-English culture settings.
+                    if (MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_InfoNewExifToolVersionExists") + newestExifToolVersionOnline.ToString(CultureInfo.InvariantCulture), "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                    {
+                        System.Diagnostics.Process.Start("https://exiftool.org/exiftool-" + newestExifToolVersionOnline.ToString(CultureInfo.InvariantCulture) + ".zip");
+                    }
+                }
+
+                // current version may be something like "0.5.8251.40825"
+                // Assembly.GetExecutingAssembly().GetName().Version.Build is just "8251"
+                int currentGTNVersionBuild = Assembly.GetExecutingAssembly().GetName().Version.Build;
+
+                Helper.s_APIOkay = true;
+                DataTable dt_APIGTNVersion = Helper.DTFromAPI_GetGTNVersion();
+                // newest may be something like "v0.5.8251"
+                string newestGTNVersionFull = dt_APIGTNVersion.Rows[0]["version"].ToString().Replace("v", "");
+                int newestGTNVersion = 0;
+
+                bool intParse;
+                intParse = int.TryParse(newestGTNVersionFull.Split('.').Last(), out newestGTNVersion);
+
+                if (newestGTNVersion > currentGTNVersionBuild)
+                {
+                    if (MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_mainApp_InfoNewGTNVersionExists") + newestGTNVersion, "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                    {
+                        System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dt_APIGTNVersion.Rows[0]["version"].ToString() + "/GeoTagNinja_Setup.msi");
+                    }
+                }
+                // write back to SQL
+                Helper.DataWriteSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: "generic",
+                    settingId: "onlineVersionCheckDate",
+                    settingValue: nowUnixTime.ToString()
+                    );
+            }
+#endif
+
+        }
         #endregion
         #region Exif Related
         /// <summary>
@@ -825,7 +1061,6 @@ namespace GeoTagNinja
         {
             string returnVal = "";
 
-            string tmpLatVal = "-";
             string tmpLongVal = "-";
             string tryDataValue = "-";
             string tmpLatRefVal = "-";
@@ -858,7 +1093,7 @@ namespace GeoTagNinja
                             tmpLatLongRefVal = "-";
                         }
 
-                        if (!tryDataValue.Contains(tmpLatLongRefVal))
+                        if (!tryDataValue.Contains(tmpLatLongRefVal) && tmpLatLongRefVal != "-")
                         {
                             tryDataValue = tmpLatLongRefVal + tryDataValue;
                         }
@@ -880,7 +1115,7 @@ namespace GeoTagNinja
                     // this is entirely the duplicate of the above
 
                     // check there is lat/long
-                    tmpLatVal = ExifGetRawDataPointFromExif(dtFileExif, "GPS" + isDest + "Latitude").Replace(',', '.');
+                    string tmpLatVal = ExifGetRawDataPointFromExif(dtFileExif, "GPS" + isDest + "Latitude").Replace(',', '.');
                     tmpLongVal = ExifGetRawDataPointFromExif(dtFileExif, "GPS" + isDest + "Longitude").Replace(',', '.');
                     if (tmpLatVal == "") { tmpLatVal = "-"; };
                     if (tmpLongVal == "") { tmpLongVal = "-"; };
@@ -889,6 +1124,28 @@ namespace GeoTagNinja
                     {
                         tmpLatRefVal = ExifGetRawDataPointFromExif(dtFileExif, "GPS" + isDest + "LatitudeRef").Substring(0, 1).Replace(',', '.');
                         tmpLongRefVal = ExifGetRawDataPointFromExif(dtFileExif, "GPS" + isDest + "LongitudeRef").Substring(0, 1).Replace(',', '.');
+                    }
+
+                    // this shouldn't really happen but ET v12.49 extracts trackfile data in the wrong format so...
+                    else if ((tmpLatVal.Contains('N') || tmpLatVal.Contains('S')) && (tmpLongVal.Contains('E') || tmpLongVal.Contains('W')))
+                    {
+                        if (tmpLatVal.Contains('N'))
+                        {
+                            tmpLatRefVal = "N";
+                        }
+                        else
+                        {
+                            tmpLatRefVal = "S";
+                        }
+
+                        if (tmpLongVal.Contains('E'))
+                        {
+                            tmpLongRefVal = "E";
+                        }
+                        else
+                        {
+                            tmpLongRefVal = "W";
+                        }
                     }
                     else
                     {
@@ -924,9 +1181,25 @@ namespace GeoTagNinja
                         tryDataValue = tryDataValue.Split('m')[0].ToString().Trim().Replace(',', '.');
                     }
                     if (tryDataValue.Contains("/"))
-                    {
-                        tryDataValue = tryDataValue.Split('/')[0].ToString().Trim().Replace(',', '.');
-                    }
+                        if (tryDataValue.Contains(",") || tryDataValue.Contains("."))
+                        {
+                            tryDataValue = tryDataValue.Split('/')[0].ToString().Trim().Replace(',', '.');
+                        }
+                        else // attempt to convert it to decimal
+                        {
+                            try
+                            {
+                                double numerator;
+                                double denominator;
+                                var parseBool = double.TryParse(tryDataValue.Split('/')[0], NumberStyles.Any, CultureInfo.InvariantCulture, out numerator);
+                                parseBool = double.TryParse(tryDataValue.Split('/')[1], NumberStyles.Any, CultureInfo.InvariantCulture, out denominator);
+                                tryDataValue = Math.Round((numerator / denominator), 2).ToString(CultureInfo.InvariantCulture);
+                            }
+                            catch
+                            {
+                                tryDataValue = "0.0";
+                            }
+                        }
                     break;
                 case "GPSAltitudeRef":
                     if (tryDataValue.ToLower().Contains("below") || tryDataValue.Contains("1"))
@@ -1039,8 +1312,9 @@ namespace GeoTagNinja
         /// ... items in the listview that's asking for it.
         /// </summary>
         /// <param name="files">List of "compatible" filenames</param>
+        /// <param name="folderEnterEpoch">This is for session-checking -> if the user was to move folders while the call is executing and the new folder has identical file names w/o this the wrong data could show</param>
         /// <returns>In practice, nothing but it's responsible for sending the updated exif info back to the requester (usually a listview)</returns>
-        internal static async Task ExifGetExifFromFilesCompatibleFileNames(List<string> files)
+        internal static async Task ExifGetExifFromFilesCompatibleFileNames(List<string> files, long folderEnterEpoch)
         {
             IEnumerable<string> exifToolCommand = Enumerable.Empty<string>();
             IEnumerable<string> exifToolCommandWithFileName = Enumerable.Empty<string>();
@@ -1092,49 +1366,19 @@ namespace GeoTagNinja
                         MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         exifToolResult = null;
                     }
-                    string[] exifToolResultArr = Convert.ToString(exifToolResult).Split(
-                             new string[] { "\r\n", "\r", "\n" },
-                             StringSplitOptions.None
-                         ).Distinct().ToArray();
-                    ;
 
-                    foreach (string fileExifDataRow in exifToolResultArr)
+                    string[] exifToolResultArr;
+
+                    // if user closes app this could return a null
+                    if (exifToolResult != null)
                     {
-                        if (fileExifDataRow is not null && fileExifDataRow.Length > 0 && fileExifDataRow.Substring(0, 1) == "[")
-                        {
-                            string exifGroup = fileExifDataRow.Split(' ')[0].Replace("[", "").Replace("]", "");
-                            string exifTagName = fileExifDataRow.Split(' ')[1].Replace(":", "");
-                            string exifTagVal = fileExifDataRow.Substring(fileExifDataRow.IndexOf(':') + 2);
-
-                            DataRow dr = dt_fileExifTable.NewRow();
-                            dr["TagName"] = exifGroup + ":" + exifTagName;
-                            dr["TagValue"] = exifTagVal;
-
-                            dt_fileExifTable.Rows.Add(dr);
-                        }
-                    }
-                    // for some files there may be data in a sidecar xmp without that data existing in the picture-file. we'll try to collect it here.
-                    if (File.Exists(Path.Combine(folderNameToUse, (Path.GetFileNameWithoutExtension(Path.Combine(folderNameToUse, listElem)) + ".xmp"))))
-                    {
-                        string sideCarXMPFilePath = Path.Combine(folderNameToUse, (Path.GetFileNameWithoutExtension(Path.Combine(folderNameToUse, listElem)) + ".xmp"));
-                        // this is totally a copypaste from above
-                        try
-                        {
-                            exifToolCommandWithFileName = exifToolCommand.Concat(new[] { sideCarXMPFilePath });
-                            exifToolResult = await frm_mainAppInstance.asyncExifTool.ExecuteAsync(exifToolCommandWithFileName);
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            exifToolResult = null;
-                        }
-                        string[] exifToolResultArrXMP = Convert.ToString(exifToolResult).Split(
+                        exifToolResultArr = Convert.ToString(exifToolResult).Split(
                                  new string[] { "\r\n", "\r", "\n" },
                                  StringSplitOptions.None
                              ).Distinct().ToArray();
                         ;
 
-                        foreach (string fileExifDataRow in exifToolResultArrXMP)
+                        foreach (string fileExifDataRow in exifToolResultArr)
                         {
                             if (fileExifDataRow is not null && fileExifDataRow.Length > 0 && fileExifDataRow.Substring(0, 1) == "[")
                             {
@@ -1151,12 +1395,54 @@ namespace GeoTagNinja
                         }
                     }
 
+                    // for some files there may be data in a sidecar xmp without that data existing in the picture-file. we'll try to collect it here.
+                    if (File.Exists(Path.Combine(folderNameToUse, (Path.GetFileNameWithoutExtension(Path.Combine(folderNameToUse, listElem)) + ".xmp"))))
+                    {
+                        string sideCarXMPFilePath = Path.Combine(folderNameToUse, (Path.GetFileNameWithoutExtension(Path.Combine(folderNameToUse, listElem)) + ".xmp"));
+                        // this is totally a copypaste from above
+                        try
+                        {
+                            exifToolCommandWithFileName = exifToolCommand.Concat(new[] { sideCarXMPFilePath });
+                            exifToolResult = await frm_mainAppInstance.asyncExifTool.ExecuteAsync(exifToolCommandWithFileName);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed") + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            exifToolResult = null;
+                        }
+                        if (exifToolResult != null)
+                        {
+                            string[] exifToolResultArrXMP = Convert.ToString(exifToolResult).Split(
+                                     new string[] { "\r\n", "\r", "\n" },
+                                     StringSplitOptions.None
+                                 ).Distinct().ToArray();
+                            ;
+
+                            foreach (string fileExifDataRow in exifToolResultArrXMP)
+                            {
+                                if (fileExifDataRow is not null && fileExifDataRow.Length > 0 && fileExifDataRow.Substring(0, 1) == "[")
+                                {
+                                    string exifGroup = fileExifDataRow.Split(' ')[0].Replace("[", "").Replace("]", "");
+                                    string exifTagName = fileExifDataRow.Split(' ')[1].Replace(":", "");
+                                    string exifTagVal = fileExifDataRow.Substring(fileExifDataRow.IndexOf(':') + 2);
+
+                                    DataRow dr = dt_fileExifTable.NewRow();
+                                    dr["TagName"] = exifGroup + ":" + exifTagName;
+                                    dr["TagValue"] = exifTagVal;
+
+                                    dt_fileExifTable.Rows.Add(dr);
+                                }
+                            }
+                        }
+                    }
+
                     ListViewItem lvi = frm_mainAppInstance.lvw_FileList.FindItemWithText(listElem);
 
                     // lvi can become null if user changes folder while a previous process is loading and listview is cleared.
-                    if (lvi != null)
+                    // also just make sure we're in the same session.
+                    if (lvi != null && Helper.folderEnterLastEpoch == folderEnterEpoch)
                     {
-                        var lvchs = frm_mainAppInstance.ListViewColumnHeaders;
+                        ListView.ColumnHeaderCollection lvchs = frm_mainAppInstance.ListViewColumnHeaders;
                         for (int i = 1; i < lvi.SubItems.Count; i++)
                         {
                             string str = ExifGetStandardisedDataPointFromExif(dt_fileExifTable, lvchs[i].Name.Substring(4));
@@ -1177,11 +1463,12 @@ namespace GeoTagNinja
         /// ... this is slower and allows for less control but safer.
         /// </summary>
         /// <param name="files">List of "incompatible" filenames</param>
+        /// /// <param name="folderEnterEpoch">This is for session-checking -> if the user was to move folders while the call is executing and the new folder has identical file names w/o this the wrong data could show</param>
         /// <returns>In practice, nothing but it's responsible for sending the updated exif info back to the requester (usually a listview)</returns>
-        internal static async Task ExifGetExifFromFilesIncompatibleFileNames(List<string> files)
+        internal static async Task ExifGetExifFromFilesIncompatibleFileNames(List<string> files, long folderEnterEpoch)
         {
             #region ExifToolConfiguration
-            var exifToolExe = Path.Combine(frm_MainApp.resourcesFolderPath, "exiftool.exe");
+            string exifToolExe = Path.Combine(frm_MainApp.resourcesFolderPath, "exiftool.exe");
             frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
 
             string folderNameToUse = frm_mainAppInstance.tbx_FolderName.Text;
@@ -1190,7 +1477,7 @@ namespace GeoTagNinja
 
             File.Delete(argsFile);
 
-            var exifArgs = new List<string> { };
+            List<string> exifArgs = new List<string> { };
             // needs a space before and after.
             string commonArgs = " -a -s -s -struct -sort -G -ee -args ";
 
@@ -1233,7 +1520,7 @@ namespace GeoTagNinja
             // via https://stackoverflow.com/a/68616297/3968494
             await Task.Run(() =>
             {
-                using var p = new Process();
+                using Process p = new Process();
                 p.StartInfo = new ProcessStartInfo(@"c:\windows\system32\cmd.exe")
                 {
                     Arguments = @"/k " + s_doubleQuote + s_doubleQuote + Path.Combine(frm_MainApp.resourcesFolderPath, "exiftool.exe") + s_doubleQuote + " " + commonArgs + exiftoolCmd + s_doubleQuote + "&& exit",
@@ -1327,15 +1614,19 @@ namespace GeoTagNinja
                         // de-dupe. this is pretty poor performance but the dataset is small
                         DataTable dt_distinctFileExifTable = dt_fileExifTable.DefaultView.ToTable(true);
 
-                        ListViewItem lvi = frm_mainAppInstance.lvw_FileList.FindItemWithText(itemText);
-
-                        var lvchs = frm_mainAppInstance.ListViewColumnHeaders;
-                        for (int i = 1; i < lvi.SubItems.Count; i++)
+                        if (Helper.folderEnterLastEpoch == folderEnterEpoch)
                         {
-                            string str = ExifGetStandardisedDataPointFromExif(dt_distinctFileExifTable, lvchs[i].Name.Substring(4));
-                            lvi.SubItems[i].Text = str;
+
+                            ListViewItem lvi = frm_mainAppInstance.lvw_FileList.FindItemWithText(itemText);
+
+                            ListView.ColumnHeaderCollection lvchs = frm_mainAppInstance.ListViewColumnHeaders;
+                            for (int i = 1; i < lvi.SubItems.Count; i++)
+                            {
+                                string str = ExifGetStandardisedDataPointFromExif(dt_distinctFileExifTable, lvchs[i].Name.Substring(4));
+                                lvi.SubItems[i].Text = str;
+                            }
+                            lvi.ForeColor = Color.Black;
                         }
-                        lvi.ForeColor = Color.Black;
                         File.Delete(exifFileIn); // clean up
                     }
                 }
@@ -1346,15 +1637,343 @@ namespace GeoTagNinja
             }
         }
         /// <summary>
+        /// Fires off a command to try to parse Track files and link them up with data in the main grid
+        /// </summary>
+        /// <param name="trackFileLocationType">File or Folder</param>
+        /// <param name="trackFileLocationVal">The location of the above</param>
+        /// <param name="useTZAdjust">True or False to whether to adjust Time Zone</param>
+        /// <param name="compareTZAgainst">If TZ should be compared against CreateDate or DateTimeOriginal</param>
+        /// <param name="TZVal">Value as string, e.g "+01:00"</param>
+        /// <param name="timeShiftSeconds">Int value if GPS time should be shifted.</param>
+        /// <returns></returns>
+        internal static async Task ExifGetTrackSyncData(string trackFileLocationType, string trackFileLocationVal, bool useTZAdjust, string compareTZAgainst, string TZVal, int GeoMaxIntSecs, int GeoMaxExtSecs, int timeShiftSeconds = 0)
+        {
+            s_ErrorMsg = "";
+            s_OutputMsg = "";
+            List<string> trackFileList = new List<string> { };
+            if (trackFileLocationType == "file")
+            {
+                trackFileList.Add(trackFileLocationVal);
+            }
+            else if (trackFileLocationType == "folder")
+            {
+                trackFileList = System.IO.Directory
+                .GetFiles(trackFileLocationVal)
+                .Where(file => ancillary_ListsArrays.gpxExtensions().Any(file.ToLower().EndsWith))
+                .ToList();
+            }
+
+            #region ExifToolConfiguration
+            string exifToolExe = Path.Combine(frm_MainApp.resourcesFolderPath, "exiftool.exe");
+            frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
+
+            string folderNameToUse = frm_mainAppInstance.tbx_FolderName.Text;
+            string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 ";
+
+            List<string> exifArgs = new List<string> { };
+            // needs a space before and after.
+            string commonArgs = " -a -s -s -struct -sort -G -ee -args ";
+
+            #endregion
+
+            // add track files
+            foreach (string trackFile in trackFileList)
+            {
+                exiftoolCmd += " -geotag=" + s_doubleQuote + trackFile + s_doubleQuote;
+            }
+
+            // add what to compare against + TZ
+            string tmpTZAdjust = s_doubleQuote;
+            if (useTZAdjust)
+            {
+                tmpTZAdjust = TZVal + s_doubleQuote;
+            }
+            exiftoolCmd += " " + s_doubleQuote + "-geotime<${" + compareTZAgainst + "#}" + tmpTZAdjust;
+
+            // time shift
+            if (timeShiftSeconds < 0)
+            {
+                exiftoolCmd += " -geosync=" + timeShiftSeconds.ToString();
+            }
+            else if (timeShiftSeconds > 0)
+            {
+                exiftoolCmd += " -geosync=+" + timeShiftSeconds.ToString();
+            }
+
+            // add -api GeoMaxIntSecs & -api GeoMaxExtSecs
+            exiftoolCmd += " -api GeoMaxIntSecs=" + GeoMaxIntSecs.ToString(CultureInfo.InvariantCulture);
+            exiftoolCmd += " -api GeoMaxExtSecs=" + GeoMaxExtSecs.ToString(CultureInfo.InvariantCulture);
+
+            // add "what folder to act upon"
+            exiftoolCmd += " " + s_doubleQuote + frm_mainAppInstance.tbx_FolderName.Text.TrimEnd('\\') + s_doubleQuote;
+
+            // verbose logging
+            exiftoolCmd += " -v2";
+
+            // add output path to tmp xmp
+
+            // make sure tmp exists -> this goes into "our" folder
+            Directory.CreateDirectory(frm_MainApp.userDataFolderPath + @"\tmpLocFiles");
+            string tmpFolder = Path.Combine(frm_MainApp.userDataFolderPath + @"\tmpLocFiles");
+
+            // this is a little superflous but...
+            System.IO.DirectoryInfo di_tmpLocFiles = new DirectoryInfo(tmpFolder);
+
+            foreach (FileInfo file in di_tmpLocFiles.EnumerateFiles())
+            {
+                file.Delete();
+            }
+
+            exiftoolCmd += " " + " -srcfile " + s_doubleQuote + tmpFolder + @"\%F.xmp" + s_doubleQuote;
+            exiftoolCmd += " -overwrite_original_in_place";
+
+            ///////////////
+            // via https://stackoverflow.com/a/68616297/3968494
+            await Task.Run(() =>
+            {
+                using Process p = new Process();
+                p.StartInfo = new ProcessStartInfo(@"c:\windows\system32\cmd.exe")
+                {
+                    Arguments = @"/k " + s_doubleQuote + s_doubleQuote + Path.Combine(frm_MainApp.resourcesFolderPath, "exiftool.exe") + s_doubleQuote + " " + commonArgs + exiftoolCmd + s_doubleQuote + "&& exit",
+                    UseShellExecute = false,
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true,
+                };
+
+                p.EnableRaisingEvents = true;
+
+                //s_ErrorMsg = "";
+                //s_OutputMsg = "";
+                p.OutputDataReceived += (_, data) =>
+                {
+                    if (data.Data != null && data.Data.Length > 0)
+                    {
+                        s_OutputMsg += data.Data.ToString() + Environment.NewLine;
+                    }
+                };
+
+                p.ErrorDataReceived += (_, data) =>
+                {
+                    if (data.Data != null && data.Data.Length > 0)
+                    {
+                        s_ErrorMsg += data.Data.ToString() + Environment.NewLine;
+                        try { p.Kill(); } catch { } // else it will be stuck running forever
+                    }
+                };
+
+                p.Start();
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+                p.WaitForExit();
+                p.Close();
+                if (s_ErrorMsg != "")
+                {
+                    //MessageBox.Show(s_ErrorMsg);
+                }
+                // if still here then exorcise
+                try { p.Kill(); } catch { }
+
+            });
+
+
+            ///////////////
+            //// try to collect the xmp/xml files and then read them back into the listview.
+
+            foreach (FileInfo exifFileIn in di_tmpLocFiles.EnumerateFiles())
+            {
+                if (exifFileIn.Extension == ".xmp")
+                {
+                    try
+                    {
+                        string xml = File.ReadAllText(System.IO.Path.Combine(tmpFolder, exifFileIn.Name));
+
+                        XmlSerializer serializer = new XmlSerializer(typeof(xmpmeta));
+                        xmpmeta? trackFileXMLData;
+                        using (StringReader reader = new StringReader(xml))
+                        {
+                            trackFileXMLData = (xmpmeta)serializer.Deserialize(reader);
+                            //trackFileXMLData.RDF.Description.GPSAltitude
+                        }
+
+                        if (trackFileXMLData != null)
+                        {
+                            DataTable dt_fileExifTable = new();
+                            dt_fileExifTable.Clear();
+                            dt_fileExifTable.Columns.Add("TagName");
+                            dt_fileExifTable.Columns.Add("TagValue");
+
+                            PropertyInfo[] props = typeof(RDFDescription).GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+
+                            foreach (PropertyInfo trackData in props)
+                            {
+                                string TagName = "exif:" + trackData.Name;
+                                object TagValue = trackData.GetValue(trackFileXMLData.RDF.Description);
+
+                                DataRow dr = dt_fileExifTable.NewRow();
+                                dr["TagName"] = TagName;
+                                dr["TagValue"] = TagValue;
+                                dt_fileExifTable.Rows.Add(dr);
+                            }
+
+                            // de-dupe. this is pretty poor performance but the dataset is small
+                            DataTable dt_distinctFileExifTable = dt_fileExifTable.DefaultView.ToTable(true);
+
+                            ListView lvw = frm_mainAppInstance.lvw_FileList;
+                            ListViewItem lvi = frm_mainAppInstance.lvw_FileList.FindItemWithText(exifFileIn.Name.Substring(0, exifFileIn.Name.Length - 4));
+
+                            if (lvi != null)
+                            {
+                                ListView.ColumnHeaderCollection lvchs = frm_mainAppInstance.ListViewColumnHeaders;
+                                string[] toponomyChangers = new string[] { "GPSLatitude", "GPSLongitude" };
+                                string[] toponomyDeletes = new string[] { "CountryCode", "Country", "City", "State", "Sub_location" };
+                                string strParsedLat = "0.0";
+                                string strParsedLng = "0.0";
+                                bool coordinatesHaveChanged = false;
+
+
+
+                                for (int i = 1; i < lvi.SubItems.Count; i++)
+                                {
+                                    string tagToWrite = lvchs[i].Name.Substring(4);
+                                    string str = ExifGetStandardisedDataPointFromExif(dt_distinctFileExifTable, tagToWrite);
+                                    frm_MainApp.HandlerUpdateLabelText(frm_mainAppInstance.lbl_ParseProgress, "Processing: " + lvi.Text);
+
+
+                                    // don't update stuff that hasn't changed
+                                    if (lvi.SubItems[i].Text != str && (ancillary_ListsArrays.gpxTagsToOverwrite().Contains(tagToWrite) || tagToWrite == "Coordinates"))
+                                    {
+                                        lvi.SubItems[i].Text = str;
+                                        if (ancillary_ListsArrays.gpxTagsToOverwrite().Contains(tagToWrite))
+                                        {
+                                            if (toponomyChangers.Contains(tagToWrite))
+                                            {
+                                                coordinatesHaveChanged = true;
+                                            }
+
+                                            Helper.GenericUpdateAddToDataTable(
+                                                    dt: frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite,
+                                                    filePath: lvi.Text,
+                                                    settingId: lvchs[i].Name.Substring(4),
+                                                    settingValue: str
+                                                    );
+
+                                            if (tagToWrite == "GPSLatitude") { strParsedLat = str; }
+                                            if (tagToWrite == "GPSLongitude") { strParsedLng = str; }
+                                            lvi.ForeColor = Color.Red;
+                                        }
+                                    }
+                                }
+
+                                if (coordinatesHaveChanged)
+                                {
+                                    // clear city, state etc
+                                    foreach (string category in toponomyDeletes)
+                                    {
+                                        Helper.GenericUpdateAddToDataTable(
+                                            dt: frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite,
+                                            filePath: lvi.Text,
+                                            settingId: category,
+                                            settingValue: "-"
+                                            );
+
+                                        lvi.SubItems[lvw.Columns["clh_" + category].Index].Text = "-";
+                                    }
+
+                                    // pull from web
+                                    Helper.s_APIOkay = true;
+                                    DataTable dt_Toponomy = Helper.DTFromAPIExifGetToponomyFromWebOrSQL(strParsedLat.ToString(CultureInfo.InvariantCulture), strParsedLng.ToString(CultureInfo.InvariantCulture));
+
+                                    if (Helper.s_APIOkay)
+                                    {
+                                        List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new List<(string toponomyOverwriteName, string toponomyOverwriteVal)>();
+                                        toponomyOverwrites.Add(("CountryCode", dt_Toponomy.Rows[0]["CountryCode"].ToString()));
+                                        toponomyOverwrites.Add(("Country", dt_Toponomy.Rows[0]["Country"].ToString()));
+                                        toponomyOverwrites.Add(("City", dt_Toponomy.Rows[0]["City"].ToString()));
+                                        toponomyOverwrites.Add(("State", dt_Toponomy.Rows[0]["State"].ToString()));
+                                        toponomyOverwrites.Add(("Sub_location", dt_Toponomy.Rows[0]["Sub_location"].ToString()));
+
+                                        foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+                                        {
+                                            Helper.GenericUpdateAddToDataTable(
+                                            dt: frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite,
+                                            filePath: lvi.Text,
+                                            settingId: toponomyDetail.toponomyOverwriteName,
+                                            settingValue: toponomyDetail.toponomyOverwriteVal
+                                            );
+                                            lvi.SubItems[lvw.Columns["clh_" + toponomyDetail.toponomyOverwriteName].Index].Text = toponomyDetail.toponomyOverwriteVal;
+
+                                        }
+
+                                        lvi.ForeColor = Color.Red;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // nothing. errors should have already come up
+                    }
+                    finally
+                    {
+                        File.Delete(exifFileIn.FullName); // clean up
+                    }
+                }
+            }
+            DialogResult dialogResult = MessageBox.Show(Helper.GenericGetMessageBoxText("mbx_frm_importGPX_AskUserWantsReport"), "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResult == DialogResult.Yes)
+            {
+                Form reportBox = new Form();
+
+                reportBox.ControlBox = false;
+                FlowLayoutPanel panel = new FlowLayoutPanel();
+
+                TextBox tbxText = new TextBox();
+                tbxText.Size = new Size(700, 400);
+
+                tbxText.Text = s_OutputMsg;
+                tbxText.ScrollBars = ScrollBars.Vertical;
+                tbxText.Multiline = true;
+                tbxText.WordWrap = true;
+                tbxText.ReadOnly = true;
+
+                //Label lblText = new Label();
+                //lblText.Text = s_OutputMsg;
+                //lblText.AutoSize = true;
+                panel.SetFlowBreak(tbxText, true);
+                panel.Controls.Add(tbxText);
+
+                Button btnOk = new Button() { Text = "OK" };
+                btnOk.Click += (sender, e) =>
+                {
+                    reportBox.Close();
+                };
+                btnOk.Location = new Point(10, tbxText.Bottom + 5);
+                btnOk.AutoSize = true;
+                panel.Controls.Add(btnOk);
+
+                panel.Padding = new Padding(5);
+                panel.AutoSize = true;
+
+                reportBox.Controls.Add(panel);
+                reportBox.MinimumSize = new Size(tbxText.Width + 40, btnOk.Bottom + 50);
+                reportBox.ShowInTaskbar = false;
+
+                reportBox.StartPosition = FormStartPosition.CenterScreen;
+                reportBox.ShowDialog();
+            }
+        }
+        /// <summary>
         /// Gets the app version of the current exifTool.
         /// <returns>A double of the current exifTool version.</returns>
         /// </summary>
-        internal static async Task<double> ExifGetExifToolVersion()
+        internal static async Task<decimal> ExifGetExifToolVersion()
         {
             string exifToolResult;
-            double returnVal = 0.0;
+            decimal returnVal = 0.0m;
             bool parsedResult;
-            double parsedDouble = 0.0;
+            decimal parsedDecimal = 0.0m;
 
             frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
             IEnumerable<string> exifToolCommand = Enumerable.Empty<string>();
@@ -1390,14 +2009,14 @@ namespace GeoTagNinja
                 if (exifToolReturnStr is not null && exifToolReturnStr.Length > 0)
                 {
                     //this only returns something like "12.42" and that's all
-                    parsedResult = double.TryParse(exifToolReturnStr, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedDouble);
+                    parsedResult = decimal.TryParse(exifToolReturnStr, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedDecimal);
                     if (parsedResult)
                     {
-                        returnVal = parsedDouble;
+                        returnVal = parsedDecimal;
                     }
                     else
                     {
-                        returnVal = 0.0;
+                        returnVal = 0.0m;
                     }
                 }
             }
@@ -1413,7 +2032,7 @@ namespace GeoTagNinja
         internal static async Task ExifGetImagePreviews(string fileName)
         {
             #region ExifToolConfiguration
-            var exifToolExe = Path.Combine(frm_MainApp.resourcesFolderPath, "exiftool.exe");
+            string exifToolExe = Path.Combine(frm_MainApp.resourcesFolderPath, "exiftool.exe");
 
             // want to give this a different name from the usual exifArgs.args just in case that's still being accessed (as much as it shouldn't be)
             Regex rgx = new Regex("[^a-zA-Z0-9]");
@@ -1440,7 +2059,7 @@ namespace GeoTagNinja
             await Task.Run(() =>
             {
 
-                using var p = new Process();
+                using Process p = new Process();
                 p.StartInfo = new ProcessStartInfo(@"c:\windows\system32\cmd.exe")
                 {
                     Arguments = @"/k " + s_doubleQuote + s_doubleQuote + Path.Combine(frm_MainApp.resourcesFolderPath, "exiftool.exe") + s_doubleQuote + " " + exiftoolCmd + s_doubleQuote + "&& exit",
@@ -1507,6 +2126,8 @@ namespace GeoTagNinja
             {
                 string fileName = dr_FileName[0].ToString();
 
+                List<string> tagsToDelete = new List<string>(); // this needs to be injected into the sidecar if req'd
+
                 exifArgs += Path.Combine(folderNameToWrite, fileName) + Environment.NewLine; //needs to include folder name
                 exifArgs += "-ignoreMinorErrors" + Environment.NewLine;
                 exifArgs += "-progress" + Environment.NewLine;
@@ -1530,10 +2151,10 @@ namespace GeoTagNinja
                     writeXMLSideCar = Convert.ToBoolean(DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_AddXMPSideCar")); ;
                     overwriteOriginal = Convert.ToBoolean(DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_OverwriteOriginal"));
 
+                    bool deleteAllGPSData = false;
                     // add tags to argsFile
                     foreach (DataRow row in dt_objectTagNames_OutWithData.Rows)
                     {
-                        bool deleteAllGPSData = false;
                         // this is prob not the best way to go around this....
                         foreach (DataRow drFileTags in dt_FileWriteQueue.Rows)
                         {
@@ -1579,28 +2200,13 @@ namespace GeoTagNinja
                                 else // delete tag
                                 {
                                     exifArgs += "-" + exiftoolTagName + "=" + Environment.NewLine;
+                                    tagsToDelete.Add(exiftoolTagName);
+
                                     //if lat/long then add Ref. 
-                                    if (exiftoolTagName == "GPSLatitude" || exiftoolTagName == "GPSDestLatitude")
+                                    if (exiftoolTagName == "GPSLatitude" || exiftoolTagName == "GPSDestLatitude" || exiftoolTagName == "GPSLongitude" || exiftoolTagName == "GPSDestLongitude")
                                     {
-                                        if (updateExifVal.Substring(0, 1) == "-")
-                                        {
-                                            exifArgs += "-" + exiftoolTagName + "Ref" + "=" + Environment.NewLine;
-                                        }
-                                        else
-                                        {
-                                            exifArgs += "-" + exiftoolTagName + "Ref" + "=" + Environment.NewLine;
-                                        }
-                                    }
-                                    else if (exiftoolTagName == "GPSLongitude" || exiftoolTagName == "GPSDestLongitude")
-                                    {
-                                        if (updateExifVal.Substring(0, 1) == "-")
-                                        {
-                                            exifArgs += "-" + exiftoolTagName + "Ref" + "=" + Environment.NewLine;
-                                        }
-                                        else
-                                        {
-                                            exifArgs += "-" + exiftoolTagName + "Ref" + "=" + Environment.NewLine;
-                                        }
+                                        exifArgs += "-" + exiftoolTagName + "Ref" + "=" + Environment.NewLine;
+                                        tagsToDelete.Add(exiftoolTagName + "Ref");
                                     }
                                 }
                             }
@@ -1640,16 +2246,18 @@ namespace GeoTagNinja
                             else //delete tag
                             {
                                 exifArgs += "-" + exiftoolTagName + "=" + Environment.NewLine;
+                                tagsToDelete.Add(exiftoolTagName);
                             }
                         }
 
                         // delete-all-gps has to come separetely as it's no a standard tag
                         // arguably this could come entirely separately and we could ignore everything else above but in reality
                         // this only deletes GPS stuff not IPTC (cities etc) so i think this is safer even if a tiny bit slower.
-                        if (deleteAllGPSData)
-                        {
-                            exifArgs += "-gps*=" + Environment.NewLine;
-                        }
+                    }
+                    if (deleteAllGPSData)
+                    {
+                        exifArgs += "-gps*=" + Environment.NewLine;
+                        tagsToDelete.Add("gps*");
                     }
 
                     if (overwriteOriginal)
@@ -1665,7 +2273,12 @@ namespace GeoTagNinja
                     exifArgs += Path.Combine(folderNameToWrite, Path.GetFileNameWithoutExtension(Path.Combine(folderNameToWrite, fileName)) + ".xmp") + Environment.NewLine; //needs to include folder name
                     exifArgs += "-progress" + Environment.NewLine;
                     exifArgs += "-ignoreMinorErrors" + Environment.NewLine;
+                    // problem here is that tagsfromFile only ADDS tags but doesn't REMOVE anything.
                     exifArgs += "-tagsfromfile=" + Path.Combine(folderNameToWrite, fileName) + Environment.NewLine;
+                    foreach(string tagToDelete in tagsToDelete)
+                    {
+                        exifArgs += "-" + tagToDelete + "=" + Environment.NewLine;
+                    }
                     if (overwriteOriginal)
                     {
                         exifArgs += "-overwrite_original_in_place" + Environment.NewLine;
@@ -1683,7 +2296,7 @@ namespace GeoTagNinja
                 await Task.Run(() =>
                 {
 
-                    using var p = new Process();
+                    using Process p = new Process();
                     p.StartInfo = new ProcessStartInfo(@"c:\windows\system32\cmd.exe")
                     {
                         Arguments = @"/k " + s_doubleQuote + s_doubleQuote + Path.Combine(frm_MainApp.resourcesFolderPath, "exiftool.exe") + s_doubleQuote + " " + exiftoolCmd + s_doubleQuote + "&& exit",
@@ -1774,19 +2387,19 @@ namespace GeoTagNinja
             }
 
             geoTagNinja.GeoResponseToponomy returnVal = new();
-            var client = new RestClient("http://api.geonames.org/")
+            RestClient client = new RestClient("http://api.geonames.org/")
             {
                 Authenticator = new HttpBasicAuthenticator(s_GeoNames_UserName, s_GeoNames_Pwd)
             };
 
-            var request_Toponomy = new RestRequest("findNearbyPlaceNameJSON?lat=" + latitude + "&lng=" + longitude + "&style=FULL", Method.Get);
-            var response_Toponomy = client.ExecuteGet(request_Toponomy);
+            RestRequest request_Toponomy = new RestRequest("findNearbyPlaceNameJSON?lat=" + latitude + "&lng=" + longitude + "&style=FULL", Method.Get);
+            RestResponse response_Toponomy = client.ExecuteGet(request_Toponomy);
             // check API reponse is OK
             if (response_Toponomy.StatusCode.ToString() == "OK")
             {
                 s_APIOkay = true;
-                var data = (JObject)JsonConvert.DeserializeObject(response_Toponomy.Content);
-                var geoResponse_Toponomy = geoTagNinja.GeoResponseToponomy.FromJson(data.ToString());
+                JObject data = (JObject)JsonConvert.DeserializeObject(response_Toponomy.Content);
+                GeoResponseToponomy geoResponse_Toponomy = geoTagNinja.GeoResponseToponomy.FromJson(data.ToString());
                 returnVal = geoResponse_Toponomy;
             }
             else
@@ -1817,19 +2430,19 @@ namespace GeoTagNinja
                 }
             }
             geoTagNinja.GeoResponseAltitude returnVal = new();
-            var client = new RestClient("http://api.geonames.org/")
+            RestClient client = new RestClient("http://api.geonames.org/")
             {
                 Authenticator = new HttpBasicAuthenticator(s_GeoNames_UserName, s_GeoNames_Pwd)
             };
 
-            var request_Altitude = new RestRequest("srtm1JSON?lat=" + latitude + "&lng=" + longitude, Method.Get);
-            var response_Altitude = client.ExecuteGet(request_Altitude);
+            RestRequest request_Altitude = new RestRequest("srtm1JSON?lat=" + latitude + "&lng=" + longitude, Method.Get);
+            RestResponse response_Altitude = client.ExecuteGet(request_Altitude);
             // check API reponse is OK
             if (response_Altitude.StatusCode.ToString() == "OK")
             {
                 s_APIOkay = true;
-                var data = (JObject)JsonConvert.DeserializeObject(response_Altitude.Content);
-                var geoResponseAltitude = geoTagNinja.GeoResponseAltitude.FromJson(data.ToString());
+                JObject data = (JObject)JsonConvert.DeserializeObject(response_Altitude.Content);
+                GeoResponseAltitude geoResponseAltitude = geoTagNinja.GeoResponseAltitude.FromJson(data.ToString());
                 returnVal = geoResponseAltitude;
             }
             else
@@ -1843,29 +2456,29 @@ namespace GeoTagNinja
         /// Responsible for pulling the latest prod-version number of exifTool from exiftool.org
         /// </summary>
         /// <returns>The version number of the currently newest exifTool uploaded to exiftool.org</returns>
-        internal static double API_ExifGetExifToolVersionFromWeb()
+        internal static decimal API_ExifGetExifToolVersionFromWeb()
         {
-            double returnVal = 0.0;
-            double parsedDouble = 0.0;
+            decimal returnVal = 0.0m;
+            decimal parsedDecimal = 0.0m;
             string onlineExifToolVer;
 
             bool parsedResult;
             try
             {
                 onlineExifToolVer = new WebClient().DownloadString("http://exiftool.org/ver.txt");
-                parsedResult = double.TryParse(onlineExifToolVer, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedDouble);
+                parsedResult = decimal.TryParse(onlineExifToolVer, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedDecimal);
                 if (parsedResult)
                 {
-                    returnVal = parsedDouble;
+                    returnVal = parsedDecimal;
                 }
                 else
                 {
-                    returnVal = 0.0;
+                    returnVal = 0.0m;
                 };
             }
             catch
             {
-                returnVal = 0.0;
+                returnVal = 0.0m;
             }
 
             return returnVal;
@@ -1877,18 +2490,18 @@ namespace GeoTagNinja
         internal static geoTagNinja.GtnReleasesApiResponse API_GenericGetGTNVersionFromWeb()
         {
             geoTagNinja.GtnReleasesApiResponse returnVal = new();
-            var client = new RestClient("https://api.github.com/")
+            RestClient client = new RestClient("https://api.github.com/")
             {
                 // admittedly no idea how to do this w/o any auth (as it's not needed) but this appears to work.
                 Authenticator = new HttpBasicAuthenticator("demo", "demo")
             };
-            var request_GTNVersionQuery = new RestRequest("repos/nemethviktor/GeoTagNinja/releases", Method.Get);
-            var response_GTNVersionQuery = client.ExecuteGet(request_GTNVersionQuery);
+            RestRequest request_GTNVersionQuery = new RestRequest("repos/nemethviktor/GeoTagNinja/releases", Method.Get);
+            RestResponse response_GTNVersionQuery = client.ExecuteGet(request_GTNVersionQuery);
             if (response_GTNVersionQuery.StatusCode.ToString() == "OK")
             {
                 s_APIOkay = true;
-                var data = (JArray)JsonConvert.DeserializeObject(response_GTNVersionQuery.Content);
-                var gtnReleasesApiResponse = geoTagNinja.GtnReleasesApiResponse.FromJson(data.ToString());
+                JArray data = (JArray)JsonConvert.DeserializeObject(response_GTNVersionQuery.Content);
+                GtnReleasesApiResponse[] gtnReleasesApiResponse = geoTagNinja.GtnReleasesApiResponse.FromJson(data.ToString());
                 returnVal = gtnReleasesApiResponse[0]; // latest only
             }
             else
@@ -1920,8 +2533,8 @@ namespace GeoTagNinja
             /// FYI this only gets amended when this button gets pressed or if map-to-location button gets pressed on the main form.
             /// ... also on an unrelated note Toponomy vs Toponmy the API calls it one thing and Wikipedia calls it another so go figure
             DataTable dt_ToponomyInSQL = DataReadSQLiteToponomyWholeRow(
-                lat: lat,
-                lng: lng
+                lat: lat.ToString(CultureInfo.InvariantCulture),
+                lng: lng.ToString(CultureInfo.InvariantCulture)
                 );
 
             geoTagNinja.GeoResponseToponomy ReadJsonToponomy;
@@ -2050,18 +2663,18 @@ namespace GeoTagNinja
             if (dt_AltitudeInSQL.Rows.Count > 0)
             {
                 Altitude = dt_AltitudeInSQL.Rows[0]["Srtm1"].ToString();
+                Altitude = Altitude.ToString(CultureInfo.InvariantCulture);
             }
             else if (s_APIOkay)
             {
-                geoTagNinja.GeoResponseAltitude readJson_Altitude;
-                readJson_Altitude = API_ExifGetGeoDataFromWebAltitude(
-                    latitude: lat.ToString(),
-                    longitude: lng.ToString()
-                    );
+                var readJson_Altitude = API_ExifGetGeoDataFromWebAltitude(
+                    latitude: lat,
+                    longitude: lng
+                );
                 if (readJson_Altitude.Srtm1 != null)
                 {
-                    string tmpAltitude;
-                    tmpAltitude = readJson_Altitude.Srtm1.ToString().Replace(',', '.'); ;
+                    var tmpAltitude = readJson_Altitude.Srtm1.ToString();
+                    tmpAltitude = tmpAltitude.ToString(CultureInfo.InvariantCulture);
 
                     // ignore if the API sends back something silly.
                     // basically i'm assuming some ppl might take pics on an airplane but even those don't fly this high.
@@ -2113,8 +2726,7 @@ namespace GeoTagNinja
 
             if (s_APIOkay)
             {
-                geoTagNinja.GtnReleasesApiResponse readJson_GTNVer;
-                readJson_GTNVer = API_GenericGetGTNVersionFromWeb();
+                var readJson_GTNVer = API_GenericGetGTNVersionFromWeb();
                 if (readJson_GTNVer.TagName != null)
                 {
                     apiVersion = readJson_GTNVer.TagName.ToString();
@@ -2178,7 +2790,6 @@ namespace GeoTagNinja
         /// <param name="senderName">At this point this can either be the main listview or the one from Edit (file) data</param>
         internal static void ExifRemoveLocationData(string senderName)
         {
-            DataRow dr_FileDataRow;
             if (senderName == "frm_editFileData")
             {
                 // for the time being i'll leave this as "remove data from the active selection file" rather than "all".
@@ -2197,11 +2808,12 @@ namespace GeoTagNinja
                 frm_editFileData.frm_editFileDataNowRemovingGeoData = false;
                 // no need to write back to sql because it's done automatically on textboxChange except for "special tag"
 
-                dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage1PreQueue.NewRow();
-                dr_FileDataRow["filePath"] = frm_editFileDataInstance.lvw_FileListEditImages.SelectedItems[0].Text;
-                dr_FileDataRow["settingId"] = "gps*";
-                dr_FileDataRow["settingValue"] = "";
-                frm_MainApp.dt_fileDataToWriteStage1PreQueue.Rows.Add(dr_FileDataRow);
+                Helper.GenericUpdateAddToDataTable(
+                                        dt: frm_MainApp.dt_fileDataToWriteStage1PreQueue,
+                                        filePath: frm_editFileDataInstance.lvw_FileListEditImages.SelectedItems[0].Text,
+                                        settingId: "gps*",
+                                        settingValue: ""
+                                        );
             }
             else if (senderName == "frm_mainApp")
             {
@@ -2214,68 +2826,27 @@ namespace GeoTagNinja
                         // don't do folders...
                         if (File.Exists(Path.Combine(frm_MainApp.folderName, lvi.Text)))
                         {
-                            // Latitude
-                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                            dr_FileDataRow["filePath"] = lvi.Text;
-                            dr_FileDataRow["settingId"] = "GPSLatitude";
-                            dr_FileDataRow["settingValue"] = "";
-                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                            string[] toponomyOverwrites = new string[] {
+                                "GPSLatitude",
+                                "GPSLongitude",
+                                "CountryCode",
+                                "Country",
+                                "City",
+                                "State",
+                                "Sub_location",
+                                "GPSAltitude",
+                                "gps*"
+                            };
 
-                            // Longitude
-                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                            dr_FileDataRow["filePath"] = lvi.Text;
-                            dr_FileDataRow["settingId"] = "GPSLongitude";
-                            dr_FileDataRow["settingValue"] = "";
-                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
-
-                            // CountryCode
-                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                            dr_FileDataRow["filePath"] = lvi.Text;
-                            dr_FileDataRow["settingId"] = "CountryCode";
-                            dr_FileDataRow["settingValue"] = "";
-                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
-
-                            // Country
-                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                            dr_FileDataRow["filePath"] = lvi.Text;
-                            dr_FileDataRow["settingId"] = "Country";
-                            dr_FileDataRow["settingValue"] = "";
-                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
-
-                            // City
-                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                            dr_FileDataRow["filePath"] = lvi.Text;
-                            dr_FileDataRow["settingId"] = "City";
-                            dr_FileDataRow["settingValue"] = "";
-                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
-
-                            // State
-                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                            dr_FileDataRow["filePath"] = lvi.Text;
-                            dr_FileDataRow["settingId"] = "State";
-                            dr_FileDataRow["settingValue"] = "";
-                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
-
-                            // Sub_location
-                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                            dr_FileDataRow["filePath"] = lvi.Text;
-                            dr_FileDataRow["settingId"] = "Sub_location";
-                            dr_FileDataRow["settingValue"] = "";
-                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
-
-                            // Altitude
-                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                            dr_FileDataRow["filePath"] = lvi.Text;
-                            dr_FileDataRow["settingId"] = "GPSAltitude";
-                            dr_FileDataRow["settingValue"] = "";
-                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
-
-                            // Force-remove stuff --> https://exiftool.org/forum/index.php?topic=6037.0
-                            dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                            dr_FileDataRow["filePath"] = lvi.Text;
-                            dr_FileDataRow["settingId"] = "gps*";
-                            dr_FileDataRow["settingValue"] = "";
-                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                            foreach (string toponomyDetail in toponomyOverwrites)
+                            {
+                                Helper.GenericUpdateAddToDataTable(
+                                        dt: frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite,
+                                        filePath: lvi.Text,
+                                        settingId: toponomyDetail,
+                                        settingValue: ""
+                                        );
+                            }
                         }
                     }
                 }
@@ -2292,7 +2863,7 @@ namespace GeoTagNinja
         /// <returns>Parent path string of "current" path (as described above)</returns>
         internal static string FsoGetParent(string path)
         {
-            var dir = new DirectoryInfo(path);
+            DirectoryInfo dir = new DirectoryInfo(path);
             string parentName;
             if (dir.Parent == null)
             {
@@ -2363,7 +2934,7 @@ namespace GeoTagNinja
         internal static void LwvUpdateRowFromDTWriteStage3ReadyToWrite()
         {
             frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
-            var lvchs = frm_mainAppInstance.ListViewColumnHeaders;
+            ListView.ColumnHeaderCollection lvchs = frm_mainAppInstance.ListViewColumnHeaders;
             ListViewItem lvi;
 
             string tmpCoordinates;
@@ -2404,7 +2975,7 @@ namespace GeoTagNinja
                 if (File.Exists(Path.Combine(frm_MainApp.folderName, lvi.Text)))
                 {
                     frm_MainApp.dt_fileDataCopyPool.Rows.Clear();
-                    var listOfTagsToCopy = new List<string> {
+                    List<string> listOfTagsToCopy = new List<string> {
                             "Coordinates"
                             ,"GPSLatitude"
                             ,"GPSLatitudeRef"
@@ -2471,11 +3042,12 @@ namespace GeoTagNinja
                             {
                                 strToWrite = dr[1].ToString();
                             }
-                            DataRow dr_FileDataRow = frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.NewRow();
-                            dr_FileDataRow["filePath"] = lvi.Text;
-                            dr_FileDataRow["settingId"] = dr[0].ToString();
-                            dr_FileDataRow["settingValue"] = strToWrite;
-                            frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite.Rows.Add(dr_FileDataRow);
+                            Helper.GenericUpdateAddToDataTable(
+                                        dt: frm_MainApp.dt_fileDataToWriteStage3ReadyToWrite,
+                                        filePath: lvi.Text,
+                                        settingId: dr[0].ToString(),
+                                        settingValue: strToWrite
+                                        );
                         }
                     }
                 }
@@ -2503,7 +3075,7 @@ namespace GeoTagNinja
                 string fileNameWithPath = Path.Combine(frm_MainApp.folderName, lvw_FileListItem.Text);
                 if (File.Exists(fileNameWithPath) && lvw_FileListItem.SubItems.Count > 1)
                 {
-                    var firstSelectedItem = lvw_FileListItem.SubItems[frm_mainAppInstance.lvw_FileList.Columns["clh_Coordinates"].Index].Text;
+                    string firstSelectedItem = lvw_FileListItem.SubItems[frm_mainAppInstance.lvw_FileList.Columns["clh_Coordinates"].Index].Text;
                     if (firstSelectedItem != "-" && firstSelectedItem != "")
                     {
                         string strLat;
@@ -2544,50 +3116,11 @@ namespace GeoTagNinja
                 // don't try and create an preview img unless it's the last file
                 if (frm_mainAppInstance.lvw_FileList.FocusedItem != null)
                 {
-                    if (frm_mainAppInstance.lvw_FileList.FocusedItem.Text == lvw_FileListItem.Text)
+                    if (frm_mainAppInstance.lvw_FileList.FocusedItem.Text == lvw_FileListItem.Text || frm_mainAppInstance.lvw_FileList.SelectedItems[0].Text == lvw_FileListItem.Text)
                     {
-                        frm_mainAppInstance.pbx_imagePreview.Image = null;
-
-                        // via https://stackoverflow.com/a/8701748/3968494
                         if (File.Exists(fileNameWithPath))
                         {
-                            Image img;
-
-                            FileInfo fi = new(fileNameWithPath);
-                            if (fi.Extension == ".jpg")
-                            {
-                                using (var bmpTemp = new Bitmap(fileNameWithPath))
-                                {
-                                    img = new Bitmap(bmpTemp);
-                                    frm_mainAppInstance.pbx_imagePreview.Image = img;
-                                }
-                            }
-                            else
-                            {
-                                string generatedFileName = Path.Combine(frm_MainApp.userDataFolderPath, frm_mainAppInstance.lvw_FileList.SelectedItems[0].Text + ".jpg");
-                                // don't run the thing again if file has already been generated
-                                if (!File.Exists(generatedFileName))
-                                {
-                                    await Helper.ExifGetImagePreviews(fileNameWithPath);
-                                }
-                                //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
-                                if (File.Exists(generatedFileName))
-                                {
-                                    using (var bmpTemp = new Bitmap(generatedFileName))
-                                    {
-                                        try
-                                        {
-                                            img = new Bitmap(bmpTemp);
-                                            frm_mainAppInstance.pbx_imagePreview.Image = img;
-                                        }
-                                        catch
-                                        {
-                                            // nothing.
-                                        }
-                                    }
-                                }
-                            }
-
+                            await LvwItemCreatePreview(fileNameWithPath);
                         }
                         else if (Directory.Exists(fileNameWithPath))
                         {
@@ -2601,7 +3134,53 @@ namespace GeoTagNinja
                 }
             }
         }
+        /// <summary>
+        /// Triggers the "create preview" process for the file it's sent to check
+        /// </summary>
+        /// <param name="fileNameWithPath">Filename w/ path to check</param>
+        /// <returns></returns>
+        internal async static Task LvwItemCreatePreview(string fileNameWithPath)
+        {
+            frm_MainApp frm_mainAppInstance = (frm_MainApp)Application.OpenForms["frm_mainApp"];
+            frm_mainAppInstance.pbx_imagePreview.Image = null;
+            // via https://stackoverflow.com/a/8701748/3968494
+            Image img;
 
+            FileInfo fi = new(fileNameWithPath);
+            if (fi.Extension == ".jpg")
+            {
+                using (Bitmap bmpTemp = new Bitmap(fileNameWithPath))
+                {
+                    img = new Bitmap(bmpTemp);
+                    frm_mainAppInstance.pbx_imagePreview.Image = img;
+                }
+            }
+            else
+            {
+                string generatedFileName = Path.Combine(frm_MainApp.userDataFolderPath, frm_mainAppInstance.lvw_FileList.SelectedItems[0].Text + ".jpg");
+                // don't run the thing again if file has already been generated
+                if (!File.Exists(generatedFileName))
+                {
+                    await Helper.ExifGetImagePreviews(fileNameWithPath);
+                }
+                //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
+                if (File.Exists(generatedFileName))
+                {
+                    using (Bitmap bmpTemp = new Bitmap(generatedFileName))
+                    {
+                        try
+                        {
+                            img = new Bitmap(bmpTemp);
+                            frm_mainAppInstance.pbx_imagePreview.Image = img;
+                        }
+                        catch
+                        {
+                            // nothing.
+                        }
+                    }
+                }
+            }
+        }
         #endregion
     }
     internal class Helper_NonStatic

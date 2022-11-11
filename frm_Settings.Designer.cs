@@ -70,7 +70,7 @@
             this.tct_Settings.Margin = new System.Windows.Forms.Padding(2);
             this.tct_Settings.Name = "tct_Settings";
             this.tct_Settings.SelectedIndex = 0;
-            this.tct_Settings.Size = new System.Drawing.Size(605, 428);
+            this.tct_Settings.Size = new System.Drawing.Size(621, 428);
             this.tct_Settings.TabIndex = 0;
             this.tct_Settings.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.Tab_Settings_Selecting);
             this.tct_Settings.Deselecting += new System.Windows.Forms.TabControlCancelEventHandler(this.Tab_Settings_Deselecting);
@@ -96,7 +96,7 @@
             this.tpg_Application.Margin = new System.Windows.Forms.Padding(2);
             this.tpg_Application.Name = "tpg_Application";
             this.tpg_Application.Padding = new System.Windows.Forms.Padding(2);
-            this.tpg_Application.Size = new System.Drawing.Size(597, 402);
+            this.tpg_Application.Size = new System.Drawing.Size(613, 402);
             this.tpg_Application.TabIndex = 0;
             this.tpg_Application.Text = "tpg_Application";
             // 
@@ -119,6 +119,7 @@
             this.cbx_Language.Name = "cbx_Language";
             this.cbx_Language.Size = new System.Drawing.Size(121, 21);
             this.cbx_Language.TabIndex = 13;
+            this.cbx_Language.SelectedValueChanged += new System.EventHandler(this.Any_cbx_TextChanged);
             this.cbx_Language.TextChanged += new System.EventHandler(this.Any_cbx_TextChanged);
             // 
             // rbx_Register_ArcGIS
@@ -253,40 +254,47 @@
             this.tpg_FileOptions.Margin = new System.Windows.Forms.Padding(2);
             this.tpg_FileOptions.Name = "tpg_FileOptions";
             this.tpg_FileOptions.Padding = new System.Windows.Forms.Padding(2);
-            this.tpg_FileOptions.Size = new System.Drawing.Size(597, 402);
+            this.tpg_FileOptions.Size = new System.Drawing.Size(613, 402);
             this.tpg_FileOptions.TabIndex = 1;
             this.tpg_FileOptions.Text = "tpg_FileOptions";
             this.tpg_FileOptions.Enter += new System.EventHandler(this.Pg_fileoptions_Enter);
             // 
             // ckb_AddXMPIntoFile
             // 
-            this.ckb_AddXMPIntoFile.AutoSize = true;
-            this.ckb_AddXMPIntoFile.Location = new System.Drawing.Point(397, 27);
+            this.ckb_AddXMPIntoFile.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ckb_AddXMPIntoFile.Location = new System.Drawing.Point(397, 20);
+            this.ckb_AddXMPIntoFile.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_AddXMPIntoFile.Name = "ckb_AddXMPIntoFile";
-            this.ckb_AddXMPIntoFile.Size = new System.Drawing.Size(126, 17);
+            this.ckb_AddXMPIntoFile.Size = new System.Drawing.Size(190, 38);
             this.ckb_AddXMPIntoFile.TabIndex = 2;
             this.ckb_AddXMPIntoFile.Text = "ckb_AddXMPIntoFile";
+            this.ckb_AddXMPIntoFile.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ckb_AddXMPIntoFile.UseVisualStyleBackColor = true;
+            this.ckb_AddXMPIntoFile.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
             // ckb_OverwriteOriginal
             // 
-            this.ckb_OverwriteOriginal.AutoSize = true;
-            this.ckb_OverwriteOriginal.Location = new System.Drawing.Point(397, 72);
+            this.ckb_OverwriteOriginal.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ckb_OverwriteOriginal.Location = new System.Drawing.Point(397, 118);
+            this.ckb_OverwriteOriginal.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_OverwriteOriginal.Name = "ckb_OverwriteOriginal";
-            this.ckb_OverwriteOriginal.Size = new System.Drawing.Size(130, 17);
+            this.ckb_OverwriteOriginal.Size = new System.Drawing.Size(190, 38);
             this.ckb_OverwriteOriginal.TabIndex = 1;
             this.ckb_OverwriteOriginal.Text = "ckb_OverwriteOriginal";
+            this.ckb_OverwriteOriginal.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ckb_OverwriteOriginal.UseVisualStyleBackColor = true;
             this.ckb_OverwriteOriginal.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
             // ckb_AddXMPSideCar
             // 
-            this.ckb_AddXMPSideCar.AutoSize = true;
-            this.ckb_AddXMPSideCar.Location = new System.Drawing.Point(397, 49);
+            this.ckb_AddXMPSideCar.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ckb_AddXMPSideCar.Location = new System.Drawing.Point(397, 69);
+            this.ckb_AddXMPSideCar.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_AddXMPSideCar.Name = "ckb_AddXMPSideCar";
-            this.ckb_AddXMPSideCar.Size = new System.Drawing.Size(129, 17);
+            this.ckb_AddXMPSideCar.Size = new System.Drawing.Size(190, 38);
             this.ckb_AddXMPSideCar.TabIndex = 1;
             this.ckb_AddXMPSideCar.Text = "ckb_AddXMPSideCar";
+            this.ckb_AddXMPSideCar.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ckb_AddXMPSideCar.UseVisualStyleBackColor = true;
             this.ckb_AddXMPSideCar.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
@@ -303,7 +311,7 @@
             // 
             this.btn_OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btn_OK.Location = new System.Drawing.Point(490, 459);
+            this.btn_OK.Location = new System.Drawing.Point(506, 459);
             this.btn_OK.Margin = new System.Windows.Forms.Padding(2);
             this.btn_OK.Name = "btn_OK";
             this.btn_OK.Size = new System.Drawing.Size(60, 19);
@@ -316,7 +324,7 @@
             // 
             this.btn_Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_Cancel.Location = new System.Drawing.Point(560, 459);
+            this.btn_Cancel.Location = new System.Drawing.Point(576, 459);
             this.btn_Cancel.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Cancel.Name = "btn_Cancel";
             this.btn_Cancel.Size = new System.Drawing.Size(60, 19);
@@ -337,7 +345,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.CancelButton = this.btn_Cancel;
-            this.ClientSize = new System.Drawing.Size(636, 485);
+            this.ClientSize = new System.Drawing.Size(652, 485);
             this.Controls.Add(this.btn_Cancel);
             this.Controls.Add(this.btn_OK);
             this.Controls.Add(this.tct_Settings);
@@ -356,7 +364,6 @@
             this.tpg_Application.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).EndInit();
             this.tpg_FileOptions.ResumeLayout(false);
-            this.tpg_FileOptions.PerformLayout();
             this.ResumeLayout(false);
 
         }
