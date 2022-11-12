@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -279,7 +280,9 @@ public partial class FrmMainApp : Form
             HelperStatic.FsoCleanUpUserFolder();
         }
         catch
-        { }
+        {
+            // ignored
+        }
 
         // resize columns
         try
@@ -452,7 +455,9 @@ public partial class FrmMainApp : Form
             );
         }
         catch
-        { }
+        {
+            // ignored
+        }
 
         if (tbx_lat.Text == "" || tbx_lat.Text == "0")
         {
@@ -618,40 +623,55 @@ public partial class FrmMainApp : Form
     ///     this is to deal with the icons in listview
     ///     from https://stackoverflow.com/a/37806517/3968494
     /// </summary>
-    private static class NativeMethods
+    static class NativeMethods
     {
-        public const uint LvmFirst = 0x1000;
-        public const uint LvmGetimagelist = LvmFirst + 2;
-        public const uint LvmSetimagelist = LvmFirst + 3;
+        public const uint LVM_FIRST = 0x1000;
+        public const uint LVM_GETIMAGELIST = (LVM_FIRST + 2);
+        public const uint LVM_SETIMAGELIST = (LVM_FIRST + 3);
 
-        public const uint LvsilNormal = 0;
-        public const uint LvsilSmall = 1;
-        public const uint LvsilState = 2;
-        public const uint LvsilGroupheader = 3;
+        public const uint LVSIL_NORMAL = 0;
+        public const uint LVSIL_SMALL = 1;
+        public const uint LVSIL_STATE = 2;
+        public const uint LVSIL_GROUPHEADER = 3;
 
-        public const uint ShgfiDisplayname = 0x200;
-        public const uint ShgfiIcon = 0x100;
-        public const uint ShgfiLargeicon = 0x0;
-        public const uint ShgfiSmallicon = 0x1;
-        public const uint ShgfiSysiconindex = 0x4000;
-
-        [DllImport(dllName: "user32")]
+        [DllImport("user32")]
         public static extern IntPtr SendMessage(IntPtr hWnd,
                                                 uint msg,
                                                 uint wParam,
                                                 IntPtr lParam);
 
-        [DllImport(dllName: "comctl32")]
+        [DllImport("comctl32")]
         public static extern bool ImageList_Destroy(IntPtr hImageList);
 
-        [DllImport(dllName: "shell32", CharSet = CharSet.Unicode)]
+        public const uint SHGFI_DISPLAYNAME = 0x200;
+        public const uint SHGFI_ICON = 0x100;
+        public const uint SHGFI_LARGEICON = 0x0;
+        public const uint SHGFI_SMALLICON = 0x1;
+        public const uint SHGFI_SYSICONINDEX = 0x4000;
+
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct SHFILEINFOW
+        {
+            public IntPtr hIcon;
+            public int iIcon;
+            public uint dwAttributes;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260 * 2)]
+            public string szDisplayName;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80 * 2)]
+            public string szTypeName;
+        }
+
+        [DllImport("shell32", CharSet = CharSet.Unicode)]
         public static extern IntPtr SHGetFileInfo(string pszPath,
                                                   uint dwFileAttributes,
-                                                  ref Shfileinfow psfi,
+                                                  ref SHFILEINFOW psfi,
                                                   uint cbSizeFileInfo,
                                                   uint uFlags);
 
-        [DllImport(dllName: "uxtheme", CharSet = CharSet.Unicode)]
+        [DllImport("uxtheme", CharSet = CharSet.Unicode)]
         public static extern int SetWindowTheme(IntPtr hWnd,
                                                 string pszSubAppName,
                                                 string pszSubIdList);
@@ -669,7 +689,7 @@ public partial class FrmMainApp : Form
 
             [MarshalAs(unmanagedType: UnmanagedType.ByValTStr, SizeConst = 80 * 2)]
             public readonly string szTypeName;
-        }
+    }
     }
 
     #endregion
@@ -875,10 +895,11 @@ public partial class FrmMainApp : Form
 
     #region Map Stuff
 
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class MapGpsCoordinates
     {
-        public double Lat { get; set; }
-        public double Lng { get; set; }
+        public double lat { get; set; } // note to self: don't allow ReSharper to rename these.
+        public double lng { get; set; } // note to self: don't allow ReSharper to rename these.
     }
 
     /// <summary>
@@ -898,16 +919,13 @@ public partial class FrmMainApp : Form
         string jsonString = e.WebMessageAsJson;
 
         MapGpsCoordinates mapGpsCoordinates =
-            JsonSerializer.Deserialize<MapGpsCoordinates>(json: jsonString);
-        string strLat = $"{mapGpsCoordinates?.Lat}".ToString()
-            .Replace(oldChar: ',', newChar: '.');
-        string strLng = $"{mapGpsCoordinates?.Lng}".ToString()
-            .Replace(oldChar: ',', newChar: '.');
-        double dblLat;
-        double dblLng;
-        double.TryParse(s: strLat, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out dblLat); // trust me i hate this f...king culture thing as much as possible...
-        double.TryParse(s: strLng, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out dblLng); // trust me i hate this f...king culture thing as much as possible...
+            System.Text.Json.JsonSerializer.Deserialize<MapGpsCoordinates>(json: jsonString);
+        string strLat = $"{mapGpsCoordinates?.lat}".ToString(CultureInfo.InvariantCulture);
+        string strLng = $"{mapGpsCoordinates?.lng}".ToString(CultureInfo.InvariantCulture);
+        double.TryParse(strLat, NumberStyles.Any, CultureInfo.InvariantCulture, out double dblLat); // trust me i hate this f...king culture thing as much as possible...
+        double.TryParse(strLng, NumberStyles.Any, CultureInfo.InvariantCulture, out double dblLng); // trust me i hate this f...king culture thing as much as possible...
         // if the user zooms out too much they can encounter an "unreal" coordinate.
+
         if (dblLng < -180)
         {
             dblLng = 180 - Math.Abs(value: dblLng) % 180;
@@ -918,11 +936,9 @@ public partial class FrmMainApp : Form
         }
 
         tbx_lat.Text = Math.Round(value: dblLat, digits: 6)
-            .ToString()
-            .Replace(oldChar: ',', newChar: '.');
+            .ToString(CultureInfo.InvariantCulture);
         tbx_lng.Text = Math.Round(value: dblLng, digits: 6)
-            .ToString()
-            .Replace(oldChar: ',', newChar: '.');
+            .ToString(CultureInfo.InvariantCulture);
     }
 
     /// <summary>
@@ -1741,7 +1757,7 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    ///     Techincally same as lvw_FileList_KeyDown but movement is a bit b...chy with "Down".
+    ///     Technically same as lvw_FileList_KeyDown but movement is a bit b...chy with "Down".
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -1905,38 +1921,38 @@ public partial class FrmMainApp : Form
         #region icon handlers
 
         //https://stackoverflow.com/a/37806517/3968494
-        NativeMethods.Shfileinfow shfi = new();
-        IntPtr hSysImgList = NativeMethods.SHGetFileInfo(pszPath: "",
-                                                         dwFileAttributes: 0,
-                                                         psfi: ref shfi,
-                                                         cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
-                                                         uFlags: NativeMethods.ShgfiSysiconindex | NativeMethods.ShgfiSmallicon);
-        Debug.Assert(condition: hSysImgList != IntPtr.Zero); // cross our fingers and hope to succeed!
+        NativeMethods.SHFILEINFOW shfi = new();
+        IntPtr hSysImgList = NativeMethods.SHGetFileInfo("",
+                                                         0,
+                                                         ref shfi,
+                                                         (uint)Marshal.SizeOf(shfi),
+                                                         NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
+        Debug.Assert(hSysImgList != IntPtr.Zero); // cross our fingers and hope to succeed!
 
         // Set the ListView control to use that image list.
-        IntPtr hOldImgList = NativeMethods.SendMessage(hWnd: lvw_FileList.Handle,
-                                                       msg: NativeMethods.LvmSetimagelist,
-                                                       wParam: NativeMethods.LvsilSmall,
-                                                       lParam: hSysImgList);
+        IntPtr hOldImgList = NativeMethods.SendMessage(lvw_FileList.Handle,
+                                                       NativeMethods.LVM_SETIMAGELIST,
+                                                       NativeMethods.LVSIL_SMALL,
+                                                       hSysImgList);
 
         // If the ListView control already had an image list, delete the old one.
         if (hOldImgList != IntPtr.Zero)
         {
-            NativeMethods.ImageList_Destroy(hImageList: hOldImgList);
+            NativeMethods.ImageList_Destroy(hOldImgList);
         }
 
         // Set up the ListView control's basic properties.
         // Set its theme so it will look like the one used by Explorer.
-        NativeMethods.SetWindowTheme(hWnd: lvw_FileList.Handle, pszSubAppName: "Explorer", pszSubIdList: null);
+        NativeMethods.SetWindowTheme(lvw_FileList.Handle, "Explorer", null);
 
         // Get the items from the file system, and add each of them to the ListView,
         // complete with their corresponding name and icon indices.
-        IntPtr himl = NativeMethods.SHGetFileInfo(pszPath: Path.Combine(path1: tbx_FolderName.Text, path2: fileName),
-                                                  dwFileAttributes: 0,
-                                                  psfi: ref shfi,
-                                                  cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
-                                                  uFlags: NativeMethods.ShgfiDisplayname | NativeMethods.ShgfiSysiconindex | NativeMethods.ShgfiSmallicon);
-        Debug.Assert(condition: himl == hSysImgList); // should be the same imagelist as the one we set
+        IntPtr himl = NativeMethods.SHGetFileInfo(Path.Combine(tbx_FolderName.Text, fileName),
+                                                  0,
+                                                  ref shfi,
+                                                  (uint)Marshal.SizeOf(shfi),
+                                                  NativeMethods.SHGFI_DISPLAYNAME | NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
+        Debug.Assert(himl == hSysImgList); // should be the same imagelist as the one we set
 
         #endregion
 
@@ -1978,7 +1994,31 @@ public partial class FrmMainApp : Form
         }
         else
         {
-            lvi.Text = shfi.szDisplayName;
+            // problem here is that assume: my "Pictures" folder is _really_ called "DigiPics". shfi.szDisplayName = "Pictures" but that doesn't _really_ exist, which would cause a break later.
+            // this hopefully sorts it.
+            bool isSpecialFolder = false;
+            DirectoryInfo directoryInfo = new DirectoryInfo(Path.Combine(tbx_FolderName.Text, fileName));
+
+            foreach (Environment.SpecialFolder specialFolder in Enum.GetValues(typeof(Environment.SpecialFolder)))
+            {
+                if (directoryInfo.FullName.ToString()
+                        .ToLower() ==
+                    Environment.GetFolderPath(specialFolder)
+                        .ToLower())
+                {
+                    isSpecialFolder = true;
+                    break;
+                }
+            }
+
+            if (isSpecialFolder)
+            {
+                lvi.Text = fileName;
+            }
+            else
+            {
+                lvi.Text = shfi.szDisplayName;
+            }
         }
 
         lvi.ImageIndex = shfi.iIcon;
@@ -2134,8 +2174,8 @@ public static class ControlExtensions
     public static void DoubleBuffered(this Control control,
                                       bool enable)
     {
-        PropertyInfo doubleBufferPropertyInfo = control.GetType()
-            .GetProperty(name: "DoubleBuffered", bindingAttr: BindingFlags.Instance | BindingFlags.NonPublic);
-        doubleBufferPropertyInfo.SetValue(obj: control, value: enable, index: null);
+        var doubleBufferPropertyInfo = control.GetType()
+            .GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
+        doubleBufferPropertyInfo.SetValue(control, enable, null);
     }
 }
