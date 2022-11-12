@@ -1,6 +1,6 @@
 ﻿namespace GeoTagNinja
 {
-    partial class frm_editFileData
+    partial class FrmEditFileData
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_editFileData));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmEditFileData));
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.btn_OK = new System.Windows.Forms.Button();
             this.pbx_imgPreview = new System.Windows.Forms.PictureBox();
@@ -930,7 +930,7 @@
             this.tcr_EditData.Size = new System.Drawing.Size(398, 482);
             this.tcr_EditData.TabIndex = 0;
             // 
-            // frm_editFileData
+            // FrmEditFileData
             // 
             this.AcceptButton = this.btn_OK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -949,10 +949,10 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(20, 490);
-            this.Name = "frm_editFileData";
+            this.Name = "FrmEditFileData";
             this.ShowInTaskbar = false;
             this.Text = "Edit Data";
-            this.Load += new System.EventHandler(this.frm_editFileData_Load);
+            this.Load += new System.EventHandler(this.FrmEditFileData_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbx_imgPreview)).EndInit();
             this.tpg_Location.ResumeLayout(false);
             this.gbx_LocationData.ResumeLayout(false);

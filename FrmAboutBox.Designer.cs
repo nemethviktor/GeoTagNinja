@@ -1,6 +1,6 @@
 ﻿namespace GeoTagNinja
 {
-    partial class frm_aboutBox
+    partial class FrmAboutBox
     {
         /// <summary>
         /// Required designer variable.
@@ -27,7 +27,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_aboutBox));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmAboutBox));
             this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.pbx_Logo = new System.Windows.Forms.PictureBox();
             this.tbx_Description = new System.Windows.Forms.TextBox();
@@ -179,7 +179,7 @@
             this.lbl_website.Text = "Website";
             this.lbl_website.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lbl_website_LinkClicked);
             // 
-            // frm_aboutBox
+            // FrmAboutBox
             // 
             this.AcceptButton = this.btn_OK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -189,13 +189,13 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frm_aboutBox";
+            this.Name = "FrmAboutBox";
             this.Padding = new System.Windows.Forms.Padding(9);
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "About";
-            this.Load += new System.EventHandler(this.frm_aboutBox_Load);
+            this.Load += new System.EventHandler(this.FrmAboutBox_Load);
             this.tableLayoutPanel.ResumeLayout(false);
             this.tableLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Logo)).EndInit();

@@ -1,4 +1,7 @@
 ﻿# GeoTagNinja Changelog
+v0.6.83XX [2022XXXX]
+- Finally managed to get hold of ReSharper so the code has been refactored in totality. Famous last words but it shouldn't affect usage.
+
 v0.6.8350 [20221111]
 - NEW FEATURE: (experimental for now) -> sync/import GPS Track Files.
 -- Version bump as for new feature.

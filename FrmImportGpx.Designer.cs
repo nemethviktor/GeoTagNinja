@@ -1,6 +1,6 @@
 ﻿namespace GeoTagNinja
 {
-    partial class frm_importGPX
+    partial class FrmImportGpx
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_importGPX));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmImportGpx));
             this.fbd_importFromAnotherFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.gbx_ImportGPXSource = new System.Windows.Forms.GroupBox();
             this.pbx_importOneFile = new System.Windows.Forms.PictureBox();
@@ -516,7 +516,7 @@
             this.lbl_TrackParseExperimental.TabIndex = 18;
             this.lbl_TrackParseExperimental.Text = "lbl_TrackParseExperimental";
             // 
-            // frm_importGPX
+            // FrmImportGpx
             // 
             this.AcceptButton = this.btn_OK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -532,9 +532,9 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frm_importGPX";
+            this.Name = "FrmImportGpx";
             this.ShowInTaskbar = false;
-            this.Text = "frm_importGPX";
+            this.Text = "FrmImportGpx";
             this.gbx_ImportGPXSource.ResumeLayout(false);
             this.gbx_ImportGPXSource.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_importOneFile)).EndInit();

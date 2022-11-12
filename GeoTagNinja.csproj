@@ -189,58 +189,66 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ancillary_ListsArrays.cs" />
-    <Compile Include="frm_aboutBox.cs">
+    <Compile Include="AncillaryListsArrays.cs" />
+    <Compile Include="FrmAboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frm_aboutBox.Designer.cs">
-      <DependentUpon>frm_aboutBox.cs</DependentUpon>
+    <Compile Include="FrmAboutBox.Designer.cs">
+      <DependentUpon>FrmAboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="frm_importGPX.cs">
+    <Compile Include="FrmImportGpx.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frm_importGPX.Designer.cs">
-      <DependentUpon>frm_importGPX.cs</DependentUpon>
+    <Compile Include="FrmImportGpx.Designer.cs">
+      <DependentUpon>FrmImportGpx.cs</DependentUpon>
     </Compile>
-    <Compile Include="helper_geoResponse.cs" />
-    <Compile Include="frm_editFileData.cs">
+    <Compile Include="HelperNonStatic.cs" />
+    <Compile Include="HelperNonStatic.Generic.cs" />
+    <Compile Include="HelperStatic.Exif.cs" />
+    <Compile Include="HelperStatic.FSO.cs" />
+    <Compile Include="HelperStatic.Generic.cs" />
+    <Compile Include="HelperStatic.lvwFileList.cs" />
+    <Compile Include="HelperStatic.SQL.cs" />
+    <Compile Include="HelperStatic.variables.cs" />
+    <Compile Include="HelperGeoResponse.cs" />
+    <Compile Include="FrmEditFileData.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frm_editFileData.Designer.cs">
-      <DependentUpon>frm_editFileData.cs</DependentUpon>
+    <Compile Include="FrmEditFileData.Designer.cs">
+      <DependentUpon>FrmEditFileData.cs</DependentUpon>
     </Compile>
-    <Compile Include="frm_mainApp.cs">
+    <Compile Include="FrmMainApp.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frm_mainApp.Designer.cs">
-      <DependentUpon>frm_mainApp.cs</DependentUpon>
+    <Compile Include="FrmMainApp.Designer.cs">
+      <DependentUpon>FrmMainApp.cs</DependentUpon>
     </Compile>
-    <Compile Include="frm_Settings.cs">
+    <Compile Include="FrmSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frm_Settings.Designer.cs">
-      <DependentUpon>frm_Settings.cs</DependentUpon>
+    <Compile Include="FrmSettings.Designer.cs">
+      <DependentUpon>FrmSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="helper.cs" />
-    <Compile Include="helper_geoTagXMLParser.cs" />
-    <Compile Include="helper_gitHubAPIResponse.cs" />
-    <Compile Include="helper_MessageBoxManager.cs" />
+    <Compile Include="HelperStatic.cs" />
+    <Compile Include="HelperGeoTagXMLParser.cs" />
+    <Compile Include="Helper.GitHubAPIResponse.cs" />
+    <Compile Include="Helper.MessageBoxManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="frm_aboutBox.resx">
-      <DependentUpon>frm_aboutBox.cs</DependentUpon>
+    <EmbeddedResource Include="FrmAboutBox.resx">
+      <DependentUpon>FrmAboutBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frm_editFileData.resx">
-      <DependentUpon>frm_editFileData.cs</DependentUpon>
+    <EmbeddedResource Include="FrmEditFileData.resx">
+      <DependentUpon>FrmEditFileData.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frm_importGPX.resx">
-      <DependentUpon>frm_importGPX.cs</DependentUpon>
+    <EmbeddedResource Include="FrmImportGpx.resx">
+      <DependentUpon>FrmImportGpx.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frm_mainApp.resx">
-      <DependentUpon>frm_mainApp.cs</DependentUpon>
+    <EmbeddedResource Include="FrmMainApp.resx">
+      <DependentUpon>FrmMainApp.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frm_Settings.resx">
-      <DependentUpon>frm_Settings.cs</DependentUpon>
+    <EmbeddedResource Include="FrmSettings.resx">
+      <DependentUpon>FrmSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

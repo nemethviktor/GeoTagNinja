@@ -1,6 +1,6 @@
 ﻿namespace GeoTagNinja
 {
-    partial class frm_Settings
+    partial class FrmSettings
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_Settings));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmSettings));
             this.tct_Settings = new System.Windows.Forms.TabControl();
             this.tpg_Application = new System.Windows.Forms.TabPage();
             this.ckb_ResetMapToZero = new System.Windows.Forms.CheckBox();
@@ -338,7 +338,7 @@
             this.fbd_StartupFolder.Description = "fbd_StartupFolder";
             this.fbd_StartupFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
-            // frm_Settings
+            // FrmSettings
             // 
             this.AcceptButton = this.btn_OK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -355,10 +355,10 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(20, 490);
-            this.Name = "frm_Settings";
+            this.Name = "FrmSettings";
             this.ShowInTaskbar = false;
-            this.Text = "frm_Settings";
-            this.Load += new System.EventHandler(this.Frm_Settings_Load);
+            this.Text = "FrmSettings";
+            this.Load += new System.EventHandler(this.FrmSettings_Load);
             this.tct_Settings.ResumeLayout(false);
             this.tpg_Application.ResumeLayout(false);
             this.tpg_Application.PerformLayout();

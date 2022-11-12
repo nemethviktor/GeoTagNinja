@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace GeoTagNinja
 {
-    partial class frm_MainApp
+    partial class FrmMainApp
     {
         
         /// <summary>
@@ -33,7 +33,7 @@ namespace GeoTagNinja
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_MainApp));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMainApp));
             this.mns_MenuStrip = new System.Windows.Forms.MenuStrip();
             this.tmi_File = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_SaveAll = new System.Windows.Forms.ToolStripMenuItem();
@@ -558,7 +558,7 @@ namespace GeoTagNinja
             this.tbx_lat.TabIndex = 7;
             this.tbx_lat.Text = "0";
             // 
-            // frm_MainApp
+            // FrmMainApp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -571,13 +571,13 @@ namespace GeoTagNinja
             this.MainMenuStrip = this.mns_MenuStrip;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimumSize = new System.Drawing.Size(673, 415);
-            this.Name = "frm_MainApp";
+            this.Name = "FrmMainApp";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GeoTagNinja";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frm_MainApp_FormClosing);
-            this.Load += new System.EventHandler(this.frm_MainApp_Load);
-            this.SizeChanged += new System.EventHandler(this.frm_MainApp_SizeChanged);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMainApp_FormClosing);
+            this.Load += new System.EventHandler(this.FrmMainApp_Load);
+            this.SizeChanged += new System.EventHandler(this.FrmMainApp_SizeChanged);
             this.mns_MenuStrip.ResumeLayout(false);
             this.mns_MenuStrip.PerformLayout();
             this.tsr_MainAppToolStrip.ResumeLayout(false);

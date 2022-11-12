@@ -1,0 +1,55 @@
+
+[*]
+
+# Microsoft .NET properties
+csharp_new_line_before_members_in_object_initializers = false
+csharp_new_line_between_query_expression_clauses = true
+csharp_prefer_braces = true:none
+csharp_style_var_elsewhere = false:none
+csharp_style_var_for_built_in_types = false:none
+csharp_style_var_when_type_is_apparent = false:none
+
+# ReSharper properties
+resharper_align_linq_query = true
+resharper_align_multiline_argument = true
+resharper_align_multiline_extends_list = true
+resharper_align_multiline_for_stmt = true
+resharper_align_multiline_parameter = true
+resharper_align_multiple_declaration = true
+resharper_align_multline_type_parameter_constrains = true
+resharper_align_multline_type_parameter_list = true
+resharper_align_tuple_components = true
+resharper_arguments_anonymous_function = named
+resharper_arguments_literal = named
+resharper_arguments_named = named
+resharper_arguments_other = named
+resharper_arguments_string_literal = named
+resharper_blank_lines_around_single_line_type = 0
+resharper_braces_redundant = true
+resharper_csharp_keep_blank_lines_in_code = 1
+resharper_csharp_wrap_lines = false
+resharper_csharp_wrap_parameters_style = chop_always
+resharper_empty_block_style = together
+resharper_force_attribute_style = join
+resharper_indent_nested_fixed_stmt = true
+resharper_indent_nested_foreach_stmt = true
+resharper_indent_nested_for_stmt = true
+resharper_indent_nested_lock_stmt = true
+resharper_indent_nested_while_stmt = true
+resharper_indent_preprocessor_if = usual_indent
+resharper_keep_existing_embedded_arrangement = false
+resharper_keep_existing_expr_member_arrangement = false
+resharper_place_expr_accessor_on_single_line = true
+resharper_place_expr_method_on_single_line = true
+resharper_place_expr_property_on_single_line = true
+resharper_place_simple_embedded_statement_on_same_line = false
+resharper_wrap_array_initializer_style = chop_always
+resharper_wrap_before_first_type_parameter_constraint = true
+resharper_wrap_chained_binary_expressions = chop_if_long
+resharper_wrap_chained_binary_patterns = chop_if_long
+resharper_wrap_chained_method_calls = chop_always
+resharper_wrap_linq_expressions = chop_always
+resharper_wrap_multiple_type_parameter_constraints_style = chop_always
+resharper_wrap_object_and_collection_initializer_style = chop_always
+resharper_wrap_property_pattern = chop_always
+resharper_wrap_ternary_expr_style = chop_always
