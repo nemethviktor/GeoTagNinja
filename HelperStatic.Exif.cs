@@ -1337,6 +1337,7 @@ internal static partial class HelperStatic
                 overwriteOriginal = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_OverwriteOriginal"));
 
                 bool deleteAllGPSData = false;
+                bool deleteTagAlreadyAdded = false;
                 // add tags to argsFile
                 foreach (DataRow row in dt_objectTagNames_OutWithData.Rows)
                 {
@@ -1348,6 +1349,64 @@ internal static partial class HelperStatic
                             @"gps*")
                         {
                             deleteAllGPSData = true;
+                            break;
+                        }
+                    }
+
+                    // non-xml always
+                    if (deleteAllGPSData && !deleteTagAlreadyAdded)
+                    {
+                        exifArgs += "-gps*=" + Environment.NewLine;
+                        tagsToDelete.Add(item: "gps*");
+
+                        // this is moved up/in here because the deletion of all gps has to come before just about anything else in case user wants to add (rather than delete) in more tags (later).
+                        if (writeXMLTags)
+                        {
+                            exifArgs += "-xmp:gps*=" + Environment.NewLine;
+                        }
+
+                        deleteTagAlreadyAdded = true;
+                    }
+
+                    if (!row[columnName: "objectTagName_Out"]
+                            .ToString()
+                            .Contains(value: ":"))
+                    {
+                        exiftoolTagName = row[columnName: "objectTagName_Out"]
+                            .ToString();
+                        updateExifVal = row[columnName: "settingValue"]
+                            .ToString();
+                        if (updateExifVal != "")
+                        {
+                            exifArgs += "-" + exiftoolTagName + "=" + updateExifVal + Environment.NewLine;
+                            //if lat/long then add Ref. 
+                            if (exiftoolTagName == "GPSLatitude" || exiftoolTagName == "GPSDestLatitude")
+                            {
+                                if (updateExifVal.Substring(startIndex: 0, length: 1) == "-")
+                                {
+                                    exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "South" + Environment.NewLine;
+                                }
+                                else
+                                {
+                                    exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "North" + Environment.NewLine;
+                                }
+                            }
+                            else if (exiftoolTagName == "GPSLongitude" || exiftoolTagName == "GPSDestLongitude")
+                            {
+                                if (updateExifVal.Substring(startIndex: 0, length: 1) == "-")
+                                {
+                                    exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "West" + Environment.NewLine;
+                                }
+                                else
+                                {
+                                    exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "East" + Environment.NewLine;
+                                }
+                            }
+                        }
+                        else //delete tag
+                        {
+                            exifArgs += "-" + exiftoolTagName + "=" + Environment.NewLine;
+                            tagsToDelete.Add(item: exiftoolTagName);
                         }
                     }
 
@@ -1403,59 +1462,6 @@ internal static partial class HelperStatic
                             }
                         }
                     }
-
-                    // non-xml always
-                    if (!row[columnName: "objectTagName_Out"]
-                            .ToString()
-                            .Contains(value: ":"))
-                    {
-                        exiftoolTagName = row[columnName: "objectTagName_Out"]
-                            .ToString();
-                        updateExifVal = row[columnName: "settingValue"]
-                            .ToString();
-                        if (updateExifVal != "")
-                        {
-                            exifArgs += "-" + exiftoolTagName + "=" + updateExifVal + Environment.NewLine;
-                            //if lat/long then add Ref. 
-                            if (exiftoolTagName == "GPSLatitude" || exiftoolTagName == "GPSDestLatitude")
-                            {
-                                if (updateExifVal.Substring(startIndex: 0, length: 1) == "-")
-                                {
-                                    exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "South" + Environment.NewLine;
-                                }
-                                else
-                                {
-                                    exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "North" + Environment.NewLine;
-                                }
-                            }
-                            else if (exiftoolTagName == "GPSLongitude" || exiftoolTagName == "GPSDestLongitude")
-                            {
-                                if (updateExifVal.Substring(startIndex: 0, length: 1) == "-")
-                                {
-                                    exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "West" + Environment.NewLine;
-                                }
-                                else
-                                {
-                                    exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "East" + Environment.NewLine;
-                                }
-                            }
-                        }
-                        else //delete tag
-                        {
-                            exifArgs += "-" + exiftoolTagName + "=" + Environment.NewLine;
-                            tagsToDelete.Add(item: exiftoolTagName);
-                        }
-                    }
-
-                    // delete-all-gps has to come separetely as it's no a standard tag
-                    // arguably this could come entirely separately and we could ignore everything else above but in reality
-                    // this only deletes GPS stuff not IPTC (cities etc) so i think this is safer even if a tiny bit slower.
-                }
-
-                if (deleteAllGPSData)
-                {
-                    exifArgs += "-gps*=" + Environment.NewLine;
-                    tagsToDelete.Add(item: "gps*");
                 }
 
                 if (overwriteOriginal)
