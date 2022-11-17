@@ -1211,7 +1211,7 @@ internal static partial class HelperStatic
         Regex rgx = new(pattern: "[^a-zA-Z0-9]");
         string fileNameReplaced = rgx.Replace(input: fileName.Replace(oldValue: FrmMainApp.FolderName, newValue: ""), replacement: "_");
         string argsFile = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "exifArgs_getPreview_" + fileNameReplaced + ".args");
-        string exiftoolCmd = " -charset utf8 -charset filename=utf8 -b -preview:all -w! " + s_doubleQuote + FrmMainApp.UserDataFolderPath + @"\%F.jpg" + s_doubleQuote + " -@ " + s_doubleQuote + argsFile + s_doubleQuote;
+        string exiftoolCmd = " -charset utf8 -charset filename=utf8 -b -preview:GTNPreview -w! " + s_doubleQuote + FrmMainApp.UserDataFolderPath + @"\%F.jpg" + s_doubleQuote + " -@ " + s_doubleQuote + argsFile + s_doubleQuote;
 
         File.Delete(path: argsFile);
 

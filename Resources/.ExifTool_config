@@ -1,8 +1,29 @@
 # exiftool config file
 %Image::ExifTool::UserDefined::Options = (
-    CoordFormat => '%+.6f',  # change default GPS coordinate format
-    GeoMaxHDOP => 4,        # ignore GPS fixes with HDOP > 4
-    RequestAll => 3,        # request additional tags not normally generated
-	DateFormat => '%Y-%m-%d %H:%M:%S'
+    CoordFormat => '%+.6f',  
+    DateFormat => '%Y-%m-%d %H:%M:%S'
 );  
-#end
+%Image::ExifTool::UserDefined = (
+    'Image::ExifTool::Composite' => {
+        GTNPreview => {
+            Groups => { 2 => 'Preview' },
+            Desire => {
+                0 => 'PreviewImage',
+                1 => 'JpgFromRaw',
+                2 => 'MPImage3',
+                3 => 'OtherImage',
+                4 => 'ThumbnailImage',
+            },
+            ValueConv => sub {
+                my $val = shift;
+                my $image;
+                foreach $image (@$val) {
+                    next unless ref $image eq 'SCALAR';
+                    return $image;
+                }
+                return undef;
+            },
+        },
+    },
+);
+1;  #end
