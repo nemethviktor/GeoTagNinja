@@ -314,7 +314,9 @@ namespace GeoTagNinja
             this.tbx_FolderName.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this.tbx_FolderName.Name = "tbx_FolderName";
             this.tbx_FolderName.Size = new System.Drawing.Size(400, 25);
+            this.tbx_FolderName.Enter += new System.EventHandler(this.tbx_FolderName_Enter);
             this.tbx_FolderName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbx_FolderName_KeyDown);
+            this.tbx_FolderName.Click += new System.EventHandler(this.tbx_FolderName_Enter);
             // 
             // tsb_OneFolderUp
             // 

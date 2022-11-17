@@ -1569,6 +1569,17 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
+    /// This handles the event when the user clicks into the textbox -> current value gets selected.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void tbx_FolderName_Enter(object sender,
+                                      EventArgs e)
+    {
+        tbx_FolderName.SelectAll();
+    }
+
+    /// <summary>
     ///     Handles the tsb_SaveFiles_Click event -> triggers ExifWriteExifToFile
     /// </summary>
     /// <param name="sender">Unused</param>
