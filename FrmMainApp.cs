@@ -1648,6 +1648,21 @@ public partial class FrmMainApp : Form
 
         files = files.OrderBy(keySelector: o => o)
             .ToList();
+
+        // add a parent folder. "dot dot"
+        try
+        {
+            string tmpStrParent = HelperStatic.FsoGetParent(path: tbx_FolderName.Text);
+            if (tmpStrParent != null)
+            {
+                lvw_FileList.Items.Add((".."));
+            }
+        }
+        catch
+        {
+            // ignored
+        }
+
         foreach (string currentDir in dirs)
         {
             lvw_FileList_addListItem(fileName: Path.GetFileName(path: currentDir));
@@ -1734,8 +1749,13 @@ public partial class FrmMainApp : Form
 
         if (item != null)
         {
+            // if .. (parent) then do a folder-up
+            if (item.Text == "..")
+            {
+                btn_OneFolderUp_Click(sender, e: EventArgs.Empty);
+            }
             // if this is a folder, enter
-            if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
+            else if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
             {
                 // check for outstanding files first and save if user wants
                 HelperStatic.s_changeFolderIsOkay = false;
@@ -1743,7 +1763,7 @@ public partial class FrmMainApp : Form
                 if (HelperStatic.s_changeFolderIsOkay)
                 {
                     tbx_FolderName.Text = Path.Combine(path1: tbx_FolderName.Text, path2: item.Text);
-                    btn_ts_Refresh_lvwFileList_Click(sender: this, e: new EventArgs());
+                    btn_ts_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
                 }
             }
             // if this is a file
@@ -1860,7 +1880,7 @@ public partial class FrmMainApp : Form
         // Backspace -> Up one folder
         else if (e.KeyCode == Keys.Back)
         {
-            btn_OneFolderUp_Click(sender: sender, e: e);
+            btn_OneFolderUp_Click(sender: sender, e: EventArgs.Empty);
         }
 
         // Enter  -> enter if folder
@@ -1868,8 +1888,13 @@ public partial class FrmMainApp : Form
         {
             string folderToEnter = lvw_FileList.SelectedItems[index: 0]
                 .Text;
-            // enter if folder
-            if (Directory.Exists(path: Path.Combine(path1: FolderName, path2: folderToEnter)))
+            // if .. (parent) then do a folder-up
+            if (folderToEnter == "..")
+            {
+                btn_OneFolderUp_Click(sender, e: EventArgs.Empty);
+            }
+            // if this is a folder, enter
+            else if (Directory.Exists(path: Path.Combine(path1: FolderName, path2: folderToEnter)))
             {
                 folderToEnter = Path.Combine(path1: FolderName, path2: folderToEnter);
                 HelperStatic.s_changeFolderIsOkay = false;
@@ -1903,7 +1928,7 @@ public partial class FrmMainApp : Form
         // F5 -> Refresh folder
         else if (e.KeyCode == Keys.F5)
         {
-            tsb_Refresh_lvwFileList_Click(sender: sender, e: e);
+            tsb_Refresh_lvwFileList_Click(sender: sender, e: EventArgs.Empty);
             lvw_FileList.Items.Clear();
             FolderName = tbx_FolderName.Text;
             lvwFileList_LoadOrUpdate();

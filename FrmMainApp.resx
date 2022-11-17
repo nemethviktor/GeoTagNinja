@@ -173,14 +173,14 @@
   <data name="tsb_RemoveGeoData.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGZSURBVDhPlZG9S0JhFMaPd6m1sUGvooMU+LEVSdZUtEZQ
-        YVMtid7btxBBU1shCuq19AbR0lJGENQSgWP/QRa0VkMEOrTUc/TVrl+XeuBwXs57fg/nvC91UjB43Osf
-        1p85i5JRksPhSCLKdrt9T9R+5RvJe30B/cwf0L9r+cgjrlgSoDzge1mWx61W62etHLqNUehmi48mBg3Y
-        5XINcEYkAAOcu36phjDh0b2BXMmwggXNGRgUnU7nIPIdQkdd6mjQIhO4LgYNcC5MsqbSTiZKGx63TTeH
-        DUpEqYdBbYkqWYWKiWXLVXxRqixM9k3xzoDzaOsMa1GaRDzGVfrSFDpJRugtrdA0DNfYxOO2nqKtHeZx
-        MeqFFqEngPMMMZxRab9ukghbLmEeE0izAD1kVSrk1rH3CvVztJrwOujbFUiz0DTWGFcYGE14nQOFyjyp
-        QNplZiLeZFu0dhfGDGQUesU6M+lVGsLjbaI2m1KoxL8j2szFkwB6R3zkVBpNqVQ6VGlCXP9N9XVgUsDP
-        nIvy/8Qm1d9RyCZKXUT0A9osxXl7fW2rAAAAAElFTkSuQmCC
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGYSURBVDhPlZG9S0JhFMaPLrU2NviFDlLgx1YkWVPRGkGF
+        TU6J3tu3EEFTmxQKeq91vUG0tJQRBLVE4Nh/kAWt1RCBDi31HH2169elHjicl/Oe38M570vdFA4f9wdH
+        9WfOomSU1eVyZRAVp9O5J2q/CowV/IGQfhYM6d/1fOQTVywroALge4fDMWmz2T7r5chtkiI3W3w0MWjC
+        Ho9niDMiDRjgwvVLLYQJj+4PaWXDChY0KzAoud3uYeQ7hI66tatBm0zghhg0wFqMHKpMO0qCNnxeu24O
+        G5ROUB+DapSqeYlK6WXL1UHUWl2aHpjhnQEX0NYdVhM0jXjcl+lLlegkE6e3nESzMFxjE5/Xdoq2TpjH
+        xagXapyeAC4yxLAiU6phko5ZLmGeFEirAD3kZSpq69h7hQY52k14HfTtCqRVaJpojisMjCa8TkqiCk8q
+        kE6ZmYg32RatvYUxQ4pEr1hnLrdKI3i8TdTmsxKV+XdEm7l4EkDviA9NpvGsTOVDmabE9d/UWAcmRfzM
+        uSj/T2xS+x2J7KLUQ0Q/0vvFdTDaaggAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="tsb_ImportGPX.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

@@ -1,6 +1,7 @@
 ﻿# GeoTagNinja Changelog
 v0.6.83XX [2022XXXX]
 - Finally managed to get hold of ReSharper so the code has been refactored in totality. Famous last words but it shouldn't affect usage.
+- Added a ".." to the main grid (listView) where applicable (parent folder).
 - Bugfixes:
 -- If a user's "Pictures" (or any other "Special") folder had been moved and renamed the could would break because Windows treats special folders in odd ways. (e.g. if the Pics folder is called "Pics" Windows would still show "Pictures", which doesn't per se exist.)
 -- If the user had chosen "Delete All GPS Data" and subsequently added GPS data the addition would not have gone through upon save. This is now fixed.
