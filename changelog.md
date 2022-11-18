@@ -2,6 +2,7 @@
 v0.6.83XX [2022XXXX]
 - Finally managed to get hold of ReSharper so the code has been refactored in totality. Famous last words but it shouldn't affect usage.
 - Added a ".." to the main grid (listView) where applicable (parent folder).
+- Added the capability to navigate to the top of the folder structure. (e.g. MyComputer and then list the drives.)
 - Changed how the previews get created. This will hopefully result in faster preview-creation. The orientation-problem is still unsolved but it's likely to remain so for the time being.
 - Bugfixes:
 -- If a user's "Pictures" (or any other "Special") folder had been moved and renamed the could would break because Windows treats special folders in odd ways. (e.g. if the Pics folder is called "Pics" Windows would still show "Pictures", which doesn't per se exist.)

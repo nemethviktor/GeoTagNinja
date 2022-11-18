@@ -365,99 +365,50 @@ internal static partial class HelperStatic
     {
         IEnumerable<string> exifToolCommand = Enumerable.Empty<string>();
         IEnumerable<string> exifToolCommandWithFileName = Enumerable.Empty<string>();
-
-        List<string> commonArgList = new()
-        {
-            "-a",
-            //"-c '%+.6f'",
-            "-s",
-            "-s",
-            "-struct",
-            "-sort",
-            "-G",
-            "-ee"
-        };
-
-        foreach (string arg in commonArgList)
-        {
-            exifToolCommand = exifToolCommand.Concat(second: new[] { arg });
-        }
-
-        CancellationToken ct = CancellationToken.None;
-        // add required tags
-        DataTable dt_objectTagNames = DataReadSQLiteObjectMappingTagsToPass();
-
-        foreach (DataRow dr in dt_objectTagNames.Rows)
-        {
-            exifToolCommand = exifToolCommand.Concat(second: new[] { "-" + dr[columnName: "objectTagName_ToPass"] });
-        }
-
         FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        string folderNameToUse = FrmMainAppInstance.tbx_FolderName.Text;
-
-        foreach (string listElem in files)
+        if (FrmMainAppInstance != null)
         {
-            DataTable dt_fileExifTable = new();
-            dt_fileExifTable.Clear();
-            dt_fileExifTable.Columns.Add(columnName: "TagName");
-            dt_fileExifTable.Columns.Add(columnName: "TagValue");
-            string exifToolResult;
-
-            if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: listElem)))
+            List<string> commonArgList = new()
             {
-                try
+                "-a",
+                "-s",
+                "-s",
+                "-struct",
+                "-sort",
+                "-G",
+                "-ee",
+                "-ignoreMinorErrors"
+            };
+
+            foreach (string arg in commonArgList)
+            {
+                exifToolCommand = exifToolCommand.Concat(second: new[] { arg });
+            }
+
+            CancellationToken ct = CancellationToken.None;
+            // add required tags
+            DataTable dt_objectTagNames = DataReadSQLiteObjectMappingTagsToPass();
+
+            foreach (DataRow dr in dt_objectTagNames.Rows)
+            {
+                exifToolCommand = exifToolCommand.Concat(second: new[] { "-" + dr[columnName: "objectTagName_ToPass"] });
+            }
+
+            string folderNameToUse = FrmMainAppInstance.tbx_FolderName.Text;
+
+            foreach (string listElem in files)
+            {
+                DataTable dt_fileExifTable = new();
+                dt_fileExifTable.Clear();
+                dt_fileExifTable.Columns.Add(columnName: "TagName");
+                dt_fileExifTable.Columns.Add(columnName: "TagValue");
+                string exifToolResult;
+
+                if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: listElem)))
                 {
-                    exifToolCommandWithFileName = exifToolCommand.Concat(second: new[] { Path.Combine(path1: folderNameToUse, path2: listElem) });
-                    exifToolResult = await FrmMainAppInstance.AsyncExifTool.ExecuteAsync(args: exifToolCommandWithFileName);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-                    exifToolResult = null;
-                }
-
-                string[] exifToolResultArr;
-
-                // if user closes app this could return a null
-                if (exifToolResult != null)
-                {
-                    exifToolResultArr = Convert.ToString(value: exifToolResult)
-                        .Split(
-                            separator: new[] { "\r\n", "\r", "\n" },
-                            options: StringSplitOptions.None
-                        )
-                        .Distinct()
-                        .ToArray();
-                    ;
-
-                    foreach (string fileExifDataRow in exifToolResultArr)
-                    {
-                        if (fileExifDataRow is not null && fileExifDataRow.Length > 0 && fileExifDataRow.Substring(startIndex: 0, length: 1) == "[")
-                        {
-                            string exifGroup = fileExifDataRow.Split(' ')[0]
-                                .Replace(oldValue: "[", newValue: "")
-                                .Replace(oldValue: "]", newValue: "");
-                            string exifTagName = fileExifDataRow.Split(' ')[1]
-                                .Replace(oldValue: ":", newValue: "");
-                            string exifTagVal = fileExifDataRow.Substring(startIndex: fileExifDataRow.IndexOf(value: ':') + 2);
-
-                            DataRow dr = dt_fileExifTable.NewRow();
-                            dr[columnName: "TagName"] = exifGroup + ":" + exifTagName;
-                            dr[columnName: "TagValue"] = exifTagVal;
-
-                            dt_fileExifTable.Rows.Add(row: dr);
-                        }
-                    }
-                }
-
-                // for some files there may be data in a sidecar xmp without that data existing in the picture-file. we'll try to collect it here.
-                if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: listElem)) + ".xmp")))
-                {
-                    string sideCarXMPFilePath = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: listElem)) + ".xmp");
-                    // this is totally a copypaste from above
                     try
                     {
-                        exifToolCommandWithFileName = exifToolCommand.Concat(second: new[] { sideCarXMPFilePath });
+                        exifToolCommandWithFileName = exifToolCommand.Concat(second: new[] { Path.Combine(path1: folderNameToUse, path2: listElem) });
                         exifToolResult = await FrmMainAppInstance.AsyncExifTool.ExecuteAsync(args: exifToolCommandWithFileName);
                     }
                     catch (Exception ex)
@@ -466,9 +417,12 @@ internal static partial class HelperStatic
                         exifToolResult = null;
                     }
 
+                    string[] exifToolResultArr;
+
+                    // if user closes app this could return a null
                     if (exifToolResult != null)
                     {
-                        string[] exifToolResultArrXMP = Convert.ToString(value: exifToolResult)
+                        exifToolResultArr = Convert.ToString(value: exifToolResult)
                             .Split(
                                 separator: new[] { "\r\n", "\r", "\n" },
                                 options: StringSplitOptions.None
@@ -477,7 +431,7 @@ internal static partial class HelperStatic
                             .ToArray();
                         ;
 
-                        foreach (string fileExifDataRow in exifToolResultArrXMP)
+                        foreach (string fileExifDataRow in exifToolResultArr)
                         {
                             if (fileExifDataRow is not null && fileExifDataRow.Length > 0 && fileExifDataRow.Substring(startIndex: 0, length: 1) == "[")
                             {
@@ -496,30 +450,78 @@ internal static partial class HelperStatic
                             }
                         }
                     }
-                }
 
-                ListViewItem lvi = FrmMainAppInstance.lvw_FileList.FindItemWithText(text: listElem);
-
-                // lvi can become null if user changes folder while a previous process is loading and listview is cleared.
-                // also just make sure we're in the same session.
-                if (lvi != null && folderEnterLastEpoch == folderEnterEpoch)
-                {
-                    ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
-                    for (int i = 1; i < lvi.SubItems.Count; i++)
+                    // for some files there may be data in a sidecar xmp without that data existing in the picture-file. we'll try to collect it here.
+                    if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: listElem)) + ".xmp")))
                     {
-                        string str = ExifGetStandardisedDataPointFromExif(dtFileExif: dt_fileExifTable, dataPoint: lvchs[index: i]
-                                                                              .Name.Substring(startIndex: 4));
-                        lvi.SubItems[index: i]
-                            .Text = str;
+                        string sideCarXMPFilePath = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: listElem)) + ".xmp");
+                        // this is totally a copypaste from above
+                        try
+                        {
+                            exifToolCommandWithFileName = exifToolCommand.Concat(second: new[] { sideCarXMPFilePath });
+                            exifToolResult = await FrmMainAppInstance.AsyncExifTool.ExecuteAsync(args: exifToolCommandWithFileName);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                            exifToolResult = null;
+                        }
+
+                        if (exifToolResult != null)
+                        {
+                            string[] exifToolResultArrXMP = Convert.ToString(value: exifToolResult)
+                                .Split(
+                                    separator: new[] { "\r\n", "\r", "\n" },
+                                    options: StringSplitOptions.None
+                                )
+                                .Distinct()
+                                .ToArray();
+                            ;
+
+                            foreach (string fileExifDataRow in exifToolResultArrXMP)
+                            {
+                                if (fileExifDataRow is not null && fileExifDataRow.Length > 0 && fileExifDataRow.Substring(startIndex: 0, length: 1) == "[")
+                                {
+                                    string exifGroup = fileExifDataRow.Split(' ')[0]
+                                        .Replace(oldValue: "[", newValue: "")
+                                        .Replace(oldValue: "]", newValue: "");
+                                    string exifTagName = fileExifDataRow.Split(' ')[1]
+                                        .Replace(oldValue: ":", newValue: "");
+                                    string exifTagVal = fileExifDataRow.Substring(startIndex: fileExifDataRow.IndexOf(value: ':') + 2);
+
+                                    DataRow dr = dt_fileExifTable.NewRow();
+                                    dr[columnName: "TagName"] = exifGroup + ":" + exifTagName;
+                                    dr[columnName: "TagValue"] = exifTagVal;
+
+                                    dt_fileExifTable.Rows.Add(row: dr);
+                                }
+                            }
+                        }
                     }
 
-                    lvi.ForeColor = Color.Black;
-                    FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " + lvi.Text);
+                    ListViewItem lvi = FrmMainAppInstance.lvw_FileList.FindItemWithText(text: listElem);
+
+                    // lvi can become null if user changes folder while a previous process is loading and listview is cleared.
+                    // also just make sure we're in the same session.
+                    if (lvi != null && folderEnterLastEpoch == folderEnterEpoch)
+                    {
+                        ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
+                        for (int i = 1; i < lvi.SubItems.Count; i++)
+                        {
+                            string str = ExifGetStandardisedDataPointFromExif(dtFileExif: dt_fileExifTable, dataPoint: lvchs[index: i]
+                                                                                  .Name.Substring(startIndex: 4));
+                            lvi.SubItems[index: i]
+                                .Text = str;
+                        }
+
+                        lvi.ForeColor = Color.Black;
+                        FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " + lvi.Text);
+                    }
                 }
             }
-        }
 
-        FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Ready.");
+            FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Ready.");
+        }
     }
 
     /// <summary>
@@ -546,170 +548,158 @@ internal static partial class HelperStatic
     {
         #region ExifToolConfiguration
 
-        string exifToolExe = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe");
+        //basically if the form gets minimised it can turn to null methinks. 
         FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-
-        string folderNameToUse = FrmMainAppInstance.tbx_FolderName.Text;
-        string argsFile = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "exifArgs.args");
-        string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 -w! " + s_doubleQuote + FrmMainApp.UserDataFolderPath + @"\%F.txt" + s_doubleQuote + " -@ " + s_doubleQuote + argsFile + s_doubleQuote;
-
-        File.Delete(path: argsFile);
-
-        List<string> exifArgs = new();
-        // needs a space before and after.
-        string commonArgs = " -a -s -s -struct -sort -G -ee -args ";
-
-        #endregion
-
-        // add required tags
-        DataTable dt_objectTagNames = DataReadSQLiteObjectMappingTagsToPass();
-
-        foreach (DataRow dr in dt_objectTagNames.Rows)
+        if (FrmMainAppInstance != null)
         {
-            exifArgs.Add(item: dr[columnName: "objectTagName_ToPass"]
-                             .ToString());
-        }
+            string exifToolExe = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe");
 
-        foreach (string listElem in files)
-        {
-            if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: listElem)))
+            string folderNameToUse = FrmMainAppInstance.tbx_FolderName.Text;
+            string argsFile = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "exifArgs.args");
+            string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 -w! " + s_doubleQuote + FrmMainApp.UserDataFolderPath + @"\%F.txt" + s_doubleQuote + " -@ " + s_doubleQuote + argsFile + s_doubleQuote;
+
+            File.Delete(path: argsFile);
+
+            List<string> exifArgs = new();
+            // needs a space before and after.
+            string commonArgs = " -a -s -s -struct -sort -G -ee -args ";
+
+            #endregion
+
+            // add required tags
+            DataTable dt_objectTagNames = DataReadSQLiteObjectMappingTagsToPass();
+
+            foreach (DataRow dr in dt_objectTagNames.Rows)
             {
-                File.AppendAllText(path: argsFile, contents: Path.Combine(path1: folderNameToUse, path2: listElem) + Environment.NewLine, encoding: Encoding.UTF8);
-                foreach (string arg in exifArgs)
-                {
-                    File.AppendAllText(path: argsFile, contents: "-" + arg + Environment.NewLine);
-                }
+                exifArgs.Add(item: dr[columnName: "objectTagName_ToPass"]
+                                 .ToString());
             }
 
-            //// add any xmp sidecar files
-            if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: listElem)) + ".xmp")))
+            foreach (string listElem in files)
             {
-                string sideCarXMPFilePath = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: listElem)) + ".xmp");
-                File.AppendAllText(path: argsFile, contents: sideCarXMPFilePath + Environment.NewLine, encoding: Encoding.UTF8);
-                foreach (string arg in exifArgs)
+                if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: listElem)))
                 {
-                    File.AppendAllText(path: argsFile, contents: "-" + arg + Environment.NewLine);
-                }
-            }
-
-            File.AppendAllText(path: argsFile, contents: "-progress" + Environment.NewLine);
-        }
-
-        File.AppendAllText(path: argsFile, contents: "-execute" + Environment.NewLine);
-        ///////////////
-        // via https://stackoverflow.com/a/68616297/3968494
-        await Task.Run(action: () =>
-        {
-            using Process p = new();
-            p.StartInfo = new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
-            {
-                Arguments = @"/k " + s_doubleQuote + s_doubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + s_doubleQuote + " " + commonArgs + exiftoolCmd + s_doubleQuote + "&& exit",
-                UseShellExecute = false,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
-            };
-
-            p.EnableRaisingEvents = true;
-
-            s_ErrorMsg = "";
-            p.OutputDataReceived += (_,
-                                     data) =>
-            {
-                if (data.Data != null && data.Data.Contains(value: "="))
-                {
-                    FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " +
-                                                                                                         data.Data.Split('[')
-                                                                                                             .First()
-                                                                                                             .Split('/')
-                                                                                                             .Last()
-                                                                                                             .Trim());
-                }
-                else if (data.Data != null && !data.Data.Contains(value: "files created") && !data.Data.Contains(value: "files read") && data.Data.Length > 0)
-                {
-                    s_ErrorMsg += data.Data.ToString() + Environment.NewLine;
-                    try
+                    File.AppendAllText(path: argsFile, contents: Path.Combine(path1: folderNameToUse, path2: listElem) + Environment.NewLine, encoding: Encoding.UTF8);
+                    foreach (string arg in exifArgs)
                     {
-                        p.Kill();
+                        File.AppendAllText(path: argsFile, contents: "-" + arg + Environment.NewLine);
                     }
-                    catch
-                    { } // else it will be stuck running forever
                 }
-            };
 
-            p.ErrorDataReceived += (_,
-                                    data) =>
-            {
-                if (data.Data != null && data.Data.Contains(value: "="))
+                //// add any xmp sidecar files
+                if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: listElem)) + ".xmp")))
                 {
-                    FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " +
-                                                                                                         data.Data.Split('[')
-                                                                                                             .First()
-                                                                                                             .Split('/')
-                                                                                                             .Last()
-                                                                                                             .Trim());
-                }
-                else if (data.Data != null && !data.Data.Contains(value: "files created") && !data.Data.Contains(value: "files read") && data.Data.Length > 0)
-                {
-                    s_ErrorMsg += data.Data.ToString() + Environment.NewLine;
-                    try
+                    string sideCarXMPFilePath = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: listElem)) + ".xmp");
+                    File.AppendAllText(path: argsFile, contents: sideCarXMPFilePath + Environment.NewLine, encoding: Encoding.UTF8);
+                    foreach (string arg in exifArgs)
                     {
-                        p.Kill();
+                        File.AppendAllText(path: argsFile, contents: "-" + arg + Environment.NewLine);
                     }
-                    catch
-                    { } // else it will be stuck running forever
                 }
-            };
 
-            p.Start();
-            p.BeginOutputReadLine();
-            p.BeginErrorReadLine();
-            p.WaitForExit();
-            p.Close();
-            if (s_ErrorMsg != "")
-            {
-                MessageBox.Show(text: s_ErrorMsg);
+                File.AppendAllText(path: argsFile, contents: "-ignoreMinorErrors" + Environment.NewLine);
+                File.AppendAllText(path: argsFile, contents: "-progress" + Environment.NewLine);
             }
 
-            // if still here then exorcise
+            File.AppendAllText(path: argsFile, contents: "-execute" + Environment.NewLine);
+            ///////////////
+            // via https://stackoverflow.com/a/68616297/3968494
+            await Task.Run(action: () =>
+            {
+                using Process p = new();
+                p.StartInfo = new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
+                {
+                    Arguments = @"/k " + s_doubleQuote + s_doubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + s_doubleQuote + " " + commonArgs + exiftoolCmd + s_doubleQuote + "&& exit",
+                    UseShellExecute = false,
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
+                };
+
+                p.EnableRaisingEvents = true;
+
+                s_ErrorMsg = "";
+                p.OutputDataReceived += (_,
+                                         data) =>
+                {
+                    if (data.Data != null && data.Data.Contains(value: "="))
+                    {
+                        FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " +
+                                                                                                             data.Data.Split('[')
+                                                                                                                 .First()
+                                                                                                                 .Split('/')
+                                                                                                                 .Last()
+                                                                                                                 .Trim());
+                    }
+                    else if (data.Data != null && !data.Data.Contains(value: "files created") && !data.Data.Contains(value: "files read") && data.Data.Length > 0)
+                    {
+                        s_ErrorMsg += data.Data.ToString() + Environment.NewLine;
+                        try
+                        {
+                            p.Kill();
+                        }
+                        catch
+                        { } // else it will be stuck running forever
+                    }
+                };
+
+                p.ErrorDataReceived += (_,
+                                        data) =>
+                {
+                    if (data.Data != null && data.Data.Contains(value: "="))
+                    {
+                        FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " +
+                                                                                                             data.Data.Split('[')
+                                                                                                                 .First()
+                                                                                                                 .Split('/')
+                                                                                                                 .Last()
+                                                                                                                 .Trim());
+                    }
+                    else if (data.Data != null && !data.Data.Contains(value: "files created") && !data.Data.Contains(value: "files read") && data.Data.Length > 0)
+                    {
+                        s_ErrorMsg += data.Data.ToString() + Environment.NewLine;
+                        try
+                        {
+                            p.Kill();
+                        }
+                        catch
+                        { } // else it will be stuck running forever
+                    }
+                };
+
+                p.Start();
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+                p.WaitForExit();
+                p.Close();
+                if (s_ErrorMsg != "")
+                {
+                    MessageBox.Show(text: s_ErrorMsg);
+                }
+
+                // if still here then exorcise
+                try
+                {
+                    p.Kill();
+                }
+                catch
+                { }
+            });
+            ///////////////
+
+            // try to collect the txt files and then read them back into the listview.
             try
             {
-                p.Kill();
-            }
-            catch
-            { }
-        });
-        ///////////////
-
-        // try to collect the txt files and then read them back into the listview.
-        try
-        {
-            foreach (string itemText in files)
-            {
-                string exifFileIn = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: itemText + ".txt");
-                if (File.Exists(path: exifFileIn))
+                foreach (string itemText in files)
                 {
-                    DataTable dt_fileExifTable = new();
-                    dt_fileExifTable.Clear();
-                    dt_fileExifTable.Columns.Add(columnName: "TagName");
-                    dt_fileExifTable.Columns.Add(columnName: "TagValue");
-                    foreach (string exifTxtFileLineIn in File.ReadLines(path: exifFileIn))
+                    string exifFileIn = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: itemText + ".txt");
+                    if (File.Exists(path: exifFileIn))
                     {
-                        string exifTagName = exifTxtFileLineIn.Split('=')[0]
-                            .Substring(startIndex: 1);
-                        string exifTagVal = exifTxtFileLineIn.Split('=')[1];
-
-                        DataRow dr = dt_fileExifTable.NewRow();
-                        dr[columnName: "TagName"] = exifTagName;
-                        dr[columnName: "TagValue"] = exifTagVal;
-                        dt_fileExifTable.Rows.Add(row: dr);
-                    }
-
-                    // see if there's an xmp-output too
-                    string sideCarXMPFilePath = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: itemText.Substring(startIndex: 0, length: itemText.LastIndexOf(value: '.')) + ".xmp" + ".txt");
-                    if (File.Exists(path: sideCarXMPFilePath))
-                    {
-                        foreach (string exifTxtFileLineIn in File.ReadLines(path: sideCarXMPFilePath))
+                        DataTable dt_fileExifTable = new();
+                        dt_fileExifTable.Clear();
+                        dt_fileExifTable.Columns.Add(columnName: "TagName");
+                        dt_fileExifTable.Columns.Add(columnName: "TagValue");
+                        foreach (string exifTxtFileLineIn in File.ReadLines(path: exifFileIn))
                         {
                             string exifTagName = exifTxtFileLineIn.Split('=')[0]
                                 .Substring(startIndex: 1);
@@ -720,34 +710,51 @@ internal static partial class HelperStatic
                             dr[columnName: "TagValue"] = exifTagVal;
                             dt_fileExifTable.Rows.Add(row: dr);
                         }
-                    }
 
-                    // de-dupe. this is pretty poor performance but the dataset is small
-                    DataTable dt_distinctFileExifTable = dt_fileExifTable.DefaultView.ToTable(distinct: true);
-
-                    if (folderEnterLastEpoch == folderEnterEpoch)
-                    {
-                        ListViewItem lvi = FrmMainAppInstance.lvw_FileList.FindItemWithText(text: itemText);
-
-                        ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
-                        for (int i = 1; i < lvi.SubItems.Count; i++)
+                        // see if there's an xmp-output too
+                        string sideCarXMPFilePath = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: itemText.Substring(startIndex: 0, length: itemText.LastIndexOf(value: '.')) + ".xmp" + ".txt");
+                        if (File.Exists(path: sideCarXMPFilePath))
                         {
-                            string str = ExifGetStandardisedDataPointFromExif(dtFileExif: dt_distinctFileExifTable, dataPoint: lvchs[index: i]
-                                                                                  .Name.Substring(startIndex: 4));
-                            lvi.SubItems[index: i]
-                                .Text = str;
+                            foreach (string exifTxtFileLineIn in File.ReadLines(path: sideCarXMPFilePath))
+                            {
+                                string exifTagName = exifTxtFileLineIn.Split('=')[0]
+                                    .Substring(startIndex: 1);
+                                string exifTagVal = exifTxtFileLineIn.Split('=')[1];
+
+                                DataRow dr = dt_fileExifTable.NewRow();
+                                dr[columnName: "TagName"] = exifTagName;
+                                dr[columnName: "TagValue"] = exifTagVal;
+                                dt_fileExifTable.Rows.Add(row: dr);
+                            }
                         }
 
-                        lvi.ForeColor = Color.Black;
-                    }
+                        // de-dupe. this is pretty poor performance but the dataset is small
+                        DataTable dt_distinctFileExifTable = dt_fileExifTable.DefaultView.ToTable(distinct: true);
 
-                    File.Delete(path: exifFileIn); // clean up
+                        if (folderEnterLastEpoch == folderEnterEpoch)
+                        {
+                            ListViewItem lvi = FrmMainAppInstance.lvw_FileList.FindItemWithText(text: itemText);
+
+                            ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
+                            for (int i = 1; i < lvi.SubItems.Count; i++)
+                            {
+                                string str = ExifGetStandardisedDataPointFromExif(dtFileExif: dt_distinctFileExifTable, dataPoint: lvchs[index: i]
+                                                                                      .Name.Substring(startIndex: 4));
+                                lvi.SubItems[index: i]
+                                    .Text = str;
+                            }
+
+                            lvi.ForeColor = Color.Black;
+                        }
+
+                        File.Delete(path: exifFileIn); // clean up
+                    }
                 }
             }
-        }
-        catch
-        {
-            // nothing. errors should have already come up
+            catch
+            {
+                // nothing. errors should have already come up
+            }
         }
     }
 

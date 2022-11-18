@@ -226,13 +226,50 @@ internal static partial class HelperStatic
                     {
                         // nothing.
                     }
-                    else
+                    else // check it's a drive? --> if so, don't do anything, otherwise warn the item is gone
                     {
-                        MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorFileGoneMissing" + fileNameWithPath), caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                        bool isDrive = LvwItemIsDrive(lvwFileListItem: lvw_FileListItem);
+
+                        if (isDrive)
+                        {
+                            // nothing
+                        }
+                        else
+                        {
+                            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorFileGoneMissing" + fileNameWithPath), caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                        }
                     }
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Checks if a ListViewItem is a drive (e.g. C:\) or not
+    /// </summary>
+    /// <param name="lvwFileListItem">The ListViewItem to check</param>
+    /// <returns></returns>
+    internal static bool LvwItemIsDrive(ListViewItem lvwFileListItem)
+    {
+        DriveInfo[] allDrives = DriveInfo.GetDrives();
+        bool isDrive = false;
+        foreach (DriveInfo d in allDrives)
+        {
+            try
+            {
+                if (lvwFileListItem.Text.Contains(value: "(" + d.Name.Replace(oldValue: "\\", newValue: "") + ")"))
+                {
+                    isDrive = true;
+                    break;
+                }
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.Message);
+            }
+        }
+
+        return isDrive;
     }
 
     /// <summary>

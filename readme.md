@@ -42,27 +42,12 @@ For the "main" project you should be okay without anything separate. It has work
 -- On top of that above exifTool has a hard limit of 260 characters for file names including paths. Anything beyond that will fail. Again, rename your files or temporarily move them to C:\temp if this is an issue. Unicode (e.g. most Chinese and other Asian) characters have an up to 4-byte size per character. This is to say you'll run into errors with these files more often than not.
 -- Alternatively you can enable [this](https://stackoverflow.com/questions/56419639/what-does-beta-use-unicode-utf-8-for-worldwide-language-support-actually-do) feature if you're running v1903 Windows 10 or later but it may have some unwanted effects so keep an eye out for changes caused by it. 
 - For UK the API returns city/sublocation in an odd way. this has been *probably* fixed in code but do test.
-- Language support should generally be okay but since the app is constantly evolving at this stage I'd prob vote against spending time on adding in a new language just yet.
 - Listview columns hiding/reorg capability is lacking. 
 -- On a related note there is an attempt to clean up the user folder (C:\Users\username\AppData\Roaming\GeoTagNinja\) on application exit but it might fail due to a file lock. This doesn't crash the app but some files may remain, they'll be cleaned up the next time the app runs.
 - Sometimes a number of cmd.exe handles remain open. Not sure why but they only consume about 800kbytes of memory each so while not great, not terrible. You can force-kill them with "taskkill /f /im cmd.exe" ; I didn't want to put that into the code as it kills _all_ cmd instances regardless of what conjured them up so it would kill any instances you're otherwise running.
 - Pressing Get From Web either in Edit mode or on the map will always set the affected file to write-queue even if the values don't actually change.
 - Preview images don't respect orientation.
 - If user zooms "too far out" on Map they will get odd longitude values. The code handles this internally but map feedback is what it is.
-
-## When reporting bugs please specify
-
-- The OS's version,
-- The OS's language (incl region such as English/UK or English/USA),
-- Full path of your photo if the bug is related to reading or writing data,
-- Possibly upload the picture somewhere if not sensitive so I can test.
-
-## System Requirements
-
-- Windows 7+ is needed. The WebView2 installer runs along Setup. Should you need separately, it's available [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703) - the installer should take care of it tho'.
-- SQLite is running x86 but fwiw the app isn't really memory-hungry so it will do. Chances are if you're still on a 1st-gen Intel Core you're not on Windows 7. Hopefully.
-- You'll need an ArcGIS API key to use the map search functionality. Register for free [here](https://developers.arcgis.com/)
-- You'll need a geoNames username and password to use toponomy search. Register for free [here](https://www.geonames.org/)
 
 ## Possible Issues & Solutions
 
@@ -79,3 +64,17 @@ For the "main" project you should be okay without anything separate. It has work
 		- In your browser go to http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&lat=47.3&lng=9&username=YOURUSERNAME&password=YOURPASSWORD (replace the username and pwd as required)
 		- You should get a JSON formatted API reply back that visibly looks like a description of a place (likely called Churzegg or some such). If you don't know what that is then have a look [here](https://github.com/nemethviktor/GeoTagNinja/issues/13#issuecomment-1305859987)
 		- If you instead get a reply that it's an invalid user or user account not enabled to use the free webservice then do as instructed/logical.
+
+## When reporting bugs please specify
+
+- The OS's version,
+- The OS's language (incl region such as English/UK or English/USA),
+- Full path of your photo if the bug is related to reading or writing data,
+- Possibly upload the picture somewhere if not sensitive so I can test.
+
+## System Requirements
+
+- Windows 7+ is needed. The WebView2 installer runs along Setup. Should you need separately, it's available [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703) - the installer should take care of it tho'.
+- SQLite is running x86 but fwiw the app isn't really memory-hungry so it will do. Chances are if you're still on a 1st-gen Intel Core you're not on Windows 7. Hopefully.
+- You'll need an ArcGIS API key to use the map search functionality. Register for free [here](https://developers.arcgis.com/)
+- You'll need a geoNames username and password to use toponomy search. Register for free [here](https://www.geonames.org/)

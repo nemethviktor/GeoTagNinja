@@ -18,6 +18,7 @@ using CoenM.ExifToolLib;
 using geoTagNinja;
 using GeoTagNinja.Properties;
 using Microsoft.Web.WebView2.Core;
+using static System.Environment;
 
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 namespace GeoTagNinja;
@@ -34,7 +35,7 @@ public partial class FrmMainApp : Form
     #region Variables
 
     internal static string ResourcesFolderPath = Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "Resources");
-    internal static string UserDataFolderPath = Path.Combine(path1: Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationData), path2: "GeoTagNinja");
+    internal static string UserDataFolderPath = Path.Combine(path1: GetFolderPath(folder: SpecialFolder.ApplicationData), path2: "GeoTagNinja");
     internal const string DoubleQuote = "\"";
     internal static string LatCoordinate;
     internal static string LngCoordinate;
@@ -80,7 +81,7 @@ public partial class FrmMainApp : Form
 
         Encoding exifToolEncoding = Encoding.UTF8;
 
-        List<string> commonArgs = new List<string>();
+        List<string> commonArgs = new();
 
         string customExifToolConfigFile = @".ExifTool_config";
 
@@ -98,7 +99,7 @@ public partial class FrmMainApp : Form
         // load all settings
         try
         {
-            Directory.CreateDirectory(path: Path.Combine(path1: Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationData), path2: "GeoTagNinja"));
+            Directory.CreateDirectory(path: Path.Combine(path1: GetFolderPath(folder: SpecialFolder.ApplicationData), path2: "GeoTagNinja"));
             HelperStatic.DataCreateSQLiteDB();
         }
         catch (Exception ex)
@@ -314,7 +315,7 @@ public partial class FrmMainApp : Form
 
         if (valStartupFolder == null)
         {
-            valStartupFolder = Environment.GetFolderPath(folder: Environment.SpecialFolder.MyPictures);
+            valStartupFolder = GetFolderPath(folder: SpecialFolder.MyPictures);
         }
 
         if (valStartupFolder.EndsWith(value: "\\"))
@@ -616,32 +617,24 @@ public partial class FrmMainApp : Form
         HelperStatic.FsoCleanUpUserFolder();
 
         // force it otherwise it keeps a lock on for a few seconds.
-        AsyncExifTool.Dispose();
+        await AsyncExifTool.DisposeAsync();
     }
 
     /// <summary>
     ///     this is to deal with the icons in listview
     ///     from https://stackoverflow.com/a/37806517/3968494
     /// </summary>
-    static class NativeMethods
+    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming"), SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local"), SuppressMessage(category: "ReSharper", checkId: "IdentifierTypo"), SuppressMessage(category: "ReSharper", checkId: "StringLiteralTypo"), SuppressMessage(category: "ReSharper", checkId: "MemberCanBePrivate.Local"), SuppressMessage(category: "ReSharper", checkId: "FieldCanBeMadeReadOnly.Local")]
+    private static class NativeMethods
     {
         public const uint LVM_FIRST = 0x1000;
-        public const uint LVM_GETIMAGELIST = (LVM_FIRST + 2);
-        public const uint LVM_SETIMAGELIST = (LVM_FIRST + 3);
+        public const uint LVM_GETIMAGELIST = LVM_FIRST + 2;
+        public const uint LVM_SETIMAGELIST = LVM_FIRST + 3;
 
         public const uint LVSIL_NORMAL = 0;
         public const uint LVSIL_SMALL = 1;
         public const uint LVSIL_STATE = 2;
         public const uint LVSIL_GROUPHEADER = 3;
-
-        [DllImport("user32")]
-        public static extern IntPtr SendMessage(IntPtr hWnd,
-                                                uint msg,
-                                                uint wParam,
-                                                IntPtr lParam);
-
-        [DllImport("comctl32")]
-        public static extern bool ImageList_Destroy(IntPtr hImageList);
 
         public const uint SHGFI_DISPLAYNAME = 0x200;
         public const uint SHGFI_ICON = 0x100;
@@ -649,32 +642,41 @@ public partial class FrmMainApp : Form
         public const uint SHGFI_SMALLICON = 0x1;
         public const uint SHGFI_SYSICONINDEX = 0x4000;
 
+        [DllImport(dllName: "user32")]
+        public static extern IntPtr SendMessage(IntPtr hWnd,
+                                                uint msg,
+                                                uint wParam,
+                                                IntPtr lParam);
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct SHFILEINFOW
-        {
-            public IntPtr hIcon;
-            public int iIcon;
-            public uint dwAttributes;
+        [DllImport(dllName: "comctl32")]
+        public static extern bool ImageList_Destroy(IntPtr hImageList);
 
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260 * 2)]
-            public string szDisplayName;
-
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80 * 2)]
-            public string szTypeName;
-        }
-
-        [DllImport("shell32", CharSet = CharSet.Unicode)]
+        [DllImport(dllName: "shell32", CharSet = CharSet.Unicode)]
         public static extern IntPtr SHGetFileInfo(string pszPath,
                                                   uint dwFileAttributes,
                                                   ref SHFILEINFOW psfi,
                                                   uint cbSizeFileInfo,
                                                   uint uFlags);
 
-        [DllImport("uxtheme", CharSet = CharSet.Unicode)]
+        [DllImport(dllName: "uxtheme", CharSet = CharSet.Unicode)]
         public static extern int SetWindowTheme(IntPtr hWnd,
                                                 string pszSubAppName,
                                                 string pszSubIdList);
+
+
+        [StructLayout(layoutKind: LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct SHFILEINFOW
+        {
+            public IntPtr hIcon;
+            public int iIcon;
+            public uint dwAttributes;
+
+            [MarshalAs(unmanagedType: UnmanagedType.ByValTStr, SizeConst = 260 * 2)]
+            public string szDisplayName;
+
+            [MarshalAs(unmanagedType: UnmanagedType.ByValTStr, SizeConst = 80 * 2)]
+            public string szTypeName;
+        }
 
 
         [StructLayout(layoutKind: LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -689,7 +691,7 @@ public partial class FrmMainApp : Form
 
             [MarshalAs(unmanagedType: UnmanagedType.ByValTStr, SizeConst = 80 * 2)]
             public readonly string szTypeName;
-    }
+        }
     }
 
     #endregion
@@ -895,7 +897,7 @@ public partial class FrmMainApp : Form
 
     #region Map Stuff
 
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     public class MapGpsCoordinates
     {
         public double lat { get; set; } // note to self: don't allow ReSharper to rename these.
@@ -919,11 +921,11 @@ public partial class FrmMainApp : Form
         string jsonString = e.WebMessageAsJson;
 
         MapGpsCoordinates mapGpsCoordinates =
-            System.Text.Json.JsonSerializer.Deserialize<MapGpsCoordinates>(json: jsonString);
-        string strLat = $"{mapGpsCoordinates?.lat}".ToString(CultureInfo.InvariantCulture);
-        string strLng = $"{mapGpsCoordinates?.lng}".ToString(CultureInfo.InvariantCulture);
-        double.TryParse(strLat, NumberStyles.Any, CultureInfo.InvariantCulture, out double dblLat); // trust me i hate this f...king culture thing as much as possible...
-        double.TryParse(strLng, NumberStyles.Any, CultureInfo.InvariantCulture, out double dblLng); // trust me i hate this f...king culture thing as much as possible...
+            JsonSerializer.Deserialize<MapGpsCoordinates>(json: jsonString);
+        string strLat = $"{mapGpsCoordinates?.lat}".ToString(provider: CultureInfo.InvariantCulture);
+        string strLng = $"{mapGpsCoordinates?.lng}".ToString(provider: CultureInfo.InvariantCulture);
+        double.TryParse(s: strLat, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dblLat); // trust me i hate this f...king culture thing as much as possible...
+        double.TryParse(s: strLng, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dblLng); // trust me i hate this f...king culture thing as much as possible...
         // if the user zooms out too much they can encounter an "unreal" coordinate.
 
         if (dblLng < -180)
@@ -936,9 +938,9 @@ public partial class FrmMainApp : Form
         }
 
         tbx_lat.Text = Math.Round(value: dblLat, digits: 6)
-            .ToString(CultureInfo.InvariantCulture);
+            .ToString(provider: CultureInfo.InvariantCulture);
         tbx_lng.Text = Math.Round(value: dblLng, digits: 6)
-            .ToString(CultureInfo.InvariantCulture);
+            .ToString(provider: CultureInfo.InvariantCulture);
     }
 
     /// <summary>
@@ -1191,6 +1193,11 @@ public partial class FrmMainApp : Form
 
     #region File
 
+    /// <summary>
+    ///     Handles the tmi_File_SaveAll_Click event -> triggers the file-save process
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
     private async void tmi_File_SaveAll_Click(object sender,
                                               EventArgs e)
     {
@@ -1256,11 +1263,6 @@ public partial class FrmMainApp : Form
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    /// <summary>
-    ///     Handles the tmi_File_SaveAll_Click event -> triggers the file-save process
-    /// </summary>
-    /// <param name="sender">Unused</param>
-    /// <param name="e">Unused</param>
     private void tmi_File_ImportGPX_Click(object sender,
                                           EventArgs e)
     {
@@ -1359,6 +1361,10 @@ public partial class FrmMainApp : Form
                 {
                     MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInvalidFolder") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
                 }
+            }
+            else if (tbx_FolderName.Text == SpecialFolder.MyComputer.ToString())
+            {
+                lvwFileList_LoadOrUpdate();
             }
             else
             {
@@ -1479,8 +1485,8 @@ public partial class FrmMainApp : Form
         await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
         if (HelperStatic.s_changeFolderIsOkay)
         {
-            string? tmpStrParent;
-            string? tmpStrRoot;
+            string? tmpStrParent = null;
+            string? tmpStrRoot = null;
             // this is a bit derp but alas
             if (tbx_FolderName.Text.EndsWith(value: "\\"))
             {
@@ -1502,13 +1508,9 @@ public partial class FrmMainApp : Form
                 );
                 tbx_FolderName.Text = HelperStatic.GenericCoalesce(tmpStrParent, tmpStrRoot);
             }
-            else
-            {
-                tbx_FolderName.Text = Directory.GetParent(path: tbx_FolderName.Text)
-                    .ToString();
-            }
 
             Application.DoEvents();
+            FolderName = tbx_FolderName.Text;
             btn_ts_Refresh_lvwFileList_Click(sender: this, e: new EventArgs());
         }
     }
@@ -1569,7 +1571,7 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    /// This handles the event when the user clicks into the textbox -> current value gets selected.
+    ///     This handles the event when the user clicks into the textbox -> current value gets selected.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -1608,8 +1610,9 @@ public partial class FrmMainApp : Form
         List<string> listOfAysncCompatibleItems = new();
         List<string> listOfAysncIncompatibleItems = new();
         List<string> listOfNonUtf8Items = new();
+        lvw_FileList.Items.Clear();
 
-        // this shoudn't really happen but just in case
+        // this shouldn't really happen but just in case
         if (FolderName is null)
         {
             if (Directory.Exists(path: tbx_FolderName.Text))
@@ -1624,115 +1627,151 @@ public partial class FrmMainApp : Form
             FolderName = tbx_FolderName.Text;
         }
 
-        // list folders and stick them at the beginning of the listview
-        List<string> dirs = Directory
-            .GetDirectories(path: FolderName)
-            .ToList();
-
-        string[] allowedExtensions = new string[AncillaryListsArrays.AllCompatibleExtensions()
-            .Length];
-        Array.Copy(sourceArray: allowedExtensions, destinationArray: AncillaryListsArrays.AllCompatibleExtensions(), length: 0);
-        for (int i = 0; i < allowedExtensions.Length; i++)
+        // check for drives
+        if (FolderName == SpecialFolder.MyComputer.ToString())
         {
-            allowedExtensions[i] = AncillaryListsArrays.AllCompatibleExtensions()[i]
-                .Split('\t')
-                .First();
-        }
-
-        // list files that have whitelisted extensions
-        List<string> files = Directory
-            .GetFiles(path: FolderName)
-            .Where(predicate: file => allowedExtensions.Any(predicate: file.ToLower()
-                                                                .EndsWith))
-            .ToList();
-
-        files = files.OrderBy(keySelector: o => o)
-            .ToList();
-
-        // add a parent folder. "dot dot"
-        try
-        {
-            string tmpStrParent = HelperStatic.FsoGetParent(path: tbx_FolderName.Text);
-            if (tmpStrParent != null)
+            foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
-                lvw_FileList.Items.Add((".."));
+                lvw_FileList_addListItem(fileName: drive.Name);
             }
         }
-        catch
+        else
         {
-            // ignored
-        }
-
-        foreach (string currentDir in dirs)
-        {
-            lvw_FileList_addListItem(fileName: Path.GetFileName(path: currentDir));
-        }
-
-        foreach (string currentFile in files)
-        {
-            string fileNameToTest = Path.Combine(currentFile);
-            lvw_FileList_addListItem(fileName: Path.GetFileName(path: currentFile));
-
-            // the add-in used here can't process nonstandard characters in filenames w/o an args file, which doesn't return what we're after.
-            // so for 'standard' stuff we'll run async and for everything else we'll do it slower but more compatible
-
-            if (Regex.IsMatch(input: fileNameToTest, pattern: @"^[a-zA-Z0-9.:\\_ ]*$"))
+            // list folders and stick them at the beginning of the listview
+            // ReparsePoint means these are links. 
+            List<string> dirs = new();
+            try
             {
-                listOfAysncCompatibleItems.Add(item: Path.GetFileName(path: currentFile));
-            }
-            else
-            {
-                listOfAysncIncompatibleItems.Add(item: Path.GetFileName(path: currentFile));
-            }
-        }
-
-        if (listOfAysncCompatibleItems.Count > 0)
-        {
-            HelperStatic.folderEnterLastEpoch = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            await HelperStatic.ExifGetExifFromFilesCompatibleFileNames(files: listOfAysncCompatibleItems, folderEnterEpoch: HelperStatic.folderEnterLastEpoch);
-        }
-
-        if (listOfAysncIncompatibleItems.Count > 0)
-        {
-            string dontShowIncompatibleFileWarningAgainInSql = HelperStatic.DataReadSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "generic",
-                settingId: "dontShowIncompatibleFileWarningAgain"
-            );
-            if (dontShowIncompatibleFileWarningAgainInSql != "true")
-            {
-                DialogResult dontShowIncompatibleFileWarningAgain = MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_QuestionDontShowIncompatibleFileWarningAgain"),
-                                                                                    caption: "Nonstandard paths", buttons: MessageBoxButtons.OKCancel, icon: MessageBoxIcon.Warning);
-                if (dontShowIncompatibleFileWarningAgain == DialogResult.Cancel)
+                DirectoryInfo di = new(path: FolderName);
+                foreach (DirectoryInfo sub in di.GetDirectories())
                 {
-                    HelperStatic.DataWriteSQLiteSettings(
-                        tableName: "settings",
-                        settingTabPage: "generic",
-                        settingId: "dontShowIncompatibleFileWarningAgain",
-                        settingValue: "true"
-                    );
+                    if (sub.Attributes.ToString()
+                            .Contains(value: "Directory") &&
+                        !sub.Attributes.ToString()
+                            .Contains(value: "ReparsePoint"))
+                    {
+                        dirs.Add(item: sub.Name);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(text: ex.Message);
+            }
+
+            string[] allowedExtensions = new string[AncillaryListsArrays.AllCompatibleExtensions()
+                .Length];
+            Array.Copy(sourceArray: allowedExtensions, destinationArray: AncillaryListsArrays.AllCompatibleExtensions(), length: 0);
+            for (int i = 0; i < allowedExtensions.Length; i++)
+            {
+                allowedExtensions[i] = AncillaryListsArrays.AllCompatibleExtensions()[i]
+                    .Split('\t')
+                    .First();
+            }
+
+            // list files that have whitelisted extensions
+            List<string> files = new();
+            try
+            {
+                files = Directory
+                    .GetFiles(path: FolderName)
+                    .Where(predicate: file => allowedExtensions.Any(predicate: file.ToLower()
+                                                                        .EndsWith))
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(text: ex.Message);
+            }
+
+            files = files.OrderBy(keySelector: o => o)
+                .ToList();
+
+            // add a parent folder. "dot dot"
+            try
+            {
+                string tmpStrParent = HelperStatic.FsoGetParent(path: tbx_FolderName.Text);
+                if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
+                {
+                    lvw_FileList.Items.Add(text: "..");
+                }
+            }
+            catch
+            {
+                // ignored
+            }
+
+            foreach (string currentDir in dirs)
+            {
+                lvw_FileList_addListItem(fileName: Path.GetFileName(path: currentDir));
+            }
+
+            foreach (string currentFile in files)
+            {
+                string fileNameToTest = Path.Combine(currentFile);
+                lvw_FileList_addListItem(fileName: Path.GetFileName(path: currentFile));
+
+                // the add-in used here can't process nonstandard characters in filenames w/o an args file, which doesn't return what we're after.
+                // so for 'standard' stuff we'll run async and for everything else we'll do it slower but more compatible
+
+                if (Regex.IsMatch(input: fileNameToTest, pattern: @"^[a-zA-Z0-9.:\\_ ]*$"))
+                {
+                    listOfAysncCompatibleItems.Add(item: Path.GetFileName(path: currentFile));
+                }
+                else
+                {
+                    listOfAysncIncompatibleItems.Add(item: Path.GetFileName(path: currentFile));
                 }
             }
 
-            HelperStatic.folderEnterLastEpoch = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            await HelperStatic.ExifGetExifFromFilesIncompatibleFileNames(files: listOfAysncIncompatibleItems, folderEnterEpoch: HelperStatic.folderEnterLastEpoch);
-        }
-
-        int filesWithGeoData = 0;
-        foreach (ListViewItem lvi in lvw_FileList.Items)
-        {
-            if (lvi.SubItems.Count > 1)
+            if (listOfAysncCompatibleItems.Count > 0)
             {
-                if (lvi.SubItems[index: 1]
-                        .Text !=
-                    "-")
+                HelperStatic.folderEnterLastEpoch = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                await HelperStatic.ExifGetExifFromFilesCompatibleFileNames(files: listOfAysncCompatibleItems, folderEnterEpoch: HelperStatic.folderEnterLastEpoch);
+            }
+
+            if (listOfAysncIncompatibleItems.Count > 0)
+            {
+                string dontShowIncompatibleFileWarningAgainInSql = HelperStatic.DataReadSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: "generic",
+                    settingId: "dontShowIncompatibleFileWarningAgain"
+                );
+                if (dontShowIncompatibleFileWarningAgainInSql != "true")
                 {
-                    filesWithGeoData++;
+                    DialogResult dontShowIncompatibleFileWarningAgain = MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_QuestionDontShowIncompatibleFileWarningAgain"),
+                                                                                        caption: "Nonstandard paths", buttons: MessageBoxButtons.OKCancel, icon: MessageBoxIcon.Warning);
+                    if (dontShowIncompatibleFileWarningAgain == DialogResult.Cancel)
+                    {
+                        HelperStatic.DataWriteSQLiteSettings(
+                            tableName: "settings",
+                            settingTabPage: "generic",
+                            settingId: "dontShowIncompatibleFileWarningAgain",
+                            settingValue: "true"
+                        );
+                    }
+                }
+
+                HelperStatic.folderEnterLastEpoch = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                await HelperStatic.ExifGetExifFromFilesIncompatibleFileNames(files: listOfAysncIncompatibleItems, folderEnterEpoch: HelperStatic.folderEnterLastEpoch);
+            }
+
+            int filesWithGeoData = 0;
+            foreach (ListViewItem lvi in lvw_FileList.Items)
+            {
+                if (lvi.SubItems.Count > 1)
+                {
+                    if (lvi.SubItems[index: 1]
+                            .Text !=
+                        "-")
+                    {
+                        filesWithGeoData++;
+                    }
                 }
             }
-        }
 
-        HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Ready. Files: Total: " + files.Count + " Geodata: " + filesWithGeoData);
+            HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Ready. Files: Total: " + files.Count + " Geodata: " + filesWithGeoData);
+        }
     }
 
     /// <summary>
@@ -1749,20 +1788,35 @@ public partial class FrmMainApp : Form
 
         if (item != null)
         {
+            bool isDrive = HelperStatic.LvwItemIsDrive(lvwFileListItem: item);
             // if .. (parent) then do a folder-up
             if (item.Text == "..")
             {
-                btn_OneFolderUp_Click(sender, e: EventArgs.Empty);
+                btn_OneFolderUp_Click(sender: sender, e: EventArgs.Empty);
             }
-            // if this is a folder, enter
-            else if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
+            // if this is a folder or drive, enter
+            else if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)) || isDrive)
             {
                 // check for outstanding files first and save if user wants
                 HelperStatic.s_changeFolderIsOkay = false;
                 await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
                 if (HelperStatic.s_changeFolderIsOkay)
                 {
-                    tbx_FolderName.Text = Path.Combine(path1: tbx_FolderName.Text, path2: item.Text);
+                    if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
+                    {
+                        tbx_FolderName.Text = Path.Combine(path1: tbx_FolderName.Text, path2: item.Text);
+                    }
+                    else
+                    {
+                        // item.Text here will be something like "C_Windows_320GB_M2_nVME (C:\)"
+                        // so just extract whatever is in the parentheses
+                        tbx_FolderName.Text = item.Text.Split('(')
+                                                  .Last()
+                                                  .Split(')')
+                                                  .First() +
+                                              @"\";
+                    }
+
                     btn_ts_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
                 }
             }
@@ -1883,43 +1937,33 @@ public partial class FrmMainApp : Form
             btn_OneFolderUp_Click(sender: sender, e: EventArgs.Empty);
         }
 
-        // Enter  -> enter if folder
+        // Enter  -> enter if folder / drive
         else if (e.KeyCode == Keys.Enter)
         {
-            string folderToEnter = lvw_FileList.SelectedItems[index: 0]
-                .Text;
-            // if .. (parent) then do a folder-up
-            if (folderToEnter == "..")
+            if (lvw_FileList.SelectedItems.Count == 1)
             {
-                btn_OneFolderUp_Click(sender, e: EventArgs.Empty);
-            }
-            // if this is a folder, enter
-            else if (Directory.Exists(path: Path.Combine(path1: FolderName, path2: folderToEnter)))
-            {
-                folderToEnter = Path.Combine(path1: FolderName, path2: folderToEnter);
-                HelperStatic.s_changeFolderIsOkay = false;
-                await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-                if (HelperStatic.s_changeFolderIsOkay)
-                {
-                    if (!folderToEnter.EndsWith(value: "\\"))
-                    {
-                        tbx_FolderName.Text = folderToEnter + "\\";
-                    }
-                    else
-                    {
-                        tbx_FolderName.Text = folderToEnter;
-                    }
+                ListViewItem item = lvw_FileList.SelectedItems[index: 0];
+                string folderToEnter = item.Text;
 
-                    try
+                // if .. (parent) then do a folder-up
+                if (folderToEnter == "..")
+                {
+                    btn_OneFolderUp_Click(sender: sender, e: EventArgs.Empty);
+                }
+                // if this is a folder or drive, enter
+                else if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
+                {
+                    // check for outstanding files first and save if user wants
+                    HelperStatic.s_changeFolderIsOkay = false;
+                    await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
+                    if (HelperStatic.s_changeFolderIsOkay)
                     {
-                        lvw_FileList.Items.Clear();
-                        HelperStatic.FsoCleanUpUserFolder();
-                        FolderName = tbx_FolderName.Text;
-                        lvwFileList_LoadOrUpdate();
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInvalidFolder"), caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                        if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
+                        {
+                            tbx_FolderName.Text = Path.Combine(path1: tbx_FolderName.Text, path2: item.Text);
+                        }
+
+                        btn_ts_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
                     }
                 }
             }
@@ -1958,37 +2002,50 @@ public partial class FrmMainApp : Form
 
         //https://stackoverflow.com/a/37806517/3968494
         NativeMethods.SHFILEINFOW shfi = new();
-        IntPtr hSysImgList = NativeMethods.SHGetFileInfo("",
-                                                         0,
-                                                         ref shfi,
-                                                         (uint)Marshal.SizeOf(shfi),
-                                                         NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
-        Debug.Assert(hSysImgList != IntPtr.Zero); // cross our fingers and hope to succeed!
+        IntPtr hSysImgList = NativeMethods.SHGetFileInfo(pszPath: "",
+                                                         dwFileAttributes: 0,
+                                                         psfi: ref shfi,
+                                                         cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
+                                                         uFlags: NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
+        Debug.Assert(condition: hSysImgList != IntPtr.Zero); // cross our fingers and hope to succeed!
 
         // Set the ListView control to use that image list.
-        IntPtr hOldImgList = NativeMethods.SendMessage(lvw_FileList.Handle,
-                                                       NativeMethods.LVM_SETIMAGELIST,
-                                                       NativeMethods.LVSIL_SMALL,
-                                                       hSysImgList);
+        IntPtr hOldImgList = NativeMethods.SendMessage(hWnd: lvw_FileList.Handle,
+                                                       msg: NativeMethods.LVM_SETIMAGELIST,
+                                                       wParam: NativeMethods.LVSIL_SMALL,
+                                                       lParam: hSysImgList);
 
         // If the ListView control already had an image list, delete the old one.
         if (hOldImgList != IntPtr.Zero)
         {
-            NativeMethods.ImageList_Destroy(hOldImgList);
+            NativeMethods.ImageList_Destroy(hImageList: hOldImgList);
         }
 
         // Set up the ListView control's basic properties.
         // Set its theme so it will look like the one used by Explorer.
-        NativeMethods.SetWindowTheme(lvw_FileList.Handle, "Explorer", null);
+        NativeMethods.SetWindowTheme(hWnd: lvw_FileList.Handle, pszSubAppName: "Explorer", pszSubIdList: null);
 
         // Get the items from the file system, and add each of them to the ListView,
         // complete with their corresponding name and icon indices.
-        IntPtr himl = NativeMethods.SHGetFileInfo(Path.Combine(tbx_FolderName.Text, fileName),
-                                                  0,
-                                                  ref shfi,
-                                                  (uint)Marshal.SizeOf(shfi),
-                                                  NativeMethods.SHGFI_DISPLAYNAME | NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
-        Debug.Assert(himl == hSysImgList); // should be the same imagelist as the one we set
+        IntPtr himl;
+        if (tbx_FolderName.Text != SpecialFolder.MyComputer.ToString())
+        {
+            himl = NativeMethods.SHGetFileInfo(pszPath: Path.Combine(path1: tbx_FolderName.Text, path2: fileName),
+                                               dwFileAttributes: 0,
+                                               psfi: ref shfi,
+                                               cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
+                                               uFlags: NativeMethods.SHGFI_DISPLAYNAME | NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
+        }
+        else
+        {
+            himl = NativeMethods.SHGetFileInfo(pszPath: fileName,
+                                               dwFileAttributes: 0,
+                                               psfi: ref shfi,
+                                               cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
+                                               uFlags: NativeMethods.SHGFI_DISPLAYNAME | NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
+        }
+
+        //Debug.Assert(himl == hSysImgList); // should be the same imagelist as the one we set
 
         #endregion
 
@@ -2017,7 +2074,7 @@ public partial class FrmMainApp : Form
 
         // With that in mind if we're missing the extension then we'll force it back on.
         string fileExtension = Path.GetExtension(path: Path.Combine(path1: FolderName, path2: fileName));
-        if (fileExtension != null && fileExtension != "")
+        if (!string.IsNullOrEmpty(value: fileExtension))
         {
             if (shfi.szDisplayName.Contains(value: fileExtension))
             {
@@ -2030,24 +2087,9 @@ public partial class FrmMainApp : Form
         }
         else
         {
-            // problem here is that assume: my "Pictures" folder is _really_ called "DigiPics". shfi.szDisplayName = "Pictures" but that doesn't _really_ exist, which would cause a break later.
-            // this hopefully sorts it.
-            bool isSpecialFolder = false;
-            DirectoryInfo directoryInfo = new DirectoryInfo(Path.Combine(tbx_FolderName.Text, fileName));
-
-            foreach (Environment.SpecialFolder specialFolder in Enum.GetValues(typeof(Environment.SpecialFolder)))
-            {
-                if (directoryInfo.FullName.ToString()
-                        .ToLower() ==
-                    Environment.GetFolderPath(specialFolder)
-                        .ToLower())
-                {
-                    isSpecialFolder = true;
-                    break;
-                }
-            }
-
-            if (isSpecialFolder)
+            // this should prevent showing silly string values for special folders (like if your Pictures folder has been moved to say Digi, it'd have shown "Digi" but since that doesn't exist per se it'd have caused an error.
+            // same for non-English places. E.g. "Documents and Settings" in HU would be displayed as "Felhasználók" but that folder is still actually called Documents and Settings, but the label is "fake".
+            if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: fileName)))
             {
                 lvi.Text = fileName;
             }
@@ -2098,7 +2140,7 @@ public partial class FrmMainApp : Form
     ///     the assigned colour.
     /// </summary>
     /// <param name="lvw">The listView Control that needs updating. Most likely the one in the main Form</param>
-    /// <param name="item">The particular listViewItem that needs updating</param>
+    /// <param name="item">The particular ListViewItem that needs updating</param>
     /// <param name="color">Parameter to assign a particular colour (prob red or black) to the whole row</param>
     internal static void HandlerUpdateItemColour(ListView lvw,
                                                  string item,
@@ -2210,8 +2252,8 @@ public static class ControlExtensions
     public static void DoubleBuffered(this Control control,
                                       bool enable)
     {
-        var doubleBufferPropertyInfo = control.GetType()
-            .GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
-        doubleBufferPropertyInfo.SetValue(control, enable, null);
+        PropertyInfo doubleBufferPropertyInfo = control.GetType()
+            .GetProperty(name: "DoubleBuffered", bindingAttr: BindingFlags.Instance | BindingFlags.NonPublic);
+        doubleBufferPropertyInfo.SetValue(obj: control, value: enable, index: null);
     }
 }

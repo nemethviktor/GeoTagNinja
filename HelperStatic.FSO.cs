@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Environment;
 
 namespace GeoTagNinja;
 
@@ -18,7 +19,11 @@ internal static partial class HelperStatic
     {
         DirectoryInfo dir = new(path: path);
         string parentName;
-        if (dir.Parent == null)
+        if (dir.ToString() == Path.GetPathRoot(dir.ToString()))
+        {
+            parentName = SpecialFolder.MyComputer.ToString();
+        }
+        else if (dir.Parent == null)
         {
             parentName = null;
         }
