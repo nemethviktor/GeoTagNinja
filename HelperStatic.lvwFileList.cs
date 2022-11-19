@@ -209,9 +209,8 @@ internal static partial class HelperStatic
                 // leave as-is (most likely the last photo)
             }
 
-            // don't do anything
             // don't try and create an preview img unless it's the last file
-            if (FrmMainAppInstance.lvw_FileList.FocusedItem != null)
+            if (FrmMainAppInstance.lvw_FileList.FocusedItem != null && lvw_FileListItem.Text != null)
             {
                 if (FrmMainAppInstance.lvw_FileList.FocusedItem.Text == lvw_FileListItem.Text ||
                     FrmMainAppInstance.lvw_FileList.SelectedItems[index: 0]

@@ -1,5 +1,5 @@
 ﻿# GeoTagNinja Changelog
-v0.6.83XX [2022XXXX]
+v0.6.8358 [20221119]
 - Finally managed to get hold of ReSharper so the code has been refactored in totality. Famous last words but it shouldn't affect usage.
 - Added a ".." to the main grid (listView) where applicable (parent folder).
 - Added the capability to navigate to the top of the folder structure. (e.g. MyComputer and then list the drives.)
@@ -7,6 +7,7 @@ v0.6.83XX [2022XXXX]
 - Bugfixes:
 -- If a user's "Pictures" (or any other "Special") folder had been moved and renamed the could would break because Windows treats special folders in odd ways. (e.g. if the Pics folder is called "Pics" Windows would still show "Pictures", which doesn't per se exist.)
 -- If the user had chosen "Delete All GPS Data" and subsequently added GPS data the addition would not have gone through upon save. This is now fixed.
+-- Rewrote the logic of (re)creating sidecar XMP files as the original logic would pull data from the RAW file (only), possibly overwriting Adobe-specific stuff that had been stored in an already-existing XMP.
 
 v0.6.8350 [20221111]
 - NEW FEATURE: (experimental for now) -> sync/import GPS Track Files.

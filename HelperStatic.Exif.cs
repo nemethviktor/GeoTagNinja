@@ -1292,11 +1292,12 @@ internal static partial class HelperStatic
         FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         // if user switches folder in the process of writing this will keep it standard
+        Debug.Assert(FrmMainAppInstance != null, nameof(FrmMainAppInstance) + " != null");
         string folderNameToWrite = FrmMainAppInstance.tbx_FolderName.Text;
         File.Delete(path: argsFile);
 
         bool writeXMLTags = false;
-        bool writeXMLSideCar = false;
+        bool writeXMPSideCar = false;
         bool overwriteOriginal = false;
 
         // get tag names
@@ -1319,6 +1320,7 @@ internal static partial class HelperStatic
             exifArgs += Path.Combine(path1: folderNameToWrite, path2: fileName) + Environment.NewLine; //needs to include folder name
             exifArgs += "-ignoreMinorErrors" + Environment.NewLine;
             exifArgs += "-progress" + Environment.NewLine;
+            string exifArgsForSidecar = "";
 
             DataView dv_FileWriteQueue = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
             dv_FileWriteQueue.RowFilter = "filePath = '" + fileName + "'";
@@ -1339,7 +1341,7 @@ internal static partial class HelperStatic
 
                 writeXMLTags = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_AddXMPIntoFile"));
                 ;
-                writeXMLSideCar = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_AddXMPSideCar"));
+                writeXMPSideCar = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_AddXMPSideCar"));
                 ;
                 overwriteOriginal = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_OverwriteOriginal"));
 
@@ -1364,12 +1366,14 @@ internal static partial class HelperStatic
                     if (deleteAllGPSData && !deleteTagAlreadyAdded)
                     {
                         exifArgs += "-gps*=" + Environment.NewLine;
+                        exifArgsForSidecar += "-gps*=" + Environment.NewLine;
                         tagsToDelete.Add(item: "gps*");
 
                         // this is moved up/in here because the deletion of all gps has to come before just about anything else in case user wants to add (rather than delete) in more tags (later).
                         if (writeXMLTags)
                         {
                             exifArgs += "-xmp:gps*=" + Environment.NewLine;
+                            exifArgsForSidecar += "-xmp:gps*=" + Environment.NewLine;
                         }
 
                         deleteTagAlreadyAdded = true;
@@ -1386,16 +1390,19 @@ internal static partial class HelperStatic
                         if (updateExifVal != "")
                         {
                             exifArgs += "-" + exiftoolTagName + "=" + updateExifVal + Environment.NewLine;
+                            exifArgsForSidecar += "-" + exiftoolTagName + "=" + updateExifVal + Environment.NewLine;
                             //if lat/long then add Ref. 
                             if (exiftoolTagName == "GPSLatitude" || exiftoolTagName == "GPSDestLatitude")
                             {
                                 if (updateExifVal.Substring(startIndex: 0, length: 1) == "-")
                                 {
                                     exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "South" + Environment.NewLine;
+                                    exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "South" + Environment.NewLine;
                                 }
                                 else
                                 {
                                     exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "North" + Environment.NewLine;
+                                    exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "North" + Environment.NewLine;
                                 }
                             }
                             else if (exiftoolTagName == "GPSLongitude" || exiftoolTagName == "GPSDestLongitude")
@@ -1403,16 +1410,19 @@ internal static partial class HelperStatic
                                 if (updateExifVal.Substring(startIndex: 0, length: 1) == "-")
                                 {
                                     exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "West" + Environment.NewLine;
+                                    exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "West" + Environment.NewLine;
                                 }
                                 else
                                 {
                                     exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "East" + Environment.NewLine;
+                                    exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "East" + Environment.NewLine;
                                 }
                             }
                         }
                         else //delete tag
                         {
                             exifArgs += "-" + exiftoolTagName + "=" + Environment.NewLine;
+                            exifArgsForSidecar += "-" + exiftoolTagName + "=" + Environment.NewLine;
                             tagsToDelete.Add(item: exiftoolTagName);
                         }
                     }
@@ -1431,16 +1441,19 @@ internal static partial class HelperStatic
                             if (updateExifVal != "")
                             {
                                 exifArgs += "-" + exiftoolTagName + "=" + updateExifVal + Environment.NewLine;
+                                exifArgsForSidecar += "-" + exiftoolTagName + "=" + updateExifVal + Environment.NewLine;
                                 //if lat/long then add Ref. 
                                 if (exiftoolTagName == "exif:GPSLatitude" || exiftoolTagName == "exif:GPSDestLatitude")
                                 {
                                     if (updateExifVal.Substring(startIndex: 0, length: 1) == "-")
                                     {
                                         exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "South" + Environment.NewLine;
+                                        exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "South" + Environment.NewLine;
                                     }
                                     else
                                     {
                                         exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "North" + Environment.NewLine;
+                                        exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "North" + Environment.NewLine;
                                     }
                                 }
                                 else if (exiftoolTagName == "exif:GPSLongitude" || exiftoolTagName == "exif:GPSDestLongitude")
@@ -1448,10 +1461,12 @@ internal static partial class HelperStatic
                                     if (updateExifVal.Substring(startIndex: 0, length: 1) == "-")
                                     {
                                         exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "West" + Environment.NewLine;
+                                        exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "West" + Environment.NewLine;
                                     }
                                     else
                                     {
                                         exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "East" + Environment.NewLine;
+                                        exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "East" + Environment.NewLine;
                                     }
                                 }
                             }
@@ -1464,6 +1479,7 @@ internal static partial class HelperStatic
                                 if (exiftoolTagName == "GPSLatitude" || exiftoolTagName == "GPSDestLatitude" || exiftoolTagName == "GPSLongitude" || exiftoolTagName == "GPSDestLongitude")
                                 {
                                     exifArgs += "-" + exiftoolTagName + "Ref" + "=" + Environment.NewLine;
+                                    exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + Environment.NewLine;
                                     tagsToDelete.Add(item: exiftoolTagName + "Ref");
                                 }
                             }
@@ -1477,21 +1493,37 @@ internal static partial class HelperStatic
                 }
 
                 exifArgs += "-iptc:codedcharacterset=utf8" + Environment.NewLine;
+                exifArgsForSidecar += "-iptc:codedcharacterset=utf8" + Environment.NewLine;
             }
 
             exifArgs += "-execute" + Environment.NewLine;
             // sidecar copying needs to be in a separate batch, as technically it's a different file
-            if (writeXMLSideCar)
+            if (writeXMPSideCar)
             {
+                string xmpFileLocation = "";
                 exifArgs += Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileName)) + ".xmp") + Environment.NewLine; //needs to include folder name
                 exifArgs += "-progress" + Environment.NewLine;
                 exifArgs += "-ignoreMinorErrors" + Environment.NewLine;
-                // problem here is that tagsfromFile only ADDS tags but doesn't REMOVE anything.
-                exifArgs += "-tagsfromfile=" + Path.Combine(path1: folderNameToWrite, path2: fileName) + Environment.NewLine;
+
+                // logic: if there is an XMP already then use that as base... (this is needed because if an old RAW file has Adobe-modifications but the XMP doesn't, then it'd overwrite everything
+                if (File.Exists(Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileName)) + ".xmp")))
+                {
+                    xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileName)) + ".xmp");
+                }
+                else
+                {
+                    // otherwise create a new one. 
+                    xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: fileName);
+                }
+
+                exifArgs += "-tagsfromfile=" + xmpFileLocation + Environment.NewLine;
+                // force-rewrite new/updated tags
                 foreach (string tagToDelete in tagsToDelete)
                 {
                     exifArgs += "-" + tagToDelete + "=" + Environment.NewLine;
                 }
+
+                exifArgs += exifArgsForSidecar;
 
                 if (overwriteOriginal)
                 {
