@@ -235,7 +235,7 @@ internal static partial class HelperStatic
                         }
                         else
                         {
-                            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorFileGoneMissing" + fileNameWithPath), caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorFileGoneMissing") + fileNameWithPath, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
                         }
                     }
                 }
@@ -244,7 +244,7 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    /// Checks if a ListViewItem is a drive (e.g. C:\) or not
+    ///     Checks if a ListViewItem is a drive (e.g. C:\) or not
     /// </summary>
     /// <param name="lvwFileListItem">The ListViewItem to check</param>
     /// <returns></returns>
