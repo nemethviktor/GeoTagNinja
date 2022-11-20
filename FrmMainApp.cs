@@ -922,8 +922,8 @@ public partial class FrmMainApp : Form
 
         MapGpsCoordinates mapGpsCoordinates =
             JsonSerializer.Deserialize<MapGpsCoordinates>(json: jsonString);
-        string strLat = $"{mapGpsCoordinates?.lat}".ToString(provider: CultureInfo.InvariantCulture);
-        string strLng = $"{mapGpsCoordinates?.lng}".ToString(provider: CultureInfo.InvariantCulture);
+        string strLat = mapGpsCoordinates?.lat.ToString(provider: CultureInfo.InvariantCulture);
+        string strLng = mapGpsCoordinates?.lng.ToString(provider: CultureInfo.InvariantCulture);
         double.TryParse(s: strLat, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dblLat); // trust me i hate this f...king culture thing as much as possible...
         double.TryParse(s: strLng, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dblLng); // trust me i hate this f...king culture thing as much as possible...
         // if the user zooms out too much they can encounter an "unreal" coordinate.
@@ -2235,6 +2235,17 @@ public partial class FrmMainApp : Form
         splitContainerLeftBottom.Panel1.Top = 0;
         pbx_imagePreview.Top = 0;
         pbx_imagePreview.Height = splitContainerLeftBottom.Panel1.Height - 2;
+    }
+
+    /// <summary>
+    ///     This is a dummy. It's here to help me find where things go wrong when clicked on the map. Doesn't do anything.
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void wbv_MapArea_Click(object sender,
+                                   EventArgs e)
+    {
+        // note to self: the one you're looking for is called wbv_MapArea_WebMessageReceived
     }
 
     #endregion
