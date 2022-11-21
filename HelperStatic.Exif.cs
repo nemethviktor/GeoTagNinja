@@ -1316,9 +1316,9 @@ internal static partial class HelperStatic
 
         FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
-        if (File.Exists(path: fileName))
+        if (File.Exists(path: Path.Combine(path1: FrmMainAppInstance.tbx_FolderName.Text, path2: fileName)))
         {
-            File.AppendAllText(path: argsFile, contents: fileName + Environment.NewLine, encoding: Encoding.UTF8);
+            File.AppendAllText(path: argsFile, contents: Path.Combine(path1: FrmMainAppInstance.tbx_FolderName.Text, path2: fileName) + Environment.NewLine, encoding: Encoding.UTF8);
             File.AppendAllText(path: argsFile, contents: "-execute" + Environment.NewLine);
         }
 

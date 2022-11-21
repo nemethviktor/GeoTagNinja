@@ -202,6 +202,12 @@
     <Compile Include="FrmImportGpx.Designer.cs">
       <DependentUpon>FrmImportGpx.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmPasteWhat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmPasteWhat.Designer.cs">
+      <DependentUpon>FrmPasteWhat.cs</DependentUpon>
+    </Compile>
     <Compile Include="HelperNonStatic.cs" />
     <Compile Include="HelperNonStatic.Generic.cs" />
     <Compile Include="HelperStatic.Exif.cs" />
@@ -246,6 +252,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMainApp.resx">
       <DependentUpon>FrmMainApp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmPasteWhat.resx">
+      <DependentUpon>FrmPasteWhat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmSettings.resx">
       <DependentUpon>FrmSettings.cs</DependentUpon>

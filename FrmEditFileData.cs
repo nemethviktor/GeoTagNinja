@@ -53,7 +53,7 @@ public partial class FrmEditFileData : Form
         DtFileDataToWriteStage2QueuePendingSave.Rows.Clear();
 
         // this below should auto-set nowLoadingFileData = false;
-        lvw_FileListEditImagesGetData();
+        lvw_EditorFileListImagesGetData();
         await pbx_imgPreviewPicGenerator(fileName: lvw_FileListEditImages.Items[index: 0]
                                              .Text);
     }
@@ -63,13 +63,12 @@ public partial class FrmEditFileData : Form
     ///     label (e.g. "Latitude")
     ///     ... for textboxes etc this is the value (e.g. "51.002")
     /// </summary>
-    private void lvw_FileListEditImagesGetData()
+    private void lvw_EditorFileListImagesGetData()
     {
         FrmEditFileDataNowLoadingFileData = true;
         string folderName = FolderName;
         string fileName = lvw_FileListEditImages.SelectedItems[index: 0]
             .Text;
-        string tempStr;
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         HelperNonStatic helperNonstatic = new();
@@ -87,7 +86,7 @@ public partial class FrmEditFileData : Form
 
                 // if label then we want text to come from datarow [objectText]
                 // else if textbox/dropdown then we want the data to come from the same spot [metaDataDirectoryData.tagName]
-                tempStr = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileName)
+                string tempStr = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileName)
                     .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_" + cItem.Name.Substring(startIndex: 4)]
                                   .Index]
                     .Text;
@@ -101,8 +100,8 @@ public partial class FrmEditFileData : Form
                 {
                     cItem.Text = tempStr;
                 }
-                // stick into sql ("pending save") - this is to see if the data has changed later.
 
+                // stick into sql ("pending save") - this is to see if the data has changed later.
                 HelperStatic.GenericUpdateAddToDataTable(
                     dt: DtFileDataToWriteStage2QueuePendingSave,
                     filePath: fileName,
@@ -456,7 +455,7 @@ public partial class FrmEditFileData : Form
         if (File.Exists(path: Path.Combine(path1: FolderName, path2: lvw_FileListEditImages.SelectedItems[index: 0]
                                                .Text)))
         {
-            lvw_FileListEditImagesGetData();
+            lvw_EditorFileListImagesGetData();
 
             pbx_imgPreview.Image = null;
             await pbx_imgPreviewPicGenerator(fileName: lvw_FileListEditImages.SelectedItems[index: 0]
@@ -532,6 +531,18 @@ public partial class FrmEditFileData : Form
         DtFileDataToWriteStage1PreQueue.Rows.Clear();
         DtFileDataToWriteStage2QueuePendingSave.Rows.Clear();
         Hide();
+    }
+
+    /// <summary>
+    ///     This pulls up the "Paste-What" Form.
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void btn_SetCurrentValues_Click(object sender,
+                                            EventArgs e)
+    {
+        FrmPasteWhat frmPasteWhat = new();
+        frmPasteWhat.ShowDialog();
     }
 
     /// <summary>
