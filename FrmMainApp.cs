@@ -2091,6 +2091,7 @@ public partial class FrmMainApp : Form
         {
             // i think having an Item active can cause a lock on it
             lvw_FileList.SelectedItems.Clear();
+            DtFileDataToWriteStage3ReadyToWrite.DefaultView.Sort = "filePath ASC";
 
             await HelperStatic.ExifWriteExifToFile();
             DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();

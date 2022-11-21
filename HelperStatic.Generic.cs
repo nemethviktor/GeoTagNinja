@@ -423,12 +423,11 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    /// This creates the DataTables for the main Form - been moved out here because it's otherwise tedious to keep track of.
+    ///     This creates the DataTables for the main Form - been moved out here because it's otherwise tedious to keep track
+    ///     of.
     /// </summary>
     public static void GenericCreateDataTables()
     {
-        #region create dataTables
-
         // dt_fileDataCopyPool
         FrmMainApp.DtFileDataCopyPool = new DataTable();
         FrmMainApp.DtFileDataCopyPool.Clear();
@@ -468,8 +467,6 @@ internal static partial class HelperStatic
         FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "filePath");
         FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingValue");
-
-        #endregion
     }
 
     #endregion
