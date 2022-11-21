@@ -422,5 +422,55 @@ internal static partial class HelperStatic
         #endif
     }
 
+    /// <summary>
+    /// This creates the DataTables for the main Form - been moved out here because it's otherwise tedious to keep track of.
+    /// </summary>
+    public static void GenericCreateDataTables()
+    {
+        #region create dataTables
+
+        // dt_fileDataCopyPool
+        FrmMainApp.DtFileDataCopyPool = new DataTable();
+        FrmMainApp.DtFileDataCopyPool.Clear();
+        FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "settingValue");
+
+        // dt_fileDataToWriteStage1PreQueue 
+        FrmMainApp.DtFileDataToWriteStage1PreQueue = new DataTable();
+        FrmMainApp.DtFileDataToWriteStage1PreQueue.Clear();
+        FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "filePath");
+        FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingValue");
+
+        // dt_fileDataToWriteStage2QueuePendingSave 
+        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave = new DataTable();
+        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Clear();
+        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "filePath");
+        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingValue");
+
+        // dt_fileDataToWriteStage3ReadyToWrite 
+        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite = new DataTable();
+        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Clear();
+        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "filePath");
+        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingValue");
+
+        // DtFilesSeenInThisSession
+        FrmMainApp.DtFilesSeenInThisSession = new DataTable();
+        FrmMainApp.DtFilesSeenInThisSession.Clear();
+        FrmMainApp.DtFilesSeenInThisSession.Columns.Add(columnName: "filePath");
+        FrmMainApp.DtFilesSeenInThisSession.Columns.Add(columnName: "fileDateTime");
+
+        // DtFileDataSeenInThisSession
+        FrmMainApp.DtFileDataSeenInThisSession = new DataTable();
+        FrmMainApp.DtFileDataSeenInThisSession.Clear();
+        FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "filePath");
+        FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingValue");
+
+        #endregion
+    }
+
     #endregion
 }

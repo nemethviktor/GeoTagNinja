@@ -19,55 +19,58 @@ internal static partial class HelperStatic
     internal static void LwvUpdateRowFromDTWriteStage3ReadyToWrite()
     {
         FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
-        ListViewItem lvi;
-
-        string tmpCoordinates;
-
-        foreach (DataRow dr_ThisDataRow in FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows)
+        if (FrmMainAppInstance != null)
         {
-            try
+            ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
+            ListViewItem lvi;
+
+            string tmpCoordinates;
+
+            foreach (DataRow dr_ThisDataRow in FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows)
             {
-                lvi = FrmMainAppInstance.lvw_FileList.FindItemWithText(text: dr_ThisDataRow[columnIndex: 0]
-                                                                           .ToString());
-                // theoretically we'd want to update the columns for each tag but for example when removing all data
-                // this becomes tricky bcs we're also firing a "-gps*=" tag.
-                if (lvchs[key: "clh_" + dr_ThisDataRow[columnIndex: 1]] != null)
+                try
                 {
-                    try
+                    lvi = FrmMainAppInstance.lvw_FileList.FindItemWithText(text: dr_ThisDataRow[columnIndex: 0]
+                                                                               .ToString());
+                    // theoretically we'd want to update the columns for each tag but for example when removing all data
+                    // this becomes tricky bcs we're also firing a "-gps*=" tag.
+                    if (lvchs[key: "clh_" + dr_ThisDataRow[columnIndex: 1]] != null)
                     {
-                        lvi.ForeColor = Color.Red;
-                        lvi.SubItems[index: lvchs[key: "clh_" + dr_ThisDataRow[columnIndex: 1]]
-                                         .Index]
-                            .Text = dr_ThisDataRow[columnIndex: 2]
-                            .ToString();
-                        //break;
+                        try
+                        {
+                            lvi.ForeColor = Color.Red;
+                            lvi.SubItems[index: lvchs[key: "clh_" + dr_ThisDataRow[columnIndex: 1]]
+                                             .Index]
+                                .Text = dr_ThisDataRow[columnIndex: 2]
+                                .ToString();
+                            //break;
+                        }
+                        catch
+                        {
+                            // nothing - basically this could happen if user navigates out of the folder
+                        }
                     }
-                    catch
-                    {
-                        // nothing - basically this could happen if user navigates out of the folder
-                    }
+
+                    tmpCoordinates = lvi.SubItems[index: lvchs[key: "clh_GPSLatitude"]
+                                                      .Index]
+                                         .Text +
+                                     ";" +
+                                     lvi.SubItems[index: lvchs[key: "clh_GPSLongitude"]
+                                                      .Index]
+                                         .Text;
+                    lvi.SubItems[index: lvchs[key: "clh_Coordinates"]
+                                     .Index]
+                        .Text = tmpCoordinates != ";"
+                        ? tmpCoordinates
+                        : "";
+                }
+                catch
+                {
+                    // nothing. 
                 }
 
-                tmpCoordinates = lvi.SubItems[index: lvchs[key: "clh_GPSLatitude"]
-                                                  .Index]
-                                     .Text +
-                                 ";" +
-                                 lvi.SubItems[index: lvchs[key: "clh_GPSLongitude"]
-                                                  .Index]
-                                     .Text;
-                lvi.SubItems[index: lvchs[key: "clh_Coordinates"]
-                                 .Index]
-                    .Text = tmpCoordinates != ";"
-                    ? tmpCoordinates
-                    : "";
+                Application.DoEvents();
             }
-            catch
-            {
-                // nothing. 
-            }
-
-            Application.DoEvents();
         }
     }
 

@@ -398,6 +398,11 @@ internal static class AncillaryListsArrays
 
     #region Extensions
 
+    /// <summary>
+    ///     this one basically handles what extensions we work with.
+    ///     the actual list is used for file-specific Settings as well as the general running of the app
+    ///     leave the \t in!
+    /// </summary>
     internal static string[] AllCompatibleExtensions()
     {
         string[] result =

@@ -1,5 +1,6 @@
 ﻿# GeoTagNinja Changelog
 v0.6.83XX [202211XX]
+- Added some logic to locally store (for the length of the session) each file's data. This is so that if the actual image/xmp files don't change then there's no need to re-parse everything _again_. It's slow and pointless.
 - Bugfixes:
 -- Error msg/image name not showing properly when file gone missing
 -- The previous version introduced an error in Non-English regions when the user clicked on the map. This has been fixed.
@@ -11,7 +12,7 @@ v0.6.8358 [20221119]
 - Added the capability to navigate to the top of the folder structure. (e.g. MyComputer and then list the drives.)
 - Changed how the previews get created. This will hopefully result in faster preview-creation. The orientation-problem is still unsolved but it's likely to remain so for the time being.
 - Bugfixes:
--- If a user's "Pictures" (or any other "Special") folder had been moved and renamed the could would break because Windows treats special folders in odd ways. (e.g. if the Pics folder is called "Pics" Windows would still show "Pictures", which doesn't per se exist.)
+-- If a user's "Pictures" (or any other "Special") folder had been moved and renamed the would break because Windows treats special folders in odd ways. (e.g. if the Pics folder is called "Pics" Windows would still show "Pictures", which doesn't per se exist.)
 -- If the user had chosen "Delete All GPS Data" and subsequently added GPS data the addition would not have gone through upon save. This is now fixed.
 -- Rewrote the logic of (re)creating sidecar XMP files as the original logic would pull data from the RAW file (only), possibly overwriting Adobe-specific stuff that had been stored in an already-existing XMP.
 

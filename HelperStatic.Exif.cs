@@ -384,7 +384,10 @@ internal static partial class HelperStatic
 
             foreach (string arg in commonArgList)
             {
-                exifToolCommand = exifToolCommand.Concat(second: new[] { arg });
+                exifToolCommand = exifToolCommand.Concat(second: new[]
+                {
+                    arg
+                });
             }
 
             CancellationToken ct = CancellationToken.None;
@@ -460,7 +463,10 @@ internal static partial class HelperStatic
                         // this is totally a copypaste from above
                         try
                         {
-                            exifToolCommandWithFileName = exifToolCommand.Concat(second: new[] { sideCarXMPFilePath });
+                            exifToolCommandWithFileName = exifToolCommand.Concat(second: new[]
+                            {
+                                sideCarXMPFilePath
+                            });
                             exifToolResult = await FrmMainAppInstance.AsyncExifTool.ExecuteAsync(args: exifToolCommandWithFileName);
                         }
                         catch (Exception ex)
@@ -503,32 +509,60 @@ internal static partial class HelperStatic
 
                     ListViewItem lvi = FrmMainAppInstance.lvw_FileList.FindItemWithText(text: listElem);
 
-                    // lvi can become null if user changes folder while a previous process is loading and listview is cleared.
-                    // also just make sure we're in the same session.
-                    if (lvi != null && folderEnterLastEpoch == folderEnterEpoch)
+                    if (lvi != null /*&& folderEnterLastEpoch == folderEnterEpoch*/) // 20221121: commenting this out for now - otherwise the filesBeingProcessed removal wouldn't ever fire.
                     {
                         ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
+                        // remove from the filesBeingProcessed list
+                        try
+                        {
+                            int itemToRemoveInt = filesBeingProcessed.IndexOf(item: Path.Combine(path1: folderNameToUse, path2: listElem));
+                            filesBeingProcessed.RemoveAt(index: itemToRemoveInt);
+                            // no need to remove the xmp here because it hasn't been added in the first place.
+                        }
+                        catch
+                        {
+                            // nothing, this shouldn't happen but i don't want it to stop the app anyway.
+                        }
+
+                        // also add to DtFilesSeenInThisSession 
+                        string filePath = Path.Combine(path1: folderNameToUse, path2: listElem);
+                        DataRow dr = FrmMainApp.DtFilesSeenInThisSession.NewRow(); // have new row on each iteration
+                        dr[columnName: "filePath"] = filePath;
+                        dr[columnName: "fileDateTime"] = File.GetLastWriteTime(path: filePath)
+                            .ToString(provider: CultureInfo.InvariantCulture);
+                        FrmMainApp.DtFilesSeenInThisSession.Rows.Add(row: dr);
+
+                        // if there's an xmp sidecar, add that too
+                        string filePathWithXmp = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: filePath) + ".xmp");
+                        if (File.Exists(path: filePathWithXmp))
+                        {
+                            dr = FrmMainApp.DtFilesSeenInThisSession.NewRow(); // have new row on each iteration
+                            dr[columnName: "filePath"] = filePathWithXmp;
+                            dr[columnName: "fileDateTime"] = File.GetLastWriteTime(path: filePathWithXmp)
+                                .ToString(provider: CultureInfo.InvariantCulture);
+                            FrmMainApp.DtFilesSeenInThisSession.Rows.Add(row: dr);
+                        }
+
                         for (int i = 1; i < lvi.SubItems.Count; i++)
                         {
                             string str = ExifGetStandardisedDataPointFromExif(dtFileExif: dt_fileExifTable, dataPoint: lvchs[index: i]
                                                                                   .Name.Substring(startIndex: 4));
                             lvi.SubItems[index: i]
                                 .Text = str;
+
+                            // also add to DtFileDataSeenInThisSession
+                            dr = FrmMainApp.DtFileDataSeenInThisSession.NewRow(); // have new row on each iteration
+                            dr[columnName: "filePath"] = filePath;
+                            dr[columnName: "settingId"] = lvchs[index: i]
+                                .Name.Substring(startIndex: 4);
+                            dr[columnName: "settingValue"] = str;
+                            FrmMainApp.DtFileDataSeenInThisSession.Rows.Add(row: dr);
+
+                            // not adding the xmp here because the current code logic would pull a "unified" data point. we just care if the xmp's timestamp has changed or not.
                         }
 
                         lvi.ForeColor = Color.Black;
                         FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " + lvi.Text);
-
-                        // remove from the filesBeingProcessed list
-                        try
-                        {
-                            int itemToRemoveInt = filesBeingProcessed.IndexOf(item: Path.Combine(path1: folderNameToUse, path2: listElem));
-                            filesBeingProcessed.RemoveAt(index: itemToRemoveInt);
-                        }
-                        catch
-                        {
-                            // nothing, this shouldn't happen but i don't want it to stop the app anyway.
-                        }
                     }
                 }
             }
@@ -590,9 +624,11 @@ internal static partial class HelperStatic
 
             foreach (string listElem in files)
             {
-                if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: listElem)))
+                string filePath = Path.Combine(path1: folderNameToUse, path2: listElem);
+                string filePathWithXmp = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: listElem)) + ".xmp");
+                if (File.Exists(path: filePath))
                 {
-                    File.AppendAllText(path: argsFile, contents: Path.Combine(path1: folderNameToUse, path2: listElem) + Environment.NewLine, encoding: Encoding.UTF8);
+                    File.AppendAllText(path: argsFile, contents: filePath + Environment.NewLine, encoding: Encoding.UTF8);
                     foreach (string arg in exifArgs)
                     {
                         File.AppendAllText(path: argsFile, contents: "-" + arg + Environment.NewLine);
@@ -600,10 +636,9 @@ internal static partial class HelperStatic
                 }
 
                 //// add any xmp sidecar files
-                if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: listElem)) + ".xmp")))
+                if (File.Exists(path: filePathWithXmp))
                 {
-                    string sideCarXMPFilePath = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: listElem)) + ".xmp");
-                    File.AppendAllText(path: argsFile, contents: sideCarXMPFilePath + Environment.NewLine, encoding: Encoding.UTF8);
+                    File.AppendAllText(path: argsFile, contents: filePathWithXmp + Environment.NewLine, encoding: Encoding.UTF8);
                     foreach (string arg in exifArgs)
                     {
                         File.AppendAllText(path: argsFile, contents: "-" + arg + Environment.NewLine);
@@ -744,9 +779,28 @@ internal static partial class HelperStatic
                         // de-dupe. this is pretty poor performance but the dataset is small
                         DataTable dt_distinctFileExifTable = dt_fileExifTable.DefaultView.ToTable(distinct: true);
 
-                        if (folderEnterLastEpoch == folderEnterEpoch)
+                        //if (folderEnterLastEpoch == folderEnterEpoch) // see comment in prev block
                         {
                             ListViewItem lvi = FrmMainAppInstance.lvw_FileList.FindItemWithText(text: itemText);
+
+                            // also add to DtFilesSeenInThisSession 
+                            string filePath = Path.Combine(path1: folderNameToUse, path2: itemText);
+                            DataRow dr = FrmMainApp.DtFilesSeenInThisSession.NewRow(); // have new row on each iteration
+                            dr[columnName: "filePath"] = filePath;
+                            dr[columnName: "fileDateTime"] = File.GetLastWriteTime(path: filePath)
+                                .ToString(provider: CultureInfo.InvariantCulture);
+                            FrmMainApp.DtFilesSeenInThisSession.Rows.Add(row: dr);
+
+                            // if there's an xmp sidecar, add that too
+                            string filePathWithXmp = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: filePath) + ".xmp");
+                            if (File.Exists(path: filePathWithXmp))
+                            {
+                                dr = FrmMainApp.DtFilesSeenInThisSession.NewRow(); // have new row on each iteration
+                                dr[columnName: "filePath"] = filePathWithXmp;
+                                dr[columnName: "fileDateTime"] = File.GetLastWriteTime(path: filePathWithXmp)
+                                    .ToString(provider: CultureInfo.InvariantCulture);
+                                FrmMainApp.DtFilesSeenInThisSession.Rows.Add(row: dr);
+                            }
 
                             ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
                             for (int i = 1; i < lvi.SubItems.Count; i++)
@@ -755,6 +809,16 @@ internal static partial class HelperStatic
                                                                                       .Name.Substring(startIndex: 4));
                                 lvi.SubItems[index: i]
                                     .Text = str;
+
+                                // also add to DtFileDataSeenInThisSession
+                                dr = FrmMainApp.DtFileDataSeenInThisSession.NewRow(); // have new row on each iteration
+                                dr[columnName: "filePath"] = filePath;
+                                dr[columnName: "settingId"] = lvchs[index: i]
+                                    .Name.Substring(startIndex: 4);
+                                dr[columnName: "settingValue"] = str;
+                                FrmMainApp.DtFileDataSeenInThisSession.Rows.Add(row: dr);
+
+                                // not adding the xmp here because the current code logic would pull a "unified" data point. we just care if the xmp's timestamp has changed or not.
                             }
 
                             // remove from the filesBeingProcessed list

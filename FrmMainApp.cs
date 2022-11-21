@@ -49,17 +49,19 @@ public partial class FrmMainApp : Form
     internal FrmEditFileData FrmEditFileData;
     internal FrmImportGpx FrmImportGpx;
 
-    /// <summary>
-    ///     this one basically handles what extensions we work with.
-    ///     the actual list is used for file-specific Settings as well as the general running of the app
-    ///     leave the \t in!
-    /// </summary>
     internal AsyncExifTool AsyncExifTool;
 
+    // this is for copy-paste
     internal static DataTable DtFileDataCopyPool;
+
+    // these are for queueing files up
     internal static DataTable DtFileDataToWriteStage1PreQueue;
     internal static DataTable DtFileDataToWriteStage2QueuePendingSave;
     internal static DataTable DtFileDataToWriteStage3ReadyToWrite;
+
+    // this is for checking if files need to be re-parsed.
+    internal static DataTable DtFilesSeenInThisSession;
+    internal static DataTable DtFileDataSeenInThisSession;
 
     #endregion
 
@@ -222,36 +224,7 @@ public partial class FrmMainApp : Form
 
         FormClosing += FrmMainApp_FormClosing;
 
-        #region create dataTables
-
-        // dt_fileDataCopyPool
-        DtFileDataCopyPool = new DataTable();
-        DtFileDataCopyPool.Clear();
-        DtFileDataCopyPool.Columns.Add(columnName: "settingId");
-        DtFileDataCopyPool.Columns.Add(columnName: "settingValue");
-
-        // dt_fileDataToWriteStage1PreQueue 
-        DtFileDataToWriteStage1PreQueue = new DataTable();
-        DtFileDataToWriteStage1PreQueue.Clear();
-        DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "filePath");
-        DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingId");
-        DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingValue");
-
-        // dt_fileDataToWriteStage2QueuePendingSave 
-        DtFileDataToWriteStage2QueuePendingSave = new DataTable();
-        DtFileDataToWriteStage2QueuePendingSave.Clear();
-        DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "filePath");
-        DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingId");
-        DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingValue");
-
-        // dt_fileDataToWriteStage3ReadyToWrite 
-        DtFileDataToWriteStage3ReadyToWrite = new DataTable();
-        DtFileDataToWriteStage3ReadyToWrite.Clear();
-        DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "filePath");
-        DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingId");
-        DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingValue");
-
-        #endregion
+        HelperStatic.GenericCreateDataTables();
     }
 
     /// <summary>
@@ -1607,9 +1580,11 @@ public partial class FrmMainApp : Form
     /// </summary>
     private async void lvwFileList_LoadOrUpdate()
     {
-        List<string> listOfAysncCompatibleItems = new();
-        List<string> listOfAysncIncompatibleItems = new();
+        List<string> listOfAsyncCompatibleItems = new();
+        List<string> listOfAsyncIncompatibleItems = new();
+
         lvw_FileList.Items.Clear();
+        Application.DoEvents();
         HelperStatic.filesBeingProcessed.Clear();
 
         // this shouldn't really happen but just in case
@@ -1714,29 +1689,155 @@ public partial class FrmMainApp : Form
 
             foreach (string currentFile in files)
             {
-                string fileNameToTest = Path.Combine(currentFile);
+                string currentFileWithXmp = Path.Combine(path1: Path.GetDirectoryName(path: currentFile), path2: Path.GetFileNameWithoutExtension(path: currentFile) + ".xmp");
                 lvw_FileList_addListItem(fileName: Path.GetFileName(path: currentFile));
 
-                // the add-in used here can't process nonstandard characters in filenames w/o an args file, which doesn't return what we're after.
-                // so for 'standard' stuff we'll run async and for everything else we'll do it slower but more compatible
-
-                if (Regex.IsMatch(input: fileNameToTest, pattern: @"^[a-zA-Z0-9.:\\_ ]*$"))
+                // if this file appears in the DtFilesSeenInThisSession // or with xmp
+                bool timeStampNeedsUpdating = false;
+                if (DtFilesSeenInThisSession.AsEnumerable()
+                    .Any(predicate: row => currentFile == row.Field<string>(columnName: "filePath")))
                 {
-                    listOfAysncCompatibleItems.Add(item: Path.GetFileName(path: currentFile));
+                    // check if the timestamp matches
+                    DataRow[] drFoundFileData = DtFilesSeenInThisSession.Select(filterExpression: "filePath = '" + currentFile + "'");
+                    DataRow[] drFoundFileDataXmp = DtFilesSeenInThisSession.Select(filterExpression: "filePath = '" + currentFileWithXmp + "'");
+                    if (drFoundFileData.Length != 0 || drFoundFileDataXmp.Length != 0)
+                    {
+                        string drFoundFileDataStr = drFoundFileData[0][columnName: "fileDateTime"]
+                            .ToString();
+
+                        string lastWriteTimeStr = File.GetLastWriteTime(path: currentFile)
+                            .ToString(provider: CultureInfo.InvariantCulture);
+
+                        if (drFoundFileDataStr == lastWriteTimeStr)
+                        {
+                            // nothing actually
+                        }
+                        else
+                        {
+                            timeStampNeedsUpdating = true;
+                        }
+
+                        // xmp
+                        if (File.Exists(path: currentFileWithXmp) && drFoundFileDataXmp.Length != 0)
+                        {
+                            string drFoundFileDataStrXmp = drFoundFileDataXmp[0][columnName: "fileDateTime"]
+                                .ToString();
+
+                            string lastWriteTimeStrXmp = File.GetLastWriteTime(path: currentFileWithXmp)
+                                .ToString(provider: CultureInfo.InvariantCulture);
+
+                            if (drFoundFileDataStrXmp == lastWriteTimeStrXmp)
+                            {
+                                // nothing actually
+                            }
+                            else
+                            {
+                                timeStampNeedsUpdating = true;
+                            }
+                        }
+                    }
                 }
                 else
                 {
-                    listOfAysncIncompatibleItems.Add(item: Path.GetFileName(path: currentFile));
+                    timeStampNeedsUpdating = true;
+                }
+
+                if (timeStampNeedsUpdating)
+                {
+                    // delete if exists in DtFilesSeenInThisSession
+                    DataRow[] drFoundFileData = DtFilesSeenInThisSession.Select(filterExpression: "filePath = '" + currentFile + "'");
+                    if (drFoundFileData.Length != 0)
+                    {
+                        drFoundFileData[0]
+                            .Delete();
+                        DtFilesSeenInThisSession.AcceptChanges();
+                    }
+
+                    // xmp
+                    DataRow[] drFoundFileDataXmp = DtFilesSeenInThisSession.Select(filterExpression: "filePath = '" + currentFileWithXmp + "'");
+                    if (drFoundFileDataXmp.Length != 0)
+                    {
+                        drFoundFileDataXmp[0]
+                            .Delete();
+                        DtFilesSeenInThisSession.AcceptChanges();
+                    }
+
+                    // also drop from DtFileDataSeenInThisSession
+                    drFoundFileData = DtFileDataSeenInThisSession.Select(filterExpression: "filePath = '" + currentFile + "'");
+                    if (drFoundFileData.Length != 0)
+                    {
+                        foreach (DataRow dr in drFoundFileData)
+                        {
+                            dr.Delete();
+                            DtFileDataSeenInThisSession.AcceptChanges();
+                        }
+                    }
+
+                    // the add-in used here can't process nonstandard characters in filenames w/o an args file, which doesn't return what we're after.
+                    // so for 'standard' stuff we'll run async and for everything else we'll do it slower but more compatible
+                    if (Regex.IsMatch(input: currentFile, pattern: @"^[a-zA-Z0-9.:\\_ ]*$"))
+                    {
+                        listOfAsyncCompatibleItems.Add(item: Path.GetFileName(path: currentFile));
+                    }
+                    else
+                    {
+                        listOfAsyncIncompatibleItems.Add(item: Path.GetFileName(path: currentFile));
+                    }
+                }
+                // basically if we've already parsed this file and it hasn't changed since then don't reparse it.
+                else
+                {
+                    DataRow[] drFoundFileData = DtFileDataSeenInThisSession.Select(filterExpression: "filePath = '" + currentFile + "'");
+
+                    // just to be on the foolproof side
+                    if (drFoundFileData.Length != 0)
+                    {
+                        foreach (DataRow dr in drFoundFileData)
+                        {
+                            ListView lvw = lvw_FileList;
+                            ListViewItem lvi = lvw.FindItemWithText(text: dr[columnIndex: 0]
+                                                                        .ToString()
+                                                                        .Split('\\')
+                                                                        .Last());
+                            try
+                            {
+                                lvi.SubItems[index: lvw.Columns[key: "clh_" +
+                                                                     dr[columnIndex: 1]]
+                                                 .Index]
+                                    .Text = dr[columnIndex: 2]
+                                    .ToString();
+                            }
+                            catch
+                            {
+                                // nothing
+                            }
+
+                            try
+                            {
+                                int itemToRemoveInt = HelperStatic.filesBeingProcessed.IndexOf(item: currentFile);
+                                if (itemToRemoveInt != -1)
+                                {
+                                    HelperStatic.filesBeingProcessed.RemoveAt(index: itemToRemoveInt);
+                                }
+                            }
+                            catch
+                            {
+                                // nothing, this shouldn't happen but i don't want it to stop the app anyway.
+                            }
+
+                            lvi.ForeColor = Color.Black;
+                        }
+                    }
                 }
             }
 
-            if (listOfAysncCompatibleItems.Count > 0)
+            if (listOfAsyncCompatibleItems.Count > 0)
             {
                 HelperStatic.folderEnterLastEpoch = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                await HelperStatic.ExifGetExifFromFilesCompatibleFileNames(files: listOfAysncCompatibleItems, folderEnterEpoch: HelperStatic.folderEnterLastEpoch);
+                await HelperStatic.ExifGetExifFromFilesCompatibleFileNames(files: listOfAsyncCompatibleItems, folderEnterEpoch: HelperStatic.folderEnterLastEpoch);
             }
 
-            if (listOfAysncIncompatibleItems.Count > 0)
+            if (listOfAsyncIncompatibleItems.Count > 0)
             {
                 string dontShowIncompatibleFileWarningAgainInSql = HelperStatic.DataReadSQLiteSettings(
                     tableName: "settings",
@@ -1759,7 +1860,7 @@ public partial class FrmMainApp : Form
                 }
 
                 HelperStatic.folderEnterLastEpoch = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                await HelperStatic.ExifGetExifFromFilesIncompatibleFileNames(files: listOfAysncIncompatibleItems, folderEnterEpoch: HelperStatic.folderEnterLastEpoch);
+                await HelperStatic.ExifGetExifFromFilesIncompatibleFileNames(files: listOfAsyncIncompatibleItems, folderEnterEpoch: HelperStatic.folderEnterLastEpoch);
             }
 
             int filesWithGeoData = 0;
@@ -2111,8 +2212,12 @@ public partial class FrmMainApp : Form
             lvi.ForeColor = Color.Gray;
         }
 
-        lvw_FileList.Items.Add(value: lvi)
-            .SubItems.AddRange(items: subItemList.ToArray());
+        // don't add twice. this could happen if user does F5 too fast/too many times/is derp. (mostly the last one.)
+        if (lvw_FileList.FindItemWithText(text: lvi.Text) == null)
+        {
+            lvw_FileList.Items.Add(value: lvi)
+                .SubItems.AddRange(items: subItemList.ToArray());
+        }
     }
 
     /// <summary>
