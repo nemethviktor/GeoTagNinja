@@ -66,7 +66,7 @@ public partial class FrmEditFileData : Form
     private void lvw_FileListEditImagesGetData()
     {
         FrmEditFileDataNowLoadingFileData = true;
-        string folderName = FrmMainApp.FolderName;
+        string folderName = FolderName;
         string fileName = lvw_FileListEditImages.SelectedItems[index: 0]
             .Text;
         string tempStr;
@@ -207,7 +207,7 @@ public partial class FrmEditFileData : Form
         FileInfo fi = new(fileName: fileNameWithPath);
         if (fi.Extension == ".jpg")
         {
-            using (Bitmap bmpTemp = new Bitmap(filename: fileNameWithPath))
+            using (Bitmap bmpTemp = new(filename: fileNameWithPath))
             {
                 img = new Bitmap(original: bmpTemp);
                 frmEditFileDataInstance.pbx_imgPreview.Image = img;
@@ -222,7 +222,7 @@ public partial class FrmEditFileData : Form
                 await HelperStatic.ExifGetImagePreviews(fileName: fileName);
             }
 
-            using (Bitmap bmpTemp = new Bitmap(filename: generatedFileName))
+            using (Bitmap bmpTemp = new(filename: generatedFileName))
             {
                 img = new Bitmap(original: bmpTemp);
                 frmEditFileDataInstance.pbx_imgPreview.Image = img;
@@ -539,10 +539,10 @@ public partial class FrmEditFileData : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private void btn_RemoveGeoData_Click(object sender,
-                                         EventArgs e)
+    private async void btn_RemoveGeoData_Click(object sender,
+                                               EventArgs e)
     {
-        HelperStatic.ExifRemoveLocationData(senderName: "FrmEditFileData");
+        await HelperStatic.ExifRemoveLocationData(senderName: "FrmEditFileData");
     }
 
     #region object text change handlers

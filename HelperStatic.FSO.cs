@@ -19,7 +19,7 @@ internal static partial class HelperStatic
     {
         DirectoryInfo dir = new(path: path);
         string parentName;
-        if (dir.ToString() == Path.GetPathRoot(dir.ToString()))
+        if (dir.ToString() == Path.GetPathRoot(path: dir.ToString()))
         {
             parentName = SpecialFolder.MyComputer.ToString();
         }

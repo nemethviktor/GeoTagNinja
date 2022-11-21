@@ -3,8 +3,8 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GeoTagNinja;
@@ -329,7 +329,7 @@ internal static partial class HelperStatic
     /// <summary>
     ///     Checks for new versions of GTN and eT.
     /// </summary>
-    internal static async void GenericCheckForNewVersions()
+    internal static async Task GenericCheckForNewVersions()
     {
         #if !DEBUG
             // check when the last polling took place

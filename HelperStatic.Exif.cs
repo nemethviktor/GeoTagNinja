@@ -24,6 +24,8 @@ namespace GeoTagNinja;
 
 internal static partial class HelperStatic
 {
+    internal static List<string> filesBeingProcessed = new();
+
     #region Exif Related
 
     /// <summary>
@@ -516,6 +518,17 @@ internal static partial class HelperStatic
 
                         lvi.ForeColor = Color.Black;
                         FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " + lvi.Text);
+
+                        // remove from the filesBeingProcessed list
+                        try
+                        {
+                            int itemToRemoveInt = filesBeingProcessed.IndexOf(item: Path.Combine(path1: folderNameToUse, path2: listElem));
+                            filesBeingProcessed.RemoveAt(index: itemToRemoveInt);
+                        }
+                        catch
+                        {
+                            // nothing, this shouldn't happen but i don't want it to stop the app anyway.
+                        }
                     }
                 }
             }
@@ -742,6 +755,17 @@ internal static partial class HelperStatic
                                                                                       .Name.Substring(startIndex: 4));
                                 lvi.SubItems[index: i]
                                     .Text = str;
+                            }
+
+                            // remove from the filesBeingProcessed list
+                            try
+                            {
+                                int itemToRemoveInt = filesBeingProcessed.IndexOf(item: Path.Combine(path1: folderNameToUse, path2: itemText));
+                                filesBeingProcessed.RemoveAt(index: itemToRemoveInt);
+                            }
+                            catch
+                            {
+                                // nothing, this shouldn't happen but i don't want it to stop the app anyway.
                             }
 
                             lvi.ForeColor = Color.Black;
@@ -1292,7 +1316,7 @@ internal static partial class HelperStatic
         FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         // if user switches folder in the process of writing this will keep it standard
-        Debug.Assert(FrmMainAppInstance != null, nameof(FrmMainAppInstance) + " != null");
+        Debug.Assert(condition: FrmMainAppInstance != null, message: nameof(FrmMainAppInstance) + " != null");
         string folderNameToWrite = FrmMainAppInstance.tbx_FolderName.Text;
         File.Delete(path: argsFile);
 
@@ -1506,7 +1530,7 @@ internal static partial class HelperStatic
                 exifArgs += "-ignoreMinorErrors" + Environment.NewLine;
 
                 // logic: if there is an XMP already then use that as base... (this is needed because if an old RAW file has Adobe-modifications but the XMP doesn't, then it'd overwrite everything
-                if (File.Exists(Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileName)) + ".xmp")))
+                if (File.Exists(path: Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileName)) + ".xmp")))
                 {
                     xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileName)) + ".xmp");
                 }
@@ -1836,7 +1860,7 @@ internal static partial class HelperStatic
             if (CountryCode == "GBR" &&
                 dt_ToponomyInSQL.Rows[index: 0][columnName: "AdminName2"]
                     .ToString()
-                    .Contains(("London")))
+                    .Contains(value: "London"))
             {
                 City = dt_ToponomyInSQL.Rows[index: 0][columnName: "AdminName2"]
                     .ToString();
@@ -1887,7 +1911,7 @@ internal static partial class HelperStatic
                     if (CountryCode == "GBR" &&
                         ReadJsonToponomy.Geonames[0]
                             .AdminName2
-                            .Contains(("London")))
+                            .Contains(value: "London"))
                     {
                         City = ReadJsonToponomy.Geonames[0]
                             .AdminName2;
@@ -2104,8 +2128,20 @@ internal static partial class HelperStatic
     ///     Queues up a command to remove existing geo-data. Depending on the sender this can be for one or many files.
     /// </summary>
     /// <param name="senderName">At this point this can either be the main listview or the one from Edit (file) data</param>
-    internal static void ExifRemoveLocationData(string senderName)
+    internal static async Task ExifRemoveLocationData(string senderName)
     {
+        string[] toponomyOverwrites =
+        {
+            "GPSLatitude",
+            "GPSLongitude",
+            "CountryCode",
+            "Country",
+            "City",
+            "State",
+            "Sub_location",
+            "GPSAltitude",
+            "gps*"
+        };
         if (senderName == "FrmEditFileData")
         {
             // for the time being i'll leave this as "remove data from the active selection file" rather than "all".
@@ -2143,18 +2179,11 @@ internal static partial class HelperStatic
                     // don't do folders...
                     if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text)))
                     {
-                        string[] toponomyOverwrites =
+                        // check it's not in the read-queue.
+                        while (filesBeingProcessed.Contains(item: Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text)))
                         {
-                            "GPSLatitude",
-                            "GPSLongitude",
-                            "CountryCode",
-                            "Country",
-                            "City",
-                            "State",
-                            "Sub_location",
-                            "GPSAltitude",
-                            "gps*"
-                        };
+                            await Task.Delay(millisecondsDelay: 100);
+                        }
 
                         foreach (string toponomyDetail in toponomyOverwrites)
                         {

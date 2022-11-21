@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
@@ -35,12 +34,19 @@ internal static partial class HelperStatic
                 // this becomes tricky bcs we're also firing a "-gps*=" tag.
                 if (lvchs[key: "clh_" + dr_ThisDataRow[columnIndex: 1]] != null)
                 {
-                    lvi.ForeColor = Color.Red;
-                    lvi.SubItems[index: lvchs[key: "clh_" + dr_ThisDataRow[columnIndex: 1]]
-                                     .Index]
-                        .Text = dr_ThisDataRow[columnIndex: 2]
-                        .ToString();
-                    //break;
+                    try
+                    {
+                        lvi.ForeColor = Color.Red;
+                        lvi.SubItems[index: lvchs[key: "clh_" + dr_ThisDataRow[columnIndex: 1]]
+                                         .Index]
+                            .Text = dr_ThisDataRow[columnIndex: 2]
+                            .ToString();
+                        //break;
+                    }
+                    catch
+                    {
+                        // nothing - basically this could happen if user navigates out of the folder
+                    }
                 }
 
                 tmpCoordinates = lvi.SubItems[index: lvchs[key: "clh_GPSLatitude"]
@@ -105,16 +111,22 @@ internal static partial class HelperStatic
     ///     This drives the logic for "pasting" (as in copy-paste) the geodata from one file to others.
     ///     See further comments inside
     /// </summary>
-    internal static void LwvPasteGeoData()
+    internal static async void LwvPasteGeoData()
     {
         FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        // check there's antying in copy-pool
+        // check there's anything in copy-pool
         if (FrmMainApp.DtFileDataCopyPool.Rows.Count > 0)
         {
             foreach (ListViewItem lvi in FrmMainAppInstance.lvw_FileList.SelectedItems)
             {
                 if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text)))
                 {
+                    // check it's not in the read-queue.
+                    while (filesBeingProcessed.Contains(item: Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text)))
+                    {
+                        await Task.Delay(millisecondsDelay: 100);
+                    }
+
                     // paste all from copy-pool
                     foreach (DataRow dr in FrmMainApp.DtFileDataCopyPool.Rows)
                     {
@@ -262,7 +274,7 @@ internal static partial class HelperStatic
                     break;
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 //MessageBox.Show(ex.Message);
             }

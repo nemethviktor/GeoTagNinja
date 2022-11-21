@@ -473,7 +473,7 @@ public partial class FrmMainApp : Form
         HelperStatic.hs_MapMarkers.Add(item: (tbx_lat.Text.Replace(oldChar: ',', newChar: '.'), tbx_lng.Text.Replace(oldChar: ',', newChar: '.')));
         NavigateMapGo();
 
-        HelperStatic.GenericCheckForNewVersions();
+        await HelperStatic.GenericCheckForNewVersions();
     }
 
     /// <summary>
@@ -1532,10 +1532,10 @@ public partial class FrmMainApp : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private void tsb_RemoveGeoData_Click(object sender,
-                                         EventArgs e)
+    private async void tsb_RemoveGeoData_Click(object sender,
+                                               EventArgs e)
     {
-        HelperStatic.ExifRemoveLocationData(senderName: "FrmMainApp");
+        await HelperStatic.ExifRemoveLocationData(senderName: "FrmMainApp");
     }
 
     /// <summary>
@@ -1609,8 +1609,8 @@ public partial class FrmMainApp : Form
     {
         List<string> listOfAysncCompatibleItems = new();
         List<string> listOfAysncIncompatibleItems = new();
-        List<string> listOfNonUtf8Items = new();
         lvw_FileList.Items.Clear();
+        HelperStatic.filesBeingProcessed.Clear();
 
         // this shouldn't really happen but just in case
         if (FolderName is null)
@@ -1686,6 +1686,12 @@ public partial class FrmMainApp : Form
 
             files = files.OrderBy(keySelector: o => o)
                 .ToList();
+
+            // also add to filesBeingProcessed
+            foreach (string file in files)
+            {
+                HelperStatic.filesBeingProcessed.Add(item: file);
+            }
 
             // add a parent folder. "dot dot"
             try
