@@ -1,6 +1,9 @@
 ﻿# GeoTagNinja Changelog
 v0.6.83XX [202211XX]
-Error msg/image name not showing properly when file gone missing
+- Bugfixes:
+-- Error msg/image name not showing properly when file gone missing
+-- The previous version introduced an error in Non-English regions when the user clicked on the map. This has been fixed.
+-- Rewrote logic re: UK Cities/Regions being mixed up. Now only applies to London.
 
 v0.6.8358 [20221119]
 - Finally managed to get hold of ReSharper so the code has been refactored in totality. Famous last words but it shouldn't affect usage.

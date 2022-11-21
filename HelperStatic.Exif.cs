@@ -1833,7 +1833,10 @@ internal static partial class HelperStatic
                 inputVal: CountryCode,
                 returnWhat: "Country"
             );
-            if (CountryCode == "GBR")
+            if (CountryCode == "GBR" &&
+                dt_ToponomyInSQL.Rows[index: 0][columnName: "AdminName2"]
+                    .ToString()
+                    .Contains(("London")))
             {
                 City = dt_ToponomyInSQL.Rows[index: 0][columnName: "AdminName2"]
                     .ToString();
@@ -1881,7 +1884,10 @@ internal static partial class HelperStatic
                     }
 
                     // api sends back some misaligned stuff for the UK
-                    if (CountryCode == "GBR")
+                    if (CountryCode == "GBR" &&
+                        ReadJsonToponomy.Geonames[0]
+                            .AdminName2
+                            .Contains(("London")))
                     {
                         City = ReadJsonToponomy.Geonames[0]
                             .AdminName2;
