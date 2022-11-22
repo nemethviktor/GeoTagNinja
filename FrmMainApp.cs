@@ -720,13 +720,13 @@ public partial class FrmMainApp : Form
         #region splitcontainers
 
         frmMainApp.splitContainerMain.Top = frmMainApp.tsr_FolderControl.Bottom;
-        frmMainApp.splitContainerMain.Left = Convert.ToInt16(value: Left + 20);
-        frmMainApp.splitContainerMain.Height = Convert.ToInt16(value: frmMainApp.Height - frmMainApp.splitContainerMain.Top);
-        frmMainApp.splitContainerMain.Width = frmMainApp.Width - 20 - Convert.ToInt16(value: Left + 20);
+        frmMainApp.splitContainerMain.Left = 20;
+        frmMainApp.splitContainerMain.Height = Convert.ToInt16(value: frmMainApp.Height);
+        frmMainApp.splitContainerMain.Width = frmMainApp.Width - 40;
 
         try
         {
-            frmMainApp.splitContainerMain.SplitterDistance = Convert.ToInt16(value: frmMainApp.splitContainerMain.Width * 0.5);
+            frmMainApp.splitContainerMain.SplitterDistance = Convert.ToInt16(value: Width * 0.5);
             frmMainApp.splitContainerMain.MaximumSize = new Size(width: Convert.ToInt16(value: frmMainApp.Width * 0.98), height: Convert.ToInt16(value: (frmMainApp.Height - frmMainApp.splitContainerMain.Top) * 0.95));
 
             // that's the left block
