@@ -46,6 +46,7 @@
             this.tbx_GeoNames_UserName = new System.Windows.Forms.TextBox();
             this.tbx_ARCGIS_APIKey = new System.Windows.Forms.TextBox();
             this.tpg_FileOptions = new System.Windows.Forms.TabPage();
+            this.ckb_ResetFileDateToCreated = new System.Windows.Forms.CheckBox();
             this.ckb_ProcessOriginalFile = new System.Windows.Forms.CheckBox();
             this.ckb_OverwriteOriginal = new System.Windows.Forms.CheckBox();
             this.ckb_AddXMPSideCar = new System.Windows.Forms.CheckBox();
@@ -53,7 +54,6 @@
             this.btn_OK = new System.Windows.Forms.Button();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.fbd_StartupFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.ckb_ResetFileDateToCreated = new System.Windows.Forms.CheckBox();
             this.tct_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).BeginInit();
@@ -261,6 +261,19 @@
             this.tpg_FileOptions.Text = "tpg_FileOptions";
             this.tpg_FileOptions.Enter += new System.EventHandler(this.Pg_fileoptions_Enter);
             // 
+            // ckb_ResetFileDateToCreated
+            // 
+            this.ckb_ResetFileDateToCreated.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ckb_ResetFileDateToCreated.Location = new System.Drawing.Point(419, 67);
+            this.ckb_ResetFileDateToCreated.MinimumSize = new System.Drawing.Size(100, 20);
+            this.ckb_ResetFileDateToCreated.Name = "ckb_ResetFileDateToCreated";
+            this.ckb_ResetFileDateToCreated.Size = new System.Drawing.Size(168, 38);
+            this.ckb_ResetFileDateToCreated.TabIndex = 4;
+            this.ckb_ResetFileDateToCreated.Text = "ckb_ResetFileDateToCreated";
+            this.ckb_ResetFileDateToCreated.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ckb_ResetFileDateToCreated.UseVisualStyleBackColor = true;
+            this.ckb_ResetFileDateToCreated.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            // 
             // ckb_ProcessOriginalFile
             // 
             this.ckb_ProcessOriginalFile.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -339,18 +352,6 @@
             // 
             this.fbd_StartupFolder.Description = "fbd_StartupFolder";
             this.fbd_StartupFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
-            // 
-            // ckb_ResetFileDateToCreated
-            // 
-            this.ckb_ResetFileDateToCreated.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_ResetFileDateToCreated.Location = new System.Drawing.Point(419, 67);
-            this.ckb_ResetFileDateToCreated.MinimumSize = new System.Drawing.Size(100, 20);
-            this.ckb_ResetFileDateToCreated.Name = "ckb_ResetFileDateToCreated";
-            this.ckb_ResetFileDateToCreated.Size = new System.Drawing.Size(168, 38);
-            this.ckb_ResetFileDateToCreated.TabIndex = 4;
-            this.ckb_ResetFileDateToCreated.Text = "ckb_ResetFileDateToCreated";
-            this.ckb_ResetFileDateToCreated.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_ResetFileDateToCreated.UseVisualStyleBackColor = true;
             // 
             // FrmSettings
             // 

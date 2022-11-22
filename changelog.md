@@ -1,5 +1,6 @@
 ﻿# GeoTagNinja Changelog
 v0.6.83XX [202211XX]
+- Added a hold/blocker on entering a folder until the folder loads. This is annoying but is needed to prevent users from starting operations before the files are processed.
 - Added some logic to locally store (for the length of the session) each file's data. This is so that if the actual image/xmp files don't change then there's no need to re-parse everything _again_. It's slow and pointless.
 - Added functionality to "Get Data from Other File" in the Edit File section.
 - Changed logic around the addition of sidecar XMP files and (possibly) overwriting the source image file.

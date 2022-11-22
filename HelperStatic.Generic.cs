@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,6 +14,11 @@ namespace GeoTagNinja;
 internal static partial class HelperStatic
 {
     #region Generic
+
+    private static readonly object TableLock = new();
+    internal static HashSet<string> FilesBeingProcessed = new();
+    internal static bool FileListBeingUpdated;
+    internal static bool FilesAreBeingSaved;
 
     /// <summary>
     ///     A "coalesce" function.
@@ -299,31 +306,35 @@ internal static partial class HelperStatic
                                                      string settingId,
                                                      string settingValue)
     {
-        // delete any existing rows with the current combination
-        for (int i = dt.Rows.Count - 1; i >= 0; i--)
+        lock (TableLock)
         {
-            DataRow thisDr = dt.Rows[index: i];
-            if (
-                thisDr[columnName: "filePath"]
-                    .ToString() ==
-                filePath &&
-                thisDr[columnName: "settingId"]
-                    .ToString() ==
-                settingId
-            )
+            // delete any existing rows with the current combination
+            for (int i = dt.Rows.Count - 1; i >= 0; i--)
             {
-                thisDr.Delete();
+                DataRow thisDr = dt.Rows[index: i];
+                if (
+                    thisDr[columnName: "filePath"]
+                        .ToString() ==
+                    filePath &&
+                    thisDr[columnName: "settingId"]
+                        .ToString() ==
+                    settingId
+                )
+                {
+                    thisDr.Delete();
+                }
             }
+
+            dt.AcceptChanges();
+
+            // add new
+            DataRow newDr = dt.NewRow();
+            newDr[columnName: "filePath"] = filePath;
+            newDr[columnName: "settingId"] = settingId;
+            newDr[columnName: "settingValue"] = settingValue;
+            dt.Rows.Add(row: newDr);
+            dt.AcceptChanges();
         }
-
-        dt.AcceptChanges();
-
-        // add new
-        DataRow newDr = dt.NewRow();
-        newDr[columnName: "filePath"] = filePath;
-        newDr[columnName: "settingId"] = settingId;
-        newDr[columnName: "settingValue"] = settingValue;
-        dt.Rows.Add(row: newDr);
     }
 
     /// <summary>
@@ -467,6 +478,21 @@ internal static partial class HelperStatic
         FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "filePath");
         FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingValue");
+    }
+
+    internal static void GenericLockLockFile(string fileNameWithOutPath)
+    {
+        FilesBeingProcessed.Add(item: fileNameWithOutPath);
+    }
+
+    internal static void GenericLockUnLockFile(string fileNameWithOutPath)
+    {
+        FilesBeingProcessed.Remove(item: fileNameWithOutPath);
+    }
+
+    internal static bool GenericLockCheckLockFile(string fileNameWithOutPath)
+    {
+        return FilesBeingProcessed.Contains(item: fileNameWithOutPath);
     }
 
     #endregion

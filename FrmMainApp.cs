@@ -63,6 +63,8 @@ public partial class FrmMainApp : Form
     internal static DataTable DtFilesSeenInThisSession;
     internal static DataTable DtFileDataSeenInThisSession;
 
+    internal static bool RemoveGeoDataIsRunning;
+
     #endregion
 
     #region Methods
@@ -560,7 +562,14 @@ public partial class FrmMainApp : Form
             DialogResult dialogResult = MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_QuestionFileQIsNotEmpty"), caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
             {
+                while (HelperStatic.FileListBeingUpdated || HelperStatic.FilesAreBeingSaved)
+                {
+                    await Task.Delay(millisecondsDelay: 10);
+                }
+
                 await HelperStatic.ExifWriteExifToFile();
+                // shouldn't be needed but just in case.
+                HelperStatic.FilesAreBeingSaved = false;
             }
             else if (dialogResult == DialogResult.No)
             {
@@ -962,18 +971,19 @@ public partial class FrmMainApp : Form
                 {
                     // don't do folders...
                     string filePath = Path.Combine(path1: FolderName, path2: lvi.Text);
+                    string fileName = lvi.Text;
                     if (File.Exists(path: filePath))
                     {
                         // check it's not in the read-queue.
-                        while (HelperStatic.filesBeingProcessed.Contains(item: filePath))
+                        while (HelperStatic.GenericLockCheckLockFile(fileNameWithOutPath: fileName))
                         {
-                            await Task.Delay(millisecondsDelay: 100);
+                            await Task.Delay(millisecondsDelay: 10);
                         }
 
                         // Latitude
                         HelperStatic.GenericUpdateAddToDataTable(
                             dt: DtFileDataToWriteStage3ReadyToWrite,
-                            filePath: lvi.Text,
+                            filePath: fileName,
                             settingId: "GPSLatitude",
                             settingValue: strParsedLat
                         );
@@ -981,7 +991,7 @@ public partial class FrmMainApp : Form
                         // Longitude
                         HelperStatic.GenericUpdateAddToDataTable(
                             dt: DtFileDataToWriteStage3ReadyToWrite,
-                            filePath: lvi.Text,
+                            filePath: fileName,
                             settingId: "GPSLongitude",
                             settingValue: strParsedLng
                         );
@@ -1027,11 +1037,19 @@ public partial class FrmMainApp : Form
 
                 if (ShowLocToMapDialogChoice != "default") // basically user can alt+f4 from the box, which is dumb but nonetheless would break the code.
                 {
+                    HelperStatic.FileListBeingUpdated = true;
                     foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                     {
                         // don't do folders...
-                        if (File.Exists(path: Path.Combine(path1: FolderName, path2: lvi.Text)))
+                        string filePath = Path.Combine(path1: FolderName, path2: lvi.Text);
+                        string fileName = Path.GetFileName(path: filePath);
+                        if (File.Exists(path: filePath))
                         {
+                            while (HelperStatic.GenericLockCheckLockFile(fileNameWithOutPath: fileName))
+                            {
+                                await Task.Delay(millisecondsDelay: 10);
+                            }
+
                             DataTable dtToponomy = new();
                             DataTable dtAltitude = new();
                             if (ShowLocToMapDialogChoice.Contains(value: "yes"))
@@ -1070,12 +1088,16 @@ public partial class FrmMainApp : Form
                                 }
                             }
                         }
+
+                        await HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
                     }
 
-                    HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite();
+                    HelperStatic.FileListBeingUpdated = false;
                 }
             }
         }
+
+        HelperStatic.LvwCountItemsWithGeoData();
     }
 
     /// <summary>
@@ -1182,10 +1204,17 @@ public partial class FrmMainApp : Form
                                               EventArgs e)
     {
         // i think having an Item active can cause a lock on it
+        while (HelperStatic.FileListBeingUpdated || HelperStatic.FilesAreBeingSaved)
+        {
+            await Task.Delay(millisecondsDelay: 10);
+        }
+
         lvw_FileList.SelectedItems.Clear();
         // also the problem here is that the exiftoolAsync can still be running and locking the file.
 
         await HelperStatic.ExifWriteExifToFile();
+        // shouldn't be needed but just in case.
+        HelperStatic.FilesAreBeingSaved = false;
         DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
     }
 
@@ -1372,9 +1401,9 @@ public partial class FrmMainApp : Form
                 if (File.Exists(path: filePath))
                 {
                     // check it's not in the read-queue.
-                    while (HelperStatic.filesBeingProcessed.Contains(item: filePath))
+                    while (HelperStatic.GenericLockCheckLockFile(fileNameWithOutPath: filePath))
                     {
-                        await Task.Delay(millisecondsDelay: 100);
+                        await Task.Delay(millisecondsDelay: 10);
                     }
 
                     string strGpsLatitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLatitude"]
@@ -1455,7 +1484,7 @@ public partial class FrmMainApp : Form
         await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
         if (HelperStatic.s_changeFolderIsOkay)
         {
-            tsb_Refresh_lvwFileList_Click(sender: this, e: new EventArgs());
+            tsb_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
         }
     }
 
@@ -1522,7 +1551,14 @@ public partial class FrmMainApp : Form
     private async void tsb_RemoveGeoData_Click(object sender,
                                                EventArgs e)
     {
-        await HelperStatic.ExifRemoveLocationData(senderName: "FrmMainApp");
+        // if user is impatient and hammer-spams the button it could create a very long queue of nothing-useful.
+        if (!RemoveGeoDataIsRunning)
+        {
+            RemoveGeoDataIsRunning = true;
+            await HelperStatic.ExifRemoveLocationData(senderName: "FrmMainApp");
+            RemoveGeoDataIsRunning = false;
+            HelperStatic.LvwCountItemsWithGeoData();
+        }
     }
 
     /// <summary>
@@ -1576,11 +1612,18 @@ public partial class FrmMainApp : Form
     private async void tsb_SaveFiles_Click(object sender,
                                            EventArgs e)
     {
+        while (HelperStatic.FileListBeingUpdated || HelperStatic.FilesAreBeingSaved)
+        {
+            await Task.Delay(millisecondsDelay: 10);
+        }
+
         // i think having an Item active can cause a lock on it
         lvw_FileList.SelectedItems.Clear();
         // also the problem here is that the exiftoolAsync can still be running and locking the file.
 
         await HelperStatic.ExifWriteExifToFile();
+        // shouldn't be needed but just in case.
+        HelperStatic.FilesAreBeingSaved = false;
         DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
     }
 
@@ -1599,7 +1642,38 @@ public partial class FrmMainApp : Form
 
         lvw_FileList.Items.Clear();
         Application.DoEvents();
-        HelperStatic.filesBeingProcessed.Clear();
+        HelperStatic.FilesBeingProcessed.Clear();
+        RemoveGeoDataIsRunning = false;
+
+        #region PleaseWaitBox
+
+        Form pleaseWaitBox = new();
+        pleaseWaitBox.Text = "Wait...";
+        pleaseWaitBox.ControlBox = false;
+        FlowLayoutPanel panel = new();
+
+        Label lblText = new();
+        lblText.Text = HelperStatic.DataReadSQLiteObjectText(
+            languageName: AppLanguage,
+            objectType: "Label",
+            objectName: "lbl_FolderIsLoading"
+        );
+        lblText.AutoSize = true;
+
+        panel.Controls.Add(value: lblText);
+
+        panel.Padding = new Padding(all: 5);
+        panel.AutoSize = true;
+
+        pleaseWaitBox.Controls.Add(value: panel);
+        pleaseWaitBox.Size = new Size(width: panel.Width + 10, height: panel.Height + 5);
+        pleaseWaitBox.ShowInTaskbar = false;
+
+        pleaseWaitBox.StartPosition = FormStartPosition.CenterScreen;
+        pleaseWaitBox.Show();
+        Enabled = false;
+
+        #endregion
 
         // this shouldn't really happen but just in case
         if (FolderName is null)
@@ -1677,9 +1751,10 @@ public partial class FrmMainApp : Form
                 .ToList();
 
             // also add to filesBeingProcessed
-            foreach (string file in files)
+            foreach (string filePath in files)
             {
-                HelperStatic.filesBeingProcessed.Add(item: file);
+                string fileName = Path.GetFileName(path: filePath);
+                HelperStatic.GenericLockLockFile(fileNameWithOutPath: fileName);
             }
 
             // add a parent folder. "dot dot"
@@ -1701,25 +1776,26 @@ public partial class FrmMainApp : Form
                 lvw_FileList_addListItem(fileName: Path.GetFileName(path: currentDir));
             }
 
-            foreach (string currentFile in files)
+            foreach (string currentFilePath in files)
             {
-                string currentFileWithXmp = Path.Combine(path1: Path.GetDirectoryName(path: currentFile), path2: Path.GetFileNameWithoutExtension(path: currentFile) + ".xmp");
-                lvw_FileList_addListItem(fileName: Path.GetFileName(path: currentFile));
+                string currentFileName = Path.GetFileName(path: currentFilePath);
+                string currentFileWithXmp = Path.Combine(path1: Path.GetDirectoryName(path: currentFilePath), path2: Path.GetFileNameWithoutExtension(path: currentFilePath) + ".xmp");
+                lvw_FileList_addListItem(fileName: Path.GetFileName(path: currentFilePath));
 
                 // if this file appears in the DtFilesSeenInThisSession // or with xmp
                 bool timeStampNeedsUpdating = false;
                 if (DtFilesSeenInThisSession.AsEnumerable()
-                    .Any(predicate: row => currentFile == row.Field<string>(columnName: "filePath")))
+                    .Any(predicate: row => currentFilePath == row.Field<string>(columnName: "filePath")))
                 {
                     // check if the timestamp matches
-                    DataRow[] drFoundFileData = DtFilesSeenInThisSession.Select(filterExpression: "filePath = '" + currentFile + "'");
+                    DataRow[] drFoundFileData = DtFilesSeenInThisSession.Select(filterExpression: "filePath = '" + currentFilePath + "'");
                     DataRow[] drFoundFileDataXmp = DtFilesSeenInThisSession.Select(filterExpression: "filePath = '" + currentFileWithXmp + "'");
                     if (drFoundFileData.Length != 0 || drFoundFileDataXmp.Length != 0)
                     {
                         string drFoundFileDataStr = drFoundFileData[0][columnName: "fileDateTime"]
                             .ToString();
 
-                        string lastWriteTimeStr = File.GetLastWriteTime(path: currentFile)
+                        string lastWriteTimeStr = File.GetLastWriteTime(path: currentFilePath)
                             .ToString(provider: CultureInfo.InvariantCulture);
 
                         if (drFoundFileDataStr == lastWriteTimeStr)
@@ -1759,7 +1835,7 @@ public partial class FrmMainApp : Form
                 if (timeStampNeedsUpdating)
                 {
                     // delete if exists in DtFilesSeenInThisSession
-                    DataRow[] drFoundFileData = DtFilesSeenInThisSession.Select(filterExpression: "filePath = '" + currentFile + "'");
+                    DataRow[] drFoundFileData = DtFilesSeenInThisSession.Select(filterExpression: "filePath = '" + currentFilePath + "'");
                     if (drFoundFileData.Length != 0)
                     {
                         drFoundFileData[0]
@@ -1777,7 +1853,7 @@ public partial class FrmMainApp : Form
                     }
 
                     // also drop from DtFileDataSeenInThisSession
-                    drFoundFileData = DtFileDataSeenInThisSession.Select(filterExpression: "filePath = '" + currentFile + "'");
+                    drFoundFileData = DtFileDataSeenInThisSession.Select(filterExpression: "filePath = '" + currentFilePath + "'");
                     if (drFoundFileData.Length != 0)
                     {
                         foreach (DataRow dr in drFoundFileData)
@@ -1789,19 +1865,20 @@ public partial class FrmMainApp : Form
 
                     // the add-in used here can't process nonstandard characters in filenames w/o an args file, which doesn't return what we're after.
                     // so for 'standard' stuff we'll run async and for everything else we'll do it slower but more compatible
-                    if (Regex.IsMatch(input: currentFile, pattern: @"^[a-zA-Z0-9.:\\_ ]*$"))
+                    // lock will be removed later.
+                    if (Regex.IsMatch(input: currentFilePath, pattern: @"^[a-zA-Z0-9.:\\_ ]*$"))
                     {
-                        listOfAsyncCompatibleItems.Add(item: Path.GetFileName(path: currentFile));
+                        listOfAsyncCompatibleItems.Add(item: Path.GetFileName(path: currentFilePath));
                     }
                     else
                     {
-                        listOfAsyncIncompatibleItems.Add(item: Path.GetFileName(path: currentFile));
+                        listOfAsyncIncompatibleItems.Add(item: Path.GetFileName(path: currentFilePath));
                     }
                 }
                 // basically if we've already parsed this file and it hasn't changed since then don't reparse it.
                 else
                 {
-                    DataRow[] drFoundFileData = DtFileDataSeenInThisSession.Select(filterExpression: "filePath = '" + currentFile + "'");
+                    DataRow[] drFoundFileData = DtFileDataSeenInThisSession.Select(filterExpression: "filePath = '" + currentFilePath + "'");
 
                     // just to be on the foolproof side
                     if (drFoundFileData.Length != 0)
@@ -1813,6 +1890,7 @@ public partial class FrmMainApp : Form
                                                                         .ToString()
                                                                         .Split('\\')
                                                                         .Last());
+                            //lvw.BeginUpdate();
                             try
                             {
                                 lvi.SubItems[index: lvw.Columns[key: "clh_" +
@@ -1826,13 +1904,10 @@ public partial class FrmMainApp : Form
                                 // nothing
                             }
 
+                            // remove the lock
                             try
                             {
-                                int itemToRemoveInt = HelperStatic.filesBeingProcessed.IndexOf(item: currentFile);
-                                if (itemToRemoveInt != -1)
-                                {
-                                    HelperStatic.filesBeingProcessed.RemoveAt(index: itemToRemoveInt);
-                                }
+                                HelperStatic.GenericLockUnLockFile(fileNameWithOutPath: currentFileName);
                             }
                             catch
                             {
@@ -1840,6 +1915,7 @@ public partial class FrmMainApp : Form
                             }
 
                             lvi.ForeColor = Color.Black;
+                            //lvw.EndUpdate();
                         }
                     }
                 }
@@ -1877,23 +1953,13 @@ public partial class FrmMainApp : Form
                 await HelperStatic.ExifGetExifFromFilesIncompatibleFileNames(files: listOfAsyncIncompatibleItems, folderEnterEpoch: HelperStatic.folderEnterLastEpoch);
             }
 
-            int filesWithGeoData = 0;
-            foreach (ListViewItem lvi in lvw_FileList.Items)
-            {
-                if (lvi.SubItems.Count > 1)
-                {
-                    if (lvi.SubItems[index: 1]
-                            .Text !=
-                        "-")
-                    {
-                        filesWithGeoData++;
-                    }
-                }
-            }
-
-            HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Ready. Files: Total: " + files.Count + " Geodata: " + filesWithGeoData);
+            HelperStatic.FileListBeingUpdated = false;
+            Enabled = true;
+            pleaseWaitBox.Hide();
+            HelperStatic.LvwCountItemsWithGeoData();
         }
     }
+
 
     /// <summary>
     ///     Handles the lvw_FileList_MouseDoubleClick event -> if user clicked on a folder then enter, if a file then edit
@@ -2094,20 +2160,24 @@ public partial class FrmMainApp : Form
         else if (e.KeyCode == Keys.F5)
         {
             tsb_Refresh_lvwFileList_Click(sender: sender, e: EventArgs.Empty);
-            lvw_FileList.Items.Clear();
-            FolderName = tbx_FolderName.Text;
-            lvwFileList_LoadOrUpdate();
             e.Handled = true;
         }
 
         // Control S -> Save files
         else if (e.Control && e.KeyCode == Keys.S)
         {
+            while (HelperStatic.FileListBeingUpdated || HelperStatic.FilesAreBeingSaved)
+            {
+                await Task.Delay(millisecondsDelay: 10);
+            }
+
             // i think having an Item active can cause a lock on it
             lvw_FileList.SelectedItems.Clear();
             DtFileDataToWriteStage3ReadyToWrite.DefaultView.Sort = "filePath ASC";
 
             await HelperStatic.ExifWriteExifToFile();
+            // shouldn't be needed but just in case.
+            HelperStatic.FilesAreBeingSaved = false;
             DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
         }
     }

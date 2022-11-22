@@ -129,6 +129,11 @@ public partial class FrmPasteWhat : Form
                         .ToString();
                 }
 
+                if (pasteValueStr == "-")
+                {
+                    pasteValueStr = "";
+                }
+
                 HelperStatic.GenericUpdateAddToDataTable(
                     dt: FrmMainApp.DtFileDataToWriteStage1PreQueue,
                     filePath: fileToUpdate,

@@ -50,6 +50,11 @@ internal static partial class HelperStatic
             DialogResult dialogResult = MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_QuestionFileQIsNotEmpty"), caption: "Info", buttons: MessageBoxButtons.YesNoCancel, icon: MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
             {
+                while (HelperStatic.FileListBeingUpdated || HelperStatic.FilesAreBeingSaved)
+                {
+                    await Task.Delay(millisecondsDelay: 10);
+                }
+
                 await ExifWriteExifToFile();
                 s_changeFolderIsOkay = true;
             }

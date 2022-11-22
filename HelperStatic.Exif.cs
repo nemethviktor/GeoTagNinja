@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using geoTagNinja;
+using Microsoft.Web.WebView2.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -24,8 +25,6 @@ namespace GeoTagNinja;
 
 internal static partial class HelperStatic
 {
-    internal static List<string> filesBeingProcessed = new();
-
     #region Exif Related
 
     /// <summary>
@@ -401,7 +400,7 @@ internal static partial class HelperStatic
 
             string folderNameToUse = FrmMainAppInstance.tbx_FolderName.Text;
 
-            foreach (string listElem in files)
+            foreach (string fileName in files)
             {
                 DataTable dt_fileExifTable = new();
                 dt_fileExifTable.Clear();
@@ -409,11 +408,11 @@ internal static partial class HelperStatic
                 dt_fileExifTable.Columns.Add(columnName: "TagValue");
                 string exifToolResult;
 
-                if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: listElem)))
+                if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: fileName)))
                 {
                     try
                     {
-                        exifToolCommandWithFileName = exifToolCommand.Concat(second: new[] { Path.Combine(path1: folderNameToUse, path2: listElem) });
+                        exifToolCommandWithFileName = exifToolCommand.Concat(second: new[] { Path.Combine(path1: folderNameToUse, path2: fileName) });
                         exifToolResult = await FrmMainAppInstance.AsyncExifTool.ExecuteAsync(args: exifToolCommandWithFileName);
                     }
                     catch (Exception ex)
@@ -457,9 +456,9 @@ internal static partial class HelperStatic
                     }
 
                     // for some files there may be data in a sidecar xmp without that data existing in the picture-file. we'll try to collect it here.
-                    if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: listElem)) + ".xmp")))
+                    if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: fileName)) + ".xmp")))
                     {
-                        string sideCarXMPFilePath = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: listElem)) + ".xmp");
+                        string sideCarXMPFilePath = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: fileName)) + ".xmp");
                         // this is totally a copypaste from above
                         try
                         {
@@ -507,25 +506,16 @@ internal static partial class HelperStatic
                         }
                     }
 
-                    ListViewItem lvi = FrmMainAppInstance.lvw_FileList.FindItemWithText(text: listElem);
+                    ListView lvw = FrmMainAppInstance.lvw_FileList;
+                    ListViewItem lvi = lvw.FindItemWithText(text: fileName);
 
                     if (lvi != null /*&& folderEnterLastEpoch == folderEnterEpoch*/) // 20221121: commenting this out for now - otherwise the filesBeingProcessed removal wouldn't ever fire.
                     {
+                        //lvw.BeginUpdate();
                         ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
-                        // remove from the filesBeingProcessed list
-                        try
-                        {
-                            int itemToRemoveInt = filesBeingProcessed.IndexOf(item: Path.Combine(path1: folderNameToUse, path2: listElem));
-                            filesBeingProcessed.RemoveAt(index: itemToRemoveInt);
-                            // no need to remove the xmp here because it hasn't been added in the first place.
-                        }
-                        catch
-                        {
-                            // nothing, this shouldn't happen but i don't want it to stop the app anyway.
-                        }
 
                         // also add to DtFilesSeenInThisSession 
-                        string filePath = Path.Combine(path1: folderNameToUse, path2: listElem);
+                        string filePath = Path.Combine(path1: folderNameToUse, path2: fileName);
                         DataRow dr = FrmMainApp.DtFilesSeenInThisSession.NewRow(); // have new row on each iteration
                         dr[columnName: "filePath"] = filePath;
                         dr[columnName: "fileDateTime"] = File.GetLastWriteTime(path: filePath)
@@ -562,6 +552,18 @@ internal static partial class HelperStatic
                         }
 
                         lvi.ForeColor = Color.Black;
+                        // remove from the filesBeingProcessed list
+                        try
+                        {
+                            GenericLockUnLockFile(fileName);
+                            // no need to remove the xmp here because it hasn't been added in the first place.
+                        }
+                        catch
+                        {
+                            // nothing, this shouldn't happen but i don't want it to stop the app anyway.
+                        }
+
+                        //lvw.EndUpdate();
                         FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " + lvi.Text);
                     }
                 }
@@ -738,9 +740,9 @@ internal static partial class HelperStatic
             // try to collect the txt files and then read them back into the listview.
             try
             {
-                foreach (string itemText in files)
+                foreach (string fileName in files)
                 {
-                    string exifFileIn = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: itemText + ".txt");
+                    string exifFileIn = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: fileName + ".txt");
                     if (File.Exists(path: exifFileIn))
                     {
                         DataTable dt_fileExifTable = new();
@@ -760,7 +762,7 @@ internal static partial class HelperStatic
                         }
 
                         // see if there's an xmp-output too
-                        string sideCarXMPFilePath = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: itemText.Substring(startIndex: 0, length: itemText.LastIndexOf(value: '.')) + ".xmp" + ".txt");
+                        string sideCarXMPFilePath = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: fileName.Substring(startIndex: 0, length: fileName.LastIndexOf(value: '.')) + ".xmp" + ".txt");
                         if (File.Exists(path: sideCarXMPFilePath))
                         {
                             foreach (string exifTxtFileLineIn in File.ReadLines(path: sideCarXMPFilePath))
@@ -781,10 +783,12 @@ internal static partial class HelperStatic
 
                         //if (folderEnterLastEpoch == folderEnterEpoch) // see comment in prev block
                         {
-                            ListViewItem lvi = FrmMainAppInstance.lvw_FileList.FindItemWithText(text: itemText);
+                            ListView lwv = FrmMainAppInstance.lvw_FileList;
+                            ListViewItem lvi = lwv.FindItemWithText(text: fileName);
+                            lwv.BeginUpdate();
 
                             // also add to DtFilesSeenInThisSession 
-                            string filePath = Path.Combine(path1: folderNameToUse, path2: itemText);
+                            string filePath = Path.Combine(path1: folderNameToUse, path2: fileName);
                             DataRow dr = FrmMainApp.DtFilesSeenInThisSession.NewRow(); // have new row on each iteration
                             dr[columnName: "filePath"] = filePath;
                             dr[columnName: "fileDateTime"] = File.GetLastWriteTime(path: filePath)
@@ -824,14 +828,14 @@ internal static partial class HelperStatic
                             // remove from the filesBeingProcessed list
                             try
                             {
-                                int itemToRemoveInt = filesBeingProcessed.IndexOf(item: Path.Combine(path1: folderNameToUse, path2: itemText));
-                                filesBeingProcessed.RemoveAt(index: itemToRemoveInt);
+                                GenericLockUnLockFile(fileName);
                             }
                             catch
                             {
                                 // nothing, this shouldn't happen but i don't want it to stop the app anyway.
                             }
 
+                            lwv.EndUpdate();
                             lvi.ForeColor = Color.Black;
                         }
 
@@ -1374,6 +1378,7 @@ internal static partial class HelperStatic
     /// <returns>Reastically nothing but writes the exif tags and updates the listview rows where necessary</returns>
     internal static async Task ExifWriteExifToFile()
     {
+        HelperStatic.FilesAreBeingSaved = true;
         string argsFile = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "exifArgsToWrite.args");
         string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8" + " -@ " + s_doubleQuote + argsFile + s_doubleQuote;
 
@@ -1431,6 +1436,19 @@ internal static partial class HelperStatic
 
             exifArgsForSidecar += Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileName)) + ".xmp") + Environment.NewLine; //needs to include folder name
             exifArgsForSidecar += "-progress" + Environment.NewLine;
+            // sidecar copying needs to be in a separate batch, as technically it's a different file
+            if (writeXMPSideCar)
+            {
+                string xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileName)) + ".xmp");
+
+                if (!File.Exists(path: xmpFileLocation))
+                {
+                    // otherwise create a new one. 
+                    xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: fileName);
+                    exifArgsForSidecar += "-tagsfromfile=" + xmpFileLocation + Environment.NewLine;
+                }
+            }
+
             exifArgsForSidecar += "-ignoreMinorErrors" + Environment.NewLine;
 
             DataView dv_FileWriteQueue = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
@@ -1607,22 +1625,6 @@ internal static partial class HelperStatic
 
             exifArgsForOriginalFile += "-execute" + Environment.NewLine;
 
-            // sidecar copying needs to be in a separate batch, as technically it's a different file
-            // otherwise it will re-read itself and generally this is pointless if the orig-file isn't being created.
-            if (processOriginalFile && writeXMPSideCar)
-            {
-                string xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileName)) + ".xmp");
-
-                // logic: if there is an XMP already then use that as base... (this is needed because if an old RAW file has Adobe-modifications but the XMP doesn't, then it'd overwrite everything
-                if (!File.Exists(path: xmpFileLocation))
-                {
-                    // otherwise create a new one. 
-                    xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: fileName);
-                }
-
-                exifArgsForSidecar += "-tagsfromfile=" + xmpFileLocation + Environment.NewLine;
-            }
-
             if (processOriginalFile)
             {
                 File.AppendAllText(path: argsFile, contents: exifArgsForOriginalFile, encoding: Encoding.UTF8);
@@ -1648,7 +1650,7 @@ internal static partial class HelperStatic
 
         FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
 
-        if (!failWriteNothingEnabled)
+        if (!failWriteNothingEnabled && !queueWasEmpty)
         {
             ///////////////
             // via https://stackoverflow.com/a/68616297/3968494
@@ -1766,6 +1768,7 @@ internal static partial class HelperStatic
 
         ///////////////
         FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Ready.");
+        HelperStatic.FilesAreBeingSaved = false;
     }
 
 
@@ -2289,49 +2292,50 @@ internal static partial class HelperStatic
         }
         else if (senderName == "FrmMainApp")
         {
-            FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-
-            if (FrmMainAppInstance.lvw_FileList.SelectedItems.Count > 0)
+            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+            ListView lvw = frmMainAppInstance.lvw_FileList;
+            if (lvw.SelectedItems.Count > 0)
             {
-                foreach (ListViewItem lvi in FrmMainAppInstance.lvw_FileList.SelectedItems)
+                HelperStatic.FileListBeingUpdated = true;
+                foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
                 {
                     // don't do folders...
-                    if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text)))
+                    string filePath = Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text);
+                    string fileName = lvi.Text;
+                    if (File.Exists(path: filePath))
                     {
+                        //lvw.BeginUpdate();
                         // check it's not in the read-queue.
-                        while (filesBeingProcessed.Contains(item: Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text)))
+                        while (HelperStatic.GenericLockCheckLockFile(fileName))
                         {
-                            await Task.Delay(millisecondsDelay: 100);
+                            await Task.Delay(millisecondsDelay: 10);
                         }
 
                         // then put a blocker on
-                        filesBeingProcessed.Add(item: Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text));
+                        GenericLockLockFile(fileName);
                         foreach (string toponomyDetail in toponomyOverwrites)
                         {
                             GenericUpdateAddToDataTable(
                                 dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                                filePath: lvi.Text,
+                                filePath: fileName,
                                 settingId: toponomyDetail,
                                 settingValue: ""
                             );
                         }
 
-                        // then remove
-                        try
-                        {
-                            int itemToRemoveInt = filesBeingProcessed.IndexOf(item: Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text));
-                            filesBeingProcessed.RemoveAt(index: itemToRemoveInt);
-                            // no need to remove the xmp here because it hasn't been added in the first place.
-                        }
-                        catch
-                        {
-                            // ignored
-                        }
-                    }
-                }
-            }
+                        // then remove lock
 
-            LwvUpdateRowFromDTWriteStage3ReadyToWrite();
+                        await LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi);
+                        GenericLockUnLockFile(fileName);
+                        // no need to remove the xmp here because it hasn't been added in the first place.
+                    }
+
+                    //lvw.EndUpdate();
+                }
+
+                HelperStatic.FileListBeingUpdated = false;
+                FrmMainApp.RemoveGeoDataIsRunning = false;
+            }
         }
     }
 

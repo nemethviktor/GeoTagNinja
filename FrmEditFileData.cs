@@ -478,6 +478,7 @@ public partial class FrmEditFileData : Form
         // move data from temp-queue to write-queue
         if (DtFileDataToWriteStage1PreQueue.Rows.Count > 0)
         {
+            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
             // transfer data from 1 to 3
             foreach (DataRow drS1 in DtFileDataToWriteStage1PreQueue.Rows)
             {
@@ -506,7 +507,13 @@ public partial class FrmEditFileData : Form
             }
 
             // update listview w new data
-            HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite();
+            HelperStatic.FileListBeingUpdated = true;
+            foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.Items)
+            {
+                await HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi);
+            }
+
+            HelperStatic.FileListBeingUpdated = false;
 
             // drop from q
             DtFileDataToWriteStage1PreQueue.Rows.Clear();
@@ -514,7 +521,6 @@ public partial class FrmEditFileData : Form
 
         DtFileDataToWriteStage2QueuePendingSave.Rows.Clear();
         // re-center map on new data.
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         await HelperStatic.LvwItemClickNavigate();
     }
