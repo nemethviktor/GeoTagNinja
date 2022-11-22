@@ -2,6 +2,8 @@
 v0.6.83XX [202211XX]
 - Added some logic to locally store (for the length of the session) each file's data. This is so that if the actual image/xmp files don't change then there's no need to re-parse everything _again_. It's slow and pointless.
 - Added functionality to "Get Data from Other File" in the Edit File section.
+- Changed logic around the addition of sidecar XMP files and (possibly) overwriting the source image file.
+-- Added some logic to the above to allow for "Original Files DateTime" to be reset to CreateDateTime by default for RAW images. (These can all be changed in Settings/File Specific)
 - Bugfixes:
 -- Error msg/image name not showing properly when file gone missing
 -- The previous version introduced an error in Non-English regions when the user clicked on the map. This has been fixed.

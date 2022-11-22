@@ -102,9 +102,10 @@ internal static partial class HelperStatic
     {
         string[] controlNamesToAdd =
         {
-            "ckb_AddXMPIntoFile",
             "ckb_AddXMPSideCar",
-            "ckb_OverwriteOriginal"
+            "ckb_OverwriteOriginal",
+            "ckb_ProcessOriginalFile",
+            "ckb_ResetFileDateToCreated"
         };
         string existingSQLVal;
 
@@ -121,12 +122,32 @@ internal static partial class HelperStatic
                     .Last()
                     .ToLower();
                 string tmpVal = "false";
-                if (controlName == "ckb_AddXMPIntoFile")
+
+                if (controlName == "ckb_AddXMPSideCar")
+                {
+                    if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
+                    {
+                        tmpVal = "true";
+                    }
+                    else
+                    {
+                        tmpVal = "false";
+                    }
+                }
+                else if (controlName == "ckb_ProcessOriginalFile")
                 {
                     tmpVal = "true";
+                    //if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
+                    //{
+                    //    tmpVal = "false";
+                    //}
+                    //else
+                    //{
+                    //    tmpVal = "true";
+                    //}
                 }
 
-                else if (controlName == "ckb_AddXMPSideCar")
+                else if (controlName == "ckb_ResetFileDateToCreated")
                 {
                     if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
                     {

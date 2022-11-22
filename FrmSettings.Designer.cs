@@ -46,13 +46,14 @@
             this.tbx_GeoNames_UserName = new System.Windows.Forms.TextBox();
             this.tbx_ARCGIS_APIKey = new System.Windows.Forms.TextBox();
             this.tpg_FileOptions = new System.Windows.Forms.TabPage();
-            this.ckb_AddXMPIntoFile = new System.Windows.Forms.CheckBox();
+            this.ckb_ProcessOriginalFile = new System.Windows.Forms.CheckBox();
             this.ckb_OverwriteOriginal = new System.Windows.Forms.CheckBox();
             this.ckb_AddXMPSideCar = new System.Windows.Forms.CheckBox();
             this.lbx_fileExtensions = new System.Windows.Forms.ListBox();
             this.btn_OK = new System.Windows.Forms.Button();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.fbd_StartupFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.ckb_ResetFileDateToCreated = new System.Windows.Forms.CheckBox();
             this.tct_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).BeginInit();
@@ -246,7 +247,8 @@
             // tpg_FileOptions
             // 
             this.tpg_FileOptions.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.tpg_FileOptions.Controls.Add(this.ckb_AddXMPIntoFile);
+            this.tpg_FileOptions.Controls.Add(this.ckb_ResetFileDateToCreated);
+            this.tpg_FileOptions.Controls.Add(this.ckb_ProcessOriginalFile);
             this.tpg_FileOptions.Controls.Add(this.ckb_OverwriteOriginal);
             this.tpg_FileOptions.Controls.Add(this.ckb_AddXMPSideCar);
             this.tpg_FileOptions.Controls.Add(this.lbx_fileExtensions);
@@ -259,23 +261,23 @@
             this.tpg_FileOptions.Text = "tpg_FileOptions";
             this.tpg_FileOptions.Enter += new System.EventHandler(this.Pg_fileoptions_Enter);
             // 
-            // ckb_AddXMPIntoFile
+            // ckb_ProcessOriginalFile
             // 
-            this.ckb_AddXMPIntoFile.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_AddXMPIntoFile.Location = new System.Drawing.Point(397, 20);
-            this.ckb_AddXMPIntoFile.MinimumSize = new System.Drawing.Size(100, 20);
-            this.ckb_AddXMPIntoFile.Name = "ckb_AddXMPIntoFile";
-            this.ckb_AddXMPIntoFile.Size = new System.Drawing.Size(190, 38);
-            this.ckb_AddXMPIntoFile.TabIndex = 2;
-            this.ckb_AddXMPIntoFile.Text = "ckb_AddXMPIntoFile";
-            this.ckb_AddXMPIntoFile.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_AddXMPIntoFile.UseVisualStyleBackColor = true;
-            this.ckb_AddXMPIntoFile.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            this.ckb_ProcessOriginalFile.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ckb_ProcessOriginalFile.Location = new System.Drawing.Point(397, 23);
+            this.ckb_ProcessOriginalFile.MinimumSize = new System.Drawing.Size(100, 20);
+            this.ckb_ProcessOriginalFile.Name = "ckb_ProcessOriginalFile";
+            this.ckb_ProcessOriginalFile.Size = new System.Drawing.Size(190, 38);
+            this.ckb_ProcessOriginalFile.TabIndex = 3;
+            this.ckb_ProcessOriginalFile.Text = "ckb_ProcessOriginalFile";
+            this.ckb_ProcessOriginalFile.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ckb_ProcessOriginalFile.UseVisualStyleBackColor = true;
+            this.ckb_ProcessOriginalFile.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
             // ckb_OverwriteOriginal
             // 
             this.ckb_OverwriteOriginal.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_OverwriteOriginal.Location = new System.Drawing.Point(397, 118);
+            this.ckb_OverwriteOriginal.Location = new System.Drawing.Point(397, 183);
             this.ckb_OverwriteOriginal.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_OverwriteOriginal.Name = "ckb_OverwriteOriginal";
             this.ckb_OverwriteOriginal.Size = new System.Drawing.Size(190, 38);
@@ -288,7 +290,7 @@
             // ckb_AddXMPSideCar
             // 
             this.ckb_AddXMPSideCar.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_AddXMPSideCar.Location = new System.Drawing.Point(397, 69);
+            this.ckb_AddXMPSideCar.Location = new System.Drawing.Point(397, 123);
             this.ckb_AddXMPSideCar.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_AddXMPSideCar.Name = "ckb_AddXMPSideCar";
             this.ckb_AddXMPSideCar.Size = new System.Drawing.Size(190, 38);
@@ -337,6 +339,18 @@
             // 
             this.fbd_StartupFolder.Description = "fbd_StartupFolder";
             this.fbd_StartupFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
+            // 
+            // ckb_ResetFileDateToCreated
+            // 
+            this.ckb_ResetFileDateToCreated.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ckb_ResetFileDateToCreated.Location = new System.Drawing.Point(419, 67);
+            this.ckb_ResetFileDateToCreated.MinimumSize = new System.Drawing.Size(100, 20);
+            this.ckb_ResetFileDateToCreated.Name = "ckb_ResetFileDateToCreated";
+            this.ckb_ResetFileDateToCreated.Size = new System.Drawing.Size(168, 38);
+            this.ckb_ResetFileDateToCreated.TabIndex = 4;
+            this.ckb_ResetFileDateToCreated.Text = "ckb_ResetFileDateToCreated";
+            this.ckb_ResetFileDateToCreated.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ckb_ResetFileDateToCreated.UseVisualStyleBackColor = true;
             // 
             // FrmSettings
             // 
@@ -391,7 +405,8 @@
         private System.Windows.Forms.ListBox lbx_fileExtensions;
         private System.Windows.Forms.Label lbl_Language;
         private System.Windows.Forms.ComboBox cbx_Language;
-        private System.Windows.Forms.CheckBox ckb_AddXMPIntoFile;
         private System.Windows.Forms.CheckBox ckb_ResetMapToZero;
+        private System.Windows.Forms.CheckBox ckb_ProcessOriginalFile;
+        private System.Windows.Forms.CheckBox ckb_ResetFileDateToCreated;
     }
 }

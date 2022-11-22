@@ -1374,19 +1374,25 @@ internal static partial class HelperStatic
     /// <returns>Reastically nothing but writes the exif tags and updates the listview rows where necessary</returns>
     internal static async Task ExifWriteExifToFile()
     {
-        string exifArgs = "";
         string argsFile = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "exifArgsToWrite.args");
         string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8" + " -@ " + s_doubleQuote + argsFile + s_doubleQuote;
-        FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         // if user switches folder in the process of writing this will keep it standard
-        Debug.Assert(condition: FrmMainAppInstance != null, message: nameof(FrmMainAppInstance) + " != null");
-        string folderNameToWrite = FrmMainAppInstance.tbx_FolderName.Text;
+        Debug.Assert(condition: frmMainAppInstance != null, message: nameof(frmMainAppInstance) + " != null");
+        string folderNameToWrite = frmMainAppInstance.tbx_FolderName.Text;
+
         File.Delete(path: argsFile);
 
-        bool writeXMLTags = false;
+        bool processOriginalFile = false;
+        bool resetFileDateToCreated = false;
+        bool writeXMLTags = true; // legacy
         bool writeXMPSideCar = false;
-        bool overwriteOriginal = false;
+        bool doNotCreateBackup = false;
+
+        bool failWriteNothingEnabled = false;
+        bool queueWasEmpty = true;
 
         // get tag names
         DataTable dt_objectTagNames_Out = GenericJoinDataTables(t1: FrmMainApp.ObjectNames, t2: FrmMainApp.ObjectTagNamesOut,
@@ -1400,15 +1406,32 @@ internal static partial class HelperStatic
         // check there's anything to write.
         foreach (DataRow dr_FileName in dt_DistinctFileNames.Rows)
         {
+            string exifArgsForOriginalFile = "";
+            string exifArgsForSidecar = "";
+
+            queueWasEmpty = false;
             string fileName = dr_FileName[columnIndex: 0]
                 .ToString();
+            string fileExt = Path.GetExtension(path: fileName)
+                .Substring(startIndex: 1);
+
+            processOriginalFile = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_ProcessOriginalFile"));
+            resetFileDateToCreated = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_ResetFileDateToCreated"));
+            writeXMPSideCar = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_AddXMPSideCar"));
+            doNotCreateBackup = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_OverwriteOriginal"));
 
             List<string> tagsToDelete = new(); // this needs to be injected into the sidecar if req'd
 
-            exifArgs += Path.Combine(path1: folderNameToWrite, path2: fileName) + Environment.NewLine; //needs to include folder name
-            exifArgs += "-ignoreMinorErrors" + Environment.NewLine;
-            exifArgs += "-progress" + Environment.NewLine;
-            string exifArgsForSidecar = "";
+            // it's a lot less complicated to just pretend we want both the Original File and the Sidecar updated and then not-include them later than to have a Yggdrasil of IFs scattered all over.
+            // ... which latter I would inevitable f...k up at some point.
+
+            exifArgsForOriginalFile += Path.Combine(path1: folderNameToWrite, path2: fileName) + Environment.NewLine; //needs to include folder name
+            exifArgsForOriginalFile += "-ignoreMinorErrors" + Environment.NewLine;
+            exifArgsForOriginalFile += "-progress" + Environment.NewLine;
+
+            exifArgsForSidecar += Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileName)) + ".xmp") + Environment.NewLine; //needs to include folder name
+            exifArgsForSidecar += "-progress" + Environment.NewLine;
+            exifArgsForSidecar += "-ignoreMinorErrors" + Environment.NewLine;
 
             DataView dv_FileWriteQueue = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
             dv_FileWriteQueue.RowFilter = "filePath = '" + fileName + "'";
@@ -1421,17 +1444,9 @@ internal static partial class HelperStatic
                                                                                 (row1,
                                                                                  row2) =>
                                                                                     row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "settingId"));
-                string fileExt = Path.GetExtension(path: fileName)
-                    .Substring(startIndex: 1);
 
                 string exiftoolTagName;
                 string updateExifVal;
-
-                writeXMLTags = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_AddXMPIntoFile"));
-                ;
-                writeXMPSideCar = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_AddXMPSideCar"));
-                ;
-                overwriteOriginal = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_OverwriteOriginal"));
 
                 bool deleteAllGPSData = false;
                 bool deleteTagAlreadyAdded = false;
@@ -1453,14 +1468,14 @@ internal static partial class HelperStatic
                     // non-xml always
                     if (deleteAllGPSData && !deleteTagAlreadyAdded)
                     {
-                        exifArgs += "-gps*=" + Environment.NewLine;
+                        exifArgsForOriginalFile += "-gps*=" + Environment.NewLine;
                         exifArgsForSidecar += "-gps*=" + Environment.NewLine;
                         tagsToDelete.Add(item: "gps*");
 
                         // this is moved up/in here because the deletion of all gps has to come before just about anything else in case user wants to add (rather than delete) in more tags (later).
                         if (writeXMLTags)
                         {
-                            exifArgs += "-xmp:gps*=" + Environment.NewLine;
+                            exifArgsForOriginalFile += "-xmp:gps*=" + Environment.NewLine;
                             exifArgsForSidecar += "-xmp:gps*=" + Environment.NewLine;
                         }
 
@@ -1477,19 +1492,19 @@ internal static partial class HelperStatic
                             .ToString();
                         if (updateExifVal != "")
                         {
-                            exifArgs += "-" + exiftoolTagName + "=" + updateExifVal + Environment.NewLine;
+                            exifArgsForOriginalFile += "-" + exiftoolTagName + "=" + updateExifVal + Environment.NewLine;
                             exifArgsForSidecar += "-" + exiftoolTagName + "=" + updateExifVal + Environment.NewLine;
                             //if lat/long then add Ref. 
                             if (exiftoolTagName == "GPSLatitude" || exiftoolTagName == "GPSDestLatitude")
                             {
                                 if (updateExifVal.Substring(startIndex: 0, length: 1) == "-")
                                 {
-                                    exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "South" + Environment.NewLine;
+                                    exifArgsForOriginalFile += "-" + exiftoolTagName + "Ref" + "=" + "South" + Environment.NewLine;
                                     exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "South" + Environment.NewLine;
                                 }
                                 else
                                 {
-                                    exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "North" + Environment.NewLine;
+                                    exifArgsForOriginalFile += "-" + exiftoolTagName + "Ref" + "=" + "North" + Environment.NewLine;
                                     exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "North" + Environment.NewLine;
                                 }
                             }
@@ -1497,19 +1512,19 @@ internal static partial class HelperStatic
                             {
                                 if (updateExifVal.Substring(startIndex: 0, length: 1) == "-")
                                 {
-                                    exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "West" + Environment.NewLine;
+                                    exifArgsForOriginalFile += "-" + exiftoolTagName + "Ref" + "=" + "West" + Environment.NewLine;
                                     exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "West" + Environment.NewLine;
                                 }
                                 else
                                 {
-                                    exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "East" + Environment.NewLine;
+                                    exifArgsForOriginalFile += "-" + exiftoolTagName + "Ref" + "=" + "East" + Environment.NewLine;
                                     exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "East" + Environment.NewLine;
                                 }
                             }
                         }
                         else //delete tag
                         {
-                            exifArgs += "-" + exiftoolTagName + "=" + Environment.NewLine;
+                            exifArgsForOriginalFile += "-" + exiftoolTagName + "=" + Environment.NewLine;
                             exifArgsForSidecar += "-" + exiftoolTagName + "=" + Environment.NewLine;
                             tagsToDelete.Add(item: exiftoolTagName);
                         }
@@ -1528,19 +1543,19 @@ internal static partial class HelperStatic
                                 .ToString();
                             if (updateExifVal != "")
                             {
-                                exifArgs += "-" + exiftoolTagName + "=" + updateExifVal + Environment.NewLine;
+                                exifArgsForOriginalFile += "-" + exiftoolTagName + "=" + updateExifVal + Environment.NewLine;
                                 exifArgsForSidecar += "-" + exiftoolTagName + "=" + updateExifVal + Environment.NewLine;
                                 //if lat/long then add Ref. 
                                 if (exiftoolTagName == "exif:GPSLatitude" || exiftoolTagName == "exif:GPSDestLatitude")
                                 {
                                     if (updateExifVal.Substring(startIndex: 0, length: 1) == "-")
                                     {
-                                        exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "South" + Environment.NewLine;
+                                        exifArgsForOriginalFile += "-" + exiftoolTagName + "Ref" + "=" + "South" + Environment.NewLine;
                                         exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "South" + Environment.NewLine;
                                     }
                                     else
                                     {
-                                        exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "North" + Environment.NewLine;
+                                        exifArgsForOriginalFile += "-" + exiftoolTagName + "Ref" + "=" + "North" + Environment.NewLine;
                                         exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "North" + Environment.NewLine;
                                     }
                                 }
@@ -1548,25 +1563,25 @@ internal static partial class HelperStatic
                                 {
                                     if (updateExifVal.Substring(startIndex: 0, length: 1) == "-")
                                     {
-                                        exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "West" + Environment.NewLine;
+                                        exifArgsForOriginalFile += "-" + exiftoolTagName + "Ref" + "=" + "West" + Environment.NewLine;
                                         exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "West" + Environment.NewLine;
                                     }
                                     else
                                     {
-                                        exifArgs += "-" + exiftoolTagName + "Ref" + "=" + "East" + Environment.NewLine;
+                                        exifArgsForOriginalFile += "-" + exiftoolTagName + "Ref" + "=" + "East" + Environment.NewLine;
                                         exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "East" + Environment.NewLine;
                                     }
                                 }
                             }
                             else // delete tag
                             {
-                                exifArgs += "-" + exiftoolTagName + "=" + Environment.NewLine;
+                                exifArgsForOriginalFile += "-" + exiftoolTagName + "=" + Environment.NewLine;
                                 tagsToDelete.Add(item: exiftoolTagName);
 
                                 //if lat/long then add Ref. 
                                 if (exiftoolTagName == "GPSLatitude" || exiftoolTagName == "GPSDestLatitude" || exiftoolTagName == "GPSLongitude" || exiftoolTagName == "GPSDestLongitude")
                                 {
-                                    exifArgs += "-" + exiftoolTagName + "Ref" + "=" + Environment.NewLine;
+                                    exifArgsForOriginalFile += "-" + exiftoolTagName + "Ref" + "=" + Environment.NewLine;
                                     exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + Environment.NewLine;
                                     tagsToDelete.Add(item: exiftoolTagName + "Ref");
                                 }
@@ -1575,58 +1590,66 @@ internal static partial class HelperStatic
                     }
                 }
 
-                if (overwriteOriginal)
+                if (doNotCreateBackup)
                 {
-                    exifArgs += "-overwrite_original_in_place" + Environment.NewLine;
+                    exifArgsForOriginalFile += "-overwrite_original_in_place" + Environment.NewLine;
                 }
 
-                exifArgs += "-iptc:codedcharacterset=utf8" + Environment.NewLine;
+                exifArgsForOriginalFile += "-iptc:codedcharacterset=utf8" + Environment.NewLine;
                 exifArgsForSidecar += "-iptc:codedcharacterset=utf8" + Environment.NewLine;
             }
 
-            exifArgs += "-execute" + Environment.NewLine;
-            // sidecar copying needs to be in a separate batch, as technically it's a different file
-            if (writeXMPSideCar)
+            if (resetFileDateToCreated)
             {
-                string xmpFileLocation = "";
-                exifArgs += Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileName)) + ".xmp") + Environment.NewLine; //needs to include folder name
-                exifArgs += "-progress" + Environment.NewLine;
-                exifArgs += "-ignoreMinorErrors" + Environment.NewLine;
+                exifArgsForOriginalFile += "-filemodifydate<datetimeoriginal" + Environment.NewLine;
+                exifArgsForOriginalFile += "-filecreatedate<datetimeoriginal" + Environment.NewLine;
+            }
+
+            exifArgsForOriginalFile += "-execute" + Environment.NewLine;
+
+            // sidecar copying needs to be in a separate batch, as technically it's a different file
+            // otherwise it will re-read itself and generally this is pointless if the orig-file isn't being created.
+            if (processOriginalFile && writeXMPSideCar)
+            {
+                string xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileName)) + ".xmp");
 
                 // logic: if there is an XMP already then use that as base... (this is needed because if an old RAW file has Adobe-modifications but the XMP doesn't, then it'd overwrite everything
-                if (File.Exists(path: Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileName)) + ".xmp")))
-                {
-                    xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileName)) + ".xmp");
-                }
-                else
+                if (!File.Exists(path: xmpFileLocation))
                 {
                     // otherwise create a new one. 
                     xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: fileName);
                 }
 
-                exifArgs += "-tagsfromfile=" + xmpFileLocation + Environment.NewLine;
-                // force-rewrite new/updated tags
-                foreach (string tagToDelete in tagsToDelete)
+                exifArgsForSidecar += "-tagsfromfile=" + xmpFileLocation + Environment.NewLine;
+            }
+
+            if (processOriginalFile)
+            {
+                File.AppendAllText(path: argsFile, contents: exifArgsForOriginalFile, encoding: Encoding.UTF8);
+            }
+
+            if (writeXMPSideCar)
+            {
+                if (doNotCreateBackup)
                 {
-                    exifArgs += "-" + tagToDelete + "=" + Environment.NewLine;
+                    exifArgsForSidecar += "-overwrite_original_in_place" + Environment.NewLine;
                 }
 
-                exifArgs += exifArgsForSidecar;
+                exifArgsForSidecar += "-execute" + Environment.NewLine;
+                File.AppendAllText(path: argsFile, contents: exifArgsForSidecar, encoding: Encoding.UTF8);
+            }
 
-                if (overwriteOriginal)
-                {
-                    exifArgs += "-overwrite_original_in_place" + Environment.NewLine;
-                }
-
-                exifArgs += "-execute" + Environment.NewLine;
+            if (!processOriginalFile && !writeXMLTags)
+            {
+                failWriteNothingEnabled = true;
+                MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"), caption: "Errrmmm...", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
             }
         }
 
         FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
-        if (exifArgs != "")
-        {
-            File.AppendAllText(path: argsFile, contents: exifArgs, encoding: Encoding.UTF8);
 
+        if (!failWriteNothingEnabled)
+        {
             ///////////////
             // via https://stackoverflow.com/a/68616297/3968494
             await Task.Run(action: () =>
@@ -1657,13 +1680,23 @@ internal static partial class HelperStatic
                             .Trim()
                             .Split('/')
                             .Last();
-                        FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " + thisFileName);
+                        FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + thisFileName);
                         try
                         {
-                            FrmMainApp.HandlerUpdateItemColour(lvw: FrmMainAppInstance.lvw_FileList, item: thisFileName, color: Color.Black);
+                            FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: thisFileName, color: Color.Black);
+                            if (thisFileName.EndsWith(value: ".xmp"))
+                            {
+                                // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
+                                // FindItemWithText -> https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.finditemwithtext?view=netframework-4.8
+                                // "Finds the first ListViewItem with __that begins with__ the given text value."
+
+                                FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: thisFileName.Replace(oldValue: ".xmp", newValue: ""), color: Color.Black);
+                            }
                         }
                         catch
-                        { }
+                        {
+                            // ignored
+                        }
                     }
                     else if (data.Data != null && !data.Data.Contains(value: "files updated") && !data.Data.Contains(value: "files created") && data.Data.Length > 0)
                     {
@@ -1682,13 +1715,23 @@ internal static partial class HelperStatic
                             .Trim()
                             .Split('/')
                             .Last();
-                        FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " + thisFileName);
+                        FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + thisFileName);
                         try
                         {
-                            FrmMainApp.HandlerUpdateItemColour(lvw: FrmMainAppInstance.lvw_FileList, item: thisFileName, color: Color.Black);
+                            FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: thisFileName, color: Color.Black);
+                            if (thisFileName.EndsWith(value: ".xmp"))
+                            {
+                                // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
+                                // FindItemWithText -> https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.finditemwithtext?view=netframework-4.8
+                                // "Finds the first ListViewItem with __that begins with__ the given text value."
+
+                                FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: thisFileName.Replace(oldValue: ".xmp", newValue: ""), color: Color.Black);
+                            }
                         }
                         catch
-                        { }
+                        {
+                            // ignored
+                        }
                     }
                     else if (data.Data != null && !data.Data.Contains(value: "files updated") && data.Data.Length > 0)
                     {
@@ -1707,12 +1750,24 @@ internal static partial class HelperStatic
                     p.Kill();
                 }
                 catch
-                { }
+                {
+                    // ignored
+                }
             });
-            ///////////////
-            FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Ready.");
         }
+        else if (!queueWasEmpty)
+        {
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"), caption: "Errrmmm...", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+        }
+        else
+        {
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNothingInWriteQueue"), caption: "Errrmmm...", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+        }
+
+        ///////////////
+        FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Ready.");
     }
+
 
     /// <summary>
     ///     Responsible for pulling the toponomy response for the API
@@ -2249,6 +2304,8 @@ internal static partial class HelperStatic
                             await Task.Delay(millisecondsDelay: 100);
                         }
 
+                        // then put a blocker on
+                        filesBeingProcessed.Add(item: Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text));
                         foreach (string toponomyDetail in toponomyOverwrites)
                         {
                             GenericUpdateAddToDataTable(
@@ -2257,6 +2314,18 @@ internal static partial class HelperStatic
                                 settingId: toponomyDetail,
                                 settingValue: ""
                             );
+                        }
+
+                        // then remove
+                        try
+                        {
+                            int itemToRemoveInt = filesBeingProcessed.IndexOf(item: Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text));
+                            filesBeingProcessed.RemoveAt(index: itemToRemoveInt);
+                            // no need to remove the xmp here because it hasn't been added in the first place.
+                        }
+                        catch
+                        {
+                            // ignored
                         }
                     }
                 }

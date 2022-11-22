@@ -943,8 +943,8 @@ public partial class FrmMainApp : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private void btn_loctToFile_Click(object sender,
-                                      EventArgs e)
+    private async void btn_loctToFile_Click(object sender,
+                                            EventArgs e)
     {
         string strParsedLat = tbx_lat.Text.Replace(oldChar: ',', newChar: '.');
         string strParsedLng = tbx_lng.Text.Replace(oldChar: ',', newChar: '.');
@@ -961,8 +961,15 @@ public partial class FrmMainApp : Form
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
                     // don't do folders...
-                    if (File.Exists(path: Path.Combine(path1: FolderName, path2: lvi.Text)))
+                    string filePath = Path.Combine(path1: FolderName, path2: lvi.Text);
+                    if (File.Exists(path: filePath))
                     {
+                        // check it's not in the read-queue.
+                        while (HelperStatic.filesBeingProcessed.Contains(item: filePath))
+                        {
+                            await Task.Delay(millisecondsDelay: 100);
+                        }
+
                         // Latitude
                         HelperStatic.GenericUpdateAddToDataTable(
                             dt: DtFileDataToWriteStage3ReadyToWrite,
@@ -1351,8 +1358,8 @@ public partial class FrmMainApp : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private void tsb_GetAllFromWeb_Click(object sender,
-                                         EventArgs e)
+    private async void tsb_GetAllFromWeb_Click(object sender,
+                                               EventArgs e)
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         ListView lvw = frmMainAppInstance.lvw_FileList;
@@ -1361,8 +1368,15 @@ public partial class FrmMainApp : Form
             foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
             {
                 // don't do folders...
-                if (File.Exists(path: Path.Combine(path1: FolderName, path2: lvi.Text)))
+                string filePath = Path.Combine(path1: FolderName, path2: lvi.Text);
+                if (File.Exists(path: filePath))
                 {
+                    // check it's not in the read-queue.
+                    while (HelperStatic.filesBeingProcessed.Contains(item: filePath))
+                    {
+                        await Task.Delay(millisecondsDelay: 100);
+                    }
+
                     string strGpsLatitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLatitude"]
                                                              .Index]
                         .Text.ToString(provider: CultureInfo.InvariantCulture);
@@ -1915,7 +1929,7 @@ public partial class FrmMainApp : Form
                     }
                     else
                     {
-                        // item.Text here will be something like "C_Windows_320GB_M2_nVME (C:\)"
+                        // itemText.Text here will be something like "C_Windows_320GB_M2_nVME (C:\)"
                         // so just extract whatever is in the parentheses
                         tbx_FolderName.Text = item.Text.Split('(')
                                                   .Last()
@@ -2252,25 +2266,26 @@ public partial class FrmMainApp : Form
     ///     the assigned colour.
     /// </summary>
     /// <param name="lvw">The listView Control that needs updating. Most likely the one in the main Form</param>
-    /// <param name="item">The particular ListViewItem that needs updating</param>
+    /// <param name="itemText">The particular ListViewItem (by text) that needs updating</param>
     /// <param name="color">Parameter to assign a particular colour (prob red or black) to the whole row</param>
     internal static void HandlerUpdateItemColour(ListView lvw,
-                                                 string item,
+                                                 string itemText,
                                                  Color color)
     {
         // If the current thread is not the UI thread, InvokeRequired will be true
         if (lvw.InvokeRequired)
         {
-            lvw.Invoke(method: (Action)(() => HandlerUpdateItemColour(lvw: lvw, item: item, color: color)));
+            lvw.Invoke(method: (Action)(() => HandlerUpdateItemColour(lvw: lvw, itemText: itemText, color: color)));
             return;
         }
 
-        ListViewItem itemToModify = lvw.FindItemWithText(text: item);
+        ListViewItem itemToModify = lvw.FindItemWithText(text: itemText);
         if (itemToModify != null)
         {
             itemToModify.ForeColor = color;
         }
     }
+
 
     /// <summary>
     ///     Updates the Text of any Label from outside the thread.
