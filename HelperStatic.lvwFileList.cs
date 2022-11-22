@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
@@ -312,40 +311,44 @@ internal static partial class HelperStatic
     /// <returns></returns>
     internal static async Task LvwItemCreatePreview(string fileNameWithPath)
     {
-        FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        FrmMainAppInstance.pbx_imagePreview.Image = null;
-        // via https://stackoverflow.com/a/8701748/3968494
-        Image img;
-
-        FileInfo fi = new(fileName: fileNameWithPath);
-        if (fi.Extension == ".jpg")
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        if (frmMainAppInstance != null)
         {
-            using (Bitmap bmpTemp = new(filename: fileNameWithPath))
+            frmMainAppInstance.pbx_imagePreview.Image = null;
+            // via https://stackoverflow.com/a/8701748/3968494
+            Image img = null;
+
+            FileInfo fi = new(fileName: fileNameWithPath);
+            try
             {
+                using Bitmap bmpTemp = new(filename: fileNameWithPath);
                 img = new Bitmap(original: bmpTemp);
-                FrmMainAppInstance.pbx_imagePreview.Image = img;
+                frmMainAppInstance.pbx_imagePreview.Image = img;
             }
-        }
-        else
-        {
-            string generatedFileName = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: FrmMainAppInstance.lvw_FileList.SelectedItems[index: 0]
-                                                                                                     .Text +
-                                                                                                 ".jpg");
-            // don't run the thing again if file has already been generated
-            if (!File.Exists(path: generatedFileName))
+            catch
             {
-                await ExifGetImagePreviews(fileName: fileNameWithPath);
+                // nothing.
             }
 
-            //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
-            if (File.Exists(path: generatedFileName))
+            if (img == null)
             {
-                using (Bitmap bmpTemp = new(filename: generatedFileName))
+                string generatedFileName = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: frmMainAppInstance.lvw_FileList.SelectedItems[index: 0]
+                                                                                                         .Text +
+                                                                                                     ".jpg");
+                // don't run the thing again if file has already been generated
+                if (!File.Exists(path: generatedFileName))
+                {
+                    await ExifGetImagePreviews(fileName: fileNameWithPath);
+                }
+
+                //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
+                if (File.Exists(path: generatedFileName))
                 {
                     try
                     {
+                        using Bitmap bmpTemp = new(filename: generatedFileName);
                         img = new Bitmap(original: bmpTemp);
-                        FrmMainAppInstance.pbx_imagePreview.Image = img;
+                        frmMainAppInstance.pbx_imagePreview.Image = img;
                     }
                     catch
                     {
