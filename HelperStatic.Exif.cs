@@ -1094,7 +1094,7 @@ internal static partial class HelperStatic
 
                                         GenericUpdateAddToDataTable(
                                             dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                                            filePath: lvi.Text,
+                                            fileNameWithoutPath: lvi.Text,
                                             settingId: lvchs[index: i]
                                                 .Name.Substring(startIndex: 4),
                                             settingValue: str
@@ -1122,7 +1122,7 @@ internal static partial class HelperStatic
                                 {
                                     GenericUpdateAddToDataTable(
                                         dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                                        filePath: lvi.Text,
+                                        fileNameWithoutPath: lvi.Text,
                                         settingId: category,
                                         settingValue: "-"
                                     );
@@ -1154,7 +1154,7 @@ internal static partial class HelperStatic
                                     {
                                         GenericUpdateAddToDataTable(
                                             dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                                            filePath: lvi.Text,
+                                            fileNameWithoutPath: lvi.Text,
                                             settingId: toponomyDetail.toponomyOverwriteName,
                                             settingValue: toponomyDetail.toponomyOverwriteVal
                                         );
@@ -2284,7 +2284,7 @@ internal static partial class HelperStatic
 
             GenericUpdateAddToDataTable(
                 dt: FrmMainApp.DtFileDataToWriteStage1PreQueue,
-                filePath: FrmEditFileDataInstance.lvw_FileListEditImages.SelectedItems[index: 0]
+                fileNameWithoutPath: FrmEditFileDataInstance.lvw_FileListEditImages.SelectedItems[index: 0]
                     .Text,
                 settingId: "gps*",
                 settingValue: ""
@@ -2317,7 +2317,7 @@ internal static partial class HelperStatic
                         {
                             GenericUpdateAddToDataTable(
                                 dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                                filePath: fileName,
+                                fileNameWithoutPath: fileName,
                                 settingId: toponomyDetail,
                                 settingValue: ""
                             );

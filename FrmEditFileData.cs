@@ -39,23 +39,29 @@ public partial class FrmEditFileData : Form
         FrmEditFileDataNowRemovingGeoData = false;
 
         clh_FileName.Width = -2;
-        lvw_FileListEditImages.Items[index: 0]
-            .Selected = true;
-        // actually if it's just one file i don't want this to be actively selectable
-        if (lvw_FileListEditImages.Items.Count == 1)
+        if (lvw_FileListEditImages.Items.Count > 0)
         {
-            lvw_FileListEditImages.Enabled = false;
+            lvw_FileListEditImages.Items[index: 0]
+                .Selected = true;
+
+            // actually if it's just one file i don't want this to be actively selectable
+            if (lvw_FileListEditImages.Items.Count == 1)
+            {
+                lvw_FileListEditImages.Enabled = false;
+            }
+
+            // empty queue
+            DtFileDataToWriteStage1PreQueue.Rows.Clear();
+            // also empty the "original data" table
+            DtFileDataToWriteStage2QueuePendingSave.Rows.Clear();
+
+            // this below should auto-set nowLoadingFileData = false;
+            lvw_EditorFileListImagesGetData();
+            string fileNameWithPath = Path.Combine(path1: FolderName, path2: lvw_FileListEditImages.Items[index: 0]
+                                                       .Text);
+
+            await pbx_imgPreviewPicGenerator(fileNameWithPath: fileNameWithPath);
         }
-
-        // empty queue
-        DtFileDataToWriteStage1PreQueue.Rows.Clear();
-        // also empty the "original data" table
-        DtFileDataToWriteStage2QueuePendingSave.Rows.Clear();
-
-        // this below should auto-set nowLoadingFileData = false;
-        lvw_EditorFileListImagesGetData();
-        await pbx_imgPreviewPicGenerator(fileName: lvw_FileListEditImages.Items[index: 0]
-                                             .Text);
     }
 
     /// <summary>
@@ -104,7 +110,7 @@ public partial class FrmEditFileData : Form
                 // stick into sql ("pending save") - this is to see if the data has changed later.
                 HelperStatic.GenericUpdateAddToDataTable(
                     dt: DtFileDataToWriteStage2QueuePendingSave,
-                    filePath: fileName,
+                    fileNameWithoutPath: fileName,
                     settingId: cItem.Name.Substring(startIndex: 4),
                     settingValue: cItem.Text
                 );
@@ -134,7 +140,7 @@ public partial class FrmEditFileData : Form
 
                     HelperStatic.GenericUpdateAddToDataTable(
                         dt: DtFileDataToWriteStage1PreQueue,
-                        filePath: lvw_FileListEditImages.SelectedItems[index: 0]
+                        fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
                             .Text,
                         settingId: cItem.Name.Substring(startIndex: 4),
                         settingValue: cItem.Text
@@ -194,37 +200,50 @@ public partial class FrmEditFileData : Form
     /// <summary>
     ///     Attempts to generate preview image for the image that was clicked on.
     /// </summary>
-    /// <param name="fileName">Name (path) of the file that was clicked on.</param>
+    /// <param name="fileNameWithPath">Name (path) of the file that was clicked on.</param>
     /// <returns></returns>
-    private static async Task pbx_imgPreviewPicGenerator(string fileName)
+    private static async Task pbx_imgPreviewPicGenerator(string fileNameWithPath)
     {
+        string fileName = Path.GetFileName(path: fileNameWithPath);
         // via https://stackoverflow.com/a/8701748/3968494
-        Image img;
-        string fileNameWithPath = Path.Combine(path1: FolderName, path2: fileName);
         FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
-
-        FileInfo fi = new(fileName: fileNameWithPath);
-        if (fi.Extension == ".jpg")
+        Image img = null;
+        if (frmEditFileDataInstance != null)
         {
-            using (Bitmap bmpTemp = new(filename: fileNameWithPath))
+            try
             {
+                using Bitmap bmpTemp = new(filename: fileNameWithPath);
                 img = new Bitmap(original: bmpTemp);
-                frmEditFileDataInstance.pbx_imgPreview.Image = img;
+                frmEditFileDataInstance.pbx_imagePreview.Image = img;
             }
-        }
-        else
-        {
-            string generatedFileName = Path.Combine(path1: UserDataFolderPath, path2: fileName + ".jpg");
-            // don't run the thing again if file has already been generated
-            if (!File.Exists(path: generatedFileName))
+            catch
             {
-                await HelperStatic.ExifGetImagePreviews(fileName: fileName);
+                // nothing.
             }
 
-            using (Bitmap bmpTemp = new(filename: generatedFileName))
+            if (img == null)
             {
-                img = new Bitmap(original: bmpTemp);
-                frmEditFileDataInstance.pbx_imgPreview.Image = img;
+                string generatedFileName = Path.Combine(path1: UserDataFolderPath, path2: fileName + ".jpg");
+                // don't run the thing again if file has already been generated
+                if (!File.Exists(path: generatedFileName))
+                {
+                    await HelperStatic.ExifGetImagePreviews(fileName: fileNameWithPath);
+                }
+
+                //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
+                if (File.Exists(path: generatedFileName))
+                {
+                    try
+                    {
+                        using Bitmap bmpTemp = new(filename: generatedFileName);
+                        img = new Bitmap(original: bmpTemp);
+                        frmEditFileDataInstance.pbx_imagePreview.Image = img;
+                    }
+                    catch
+                    {
+                        // nothing.
+                    }
+                }
             }
         }
     }
@@ -346,7 +365,7 @@ public partial class FrmEditFileData : Form
                                 {
                                     HelperStatic.GenericUpdateAddToDataTable(
                                         dt: DtFileDataToWriteStage1PreQueue,
-                                        filePath: lvi.Text,
+                                        fileNameWithoutPath: lvi.Text,
                                         settingId: toponomyDetail.toponomyOverwriteName,
                                         settingValue: toponomyDetail.toponomyOverwriteVal
                                     );
@@ -419,7 +438,7 @@ public partial class FrmEditFileData : Form
                                     .ToString();
                                 HelperStatic.GenericUpdateAddToDataTable(
                                     dt: DtFileDataToWriteStage1PreQueue,
-                                    filePath: lvi.Text,
+                                    fileNameWithoutPath: lvi.Text,
                                     settingId: "GPSAltitude",
                                     settingValue: altitude
                                 );
@@ -444,26 +463,30 @@ public partial class FrmEditFileData : Form
         }
     }
 
+
     /// <summary>
-    ///     Handles when user clicks on the listview and generates data for the target item (file)
+    ///     Handles the keyboard interactions (move up/down)
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private async void lvw_FileListEditImages_MouseClick(object sender,
-                                                         MouseEventArgs e)
+    private async void lvw_FileListEditImages_SelectedIndexChanged(object sender,
+                                                                   EventArgs e)
     {
-        if (File.Exists(path: Path.Combine(path1: FolderName, path2: lvw_FileListEditImages.SelectedItems[index: 0]
-                                               .Text)))
+        if (lvw_FileListEditImages.SelectedItems.Count > 0)
         {
-            lvw_EditorFileListImagesGetData();
+            string filePath = Path.Combine(path1: FolderName, path2: lvw_FileListEditImages.SelectedItems[index: 0]
+                                               .Text);
+            if (File.Exists(path: filePath))
+            {
+                lvw_EditorFileListImagesGetData();
 
-            pbx_imgPreview.Image = null;
-            await pbx_imgPreviewPicGenerator(fileName: lvw_FileListEditImages.SelectedItems[index: 0]
-                                                 .Text);
-        }
-        else
-        {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_WarningFileDisappeared"), caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+                pbx_imagePreview.Image = null;
+                await pbx_imgPreviewPicGenerator(fileNameWithPath: filePath);
+            }
+            else
+            {
+                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_WarningFileDisappeared"), caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            }
         }
     }
 
@@ -510,7 +533,7 @@ public partial class FrmEditFileData : Form
             HelperStatic.FileListBeingUpdated = true;
             foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.Items)
             {
-                await HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi);
+                await HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
             }
 
             HelperStatic.FileListBeingUpdated = false;
@@ -547,7 +570,7 @@ public partial class FrmEditFileData : Form
     private void btn_SetCurrentValues_Click(object sender,
                                             EventArgs e)
     {
-        FrmPasteWhat frmPasteWhat = new();
+        FrmPasteWhat frmPasteWhat = new(initiator: Name);
         frmPasteWhat.ShowDialog();
     }
 
@@ -631,7 +654,7 @@ public partial class FrmEditFileData : Form
 
                     HelperStatic.GenericUpdateAddToDataTable(
                         dt: DtFileDataToWriteStage1PreQueue,
-                        filePath: lvw_FileListEditImages.SelectedItems[index: 0]
+                        fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
                             .Text,
                         settingId: sndr.Name.Substring(startIndex: 4),
                         settingValue: sndr.Text

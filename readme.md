@@ -34,7 +34,7 @@ There are 2 parts to the project. One is the "main" the other is the installer. 
 For the "main" project you should be okay without anything separate. It has worked ok for me on a blank VM when pulled from Git. Just build and F5/run.
 
 ## ToDos
-- [half] Add copy-paste functionality - kinda done but no choices as to what to paste.
+
 - [later] Destination stuff not working atm, todo.
 - [later] Column reorg.
 - [later] add time-shift capabilities

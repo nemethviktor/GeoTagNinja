@@ -983,7 +983,7 @@ public partial class FrmMainApp : Form
                         // Latitude
                         HelperStatic.GenericUpdateAddToDataTable(
                             dt: DtFileDataToWriteStage3ReadyToWrite,
-                            filePath: fileName,
+                            fileNameWithoutPath: fileName,
                             settingId: "GPSLatitude",
                             settingValue: strParsedLat
                         );
@@ -991,7 +991,7 @@ public partial class FrmMainApp : Form
                         // Longitude
                         HelperStatic.GenericUpdateAddToDataTable(
                             dt: DtFileDataToWriteStage3ReadyToWrite,
-                            filePath: fileName,
+                            fileNameWithoutPath: fileName,
                             settingId: "GPSLongitude",
                             settingValue: strParsedLng
                         );
@@ -1077,7 +1077,7 @@ public partial class FrmMainApp : Form
                                     {
                                         HelperStatic.GenericUpdateAddToDataTable(
                                             dt: DtFileDataToWriteStage3ReadyToWrite,
-                                            filePath: lvi.Text,
+                                            fileNameWithoutPath: lvi.Text,
                                             settingId: toponomyDetail.toponomyOverwriteName,
                                             settingValue: toponomyDetail.toponomyOverwriteVal
                                         );
@@ -1226,23 +1226,31 @@ public partial class FrmMainApp : Form
     private void tmi_File_EditFiles_Click(object sender,
                                           EventArgs e)
     {
-        FrmEditFileData = new FrmEditFileData();
-        FrmEditFileData.lvw_FileListEditImages.Items.Clear();
-        foreach (ListViewItem selectedItem in lvw_FileList.SelectedItems)
+        if (lvw_FileList.SelectedItems.Count > 0)
         {
-            if (File.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: selectedItem.Text)))
+            int fileCount = 0;
+            FrmEditFileData = new FrmEditFileData();
+            FrmEditFileData.lvw_FileListEditImages.Items.Clear();
+            foreach (ListViewItem selectedItem in lvw_FileList.SelectedItems)
             {
-                FolderName = tbx_FolderName.Text;
-                FrmEditFileData.lvw_FileListEditImages.Items.Add(text: selectedItem.Text);
+                if (File.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: selectedItem.Text)))
+                {
+                    FolderName = tbx_FolderName.Text;
+                    FrmEditFileData.lvw_FileListEditImages.Items.Add(text: selectedItem.Text);
+                    fileCount++;
+                }
+            }
+
+            if (fileCount > 0)
+            {
+                FrmEditFileData.Text = HelperStatic.DataReadSQLiteObjectText(
+                    languageName: AppLanguage,
+                    objectType: "Form",
+                    objectName: "FrmEditFileData"
+                );
+                FrmEditFileData.ShowDialog();
             }
         }
-
-        FrmEditFileData.Text = HelperStatic.DataReadSQLiteObjectText(
-            languageName: AppLanguage,
-            objectType: "Form",
-            objectName: "FrmEditFileData"
-        );
-        FrmEditFileData.ShowDialog();
     }
 
     /// <summary>
@@ -1436,7 +1444,7 @@ public partial class FrmMainApp : Form
                             {
                                 HelperStatic.GenericUpdateAddToDataTable(
                                     dt: DtFileDataToWriteStage3ReadyToWrite,
-                                    filePath: lvi.Text,
+                                    fileNameWithoutPath: lvi.Text,
                                     settingId: toponomyDetail.toponomyOverwriteName,
                                     settingValue: toponomyDetail.toponomyOverwriteVal
                                 );
@@ -1455,7 +1463,7 @@ public partial class FrmMainApp : Form
                         {
                             HelperStatic.GenericUpdateAddToDataTable(
                                 dt: DtFileDataToWriteStage3ReadyToWrite,
-                                filePath: lvi.Text,
+                                fileNameWithoutPath: lvi.Text,
                                 settingId: "GPSAltitude",
                                 settingValue: dtAltitude.Rows[index: 0][columnName: "Altitude"]
                                     .ToString()

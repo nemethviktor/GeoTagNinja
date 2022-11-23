@@ -299,11 +299,11 @@ internal static partial class HelperStatic
     ///     for the given combination and if so deletes it, then writes the new data.
     /// </summary>
     /// <param name="dt">Name of the datatable. Realistically this is one of the three "queue" DTs</param>
-    /// <param name="filePath">Path of file</param>
+    /// <param name="fileNameWithoutPath"></param>
     /// <param name="settingId">Name of the column or tag (e.g. GPSLatitude)</param>
     /// <param name="settingValue">Value to write</param>
     internal static void GenericUpdateAddToDataTable(DataTable dt,
-                                                     string filePath,
+                                                     string fileNameWithoutPath,
                                                      string settingId,
                                                      string settingValue)
     {
@@ -316,7 +316,7 @@ internal static partial class HelperStatic
                 if (
                     thisDr[columnName: "filePath"]
                         .ToString() ==
-                    filePath &&
+                    fileNameWithoutPath &&
                     thisDr[columnName: "settingId"]
                         .ToString() ==
                     settingId
@@ -330,7 +330,7 @@ internal static partial class HelperStatic
 
             // add new
             DataRow newDr = dt.NewRow();
-            newDr[columnName: "filePath"] = filePath;
+            newDr[columnName: "filePath"] = fileNameWithoutPath;
             newDr[columnName: "settingId"] = settingId;
             newDr[columnName: "settingValue"] = settingValue;
             dt.Rows.Add(row: newDr);

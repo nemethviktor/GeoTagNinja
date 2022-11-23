@@ -29,55 +29,55 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmEditFileData));
-            this.pbx_imgPreview = new System.Windows.Forms.PictureBox();
+            this.pbx_imagePreview = new System.Windows.Forms.PictureBox();
             this.lvw_FileListEditImages = new System.Windows.Forms.ListView();
             this.clh_FileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tpg_Location = new System.Windows.Forms.TabPage();
-            this.gbx_GPSData = new System.Windows.Forms.GroupBox();
-            this.lbl_Decimal = new System.Windows.Forms.Label();
-            this.btn_getAllFromWeb_Altitude = new System.Windows.Forms.Button();
-            this.lbl_GPSLatitude = new System.Windows.Forms.Label();
-            this.lbl_GPSLongitude = new System.Windows.Forms.Label();
-            this.lbl_GPSImgDirection = new System.Windows.Forms.Label();
-            this.lbl_GPSAltitude = new System.Windows.Forms.Label();
-            this.tbx_GPSLatitude = new System.Windows.Forms.TextBox();
-            this.tbx_GPSLongitude = new System.Windows.Forms.TextBox();
-            this.tbx_GPSImgDirection = new System.Windows.Forms.TextBox();
-            this.tbx_GPSAltitude = new System.Windows.Forms.TextBox();
-            this.btn_getFromWeb_Altitude = new System.Windows.Forms.Button();
-            this.gbx_LocationData = new System.Windows.Forms.GroupBox();
-            this.lbl_CountryCode = new System.Windows.Forms.Label();
-            this.lbl_Country = new System.Windows.Forms.Label();
-            this.lbl_State = new System.Windows.Forms.Label();
-            this.lbl_City = new System.Windows.Forms.Label();
-            this.lbl_Sub_location = new System.Windows.Forms.Label();
-            this.cbx_CountryCode = new System.Windows.Forms.ComboBox();
-            this.cbx_Country = new System.Windows.Forms.ComboBox();
-            this.tbx_State = new System.Windows.Forms.TextBox();
-            this.tbx_City = new System.Windows.Forms.TextBox();
-            this.tbx_Sub_location = new System.Windows.Forms.TextBox();
-            this.btn_getFromWeb_Toponomy = new System.Windows.Forms.Button();
-            this.btn_getAllFromWeb_Toponomy = new System.Windows.Forms.Button();
-            this.btn_RemoveGeoData = new System.Windows.Forms.Button();
             this.btn_SetCurrentValues = new System.Windows.Forms.Button();
+            this.gbx_LocationData = new System.Windows.Forms.GroupBox();
+            this.btn_RemoveGeoData = new System.Windows.Forms.Button();
+            this.btn_getAllFromWeb_Toponomy = new System.Windows.Forms.Button();
+            this.btn_getFromWeb_Toponomy = new System.Windows.Forms.Button();
+            this.tbx_Sub_location = new System.Windows.Forms.TextBox();
+            this.tbx_City = new System.Windows.Forms.TextBox();
+            this.tbx_State = new System.Windows.Forms.TextBox();
+            this.cbx_Country = new System.Windows.Forms.ComboBox();
+            this.cbx_CountryCode = new System.Windows.Forms.ComboBox();
+            this.lbl_Sub_location = new System.Windows.Forms.Label();
+            this.lbl_City = new System.Windows.Forms.Label();
+            this.lbl_State = new System.Windows.Forms.Label();
+            this.lbl_Country = new System.Windows.Forms.Label();
+            this.lbl_CountryCode = new System.Windows.Forms.Label();
+            this.gbx_GPSData = new System.Windows.Forms.GroupBox();
+            this.btn_getFromWeb_Altitude = new System.Windows.Forms.Button();
+            this.tbx_GPSAltitude = new System.Windows.Forms.TextBox();
+            this.tbx_GPSImgDirection = new System.Windows.Forms.TextBox();
+            this.tbx_GPSLongitude = new System.Windows.Forms.TextBox();
+            this.tbx_GPSLatitude = new System.Windows.Forms.TextBox();
+            this.lbl_GPSAltitude = new System.Windows.Forms.Label();
+            this.lbl_GPSImgDirection = new System.Windows.Forms.Label();
+            this.lbl_GPSLongitude = new System.Windows.Forms.Label();
+            this.lbl_GPSLatitude = new System.Windows.Forms.Label();
+            this.btn_getAllFromWeb_Altitude = new System.Windows.Forms.Button();
+            this.lbl_Decimal = new System.Windows.Forms.Label();
             this.tcr_EditData = new System.Windows.Forms.TabControl();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.btn_OK = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.pbx_imgPreview)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbx_imagePreview)).BeginInit();
             this.tpg_Location.SuspendLayout();
-            this.gbx_GPSData.SuspendLayout();
             this.gbx_LocationData.SuspendLayout();
+            this.gbx_GPSData.SuspendLayout();
             this.tcr_EditData.SuspendLayout();
             this.SuspendLayout();
             // 
-            // pbx_imgPreview
+            // pbx_imagePreview
             // 
-            this.pbx_imgPreview.Location = new System.Drawing.Point(12, 320);
-            this.pbx_imgPreview.Name = "pbx_imgPreview";
-            this.pbx_imgPreview.Size = new System.Drawing.Size(438, 210);
-            this.pbx_imgPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pbx_imgPreview.TabIndex = 2;
-            this.pbx_imgPreview.TabStop = false;
+            this.pbx_imagePreview.Location = new System.Drawing.Point(12, 320);
+            this.pbx_imagePreview.Name = "pbx_imagePreview";
+            this.pbx_imagePreview.Size = new System.Drawing.Size(438, 210);
+            this.pbx_imagePreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbx_imagePreview.TabIndex = 2;
+            this.pbx_imagePreview.TabStop = false;
             // 
             // lvw_FileListEditImages
             // 
@@ -94,7 +94,7 @@
             this.lvw_FileListEditImages.TabIndex = 0;
             this.lvw_FileListEditImages.UseCompatibleStateImageBehavior = false;
             this.lvw_FileListEditImages.View = System.Windows.Forms.View.Details;
-            this.lvw_FileListEditImages.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lvw_FileListEditImages_MouseClick);
+            this.lvw_FileListEditImages.SelectedIndexChanged += new System.EventHandler(this.lvw_FileListEditImages_SelectedIndexChanged);
             // 
             // clh_FileName
             // 
@@ -115,129 +115,15 @@
             this.tpg_Location.Text = "tpg_Location";
             this.tpg_Location.UseVisualStyleBackColor = true;
             // 
-            // gbx_GPSData
+            // btn_SetCurrentValues
             // 
-            this.gbx_GPSData.Controls.Add(this.btn_getFromWeb_Altitude);
-            this.gbx_GPSData.Controls.Add(this.tbx_GPSAltitude);
-            this.gbx_GPSData.Controls.Add(this.tbx_GPSImgDirection);
-            this.gbx_GPSData.Controls.Add(this.tbx_GPSLongitude);
-            this.gbx_GPSData.Controls.Add(this.tbx_GPSLatitude);
-            this.gbx_GPSData.Controls.Add(this.lbl_GPSAltitude);
-            this.gbx_GPSData.Controls.Add(this.lbl_GPSImgDirection);
-            this.gbx_GPSData.Controls.Add(this.lbl_GPSLongitude);
-            this.gbx_GPSData.Controls.Add(this.lbl_GPSLatitude);
-            this.gbx_GPSData.Controls.Add(this.btn_getAllFromWeb_Altitude);
-            this.gbx_GPSData.Controls.Add(this.lbl_Decimal);
-            this.gbx_GPSData.Location = new System.Drawing.Point(13, 42);
-            this.gbx_GPSData.Margin = new System.Windows.Forms.Padding(2);
-            this.gbx_GPSData.Name = "gbx_GPSData";
-            this.gbx_GPSData.Padding = new System.Windows.Forms.Padding(2);
-            this.gbx_GPSData.Size = new System.Drawing.Size(364, 157);
-            this.gbx_GPSData.TabIndex = 0;
-            this.gbx_GPSData.TabStop = false;
-            this.gbx_GPSData.Text = "gbx_GPSData";
-            // 
-            // lbl_Decimal
-            // 
-            this.lbl_Decimal.AutoSize = true;
-            this.lbl_Decimal.Location = new System.Drawing.Point(130, 16);
-            this.lbl_Decimal.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lbl_Decimal.Name = "lbl_Decimal";
-            this.lbl_Decimal.Size = new System.Drawing.Size(61, 13);
-            this.lbl_Decimal.TabIndex = 1;
-            this.lbl_Decimal.Text = "lbl_Decimal";
-            // 
-            // btn_getAllFromWeb_Altitude
-            // 
-            this.btn_getAllFromWeb_Altitude.Location = new System.Drawing.Point(243, 108);
-            this.btn_getAllFromWeb_Altitude.Name = "btn_getAllFromWeb_Altitude";
-            this.btn_getAllFromWeb_Altitude.Size = new System.Drawing.Size(112, 23);
-            this.btn_getAllFromWeb_Altitude.TabIndex = 5;
-            this.btn_getAllFromWeb_Altitude.Text = "btn_getAllFromWeb_Altitude";
-            this.btn_getAllFromWeb_Altitude.UseVisualStyleBackColor = true;
-            this.btn_getAllFromWeb_Altitude.Click += new System.EventHandler(this.btn_getFromWeb_Click);
-            // 
-            // lbl_GPSLatitude
-            // 
-            this.lbl_GPSLatitude.AutoSize = true;
-            this.lbl_GPSLatitude.Location = new System.Drawing.Point(14, 38);
-            this.lbl_GPSLatitude.Name = "lbl_GPSLatitude";
-            this.lbl_GPSLatitude.Size = new System.Drawing.Size(83, 13);
-            this.lbl_GPSLatitude.TabIndex = 12;
-            this.lbl_GPSLatitude.Text = "lbl_GPSLatitude";
-            // 
-            // lbl_GPSLongitude
-            // 
-            this.lbl_GPSLongitude.AutoSize = true;
-            this.lbl_GPSLongitude.Location = new System.Drawing.Point(14, 66);
-            this.lbl_GPSLongitude.Name = "lbl_GPSLongitude";
-            this.lbl_GPSLongitude.Size = new System.Drawing.Size(92, 13);
-            this.lbl_GPSLongitude.TabIndex = 12;
-            this.lbl_GPSLongitude.Text = "lbl_GPSLongitude";
-            // 
-            // lbl_GPSImgDirection
-            // 
-            this.lbl_GPSImgDirection.AutoSize = true;
-            this.lbl_GPSImgDirection.Location = new System.Drawing.Point(14, 92);
-            this.lbl_GPSImgDirection.Name = "lbl_GPSImgDirection";
-            this.lbl_GPSImgDirection.Size = new System.Drawing.Size(104, 13);
-            this.lbl_GPSImgDirection.TabIndex = 12;
-            this.lbl_GPSImgDirection.Text = "lbl_GPSImgDirection";
-            // 
-            // lbl_GPSAltitude
-            // 
-            this.lbl_GPSAltitude.AutoSize = true;
-            this.lbl_GPSAltitude.Location = new System.Drawing.Point(14, 117);
-            this.lbl_GPSAltitude.Name = "lbl_GPSAltitude";
-            this.lbl_GPSAltitude.Size = new System.Drawing.Size(80, 13);
-            this.lbl_GPSAltitude.TabIndex = 12;
-            this.lbl_GPSAltitude.Text = "lbl_GPSAltitude";
-            // 
-            // tbx_GPSLatitude
-            // 
-            this.tbx_GPSLatitude.Location = new System.Drawing.Point(124, 35);
-            this.tbx_GPSLatitude.Name = "tbx_GPSLatitude";
-            this.tbx_GPSLatitude.Size = new System.Drawing.Size(100, 20);
-            this.tbx_GPSLatitude.TabIndex = 1;
-            this.tbx_GPSLatitude.TextChanged += new System.EventHandler(this.tbx_cbx_Any_TextChanged);
-            this.tbx_GPSLatitude.Enter += new System.EventHandler(this.tbx_cbx_Any_Enter);
-            // 
-            // tbx_GPSLongitude
-            // 
-            this.tbx_GPSLongitude.Location = new System.Drawing.Point(124, 63);
-            this.tbx_GPSLongitude.Name = "tbx_GPSLongitude";
-            this.tbx_GPSLongitude.Size = new System.Drawing.Size(100, 20);
-            this.tbx_GPSLongitude.TabIndex = 2;
-            this.tbx_GPSLongitude.TextChanged += new System.EventHandler(this.tbx_cbx_Any_TextChanged);
-            this.tbx_GPSLongitude.Enter += new System.EventHandler(this.tbx_cbx_Any_Enter);
-            // 
-            // tbx_GPSImgDirection
-            // 
-            this.tbx_GPSImgDirection.Location = new System.Drawing.Point(124, 89);
-            this.tbx_GPSImgDirection.Name = "tbx_GPSImgDirection";
-            this.tbx_GPSImgDirection.Size = new System.Drawing.Size(100, 20);
-            this.tbx_GPSImgDirection.TabIndex = 3;
-            this.tbx_GPSImgDirection.TextChanged += new System.EventHandler(this.tbx_cbx_Any_TextChanged);
-            this.tbx_GPSImgDirection.Enter += new System.EventHandler(this.tbx_cbx_Any_Enter);
-            // 
-            // tbx_GPSAltitude
-            // 
-            this.tbx_GPSAltitude.Location = new System.Drawing.Point(124, 115);
-            this.tbx_GPSAltitude.Name = "tbx_GPSAltitude";
-            this.tbx_GPSAltitude.Size = new System.Drawing.Size(100, 20);
-            this.tbx_GPSAltitude.TabIndex = 4;
-            this.tbx_GPSAltitude.TextChanged += new System.EventHandler(this.tbx_cbx_Any_TextChanged);
-            this.tbx_GPSAltitude.Enter += new System.EventHandler(this.tbx_cbx_Any_Enter);
-            // 
-            // btn_getFromWeb_Altitude
-            // 
-            this.btn_getFromWeb_Altitude.Location = new System.Drawing.Point(243, 73);
-            this.btn_getFromWeb_Altitude.Name = "btn_getFromWeb_Altitude";
-            this.btn_getFromWeb_Altitude.Size = new System.Drawing.Size(112, 23);
-            this.btn_getFromWeb_Altitude.TabIndex = 13;
-            this.btn_getFromWeb_Altitude.Text = "btn_getFromWeb_Altitude";
-            this.btn_getFromWeb_Altitude.UseVisualStyleBackColor = true;
-            this.btn_getFromWeb_Altitude.Click += new System.EventHandler(this.btn_getFromWeb_Click);
+            this.btn_SetCurrentValues.Location = new System.Drawing.Point(27, 459);
+            this.btn_SetCurrentValues.Name = "btn_SetCurrentValues";
+            this.btn_SetCurrentValues.Size = new System.Drawing.Size(324, 23);
+            this.btn_SetCurrentValues.TabIndex = 14;
+            this.btn_SetCurrentValues.Text = "btn_SetCurrentValues";
+            this.btn_SetCurrentValues.UseVisualStyleBackColor = true;
+            this.btn_SetCurrentValues.Click += new System.EventHandler(this.btn_SetCurrentValues_Click);
             // 
             // gbx_LocationData
             // 
@@ -263,320 +149,62 @@
             this.gbx_LocationData.TabStop = false;
             this.gbx_LocationData.Text = "gbx_LocationData";
             // 
-            // lbl_CountryCode
+            // btn_RemoveGeoData
             // 
-            this.lbl_CountryCode.AutoSize = true;
-            this.lbl_CountryCode.Location = new System.Drawing.Point(11, 30);
-            this.lbl_CountryCode.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lbl_CountryCode.Name = "lbl_CountryCode";
-            this.lbl_CountryCode.Size = new System.Drawing.Size(84, 13);
-            this.lbl_CountryCode.TabIndex = 0;
-            this.lbl_CountryCode.Text = "lbl_CountryCode";
+            this.btn_RemoveGeoData.Location = new System.Drawing.Point(14, 198);
+            this.btn_RemoveGeoData.Name = "btn_RemoveGeoData";
+            this.btn_RemoveGeoData.Size = new System.Drawing.Size(324, 23);
+            this.btn_RemoveGeoData.TabIndex = 13;
+            this.btn_RemoveGeoData.Text = "btn_RemoveGeoData";
+            this.btn_RemoveGeoData.UseVisualStyleBackColor = true;
+            this.btn_RemoveGeoData.Click += new System.EventHandler(this.btn_RemoveGeoData_Click);
             // 
-            // lbl_Country
+            // btn_getAllFromWeb_Toponomy
             // 
-            this.lbl_Country.AutoSize = true;
-            this.lbl_Country.Location = new System.Drawing.Point(11, 57);
-            this.lbl_Country.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lbl_Country.Name = "lbl_Country";
-            this.lbl_Country.Size = new System.Drawing.Size(59, 13);
-            this.lbl_Country.TabIndex = 0;
-            this.lbl_Country.Text = "lbl_Country";
+            this.btn_getAllFromWeb_Toponomy.Location = new System.Drawing.Point(178, 169);
+            this.btn_getAllFromWeb_Toponomy.Name = "btn_getAllFromWeb_Toponomy";
+            this.btn_getAllFromWeb_Toponomy.Size = new System.Drawing.Size(160, 23);
+            this.btn_getAllFromWeb_Toponomy.TabIndex = 12;
+            this.btn_getAllFromWeb_Toponomy.Text = "btn_getAllFromWeb_Toponomy";
+            this.btn_getAllFromWeb_Toponomy.UseVisualStyleBackColor = true;
+            this.btn_getAllFromWeb_Toponomy.Click += new System.EventHandler(this.btn_getFromWeb_Click);
             // 
-            // lbl_State
+            // btn_getFromWeb_Toponomy
             // 
-            this.lbl_State.AutoSize = true;
-            this.lbl_State.Location = new System.Drawing.Point(11, 84);
-            this.lbl_State.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lbl_State.Name = "lbl_State";
-            this.lbl_State.Size = new System.Drawing.Size(48, 13);
-            this.lbl_State.TabIndex = 0;
-            this.lbl_State.Text = "lbl_State";
+            this.btn_getFromWeb_Toponomy.Location = new System.Drawing.Point(14, 169);
+            this.btn_getFromWeb_Toponomy.Name = "btn_getFromWeb_Toponomy";
+            this.btn_getFromWeb_Toponomy.Size = new System.Drawing.Size(160, 23);
+            this.btn_getFromWeb_Toponomy.TabIndex = 11;
+            this.btn_getFromWeb_Toponomy.Text = "btn_getFromWeb_Toponomy";
+            this.btn_getFromWeb_Toponomy.UseVisualStyleBackColor = true;
+            this.btn_getFromWeb_Toponomy.Click += new System.EventHandler(this.btn_getFromWeb_Click);
             // 
-            // lbl_City
+            // tbx_Sub_location
             // 
-            this.lbl_City.AutoSize = true;
-            this.lbl_City.Location = new System.Drawing.Point(11, 110);
-            this.lbl_City.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lbl_City.Name = "lbl_City";
-            this.lbl_City.Size = new System.Drawing.Size(40, 13);
-            this.lbl_City.TabIndex = 0;
-            this.lbl_City.Text = "lbl_City";
+            this.tbx_Sub_location.Location = new System.Drawing.Point(124, 133);
+            this.tbx_Sub_location.Name = "tbx_Sub_location";
+            this.tbx_Sub_location.Size = new System.Drawing.Size(214, 20);
+            this.tbx_Sub_location.TabIndex = 10;
+            this.tbx_Sub_location.TextChanged += new System.EventHandler(this.tbx_cbx_Any_TextChanged);
+            this.tbx_Sub_location.Enter += new System.EventHandler(this.tbx_cbx_Any_Enter);
             // 
-            // lbl_Sub_location
+            // tbx_City
             // 
-            this.lbl_Sub_location.AutoSize = true;
-            this.lbl_Sub_location.Location = new System.Drawing.Point(11, 136);
-            this.lbl_Sub_location.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lbl_Sub_location.Name = "lbl_Sub_location";
-            this.lbl_Sub_location.Size = new System.Drawing.Size(85, 13);
-            this.lbl_Sub_location.TabIndex = 0;
-            this.lbl_Sub_location.Text = "lbl_Sub_location";
+            this.tbx_City.Location = new System.Drawing.Point(124, 107);
+            this.tbx_City.Name = "tbx_City";
+            this.tbx_City.Size = new System.Drawing.Size(214, 20);
+            this.tbx_City.TabIndex = 9;
+            this.tbx_City.TextChanged += new System.EventHandler(this.tbx_cbx_Any_TextChanged);
+            this.tbx_City.Enter += new System.EventHandler(this.tbx_cbx_Any_Enter);
             // 
-            // cbx_CountryCode
+            // tbx_State
             // 
-            this.cbx_CountryCode.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.cbx_CountryCode.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cbx_CountryCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbx_CountryCode.FormattingEnabled = true;
-            this.cbx_CountryCode.Items.AddRange(new object[] {
-            "",
-            "ABW",
-            "AFG",
-            "AGO",
-            "AIA",
-            "ALA",
-            "ALB",
-            "AND",
-            "ARE",
-            "ARG",
-            "ARM",
-            "ASM",
-            "ATA",
-            "ATF",
-            "ATG",
-            "AUS",
-            "AUT",
-            "AZE",
-            "BDI",
-            "BEL",
-            "BEN",
-            "BFA",
-            "BGD",
-            "BGR",
-            "BHR",
-            "BHS",
-            "BIH",
-            "BLM",
-            "BLR",
-            "BLZ",
-            "BMU",
-            "BOL",
-            "BQ",
-            "BRA",
-            "BRB",
-            "BRN",
-            "BTN",
-            "BVT",
-            "BWA",
-            "CAF",
-            "CAN",
-            "CCK",
-            "CHE",
-            "CHL",
-            "CHN",
-            "CIV",
-            "CMR",
-            "COD",
-            "COG",
-            "COK",
-            "COL",
-            "COM",
-            "CPV",
-            "CRI",
-            "CUB",
-            "CUW",
-            "CXR",
-            "CYM",
-            "CYP",
-            "CZE",
-            "DEU",
-            "DJI",
-            "DMA",
-            "DNK",
-            "DOM",
-            "DZA",
-            "ECU",
-            "EGY",
-            "ERI",
-            "ESH",
-            "ESP",
-            "EST",
-            "ETH",
-            "FIN",
-            "FJI",
-            "FLK",
-            "FRA",
-            "FRO",
-            "FSM",
-            "GAB",
-            "GBR",
-            "GEO",
-            "GGY",
-            "GHA",
-            "GIB",
-            "GIN",
-            "GLP",
-            "GMB",
-            "GNB",
-            "GNQ",
-            "GRC",
-            "GRD",
-            "GRL",
-            "GTM",
-            "GUF",
-            "GUM",
-            "GUY",
-            "HKG",
-            "HMD",
-            "HND",
-            "HRV",
-            "HTI",
-            "HUN",
-            "IDN",
-            "IMN",
-            "IND",
-            "IOT",
-            "IRL",
-            "IRN",
-            "IRQ",
-            "ISL",
-            "ISR",
-            "ITA",
-            "JAM",
-            "JEY",
-            "JOR",
-            "JPN",
-            "KAZ",
-            "KEN",
-            "KGZ",
-            "KHM",
-            "KIR",
-            "KNA",
-            "KOR",
-            "KWT",
-            "LAO",
-            "LBN",
-            "LBR",
-            "LBY",
-            "LCA",
-            "LIE",
-            "LKA",
-            "LSO",
-            "LTU",
-            "LUX",
-            "LVA",
-            "MAC",
-            "MAF",
-            "MAR",
-            "MCO",
-            "MDA",
-            "MDG",
-            "MDV",
-            "MEX",
-            "MHL",
-            "MKD",
-            "MLI",
-            "MLT",
-            "MMR",
-            "MNE",
-            "MNG",
-            "MNP",
-            "MOZ",
-            "MRT",
-            "MSR",
-            "MTQ",
-            "MUS",
-            "MWI",
-            "MYS",
-            "MYT",
-            "NAM",
-            "NCL",
-            "NER",
-            "NFK",
-            "NGA",
-            "NIC",
-            "NIU",
-            "NLD",
-            "NOR",
-            "NPL",
-            "NRU",
-            "NZL",
-            "OMN",
-            "PAK",
-            "PAN",
-            "PCN",
-            "PER",
-            "PHL",
-            "PLW",
-            "PNG",
-            "POL",
-            "PRI",
-            "PRK",
-            "PRT",
-            "PRY",
-            "PS",
-            "PYF",
-            "QAT",
-            "REU",
-            "ROU",
-            "RUS",
-            "RWA",
-            "SAU",
-            "SDN",
-            "SEN",
-            "SGP",
-            "SGS",
-            "SH",
-            "SJM",
-            "SLB",
-            "SLE",
-            "SLV",
-            "SMR",
-            "SOM",
-            "SPM",
-            "SRB",
-            "SSD",
-            "STP",
-            "SUR",
-            "SVK",
-            "SVN",
-            "SWE",
-            "SWZ",
-            "SXM",
-            "SYC",
-            "SYR",
-            "TCA",
-            "TCD",
-            "TGO",
-            "THA",
-            "TJK",
-            "TKL",
-            "TKM",
-            "TLS",
-            "TON",
-            "TTO",
-            "TUN",
-            "TUR",
-            "TUV",
-            "TWN",
-            "TZ",
-            "UGA",
-            "UKR",
-            "UMI",
-            "URY",
-            "USA",
-            "UZB",
-            "VAT",
-            "VCT",
-            "VEN",
-            "VGB",
-            "VIR",
-            "VNM",
-            "VUT",
-            "WLF",
-            "WSM",
-            "YEM",
-            "ZAF",
-            "ZMB",
-            "ZWE"});
-            this.cbx_CountryCode.Location = new System.Drawing.Point(124, 27);
-            this.cbx_CountryCode.Name = "cbx_CountryCode";
-            this.cbx_CountryCode.Size = new System.Drawing.Size(68, 21);
-            this.cbx_CountryCode.Sorted = true;
-            this.cbx_CountryCode.TabIndex = 6;
-            this.cbx_CountryCode.SelectedValueChanged += new System.EventHandler(this.tbx_cbx_Any_TextChanged);
-            this.cbx_CountryCode.Enter += new System.EventHandler(this.tbx_cbx_Any_Enter);
+            this.tbx_State.Location = new System.Drawing.Point(124, 81);
+            this.tbx_State.Name = "tbx_State";
+            this.tbx_State.Size = new System.Drawing.Size(214, 20);
+            this.tbx_State.TabIndex = 8;
+            this.tbx_State.TextChanged += new System.EventHandler(this.tbx_cbx_Any_TextChanged);
+            this.tbx_State.Enter += new System.EventHandler(this.tbx_cbx_Any_Enter);
             // 
             // cbx_Country
             // 
@@ -843,72 +471,444 @@
             this.cbx_Country.SelectedValueChanged += new System.EventHandler(this.tbx_cbx_Any_TextChanged);
             this.cbx_Country.Enter += new System.EventHandler(this.tbx_cbx_Any_Enter);
             // 
-            // tbx_State
+            // cbx_CountryCode
             // 
-            this.tbx_State.Location = new System.Drawing.Point(124, 81);
-            this.tbx_State.Name = "tbx_State";
-            this.tbx_State.Size = new System.Drawing.Size(214, 20);
-            this.tbx_State.TabIndex = 8;
-            this.tbx_State.TextChanged += new System.EventHandler(this.tbx_cbx_Any_TextChanged);
-            this.tbx_State.Enter += new System.EventHandler(this.tbx_cbx_Any_Enter);
+            this.cbx_CountryCode.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbx_CountryCode.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbx_CountryCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbx_CountryCode.FormattingEnabled = true;
+            this.cbx_CountryCode.Items.AddRange(new object[] {
+            "",
+            "ABW",
+            "AFG",
+            "AGO",
+            "AIA",
+            "ALA",
+            "ALB",
+            "AND",
+            "ARE",
+            "ARG",
+            "ARM",
+            "ASM",
+            "ATA",
+            "ATF",
+            "ATG",
+            "AUS",
+            "AUT",
+            "AZE",
+            "BDI",
+            "BEL",
+            "BEN",
+            "BFA",
+            "BGD",
+            "BGR",
+            "BHR",
+            "BHS",
+            "BIH",
+            "BLM",
+            "BLR",
+            "BLZ",
+            "BMU",
+            "BOL",
+            "BQ",
+            "BRA",
+            "BRB",
+            "BRN",
+            "BTN",
+            "BVT",
+            "BWA",
+            "CAF",
+            "CAN",
+            "CCK",
+            "CHE",
+            "CHL",
+            "CHN",
+            "CIV",
+            "CMR",
+            "COD",
+            "COG",
+            "COK",
+            "COL",
+            "COM",
+            "CPV",
+            "CRI",
+            "CUB",
+            "CUW",
+            "CXR",
+            "CYM",
+            "CYP",
+            "CZE",
+            "DEU",
+            "DJI",
+            "DMA",
+            "DNK",
+            "DOM",
+            "DZA",
+            "ECU",
+            "EGY",
+            "ERI",
+            "ESH",
+            "ESP",
+            "EST",
+            "ETH",
+            "FIN",
+            "FJI",
+            "FLK",
+            "FRA",
+            "FRO",
+            "FSM",
+            "GAB",
+            "GBR",
+            "GEO",
+            "GGY",
+            "GHA",
+            "GIB",
+            "GIN",
+            "GLP",
+            "GMB",
+            "GNB",
+            "GNQ",
+            "GRC",
+            "GRD",
+            "GRL",
+            "GTM",
+            "GUF",
+            "GUM",
+            "GUY",
+            "HKG",
+            "HMD",
+            "HND",
+            "HRV",
+            "HTI",
+            "HUN",
+            "IDN",
+            "IMN",
+            "IND",
+            "IOT",
+            "IRL",
+            "IRN",
+            "IRQ",
+            "ISL",
+            "ISR",
+            "ITA",
+            "JAM",
+            "JEY",
+            "JOR",
+            "JPN",
+            "KAZ",
+            "KEN",
+            "KGZ",
+            "KHM",
+            "KIR",
+            "KNA",
+            "KOR",
+            "KWT",
+            "LAO",
+            "LBN",
+            "LBR",
+            "LBY",
+            "LCA",
+            "LIE",
+            "LKA",
+            "LSO",
+            "LTU",
+            "LUX",
+            "LVA",
+            "MAC",
+            "MAF",
+            "MAR",
+            "MCO",
+            "MDA",
+            "MDG",
+            "MDV",
+            "MEX",
+            "MHL",
+            "MKD",
+            "MLI",
+            "MLT",
+            "MMR",
+            "MNE",
+            "MNG",
+            "MNP",
+            "MOZ",
+            "MRT",
+            "MSR",
+            "MTQ",
+            "MUS",
+            "MWI",
+            "MYS",
+            "MYT",
+            "NAM",
+            "NCL",
+            "NER",
+            "NFK",
+            "NGA",
+            "NIC",
+            "NIU",
+            "NLD",
+            "NOR",
+            "NPL",
+            "NRU",
+            "NZL",
+            "OMN",
+            "PAK",
+            "PAN",
+            "PCN",
+            "PER",
+            "PHL",
+            "PLW",
+            "PNG",
+            "POL",
+            "PRI",
+            "PRK",
+            "PRT",
+            "PRY",
+            "PS",
+            "PYF",
+            "QAT",
+            "REU",
+            "ROU",
+            "RUS",
+            "RWA",
+            "SAU",
+            "SDN",
+            "SEN",
+            "SGP",
+            "SGS",
+            "SH",
+            "SJM",
+            "SLB",
+            "SLE",
+            "SLV",
+            "SMR",
+            "SOM",
+            "SPM",
+            "SRB",
+            "SSD",
+            "STP",
+            "SUR",
+            "SVK",
+            "SVN",
+            "SWE",
+            "SWZ",
+            "SXM",
+            "SYC",
+            "SYR",
+            "TCA",
+            "TCD",
+            "TGO",
+            "THA",
+            "TJK",
+            "TKL",
+            "TKM",
+            "TLS",
+            "TON",
+            "TTO",
+            "TUN",
+            "TUR",
+            "TUV",
+            "TWN",
+            "TZ",
+            "UGA",
+            "UKR",
+            "UMI",
+            "URY",
+            "USA",
+            "UZB",
+            "VAT",
+            "VCT",
+            "VEN",
+            "VGB",
+            "VIR",
+            "VNM",
+            "VUT",
+            "WLF",
+            "WSM",
+            "YEM",
+            "ZAF",
+            "ZMB",
+            "ZWE"});
+            this.cbx_CountryCode.Location = new System.Drawing.Point(124, 27);
+            this.cbx_CountryCode.Name = "cbx_CountryCode";
+            this.cbx_CountryCode.Size = new System.Drawing.Size(68, 21);
+            this.cbx_CountryCode.Sorted = true;
+            this.cbx_CountryCode.TabIndex = 6;
+            this.cbx_CountryCode.SelectedValueChanged += new System.EventHandler(this.tbx_cbx_Any_TextChanged);
+            this.cbx_CountryCode.Enter += new System.EventHandler(this.tbx_cbx_Any_Enter);
             // 
-            // tbx_City
+            // lbl_Sub_location
             // 
-            this.tbx_City.Location = new System.Drawing.Point(124, 107);
-            this.tbx_City.Name = "tbx_City";
-            this.tbx_City.Size = new System.Drawing.Size(214, 20);
-            this.tbx_City.TabIndex = 9;
-            this.tbx_City.TextChanged += new System.EventHandler(this.tbx_cbx_Any_TextChanged);
-            this.tbx_City.Enter += new System.EventHandler(this.tbx_cbx_Any_Enter);
+            this.lbl_Sub_location.AutoSize = true;
+            this.lbl_Sub_location.Location = new System.Drawing.Point(11, 136);
+            this.lbl_Sub_location.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_Sub_location.Name = "lbl_Sub_location";
+            this.lbl_Sub_location.Size = new System.Drawing.Size(85, 13);
+            this.lbl_Sub_location.TabIndex = 0;
+            this.lbl_Sub_location.Text = "lbl_Sub_location";
             // 
-            // tbx_Sub_location
+            // lbl_City
             // 
-            this.tbx_Sub_location.Location = new System.Drawing.Point(124, 133);
-            this.tbx_Sub_location.Name = "tbx_Sub_location";
-            this.tbx_Sub_location.Size = new System.Drawing.Size(214, 20);
-            this.tbx_Sub_location.TabIndex = 10;
-            this.tbx_Sub_location.TextChanged += new System.EventHandler(this.tbx_cbx_Any_TextChanged);
-            this.tbx_Sub_location.Enter += new System.EventHandler(this.tbx_cbx_Any_Enter);
+            this.lbl_City.AutoSize = true;
+            this.lbl_City.Location = new System.Drawing.Point(11, 110);
+            this.lbl_City.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_City.Name = "lbl_City";
+            this.lbl_City.Size = new System.Drawing.Size(40, 13);
+            this.lbl_City.TabIndex = 0;
+            this.lbl_City.Text = "lbl_City";
             // 
-            // btn_getFromWeb_Toponomy
+            // lbl_State
             // 
-            this.btn_getFromWeb_Toponomy.Location = new System.Drawing.Point(14, 169);
-            this.btn_getFromWeb_Toponomy.Name = "btn_getFromWeb_Toponomy";
-            this.btn_getFromWeb_Toponomy.Size = new System.Drawing.Size(160, 23);
-            this.btn_getFromWeb_Toponomy.TabIndex = 11;
-            this.btn_getFromWeb_Toponomy.Text = "btn_getFromWeb_Toponomy";
-            this.btn_getFromWeb_Toponomy.UseVisualStyleBackColor = true;
-            this.btn_getFromWeb_Toponomy.Click += new System.EventHandler(this.btn_getFromWeb_Click);
+            this.lbl_State.AutoSize = true;
+            this.lbl_State.Location = new System.Drawing.Point(11, 84);
+            this.lbl_State.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_State.Name = "lbl_State";
+            this.lbl_State.Size = new System.Drawing.Size(48, 13);
+            this.lbl_State.TabIndex = 0;
+            this.lbl_State.Text = "lbl_State";
             // 
-            // btn_getAllFromWeb_Toponomy
+            // lbl_Country
             // 
-            this.btn_getAllFromWeb_Toponomy.Location = new System.Drawing.Point(178, 169);
-            this.btn_getAllFromWeb_Toponomy.Name = "btn_getAllFromWeb_Toponomy";
-            this.btn_getAllFromWeb_Toponomy.Size = new System.Drawing.Size(160, 23);
-            this.btn_getAllFromWeb_Toponomy.TabIndex = 12;
-            this.btn_getAllFromWeb_Toponomy.Text = "btn_getAllFromWeb_Toponomy";
-            this.btn_getAllFromWeb_Toponomy.UseVisualStyleBackColor = true;
-            this.btn_getAllFromWeb_Toponomy.Click += new System.EventHandler(this.btn_getFromWeb_Click);
+            this.lbl_Country.AutoSize = true;
+            this.lbl_Country.Location = new System.Drawing.Point(11, 57);
+            this.lbl_Country.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_Country.Name = "lbl_Country";
+            this.lbl_Country.Size = new System.Drawing.Size(59, 13);
+            this.lbl_Country.TabIndex = 0;
+            this.lbl_Country.Text = "lbl_Country";
             // 
-            // btn_RemoveGeoData
+            // lbl_CountryCode
             // 
-            this.btn_RemoveGeoData.Location = new System.Drawing.Point(14, 198);
-            this.btn_RemoveGeoData.Name = "btn_RemoveGeoData";
-            this.btn_RemoveGeoData.Size = new System.Drawing.Size(324, 23);
-            this.btn_RemoveGeoData.TabIndex = 13;
-            this.btn_RemoveGeoData.Text = "btn_RemoveGeoData";
-            this.btn_RemoveGeoData.UseVisualStyleBackColor = true;
-            this.btn_RemoveGeoData.Click += new System.EventHandler(this.btn_RemoveGeoData_Click);
+            this.lbl_CountryCode.AutoSize = true;
+            this.lbl_CountryCode.Location = new System.Drawing.Point(11, 30);
+            this.lbl_CountryCode.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_CountryCode.Name = "lbl_CountryCode";
+            this.lbl_CountryCode.Size = new System.Drawing.Size(84, 13);
+            this.lbl_CountryCode.TabIndex = 0;
+            this.lbl_CountryCode.Text = "lbl_CountryCode";
             // 
-            // btn_SetCurrentValues
+            // gbx_GPSData
             // 
-            this.btn_SetCurrentValues.Location = new System.Drawing.Point(27, 459);
-            this.btn_SetCurrentValues.Name = "btn_SetCurrentValues";
-            this.btn_SetCurrentValues.Size = new System.Drawing.Size(324, 23);
-            this.btn_SetCurrentValues.TabIndex = 14;
-            this.btn_SetCurrentValues.Text = "btn_SetCurrentValues";
-            this.btn_SetCurrentValues.UseVisualStyleBackColor = true;
-            this.btn_SetCurrentValues.Click += new System.EventHandler(this.btn_SetCurrentValues_Click);
+            this.gbx_GPSData.Controls.Add(this.btn_getFromWeb_Altitude);
+            this.gbx_GPSData.Controls.Add(this.tbx_GPSAltitude);
+            this.gbx_GPSData.Controls.Add(this.tbx_GPSImgDirection);
+            this.gbx_GPSData.Controls.Add(this.tbx_GPSLongitude);
+            this.gbx_GPSData.Controls.Add(this.tbx_GPSLatitude);
+            this.gbx_GPSData.Controls.Add(this.lbl_GPSAltitude);
+            this.gbx_GPSData.Controls.Add(this.lbl_GPSImgDirection);
+            this.gbx_GPSData.Controls.Add(this.lbl_GPSLongitude);
+            this.gbx_GPSData.Controls.Add(this.lbl_GPSLatitude);
+            this.gbx_GPSData.Controls.Add(this.btn_getAllFromWeb_Altitude);
+            this.gbx_GPSData.Controls.Add(this.lbl_Decimal);
+            this.gbx_GPSData.Location = new System.Drawing.Point(13, 42);
+            this.gbx_GPSData.Margin = new System.Windows.Forms.Padding(2);
+            this.gbx_GPSData.Name = "gbx_GPSData";
+            this.gbx_GPSData.Padding = new System.Windows.Forms.Padding(2);
+            this.gbx_GPSData.Size = new System.Drawing.Size(364, 157);
+            this.gbx_GPSData.TabIndex = 0;
+            this.gbx_GPSData.TabStop = false;
+            this.gbx_GPSData.Text = "gbx_GPSData";
+            // 
+            // btn_getFromWeb_Altitude
+            // 
+            this.btn_getFromWeb_Altitude.Location = new System.Drawing.Point(243, 73);
+            this.btn_getFromWeb_Altitude.Name = "btn_getFromWeb_Altitude";
+            this.btn_getFromWeb_Altitude.Size = new System.Drawing.Size(112, 23);
+            this.btn_getFromWeb_Altitude.TabIndex = 13;
+            this.btn_getFromWeb_Altitude.Text = "btn_getFromWeb_Altitude";
+            this.btn_getFromWeb_Altitude.UseVisualStyleBackColor = true;
+            this.btn_getFromWeb_Altitude.Click += new System.EventHandler(this.btn_getFromWeb_Click);
+            // 
+            // tbx_GPSAltitude
+            // 
+            this.tbx_GPSAltitude.Location = new System.Drawing.Point(124, 115);
+            this.tbx_GPSAltitude.Name = "tbx_GPSAltitude";
+            this.tbx_GPSAltitude.Size = new System.Drawing.Size(100, 20);
+            this.tbx_GPSAltitude.TabIndex = 4;
+            this.tbx_GPSAltitude.TextChanged += new System.EventHandler(this.tbx_cbx_Any_TextChanged);
+            this.tbx_GPSAltitude.Enter += new System.EventHandler(this.tbx_cbx_Any_Enter);
+            // 
+            // tbx_GPSImgDirection
+            // 
+            this.tbx_GPSImgDirection.Location = new System.Drawing.Point(124, 89);
+            this.tbx_GPSImgDirection.Name = "tbx_GPSImgDirection";
+            this.tbx_GPSImgDirection.Size = new System.Drawing.Size(100, 20);
+            this.tbx_GPSImgDirection.TabIndex = 3;
+            this.tbx_GPSImgDirection.TextChanged += new System.EventHandler(this.tbx_cbx_Any_TextChanged);
+            this.tbx_GPSImgDirection.Enter += new System.EventHandler(this.tbx_cbx_Any_Enter);
+            // 
+            // tbx_GPSLongitude
+            // 
+            this.tbx_GPSLongitude.Location = new System.Drawing.Point(124, 63);
+            this.tbx_GPSLongitude.Name = "tbx_GPSLongitude";
+            this.tbx_GPSLongitude.Size = new System.Drawing.Size(100, 20);
+            this.tbx_GPSLongitude.TabIndex = 2;
+            this.tbx_GPSLongitude.TextChanged += new System.EventHandler(this.tbx_cbx_Any_TextChanged);
+            this.tbx_GPSLongitude.Enter += new System.EventHandler(this.tbx_cbx_Any_Enter);
+            // 
+            // tbx_GPSLatitude
+            // 
+            this.tbx_GPSLatitude.Location = new System.Drawing.Point(124, 35);
+            this.tbx_GPSLatitude.Name = "tbx_GPSLatitude";
+            this.tbx_GPSLatitude.Size = new System.Drawing.Size(100, 20);
+            this.tbx_GPSLatitude.TabIndex = 1;
+            this.tbx_GPSLatitude.TextChanged += new System.EventHandler(this.tbx_cbx_Any_TextChanged);
+            this.tbx_GPSLatitude.Enter += new System.EventHandler(this.tbx_cbx_Any_Enter);
+            // 
+            // lbl_GPSAltitude
+            // 
+            this.lbl_GPSAltitude.AutoSize = true;
+            this.lbl_GPSAltitude.Location = new System.Drawing.Point(14, 117);
+            this.lbl_GPSAltitude.Name = "lbl_GPSAltitude";
+            this.lbl_GPSAltitude.Size = new System.Drawing.Size(80, 13);
+            this.lbl_GPSAltitude.TabIndex = 12;
+            this.lbl_GPSAltitude.Text = "lbl_GPSAltitude";
+            // 
+            // lbl_GPSImgDirection
+            // 
+            this.lbl_GPSImgDirection.AutoSize = true;
+            this.lbl_GPSImgDirection.Location = new System.Drawing.Point(14, 92);
+            this.lbl_GPSImgDirection.Name = "lbl_GPSImgDirection";
+            this.lbl_GPSImgDirection.Size = new System.Drawing.Size(104, 13);
+            this.lbl_GPSImgDirection.TabIndex = 12;
+            this.lbl_GPSImgDirection.Text = "lbl_GPSImgDirection";
+            // 
+            // lbl_GPSLongitude
+            // 
+            this.lbl_GPSLongitude.AutoSize = true;
+            this.lbl_GPSLongitude.Location = new System.Drawing.Point(14, 66);
+            this.lbl_GPSLongitude.Name = "lbl_GPSLongitude";
+            this.lbl_GPSLongitude.Size = new System.Drawing.Size(92, 13);
+            this.lbl_GPSLongitude.TabIndex = 12;
+            this.lbl_GPSLongitude.Text = "lbl_GPSLongitude";
+            // 
+            // lbl_GPSLatitude
+            // 
+            this.lbl_GPSLatitude.AutoSize = true;
+            this.lbl_GPSLatitude.Location = new System.Drawing.Point(14, 38);
+            this.lbl_GPSLatitude.Name = "lbl_GPSLatitude";
+            this.lbl_GPSLatitude.Size = new System.Drawing.Size(83, 13);
+            this.lbl_GPSLatitude.TabIndex = 12;
+            this.lbl_GPSLatitude.Text = "lbl_GPSLatitude";
+            // 
+            // btn_getAllFromWeb_Altitude
+            // 
+            this.btn_getAllFromWeb_Altitude.Location = new System.Drawing.Point(243, 108);
+            this.btn_getAllFromWeb_Altitude.Name = "btn_getAllFromWeb_Altitude";
+            this.btn_getAllFromWeb_Altitude.Size = new System.Drawing.Size(112, 23);
+            this.btn_getAllFromWeb_Altitude.TabIndex = 5;
+            this.btn_getAllFromWeb_Altitude.Text = "btn_getAllFromWeb_Altitude";
+            this.btn_getAllFromWeb_Altitude.UseVisualStyleBackColor = true;
+            this.btn_getAllFromWeb_Altitude.Click += new System.EventHandler(this.btn_getFromWeb_Click);
+            // 
+            // lbl_Decimal
+            // 
+            this.lbl_Decimal.AutoSize = true;
+            this.lbl_Decimal.Location = new System.Drawing.Point(130, 16);
+            this.lbl_Decimal.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_Decimal.Name = "lbl_Decimal";
+            this.lbl_Decimal.Size = new System.Drawing.Size(61, 13);
+            this.lbl_Decimal.TabIndex = 1;
+            this.lbl_Decimal.Text = "lbl_Decimal";
             // 
             // tcr_EditData
             // 
@@ -953,7 +953,7 @@
             this.Controls.Add(this.btn_OK);
             this.Controls.Add(this.btn_Cancel);
             this.Controls.Add(this.lvw_FileListEditImages);
-            this.Controls.Add(this.pbx_imgPreview);
+            this.Controls.Add(this.pbx_imagePreview);
             this.Controls.Add(this.tcr_EditData);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -965,19 +965,19 @@
             this.ShowInTaskbar = false;
             this.Text = "Edit Data";
             this.Load += new System.EventHandler(this.FrmEditFileData_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pbx_imgPreview)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbx_imagePreview)).EndInit();
             this.tpg_Location.ResumeLayout(false);
-            this.gbx_GPSData.ResumeLayout(false);
-            this.gbx_GPSData.PerformLayout();
             this.gbx_LocationData.ResumeLayout(false);
             this.gbx_LocationData.PerformLayout();
+            this.gbx_GPSData.ResumeLayout(false);
+            this.gbx_GPSData.PerformLayout();
             this.tcr_EditData.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.PictureBox pbx_imgPreview;
+        private System.Windows.Forms.PictureBox pbx_imagePreview;
         public System.Windows.Forms.ColumnHeader clh_FileName;
         internal System.Windows.Forms.ListView lvw_FileListEditImages;
         private System.Windows.Forms.TabPage tpg_Location;

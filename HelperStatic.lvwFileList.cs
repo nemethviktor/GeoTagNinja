@@ -3,6 +3,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -129,54 +130,12 @@ internal static partial class HelperStatic
     /// </summary>
     internal static async void LwvPasteGeoData()
     {
-        FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         // check there's anything in copy-pool
-        if (FrmMainApp.DtFileDataCopyPool.Rows.Count > 0)
+        if (FrmMainApp.DtFileDataCopyPool.Rows.Count > 0 && frmMainAppInstance != null)
         {
-            FileListBeingUpdated = true;
-            foreach (ListViewItem lvi in FrmMainAppInstance.lvw_FileList.SelectedItems)
-            {
-                string filePath = Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text);
-                string fileName = lvi.Text;
-                if (File.Exists(path: filePath))
-                {
-                    // check it's not in the read-queue.
-                    while (GenericLockCheckLockFile(fileNameWithOutPath: fileName))
-                    {
-                        await Task.Delay(millisecondsDelay: 10);
-                    }
-
-                    // paste all from copy-pool
-                    foreach (DataRow dr in FrmMainApp.DtFileDataCopyPool.Rows)
-                    {
-                        string strToWrite;
-                        if (dr[columnIndex: 1]
-                                .ToString() ==
-                            "-")
-                        {
-                            strToWrite = "";
-                        }
-                        else
-                        {
-                            strToWrite = dr[columnIndex: 1]
-                                .ToString();
-                        }
-
-                        GenericUpdateAddToDataTable(
-                            dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                            filePath: fileName,
-                            settingId: dr[columnIndex: 0]
-                                .ToString(),
-                            settingValue: strToWrite
-                        );
-                    }
-                }
-
-                // push to lvw
-                await LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
-            }
-
-            FileListBeingUpdated = true;
+            FrmPasteWhat frmPasteWhat = new(initiator: frmMainAppInstance.Name);
+            frmPasteWhat.ShowDialog();
         }
         else
         {
