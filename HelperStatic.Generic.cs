@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -342,95 +343,99 @@ internal static partial class HelperStatic
     /// </summary>
     internal static async Task GenericCheckForNewVersions()
     {
-        #if !DEBUG
-            // check when the last polling took place
-            long nowUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
-            long lastCheckUnixTime = 0;
+        // check when the last polling took place
+        long nowUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
+        long lastCheckUnixTime = 0;
 
-            string strLastOnlineVersionCheck = HelperStatic.DataReadSQLiteSettings(
-                    tableName: "settings",
-                    settingTabPage: "generic",
-                    settingId: "onlineVersionCheckDate"
-                    );
+        string strLastOnlineVersionCheck = DataReadSQLiteSettings(
+            tableName: "settings",
+            settingTabPage: "generic",
+            settingId: "onlineVersionCheckDate"
+        );
 
-            if (strLastOnlineVersionCheck == null)
+        if (strLastOnlineVersionCheck == null)
+        {
+            lastCheckUnixTime = nowUnixTime;
+            // write back to SQL so it doesn't remain blank
+            DataWriteSQLiteSettings(
+                tableName: "settings",
+                settingTabPage: "generic",
+                settingId: "onlineVersionCheckDate",
+                settingValue: nowUnixTime.ToString(provider: CultureInfo.InvariantCulture)
+            );
+        }
+        else
+        {
+            lastCheckUnixTime = long.Parse(s: strLastOnlineVersionCheck);
+        }
+
+        if (nowUnixTime > lastCheckUnixTime + 604800) //604800 is a week's worth of seconds
+        {
+            // get current & newest exiftool version -- do this here at the end so it doesn't hold up the process
+            decimal currentExifToolVersionLocal = await ExifGetExifToolVersion();
+            decimal newestExifToolVersionOnline = API_ExifGetExifToolVersionFromWeb();
+            decimal currentExifToolVersionInSQL;
+            string strCurrentExifToolVersionInSQL = DataReadSQLiteSettings(
+                tableName: "settings",
+                settingTabPage: "generic",
+                settingId: "exifToolVer"
+            );
+
+            if (!decimal.TryParse(s: strCurrentExifToolVersionInSQL, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out currentExifToolVersionInSQL))
             {
-                lastCheckUnixTime = nowUnixTime;
-                // write back to SQL so it doesn't remain blank
-                HelperStatic.DataWriteSQLiteSettings(
+                currentExifToolVersionInSQL = currentExifToolVersionLocal;
+            }
+
+            if (newestExifToolVersionOnline > currentExifToolVersionLocal && newestExifToolVersionOnline > currentExifToolVersionInSQL && currentExifToolVersionLocal + newestExifToolVersionOnline > 0)
+            {
+                // write current to SQL
+                DataWriteSQLiteSettings(
                     tableName: "settings",
                     settingTabPage: "generic",
-                    settingId: "onlineVersionCheckDate",
-                    settingValue: nowUnixTime.ToString(CultureInfo.InvariantCulture)
+                    settingId: "exifToolVer",
+                    settingValue: newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture)
                 );
+
+                if (MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewExifToolVersionExists") + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture), caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                {
+                    Process.Start(fileName: "https://exiftool.org/exiftool-" + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture) + ".zip");
+                }
             }
-            else
+
+            // current version may be something like "0.5.8251.40825"
+            // Assembly.GetExecutingAssembly().GetName().Version.Build is just "8251"
+            int currentGTNVersionBuild = Assembly.GetExecutingAssembly()
+                .GetName()
+                .Version.Build;
+
+            s_APIOkay = true;
+            DataTable dt_APIGTNVersion = DTFromAPI_GetGTNVersion();
+            // newest may be something like "v0.5.8251"
+            string newestGTNVersionFull = dt_APIGTNVersion.Rows[index: 0][columnName: "version"]
+                .ToString()
+                .Replace(oldValue: "v", newValue: "");
+            int newestGTNVersion = 0;
+
+            bool intParse;
+            intParse = int.TryParse(s: newestGTNVersionFull.Split('.')
+                                        .Last(), result: out newestGTNVersion);
+
+            if (newestGTNVersion > currentGTNVersionBuild)
             {
-                lastCheckUnixTime = long.Parse(strLastOnlineVersionCheck);
+                if (MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewGTNVersionExists") + newestGTNVersion, caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                {
+                    Process.Start(fileName: "https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dt_APIGTNVersion.Rows[index: 0][columnName: "version"] + "/GeoTagNinja_Setup.msi");
+                }
             }
 
-            if (nowUnixTime > (lastCheckUnixTime + 604800)) //604800 is a week's worth of seconds
-            {
-                // get current & newest exiftool version -- do this here at the end so it doesn't hold up the process
-                decimal currentExifToolVersionLocal = await HelperStatic.ExifGetExifToolVersion();
-                decimal newestExifToolVersionOnline = HelperStatic.API_ExifGetExifToolVersionFromWeb();
-                decimal currentExifToolVersionInSQL;
-                string strCurrentExifToolVersionInSQL = HelperStatic.DataReadSQLiteSettings(
-                        tableName: "settings",
-                        settingTabPage: "generic",
-                        settingId: "exifToolVer"
-                        );
-
-                if (!decimal.TryParse(strCurrentExifToolVersionInSQL, NumberStyles.Any, CultureInfo.InvariantCulture, out currentExifToolVersionInSQL))
-                {
-                    currentExifToolVersionInSQL = currentExifToolVersionLocal;
-                }
-
-                if (newestExifToolVersionOnline > currentExifToolVersionLocal && newestExifToolVersionOnline > currentExifToolVersionInSQL && (currentExifToolVersionLocal + newestExifToolVersionOnline) > 0)
-                {
-                    // write current to SQL
-                    HelperStatic.DataWriteSQLiteSettings(
-                        tableName: "settings",
-                        settingTabPage: "generic",
-                        settingId: "exifToolVer",
-                        settingValue: newestExifToolVersionOnline.ToString(CultureInfo.InvariantCulture)
-                        );
-
-                    if (MessageBox.Show(HelperStatic.GenericGetMessageBoxText("mbx_FrmMainApp_InfoNewExifToolVersionExists") + newestExifToolVersionOnline.ToString(CultureInfo.InvariantCulture), "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
-                    {
-                        System.Diagnostics.Process.Start("https://exiftool.org/exiftool-" + newestExifToolVersionOnline.ToString(CultureInfo.InvariantCulture) + ".zip");
-                    }
-                }
-
-                // current version may be something like "0.5.8251.40825"
-                // Assembly.GetExecutingAssembly().GetName().Version.Build is just "8251"
-                int currentGTNVersionBuild = Assembly.GetExecutingAssembly().GetName().Version.Build;
-
-                HelperStatic.s_APIOkay = true;
-                DataTable dt_APIGTNVersion = HelperStatic.DTFromAPI_GetGTNVersion();
-                // newest may be something like "v0.5.8251"
-                string newestGTNVersionFull = dt_APIGTNVersion.Rows[0]["version"].ToString().Replace("v", "");
-                int newestGTNVersion = 0;
-
-                bool intParse;
-                intParse = int.TryParse(newestGTNVersionFull.Split('.').Last(), out newestGTNVersion);
-
-                if (newestGTNVersion > currentGTNVersionBuild)
-                {
-                    if (MessageBox.Show(HelperStatic.GenericGetMessageBoxText("mbx_FrmMainApp_InfoNewGTNVersionExists") + newestGTNVersion, "Info", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
-                    {
-                        System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dt_APIGTNVersion.Rows[0]["version"].ToString() + "/GeoTagNinja_Setup.msi");
-                    }
-                }
-                // write back to SQL
-                HelperStatic.DataWriteSQLiteSettings(
-                    tableName: "settings",
-                    settingTabPage: "generic",
-                    settingId: "onlineVersionCheckDate",
-                    settingValue: nowUnixTime.ToString()
-                    );
-            }
-        #endif
+            // write back to SQL
+            DataWriteSQLiteSettings(
+                tableName: "settings",
+                settingTabPage: "generic",
+                settingId: "onlineVersionCheckDate",
+                settingValue: nowUnixTime.ToString()
+            );
+        }
     }
 
     /// <summary>
