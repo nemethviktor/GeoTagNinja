@@ -25,15 +25,15 @@ internal static partial class HelperStatic
             ListView lvw = FrmMainAppInstance.lvw_FileList;
             ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
 
-            string fileName = lvi.Text;
+            string fileNameWithOutPath = lvi.Text;
             DataView dataViewRelevantRows = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
-            dataViewRelevantRows.RowFilter = "filePath = '" +
-                                             fileName +
+            dataViewRelevantRows.RowFilter = "fileNameWithOutPath = '" +
+                                             fileNameWithOutPath +
                                              "'";
             DataTable dataTableRelevant = dataViewRelevantRows.ToTable();
             if (dataTableRelevant.Rows.Count > 0)
             {
-                //while (GenericLockCheckLockFile(fileNameWithOutPath: fileName))
+                //while (GenericLockCheckLockFile(fileNameWithOutPath: fileNameWithOutPath))
                 //{
                 //    await Task.Delay(millisecondsDelay: 10);
                 //}
@@ -150,8 +150,8 @@ internal static partial class HelperStatic
     internal static async Task LvwItemClickNavigate()
     {
         FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        HTMLAddMarker = "";
-        hs_MapMarkers.Clear();
+        HtmlAddMarker = "";
+        HsMapMarkers.Clear();
 
         foreach (ListViewItem lvw_FileListItem in FrmMainAppInstance.lvw_FileList.SelectedItems)
         {
@@ -189,14 +189,14 @@ internal static partial class HelperStatic
                     {
                         FrmMainAppInstance.tbx_lat.Text = strLat;
                         FrmMainAppInstance.tbx_lng.Text = strLng;
-                        hs_MapMarkers.Add(item: (strLat, strLng));
+                        HsMapMarkers.Add(item: (strLat, strLng));
                     }
                 }
-                else if (s_ResetMapToZero)
+                else if (SResetMapToZero)
                 {
                     FrmMainAppInstance.tbx_lat.Text = "0";
                     FrmMainAppInstance.tbx_lng.Text = "0";
-                    hs_MapMarkers.Add(item: ("0", "0"));
+                    HsMapMarkers.Add(item: ("0", "0"));
                 }
                 // leave as-is (most likely the last photo)
             }
@@ -297,7 +297,7 @@ internal static partial class HelperStatic
                 // don't run the thing again if file has already been generated
                 if (!File.Exists(path: generatedFileName))
                 {
-                    await ExifGetImagePreviews(fileName: fileNameWithPath);
+                    await ExifGetImagePreviews(fileNameWithOutPath: fileNameWithPath);
                 }
 
                 //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
@@ -326,14 +326,14 @@ internal static partial class HelperStatic
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         int fileCount = 0;
         int filesWithGeoData = 0;
-        string thisFileName;
+        string fileNameWithOutPath;
 
         if (frmMainAppInstance != null)
         {
             foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.Items)
             {
-                thisFileName = lvi.Text;
-                if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: thisFileName)))
+                fileNameWithOutPath = lvi.Text;
+                if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithOutPath)))
                 {
                     fileCount++;
                 }

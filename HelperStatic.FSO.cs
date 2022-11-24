@@ -42,7 +42,7 @@ internal static partial class HelperStatic
     /// <returns>Realistically nothing but it sets s_changeFolderIsOkay according to the user input and circumstances</returns>
     internal static async Task FsoCheckOutstandingFiledataOkayToChangeFolderAsync()
     {
-        s_changeFolderIsOkay = false;
+        SChangeFolderIsOkay = false;
 
         // check if there's anything in the write-Q
         if (FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows.Count > 0)
@@ -56,17 +56,17 @@ internal static partial class HelperStatic
                 }
 
                 await ExifWriteExifToFile();
-                s_changeFolderIsOkay = true;
+                SChangeFolderIsOkay = true;
             }
             else if (dialogResult == DialogResult.No)
             {
                 FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
-                s_changeFolderIsOkay = true;
+                SChangeFolderIsOkay = true;
             }
         }
         else
         {
-            s_changeFolderIsOkay = true;
+            SChangeFolderIsOkay = true;
         }
     }
 

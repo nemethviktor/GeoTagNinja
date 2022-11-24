@@ -73,7 +73,7 @@ public partial class FrmEditFileData : Form
     {
         FrmEditFileDataNowLoadingFileData = true;
         string folderName = FolderName;
-        string fileName = lvw_FileListEditImages.SelectedItems[index: 0]
+        string fileNameWithOutPath = lvw_FileListEditImages.SelectedItems[index: 0]
             .Text;
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
@@ -92,7 +92,7 @@ public partial class FrmEditFileData : Form
 
                 // if label then we want text to come from datarow [objectText]
                 // else if textbox/dropdown then we want the data to come from the same spot [metaDataDirectoryData.tagName]
-                string tempStr = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileName)
+                string tempStr = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithOutPath)
                     .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_" + cItem.Name.Substring(startIndex: 4)]
                                   .Index]
                     .Text;
@@ -110,7 +110,7 @@ public partial class FrmEditFileData : Form
                 // stick into sql ("pending save") - this is to see if the data has changed later.
                 HelperStatic.GenericUpdateAddToDataTable(
                     dt: DtFileDataToWriteStage2QueuePendingSave,
-                    fileNameWithoutPath: fileName,
+                    fileNameWithoutPath: fileNameWithOutPath,
                     settingId: cItem.Name.Substring(startIndex: 4),
                     settingValue: cItem.Text
                 );
@@ -118,10 +118,10 @@ public partial class FrmEditFileData : Form
                 // overwrite from sql-Q if available
                 // if data was pulled from the map this will sit in the main table, not in Q
                 DataView dvSqlDataQ = new(table: DtFileDataToWriteStage1PreQueue);
-                dvSqlDataQ.RowFilter = "filePath = '" + fileName + "' AND settingId ='" + cItem.Name.Substring(startIndex: 4) + "'";
+                dvSqlDataQ.RowFilter = "fileNameWithOutPath = '" + fileNameWithOutPath + "' AND settingId ='" + cItem.Name.Substring(startIndex: 4) + "'";
 
                 DataView dvSqlDataF = new(table: DtFileDataToWriteStage3ReadyToWrite);
-                dvSqlDataF.RowFilter = "filePath = '" + fileName + "' AND settingId ='" + cItem.Name.Substring(startIndex: 4) + "'";
+                dvSqlDataF.RowFilter = "fileNameWithOutPath = '" + fileNameWithOutPath + "' AND settingId ='" + cItem.Name.Substring(startIndex: 4) + "'";
 
                 if (dvSqlDataQ.Count > 0 || dvSqlDataF.Count > 0)
                 {
@@ -227,7 +227,7 @@ public partial class FrmEditFileData : Form
                 // don't run the thing again if file has already been generated
                 if (!File.Exists(path: generatedFileName))
                 {
-                    await HelperStatic.ExifGetImagePreviews(fileName: fileNameWithPath);
+                    await HelperStatic.ExifGetImagePreviews(fileNameWithOutPath: fileNameWithPath);
                 }
 
                 //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
@@ -250,7 +250,7 @@ public partial class FrmEditFileData : Form
 
     #region Variables
 
-    internal static bool FrmEditFileDataNowLoadingFileData;
+    private static bool FrmEditFileDataNowLoadingFileData;
     internal static bool FrmEditFileDataNowRemovingGeoData;
 
     #endregion
@@ -275,7 +275,7 @@ public partial class FrmEditFileData : Form
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         //reset this just in case.
-        HelperStatic.s_APIOkay = true;
+        HelperStatic.SApiOkay = true;
         string strGpsLatitude;
         string strGpsLongitude;
         switch (((Button)sender).Name)
@@ -453,7 +453,7 @@ public partial class FrmEditFileData : Form
                 break;
         }
 
-        if (HelperStatic.s_APIOkay)
+        if (HelperStatic.SApiOkay)
         {
             MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_InfoDataUpdated"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
         }
@@ -474,14 +474,14 @@ public partial class FrmEditFileData : Form
     {
         if (lvw_FileListEditImages.SelectedItems.Count > 0)
         {
-            string filePath = Path.Combine(path1: FolderName, path2: lvw_FileListEditImages.SelectedItems[index: 0]
-                                               .Text);
-            if (File.Exists(path: filePath))
+            string fileNameWithPath = Path.Combine(path1: FolderName, path2: lvw_FileListEditImages.SelectedItems[index: 0]
+                                                       .Text);
+            if (File.Exists(path: fileNameWithPath))
             {
                 lvw_EditorFileListImagesGetData();
 
                 pbx_imagePreview.Image = null;
-                await pbx_imgPreviewPicGenerator(fileNameWithPath: filePath);
+                await pbx_imgPreviewPicGenerator(fileNameWithPath: fileNameWithPath);
             }
             else
             {
@@ -511,9 +511,9 @@ public partial class FrmEditFileData : Form
                 {
                     DataRow drS3 = DtFileDataToWriteStage3ReadyToWrite.Rows[index: i];
                     if (
-                        drS3[columnName: "filePath"]
+                        drS3[columnName: "fileNameWithOutPath"]
                             .ToString() ==
-                        drS1[columnName: "filePath"]
+                        drS1[columnName: "fileNameWithOutPath"]
                             .ToString() &&
                         drS3[columnName: "settingId"]
                             .ToString() ==
@@ -601,7 +601,7 @@ public partial class FrmEditFileData : Form
             Control sndr = (Control)sender;
 
             DataView dvPreviousText = new(table: DtFileDataToWriteStage2QueuePendingSave);
-            dvPreviousText.RowFilter = "filePath = '" +
+            dvPreviousText.RowFilter = "fileNameWithOutPath = '" +
                                        lvw_FileListEditImages.SelectedItems[index: 0]
                                            .Text +
                                        "' AND settingId ='" +

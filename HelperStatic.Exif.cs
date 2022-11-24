@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using geoTagNinja;
-using Microsoft.Web.WebView2.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -33,8 +32,8 @@ internal static partial class HelperStatic
     /// <param name="dtFileExif">Raw values tag from exiftool</param>
     /// <param name="dataPoint">Name of the exiftag we want the data for</param>
     /// <returns>Standardised exif tag output</returns>
-    internal static string ExifGetStandardisedDataPointFromExif(DataTable dtFileExif,
-                                                                string dataPoint)
+    private static string ExifGetStandardisedDataPointFromExif(DataTable dtFileExif,
+                                                               string dataPoint)
     {
         string returnVal = "";
 
@@ -289,8 +288,8 @@ internal static partial class HelperStatic
     /// <param name="dtFileExif">Raw exiftool outout of all tags</param>
     /// <param name="dataPoint">Plain English datapoint we're after</param>
     /// <returns>Value of that datapoint if exists (e.g "Canon EOS 30D") - unwrangled, raw.</returns>
-    internal static string ExifGetRawDataPointFromExif(DataTable dtFileExif,
-                                                       string dataPoint)
+    private static string ExifGetRawDataPointFromExif(DataTable dtFileExif,
+                                                      string dataPoint)
     {
         string returnVal = "-";
         string tryDataValue = "-";
@@ -352,7 +351,7 @@ internal static partial class HelperStatic
     ///     work line-by-line for
     ///     ... items in the listview that's asking for it.
     /// </summary>
-    /// <param name="files">List of "compatible" filenames</param>
+    /// <param name="listOfAsyncCompatibleFileNamesWithOutPath">List of "compatible" filenames</param>
     /// <param name="folderEnterEpoch">
     ///     This is for session-checking -> if the user was to move folders while the call is
     ///     executing and the new folder has identical file names w/o this the wrong data could show
@@ -361,7 +360,7 @@ internal static partial class HelperStatic
     ///     In practice, nothing but it's responsible for sending the updated exif info back to the requester (usually a
     ///     listview)
     /// </returns>
-    internal static async Task ExifGetExifFromFilesCompatibleFileNames(List<string> files,
+    internal static async Task ExifGetExifFromFilesCompatibleFileNames(List<string> listOfAsyncCompatibleFileNamesWithOutPath,
                                                                        long folderEnterEpoch)
     {
         IEnumerable<string> exifToolCommand = Enumerable.Empty<string>();
@@ -400,7 +399,7 @@ internal static partial class HelperStatic
 
             string folderNameToUse = FrmMainAppInstance.tbx_FolderName.Text;
 
-            foreach (string fileName in files)
+            foreach (string fileNameWithOutPath in listOfAsyncCompatibleFileNamesWithOutPath)
             {
                 DataTable dt_fileExifTable = new();
                 dt_fileExifTable.Clear();
@@ -408,11 +407,11 @@ internal static partial class HelperStatic
                 dt_fileExifTable.Columns.Add(columnName: "TagValue");
                 string exifToolResult;
 
-                if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: fileName)))
+                if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: fileNameWithOutPath)))
                 {
                     try
                     {
-                        exifToolCommandWithFileName = exifToolCommand.Concat(second: new[] { Path.Combine(path1: folderNameToUse, path2: fileName) });
+                        exifToolCommandWithFileName = exifToolCommand.Concat(second: new[] { Path.Combine(path1: folderNameToUse, path2: fileNameWithOutPath) });
                         exifToolResult = await FrmMainAppInstance.AsyncExifTool.ExecuteAsync(args: exifToolCommandWithFileName);
                     }
                     catch (Exception ex)
@@ -455,10 +454,10 @@ internal static partial class HelperStatic
                         }
                     }
 
-                    // for some files there may be data in a sidecar xmp without that data existing in the picture-file. we'll try to collect it here.
-                    if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: fileName)) + ".xmp")))
+                    // for some listOfAsyncCompatibleFileNamesWithOutPath there may be data in a sidecar xmp without that data existing in the picture-file. we'll try to collect it here.
+                    if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: fileNameWithOutPath)) + ".xmp")))
                     {
-                        string sideCarXMPFilePath = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: fileName)) + ".xmp");
+                        string sideCarXMPFilePath = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: fileNameWithOutPath)) + ".xmp");
                         // this is totally a copypaste from above
                         try
                         {
@@ -507,7 +506,7 @@ internal static partial class HelperStatic
                     }
 
                     ListView lvw = FrmMainAppInstance.lvw_FileList;
-                    ListViewItem lvi = lvw.FindItemWithText(text: fileName);
+                    ListViewItem lvi = lvw.FindItemWithText(text: fileNameWithOutPath);
 
                     if (lvi != null /*&& folderEnterLastEpoch == folderEnterEpoch*/) // 20221121: commenting this out for now - otherwise the filesBeingProcessed removal wouldn't ever fire.
                     {
@@ -515,20 +514,20 @@ internal static partial class HelperStatic
                         ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
 
                         // also add to DtFilesSeenInThisSession 
-                        string filePath = Path.Combine(path1: folderNameToUse, path2: fileName);
+                        string fileNameWithPath = Path.Combine(path1: folderNameToUse, path2: fileNameWithOutPath);
                         DataRow dr = FrmMainApp.DtFilesSeenInThisSession.NewRow(); // have new row on each iteration
-                        dr[columnName: "filePath"] = filePath;
-                        dr[columnName: "fileDateTime"] = File.GetLastWriteTime(path: filePath)
+                        dr[columnName: "fileNameWithPath"] = fileNameWithPath;
+                        dr[columnName: "fileDateTime"] = File.GetLastWriteTime(path: fileNameWithPath)
                             .ToString(provider: CultureInfo.InvariantCulture);
                         FrmMainApp.DtFilesSeenInThisSession.Rows.Add(row: dr);
 
                         // if there's an xmp sidecar, add that too
-                        string filePathWithXmp = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: filePath) + ".xmp");
-                        if (File.Exists(path: filePathWithXmp))
+                        string fileNameWithPathWithXMP = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: fileNameWithPath) + ".xmp");
+                        if (File.Exists(path: fileNameWithPathWithXMP))
                         {
                             dr = FrmMainApp.DtFilesSeenInThisSession.NewRow(); // have new row on each iteration
-                            dr[columnName: "filePath"] = filePathWithXmp;
-                            dr[columnName: "fileDateTime"] = File.GetLastWriteTime(path: filePathWithXmp)
+                            dr[columnName: "fileNameWithPath"] = fileNameWithPathWithXMP;
+                            dr[columnName: "fileDateTime"] = File.GetLastWriteTime(path: fileNameWithPathWithXMP)
                                 .ToString(provider: CultureInfo.InvariantCulture);
                             FrmMainApp.DtFilesSeenInThisSession.Rows.Add(row: dr);
                         }
@@ -542,7 +541,7 @@ internal static partial class HelperStatic
 
                             // also add to DtFileDataSeenInThisSession
                             dr = FrmMainApp.DtFileDataSeenInThisSession.NewRow(); // have new row on each iteration
-                            dr[columnName: "filePath"] = filePath;
+                            dr[columnName: "fileNameWithPath"] = fileNameWithPath;
                             dr[columnName: "settingId"] = lvchs[index: i]
                                 .Name.Substring(startIndex: 4);
                             dr[columnName: "settingValue"] = str;
@@ -555,7 +554,7 @@ internal static partial class HelperStatic
                         // remove from the filesBeingProcessed list
                         try
                         {
-                            GenericLockUnLockFile(fileName);
+                            GenericLockUnLockFile(fileNameWithOutPath: fileNameWithOutPath);
                             // no need to remove the xmp here because it hasn't been added in the first place.
                         }
                         catch
@@ -564,7 +563,7 @@ internal static partial class HelperStatic
                         }
 
                         //lvw.EndUpdate();
-                        FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " + lvi.Text);
+                        FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithOutPath);
                     }
                 }
             }
@@ -582,7 +581,7 @@ internal static partial class HelperStatic
     ///     a txt file (as part of exiftoolCmd) that gets read back in
     ///     ... this is slower and allows for less control but safer.
     /// </summary>
-    /// <param name="files">List of "incompatible" filenames</param>
+    /// <param name="listOfAsyncIncompatibleFileNamesWithOutPath">List of "incompatible" filenames</param>
     /// ///
     /// <param name="folderEnterEpoch">
     ///     This is for session-checking -> if the user was to move folders while the call is
@@ -592,7 +591,7 @@ internal static partial class HelperStatic
     ///     In practice, nothing but it's responsible for sending the updated exif info back to the requester (usually a
     ///     listview)
     /// </returns>
-    internal static async Task ExifGetExifFromFilesIncompatibleFileNames(List<string> files,
+    internal static async Task ExifGetExifFromFilesIncompatibleFileNames(List<string> listOfAsyncIncompatibleFileNamesWithOutPath,
                                                                          long folderEnterEpoch)
     {
         #region ExifToolConfiguration
@@ -605,7 +604,7 @@ internal static partial class HelperStatic
 
             string folderNameToUse = FrmMainAppInstance.tbx_FolderName.Text;
             string argsFile = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "exifArgs.args");
-            string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 -w! " + s_doubleQuote + FrmMainApp.UserDataFolderPath + @"\%F.txt" + s_doubleQuote + " -@ " + s_doubleQuote + argsFile + s_doubleQuote;
+            string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 -w! " + SDoubleQuote + FrmMainApp.UserDataFolderPath + @"\%F.txt" + SDoubleQuote + " -@ " + SDoubleQuote + argsFile + SDoubleQuote;
 
             File.Delete(path: argsFile);
 
@@ -624,23 +623,23 @@ internal static partial class HelperStatic
                                  .ToString());
             }
 
-            foreach (string listElem in files)
+            foreach (string listElem in listOfAsyncIncompatibleFileNamesWithOutPath)
             {
-                string filePath = Path.Combine(path1: folderNameToUse, path2: listElem);
-                string filePathWithXmp = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: listElem)) + ".xmp");
-                if (File.Exists(path: filePath))
+                string fileNameWithPath = Path.Combine(path1: folderNameToUse, path2: listElem);
+                string fileNameWithPathWithXMP = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToUse, path2: listElem)) + ".xmp");
+                if (File.Exists(path: fileNameWithPath))
                 {
-                    File.AppendAllText(path: argsFile, contents: filePath + Environment.NewLine, encoding: Encoding.UTF8);
+                    File.AppendAllText(path: argsFile, contents: fileNameWithPath + Environment.NewLine, encoding: Encoding.UTF8);
                     foreach (string arg in exifArgs)
                     {
                         File.AppendAllText(path: argsFile, contents: "-" + arg + Environment.NewLine);
                     }
                 }
 
-                //// add any xmp sidecar files
-                if (File.Exists(path: filePathWithXmp))
+                //// add any xmp sidecar listOfAsyncCompatibleFileNamesWithOutPath
+                if (File.Exists(path: fileNameWithPathWithXMP))
                 {
-                    File.AppendAllText(path: argsFile, contents: filePathWithXmp + Environment.NewLine, encoding: Encoding.UTF8);
+                    File.AppendAllText(path: argsFile, contents: fileNameWithPathWithXMP + Environment.NewLine, encoding: Encoding.UTF8);
                     foreach (string arg in exifArgs)
                     {
                         File.AppendAllText(path: argsFile, contents: "-" + arg + Environment.NewLine);
@@ -659,7 +658,7 @@ internal static partial class HelperStatic
                 using Process p = new();
                 p.StartInfo = new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
                 {
-                    Arguments = @"/k " + s_doubleQuote + s_doubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + s_doubleQuote + " " + commonArgs + exiftoolCmd + s_doubleQuote + "&& exit",
+                    Arguments = @"/k " + SDoubleQuote + SDoubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + SDoubleQuote + " " + commonArgs + exiftoolCmd + SDoubleQuote + "&& exit",
                     UseShellExecute = false,
                     RedirectStandardError = true,
                     RedirectStandardOutput = true,
@@ -668,28 +667,31 @@ internal static partial class HelperStatic
 
                 p.EnableRaisingEvents = true;
 
-                s_ErrorMsg = "";
+                _sErrorMsg = "";
                 p.OutputDataReceived += (_,
                                          data) =>
                 {
                     if (data.Data != null && data.Data.Contains(value: "="))
                     {
-                        FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " +
-                                                                                                             data.Data.Split('[')
-                                                                                                                 .First()
-                                                                                                                 .Split('/')
-                                                                                                                 .Last()
-                                                                                                                 .Trim());
+                        string fileNameWithOutPath = data.Data.Split('[')
+                            .First()
+                            .Split('/')
+                            .Last()
+                            .Trim();
+                        FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithOutPath);
+                        ;
                     }
                     else if (data.Data != null && !data.Data.Contains(value: "files created") && !data.Data.Contains(value: "files read") && data.Data.Length > 0)
                     {
-                        s_ErrorMsg += data.Data.ToString() + Environment.NewLine;
+                        _sErrorMsg += data.Data.ToString() + Environment.NewLine;
                         try
                         {
                             p.Kill();
                         }
                         catch
-                        { } // else it will be stuck running forever
+                        {
+                            // ignored
+                        }
                     }
                 };
 
@@ -698,22 +700,24 @@ internal static partial class HelperStatic
                 {
                     if (data.Data != null && data.Data.Contains(value: "="))
                     {
-                        FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " +
-                                                                                                             data.Data.Split('[')
-                                                                                                                 .First()
-                                                                                                                 .Split('/')
-                                                                                                                 .Last()
-                                                                                                                 .Trim());
+                        string fileNameWithOutPath = data.Data.Split('[')
+                            .First()
+                            .Split('/')
+                            .Last()
+                            .Trim();
+                        FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithOutPath);
                     }
                     else if (data.Data != null && !data.Data.Contains(value: "files created") && !data.Data.Contains(value: "files read") && data.Data.Length > 0)
                     {
-                        s_ErrorMsg += data.Data.ToString() + Environment.NewLine;
+                        _sErrorMsg += data.Data.ToString() + Environment.NewLine;
                         try
                         {
                             p.Kill();
                         }
                         catch
-                        { } // else it will be stuck running forever
+                        {
+                            // ignored
+                        }
                     }
                 };
 
@@ -722,9 +726,9 @@ internal static partial class HelperStatic
                 p.BeginErrorReadLine();
                 p.WaitForExit();
                 p.Close();
-                if (s_ErrorMsg != "")
+                if (_sErrorMsg != "")
                 {
-                    MessageBox.Show(text: s_ErrorMsg);
+                    MessageBox.Show(text: _sErrorMsg);
                 }
 
                 // if still here then exorcise
@@ -737,12 +741,12 @@ internal static partial class HelperStatic
             });
             ///////////////
 
-            // try to collect the txt files and then read them back into the listview.
+            // try to collect the txt listOfAsyncCompatibleFileNamesWithOutPath and then read them back into the listview.
             try
             {
-                foreach (string fileName in files)
+                foreach (string fileNameWithOutPath in listOfAsyncIncompatibleFileNamesWithOutPath)
                 {
-                    string exifFileIn = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: fileName + ".txt");
+                    string exifFileIn = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: fileNameWithOutPath + ".txt");
                     if (File.Exists(path: exifFileIn))
                     {
                         DataTable dt_fileExifTable = new();
@@ -762,7 +766,7 @@ internal static partial class HelperStatic
                         }
 
                         // see if there's an xmp-output too
-                        string sideCarXMPFilePath = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: fileName.Substring(startIndex: 0, length: fileName.LastIndexOf(value: '.')) + ".xmp" + ".txt");
+                        string sideCarXMPFilePath = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: fileNameWithOutPath.Substring(startIndex: 0, length: fileNameWithOutPath.LastIndexOf(value: '.')) + ".xmp" + ".txt");
                         if (File.Exists(path: sideCarXMPFilePath))
                         {
                             foreach (string exifTxtFileLineIn in File.ReadLines(path: sideCarXMPFilePath))
@@ -784,24 +788,24 @@ internal static partial class HelperStatic
                         //if (folderEnterLastEpoch == folderEnterEpoch) // see comment in prev block
                         {
                             ListView lwv = FrmMainAppInstance.lvw_FileList;
-                            ListViewItem lvi = lwv.FindItemWithText(text: fileName);
+                            ListViewItem lvi = lwv.FindItemWithText(text: fileNameWithOutPath);
                             lwv.BeginUpdate();
 
                             // also add to DtFilesSeenInThisSession 
-                            string filePath = Path.Combine(path1: folderNameToUse, path2: fileName);
+                            string fileNameWithPath = Path.Combine(path1: folderNameToUse, path2: fileNameWithOutPath);
                             DataRow dr = FrmMainApp.DtFilesSeenInThisSession.NewRow(); // have new row on each iteration
-                            dr[columnName: "filePath"] = filePath;
-                            dr[columnName: "fileDateTime"] = File.GetLastWriteTime(path: filePath)
+                            dr[columnName: "fileNameWithPath"] = fileNameWithPath;
+                            dr[columnName: "fileDateTime"] = File.GetLastWriteTime(path: fileNameWithPath)
                                 .ToString(provider: CultureInfo.InvariantCulture);
                             FrmMainApp.DtFilesSeenInThisSession.Rows.Add(row: dr);
 
                             // if there's an xmp sidecar, add that too
-                            string filePathWithXmp = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: filePath) + ".xmp");
-                            if (File.Exists(path: filePathWithXmp))
+                            string fileNameWithPathWithXMP = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: fileNameWithPath) + ".xmp");
+                            if (File.Exists(path: fileNameWithPathWithXMP))
                             {
                                 dr = FrmMainApp.DtFilesSeenInThisSession.NewRow(); // have new row on each iteration
-                                dr[columnName: "filePath"] = filePathWithXmp;
-                                dr[columnName: "fileDateTime"] = File.GetLastWriteTime(path: filePathWithXmp)
+                                dr[columnName: "fileNameWithPath"] = fileNameWithPathWithXMP;
+                                dr[columnName: "fileDateTime"] = File.GetLastWriteTime(path: fileNameWithPathWithXMP)
                                     .ToString(provider: CultureInfo.InvariantCulture);
                                 FrmMainApp.DtFilesSeenInThisSession.Rows.Add(row: dr);
                             }
@@ -816,7 +820,7 @@ internal static partial class HelperStatic
 
                                 // also add to DtFileDataSeenInThisSession
                                 dr = FrmMainApp.DtFileDataSeenInThisSession.NewRow(); // have new row on each iteration
-                                dr[columnName: "filePath"] = filePath;
+                                dr[columnName: "fileNameWithPath"] = fileNameWithPath;
                                 dr[columnName: "settingId"] = lvchs[index: i]
                                     .Name.Substring(startIndex: 4);
                                 dr[columnName: "settingValue"] = str;
@@ -828,7 +832,7 @@ internal static partial class HelperStatic
                             // remove from the filesBeingProcessed list
                             try
                             {
-                                GenericLockUnLockFile(fileName);
+                                GenericLockUnLockFile(fileNameWithOutPath: fileNameWithOutPath);
                             }
                             catch
                             {
@@ -851,7 +855,7 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    ///     Fires off a command to try to parse Track files and link them up with data in the main grid
+    ///     Fires off a command to try to parse Track listOfAsyncCompatibleFileNamesWithOutPath and link them up with data in the main grid
     /// </summary>
     /// <param name="trackFileLocationType">File or Folder</param>
     /// <param name="trackFileLocationVal">The location of the above</param>
@@ -869,8 +873,8 @@ internal static partial class HelperStatic
                                                     int GeoMaxExtSecs,
                                                     int timeShiftSeconds = 0)
     {
-        s_ErrorMsg = "";
-        s_OutputMsg = "";
+        _sErrorMsg = "";
+        _sOutputMsg = "";
         List<string> trackFileList = new();
         if (trackFileLocationType == "file")
         {
@@ -900,20 +904,20 @@ internal static partial class HelperStatic
 
         #endregion
 
-        // add track files
+        // add track listOfAsyncCompatibleFileNamesWithOutPath
         foreach (string trackFile in trackFileList)
         {
-            exiftoolCmd += " -geotag=" + s_doubleQuote + trackFile + s_doubleQuote;
+            exiftoolCmd += " -geotag=" + SDoubleQuote + trackFile + SDoubleQuote;
         }
 
         // add what to compare against + TZ
-        string tmpTZAdjust = s_doubleQuote;
+        string tmpTZAdjust = SDoubleQuote;
         if (useTZAdjust)
         {
-            tmpTZAdjust = TZVal + s_doubleQuote;
+            tmpTZAdjust = TZVal + SDoubleQuote;
         }
 
-        exiftoolCmd += " " + s_doubleQuote + "-geotime<${" + compareTZAgainst + "#}" + tmpTZAdjust;
+        exiftoolCmd += " " + SDoubleQuote + "-geotime<${" + compareTZAgainst + "#}" + tmpTZAdjust;
 
         // time shift
         if (timeShiftSeconds < 0)
@@ -930,7 +934,7 @@ internal static partial class HelperStatic
         exiftoolCmd += " -api GeoMaxExtSecs=" + GeoMaxExtSecs.ToString(provider: CultureInfo.InvariantCulture);
 
         // add "what folder to act upon"
-        exiftoolCmd += " " + s_doubleQuote + FrmMainAppInstance.tbx_FolderName.Text.TrimEnd('\\') + s_doubleQuote;
+        exiftoolCmd += " " + SDoubleQuote + FrmMainAppInstance.tbx_FolderName.Text.TrimEnd('\\') + SDoubleQuote;
 
         // verbose logging
         exiftoolCmd += " -v2";
@@ -949,7 +953,7 @@ internal static partial class HelperStatic
             file.Delete();
         }
 
-        exiftoolCmd += " " + " -srcfile " + s_doubleQuote + tmpFolder + @"\%F.xmp" + s_doubleQuote;
+        exiftoolCmd += " " + " -srcfile " + SDoubleQuote + tmpFolder + @"\%F.xmp" + SDoubleQuote;
         exiftoolCmd += " -overwrite_original_in_place";
 
         ///////////////
@@ -959,7 +963,7 @@ internal static partial class HelperStatic
             using Process p = new();
             p.StartInfo = new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
             {
-                Arguments = @"/k " + s_doubleQuote + s_doubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + s_doubleQuote + " " + commonArgs + exiftoolCmd + s_doubleQuote + "&& exit",
+                Arguments = @"/k " + SDoubleQuote + SDoubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + SDoubleQuote + " " + commonArgs + exiftoolCmd + SDoubleQuote + "&& exit",
                 UseShellExecute = false,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
@@ -975,7 +979,7 @@ internal static partial class HelperStatic
             {
                 if (data.Data != null && data.Data.Length > 0)
                 {
-                    s_OutputMsg += data.Data.ToString() + Environment.NewLine;
+                    _sOutputMsg += data.Data.ToString() + Environment.NewLine;
                 }
             };
 
@@ -984,7 +988,7 @@ internal static partial class HelperStatic
             {
                 if (data.Data != null && data.Data.Length > 0)
                 {
-                    s_ErrorMsg += data.Data.ToString() + Environment.NewLine;
+                    _sErrorMsg += data.Data.ToString() + Environment.NewLine;
                     try
                     {
                         p.Kill();
@@ -999,7 +1003,7 @@ internal static partial class HelperStatic
             p.BeginErrorReadLine();
             p.WaitForExit();
             p.Close();
-            if (s_ErrorMsg != "")
+            if (_sErrorMsg != "")
             {
                 //MessageBox.Show(s_ErrorMsg);
             }
@@ -1014,7 +1018,7 @@ internal static partial class HelperStatic
         });
 
         ///////////////
-        //// try to collect the xmp/xml files and then read them back into the listview.
+        //// try to collect the xmp/xml listOfAsyncCompatibleFileNamesWithOutPath and then read them back into the listview.
 
         foreach (FileInfo exifFileIn in di_tmpLocFiles.EnumerateFiles())
         {
@@ -1066,13 +1070,14 @@ internal static partial class HelperStatic
                             string strParsedLat = "0.0";
                             string strParsedLng = "0.0";
                             bool coordinatesHaveChanged = false;
+                            string fileNameWithOutPath = lvi.Text;
 
                             for (int i = 1; i < lvi.SubItems.Count; i++)
                             {
                                 string tagToWrite = lvchs[index: i]
                                     .Name.Substring(startIndex: 4);
                                 string str = ExifGetStandardisedDataPointFromExif(dtFileExif: dt_distinctFileExifTable, dataPoint: tagToWrite);
-                                FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " + lvi.Text);
+                                FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithOutPath);
 
                                 // don't update stuff that hasn't changed
                                 if (lvi.SubItems[index: i]
@@ -1133,10 +1138,10 @@ internal static partial class HelperStatic
                                 }
 
                                 // pull from web
-                                s_APIOkay = true;
+                                SApiOkay = true;
                                 DataTable dt_Toponomy = DTFromAPIExifGetToponomyFromWebOrSQL(lat: strParsedLat.ToString(provider: CultureInfo.InvariantCulture), lng: strParsedLng.ToString(provider: CultureInfo.InvariantCulture));
 
-                                if (s_APIOkay)
+                                if (SApiOkay)
                                 {
                                     List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
                                     toponomyOverwrites.Add(item: ("CountryCode", dt_Toponomy.Rows[index: 0][columnName: "CountryCode"]
@@ -1191,7 +1196,7 @@ internal static partial class HelperStatic
             TextBox tbxText = new();
             tbxText.Size = new Size(width: 700, height: 400);
 
-            tbxText.Text = s_OutputMsg;
+            tbxText.Text = _sOutputMsg;
             tbxText.ScrollBars = ScrollBars.Vertical;
             tbxText.Multiline = true;
             tbxText.WordWrap = true;
@@ -1230,7 +1235,7 @@ internal static partial class HelperStatic
     ///     Gets the app version of the current exifTool.
     ///     <returns>A double of the current exifTool version.</returns>
     /// </summary>
-    internal static async Task<decimal> ExifGetExifToolVersion()
+    private static async Task<decimal> ExifGetExifToolVersion()
     {
         string exifToolResult;
         decimal returnVal = 0.0m;
@@ -1295,12 +1300,12 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    ///     This generates (technically, extracts) the image previews from files for the user when they click on a filename
+    ///     This generates (technically, extracts) the image previews from listOfAsyncCompatibleFileNamesWithOutPath for the user when they click on a filename
     ///     ... in whichever listview.
     /// </summary>
-    /// <param name="fileName">Path of file for which the preview needs creating</param>
+    /// <param name="fileNameWithOutPath">Path of file for which the preview needs creating</param>
     /// <returns>Realistically nothing but the process generates the bitmap if possible</returns>
-    internal static async Task ExifGetImagePreviews(string fileName)
+    internal static async Task ExifGetImagePreviews(string fileNameWithOutPath)
     {
         #region ExifToolConfiguration
 
@@ -1308,9 +1313,9 @@ internal static partial class HelperStatic
 
         // want to give this a different name from the usual exifArgs.args just in case that's still being accessed (as much as it shouldn't be)
         Regex rgx = new(pattern: "[^a-zA-Z0-9]");
-        string fileNameReplaced = rgx.Replace(input: fileName.Replace(oldValue: FrmMainApp.FolderName, newValue: ""), replacement: "_");
+        string fileNameReplaced = rgx.Replace(input: fileNameWithOutPath.Replace(oldValue: FrmMainApp.FolderName, newValue: ""), replacement: "_");
         string argsFile = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "exifArgs_getPreview_" + fileNameReplaced + ".args");
-        string exiftoolCmd = " -charset utf8 -charset filename=utf8 -b -preview:GTNPreview -w! " + s_doubleQuote + FrmMainApp.UserDataFolderPath + @"\%F.jpg" + s_doubleQuote + " -@ " + s_doubleQuote + argsFile + s_doubleQuote;
+        string exiftoolCmd = " -charset utf8 -charset filename=utf8 -b -preview:GTNPreview -w! " + SDoubleQuote + FrmMainApp.UserDataFolderPath + @"\%F.jpg" + SDoubleQuote + " -@ " + SDoubleQuote + argsFile + SDoubleQuote;
 
         File.Delete(path: argsFile);
 
@@ -1320,9 +1325,9 @@ internal static partial class HelperStatic
 
         FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
-        if (File.Exists(path: Path.Combine(path1: FrmMainAppInstance.tbx_FolderName.Text, path2: fileName)))
+        if (File.Exists(path: Path.Combine(path1: FrmMainAppInstance.tbx_FolderName.Text, path2: fileNameWithOutPath)))
         {
-            File.AppendAllText(path: argsFile, contents: Path.Combine(path1: FrmMainAppInstance.tbx_FolderName.Text, path2: fileName) + Environment.NewLine, encoding: Encoding.UTF8);
+            File.AppendAllText(path: argsFile, contents: Path.Combine(path1: FrmMainAppInstance.tbx_FolderName.Text, path2: fileNameWithOutPath) + Environment.NewLine, encoding: Encoding.UTF8);
             File.AppendAllText(path: argsFile, contents: "-execute" + Environment.NewLine);
         }
 
@@ -1333,7 +1338,7 @@ internal static partial class HelperStatic
             using Process p = new();
             p.StartInfo = new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
             {
-                Arguments = @"/k " + s_doubleQuote + s_doubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + s_doubleQuote + " " + exiftoolCmd + s_doubleQuote + "&& exit",
+                Arguments = @"/k " + SDoubleQuote + SDoubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + SDoubleQuote + " " + exiftoolCmd + SDoubleQuote + "&& exit",
                 UseShellExecute = false,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
@@ -1370,17 +1375,17 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    ///     Writes outstanding exif changes to the files (all files in the queue).
+    ///     Writes outstanding exif changes to the listOfAsyncCompatibleFileNamesWithOutPath (all listOfAsyncCompatibleFileNamesWithOutPath in the queue).
     ///     This logic is very similar to the "incompatible read" above - it's safer. While it's also probably slower
-    ///     ... the assumption is that users will read a lot of files but will write proportionately fewer files so
+    ///     ... the assumption is that users will read a lot of listOfAsyncCompatibleFileNamesWithOutPath but will write proportionately fewer listOfAsyncCompatibleFileNamesWithOutPath so
     ///     ... speed is less of an essence against safety.
     /// </summary>
     /// <returns>Reastically nothing but writes the exif tags and updates the listview rows where necessary</returns>
     internal static async Task ExifWriteExifToFile()
     {
-        HelperStatic.FilesAreBeingSaved = true;
+        FilesAreBeingSaved = true;
         string argsFile = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "exifArgsToWrite.args");
-        string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8" + " -@ " + s_doubleQuote + argsFile + s_doubleQuote;
+        string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8" + " -@ " + SDoubleQuote + argsFile + SDoubleQuote;
 
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
@@ -1406,7 +1411,7 @@ internal static partial class HelperStatic
                                                                     row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "objectName"));
 
         DataView dv_FileNames = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
-        DataTable dt_DistinctFileNames = dv_FileNames.ToTable(distinct: true, "filePath");
+        DataTable dt_DistinctFileNames = dv_FileNames.ToTable(distinct: true, "fileNameWithOutPath");
 
         // check there's anything to write.
         foreach (DataRow dr_FileName in dt_DistinctFileNames.Rows)
@@ -1415,36 +1420,36 @@ internal static partial class HelperStatic
             string exifArgsForSidecar = "";
 
             queueWasEmpty = false;
-            string fileName = dr_FileName[columnIndex: 0]
+            string fileNameWithOutPath = dr_FileName[columnIndex: 0]
                 .ToString();
-            string fileExt = Path.GetExtension(path: fileName)
+            string fileExtension = Path.GetExtension(path: fileNameWithOutPath)
                 .Substring(startIndex: 1);
 
-            processOriginalFile = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_ProcessOriginalFile"));
-            resetFileDateToCreated = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_ResetFileDateToCreated"));
-            writeXMPSideCar = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_AddXMPSideCar"));
-            doNotCreateBackup = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExt.ToLower() + "_" + "ckb_OverwriteOriginal"));
+            processOriginalFile = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_ProcessOriginalFile"));
+            resetFileDateToCreated = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_ResetFileDateToCreated"));
+            writeXMPSideCar = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_AddXMPSideCar"));
+            doNotCreateBackup = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_OverwriteOriginal"));
 
             List<string> tagsToDelete = new(); // this needs to be injected into the sidecar if req'd
 
             // it's a lot less complicated to just pretend we want both the Original File and the Sidecar updated and then not-include them later than to have a Yggdrasil of IFs scattered all over.
             // ... which latter I would inevitable f...k up at some point.
 
-            exifArgsForOriginalFile += Path.Combine(path1: folderNameToWrite, path2: fileName) + Environment.NewLine; //needs to include folder name
+            exifArgsForOriginalFile += Path.Combine(path1: folderNameToWrite, path2: fileNameWithOutPath) + Environment.NewLine; //needs to include folder name
             exifArgsForOriginalFile += "-ignoreMinorErrors" + Environment.NewLine;
             exifArgsForOriginalFile += "-progress" + Environment.NewLine;
 
-            exifArgsForSidecar += Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileName)) + ".xmp") + Environment.NewLine; //needs to include folder name
+            exifArgsForSidecar += Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileNameWithOutPath)) + ".xmp") + Environment.NewLine; //needs to include folder name
             exifArgsForSidecar += "-progress" + Environment.NewLine;
             // sidecar copying needs to be in a separate batch, as technically it's a different file
             if (writeXMPSideCar)
             {
-                string xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileName)) + ".xmp");
+                string xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileNameWithOutPath)) + ".xmp");
 
                 if (!File.Exists(path: xmpFileLocation))
                 {
                     // otherwise create a new one. 
-                    xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: fileName);
+                    xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: fileNameWithOutPath);
                     exifArgsForSidecar += "-tagsfromfile=" + xmpFileLocation + Environment.NewLine;
                 }
             }
@@ -1452,7 +1457,7 @@ internal static partial class HelperStatic
             exifArgsForSidecar += "-ignoreMinorErrors" + Environment.NewLine;
 
             DataView dv_FileWriteQueue = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
-            dv_FileWriteQueue.RowFilter = "filePath = '" + fileName + "'";
+            dv_FileWriteQueue.RowFilter = "fileNameWithOutPath = '" + fileNameWithOutPath + "'";
 
             if (dv_FileWriteQueue.Count > 0)
             {
@@ -1659,7 +1664,7 @@ internal static partial class HelperStatic
                 using Process p = new();
                 p.StartInfo = new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
                 {
-                    Arguments = @"/k " + s_doubleQuote + s_doubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + s_doubleQuote + " " + exiftoolCmd + s_doubleQuote + "&& exit",
+                    Arguments = @"/k " + SDoubleQuote + SDoubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + SDoubleQuote + " " + exiftoolCmd + SDoubleQuote + "&& exit",
                     UseShellExecute = false,
                     RedirectStandardError = true,
                     RedirectStandardOutput = true,
@@ -1676,23 +1681,23 @@ internal static partial class HelperStatic
                 {
                     if (data.Data != null && data.Data.Contains(value: "="))
                     {
-                        string thisFileName = data.Data.Replace(oldValue: "=", newValue: "")
+                        string fileNameWithOutPath = data.Data.Replace(oldValue: "=", newValue: "")
                             .Split('[')
                             .First()
                             .Trim()
                             .Split('/')
                             .Last();
-                        FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + thisFileName);
+                        FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithOutPath);
                         try
                         {
-                            FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: thisFileName, color: Color.Black);
-                            if (thisFileName.EndsWith(value: ".xmp"))
+                            FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithOutPath, color: Color.Black);
+                            if (Path.GetExtension(path: fileNameWithOutPath) == ".xmp")
                             {
                                 // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
                                 // FindItemWithText -> https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.finditemwithtext?view=netframework-4.8
                                 // "Finds the first ListViewItem with __that begins with__ the given text value."
 
-                                FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: thisFileName.Replace(oldValue: ".xmp", newValue: ""), color: Color.Black);
+                                FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: Path.GetFileNameWithoutExtension(path: fileNameWithOutPath), color: Color.Black);
                             }
                         }
                         catch
@@ -1711,23 +1716,23 @@ internal static partial class HelperStatic
                 {
                     if (data.Data != null && data.Data.Contains(value: "="))
                     {
-                        string thisFileName = data.Data.Replace(oldValue: "=", newValue: "")
+                        string fileNameWithOutPath = data.Data.Replace(oldValue: "=", newValue: "")
                             .Split('[')
                             .First()
                             .Trim()
                             .Split('/')
                             .Last();
-                        FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + thisFileName);
+                        FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithOutPath);
                         try
                         {
-                            FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: thisFileName, color: Color.Black);
-                            if (thisFileName.EndsWith(value: ".xmp"))
+                            FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithOutPath, color: Color.Black);
+                            if (Path.GetExtension(path: fileNameWithOutPath) == ".xmp")
                             {
                                 // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
                                 // FindItemWithText -> https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.finditemwithtext?view=netframework-4.8
                                 // "Finds the first ListViewItem with __that begins with__ the given text value."
 
-                                FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: thisFileName.Replace(oldValue: ".xmp", newValue: ""), color: Color.Black);
+                                FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: Path.GetFileNameWithoutExtension(path: fileNameWithOutPath), color: Color.Black);
                             }
                         }
                         catch
@@ -1768,7 +1773,7 @@ internal static partial class HelperStatic
 
         ///////////////
         FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Ready.");
-        HelperStatic.FilesAreBeingSaved = false;
+        FilesAreBeingSaved = false;
     }
 
 
@@ -1778,15 +1783,15 @@ internal static partial class HelperStatic
     /// <param name="latitude">As on the tin.</param>
     /// <param name="longitude">As on the tin.</param>
     /// <returns>Structured toponomy response</returns>
-    internal static GeoResponseToponomy API_ExifGetGeoDataFromWebToponomy(string latitude,
-                                                                          string longitude)
+    private static GeoResponseToponomy API_ExifGetGeoDataFromWebToponomy(string latitude,
+                                                                         string longitude)
     {
-        if (s_GeoNames_UserName == null)
+        if (SGeoNamesUserName == null)
         {
             try
             {
-                s_GeoNames_UserName = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_UserName");
-                s_GeoNames_Pwd = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_Pwd");
+                SGeoNamesUserName = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_UserName");
+                SGeoNamesPwd = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_Pwd");
             }
             catch (Exception ex)
             {
@@ -1797,7 +1802,7 @@ internal static partial class HelperStatic
         GeoResponseToponomy returnVal = new();
         RestClient client = new(baseUrl: "http://api.geonames.org/")
         {
-            Authenticator = new HttpBasicAuthenticator(username: s_GeoNames_UserName, password: s_GeoNames_Pwd)
+            Authenticator = new HttpBasicAuthenticator(username: SGeoNamesUserName, password: SGeoNamesPwd)
         };
 
         RestRequest request_Toponomy = new(resource: "findNearbyPlaceNameJSON?lat=" + latitude + "&lng=" + longitude + "&style=FULL");
@@ -1805,14 +1810,14 @@ internal static partial class HelperStatic
         // check API reponse is OK
         if (response_Toponomy.StatusCode.ToString() == "OK")
         {
-            s_APIOkay = true;
+            SApiOkay = true;
             JObject data = (JObject)JsonConvert.DeserializeObject(value: response_Toponomy.Content);
             GeoResponseToponomy geoResponse_Toponomy = GeoResponseToponomy.FromJson(Json: data.ToString());
             returnVal = geoResponse_Toponomy;
         }
         else
         {
-            s_APIOkay = false;
+            SApiOkay = false;
             MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + response_Toponomy.StatusCode, caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
         }
 
@@ -1825,15 +1830,15 @@ internal static partial class HelperStatic
     /// <param name="latitude">As on the tin.</param>
     /// <param name="longitude">As on the tin.</param>
     /// <returns>Structured altitude response</returns>
-    internal static GeoResponseAltitude API_ExifGetGeoDataFromWebAltitude(string latitude,
-                                                                          string longitude)
+    private static GeoResponseAltitude API_ExifGetGeoDataFromWebAltitude(string latitude,
+                                                                         string longitude)
     {
-        if (s_GeoNames_UserName == null)
+        if (SGeoNamesUserName == null)
         {
             try
             {
-                s_GeoNames_UserName = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_UserName");
-                s_GeoNames_Pwd = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_Pwd");
+                SGeoNamesUserName = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_UserName");
+                SGeoNamesPwd = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_Pwd");
             }
             catch (Exception ex)
             {
@@ -1844,7 +1849,7 @@ internal static partial class HelperStatic
         GeoResponseAltitude returnVal = new();
         RestClient client = new(baseUrl: "http://api.geonames.org/")
         {
-            Authenticator = new HttpBasicAuthenticator(username: s_GeoNames_UserName, password: s_GeoNames_Pwd)
+            Authenticator = new HttpBasicAuthenticator(username: SGeoNamesUserName, password: SGeoNamesPwd)
         };
 
         RestRequest request_Altitude = new(resource: "srtm1JSON?lat=" + latitude + "&lng=" + longitude);
@@ -1852,14 +1857,14 @@ internal static partial class HelperStatic
         // check API reponse is OK
         if (response_Altitude.StatusCode.ToString() == "OK")
         {
-            s_APIOkay = true;
+            SApiOkay = true;
             JObject data = (JObject)JsonConvert.DeserializeObject(value: response_Altitude.Content);
             GeoResponseAltitude geoResponseAltitude = GeoResponseAltitude.FromJson(Json: data.ToString());
             returnVal = geoResponseAltitude;
         }
         else
         {
-            s_APIOkay = false;
+            SApiOkay = false;
             MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + response_Altitude.StatusCode, caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
         }
 
@@ -1904,7 +1909,7 @@ internal static partial class HelperStatic
     ///     Responsible for pulling the latest release of GTN from gitHub
     /// </summary>
     /// <returns>The version number of the latest GTN release</returns>
-    internal static GtnReleasesApiResponse API_GenericGetGTNVersionFromWeb()
+    private static GtnReleasesApiResponse API_GenericGetGTNVersionFromWeb()
     {
         GtnReleasesApiResponse returnVal = new();
         RestClient client = new(baseUrl: "https://api.github.com/")
@@ -1916,14 +1921,14 @@ internal static partial class HelperStatic
         RestResponse response_GTNVersionQuery = client.ExecuteGet(request: request_GTNVersionQuery);
         if (response_GTNVersionQuery.StatusCode.ToString() == "OK")
         {
-            s_APIOkay = true;
+            SApiOkay = true;
             JArray data = (JArray)JsonConvert.DeserializeObject(value: response_GTNVersionQuery.Content);
             GtnReleasesApiResponse[] gtnReleasesApiResponse = GtnReleasesApiResponse.FromJson(json: data.ToString());
             returnVal = gtnReleasesApiResponse[0]; // latest only
         }
         else
         {
-            s_APIOkay = false;
+            SApiOkay = false;
             MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGTNVerAPIResponse") + response_GTNVersionQuery.StatusCode, caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
         }
 
@@ -2002,7 +2007,7 @@ internal static partial class HelperStatic
             }
         }
         // read from API
-        else if (s_APIOkay)
+        else if (SApiOkay)
         {
             ReadJsonToponomy = API_ExifGetGeoDataFromWebToponomy(
                 latitude: lat,
@@ -2065,7 +2070,7 @@ internal static partial class HelperStatic
                         CountryCode: CountryCode
                     );
                 }
-                else if (s_APIOkay)
+                else if (SApiOkay)
                 {
                     // write back empty
                     DataWriteSQLiteToponomyWholeRow(
@@ -2076,7 +2081,7 @@ internal static partial class HelperStatic
             }
         }
 
-        if (s_APIOkay || dt_ToponomyInSQL.Rows.Count > 0)
+        if (SApiOkay || dt_ToponomyInSQL.Rows.Count > 0)
         {
             DataRow dr_ReturnRow = dt_Return.NewRow();
             dr_ReturnRow[columnName: "CountryCode"] = CountryCode;
@@ -2120,7 +2125,7 @@ internal static partial class HelperStatic
                 .ToString();
             Altitude = Altitude.ToString(provider: CultureInfo.InvariantCulture);
         }
-        else if (s_APIOkay)
+        else if (SApiOkay)
         {
             GeoResponseAltitude readJson_Altitude = API_ExifGetGeoDataFromWebAltitude(
                 latitude: lat,
@@ -2149,7 +2154,7 @@ internal static partial class HelperStatic
             }
 
             // this will be a null value if Unauthorised, we'll ignore that.
-            if (readJson_Altitude.Lat == null && s_APIOkay)
+            if (readJson_Altitude.Lat == null && SApiOkay)
             {
                 // write back blank
                 DataWriteSQLiteAltitudeWholeRow(
@@ -2159,7 +2164,7 @@ internal static partial class HelperStatic
             }
         }
 
-        if (s_APIOkay || dt_AltitudeInSQL.Rows.Count > 0)
+        if (SApiOkay || dt_AltitudeInSQL.Rows.Count > 0)
         {
             DataRow dr_ReturnRow = dt_Return.NewRow();
             dr_ReturnRow[columnName: "Altitude"] = Altitude;
@@ -2174,7 +2179,7 @@ internal static partial class HelperStatic
     ///     Actually the reason why this might be indicated as 0 references is because this doesn't run in Debug mode.
     /// </summary>
     /// <returns>A Datatable with (hopefully) one row of data containing the newest GTN version</returns>
-    internal static DataTable DTFromAPI_GetGTNVersion()
+    private static DataTable DTFromAPI_GetGTNVersion()
     {
         DataTable dt_Return = new();
         dt_Return.Clear();
@@ -2182,7 +2187,7 @@ internal static partial class HelperStatic
 
         string apiVersion = "";
 
-        if (s_APIOkay)
+        if (SApiOkay)
         {
             GtnReleasesApiResponse readJson_GTNVer = API_GenericGetGTNVersionFromWeb();
             if (readJson_GTNVer.TagName != null)
@@ -2192,7 +2197,7 @@ internal static partial class HelperStatic
             // this will be a null value if Unauthorised, we'll ignore that.
         }
 
-        if (s_APIOkay)
+        if (SApiOkay)
         {
             DataRow dr_ReturnRow = dt_Return.NewRow();
             dr_ReturnRow[columnName: "version"] = apiVersion;
@@ -2215,7 +2220,7 @@ internal static partial class HelperStatic
         FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         foreach (ListViewItem selectedItem in FrmMainAppInstance.lvw_FileList.SelectedItems)
         {
-            // only deal with files, not folders
+            // only deal with listOfAsyncCompatibleFileNamesWithOutPath, not folders
             if (File.Exists(path: Path.Combine(path1: FrmMainAppInstance.tbx_FolderName.Text, path2: selectedItem.Text)))
             {
                 overallCount++;
@@ -2247,7 +2252,7 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    ///     Queues up a command to remove existing geo-data. Depending on the sender this can be for one or many files.
+    ///     Queues up a command to remove existing geo-data. Depending on the sender this can be for one or many listOfAsyncCompatibleFileNamesWithOutPath.
     /// </summary>
     /// <param name="senderName">At this point this can either be the main listview or the one from Edit (file) data</param>
     internal static async Task ExifRemoveLocationData(string senderName)
@@ -2293,48 +2298,51 @@ internal static partial class HelperStatic
         else if (senderName == "FrmMainApp")
         {
             FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-            ListView lvw = frmMainAppInstance.lvw_FileList;
-            if (lvw.SelectedItems.Count > 0)
+            if (frmMainAppInstance != null)
             {
-                HelperStatic.FileListBeingUpdated = true;
-                foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
+                ListView lvw = frmMainAppInstance.lvw_FileList;
+                if (lvw.SelectedItems.Count > 0)
                 {
-                    // don't do folders...
-                    string filePath = Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text);
-                    string fileName = lvi.Text;
-                    if (File.Exists(path: filePath))
+                    FileListBeingUpdated = true;
+                    foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
                     {
-                        //lvw.BeginUpdate();
-                        // check it's not in the read-queue.
-                        while (HelperStatic.GenericLockCheckLockFile(fileName))
+                        // don't do folders...
+                        string fileNameWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text);
+                        string fileNameWithOutPath = lvi.Text;
+                        if (File.Exists(path: fileNameWithPath))
                         {
-                            await Task.Delay(millisecondsDelay: 10);
+                            //lvw.BeginUpdate();
+                            // check it's not in the read-queue.
+                            while (GenericLockCheckLockFile(fileNameWithOutPath: fileNameWithOutPath))
+                            {
+                                await Task.Delay(millisecondsDelay: 10);
+                            }
+
+                            // then put a blocker on
+                            GenericLockLockFile(fileNameWithOutPath: fileNameWithOutPath);
+                            foreach (string toponomyDetail in toponomyOverwrites)
+                            {
+                                GenericUpdateAddToDataTable(
+                                    dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
+                                    fileNameWithoutPath: fileNameWithOutPath,
+                                    settingId: toponomyDetail,
+                                    settingValue: ""
+                                );
+                            }
+
+                            // then remove lock
+
+                            await LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
+                            GenericLockUnLockFile(fileNameWithOutPath: fileNameWithOutPath);
+                            // no need to remove the xmp here because it hasn't been added in the first place.
                         }
 
-                        // then put a blocker on
-                        GenericLockLockFile(fileName);
-                        foreach (string toponomyDetail in toponomyOverwrites)
-                        {
-                            GenericUpdateAddToDataTable(
-                                dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                                fileNameWithoutPath: fileName,
-                                settingId: toponomyDetail,
-                                settingValue: ""
-                            );
-                        }
-
-                        // then remove lock
-
-                        await LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi);
-                        GenericLockUnLockFile(fileName);
-                        // no need to remove the xmp here because it hasn't been added in the first place.
+                        //lvw.EndUpdate();
                     }
 
-                    //lvw.EndUpdate();
+                    FileListBeingUpdated = false;
+                    FrmMainApp.RemoveGeoDataIsRunning = false;
                 }
-
-                HelperStatic.FileListBeingUpdated = false;
-                FrmMainApp.RemoveGeoDataIsRunning = false;
             }
         }
     }

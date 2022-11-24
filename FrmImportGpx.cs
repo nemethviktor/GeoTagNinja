@@ -11,9 +11,9 @@ public partial class FrmImportGpx : Form
 {
     internal const string DoubleQuote = "\"";
     private static readonly Timer FormTimer = new();
-    internal static string LocalIanatZname;
-    internal static string SelectedIanatzName;
-    internal static string SelectedTzAdjustment;
+    private static string LocalIanatZname;
+    private static string SelectedIanatzName;
+    private static string SelectedTzAdjustment;
 
     private readonly FrmMainApp _frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 

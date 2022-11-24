@@ -9,7 +9,7 @@ namespace GeoTagNinja;
 
 public partial class FrmPasteWhat : Form
 {
-    internal static string initiatorName;
+    private static string initiatorName;
 
     /// <summary>
     ///     This form controls what data to paste from a "current file" to "selected files".
@@ -117,18 +117,18 @@ public partial class FrmPasteWhat : Form
                     if (thisCheckBox.Checked)
                     {
                         string tagName = cItem.Name.Substring(startIndex: 4);
-                        UpdateFileDataPaste(tagName: tagName, fileToUpdate: fileName);
+                        UpdateFileDataPaste(tagName: tagName, fileNameWithOutPathToUpdate: fileName);
 
                         // also do all the Refs 
                         if (tagsWithRefList.Contains(item: tagName))
                         {
-                            UpdateFileDataPaste(tagName: tagName + "Ref", fileToUpdate: fileName);
+                            UpdateFileDataPaste(tagName: tagName + "Ref", fileNameWithOutPathToUpdate: fileName);
                         }
 
                         // also do all the CountryCode 
                         if (tagName == "Country")
                         {
-                            UpdateFileDataPaste(tagName: "CountryCode", fileToUpdate: fileName);
+                            UpdateFileDataPaste(tagName: "CountryCode", fileNameWithOutPathToUpdate: fileName);
                         }
                     }
                 }
@@ -137,7 +137,7 @@ public partial class FrmPasteWhat : Form
     }
 
     private static void UpdateFileDataPaste(string tagName,
-                                            string fileToUpdate
+                                            string fileNameWithOutPathToUpdate
     )
     {
         if (initiatorName == "FrmEditFileData")
@@ -147,20 +147,21 @@ public partial class FrmPasteWhat : Form
             {
                 ListView lvw = frmEditFileDataInstance.lvw_FileListEditImages;
 
-                string fileToPullFrom = lvw.SelectedItems[index: 0]
+                string fileNameWithOutPath = lvw.SelectedItems[index: 0]
                     .Text;
+                string fileNameWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithOutPath);
                 string pasteValueStr = "";
 
                 // check it's sitting somewhere already?
                 DataView dvSqlDataQ = new(table: FrmMainApp.DtFileDataToWriteStage1PreQueue);
-                dvSqlDataQ.RowFilter = "filePath = '" + fileToPullFrom + "' AND settingId ='" + tagName + "'";
+                dvSqlDataQ.RowFilter = "fileNameWithOutPath = '" + fileNameWithOutPath + "' AND settingId ='" + tagName + "'";
 
                 DataView dvSqlDataRTW = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
-                dvSqlDataRTW.RowFilter = "filePath = '" + fileToPullFrom + "' AND settingId ='" + tagName + "'";
+                dvSqlDataRTW.RowFilter = "fileNameWithOutPath = '" + fileNameWithOutPath + "' AND settingId ='" + tagName + "'";
 
                 DataView dvSqlDataInFile = new(table: FrmMainApp.DtFileDataSeenInThisSession);
-                // this holds filepaths with a Directory attached to the string 
-                dvSqlDataInFile.RowFilter = "filePath = '" + Path.Combine(path1: FrmMainApp.FolderName, path2: fileToPullFrom) + "' AND settingId ='" + tagName + "'";
+                // this holds fileNameWithPath with a Directory attached to the string 
+                dvSqlDataInFile.RowFilter = "fileNameWithPath = '" + fileNameWithPath + "' AND settingId ='" + tagName + "'";
 
                 if (dvSqlDataQ.Count > 0 || dvSqlDataRTW.Count > 0 || dvSqlDataInFile.Count > 0)
                 {
@@ -190,7 +191,7 @@ public partial class FrmPasteWhat : Form
 
                     HelperStatic.GenericUpdateAddToDataTable(
                         dt: FrmMainApp.DtFileDataToWriteStage1PreQueue,
-                        fileNameWithoutPath: fileToUpdate,
+                        fileNameWithoutPath: fileNameWithOutPathToUpdate,
                         settingId: tagName,
                         settingValue: pasteValueStr);
                 }
@@ -199,37 +200,40 @@ public partial class FrmPasteWhat : Form
         else if (initiatorName == "FrmMainApp")
         {
             FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-            foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
+            if (frmMainAppInstance != null)
             {
-                string filePath = Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text);
-                string fileName = lvi.Text;
-
-                // paste from copy-pool (no filename needed)
-                EnumerableRowCollection<DataRow> drFileCopyPoolRows = FrmMainApp.DtFileDataCopyPool.AsEnumerable()
-                    .Where(r => r.Field<string>("settingId") == tagName);
-
-                foreach (DataRow dr in drFileCopyPoolRows)
+                foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
                 {
-                    string strToWrite;
-                    if (dr[columnIndex: 1]
-                            .ToString() ==
-                        "-")
-                    {
-                        strToWrite = "";
-                    }
-                    else
-                    {
-                        strToWrite = dr[columnIndex: 1]
-                            .ToString();
-                    }
+                    string fileNameWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text);
+                    string fileNameWithOutPath = lvi.Text;
 
-                    HelperStatic.GenericUpdateAddToDataTable(
-                        dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                        fileNameWithoutPath: fileName,
-                        settingId: dr[columnIndex: 0]
-                            .ToString(),
-                        settingValue: strToWrite
-                    );
+                    // paste from copy-pool (no filename needed)
+                    EnumerableRowCollection<DataRow> drFileCopyPoolRows = FrmMainApp.DtFileDataCopyPool.AsEnumerable()
+                        .Where(r => r.Field<string>("settingId") == tagName);
+
+                    foreach (DataRow dr in drFileCopyPoolRows)
+                    {
+                        string strToWrite;
+                        if (dr[columnIndex: 1]
+                                .ToString() ==
+                            "-")
+                        {
+                            strToWrite = "";
+                        }
+                        else
+                        {
+                            strToWrite = dr[columnIndex: 1]
+                                .ToString();
+                        }
+
+                        HelperStatic.GenericUpdateAddToDataTable(
+                            dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
+                            fileNameWithoutPath: fileNameWithOutPath,
+                            settingId: dr[columnIndex: 0]
+                                .ToString(),
+                            settingValue: strToWrite
+                        );
+                    }
                 }
             }
         }

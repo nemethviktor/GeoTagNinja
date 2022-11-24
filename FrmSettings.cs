@@ -159,13 +159,13 @@ public partial class FrmSettings : Form
         HelperStatic.DataDeleteSQLitesettingsToWritePreQueue();
 
         // refresh user data
-        HelperStatic.s_ArcGIS_APIKey = HelperStatic.DataSelectTbxARCGIS_APIKey_FromSQLite();
-        HelperStatic.s_GeoNames_UserName = HelperStatic.DataReadSQLiteSettings(
+        HelperStatic.SArcGisApiKey = HelperStatic.DataSelectTbxARCGIS_APIKey_FromSQLite();
+        HelperStatic.SGeoNamesUserName = HelperStatic.DataReadSQLiteSettings(
             tableName: "settings",
             settingTabPage: "tpg_Application",
             settingId: "tbx_GeoNames_UserName"
         );
-        HelperStatic.s_GeoNames_Pwd = HelperStatic.DataReadSQLiteSettings(
+        HelperStatic.SGeoNamesPwd = HelperStatic.DataReadSQLiteSettings(
             tableName: "settings",
             settingTabPage: "tpg_Application",
             settingId: "tbx_GeoNames_Pwd"
@@ -178,11 +178,11 @@ public partial class FrmSettings : Form
         );
         if (tmpSettingVal == "true")
         {
-            HelperStatic.s_ResetMapToZero = true;
+            HelperStatic.SResetMapToZero = true;
         }
         else
         {
-            HelperStatic.s_ResetMapToZero = false;
+            HelperStatic.SResetMapToZero = false;
         }
 
         Hide();

@@ -36,7 +36,7 @@ internal static partial class HelperStatic
     /// </summary>
     /// <param name="point">This is a raw coordinate. Could contain numbers or things like "East" on top of numbers</param>
     /// <returns>Double - an actual coordinate</returns>
-    public static double GenericAdjustLatLongNegative(string point)
+    private static double GenericAdjustLatLongNegative(string point)
     {
         string pointOrig = point.Replace(oldValue: " ", newValue: "")
             .Replace(oldChar: ',', newChar: '.');
@@ -46,10 +46,8 @@ internal static partial class HelperStatic
         double pointVal = 0.0;
         if (pointOrig.Count(predicate: f => f == '.') == 2)
         {
-            int degree;
-            double minute;
-            bool degreeParse = int.TryParse(s: pointOrig.Split('.')[0], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out degree);
-            bool minuteParse = double.TryParse(s: Regex.Replace(input: pointOrig.Split('.')[1] + "." + pointOrig.Split('.')[2], pattern: "[SWNE\"-]", replacement: ""), style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out minute);
+            bool degreeParse = int.TryParse(s: pointOrig.Split('.')[0], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out int degree);
+            bool minuteParse = double.TryParse(s: Regex.Replace(input: pointOrig.Split('.')[1] + "." + pointOrig.Split('.')[2], pattern: "[SWNE\"-]", replacement: ""), style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double minute);
             minute = minute / 60;
             pointVal = degree + minute;
         }
@@ -73,9 +71,9 @@ internal static partial class HelperStatic
     /// <param name="t2">Name of input table</param>
     /// <param name="joinOn">Column Name to join on</param>
     /// <returns>A joined datatable</returns>
-    internal static DataTable GenericJoinDataTables(DataTable t1,
-                                                    DataTable t2,
-                                                    params Func<DataRow, DataRow, bool>[] joinOn)
+    private static DataTable GenericJoinDataTables(DataTable t1,
+                                                   DataTable t2,
+                                                   params Func<DataRow, DataRow, bool>[] joinOn)
     {
         // via https://stackoverflow.com/a/11505884/3968494
         // usage
@@ -314,7 +312,7 @@ internal static partial class HelperStatic
             {
                 DataRow thisDr = dt.Rows[index: i];
                 if (
-                    thisDr[columnName: "filePath"]
+                    thisDr[columnName: "fileNameWithoutPath"]
                         .ToString() ==
                     fileNameWithoutPath &&
                     thisDr[columnName: "settingId"]
@@ -330,7 +328,7 @@ internal static partial class HelperStatic
 
             // add new
             DataRow newDr = dt.NewRow();
-            newDr[columnName: "filePath"] = fileNameWithoutPath;
+            newDr[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
             newDr[columnName: "settingId"] = settingId;
             newDr[columnName: "settingValue"] = settingValue;
             dt.Rows.Add(row: newDr);
@@ -408,7 +406,7 @@ internal static partial class HelperStatic
                 .GetName()
                 .Version.Build;
 
-            s_APIOkay = true;
+            SApiOkay = true;
             DataTable dt_APIGTNVersion = DTFromAPI_GetGTNVersion();
             // newest may be something like "v0.5.8251"
             string newestGTNVersionFull = dt_APIGTNVersion.Rows[index: 0][columnName: "version"]
@@ -453,48 +451,62 @@ internal static partial class HelperStatic
         // dt_fileDataToWriteStage1PreQueue 
         FrmMainApp.DtFileDataToWriteStage1PreQueue = new DataTable();
         FrmMainApp.DtFileDataToWriteStage1PreQueue.Clear();
-        FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "filePath");
+        FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "fileNameWithOutPath");
         FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingValue");
 
         // dt_fileDataToWriteStage2QueuePendingSave 
         FrmMainApp.DtFileDataToWriteStage2QueuePendingSave = new DataTable();
         FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Clear();
-        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "filePath");
+        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "fileNameWithOutPath");
         FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingValue");
 
         // dt_fileDataToWriteStage3ReadyToWrite 
         FrmMainApp.DtFileDataToWriteStage3ReadyToWrite = new DataTable();
         FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Clear();
-        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "filePath");
+        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "fileNameWithOutPath");
         FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingValue");
 
         // DtFilesSeenInThisSession
         FrmMainApp.DtFilesSeenInThisSession = new DataTable();
         FrmMainApp.DtFilesSeenInThisSession.Clear();
-        FrmMainApp.DtFilesSeenInThisSession.Columns.Add(columnName: "filePath");
+        FrmMainApp.DtFilesSeenInThisSession.Columns.Add(columnName: "fileNameWithPath");
         FrmMainApp.DtFilesSeenInThisSession.Columns.Add(columnName: "fileDateTime");
 
         // DtFileDataSeenInThisSession
         FrmMainApp.DtFileDataSeenInThisSession = new DataTable();
         FrmMainApp.DtFileDataSeenInThisSession.Clear();
-        FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "filePath");
+        FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "fileNameWithPath");
         FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingValue");
     }
 
+    /// <summary>
+    ///     Adds fileNameWithOutPath to FilesBeingProcessed
+    /// </summary>
+    /// <param name="fileNameWithOutPath">The file name without the path.</param>
     internal static void GenericLockLockFile(string fileNameWithOutPath)
     {
         FilesBeingProcessed.Add(item: fileNameWithOutPath);
     }
 
+    /// <summary>
+    ///     Removes fileNameWithOutPath from FilesBeingProcessed
+    /// </summary>
+    /// <param name="fileNameWithOutPath">The file name without the path.</param>
     internal static void GenericLockUnLockFile(string fileNameWithOutPath)
     {
         FilesBeingProcessed.Remove(item: fileNameWithOutPath);
     }
 
+    /// <summary>
+    ///     Checks if a file is currently locked by any other running operation - checks if the fileNameWithOutPath is
+    ///     currently in FilesBeingProcessed
+    /// </summary>
+    /// <param name="fileNameWithOutPath">The file name without the path.</param>
+    /// <returns>A true/false</returns>
     internal static bool GenericLockCheckLockFile(string fileNameWithOutPath)
     {
         return FilesBeingProcessed.Contains(item: fileNameWithOutPath);

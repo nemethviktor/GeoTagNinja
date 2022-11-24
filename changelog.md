@@ -5,12 +5,14 @@ v0.6.83XX [202211XX]
 - Added functionality to "Get Data from Other File" in the Edit File section.
 - Changed logic around the addition of sidecar XMP files and (possibly) overwriting the source image file.
 - Fixed Copy-Paste properly. Users can now pick what to paste.
+- Added this changelog.md file to the project outputs. I don't expect anyone to read it locally but at least now it's possible.
 - Bumped exifTool to v12.51
--- Added some logic to the above to allow for "Original Files DateTime" to be reset to CreateDateTime by default for RAW images. (These can all be changed in Settings/File Specific)
+- Added some logic to the above to allow for "Original Files DateTime" to be reset to CreateDateTime by default for RAW images. (These can all be changed in Settings/File Specific)
 - Bugfixes:
 -- Error msg/image name not showing properly when file gone missing
 -- The previous version introduced an error in Non-English regions when the user clicked on the map. This has been fixed.
 -- Rewrote logic re: UK Cities/Regions being mixed up. Now only applies to London.
+-- Thoroughly renamed all my rather ambigous "filePath" variable in the code to specify fileNameWithPath and fileNameWithoutPath. This isn't a material change but it makes things a bit more readable.
 
 v0.6.8358 [20221119]
 - Finally managed to get hold of ReSharper so the code has been refactored in totality. Famous last words but it shouldn't affect usage.

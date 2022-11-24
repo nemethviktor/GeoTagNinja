@@ -17,7 +17,7 @@ Download the .msi file from [Releases](https://github.com/nemethviktor/GeoTagNin
 - I have tried to test reasonably thoroughly but bugs probably remain.
 -- Basically until the program hits version 1 (currently it's v0.x) most probably save your original files before using this. This particularly applies if you happen to be using a non-English version of Windows or if your various file paths contain non-standard characters.
 - As per usual I don't accept any liability for damage and/or any other inconvenience you may suffer while/from using this app, no warranties and/or guarantees. The script is open source and everyone is welcome to read it. 
-- During Setup the installer will trigger the webView2 installer as well. This is an Edge/Chromium-based engine that is required to show the map.
+- During Setup the installer will trigger the webView2 installer as well. This is an Edge/Chromium-based engine that is required to show the map. This should run in Silent Mode.
 - I'm kinda hoping this won't come up a problem but don't bash me about country names please. I'm thinking disputed country names and areas here. They are ISO standards, the API returns those values, that's it. Being from the UK I do think that the long name of "United Kingdom of Great Britain and Northern Ireland (the)" is a bit lengthy but it is what it is (and it's relatively rarely disputed but for example Crimea does return Ukraine as a value, regardless of what's been going on there since 2014; again, this isn't a statement either way, it's the API reply). 
 -- On this particular note above --> the script won't change existing country details in files unless you explicitly edit them. So it may happen that your existing file has the CountryCode GBR and the Country "United Kingdom", that won't be changed unless you do a "Get From Web" because the CountryCode-to-Country matching only runs in that case. That's a feature, not a bug.
 - Altitude: in some cases the API returns 32K or negative 32K as an altitude. Those are being blanked out.
@@ -77,7 +77,7 @@ For the "main" project you should be okay without anything separate. It has work
 
 ## System Requirements
 
-- Windows 7+ is needed. The WebView2 installer runs along Setup. Should you need separately, it's available [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703) - the installer should take care of it tho'.
+- Windows 7+ is needed. The WebView2 installer runs along Setup (in Silent Mode). Should you need separately, it's available [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703) - the installer should take care of it tho'.
 - SQLite is running x86 but fwiw the app isn't really memory-hungry so it will do. Chances are if you're still on a 1st-gen Intel Core you're not on Windows 7. Hopefully.
 - You'll need an ArcGIS API key to use the map search functionality. Register for free [here](https://developers.arcgis.com/)
 - You'll need a geoNames username and password to use toponomy search. Register for free [here](https://www.geonames.org/)
