@@ -77,6 +77,7 @@ namespace GeoTagNinja
             this.tbx_lat = new System.Windows.Forms.TextBox();
             this.ttp_NavigateMapGo = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_loctToFile = new System.Windows.Forms.ToolTip(this.components);
+            this.igl_RightHandSide = new System.Windows.Forms.ImageList(this.components);
             this.mns_MenuStrip.SuspendLayout();
             this.tsr_MainAppToolStrip.SuspendLayout();
             this.tsr_FolderControl.SuspendLayout();
@@ -457,6 +458,7 @@ namespace GeoTagNinja
             // tct_Main
             // 
             this.tct_Main.Controls.Add(this.tpg_Map);
+            this.tct_Main.ImageList = this.igl_RightHandSide;
             this.tct_Main.Location = new System.Drawing.Point(2, 2);
             this.tct_Main.Margin = new System.Windows.Forms.Padding(2);
             this.tct_Main.Name = "tct_Main";
@@ -467,11 +469,12 @@ namespace GeoTagNinja
             // tpg_Map
             // 
             this.tpg_Map.Controls.Add(this.wbv_MapArea);
-            this.tpg_Map.Location = new System.Drawing.Point(4, 22);
+            this.tpg_Map.ImageKey = "PublishOnDemand.png";
+            this.tpg_Map.Location = new System.Drawing.Point(4, 23);
             this.tpg_Map.Margin = new System.Windows.Forms.Padding(2);
             this.tpg_Map.Name = "tpg_Map";
             this.tpg_Map.Padding = new System.Windows.Forms.Padding(2);
-            this.tpg_Map.Size = new System.Drawing.Size(372, 219);
+            this.tpg_Map.Size = new System.Drawing.Size(372, 218);
             this.tpg_Map.TabIndex = 0;
             this.tpg_Map.Text = "tpg_Map";
             this.tpg_Map.UseVisualStyleBackColor = true;
@@ -485,7 +488,7 @@ namespace GeoTagNinja
             this.wbv_MapArea.Location = new System.Drawing.Point(2, 2);
             this.wbv_MapArea.Name = "wbv_MapArea";
             this.wbv_MapArea.Padding = new System.Windows.Forms.Padding(1);
-            this.wbv_MapArea.Size = new System.Drawing.Size(368, 215);
+            this.wbv_MapArea.Size = new System.Drawing.Size(368, 214);
             this.wbv_MapArea.TabIndex = 1;
             this.wbv_MapArea.ZoomFactor = 1D;
             // 
@@ -559,6 +562,12 @@ namespace GeoTagNinja
             this.tbx_lat.Size = new System.Drawing.Size(79, 20);
             this.tbx_lat.TabIndex = 7;
             this.tbx_lat.Text = "0";
+            // 
+            // igl_RightHandSide
+            // 
+            this.igl_RightHandSide.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("igl_RightHandSide.ImageStream")));
+            this.igl_RightHandSide.TransparentColor = System.Drawing.Color.Transparent;
+            this.igl_RightHandSide.Images.SetKeyName(0, "PublishOnDemand.png");
             // 
             // FrmMainApp
             // 
@@ -656,6 +665,7 @@ namespace GeoTagNinja
         public TextBox tbx_lat;
         private ToolTip ttp_NavigateMapGo;
         private ToolTip ttp_loctToFile;
+        private ImageList igl_RightHandSide;
     }
 }
 

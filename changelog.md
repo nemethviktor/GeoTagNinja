@@ -1,5 +1,6 @@
 ﻿# GeoTagNinja Changelog
-v0.6.83XX [202211XX]
+v0.6.8368 [20221129]
+- NEW FEATURE: Modify TakenDate & CreateDate (it's in the Edit File section.)
 - Added a hold/blocker on entering a folder until the folder loads. This is annoying but is needed to prevent users from starting operations before the files are processed.
 - Added some logic to locally store (for the length of the session) each file's data. This is so that if the actual image/xmp files don't change then there's no need to re-parse everything _again_. It's slow and pointless.
 - Added functionality to "Get Data from Other File" in the Edit File section.
@@ -8,11 +9,13 @@ v0.6.83XX [202211XX]
 - Added this changelog.md file to the project outputs. I don't expect anyone to read it locally but at least now it's possible.
 - Bumped exifTool to v12.51
 - Added some logic to the above to allow for "Original Files DateTime" to be reset to CreateDateTime by default for RAW images. (These can all be changed in Settings/File Specific)
+- Rewrote the Excel macro that deals with exporting languages. It can now also import. (less relevant for the users but makes my life easier.)
 - Bugfixes:
 -- Error msg/image name not showing properly when file gone missing
 -- The previous version introduced an error in Non-English regions when the user clicked on the map. This has been fixed.
 -- Rewrote logic re: UK Cities/Regions being mixed up. Now only applies to London.
--- Thoroughly renamed all my rather ambigous "filePath" variable in the code to specify fileNameWithPath and fileNameWithoutPath. This isn't a material change but it makes things a bit more readable.
+-- Thoroughly renamed all my rather ambigous "filePath" variables in the code to specify fileNameWithPath and fileNameWithoutPath. This isn't a material change but it makes things a bit more readable.
+-- Further French lang updates. Thanks to pbranly once again.
 
 v0.6.8358 [20221119]
 - Finally managed to get hold of ReSharper so the code has been refactored in totality. Famous last words but it shouldn't affect usage.

@@ -58,6 +58,7 @@ internal static partial class HelperStatic
                                 settingValue NTEXT(2000)    DEFAULT "",
                                 PRIMARY KEY([settingTabPage], [settingId])
                             );
+                            DROP TABLE IF EXISTS [toponymyData];
                             CREATE TABLE [toponymyData](
                                         [Lat] DECIMAL(19, 6) NOT NULL, 
                                         [Lng] DECIMAL(19, 6) NOT NULL, 
@@ -65,8 +66,10 @@ internal static partial class HelperStatic
                                         [AdminName2] NTEXT, 
                                         [ToponymName] NTEXT, 
                                         [CountryCode] NTEXT,
+                                        [timezoneId] NTEXT,
                                         PRIMARY KEY([Lat], [Lng]))
                             ;
+                            DROP TABLE IF EXISTS [altitudeData];
                             CREATE TABLE [altitudeData](
                                         [Lat] DECIMAL(19, 6) NOT NULL, 
                                         [Lng] DECIMAL(19, 6) NOT NULL,
@@ -646,14 +649,16 @@ internal static partial class HelperStatic
                                                         string AdminName1 = "",
                                                         string AdminName2 = "",
                                                         string ToponymName = "",
-                                                        string CountryCode = "")
+                                                        string CountryCode = "",
+                                                        string timezoneId = ""
+    )
     {
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
-                                REPLACE INTO toponymyData (lat, lng, AdminName1, AdminName2, ToponymName, CountryCode) " +
-                               "VALUES (@lat, @lng, @AdminName1, @AdminName2, @ToponymName, @CountryCode);"
+                                REPLACE INTO toponymyData (lat, lng, AdminName1, AdminName2, ToponymName, CountryCode, timezoneId) " +
+                               "VALUES (@lat, @lng, @AdminName1, @AdminName2, @ToponymName, @CountryCode, @timezoneId);"
             ;
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
@@ -663,12 +668,14 @@ internal static partial class HelperStatic
         sqlToRun.Parameters.AddWithValue(parameterName: "@AdminName2", value: AdminName2);
         sqlToRun.Parameters.AddWithValue(parameterName: "@ToponymName", value: ToponymName);
         sqlToRun.Parameters.AddWithValue(parameterName: "@CountryCode", value: CountryCode);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@timezoneId", value: timezoneId);
 
         sqlToRun.ExecuteNonQuery();
     }
 
     /// <summary>
     ///     Clears the data from the Toponomy table. Run at session start.
+    ///     This was changed from a simple DELETE FROM because timezoneId had been added as of 20221128
     /// </summary>
     private static void DataDeleteSQLiteToponomy()
     {
@@ -676,7 +683,17 @@ internal static partial class HelperStatic
         sqliteDB.Open();
 
         string sqlCommandStr = @"
-                                DELETE FROM toponymyData;"
+                                DROP TABLE IF EXISTS [toponymyData];
+                                CREATE TABLE [toponymyData](
+                                            [Lat] DECIMAL(19, 6) NOT NULL, 
+                                            [Lng] DECIMAL(19, 6) NOT NULL, 
+                                            [AdminName1] NTEXT, 
+                                            [AdminName2] NTEXT, 
+                                            [ToponymName] NTEXT, 
+                                            [CountryCode] NTEXT,
+                                            [timezoneId] NTEXT,
+                                            PRIMARY KEY([Lat], [Lng]))
+                                ;"
             ;
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);

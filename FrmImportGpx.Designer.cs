@@ -52,10 +52,10 @@
             this.cbx_UseTimeZone = new System.Windows.Forms.ComboBox();
             this.lbl_CameraTimeData = new System.Windows.Forms.Label();
             this.lbl_CameraTime = new System.Windows.Forms.Label();
-            this.lbl_Seconds = new System.Windows.Forms.Label();
-            this.lbl_Minutes = new System.Windows.Forms.Label();
-            this.lbl_Hours = new System.Windows.Forms.Label();
-            this.lbl_Days = new System.Windows.Forms.Label();
+            this.lbl_ImportGPXSeconds = new System.Windows.Forms.Label();
+            this.lbl_ImportGPXMinutes = new System.Windows.Forms.Label();
+            this.lbl_ImportGPXHours = new System.Windows.Forms.Label();
+            this.lbl_ImportGPXDays = new System.Windows.Forms.Label();
             this.nud_Seconds = new System.Windows.Forms.NumericUpDown();
             this.nud_Minutes = new System.Windows.Forms.NumericUpDown();
             this.nud_Hours = new System.Windows.Forms.NumericUpDown();
@@ -190,10 +190,10 @@
             this.gbx_ImportGPXTimeSetting.Controls.Add(this.cbx_UseTimeZone);
             this.gbx_ImportGPXTimeSetting.Controls.Add(this.lbl_CameraTimeData);
             this.gbx_ImportGPXTimeSetting.Controls.Add(this.lbl_CameraTime);
-            this.gbx_ImportGPXTimeSetting.Controls.Add(this.lbl_Seconds);
-            this.gbx_ImportGPXTimeSetting.Controls.Add(this.lbl_Minutes);
-            this.gbx_ImportGPXTimeSetting.Controls.Add(this.lbl_Hours);
-            this.gbx_ImportGPXTimeSetting.Controls.Add(this.lbl_Days);
+            this.gbx_ImportGPXTimeSetting.Controls.Add(this.lbl_ImportGPXSeconds);
+            this.gbx_ImportGPXTimeSetting.Controls.Add(this.lbl_ImportGPXMinutes);
+            this.gbx_ImportGPXTimeSetting.Controls.Add(this.lbl_ImportGPXHours);
+            this.gbx_ImportGPXTimeSetting.Controls.Add(this.lbl_ImportGPXDays);
             this.gbx_ImportGPXTimeSetting.Controls.Add(this.nud_Seconds);
             this.gbx_ImportGPXTimeSetting.Controls.Add(this.nud_Minutes);
             this.gbx_ImportGPXTimeSetting.Controls.Add(this.nud_Hours);
@@ -353,41 +353,41 @@
             this.lbl_CameraTime.TabIndex = 11;
             this.lbl_CameraTime.Text = "lbl_CameraTime";
             // 
-            // lbl_Seconds
+            // lbl_ImportGPXSeconds
             // 
-            this.lbl_Seconds.AutoSize = true;
-            this.lbl_Seconds.Location = new System.Drawing.Point(407, 300);
-            this.lbl_Seconds.Name = "lbl_Seconds";
-            this.lbl_Seconds.Size = new System.Drawing.Size(65, 13);
-            this.lbl_Seconds.TabIndex = 10;
-            this.lbl_Seconds.Text = "lbl_Seconds";
+            this.lbl_ImportGPXSeconds.AutoSize = true;
+            this.lbl_ImportGPXSeconds.Location = new System.Drawing.Point(407, 300);
+            this.lbl_ImportGPXSeconds.Name = "lbl_ImportGPXSeconds";
+            this.lbl_ImportGPXSeconds.Size = new System.Drawing.Size(116, 13);
+            this.lbl_ImportGPXSeconds.TabIndex = 10;
+            this.lbl_ImportGPXSeconds.Text = "lbl_ImportGPXSeconds";
             // 
-            // lbl_Minutes
+            // lbl_ImportGPXMinutes
             // 
-            this.lbl_Minutes.AutoSize = true;
-            this.lbl_Minutes.Location = new System.Drawing.Point(332, 300);
-            this.lbl_Minutes.Name = "lbl_Minutes";
-            this.lbl_Minutes.Size = new System.Drawing.Size(60, 13);
-            this.lbl_Minutes.TabIndex = 9;
-            this.lbl_Minutes.Text = "lbl_Minutes";
+            this.lbl_ImportGPXMinutes.AutoSize = true;
+            this.lbl_ImportGPXMinutes.Location = new System.Drawing.Point(332, 300);
+            this.lbl_ImportGPXMinutes.Name = "lbl_ImportGPXMinutes";
+            this.lbl_ImportGPXMinutes.Size = new System.Drawing.Size(111, 13);
+            this.lbl_ImportGPXMinutes.TabIndex = 9;
+            this.lbl_ImportGPXMinutes.Text = "lbl_ImportGPXMinutes";
             // 
-            // lbl_Hours
+            // lbl_ImportGPXHours
             // 
-            this.lbl_Hours.AutoSize = true;
-            this.lbl_Hours.Location = new System.Drawing.Point(266, 300);
-            this.lbl_Hours.Name = "lbl_Hours";
-            this.lbl_Hours.Size = new System.Drawing.Size(51, 13);
-            this.lbl_Hours.TabIndex = 8;
-            this.lbl_Hours.Text = "lbl_Hours";
+            this.lbl_ImportGPXHours.AutoSize = true;
+            this.lbl_ImportGPXHours.Location = new System.Drawing.Point(266, 300);
+            this.lbl_ImportGPXHours.Name = "lbl_ImportGPXHours";
+            this.lbl_ImportGPXHours.Size = new System.Drawing.Size(102, 13);
+            this.lbl_ImportGPXHours.TabIndex = 8;
+            this.lbl_ImportGPXHours.Text = "lbl_ImportGPXHours";
             // 
-            // lbl_Days
+            // lbl_ImportGPXDays
             // 
-            this.lbl_Days.AutoSize = true;
-            this.lbl_Days.Location = new System.Drawing.Point(204, 300);
-            this.lbl_Days.Name = "lbl_Days";
-            this.lbl_Days.Size = new System.Drawing.Size(47, 13);
-            this.lbl_Days.TabIndex = 7;
-            this.lbl_Days.Text = "lbl_Days";
+            this.lbl_ImportGPXDays.AutoSize = true;
+            this.lbl_ImportGPXDays.Location = new System.Drawing.Point(204, 300);
+            this.lbl_ImportGPXDays.Name = "lbl_ImportGPXDays";
+            this.lbl_ImportGPXDays.Size = new System.Drawing.Size(98, 13);
+            this.lbl_ImportGPXDays.TabIndex = 7;
+            this.lbl_ImportGPXDays.Text = "lbl_ImportGPXDays";
             // 
             // nud_Seconds
             // 
@@ -566,14 +566,14 @@
         private System.Windows.Forms.ComboBox cbx_ImportTimeAgainst;
         private System.Windows.Forms.Label lbl_ImportTimeAgainst;
         private System.Windows.Forms.Label lbl_ShiftTrackTimeBy;
-        private System.Windows.Forms.Label lbl_Days;
+        private System.Windows.Forms.Label lbl_ImportGPXDays;
         private System.Windows.Forms.NumericUpDown nud_Seconds;
         private System.Windows.Forms.NumericUpDown nud_Minutes;
         private System.Windows.Forms.NumericUpDown nud_Hours;
         private System.Windows.Forms.NumericUpDown nud_Days;
-        private System.Windows.Forms.Label lbl_Seconds;
-        private System.Windows.Forms.Label lbl_Minutes;
-        private System.Windows.Forms.Label lbl_Hours;
+        private System.Windows.Forms.Label lbl_ImportGPXSeconds;
+        private System.Windows.Forms.Label lbl_ImportGPXMinutes;
+        private System.Windows.Forms.Label lbl_ImportGPXHours;
         private System.Windows.Forms.Button btn_OK;
         private System.Windows.Forms.Button btn_Cancel;
         private System.Windows.Forms.OpenFileDialog ofd_importOneFile;

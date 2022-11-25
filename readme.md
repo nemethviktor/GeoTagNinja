@@ -22,6 +22,7 @@ Download the .msi file from [Releases](https://github.com/nemethviktor/GeoTagNin
 -- On this particular note above --> the script won't change existing country details in files unless you explicitly edit them. So it may happen that your existing file has the CountryCode GBR and the Country "United Kingdom", that won't be changed unless you do a "Get From Web" because the CountryCode-to-Country matching only runs in that case. That's a feature, not a bug.
 - Altitude: in some cases the API returns 32K or negative 32K as an altitude. Those are being blanked out.
 - Pressing Get From Web in Edit mode will always query the lat/long data for the file as in the main listview (the main page, in less geeky terms.). This is a feature. The assumption is that you aren't going to change coordinates manually by typing stuff in and _then_ query data. It's a lot more likely you'll change stuff using the map.
+- Time Zones (in the Edit File) are left as blank on open regardless of what the stored value is. There is no Exif Tag for TZ but only "Offset", which is something like "+01:00". As there is no indication for neither TZ nor DST per se I can't ascertain that  "+01:00" was in fact say BST rather than CET, one being DST the other not. Either adjust manually or pull from web - the combination of coordinates + createDate would decisively inform the program of the real TZ value.
 - If you have Avast running or some other nightmare that tries to capture iframes within apps the app will most likely crash sooner rather than later, at least on the first run. I *think* it should be okay afterwards.
 
 ## Building & Testing
@@ -33,11 +34,16 @@ If you want to build the project probably use Visual Studio - I used v2022 Commu
 There are 2 parts to the project. One is the "main" the other is the installer. You'll generally have problems w/ the installer bcs it hasn't been pushed to git so it's going to be missing that half.
 For the "main" project you should be okay without anything separate. It has worked ok for me on a blank VM when pulled from Git. Just build and F5/run.
 
+## Pull Requests
+
+I'm generally happy for anyone competent to add pull requests but I don't always sync the commits as they come with GitHub until there is an actual release - it's therefore possible that my local commits are lightyears away from the public ones. If you'd like to do a pull request, drop a message/open a ticket first please and we can sync the details.
+
 ## ToDos
 
+- Rework the "seen before" logic. I should use SHA512 instead of ModifyDateTime. Allegedly faster too.
+- [WIP] Column reorg.
 - [later] Destination stuff not working atm, todo.
-- [later] Column reorg.
-- [later] add time-shift capabilities
+
 
 ## Known Issues
 
@@ -51,6 +57,8 @@ For the "main" project you should be okay without anything separate. It has work
 - Pressing Get From Web either in Edit mode or on the map will always set the affected file to write-queue even if the values don't actually change.
 - Preview images don't respect orientation.
 - If user zooms "too far out" on Map they will get odd longitude values. The code handles this internally but map feedback is what it is.
+- I didn't really manage to test this but for Nikon D5 the camera outputs NEF files with a built-in "Rating=0" tag. This becomes an issue in Adobe Bridge if an XMP is created and then the NEF file is subsequently ownerwritten by GTN because Bridge would ignore the Rating value in the XMP file going forward. For this reason Rating is always sent back to the RAW files if they are saved. I don't think this would be a problem but more of a heads-up that there are some oddities like this. Btw this force-save-Rating isn't limited to Nikon camera saves in GTN.
+- If you change Time Offset (time zone) _and nothing else at all_ then you'll get a warning that "nothing has changed" in the xmp sidecar file. This is not a bug. There is no XMP tag for OffsetTime.
 
 ## Possible Issues & Solutions
 

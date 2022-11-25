@@ -134,6 +134,10 @@ namespace geoTagNinja
         [JsonProperty("lat", NullValueHandling = NullValueHandling.Ignore)]
         public double? Lat { get; set; }
     }
+    public partial class GeoResponseTimeZone
+    {
+        public static GeoResponseTimeZone FromJson(string Json) => JsonConvert.DeserializeObject<GeoResponseTimeZone>(Json, geoTagNinja.Converter.Settings);
+    }
     public static class Serialize
     {
         public static string ToJson(this GeoResponseToponomy self) => JsonConvert.SerializeObject(self, geoTagNinja.Converter.Settings);

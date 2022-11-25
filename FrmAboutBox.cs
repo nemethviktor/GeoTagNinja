@@ -16,6 +16,8 @@ internal partial class FrmAboutBox : Form
     public FrmAboutBox()
     {
         InitializeComponent();
+        HelperNonStatic helperNonstatic = new();
+        HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
 
         // via https://stackoverflow.com/a/1601079/3968494
         Version version = Assembly.GetEntryAssembly()
@@ -27,7 +29,7 @@ internal partial class FrmAboutBox : Form
 
         Text = AssemblyTitle;
         lbl_ProductName.Text = AssemblyProduct;
-        lbl_Version.Text = "Version: " +
+        tbx_Version.Text = "Version: " +
                            Assembly.GetExecutingAssembly()
                                .GetName()
                                .Version.Major +

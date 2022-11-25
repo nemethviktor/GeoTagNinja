@@ -21,6 +21,7 @@ public partial class FrmSettings : Form
         // this one is largely responsible for disabling the detection of "new" (changed) data. (ie when going from "noting" to "something")
         _nowLoadingSettingsData = true;
         HelperNonStatic helperNonstatic = new();
+        HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
 
         // Gets the various controls' labels and values (eg "latitude" and "51.002")
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
@@ -415,8 +416,8 @@ public partial class FrmSettings : Form
     /// <summary>
     ///     Handles the event where any combobox's dropdown/text has changed.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
     private void Any_cbx_TextChanged(object sender,
                                      EventArgs e)
     {

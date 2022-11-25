@@ -25,15 +25,15 @@ internal static partial class HelperStatic
             ListView lvw = FrmMainAppInstance.lvw_FileList;
             ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
 
-            string fileNameWithOutPath = lvi.Text;
+            string fileNameWithoutPath = lvi.Text;
             DataView dataViewRelevantRows = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
-            dataViewRelevantRows.RowFilter = "fileNameWithOutPath = '" +
-                                             fileNameWithOutPath +
+            dataViewRelevantRows.RowFilter = "fileNameWithoutPath = '" +
+                                             fileNameWithoutPath +
                                              "'";
             DataTable dataTableRelevant = dataViewRelevantRows.ToTable();
             if (dataTableRelevant.Rows.Count > 0)
             {
-                //while (GenericLockCheckLockFile(fileNameWithOutPath: fileNameWithOutPath))
+                //while (GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
                 //{
                 //    await Task.Delay(millisecondsDelay: 10);
                 //}
@@ -102,7 +102,30 @@ internal static partial class HelperStatic
                 FrmMainApp.DtFileDataCopyPool.Rows.Clear();
                 List<string> listOfTagsToCopy = new()
                 {
-                    "Coordinates", "GPSLatitude", "GPSLatitudeRef", "GPSLongitude", "GPSLongitudeRef", "GPSSpeed", "GPSSpeedRef", "GPSAltitude", "GPSAltitudeRef", "Country", "CountryCode", "State", "City", "Sub_location", "DestCoordinates", "GPSDestLatitude", "GPSDestLatitudeRef", "GPSDestLongitude", "GPSDestLongitudeRef", "GPSImgDirection", "GPSImgDirectionRef"
+                    "Coordinates",
+                    "GPSLatitude",
+                    "GPSLatitudeRef",
+                    "GPSLongitude",
+                    "GPSLongitudeRef",
+                    "GPSSpeed",
+                    "GPSSpeedRef",
+                    "GPSAltitude",
+                    "GPSAltitudeRef",
+                    "Country",
+                    "CountryCode",
+                    "State",
+                    "City",
+                    "Sub_location",
+                    "DestCoordinates",
+                    "GPSDestLatitude",
+                    "GPSDestLatitudeRef",
+                    "GPSDestLongitude",
+                    "GPSDestLongitudeRef",
+                    "GPSImgDirection",
+                    "GPSImgDirectionRef",
+                    "TakenDate",
+                    "CreateDate",
+                    "OffsetTime"
                 };
 
                 foreach (ColumnHeader clh in FrmMainAppInstance.lvw_FileList.Columns)
@@ -297,7 +320,7 @@ internal static partial class HelperStatic
                 // don't run the thing again if file has already been generated
                 if (!File.Exists(path: generatedFileName))
                 {
-                    await ExifGetImagePreviews(fileNameWithOutPath: fileNameWithPath);
+                    await ExifGetImagePreviews(fileNameWithoutPath: fileNameWithPath);
                 }
 
                 //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
@@ -326,14 +349,14 @@ internal static partial class HelperStatic
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         int fileCount = 0;
         int filesWithGeoData = 0;
-        string fileNameWithOutPath;
+        string fileNameWithoutPath;
 
         if (frmMainAppInstance != null)
         {
             foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.Items)
             {
-                fileNameWithOutPath = lvi.Text;
-                if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithOutPath)))
+                fileNameWithoutPath = lvi.Text;
+                if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath)))
                 {
                     fileCount++;
                 }

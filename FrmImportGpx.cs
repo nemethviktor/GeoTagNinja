@@ -17,6 +17,7 @@ public partial class FrmImportGpx : Form
 
     private readonly FrmMainApp _frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
+
     /// <summary>
     ///     This form helps import various Track files.
     ///     For the list of currently supported file types & formats check: https://exiftool.org/geotag.html
@@ -29,6 +30,8 @@ public partial class FrmImportGpx : Form
         pbx_importFromAnotherFolder.Enabled = false;
         lbl_importOneFile.Enabled = true;
         lbl_importFromAnotherFolder.Enabled = false;
+
+        HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
 
         // load TZ-CBX
         foreach (string timezone in AncillaryListsArrays.GetTimeZones())
@@ -97,8 +100,8 @@ public partial class FrmImportGpx : Form
     /// <summary>
     ///     This updates the "now" value of lbl_CameraTimeData with any user adjustments there may be.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
     private void TimerEventProcessor(object sender,
                                      EventArgs e)
     {
@@ -134,8 +137,8 @@ public partial class FrmImportGpx : Form
     /// <summary>
     ///     Opens a file browser for track files
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
     private void pbx_importOneFile_Click(object sender,
                                          EventArgs e)
     {
@@ -148,8 +151,8 @@ public partial class FrmImportGpx : Form
     /// <summary>
     ///     Opens a folder browser for track files
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
     private void pbx_importFromAnotherFolder_Click(object sender,
                                                    EventArgs e)
     {
@@ -203,8 +206,8 @@ public partial class FrmImportGpx : Form
     /// <summary>
     ///     Closes (hides) the Form
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
     private void btn_Cancel_Click(object sender,
                                   EventArgs e)
     {
@@ -214,8 +217,8 @@ public partial class FrmImportGpx : Form
     /// <summary>
     ///     Collects the settings for track-parse and sends to the data collector; then closes the Form.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
     private async void btn_OK_Click(object sender,
                                     EventArgs e)
     {

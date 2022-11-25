@@ -257,13 +257,14 @@ internal static partial class HelperStatic
                                                   Form senderForm)
     {
         if (
-            cItem.GetType() == typeof(Label) ||
-            cItem.GetType() == typeof(GroupBox) ||
-            cItem.GetType() == typeof(Button) ||
-            cItem.GetType() == typeof(CheckBox) ||
-            cItem.GetType() == typeof(TabPage) ||
-            cItem.GetType() == typeof(RichTextBox) ||
-            cItem.GetType() == typeof(RadioButton) // ||
+            cItem is Label ||
+            cItem is GroupBox ||
+            cItem is Button ||
+            cItem is CheckBox ||
+            cItem is TabPage ||
+            cItem is RichTextBox ||
+            cItem is RadioButton
+            //||
         )
         {
             // for some reason there is no .Last() being offered here
@@ -279,7 +280,14 @@ internal static partial class HelperStatic
                 objectName: cItem.Name
             );
         }
-        else if (cItem.GetType() == typeof(TextBox) || cItem.GetType() == typeof(ComboBox))
+        else if (cItem is Form)
+        {
+            cItem.Text = DataReadSQLiteObjectText(
+                languageName: FrmMainApp.AppLanguage,
+                objectType: "Form",
+                objectName: cItem.Name);
+        }
+        else if (cItem is TextBox || cItem is ComboBox)
         {
             if (senderForm.Name == "FrmSettings")
             {
@@ -451,21 +459,21 @@ internal static partial class HelperStatic
         // dt_fileDataToWriteStage1PreQueue 
         FrmMainApp.DtFileDataToWriteStage1PreQueue = new DataTable();
         FrmMainApp.DtFileDataToWriteStage1PreQueue.Clear();
-        FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "fileNameWithOutPath");
+        FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "fileNameWithoutPath");
         FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingValue");
 
         // dt_fileDataToWriteStage2QueuePendingSave 
         FrmMainApp.DtFileDataToWriteStage2QueuePendingSave = new DataTable();
         FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Clear();
-        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "fileNameWithOutPath");
+        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "fileNameWithoutPath");
         FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingValue");
 
         // dt_fileDataToWriteStage3ReadyToWrite 
         FrmMainApp.DtFileDataToWriteStage3ReadyToWrite = new DataTable();
         FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Clear();
-        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "fileNameWithOutPath");
+        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "fileNameWithoutPath");
         FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingValue");
 
@@ -484,32 +492,32 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    ///     Adds fileNameWithOutPath to FilesBeingProcessed
+    ///     Adds fileNameWithoutPath to FilesBeingProcessed
     /// </summary>
-    /// <param name="fileNameWithOutPath">The file name without the path.</param>
-    internal static void GenericLockLockFile(string fileNameWithOutPath)
+    /// <param name="fileNameWithoutPath">The file name without the path.</param>
+    internal static void GenericLockLockFile(string fileNameWithoutPath)
     {
-        FilesBeingProcessed.Add(item: fileNameWithOutPath);
+        FilesBeingProcessed.Add(item: fileNameWithoutPath);
     }
 
     /// <summary>
-    ///     Removes fileNameWithOutPath from FilesBeingProcessed
+    ///     Removes fileNameWithoutPath from FilesBeingProcessed
     /// </summary>
-    /// <param name="fileNameWithOutPath">The file name without the path.</param>
-    internal static void GenericLockUnLockFile(string fileNameWithOutPath)
+    /// <param name="fileNameWithoutPath">The file name without the path.</param>
+    internal static void GenericLockUnLockFile(string fileNameWithoutPath)
     {
-        FilesBeingProcessed.Remove(item: fileNameWithOutPath);
+        FilesBeingProcessed.Remove(item: fileNameWithoutPath);
     }
 
     /// <summary>
-    ///     Checks if a file is currently locked by any other running operation - checks if the fileNameWithOutPath is
+    ///     Checks if a file is currently locked by any other running operation - checks if the fileNameWithoutPath is
     ///     currently in FilesBeingProcessed
     /// </summary>
-    /// <param name="fileNameWithOutPath">The file name without the path.</param>
+    /// <param name="fileNameWithoutPath">The file name without the path.</param>
     /// <returns>A true/false</returns>
-    internal static bool GenericLockCheckLockFile(string fileNameWithOutPath)
+    internal static bool GenericLockCheckLockFile(string fileNameWithoutPath)
     {
-        return FilesBeingProcessed.Contains(item: fileNameWithOutPath);
+        return FilesBeingProcessed.Contains(item: fileNameWithoutPath);
     }
 
     #endregion

@@ -6,12 +6,20 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TimeZoneConverter;
 using static GeoTagNinja.FrmMainApp;
 
 namespace GeoTagNinja;
 
 public partial class FrmEditFileData : Form
 {
+    private static string LocalIanatZname;
+    private static string SelectedIanatzName;
+    private static string SelectedTzAdjustment;
+    private static bool TZChangedByAPI;
+    private DateTime origDateValCreateDate = DateTime.Now;
+    private DateTime origDateValTakenDate = DateTime.Now;
+
     /// <summary>
     ///     This Form provides an interface for the user to edit various bits of Exif data in images.
     /// </summary>
@@ -22,6 +30,34 @@ public partial class FrmEditFileData : Form
         AcceptButton = btn_OK;
 
         InitializeComponent();
+
+        // Ddeal with Dates
+        // TakenDate
+        dtp_TakenDate.Enabled = true;
+        nud_TakenDateDays.Enabled = false;
+        nud_TakenDateHours.Enabled = false;
+        nud_TakenDateMinutes.Enabled = false;
+        nud_TakenDateSeconds.Enabled = false;
+
+        dtp_TakenDate.CustomFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern +
+                                     " " +
+                                     CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern;
+
+        // CreateDate
+        dtp_CreateDate.Enabled = true;
+        nud_CreateDateDays.Enabled = false;
+        nud_CreateDateHours.Enabled = false;
+        nud_CreateDateMinutes.Enabled = false;
+        nud_CreateDateSeconds.Enabled = false;
+        dtp_CreateDate.CustomFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern +
+                                      " " +
+                                      CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern;
+
+        // load TZ-CBX
+        foreach (string timezone in AncillaryListsArrays.GetTimeZones())
+        {
+            cbx_OffsetTimeList.Items.Add(item: timezone);
+        }
     }
 
     /// <summary>
@@ -37,6 +73,7 @@ public partial class FrmEditFileData : Form
     {
         FrmEditFileDataNowLoadingFileData = true;
         FrmEditFileDataNowRemovingGeoData = false;
+        HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
 
         clh_FileName.Width = -2;
         if (lvw_FileListEditImages.Items.Count > 0)
@@ -73,7 +110,7 @@ public partial class FrmEditFileData : Form
     {
         FrmEditFileDataNowLoadingFileData = true;
         string folderName = FolderName;
-        string fileNameWithOutPath = lvw_FileListEditImages.SelectedItems[index: 0]
+        string fileNameWithoutPath = lvw_FileListEditImages.SelectedItems[index: 0]
             .Text;
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
@@ -81,115 +118,181 @@ public partial class FrmEditFileData : Form
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
-            if (cItem.GetType() == typeof(Label) || cItem.GetType() == typeof(GroupBox) || cItem.GetType() == typeof(Button) || cItem.GetType() == typeof(CheckBox) || cItem.GetType() == typeof(TabPage))
+            try
             {
-                HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
-            }
-            else if (cItem is TextBox || cItem is ComboBox)
-            {
-                // reset font to normal
-                cItem.Font = new Font(prototype: cItem.Font, newStyle: FontStyle.Regular);
-
-                // if label then we want text to come from datarow [objectText]
-                // else if textbox/dropdown then we want the data to come from the same spot [metaDataDirectoryData.tagName]
-                string tempStr = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithOutPath)
-                    .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_" + cItem.Name.Substring(startIndex: 4)]
-                                  .Index]
-                    .Text;
-                if (tempStr == "-")
+                if (
+                    cItem is Label ||
+                    cItem is GroupBox ||
+                    cItem is Button ||
+                    cItem is CheckBox ||
+                    cItem is TabPage ||
+                    cItem is RadioButton
+                )
                 {
-                    {
-                        cItem.Text = "";
-                    }
+                    HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
                 }
-                else
+                else if (cItem is TextBox || cItem is ComboBox || cItem is DateTimePicker)
                 {
-                    cItem.Text = tempStr;
-                }
+                    // reset font to normal
+                    cItem.Font = new Font(prototype: cItem.Font, newStyle: FontStyle.Regular);
+                    string exifTag = cItem.Name.Substring(startIndex: 4);
 
-                // stick into sql ("pending save") - this is to see if the data has changed later.
-                HelperStatic.GenericUpdateAddToDataTable(
-                    dt: DtFileDataToWriteStage2QueuePendingSave,
-                    fileNameWithoutPath: fileNameWithOutPath,
-                    settingId: cItem.Name.Substring(startIndex: 4),
-                    settingValue: cItem.Text
-                );
-
-                // overwrite from sql-Q if available
-                // if data was pulled from the map this will sit in the main table, not in Q
-                DataView dvSqlDataQ = new(table: DtFileDataToWriteStage1PreQueue);
-                dvSqlDataQ.RowFilter = "fileNameWithOutPath = '" + fileNameWithOutPath + "' AND settingId ='" + cItem.Name.Substring(startIndex: 4) + "'";
-
-                DataView dvSqlDataF = new(table: DtFileDataToWriteStage3ReadyToWrite);
-                dvSqlDataF.RowFilter = "fileNameWithOutPath = '" + fileNameWithOutPath + "' AND settingId ='" + cItem.Name.Substring(startIndex: 4) + "'";
-
-                if (dvSqlDataQ.Count > 0 || dvSqlDataF.Count > 0)
-                {
-                    // see if data in temp-queue
-                    if (dvSqlDataQ.Count > 0)
+                    // if label then we want text to come from datarow [objectText]
+                    // else if textbox/dropdown then we want the data to come from the same spot [metaDataDirectoryData.tagName]
+                    string tempStr = "-";
+                    if (exifTag != "OffsetTimeList") // I hate you.
                     {
-                        cItem.Text = dvSqlDataQ[recordIndex: 0][property: "settingValue"]
-                            .ToString();
+                        tempStr = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
+                            .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_" + exifTag]
+                                          .Index]
+                            .Text;
                     }
-                    // see if data is ready to be written
-                    else if (dvSqlDataF.Count > 0)
+
+                    if (tempStr == "-")
                     {
-                        cItem.Text = dvSqlDataF[recordIndex: 0][property: "settingValue"]
-                            .ToString();
+                        switch (cItem.Parent.Name)
+                        {
+                            case "gbx_TakenDate":
+                                IEnumerable<Control> cGbx_TakenDate = helperNonstatic.GetAllControls(control: gbx_TakenDate);
+                                foreach (Control cItemGbx_TakenDate in cGbx_TakenDate)
+                                {
+                                    if (cItemGbx_TakenDate != btn_InsertTakenDate)
+                                    {
+                                        cItemGbx_TakenDate.Enabled = false;
+                                        btn_InsertFromTakenDate.Enabled = false;
+                                    }
+                                }
+
+                                break;
+                            case "gbx_CrateDate":
+                                IEnumerable<Control> cGbx_CreateDate = helperNonstatic.GetAllControls(control: gbx_TakenDate);
+                                foreach (Control cItemGbx_CrateDate in cGbx_CreateDate)
+                                {
+                                    if (cItemGbx_CrateDate != btn_InsertCreateDate)
+                                    {
+                                        cItemGbx_CrateDate.Enabled = false;
+                                        btn_InsertFromTakenDate.Enabled = false;
+                                    }
+                                }
+
+                                break;
+
+                            default:
+                                cItem.Text = "";
+                                break;
+                        }
                     }
+                    else
+                    {
+                        cItem.Text = tempStr;
+                        if (cItem == dtp_TakenDate)
+                        {
+                            btn_InsertTakenDate.Enabled = false;
+                        }
+                        else if (cItem == dtp_CreateDate)
+                        {
+                            btn_InsertCreateDate.Enabled = false;
+                        }
+                        else if (cItem == cbx_OffsetTimeList)
+                        {
+                            // leave blank on purpose.
+                        }
+                    }
+
+                    // stick into sql ("pending save") - this is to see if the data has changed later.
 
                     HelperStatic.GenericUpdateAddToDataTable(
-                        dt: DtFileDataToWriteStage1PreQueue,
-                        fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
-                            .Text,
+                        dt: DtFileDataToWriteStage2QueuePendingSave,
+                        fileNameWithoutPath: fileNameWithoutPath,
                         settingId: cItem.Name.Substring(startIndex: 4),
-                        settingValue: cItem.Text
-                    );
+                        settingValue: cItem.Text);
 
-                    if (cItem is TextBox txt)
+                    // overwrite from sql-Q if available
+                    // if data was pulled from the map this will sit in the main table, not in Q
+                    DataView dvSqlDataQ = new(table: DtFileDataToWriteStage1PreQueue);
+                    dvSqlDataQ.RowFilter = "fileNameWithoutPath = '" + fileNameWithoutPath + "' AND settingId ='" + cItem.Name.Substring(startIndex: 4) + "'";
+
+                    DataView dvSqlDataF = new(table: DtFileDataToWriteStage3ReadyToWrite);
+                    dvSqlDataF.RowFilter = "fileNameWithoutPath = '" + fileNameWithoutPath + "' AND settingId ='" + cItem.Name.Substring(startIndex: 4) + "'";
+
+                    if (dvSqlDataQ.Count > 0 || dvSqlDataF.Count > 0)
                     {
-                        txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Bold);
-                    }
-                    else if (cItem is ComboBox cmb)
-                    {
-                        cmb.Font = new Font(prototype: cmb.Font, newStyle: FontStyle.Bold);
+                        // see if data in temp-queue
+                        if (dvSqlDataQ.Count > 0)
+                        {
+                            cItem.Text = dvSqlDataQ[recordIndex: 0][property: "settingValue"]
+                                .ToString();
+                        }
+                        // see if data is ready to be written
+                        else if (dvSqlDataF.Count > 0)
+                        {
+                            cItem.Text = dvSqlDataF[recordIndex: 0][property: "settingValue"]
+                                .ToString();
+                        }
+
+                        HelperStatic.GenericUpdateAddToDataTable(
+                            dt: DtFileDataToWriteStage1PreQueue,
+                            fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
+                                .Text,
+                            settingId: cItem.Name.Substring(startIndex: 4),
+                            settingValue: cItem.Text
+                        );
+
+                        if (cItem is TextBox txt)
+                        {
+                            txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Bold);
+                        }
+                        else if (cItem is ComboBox cmb)
+                        {
+                            cmb.Font = new Font(prototype: cmb.Font, newStyle: FontStyle.Bold);
+
+                            if (cItem.Name == "cbx_CountryCode" || cItem.Name == "cbx_Country")
+                            {
+                                // okay this is derp but i don't have a particularly better idea at this point
+                                // so basically countrycode and country need to be loaded first so we'll see how they are above...
+                                // then have another go at them here.
+                                // marry up countrycodes and countrynames
+                                string sqliteText;
+                                if (cItem.Name == "cbx_CountryCode" && cItem.Text == "")
+                                {
+                                    sqliteText = HelperStatic.DataReadSQLiteCountryCodesNames(
+                                        queryWhat: "Country",
+                                        inputVal: cbx_Country.Text,
+                                        returnWhat: "ISO_3166_1A3"
+                                    );
+                                    if (cbx_CountryCode.Text != sqliteText)
+                                    {
+                                        cbx_CountryCode.Text = sqliteText;
+                                    }
+                                }
+                                else if (cItem.Name == "cbx_Country" && cItem.Text == "")
+                                {
+                                    sqliteText = HelperStatic.DataReadSQLiteCountryCodesNames(
+                                        queryWhat: "ISO_3166_1A3",
+                                        inputVal: cbx_CountryCode.Text,
+                                        returnWhat: "Country");
+                                    if (cbx_Country.Text != sqliteText)
+                                    {
+                                        cbx_Country.Text = sqliteText;
+                                    }
+                                }
+                                else if (cItem.Name == "cbx_OffsetTime")
+                                { }
+                            }
+                        }
+                        else if (cItem is DateTimePicker dtp)
+                        {
+                            dtp.Font = new Font(prototype: dtp.Font, newStyle: FontStyle.Bold);
+                        }
                     }
                 }
+
+                origDateValTakenDate = dtp_TakenDate.Value;
+                origDateValCreateDate = dtp_CreateDate.Value;
             }
-        }
-
-        // okay this is derp but i don't have a particularly better idea at this point
-        // so basically countrycode and country need to be loaded first so we'll see how they are above...
-        // then have another go at them here.
-        foreach (Control cItem in c)
-        {
-            if (cItem.Name == "cbx_CountryCode" || cItem.Name == "cbx_Country")
+            catch
             {
-                // marry up countrycodes and countrynames
-                string sqliteText;
-                if (cItem.Name == "cbx_CountryCode" && cItem.Text == "")
-                {
-                    sqliteText = HelperStatic.DataReadSQLiteCountryCodesNames(
-                        queryWhat: "Country",
-                        inputVal: cbx_Country.Text,
-                        returnWhat: "ISO_3166_1A3"
-                    );
-                    if (cbx_CountryCode.Text != sqliteText)
-                    {
-                        cbx_CountryCode.Text = sqliteText;
-                    }
-                }
-                else if (cItem.Name == "cbx_Country" && cItem.Text == "")
-                {
-                    sqliteText = HelperStatic.DataReadSQLiteCountryCodesNames(
-                        queryWhat: "ISO_3166_1A3",
-                        inputVal: cbx_CountryCode.Text,
-                        returnWhat: "Country");
-                    if (cbx_Country.Text != sqliteText)
-                    {
-                        cbx_Country.Text = sqliteText;
-                    }
-                }
+                // ignored
             }
         }
 
@@ -227,7 +330,7 @@ public partial class FrmEditFileData : Form
                 // don't run the thing again if file has already been generated
                 if (!File.Exists(path: generatedFileName))
                 {
-                    await HelperStatic.ExifGetImagePreviews(fileNameWithOutPath: fileNameWithPath);
+                    await HelperStatic.ExifGetImagePreviews(fileNameWithoutPath: fileNameWithPath);
                 }
 
                 //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
@@ -281,26 +384,7 @@ public partial class FrmEditFileData : Form
         switch (((Button)sender).Name)
         {
             case "btn_getFromWeb_Toponomy":
-                strGpsLatitude = tbx_GPSLatitude.Text.ToString(provider: CultureInfo.InvariantCulture);
-                strGpsLongitude = tbx_GPSLongitude.Text.ToString(provider: CultureInfo.InvariantCulture);
-
-                if (double.TryParse(s: strGpsLatitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strGpsLongitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
-                {
-                    dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
-
-                    tbx_City.Text = dtToponomy.Rows[index: 0][columnName: "City"]
-                        .ToString();
-                    tbx_State.Text = dtToponomy.Rows[index: 0][columnName: "State"]
-                        .ToString();
-                    tbx_Sub_location.Text = dtToponomy.Rows[index: 0][columnName: "Sub_location"]
-                        .ToString();
-                    cbx_CountryCode.Text = dtToponomy.Rows[index: 0][columnName: "CountryCode"]
-                        .ToString();
-                    cbx_Country.Text = dtToponomy.Rows[index: 0][columnName: "Country"]
-                        .ToString();
-                    // no need to write back to sql because it's done automatically on textboxChange
-                }
-
+                getFromWeb_Toponomy(fileNameWithoutPath: "");
                 break;
             case "btn_getAllFromWeb_Toponomy":
                 foreach (ListViewItem lvi in lvw_FileListEditImages.Items)
@@ -311,91 +395,23 @@ public partial class FrmEditFileData : Form
                         lvw_FileListEditImages.SelectedItems[index: 0]
                             .Text)
                     {
-                        strGpsLatitude = tbx_GPSLatitude.Text.ToString(provider: CultureInfo.InvariantCulture);
-                        strGpsLongitude = tbx_GPSLongitude.Text.ToString(provider: CultureInfo.InvariantCulture);
-
-                        if (double.TryParse(s: strGpsLatitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strGpsLongitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
-                        {
-                            dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
-                            if (dtToponomy.Rows.Count > 0)
-                            {
-                                tbx_City.Text = dtToponomy.Rows[index: 0][columnName: "City"]
-                                    .ToString();
-                                tbx_State.Text = dtToponomy.Rows[index: 0][columnName: "State"]
-                                    .ToString();
-                                tbx_Sub_location.Text = dtToponomy.Rows[index: 0][columnName: "Sub_location"]
-                                    .ToString();
-                                cbx_CountryCode.Text = dtToponomy.Rows[index: 0][columnName: "CountryCode"]
-                                    .ToString();
-                                cbx_Country.Text = dtToponomy.Rows[index: 0][columnName: "Country"]
-                                    .ToString();
-                            }
-                            // no need to write back to sql because it's done automatically on textboxChange
-                        }
+                        getFromWeb_Toponomy(fileNameWithoutPath: "");
+                        // no need to write back to sql because it's done automatically on textboxChange
                     }
                     else
                     {
+                        getFromWeb_Toponomy(fileNameWithoutPath: lvi.Text);
                         // get lat/long from main listview
-                        strGpsLatitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileName)
-                            .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLatitude"]
-                                          .Index]
-                            .Text.ToString(provider: CultureInfo.InvariantCulture);
-                        strGpsLongitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileName)
-                            .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLongitude"]
-                                          .Index]
-                            .Text.ToString(provider: CultureInfo.InvariantCulture);
-                        if (double.TryParse(s: strGpsLatitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strGpsLongitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
-                        {
-                            dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
-                            if (dtToponomy.Rows.Count > 0)
-                            {
-                                List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
-                                toponomyOverwrites.Add(item: ("CountryCode", dtToponomy.Rows[index: 0][columnName: "CountryCode"]
-                                                                  .ToString()));
-                                toponomyOverwrites.Add(item: ("Country", dtToponomy.Rows[index: 0][columnName: "Country"]
-                                                                  .ToString()));
-                                toponomyOverwrites.Add(item: ("City", dtToponomy.Rows[index: 0][columnName: "City"]
-                                                                  .ToString()));
-                                toponomyOverwrites.Add(item: ("State", dtToponomy.Rows[index: 0][columnName: "State"]
-                                                                  .ToString()));
-                                toponomyOverwrites.Add(item: ("Sub_location", dtToponomy.Rows[index: 0][columnName: "Sub_location"]
-                                                                  .ToString()));
-
-                                foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
-                                {
-                                    HelperStatic.GenericUpdateAddToDataTable(
-                                        dt: DtFileDataToWriteStage1PreQueue,
-                                        fileNameWithoutPath: lvi.Text,
-                                        settingId: toponomyDetail.toponomyOverwriteName,
-                                        settingValue: toponomyDetail.toponomyOverwriteVal
-                                    );
-                                }
-
-                                lvi.ForeColor = Color.Red;
-                            }
-                        }
+                        lvi.ForeColor = Color.Red;
                     }
                 }
 
                 break;
             case "btn_getFromWeb_Altitude":
-                strGpsLatitude = tbx_GPSLatitude.Text.ToString(provider: CultureInfo.InvariantCulture);
-                strGpsLongitude = tbx_GPSLongitude.Text.ToString(provider: CultureInfo.InvariantCulture);
-
-                if (double.TryParse(s: strGpsLatitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strGpsLongitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
-                {
-                    dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
-                    if (dtAltitude.Rows.Count > 0)
-                    {
-                        tbx_GPSAltitude.Text = dtAltitude.Rows[index: 0][columnName: "Altitude"]
-                            .ToString();
-                    }
-                    // no need to write back to sql because it's done automatically on textboxChange
-                }
+                getFromWeb_Altitude(fileNameWithoutPath: "");
 
                 break;
             case "btn_getAllFromWeb_Altitude":
-                // same logic as toponomy
                 foreach (ListViewItem lvi in lvw_FileListEditImages.Items)
                 {
                     string fileName = lvi.Text;
@@ -404,46 +420,15 @@ public partial class FrmEditFileData : Form
                         lvw_FileListEditImages.SelectedItems[index: 0]
                             .Text)
                     {
-                        strGpsLatitude = tbx_GPSLatitude.Text.ToString(provider: CultureInfo.InvariantCulture);
-                        strGpsLongitude = tbx_GPSLongitude.Text.ToString(provider: CultureInfo.InvariantCulture);
+                        getFromWeb_Altitude(fileNameWithoutPath: "");
 
-                        if (double.TryParse(s: strGpsLatitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strGpsLongitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
-                        {
-                            dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
-                            if (dtAltitude.Rows.Count > 0)
-                            {
-                                tbx_GPSAltitude.Text = dtAltitude.Rows[index: 0][columnName: "Altitude"]
-                                    .ToString();
-                            }
-                            // no need to write back to sql because it's done automatically on textboxChange
-                        }
+                        // no need to write back to sql because it's done automatically on textboxChange
                     }
                     else
                     {
+                        getFromWeb_Altitude(fileNameWithoutPath: lvi.Text);
                         // get lat/long from main listview
-                        strGpsLatitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileName)
-                            .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLatitude"]
-                                          .Index]
-                            .Text.ToString(provider: CultureInfo.InvariantCulture);
-                        strGpsLongitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileName)
-                            .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLongitude"]
-                                          .Index]
-                            .Text.ToString(provider: CultureInfo.InvariantCulture);
-                        if (double.TryParse(s: strGpsLatitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strGpsLongitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
-                        {
-                            dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
-                            if (dtAltitude.Rows.Count > 0)
-                            {
-                                string altitude = dtAltitude.Rows[index: 0][columnName: "Altitude"]
-                                    .ToString();
-                                HelperStatic.GenericUpdateAddToDataTable(
-                                    dt: DtFileDataToWriteStage1PreQueue,
-                                    fileNameWithoutPath: lvi.Text,
-                                    settingId: "GPSAltitude",
-                                    settingValue: altitude
-                                );
-                            }
-                        }
+                        lvi.ForeColor = Color.Red;
                     }
                 }
 
@@ -463,6 +448,312 @@ public partial class FrmEditFileData : Form
         }
     }
 
+    /// <summary>
+    /// Pulls data from the various APIs and fills up the listView and fills the TextBoxes and/or SQLite.
+    /// </summary>
+    /// <param name="fileNameWithoutPath">Blank if used as "pull one file" otherwise the name of the file w/o Path</param>
+    private void getFromWeb_Toponomy(string fileNameWithoutPath = "")
+    {
+        DataTable dtToponomy;
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        double parsedLat;
+        double parsedLng;
+        DateTime createDate = default; // can't leave it null because it's updated in various IFs and C# perceives it as uninitialised.
+
+        string strGpsLatitude;
+        string strGpsLongitude;
+
+        dtToponomy = new DataTable();
+
+        // this is "current file"
+        if (fileNameWithoutPath == "")
+        {
+            strGpsLatitude = tbx_GPSLatitude.Text.ToString(provider: CultureInfo.InvariantCulture);
+            strGpsLongitude = tbx_GPSLongitude.Text.ToString(provider: CultureInfo.InvariantCulture);
+
+            if (double.TryParse(s: strGpsLatitude,
+                                style: NumberStyles.Any,
+                                provider: CultureInfo.InvariantCulture,
+                                result: out parsedLat) &&
+                double.TryParse(s: strGpsLongitude,
+                                style: NumberStyles.Any,
+                                provider: CultureInfo.InvariantCulture,
+                                result: out parsedLng))
+            {
+                dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
+            }
+        }
+
+        // this is all the other files
+        else
+        {
+            strGpsLatitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
+                .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLatitude"]
+                              .Index]
+                .Text.ToString(provider: CultureInfo.InvariantCulture);
+            strGpsLongitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
+                .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLongitude"]
+                              .Index]
+                .Text.ToString(provider: CultureInfo.InvariantCulture);
+            string strCreateDate = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
+                .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_CreateDate"]
+                              .Index]
+                .Text.ToString(provider: CultureInfo.InvariantCulture);
+            bool _ = DateTime.TryParse(s: strCreateDate.ToString(provider: CultureInfo.InvariantCulture), result: out createDate);
+
+            if (double.TryParse(s: strGpsLatitude,
+                                style: NumberStyles.Any,
+                                provider: CultureInfo.InvariantCulture,
+                                result: out parsedLat) &&
+                double.TryParse(s: strGpsLongitude,
+                                style: NumberStyles.Any,
+                                provider: CultureInfo.InvariantCulture,
+                                result: out parsedLng))
+            {
+                dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
+            }
+        }
+
+        // Pull the data from the web regardless.
+        List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
+        toponomyOverwrites.Add(item: ("CountryCode", dtToponomy.Rows[index: 0][columnName: "CountryCode"]
+                                          .ToString()));
+        toponomyOverwrites.Add(item: ("Country", dtToponomy.Rows[index: 0][columnName: "Country"]
+                                          .ToString()));
+        toponomyOverwrites.Add(item: ("City", dtToponomy.Rows[index: 0][columnName: "City"]
+                                          .ToString()));
+        toponomyOverwrites.Add(item: ("State", dtToponomy.Rows[index: 0][columnName: "State"]
+                                          .ToString()));
+        toponomyOverwrites.Add(item: ("Sub_location", dtToponomy.Rows[index: 0][columnName: "Sub_location"]
+                                          .ToString()));
+
+        string TZ = dtToponomy.Rows[index: 0][columnName: "timeZoneId"]
+            .ToString();
+
+        if (fileNameWithoutPath == "")
+        {
+            const int tzStartInt = 18;
+
+            bool _ = DateTime.TryParse(s: tbx_CreateDate.Text.ToString(provider: CultureInfo.InvariantCulture), result: out createDate);
+
+            // cbx_OffsetTimeList.FindString(TZ, 18) doesn't seem to work so....
+            for (int i = 0; i <= cbx_OffsetTimeList.Items.Count; i++)
+            {
+                string cbxText = cbx_OffsetTimeList.Items[index: i]
+                    .ToString();
+                if (cbxText.Length >= tzStartInt)
+                {
+                    if (cbxText
+                        .Substring(startIndex: tzStartInt)
+                        .Contains(value: TZ))
+                    {
+                        // this controls the logic that the ckb_UseDST should not be re-parsed again manually on the Change event that would otherwise fire.
+                        TZChangedByAPI = true;
+                        cbx_OffsetTimeList.SelectedIndex = i;
+                        try
+                        {
+                            string IANATZ = TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
+                            string TZOffset;
+                            TimeZoneInfo tst = TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
+                            ckb_UseDST.Checked = tst.IsDaylightSavingTime(dateTime: createDate);
+                            TZOffset = tst.GetUtcOffset(dateTime: createDate)
+                                .ToString()
+                                .Substring(0, tst.GetUtcOffset(dateTime: createDate)
+                                                  .ToString()
+                                                  .Length -
+                                              3);
+                            if (!TZOffset.StartsWith(value: "-"))
+                            {
+                                toponomyOverwrites.Add(item: ("OffsetTime", "+" + TZOffset));
+                            }
+                            else
+                            {
+                                toponomyOverwrites.Add(item: ("OffsetTime", TZOffset));
+                            }
+                        }
+                        catch
+                        {
+                            // add a zero
+                            toponomyOverwrites.Add(item: ("OffsetTime", "+00:00"));
+                        }
+
+                        TZChangedByAPI = false;
+                        break;
+                    }
+                }
+            }
+
+            // send it back to the Form + SQL
+            foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+            {
+                switch (toponomyDetail.toponomyOverwriteName)
+                {
+                    case "CountryCode":
+                        cbx_CountryCode.Text = toponomyDetail.toponomyOverwriteVal;
+                        break;
+                    case "Country":
+                        cbx_Country.Text = toponomyDetail.toponomyOverwriteVal;
+                        break;
+                    case "City":
+                        tbx_City.Text = toponomyDetail.toponomyOverwriteVal;
+                        break;
+                    case "State":
+                        tbx_State.Text = toponomyDetail.toponomyOverwriteVal;
+                        break;
+                    case "Sub_location":
+                        tbx_Sub_location.Text = toponomyDetail.toponomyOverwriteVal;
+                        break;
+                    case "OffsetTime":
+                        tbx_OffsetTime.Text = toponomyDetail.toponomyOverwriteVal;
+                        break;
+                }
+            }
+        }
+        else
+        {
+            try
+            {
+                string IANATZ = TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
+                string TZOffset;
+                TimeZoneInfo tst = TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
+
+                TZOffset = tst.GetUtcOffset(dateTime: createDate)
+                    .ToString()
+                    .Substring(0, tst.GetUtcOffset(dateTime: createDate)
+                                      .ToString()
+                                      .Length -
+                                  3);
+                if (!TZOffset.StartsWith(value: "-"))
+                {
+                    toponomyOverwrites.Add(item: ("OffsetTime", "+" + TZOffset));
+                }
+                else
+                {
+                    toponomyOverwrites.Add(item: ("OffsetTime", TZOffset));
+                }
+            }
+            catch
+            {
+                // add a zero
+                toponomyOverwrites.Add(item: ("OffsetTime", "+00:00"));
+            }
+
+            foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+            {
+                HelperStatic.GenericUpdateAddToDataTable(
+                    dt: DtFileDataToWriteStage1PreQueue,
+                    fileNameWithoutPath: fileNameWithoutPath,
+                    settingId: toponomyDetail.toponomyOverwriteName,
+                    settingValue: toponomyDetail.toponomyOverwriteVal
+                );
+            }
+        }
+    }
+
+    /// <summary>
+    /// Pulls data from the various APIs and fills up the listView and fills the TextBoxes and/or SQLite.
+    /// </summary>
+    /// <param name="fileNameWithoutPath">Blank if used as "pull one file" otherwise the name of the file w/o Path</param>
+    private void getFromWeb_Altitude(string fileNameWithoutPath = "")
+    {
+        DataTable dtAltitude;
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        double parsedLat;
+        double parsedLng;
+        string strGpsLatitude;
+        string strGpsLongitude;
+
+        if (fileNameWithoutPath == "")
+        {
+            strGpsLatitude = tbx_GPSLatitude.Text.ToString(provider: CultureInfo.InvariantCulture);
+            strGpsLongitude = tbx_GPSLongitude.Text.ToString(provider: CultureInfo.InvariantCulture);
+
+            if (double.TryParse(s: strGpsLatitude,
+                                style: NumberStyles.Any,
+                                provider: CultureInfo.InvariantCulture,
+                                result: out parsedLat) &&
+                double.TryParse(s: strGpsLongitude,
+                                style: NumberStyles.Any,
+                                provider: CultureInfo.InvariantCulture,
+                                result: out parsedLng))
+            {
+                dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
+
+                if (dtAltitude.Rows.Count > 0)
+                {
+                    tbx_GPSAltitude.Text = dtAltitude.Rows[index: 0][columnName: "Altitude"]
+                        .ToString();
+                }
+                // no need to write back to sql because it's done automatically on textboxChange
+            }
+            else
+            {
+                foreach (ListViewItem lvi in lvw_FileListEditImages.Items)
+                {
+                    string fileName = lvi.Text;
+
+                    // get lat/long from main listview
+                    strGpsLatitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileName)
+                        .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLatitude"]
+                                      .Index]
+                        .Text.ToString(provider: CultureInfo.InvariantCulture);
+                    strGpsLongitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileName)
+                        .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLongitude"]
+                                      .Index]
+                        .Text.ToString(provider: CultureInfo.InvariantCulture);
+                    if (double.TryParse(s: strGpsLatitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strGpsLongitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
+                    {
+                        dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
+                        if (dtAltitude.Rows.Count > 0)
+                        {
+                            string altitude = dtAltitude.Rows[index: 0][columnName: "Altitude"]
+                                .ToString();
+                            HelperStatic.GenericUpdateAddToDataTable(
+                                dt: DtFileDataToWriteStage1PreQueue,
+                                fileNameWithoutPath: lvi.Text,
+                                settingId: "GPSAltitude",
+                                settingValue: altitude
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    ///     Allows to insert a TakenDate value if there isn't one already.
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void btn_InsertTakenDate_Click(object sender,
+                                           EventArgs e)
+    {
+        HelperNonStatic helperNonstatic = new();
+        IEnumerable<Control> cGbx_TakenDate = helperNonstatic.GetAllControls(control: gbx_TakenDate);
+        foreach (Control cItemGbx_TakenDate in cGbx_TakenDate)
+        {
+            if (cItemGbx_TakenDate != btn_InsertTakenDate)
+            {
+                cItemGbx_TakenDate.Enabled = Enabled;
+
+                // set font to bold for these two - that will get picked up later.
+                if (cItemGbx_TakenDate is DateTimePicker dtp)
+                {
+                    dtp.Font = new Font(prototype: dtp.Font, newStyle: FontStyle.Bold);
+                    HelperStatic.GenericUpdateAddToDataTable(
+                        dt: DtFileDataToWriteStage1PreQueue,
+                        fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
+                            .Text,
+                        settingId: dtp.Name.Substring(startIndex: 4),
+                        settingValue: dtp.Text
+                    );
+                }
+            }
+        }
+
+        btn_InsertTakenDate.Enabled = false;
+    }
 
     /// <summary>
     ///     Handles the keyboard interactions (move up/down)
@@ -511,9 +802,9 @@ public partial class FrmEditFileData : Form
                 {
                     DataRow drS3 = DtFileDataToWriteStage3ReadyToWrite.Rows[index: i];
                     if (
-                        drS3[columnName: "fileNameWithOutPath"]
+                        drS3[columnName: "fileNameWithoutPath"]
                             .ToString() ==
-                        drS1[columnName: "fileNameWithOutPath"]
+                        drS1[columnName: "fileNameWithoutPath"]
                             .ToString() &&
                         drS3[columnName: "settingId"]
                             .ToString() ==
@@ -593,75 +884,127 @@ public partial class FrmEditFileData : Form
     /// </summary>
     /// <param name="sender">The Control whose Text has been changed</param>
     /// <param name="e">Unused</param>
-    private void tbx_cbx_Any_TextChanged(object sender,
-                                         EventArgs e)
+    private void tbx_cbx_dtp_Any_TextChanged(object sender,
+                                             EventArgs e)
     {
         if (FrmEditFileDataNowLoadingFileData == false)
         {
             Control sndr = (Control)sender;
-
-            DataView dvPreviousText = new(table: DtFileDataToWriteStage2QueuePendingSave);
-            dvPreviousText.RowFilter = "fileNameWithOutPath = '" +
-                                       lvw_FileListEditImages.SelectedItems[index: 0]
-                                           .Text +
-                                       "' AND settingId ='" +
-                                       sndr.Name.Substring(startIndex: 4) +
-                                       "'";
-            if (dvPreviousText[recordIndex: 0][property: "settingValue"]
-                    .ToString() !=
-                sndr.Text)
+            string senderName = sndr.Name;
+            switch (senderName)
             {
-                string strSndrText = sndr.Text.Replace(oldChar: ',', newChar: '.');
-                if (!FrmEditFileDataNowRemovingGeoData && sndr.Parent.Name == "gbx_GPSData" && double.TryParse(s: strSndrText, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dbl) == false)
-                {
-                    // don't warn on a single "-" as that could be a lead-up to a negative number
-                    if (strSndrText != "-")
+                default:
+
+                    DataView dvPreviousText = new(table: DtFileDataToWriteStage2QueuePendingSave);
+                    string previousText = "";
+                    string newText = "";
+                    string exifTag = sndr.Name.Substring(startIndex: 4);
+                    dvPreviousText.RowFilter = "fileNameWithoutPath = '" +
+                                               lvw_FileListEditImages.SelectedItems[index: 0]
+                                                   .Text +
+                                               "' AND settingId = '" +
+                                               exifTag +
+                                               "'";
+                    if (dvPreviousText.Count > 0)
                     {
-                        MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_WarningLatLongMustBeNumbers"), caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
-                        // find a valid number
-                        sndr.Text = "0.0";
+                        previousText = dvPreviousText[recordIndex: 0][property: "settingValue"]
+                            .ToString();
                     }
-                }
-                else
-                {
-                    sndr.Font = new Font(prototype: sndr.Font, newStyle: FontStyle.Bold);
-                    // marry up countrycodes and countrynames
-                    string sqliteText;
-                    if (sndr.Name == "cbx_CountryCode")
+
+                    newText = sndr.Text;
+
+                    // I'll paste it here for good measure.
+                    // Time Zones are left as blank on open regardless of what the stored value is. There is no Exif Tag for TZ but only "Offset", which is something like "+01:00".
+                    // As there is no indication for neither TZ nor DST per se I can't ascertain that  "+01:00" was in fact say BST rather than CET, one being DST the other not.
+                    // Either adjust manually or pull from web - the combination of coordinates + createDate would decisively inform the program of the real TZ value.
+                    // The value in the read-only textbox will be saved in the file.
+                    // ...That also means that cbx_OffsetTimeList is a "bit special" (aren't we all...) so it needs to be derailed rather than sent back to the various datatables
+                    if (senderName == "cbx_OffsetTimeList" && !TZChangedByAPI)
                     {
-                        sqliteText = HelperStatic.DataReadSQLiteCountryCodesNames(
-                            queryWhat: "ISO_3166_1A3",
-                            inputVal: sndr.Text,
-                            returnWhat: "Country"
-                        );
-                        if (cbx_Country.Text != sqliteText)
+                        GetTimeZoneOffset();
+                    }
+                    else if (senderName == "tbx_OffsetTime")
+                    { }
+
+                    if (previousText != newText)
+                    {
+                        string strSndrText = sndr.Text.Replace(oldChar: ',', newChar: '.');
+                        if (!FrmEditFileDataNowRemovingGeoData && sndr.Parent.Name == "gbx_GPSData" && double.TryParse(s: strSndrText, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dbl) == false)
                         {
-                            cbx_Country.Text = sqliteText;
+                            // don't warn on a single "-" as that could be a lead-up to a negative number
+                            if (strSndrText != "-")
+                            {
+                                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_WarningLatLongMustBeNumbers"), caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+                                // find a valid number
+                                sndr.Text = "0.0";
+                            }
                         }
-                    }
-                    else if (sndr.Name == "cbx_Country")
-                    {
-                        sqliteText = HelperStatic.DataReadSQLiteCountryCodesNames(
-                            queryWhat: "Country",
-                            inputVal: sndr.Text,
-                            returnWhat: "ISO_3166_1A3"
-                        );
-                        if (cbx_CountryCode.Text != sqliteText)
+                        else
                         {
-                            cbx_CountryCode.Text = sqliteText;
+                            sndr.Font = new Font(prototype: sndr.Font, newStyle: FontStyle.Bold);
+                            // marry up countrycodes and countrynames
+                            string sqliteText;
+                            if (senderName == "cbx_CountryCode")
+                            {
+                                sqliteText = HelperStatic.DataReadSQLiteCountryCodesNames(
+                                    queryWhat: "ISO_3166_1A3",
+                                    inputVal: sndr.Text,
+                                    returnWhat: "Country"
+                                );
+                                if (cbx_Country.Text != sqliteText)
+                                {
+                                    cbx_Country.Text = sqliteText;
+                                }
+                            }
+                            else if (senderName == "cbx_Country")
+                            {
+                                sqliteText = HelperStatic.DataReadSQLiteCountryCodesNames(
+                                    queryWhat: "Country",
+                                    inputVal: sndr.Text,
+                                    returnWhat: "ISO_3166_1A3"
+                                );
+                                if (cbx_CountryCode.Text != sqliteText)
+                                {
+                                    cbx_CountryCode.Text = sqliteText;
+                                }
+                            }
+
+                            HelperStatic.GenericUpdateAddToDataTable(
+                                dt: DtFileDataToWriteStage1PreQueue,
+                                fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
+                                    .Text,
+                                settingId: exifTag,
+                                settingValue: sndr.Text
+                            );
                         }
                     }
 
-                    HelperStatic.GenericUpdateAddToDataTable(
-                        dt: DtFileDataToWriteStage1PreQueue,
-                        fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
-                            .Text,
-                        settingId: sndr.Name.Substring(startIndex: 4),
-                        settingValue: sndr.Text
-                    );
-                }
+                    break;
             }
         }
+    }
+
+    private void GetTimeZoneOffset()
+    {
+        string strOffsetTime = "";
+        bool useDST = ckb_UseDST.Checked;
+        try
+        {
+            if (!useDST)
+            {
+                strOffsetTime = cbx_OffsetTimeList.Text.Substring(startIndex: 1, length: 6);
+            }
+            else
+            {
+                strOffsetTime = cbx_OffsetTimeList.Text.Substring(startIndex: 8, length: 6);
+            }
+        }
+        catch
+        {
+            // nothing. Leave it as blank.
+        }
+
+        tbx_OffsetTime.Text = strOffsetTime;
     }
 
     #endregion
@@ -675,6 +1018,285 @@ public partial class FrmEditFileData : Form
                                    EventArgs e)
     {
         //previousText = this.Text;
+    }
+
+    /// <summary>
+    ///     This kills off the AcceptButton - problem is that if user was to type in an invalid number (say 7 rather than 07
+    ///     for HOUR) and press Enter then the Form would close and sooner rather than later it'd cause trouble.
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void dtp_TakenDate_Enter(object sender,
+                                     EventArgs e)
+    {
+        AcceptButton = null;
+    }
+
+    /// <summary>
+    ///     Reinstates AcceptButton. By this point Validation auto-corrects the value if user was derp.
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void dtp_TakenDate_Leave(object sender,
+                                     EventArgs e)
+    {
+        AcceptButton = btn_OK;
+    }
+
+    /// <summary>
+    ///     Handles rbt_TakenDateSetToFixedDate changing to on/off. Disables the other controls in the group when required.
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void rbt_TakenDateSetToFixedDate_CheckedChanged(object sender,
+                                                            EventArgs e)
+    {
+        if (rbt_TakenDateSetToFixedDate.Checked)
+        {
+            dtp_TakenDate.Enabled = true;
+            nud_TakenDateDays.Enabled = false;
+            nud_TakenDateHours.Enabled = false;
+            nud_TakenDateMinutes.Enabled = false;
+            nud_TakenDateSeconds.Enabled = false;
+            origDateValTakenDate = dtp_TakenDate.Value;
+
+            nud_TakenDateDays.Text = "0";
+            nud_TakenDateHours.Text = "0";
+            nud_TakenDateMinutes.Text = "0";
+            nud_TakenDateSeconds.Text = "0";
+        }
+        else
+        {
+            dtp_TakenDate.Enabled = false;
+            nud_TakenDateDays.Enabled = true;
+            nud_TakenDateHours.Enabled = true;
+            nud_TakenDateMinutes.Enabled = true;
+            nud_TakenDateSeconds.Enabled = true;
+        }
+    }
+
+    private void rbt_TakenDateTimeShift_CheckedChanged(object sender,
+                                                       EventArgs e)
+    {
+        if (!rbt_TakenDateTimeShift.Checked)
+        {
+            dtp_TakenDate.Enabled = true;
+            nud_TakenDateDays.Enabled = false;
+            nud_TakenDateHours.Enabled = false;
+            nud_TakenDateMinutes.Enabled = false;
+            nud_TakenDateSeconds.Enabled = false;
+        }
+        else
+        {
+            origDateValTakenDate = dtp_TakenDate.Value;
+            dtp_TakenDate.Enabled = false;
+            nud_TakenDateDays.Enabled = true;
+            nud_TakenDateHours.Enabled = true;
+            nud_TakenDateMinutes.Enabled = true;
+            nud_TakenDateSeconds.Enabled = true;
+        }
+    }
+
+    /// <summary>
+    ///     Handles the value changes for the NUDs
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void nud_ValueChanged(object sender,
+                                  EventArgs e)
+    {
+        Control sndr = (Control)sender;
+
+        DateTime newTakenDateVal = dtp_TakenDate.Value;
+        DateTime newCreateDateVal = dtp_CreateDate.Value;
+
+        switch (sndr.Name)
+        {
+            case "nud_TakenDateDays":
+                newTakenDateVal = origDateValTakenDate
+                    .AddDays(value: double.Parse(s: nud_TakenDateDays.Value.ToString()));
+                break;
+            case "nud_TakenDateHours":
+                newTakenDateVal = origDateValTakenDate
+                    .AddHours(value: double.Parse(s: nud_TakenDateHours.Value.ToString()));
+                break;
+            case "nud_TakenDateMinutes":
+                newTakenDateVal = origDateValTakenDate
+                    .AddMinutes(value: double.Parse(s: nud_TakenDateMinutes.Value.ToString()));
+                break;
+            case "nud_TakenDateSeconds":
+                newTakenDateVal = origDateValTakenDate
+                    .AddSeconds(value: double.Parse(s: nud_TakenDateSeconds.Value.ToString()));
+                break;
+            case "nud_CreateDateDays":
+                newCreateDateVal = origDateValCreateDate
+                    .AddDays(value: double.Parse(s: nud_CreateDateDays.Value.ToString()));
+                break;
+            case "nud_CreateDateHours":
+                newCreateDateVal = origDateValCreateDate
+                    .AddHours(value: double.Parse(s: nud_CreateDateHours.Value.ToString()));
+                break;
+            case "nud_CreateDateMinutes":
+                newCreateDateVal = origDateValCreateDate
+                    .AddMinutes(value: double.Parse(s: nud_CreateDateMinutes.Value.ToString()));
+                break;
+            case "nud_CreateDateSeconds":
+                newCreateDateVal = origDateValCreateDate
+                    .AddSeconds(value: double.Parse(s: nud_CreateDateSeconds.Value.ToString()));
+                break;
+        }
+
+        dtp_TakenDate.Value = newTakenDateVal;
+        dtp_CreateDate.Value = newCreateDateVal;
+    }
+
+
+    private void rbt_CreateDateSetToFixedDate_CheckedChanged(object sender,
+                                                             EventArgs e)
+    {
+        if (rbt_CreateDateSetToFixedDate.Checked)
+        {
+            dtp_CreateDate.Enabled = true;
+            nud_CreateDateDays.Enabled = false;
+            nud_CreateDateHours.Enabled = false;
+            nud_CreateDateMinutes.Enabled = false;
+            nud_CreateDateSeconds.Enabled = false;
+            origDateValCreateDate = dtp_CreateDate.Value;
+
+            nud_CreateDateDays.Text = "0";
+            nud_CreateDateHours.Text = "0";
+            nud_CreateDateMinutes.Text = "0";
+            nud_CreateDateSeconds.Text = "0";
+        }
+        else
+        {
+            dtp_CreateDate.Enabled = false;
+            nud_CreateDateDays.Enabled = true;
+            nud_CreateDateHours.Enabled = true;
+            nud_CreateDateMinutes.Enabled = true;
+            nud_CreateDateSeconds.Enabled = true;
+        }
+    }
+
+    private void rbt_CreateDateTimeShift_CheckedChanged(object sender,
+                                                        EventArgs e)
+    {
+        if (!rbt_CreateDateTimeShift.Checked)
+        {
+            dtp_CreateDate.Enabled = true;
+            nud_CreateDateDays.Enabled = false;
+            nud_CreateDateHours.Enabled = false;
+            nud_CreateDateMinutes.Enabled = false;
+            nud_CreateDateSeconds.Enabled = false;
+        }
+        else
+        {
+            origDateValCreateDate = dtp_CreateDate.Value;
+            dtp_CreateDate.Enabled = false;
+            nud_CreateDateDays.Enabled = true;
+            nud_CreateDateHours.Enabled = true;
+            nud_CreateDateMinutes.Enabled = true;
+            nud_CreateDateSeconds.Enabled = true;
+        }
+    }
+
+    /// <summary>
+    ///     This kills off the AcceptButton - problem is that if user was to type in an invalid number (say 7 rather than 07
+    ///     for HOUR) and press Enter then the Form would close and sooner rather than later it'd cause trouble.
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void dtp_CreateDate_Leave(object sender,
+                                      EventArgs e)
+    {
+        AcceptButton = null;
+    }
+
+    /// <summary>
+    ///     Reinstates AcceptButton. By this point Validation auto-corrects the value if user was derp.
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void dtp_CreateDate_Enter(object sender,
+                                      EventArgs e)
+    {
+        AcceptButton = btn_OK;
+    }
+
+
+    /// <summary>
+    ///     Allows to insert a CreateDate value if there isn't one already.
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void btn_InsertCreateDate_Click(object sender,
+                                            EventArgs e)
+    {
+        HelperNonStatic helperNonstatic = new();
+        IEnumerable<Control> cGbx_CreateDate = helperNonstatic.GetAllControls(control: gbx_CreateDate);
+        foreach (Control cItemGbx_CreateDate in cGbx_CreateDate)
+        {
+            if (cItemGbx_CreateDate != btn_InsertCreateDate)
+            {
+                cItemGbx_CreateDate.Enabled = Enabled;
+
+                // set font to bold for these two - that will get picked up later.
+                if (cItemGbx_CreateDate is DateTimePicker dtp)
+                {
+                    dtp.Font = new Font(prototype: dtp.Font, newStyle: FontStyle.Bold);
+                    HelperStatic.GenericUpdateAddToDataTable(
+                        dt: DtFileDataToWriteStage1PreQueue,
+                        fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
+                            .Text,
+                        settingId: dtp.Name.Substring(startIndex: 4),
+                        settingValue: dtp.Text
+                    );
+                }
+            }
+        }
+
+        btn_InsertCreateDate.Enabled = false;
+    }
+
+    /// <summary>
+    ///     Takes the value in TakenDate and pastes it to CreateDate
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void btn_InsertFromTakenDate_Click(object sender,
+                                               EventArgs e)
+    {
+        dtp_CreateDate.Value = dtp_TakenDate.Value;
+    }
+
+
+    /// <summary>
+    ///     Sets the tooltip for the pbx_OffsetTimeInfo
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void pbx_OffsetTimeInfo_MouseHover(object sender,
+                                               EventArgs e)
+    {
+        ToolTip ttp = new();
+
+        ttp.SetToolTip(control: pbx_OffsetTimeInfo,
+                       caption: HelperStatic.DataReadSQLiteObjectText(
+                           languageName: AppLanguage,
+                           objectType: "ToolTip",
+                           objectName: "ttp_OffsetTime"
+                       ));
+    }
+
+    /// <summary>
+    ///     TODO
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void ckb_UseDST_CheckedChanged(object sender,
+                                           EventArgs e)
+    {
+        GetTimeZoneOffset();
     }
 
     #endregion
