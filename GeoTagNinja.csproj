@@ -233,6 +233,7 @@
     <Compile Include="HelperGeoTagXMLParser.cs" />
     <Compile Include="Helper.GitHubAPIResponse.cs" />
     <Compile Include="Helper.MessageBoxManager.cs" />
+    <Compile Include="ListViewColumnSorter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FrmAboutBox.resx">
