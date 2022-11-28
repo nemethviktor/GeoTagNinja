@@ -1,108 +1,83 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Collections;
 using System.Windows.Forms;
 
 namespace GeoTagNinja
 {
+    /// <summary>
+    /// Comparer for columns. Currently supports only case insensitive string comparison.
+    /// </summary>
     internal class ListViewColumnSorter : IComparer
     {
         /// <summary>
-        /// Specifies the column to be sorted
+        /// Column to be sorted (inited to to 0, no validation on setting)
         /// </summary>
         private int ColumnToSort;
 
         /// <summary>
-        /// Specifies the order in which to sort (i.e. 'Ascending').
+        /// Sort order (limited to ascending and descending, init to asc)
         /// </summary>
-        private SortOrder OrderOfSort;
+        private SortOrder ColumnSortOrder;
 
         /// <summary>
-        /// Case insensitive comparer object
+        /// comparer object for re use
         /// </summary>
-        private CaseInsensitiveComparer ObjectCompare;
+        private CaseInsensitiveComparer Comparer;
 
-        /// <summary>
-        /// Class constructor. Initializes various elements
-        /// </summary>
         public ListViewColumnSorter()
         {
-            // Initialize the column to '0'
             ColumnToSort = 0;
-
-            // Initialize the sort order to 'none'
-            OrderOfSort = SortOrder.None;
-
-            // Initialize the CaseInsensitiveComparer object
-            ObjectCompare = new CaseInsensitiveComparer();
+            ColumnSortOrder = SortOrder.Ascending;
+            Comparer = new CaseInsensitiveComparer();
         }
 
         /// <summary>
-        /// This method is inherited from the IComparer interface. It compares the two objects passed using a case insensitive comparison.
+        /// Compare two objects of type ListViewItem by looking at the set SortColumn.
+        /// If descending sort order is set, the inverse result is returned.
+        /// Inherited from IComparer interface.
         /// </summary>
-        /// <param name="x">First object to be compared</param>
-        /// <param name="y">Second object to be compared</param>
-        /// <returns>The result of the comparison. "0" if equal, negative if 'x' is less than 'y' and positive if 'x' is greater than 'y'</returns>
+        /// <returns>Result of comparison: equal (0), 'x'<'y' (negative), 'x'>'y' (positive)</returns>
         public int Compare(object x, object y)
         {
-            int compareResult;
-            ListViewItem listviewX, listviewY;
+            int result;
+            ListViewItem lvi_x = (ListViewItem)x;
+            ListViewItem lvi_y = (ListViewItem)y;
 
-            // Cast the objects to be compared to ListViewItem objects
-            listviewX = (ListViewItem)x;
-            listviewY = (ListViewItem)y;
+            result = Comparer.Compare(lvi_x.SubItems[ColumnToSort].Text, lvi_y.SubItems[ColumnToSort].Text);
 
-            // Compare the two items
-            compareResult = ObjectCompare.Compare(listviewX.SubItems[ColumnToSort].Text, listviewY.SubItems[ColumnToSort].Text);
-
-            // Calculate correct return value based on object comparison
-            if (OrderOfSort == SortOrder.Ascending)
-            {
-                // Ascending sort is selected, return normal result of compare operation
-                return compareResult;
-            }
-            else if (OrderOfSort == SortOrder.Descending)
-            {
-                // Descending sort is selected, return negative result of compare operation
-                return (-compareResult);
-            }
-            else
-            {
-                // Return '0' to indicate they are equal
-                return 0;
+            // Inverse if descending
+            if (ColumnSortOrder == SortOrder.Ascending) {
+                return result;
+            } else {
+                return (-result);
             }
         }
 
         /// <summary>
-        /// Gets or sets the number of the column to which to apply the sorting operation (Defaults to '0').
+        /// The column (sub item index) by which to sort (default 0)
         /// </summary>
-        public int SortColumn
-        {
-            set
-            {
+        public int SortColumn {
+            set {
                 ColumnToSort = value;
             }
-            get
-            {
+            get {
                 return ColumnToSort;
             }
         }
 
         /// <summary>
-        /// Gets or sets the order of sorting to apply (for example, 'Ascending' or 'Descending').
+        /// The sort order is either SortOrder.Ascending or SortOrder.Descending (default ascending)
         /// </summary>
-        public SortOrder Order
-        {
-            set
-            {
-                OrderOfSort = value;
+        public SortOrder SortOrder {
+            set {
+                if (value == SortOrder.Ascending || value == SortOrder.Descending ) {
+                    ColumnSortOrder = value;
+                } else {
+                    throw new ArgumentException("Sort order must either by ascending or descending.");
+                }
             }
-            get
-            {
-                return OrderOfSort;
+            get {
+                return ColumnSortOrder;
             }
         }
     }

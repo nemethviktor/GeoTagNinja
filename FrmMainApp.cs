@@ -2310,14 +2310,14 @@ public partial class FrmMainApp : Form
     {
         if (e.Column == lvw_ColumnSorter.SortColumn) {
             // Column clicked is current sort column --> Reverse order
-            if (lvw_ColumnSorter.Order == SortOrder.Ascending) {
-                lvw_ColumnSorter.Order = SortOrder.Descending;
+            if (lvw_ColumnSorter.SortOrder == SortOrder.Ascending) {
+                lvw_ColumnSorter.SortOrder = SortOrder.Descending;
             } else {
-                lvw_ColumnSorter.Order = SortOrder.Ascending;
+                lvw_ColumnSorter.SortOrder = SortOrder.Ascending;
             }
         } else {
             lvw_ColumnSorter.SortColumn = e.Column;
-            lvw_ColumnSorter.Order = SortOrder.Ascending;
+            lvw_ColumnSorter.SortOrder = SortOrder.Ascending;
         }
 
         // Perform the sort with these new sort options.
