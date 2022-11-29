@@ -3,7 +3,6 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -25,7 +24,9 @@ internal static partial class HelperStatic
             ListView lvw = FrmMainAppInstance.lvw_FileList;
             ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
 
+            int d = lvi.Index;
             string fileNameWithoutPath = lvi.Text;
+
             DataView dataViewRelevantRows = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
             dataViewRelevantRows.RowFilter = "fileNameWithoutPath = '" +
                                              fileNameWithoutPath +
@@ -33,15 +34,11 @@ internal static partial class HelperStatic
             DataTable dataTableRelevant = dataViewRelevantRows.ToTable();
             if (dataTableRelevant.Rows.Count > 0)
             {
-                //while (GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
-                //{
-                //    await Task.Delay(millisecondsDelay: 10);
-                //}
-
                 try
                 {
                     lvw.BeginUpdate();
-                    lvi.ForeColor = Color.Red;
+                    FrmMainApp.HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Red);
+                    FrmMainApp.HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
                     foreach (DataRow drTagData in dataTableRelevant.Rows)
                     {
                         // theoretically we'd want to update the columns for each tag but for example when removing all data
@@ -76,14 +73,17 @@ internal static partial class HelperStatic
                             ? tmpCoordinates
                             : "";
                     }
-
-                    lvw.EndUpdate();
-                    Application.DoEvents();
                 }
                 catch
                 {
                     // nothing. 
                 }
+            }
+
+            lvw.EndUpdate();
+            if (d % 10 == 0)
+            {
+                Application.DoEvents();
             }
         }
     }
@@ -99,6 +99,7 @@ internal static partial class HelperStatic
             ListViewItem lvi = FrmMainAppInstance.lvw_FileList.SelectedItems[index: 0];
             if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text)))
             {
+                FrmMainApp.FileDateCopySourceFileNameWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text);
                 FrmMainApp.DtFileDataCopyPool.Rows.Clear();
                 List<string> listOfTagsToCopy = new()
                 {

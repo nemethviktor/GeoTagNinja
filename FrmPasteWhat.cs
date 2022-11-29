@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GeoTagNinja.Properties;
+using MetadataExtractor;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -56,49 +58,47 @@ public partial class FrmPasteWhat : Form
     private async void btn_OK_Click(object sender,
                                     EventArgs e)
     {
+        FrmMainApp.DtFileDataPastePool.Clear();
+
         // create a list of tags that also have a Ref version
         List<string> tagsWithRefList = new()
         {
             "GPSAltitude", "GPSDestLatitude", "GPSDestLongitude", "GPSImgDirection", "GPSLatitude", "GPSLongitude", "GPSSpeed"
         };
 
+        HelperNonStatic helperNonstatic = new();
+        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
+
+        ListView lvw;
+        string fileNameSourceWithoutPath = null;
+        string fileNameSourceWithPath = null;
+
+        string pasteValueStr = null;
+
+        // get the name of the file we're pasting FROM.
         if (initiatorName == "FrmEditFileData")
         {
+            FrmMainApp.DtFileDataPastePool.Clear();
             FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
             if (frmEditFileDataInstance != null)
             {
-                ListView lvw = frmEditFileDataInstance.lvw_FileListEditImages;
+                lvw = frmEditFileDataInstance.lvw_FileListEditImages;
 
-                foreach (ListViewItem lvi in lvw.Items)
-                {
-                    PasteDataToLvi(fileName: lvi.Text);
-                }
+                fileNameSourceWithoutPath = lvw.SelectedItems[index: 0]
+                    .Text;
+                fileNameSourceWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameSourceWithoutPath);
             }
         }
         else if (initiatorName == "FrmMainApp")
         {
-            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms["FrmMainApp"];
             if (frmMainAppInstance != null)
             {
-                ListView lvw = frmMainAppInstance.lvw_FileList;
-                HelperStatic.FileListBeingUpdated = true;
-                foreach (ListViewItem lvi in lvw.SelectedItems)
-                {
-                    if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text)))
-                    {
-                        // check it's not in the read-queue.
-                        while (HelperStatic.GenericLockCheckLockFile(fileNameWithoutPath: lvi.Text))
-                        {
-                            await Task.Delay(millisecondsDelay: 10);
-                        }
+                lvw = frmMainAppInstance.lvw_FileList;
 
-                        PasteDataToLvi(fileName: lvi.Text);
-                    }
-
-                    await HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
-                }
-
-                HelperStatic.FileListBeingUpdated = false;
+                fileNameSourceWithoutPath = Path.GetFileName(FrmMainApp.FileDateCopySourceFileNameWithPath);
+                fileNameSourceWithPath = FrmMainApp.FileDateCopySourceFileNameWithPath;
+                ;
             }
         }
         else
@@ -106,145 +106,172 @@ public partial class FrmPasteWhat : Form
             throw new NotImplementedException();
         }
 
-        Hide();
-
-        void PasteDataToLvi(string fileName)
+        // get a list of tag names to paste
+        List<string> tagsToPaste = new List<string>();
+        foreach (Control cItem in c)
         {
-            HelperNonStatic helperNonstatic = new();
-            IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-            foreach (Control cItem in c)
+            if (cItem.GetType() == typeof(CheckBox))
             {
-                if (cItem.GetType() == typeof(CheckBox))
+                CheckBox thisCheckBox = (CheckBox)cItem;
+                if (thisCheckBox.Checked)
                 {
-                    CheckBox thisCheckBox = (CheckBox)cItem;
-                    if (thisCheckBox.Checked)
+                    string tagName = cItem.Name.Substring(startIndex: 4);
+                    tagsToPaste.Add(tagName);
+
+                    // any in the Ref lot
+                    if (tagsWithRefList.Contains(item: tagName))
                     {
-                        string tagName = cItem.Name.Substring(startIndex: 4);
-                        UpdateFileDataPaste(tagName: tagName, fileNameWithoutPathToUpdate: fileName);
+                        tagsToPaste.Add(tagName + "Ref");
+                    }
 
-                        // also do all the Refs 
-                        if (tagsWithRefList.Contains(item: tagName))
-                        {
-                            UpdateFileDataPaste(tagName: tagName + "Ref", fileNameWithoutPathToUpdate: fileName);
-                        }
-
-                        // also do all the CountryCode 
-                        if (tagName == "Country")
-                        {
-                            UpdateFileDataPaste(tagName: "CountryCode", fileNameWithoutPathToUpdate: fileName);
-                        }
+                    // also do all the CountryCode 
+                    if (tagName == "Country")
+                    {
+                        tagsToPaste.Add("CountryCode");
                     }
                 }
             }
         }
-    }
 
-    private static void UpdateFileDataPaste(string tagName,
-                                            string fileNameWithoutPathToUpdate
-    )
-    {
+        // stick the tagNames + values into DtFileDataPastePool
+        foreach (string tagName in tagsToPaste)
+        {
+            // by this point we know there is something to paste.
+            btn_OK.Enabled = false;
+            btn_Cancel.Enabled = false;
+
+            // check it's sitting somewhere already?
+            DataView dvSqlDataQ = new(table: FrmMainApp.DtFileDataToWriteStage1PreQueue);
+            dvSqlDataQ.RowFilter = "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId ='" + tagName + "'";
+
+            DataView dvSqlDataRTW = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
+            dvSqlDataRTW.RowFilter = "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId ='" + tagName + "'";
+
+            DataView dvSqlDataInFile = new(table: FrmMainApp.DtFileDataSeenInThisSession);
+            // this holds fileNameWithPath with a Directory attached to the string 
+            dvSqlDataInFile.RowFilter = "fileNameWithPath = '" + fileNameSourceWithPath + "' AND settingId ='" + tagName + "'";
+
+            if (dvSqlDataQ.Count > 0 || dvSqlDataRTW.Count > 0 || dvSqlDataInFile.Count > 0)
+            {
+                // see if data in temp-queue
+                if (dvSqlDataQ.Count > 0)
+                {
+                    pasteValueStr = dvSqlDataQ[recordIndex: 0][property: "settingValue"]
+                        .ToString();
+                }
+                // see if data is ready to be written
+                else if (dvSqlDataRTW.Count > 0)
+                {
+                    pasteValueStr = dvSqlDataRTW[recordIndex: 0][property: "settingValue"]
+                        .ToString();
+                }
+                // take it from the file then
+                else if (dvSqlDataInFile.Count > 0)
+                {
+                    pasteValueStr = dvSqlDataInFile[recordIndex: 0][property: "settingValue"]
+                        .ToString();
+                }
+
+                if (pasteValueStr == "-")
+                {
+                    pasteValueStr = "";
+                }
+            }
+
+            DataRow newDr = FrmMainApp.DtFileDataPastePool.NewRow();
+            newDr[columnName: "settingId"] = tagName;
+            newDr[columnName: "settingValue"] = pasteValueStr;
+            FrmMainApp.DtFileDataPastePool.Rows.Add(row: newDr);
+            FrmMainApp.DtFileDataPastePool.AcceptChanges();
+        }
+
+        // do paste into the tables + grid as req'd
         if (initiatorName == "FrmEditFileData")
         {
+            string fileNameWithoutPathToUpdate = null;
             FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
             if (frmEditFileDataInstance != null)
             {
-                ListView lvw = frmEditFileDataInstance.lvw_FileListEditImages;
+                lvw = frmEditFileDataInstance.lvw_FileListEditImages;
 
-                string fileNameWithoutPath = lvw.SelectedItems[index: 0]
-                    .Text;
-                string fileNameWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath);
-                string pasteValueStr = "";
-
-                // check it's sitting somewhere already?
-                DataView dvSqlDataQ = new(table: FrmMainApp.DtFileDataToWriteStage1PreQueue);
-                dvSqlDataQ.RowFilter = "fileNameWithoutPath = '" + fileNameWithoutPath + "' AND settingId ='" + tagName + "'";
-
-                DataView dvSqlDataRTW = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
-                dvSqlDataRTW.RowFilter = "fileNameWithoutPath = '" + fileNameWithoutPath + "' AND settingId ='" + tagName + "'";
-
-                DataView dvSqlDataInFile = new(table: FrmMainApp.DtFileDataSeenInThisSession);
-                // this holds fileNameWithPath with a Directory attached to the string 
-                dvSqlDataInFile.RowFilter = "fileNameWithPath = '" + fileNameWithPath + "' AND settingId ='" + tagName + "'";
-
-                if (dvSqlDataQ.Count > 0 || dvSqlDataRTW.Count > 0 || dvSqlDataInFile.Count > 0)
+                // for each file
+                foreach (ListViewItem lvi in lvw.Items)
                 {
-                    // see if data in temp-queue
-                    if (dvSqlDataQ.Count > 0)
+                    fileNameWithoutPathToUpdate = lvi.Text;
+                    // update each tag
+                    foreach (DataRow drPRow in FrmMainApp.DtFileDataPastePool.Rows)
                     {
-                        pasteValueStr = dvSqlDataQ[recordIndex: 0][property: "settingValue"]
+                        string settingId = drPRow[0]
                             .ToString();
-                    }
-                    // see if data is ready to be written
-                    else if (dvSqlDataRTW.Count > 0)
-                    {
-                        pasteValueStr = dvSqlDataRTW[recordIndex: 0][property: "settingValue"]
+                        string settingValue = drPRow[1]
                             .ToString();
-                    }
-                    // take it from the file then
-                    else if (dvSqlDataInFile.Count > 0)
-                    {
-                        pasteValueStr = dvSqlDataInFile[recordIndex: 0][property: "settingValue"]
-                            .ToString();
-                    }
 
-                    if (pasteValueStr == "-")
-                    {
-                        pasteValueStr = "";
+                        // this is for FrmEditData
+                        HelperStatic.GenericUpdateAddToDataTable(
+                            dt: FrmMainApp.DtFileDataToWriteStage1PreQueue,
+                            fileNameWithoutPath: fileNameWithoutPathToUpdate,
+                            settingId: settingId,
+                            settingValue: settingValue);
                     }
-
-                    HelperStatic.GenericUpdateAddToDataTable(
-                        dt: FrmMainApp.DtFileDataToWriteStage1PreQueue,
-                        fileNameWithoutPath: fileNameWithoutPathToUpdate,
-                        settingId: tagName,
-                        settingValue: pasteValueStr);
                 }
             }
         }
+
         else if (initiatorName == "FrmMainApp")
         {
             FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
             if (frmMainAppInstance != null)
             {
+                // for each file
                 foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
                 {
-                    string fileNameWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text);
-                    string fileNameWithoutPath = lvi.Text;
+                    string fileNameWithoutPathToUpdate = lvi.Text;
 
                     // paste from copy-pool (no filename needed)
-                    EnumerableRowCollection<DataRow> drFileCopyPoolRows = FrmMainApp.DtFileDataCopyPool.AsEnumerable()
-                        .Where(predicate: r => r.Field<string>(columnName: "settingId") == tagName);
-
-                    foreach (DataRow dr in drFileCopyPoolRows)
+                    // update each tag
+                    foreach (DataRow drPRow in FrmMainApp.DtFileDataPastePool.Rows)
                     {
-                        string strToWrite;
-                        if (dr[columnIndex: 1]
-                                .ToString() ==
-                            "-")
+                        string settingId = drPRow[0]
+                            .ToString();
+                        string settingValue = drPRow[1]
+                            .ToString();
+
+                        if (settingValue == "-")
                         {
-                            strToWrite = "";
-                        }
-                        else
-                        {
-                            strToWrite = dr[columnIndex: 1]
-                                .ToString();
+                            settingValue = "";
                         }
 
                         HelperStatic.GenericUpdateAddToDataTable(
                             dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                            fileNameWithoutPath: fileNameWithoutPath,
-                            settingId: dr[columnIndex: 0]
-                                .ToString(),
-                            settingValue: strToWrite
-                        );
+                            fileNameWithoutPath: fileNameWithoutPathToUpdate,
+                            settingId: settingId,
+                            settingValue: settingValue);
+                    }
+
+                    // update listview
+                    if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPathToUpdate)))
+                    {
+                        // check it's not in the read-queue.
+                        while (HelperStatic.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPathToUpdate))
+                        {
+                            await Task.Delay(millisecondsDelay: 10);
+                        }
+
+                        HelperStatic.FileListBeingUpdated = true;
+                        await HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
+                        FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPathToUpdate);
+                        HelperStatic.FileListBeingUpdated = false;
                     }
                 }
+
+                // just for good measure
+                HelperStatic.FileListBeingUpdated = false;
             }
         }
-        else
-        {
-            throw new NotImplementedException();
-        }
+
+        Hide();
     }
+
 
     private void btn_Cancel_Click(object sender,
                                   EventArgs e)

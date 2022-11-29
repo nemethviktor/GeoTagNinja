@@ -450,27 +450,33 @@ internal static partial class HelperStatic
     /// </summary>
     public static void GenericCreateDataTables()
     {
-        // dt_fileDataCopyPool
+        // DtFileDataCopyPool
         FrmMainApp.DtFileDataCopyPool = new DataTable();
         FrmMainApp.DtFileDataCopyPool.Clear();
         FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "settingValue");
 
-        // dt_fileDataToWriteStage1PreQueue 
+        // DtFileDataPastePool 
+        FrmMainApp.DtFileDataPastePool = new DataTable();
+        FrmMainApp.DtFileDataPastePool.Clear();
+        FrmMainApp.DtFileDataPastePool.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtFileDataPastePool.Columns.Add(columnName: "settingValue");
+
+        // DtFileDataToWriteStage1PreQueue 
         FrmMainApp.DtFileDataToWriteStage1PreQueue = new DataTable();
         FrmMainApp.DtFileDataToWriteStage1PreQueue.Clear();
         FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "fileNameWithoutPath");
         FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingValue");
 
-        // dt_fileDataToWriteStage2QueuePendingSave 
+        // DtFileDataToWriteStage2QueuePendingSave 
         FrmMainApp.DtFileDataToWriteStage2QueuePendingSave = new DataTable();
         FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Clear();
         FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "fileNameWithoutPath");
         FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingValue");
 
-        // dt_fileDataToWriteStage3ReadyToWrite 
+        // DtFileDataToWriteStage3ReadyToWrite 
         FrmMainApp.DtFileDataToWriteStage3ReadyToWrite = new DataTable();
         FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Clear();
         FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "fileNameWithoutPath");
@@ -481,7 +487,7 @@ internal static partial class HelperStatic
         FrmMainApp.DtFilesSeenInThisSession = new DataTable();
         FrmMainApp.DtFilesSeenInThisSession.Clear();
         FrmMainApp.DtFilesSeenInThisSession.Columns.Add(columnName: "fileNameWithPath");
-        FrmMainApp.DtFilesSeenInThisSession.Columns.Add(columnName: "fileDateTime");
+        FrmMainApp.DtFilesSeenInThisSession.Columns.Add(columnName: "fileMD5Hash");
 
         // DtFileDataSeenInThisSession
         FrmMainApp.DtFileDataSeenInThisSession = new DataTable();

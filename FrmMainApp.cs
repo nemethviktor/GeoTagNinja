@@ -54,6 +54,8 @@ public partial class FrmMainApp : Form
 
     // this is for copy-paste
     internal static DataTable DtFileDataCopyPool;
+    internal static DataTable DtFileDataPastePool;
+    internal static string FileDateCopySourceFileNameWithPath;
 
     // these are for queueing listOfAsyncCompatibleFileNamesWithOutPath up
     internal static DataTable DtFileDataToWriteStage1PreQueue;
@@ -1467,10 +1469,10 @@ public partial class FrmMainApp : Form
 
                 TZOffset = tst.GetUtcOffset(dateTime: createDate)
                     .ToString()
-                    .Substring(0, tst.GetUtcOffset(dateTime: createDate)
-                                      .ToString()
-                                      .Length -
-                                  3);
+                    .Substring(startIndex: 0, length: tst.GetUtcOffset(dateTime: createDate)
+                                                          .ToString()
+                                                          .Length -
+                                                      3);
                 if (!TZOffset.StartsWith(value: "-"))
                 {
                     toponomyOverwrites.Add(item: ("OffsetTime", "+" + TZOffset));
@@ -1499,7 +1501,9 @@ public partial class FrmMainApp : Form
                     .Text = toponomyDetail.toponomyOverwriteVal;
             }
 
-            lvi.ForeColor = Color.Red;
+            HandlerUpdateItemColour(lvw: lvw_FileList, itemText: fileNameWithoutPath, color: Color.Red);
+            HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
+
             HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
         }
 
@@ -1513,7 +1517,8 @@ public partial class FrmMainApp : Form
                 settingValue: dtAltitude.Rows[index: 0][columnName: "Altitude"]
                     .ToString()
             );
-            lvi.ForeColor = Color.Red;
+            HandlerUpdateItemColour(lvw: lvw_FileList, itemText: fileNameWithoutPath, color: Color.Red);
+            HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
             HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
         }
     }
@@ -1746,7 +1751,7 @@ public partial class FrmMainApp : Form
             {
                 foreach (DriveInfo drive in DriveInfo.GetDrives())
                 {
-                    lvw_FileList_addListItem(fileName: drive.Name);
+                    lvw_FileList_addListItem(fileNameWithoutPath: drive.Name);
                 }
             }
             else
@@ -1824,66 +1829,70 @@ public partial class FrmMainApp : Form
 
                 foreach (string currentDir in dirs)
                 {
-                    lvw_FileList_addListItem(fileName: Path.GetFileName(path: currentDir));
+                    lvw_FileList_addListItem(fileNameWithoutPath: Path.GetFileName(path: currentDir));
                 }
 
-                foreach (string fileNameWithPath in listFilesWithPath)
+                for (int d = 0; d < listFilesWithPath.Count; d++)
                 {
+                    string fileNameWithPath = listFilesWithPath[d]
+                        .ToString();
                     string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
                     string fileNameWithPathWithXMP = Path.Combine(path1: Path.GetDirectoryName(path: fileNameWithPath), path2: Path.GetFileNameWithoutExtension(path: fileNameWithPath) + ".xmp");
-                    lvw_FileList_addListItem(fileName: Path.GetFileName(path: fileNameWithoutPath));
+                    lvw_FileList_addListItem(fileNameWithoutPath: Path.GetFileName(path: fileNameWithoutPath));
+                    if (d % 10 == 0)
+                    {
+                        Application.DoEvents();
+                    }
 
                     // if this file appears in the DtFilesSeenInThisSession // or with xmp
-                    bool timeStampNeedsUpdating = false;
+                    bool MD5NeedsUpdating = false;
                     if (DtFilesSeenInThisSession.AsEnumerable()
                         .Any(predicate: row => fileNameWithPath == row.Field<string>(columnName: "fileNameWithPath")))
                     {
-                        // check if the timestamp matches
+                        // check if the MD5 matches
                         DataRow[] drFoundFileData = DtFilesSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameWithPath + "'");
                         DataRow[] drFoundFileDataXmp = DtFilesSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameWithPathWithXMP + "'");
                         if (drFoundFileData.Length != 0 || drFoundFileDataXmp.Length != 0)
                         {
-                            string drFoundFileDataStr = drFoundFileData[0][columnName: "fileDateTime"]
+                            string previousMD5 = drFoundFileData[0][columnName: "fileMD5Hash"]
                                 .ToString();
 
-                            string lastWriteTimeStr = File.GetLastWriteTime(path: fileNameWithPath)
-                                .ToString(provider: CultureInfo.InvariantCulture);
+                            string nowMD5 = HelperStatic.Md5SumByProcess(fileNameWithPath: fileNameWithPath);
 
-                            if (drFoundFileDataStr == lastWriteTimeStr)
+                            if (previousMD5 == nowMD5)
                             {
                                 // nothing actually
                             }
                             else
                             {
-                                timeStampNeedsUpdating = true;
+                                MD5NeedsUpdating = true;
                             }
 
                             // xmp
                             if (File.Exists(path: fileNameWithPathWithXMP) && drFoundFileDataXmp.Length != 0)
                             {
-                                string drFoundFileDataStrXmp = drFoundFileDataXmp[0][columnName: "fileDateTime"]
+                                string previousMD5Xmp = drFoundFileDataXmp[0][columnName: "fileMD5Hash"]
                                     .ToString();
 
-                                string lastWriteTimeStrXmp = File.GetLastWriteTime(path: fileNameWithPathWithXMP)
-                                    .ToString(provider: CultureInfo.InvariantCulture);
+                                string nowMD5Xmp = HelperStatic.Md5SumByProcess(fileNameWithPath: fileNameWithPathWithXMP);
 
-                                if (drFoundFileDataStrXmp == lastWriteTimeStrXmp)
+                                if (previousMD5Xmp == nowMD5Xmp)
                                 {
                                     // nothing actually
                                 }
                                 else
                                 {
-                                    timeStampNeedsUpdating = true;
+                                    MD5NeedsUpdating = true;
                                 }
                             }
                         }
                     }
                     else
                     {
-                        timeStampNeedsUpdating = true;
+                        MD5NeedsUpdating = true;
                     }
 
-                    if (timeStampNeedsUpdating)
+                    if (MD5NeedsUpdating)
                     {
                         // delete if exists in DtFilesSeenInThisSession
                         DataRow[] drFoundFileData = DtFilesSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameWithPath + "'");
@@ -1917,7 +1926,7 @@ public partial class FrmMainApp : Form
                         // the add-in used here can't process nonstandard characters in filenames w/o an args file, which doesn't return what we're after.
                         // so for 'standard' stuff we'll run async and for everything else we'll do it slower but more compatible
                         // lock will be removed later.
-                        if (Regex.IsMatch(input: fileNameWithPath, pattern: @"^[a-zA-Z0-9.:\\_ ]*$"))
+                        if (Regex.IsMatch(input: fileNameWithPath, pattern: @"^[a-zA-Z0-9.:\\_\- ]*$"))
                         {
                             listOfAsyncCompatibleFileNamesWithOutPath.Add(item: Path.GetFileName(path: fileNameWithPath));
                         }
@@ -1965,7 +1974,9 @@ public partial class FrmMainApp : Form
                                     // nothing, this shouldn't happen but i don't want it to stop the app anyway.
                                 }
 
-                                lvi.ForeColor = Color.Black;
+                                HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Black);
+                                HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
+                                ;
                                 //lvw.EndUpdate();
                             }
                         }
@@ -2243,10 +2254,11 @@ public partial class FrmMainApp : Form
     /// <summary>
     ///     Adds a new listitem to lvw_FileList listview
     /// </summary>
-    /// <param name="fileName">Name of file to be added</param>
-    private void lvw_FileList_addListItem(string fileName)
+    /// <param name="fileNameWithoutPath">Name of file to be added</param>
+    private void lvw_FileList_addListItem(string fileNameWithoutPath)
     {
         List<string> subItemList = new();
+        string fileNameWithPath = Path.Combine(path1: FolderName, path2: fileNameWithoutPath);
 
         #region icon handlers
 
@@ -2280,7 +2292,7 @@ public partial class FrmMainApp : Form
         IntPtr himl;
         if (tbx_FolderName.Text != SpecialFolder.MyComputer.ToString())
         {
-            himl = NativeMethods.SHGetFileInfo(pszPath: Path.Combine(path1: tbx_FolderName.Text, path2: fileName),
+            himl = NativeMethods.SHGetFileInfo(pszPath: Path.Combine(path1: tbx_FolderName.Text, path2: fileNameWithoutPath),
                                                dwFileAttributes: 0,
                                                psfi: ref shfi,
                                                cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
@@ -2288,7 +2300,7 @@ public partial class FrmMainApp : Form
         }
         else
         {
-            himl = NativeMethods.SHGetFileInfo(pszPath: fileName,
+            himl = NativeMethods.SHGetFileInfo(pszPath: fileNameWithoutPath,
                                                dwFileAttributes: 0,
                                                psfi: ref shfi,
                                                cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
@@ -2299,7 +2311,7 @@ public partial class FrmMainApp : Form
 
         #endregion
 
-        if (File.Exists(path: Path.Combine(path1: FolderName, path2: fileName)))
+        if (File.Exists(path: fileNameWithPath))
         {
             foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
             {
@@ -2323,7 +2335,7 @@ public partial class FrmMainApp : Form
         // The repercussions of that is w/o an extension fileinfo.exists will return false and exiftool won't run/find it.
 
         // With that in mind if we're missing the extension then we'll force it back on.
-        string fileExtension = Path.GetExtension(path: Path.Combine(path1: FolderName, path2: fileName));
+        string fileExtension = Path.GetExtension(path: fileNameWithPath);
         if (!string.IsNullOrEmpty(value: fileExtension))
         {
             if (shfi.szDisplayName.Contains(value: fileExtension))
@@ -2339,9 +2351,9 @@ public partial class FrmMainApp : Form
         {
             // this should prevent showing silly string values for special folders (like if your Pictures folder has been moved to say Digi, it'd have shown "Digi" but since that doesn't exist per se it'd have caused an error.
             // same for non-English places. E.g. "Documents and Settings" in HU would be displayed as "Felhasználók" but that folder is still actually called Documents and Settings, but the label is "fake".
-            if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: fileName)))
+            if (Directory.Exists(path: fileNameWithPath))
             {
-                lvi.Text = fileName;
+                lvi.Text = fileNameWithoutPath;
             }
             else
             {
@@ -2350,9 +2362,10 @@ public partial class FrmMainApp : Form
         }
 
         lvi.ImageIndex = shfi.iIcon;
-        if (File.Exists(path: Path.Combine(path1: FolderName, path2: fileName)))
+        if (File.Exists(path: fileNameWithPath))
         {
-            lvi.ForeColor = Color.Gray;
+            HandlerUpdateItemColour(lvw: lvw_FileList, itemText: fileNameWithoutPath, color: Color.Gray);
+            HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
         }
 
         // don't add twice. this could happen if user does F5 too fast/too many times/is derp. (mostly the last one.)
@@ -2414,6 +2427,27 @@ public partial class FrmMainApp : Form
         }
     }
 
+    /// <summary>
+    ///     Scrolls to the relevant line of the listview
+    /// </summary>
+    /// <param name="lvw">The listView Control that needs updating. Most likely the one in the main Form</param>
+    /// <param name="itemText">The particular ListViewItem (by text) that needs updating</param>
+    internal static void HandlerLvwScrollToDataPoint(ListView lvw,
+                                                     string itemText)
+    {
+        // If the current thread is not the UI thread, InvokeRequired will be true
+        if (lvw.InvokeRequired)
+        {
+            lvw.Invoke(method: (Action)(() => HandlerLvwScrollToDataPoint(lvw: lvw, itemText: itemText)));
+            return;
+        }
+
+        ListViewItem itemToModify = lvw.FindItemWithText(text: itemText);
+        if (itemToModify != null)
+        {
+            lvw.EnsureVisible(index: itemToModify.Index);
+        }
+    }
 
     /// <summary>
     ///     Updates the Text of any Label from outside the thread.

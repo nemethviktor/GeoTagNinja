@@ -40,7 +40,6 @@ I'm generally happy for anyone competent to add pull requests but I don't always
 
 ## ToDos
 
-- Rework the "seen before" logic. I should use SHA512 instead of ModifyDateTime. Allegedly faster too.
 - [WIP] Column reorg.
 - [later] Destination stuff not working atm, todo.
 

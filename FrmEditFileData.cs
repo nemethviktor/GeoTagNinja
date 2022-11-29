@@ -4,6 +4,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TimeZoneConverter;
@@ -13,9 +14,6 @@ namespace GeoTagNinja;
 
 public partial class FrmEditFileData : Form
 {
-    private static string LocalIanatZname;
-    private static string SelectedIanatzName;
-    private static string SelectedTzAdjustment;
     private static bool TZChangedByAPI;
     private DateTime origDateValCreateDate = DateTime.Now;
     private DateTime origDateValTakenDate = DateTime.Now;
@@ -73,6 +71,8 @@ public partial class FrmEditFileData : Form
     {
         FrmEditFileDataNowLoadingFileData = true;
         FrmEditFileDataNowRemovingGeoData = false;
+
+        // this just pulls the form's name
         HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
 
         clh_FileName.Width = -2;
@@ -92,12 +92,11 @@ public partial class FrmEditFileData : Form
             // also empty the "original data" table
             DtFileDataToWriteStage2QueuePendingSave.Rows.Clear();
 
-            // this below should auto-set nowLoadingFileData = false;
-            lvw_EditorFileListImagesGetData();
-            string fileNameWithPath = Path.Combine(path1: FolderName, path2: lvw_FileListEditImages.Items[index: 0]
-                                                       .Text);
+            // This actually gets triggered with the SelectedIndexChange above.
+            // lvw_EditorFileListImagesGetData();
 
-            await pbx_imgPreviewPicGenerator(fileNameWithPath: fileNameWithPath);
+            // This actually gets triggered with the SelectedIndexChange above.
+            //await pbx_imgPreviewPicGenerator(fileNameWithPath: fileNameWithPath);
         }
     }
 
@@ -164,8 +163,8 @@ public partial class FrmEditFileData : Form
                                 }
 
                                 break;
-                            case "gbx_CrateDate":
-                                IEnumerable<Control> cGbx_CreateDate = helperNonstatic.GetAllControls(control: gbx_TakenDate);
+                            case "gbx_CreateDate":
+                                IEnumerable<Control> cGbx_CreateDate = helperNonstatic.GetAllControls(control: gbx_CreateDate);
                                 foreach (Control cItemGbx_CrateDate in cGbx_CreateDate)
                                 {
                                     if (cItemGbx_CrateDate != btn_InsertCreateDate)
@@ -370,17 +369,12 @@ public partial class FrmEditFileData : Form
     private void btn_getFromWeb_Click(object sender,
                                       EventArgs e)
     {
-        double parsedLat;
-        double parsedLng;
-
         DataTable dtToponomy = new();
         DataTable dtAltitude = new();
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         //reset this just in case.
         HelperStatic.SApiOkay = true;
-        string strGpsLatitude;
-        string strGpsLongitude;
         switch (((Button)sender).Name)
         {
             case "btn_getFromWeb_Toponomy":
@@ -449,7 +443,7 @@ public partial class FrmEditFileData : Form
     }
 
     /// <summary>
-    /// Pulls data from the various APIs and fills up the listView and fills the TextBoxes and/or SQLite.
+    ///     Pulls data from the various APIs and fills up the listView and fills the TextBoxes and/or SQLite.
     /// </summary>
     /// <param name="fileNameWithoutPath">Blank if used as "pull one file" otherwise the name of the file w/o Path</param>
     private void getFromWeb_Toponomy(string fileNameWithoutPath = "")
@@ -552,23 +546,26 @@ public partial class FrmEditFileData : Form
                         cbx_OffsetTimeList.SelectedIndex = i;
                         try
                         {
-                            string IANATZ = TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
-                            string TZOffset;
-                            TimeZoneInfo tst = TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
-                            ckb_UseDST.Checked = tst.IsDaylightSavingTime(dateTime: createDate);
-                            TZOffset = tst.GetUtcOffset(dateTime: createDate)
-                                .ToString()
-                                .Substring(0, tst.GetUtcOffset(dateTime: createDate)
-                                                  .ToString()
-                                                  .Length -
-                                              3);
-                            if (!TZOffset.StartsWith(value: "-"))
+                            if (TZ != null)
                             {
-                                toponomyOverwrites.Add(item: ("OffsetTime", "+" + TZOffset));
-                            }
-                            else
-                            {
-                                toponomyOverwrites.Add(item: ("OffsetTime", TZOffset));
+                                string IANATZ = TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
+                                string TZOffset;
+                                TimeZoneInfo tst = TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
+                                ckb_UseDST.Checked = tst.IsDaylightSavingTime(dateTime: createDate);
+                                TZOffset = tst.GetUtcOffset(dateTime: createDate)
+                                    .ToString()
+                                    .Substring(startIndex: 0, length: tst.GetUtcOffset(dateTime: createDate)
+                                                                          .ToString()
+                                                                          .Length -
+                                                                      3);
+                                if (!TZOffset.StartsWith(value: "-"))
+                                {
+                                    toponomyOverwrites.Add(item: ("OffsetTime", "+" + TZOffset));
+                                }
+                                else
+                                {
+                                    toponomyOverwrites.Add(item: ("OffsetTime", TZOffset));
+                                }
                             }
                         }
                         catch
@@ -613,23 +610,26 @@ public partial class FrmEditFileData : Form
         {
             try
             {
-                string IANATZ = TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
-                string TZOffset;
-                TimeZoneInfo tst = TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
+                if (TZ != null)
+                {
+                    string IANATZ = TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
+                    string TZOffset;
+                    TimeZoneInfo tst = TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
 
-                TZOffset = tst.GetUtcOffset(dateTime: createDate)
-                    .ToString()
-                    .Substring(0, tst.GetUtcOffset(dateTime: createDate)
-                                      .ToString()
-                                      .Length -
-                                  3);
-                if (!TZOffset.StartsWith(value: "-"))
-                {
-                    toponomyOverwrites.Add(item: ("OffsetTime", "+" + TZOffset));
-                }
-                else
-                {
-                    toponomyOverwrites.Add(item: ("OffsetTime", TZOffset));
+                    TZOffset = tst.GetUtcOffset(dateTime: createDate)
+                        .ToString()
+                        .Substring(startIndex: 0, length: tst.GetUtcOffset(dateTime: createDate)
+                                                              .ToString()
+                                                              .Length -
+                                                          3);
+                    if (!TZOffset.StartsWith(value: "-"))
+                    {
+                        toponomyOverwrites.Add(item: ("OffsetTime", "+" + TZOffset));
+                    }
+                    else
+                    {
+                        toponomyOverwrites.Add(item: ("OffsetTime", TZOffset));
+                    }
                 }
             }
             catch
@@ -651,7 +651,7 @@ public partial class FrmEditFileData : Form
     }
 
     /// <summary>
-    /// Pulls data from the various APIs and fills up the listView and fills the TextBoxes and/or SQLite.
+    ///     Pulls data from the various APIs and fills up the listView and fills the TextBoxes and/or SQLite.
     /// </summary>
     /// <param name="fileNameWithoutPath">Blank if used as "pull one file" otherwise the name of the file w/o Path</param>
     private void getFromWeb_Altitude(string fileNameWithoutPath = "")
@@ -793,41 +793,67 @@ public partial class FrmEditFileData : Form
         if (DtFileDataToWriteStage1PreQueue.Rows.Count > 0)
         {
             FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-            // transfer data from 1 to 3
-            foreach (DataRow drS1 in DtFileDataToWriteStage1PreQueue.Rows)
+            // make a list of files to actually update
+            DataView dv_FileNames = new(table: DtFileDataToWriteStage1PreQueue);
+            DataTable dt_DistinctFileNames = dv_FileNames.ToTable(distinct: true, "fileNameWithoutPath");
+            foreach (DataRow dr_FileName in dt_DistinctFileNames.Rows)
             {
-                // any existing instance of this particular combination needs to be deleted...
-                // eg if we type "50" as a value then w/o this we'd end up with a "5" row and a "50" row.
-                for (int i = DtFileDataToWriteStage3ReadyToWrite.Rows.Count - 1; i >= 0; i--)
+                string fileNameWithoutPath = dr_FileName[columnIndex: 0]
+                    .ToString();
+
+                DataView dv_FileWriteQueue = new(table: DtFileDataToWriteStage1PreQueue);
+                dv_FileWriteQueue.RowFilter = "fileNameWithoutPath = '" + fileNameWithoutPath + "'";
+
+                // this shouldn't ever be zero...
+                if (dv_FileWriteQueue.Count > 0)
                 {
-                    DataRow drS3 = DtFileDataToWriteStage3ReadyToWrite.Rows[index: i];
-                    if (
-                        drS3[columnName: "fileNameWithoutPath"]
-                            .ToString() ==
-                        drS1[columnName: "fileNameWithoutPath"]
-                            .ToString() &&
-                        drS3[columnName: "settingId"]
-                            .ToString() ==
-                        drS1[columnName: "settingId"]
-                            .ToString()
-                    )
+                    // transfer data from 1 to 3
+                    DataTable dt_FileWriteQueue = dv_FileWriteQueue.ToTable();
+                    foreach (DataRow drS1 in dt_FileWriteQueue.Rows)
                     {
-                        drS3.Delete();
+                        string drS1fileNameWithoutPath = drS1[columnName: "fileNameWithoutPath"]
+                            .ToString();
+                        string drS1settingId = drS1[columnName: "settingId"]
+                            .ToString();
+
+                        // any existing instance of this particular combination needs to be deleted...
+                        // eg if we type "50" as a value then w/o this we'd end up with a "5" row and a "50" row.
+
+                        DtFileDataToWriteStage3ReadyToWrite.Rows.Cast<DataRow>()
+                            .Where(
+                                predicate: r => r.ItemArray[0]
+                                                    .ToString() ==
+                                                drS1fileNameWithoutPath &&
+                                                r.ItemArray[1]
+                                                    .ToString() ==
+                                                drS1settingId)
+                            .ToList()
+                            .ForEach(action: r => r.Delete());
+
+                        DtFileDataToWriteStage3ReadyToWrite.AcceptChanges();
+                        DtFileDataToWriteStage3ReadyToWrite.Rows.Add(values: drS1.ItemArray);
+                        DtFileDataToWriteStage3ReadyToWrite.AcceptChanges();
+                    }
+
+                    ListViewItem lvi = null;
+                    try
+                    {
+                        lvi = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath);
+                    }
+                    catch
+                    {
+                        // shouldn't happen
+                    }
+
+                    if (lvi != null)
+                    {
+                        // update listview w new data
+                        HelperStatic.FileListBeingUpdated = true;
+                        await HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
+                        HelperStatic.FileListBeingUpdated = false;
                     }
                 }
-
-                DtFileDataToWriteStage3ReadyToWrite.AcceptChanges();
-                DtFileDataToWriteStage3ReadyToWrite.Rows.Add(values: drS1.ItemArray);
             }
-
-            // update listview w new data
-            HelperStatic.FileListBeingUpdated = true;
-            foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.Items)
-            {
-                await HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
-            }
-
-            HelperStatic.FileListBeingUpdated = false;
 
             // drop from q
             DtFileDataToWriteStage1PreQueue.Rows.Clear();
