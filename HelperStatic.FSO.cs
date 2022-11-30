@@ -106,7 +106,7 @@ internal static partial class HelperStatic
 
         try
         {
-            using BufferedStream stream = new BufferedStream(stream: File.OpenRead(path: fileNameWithPath), bufferSize: 100000);
+            using BufferedStream stream = new(stream: File.OpenRead(path: fileNameWithPath), bufferSize: 100000);
             return BitConverter.ToString(value: MD5.ComputeHash(inputStream: stream))
                 .Replace(oldValue: "-", newValue: string.Empty);
         }

@@ -1,6 +1,4 @@
-﻿using GeoTagNinja.Properties;
-using MetadataExtractor;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -91,12 +89,12 @@ public partial class FrmPasteWhat : Form
         }
         else if (initiatorName == "FrmMainApp")
         {
-            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms["FrmMainApp"];
+            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
             if (frmMainAppInstance != null)
             {
                 lvw = frmMainAppInstance.lvw_FileList;
 
-                fileNameSourceWithoutPath = Path.GetFileName(FrmMainApp.FileDateCopySourceFileNameWithPath);
+                fileNameSourceWithoutPath = Path.GetFileName(path: FrmMainApp.FileDateCopySourceFileNameWithPath);
                 fileNameSourceWithPath = FrmMainApp.FileDateCopySourceFileNameWithPath;
                 ;
             }
@@ -107,7 +105,7 @@ public partial class FrmPasteWhat : Form
         }
 
         // get a list of tag names to paste
-        List<string> tagsToPaste = new List<string>();
+        List<string> tagsToPaste = new();
         foreach (Control cItem in c)
         {
             if (cItem.GetType() == typeof(CheckBox))
@@ -116,18 +114,18 @@ public partial class FrmPasteWhat : Form
                 if (thisCheckBox.Checked)
                 {
                     string tagName = cItem.Name.Substring(startIndex: 4);
-                    tagsToPaste.Add(tagName);
+                    tagsToPaste.Add(item: tagName);
 
                     // any in the Ref lot
                     if (tagsWithRefList.Contains(item: tagName))
                     {
-                        tagsToPaste.Add(tagName + "Ref");
+                        tagsToPaste.Add(item: tagName + "Ref");
                     }
 
                     // also do all the CountryCode 
                     if (tagName == "Country")
                     {
-                        tagsToPaste.Add("CountryCode");
+                        tagsToPaste.Add(item: "CountryCode");
                     }
                 }
             }
@@ -201,9 +199,9 @@ public partial class FrmPasteWhat : Form
                     // update each tag
                     foreach (DataRow drPRow in FrmMainApp.DtFileDataPastePool.Rows)
                     {
-                        string settingId = drPRow[0]
+                        string settingId = drPRow[columnIndex: 0]
                             .ToString();
-                        string settingValue = drPRow[1]
+                        string settingValue = drPRow[columnIndex: 1]
                             .ToString();
 
                         // this is for FrmEditData
@@ -231,9 +229,9 @@ public partial class FrmPasteWhat : Form
                     // update each tag
                     foreach (DataRow drPRow in FrmMainApp.DtFileDataPastePool.Rows)
                     {
-                        string settingId = drPRow[0]
+                        string settingId = drPRow[columnIndex: 0]
                             .ToString();
-                        string settingValue = drPRow[1]
+                        string settingValue = drPRow[columnIndex: 1]
                             .ToString();
 
                         if (settingValue == "-")

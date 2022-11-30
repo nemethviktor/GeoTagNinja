@@ -296,15 +296,15 @@ public partial class FrmSettings : Form
                     }
                 }
 
-                if (tmpCtrlName.Contains("ckb_ProcessOriginalFile"))
+                if (tmpCtrlName.Contains(value: "ckb_ProcessOriginalFile"))
                 {
                     if (box.Checked)
                     {
-                        this.ckb_ResetFileDateToCreated.Enabled = true;
+                        ckb_ResetFileDateToCreated.Enabled = true;
                     }
                     else
                     {
-                        this.ckb_ResetFileDateToCreated.Enabled = false;
+                        ckb_ResetFileDateToCreated.Enabled = false;
                     }
                 }
             }

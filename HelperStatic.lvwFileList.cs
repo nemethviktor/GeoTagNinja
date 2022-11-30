@@ -38,19 +38,23 @@ internal static partial class HelperStatic
                 {
                     lvw.BeginUpdate();
                     FrmMainApp.HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Red);
-                    FrmMainApp.HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
+
                     foreach (DataRow drTagData in dataTableRelevant.Rows)
                     {
                         // theoretically we'd want to update the columns for each tag but for example when removing all data
                         // this becomes tricky bcs we're also firing a "-gps*=" tag.
-                        if (lvchs[key: "clh_" + drTagData[columnIndex: 1]] != null)
+                        string settingId = "clh_" +
+                                           drTagData[columnIndex: 1]
+                                               .ToString();
+                        string settingVal = drTagData[columnIndex: 2]
+                            .ToString();
+                        if (lvchs[key: settingId] != null)
                         {
                             try
                             {
                                 lvi.SubItems[index: lvchs[key: "clh_" + drTagData[columnIndex: 1]]
                                                  .Index]
-                                    .Text = drTagData[columnIndex: 2]
-                                    .ToString();
+                                    .Text = settingVal;
                                 //break;
                             }
                             catch

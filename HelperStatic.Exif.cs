@@ -270,14 +270,14 @@ internal static partial class HelperStatic
                 }
 
                 break;
-            case "FileModifyDate" or "TakenDate" or "CreateDate":
+            case /*"FileModifyDate" or */"TakenDate" or "CreateDate":
             {
-                try
+                DateTime outDateTime;
+                if (DateTime.TryParse(s: tryDataValue, out outDateTime))
                 {
-                    tryDataValue = DateTime.Parse(s: tryDataValue)
-                        .ToString(format: CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern);
+                    tryDataValue = outDateTime.ToString(format: CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern);
                 }
-                catch
+                else
                 {
                     tryDataValue = "-";
                 }
@@ -557,17 +557,13 @@ internal static partial class HelperStatic
                             dr[columnName: "settingValue"] = str;
                             FrmMainApp.DtFileDataSeenInThisSession.Rows.Add(row: dr);
 
-                            subItemValuesArr.Add(str);
+                            subItemValuesArr.Add(item: str);
                         }
 
                         lvi.SubItems.Clear();
                         lvi.Text = fileNameWithoutPath;
-                        lvi.SubItems.AddRange(subItemValuesArr.ToArray());
+                        lvi.SubItems.AddRange(items: subItemValuesArr.ToArray());
 
-                        // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                        FrmMainApp.HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Black);
-                        FrmMainApp.HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
                         // remove from the filesBeingProcessed list
                         try
                         {
@@ -582,9 +578,13 @@ internal static partial class HelperStatic
                         if (lvi.Index % 10 == 0)
                         {
                             Application.DoEvents();
+                            // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                            FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+                            FrmMainApp.HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
                         }
 
-                        FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+                        FrmMainApp.HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Black);
                     }
 
                     lvw.EndUpdate();
@@ -860,8 +860,16 @@ internal static partial class HelperStatic
                                 // nothing, this shouldn't happen but i don't want it to stop the app anyway.
                             }
 
+                            if (lvi.Index % 10 == 0)
+                            {
+                                Application.DoEvents();
+                                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                FrmMainApp.HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
+                            }
+
                             FrmMainApp.HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Black);
-                            FrmMainApp.HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
+
                             lvw.EndUpdate();
                         }
 
@@ -1137,8 +1145,15 @@ internal static partial class HelperStatic
                                             strParsedLng = str;
                                         }
 
+                                        if (lvi.Index % 10 == 0)
+                                        {
+                                            Application.DoEvents();
+                                            // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                            FrmMainApp.HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
+                                        }
+
                                         FrmMainApp.HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Red);
-                                        FrmMainApp.HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
                                     }
                                 }
                             }
@@ -1191,8 +1206,15 @@ internal static partial class HelperStatic
                                             .Text = toponomyDetail.toponomyOverwriteVal;
                                     }
 
+                                    if (lvi.Index % 10 == 0)
+                                    {
+                                        Application.DoEvents();
+                                        // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                        FrmMainApp.HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
+                                    }
+
                                     FrmMainApp.HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Red);
-                                    FrmMainApp.HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
                                 }
                             }
                         }
@@ -1444,8 +1466,8 @@ internal static partial class HelperStatic
         {
             string fileNameWithoutPath = dr_FileName[columnIndex: 0]
                 .ToString();
-            string fileNameWithPath = Path.Combine(folderNameToWrite, fileNameWithoutPath);
-            if (File.Exists(fileNameWithPath))
+            string fileNameWithPath = Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath);
+            if (File.Exists(path: fileNameWithPath))
             {
                 string exifArgsForOriginalFile = "";
                 string exifArgsForSidecar = "";
@@ -1706,6 +1728,7 @@ internal static partial class HelperStatic
 
         if (!failWriteNothingEnabled && !queueWasEmpty)
         {
+            int lviIndex = 0;
             ///////////////
             // via https://stackoverflow.com/a/68616297/3968494
             await Task.Run(action: () =>
@@ -1737,24 +1760,43 @@ internal static partial class HelperStatic
                             .Split('/')
                             .Last();
                         FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+
                         try
                         {
+                            if (lviIndex % 10 == 0)
+                            {
+                                Application.DoEvents();
+
+                                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath);
+                            }
+
                             FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath, color: Color.Black);
-                            FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath);
+
                             if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
                             {
                                 // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
                                 // FindItemWithText -> https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.finditemwithtext?view=netframework-4.8
                                 // "Finds the first ListViewItem with __that begins with__ the given text value."
 
+                                if (lviIndex % 10 == 0)
+                                {
+                                    Application.DoEvents();
+                                    // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                    FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath); // this is redundant here.
+                                }
+
                                 FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: Path.GetFileNameWithoutExtension(path: fileNameWithoutPath), color: Color.Black);
-                                FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath); // this is redundant here.
                             }
                         }
                         catch
                         {
                             // ignored
                         }
+
+                        lviIndex++;
                     }
                     else if (data.Data != null && !data.Data.Contains(value: "files updated") && !data.Data.Contains(value: "files created") && data.Data.Length > 0)
                     {
@@ -1774,24 +1816,40 @@ internal static partial class HelperStatic
                             .Split('/')
                             .Last();
                         FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+
                         try
                         {
+                            {
+                                Application.DoEvents();
+                                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath);
+                            }
+
                             FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath, color: Color.Black);
-                            FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath);
+
                             if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
                             {
                                 // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
                                 // FindItemWithText -> https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.finditemwithtext?view=netframework-4.8
                                 // "Finds the first ListViewItem with __that begins with__ the given text value."
+                                if (lviIndex % 10 == 0)
+                                {
+                                    Application.DoEvents();
+                                    // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                    FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath); // this is redundant here
+                                }
 
                                 FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: Path.GetFileNameWithoutExtension(path: fileNameWithoutPath), color: Color.Black);
-                                FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath); // this is redundant here
                             }
                         }
                         catch
                         {
                             // ignored
                         }
+
+                        lviIndex++;
                     }
                     else if (data.Data != null && !data.Data.Contains(value: "files updated") && data.Data.Length > 0)
                     {
@@ -1861,7 +1919,7 @@ internal static partial class HelperStatic
         RestRequest request_Toponomy = new(resource: "findNearbyPlaceNameJSON?lat=" + latitude + "&lng=" + longitude + "&style=FULL");
         RestResponse response_Toponomy = client.ExecuteGet(request: request_Toponomy);
         // check API reponse is OK
-        if (response_Toponomy.Content != null && response_Toponomy.Content.Contains("the hourly limit of "))
+        if (response_Toponomy.Content != null && response_Toponomy.Content.Contains(value: "the hourly limit of "))
         {
             SApiOkay = false;
             MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + response_Toponomy.Content, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
@@ -1913,7 +1971,7 @@ internal static partial class HelperStatic
         RestRequest request_TimeZone = new(resource: "timezoneJSON?lat=" + latitude + "&lng=" + longitude);
         RestResponse response_TimeZone = client.ExecuteGet(request: request_TimeZone);
         // check API reponse is OK
-        if (response_TimeZone.Content != null && response_TimeZone.Content.Contains("the hourly limit of "))
+        if (response_TimeZone.Content != null && response_TimeZone.Content.Contains(value: "the hourly limit of "))
         {
             SApiOkay = false;
             MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + response_TimeZone.Content, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
@@ -1965,7 +2023,7 @@ internal static partial class HelperStatic
         RestRequest request_Altitude = new(resource: "srtm1JSON?lat=" + latitude + "&lng=" + longitude);
         RestResponse response_Altitude = client.ExecuteGet(request: request_Altitude);
         // check API reponse is OK
-        if (response_Altitude.Content != null && response_Altitude.Content.Contains("the hourly limit of "))
+        if (response_Altitude.Content != null && response_Altitude.Content.Contains(value: "the hourly limit of "))
         {
             SApiOkay = false;
             MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + response_Altitude.Content, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);

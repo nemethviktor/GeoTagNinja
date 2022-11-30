@@ -1,6 +1,6 @@
 ﻿# GeoTagNinja Changelog
-v0.6.8369 [20221130]
-- NEW FEATURE: Modify TakenDate & CreateDate (it's in the Edit File section.)
+v0.6.8370 [20221201]
+- NEW FEATURE: Modify TakenDate & CreateDate (it's in the Edit File section - and no the time-shift cannot be copy-pasted yet -> shift works in terms of modifying the literal DateTime at the moment not as in a proper copyable "shift" value.)
 - Added a hold/blocker on entering a folder until the folder loads. This is annoying but is needed to prevent users from starting operations before the files are processed.
 - Added some logic to locally store (for the length of the session) each file's data. This is so that if the actual image/xmp files don't change then there's no need to re-parse everything _again_. It's slow and pointless.
 - Added functionality to "Get Data from Other File" in the Edit File section.

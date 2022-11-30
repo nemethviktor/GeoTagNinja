@@ -1,12 +1,12 @@
-﻿using System;	
-	
-namespace GeoTagNinja;	
-	
-internal static class AncillaryListsArrays	
-{	
-    #region Time zones	
-	
-    internal static string[] GetTimeZones()	
+﻿using System;
+
+namespace GeoTagNinja;
+
+internal static class AncillaryListsArrays
+{
+    #region Time zones
+
+    internal static string[] GetTimeZones()
     {
         string[] result =
         {
@@ -362,51 +362,51 @@ internal static class AncillaryListsArrays
             "(+12:00/+12:00) # Pacific/Wake",
             "(+12:00/+12:00) # Pacific/Wallis",
             "(-08:00/-07:00) # PST8PDT"
-        };	
-        Array.Sort(array: result);	
-        return result;	
-    }	
-	
-    #endregion	
-	
-    #region Columns	
-	
-    internal static string[] GpxTagsToOverwrite()	
-    {	
-        string[] result =	
-        {	
-            "GPSAltitude",	
-            "GPSAltitudeRef",	
-            "GPSDateStamp",	
-            "GPSImgDirection",	
-            "GPSImgDirectionRef",	
-            "GPSLatitude",	
-            "GPSLatitudeRef",	
-            "GPSLongitude",	
-            "GPSLongitudeRef",	
-            "GPSSpeed",	
-            "GPSSpeedRef",	
-            "GPSTimeStamp",	
-            "GPSTrack",	
-            "GPSTrackRef"	
-        };	
-	
-        return result;	
-    }	
-	
-    #endregion	
-	
-    #region Extensions	
-	
-    /// <summary>	
-    ///     this one basically handles what extensions we work with.	
-    ///     the actual list is used for file-specific Settings as well as the general running of the app	
-    ///     leave the \t in!	
-    /// </summary>	
-    internal static string[] AllCompatibleExtensions()	
-    {	
-        string[] result =	
-        {	
+        };
+        Array.Sort(array: result);
+        return result;
+    }
+
+    #endregion
+
+    #region Columns
+
+    internal static string[] GpxTagsToOverwrite()
+    {
+        string[] result =
+        {
+            "GPSAltitude",
+            "GPSAltitudeRef",
+            "GPSDateStamp",
+            "GPSImgDirection",
+            "GPSImgDirectionRef",
+            "GPSLatitude",
+            "GPSLatitudeRef",
+            "GPSLongitude",
+            "GPSLongitudeRef",
+            "GPSSpeed",
+            "GPSSpeedRef",
+            "GPSTimeStamp",
+            "GPSTrack",
+            "GPSTrackRef"
+        };
+
+        return result;
+    }
+
+    #endregion
+
+    #region Extensions
+
+    /// <summary>
+    ///     this one basically handles what extensions we work with.
+    ///     the actual list is used for file-specific Settings as well as the general running of the app
+    ///     leave the \t in!
+    /// </summary>
+    internal static string[] AllCompatibleExtensions()
+    {
+        string[] result =
+        {
             "arq	Sony Alpha Pixel-Shift RAW (TIFF-based)",
             "arw	Sony Alpha RAW (TIFF-based)",
             "cr2	Canon RAW 2 (TIFF-based) (CR2 spec)",
@@ -453,14 +453,14 @@ internal static class AncillaryListsArrays
             "tiff	Tagged Image File Format",
             "wdp 	Windows HD Photo / Media Photo / JPEG XR (TIFF-based)",
             "x3f	Sigma/Foveon RAW"
-        };	
-        return result;	
-    }	
-	
-    internal static string[] GpxExtensions()	
-    {	
-        string[] result =	
-        {	
+        };
+        return result;
+    }
+
+    internal static string[] GpxExtensions()
+    {
+        string[] result =
+        {
             "gpx", // GPX	
             "nmea", // NMEA (RMC, GGA, GLL and GSA sentences)	
             "kml", // KML	
@@ -470,10 +470,10 @@ internal static class AncillaryListsArrays
             "txt", // Winplus Beacon .TXT	
             "json", // Google Takeout .JSON	
             "csv" // GPS/IMU .CSV + // DJI .CSV + // ExifTool .CSV file	
-        };	
-	
-        return result;	
-    }	
-	
-    #endregion	
-}	
+        };
+
+        return result;
+    }
+
+    #endregion
+}

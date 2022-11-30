@@ -1501,10 +1501,17 @@ public partial class FrmMainApp : Form
                     .Text = toponomyDetail.toponomyOverwriteVal;
             }
 
-            HandlerUpdateItemColour(lvw: lvw_FileList, itemText: fileNameWithoutPath, color: Color.Red);
-            HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
+            if (lvi.Index % 10 == 0)
+            {
+                Application.DoEvents();
+                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
-            HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+                HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
+
+                HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+            }
+
+            HandlerUpdateItemColour(lvw: lvw_FileList, itemText: fileNameWithoutPath, color: Color.Red);
         }
 
         DataTable dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
@@ -1517,9 +1524,16 @@ public partial class FrmMainApp : Form
                 settingValue: dtAltitude.Rows[index: 0][columnName: "Altitude"]
                     .ToString()
             );
+            if (lvi.Index % 10 == 0)
+            {
+                Application.DoEvents();
+                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
+                HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+            }
+
             HandlerUpdateItemColour(lvw: lvw_FileList, itemText: fileNameWithoutPath, color: Color.Red);
-            HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
-            HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
         }
     }
 
@@ -1834,14 +1848,16 @@ public partial class FrmMainApp : Form
 
                 for (int d = 0; d < listFilesWithPath.Count; d++)
                 {
-                    string fileNameWithPath = listFilesWithPath[d]
-                        .ToString();
+                    string fileNameWithPath = listFilesWithPath[index: d];
                     string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
                     string fileNameWithPathWithXMP = Path.Combine(path1: Path.GetDirectoryName(path: fileNameWithPath), path2: Path.GetFileNameWithoutExtension(path: fileNameWithPath) + ".xmp");
                     lvw_FileList_addListItem(fileNameWithoutPath: Path.GetFileName(path: fileNameWithoutPath));
                     if (d % 10 == 0)
                     {
                         Application.DoEvents();
+                        // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                        HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
                     }
 
                     // if this file appears in the DtFilesSeenInThisSession // or with xmp
@@ -1974,8 +1990,16 @@ public partial class FrmMainApp : Form
                                     // nothing, this shouldn't happen but i don't want it to stop the app anyway.
                                 }
 
+                                if (lvi.Index % 10 == 0)
+                                {
+                                    Application.DoEvents();
+                                    // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                    HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
+                                }
+
                                 HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Black);
-                                HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
+
                                 ;
                                 //lvw.EndUpdate();
                             }
@@ -2364,8 +2388,15 @@ public partial class FrmMainApp : Form
         lvi.ImageIndex = shfi.iIcon;
         if (File.Exists(path: fileNameWithPath))
         {
+            if (lvi.Index % 10 == 0)
+            {
+                Application.DoEvents();
+                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
+            }
+
             HandlerUpdateItemColour(lvw: lvw_FileList, itemText: fileNameWithoutPath, color: Color.Gray);
-            HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
         }
 
         // don't add twice. this could happen if user does F5 too fast/too many times/is derp. (mostly the last one.)
@@ -2401,6 +2432,24 @@ public partial class FrmMainApp : Form
     #endregion
 
     #region handlers
+
+    internal static int HandlerReturnItemIndes(ListView lvw,
+                                               string itemText)
+    {
+        int retVal = 0;
+        // If the current thread is not the UI thread, InvokeRequired will be true
+        if (lvw.InvokeRequired)
+        {
+            lvw.Invoke(method: (Action)(() => HandlerReturnItemIndes(lvw: lvw, itemText: itemText)));
+        }
+        else
+        {
+            retVal = lvw.FindItemWithText(text: itemText)
+                .Index;
+        }
+
+        return retVal;
+    }
 
     /// <summary>
     ///     Deals with invoking the listview (from outside the thread) and updating the colour of a particular row (Item) to
