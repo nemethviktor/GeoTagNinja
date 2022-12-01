@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Environment;
@@ -7,8 +9,6 @@ namespace GeoTagNinja;
 
 internal static partial class HelperStatic
 {
-    #region FSO_Interaction
-
     /// <summary>
     ///     Gets the parent folder of the current path (used when user wants to move a folder up.)
     ///     We can't just do a "cd.." because top level folders don't handle that logic well.
@@ -19,7 +19,7 @@ internal static partial class HelperStatic
     {
         DirectoryInfo dir = new(path: path);
         string parentName;
-        if (dir.ToString() == Path.GetPathRoot(dir.ToString()))
+        if (dir.ToString() == Path.GetPathRoot(path: dir.ToString()))
         {
             parentName = SpecialFolder.MyComputer.ToString();
         }
@@ -42,7 +42,7 @@ internal static partial class HelperStatic
     /// <returns>Realistically nothing but it sets s_changeFolderIsOkay according to the user input and circumstances</returns>
     internal static async Task FsoCheckOutstandingFiledataOkayToChangeFolderAsync()
     {
-        s_changeFolderIsOkay = false;
+        SChangeFolderIsOkay = false;
 
         // check if there's anything in the write-Q
         if (FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows.Count > 0)
@@ -50,18 +50,23 @@ internal static partial class HelperStatic
             DialogResult dialogResult = MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_QuestionFileQIsNotEmpty"), caption: "Info", buttons: MessageBoxButtons.YesNoCancel, icon: MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
             {
+                while (FileListBeingUpdated || FilesAreBeingSaved)
+                {
+                    await Task.Delay(millisecondsDelay: 10);
+                }
+
                 await ExifWriteExifToFile();
-                s_changeFolderIsOkay = true;
+                SChangeFolderIsOkay = true;
             }
             else if (dialogResult == DialogResult.No)
             {
                 FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
-                s_changeFolderIsOkay = true;
+                SChangeFolderIsOkay = true;
             }
         }
         else
         {
-            s_changeFolderIsOkay = true;
+            SChangeFolderIsOkay = true;
         }
     }
 
@@ -89,5 +94,25 @@ internal static partial class HelperStatic
         }
     }
 
-    #endregion
+    /// <summary>
+    ///     Creates an MD5 hash of the given fileNameWithPath.
+    ///     Via https://lonewolfonline.net/calculate-md5-checksum-file/
+    /// </summary>
+    /// <param name="fileNameWithPath">Filename to process</param>
+    /// <returns>MD5 hash</returns>
+    internal static string Md5SumByProcess(string fileNameWithPath)
+    {
+        HashAlgorithm MD5 = new MD5CryptoServiceProvider();
+
+        try
+        {
+            using BufferedStream stream = new(stream: File.OpenRead(path: fileNameWithPath), bufferSize: 100000);
+            return BitConverter.ToString(value: MD5.ComputeHash(inputStream: stream))
+                .Replace(oldValue: "-", newValue: string.Empty);
+        }
+        catch
+        {
+            return string.Empty;
+        }
+    }
 }

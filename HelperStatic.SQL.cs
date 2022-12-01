@@ -23,20 +23,20 @@ internal static partial class HelperStatic
         {
             // create folder in Appdata if doesn't exist
 
-            FileInfo fi = new(fileName: s_settingsDataBasePath);
+            FileInfo fi = new(fileName: SSettingsDataBasePath);
 
             if (fi.Exists && fi.Length == 0)
             {
                 fi.Delete();
             }
 
-            string sqldbPath = s_settingsDataBasePath;
+            string sqldbPath = SSettingsDataBasePath;
             if (!fi.Exists)
             {
                 try
                 {
-                    SQLiteConnection.CreateFile(databaseFileName: Path.Combine(s_settingsDataBasePath));
-                    SQLiteConnection sqliteDB = new(connectionString: @"Data Source=" + Path.Combine(s_settingsDataBasePath) + "; Version=3");
+                    SQLiteConnection.CreateFile(databaseFileName: Path.Combine(SSettingsDataBasePath));
+                    SQLiteConnection sqliteDB = new(connectionString: @"Data Source=" + Path.Combine(SSettingsDataBasePath) + "; Version=3");
                     sqliteDB.Open();
 
                     string sql = """
@@ -58,6 +58,7 @@ internal static partial class HelperStatic
                                 settingValue NTEXT(2000)    DEFAULT "",
                                 PRIMARY KEY([settingTabPage], [settingId])
                             );
+                            DROP TABLE IF EXISTS [toponymyData];
                             CREATE TABLE [toponymyData](
                                         [Lat] DECIMAL(19, 6) NOT NULL, 
                                         [Lng] DECIMAL(19, 6) NOT NULL, 
@@ -65,8 +66,10 @@ internal static partial class HelperStatic
                                         [AdminName2] NTEXT, 
                                         [ToponymName] NTEXT, 
                                         [CountryCode] NTEXT,
+                                        [timezoneId] NTEXT,
                                         PRIMARY KEY([Lat], [Lng]))
                             ;
+                            DROP TABLE IF EXISTS [altitudeData];
                             CREATE TABLE [altitudeData](
                                         [Lat] DECIMAL(19, 6) NOT NULL, 
                                         [Lng] DECIMAL(19, 6) NOT NULL,
@@ -102,9 +105,10 @@ internal static partial class HelperStatic
     {
         string[] controlNamesToAdd =
         {
-            "ckb_AddXMPIntoFile",
             "ckb_AddXMPSideCar",
-            "ckb_OverwriteOriginal"
+            "ckb_OverwriteOriginal",
+            "ckb_ProcessOriginalFile",
+            "ckb_ResetFileDateToCreated"
         };
         string existingSQLVal;
 
@@ -121,12 +125,32 @@ internal static partial class HelperStatic
                     .Last()
                     .ToLower();
                 string tmpVal = "false";
-                if (controlName == "ckb_AddXMPIntoFile")
+
+                if (controlName == "ckb_AddXMPSideCar")
+                {
+                    if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
+                    {
+                        tmpVal = "true";
+                    }
+                    else
+                    {
+                        tmpVal = "false";
+                    }
+                }
+                else if (controlName == "ckb_ProcessOriginalFile")
                 {
                     tmpVal = "true";
+                    //if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
+                    //{
+                    //    tmpVal = "false";
+                    //}
+                    //else
+                    //{
+                    //    tmpVal = "true";
+                    //}
                 }
 
-                else if (controlName == "ckb_AddXMPSideCar")
+                else if (controlName == "ckb_ResetFileDateToCreated")
                 {
                     if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
                     {
@@ -211,7 +235,7 @@ internal static partial class HelperStatic
     ///     left them as is.
     /// </summary>
     /// <returns>A DataTable with the complete list of tags stored in the database w/o filter.</returns>
-    internal static DataTable DataReadSQLiteObjectMappingTagsToPass()
+    private static DataTable DataReadSQLiteObjectMappingTagsToPass()
     {
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "objectMapping.sqlite"));
         sqliteDB.Open();
@@ -253,29 +277,27 @@ internal static partial class HelperStatic
     {
         string returnString = null;
 
-        using (SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + s_settingsDataBasePath))
-        {
-            sqliteDB.Open();
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
 
-            string sqlCommandStr = @"
+        string sqlCommandStr = @"
                                 SELECT settingValue
                                 FROM " +
-                                   tableName +
-                                   " " +
-                                   @"WHERE 1=1
+                               tableName +
+                               " " +
+                               @"WHERE 1=1
                                     AND settingId = @settingId
                                     AND settingTabPage = @settingTabPage
                                     ;"
-                ;
-            SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-            sqlToRun.Parameters.AddWithValue(parameterName: "@settingTabPage", value: settingTabPage);
-            sqlToRun.Parameters.AddWithValue(parameterName: "@settingId", value: settingId);
+            ;
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@settingTabPage", value: settingTabPage);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@settingId", value: settingId);
 
-            using SQLiteDataReader reader = sqlToRun.ExecuteReader();
-            while (reader.Read())
-            {
-                returnString = reader.GetString(i: 0);
-            }
+        using SQLiteDataReader reader = sqlToRun.ExecuteReader();
+        while (reader.Read())
+        {
+            returnString = reader.GetString(i: 0);
         }
 
         return returnString;
@@ -296,7 +318,7 @@ internal static partial class HelperStatic
                                                  string settingId,
                                                  string settingValue)
     {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + s_settingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
         string sqlCommandStrand = @"
@@ -323,7 +345,7 @@ internal static partial class HelperStatic
     /// </summary>
     internal static void DataTransferSQLiteSettings()
     {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + s_settingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -341,7 +363,7 @@ internal static partial class HelperStatic
     /// </summary>
     internal static void DataDeleteSQLitesettingsToWritePreQueue()
     {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + s_settingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -366,18 +388,18 @@ internal static partial class HelperStatic
     {
         try
         {
-            s_ArcGIS_APIKey = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_ARCGIS_APIKey");
-            if (s_ArcGIS_APIKey == null || s_ArcGIS_APIKey == "")
+            SArcGisApiKey = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_ARCGIS_APIKey");
+            if (SArcGisApiKey == null || SArcGisApiKey == "")
             {
                 //MessageBox.Show(HelperStatic.GenericGetMessageBoxText("mbx_Helper_WarningNoARCGISKey"), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         catch
         {
-            s_ArcGIS_APIKey = "";
+            SArcGisApiKey = "";
         }
 
-        return s_ArcGIS_APIKey;
+        return SArcGisApiKey;
     }
 
     #endregion
@@ -546,10 +568,10 @@ internal static partial class HelperStatic
     ///     systems and strings are easier to coerce to work.
     /// </param>
     /// <returns>DataTable with toponomy data if exists</returns>
-    internal static DataTable DataReadSQLiteToponomyWholeRow(string lat,
-                                                             string lng)
+    private static DataTable DataReadSQLiteToponomyWholeRow(string lat,
+                                                            string lng)
     {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + s_settingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -582,10 +604,10 @@ internal static partial class HelperStatic
     ///     systems and strings are easier to coerce to work.
     /// </param>
     /// <returns>DataTable with toponomy data if exists</returns>
-    internal static DataTable DataReadSQLiteAltitudeWholeRow(string lat,
-                                                             string lng)
+    private static DataTable DataReadSQLiteAltitudeWholeRow(string lat,
+                                                            string lng)
     {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + s_settingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -622,19 +644,21 @@ internal static partial class HelperStatic
     /// <param name="AdminName2">API Response for this particular tag.</param>
     /// <param name="ToponymName">API Response for this particular tag.</param>
     /// <param name="CountryCode">API Response for this particular tag.</param>
-    internal static void DataWriteSQLiteToponomyWholeRow(string lat,
-                                                         string lng,
-                                                         string AdminName1 = "",
-                                                         string AdminName2 = "",
-                                                         string ToponymName = "",
-                                                         string CountryCode = "")
+    private static void DataWriteSQLiteToponomyWholeRow(string lat,
+                                                        string lng,
+                                                        string AdminName1 = "",
+                                                        string AdminName2 = "",
+                                                        string ToponymName = "",
+                                                        string CountryCode = "",
+                                                        string timezoneId = ""
+    )
     {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + s_settingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
-                                REPLACE INTO toponymyData (lat, lng, AdminName1, AdminName2, ToponymName, CountryCode) " +
-                               "VALUES (@lat, @lng, @AdminName1, @AdminName2, @ToponymName, @CountryCode);"
+                                REPLACE INTO toponymyData (lat, lng, AdminName1, AdminName2, ToponymName, CountryCode, timezoneId) " +
+                               "VALUES (@lat, @lng, @AdminName1, @AdminName2, @ToponymName, @CountryCode, @timezoneId);"
             ;
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
@@ -644,20 +668,32 @@ internal static partial class HelperStatic
         sqlToRun.Parameters.AddWithValue(parameterName: "@AdminName2", value: AdminName2);
         sqlToRun.Parameters.AddWithValue(parameterName: "@ToponymName", value: ToponymName);
         sqlToRun.Parameters.AddWithValue(parameterName: "@CountryCode", value: CountryCode);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@timezoneId", value: timezoneId);
 
         sqlToRun.ExecuteNonQuery();
     }
 
     /// <summary>
     ///     Clears the data from the Toponomy table. Run at session start.
+    ///     This was changed from a simple DELETE FROM because timezoneId had been added as of 20221128
     /// </summary>
-    internal static void DataDeleteSQLiteToponomy()
+    private static void DataDeleteSQLiteToponomy()
     {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + s_settingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
-                                DELETE FROM toponymyData;"
+                                DROP TABLE IF EXISTS [toponymyData];
+                                CREATE TABLE [toponymyData](
+                                            [Lat] DECIMAL(19, 6) NOT NULL, 
+                                            [Lng] DECIMAL(19, 6) NOT NULL, 
+                                            [AdminName1] NTEXT, 
+                                            [AdminName2] NTEXT, 
+                                            [ToponymName] NTEXT, 
+                                            [CountryCode] NTEXT,
+                                            [timezoneId] NTEXT,
+                                            PRIMARY KEY([Lat], [Lng]))
+                                ;"
             ;
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
@@ -668,9 +704,9 @@ internal static partial class HelperStatic
     /// <summary>
     ///     Clears the data from the Altitude table. Run at session start.
     /// </summary>
-    internal static void DataDeleteSQLiteAltitude()
+    private static void DataDeleteSQLiteAltitude()
     {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + s_settingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -694,11 +730,11 @@ internal static partial class HelperStatic
     ///     systems and strings are easier to coerce to work.
     /// </param>
     /// <param name="Altitude">API Response for this particular tag.</param>
-    internal static void DataWriteSQLiteAltitudeWholeRow(string lat,
-                                                         string lng,
-                                                         string Altitude = "")
+    private static void DataWriteSQLiteAltitudeWholeRow(string lat,
+                                                        string lng,
+                                                        string Altitude = "")
     {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + s_settingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -733,8 +769,8 @@ internal static partial class HelperStatic
         // need to account for lack of data actually
         if (inputVal != " ")
         {
-            string countryCodeFilePath = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "isoCountryCodeMapping.sqlite");
-            using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + countryCodeFilePath);
+            string countryCodeSQLiteFilePath = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "isoCountryCodeMapping.sqlite");
+            using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + countryCodeSQLiteFilePath);
             sqliteDB.Open();
 
             string sqlCommandStr = @"
@@ -752,12 +788,10 @@ internal static partial class HelperStatic
                 ;
             SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
 
-            using (SQLiteDataReader reader = sqlToRun.ExecuteReader())
+            using SQLiteDataReader reader = sqlToRun.ExecuteReader();
+            while (reader.Read())
             {
-                while (reader.Read())
-                {
-                    returnString = reader.GetString(i: 0);
-                }
+                returnString = reader.GetString(i: 0);
             }
         }
 

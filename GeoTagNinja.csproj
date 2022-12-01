@@ -118,8 +118,8 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="RestSharp, Version=108.0.2.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
-      <HintPath>packages\RestSharp.108.0.2\lib\netstandard2.0\RestSharp.dll</HintPath>
+    <Reference Include="RestSharp, Version=108.0.3.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>packages\RestSharp.108.0.3\lib\netstandard2.0\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="SQLitePCLRaw.core, Version=2.1.2.1721, Culture=neutral, PublicKeyToken=1488e028ca7ab535, processorArchitecture=MSIL">
       <HintPath>packages\SQLitePCLRaw.core.2.1.2\lib\netstandard2.0\SQLitePCLRaw.core.dll</HintPath>
@@ -202,6 +202,12 @@
     <Compile Include="FrmImportGpx.Designer.cs">
       <DependentUpon>FrmImportGpx.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmPasteWhat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmPasteWhat.Designer.cs">
+      <DependentUpon>FrmPasteWhat.cs</DependentUpon>
+    </Compile>
     <Compile Include="HelperNonStatic.cs" />
     <Compile Include="HelperNonStatic.Generic.cs" />
     <Compile Include="HelperStatic.Exif.cs" />
@@ -238,6 +244,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FrmAboutBox.resx">
       <DependentUpon>FrmAboutBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmEditFileData.resx">
       <DependentUpon>FrmEditFileData.cs</DependentUpon>
@@ -247,6 +254,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMainApp.resx">
       <DependentUpon>FrmMainApp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmPasteWhat.resx">
+      <DependentUpon>FrmPasteWhat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmSettings.resx">
       <DependentUpon>FrmSettings.cs</DependentUpon>

@@ -21,6 +21,7 @@ public partial class FrmSettings : Form
         // this one is largely responsible for disabling the detection of "new" (changed) data. (ie when going from "noting" to "something")
         _nowLoadingSettingsData = true;
         HelperNonStatic helperNonstatic = new();
+        HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
 
         // Gets the various controls' labels and values (eg "latitude" and "51.002")
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
@@ -159,13 +160,13 @@ public partial class FrmSettings : Form
         HelperStatic.DataDeleteSQLitesettingsToWritePreQueue();
 
         // refresh user data
-        HelperStatic.s_ArcGIS_APIKey = HelperStatic.DataSelectTbxARCGIS_APIKey_FromSQLite();
-        HelperStatic.s_GeoNames_UserName = HelperStatic.DataReadSQLiteSettings(
+        HelperStatic.SArcGisApiKey = HelperStatic.DataSelectTbxARCGIS_APIKey_FromSQLite();
+        HelperStatic.SGeoNamesUserName = HelperStatic.DataReadSQLiteSettings(
             tableName: "settings",
             settingTabPage: "tpg_Application",
             settingId: "tbx_GeoNames_UserName"
         );
-        HelperStatic.s_GeoNames_Pwd = HelperStatic.DataReadSQLiteSettings(
+        HelperStatic.SGeoNamesPwd = HelperStatic.DataReadSQLiteSettings(
             tableName: "settings",
             settingTabPage: "tpg_Application",
             settingId: "tbx_GeoNames_Pwd"
@@ -178,11 +179,11 @@ public partial class FrmSettings : Form
         );
         if (tmpSettingVal == "true")
         {
-            HelperStatic.s_ResetMapToZero = true;
+            HelperStatic.SResetMapToZero = true;
         }
         else
         {
-            HelperStatic.s_ResetMapToZero = false;
+            HelperStatic.SResetMapToZero = false;
         }
 
         Hide();
@@ -294,6 +295,18 @@ public partial class FrmSettings : Form
                         );
                     }
                 }
+
+                if (tmpCtrlName.Contains(value: "ckb_ProcessOriginalFile"))
+                {
+                    if (box.Checked)
+                    {
+                        ckb_ResetFileDateToCreated.Enabled = true;
+                    }
+                    else
+                    {
+                        ckb_ResetFileDateToCreated.Enabled = false;
+                    }
+                }
             }
         }
 
@@ -403,8 +416,8 @@ public partial class FrmSettings : Form
     /// <summary>
     ///     Handles the event where any combobox's dropdown/text has changed.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
     private void Any_cbx_TextChanged(object sender,
                                      EventArgs e)
     {

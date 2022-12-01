@@ -18,6 +18,7 @@ using CoenM.ExifToolLib;
 using geoTagNinja;
 using GeoTagNinja.Properties;
 using Microsoft.Web.WebView2.Core;
+using TimeZoneConverter;
 using static System.Environment;
 
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
@@ -37,31 +38,40 @@ public partial class FrmMainApp : Form
     internal static string ResourcesFolderPath = Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "Resources");
     internal static string UserDataFolderPath = Path.Combine(path1: GetFolderPath(folder: SpecialFolder.ApplicationData), path2: "GeoTagNinja");
     internal const string DoubleQuote = "\"";
+
     internal const string ParentFolder = "..";
     internal static string LatCoordinate;
     internal static string LngCoordinate;
+
     internal static DataTable ObjectNames;
     internal static DataTable ObjectTagNamesIn;
     internal static DataTable ObjectTagNamesOut;
     internal static string FolderName;
     internal static string AppLanguage = "english"; // default to english 
+
     internal static string ShowLocToMapDialogChoice = "default";
     internal FrmSettings FrmSettings;
     internal FrmEditFileData FrmEditFileData;
     internal FrmImportGpx FrmImportGpx;
     internal ListViewColumnSorter lvw_ColumnSorter;
 
-    /// <summary>
-    ///     this one basically handles what extensions we work with.
-    ///     the actual list is used for file-specific Settings as well as the general running of the app
-    ///     leave the \t in!
-    /// </summary>
-    internal AsyncExifTool AsyncExifTool;
+    internal readonly AsyncExifTool AsyncExifTool;
 
+    // this is for copy-paste
     internal static DataTable DtFileDataCopyPool;
+    internal static DataTable DtFileDataPastePool;
+    internal static string FileDateCopySourceFileNameWithPath;
+
+    // these are for queueing listOfAsyncCompatibleFileNamesWithOutPath up
     internal static DataTable DtFileDataToWriteStage1PreQueue;
     internal static DataTable DtFileDataToWriteStage2QueuePendingSave;
     internal static DataTable DtFileDataToWriteStage3ReadyToWrite;
+
+    // this is for checking if listOfAsyncCompatibleFileNamesWithOutPath need to be re-parsed.
+    internal static DataTable DtFilesSeenInThisSession;
+    internal static DataTable DtFileDataSeenInThisSession;
+
+    internal static bool RemoveGeoDataIsRunning;
 
     #endregion
 
@@ -145,13 +155,13 @@ public partial class FrmMainApp : Form
         // get some defaults
         try
         {
-            HelperStatic.s_ArcGIS_APIKey = HelperStatic.DataSelectTbxARCGIS_APIKey_FromSQLite();
-            HelperStatic.s_GeoNames_UserName = HelperStatic.DataReadSQLiteSettings(
+            HelperStatic.SArcGisApiKey = HelperStatic.DataSelectTbxARCGIS_APIKey_FromSQLite();
+            HelperStatic.SGeoNamesUserName = HelperStatic.DataReadSQLiteSettings(
                 tableName: "settings",
                 settingTabPage: "tpg_Application",
                 settingId: "tbx_GeoNames_UserName"
             );
-            HelperStatic.s_GeoNames_Pwd = HelperStatic.DataReadSQLiteSettings(
+            HelperStatic.SGeoNamesPwd = HelperStatic.DataReadSQLiteSettings(
                 tableName: "settings",
                 settingTabPage: "tpg_Application",
                 settingId: "tbx_GeoNames_Pwd"
@@ -228,36 +238,7 @@ public partial class FrmMainApp : Form
 
         FormClosing += FrmMainApp_FormClosing;
 
-        #region create dataTables
-
-        // dt_fileDataCopyPool
-        DtFileDataCopyPool = new DataTable();
-        DtFileDataCopyPool.Clear();
-        DtFileDataCopyPool.Columns.Add(columnName: "settingId");
-        DtFileDataCopyPool.Columns.Add(columnName: "settingValue");
-
-        // dt_fileDataToWriteStage1PreQueue 
-        DtFileDataToWriteStage1PreQueue = new DataTable();
-        DtFileDataToWriteStage1PreQueue.Clear();
-        DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "filePath");
-        DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingId");
-        DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingValue");
-
-        // dt_fileDataToWriteStage2QueuePendingSave 
-        DtFileDataToWriteStage2QueuePendingSave = new DataTable();
-        DtFileDataToWriteStage2QueuePendingSave.Clear();
-        DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "filePath");
-        DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingId");
-        DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingValue");
-
-        // dt_fileDataToWriteStage3ReadyToWrite 
-        DtFileDataToWriteStage3ReadyToWrite = new DataTable();
-        DtFileDataToWriteStage3ReadyToWrite.Clear();
-        DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "filePath");
-        DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingId");
-        DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingValue");
-
-        #endregion
+        HelperStatic.GenericCreateDataTables();
     }
 
     /// <summary>
@@ -475,11 +456,11 @@ public partial class FrmMainApp : Form
             tbx_lng.Text = defaultLng;
         }
 
-        HelperStatic.hs_MapMarkers.Clear();
-        HelperStatic.hs_MapMarkers.Add(item: (tbx_lat.Text.Replace(oldChar: ',', newChar: '.'), tbx_lng.Text.Replace(oldChar: ',', newChar: '.')));
+        HelperStatic.HsMapMarkers.Clear();
+        HelperStatic.HsMapMarkers.Add(item: (tbx_lat.Text.Replace(oldChar: ',', newChar: '.'), tbx_lng.Text.Replace(oldChar: ',', newChar: '.')));
         NavigateMapGo();
 
-        HelperStatic.GenericCheckForNewVersions();
+        await HelperStatic.GenericCheckForNewVersions();
     }
 
     /// <summary>
@@ -505,7 +486,10 @@ public partial class FrmMainApp : Form
 
         try
         {
-            wbv_MapArea.CoreWebView2.Settings.IsWebMessageEnabled = true;
+            if (wbv_MapArea.CoreWebView2 != null)
+            {
+                wbv_MapArea.CoreWebView2.Settings.IsWebMessageEnabled = true;
+            }
         }
         catch (Exception ex)
         {
@@ -544,12 +528,12 @@ public partial class FrmMainApp : Form
         // replace hard-coded values in the html code
         try
         {
-            if (HelperStatic.s_ArcGIS_APIKey == null)
+            if (HelperStatic.SArcGisApiKey == null)
             {
-                HelperStatic.s_ArcGIS_APIKey = HelperStatic.DataSelectTbxARCGIS_APIKey_FromSQLite();
+                HelperStatic.SArcGisApiKey = HelperStatic.DataSelectTbxARCGIS_APIKey_FromSQLite();
             }
 
-            htmlCode = htmlCode.Replace(oldValue: "yourApiKey", newValue: HelperStatic.s_ArcGIS_APIKey);
+            htmlCode = htmlCode.Replace(oldValue: "yourApiKey", newValue: HelperStatic.SArcGisApiKey);
             htmlCode = htmlCode.Replace(oldValue: "replaceLat", newValue: LatCoordinate);
             htmlCode = htmlCode.Replace(oldValue: "replaceLng", newValue: LngCoordinate);
         }
@@ -593,7 +577,14 @@ public partial class FrmMainApp : Form
             DialogResult dialogResult = MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_QuestionFileQIsNotEmpty"), caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
             {
+                while (HelperStatic.FileListBeingUpdated || HelperStatic.FilesAreBeingSaved)
+                {
+                    await Task.Delay(millisecondsDelay: 10);
+                }
+
                 await HelperStatic.ExifWriteExifToFile();
+                // shouldn't be needed but just in case.
+                HelperStatic.FilesAreBeingSaved = false;
             }
             else if (dialogResult == DialogResult.No)
             {
@@ -619,7 +610,7 @@ public partial class FrmMainApp : Form
         );
 
         // clean up
-        pbx_imagePreview.Image = null; // unlocks files. theoretically.
+        pbx_imagePreview.Image = null; // unlocks listOfAsyncCompatibleFileNamesWithOutPath. theoretically.
         HelperStatic.FsoCleanUpUserFolder();
 
         // force it otherwise it keeps a lock on for a few seconds.
@@ -744,13 +735,13 @@ public partial class FrmMainApp : Form
         #region splitcontainers
 
         frmMainApp.splitContainerMain.Top = frmMainApp.tsr_FolderControl.Bottom;
-        frmMainApp.splitContainerMain.Left = Convert.ToInt16(value: Left + 20);
-        frmMainApp.splitContainerMain.Height = Convert.ToInt16(value: frmMainApp.Height - frmMainApp.splitContainerMain.Top);
-        frmMainApp.splitContainerMain.Width = frmMainApp.Width - 20 - Convert.ToInt16(value: Left + 20);
+        frmMainApp.splitContainerMain.Left = 20;
+        frmMainApp.splitContainerMain.Height = Convert.ToInt16(value: frmMainApp.Height);
+        frmMainApp.splitContainerMain.Width = frmMainApp.Width - 40;
 
         try
         {
-            frmMainApp.splitContainerMain.SplitterDistance = Convert.ToInt16(value: frmMainApp.splitContainerMain.Width * 0.5);
+            frmMainApp.splitContainerMain.SplitterDistance = Convert.ToInt16(value: Width * 0.5);
             frmMainApp.splitContainerMain.MaximumSize = new Size(width: Convert.ToInt16(value: frmMainApp.Width * 0.98), height: Convert.ToInt16(value: (frmMainApp.Height - frmMainApp.splitContainerMain.Top) * 0.95));
 
             // that's the left block
@@ -807,21 +798,28 @@ public partial class FrmMainApp : Form
         frmMainApp.btn_loctToFile.Left = frmMainApp.btn_NavigateMapGo.Right + 2;
 
         // bit manual for now.
-        ttp_loctToFile.SetToolTip(control: frmMainApp.btn_loctToFile,
-                                  caption: HelperStatic.DataReadSQLiteObjectText(
-                                      languageName: AppLanguage,
-                                      objectType: "ToolTip",
-                                      objectName: "ttp_loctToFile"
-                                  )
-        );
+        try
+        {
+            ttp_loctToFile.SetToolTip(control: frmMainApp.btn_loctToFile,
+                                      caption: HelperStatic.DataReadSQLiteObjectText(
+                                          languageName: AppLanguage,
+                                          objectType: "ToolTip",
+                                          objectName: "ttp_loctToFile"
+                                      )
+            );
 
-        ttp_NavigateMapGo.SetToolTip(control: frmMainApp.btn_NavigateMapGo,
-                                     caption: HelperStatic.DataReadSQLiteObjectText(
-                                         languageName: AppLanguage,
-                                         objectType: "ToolTip",
-                                         objectName: "ttp_NavigateMapGo"
-                                     )
-        );
+            ttp_NavigateMapGo.SetToolTip(control: frmMainApp.btn_NavigateMapGo,
+                                         caption: HelperStatic.DataReadSQLiteObjectText(
+                                             languageName: AppLanguage,
+                                             objectType: "ToolTip",
+                                             objectName: "ttp_NavigateMapGo"
+                                         )
+            );
+        }
+        catch
+        {
+            //nothing
+        }
     }
 
     /// <summary>
@@ -970,8 +968,8 @@ public partial class FrmMainApp : Form
 
         MapGpsCoordinates mapGpsCoordinates =
             JsonSerializer.Deserialize<MapGpsCoordinates>(json: jsonString);
-        string strLat = $"{mapGpsCoordinates?.lat}".ToString(provider: CultureInfo.InvariantCulture);
-        string strLng = $"{mapGpsCoordinates?.lng}".ToString(provider: CultureInfo.InvariantCulture);
+        string strLat = mapGpsCoordinates?.lat.ToString(provider: CultureInfo.InvariantCulture);
+        string strLng = mapGpsCoordinates?.lng.ToString(provider: CultureInfo.InvariantCulture);
         double.TryParse(s: strLat, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dblLat); // trust me i hate this f...king culture thing as much as possible...
         double.TryParse(s: strLng, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dblLng); // trust me i hate this f...king culture thing as much as possible...
         // if the user zooms out too much they can encounter an "unreal" coordinate.
@@ -1008,8 +1006,8 @@ public partial class FrmMainApp : Form
     private void btn_NavigateMapGo_Click(object sender,
                                          EventArgs e)
     {
-        HelperStatic.hs_MapMarkers.Clear();
-        HelperStatic.hs_MapMarkers.Add(item: (tbx_lat.Text.Replace(oldChar: ',', newChar: '.'), tbx_lng.Text.Replace(oldChar: ',', newChar: '.')));
+        HelperStatic.HsMapMarkers.Clear();
+        HelperStatic.HsMapMarkers.Add(item: (tbx_lat.Text.Replace(oldChar: ',', newChar: '.'), tbx_lng.Text.Replace(oldChar: ',', newChar: '.')));
         NavigateMapGo();
     }
 
@@ -1018,47 +1016,55 @@ public partial class FrmMainApp : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private void btn_loctToFile_Click(object sender,
-                                      EventArgs e)
+    private async void btn_loctToFile_Click(object sender,
+                                            EventArgs e)
     {
-        string strParsedLat = tbx_lat.Text.Replace(oldChar: ',', newChar: '.');
-        string strParsedLng = tbx_lng.Text.Replace(oldChar: ',', newChar: '.');
+        string strGpsLatitude = tbx_lat.Text.Replace(oldChar: ',', newChar: '.');
+        string strGpsLongitude = tbx_lng.Text.Replace(oldChar: ',', newChar: '.');
         double parsedLat;
         double parsedLng;
         GeoResponseToponomy readJsonToponomy = new();
         GeoResponseAltitude readJsonAltitude = new();
 
         // lat/long gets written regardless of update-toponomy-choice
-        if (double.TryParse(s: strParsedLat, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strParsedLng, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
+        if (double.TryParse(s: strGpsLatitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strGpsLongitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
         {
             if (lvw_FileList.SelectedItems.Count > 0)
             {
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
                     // don't do folders...
-                    if (File.Exists(path: Path.Combine(path1: FolderName, path2: lvi.Text)))
+                    string fileNameWithPath = Path.Combine(path1: FolderName, path2: lvi.Text);
+                    string fileNameWithoutPath = lvi.Text;
+                    if (File.Exists(path: fileNameWithPath))
                     {
+                        // check it's not in the read-queue.
+                        while (HelperStatic.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
+                        {
+                            await Task.Delay(millisecondsDelay: 10);
+                        }
+
                         // Latitude
                         HelperStatic.GenericUpdateAddToDataTable(
                             dt: DtFileDataToWriteStage3ReadyToWrite,
-                            filePath: lvi.Text,
+                            fileNameWithoutPath: fileNameWithoutPath,
                             settingId: "GPSLatitude",
-                            settingValue: strParsedLat
+                            settingValue: strGpsLatitude
                         );
 
                         // Longitude
                         HelperStatic.GenericUpdateAddToDataTable(
                             dt: DtFileDataToWriteStage3ReadyToWrite,
-                            filePath: lvi.Text,
+                            fileNameWithoutPath: fileNameWithoutPath,
                             settingId: "GPSLongitude",
-                            settingValue: strParsedLng
+                            settingValue: strGpsLongitude
                         );
                     }
                 }
             }
         }
 
-        if (double.TryParse(s: strParsedLat, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strParsedLng, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
+        if (double.TryParse(s: strGpsLatitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strGpsLongitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
         {
             if (lvw_FileList.SelectedItems.Count > 0)
             {
@@ -1095,69 +1101,50 @@ public partial class FrmMainApp : Form
 
                 if (ShowLocToMapDialogChoice != "default") // basically user can alt+f4 from the box, which is dumb but nonetheless would break the code.
                 {
+                    HelperStatic.FileListBeingUpdated = true;
                     foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                     {
                         // don't do folders...
-                        if (File.Exists(path: Path.Combine(path1: FolderName, path2: lvi.Text)))
+                        string fileNameWithPath = Path.Combine(path1: FolderName, path2: lvi.Text);
+                        string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
+                        if (File.Exists(path: fileNameWithPath))
                         {
+                            while (HelperStatic.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
+                            {
+                                await Task.Delay(millisecondsDelay: 10);
+                            }
+
                             DataTable dtToponomy = new();
                             DataTable dtAltitude = new();
                             if (ShowLocToMapDialogChoice.Contains(value: "yes"))
                             {
-                                HelperStatic.s_APIOkay = true;
-                                dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strParsedLat.ToString(provider: CultureInfo.InvariantCulture), lng: strParsedLng.ToString(provider: CultureInfo.InvariantCulture));
-                                dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrSQL(lat: strParsedLat.ToString(provider: CultureInfo.InvariantCulture), lng: strParsedLng.ToString(provider: CultureInfo.InvariantCulture));
-                                if (HelperStatic.s_APIOkay)
-                                {
-                                    List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
-                                    toponomyOverwrites.Add(item: ("CountryCode", dtToponomy.Rows[index: 0][columnName: "CountryCode"]
-                                                                      .ToString()));
-                                    toponomyOverwrites.Add(item: ("Country", dtToponomy.Rows[index: 0][columnName: "Country"]
-                                                                      .ToString()));
-                                    toponomyOverwrites.Add(item: ("City", dtToponomy.Rows[index: 0][columnName: "City"]
-                                                                      .ToString()));
-                                    toponomyOverwrites.Add(item: ("State", dtToponomy.Rows[index: 0][columnName: "State"]
-                                                                      .ToString()));
-                                    toponomyOverwrites.Add(item: ("Sub_location", dtToponomy.Rows[index: 0][columnName: "Sub_location"]
-                                                                      .ToString()));
-                                    toponomyOverwrites.Add(item: ("GPSAltitude", dtAltitude.Rows[index: 0][columnName: "Altitude"]
-                                                                      .ToString()));
-
-                                    foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
-                                    {
-                                        HelperStatic.GenericUpdateAddToDataTable(
-                                            dt: DtFileDataToWriteStage3ReadyToWrite,
-                                            filePath: lvi.Text,
-                                            settingId: toponomyDetail.toponomyOverwriteName,
-                                            settingValue: toponomyDetail.toponomyOverwriteVal
-                                        );
-                                    }
-
-                                    HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + lvi.Text);
-                                    lvi.ForeColor = Color.Red;
-                                }
+                                lvwUpdateTagsFromWeb(strGpsLatitude: strGpsLatitude, strGpsLongitude: strGpsLongitude, lvi: lvi);
                             }
                         }
+
+                        await HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
                     }
 
-                    HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite();
+                    HelperStatic.FileListBeingUpdated = false;
                 }
             }
         }
+
+        HelperStatic.LvwCountItemsWithGeoData();
     }
 
     /// <summary>
     ///     Handles the navigation to a coordinate on the map. Replaces hard-coded values w/ user-provided ones
     ///     ... and executes the navigation action.
     /// </summary>
-    internal void NavigateMapGo()
+    private void NavigateMapGo()
     {
         string htmlCode = "";
-        HelperStatic.HTMLAddMarker = "";
-        HelperStatic.minLat = null;
-        HelperStatic.minLng = null;
-        HelperStatic.maxLat = null;
-        HelperStatic.maxLng = null;
+        HelperStatic.HtmlAddMarker = "";
+        HelperStatic.MinLat = null;
+        HelperStatic.MinLng = null;
+        HelperStatic.MaxLat = null;
+        HelperStatic.MaxLng = null;
 
         // lazy
         string strLatCoordinate = "0";
@@ -1172,66 +1159,66 @@ public partial class FrmMainApp : Form
             MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
         }
 
-        if (HelperStatic.s_ArcGIS_APIKey == null)
+        if (HelperStatic.SArcGisApiKey == null)
         {
-            HelperStatic.s_ArcGIS_APIKey = HelperStatic.DataSelectTbxARCGIS_APIKey_FromSQLite();
+            HelperStatic.SArcGisApiKey = HelperStatic.DataSelectTbxARCGIS_APIKey_FromSQLite();
         }
 
-        foreach ((string strLat, string strLng) locationCoord in HelperStatic.hs_MapMarkers)
+        foreach ((string strLat, string strLng) locationCoord in HelperStatic.HsMapMarkers)
         {
-            HelperStatic.HTMLAddMarker += "var marker = L.marker([" + locationCoord.strLat + ", " + locationCoord.strLng + "]).addTo(map).openPopup();" + "\n";
+            HelperStatic.HtmlAddMarker += "var marker = L.marker([" + locationCoord.strLat + ", " + locationCoord.strLng + "]).addTo(map).openPopup();" + "\n";
             strLatCoordinate = locationCoord.strLat;
             strLngCoordinate = locationCoord.strLng;
 
             // set scene for mix/max so map zoom can be set automatically
             {
-                if (HelperStatic.minLat == null)
+                if (HelperStatic.MinLat == null)
                 {
-                    HelperStatic.minLat = double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture);
-                    HelperStatic.maxLat = HelperStatic.minLat;
+                    HelperStatic.MinLat = double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture);
+                    HelperStatic.MaxLat = HelperStatic.MinLat;
                 }
 
-                if (double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture) < HelperStatic.minLat)
+                if (double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture) < HelperStatic.MinLat)
                 {
-                    HelperStatic.minLat = double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture);
+                    HelperStatic.MinLat = double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture);
                 }
 
-                if (double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture) > HelperStatic.maxLat)
+                if (double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture) > HelperStatic.MaxLat)
                 {
-                    HelperStatic.maxLat = double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture);
+                    HelperStatic.MaxLat = double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture);
                 }
 
-                if (HelperStatic.minLng == null)
+                if (HelperStatic.MinLng == null)
                 {
-                    HelperStatic.minLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
-                    HelperStatic.maxLng = HelperStatic.minLng;
+                    HelperStatic.MinLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
+                    HelperStatic.MaxLng = HelperStatic.MinLng;
                 }
 
-                if (double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture) < HelperStatic.minLng)
+                if (double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture) < HelperStatic.MinLng)
                 {
-                    HelperStatic.minLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
+                    HelperStatic.MinLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
                 }
 
-                if (double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture) > HelperStatic.maxLng)
+                if (double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture) > HelperStatic.MaxLng)
                 {
-                    HelperStatic.maxLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
+                    HelperStatic.MaxLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
                 }
             }
         }
 
         htmlCode = htmlCode.Replace(oldValue: "replaceLat", newValue: strLatCoordinate);
         htmlCode = htmlCode.Replace(oldValue: "replaceLng", newValue: strLngCoordinate);
-        htmlCode = htmlCode.Replace(oldValue: "replaceMinLat", newValue: HelperStatic.minLat.ToString()
+        htmlCode = htmlCode.Replace(oldValue: "replaceMinLat", newValue: HelperStatic.MinLat.ToString()
                                         .Replace(oldChar: ',', newChar: '.'));
-        htmlCode = htmlCode.Replace(oldValue: "replaceMinLng", newValue: HelperStatic.minLng.ToString()
+        htmlCode = htmlCode.Replace(oldValue: "replaceMinLng", newValue: HelperStatic.MinLng.ToString()
                                         .Replace(oldChar: ',', newChar: '.'));
-        htmlCode = htmlCode.Replace(oldValue: "replaceMaxLat", newValue: HelperStatic.maxLat.ToString()
+        htmlCode = htmlCode.Replace(oldValue: "replaceMaxLat", newValue: HelperStatic.MaxLat.ToString()
                                         .Replace(oldChar: ',', newChar: '.'));
-        htmlCode = htmlCode.Replace(oldValue: "replaceMaxLng", newValue: HelperStatic.maxLng.ToString()
+        htmlCode = htmlCode.Replace(oldValue: "replaceMaxLng", newValue: HelperStatic.MaxLng.ToString()
                                         .Replace(oldChar: ',', newChar: '.'));
 
-        htmlCode = htmlCode.Replace(oldValue: "yourApiKey", newValue: HelperStatic.s_ArcGIS_APIKey);
-        htmlCode = htmlCode.Replace(oldValue: "{ HTMLAddMarker }", newValue: HelperStatic.HTMLAddMarker);
+        htmlCode = htmlCode.Replace(oldValue: "yourApiKey", newValue: HelperStatic.SArcGisApiKey);
+        htmlCode = htmlCode.Replace(oldValue: "{ HTMLAddMarker }", newValue: HelperStatic.HtmlAddMarker);
         wbv_MapArea.NavigateToString(htmlContent: htmlCode);
     }
 
@@ -1250,10 +1237,17 @@ public partial class FrmMainApp : Form
                                               EventArgs e)
     {
         // i think having an Item active can cause a lock on it
+        while (HelperStatic.FileListBeingUpdated || HelperStatic.FilesAreBeingSaved)
+        {
+            await Task.Delay(millisecondsDelay: 10);
+        }
+
         lvw_FileList.SelectedItems.Clear();
         // also the problem here is that the exiftoolAsync can still be running and locking the file.
 
         await HelperStatic.ExifWriteExifToFile();
+        // shouldn't be needed but just in case.
+        HelperStatic.FilesAreBeingSaved = false;
         DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
     }
 
@@ -1265,23 +1259,31 @@ public partial class FrmMainApp : Form
     private void tmi_File_EditFiles_Click(object sender,
                                           EventArgs e)
     {
-        FrmEditFileData = new FrmEditFileData();
-        FrmEditFileData.lvw_FileListEditImages.Items.Clear();
-        foreach (ListViewItem selectedItem in lvw_FileList.SelectedItems)
+        if (lvw_FileList.SelectedItems.Count > 0)
         {
-            if (File.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: selectedItem.Text)))
+            int fileCount = 0;
+            FrmEditFileData = new FrmEditFileData();
+            FrmEditFileData.lvw_FileListEditImages.Items.Clear();
+            foreach (ListViewItem selectedItem in lvw_FileList.SelectedItems)
             {
-                FolderName = tbx_FolderName.Text;
-                FrmEditFileData.lvw_FileListEditImages.Items.Add(text: selectedItem.Text);
+                if (File.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: selectedItem.Text)))
+                {
+                    FolderName = tbx_FolderName.Text;
+                    FrmEditFileData.lvw_FileListEditImages.Items.Add(text: selectedItem.Text);
+                    fileCount++;
+                }
+            }
+
+            if (fileCount > 0)
+            {
+                FrmEditFileData.Text = HelperStatic.DataReadSQLiteObjectText(
+                    languageName: AppLanguage,
+                    objectType: "Form",
+                    objectName: "FrmEditFileData"
+                );
+                FrmEditFileData.ShowDialog();
             }
         }
-
-        FrmEditFileData.Text = HelperStatic.DataReadSQLiteObjectText(
-            languageName: AppLanguage,
-            objectType: "Form",
-            objectName: "FrmEditFileData"
-        );
-        FrmEditFileData.ShowDialog();
     }
 
     /// <summary>
@@ -1307,10 +1309,11 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    ///     Handles the tmi_File_ImportGPX_Click event -> Brings up the FrmImportGpx to import grack files
+    ///     Handles the tmi_File_ImportGPX_Click event -> Brings up the FrmImportGpx to import grack
+    ///     listOfAsyncCompatibleFileNamesWithOutPath
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
     private void tmi_File_ImportGPX_Click(object sender,
                                           EventArgs e)
     {
@@ -1387,9 +1390,9 @@ public partial class FrmMainApp : Form
     private async void tsb_Refresh_lvwFileList_Click(object sender,
                                                      EventArgs e)
     {
-        HelperStatic.s_changeFolderIsOkay = false;
+        HelperStatic.SChangeFolderIsOkay = false;
         await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-        if (HelperStatic.s_changeFolderIsOkay)
+        if (HelperStatic.SChangeFolderIsOkay)
         {
             if (Directory.Exists(path: tbx_FolderName.Text))
             {
@@ -1422,12 +1425,12 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    ///     Performs a pull of Toponomy & Altitude info for all of the selected files.
+    ///     Performs a pull of Toponomy & Altitude info for all of the selected listOfAsyncCompatibleFileNamesWithOutPath.
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private void tsb_GetAllFromWeb_Click(object sender,
-                                         EventArgs e)
+    private async void tsb_GetAllFromWeb_Click(object sender,
+                                               EventArgs e)
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         ListView lvw = frmMainAppInstance.lvw_FileList;
@@ -1436,8 +1439,16 @@ public partial class FrmMainApp : Form
             foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
             {
                 // don't do folders...
-                if (File.Exists(path: Path.Combine(path1: FolderName, path2: lvi.Text)))
+                string fileNameWithPath = Path.Combine(path1: FolderName, path2: lvi.Text);
+                string fileNameWithoutPath = lvi.Text;
+                if (File.Exists(path: fileNameWithPath))
                 {
+                    // check it's not in the read-queue.
+                    while (HelperStatic.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
+                    {
+                        await Task.Delay(millisecondsDelay: 10);
+                    }
+
                     string strGpsLatitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLatitude"]
                                                              .Index]
                         .Text.ToString(provider: CultureInfo.InvariantCulture);
@@ -1446,55 +1457,16 @@ public partial class FrmMainApp : Form
                         .Text.ToString(provider: CultureInfo.InvariantCulture);
                     double parsedLat = 0.0;
                     double parsedLng = 0.0;
-                    if (double.TryParse(s: strGpsLatitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strGpsLongitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
+                    if (double.TryParse(s: strGpsLatitude,
+                                        style: NumberStyles.Any,
+                                        provider: CultureInfo.InvariantCulture,
+                                        result: out parsedLat) &&
+                        double.TryParse(s: strGpsLongitude,
+                                        style: NumberStyles.Any,
+                                        provider: CultureInfo.InvariantCulture,
+                                        result: out parsedLng))
                     {
-                        DataTable dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
-                        if (dtToponomy.Rows.Count > 0)
-                        {
-                            // Send off to SQL
-                            List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
-                            toponomyOverwrites.Add(item: ("CountryCode", dtToponomy.Rows[index: 0][columnName: "CountryCode"]
-                                                              .ToString()));
-                            toponomyOverwrites.Add(item: ("Country", dtToponomy.Rows[index: 0][columnName: "Country"]
-                                                              .ToString()));
-                            toponomyOverwrites.Add(item: ("City", dtToponomy.Rows[index: 0][columnName: "City"]
-                                                              .ToString()));
-                            toponomyOverwrites.Add(item: ("State", dtToponomy.Rows[index: 0][columnName: "State"]
-                                                              .ToString()));
-                            toponomyOverwrites.Add(item: ("Sub_location", dtToponomy.Rows[index: 0][columnName: "Sub_location"]
-                                                              .ToString()));
-
-                            foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
-                            {
-                                HelperStatic.GenericUpdateAddToDataTable(
-                                    dt: DtFileDataToWriteStage3ReadyToWrite,
-                                    filePath: lvi.Text,
-                                    settingId: toponomyDetail.toponomyOverwriteName,
-                                    settingValue: toponomyDetail.toponomyOverwriteVal
-                                );
-
-                                lvi.SubItems[index: lvw.Columns[key: "clh_" + toponomyDetail.toponomyOverwriteName]
-                                                 .Index]
-                                    .Text = toponomyDetail.toponomyOverwriteVal;
-                            }
-
-                            lvi.ForeColor = Color.Red;
-                            HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + lvi.Text);
-                        }
-
-                        DataTable dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
-                        if (dtAltitude.Rows.Count > 0)
-                        {
-                            HelperStatic.GenericUpdateAddToDataTable(
-                                dt: DtFileDataToWriteStage3ReadyToWrite,
-                                filePath: lvi.Text,
-                                settingId: "GPSAltitude",
-                                settingValue: dtAltitude.Rows[index: 0][columnName: "Altitude"]
-                                    .ToString()
-                            );
-                            lvi.ForeColor = Color.Red;
-                            HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + lvi.Text);
-                        }
+                        lvwUpdateTagsFromWeb(strGpsLatitude: strGpsLatitude, strGpsLongitude: strGpsLongitude, lvi: lvi);
                     }
                 }
             }
@@ -1505,6 +1477,118 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
+    ///     Pulls data from the various APIs and fills up the listView
+    /// </summary>
+    /// <param name="strGpsLatitude">Latitude as string</param>
+    /// <param name="strGpsLongitude">Longitude as string</param>
+    /// <param name="lvi">ListViewItem in the the main grid</param>
+    private void lvwUpdateTagsFromWeb(string strGpsLatitude,
+                                      string strGpsLongitude,
+                                      ListViewItem lvi)
+    {
+        string fileNameWithoutPath = lvi.Text;
+        DataTable dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
+        if (dtToponomy.Rows.Count > 0)
+        {
+            // Send off to SQL
+            List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
+            toponomyOverwrites.Add(item: ("CountryCode", dtToponomy.Rows[index: 0][columnName: "CountryCode"]
+                                              .ToString()));
+            toponomyOverwrites.Add(item: ("Country", dtToponomy.Rows[index: 0][columnName: "Country"]
+                                              .ToString()));
+            toponomyOverwrites.Add(item: ("City", dtToponomy.Rows[index: 0][columnName: "City"]
+                                              .ToString()));
+            toponomyOverwrites.Add(item: ("State", dtToponomy.Rows[index: 0][columnName: "State"]
+                                              .ToString()));
+            toponomyOverwrites.Add(item: ("Sub_location", dtToponomy.Rows[index: 0][columnName: "Sub_location"]
+                                              .ToString()));
+
+            // timeZone is a bit special but that's just how we all love it....not.
+            string TZ = dtToponomy.Rows[index: 0][columnName: "timeZoneId"]
+                .ToString();
+
+            DateTime createDate;
+            bool _ = DateTime.TryParse(s: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_CreateDate"]
+                                                           .Index]
+                                           .Text.ToString(provider: CultureInfo.InvariantCulture), result: out createDate);
+
+            try
+            {
+                string IANATZ = TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
+                string TZOffset;
+                TimeZoneInfo tst = TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
+
+                TZOffset = tst.GetUtcOffset(dateTime: createDate)
+                    .ToString()
+                    .Substring(startIndex: 0, length: tst.GetUtcOffset(dateTime: createDate)
+                                                          .ToString()
+                                                          .Length -
+                                                      3);
+                if (!TZOffset.StartsWith(value: "-"))
+                {
+                    toponomyOverwrites.Add(item: ("OffsetTime", "+" + TZOffset));
+                }
+                else
+                {
+                    toponomyOverwrites.Add(item: ("OffsetTime", TZOffset));
+                }
+            }
+            catch
+            {
+                // don't do anything.
+            }
+
+            foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+            {
+                HelperStatic.GenericUpdateAddToDataTable(
+                    dt: DtFileDataToWriteStage3ReadyToWrite,
+                    fileNameWithoutPath: lvi.Text,
+                    settingId: toponomyDetail.toponomyOverwriteName,
+                    settingValue: toponomyDetail.toponomyOverwriteVal
+                );
+
+                lvi.SubItems[index: lvw_FileList.Columns[key: "clh_" + toponomyDetail.toponomyOverwriteName]
+                                 .Index]
+                    .Text = toponomyDetail.toponomyOverwriteVal;
+            }
+
+            if (lvi.Index % 10 == 0)
+            {
+                Application.DoEvents();
+                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
+
+                HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+            }
+
+            HandlerUpdateItemColour(lvw: lvw_FileList, itemText: fileNameWithoutPath, color: Color.Red);
+        }
+
+        DataTable dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
+        if (dtAltitude.Rows.Count > 0)
+        {
+            HelperStatic.GenericUpdateAddToDataTable(
+                dt: DtFileDataToWriteStage3ReadyToWrite,
+                fileNameWithoutPath: lvi.Text,
+                settingId: "GPSAltitude",
+                settingValue: dtAltitude.Rows[index: 0][columnName: "Altitude"]
+                    .ToString()
+            );
+            if (lvi.Index % 10 == 0)
+            {
+                Application.DoEvents();
+                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
+                HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+            }
+
+            HandlerUpdateItemColour(lvw: lvw_FileList, itemText: fileNameWithoutPath, color: Color.Red);
+        }
+    }
+
+    /// <summary>
     ///     Generally similar to the above.(btn_Refresh_lvwFileList_Click)
     /// </summary>
     /// <param name="sender">Unused</param>
@@ -1512,11 +1596,11 @@ public partial class FrmMainApp : Form
     private async void btn_ts_Refresh_lvwFileList_Click(object sender,
                                                         EventArgs e)
     {
-        HelperStatic.s_changeFolderIsOkay = false;
+        HelperStatic.SChangeFolderIsOkay = false;
         await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-        if (HelperStatic.s_changeFolderIsOkay)
+        if (HelperStatic.SChangeFolderIsOkay)
         {
-            tsb_Refresh_lvwFileList_Click(sender: this, e: new EventArgs());
+            tsb_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
         }
     }
 
@@ -1529,9 +1613,9 @@ public partial class FrmMainApp : Form
     private async void btn_OneFolderUp_Click(object sender,
                                              EventArgs e)
     {
-        HelperStatic.s_changeFolderIsOkay = false;
+        HelperStatic.SChangeFolderIsOkay = false;
         await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-        if (HelperStatic.s_changeFolderIsOkay)
+        if (HelperStatic.SChangeFolderIsOkay)
         {
             string? tmpStrParent = null;
             string? tmpStrRoot = null;
@@ -1576,14 +1660,21 @@ public partial class FrmMainApp : Form
 
     /// <summary>
     ///     Handles the tsb_RemoveGeoData_Click event -> calls HelperStatic.ExifRemoveLocationData to remove GeoData from all
-    ///     selected files
+    ///     selected listOfAsyncCompatibleFileNamesWithOutPath
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private void tsb_RemoveGeoData_Click(object sender,
-                                         EventArgs e)
+    private async void tsb_RemoveGeoData_Click(object sender,
+                                               EventArgs e)
     {
-        HelperStatic.ExifRemoveLocationData(senderName: "FrmMainApp");
+        // if user is impatient and hammer-spams the button it could create a very long queue of nothing-useful.
+        if (!RemoveGeoDataIsRunning)
+        {
+            RemoveGeoDataIsRunning = true;
+            await HelperStatic.ExifRemoveLocationData(senderName: "FrmMainApp");
+            RemoveGeoDataIsRunning = false;
+            HelperStatic.LvwCountItemsWithGeoData();
+        }
     }
 
     /// <summary>
@@ -1609,9 +1700,9 @@ public partial class FrmMainApp : Form
     {
         if (e.KeyCode == Keys.Enter)
         {
-            HelperStatic.s_changeFolderIsOkay = false;
+            HelperStatic.SChangeFolderIsOkay = false;
             await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-            if (HelperStatic.s_changeFolderIsOkay)
+            if (HelperStatic.SChangeFolderIsOkay)
             {
                 btn_ts_Refresh_lvwFileList_Click(sender: this, e: new EventArgs());
             }
@@ -1621,8 +1712,8 @@ public partial class FrmMainApp : Form
     /// <summary>
     ///     This handles the event when the user clicks into the textbox -> current value gets selected.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
     private void tbx_FolderName_Enter(object sender,
                                       EventArgs e)
     {
@@ -1637,11 +1728,18 @@ public partial class FrmMainApp : Form
     private async void tsb_SaveFiles_Click(object sender,
                                            EventArgs e)
     {
+        while (HelperStatic.FileListBeingUpdated || HelperStatic.FilesAreBeingSaved)
+        {
+            await Task.Delay(millisecondsDelay: 10);
+        }
+
         // i think having an Item active can cause a lock on it
         lvw_FileList.SelectedItems.Clear();
         // also the problem here is that the exiftoolAsync can still be running and locking the file.
 
         await HelperStatic.ExifWriteExifToFile();
+        // shouldn't be needed but just in case.
+        HelperStatic.FilesAreBeingSaved = false;
         DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
     }
 
@@ -1651,95 +1749,104 @@ public partial class FrmMainApp : Form
 
     /// <summary>
     ///     Responsible for updating the main listview. For each file depending on the "compatible" or "incompatible" naming
-    ///     ... it assigns the outstanding files according to compatibility and then runs the respective exiftool commands
+    ///     ... it assigns the outstanding listOfAsyncCompatibleFileNamesWithOutPath according to compatibility and then runs
+    ///     the respective exiftool commands.
+    ///     Also I've introduced a "Please Wait" Form to block the Main Form from being interacted with while the folder is
+    ///     refreshing. Soz but needed.
     /// </summary>
     private async void lvwFileList_LoadOrUpdate()
     {
-        List<string> listOfAysncCompatibleItems = new();
-        List<string> listOfAysncIncompatibleItems = new();
-        List<string> listOfNonUtf8Items = new();
-        lvw_FileList.Items.Clear();
+        List<string> listOfAsyncCompatibleFileNamesWithOutPath = new();
+        List<string> listOfAsyncInompatibleFileNamesWithOutPath = new();
 
-        // this shouldn't really happen but just in case
-        if (FolderName is null)
+        lvw_FileList.Items.Clear();
+        Application.DoEvents();
+        HelperStatic.FilesBeingProcessed.Clear();
+        RemoveGeoDataIsRunning = false;
+
+        #region PleaseWaitBox
+
+        Form pleaseWaitBox = new();
+        pleaseWaitBox.Text = "Wait...";
+        pleaseWaitBox.ControlBox = false;
+        FlowLayoutPanel panel = new();
+
+        Label lblText = new();
+        lblText.Text = HelperStatic.DataReadSQLiteObjectText(
+            languageName: AppLanguage,
+            objectType: "Label",
+            objectName: "lbl_FolderIsLoading"
+        );
+        lblText.AutoSize = true;
+
+        panel.Controls.Add(value: lblText);
+
+        panel.Padding = new Padding(all: 5);
+        panel.AutoSize = true;
+
+        pleaseWaitBox.Controls.Add(value: panel);
+        pleaseWaitBox.Size = new Size(width: panel.Width + 10, height: panel.Height + 5);
+        pleaseWaitBox.ShowInTaskbar = false;
+
+        pleaseWaitBox.StartPosition = FormStartPosition.CenterScreen;
+        pleaseWaitBox.Show();
+        Enabled = false;
+
+        #endregion
+
+        if (tbx_FolderName.Text != null)
         {
-            if (Directory.Exists(path: tbx_FolderName.Text))
+            // this shouldn't really happen but just in case
+            if (FolderName is null)
             {
-                // nothing
+                if (Directory.Exists(path: tbx_FolderName.Text))
+                {
+                    // nothing
+                }
+                else
+                {
+                    tbx_FolderName.Text = @"C:\";
+                }
+
+                FolderName = tbx_FolderName.Text;
+            }
+
+            // check for drives
+            if (FolderName == SpecialFolder.MyComputer.ToString())
+            {
+                foreach (DriveInfo drive in DriveInfo.GetDrives())
+                {
+                    lvw_FileList_addListItem(fileNameWithoutPath: drive.Name);
+                }
             }
             else
             {
-                tbx_FolderName.Text = @"C:\";
-            }
-
-            FolderName = tbx_FolderName.Text;
-        }
-
-        // check for drives
-        if (FolderName == SpecialFolder.MyComputer.ToString())
-        {
-            foreach (DriveInfo drive in DriveInfo.GetDrives())
-            {
-                lvw_FileList_addListItem(fileName: drive.Name);
-            }
-        }
-        else
-        {
-            // list folders and stick them at the beginning of the listview
-            // ReparsePoint means these are links. 
-            List<string> dirs = new();
-            try
-            {
-                DirectoryInfo di = new(path: FolderName);
-                foreach (DirectoryInfo sub in di.GetDirectories())
+                // list folders and stick them at the beginning of the listview
+                // ReparsePoint means these are links. 
+                List<string> dirs = new();
+                try
                 {
-                    if (sub.Attributes.ToString()
-                            .Contains(value: "Directory") &&
-                        !sub.Attributes.ToString()
-                            .Contains(value: "ReparsePoint"))
+                    DirectoryInfo di = new(path: FolderName);
+                    foreach (DirectoryInfo sub in di.GetDirectories())
                     {
-                        dirs.Add(item: sub.Name);
+                        if (sub.Attributes.ToString()
+                                .Contains(value: "Directory") &&
+                            !sub.Attributes.ToString()
+                                .Contains(value: "ReparsePoint"))
+                        {
+                            dirs.Add(item: sub.Name);
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(text: ex.Message);
-            }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(text: ex.Message);
+                }
 
-            string[] allowedExtensions = new string[AncillaryListsArrays.AllCompatibleExtensions()
-                .Length];
-            Array.Copy(sourceArray: allowedExtensions, destinationArray: AncillaryListsArrays.AllCompatibleExtensions(), length: 0);
-            for (int i = 0; i < allowedExtensions.Length; i++)
-            {
-                allowedExtensions[i] = AncillaryListsArrays.AllCompatibleExtensions()[i]
-                    .Split('\t')
-                    .First();
-            }
-
-            // list files that have whitelisted extensions
-            List<string> files = new();
-            try
-            {
-                files = Directory
-                    .GetFiles(path: FolderName)
-                    .Where(predicate: file => allowedExtensions.Any(predicate: file.ToLower()
-                                                                        .EndsWith))
-                    .ToList();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(text: ex.Message);
-            }
-
-            files = files.OrderBy(keySelector: o => o)
-                .ToList();
-
-            // add a parent folder. "dot dot"
-            try
-            {
-                string tmpStrParent = HelperStatic.FsoGetParent(path: tbx_FolderName.Text);
-                if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
+                string[] allowedExtensions = new string[AncillaryListsArrays.AllCompatibleExtensions()
+                    .Length];
+                Array.Copy(sourceArray: allowedExtensions, destinationArray: AncillaryListsArrays.AllCompatibleExtensions(), length: 0);
+                for (int i = 0; i < allowedExtensions.Length; i++)
                 {
                     List<string> subItemList = new();
                     foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
@@ -1752,84 +1859,252 @@ public partial class FrmMainApp : Form
                     lvw_FileList.Items.Add(text: ParentFolder)
                         .SubItems.AddRange(items: subItemList.ToArray());
                 }
-            }
-            catch
-            {
-                // ignored
-            }
 
-            foreach (string currentDir in dirs)
-            {
-                lvw_FileList_addListItem(fileName: Path.GetFileName(path: currentDir));
-            }
-
-            foreach (string currentFile in files)
-            {
-                string fileNameToTest = Path.Combine(currentFile);
-                lvw_FileList_addListItem(fileName: Path.GetFileName(path: currentFile));
-
-                // the add-in used here can't process nonstandard characters in filenames w/o an args file, which doesn't return what we're after.
-                // so for 'standard' stuff we'll run async and for everything else we'll do it slower but more compatible
-
-                if (Regex.IsMatch(input: fileNameToTest, pattern: @"^[a-zA-Z0-9.:\\_ ]*$"))
+                // list listOfAsyncCompatibleFileNamesWithOutPath that have whitelisted extensions
+                List<string> listFilesWithPath = new();
+                try
                 {
-                    listOfAysncCompatibleItems.Add(item: Path.GetFileName(path: currentFile));
+                    listFilesWithPath = Directory
+                        .GetFiles(path: FolderName)
+                        .Where(predicate: file => allowedExtensions.Any(predicate: file.ToLower()
+                                                                            .EndsWith))
+                        .ToList();
                 }
-                else
+                catch (Exception ex)
                 {
-                    listOfAysncIncompatibleItems.Add(item: Path.GetFileName(path: currentFile));
+                    MessageBox.Show(text: ex.Message);
                 }
-            }
 
-            if (listOfAysncCompatibleItems.Count > 0)
-            {
-                HelperStatic.folderEnterLastEpoch = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                await HelperStatic.ExifGetExifFromFilesCompatibleFileNames(files: listOfAysncCompatibleItems, folderEnterEpoch: HelperStatic.folderEnterLastEpoch);
-            }
+                listFilesWithPath = listFilesWithPath.OrderBy(keySelector: o => o)
+                    .ToList();
 
-            if (listOfAysncIncompatibleItems.Count > 0)
-            {
-                string dontShowIncompatibleFileWarningAgainInSql = HelperStatic.DataReadSQLiteSettings(
-                    tableName: "settings",
-                    settingTabPage: "generic",
-                    settingId: "dontShowIncompatibleFileWarningAgain"
-                );
-                if (dontShowIncompatibleFileWarningAgainInSql != "true")
+                // also add to filesBeingProcessed
+                foreach (string fileNameWithPath in listFilesWithPath)
                 {
-                    DialogResult dontShowIncompatibleFileWarningAgain = MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_QuestionDontShowIncompatibleFileWarningAgain"),
-                                                                                        caption: "Nonstandard paths", buttons: MessageBoxButtons.OKCancel, icon: MessageBoxIcon.Warning);
-                    if (dontShowIncompatibleFileWarningAgain == DialogResult.Cancel)
+                    string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
+                    HelperStatic.GenericLockLockFile(fileNameWithoutPath: fileNameWithoutPath);
+                }
+
+                // add a parent folder. "dot dot"
+                try
+                {
+                    string tmpStrParent = HelperStatic.FsoGetParent(path: tbx_FolderName.Text);
+                    if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
                     {
-                        HelperStatic.DataWriteSQLiteSettings(
-                            tableName: "settings",
-                            settingTabPage: "generic",
-                            settingId: "dontShowIncompatibleFileWarningAgain",
-                            settingValue: "true"
-                        );
+                        lvw_FileList.Items.Add(text: "..");
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
+
+                foreach (string currentDir in dirs)
+                {
+                    lvw_FileList_addListItem(fileNameWithoutPath: Path.GetFileName(path: currentDir));
+                }
+
+                for (int d = 0; d < listFilesWithPath.Count; d++)
+                {
+                    string fileNameWithPath = listFilesWithPath[index: d];
+                    string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
+                    string fileNameWithPathWithXMP = Path.Combine(path1: Path.GetDirectoryName(path: fileNameWithPath), path2: Path.GetFileNameWithoutExtension(path: fileNameWithPath) + ".xmp");
+                    lvw_FileList_addListItem(fileNameWithoutPath: Path.GetFileName(path: fileNameWithoutPath));
+                    if (d % 10 == 0)
+                    {
+                        Application.DoEvents();
+                        // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                        HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
+                    }
+
+                    // if this file appears in the DtFilesSeenInThisSession // or with xmp
+                    bool MD5NeedsUpdating = false;
+                    if (DtFilesSeenInThisSession.AsEnumerable()
+                        .Any(predicate: row => fileNameWithPath == row.Field<string>(columnName: "fileNameWithPath")))
+                    {
+                        // check if the MD5 matches
+                        DataRow[] drFoundFileData = DtFilesSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameWithPath + "'");
+                        DataRow[] drFoundFileDataXmp = DtFilesSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameWithPathWithXMP + "'");
+                        if (drFoundFileData.Length != 0 || drFoundFileDataXmp.Length != 0)
+                        {
+                            string previousMD5 = drFoundFileData[0][columnName: "fileMD5Hash"]
+                                .ToString();
+
+                            string nowMD5 = HelperStatic.Md5SumByProcess(fileNameWithPath: fileNameWithPath);
+
+                            if (previousMD5 == nowMD5)
+                            {
+                                // nothing actually
+                            }
+                            else
+                            {
+                                MD5NeedsUpdating = true;
+                            }
+
+                            // xmp
+                            if (File.Exists(path: fileNameWithPathWithXMP) && drFoundFileDataXmp.Length != 0)
+                            {
+                                string previousMD5Xmp = drFoundFileDataXmp[0][columnName: "fileMD5Hash"]
+                                    .ToString();
+
+                                string nowMD5Xmp = HelperStatic.Md5SumByProcess(fileNameWithPath: fileNameWithPathWithXMP);
+
+                                if (previousMD5Xmp == nowMD5Xmp)
+                                {
+                                    // nothing actually
+                                }
+                                else
+                                {
+                                    MD5NeedsUpdating = true;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MD5NeedsUpdating = true;
+                    }
+
+                    if (MD5NeedsUpdating)
+                    {
+                        // delete if exists in DtFilesSeenInThisSession
+                        DataRow[] drFoundFileData = DtFilesSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameWithPath + "'");
+                        if (drFoundFileData.Length != 0)
+                        {
+                            drFoundFileData[0]
+                                .Delete();
+                            DtFilesSeenInThisSession.AcceptChanges();
+                        }
+
+                        // xmp
+                        DataRow[] drFoundFileDataXmp = DtFilesSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameWithPathWithXMP + "'");
+                        if (drFoundFileDataXmp.Length != 0)
+                        {
+                            drFoundFileDataXmp[0]
+                                .Delete();
+                            DtFilesSeenInThisSession.AcceptChanges();
+                        }
+
+                        // also drop from DtFileDataSeenInThisSession
+                        drFoundFileData = DtFileDataSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameWithPath + "'");
+                        if (drFoundFileData.Length != 0)
+                        {
+                            foreach (DataRow dr in drFoundFileData)
+                            {
+                                dr.Delete();
+                                DtFileDataSeenInThisSession.AcceptChanges();
+                            }
+                        }
+
+                        // the add-in used here can't process nonstandard characters in filenames w/o an args file, which doesn't return what we're after.
+                        // so for 'standard' stuff we'll run async and for everything else we'll do it slower but more compatible
+                        // lock will be removed later.
+                        if (Regex.IsMatch(input: fileNameWithPath, pattern: @"^[a-zA-Z0-9.:\\_\- ]*$"))
+                        {
+                            listOfAsyncCompatibleFileNamesWithOutPath.Add(item: Path.GetFileName(path: fileNameWithPath));
+                        }
+                        else
+                        {
+                            listOfAsyncInompatibleFileNamesWithOutPath.Add(item: Path.GetFileName(path: fileNameWithPath));
+                        }
+                    }
+                    // basically if we've already parsed this file and it hasn't changed since then don't reparse it.
+                    else
+                    {
+                        DataRow[] drFoundFileData = DtFileDataSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameWithPath + "'");
+
+                        // just to be on the foolproof side
+                        if (drFoundFileData.Length != 0)
+                        {
+                            foreach (DataRow dr in drFoundFileData)
+                            {
+                                ListView lvw = lvw_FileList;
+                                ListViewItem lvi = lvw.FindItemWithText(text: dr[columnIndex: 0]
+                                                                            .ToString()
+                                                                            .Split('\\')
+                                                                            .Last());
+                                //lvw.BeginUpdate();
+                                try
+                                {
+                                    lvi.SubItems[index: lvw.Columns[key: "clh_" +
+                                                                         dr[columnIndex: 1]]
+                                                     .Index]
+                                        .Text = dr[columnIndex: 2]
+                                        .ToString();
+                                }
+                                catch
+                                {
+                                    // nothing
+                                }
+
+                                // remove the lock
+                                try
+                                {
+                                    HelperStatic.GenericLockUnLockFile(fileNameWithoutPath: fileNameWithoutPath);
+                                }
+                                catch
+                                {
+                                    // nothing, this shouldn't happen but i don't want it to stop the app anyway.
+                                }
+
+                                if (lvi.Index % 10 == 0)
+                                {
+                                    Application.DoEvents();
+                                    // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                    HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
+                                }
+
+                                HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Black);
+
+                                ;
+                                //lvw.EndUpdate();
+                            }
+                        }
                     }
                 }
 
-                HelperStatic.folderEnterLastEpoch = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                await HelperStatic.ExifGetExifFromFilesIncompatibleFileNames(files: listOfAysncIncompatibleItems, folderEnterEpoch: HelperStatic.folderEnterLastEpoch);
-            }
-
-            int filesWithGeoData = 0;
-            foreach (ListViewItem lvi in lvw_FileList.Items)
-            {
-                if (lvi.SubItems.Count > 1)
+                if (listOfAsyncCompatibleFileNamesWithOutPath.Count > 0)
                 {
-                    if (lvi.SubItems[index: 1]
-                            .Text !=
-                        "-")
+                    HelperStatic.FolderEnterLastEpoch = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                    await HelperStatic.ExifGetExifFromFilesCompatibleFileNames(listOfAsyncCompatibleFileNamesWithOutPath: listOfAsyncCompatibleFileNamesWithOutPath, folderEnterEpoch: HelperStatic.FolderEnterLastEpoch);
+                }
+
+                if (listOfAsyncInompatibleFileNamesWithOutPath.Count > 0)
+                {
+                    string dontShowIncompatibleFileWarningAgainInSql = HelperStatic.DataReadSQLiteSettings(
+                        tableName: "settings",
+                        settingTabPage: "generic",
+                        settingId: "dontShowIncompatibleFileWarningAgain"
+                    );
+                    if (dontShowIncompatibleFileWarningAgainInSql != "true")
                     {
-                        filesWithGeoData++;
+                        DialogResult dontShowIncompatibleFileWarningAgain = MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_QuestionDontShowIncompatibleFileWarningAgain"),
+                                                                                            caption: "Nonstandard paths", buttons: MessageBoxButtons.OKCancel, icon: MessageBoxIcon.Warning);
+                        if (dontShowIncompatibleFileWarningAgain == DialogResult.Cancel)
+                        {
+                            HelperStatic.DataWriteSQLiteSettings(
+                                tableName: "settings",
+                                settingTabPage: "generic",
+                                settingId: "dontShowIncompatibleFileWarningAgain",
+                                settingValue: "true"
+                            );
+                        }
                     }
+
+                    HelperStatic.FolderEnterLastEpoch = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                    await HelperStatic.ExifGetExifFromFilesIncompatibleFileNames(listOfAsyncIncompatibleFileNamesWithOutPath: listOfAsyncInompatibleFileNamesWithOutPath, folderEnterEpoch: HelperStatic.FolderEnterLastEpoch);
                 }
             }
-
-            HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Ready. Files: Total: " + files.Count + " Geodata: " + filesWithGeoData);
         }
+
+        HelperStatic.FileListBeingUpdated = false;
+        Enabled = true;
+        pleaseWaitBox.Hide();
+        HelperStatic.LvwCountItemsWithGeoData();
     }
+
 
     /// <summary>
     ///     Handles the lvw_FileList_MouseDoubleClick event -> if user clicked on a folder then enter, if a file then edit
@@ -1854,10 +2129,10 @@ public partial class FrmMainApp : Form
             // if this is a folder or drive, enter
             else if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)) || isDrive)
             {
-                // check for outstanding files first and save if user wants
-                HelperStatic.s_changeFolderIsOkay = false;
+                // check for outstanding listOfAsyncCompatibleFileNamesWithOutPath first and save if user wants
+                HelperStatic.SChangeFolderIsOkay = false;
                 await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-                if (HelperStatic.s_changeFolderIsOkay)
+                if (HelperStatic.SChangeFolderIsOkay)
                 {
                     if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
                     {
@@ -1865,7 +2140,7 @@ public partial class FrmMainApp : Form
                     }
                     else
                     {
-                        // item.Text here will be something like "C_Windows_320GB_M2_nVME (C:\)"
+                        // itemText.Text here will be something like "C_Windows_320GB_M2_nVME (C:\)"
                         // so just extract whatever is in the parentheses
                         tbx_FolderName.Text = item.Text.Split('(')
                                                   .Last()
@@ -1901,8 +2176,8 @@ public partial class FrmMainApp : Form
     /// <summary>
     ///     Technically same as lvw_FileList_KeyDown but movement is a bit b...chy with "Down".
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
     private async void lvw_FileList_KeyUp(object sender,
                                           KeyEventArgs e)
     {
@@ -1919,17 +2194,20 @@ public partial class FrmMainApp : Form
             {
                 await HelperStatic.LvwItemClickNavigate();
                 // it's easier to call the create-preview here than in the other one because focusedItems misbehave/I don't quite understand it/them
-                if (File.Exists(path: Path.Combine(FolderName +
-                                                   lvw_FileList.SelectedItems[index: 0]
-                                                       .Text)))
+                if (lvw_FileList.SelectedItems.Count > 0)
                 {
-                    await HelperStatic.LvwItemCreatePreview(fileNameWithPath: Path.Combine(FolderName +
-                                                                                           lvw_FileList.SelectedItems[index: 0]
-                                                                                               .Text));
+                    if (File.Exists(path: Path.Combine(FolderName +
+                                                       lvw_FileList.SelectedItems[index: 0]
+                                                           .Text)))
+                    {
+                        await HelperStatic.LvwItemCreatePreview(fileNameWithPath: Path.Combine(FolderName +
+                                                                                               lvw_FileList.SelectedItems[index: 0]
+                                                                                                   .Text));
+                    }
                 }
 
                 // for folders and other non-valid items, don't do anything.
-                if (HelperStatic.hs_MapMarkers.Count > 0)
+                if (HelperStatic.HsMapMarkers.Count > 0)
                 {
                     NavigateMapGo();
                 }
@@ -1948,7 +2226,7 @@ public partial class FrmMainApp : Form
         // control A -> select all
         if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
         {
-            HelperStatic.s_NowSelectingAllItems = true;
+            HelperStatic.SNowSelectingAllItems = true;
 
             for (int i = 0; i < lvw_FileList.Items.Count; i++)
             {
@@ -1957,9 +2235,9 @@ public partial class FrmMainApp : Form
                 // so because there is no way to do a proper "select all" w/o looping i only want to run the "navigate" (which is triggered on select-state-change at the end)
                 if (i == lvw_FileList.Items.Count - 1)
                 {
-                    HelperStatic.s_NowSelectingAllItems = false;
+                    HelperStatic.SNowSelectingAllItems = false;
                     await HelperStatic.LvwItemClickNavigate();
-                    if (HelperStatic.hs_MapMarkers.Count > 0)
+                    if (HelperStatic.HsMapMarkers.Count > 0)
                     {
                         NavigateMapGo();
                     }
@@ -1967,7 +2245,7 @@ public partial class FrmMainApp : Form
             }
 
             // just in case...
-            HelperStatic.s_NowSelectingAllItems = false;
+            HelperStatic.SNowSelectingAllItems = false;
         }
 
         // Shift Control C -> copy details
@@ -2010,10 +2288,10 @@ public partial class FrmMainApp : Form
                 // if this is a folder or drive, enter
                 else if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
                 {
-                    // check for outstanding files first and save if user wants
-                    HelperStatic.s_changeFolderIsOkay = false;
+                    // check for outstanding listOfAsyncCompatibleFileNamesWithOutPath first and save if user wants
+                    HelperStatic.SChangeFolderIsOkay = false;
                     await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-                    if (HelperStatic.s_changeFolderIsOkay)
+                    if (HelperStatic.SChangeFolderIsOkay)
                     {
                         if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
                         {
@@ -2030,19 +2308,27 @@ public partial class FrmMainApp : Form
         else if (e.KeyCode == Keys.F5)
         {
             tsb_Refresh_lvwFileList_Click(sender: sender, e: EventArgs.Empty);
-            lvw_FileList.Items.Clear();
-            FolderName = tbx_FolderName.Text;
-            lvwFileList_LoadOrUpdate();
             e.Handled = true;
         }
 
-        // Control S -> Save files
+        // Control S -> Save listOfAsyncCompatibleFileNamesWithOutPath
         else if (e.Control && e.KeyCode == Keys.S)
         {
+            while (HelperStatic.FileListBeingUpdated || HelperStatic.FilesAreBeingSaved)
+            {
+                await Task.Delay(millisecondsDelay: 10);
+            }
+
             // i think having an Item active can cause a lock on it
             lvw_FileList.SelectedItems.Clear();
 
+            // sort alphabetically
+            DtFileDataToWriteStage3ReadyToWrite.DefaultView.Sort = "fileNameWithoutPath ASC";
+            DtFileDataToWriteStage3ReadyToWrite = DtFileDataToWriteStage3ReadyToWrite.DefaultView.ToTable();
+
             await HelperStatic.ExifWriteExifToFile();
+            // shouldn't be needed but just in case.
+            HelperStatic.FilesAreBeingSaved = false;
             DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
         }
     }
@@ -2050,10 +2336,11 @@ public partial class FrmMainApp : Form
     /// <summary>
     ///     Adds a new listitem to lvw_FileList listview
     /// </summary>
-    /// <param name="fileName">Name of file to be added</param>
-    private void lvw_FileList_addListItem(string fileName)
+    /// <param name="fileNameWithoutPath">Name of file to be added</param>
+    private void lvw_FileList_addListItem(string fileNameWithoutPath)
     {
         List<string> subItemList = new();
+        string fileNameWithPath = Path.Combine(path1: FolderName, path2: fileNameWithoutPath);
 
         #region icon handlers
 
@@ -2087,7 +2374,7 @@ public partial class FrmMainApp : Form
         IntPtr himl;
         if (tbx_FolderName.Text != SpecialFolder.MyComputer.ToString())
         {
-            himl = NativeMethods.SHGetFileInfo(pszPath: Path.Combine(path1: tbx_FolderName.Text, path2: fileName),
+            himl = NativeMethods.SHGetFileInfo(pszPath: Path.Combine(path1: tbx_FolderName.Text, path2: fileNameWithoutPath),
                                                dwFileAttributes: 0,
                                                psfi: ref shfi,
                                                cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
@@ -2095,7 +2382,7 @@ public partial class FrmMainApp : Form
         }
         else
         {
-            himl = NativeMethods.SHGetFileInfo(pszPath: fileName,
+            himl = NativeMethods.SHGetFileInfo(pszPath: fileNameWithoutPath,
                                                dwFileAttributes: 0,
                                                psfi: ref shfi,
                                                cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
@@ -2106,8 +2393,8 @@ public partial class FrmMainApp : Form
 
         #endregion
 
-        // For each file, create all columns with "-" (until exif update)
-        if (File.Exists(path: Path.Combine(path1: FolderName, path2: fileName)))
+        if (File.Exists(path: fileNameWithPath))
+
         {
             foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
             {
@@ -2140,7 +2427,7 @@ public partial class FrmMainApp : Form
         // The repercussions of that is w/o an extension fileinfo.exists will return false and exiftool won't run/find it.
 
         // With that in mind if we're missing the extension then we'll force it back on.
-        string fileExtension = Path.GetExtension(path: Path.Combine(path1: FolderName, path2: fileName));
+        string fileExtension = Path.GetExtension(path: fileNameWithPath);
         if (!string.IsNullOrEmpty(value: fileExtension))
         {
             if (shfi.szDisplayName.Contains(value: fileExtension))
@@ -2156,9 +2443,9 @@ public partial class FrmMainApp : Form
         {
             // this should prevent showing silly string values for special folders (like if your Pictures folder has been moved to say Digi, it'd have shown "Digi" but since that doesn't exist per se it'd have caused an error.
             // same for non-English places. E.g. "Documents and Settings" in HU would be displayed as "Felhasználók" but that folder is still actually called Documents and Settings, but the label is "fake".
-            if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: fileName)))
+            if (Directory.Exists(path: fileNameWithPath))
             {
-                lvi.Text = fileName;
+                lvi.Text = fileNameWithoutPath;
             }
             else
             {
@@ -2167,29 +2454,41 @@ public partial class FrmMainApp : Form
         }
 
         lvi.ImageIndex = shfi.iIcon;
-        if (File.Exists(path: Path.Combine(path1: FolderName, path2: fileName)))
+        if (File.Exists(path: fileNameWithPath))
         {
-            lvi.ForeColor = Color.Gray;
+            if (lvi.Index % 10 == 0)
+            {
+                Application.DoEvents();
+                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
+            }
+
+            HandlerUpdateItemColour(lvw: lvw_FileList, itemText: fileNameWithoutPath, color: Color.Gray);
         }
 
-        lvw_FileList.Items.Add(value: lvi)
-            .SubItems.AddRange(items: subItemList.ToArray());
+        // don't add twice. this could happen if user does F5 too fast/too many times/is derp. (mostly the last one.)
+        if (lvw_FileList.FindItemWithText(text: lvi.Text) == null)
+        {
+            lvw_FileList.Items.Add(value: lvi)
+                .SubItems.AddRange(items: subItemList.ToArray());
+        }
     }
 
     /// <summary>
     ///     Watches for the user to lift the mouse button while over the listview. This will trigger the collection of
     ///     coordinates and map them.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
     private async void lvw_FileList_MouseUp(object sender,
                                             MouseEventArgs e)
     {
-        if (!HelperStatic.s_NowSelectingAllItems)
+        if (!HelperStatic.SNowSelectingAllItems)
         {
             await HelperStatic.LvwItemClickNavigate();
             // for folders and other non-valid items, don't do anything.
-            if (HelperStatic.hs_MapMarkers.Count > 0)
+            if (HelperStatic.HsMapMarkers.Count > 0)
             {
                 NavigateMapGo();
             }
@@ -2202,28 +2501,68 @@ public partial class FrmMainApp : Form
 
     #region handlers
 
+    internal static int HandlerReturnItemIndes(ListView lvw,
+                                               string itemText)
+    {
+        int retVal = 0;
+        // If the current thread is not the UI thread, InvokeRequired will be true
+        if (lvw.InvokeRequired)
+        {
+            lvw.Invoke(method: (Action)(() => HandlerReturnItemIndes(lvw: lvw, itemText: itemText)));
+        }
+        else
+        {
+            retVal = lvw.FindItemWithText(text: itemText)
+                .Index;
+        }
+
+        return retVal;
+    }
+
     /// <summary>
     ///     Deals with invoking the listview (from outside the thread) and updating the colour of a particular row (Item) to
     ///     the assigned colour.
     /// </summary>
     /// <param name="lvw">The listView Control that needs updating. Most likely the one in the main Form</param>
-    /// <param name="item">The particular ListViewItem that needs updating</param>
+    /// <param name="itemText">The particular ListViewItem (by text) that needs updating</param>
     /// <param name="color">Parameter to assign a particular colour (prob red or black) to the whole row</param>
     internal static void HandlerUpdateItemColour(ListView lvw,
-                                                 string item,
+                                                 string itemText,
                                                  Color color)
     {
         // If the current thread is not the UI thread, InvokeRequired will be true
         if (lvw.InvokeRequired)
         {
-            lvw.Invoke(method: (Action)(() => HandlerUpdateItemColour(lvw: lvw, item: item, color: color)));
+            lvw.Invoke(method: (Action)(() => HandlerUpdateItemColour(lvw: lvw, itemText: itemText, color: color)));
             return;
         }
 
-        ListViewItem itemToModify = lvw.FindItemWithText(text: item);
+        ListViewItem itemToModify = lvw.FindItemWithText(text: itemText);
         if (itemToModify != null)
         {
             itemToModify.ForeColor = color;
+        }
+    }
+
+    /// <summary>
+    ///     Scrolls to the relevant line of the listview
+    /// </summary>
+    /// <param name="lvw">The listView Control that needs updating. Most likely the one in the main Form</param>
+    /// <param name="itemText">The particular ListViewItem (by text) that needs updating</param>
+    internal static void HandlerLvwScrollToDataPoint(ListView lvw,
+                                                     string itemText)
+    {
+        // If the current thread is not the UI thread, InvokeRequired will be true
+        if (lvw.InvokeRequired)
+        {
+            lvw.Invoke(method: (Action)(() => HandlerLvwScrollToDataPoint(lvw: lvw, itemText: itemText)));
+            return;
+        }
+
+        ListViewItem itemToModify = lvw.FindItemWithText(text: itemText);
+        if (itemToModify != null)
+        {
+            lvw.EnsureVisible(index: itemToModify.Index);
         }
     }
 
@@ -2252,8 +2591,8 @@ public partial class FrmMainApp : Form
     /// <summary>
     ///     Resizes items when the main Splitter is moved.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
     private void splitContainerMain_SplitterMoved(object sender,
                                                   SplitterEventArgs e)
     {
@@ -2290,8 +2629,8 @@ public partial class FrmMainApp : Form
     /// <summary>
     ///     Resizes items when the left lower Splitter is moved
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
     private void splitContainerLeftTop_SplitterMoved(object sender,
                                                      SplitterEventArgs e)
     {
@@ -2302,6 +2641,17 @@ public partial class FrmMainApp : Form
         splitContainerLeftBottom.Panel1.Top = 0;
         pbx_imagePreview.Top = 0;
         pbx_imagePreview.Height = splitContainerLeftBottom.Panel1.Height - 2;
+    }
+
+    /// <summary>
+    ///     This is a dummy. It's here to help me find where things go wrong when clicked on the map. Doesn't do anything.
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void wbv_MapArea_Click(object sender,
+                                   EventArgs e)
+    {
+        // note to self: the one you're looking for is called wbv_MapArea_WebMessageReceived
     }
 
     #endregion

@@ -16,24 +16,46 @@ internal partial class FrmAboutBox : Form
     public FrmAboutBox()
     {
         InitializeComponent();
-        Text = string.Format(format: "About {0}", arg0: AssemblyTitle);
+        HelperNonStatic helperNonstatic = new();
+        HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
+
+        // via https://stackoverflow.com/a/1601079/3968494
+        Version version = Assembly.GetEntryAssembly()
+            .GetName()
+            .Version;
+        DateTime buildDateTime = new DateTime(year: 2000, month: 1, day: 1).Add(value: new TimeSpan(
+                                                                                    ticks: TimeSpan.TicksPerDay * version.Build + // days since 1 January 2000
+                                                                                           TimeSpan.TicksPerSecond * 2 * version.Revision)); // seconds since midnight, (multiply by 2 to get original)
+
+        Text = AssemblyTitle;
         lbl_ProductName.Text = AssemblyProduct;
-        lbl_Version.Text = string.Format(format: "Version {0}", arg0: Assembly.GetExecutingAssembly()
-                                                                          .GetName()
-                                                                          .Version.Major +
-                                                                      "." +
-                                                                      Assembly.GetExecutingAssembly()
-                                                                          .GetName()
-                                                                          .Version.Minor +
-                                                                      "." +
-                                                                      Assembly.GetExecutingAssembly()
-                                                                          .GetName()
-                                                                          .Version.Build.ToString(provider: CultureInfo.InvariantCulture));
+        tbx_Version.Text = "Version: " +
+                           Assembly.GetExecutingAssembly()
+                               .GetName()
+                               .Version.Major +
+                           "." +
+                           Assembly.GetExecutingAssembly()
+                               .GetName()
+                               .Version.Minor +
+                           "." +
+                           Assembly.GetExecutingAssembly()
+                               .GetName()
+                               .Version.Build.ToString(provider: CultureInfo.InvariantCulture) +
+                           " [" +
+                           buildDateTime.ToString(format: "yyyyMMdd:HHmm") +
+                           "]";
+
         lbl_Copyright.Text = AssemblyCopyright;
         lbl_CompanyName.Text = AssemblyCompany;
         tbx_Description.Text = AssemblyDescription;
         lbl_Paypal.Links.Clear();
         lbl_Paypal.Links.Add(start: 0, length: lbl_Paypal.Width, linkData: "https://www.paypal.com/donate/?hosted_button_id=R5GSBXW8A5NNN");
+    }
+
+    public sealed override string Text
+    {
+        get => base.Text;
+        set => base.Text = value;
     }
 
     private void Btn_OK_Click(object sender,
@@ -64,7 +86,7 @@ internal partial class FrmAboutBox : Form
 
     #region Assembly Attribute Accessors
 
-    public string AssemblyTitle
+    private string AssemblyTitle
     {
         get
         {
@@ -88,7 +110,7 @@ internal partial class FrmAboutBox : Form
         .GetName()
         .Version.ToString();
 
-    public string AssemblyDescription
+    private string AssemblyDescription
     {
         get
         {
@@ -103,7 +125,7 @@ internal partial class FrmAboutBox : Form
         }
     }
 
-    public string AssemblyProduct
+    private string AssemblyProduct
     {
         get
         {
@@ -118,7 +140,7 @@ internal partial class FrmAboutBox : Form
         }
     }
 
-    public string AssemblyCopyright
+    private string AssemblyCopyright
     {
         get
         {
@@ -133,7 +155,7 @@ internal partial class FrmAboutBox : Form
         }
     }
 
-    public string AssemblyCompany
+    private string AssemblyCompany
     {
         get
         {

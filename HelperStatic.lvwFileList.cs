@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
@@ -11,57 +10,85 @@ namespace GeoTagNinja;
 
 internal static partial class HelperStatic
 {
-    #region lvwFileList
-
     /// <summary>
     ///     Updates the data sitting in the main listview if there is anything outstanding in
     ///     dt_fileDataToWriteStage3ReadyToWrite for the file
     /// </summary>
-    internal static void LwvUpdateRowFromDTWriteStage3ReadyToWrite()
+    /// <param name="lvi"></param>
+    internal static async Task LwvUpdateRowFromDTWriteStage3ReadyToWrite(ListViewItem lvi)
     {
         FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
-        ListViewItem lvi;
-
         string tmpCoordinates;
-
-        foreach (DataRow dr_ThisDataRow in FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows)
+        if (FrmMainAppInstance != null)
         {
-            try
+            ListView lvw = FrmMainAppInstance.lvw_FileList;
+            ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
+
+            int d = lvi.Index;
+            string fileNameWithoutPath = lvi.Text;
+
+            DataView dataViewRelevantRows = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
+            dataViewRelevantRows.RowFilter = "fileNameWithoutPath = '" +
+                                             fileNameWithoutPath +
+                                             "'";
+            DataTable dataTableRelevant = dataViewRelevantRows.ToTable();
+            if (dataTableRelevant.Rows.Count > 0)
             {
-                lvi = FrmMainAppInstance.lvw_FileList.FindItemWithText(text: dr_ThisDataRow[columnIndex: 0]
-                                                                           .ToString());
-                // theoretically we'd want to update the columns for each tag but for example when removing all data
-                // this becomes tricky bcs we're also firing a "-gps*=" tag.
-                if (lvchs[key: "clh_" + dr_ThisDataRow[columnIndex: 1]] != null)
+                try
                 {
-                    lvi.ForeColor = Color.Red;
-                    lvi.SubItems[index: lvchs[key: "clh_" + dr_ThisDataRow[columnIndex: 1]]
-                                     .Index]
-                        .Text = dr_ThisDataRow[columnIndex: 2]
-                        .ToString();
-                    //break;
+                    lvw.BeginUpdate();
+                    FrmMainApp.HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Red);
+
+                    foreach (DataRow drTagData in dataTableRelevant.Rows)
+                    {
+                        // theoretically we'd want to update the columns for each tag but for example when removing all data
+                        // this becomes tricky bcs we're also firing a "-gps*=" tag.
+                        string settingId = "clh_" +
+                                           drTagData[columnIndex: 1]
+                                               .ToString();
+                        string settingVal = drTagData[columnIndex: 2]
+                            .ToString();
+                        if (lvchs[key: settingId] != null)
+                        {
+                            try
+                            {
+                                lvi.SubItems[index: lvchs[key: "clh_" + drTagData[columnIndex: 1]]
+                                                 .Index]
+                                    .Text = settingVal;
+                                //break;
+                            }
+                            catch
+                            {
+                                // nothing - basically this could happen if user navigates out of the folder
+                            }
+                        }
+
+                        tmpCoordinates = lvi.SubItems[index: lvchs[key: "clh_GPSLatitude"]
+                                                          .Index]
+                                             .Text +
+                                         ";" +
+                                         lvi.SubItems[index: lvchs[key: "clh_GPSLongitude"]
+                                                          .Index]
+                                             .Text;
+
+                        lvi.SubItems[index: lvchs[key: "clh_Coordinates"]
+                                         .Index]
+                            .Text = tmpCoordinates != ";"
+                            ? tmpCoordinates
+                            : "";
+                    }
                 }
-
-                tmpCoordinates = lvi.SubItems[index: lvchs[key: "clh_GPSLatitude"]
-                                                  .Index]
-                                     .Text +
-                                 ";" +
-                                 lvi.SubItems[index: lvchs[key: "clh_GPSLongitude"]
-                                                  .Index]
-                                     .Text;
-                lvi.SubItems[index: lvchs[key: "clh_Coordinates"]
-                                 .Index]
-                    .Text = tmpCoordinates != ";"
-                    ? tmpCoordinates
-                    : "";
+                catch
+                {
+                    // nothing. 
+                }
             }
-            catch
+
+            lvw.EndUpdate();
+            if (d % 10 == 0)
             {
-                // nothing. 
+                Application.DoEvents();
             }
-
-            Application.DoEvents();
         }
     }
 
@@ -76,10 +103,34 @@ internal static partial class HelperStatic
             ListViewItem lvi = FrmMainAppInstance.lvw_FileList.SelectedItems[index: 0];
             if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text)))
             {
+                FrmMainApp.FileDateCopySourceFileNameWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text);
                 FrmMainApp.DtFileDataCopyPool.Rows.Clear();
                 List<string> listOfTagsToCopy = new()
                 {
-                    "Coordinates", "GPSLatitude", "GPSLatitudeRef", "GPSLongitude", "GPSLongitudeRef", "GPSSpeed", "GPSSpeedRef", "GPSAltitude", "GPSAltitudeRef", "Country", "CountryCode", "State", "City", "Sub_location", "DestCoordinates", "GPSDestLatitude", "GPSDestLatitudeRef", "GPSDestLongitude", "GPSDestLongitudeRef", "GPSImgDirection", "GPSImgDirectionRef"
+                    "Coordinates",
+                    "GPSLatitude",
+                    "GPSLatitudeRef",
+                    "GPSLongitude",
+                    "GPSLongitudeRef",
+                    "GPSSpeed",
+                    "GPSSpeedRef",
+                    "GPSAltitude",
+                    "GPSAltitudeRef",
+                    "Country",
+                    "CountryCode",
+                    "State",
+                    "City",
+                    "Sub_location",
+                    "DestCoordinates",
+                    "GPSDestLatitude",
+                    "GPSDestLatitudeRef",
+                    "GPSDestLongitude",
+                    "GPSDestLongitudeRef",
+                    "GPSImgDirection",
+                    "GPSImgDirectionRef",
+                    "TakenDate",
+                    "CreateDate",
+                    "OffsetTime"
                 };
 
                 foreach (ColumnHeader clh in FrmMainAppInstance.lvw_FileList.Columns)
@@ -105,45 +156,14 @@ internal static partial class HelperStatic
     ///     This drives the logic for "pasting" (as in copy-paste) the geodata from one file to others.
     ///     See further comments inside
     /// </summary>
-    internal static void LwvPasteGeoData()
+    internal static async void LwvPasteGeoData()
     {
-        FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        // check there's antying in copy-pool
-        if (FrmMainApp.DtFileDataCopyPool.Rows.Count > 0)
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        // check there's anything in copy-pool
+        if (FrmMainApp.DtFileDataCopyPool.Rows.Count > 0 && frmMainAppInstance != null)
         {
-            foreach (ListViewItem lvi in FrmMainAppInstance.lvw_FileList.SelectedItems)
-            {
-                if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text)))
-                {
-                    // paste all from copy-pool
-                    foreach (DataRow dr in FrmMainApp.DtFileDataCopyPool.Rows)
-                    {
-                        string strToWrite;
-                        if (dr[columnIndex: 1]
-                                .ToString() ==
-                            "-")
-                        {
-                            strToWrite = "";
-                        }
-                        else
-                        {
-                            strToWrite = dr[columnIndex: 1]
-                                .ToString();
-                        }
-
-                        GenericUpdateAddToDataTable(
-                            dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                            filePath: lvi.Text,
-                            settingId: dr[columnIndex: 0]
-                                .ToString(),
-                            settingValue: strToWrite
-                        );
-                    }
-                }
-            }
-
-            // push to lvw
-            LwvUpdateRowFromDTWriteStage3ReadyToWrite();
+            FrmPasteWhat frmPasteWhat = new(initiator: frmMainAppInstance.Name);
+            frmPasteWhat.ShowDialog();
         }
         else
         {
@@ -158,8 +178,8 @@ internal static partial class HelperStatic
     internal static async Task LvwItemClickNavigate()
     {
         FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        HTMLAddMarker = "";
-        hs_MapMarkers.Clear();
+        HtmlAddMarker = "";
+        HsMapMarkers.Clear();
 
         foreach (ListViewItem lvw_FileListItem in FrmMainAppInstance.lvw_FileList.SelectedItems)
         {
@@ -197,14 +217,14 @@ internal static partial class HelperStatic
                     {
                         FrmMainAppInstance.tbx_lat.Text = strLat;
                         FrmMainAppInstance.tbx_lng.Text = strLng;
-                        hs_MapMarkers.Add(item: (strLat, strLng));
+                        HsMapMarkers.Add(item: (strLat, strLng));
                     }
                 }
-                else if (s_ResetMapToZero)
+                else if (SResetMapToZero)
                 {
                     FrmMainAppInstance.tbx_lat.Text = "0";
                     FrmMainAppInstance.tbx_lng.Text = "0";
-                    hs_MapMarkers.Add(item: ("0", "0"));
+                    HsMapMarkers.Add(item: ("0", "0"));
                 }
                 // leave as-is (most likely the last photo)
             }
@@ -235,7 +255,7 @@ internal static partial class HelperStatic
                         }
                         else
                         {
-                            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorFileGoneMissing" + fileNameWithPath), caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorFileGoneMissing") + fileNameWithPath, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
                         }
                     }
                 }
@@ -244,7 +264,7 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    /// Checks if a ListViewItem is a drive (e.g. C:\) or not
+    ///     Checks if a ListViewItem is a drive (e.g. C:\) or not
     /// </summary>
     /// <param name="lvwFileListItem">The ListViewItem to check</param>
     /// <returns></returns>
@@ -262,7 +282,7 @@ internal static partial class HelperStatic
                     break;
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 //MessageBox.Show(ex.Message);
             }
@@ -278,40 +298,44 @@ internal static partial class HelperStatic
     /// <returns></returns>
     internal static async Task LvwItemCreatePreview(string fileNameWithPath)
     {
-        FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        FrmMainAppInstance.pbx_imagePreview.Image = null;
-        // via https://stackoverflow.com/a/8701748/3968494
-        Image img;
-
-        FileInfo fi = new(fileName: fileNameWithPath);
-        if (fi.Extension == ".jpg")
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        if (frmMainAppInstance != null)
         {
-            using (Bitmap bmpTemp = new(filename: fileNameWithPath))
+            frmMainAppInstance.pbx_imagePreview.Image = null;
+            // via https://stackoverflow.com/a/8701748/3968494
+            Image img = null;
+
+            FileInfo fi = new(fileName: fileNameWithPath);
+            try
             {
+                using Bitmap bmpTemp = new(filename: fileNameWithPath);
                 img = new Bitmap(original: bmpTemp);
-                FrmMainAppInstance.pbx_imagePreview.Image = img;
+                frmMainAppInstance.pbx_imagePreview.Image = img;
             }
-        }
-        else
-        {
-            string generatedFileName = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: FrmMainAppInstance.lvw_FileList.SelectedItems[index: 0]
-                                                                                                     .Text +
-                                                                                                 ".jpg");
-            // don't run the thing again if file has already been generated
-            if (!File.Exists(path: generatedFileName))
+            catch
             {
-                await ExifGetImagePreviews(fileName: fileNameWithPath);
+                // nothing.
             }
 
-            //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
-            if (File.Exists(path: generatedFileName))
+            if (img == null)
             {
-                using (Bitmap bmpTemp = new(filename: generatedFileName))
+                string generatedFileName = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: frmMainAppInstance.lvw_FileList.SelectedItems[index: 0]
+                                                                                                         .Text +
+                                                                                                     ".jpg");
+                // don't run the thing again if file has already been generated
+                if (!File.Exists(path: generatedFileName))
+                {
+                    await ExifGetImagePreviews(fileNameWithoutPath: fileNameWithPath);
+                }
+
+                //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
+                if (File.Exists(path: generatedFileName))
                 {
                     try
                     {
+                        using Bitmap bmpTemp = new(filename: generatedFileName);
                         img = new Bitmap(original: bmpTemp);
-                        FrmMainAppInstance.pbx_imagePreview.Image = img;
+                        frmMainAppInstance.pbx_imagePreview.Image = img;
                     }
                     catch
                     {
@@ -322,5 +346,38 @@ internal static partial class HelperStatic
         }
     }
 
-    #endregion
+    /// <summary>
+    ///     This updates the lbl_ParseProgress with count of items with geodata.
+    /// </summary>
+    internal static void LvwCountItemsWithGeoData()
+    {
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        int fileCount = 0;
+        int filesWithGeoData = 0;
+        string fileNameWithoutPath;
+
+        if (frmMainAppInstance != null)
+        {
+            foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.Items)
+            {
+                fileNameWithoutPath = lvi.Text;
+                if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath)))
+                {
+                    fileCount++;
+                }
+
+                if (lvi.SubItems.Count > 1)
+                {
+                    if (lvi.SubItems[index: 1]
+                            .Text.Replace(oldValue: "-", newValue: "") !=
+                        "")
+                    {
+                        filesWithGeoData++;
+                    }
+                }
+            }
+
+            FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Ready. Files: Total: " + fileCount + " Geodata: " + filesWithGeoData);
+        }
+    }
 }

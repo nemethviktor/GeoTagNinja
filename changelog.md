@@ -1,11 +1,29 @@
 ﻿# GeoTagNinja Changelog
+v0.6.8370 [20221201]
+- NEW FEATURE: Modify TakenDate & CreateDate (it's in the Edit File section - and no the time-shift cannot be copy-pasted yet -> shift works in terms of modifying the literal DateTime at the moment not as in a proper copyable "shift" value.)
+- Added a hold/blocker on entering a folder until the folder loads. This is annoying but is needed to prevent users from starting operations before the files are processed.
+- Added some logic to locally store (for the length of the session) each file's data. This is so that if the actual image/xmp files don't change then there's no need to re-parse everything _again_. It's slow and pointless.
+- Added functionality to "Get Data from Other File" in the Edit File section.
+- Changed logic around the addition of sidecar XMP files and (possibly) overwriting the source image file.
+- Fixed Copy-Paste properly. Users can now pick what to paste. It's faster too now.
+- Added this changelog.md file to the project outputs. I don't expect anyone to read it locally but at least now it's possible.
+- Bumped exifTool to v12.51
+- Added some logic to the above to allow for "Original Files DateTime" to be reset to CreateDateTime by default for RAW images. (These can all be changed in Settings/File Specific)
+- Rewrote the Excel macro that deals with exporting languages. It can now also import. (less relevant for the users but makes my life easier.)
+- Bugfixes:
+-- Error msg/image name not showing properly when file gone missing
+-- The previous version introduced an error in Non-English regions when the user clicked on the map. This has been fixed.
+-- Rewrote logic re: UK Cities/Regions being mixed up. Now only applies to London.
+-- Thoroughly renamed all my rather ambigous "filePath" variables in the code to specify fileNameWithPath and fileNameWithoutPath. This isn't a material change but it makes things a bit more readable.
+-- Further French lang updates. Thanks to pbranly once again.
+
 v0.6.8358 [20221119]
 - Finally managed to get hold of ReSharper so the code has been refactored in totality. Famous last words but it shouldn't affect usage.
 - Added a ".." to the main grid (listView) where applicable (parent folder).
 - Added the capability to navigate to the top of the folder structure. (e.g. MyComputer and then list the drives.)
 - Changed how the previews get created. This will hopefully result in faster preview-creation. The orientation-problem is still unsolved but it's likely to remain so for the time being.
 - Bugfixes:
--- If a user's "Pictures" (or any other "Special") folder had been moved and renamed the could would break because Windows treats special folders in odd ways. (e.g. if the Pics folder is called "Pics" Windows would still show "Pictures", which doesn't per se exist.)
+-- If a user's "Pictures" (or any other "Special") folder had been moved and renamed the would break because Windows treats special folders in odd ways. (e.g. if the Pics folder is called "Pics" Windows would still show "Pictures", which doesn't per se exist.)
 -- If the user had chosen "Delete All GPS Data" and subsequently added GPS data the addition would not have gone through upon save. This is now fixed.
 -- Rewrote the logic of (re)creating sidecar XMP files as the original logic would pull data from the RAW file (only), possibly overwriting Adobe-specific stuff that had been stored in an already-existing XMP.
 
