@@ -370,6 +370,7 @@ namespace GeoTagNinja
             // 
             // lvw_FileList
             // 
+            this.lvw_FileList.AllowColumnReorder = true;
             this.lvw_FileList.BackColor = System.Drawing.Color.SeaShell;
             this.lvw_FileList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.clh_FileName});
@@ -383,6 +384,7 @@ namespace GeoTagNinja
             this.lvw_FileList.TabIndex = 12;
             this.lvw_FileList.UseCompatibleStateImageBehavior = false;
             this.lvw_FileList.View = System.Windows.Forms.View.Details;
+            this.lvw_FileList.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvw_FileList_ColumnClick);
             this.lvw_FileList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvw_FileList_KeyDown);
             this.lvw_FileList.KeyUp += new System.Windows.Forms.KeyEventHandler(this.lvw_FileList_KeyUp);
             this.lvw_FileList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvw_FileList_MouseDoubleClick);

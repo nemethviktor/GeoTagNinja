@@ -38,17 +38,22 @@ public partial class FrmMainApp : Form
     internal static string ResourcesFolderPath = Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "Resources");
     internal static string UserDataFolderPath = Path.Combine(path1: GetFolderPath(folder: SpecialFolder.ApplicationData), path2: "GeoTagNinja");
     internal const string DoubleQuote = "\"";
-    private static string LatCoordinate;
-    private static string LngCoordinate;
+
+    internal const string ParentFolder = "..";
+    internal static string LatCoordinate;
+    internal static string LngCoordinate;
+
     internal static DataTable ObjectNames;
     internal static DataTable ObjectTagNamesIn;
     internal static DataTable ObjectTagNamesOut;
     internal static string FolderName;
     internal static string AppLanguage = "english"; // default to english 
-    private static string ShowLocToMapDialogChoice = "default";
-    private FrmSettings FrmSettings;
-    private FrmEditFileData FrmEditFileData;
-    private FrmImportGpx FrmImportGpx;
+
+    internal static string ShowLocToMapDialogChoice = "default";
+    internal FrmSettings FrmSettings;
+    internal FrmEditFileData FrmEditFileData;
+    internal FrmImportGpx FrmImportGpx;
+    internal ListViewColumnSorter lvw_ColumnSorter;
 
     internal readonly AsyncExifTool AsyncExifTool;
 
@@ -225,6 +230,10 @@ public partial class FrmMainApp : Form
             MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorLanguageFileColumnHeaders") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
         }
 
+        // Create the sorter for the list view
+        lvw_ColumnSorter = new ListViewColumnSorter();
+        lvw_FileList.ListViewItemSorter = lvw_ColumnSorter;
+
         #endregion
 
         FormClosing += FrmMainApp_FormClosing;
@@ -263,10 +272,10 @@ public partial class FrmMainApp : Form
             // ignored
         }
 
-        // resize columns
+        // resize columns and set order
         try
         {
-            VisualReadLvw_FileList_ColWidth(frmMainApp: this);
+            VisualReadLvw_FileList_ColOrderAndWidth(frmMainApp: this);
         }
         catch (Exception ex)
         {
@@ -584,7 +593,7 @@ public partial class FrmMainApp : Form
         }
 
         // write column widths to db
-        VisualWriteLvw_FileList_ColWidth(frmMainApp: this);
+        VisualWriteLvw_FileList_ColOrderAndWidth(frmMainApp: this);
 
         // write lat/long for future reference to db
         HelperStatic.DataWriteSQLiteSettings(
@@ -818,8 +827,15 @@ public partial class FrmMainApp : Form
     /// </summary>
     /// <param name="frmMainApp">Make a guess</param>
     /// <exception cref="InvalidOperationException">If it encounters a missingCLH</exception>
-    private void VisualReadLvw_FileList_ColWidth(FrmMainApp frmMainApp)
+    private void VisualReadLvw_FileList_ColOrderAndWidth(FrmMainApp frmMainApp)
     {
+        frmMainApp.lvw_FileList.BeginUpdate();  // stop drawing
+
+        // While reading col widths, gather order data
+        List<int> col_order_index = new();
+        List<string> col_order_headername = new();
+
+
         string settingIdToSend;
         int colWidth = 0;
         // logic: see if it's in SQL first...if not then set to Auto
@@ -833,6 +849,16 @@ public partial class FrmMainApp : Form
                 throw new InvalidOperationException(message: "columnHeader name missing");
             }
 
+            // Read index / order
+            settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_index";
+            col_order_headername.Add(columnHeader.Name);
+            col_order_index.Add( Convert.ToInt16(value: HelperStatic.DataReadSQLiteSettings(
+                                           tableName: "applayout",
+                                           settingTabPage: "lvw_FileList",
+                                           settingId: settingIdToSend)
+                ));
+
+            // Read and process width
             settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_width";
             colWidth = Convert.ToInt16(value: HelperStatic.DataReadSQLiteSettings(
                                            tableName: "applayout",
@@ -864,17 +890,42 @@ public partial class FrmMainApp : Form
                 }
             }
         }
+
+        // Finally set the column order - setting them from first to last col
+        int[] arr_col_order_index = col_order_index.ToArray();
+        string[] arr_col_order_headername = col_order_headername.ToArray();
+        Array.Sort(arr_col_order_index, arr_col_order_headername);
+        for (int idx = 0; idx < arr_col_order_headername.Length; idx++) {
+            foreach (ColumnHeader columnHeader in frmMainApp.lvw_FileList.Columns){
+                // We go for case-insensitive!
+                if (String.Equals(columnHeader.Name, arr_col_order_headername[idx], StringComparison.OrdinalIgnoreCase)) {
+                    columnHeader.DisplayIndex = idx;
+                    break;
+                }
+            }
+        }
+
+        frmMainApp.lvw_FileList.EndUpdate();  // continue drawing
     }
 
+
     /// <summary>
-    ///     Sends the CLH width to SQL for writing.
+    ///     Sends the CLH width and column order to SQL for writing.
     /// </summary>
     /// <param name="frmMainApp">Make a guess</param>
-    private void VisualWriteLvw_FileList_ColWidth(FrmMainApp frmMainApp)
+    private void VisualWriteLvw_FileList_ColOrderAndWidth(FrmMainApp frmMainApp)
     {
         string settingIdToSend;
         foreach (ColumnHeader columnHeader in frmMainApp.lvw_FileList.Columns)
         {
+            settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_index";
+            HelperStatic.DataWriteSQLiteSettings(
+                tableName: "applayout",
+                settingTabPage: "lvw_FileList",
+                settingId: settingIdToSend,
+                settingValue: columnHeader.DisplayIndex.ToString()
+            );
+
             if (columnHeader.Width != -2) // actually this doesn't work but low-pri to fix
             {
                 settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_width";
@@ -1797,9 +1848,16 @@ public partial class FrmMainApp : Form
                 Array.Copy(sourceArray: allowedExtensions, destinationArray: AncillaryListsArrays.AllCompatibleExtensions(), length: 0);
                 for (int i = 0; i < allowedExtensions.Length; i++)
                 {
-                    allowedExtensions[i] = AncillaryListsArrays.AllCompatibleExtensions()[i]
-                        .Split('\t')
-                        .First();
+                    List<string> subItemList = new();
+                    foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
+                    {
+                        if (columnHeader.Name != "clh_FileName")
+                        {
+                            subItemList.Add(item: "");
+                        }
+                    }
+                    lvw_FileList.Items.Add(text: ParentFolder)
+                        .SubItems.AddRange(items: subItemList.ToArray());
                 }
 
                 // list listOfAsyncCompatibleFileNamesWithOutPath that have whitelisted extensions
@@ -2064,7 +2122,7 @@ public partial class FrmMainApp : Form
         {
             bool isDrive = HelperStatic.LvwItemIsDrive(lvwFileListItem: item);
             // if .. (parent) then do a folder-up
-            if (item.Text == "..")
+            if (item.Text == ParentFolder)
             {
                 btn_OneFolderUp_Click(sender: sender, e: EventArgs.Empty);
             }
@@ -2223,7 +2281,7 @@ public partial class FrmMainApp : Form
                 string folderToEnter = item.Text;
 
                 // if .. (parent) then do a folder-up
-                if (folderToEnter == "..")
+                if (folderToEnter == ParentFolder)
                 {
                     btn_OneFolderUp_Click(sender: sender, e: EventArgs.Empty);
                 }
@@ -2336,12 +2394,22 @@ public partial class FrmMainApp : Form
         #endregion
 
         if (File.Exists(path: fileNameWithPath))
+
         {
             foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
             {
                 if (columnHeader.Name != "clh_FileName")
                 {
                     subItemList.Add(item: "-");
+                }
+            }
+        // For each non-file (i.e. dirs), create empty sub items (needed for sorting)
+        } else {
+            foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
+            {
+                if (columnHeader.Name != "clh_FileName")
+                {
+                    subItemList.Add(item: "");
                 }
             }
         }
@@ -2587,6 +2655,24 @@ public partial class FrmMainApp : Form
     }
 
     #endregion
+
+    private void lvw_FileList_ColumnClick(object sender, ColumnClickEventArgs e)
+    {
+        if (e.Column == lvw_ColumnSorter.SortColumn) {
+            // Column clicked is current sort column --> Reverse order
+            if (lvw_ColumnSorter.SortOrder == SortOrder.Ascending) {
+                lvw_ColumnSorter.SortOrder = SortOrder.Descending;
+            } else {
+                lvw_ColumnSorter.SortOrder = SortOrder.Ascending;
+            }
+        } else {
+            lvw_ColumnSorter.SortColumn = e.Column;
+            lvw_ColumnSorter.SortOrder = SortOrder.Ascending;
+        }
+
+        // Perform the sort with these new sort options.
+        lvw_FileList.Sort();
+    }
 }
 
 public static class ControlExtensions
