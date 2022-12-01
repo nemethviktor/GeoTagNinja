@@ -829,12 +829,11 @@ public partial class FrmMainApp : Form
     /// <exception cref="InvalidOperationException">If it encounters a missingCLH</exception>
     private void VisualReadLvw_FileList_ColOrderAndWidth(FrmMainApp frmMainApp)
     {
-        frmMainApp.lvw_FileList.BeginUpdate();  // stop drawing
+        frmMainApp.lvw_FileList.BeginUpdate(); // stop drawing
 
         // While reading col widths, gather order data
         List<int> col_order_index = new();
         List<string> col_order_headername = new();
-
 
         string settingIdToSend;
         int colWidth = 0;
@@ -851,12 +850,12 @@ public partial class FrmMainApp : Form
 
             // Read index / order
             settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_index";
-            col_order_headername.Add(columnHeader.Name);
-            col_order_index.Add( Convert.ToInt16(value: HelperStatic.DataReadSQLiteSettings(
-                                           tableName: "applayout",
-                                           settingTabPage: "lvw_FileList",
-                                           settingId: settingIdToSend)
-                ));
+            col_order_headername.Add(item: columnHeader.Name);
+            col_order_index.Add(item: Convert.ToInt16(value: HelperStatic.DataReadSQLiteSettings(
+                                                          tableName: "applayout",
+                                                          settingTabPage: "lvw_FileList",
+                                                          settingId: settingIdToSend)
+                                ));
 
             // Read and process width
             settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_width";
@@ -894,18 +893,21 @@ public partial class FrmMainApp : Form
         // Finally set the column order - setting them from first to last col
         int[] arr_col_order_index = col_order_index.ToArray();
         string[] arr_col_order_headername = col_order_headername.ToArray();
-        Array.Sort(arr_col_order_index, arr_col_order_headername);
-        for (int idx = 0; idx < arr_col_order_headername.Length; idx++) {
-            foreach (ColumnHeader columnHeader in frmMainApp.lvw_FileList.Columns){
+        Array.Sort(keys: arr_col_order_index, items: arr_col_order_headername);
+        for (int idx = 0; idx < arr_col_order_headername.Length; idx++)
+        {
+            foreach (ColumnHeader columnHeader in frmMainApp.lvw_FileList.Columns)
+            {
                 // We go for case-insensitive!
-                if (String.Equals(columnHeader.Name, arr_col_order_headername[idx], StringComparison.OrdinalIgnoreCase)) {
+                if (string.Equals(a: columnHeader.Name, b: arr_col_order_headername[idx], comparisonType: StringComparison.OrdinalIgnoreCase))
+                {
                     columnHeader.DisplayIndex = idx;
                     break;
                 }
             }
         }
 
-        frmMainApp.lvw_FileList.EndUpdate();  // continue drawing
+        frmMainApp.lvw_FileList.EndUpdate(); // continue drawing
     }
 
 
@@ -1848,6 +1850,9 @@ public partial class FrmMainApp : Form
                 Array.Copy(sourceArray: allowedExtensions, destinationArray: AncillaryListsArrays.AllCompatibleExtensions(), length: 0);
                 for (int i = 0; i < allowedExtensions.Length; i++)
                 {
+                    allowedExtensions[i] = AncillaryListsArrays.AllCompatibleExtensions()[i]
+                        .Split('\t')
+                        .First();
                     List<string> subItemList = new();
                     foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
                     {
@@ -1856,8 +1861,6 @@ public partial class FrmMainApp : Form
                             subItemList.Add(item: "");
                         }
                     }
-                    lvw_FileList.Items.Add(text: ParentFolder)
-                        .SubItems.AddRange(items: subItemList.ToArray());
                 }
 
                 // list listOfAsyncCompatibleFileNamesWithOutPath that have whitelisted extensions
@@ -1891,7 +1894,7 @@ public partial class FrmMainApp : Form
                     string tmpStrParent = HelperStatic.FsoGetParent(path: tbx_FolderName.Text);
                     if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
                     {
-                        lvw_FileList.Items.Add(text: "..");
+                        lvw_FileList.Items.Add(text: ParentFolder);
                     }
                 }
                 catch
@@ -2403,8 +2406,10 @@ public partial class FrmMainApp : Form
                     subItemList.Add(item: "-");
                 }
             }
-        // For each non-file (i.e. dirs), create empty sub items (needed for sorting)
-        } else {
+            // For each non-file (i.e. dirs), create empty sub items (needed for sorting)
+        }
+        else
+        {
             foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
             {
                 if (columnHeader.Name != "clh_FileName")
@@ -2493,6 +2498,36 @@ public partial class FrmMainApp : Form
                 NavigateMapGo();
             }
         }
+    }
+
+    /// <summary>
+    /// Handles the sorting and reordering.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void lvw_FileList_ColumnClick(object sender,
+                                          ColumnClickEventArgs e)
+    {
+        if (e.Column == lvw_ColumnSorter.SortColumn)
+        {
+            // Column clicked is current sort column --> Reverse order
+            if (lvw_ColumnSorter.SortOrder == SortOrder.Ascending)
+            {
+                lvw_ColumnSorter.SortOrder = SortOrder.Descending;
+            }
+            else
+            {
+                lvw_ColumnSorter.SortOrder = SortOrder.Ascending;
+            }
+        }
+        else
+        {
+            lvw_ColumnSorter.SortColumn = e.Column;
+            lvw_ColumnSorter.SortOrder = SortOrder.Ascending;
+        }
+
+        // Perform the sort with these new sort options.
+        lvw_FileList.Sort();
     }
 
     #endregion
@@ -2655,24 +2690,6 @@ public partial class FrmMainApp : Form
     }
 
     #endregion
-
-    private void lvw_FileList_ColumnClick(object sender, ColumnClickEventArgs e)
-    {
-        if (e.Column == lvw_ColumnSorter.SortColumn) {
-            // Column clicked is current sort column --> Reverse order
-            if (lvw_ColumnSorter.SortOrder == SortOrder.Ascending) {
-                lvw_ColumnSorter.SortOrder = SortOrder.Descending;
-            } else {
-                lvw_ColumnSorter.SortOrder = SortOrder.Ascending;
-            }
-        } else {
-            lvw_ColumnSorter.SortColumn = e.Column;
-            lvw_ColumnSorter.SortOrder = SortOrder.Ascending;
-        }
-
-        // Perform the sort with these new sort options.
-        lvw_FileList.Sort();
-    }
 }
 
 public static class ControlExtensions

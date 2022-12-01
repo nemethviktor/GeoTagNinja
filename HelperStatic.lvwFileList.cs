@@ -44,8 +44,7 @@ internal static partial class HelperStatic
                         // theoretically we'd want to update the columns for each tag but for example when removing all data
                         // this becomes tricky bcs we're also firing a "-gps*=" tag.
                         string settingId = "clh_" +
-                                           drTagData[columnIndex: 1]
-                                               .ToString();
+                                           drTagData[columnIndex: 1];
                         string settingVal = drTagData[columnIndex: 2]
                             .ToString();
                         if (lvchs[key: settingId] != null)

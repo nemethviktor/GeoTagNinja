@@ -273,7 +273,7 @@ internal static partial class HelperStatic
             case /*"FileModifyDate" or */"TakenDate" or "CreateDate":
             {
                 DateTime outDateTime;
-                if (DateTime.TryParse(s: tryDataValue, out outDateTime))
+                if (DateTime.TryParse(s: tryDataValue, result: out outDateTime))
                 {
                     tryDataValue = outDateTime.ToString(format: CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern);
                 }
