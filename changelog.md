@@ -1,4 +1,11 @@
 ﻿# GeoTagNinja Changelog
+v0.6.83XX [202212XX]
+- Updated Read-in logic to process the whole folder in one go. Should run _a lot_ faster now.
+- Eliminate MD5 checks. Basically the bloody thing takes longer than re-parsing the whole folder.
+- Column Sort (kudos to Urmel, thank you!)
+- Updated Translations.
+- Removed the built-in webView2 installer because it was more of a pain in the backside than benefit. Updated the readme w/ instructions should this cause a problem.
+
 v0.6.8370 [20221201]
 - NEW FEATURE: Modify TakenDate & CreateDate (it's in the Edit File section - and no the time-shift cannot be copy-pasted yet -> shift works in terms of modifying the literal DateTime at the moment not as in a proper copyable "shift" value.)
 - Added a hold/blocker on entering a folder until the folder loads. This is annoying but is needed to prevent users from starting operations before the files are processed.

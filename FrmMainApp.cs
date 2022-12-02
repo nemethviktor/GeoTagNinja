@@ -11,7 +11,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CoenM.ExifToolLib;
@@ -62,13 +61,13 @@ public partial class FrmMainApp : Form
     internal static DataTable DtFileDataPastePool;
     internal static string FileDateCopySourceFileNameWithPath;
 
-    // these are for queueing listOfAsyncCompatibleFileNamesWithOutPath up
+    // these are for queueing files up
     internal static DataTable DtFileDataToWriteStage1PreQueue;
     internal static DataTable DtFileDataToWriteStage2QueuePendingSave;
     internal static DataTable DtFileDataToWriteStage3ReadyToWrite;
 
-    // this is for checking if listOfAsyncCompatibleFileNamesWithOutPath need to be re-parsed.
-    internal static DataTable DtFilesSeenInThisSession;
+    // this is for checking if files need to be re-parsed.
+    //internal static DataTable DtFilesSeenInThisSession;
     internal static DataTable DtFileDataSeenInThisSession;
 
     internal static bool RemoveGeoDataIsRunning;
@@ -610,7 +609,7 @@ public partial class FrmMainApp : Form
         );
 
         // clean up
-        pbx_imagePreview.Image = null; // unlocks listOfAsyncCompatibleFileNamesWithOutPath. theoretically.
+        pbx_imagePreview.Image = null; // unlocks files. theoretically.
         HelperStatic.FsoCleanUpUserFolder();
 
         // force it otherwise it keeps a lock on for a few seconds.
@@ -829,12 +828,11 @@ public partial class FrmMainApp : Form
     /// <exception cref="InvalidOperationException">If it encounters a missingCLH</exception>
     private void VisualReadLvw_FileList_ColOrderAndWidth(FrmMainApp frmMainApp)
     {
-        frmMainApp.lvw_FileList.BeginUpdate();  // stop drawing
+        frmMainApp.lvw_FileList.BeginUpdate(); // stop drawing
 
         // While reading col widths, gather order data
         List<int> col_order_index = new();
         List<string> col_order_headername = new();
-
 
         string settingIdToSend;
         int colWidth = 0;
@@ -851,12 +849,12 @@ public partial class FrmMainApp : Form
 
             // Read index / order
             settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_index";
-            col_order_headername.Add(columnHeader.Name);
-            col_order_index.Add( Convert.ToInt16(value: HelperStatic.DataReadSQLiteSettings(
-                                           tableName: "applayout",
-                                           settingTabPage: "lvw_FileList",
-                                           settingId: settingIdToSend)
-                ));
+            col_order_headername.Add(item: columnHeader.Name);
+            col_order_index.Add(item: Convert.ToInt16(value: HelperStatic.DataReadSQLiteSettings(
+                                                          tableName: "applayout",
+                                                          settingTabPage: "lvw_FileList",
+                                                          settingId: settingIdToSend)
+                                ));
 
             // Read and process width
             settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_width";
@@ -894,18 +892,21 @@ public partial class FrmMainApp : Form
         // Finally set the column order - setting them from first to last col
         int[] arr_col_order_index = col_order_index.ToArray();
         string[] arr_col_order_headername = col_order_headername.ToArray();
-        Array.Sort(arr_col_order_index, arr_col_order_headername);
-        for (int idx = 0; idx < arr_col_order_headername.Length; idx++) {
-            foreach (ColumnHeader columnHeader in frmMainApp.lvw_FileList.Columns){
+        Array.Sort(keys: arr_col_order_index, items: arr_col_order_headername);
+        for (int idx = 0; idx < arr_col_order_headername.Length; idx++)
+        {
+            foreach (ColumnHeader columnHeader in frmMainApp.lvw_FileList.Columns)
+            {
                 // We go for case-insensitive!
-                if (String.Equals(columnHeader.Name, arr_col_order_headername[idx], StringComparison.OrdinalIgnoreCase)) {
+                if (string.Equals(a: columnHeader.Name, b: arr_col_order_headername[idx], comparisonType: StringComparison.OrdinalIgnoreCase))
+                {
                     columnHeader.DisplayIndex = idx;
                     break;
                 }
             }
         }
 
-        frmMainApp.lvw_FileList.EndUpdate();  // continue drawing
+        frmMainApp.lvw_FileList.EndUpdate(); // continue drawing
     }
 
 
@@ -1309,8 +1310,8 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    ///     Handles the tmi_File_ImportGPX_Click event -> Brings up the FrmImportGpx to import grack
-    ///     listOfAsyncCompatibleFileNamesWithOutPath
+    ///     Handles the tmi_File_ImportGPX_Click event -> Brings up the FrmImportGpx to import track
+    ///     files
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
@@ -1425,7 +1426,7 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    ///     Performs a pull of Toponomy & Altitude info for all of the selected listOfAsyncCompatibleFileNamesWithOutPath.
+    ///     Performs a pull of Toponomy & Altitude info for all of the selected files.
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
@@ -1660,7 +1661,7 @@ public partial class FrmMainApp : Form
 
     /// <summary>
     ///     Handles the tsb_RemoveGeoData_Click event -> calls HelperStatic.ExifRemoveLocationData to remove GeoData from all
-    ///     selected listOfAsyncCompatibleFileNamesWithOutPath
+    ///     selected files
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
@@ -1749,16 +1750,13 @@ public partial class FrmMainApp : Form
 
     /// <summary>
     ///     Responsible for updating the main listview. For each file depending on the "compatible" or "incompatible" naming
-    ///     ... it assigns the outstanding listOfAsyncCompatibleFileNamesWithOutPath according to compatibility and then runs
+    ///     ... it assigns the outstanding files according to compatibility and then runs
     ///     the respective exiftool commands.
     ///     Also I've introduced a "Please Wait" Form to block the Main Form from being interacted with while the folder is
     ///     refreshing. Soz but needed.
     /// </summary>
     private async void lvwFileList_LoadOrUpdate()
     {
-        List<string> listOfAsyncCompatibleFileNamesWithOutPath = new();
-        List<string> listOfAsyncInompatibleFileNamesWithOutPath = new();
-
         lvw_FileList.Items.Clear();
         Application.DoEvents();
         HelperStatic.FilesBeingProcessed.Clear();
@@ -1848,6 +1846,9 @@ public partial class FrmMainApp : Form
                 Array.Copy(sourceArray: allowedExtensions, destinationArray: AncillaryListsArrays.AllCompatibleExtensions(), length: 0);
                 for (int i = 0; i < allowedExtensions.Length; i++)
                 {
+                    allowedExtensions[i] = AncillaryListsArrays.AllCompatibleExtensions()[i]
+                        .Split('\t')
+                        .First();
                     List<string> subItemList = new();
                     foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
                     {
@@ -1856,11 +1857,9 @@ public partial class FrmMainApp : Form
                             subItemList.Add(item: "");
                         }
                     }
-                    lvw_FileList.Items.Add(text: ParentFolder)
-                        .SubItems.AddRange(items: subItemList.ToArray());
                 }
 
-                // list listOfAsyncCompatibleFileNamesWithOutPath that have whitelisted extensions
+                // list files that have whitelisted extensions
                 List<string> listFilesWithPath = new();
                 try
                 {
@@ -1878,20 +1877,13 @@ public partial class FrmMainApp : Form
                 listFilesWithPath = listFilesWithPath.OrderBy(keySelector: o => o)
                     .ToList();
 
-                // also add to filesBeingProcessed
-                foreach (string fileNameWithPath in listFilesWithPath)
-                {
-                    string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
-                    HelperStatic.GenericLockLockFile(fileNameWithoutPath: fileNameWithoutPath);
-                }
-
                 // add a parent folder. "dot dot"
                 try
                 {
                     string tmpStrParent = HelperStatic.FsoGetParent(path: tbx_FolderName.Text);
                     if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
                     {
-                        lvw_FileList.Items.Add(text: "..");
+                        lvw_FileList.Items.Add(text: ParentFolder);
                     }
                 }
                 catch
@@ -1904,198 +1896,13 @@ public partial class FrmMainApp : Form
                     lvw_FileList_addListItem(fileNameWithoutPath: Path.GetFileName(path: currentDir));
                 }
 
-                for (int d = 0; d < listFilesWithPath.Count; d++)
+                foreach (string fileNameWithPath in listFilesWithPath)
                 {
-                    string fileNameWithPath = listFilesWithPath[index: d];
                     string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
-                    string fileNameWithPathWithXMP = Path.Combine(path1: Path.GetDirectoryName(path: fileNameWithPath), path2: Path.GetFileNameWithoutExtension(path: fileNameWithPath) + ".xmp");
                     lvw_FileList_addListItem(fileNameWithoutPath: Path.GetFileName(path: fileNameWithoutPath));
-                    if (d % 10 == 0)
-                    {
-                        Application.DoEvents();
-                        // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                        HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
-                    }
-
-                    // if this file appears in the DtFilesSeenInThisSession // or with xmp
-                    bool MD5NeedsUpdating = false;
-                    if (DtFilesSeenInThisSession.AsEnumerable()
-                        .Any(predicate: row => fileNameWithPath == row.Field<string>(columnName: "fileNameWithPath")))
-                    {
-                        // check if the MD5 matches
-                        DataRow[] drFoundFileData = DtFilesSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameWithPath + "'");
-                        DataRow[] drFoundFileDataXmp = DtFilesSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameWithPathWithXMP + "'");
-                        if (drFoundFileData.Length != 0 || drFoundFileDataXmp.Length != 0)
-                        {
-                            string previousMD5 = drFoundFileData[0][columnName: "fileMD5Hash"]
-                                .ToString();
-
-                            string nowMD5 = HelperStatic.Md5SumByProcess(fileNameWithPath: fileNameWithPath);
-
-                            if (previousMD5 == nowMD5)
-                            {
-                                // nothing actually
-                            }
-                            else
-                            {
-                                MD5NeedsUpdating = true;
-                            }
-
-                            // xmp
-                            if (File.Exists(path: fileNameWithPathWithXMP) && drFoundFileDataXmp.Length != 0)
-                            {
-                                string previousMD5Xmp = drFoundFileDataXmp[0][columnName: "fileMD5Hash"]
-                                    .ToString();
-
-                                string nowMD5Xmp = HelperStatic.Md5SumByProcess(fileNameWithPath: fileNameWithPathWithXMP);
-
-                                if (previousMD5Xmp == nowMD5Xmp)
-                                {
-                                    // nothing actually
-                                }
-                                else
-                                {
-                                    MD5NeedsUpdating = true;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        MD5NeedsUpdating = true;
-                    }
-
-                    if (MD5NeedsUpdating)
-                    {
-                        // delete if exists in DtFilesSeenInThisSession
-                        DataRow[] drFoundFileData = DtFilesSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameWithPath + "'");
-                        if (drFoundFileData.Length != 0)
-                        {
-                            drFoundFileData[0]
-                                .Delete();
-                            DtFilesSeenInThisSession.AcceptChanges();
-                        }
-
-                        // xmp
-                        DataRow[] drFoundFileDataXmp = DtFilesSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameWithPathWithXMP + "'");
-                        if (drFoundFileDataXmp.Length != 0)
-                        {
-                            drFoundFileDataXmp[0]
-                                .Delete();
-                            DtFilesSeenInThisSession.AcceptChanges();
-                        }
-
-                        // also drop from DtFileDataSeenInThisSession
-                        drFoundFileData = DtFileDataSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameWithPath + "'");
-                        if (drFoundFileData.Length != 0)
-                        {
-                            foreach (DataRow dr in drFoundFileData)
-                            {
-                                dr.Delete();
-                                DtFileDataSeenInThisSession.AcceptChanges();
-                            }
-                        }
-
-                        // the add-in used here can't process nonstandard characters in filenames w/o an args file, which doesn't return what we're after.
-                        // so for 'standard' stuff we'll run async and for everything else we'll do it slower but more compatible
-                        // lock will be removed later.
-                        if (Regex.IsMatch(input: fileNameWithPath, pattern: @"^[a-zA-Z0-9.:\\_\- ]*$"))
-                        {
-                            listOfAsyncCompatibleFileNamesWithOutPath.Add(item: Path.GetFileName(path: fileNameWithPath));
-                        }
-                        else
-                        {
-                            listOfAsyncInompatibleFileNamesWithOutPath.Add(item: Path.GetFileName(path: fileNameWithPath));
-                        }
-                    }
-                    // basically if we've already parsed this file and it hasn't changed since then don't reparse it.
-                    else
-                    {
-                        DataRow[] drFoundFileData = DtFileDataSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameWithPath + "'");
-
-                        // just to be on the foolproof side
-                        if (drFoundFileData.Length != 0)
-                        {
-                            foreach (DataRow dr in drFoundFileData)
-                            {
-                                ListView lvw = lvw_FileList;
-                                ListViewItem lvi = lvw.FindItemWithText(text: dr[columnIndex: 0]
-                                                                            .ToString()
-                                                                            .Split('\\')
-                                                                            .Last());
-                                //lvw.BeginUpdate();
-                                try
-                                {
-                                    lvi.SubItems[index: lvw.Columns[key: "clh_" +
-                                                                         dr[columnIndex: 1]]
-                                                     .Index]
-                                        .Text = dr[columnIndex: 2]
-                                        .ToString();
-                                }
-                                catch
-                                {
-                                    // nothing
-                                }
-
-                                // remove the lock
-                                try
-                                {
-                                    HelperStatic.GenericLockUnLockFile(fileNameWithoutPath: fileNameWithoutPath);
-                                }
-                                catch
-                                {
-                                    // nothing, this shouldn't happen but i don't want it to stop the app anyway.
-                                }
-
-                                if (lvi.Index % 10 == 0)
-                                {
-                                    Application.DoEvents();
-                                    // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                    HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
-                                }
-
-                                HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Black);
-
-                                ;
-                                //lvw.EndUpdate();
-                            }
-                        }
-                    }
                 }
 
-                if (listOfAsyncCompatibleFileNamesWithOutPath.Count > 0)
-                {
-                    HelperStatic.FolderEnterLastEpoch = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                    await HelperStatic.ExifGetExifFromFilesCompatibleFileNames(listOfAsyncCompatibleFileNamesWithOutPath: listOfAsyncCompatibleFileNamesWithOutPath, folderEnterEpoch: HelperStatic.FolderEnterLastEpoch);
-                }
-
-                if (listOfAsyncInompatibleFileNamesWithOutPath.Count > 0)
-                {
-                    string dontShowIncompatibleFileWarningAgainInSql = HelperStatic.DataReadSQLiteSettings(
-                        tableName: "settings",
-                        settingTabPage: "generic",
-                        settingId: "dontShowIncompatibleFileWarningAgain"
-                    );
-                    if (dontShowIncompatibleFileWarningAgainInSql != "true")
-                    {
-                        DialogResult dontShowIncompatibleFileWarningAgain = MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_QuestionDontShowIncompatibleFileWarningAgain"),
-                                                                                            caption: "Nonstandard paths", buttons: MessageBoxButtons.OKCancel, icon: MessageBoxIcon.Warning);
-                        if (dontShowIncompatibleFileWarningAgain == DialogResult.Cancel)
-                        {
-                            HelperStatic.DataWriteSQLiteSettings(
-                                tableName: "settings",
-                                settingTabPage: "generic",
-                                settingId: "dontShowIncompatibleFileWarningAgain",
-                                settingValue: "true"
-                            );
-                        }
-                    }
-
-                    HelperStatic.FolderEnterLastEpoch = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                    await HelperStatic.ExifGetExifFromFilesIncompatibleFileNames(listOfAsyncIncompatibleFileNamesWithOutPath: listOfAsyncInompatibleFileNamesWithOutPath, folderEnterEpoch: HelperStatic.FolderEnterLastEpoch);
-                }
+                await HelperStatic.ExifGetExifFromFolder(folderNameToUse: FolderName);
             }
         }
 
@@ -2129,7 +1936,7 @@ public partial class FrmMainApp : Form
             // if this is a folder or drive, enter
             else if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)) || isDrive)
             {
-                // check for outstanding listOfAsyncCompatibleFileNamesWithOutPath first and save if user wants
+                // check for outstanding files first and save if user wants
                 HelperStatic.SChangeFolderIsOkay = false;
                 await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
                 if (HelperStatic.SChangeFolderIsOkay)
@@ -2288,7 +2095,7 @@ public partial class FrmMainApp : Form
                 // if this is a folder or drive, enter
                 else if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
                 {
-                    // check for outstanding listOfAsyncCompatibleFileNamesWithOutPath first and save if user wants
+                    // check for outstanding files first and save if user wants
                     HelperStatic.SChangeFolderIsOkay = false;
                     await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
                     if (HelperStatic.SChangeFolderIsOkay)
@@ -2311,7 +2118,7 @@ public partial class FrmMainApp : Form
             e.Handled = true;
         }
 
-        // Control S -> Save listOfAsyncCompatibleFileNamesWithOutPath
+        // Control S -> Save files
         else if (e.Control && e.KeyCode == Keys.S)
         {
             while (HelperStatic.FileListBeingUpdated || HelperStatic.FilesAreBeingSaved)
@@ -2403,8 +2210,10 @@ public partial class FrmMainApp : Form
                     subItemList.Add(item: "-");
                 }
             }
-        // For each non-file (i.e. dirs), create empty sub items (needed for sorting)
-        } else {
+            // For each non-file (i.e. dirs), create empty sub items (needed for sorting)
+        }
+        else
+        {
             foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
             {
                 if (columnHeader.Name != "clh_FileName")
@@ -2493,6 +2302,36 @@ public partial class FrmMainApp : Form
                 NavigateMapGo();
             }
         }
+    }
+
+    /// <summary>
+    ///     Handles the sorting and reordering.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void lvw_FileList_ColumnClick(object sender,
+                                          ColumnClickEventArgs e)
+    {
+        if (e.Column == lvw_ColumnSorter.SortColumn)
+        {
+            // Column clicked is current sort column --> Reverse order
+            if (lvw_ColumnSorter.SortOrder == SortOrder.Ascending)
+            {
+                lvw_ColumnSorter.SortOrder = SortOrder.Descending;
+            }
+            else
+            {
+                lvw_ColumnSorter.SortOrder = SortOrder.Ascending;
+            }
+        }
+        else
+        {
+            lvw_ColumnSorter.SortColumn = e.Column;
+            lvw_ColumnSorter.SortOrder = SortOrder.Ascending;
+        }
+
+        // Perform the sort with these new sort options.
+        lvw_FileList.Sort();
     }
 
     #endregion
@@ -2655,24 +2494,6 @@ public partial class FrmMainApp : Form
     }
 
     #endregion
-
-    private void lvw_FileList_ColumnClick(object sender, ColumnClickEventArgs e)
-    {
-        if (e.Column == lvw_ColumnSorter.SortColumn) {
-            // Column clicked is current sort column --> Reverse order
-            if (lvw_ColumnSorter.SortOrder == SortOrder.Ascending) {
-                lvw_ColumnSorter.SortOrder = SortOrder.Descending;
-            } else {
-                lvw_ColumnSorter.SortOrder = SortOrder.Ascending;
-            }
-        } else {
-            lvw_ColumnSorter.SortColumn = e.Column;
-            lvw_ColumnSorter.SortOrder = SortOrder.Ascending;
-        }
-
-        // Perform the sort with these new sort options.
-        lvw_FileList.Sort();
-    }
 }
 
 public static class ControlExtensions
