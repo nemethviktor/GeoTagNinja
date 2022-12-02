@@ -10,6 +10,11 @@ namespace GeoTagNinja;
 internal class ListViewColumnSorter : IComparer
 {
     /// <summary>
+    ///     comparer object for re use
+    /// </summary>
+    private readonly CaseInsensitiveComparer Comparer;
+
+    /// <summary>
     ///     Sort order (limited to ascending and descending, init to asc)
     /// </summary>
     private SortOrder ColumnSortOrder;
@@ -18,11 +23,6 @@ internal class ListViewColumnSorter : IComparer
     ///     Column to be sorted (inited to to 0, no validation on setting)
     /// </summary>
     private int ColumnToSort;
-
-    /// <summary>
-    ///     comparer object for re use
-    /// </summary>
-    private readonly CaseInsensitiveComparer Comparer;
 
     public ListViewColumnSorter()
     {

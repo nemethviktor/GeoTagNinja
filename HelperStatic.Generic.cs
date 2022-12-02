@@ -482,13 +482,6 @@ internal static partial class HelperStatic
         FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "fileNameWithoutPath");
         FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingValue");
-
-        // DtFilesSeenInThisSession
-        FrmMainApp.DtFilesSeenInThisSession = new DataTable();
-        FrmMainApp.DtFilesSeenInThisSession.Clear();
-        FrmMainApp.DtFilesSeenInThisSession.Columns.Add(columnName: "fileNameWithPath");
-        FrmMainApp.DtFilesSeenInThisSession.Columns.Add(columnName: "fileMD5Hash");
-
         // DtFileDataSeenInThisSession
         FrmMainApp.DtFileDataSeenInThisSession = new DataTable();
         FrmMainApp.DtFileDataSeenInThisSession.Clear();

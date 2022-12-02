@@ -6,7 +6,8 @@
  
 
 ***********************************************************************
-Note for anyone trying to build the Setup Project: this file should be copied to C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VisualStudio\BootstrapperPackages\WebViewRuntime\product.xml
+Note for anyone trying to build the Setup Project: this file should be copied to 
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VisualStudio\BootstrapperPackages\WebViewRuntime\product.xml
 -->
 
 <Product 
