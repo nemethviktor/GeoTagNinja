@@ -590,6 +590,8 @@ namespace GeoTagNinja
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMainApp_FormClosing);
             this.Load += new System.EventHandler(this.FrmMainApp_Load);
+            this.ResizeBegin += new System.EventHandler(this.FrmMainApp_ResizeBegin);
+            this.ResizeEnd += new System.EventHandler(this.FrmMainApp_ResizeEnd);
             this.SizeChanged += new System.EventHandler(this.FrmMainApp_SizeChanged);
             this.mns_MenuStrip.ResumeLayout(false);
             this.mns_MenuStrip.PerformLayout();

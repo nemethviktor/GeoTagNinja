@@ -1757,6 +1757,9 @@ public partial class FrmMainApp : Form
     /// </summary>
     private async void lvwFileList_LoadOrUpdate()
     {
+        // Temp. disable sorting of the list view
+        ListViewColumnSorter old_sorter = (ListViewColumnSorter)lvw_FileList.ListViewItemSorter;
+        lvw_FileList.ListViewItemSorter = null;
         lvw_FileList.Items.Clear();
         Application.DoEvents();
         HelperStatic.FilesBeingProcessed.Clear();
@@ -1910,6 +1913,10 @@ public partial class FrmMainApp : Form
         Enabled = true;
         pleaseWaitBox.Hide();
         HelperStatic.LvwCountItemsWithGeoData();
+
+        // Resume sorting...
+        lvw_FileList.ListViewItemSorter = old_sorter;
+        lvw_FileList.Sort();
     }
 
 
@@ -2494,6 +2501,16 @@ public partial class FrmMainApp : Form
     }
 
     #endregion
+
+    private void FrmMainApp_ResizeBegin(object sender, EventArgs e)
+    {
+        wbv_MapArea.Hide();
+    }
+
+    private void FrmMainApp_ResizeEnd(object sender, EventArgs e)
+    {
+        wbv_MapArea.Show();
+    }
 }
 
 public static class ControlExtensions
