@@ -412,9 +412,23 @@ public partial class FrmMainApp : Form
             }
         }
 
-        #endregion
+        ttp_loctToFile.SetToolTip(control: this.btn_loctToFile,
+                                  caption: HelperStatic.DataReadSQLiteObjectText(
+                                      languageName: AppLanguage,
+                                      objectType: "ToolTip",
+                                      objectName: "ttp_loctToFile"
+                                  )
+        );
 
-        VisualResizeAppElements(frmMainApp: this);
+        ttp_NavigateMapGo.SetToolTip(control: this.btn_NavigateMapGo,
+                                     caption: HelperStatic.DataReadSQLiteObjectText(
+                                         languageName: AppLanguage,
+                                         objectType: "ToolTip",
+                                         objectName: "ttp_NavigateMapGo"
+                                     )
+        );
+
+        #endregion
 
         // load lvwFileList
         lvwFileList_LoadOrUpdate();
@@ -427,7 +441,6 @@ public partial class FrmMainApp : Form
                 ev.Handled = true; // suppress default handling
             }
         };
-        SizeChanged += FrmMainApp_SizeChanged;
         try
         {
             tbx_lat.Text = HelperStatic.DataReadSQLiteSettings(
@@ -693,133 +706,6 @@ public partial class FrmMainApp : Form
     #endregion
 
     #region Resizing Stuff
-
-    /// <summary>
-    ///     When the app resizes automatically this adjusts the elements to fit the view.
-    /// </summary>
-    /// <param name="sender">Unused</param>
-    /// <param name="e">Unused</param>
-    private void FrmMainApp_SizeChanged(object sender,
-                                        EventArgs e)
-    {
-        // when minimised some heights become 0 value which causes problems with the splitterdistances.
-        if (WindowState != FormWindowState.Minimized)
-        {
-            VisualResizeAppElements(frmMainApp: this);
-        }
-    }
-
-    /// <summary>
-    ///     Identical to the above but this is the one actually executing
-    /// </summary>
-    /// <param name="frmMainApp">Make a guess</param>
-    private void VisualResizeAppElements(FrmMainApp frmMainApp)
-    {
-        #region fixed stuff
-
-        frmMainApp.tsr_MainAppToolStrip.Top = Convert.ToInt16(value: mns_MenuStrip.Bottom + 2);
-        frmMainApp.tsr_MainAppToolStrip.Left = 5;
-
-        frmMainApp.tsr_FolderControl.Top = Convert.ToInt16(value: tsr_MainAppToolStrip.Bottom + 2);
-        frmMainApp.tsr_FolderControl.Left = 5;
-
-        // tct is the map page container, currently not split into further pages
-        frmMainApp.tct_Main.Width = Convert.ToInt16(value: Width * 0.4);
-        frmMainApp.tct_Main.Top = Convert.ToInt16(value: tsr_FolderControl.Bottom + 2);
-        frmMainApp.tct_Main.Height = Convert.ToInt16(value: Bottom - tsr_FolderControl.Bottom - 95);
-        frmMainApp.tct_Main.Left = Convert.ToInt16(value: Width - frmMainApp.tct_Main.Width - 20);
-
-        #endregion
-
-        #region splitcontainers
-
-        frmMainApp.splitContainerMain.Top = frmMainApp.tsr_FolderControl.Bottom;
-        frmMainApp.splitContainerMain.Left = 20;
-        frmMainApp.splitContainerMain.Height = Convert.ToInt16(value: frmMainApp.Height);
-        frmMainApp.splitContainerMain.Width = frmMainApp.Width - 40;
-
-        try
-        {
-            frmMainApp.splitContainerMain.SplitterDistance = Convert.ToInt16(value: Width * 0.5);
-            frmMainApp.splitContainerMain.MaximumSize = new Size(width: Convert.ToInt16(value: frmMainApp.Width * 0.98), height: Convert.ToInt16(value: (frmMainApp.Height - frmMainApp.splitContainerMain.Top) * 0.95));
-
-            // that's the left block
-            frmMainApp.splitContainerMain.Panel1MinSize = Convert.ToInt16(value: frmMainApp.splitContainerMain.Width * 0.15);
-            frmMainApp.splitContainerLeftTop.SplitterDistance = Convert.ToInt16(value: frmMainApp.splitContainerMain.Height * 0.65);
-
-            // that's the right block
-            frmMainApp.splitContainerMain.Panel2MinSize = Convert.ToInt16(value: frmMainApp.splitContainerMain.Width * 0.25);
-
-            frmMainApp.splitContainerRight.SplitterDistance = Convert.ToInt16(value: frmMainApp.splitContainerRight.Height * 0.9);
-        }
-        catch
-        { }
-
-        #endregion
-
-        // top left
-        frmMainApp.lvw_FileList.Top = 0;
-        frmMainApp.lvw_FileList.Left = 0;
-        frmMainApp.lvw_FileList.Height = frmMainApp.splitContainerLeftTop.Panel1.Height;
-        frmMainApp.lvw_FileList.Width = frmMainApp.splitContainerLeftTop.Panel1.Width;
-
-        // top right
-        frmMainApp.tct_Main.Top = 0;
-        frmMainApp.tct_Main.Left = frmMainApp.splitContainerRight.Panel1.Left;
-        frmMainApp.tct_Main.Height = frmMainApp.splitContainerRight.Panel1.Height;
-        frmMainApp.tct_Main.Width = frmMainApp.splitContainerRight.Width;
-
-        // bottom left
-        frmMainApp.pbx_imagePreview.Top = 0;
-        frmMainApp.pbx_imagePreview.Left = 0;
-        frmMainApp.pbx_imagePreview.Height = frmMainApp.splitContainerLeftBottom.Panel1.Height;
-        frmMainApp.pbx_imagePreview.Width = frmMainApp.splitContainerLeftBottom.Panel1.Width;
-
-        frmMainApp.lbl_ParseProgress.Top = 0;
-        frmMainApp.lbl_ParseProgress.Left = 0;
-        frmMainApp.lbl_ParseProgress.Width = frmMainApp.splitContainerLeftBottom.Panel2.Width;
-        frmMainApp.splitContainerLeftTop.Panel2MinSize = Convert.ToInt16(value: frmMainApp.splitContainerMain.Height * 0.25);
-
-        // bottom right
-        frmMainApp.lbl_lat.Top = 0;
-        frmMainApp.tbx_lat.Top = 0;
-        frmMainApp.lbl_lat.Left = frmMainApp.splitContainerRight.Left;
-        frmMainApp.tbx_lat.Left = frmMainApp.lbl_lat.Right + 2;
-
-        frmMainApp.lbl_lng.Top = 0;
-        frmMainApp.tbx_lng.Top = 0;
-        frmMainApp.lbl_lng.Left = frmMainApp.tbx_lat.Right + 2;
-        frmMainApp.tbx_lng.Left = frmMainApp.lbl_lng.Right + 2;
-
-        frmMainApp.btn_NavigateMapGo.Top = 0;
-        frmMainApp.btn_NavigateMapGo.Left = frmMainApp.tbx_lng.Right + 2;
-        frmMainApp.btn_loctToFile.Top = 0;
-        frmMainApp.btn_loctToFile.Left = frmMainApp.btn_NavigateMapGo.Right + 2;
-
-        // bit manual for now.
-        try
-        {
-            ttp_loctToFile.SetToolTip(control: frmMainApp.btn_loctToFile,
-                                      caption: HelperStatic.DataReadSQLiteObjectText(
-                                          languageName: AppLanguage,
-                                          objectType: "ToolTip",
-                                          objectName: "ttp_loctToFile"
-                                      )
-            );
-
-            ttp_NavigateMapGo.SetToolTip(control: frmMainApp.btn_NavigateMapGo,
-                                         caption: HelperStatic.DataReadSQLiteObjectText(
-                                             languageName: AppLanguage,
-                                             objectType: "ToolTip",
-                                             objectName: "ttp_NavigateMapGo"
-                                         )
-            );
-        }
-        catch
-        {
-            //nothing
-        }
-    }
 
     /// <summary>
     ///     Reads the widths of individual CLHs from SQL, if not found assigns them "auto" (-2)
@@ -2434,60 +2320,6 @@ public partial class FrmMainApp : Form
         label.Text = text;
     }
 
-    /// <summary>
-    ///     Resizes items when the main Splitter is moved.
-    /// </summary>
-    /// <param name="sender">Unused</param>
-    /// <param name="e">Unused</param>
-    private void splitContainerMain_SplitterMoved(object sender,
-                                                  SplitterEventArgs e)
-    {
-        // top left
-        lvw_FileList.Width = splitContainerMain.Panel1.Width - 2;
-
-        // bottom left
-        pbx_imagePreview.Width = splitContainerMain.Panel1.Width - 2;
-        lbl_ParseProgress.Width = splitContainerMain.Panel1.Width - 2;
-
-        // top right
-        tct_Main.Top = 0;
-        tct_Main.Left = splitContainerRight.Panel1.Left;
-        tct_Main.Height = splitContainerRight.Panel1.Height;
-        tct_Main.Width = splitContainerRight.Width;
-
-        // bottom right
-        lbl_lat.Top = 0;
-        tbx_lat.Top = 0;
-        lbl_lat.Left = splitContainerRight.Left;
-        tbx_lat.Left = lbl_lat.Right + 2;
-
-        lbl_lng.Top = 0;
-        tbx_lng.Top = 0;
-        lbl_lng.Left = tbx_lat.Right + 2;
-        tbx_lng.Left = lbl_lng.Right + 2;
-
-        btn_NavigateMapGo.Top = 0;
-        btn_NavigateMapGo.Left = tbx_lng.Right + 2;
-        btn_loctToFile.Top = 0;
-        btn_loctToFile.Left = btn_NavigateMapGo.Right + 2;
-    }
-
-    /// <summary>
-    ///     Resizes items when the left lower Splitter is moved
-    /// </summary>
-    /// <param name="sender">Unused</param>
-    /// <param name="e">Unused</param>
-    private void splitContainerLeftTop_SplitterMoved(object sender,
-                                                     SplitterEventArgs e)
-    {
-        // top left
-        lvw_FileList.Height = splitContainerLeftTop.Panel1.Height - 2;
-
-        // bottom left
-        splitContainerLeftBottom.Panel1.Top = 0;
-        pbx_imagePreview.Top = 0;
-        pbx_imagePreview.Height = splitContainerLeftBottom.Panel1.Height - 2;
-    }
 
     /// <summary>
     ///     This is a dummy. It's here to help me find where things go wrong when clicked on the map. Doesn't do anything.
