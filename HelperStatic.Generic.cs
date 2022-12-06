@@ -453,6 +453,7 @@ internal static partial class HelperStatic
         // DtFileDataCopyPool
         FrmMainApp.DtFileDataCopyPool = new DataTable();
         FrmMainApp.DtFileDataCopyPool.Clear();
+        FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "fileNameWithoutPath");
         FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "settingValue");
 
@@ -488,6 +489,18 @@ internal static partial class HelperStatic
         FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "fileNameWithPath");
         FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingValue");
+
+        // DtOriginalTakenDate
+        FrmMainApp.DtOriginalTakenDate = new DataTable();
+        FrmMainApp.DtOriginalTakenDate.Clear();
+        FrmMainApp.DtOriginalTakenDate.Columns.Add(columnName: "fileNameWithoutPath");
+        FrmMainApp.DtOriginalTakenDate.Columns.Add(columnName: "originalTakenDate");
+
+        // DtOriginalCreateDate
+        FrmMainApp.DtOriginalCreateDate = new DataTable();
+        FrmMainApp.DtOriginalCreateDate.Clear();
+        FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "fileNameWithoutPath");
+        FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "originalCreateDate");
     }
 
     /// <summary>

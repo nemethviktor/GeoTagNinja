@@ -104,7 +104,7 @@ internal static partial class HelperStatic
             {
                 FrmMainApp.FileDateCopySourceFileNameWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text);
                 FrmMainApp.DtFileDataCopyPool.Rows.Clear();
-                List<string> listOfTagsToCopy = new()
+                List<string> listOfTagsToCopyExclShifts = new()
                 {
                     "Coordinates",
                     "GPSLatitude",
@@ -132,14 +132,43 @@ internal static partial class HelperStatic
                     "OffsetTime"
                 };
 
+                List<string> listOfTagsToCopyTimeShifts = new()
+                {
+                    "TakenDateSecondsShift",
+                    "TakenDateMinutesShift",
+                    "TakenDateHoursShift ",
+                    "TakenDateDaysShift",
+                    "CreateDateSecondsShift",
+                    "CreateDateMinutesShift",
+                    "CreateDateHoursShift",
+                    "CreateDateDaysShift"
+                };
+
+                string fileNameWithoutPath = lvi.Text;
                 foreach (ColumnHeader clh in FrmMainAppInstance.lvw_FileList.Columns)
                 {
-                    if (listOfTagsToCopy.IndexOf(item: clh.Name.Substring(startIndex: 4)) >= 0)
+                    if (listOfTagsToCopyExclShifts.IndexOf(item: clh.Name.Substring(startIndex: 4)) >= 0)
                     {
                         DataRow dr_FileDataRow = FrmMainApp.DtFileDataCopyPool.NewRow();
+                        dr_FileDataRow[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
                         dr_FileDataRow[columnName: "settingId"] = clh.Name.Substring(startIndex: 4);
                         dr_FileDataRow[columnName: "settingValue"] = lvi.SubItems[index: clh.Index]
                             .Text;
+                        FrmMainApp.DtFileDataCopyPool.Rows.Add(row: dr_FileDataRow);
+                    }
+                }
+
+                // when COPYING we use the main grid, therefore timeshifts can only possibly live in DtFileDataToWriteStage3ReadyToWrite
+                foreach (string settingId in listOfTagsToCopyTimeShifts)
+                {
+                    DataRow[] dtDateShifted = FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "' AND settingId = '" + settingId + "'");
+                    if (dtDateShifted.Length > 0)
+                    {
+                        DataRow dr_FileDataRow = FrmMainApp.DtFileDataCopyPool.NewRow();
+                        dr_FileDataRow[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
+                        dr_FileDataRow[columnName: "settingId"] = settingId;
+                        dr_FileDataRow[columnName: "settingValue"] = dtDateShifted[0][columnName: "settingValue"]
+                            .ToString();
                         FrmMainApp.DtFileDataCopyPool.Rows.Add(row: dr_FileDataRow);
                     }
                 }

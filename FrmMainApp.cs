@@ -32,10 +32,22 @@ public partial class FrmMainApp : Form
 
     public ListView.ColumnHeaderCollection ListViewColumnHeaders => lvw_FileList.Columns;
 
+    private void FrmMainApp_ResizeBegin(object sender,
+                                        EventArgs e)
+    {
+        wbv_MapArea.Hide();
+    }
+
+    private void FrmMainApp_ResizeEnd(object sender,
+                                      EventArgs e)
+    {
+        wbv_MapArea.Show();
+    }
+
     #region Variables
 
-    internal static string ResourcesFolderPath = Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "Resources");
-    internal static string UserDataFolderPath = Path.Combine(path1: GetFolderPath(folder: SpecialFolder.ApplicationData), path2: "GeoTagNinja");
+    internal static readonly string ResourcesFolderPath = Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "Resources");
+    internal static readonly string UserDataFolderPath = Path.Combine(path1: GetFolderPath(folder: SpecialFolder.ApplicationData), path2: "GeoTagNinja");
     internal const string DoubleQuote = "\"";
 
     internal const string ParentFolder = "..";
@@ -66,11 +78,21 @@ public partial class FrmMainApp : Form
     internal static DataTable DtFileDataToWriteStage2QueuePendingSave;
     internal static DataTable DtFileDataToWriteStage3ReadyToWrite;
 
+    // just to keep myself sane here....
+    // the "queue" tables have the following structure:
+    // (columnName: "fileNameWithoutPath");
+    // (columnName: "settingId");
+    // (columnName: "settingValue");
+
     // this is for checking if files need to be re-parsed.
     //internal static DataTable DtFilesSeenInThisSession;
     internal static DataTable DtFileDataSeenInThisSession;
 
     internal static bool RemoveGeoDataIsRunning;
+
+    // these are for storing the inital values of TakenDate and CreateDate. Needed for TimeShift.
+    internal static DataTable DtOriginalTakenDate;
+    internal static DataTable DtOriginalCreateDate;
 
     #endregion
 
@@ -412,7 +434,7 @@ public partial class FrmMainApp : Form
             }
         }
 
-        ttp_loctToFile.SetToolTip(control: this.btn_loctToFile,
+        ttp_loctToFile.SetToolTip(control: btn_loctToFile,
                                   caption: HelperStatic.DataReadSQLiteObjectText(
                                       languageName: AppLanguage,
                                       objectType: "ToolTip",
@@ -420,7 +442,7 @@ public partial class FrmMainApp : Form
                                   )
         );
 
-        ttp_NavigateMapGo.SetToolTip(control: this.btn_NavigateMapGo,
+        ttp_NavigateMapGo.SetToolTip(control: btn_NavigateMapGo,
                                      caption: HelperStatic.DataReadSQLiteObjectText(
                                          languageName: AppLanguage,
                                          objectType: "ToolTip",
@@ -1948,19 +1970,19 @@ public partial class FrmMainApp : Form
             HelperStatic.SNowSelectingAllItems = false;
         }
 
-        // Shift Control C -> copy details
+        // Shift Ctrl C -> copy details
         else if (e.Control && e.Shift && e.KeyCode == Keys.C)
         {
             HelperStatic.LwvCopyGeoData();
         }
 
-        // Shift Control V -> paste details
+        // Shift Ctrl V -> paste details
         else if (e.Control && e.Shift && e.KeyCode == Keys.V)
         {
             HelperStatic.LwvPasteGeoData();
         }
 
-        // Control Enter -> Edit File
+        // Ctrl Enter -> Edit File
         else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Enter)
         {
             HelperStatic.ExifShowEditFrm();
@@ -2333,16 +2355,6 @@ public partial class FrmMainApp : Form
     }
 
     #endregion
-
-    private void FrmMainApp_ResizeBegin(object sender, EventArgs e)
-    {
-        wbv_MapArea.Hide();
-    }
-
-    private void FrmMainApp_ResizeEnd(object sender, EventArgs e)
-    {
-        wbv_MapArea.Show();
-    }
 }
 
 public static class ControlExtensions

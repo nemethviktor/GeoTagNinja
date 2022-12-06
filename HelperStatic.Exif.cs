@@ -273,8 +273,7 @@ internal static partial class HelperStatic
                 break;
             case /*"FileModifyDate" or */"TakenDate" or "CreateDate":
             {
-                DateTime outDateTime;
-                if (DateTime.TryParse(s: tryDataValue, result: out outDateTime))
+                if (DateTime.TryParse(s: tryDataValue, result: out DateTime outDateTime))
                 {
                     tryDataValue = outDateTime.ToString(format: CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern);
                 }
@@ -363,6 +362,10 @@ internal static partial class HelperStatic
     /// <param name="folderNameToUse">The folder to Parse</param>
     internal static async Task ExifGetExifFromFolder(string folderNameToUse)
     {
+        // clear the FrmMainApp.DtOriginalTakenDate && FrmMainApp.DtOriginalCreateDate tables
+        FrmMainApp.DtOriginalTakenDate.Clear();
+        FrmMainApp.DtOriginalCreateDate.Clear();
+
         if (folderNameToUse.EndsWith(value: @"\"))
         {
             folderNameToUse = folderNameToUse.Substring(startIndex: 0, length: folderNameToUse.Length - 1);
@@ -472,8 +475,8 @@ internal static partial class HelperStatic
 
                             if (drThisFileCSVData.Length > 0)
                             {
-                                DataTable dtThisFileCSVData = drThisFileCSVData[0]
-                                    .Table;
+                                DataTable dtThisFileCSVData = drThisFileCSVData
+                                    .CopyToDataTable();
 
                                 // transpose CSV (skip #0, that's filename)
                                 for (int csvCol = 1; csvCol < dtThisFileCSVData.Columns.Count; csvCol++)
@@ -503,8 +506,7 @@ internal static partial class HelperStatic
 
                                 if (drThisFileCSVData.Length > 0)
                                 {
-                                    DataTable dtThisFileCSVData = drThisFileCSVData[0]
-                                        .Table;
+                                    DataTable dtThisFileCSVData = drThisFileCSVData.CopyToDataTable();
 
                                     // transpose CSV (skip #0, that's filename)
                                     for (int csvCol = 1; csvCol < dtThisFileCSVData.Columns.Count; csvCol++)
@@ -541,6 +543,35 @@ internal static partial class HelperStatic
                                                                                       .Name.Substring(startIndex: 4));
                                 lvi.SubItems[index: i]
                                     .Text = str;
+
+                                // TakenDate & CreateDate have to be sent into their respective tables for querying later if user chooses time-shift.
+                                if (lvchs[index: i]
+                                        .Name ==
+                                    "clh_TakenDate" &&
+                                    str != "-")
+                                {
+                                    DataRow drTakenDate = FrmMainApp.DtOriginalTakenDate.NewRow();
+                                    drTakenDate[columnName: "fileNameWithoutPath"] = lvi.Text;
+                                    drTakenDate[columnName: "originalTakenDate"] = DateTime.Parse(s: str,
+                                                                                                  provider: CultureInfo.InvariantCulture)
+                                        .ToString(provider: CultureInfo.InvariantCulture);
+                                    FrmMainApp.DtOriginalTakenDate.Rows.Add(row: drTakenDate);
+                                    FrmMainApp.DtOriginalTakenDate.AcceptChanges();
+                                }
+                                else if (lvchs[index: i]
+                                             .Name ==
+                                         "clh_CreateDate" &&
+                                         str != "-")
+                                {
+                                    DataRow drCreateDate = FrmMainApp.DtOriginalCreateDate.NewRow();
+                                    drCreateDate[columnName: "fileNameWithoutPath"] = lvi.Text;
+                                    drCreateDate[columnName: "originalCreateDate"] = DateTime.Parse(s: str,
+                                                                                                    provider: CultureInfo.InvariantCulture)
+                                        .ToString(provider: CultureInfo.InvariantCulture);
+                                    ;
+                                    FrmMainApp.DtOriginalCreateDate.Rows.Add(row: drCreateDate);
+                                    FrmMainApp.DtOriginalCreateDate.AcceptChanges();
+                                }
 
                                 // not adding the xmp here because the current code logic would pull a "unified" data point.
                                 DataRow dr = FrmMainApp.DtFileDataSeenInThisSession.NewRow();
