@@ -15,7 +15,7 @@ internal static partial class HelperStatic
     ///     dt_fileDataToWriteStage3ReadyToWrite for the file
     /// </summary>
     /// <param name="lvi"></param>
-    internal static async Task LwvUpdateRowFromDTWriteStage3ReadyToWrite(ListViewItem lvi)
+    internal static Task LwvUpdateRowFromDTWriteStage3ReadyToWrite(ListViewItem lvi)
     {
         FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         string tmpCoordinates;
@@ -27,19 +27,15 @@ internal static partial class HelperStatic
             int d = lvi.Index;
             string fileNameWithoutPath = lvi.Text;
 
-            DataView dataViewRelevantRows = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
-            dataViewRelevantRows.RowFilter = "fileNameWithoutPath = '" +
-                                             fileNameWithoutPath +
-                                             "'";
-            DataTable dataTableRelevant = dataViewRelevantRows.ToTable();
-            if (dataTableRelevant.Rows.Count > 0)
+            DataRow[] drRelevantRows = FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'");
+            if (drRelevantRows.Length > 0)
             {
                 try
                 {
                     lvw.BeginUpdate();
                     FrmMainApp.HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Red);
 
-                    foreach (DataRow drTagData in dataTableRelevant.Rows)
+                    foreach (DataRow drTagData in drRelevantRows)
                     {
                         // theoretically we'd want to update the columns for each tag but for example when removing all data
                         // this becomes tricky bcs we're also firing a "-gps*=" tag.
@@ -89,6 +85,8 @@ internal static partial class HelperStatic
                 Application.DoEvents();
             }
         }
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -149,12 +147,12 @@ internal static partial class HelperStatic
                 {
                     if (listOfTagsToCopyExclShifts.IndexOf(item: clh.Name.Substring(startIndex: 4)) >= 0)
                     {
-                        DataRow dr_FileDataRow = FrmMainApp.DtFileDataCopyPool.NewRow();
-                        dr_FileDataRow[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
-                        dr_FileDataRow[columnName: "settingId"] = clh.Name.Substring(startIndex: 4);
-                        dr_FileDataRow[columnName: "settingValue"] = lvi.SubItems[index: clh.Index]
+                        DataRow drFileDataRow = FrmMainApp.DtFileDataCopyPool.NewRow();
+                        drFileDataRow[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
+                        drFileDataRow[columnName: "settingId"] = clh.Name.Substring(startIndex: 4);
+                        drFileDataRow[columnName: "settingValue"] = lvi.SubItems[index: clh.Index]
                             .Text;
-                        FrmMainApp.DtFileDataCopyPool.Rows.Add(row: dr_FileDataRow);
+                        FrmMainApp.DtFileDataCopyPool.Rows.Add(row: drFileDataRow);
                     }
                 }
 
@@ -164,12 +162,12 @@ internal static partial class HelperStatic
                     DataRow[] dtDateShifted = FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "' AND settingId = '" + settingId + "'");
                     if (dtDateShifted.Length > 0)
                     {
-                        DataRow dr_FileDataRow = FrmMainApp.DtFileDataCopyPool.NewRow();
-                        dr_FileDataRow[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
-                        dr_FileDataRow[columnName: "settingId"] = settingId;
-                        dr_FileDataRow[columnName: "settingValue"] = dtDateShifted[0][columnName: "settingValue"]
+                        DataRow drFileDataRow = FrmMainApp.DtFileDataCopyPool.NewRow();
+                        drFileDataRow[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
+                        drFileDataRow[columnName: "settingId"] = settingId;
+                        drFileDataRow[columnName: "settingValue"] = dtDateShifted[0][columnName: "settingValue"]
                             .ToString();
-                        FrmMainApp.DtFileDataCopyPool.Rows.Add(row: dr_FileDataRow);
+                        FrmMainApp.DtFileDataCopyPool.Rows.Add(row: drFileDataRow);
                     }
                 }
             }

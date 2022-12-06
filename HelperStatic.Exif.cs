@@ -1405,16 +1405,13 @@ internal static partial class HelperStatic
 
                 exifArgsForOriginalFile += "-iptc:codedcharacterset=utf8" + Environment.NewLine;
 
-                // Apparently without these two lines (iptcdigest) certain programs can get confused because the data is/becomes out of sync internally.
-                exifArgsForOriginalFile += "-iptcdigest=" + Environment.NewLine;
-                exifArgsForOriginalFile += "-iptcdigest=new" + Environment.NewLine;
-                //exifArgsForSidecar += "-iptc:codedcharacterset=utf8" + Environment.NewLine;
-
                 if (resetFileDateToCreated)
                 {
                     exifArgsForOriginalFile += "-filemodifydate<datetimeoriginal" + Environment.NewLine;
                     exifArgsForOriginalFile += "-filecreatedate<datetimeoriginal" + Environment.NewLine;
                 }
+
+                exifArgsForOriginalFile += "-IPTCDigest=" + Environment.NewLine;
 
                 exifArgsForOriginalFile += "-execute" + Environment.NewLine;
 
@@ -1427,6 +1424,7 @@ internal static partial class HelperStatic
                 {
                     if (doNotCreateBackup)
                     {
+                        exifArgsForSidecar += "-IPTCDigest=" + Environment.NewLine;
                         exifArgsForSidecar += "-overwrite_original_in_place" + Environment.NewLine;
                     }
 

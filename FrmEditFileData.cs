@@ -227,7 +227,7 @@ public partial class FrmEditFileData : Form
                         if (cItem == dtp_TakenDate)
                         {
                             btn_InsertTakenDate.Enabled = false;
-                            DataRow[] drTakenDate = FrmMainApp.DtOriginalTakenDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'");
+                            DataRow[] drTakenDate = DtOriginalTakenDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'");
                             if (drTakenDate.Length > 0)
                             {
                                 _origDateValTakenDate = Convert.ToDateTime(value: drTakenDate[0][columnName: "originalTakenDate"]
@@ -237,7 +237,7 @@ public partial class FrmEditFileData : Form
                         else if (cItem == dtp_CreateDate)
                         {
                             btn_InsertCreateDate.Enabled = false;
-                            DataRow[] drCreateDate = FrmMainApp.DtOriginalCreateDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'");
+                            DataRow[] drCreateDate = DtOriginalCreateDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'");
                             if (drCreateDate.Length > 0)
                             {
                                 _origDateValCreateDate = Convert.ToDateTime(value: drCreateDate[0][columnName: "originalCreateDate"]
@@ -876,19 +876,181 @@ public partial class FrmEditFileData : Form
                 string fileNameWithoutPath = drFileName[columnIndex: 0]
                     .ToString();
 
-                DataView dvFileWriteQueue = new(table: DtFileDataToWriteStage1PreQueue);
-                dvFileWriteQueue.RowFilter = "fileNameWithoutPath = '" + fileNameWithoutPath + "'";
+                DataRow[] drFileWriteQueue = DtFileDataToWriteStage1PreQueue.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'");
+                DataTable dtFileWriteQueue = drFileWriteQueue.CopyToDataTable();
 
                 // this shouldn't ever be zero...
-                if (dvFileWriteQueue.Count > 0)
+                if (dtFileWriteQueue.Rows.Count > 0)
                 {
-                    // transfer data from 1 to 3
-                    DataTable dtFileWriteQueue = dvFileWriteQueue.ToTable();
-                    foreach (DataRow drS1 in dtFileWriteQueue.Rows)
+                    //---
+                    // TimeShifts go separately. -- Also while this could be done in one step it's easier for now if we split Taken and Create
+                    // TakenDate
+                    DataRow[] drDateTakenDateShifted = dtFileWriteQueue.Select(filterExpression: "settingId LIKE 'Taken%' AND settingId LIKE '%Shift'");
+                    if (drDateTakenDateShifted.Length > 0)
                     {
-                        string drS1FileNameWithoutPath = drS1[columnName: "fileNameWithoutPath"]
+                        int shiftedDays = 0;
+                        int shiftedHours = 0;
+                        int shiftedMinutes = 0;
+                        int shiftedSeconds = 0;
+                        List<(string settingId, string settingValue)> lstDr3RowsToAdd = new();
+
+                        foreach (DataRow drPRow in drDateTakenDateShifted)
+                        {
+                            string settingId = drPRow[columnIndex: 1]
+                                .ToString();
+                            string settingValue = drPRow[columnIndex: 2]
+                                .ToString();
+                            switch (settingId)
+                            {
+                                case "TakenDateDaysShift":
+                                    shiftedDays = int.Parse(s: drPRow[columnIndex: 2]
+                                                                .ToString());
+
+                                    break;
+                                case "TakenDateHoursShift":
+                                    shiftedHours = int.Parse(s: drPRow[columnIndex: 2]
+                                                                 .ToString());
+
+                                    break;
+                                case "TakenDateMinutesShift":
+                                    shiftedMinutes = int.Parse(s: drPRow[columnIndex: 2]
+                                                                   .ToString());
+
+                                    break;
+                                case "TakenDateSecondsShift":
+                                    shiftedSeconds = int.Parse(s: drPRow[columnIndex: 2]
+                                                                   .ToString());
+
+                                    break;
+                            }
+
+                            if (settingValue != "0" && settingValue != null)
+                            {
+                                lstDr3RowsToAdd.Add(item: (settingId, settingValue));
+                            }
+                        }
+
+                        foreach ((string settingId, string settingValue) lstDr3RowToAdd in lstDr3RowsToAdd)
+                        {
+                            DataRow drUpdatedShift = CreateDataRowForDR3(fileNameWithoutPath: fileNameWithoutPath,
+                                                                         settingId: lstDr3RowToAdd.settingId,
+                                                                         settingValue: lstDr3RowToAdd.settingValue)
+                                ;
+                            UpdateExistingDataRowInDT3(dataRow: drUpdatedShift);
+                        }
+
+                        int totalShiftedSeconds = shiftedSeconds +
+                                                  shiftedMinutes * 60 +
+                                                  shiftedHours * 60 * 60 +
+                                                  shiftedDays * 60 * 60 * 24;
+
+                        DataRow[] drTakenDate = DtOriginalTakenDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'");
+                        if (drTakenDate.Length > 0)
+                        {
+                            DateTime originalTakenDateTime = Convert.ToDateTime(value: drTakenDate[0][columnName: "originalTakenDate"]
+                                                                                    .ToString());
+
+                            DateTime modifiedTakenDateTime = originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
+
+                            DataRow drUpdatedTakenDate = CreateDataRowForDR3(fileNameWithoutPath: fileNameWithoutPath,
+                                                                             settingId: "TakenDate",
+                                                                             settingValue: modifiedTakenDateTime
+                                                                                 .ToString(provider: CultureInfo
+                                                                                               .CurrentUICulture));
+                            UpdateExistingDataRowInDT3(dataRow: drUpdatedTakenDate);
+                        }
+                    }
+
+                    // CreateDate
+                    DataRow[] drDateCreateDateShifted = dtFileWriteQueue.Select(filterExpression: "settingId LIKE 'Create%' AND settingId LIKE '%Shift'");
+                    if (drDateCreateDateShifted.Length > 0)
+                    {
+                        int shiftedDays = 0;
+                        int shiftedHours = 0;
+                        int shiftedMinutes = 0;
+                        int shiftedSeconds = 0;
+                        List<(string settingId, string settingValue)> lstDr3RowsToAdd = new();
+
+                        foreach (DataRow drPRow in drDateCreateDateShifted)
+                        {
+                            string settingId = drPRow[columnIndex: 1]
+                                .ToString();
+                            string settingValue = drPRow[columnIndex: 2]
+                                .ToString();
+                            switch (settingId)
+                            {
+                                case "CreateDateDaysShift":
+                                    shiftedDays = int.Parse(s: drPRow[columnIndex: 2]
+                                                                .ToString());
+
+                                    break;
+                                case "CreateDateHoursShift":
+                                    shiftedHours = int.Parse(s: drPRow[columnIndex: 2]
+                                                                 .ToString());
+
+                                    break;
+                                case "CreateDateMinutesShift":
+                                    shiftedMinutes = int.Parse(s: drPRow[columnIndex: 2]
+                                                                   .ToString());
+
+                                    break;
+                                case "CreateDateSecondsShift":
+                                    shiftedSeconds = int.Parse(s: drPRow[columnIndex: 2]
+                                                                   .ToString());
+
+                                    break;
+                            }
+
+                            if (settingValue != "0" && settingValue != null)
+                            {
+                                lstDr3RowsToAdd.Add(item: (settingId, settingValue));
+                            }
+                        }
+
+                        foreach ((string settingId, string settingValue) lstDr3RowToAdd in lstDr3RowsToAdd)
+                        {
+                            DataRow drUpdatedShift = CreateDataRowForDR3(fileNameWithoutPath: fileNameWithoutPath,
+                                                                         settingId: lstDr3RowToAdd.settingId,
+                                                                         settingValue: lstDr3RowToAdd.settingValue)
+                                ;
+                            UpdateExistingDataRowInDT3(dataRow: drUpdatedShift);
+                        }
+
+                        int totalShiftedSeconds = shiftedSeconds +
+                                                  shiftedMinutes * 60 +
+                                                  shiftedHours * 60 * 60 +
+                                                  shiftedDays * 60 * 60 * 24;
+
+                        DataRow[] drCreateDate = DtOriginalCreateDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'");
+                        if (drCreateDate.Length > 0)
+                        {
+                            DateTime originalCreateDateTime = Convert.ToDateTime(value: drCreateDate[0][columnName: "originalCreateDate"]
+                                                                                     .ToString());
+
+                            DateTime modifiedCreateDateTime = originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
+
+                            DataRow drUpdatedCreateDate = CreateDataRowForDR3(fileNameWithoutPath: fileNameWithoutPath,
+                                                                              settingId: "CreateDate",
+                                                                              settingValue: modifiedCreateDateTime
+                                                                                  .ToString(provider: CultureInfo
+                                                                                                .CurrentUICulture));
+                            UpdateExistingDataRowInDT3(dataRow: drUpdatedCreateDate);
+                        }
+                    }
+
+                    //---
+                    // transfer data from 1 to 3
+                    DataRow[] drNotShifted = dtFileWriteQueue.Select(filterExpression: "settingId NOT LIKE '%Shift'");
+                    foreach (DataRow drS1 in drNotShifted)
+                    {
+                        UpdateExistingDataRowInDT3(dataRow: drS1);
+                    }
+
+                    void UpdateExistingDataRowInDT3(DataRow dataRow)
+                    {
+                        string drS1FileNameWithoutPath = dataRow[columnName: "fileNameWithoutPath"]
                             .ToString();
-                        string drS1SettingId = drS1[columnName: "settingId"]
+                        string drS1SettingId = dataRow[columnName: "settingId"]
                             .ToString();
 
                         // any existing instance of this particular combination needs to be deleted...
@@ -906,7 +1068,7 @@ public partial class FrmEditFileData : Form
                             .ForEach(action: r => r.Delete());
 
                         DtFileDataToWriteStage3ReadyToWrite.AcceptChanges();
-                        DtFileDataToWriteStage3ReadyToWrite.Rows.Add(values: drS1.ItemArray);
+                        DtFileDataToWriteStage3ReadyToWrite.Rows.Add(values: dataRow.ItemArray);
                         DtFileDataToWriteStage3ReadyToWrite.AcceptChanges();
                     }
 
@@ -1014,6 +1176,17 @@ public partial class FrmEditFileData : Form
                         HelperStatic.FileListBeingUpdated = true;
                         await HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
                         HelperStatic.FileListBeingUpdated = false;
+                    }
+
+                    DataRow CreateDataRowForDR3(string fileNameWithoutPath,
+                                                string settingId,
+                                                string settingValue)
+                    {
+                        DataRow drUpdatedTakenDate = DtFileDataToWriteStage3ReadyToWrite.NewRow();
+                        drUpdatedTakenDate[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
+                        drUpdatedTakenDate[columnName: "settingId"] = settingId;
+                        drUpdatedTakenDate[columnName: "settingValue"] = settingValue;
+                        return drUpdatedTakenDate;
                     }
                 }
             }
