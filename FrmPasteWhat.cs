@@ -188,34 +188,59 @@ public partial class FrmPasteWhat : Form
             btn_Cancel.Enabled = false;
 
             // check it's sitting somewhere already?
-            DataView dvSqlDataQ = new(table: FrmMainApp.DtFileDataToWriteStage1PreQueue);
-            dvSqlDataQ.RowFilter = "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId ='" + tagName + "'";
+            DataTable dtSqlDataQ;
+            try
+            {
+                dtSqlDataQ = FrmMainApp.DtFileDataToWriteStage1PreQueue.Select(filterExpression: "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId ='" + tagName + "'")
+                    .CopyToDataTable();
+            }
+            catch
+            {
+                dtSqlDataQ = null;
+            }
 
-            DataView dvSqlDataRTW = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
-            dvSqlDataRTW.RowFilter = "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId ='" + tagName + "'";
+            DataTable dtSqlDataReadyToWrite;
+            try
+            {
+                dtSqlDataReadyToWrite = FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Select(filterExpression: "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId ='" + tagName + "'")
+                    .CopyToDataTable();
+            }
+            catch
+            {
+                dtSqlDataReadyToWrite = null;
+            }
 
-            DataView dvSqlDataInFile = new(table: FrmMainApp.DtFileDataSeenInThisSession);
-            // this holds fileNameWithPath with a Directory attached to the string 
-            dvSqlDataInFile.RowFilter = "fileNameWithPath = '" + fileNameSourceWithPath + "' AND settingId ='" + tagName + "'";
+            DataTable dtSqlDataInFile;
+            try
+            {
+                dtSqlDataInFile = FrmMainApp.DtFileDataSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameSourceWithPath + "' AND settingId ='" + tagName + "'")
+                    .CopyToDataTable();
+            }
+            catch
+            {
+                dtSqlDataInFile = null;
+            }
 
-            if (dvSqlDataQ.Count > 0 || dvSqlDataRTW.Count > 0 || dvSqlDataInFile.Count > 0)
+            if ((dtSqlDataQ != null && dtSqlDataQ.Rows.Count > 0) ||
+                (dtSqlDataReadyToWrite != null && dtSqlDataReadyToWrite.Rows.Count > 0) ||
+                (dtSqlDataInFile != null && dtSqlDataInFile.Rows.Count > 0))
             {
                 // see if data in temp-queue
-                if (dvSqlDataQ.Count > 0)
+                if (dtSqlDataQ.Rows.Count > 0)
                 {
-                    pasteValueStr = dvSqlDataQ[recordIndex: 0][property: "settingValue"]
+                    pasteValueStr = dtSqlDataQ.Rows[index: 0][columnName: "settingValue"]
                         .ToString();
                 }
                 // see if data is ready to be written
-                else if (dvSqlDataRTW.Count > 0)
+                else if (dtSqlDataReadyToWrite.Rows.Count > 0)
                 {
-                    pasteValueStr = dvSqlDataRTW[recordIndex: 0][property: "settingValue"]
+                    pasteValueStr = dtSqlDataReadyToWrite.Rows[index: 0][columnName: "settingValue"]
                         .ToString();
                 }
                 // take it from the file then
-                else if (dvSqlDataInFile.Count > 0)
+                else if (dtSqlDataInFile.Rows.Count > 0)
                 {
-                    pasteValueStr = dvSqlDataInFile[recordIndex: 0][property: "settingValue"]
+                    pasteValueStr = dtSqlDataInFile.Rows[index: 0][columnName: "settingValue"]
                         .ToString();
                 }
             }

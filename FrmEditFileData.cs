@@ -346,24 +346,40 @@ public partial class FrmEditFileData : Form
 
         // overwrite from sql-Q if available
         // if data was pulled from the map this will sit in the main table, not in Q
-        DataView dvSqlDataQ = new(table: DtFileDataToWriteStage1PreQueue);
-        dvSqlDataQ.RowFilter = "fileNameWithoutPath = '" + fileNameWithoutPath + "' AND settingId ='" + cItem.Name.Substring(startIndex: 4) + "'";
+        DataTable dtSqlDataQ = null;
+        try
+        {
+            dtSqlDataQ = DtFileDataToWriteStage1PreQueue.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "' AND settingId ='" + cItem.Name.Substring(startIndex: 4) + "'")
+                .CopyToDataTable();
+        }
+        catch
+        {
+            dtSqlDataQ = null;
+        }
 
-        DataView dvSqlDataF = new(table: DtFileDataToWriteStage3ReadyToWrite);
-        dvSqlDataF.RowFilter = "fileNameWithoutPath = '" + fileNameWithoutPath + "' AND settingId ='" + cItem.Name.Substring(startIndex: 4) + "'";
+        DataTable dtSqlDataF = null;
+        try
+        {
+            dtSqlDataF = DtFileDataToWriteStage3ReadyToWrite.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "' AND settingId ='" + cItem.Name.Substring(startIndex: 4) + "'")
+                .CopyToDataTable();
+        }
+        catch
+        {
+            dtSqlDataF = null;
+        }
 
-        if (dvSqlDataQ.Count > 0 || dvSqlDataF.Count > 0)
+        if ((dtSqlDataQ != null && dtSqlDataQ.Rows.Count > 0) || (dtSqlDataF != null && dtSqlDataF.Rows.Count > 0))
         {
             // see if data in temp-queue
-            if (dvSqlDataQ.Count > 0)
+            if (dtSqlDataQ != null && dtSqlDataQ.Rows.Count > 0)
             {
-                strValueInSQL = dvSqlDataQ[recordIndex: 0][property: "settingValue"]
+                strValueInSQL = dtSqlDataQ.Rows[index: 0][columnName: "settingValue"]
                     .ToString();
             }
             // see if data is ready to be written
-            else if (dvSqlDataF.Count > 0)
+            else if (dtSqlDataF != null && dtSqlDataF.Rows.Count > 0)
             {
-                strValueInSQL = dvSqlDataF[recordIndex: 0][property: "settingValue"]
+                strValueInSQL = dtSqlDataF.Rows[index: 0][columnName: "settingValue"]
                     .ToString();
             }
         }
@@ -869,24 +885,41 @@ public partial class FrmEditFileData : Form
         {
             FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
             // make a list of files to actually update
-            DataView dvFileNames = new(table: DtFileDataToWriteStage1PreQueue);
-            DataTable dtDistinctFileNames = dvFileNames.ToTable(distinct: true, "fileNameWithoutPath");
+            DataTable dtDistinctFileNames = DtFileDataToWriteStage1PreQueue.DefaultView.ToTable(distinct: true, "fileNameWithoutPath");
             foreach (DataRow drFileName in dtDistinctFileNames.Rows)
             {
                 string fileNameWithoutPath = drFileName[columnIndex: 0]
                     .ToString();
 
-                DataRow[] drFileWriteQueue = DtFileDataToWriteStage1PreQueue.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'");
-                DataTable dtFileWriteQueue = drFileWriteQueue.CopyToDataTable();
+                DataTable dtFileWriteQueue = null;
+                try
+                {
+                    dtFileWriteQueue = DtFileDataToWriteStage1PreQueue.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'")
+                        .CopyToDataTable();
+                }
+                catch
+                {
+                    dtFileWriteQueue = null;
+                }
 
                 // this shouldn't ever be zero...
-                if (dtFileWriteQueue.Rows.Count > 0)
+                if (dtFileWriteQueue != null && dtFileWriteQueue.Rows.Count > 0)
                 {
                     //---
                     // TimeShifts go separately. -- Also while this could be done in one step it's easier for now if we split Taken and Create
                     // TakenDate
-                    DataRow[] drDateTakenDateShifted = dtFileWriteQueue.Select(filterExpression: "settingId LIKE 'Taken%' AND settingId LIKE '%Shift'");
-                    if (drDateTakenDateShifted.Length > 0)
+                    DataTable dtDateTakenDateShifted = null;
+                    try
+                    {
+                        dtDateTakenDateShifted = dtFileWriteQueue.Select(filterExpression: "settingId LIKE 'Taken%' AND settingId LIKE '%Shift'")
+                            .CopyToDataTable();
+                    }
+                    catch
+                    {
+                        dtDateTakenDateShifted = null;
+                    }
+
+                    if (dtDateTakenDateShifted != null && dtDateTakenDateShifted.Rows.Count > 0)
                     {
                         int shiftedDays = 0;
                         int shiftedHours = 0;
@@ -894,33 +927,25 @@ public partial class FrmEditFileData : Form
                         int shiftedSeconds = 0;
                         List<(string settingId, string settingValue)> lstDr3RowsToAdd = new();
 
-                        foreach (DataRow drPRow in drDateTakenDateShifted)
+                        foreach (DataRow drDateTakenDateShifted in dtDateTakenDateShifted.Rows)
                         {
-                            string settingId = drPRow[columnIndex: 1]
+                            string settingId = drDateTakenDateShifted[columnName: "settingId"]
                                 .ToString();
-                            string settingValue = drPRow[columnIndex: 2]
+                            string settingValue = drDateTakenDateShifted[columnName: "settingValue"]
                                 .ToString();
                             switch (settingId)
                             {
                                 case "TakenDateDaysShift":
-                                    shiftedDays = int.Parse(s: drPRow[columnIndex: 2]
-                                                                .ToString());
-
+                                    shiftedDays = int.Parse(s: settingValue);
                                     break;
                                 case "TakenDateHoursShift":
-                                    shiftedHours = int.Parse(s: drPRow[columnIndex: 2]
-                                                                 .ToString());
-
+                                    shiftedHours = int.Parse(s: settingValue);
                                     break;
                                 case "TakenDateMinutesShift":
-                                    shiftedMinutes = int.Parse(s: drPRow[columnIndex: 2]
-                                                                   .ToString());
-
+                                    shiftedMinutes = int.Parse(s: settingValue);
                                     break;
                                 case "TakenDateSecondsShift":
-                                    shiftedSeconds = int.Parse(s: drPRow[columnIndex: 2]
-                                                                   .ToString());
-
+                                    shiftedSeconds = int.Parse(s: settingValue);
                                     break;
                             }
 
@@ -932,11 +957,10 @@ public partial class FrmEditFileData : Form
 
                         foreach ((string settingId, string settingValue) lstDr3RowToAdd in lstDr3RowsToAdd)
                         {
-                            DataRow drUpdatedShift = CreateDataRowForDR3(fileNameWithoutPath: fileNameWithoutPath,
-                                                                         settingId: lstDr3RowToAdd.settingId,
-                                                                         settingValue: lstDr3RowToAdd.settingValue)
-                                ;
-                            UpdateExistingDataRowInDT3(dataRow: drUpdatedShift);
+                            HelperStatic.GenericUpdateAddToDataTable(dt: DtFileDataToWriteStage3ReadyToWrite,
+                                                                     fileNameWithoutPath: fileNameWithoutPath,
+                                                                     settingId: lstDr3RowToAdd.settingId,
+                                                                     settingValue: lstDr3RowToAdd.settingValue);
                         }
 
                         int totalShiftedSeconds = shiftedSeconds +
@@ -944,26 +968,47 @@ public partial class FrmEditFileData : Form
                                                   shiftedHours * 60 * 60 +
                                                   shiftedDays * 60 * 60 * 24;
 
-                        DataRow[] drTakenDate = DtOriginalTakenDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'");
-                        if (drTakenDate.Length > 0)
+                        DataTable dtTakenDate = null;
+
+                        try
                         {
-                            DateTime originalTakenDateTime = Convert.ToDateTime(value: drTakenDate[0][columnName: "originalTakenDate"]
+                            dtTakenDate = DtOriginalTakenDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'")
+                                .CopyToDataTable();
+                        }
+                        catch
+                        {
+                            dtTakenDate = null;
+                        }
+
+                        if (dtTakenDate != null && dtTakenDate.Rows.Count > 0)
+                        {
+                            DateTime originalTakenDateTime = Convert.ToDateTime(value: dtTakenDate.Rows[index: 0][columnName: "originalTakenDate"]
                                                                                     .ToString());
 
                             DateTime modifiedTakenDateTime = originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
 
-                            DataRow drUpdatedTakenDate = CreateDataRowForDR3(fileNameWithoutPath: fileNameWithoutPath,
-                                                                             settingId: "TakenDate",
-                                                                             settingValue: modifiedTakenDateTime
-                                                                                 .ToString(provider: CultureInfo
-                                                                                               .CurrentUICulture));
-                            UpdateExistingDataRowInDT3(dataRow: drUpdatedTakenDate);
+                            HelperStatic.GenericUpdateAddToDataTable(dt: DtFileDataToWriteStage3ReadyToWrite,
+                                                                     fileNameWithoutPath: fileNameWithoutPath,
+                                                                     settingId: "TakenDate",
+                                                                     settingValue: modifiedTakenDateTime
+                                                                         .ToString(provider: CultureInfo
+                                                                                       .CurrentUICulture));
                         }
                     }
 
                     // CreateDate
-                    DataRow[] drDateCreateDateShifted = dtFileWriteQueue.Select(filterExpression: "settingId LIKE 'Create%' AND settingId LIKE '%Shift'");
-                    if (drDateCreateDateShifted.Length > 0)
+                    DataTable dtDateCreateDateShifted = null;
+                    try
+                    {
+                        dtDateCreateDateShifted = dtFileWriteQueue.Select(filterExpression: "settingId LIKE 'Create%' AND settingId LIKE '%Shift'")
+                            .CopyToDataTable();
+                    }
+                    catch
+                    {
+                        dtDateCreateDateShifted = null;
+                    }
+
+                    if (dtDateCreateDateShifted != null && dtDateCreateDateShifted.Rows.Count > 0)
                     {
                         int shiftedDays = 0;
                         int shiftedHours = 0;
@@ -971,33 +1016,25 @@ public partial class FrmEditFileData : Form
                         int shiftedSeconds = 0;
                         List<(string settingId, string settingValue)> lstDr3RowsToAdd = new();
 
-                        foreach (DataRow drPRow in drDateCreateDateShifted)
+                        foreach (DataRow drDateCreateDateShifted in dtDateCreateDateShifted.Rows)
                         {
-                            string settingId = drPRow[columnIndex: 1]
+                            string settingId = drDateCreateDateShifted[columnName: "settingId"]
                                 .ToString();
-                            string settingValue = drPRow[columnIndex: 2]
+                            string settingValue = drDateCreateDateShifted[columnName: "settingValue"]
                                 .ToString();
                             switch (settingId)
                             {
                                 case "CreateDateDaysShift":
-                                    shiftedDays = int.Parse(s: drPRow[columnIndex: 2]
-                                                                .ToString());
-
+                                    shiftedDays = int.Parse(s: settingValue);
                                     break;
                                 case "CreateDateHoursShift":
-                                    shiftedHours = int.Parse(s: drPRow[columnIndex: 2]
-                                                                 .ToString());
-
+                                    shiftedHours = int.Parse(s: settingValue);
                                     break;
                                 case "CreateDateMinutesShift":
-                                    shiftedMinutes = int.Parse(s: drPRow[columnIndex: 2]
-                                                                   .ToString());
-
+                                    shiftedMinutes = int.Parse(s: settingValue);
                                     break;
                                 case "CreateDateSecondsShift":
-                                    shiftedSeconds = int.Parse(s: drPRow[columnIndex: 2]
-                                                                   .ToString());
-
+                                    shiftedSeconds = int.Parse(s: settingValue);
                                     break;
                             }
 
@@ -1009,11 +1046,10 @@ public partial class FrmEditFileData : Form
 
                         foreach ((string settingId, string settingValue) lstDr3RowToAdd in lstDr3RowsToAdd)
                         {
-                            DataRow drUpdatedShift = CreateDataRowForDR3(fileNameWithoutPath: fileNameWithoutPath,
-                                                                         settingId: lstDr3RowToAdd.settingId,
-                                                                         settingValue: lstDr3RowToAdd.settingValue)
-                                ;
-                            UpdateExistingDataRowInDT3(dataRow: drUpdatedShift);
+                            HelperStatic.GenericUpdateAddToDataTable(dt: DtFileDataToWriteStage3ReadyToWrite,
+                                                                     fileNameWithoutPath: fileNameWithoutPath,
+                                                                     settingId: lstDr3RowToAdd.settingId,
+                                                                     settingValue: lstDr3RowToAdd.settingValue);
                         }
 
                         int totalShiftedSeconds = shiftedSeconds +
@@ -1021,69 +1057,92 @@ public partial class FrmEditFileData : Form
                                                   shiftedHours * 60 * 60 +
                                                   shiftedDays * 60 * 60 * 24;
 
-                        DataRow[] drCreateDate = DtOriginalCreateDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'");
-                        if (drCreateDate.Length > 0)
+                        DataTable dtCreateDate = null;
+                        try
                         {
-                            DateTime originalCreateDateTime = Convert.ToDateTime(value: drCreateDate[0][columnName: "originalCreateDate"]
+                            dtCreateDate = DtOriginalCreateDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'")
+                                .CopyToDataTable();
+                        }
+                        catch
+                        {
+                            dtCreateDate = null;
+                        }
+
+                        if (dtCreateDate != null && dtCreateDate.Rows.Count > 0)
+                        {
+                            DateTime originalCreateDateTime = Convert.ToDateTime(value: dtCreateDate.Rows[index: 0][columnName: "originalCreateDate"]
                                                                                      .ToString());
 
                             DateTime modifiedCreateDateTime = originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
 
-                            DataRow drUpdatedCreateDate = CreateDataRowForDR3(fileNameWithoutPath: fileNameWithoutPath,
-                                                                              settingId: "CreateDate",
-                                                                              settingValue: modifiedCreateDateTime
-                                                                                  .ToString(provider: CultureInfo
-                                                                                                .CurrentUICulture));
-                            UpdateExistingDataRowInDT3(dataRow: drUpdatedCreateDate);
+                            HelperStatic.GenericUpdateAddToDataTable(dt: DtFileDataToWriteStage3ReadyToWrite,
+                                                                     fileNameWithoutPath: fileNameWithoutPath,
+                                                                     settingId: "CreateDate",
+                                                                     settingValue: modifiedCreateDateTime
+                                                                         .ToString(provider: CultureInfo
+                                                                                       .CurrentUICulture));
                         }
                     }
 
                     //---
                     // transfer data from 1 to 3
-                    DataRow[] drNotShifted = dtFileWriteQueue.Select(filterExpression: "settingId NOT LIKE '%Shift'");
-                    foreach (DataRow drS1 in drNotShifted)
+                    DataTable dtNotShifted = null;
+                    try
                     {
-                        UpdateExistingDataRowInDT3(dataRow: drS1);
+                        dtNotShifted = dtFileWriteQueue.Select(filterExpression: "settingId NOT LIKE '%Shift'")
+                            .CopyToDataTable();
+                    }
+                    catch
+                    {
+                        dtNotShifted = null;
                     }
 
-                    void UpdateExistingDataRowInDT3(DataRow dataRow)
+                    if (dtNotShifted != null)
                     {
-                        string drS1FileNameWithoutPath = dataRow[columnName: "fileNameWithoutPath"]
-                            .ToString();
-                        string drS1SettingId = dataRow[columnName: "settingId"]
-                            .ToString();
+                        foreach (DataRow drS1 in dtNotShifted.Rows)
+                        {
+                            string settingId = drS1[columnName: "settingId"]
+                                .ToString();
+                            string settingValue = drS1[columnName: "settingValue"]
+                                .ToString();
 
-                        // any existing instance of this particular combination needs to be deleted...
-                        // eg if we type "50" as a value then w/o this we'd end up with a "5" row and a "50" row.
-
-                        DtFileDataToWriteStage3ReadyToWrite.Rows.Cast<DataRow>()
-                            .Where(
-                                predicate: r => r.ItemArray[0]
-                                                    .ToString() ==
-                                                drS1FileNameWithoutPath &&
-                                                r.ItemArray[1]
-                                                    .ToString() ==
-                                                drS1SettingId)
-                            .ToList()
-                            .ForEach(action: r => r.Delete());
-
-                        DtFileDataToWriteStage3ReadyToWrite.AcceptChanges();
-                        DtFileDataToWriteStage3ReadyToWrite.Rows.Add(values: dataRow.ItemArray);
-                        DtFileDataToWriteStage3ReadyToWrite.AcceptChanges();
+                            HelperStatic.GenericUpdateAddToDataTable(dt: DtFileDataToWriteStage3ReadyToWrite,
+                                                                     fileNameWithoutPath: fileNameWithoutPath,
+                                                                     settingId: settingId,
+                                                                     settingValue: settingValue);
+                        }
                     }
 
                     // Also logically if user changed (TakenDate || CreateDate) && ! *Shift* then stick those values into FrmMainApp.DtOriginalTakenDate && FrmMainApp.DtOriginalCreateDate
                     // Basically they just pressed OK to queue it up to write-queue. If they then amend stuff this will be their basis of reality and if they cancel (by refreshing), the Dt is lost anyway.
                     // TakenDate
-                    DataRow[] dtDateChanged = dtFileWriteQueue.Select(filterExpression: "settingId = 'TakenDate'");
-                    int dateChangeCount = dtDateChanged.Length;
+                    DataRow[] drArrDateChanged = { };
+                    int dateChangeCount = 0;
+                    try
+                    {
+                        drArrDateChanged = dtFileWriteQueue.Select(filterExpression: "settingId = 'TakenDate'");
+                        dateChangeCount = drArrDateChanged.Length;
+                    }
+                    catch
+                    {
+                        // nothing
+                    }
 
-                    DataRow[] dtDateShifted = dtFileWriteQueue.Select(filterExpression: "settingId LIKE 'TakenDate%' AND settingId LIKE '%Shift'");
-                    int shiftedChangeCount = dtDateShifted.Length;
+                    DataRow[] drArrDateShifted;
+                    int shiftedChangeCount = 0;
+                    try
+                    {
+                        drArrDateShifted = dtFileWriteQueue.Select(filterExpression: "settingId LIKE 'TakenDate%' AND settingId LIKE '%Shift'");
+                        shiftedChangeCount = drArrDateShifted.Length;
+                    }
+                    catch
+                    {
+                        // nothing
+                    }
 
                     if (dateChangeCount == 1 && shiftedChangeCount == 0)
                     {
-                        DataRow drDateChanged = dtDateChanged[0];
+                        DataRow drDateChanged = drArrDateChanged[0];
                         DtOriginalTakenDate.Rows.Cast<DataRow>()
                             .Where(
                                 predicate: r => r.ItemArray[0]
@@ -1118,15 +1177,29 @@ public partial class FrmEditFileData : Form
                     }
 
                     // CreateDate
-                    dtDateChanged = dtFileWriteQueue.Select(filterExpression: "settingId = 'CreateDate'");
-                    dateChangeCount = dtDateChanged.Length;
+                    try
+                    {
+                        drArrDateChanged = dtFileWriteQueue.Select(filterExpression: "settingId = 'CreateDate'");
+                        dateChangeCount = drArrDateChanged.Length;
+                    }
+                    catch
+                    {
+                        // nothing
+                    }
 
-                    dtDateShifted = dtFileWriteQueue.Select(filterExpression: "settingId LIKE 'CreateDate%' AND settingId LIKE '%Shift'");
-                    shiftedChangeCount = dtDateShifted.Length;
+                    try
+                    {
+                        drArrDateShifted = dtFileWriteQueue.Select(filterExpression: "settingId LIKE 'CreateDate%' AND settingId LIKE '%Shift'");
+                        shiftedChangeCount = drArrDateShifted.Length;
+                    }
+                    catch
+                    {
+                        // nothing
+                    }
 
                     if (dateChangeCount == 1 && shiftedChangeCount == 0)
                     {
-                        DataRow drDateChanged = dtDateChanged[0];
+                        DataRow drDateChanged = drArrDateChanged[0];
                         DtOriginalCreateDate.Rows.Cast<DataRow>()
                             .Where(
                                 predicate: r => r.ItemArray[0]
@@ -1177,17 +1250,6 @@ public partial class FrmEditFileData : Form
                         await HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
                         HelperStatic.FileListBeingUpdated = false;
                     }
-
-                    DataRow CreateDataRowForDR3(string fileNameWithoutPath,
-                                                string settingId,
-                                                string settingValue)
-                    {
-                        DataRow drUpdatedTakenDate = DtFileDataToWriteStage3ReadyToWrite.NewRow();
-                        drUpdatedTakenDate[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
-                        drUpdatedTakenDate[columnName: "settingId"] = settingId;
-                        drUpdatedTakenDate[columnName: "settingValue"] = settingValue;
-                        return drUpdatedTakenDate;
-                    }
                 }
             }
 
@@ -1200,6 +1262,7 @@ public partial class FrmEditFileData : Form
         // re-center map on new data.
         await HelperStatic.LvwItemClickNavigate();
     }
+
 
     /// <summary>
     ///     Handles when user clicks Cancel. Clears holding tables 1 & 2.
@@ -1253,7 +1316,7 @@ public partial class FrmEditFileData : Form
         {
             string senderName;
             string parentName;
-            DataView dvPreviousText = new(table: DtFileDataToWriteStage2QueuePendingSave);
+            DataTable dtPreviousText = null;
             string previousText = "";
             string newText = "";
             string exifTag = null;
@@ -1265,15 +1328,24 @@ public partial class FrmEditFileData : Form
                 senderName = sndr.Name;
                 parentName = sndr.Parent.Name;
                 exifTag = sndr.Name.Substring(startIndex: 4);
-                dvPreviousText.RowFilter = "fileNameWithoutPath = '" +
-                                           lvw_FileListEditImages.SelectedItems[index: 0]
-                                               .Text +
-                                           "' AND settingId = '" +
-                                           exifTag +
-                                           "'";
-                if (dvPreviousText.Count > 0)
+                try
                 {
-                    previousText = dvPreviousText[recordIndex: 0][property: "settingValue"]
+                    dtPreviousText = DtFileDataToWriteStage2QueuePendingSave.Select(filterExpression: "fileNameWithoutPath = '" +
+                                                                                                      lvw_FileListEditImages.SelectedItems[index: 0]
+                                                                                                          .Text +
+                                                                                                      "' AND settingId = '" +
+                                                                                                      exifTag +
+                                                                                                      "'")
+                        .CopyToDataTable();
+                }
+                catch
+                {
+                    dtPreviousText = null;
+                }
+
+                if (dtPreviousText != null && dtPreviousText.Rows.Count > 0)
+                {
+                    previousText = dtPreviousText.Rows[index: 0][columnName: "settingValue"]
                         .ToString();
                 }
 
@@ -1286,15 +1358,24 @@ public partial class FrmEditFileData : Form
                 senderName = sndr.Name;
                 parentName = sndr.Parent.Name;
                 exifTag = sndr.Name.Substring(startIndex: 4);
-                dvPreviousText.RowFilter = "fileNameWithoutPath = '" +
-                                           lvw_FileListEditImages.SelectedItems[index: 0]
-                                               .Text +
-                                           "' AND settingId = '" +
-                                           exifTag +
-                                           "'";
-                if (dvPreviousText.Count > 0)
+                try
                 {
-                    previousText = dvPreviousText[recordIndex: 0][property: "settingValue"]
+                    dtPreviousText = DtFileDataToWriteStage2QueuePendingSave.Select(filterExpression: "fileNameWithoutPath = '" +
+                                                                                                      lvw_FileListEditImages.SelectedItems[index: 0]
+                                                                                                          .Text +
+                                                                                                      "' AND settingId = '" +
+                                                                                                      exifTag +
+                                                                                                      "'")
+                        .CopyToDataTable();
+                }
+                catch
+                {
+                    dtPreviousText = null;
+                }
+
+                if (dtPreviousText != null && dtPreviousText.Rows.Count > 0)
+                {
+                    previousText = dtPreviousText.Rows[index: 0][columnName: "settingValue"]
                         .ToString();
                 }
 

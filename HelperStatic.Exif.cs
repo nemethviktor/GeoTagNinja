@@ -306,48 +306,58 @@ internal static partial class HelperStatic
         string returnVal = "-";
         string tryDataValue = "-";
 
-        DataTable dtobjectTagNames_In = GenericJoinDataTables(t1: FrmMainApp.ObjectNames, t2: FrmMainApp.ObjectTagNamesIn,
-                                                              (row1,
-                                                               row2) =>
-                                                                  row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "objectName"));
+        DataTable dtObjectTagNamesIn = GenericJoinDataTables(t1: FrmMainApp.ObjectNames, t2: FrmMainApp.ObjectTagNamesIn,
+                                                             (row1,
+                                                              row2) =>
+                                                                 row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "objectName"));
 
-        DataView dvobjectTagNames_In = new(table: dtobjectTagNames_In)
+        DataTable dtObjectTagNameIn = null;
+        try
         {
-            RowFilter = "objectName = '" + dataPoint + "'",
-            Sort = "valuePriorityOrder"
-        };
-
-        DataTable dtTagsWanted = dvobjectTagNames_In.ToTable(distinct: true, "objectTagName_In");
-
-        if (dtTagsWanted.Rows.Count > 0 && dtFileExif.Rows.Count > 0)
+            dtObjectTagNameIn = dtObjectTagNamesIn.Select(filterExpression: "objectName = '" + dataPoint + "'")
+                .CopyToDataTable();
+            dtObjectTagNameIn.DefaultView.Sort = "valuePriorityOrder";
+            dtObjectTagNameIn = dtObjectTagNameIn.DefaultView.ToTable();
+        }
+        catch
         {
-            foreach (DataRow dr in dtTagsWanted.Rows)
+            dtObjectTagNameIn = null;
+        }
+
+        if (dtObjectTagNameIn != null)
+        {
+            DataTable dtTagsWanted = dtObjectTagNameIn.DefaultView.ToTable(distinct: true, "objectTagName_In");
+
+            if (dtTagsWanted.Rows.Count > 0 && dtFileExif.Rows.Count > 0)
             {
-                try
+                foreach (DataRow drTagWanted in dtTagsWanted.Rows)
                 {
-                    string tagNameToSelect = dr[columnIndex: 0]
-                        .ToString();
-                    DataRow filteredRows = dtFileExif.Select(filterExpression: "TagName = '" + tagNameToSelect + "'")
-                        .FirstOrDefault();
-                    if (filteredRows != null)
+                    try
                     {
-                        tryDataValue = filteredRows[columnIndex: 1]
-                            ?.ToString();
-                        if (tryDataValue != null && tryDataValue != "")
+                        string tagNameToSelect = drTagWanted[columnIndex: 0]
+                            .ToString();
+                        DataRow filteredRows = dtFileExif.Select(filterExpression: "TagName = '" + tagNameToSelect + "'")
+                            .FirstOrDefault();
+                        if (filteredRows != null)
                         {
-                            break;
+                            tryDataValue = filteredRows[columnIndex: 1]
+                                ?.ToString();
+                            if (!string.IsNullOrEmpty(value: tryDataValue))
+                            {
+                                break;
+                            }
                         }
                     }
-                }
-                catch (ArgumentException)
-                {
-                    tryDataValue = "-";
+                    catch (ArgumentException)
+                    {
+                        tryDataValue = "-";
+                    }
                 }
             }
-        }
-        else
-        {
-            tryDataValue = "-";
+            else
+            {
+                tryDataValue = "-";
+            }
         }
 
         returnVal = tryDataValue;
@@ -371,20 +381,24 @@ internal static partial class HelperStatic
             folderNameToUse = folderNameToUse.Substring(startIndex: 0, length: folderNameToUse.Length - 1);
         }
 
+        // using a .bat file actually ensures the process exits come rain or shine.
+        string batchFilePath = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "runme.bat");
         string csvFilePath = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "out.csv");
 
         #region ExifToolConfiguration
 
         //basically if the form gets minimised it can turn to null methinks. 
-        FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        if (FrmMainAppInstance != null)
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        if (frmMainAppInstance != null)
         {
             FrmMainApp.DtFileDataSeenInThisSession.Clear();
+            string batchFileContents = "";
             string exifToolExe = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe");
             string argsFile = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "exifArgs.args");
             string extraArgs = "";
 
             File.Delete(path: csvFilePath);
+            File.Delete(path: batchFilePath);
             File.Delete(path: argsFile);
 
             List<string> exifArgs = new();
@@ -412,20 +426,33 @@ internal static partial class HelperStatic
             extraArgs += " -csv > " + SDoubleQuote + csvFilePath + SDoubleQuote;
             extraArgs += " -@ " + SDoubleQuote + argsFile + SDoubleQuote;
 
-            File.AppendAllText(path: argsFile, contents: folderNameToUse + Environment.NewLine, encoding: Encoding.UTF8);
+            // exiftool on its own would query a bunch of file types we don't care about so this isn't particularly neat but puts a blocker.
+            string[] allowedExtensions = new string[AncillaryListsArrays.AllCompatibleExtensions()
+                .Length];
+            Array.Copy(sourceArray: allowedExtensions, destinationArray: AncillaryListsArrays.AllCompatibleExtensions(), length: 0);
+            for (int i = 0; i < allowedExtensions.Length; i++)
+            {
+                allowedExtensions[i] = AncillaryListsArrays.AllCompatibleExtensions()[i]
+                    .Split('\t')
+                    .First();
+
+                File.AppendAllText(path: argsFile, contents: folderNameToUse + @"\*." + allowedExtensions[i] + Environment.NewLine, encoding: Encoding.UTF8);
+            }
+
             foreach (string arg in exifArgs)
             {
                 File.AppendAllText(path: argsFile, contents: "-" + arg + Environment.NewLine);
             }
+
+            batchFileContents = SDoubleQuote + exifToolExe + SDoubleQuote + commonArgs + extraArgs;
+            File.AppendAllText(path: batchFilePath, contents: batchFileContents);
 
             ///////////////
             // via https://stackoverflow.com/a/68616297/3968494
             await Task.Run(action: () =>
             {
                 Process prcExifTool = new();
-                prcExifTool.StartInfo.FileName = @"c:\windows\system32\cmd.exe";
-
-                prcExifTool.StartInfo.Arguments = @"/k " + SDoubleQuote + SDoubleQuote + exifToolExe + SDoubleQuote + commonArgs + extraArgs + SDoubleQuote + " && exit";
+                prcExifTool.StartInfo.FileName = batchFilePath;
 
                 prcExifTool.StartInfo.CreateNoWindow = true;
                 prcExifTool.StartInfo.UseShellExecute = false;
@@ -454,7 +481,7 @@ internal static partial class HelperStatic
                 {
                     DataTable dtCSV = GetDataTableFromCsv(fileNameWithPath: csvFilePath, isFirstRowHeader: true);
                     // parse file data 
-                    foreach (ListViewItem lvi in FrmMainAppInstance.lvw_FileList.Items)
+                    foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.Items)
                     {
                         // obvs don't bother w/ non-files.
                         if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: lvi.Text)))
@@ -471,19 +498,25 @@ internal static partial class HelperStatic
                             string fileNameWithPathForwardSlash = fileNameWithPath
                                 .Replace(oldValue: @"\", newValue: "/");
 
-                            DataRow[] drThisFileCSVData = dtCSV.Select(filterExpression: "SourceFile = '" + fileNameWithPathForwardSlash + "'");
-
-                            if (drThisFileCSVData.Length > 0)
+                            DataTable dtThisFileCsvData = null;
+                            try
                             {
-                                DataTable dtThisFileCSVData = drThisFileCSVData
+                                dtThisFileCsvData = dtCSV.Select(filterExpression: "SourceFile = '" + fileNameWithPathForwardSlash + "'")
                                     .CopyToDataTable();
+                            }
+                            catch
+                            {
+                                dtThisFileCsvData = null;
+                            }
 
+                            if (dtThisFileCsvData != null && dtThisFileCsvData.Rows.Count > 0)
+                            {
                                 // transpose CSV (skip #0, that's filename)
-                                for (int csvCol = 1; csvCol < dtThisFileCSVData.Columns.Count; csvCol++)
+                                for (int csvCol = 1; csvCol < dtThisFileCsvData.Columns.Count; csvCol++)
                                 {
-                                    string tagName = dtThisFileCSVData.Columns[index: csvCol]
+                                    string tagName = dtThisFileCsvData.Columns[index: csvCol]
                                         .ToString();
-                                    string tagValue = dtThisFileCSVData.Rows[index: 0][columnIndex: csvCol]
+                                    string tagValue = dtThisFileCsvData.Rows[index: 0][columnIndex: csvCol]
                                         .ToString();
 
                                     if (tagValue != "")
@@ -502,18 +535,25 @@ internal static partial class HelperStatic
                             {
                                 fileNameWithPathForwardSlash = sideCarXMPFilePath
                                     .Replace(oldValue: @"\", newValue: "/");
-                                drThisFileCSVData = dtCSV.Select(filterExpression: "SourceFile = '" + fileNameWithPathForwardSlash + "'");
-
-                                if (drThisFileCSVData.Length > 0)
+                                try
                                 {
-                                    DataTable dtThisFileCSVData = drThisFileCSVData.CopyToDataTable();
+                                    dtThisFileCsvData = dtCSV.Select(filterExpression: "SourceFile = '" + fileNameWithPathForwardSlash + "'")
+                                        .CopyToDataTable();
+                                    ;
+                                }
+                                catch
+                                {
+                                    dtThisFileCsvData = null;
+                                }
 
+                                if (dtThisFileCsvData != null && dtThisFileCsvData.Columns.Count > 0)
+                                {
                                     // transpose CSV (skip #0, that's filename)
-                                    for (int csvCol = 1; csvCol < dtThisFileCSVData.Columns.Count; csvCol++)
+                                    for (int csvCol = 1; csvCol < dtThisFileCsvData.Columns.Count; csvCol++)
                                     {
-                                        string tagName = dtThisFileCSVData.Columns[index: csvCol]
+                                        string tagName = dtThisFileCsvData.Columns[index: csvCol]
                                             .ToString();
-                                        string tagValue = dtThisFileCSVData.Rows[index: 0][columnIndex: csvCol]
+                                        string tagValue = dtThisFileCsvData.Rows[index: 0][columnIndex: csvCol]
                                             .ToString();
                                         if (tagValue != "")
                                         {
@@ -527,71 +567,74 @@ internal static partial class HelperStatic
                             }
 
                             // de-dupe. this is pretty poor performance but the dataset is small
-                            dtFileExifTable = dtFileExifTable.DefaultView.ToTable(distinct: true);
-
-                            // lvi uses fileNameWithoutPath
-                            string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
-
-                            GenericLockLockFile(fileNameWithoutPath: fileNameWithoutPath);
-                            FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-
-                            ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
-
-                            for (int i = 1; i < lvi.SubItems.Count; i++)
+                            if (dtFileExifTable != null)
                             {
-                                string str = ExifGetStandardisedDataPointFromExif(dtFileExif: dtFileExifTable, dataPoint: lvchs[index: i]
-                                                                                      .Name.Substring(startIndex: 4));
-                                lvi.SubItems[index: i]
-                                    .Text = str;
+                                dtFileExifTable = dtFileExifTable.DefaultView.ToTable(distinct: true);
 
-                                // TakenDate & CreateDate have to be sent into their respective tables for querying later if user chooses time-shift.
-                                if (lvchs[index: i]
-                                        .Name ==
-                                    "clh_TakenDate" &&
-                                    str != "-")
+                                // lvi uses fileNameWithoutPath
+                                string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
+
+                                GenericLockLockFile(fileNameWithoutPath: fileNameWithoutPath);
+                                FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+
+                                ListView.ColumnHeaderCollection lvchs = frmMainAppInstance.ListViewColumnHeaders;
+
+                                for (int i = 1; i < lvi.SubItems.Count; i++)
                                 {
-                                    DataRow drTakenDate = FrmMainApp.DtOriginalTakenDate.NewRow();
-                                    drTakenDate[columnName: "fileNameWithoutPath"] = lvi.Text;
-                                    drTakenDate[columnName: "originalTakenDate"] = DateTime.Parse(s: str,
-                                                                                                  provider: CultureInfo.InvariantCulture)
-                                        .ToString(provider: CultureInfo.InvariantCulture);
-                                    FrmMainApp.DtOriginalTakenDate.Rows.Add(row: drTakenDate);
-                                    FrmMainApp.DtOriginalTakenDate.AcceptChanges();
+                                    string str = ExifGetStandardisedDataPointFromExif(dtFileExif: dtFileExifTable, dataPoint: lvchs[index: i]
+                                                                                          .Name.Substring(startIndex: 4));
+                                    lvi.SubItems[index: i]
+                                        .Text = str;
+
+                                    // TakenDate & CreateDate have to be sent into their respective tables for querying later if user chooses time-shift.
+                                    if (lvchs[index: i]
+                                            .Name ==
+                                        "clh_TakenDate" &&
+                                        str != "-")
+                                    {
+                                        DataRow drTakenDate = FrmMainApp.DtOriginalTakenDate.NewRow();
+                                        drTakenDate[columnName: "fileNameWithoutPath"] = lvi.Text;
+                                        drTakenDate[columnName: "originalTakenDate"] = DateTime.Parse(s: str,
+                                                                                                      provider: CultureInfo.CurrentUICulture)
+                                            .ToString(provider: CultureInfo.CurrentUICulture);
+                                        FrmMainApp.DtOriginalTakenDate.Rows.Add(row: drTakenDate);
+                                        FrmMainApp.DtOriginalTakenDate.AcceptChanges();
+                                    }
+                                    else if (lvchs[index: i]
+                                                 .Name ==
+                                             "clh_CreateDate" &&
+                                             str != "-")
+                                    {
+                                        DataRow drCreateDate = FrmMainApp.DtOriginalCreateDate.NewRow();
+                                        drCreateDate[columnName: "fileNameWithoutPath"] = lvi.Text;
+                                        drCreateDate[columnName: "originalCreateDate"] = DateTime.Parse(s: str,
+                                                                                                        provider: CultureInfo.CurrentUICulture)
+                                            .ToString(provider: CultureInfo.CurrentUICulture);
+                                        ;
+                                        FrmMainApp.DtOriginalCreateDate.Rows.Add(row: drCreateDate);
+                                        FrmMainApp.DtOriginalCreateDate.AcceptChanges();
+                                    }
+
+                                    // not adding the xmp here because the current code logic would pull a "unified" data point.
+                                    DataRow dr = FrmMainApp.DtFileDataSeenInThisSession.NewRow();
+                                    dr[columnName: "fileNameWithPath"] = fileNameWithPath;
+                                    dr[columnName: "settingId"] = lvchs[index: i]
+                                        .Name.Substring(startIndex: 4);
+                                    dr[columnName: "settingValue"] = str;
+                                    FrmMainApp.DtFileDataSeenInThisSession.Rows.Add(row: dr);
                                 }
-                                else if (lvchs[index: i]
-                                             .Name ==
-                                         "clh_CreateDate" &&
-                                         str != "-")
+
+                                if (lvi.Index % 10 == 0)
                                 {
-                                    DataRow drCreateDate = FrmMainApp.DtOriginalCreateDate.NewRow();
-                                    drCreateDate[columnName: "fileNameWithoutPath"] = lvi.Text;
-                                    drCreateDate[columnName: "originalCreateDate"] = DateTime.Parse(s: str,
-                                                                                                    provider: CultureInfo.InvariantCulture)
-                                        .ToString(provider: CultureInfo.InvariantCulture);
-                                    ;
-                                    FrmMainApp.DtOriginalCreateDate.Rows.Add(row: drCreateDate);
-                                    FrmMainApp.DtOriginalCreateDate.AcceptChanges();
+                                    Application.DoEvents();
+                                    // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                    FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath);
                                 }
 
-                                // not adding the xmp here because the current code logic would pull a "unified" data point.
-                                DataRow dr = FrmMainApp.DtFileDataSeenInThisSession.NewRow();
-                                dr[columnName: "fileNameWithPath"] = fileNameWithPath;
-                                dr[columnName: "settingId"] = lvchs[index: i]
-                                    .Name.Substring(startIndex: 4);
-                                dr[columnName: "settingValue"] = str;
-                                FrmMainApp.DtFileDataSeenInThisSession.Rows.Add(row: dr);
+                                FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath, color: Color.Black);
+                                GenericLockUnLockFile(fileNameWithoutPath: fileNameWithoutPath);
                             }
-
-                            if (lvi.Index % 10 == 0)
-                            {
-                                Application.DoEvents();
-                                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                FrmMainApp.HandlerLvwScrollToDataPoint(lvw: FrmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath);
-                            }
-
-                            FrmMainApp.HandlerUpdateItemColour(lvw: FrmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath, color: Color.Black);
-                            GenericLockUnLockFile(fileNameWithoutPath: fileNameWithoutPath);
                         }
                     }
                 }
@@ -639,9 +682,9 @@ internal static partial class HelperStatic
         #region ExifToolConfiguration
 
         string exifToolExe = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe");
-        FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
-        string folderNameToUse = FrmMainAppInstance.tbx_FolderName.Text;
+        string folderNameToUse = frmMainAppInstance.tbx_FolderName.Text;
         string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 ";
 
         List<string> exifArgs = new();
@@ -680,7 +723,7 @@ internal static partial class HelperStatic
         exiftoolCmd += " -api GeoMaxExtSecs=" + GeoMaxExtSecs.ToString(provider: CultureInfo.InvariantCulture);
 
         // add "what folder to act upon"
-        exiftoolCmd += " " + SDoubleQuote + FrmMainAppInstance.tbx_FolderName.Text.TrimEnd('\\') + SDoubleQuote;
+        exiftoolCmd += " " + SDoubleQuote + frmMainAppInstance.tbx_FolderName.Text.TrimEnd('\\') + SDoubleQuote;
 
         // verbose logging
         exiftoolCmd += " -v2";
@@ -804,12 +847,12 @@ internal static partial class HelperStatic
                         // de-dupe. this is pretty poor performance but the dataset is small
                         DataTable dt_distinctFileExifTable = dt_fileExifTable.DefaultView.ToTable(distinct: true);
 
-                        ListView lvw = FrmMainAppInstance.lvw_FileList;
-                        ListViewItem lvi = FrmMainAppInstance.lvw_FileList.FindItemWithText(text: exifFileIn.Name.Substring(startIndex: 0, length: exifFileIn.Name.Length - 4));
+                        ListView lvw = frmMainAppInstance.lvw_FileList;
+                        ListViewItem lvi = frmMainAppInstance.lvw_FileList.FindItemWithText(text: exifFileIn.Name.Substring(startIndex: 0, length: exifFileIn.Name.Length - 4));
 
                         if (lvi != null)
                         {
-                            ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
+                            ListView.ColumnHeaderCollection lvchs = frmMainAppInstance.ListViewColumnHeaders;
                             string[] toponomyChangers = { "GPSLatitude", "GPSLongitude" };
                             string[] toponomyDeletes = { "CountryCode", "Country", "City", "State", "Sub_location" };
                             string strParsedLat = "0.0";
@@ -822,7 +865,7 @@ internal static partial class HelperStatic
                                 string tagToWrite = lvchs[index: i]
                                     .Name.Substring(startIndex: 4);
                                 string str = ExifGetStandardisedDataPointFromExif(dtFileExif: dt_distinctFileExifTable, dataPoint: tagToWrite);
-                                FrmMainApp.HandlerUpdateLabelText(label: FrmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+                                FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
 
                                 // don't update stuff that hasn't changed
                                 if (lvi.SubItems[index: i]
@@ -1003,7 +1046,7 @@ internal static partial class HelperStatic
         bool parsedResult;
         decimal parsedDecimal = 0.0m;
 
-        FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         IEnumerable<string> exifToolCommand = Enumerable.Empty<string>();
         List<string> commonArgList = new()
         {
@@ -1022,7 +1065,7 @@ internal static partial class HelperStatic
 
         try
         {
-            exifToolResult = await FrmMainAppInstance.AsyncExifTool.ExecuteAsync(args: exifToolCommand);
+            exifToolResult = await frmMainAppInstance.AsyncExifTool.ExecuteAsync(args: exifToolCommand);
         }
         catch (Exception ex)
         {
@@ -1085,11 +1128,11 @@ internal static partial class HelperStatic
 
         // add required tags
 
-        FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
-        if (File.Exists(path: Path.Combine(path1: FrmMainAppInstance.tbx_FolderName.Text, path2: fileNameWithoutPath)))
+        if (File.Exists(path: Path.Combine(path1: frmMainAppInstance.tbx_FolderName.Text, path2: fileNameWithoutPath)))
         {
-            File.AppendAllText(path: argsFile, contents: Path.Combine(path1: FrmMainAppInstance.tbx_FolderName.Text, path2: fileNameWithoutPath) + Environment.NewLine, encoding: Encoding.UTF8);
+            File.AppendAllText(path: argsFile, contents: Path.Combine(path1: frmMainAppInstance.tbx_FolderName.Text, path2: fileNameWithoutPath) + Environment.NewLine, encoding: Encoding.UTF8);
             File.AppendAllText(path: argsFile, contents: "-execute" + Environment.NewLine);
         }
 
@@ -1168,18 +1211,17 @@ internal static partial class HelperStatic
         bool queueWasEmpty = true;
 
         // get tag names
-        DataTable dt_objectTagNames_Out = GenericJoinDataTables(t1: FrmMainApp.ObjectNames, t2: FrmMainApp.ObjectTagNamesOut,
-                                                                (row1,
-                                                                 row2) =>
-                                                                    row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "objectName"));
+        DataTable dtObjectTagNamesOut = GenericJoinDataTables(t1: FrmMainApp.ObjectNames, t2: FrmMainApp.ObjectTagNamesOut,
+                                                              (row1,
+                                                               row2) =>
+                                                                  row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "objectName"));
 
-        DataView dv_FileNames = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
-        DataTable dt_DistinctFileNames = dv_FileNames.ToTable(distinct: true, "fileNameWithoutPath");
+        DataTable dtDistinctFileNames = FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.DefaultView.ToTable(distinct: true, "fileNameWithoutPath");
 
         // check there's anything to write.
-        foreach (DataRow dr_FileName in dt_DistinctFileNames.Rows)
+        foreach (DataRow drFileName in dtDistinctFileNames.Rows)
         {
-            string fileNameWithoutPath = dr_FileName[columnIndex: 0]
+            string fileNameWithoutPath = drFileName[columnIndex: 0]
                 .ToString();
             string fileNameWithPath = Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath);
             if (File.Exists(path: fileNameWithPath))
@@ -1250,17 +1292,25 @@ internal static partial class HelperStatic
 
                 exifArgsForSidecar += "-ignoreMinorErrors" + Environment.NewLine;
 
-                DataView dv_FileWriteQueue = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
-                dv_FileWriteQueue.RowFilter = "fileNameWithoutPath = '" + fileNameWithoutPath + "'";
+                DataTable dtFileWriteQueue;
+                try
+                {
+                    dtFileWriteQueue = FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'")
+                        .CopyToDataTable();
+                }
+                catch
+                {
+                    dtFileWriteQueue = null;
+                }
 
-                if (dv_FileWriteQueue.Count > 0)
+                if (dtFileWriteQueue != null && dtFileWriteQueue.Rows.Count > 0)
                 {
                     // get tags for this file
-                    DataTable dt_FileWriteQueue = dv_FileWriteQueue.ToTable();
-                    DataTable dt_objectTagNames_OutWithData = GenericJoinDataTables(t1: dt_objectTagNames_Out, t2: dt_FileWriteQueue,
-                                                                                    (row1,
-                                                                                     row2) =>
-                                                                                        row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "settingId"));
+
+                    DataTable dtObjectTagNamesOutWithData = GenericJoinDataTables(t1: dtObjectTagNamesOut, t2: dtFileWriteQueue,
+                                                                                  (row1,
+                                                                                   row2) =>
+                                                                                      row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "settingId"));
 
                     string exiftoolTagName;
                     string updateExifVal;
@@ -1268,7 +1318,7 @@ internal static partial class HelperStatic
                     bool deleteAllGPSData = false;
                     bool deleteTagAlreadyAdded = false;
                     // add tags to argsFile
-                    foreach (DataRow row in dt_objectTagNames_OutWithData.Rows)
+                    foreach (DataRow row in dtObjectTagNamesOutWithData.Rows)
                     {
                         string settingId = row[columnName: "settingId"]
                             .ToString();
@@ -1276,7 +1326,7 @@ internal static partial class HelperStatic
                             .ToString();
 
                         // this is prob not the best way to go around this....
-                        foreach (DataRow drFileTags in dt_FileWriteQueue.Rows)
+                        foreach (DataRow drFileTags in dtFileWriteQueue.Rows)
                         {
                             string tmpSettingValue = drFileTags[columnName: "settingValue"]
                                 .ToString();
@@ -2124,18 +2174,18 @@ internal static partial class HelperStatic
         int folderCount = 0;
         FrmEditFileData FrmEditFileData = new();
         FrmEditFileData.lvw_FileListEditImages.Items.Clear();
-        FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        foreach (ListViewItem selectedItem in FrmMainAppInstance.lvw_FileList.SelectedItems)
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        foreach (ListViewItem selectedItem in frmMainAppInstance.lvw_FileList.SelectedItems)
         {
             // only deal with listOfAsyncCompatibleFileNamesWithOutPath, not folders
-            if (File.Exists(path: Path.Combine(path1: FrmMainAppInstance.tbx_FolderName.Text, path2: selectedItem.Text)))
+            if (File.Exists(path: Path.Combine(path1: frmMainAppInstance.tbx_FolderName.Text, path2: selectedItem.Text)))
             {
                 overallCount++;
-                FrmMainApp.FolderName = FrmMainAppInstance.tbx_FolderName.Text;
+                FrmMainApp.FolderName = frmMainAppInstance.tbx_FolderName.Text;
                 FrmEditFileData.lvw_FileListEditImages.Items.Add(text: selectedItem.Text);
                 fileCount++;
             }
-            else if (Directory.Exists(path: Path.Combine(path1: FrmMainAppInstance.tbx_FolderName.Text, path2: selectedItem.Text)))
+            else if (Directory.Exists(path: Path.Combine(path1: frmMainAppInstance.tbx_FolderName.Text, path2: selectedItem.Text)))
             {
                 overallCount++;
                 folderCount++;
