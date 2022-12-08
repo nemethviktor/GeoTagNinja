@@ -23,7 +23,27 @@ public partial class FrmEditFileData : Form
     /// </summary>
     public FrmEditFileData()
     {
+        Logger.Debug(message: "Starting");
+
         InitializeComponent();
+        Logger.Trace(message: "InitializeComponent OK");
+    }
+
+    /// <summary>
+    ///     Fires when loading the form. Sets defaults for the listview and makes sure the app is ready to read the file data
+    ///     ...w/o marking changes to textboxes (aka when a value changes the textbox formatting will generally turn to bold
+    ///     but
+    ///     ...when going from "nothing" to "something" that's obviously a change and we don't want that.)
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void FrmEditFileData_Load(object sender,
+                                      EventArgs e)
+    {
+        Logger.Info(message: "Starting");
+        Logger.Trace(message: "Defaults Starting");
+        _frmEditFileDataNowLoadingFileData = true;
+        FrmEditFileDataNowRemovingGeoData = false;
 
         // Ddeal with Dates
         // TakenDate
@@ -47,31 +67,11 @@ public partial class FrmEditFileData : Form
                                       " " +
                                       CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern;
 
-        // load TZ-CBX
-        foreach (string timezone in AncillaryListsArrays.GetTimeZones())
-        {
-            cbx_OffsetTimeList.Items.Add(item: timezone);
-        }
-    }
-
-    /// <summary>
-    ///     Fires when loading the form. Sets defaults for the listview and makes sure the app is ready to read the file data
-    ///     ...w/o marking changes to textboxes (aka when a value changes the textbox formatting will generally turn to bold
-    ///     but
-    ///     ...when going from "nothing" to "something" that's obviously a change and we don't want that.)
-    /// </summary>
-    /// <param name="sender">Unused</param>
-    /// <param name="e">Unused</param>
-    private void FrmEditFileData_Load(object sender,
-                                      EventArgs e)
-    {
-        _frmEditFileDataNowLoadingFileData = true;
-        FrmEditFileDataNowRemovingGeoData = false;
-
-        // this just pulls the form's name
+        // this just pulls the form's name -- logged inside
         HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
 
         // fills the countries box
+
         foreach (string country in AncillaryListsArrays.GetCountries())
         {
             cbx_Country.Items.Add(item: country);
@@ -83,10 +83,20 @@ public partial class FrmEditFileData : Form
             cbx_CountryCode.Items.Add(item: countryCode);
         }
 
+        // load TZ-CBX
+        foreach (string timezone in AncillaryListsArrays.GetTimeZones())
+        {
+            cbx_OffsetTimeList.Items.Add(item: timezone);
+        }
+
+        Logger.Trace(message: "Defaults OK");
+
         // this updates the listview itself
         clh_FileName.Width = -2; // auto width col
         if (lvw_FileListEditImages.Items.Count > 0)
         {
+            Logger.Trace(message: "ListViewSelect Start");
+            Logger.Trace(message: "Items[index: 0].Selected = true");
             lvw_FileListEditImages.Items[index: 0]
                 .Selected = true;
 
@@ -96,6 +106,7 @@ public partial class FrmEditFileData : Form
                 lvw_FileListEditImages.Enabled = false;
             }
 
+            Logger.Trace(message: "Emptying DtFileDataToWriteStage1PreQueue + DtFileDataToWriteStage2QueuePendingSave");
             // empty queue
             DtFileDataToWriteStage1PreQueue.Rows.Clear();
             // also empty the "original data" table
@@ -106,9 +117,12 @@ public partial class FrmEditFileData : Form
 
             // This actually gets triggered with the SelectedIndexChange above.
             //await pbx_imgPreviewPicGenerator(fileNameWithPath: fileNameWithPath);
+
+            Logger.Trace(message: "ListViewSelect Done");
         }
 
         _frmEditFileDataNowLoadingFileData = false; // techinically this is redundant here
+        Logger.Info(message: "Done");
     }
 
     /// <summary>
@@ -118,18 +132,22 @@ public partial class FrmEditFileData : Form
     /// </summary>
     private void lvw_EditorFileListImagesGetData()
     {
+        Logger.Debug(message: "Starting");
+
         _frmEditFileDataNowLoadingFileData = true;
 
         string fileNameWithoutPath = lvw_FileListEditImages.SelectedItems[index: 0]
             .Text;
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
+        Logger.Trace(message: "Assinging Labels Start");
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
             try
             {
+                Logger.Trace(message: "cItem: " + cItem.Name + " (" + cItem.GetType() + ")");
                 if (
                     cItem is Label ||
                     cItem is GroupBox ||
@@ -139,6 +157,7 @@ public partial class FrmEditFileData : Form
                     cItem is RadioButton
                 )
                 {
+                    // gets logged inside.
                     HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
                 }
                 else if (cItem is TextBox || cItem is ComboBox || cItem is DateTimePicker || cItem is NumericUpDown)
@@ -146,6 +165,8 @@ public partial class FrmEditFileData : Form
                     // reset font to normal
                     cItem.Font = new Font(prototype: cItem.Font, newStyle: FontStyle.Regular);
                     string exifTag = cItem.Name.Substring(startIndex: 4);
+
+                    Logger.Trace(message: "cItem: " + cItem.Name + " - exifTag: " + exifTag);
 
                     // if label then we want text to come from datarow [objectText]
                     // else if textbox/dropdown then we want the data to come from the same spot [metaDataDirectoryData.tagName]
@@ -157,6 +178,7 @@ public partial class FrmEditFileData : Form
                     else if (exifTag.EndsWith(value: "Shift")) // I very passionately hate you too.
                     {
                         // this will never sit in the main listview data because it's not a tag.
+                        Logger.Trace(message: "cItem: " + cItem.Name + " - Pulling from SQL");
                         tempStr = lvw_EditorFile_GetDataReadFromSQLQueues(fileNameWithoutPath: fileNameWithoutPath, cItem: cItem);
                         if (tempStr == null)
                         {
@@ -172,6 +194,7 @@ public partial class FrmEditFileData : Form
                     }
                     else
                     {
+                        Logger.Trace(message: "cItem: " + cItem.Name + " - Pulling from lvw_FileList");
                         tempStr = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
                             .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_" + exifTag]
                                           .Index]
@@ -250,6 +273,7 @@ public partial class FrmEditFileData : Form
                         }
                     }
 
+                    Logger.Trace(message: "cItem: " + cItem.Name + " - Adding to DtFileDataToWriteStage2QueuePendingSave");
                     // stick into sql ("pending save") - this is to see if the data has changed later.
                     if (cItem is not NumericUpDown cItemNumericUpDown)
                     {
@@ -268,7 +292,9 @@ public partial class FrmEditFileData : Form
                             settingValue: cItemNumericUpDown.Value.ToString(provider: CultureInfo.InvariantCulture));
                     }
 
+                    Logger.Trace(message: "cItem: " + cItem.Name + " - Pulling from SQL");
                     string strValueInSQL = lvw_EditorFile_GetDataReadFromSQLQueues(fileNameWithoutPath: fileNameWithoutPath, cItem: cItem);
+                    Logger.Trace(message: "cItem: " + cItem.Name + " - Pulled from SQL: " + strValueInSQL);
 
                     if (strValueInSQL != null)
                     {
@@ -282,10 +308,12 @@ public partial class FrmEditFileData : Form
 
                         if (cItem is TextBox txt)
                         {
+                            Logger.Trace(message: "cItem: " + cItem.Name + " - Updating TextBox");
                             txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Bold);
                         }
                         else if (cItem is ComboBox cmb)
                         {
+                            Logger.Trace(message: "cItem: " + cItem.Name + " - Updating ComboBox");
                             cmb.Font = new Font(prototype: cmb.Font, newStyle: FontStyle.Bold);
 
                             if (cItem.Name == "cbx_CountryCode" || cItem.Name == "cbx_Country")
@@ -324,6 +352,7 @@ public partial class FrmEditFileData : Form
                         }
                         else if (cItem is DateTimePicker dtp)
                         {
+                            Logger.Trace(message: "cItem: " + cItem.Name + " - Updating DateTimePicker");
                             dtp.Font = new Font(prototype: dtp.Font, newStyle: FontStyle.Bold);
                         }
                     }
@@ -333,55 +362,77 @@ public partial class FrmEditFileData : Form
             {
                 // ignored
             }
+
+            Logger.Trace(message: "cItem: " + cItem.Name + " (" + cItem.GetType() + ") - Done");
         }
 
         // done load
+        Logger.Debug(message: "Done");
         _frmEditFileDataNowLoadingFileData = false;
     }
 
     private static string lvw_EditorFile_GetDataReadFromSQLQueues(string fileNameWithoutPath,
                                                                   Control cItem)
     {
+        FrmMainApp.Logger.Debug(message: "Starting - cItem: " + cItem.Name);
         string strValueInSQL = null;
 
-        // overwrite from sql-Q if available
-        // if data was pulled from the map this will sit in the main table, not in Q
+        // Overwrite from sql-Q if available
+        // If data was pulled from the map this will sit in the main table, not in Q
         DataTable dtSqlDataQ = null;
         try
         {
+            FrmMainApp.Logger.Trace(message: "Starting - cItem: " + cItem.Name + " - dtSqlDataQ - Checking");
             dtSqlDataQ = DtFileDataToWriteStage1PreQueue.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "' AND settingId ='" + cItem.Name.Substring(startIndex: 4) + "'")
                 .CopyToDataTable();
+            FrmMainApp.Logger.Trace(message: "Starting - cItem: " +
+                                             cItem.Name +
+                                             " - dtSqlDataQ - Found: " +
+                                             dtSqlDataQ.Rows[index: 0][columnName: "settingValue"]
+                                                 .ToString());
         }
         catch
         {
+            FrmMainApp.Logger.Trace(message: "Starting - cItem: " + cItem.Name + " - dtSqlDataQ - Not Found");
             dtSqlDataQ = null;
         }
 
         DataTable dtSqlDataF = null;
         try
         {
+            FrmMainApp.Logger.Trace(message: "Starting - cItem: " + cItem.Name + " - dtSqlDataF - Checking");
             dtSqlDataF = DtFileDataToWriteStage3ReadyToWrite.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "' AND settingId ='" + cItem.Name.Substring(startIndex: 4) + "'")
                 .CopyToDataTable();
+            FrmMainApp.Logger.Debug(message: "Starting - cItem: " +
+                                             cItem.Name +
+                                             " - dtSqlDataF - Found: " +
+                                             dtSqlDataF.Rows[index: 0][columnName: "settingValue"]
+                                                 .ToString());
         }
         catch
         {
+            FrmMainApp.Logger.Trace(message: "Starting - cItem: " + cItem.Name + " - dtSqlDataF - Not Found");
             dtSqlDataF = null;
         }
 
         if ((dtSqlDataQ != null && dtSqlDataQ.Rows.Count > 0) || (dtSqlDataF != null && dtSqlDataF.Rows.Count > 0))
         {
-            // see if data in temp-queue
+            // See if data in temp-queue
             if (dtSqlDataQ != null && dtSqlDataQ.Rows.Count > 0)
             {
                 strValueInSQL = dtSqlDataQ.Rows[index: 0][columnName: "settingValue"]
                     .ToString();
             }
-            // see if data is ready to be written
+            // See if data is ready to be written
             else if (dtSqlDataF != null && dtSqlDataF.Rows.Count > 0)
             {
                 strValueInSQL = dtSqlDataF.Rows[index: 0][columnName: "settingValue"]
                     .ToString();
             }
+        }
+        else
+        {
+            FrmMainApp.Logger.Trace(message: "Not in SQL");
         }
 
         return strValueInSQL;
@@ -394,6 +445,8 @@ public partial class FrmEditFileData : Form
     /// <returns></returns>
     private static async Task pbx_imgPreviewPicGenerator(string fileNameWithPath)
     {
+        Logger.Debug(message: "Starting");
+
         string fileName = Path.GetFileName(path: fileNameWithPath);
         // via https://stackoverflow.com/a/8701748/3968494
         FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
@@ -402,17 +455,19 @@ public partial class FrmEditFileData : Form
         {
             try
             {
+                Logger.Trace(message: "Trying Bitmap");
                 using Bitmap bmpTemp = new(filename: fileNameWithPath);
                 img = new Bitmap(original: bmpTemp);
                 frmEditFileDataInstance.pbx_imagePreview.Image = img;
             }
             catch
             {
-                // nothing.
+                Logger.Trace(message: "Bitmap failed");
             }
 
             if (img == null)
             {
+                Logger.Trace(message: "Img doesn't exist.");
                 string generatedFileName = Path.Combine(path1: UserDataFolderPath, path2: fileName + ".jpg");
                 // don't run the thing again if file has already been generated
                 if (!File.Exists(path: generatedFileName))
@@ -421,21 +476,25 @@ public partial class FrmEditFileData : Form
                 }
 
                 //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
-                if (File.Exists(path: generatedFileName))
+                if (!File.Exists(path: generatedFileName))
                 {
+                    Logger.Trace(message: "Exiftool Failed to extract file");
                     try
                     {
+                        Logger.Trace(message: "Trying bitmap again");
                         using Bitmap bmpTemp = new(filename: generatedFileName);
                         img = new Bitmap(original: bmpTemp);
                         frmEditFileDataInstance.pbx_imagePreview.Image = img;
                     }
                     catch
                     {
-                        // nothing.
+                        Logger.Trace(message: "Bitmap failed");
                     }
                 }
             }
         }
+
+        Logger.Debug(message: "Done");
     }
 
     #region Variables
@@ -851,6 +910,7 @@ public partial class FrmEditFileData : Form
     private async void lvw_FileListEditImages_SelectedIndexChanged(object sender,
                                                                    EventArgs e)
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
         if (lvw_FileListEditImages.SelectedItems.Count > 0)
         {
             string fileNameWithPath = Path.Combine(path1: FolderName, path2: lvw_FileListEditImages.SelectedItems[index: 0]
@@ -864,9 +924,12 @@ public partial class FrmEditFileData : Form
             }
             else
             {
+                Logger.Debug(message: "File disappeared: " + fileNameWithPath);
                 MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_WarningFileDisappeared"), caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
             }
         }
+
+        FrmMainApp.Logger.Debug(message: "Done");
     }
 
     /// <summary>

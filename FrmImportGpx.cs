@@ -245,8 +245,6 @@ public partial class FrmImportGpx : Form
             }
         }
 
-        ;
-
         int timeShiftSeconds = 0;
         // adjust time as needed
         if (nud_Days.Value != 0 || nud_Hours.Value != 0 || nud_Minutes.Value != 0 || nud_Seconds.Value != 0)

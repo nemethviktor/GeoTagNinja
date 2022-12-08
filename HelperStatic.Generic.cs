@@ -154,6 +154,7 @@ internal static partial class HelperStatic
     internal static void GenericReturnControlText(Control cItem,
                                                   Form senderForm)
     {
+        FrmMainApp.Logger.Trace(message: "Starting - cItem: " + cItem.Name);
         if (
             cItem is Label ||
             cItem is GroupBox ||
@@ -247,6 +248,8 @@ internal static partial class HelperStatic
     /// </summary>
     internal static async Task GenericCheckForNewVersions()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         // check when the last polling took place
         long nowUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
         long lastCheckUnixTime = 0;
@@ -273,17 +276,26 @@ internal static partial class HelperStatic
             lastCheckUnixTime = long.Parse(s: strLastOnlineVersionCheck);
         }
 
+        FrmMainApp.Logger.Trace(message: "nowUnixTime > lastCheckUnixTime:" + (nowUnixTime - lastCheckUnixTime));
+
         if (nowUnixTime > lastCheckUnixTime + 604800) //604800 is a week's worth of seconds
         {
+            FrmMainApp.Logger.Trace(message: "Checking for new versions.");
+
             // get current & newest exiftool version -- do this here at the end so it doesn't hold up the process
             decimal currentExifToolVersionLocal = await ExifGetExifToolVersion();
             decimal newestExifToolVersionOnline = API_ExifGetExifToolVersionFromWeb();
+
+            FrmMainApp.Logger.Trace(message: "currentExifToolVersionLocal: " + currentExifToolVersionLocal + " / newestExifToolVersionOnline: " + newestExifToolVersionOnline);
+
             decimal currentExifToolVersionInSQL;
             string strCurrentExifToolVersionInSQL = DataReadSQLiteSettings(
                 tableName: "settings",
                 settingTabPage: "generic",
                 settingId: "exifToolVer"
             );
+
+            FrmMainApp.Logger.Trace(message: "strCurrentExifToolVersionInSQL: " + strCurrentExifToolVersionInSQL);
 
             if (!decimal.TryParse(s: strCurrentExifToolVersionInSQL, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out currentExifToolVersionInSQL))
             {
@@ -292,6 +304,7 @@ internal static partial class HelperStatic
 
             if (newestExifToolVersionOnline > currentExifToolVersionLocal && newestExifToolVersionOnline > currentExifToolVersionInSQL && currentExifToolVersionLocal + newestExifToolVersionOnline > 0)
             {
+                FrmMainApp.Logger.Trace(message: "Writing new version to SQL: " + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture));
                 // write current to SQL
                 DataWriteSQLiteSettings(
                     tableName: "settings",
@@ -303,6 +316,11 @@ internal static partial class HelperStatic
                 if (MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewExifToolVersionExists") + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture), caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Asterisk) == DialogResult.Yes)
                 {
                     Process.Start(fileName: "https://exiftool.org/exiftool-" + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture) + ".zip");
+                    FrmMainApp.Logger.Trace(message: "User Launched Browser to Download");
+                }
+                else
+                {
+                    FrmMainApp.Logger.Trace(message: "User Declined Launch to Download");
                 }
             }
 
@@ -340,6 +358,10 @@ internal static partial class HelperStatic
                 settingValue: nowUnixTime.ToString()
             );
         }
+        else
+        {
+            FrmMainApp.Logger.Trace(message: "Not checking for new versions.");
+        }
     }
 
     /// <summary>
@@ -348,6 +370,8 @@ internal static partial class HelperStatic
     /// </summary>
     public static void GenericCreateDataTables()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         // DtFileDataCopyPool
         FrmMainApp.DtFileDataCopyPool = new DataTable();
         FrmMainApp.DtFileDataCopyPool.Clear();
@@ -525,7 +549,6 @@ internal static partial class HelperStatic
                 returnString = returnButton2Text;
             }
 
-            ;
             return returnString;
         }
     }

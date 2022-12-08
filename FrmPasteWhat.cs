@@ -104,7 +104,6 @@ public partial class FrmPasteWhat : Form
 
                 fileNameSourceWithoutPath = Path.GetFileName(path: FrmMainApp.FileDateCopySourceFileNameWithPath);
                 fileNameSourceWithPath = FrmMainApp.FileDateCopySourceFileNameWithPath;
-                ;
             }
         }
         else

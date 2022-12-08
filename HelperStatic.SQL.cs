@@ -19,20 +19,25 @@ internal static partial class HelperStatic
     /// </summary>
     internal static void DataCreateSQLiteDB()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         try
         {
             // create folder in Appdata if doesn't exist
-
+            string sqldbPath = SSettingsDataBasePath;
+            FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath is " + SSettingsDataBasePath);
             FileInfo fi = new(fileName: SSettingsDataBasePath);
 
             if (fi.Exists && fi.Length == 0)
             {
+                FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath exists");
                 fi.Delete();
+                FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath deleted");
             }
 
-            string sqldbPath = SSettingsDataBasePath;
             if (!fi.Exists)
             {
+                FrmMainApp.Logger.Trace(message: "Creating " + SSettingsDataBasePath);
                 try
                 {
                     SQLiteConnection.CreateFile(databaseFileName: Path.Combine(SSettingsDataBasePath));
@@ -83,6 +88,7 @@ internal static partial class HelperStatic
                 }
                 catch (Exception ex)
                 {
+                    FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
                     MessageBox.Show(text: ex.Message);
                 }
             }
@@ -94,6 +100,7 @@ internal static partial class HelperStatic
         }
         catch (Exception ex)
         {
+            FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
             MessageBox.Show(text: ex.Message);
         }
     }
@@ -103,6 +110,8 @@ internal static partial class HelperStatic
     /// </summary>
     internal static void DataWriteSQLiteSettingsDefaultSettings()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         string[] controlNamesToAdd =
         {
             "ckb_AddXMPSideCar",
@@ -237,6 +246,8 @@ internal static partial class HelperStatic
     /// <returns>A DataTable with the complete list of tags stored in the database w/o filter.</returns>
     private static DataTable DataReadSQLiteObjectMappingTagsToPass()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "objectMapping.sqlite"));
         sqliteDB.Open();
 
@@ -679,6 +690,8 @@ internal static partial class HelperStatic
     /// </summary>
     private static void DataDeleteSQLiteToponomy()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
@@ -706,6 +719,8 @@ internal static partial class HelperStatic
     /// </summary>
     private static void DataDeleteSQLiteAltitude()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
@@ -734,6 +749,7 @@ internal static partial class HelperStatic
                                                         string lng,
                                                         string Altitude = "")
     {
+        FrmMainApp.Logger.Trace(message: "Starting - lat: " + lat + " lng: " + lng + " Altitude: " + Altitude);
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
