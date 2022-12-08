@@ -309,7 +309,7 @@ internal static partial class HelperStatic
         string returnVal = "-";
         string tryDataValue = "-";
 
-        DataTable dtObjectTagNamesIn = GenericJoinDataTables(t1: FrmMainApp.ObjectNames, t2: FrmMainApp.ObjectTagNamesIn,
+        DataTable dtObjectTagNamesIn = GenericJoinDataTables(t1: FrmMainApp.DtObjectNames, t2: FrmMainApp.DtObjectTagNamesIn,
                                                              (row1,
                                                               row2) =>
                                                                  row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "objectName"));
@@ -446,7 +446,7 @@ internal static partial class HelperStatic
             {
                 allowedExtensions[i] = AncillaryListsArrays.AllCompatibleExtensions()[i]
                     .Split('\t')
-                    .First();
+                    .FirstOrDefault();
 
                 File.AppendAllText(path: argsFile, contents: folderNameToUse + @"\*." + allowedExtensions[i] + Environment.NewLine, encoding: Encoding.UTF8);
             }
@@ -628,8 +628,9 @@ internal static partial class HelperStatic
                                     {
                                         DataRow drTakenDate = FrmMainApp.DtOriginalTakenDate.NewRow();
                                         drTakenDate[columnName: "fileNameWithoutPath"] = lvi.Text;
-                                        drTakenDate[columnName: "originalTakenDate"] = DateTime.Parse(s: str,
-                                                                                                      provider: CultureInfo.CurrentUICulture)
+                                        drTakenDate[columnName: "settingId"] = "originalTakenDate";
+                                        drTakenDate[columnName: "settingValue"] = DateTime.Parse(s: str,
+                                                                                                 provider: CultureInfo.CurrentUICulture)
                                             .ToString(provider: CultureInfo.CurrentUICulture);
                                         FrmMainApp.DtOriginalTakenDate.Rows.Add(row: drTakenDate);
                                         FrmMainApp.DtOriginalTakenDate.AcceptChanges();
@@ -641,8 +642,9 @@ internal static partial class HelperStatic
                                     {
                                         DataRow drCreateDate = FrmMainApp.DtOriginalCreateDate.NewRow();
                                         drCreateDate[columnName: "fileNameWithoutPath"] = lvi.Text;
-                                        drCreateDate[columnName: "originalCreateDate"] = DateTime.Parse(s: str,
-                                                                                                        provider: CultureInfo.CurrentUICulture)
+                                        drCreateDate[columnName: "settingId"] = "originalCreateDate";
+                                        drCreateDate[columnName: "settingValue"] = DateTime.Parse(s: str,
+                                                                                                  provider: CultureInfo.CurrentUICulture)
                                             .ToString(provider: CultureInfo.CurrentUICulture);
 
                                         FrmMainApp.DtOriginalCreateDate.Rows.Add(row: drCreateDate);
@@ -1275,7 +1277,7 @@ internal static partial class HelperStatic
         bool queueWasEmpty = true;
 
         // get tag names
-        DataTable dtObjectTagNamesOut = GenericJoinDataTables(t1: FrmMainApp.ObjectNames, t2: FrmMainApp.ObjectTagNamesOut,
+        DataTable dtObjectTagNamesOut = GenericJoinDataTables(t1: FrmMainApp.DtObjectNames, t2: FrmMainApp.DtObjectTagNamesOut,
                                                               (row1,
                                                                row2) =>
                                                                   row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "objectName"));
@@ -1600,7 +1602,7 @@ internal static partial class HelperStatic
                     {
                         string fileNameWithoutPath = data.Data.Replace(oldValue: "=", newValue: "")
                             .Split('[')
-                            .First()
+                            .FirstOrDefault()
                             .Trim()
                             .Split('/')
                             .Last();
@@ -1656,7 +1658,7 @@ internal static partial class HelperStatic
                     {
                         string fileNameWithoutPath = data.Data.Replace(oldValue: "=", newValue: "")
                             .Split('[')
-                            .First()
+                            .FirstOrDefault()
                             .Trim()
                             .Split('/')
                             .Last();

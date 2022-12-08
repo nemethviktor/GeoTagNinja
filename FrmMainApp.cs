@@ -44,9 +44,9 @@ public partial class FrmMainApp : Form
     internal static string LatCoordinate;
     internal static string LngCoordinate;
 
-    internal static DataTable ObjectNames;
-    internal static DataTable ObjectTagNamesIn;
-    internal static DataTable ObjectTagNamesOut;
+    internal static DataTable DtObjectNames;
+    internal static DataTable DtObjectTagNamesIn;
+    internal static DataTable DtObjectTagNamesOut;
     internal static string FolderName;
     internal static string AppLanguage = "english"; // default to english 
 
@@ -1596,7 +1596,7 @@ public partial class FrmMainApp : Form
                 {
                     allowedExtensions[i] = AncillaryListsArrays.AllCompatibleExtensions()[i]
                         .Split('\t')
-                        .First();
+                        .FirstOrDefault();
                     List<string> subItemList = new();
                     foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
                     {
@@ -1730,7 +1730,7 @@ public partial class FrmMainApp : Form
                         tbx_FolderName.Text = item.Text.Split('(')
                                                   .Last()
                                                   .Split(')')
-                                                  .First() +
+                                                  .FirstOrDefault() +
                                               @"\";
                     }
 

@@ -220,29 +220,25 @@ public partial class FrmPasteWhat : Form
                 dtSqlDataInFile = null;
             }
 
-            if ((dtSqlDataQ != null && dtSqlDataQ.Rows.Count > 0) ||
-                (dtSqlDataReadyToWrite != null && dtSqlDataReadyToWrite.Rows.Count > 0) ||
-                (dtSqlDataInFile != null && dtSqlDataInFile.Rows.Count > 0))
+            // see if data in temp-queue
+            if (dtSqlDataQ != null && dtSqlDataQ.Rows.Count > 0)
             {
-                // see if data in temp-queue
-                if (dtSqlDataQ.Rows.Count > 0)
-                {
-                    pasteValueStr = dtSqlDataQ.Rows[index: 0][columnName: "settingValue"]
-                        .ToString();
-                }
-                // see if data is ready to be written
-                else if (dtSqlDataReadyToWrite.Rows.Count > 0)
-                {
-                    pasteValueStr = dtSqlDataReadyToWrite.Rows[index: 0][columnName: "settingValue"]
-                        .ToString();
-                }
-                // take it from the file then
-                else if (dtSqlDataInFile.Rows.Count > 0)
-                {
-                    pasteValueStr = dtSqlDataInFile.Rows[index: 0][columnName: "settingValue"]
-                        .ToString();
-                }
+                pasteValueStr = dtSqlDataQ.Rows[index: 0][columnName: "settingValue"]
+                    .ToString();
             }
+            // see if data is ready to be written
+            else if (dtSqlDataReadyToWrite != null && dtSqlDataReadyToWrite.Rows.Count > 0)
+            {
+                pasteValueStr = dtSqlDataReadyToWrite.Rows[index: 0][columnName: "settingValue"]
+                    .ToString();
+            }
+            // take it from the file then
+            else if (dtSqlDataInFile != null && dtSqlDataInFile.Rows.Count > 0)
+            {
+                pasteValueStr = dtSqlDataInFile.Rows[index: 0][columnName: "settingValue"]
+                    .ToString();
+            }
+
             else
             {
                 pasteValueStr = "-";
@@ -349,7 +345,7 @@ public partial class FrmPasteWhat : Form
                         DataRow[] drTakenDate = FrmMainApp.DtOriginalTakenDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPathToUpdate + "'");
                         if (drTakenDate.Length > 0)
                         {
-                            DateTime originalTakenDateTime = Convert.ToDateTime(value: drTakenDate[0][columnName: "originalTakenDate"]
+                            DateTime originalTakenDateTime = Convert.ToDateTime(value: drTakenDate[0][columnName: "settingValue"]
                                                                                     .ToString());
 
                             DateTime modifiedTakenDateTime = originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
@@ -400,7 +396,7 @@ public partial class FrmPasteWhat : Form
                         DataRow[] drCreateDate = FrmMainApp.DtOriginalCreateDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPathToUpdate + "'");
                         if (drCreateDate.Length > 0)
                         {
-                            DateTime originalCreateDateTime = Convert.ToDateTime(value: drCreateDate[0][columnName: "originalCreateDate"]
+                            DateTime originalCreateDateTime = Convert.ToDateTime(value: drCreateDate[0][columnName: "settingValue"]
                                                                                      .ToString());
 
                             DateTime modifiedCreateDateTime = originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);

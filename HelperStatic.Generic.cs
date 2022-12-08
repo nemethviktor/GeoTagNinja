@@ -416,13 +416,15 @@ internal static partial class HelperStatic
         FrmMainApp.DtOriginalTakenDate = new DataTable();
         FrmMainApp.DtOriginalTakenDate.Clear();
         FrmMainApp.DtOriginalTakenDate.Columns.Add(columnName: "fileNameWithoutPath");
-        FrmMainApp.DtOriginalTakenDate.Columns.Add(columnName: "originalTakenDate");
+        FrmMainApp.DtOriginalTakenDate.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtOriginalTakenDate.Columns.Add(columnName: "settingValue");
 
         // DtOriginalCreateDate
         FrmMainApp.DtOriginalCreateDate = new DataTable();
         FrmMainApp.DtOriginalCreateDate.Clear();
         FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "fileNameWithoutPath");
-        FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "originalCreateDate");
+        FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "settingValue");
     }
 
     /// <summary>

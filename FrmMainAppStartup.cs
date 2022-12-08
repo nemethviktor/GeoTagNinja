@@ -110,14 +110,14 @@ public partial class FrmMainApp
 
             Logger.Trace(message: "AppLanguage is" + AppLanguage);
 
-            Logger.Debug(message: "Reading ObjectNames");
-            ObjectNames = HelperStatic.DataReadSQLiteObjectMapping(
+            Logger.Debug(message: "Reading dtObjectNames");
+            DtObjectNames = HelperStatic.DataReadSQLiteObjectMapping(
                 tableName: "objectNames",
                 orderBy: "sqlOrder"
             );
-            ObjectTagNamesIn = HelperStatic.DataReadSQLiteObjectMapping(tableName: "objectTagNames_In");
+            DtObjectTagNamesIn = HelperStatic.DataReadSQLiteObjectMapping(tableName: "objectTagNames_In");
             Logger.Trace(message: "objectTagNames_In OK");
-            ObjectTagNamesOut = HelperStatic.DataReadSQLiteObjectMapping(tableName: "objectTagNames_Out");
+            DtObjectTagNamesOut = HelperStatic.DataReadSQLiteObjectMapping(tableName: "objectTagNames_Out");
             Logger.Trace(message: "objectTagNames_Out OK");
         }
         catch (Exception ex)
@@ -229,8 +229,8 @@ public partial class FrmMainApp
 
         try
         {
-            ObjectNames.DefaultView.Sort = "sqlOrder";
-            DataTable dt = ObjectNames.DefaultView.ToTable();
+            DtObjectNames.DefaultView.Sort = "sqlOrder";
+            DataTable dt = DtObjectNames.DefaultView.ToTable();
             foreach (DataRow dr in dt.Rows)
             {
                 ColumnHeader clh = new();

@@ -1,17 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GeoTagNinja;
 
 internal static partial class HelperStatic
 {
-    #region SQL
-
     #region Database Creation SQL & Startup Checks
 
     /// <summary>
@@ -127,7 +127,7 @@ internal static partial class HelperStatic
             foreach (string ext in AncillaryListsArrays.AllCompatibleExtensions())
             {
                 string tmptmpCtrlName = ext.Split('\t')
-                                            .First() +
+                                            .FirstOrDefault() +
                                         '_'; // 'tis ok as is
                 string tmpCtrlName = tmptmpCtrlName + controlName;
                 string tmpCtrlGroup = ext.Split('\t')
@@ -814,7 +814,47 @@ internal static partial class HelperStatic
         return returnString;
     }
 
-    #endregion
+    /// <summary>
+    ///     Does a filter on a DataTable - just faster.
+    ///     via https://stackoverflow.com/a/47692754/3968494
+    /// </summary>
+    /// <param name="dt">DataTable to query</param>
+    /// <param name="filePathColumnName">The "column" part of WHERE</param>
+    /// <param name="filePathValue">The "value" part of WHERE</param>
+    /// <returns>List of KVP String/String</returns>
+    internal static List<KeyValuePair<string, string>> DataReadFilterDataTable(DataTable dt,
+                                                                               string filePathColumnName,
+                                                                               string filePathValue)
+    {
+        EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in dt.AsEnumerable()
+                                                           where dataRow.Field<string>(columnName: filePathColumnName) == filePathValue
+                                                           select dataRow;
+        List<KeyValuePair<string, string>> lstReturn = new();
+
+        Parallel.ForEach(source: drDataTableData, body: dataRow =>
+            {
+                string settingId = dataRow[columnName: "settingId"]
+                    .ToString();
+                string settingValue = dataRow[columnName: "settingValue"]
+                    .ToString();
+                lstReturn.Add(item: new KeyValuePair<string, string>(key: settingId, value: settingValue));
+            })
+            ;
+        return lstReturn;
+    }
+
+    /// <summary>
+    ///     Gets the "FirstOrDefault" from a List of KVP
+    /// </summary>
+    /// <param name="lstIn">List (KVP) to check</param>
+    /// <param name="keyEqualsWhat">Key filter</param>
+    /// <returns>String of Value</returns>
+    internal static string DataGetFirstOrDefaultFromKVPList(List<KeyValuePair<string, string>> lstIn,
+                                                            string keyEqualsWhat)
+    {
+        return lstIn.FirstOrDefault(predicate: kvp => kvp.Key == keyEqualsWhat)
+            .Value;
+    }
 
     #endregion
 }

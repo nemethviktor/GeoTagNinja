@@ -139,12 +139,27 @@ public partial class FrmEditFileData : Form
         string fileNameWithoutPath = lvw_FileListEditImages.SelectedItems[index: 0]
             .Text;
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        string strSqlDataDT1 = null;
+        string strSqlDataDT3 = null;
+        string strFLData = null;
+
+        // via https://stackoverflow.com/a/47692754/3968494
+
+        Logger.Trace(message: "Copying Data From dtSqlDataQ");
+
+        List<KeyValuePair<string, string>> lstSqlDataDT1 = HelperStatic.DataReadFilterDataTable(dt: DtFileDataToWriteStage1PreQueue, filePathColumnName: "fileNameWithoutPath", filePathValue: fileNameWithoutPath);
+
+        Logger.Trace(message: "Copying Data From dtSqlDataF");
+        List<KeyValuePair<string, string>> lstSqlDataDT3 = HelperStatic.DataReadFilterDataTable(dt: DtFileDataToWriteStage3ReadyToWrite, filePathColumnName: "fileNameWithoutPath", filePathValue: fileNameWithoutPath);
+
+        Logger.Trace(message: "Data Copy Done");
 
         Logger.Trace(message: "Assinging Labels Start");
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
+            string exifTag = cItem.Name; // this is for debugging only (particularly here, that is.)
             try
             {
                 Logger.Trace(message: "cItem: " + cItem.Name + " (" + cItem.GetType() + ")");
@@ -164,157 +179,164 @@ public partial class FrmEditFileData : Form
                 {
                     // reset font to normal
                     cItem.Font = new Font(prototype: cItem.Font, newStyle: FontStyle.Regular);
-                    string exifTag = cItem.Name.Substring(startIndex: 4);
+                    exifTag = cItem.Name.Substring(startIndex: 4);
 
-                    Logger.Trace(message: "cItem: " + cItem.Name + " - exifTag: " + exifTag);
+                    string cItemValStr = "-";
 
-                    // if label then we want text to come from datarow [objectText]
-                    // else if textbox/dropdown then we want the data to come from the same spot [metaDataDirectoryData.tagName]
-                    string tempStr = "-";
-                    if (exifTag == "OffsetTimeList") // I hate you.
+                    Logger.Trace(message: "cItem: " + cItem.Name + " - keyEqualsWhat: " + exifTag + " - Pulling from SQL");
+                    strSqlDataDT1 = HelperStatic.DataGetFirstOrDefaultFromKVPList(lstIn: lstSqlDataDT1, keyEqualsWhat: exifTag);
+                    strSqlDataDT3 = HelperStatic.DataGetFirstOrDefaultFromKVPList(lstIn: lstSqlDataDT3, keyEqualsWhat: exifTag);
+
+                    // Basically not all Tags exist as CLHs.
+                    List<string> lstObjectNamesIn = DtObjectTagNamesIn.Rows.OfType<DataRow>()
+                        .Select(selector: dr => dr.Field<string>(columnName: "objectName"))
+                        .ToList();
+
+                    if (lstObjectNamesIn.Contains(item: exifTag))
                     {
-                        // blank on purpose
-                    }
-                    else if (exifTag.EndsWith(value: "Shift")) // I very passionately hate you too.
-                    {
-                        // this will never sit in the main listview data because it's not a tag.
-                        Logger.Trace(message: "cItem: " + cItem.Name + " - Pulling from SQL");
-                        tempStr = lvw_EditorFile_GetDataReadFromSQLQueues(fileNameWithoutPath: fileNameWithoutPath, cItem: cItem);
-                        if (tempStr == null)
-                        {
-                            if (cItem is not NumericUpDown)
-                            {
-                                tempStr = "-";
-                            }
-                            else
-                            {
-                                tempStr = "0";
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Logger.Trace(message: "cItem: " + cItem.Name + " - Pulling from lvw_FileList");
-                        tempStr = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
+                        strFLData = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
                             .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_" + exifTag]
                                           .Index]
                             .Text;
                     }
 
-                    // if empty...
-                    if (tempStr == "-")
+                    if (strSqlDataDT1 != null)
                     {
-                        switch (cItem.Parent.Name)
-                        {
-                            case "gbx_TakenDate":
-                                // NUDs are likely to be blank for almost all files so this shouldn't prevent the user from operating with the data
-                                if (cItem is not NumericUpDown)
-                                {
-                                    IEnumerable<Control> cGbx_TakenDate = helperNonstatic.GetAllControls(control: gbx_TakenDate);
-                                    foreach (Control cItemGbx_TakenDate in cGbx_TakenDate)
-                                    {
-                                        if (cItemGbx_TakenDate != btn_InsertTakenDate)
-                                        {
-                                            cItemGbx_TakenDate.Enabled = false;
-                                            btn_InsertFromTakenDate.Enabled = false;
-                                        }
-                                    }
-                                }
-
-                                break;
-                            case "gbx_CreateDate":
-                                if (cItem is not NumericUpDown)
-                                {
-                                    IEnumerable<Control> cGbx_CreateDate = helperNonstatic.GetAllControls(control: gbx_CreateDate);
-                                    foreach (Control cItemGbx_CrateDate in cGbx_CreateDate)
-                                    {
-                                        if (cItemGbx_CrateDate != btn_InsertCreateDate)
-                                        {
-                                            cItemGbx_CrateDate.Enabled = false;
-                                            btn_InsertFromTakenDate.Enabled = false;
-                                        }
-                                    }
-                                }
-
-                                break;
-
-                            default:
-                                cItem.Text = "";
-                                break;
-                        }
+                        cItemValStr = strSqlDataDT1;
                     }
-                    // still if empty
+                    else if (strSqlDataDT3 != null)
+                    {
+                        cItemValStr = strSqlDataDT3;
+                    }
+                    else if (strFLData != null)
+                    {
+                        cItemValStr = strFLData;
+                    }
+                    // if not in SQL...
                     else
                     {
-                        cItem.Text = tempStr;
+                        if (cItem is NumericUpDown) // These are the Time-Shifts
+                        {
+                            Logger.Trace(message: "Not in SQL");
+                            cItemValStr = "0";
+                        }
+                        else if (exifTag == "OffsetTimeList") // I hate you.
+                        {
+                            Logger.Trace(message: "Not in SQL");
+                            // blank on purpose
+                        }
+                    }
+
+                    // if empty...
+                    if (cItemValStr == "-" || cItemValStr == "" || cItemValStr is null)
+                    {
+                        // okay for gbx_*Date && !NUD -> those are DateTimePickers. If they are NULL then there is either no TakenDate or no CreateDate so the actual controls will have to be disabled.
+                        if (cItem.Parent.Name.StartsWith(value: "gbx_") && cItem.Parent.Name.EndsWith(value: "Date") && cItem is not NumericUpDown)
+                        {
+                            if (cItem.Parent.Name == "gbx_TakenDate")
+                            {
+                                IEnumerable<Control> cGbx_TakenDate = helperNonstatic.GetAllControls(control: gbx_TakenDate);
+                                foreach (Control cItemGbx_TakenDate in cGbx_TakenDate)
+                                {
+                                    if (cItemGbx_TakenDate != btn_InsertTakenDate)
+                                    {
+                                        cItemGbx_TakenDate.Enabled = false;
+                                        btn_InsertFromTakenDate.Enabled = false;
+                                    }
+                                }
+                            }
+
+                            else if (cItem.Parent.Name == "gbx_CreateDate")
+                            {
+                                IEnumerable<Control> cGbx_CreateDate = helperNonstatic.GetAllControls(control: gbx_CreateDate);
+                                foreach (Control cItemGbx_CrateDate in cGbx_CreateDate)
+                                {
+                                    if (cItemGbx_CrateDate != btn_InsertCreateDate)
+                                    {
+                                        cItemGbx_CrateDate.Enabled = false;
+                                        btn_InsertFromTakenDate.Enabled = false;
+                                    }
+                                }
+                            }
+                        }
+                        // if it's none of the above then make the cItem be just blank.
+                        else if (exifTag == "OffsetTimeList") // I hate you.
+                        {
+                            // blank on purpose
+                        }
+                        else
+                        {
+                            cItem.Text = "";
+                        }
+                    }
+                    // if has value...
+                    else
+                    {
+                        // this is related to storing the default DateTimes for TakenDate and CreateDate
                         if (cItem == dtp_TakenDate)
                         {
                             btn_InsertTakenDate.Enabled = false;
-                            DataRow[] drTakenDate = DtOriginalTakenDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'");
-                            if (drTakenDate.Length > 0)
+                            List<KeyValuePair<string, string>> lstSqlDataDTTakenDate =
+                                HelperStatic.DataReadFilterDataTable(dt: DtOriginalTakenDate,
+                                                                     filePathColumnName: "fileNameWithoutPath",
+                                                                     filePathValue: fileNameWithoutPath);
+
+                            if (lstSqlDataDTTakenDate.Count > 0)
                             {
-                                _origDateValTakenDate = Convert.ToDateTime(value: drTakenDate[0][columnName: "originalTakenDate"]
-                                                                               .ToString());
+                                _origDateValTakenDate = Convert.ToDateTime(value: HelperStatic.DataGetFirstOrDefaultFromKVPList(lstIn: lstSqlDataDTTakenDate, keyEqualsWhat: "originalTakenDate"));
                             }
                         }
                         else if (cItem == dtp_CreateDate)
                         {
                             btn_InsertCreateDate.Enabled = false;
-                            DataRow[] drCreateDate = DtOriginalCreateDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'");
-                            if (drCreateDate.Length > 0)
+                            List<KeyValuePair<string, string>> lstSqlDataDTCreateDate =
+                                HelperStatic.DataReadFilterDataTable(dt: DtOriginalCreateDate,
+                                                                     filePathColumnName: "fileNameWithoutPath",
+                                                                     filePathValue: fileNameWithoutPath);
+
+                            if (lstSqlDataDTCreateDate.Count > 0)
                             {
-                                _origDateValCreateDate = Convert.ToDateTime(value: drCreateDate[0][columnName: "originalCreateDate"]
-                                                                                .ToString());
+                                _origDateValCreateDate = Convert.ToDateTime(value: HelperStatic.DataGetFirstOrDefaultFromKVPList(lstIn: lstSqlDataDTCreateDate, keyEqualsWhat: "originalCreateDate"));
                             }
                         }
-                        else if (cItem == cbx_OffsetTimeList)
+
+                        Logger.Trace(message: "cItem: " + cItem.Name + " - Adding to DtFileDataToWriteStage2QueuePendingSave");
+                        // stick into sql ("pending save") - this is to see if the data has changed later.
+                        if (cItem is not NumericUpDown cItemNumericUpDown)
                         {
-                            // leave blank on purpose.
+                            HelperStatic.GenericUpdateAddToDataTable(
+                                dt: DtFileDataToWriteStage2QueuePendingSave,
+                                fileNameWithoutPath: fileNameWithoutPath,
+                                settingId: cItem.Name.Substring(startIndex: 4),
+                                settingValue: cItemValStr);
+                            cItem.Text = cItemValStr;
                         }
-                    }
+                        else
+                        {
+                            HelperStatic.GenericUpdateAddToDataTable(
+                                dt: DtFileDataToWriteStage2QueuePendingSave,
+                                fileNameWithoutPath: fileNameWithoutPath,
+                                settingId: cItemNumericUpDown.Name.Substring(startIndex: 4),
+                                settingValue: cItemValStr);
 
-                    Logger.Trace(message: "cItem: " + cItem.Name + " - Adding to DtFileDataToWriteStage2QueuePendingSave");
-                    // stick into sql ("pending save") - this is to see if the data has changed later.
-                    if (cItem is not NumericUpDown cItemNumericUpDown)
-                    {
-                        HelperStatic.GenericUpdateAddToDataTable(
-                            dt: DtFileDataToWriteStage2QueuePendingSave,
-                            fileNameWithoutPath: fileNameWithoutPath,
-                            settingId: cItem.Name.Substring(startIndex: 4),
-                            settingValue: cItem.Text);
-                    }
-                    else
-                    {
-                        HelperStatic.GenericUpdateAddToDataTable(
-                            dt: DtFileDataToWriteStage2QueuePendingSave,
-                            fileNameWithoutPath: fileNameWithoutPath,
-                            settingId: cItemNumericUpDown.Name.Substring(startIndex: 4),
-                            settingValue: cItemNumericUpDown.Value.ToString(provider: CultureInfo.InvariantCulture));
-                    }
-
-                    Logger.Trace(message: "cItem: " + cItem.Name + " - Pulling from SQL");
-                    string strValueInSQL = lvw_EditorFile_GetDataReadFromSQLQueues(fileNameWithoutPath: fileNameWithoutPath, cItem: cItem);
-                    Logger.Trace(message: "cItem: " + cItem.Name + " - Pulled from SQL: " + strValueInSQL);
-
-                    if (strValueInSQL != null)
-                    {
-                        HelperStatic.GenericUpdateAddToDataTable(
-                            dt: DtFileDataToWriteStage1PreQueue,
-                            fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
-                                .Text,
-                            settingId: cItem.Name.Substring(startIndex: 4),
-                            settingValue: cItem.Text
-                        );
+                            cItemNumericUpDown.Value = int.Parse(cItemValStr);
+                        }
 
                         if (cItem is TextBox txt)
                         {
                             Logger.Trace(message: "cItem: " + cItem.Name + " - Updating TextBox");
-                            txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Bold);
+                            if (strSqlDataDT1 != null || strSqlDataDT3 != null)
+                            {
+                                txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Bold);
+                            }
                         }
                         else if (cItem is ComboBox cmb)
                         {
                             Logger.Trace(message: "cItem: " + cItem.Name + " - Updating ComboBox");
-                            cmb.Font = new Font(prototype: cmb.Font, newStyle: FontStyle.Bold);
+                            if (strSqlDataDT1 != null || strSqlDataDT3 != null)
+                            {
+                                cmb.Font = new Font(prototype: cmb.Font, newStyle: FontStyle.Bold);
+                            }
 
                             if (cItem.Name == "cbx_CountryCode" || cItem.Name == "cbx_Country")
                             {
@@ -353,7 +375,10 @@ public partial class FrmEditFileData : Form
                         else if (cItem is DateTimePicker dtp)
                         {
                             Logger.Trace(message: "cItem: " + cItem.Name + " - Updating DateTimePicker");
-                            dtp.Font = new Font(prototype: dtp.Font, newStyle: FontStyle.Bold);
+                            if (strSqlDataDT1 != null || strSqlDataDT3 != null)
+                            {
+                                dtp.Font = new Font(prototype: dtp.Font, newStyle: FontStyle.Bold);
+                            }
                         }
                     }
                 }
@@ -371,72 +396,6 @@ public partial class FrmEditFileData : Form
         _frmEditFileDataNowLoadingFileData = false;
     }
 
-    private static string lvw_EditorFile_GetDataReadFromSQLQueues(string fileNameWithoutPath,
-                                                                  Control cItem)
-    {
-        FrmMainApp.Logger.Debug(message: "Starting - cItem: " + cItem.Name);
-        string strValueInSQL = null;
-
-        // Overwrite from sql-Q if available
-        // If data was pulled from the map this will sit in the main table, not in Q
-        DataTable dtSqlDataQ = null;
-        try
-        {
-            FrmMainApp.Logger.Trace(message: "Starting - cItem: " + cItem.Name + " - dtSqlDataQ - Checking");
-            dtSqlDataQ = DtFileDataToWriteStage1PreQueue.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "' AND settingId ='" + cItem.Name.Substring(startIndex: 4) + "'")
-                .CopyToDataTable();
-            FrmMainApp.Logger.Trace(message: "Starting - cItem: " +
-                                             cItem.Name +
-                                             " - dtSqlDataQ - Found: " +
-                                             dtSqlDataQ.Rows[index: 0][columnName: "settingValue"]
-                                                 .ToString());
-        }
-        catch
-        {
-            FrmMainApp.Logger.Trace(message: "Starting - cItem: " + cItem.Name + " - dtSqlDataQ - Not Found");
-            dtSqlDataQ = null;
-        }
-
-        DataTable dtSqlDataF = null;
-        try
-        {
-            FrmMainApp.Logger.Trace(message: "Starting - cItem: " + cItem.Name + " - dtSqlDataF - Checking");
-            dtSqlDataF = DtFileDataToWriteStage3ReadyToWrite.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "' AND settingId ='" + cItem.Name.Substring(startIndex: 4) + "'")
-                .CopyToDataTable();
-            FrmMainApp.Logger.Debug(message: "Starting - cItem: " +
-                                             cItem.Name +
-                                             " - dtSqlDataF - Found: " +
-                                             dtSqlDataF.Rows[index: 0][columnName: "settingValue"]
-                                                 .ToString());
-        }
-        catch
-        {
-            FrmMainApp.Logger.Trace(message: "Starting - cItem: " + cItem.Name + " - dtSqlDataF - Not Found");
-            dtSqlDataF = null;
-        }
-
-        if ((dtSqlDataQ != null && dtSqlDataQ.Rows.Count > 0) || (dtSqlDataF != null && dtSqlDataF.Rows.Count > 0))
-        {
-            // See if data in temp-queue
-            if (dtSqlDataQ != null && dtSqlDataQ.Rows.Count > 0)
-            {
-                strValueInSQL = dtSqlDataQ.Rows[index: 0][columnName: "settingValue"]
-                    .ToString();
-            }
-            // See if data is ready to be written
-            else if (dtSqlDataF != null && dtSqlDataF.Rows.Count > 0)
-            {
-                strValueInSQL = dtSqlDataF.Rows[index: 0][columnName: "settingValue"]
-                    .ToString();
-            }
-        }
-        else
-        {
-            FrmMainApp.Logger.Trace(message: "Not in SQL");
-        }
-
-        return strValueInSQL;
-    }
 
     /// <summary>
     ///     Attempts to generate preview image for the image that was clicked on.
@@ -910,7 +869,7 @@ public partial class FrmEditFileData : Form
     private async void lvw_FileListEditImages_SelectedIndexChanged(object sender,
                                                                    EventArgs e)
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        Logger.Debug(message: "Starting");
         if (lvw_FileListEditImages.SelectedItems.Count > 0)
         {
             string fileNameWithPath = Path.Combine(path1: FolderName, path2: lvw_FileListEditImages.SelectedItems[index: 0]
@@ -929,7 +888,7 @@ public partial class FrmEditFileData : Form
             }
         }
 
-        FrmMainApp.Logger.Debug(message: "Done");
+        Logger.Debug(message: "Done");
     }
 
     /// <summary>
@@ -1045,7 +1004,7 @@ public partial class FrmEditFileData : Form
 
                         if (dtTakenDate != null && dtTakenDate.Rows.Count > 0)
                         {
-                            DateTime originalTakenDateTime = Convert.ToDateTime(value: dtTakenDate.Rows[index: 0][columnName: "originalTakenDate"]
+                            DateTime originalTakenDateTime = Convert.ToDateTime(value: dtTakenDate.Rows[index: 0][columnName: "settingValue"]
                                                                                     .ToString());
 
                             DateTime modifiedTakenDateTime = originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
@@ -1133,7 +1092,7 @@ public partial class FrmEditFileData : Form
 
                         if (dtCreateDate != null && dtCreateDate.Rows.Count > 0)
                         {
-                            DateTime originalCreateDateTime = Convert.ToDateTime(value: dtCreateDate.Rows[index: 0][columnName: "originalCreateDate"]
+                            DateTime originalCreateDateTime = Convert.ToDateTime(value: dtCreateDate.Rows[index: 0][columnName: "settingValue"]
                                                                                      .ToString());
 
                             DateTime modifiedCreateDateTime = originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
@@ -1217,7 +1176,8 @@ public partial class FrmEditFileData : Form
                         DtOriginalTakenDate.AcceptChanges();
                         DataRow drDateChange = DtOriginalTakenDate.NewRow();
                         drDateChange[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
-                        drDateChange[columnName: "originalTakenDate"] = drDateChanged[columnName: "settingValue"];
+                        drDateChange[columnName: "settingId"] = "originalTakenDate";
+                        drDateChange[columnName: "settingValue"] = drDateChanged[columnName: "settingValue"];
                         DtOriginalTakenDate.Rows.Add(row: drDateChange);
                         DtOriginalTakenDate.AcceptChanges();
 
@@ -1274,7 +1234,8 @@ public partial class FrmEditFileData : Form
                         DtOriginalCreateDate.AcceptChanges();
                         DataRow drDateChange = DtOriginalCreateDate.NewRow();
                         drDateChange[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
-                        drDateChange[columnName: "originalCreateDate"] = drDateChanged[columnName: "settingValue"];
+                        drDateChange[columnName: "settingId"] = "originalCreateDate";
+                        drDateChange[columnName: "settingValue"] = drDateChanged[columnName: "settingValue"];
                         DtOriginalCreateDate.Rows.Add(row: drDateChange);
                         DtOriginalCreateDate.AcceptChanges();
 
