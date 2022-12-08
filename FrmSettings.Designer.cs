@@ -52,10 +52,10 @@
             this.ckb_OverwriteOriginal = new System.Windows.Forms.CheckBox();
             this.ckb_AddXMPSideCar = new System.Windows.Forms.CheckBox();
             this.lbx_fileExtensions = new System.Windows.Forms.ListBox();
+            this.igl_Settings = new System.Windows.Forms.ImageList(this.components);
             this.btn_OK = new System.Windows.Forms.Button();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.fbd_StartupFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.igl_Settings = new System.Windows.Forms.ImageList(this.components);
             this.tct_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).BeginInit();
@@ -327,6 +327,14 @@
             this.lbx_fileExtensions.TabIndex = 0;
             this.lbx_fileExtensions.SelectedIndexChanged += new System.EventHandler(this.Lbx_fileExtensions_SelectedIndexChanged);
             // 
+            // igl_Settings
+            // 
+            this.igl_Settings.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("igl_Settings.ImageStream")));
+            this.igl_Settings.TransparentColor = System.Drawing.Color.Transparent;
+            this.igl_Settings.Images.SetKeyName(0, "LibrarySettings.png");
+            this.igl_Settings.Images.SetKeyName(1, "Settings.png");
+            this.igl_Settings.Images.SetKeyName(2, "SettingsFile.png");
+            // 
             // btn_OK
             // 
             this.btn_OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -357,14 +365,6 @@
             // 
             this.fbd_StartupFolder.Description = "fbd_StartupFolder";
             this.fbd_StartupFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
-            // 
-            // igl_Settings
-            // 
-            this.igl_Settings.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("igl_Settings.ImageStream")));
-            this.igl_Settings.TransparentColor = System.Drawing.Color.Transparent;
-            this.igl_Settings.Images.SetKeyName(0, "LibrarySettings.png");
-            this.igl_Settings.Images.SetKeyName(1, "Settings.png");
-            this.igl_Settings.Images.SetKeyName(2, "SettingsFile.png");
             // 
             // FrmSettings
             // 

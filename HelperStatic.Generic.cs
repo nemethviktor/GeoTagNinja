@@ -142,8 +142,9 @@ internal static partial class HelperStatic
     /// <returns>Messagebox text contents</returns>
     internal static string GenericGetMessageBoxText(string messageBoxName)
     {
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         return DataReadSQLiteObjectText(
-            languageName: FrmMainApp.AppLanguage,
+            languageName: frmMainAppInstance.AppLanguage,
             objectType: "messageBox",
             objectName: messageBoxName
         );
@@ -256,6 +257,7 @@ internal static partial class HelperStatic
     internal static void GenericReturnControlText(Control cItem,
                                                   Form senderForm)
     {
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         if (
             cItem is Label ||
             cItem is GroupBox ||
@@ -269,7 +271,7 @@ internal static partial class HelperStatic
         {
             // for some reason there is no .Last() being offered here
             cItem.Text = DataReadSQLiteObjectText(
-                languageName: FrmMainApp.AppLanguage,
+                languageName: frmMainAppInstance.AppLanguage,
                 objectType: cItem.GetType()
                     .ToString()
                     .Split('.')[cItem.GetType()
@@ -283,7 +285,7 @@ internal static partial class HelperStatic
         else if (cItem is Form)
         {
             cItem.Text = DataReadSQLiteObjectText(
-                languageName: FrmMainApp.AppLanguage,
+                languageName: frmMainAppInstance.AppLanguage,
                 objectType: "Form",
                 objectName: cItem.Name);
         }

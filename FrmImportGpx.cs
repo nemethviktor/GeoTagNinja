@@ -224,6 +224,7 @@ public partial class FrmImportGpx : Form
     {
         string trackFileLocationType = "";
         string trackFileLocationVal = "";
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         // one source:
         // exiftool -geotag "c:\gps logs\track.log" x.jpg
@@ -261,7 +262,7 @@ public partial class FrmImportGpx : Form
         {
             // indicate that something is going on
             btn_OK.Text = HelperStatic.DataReadSQLiteObjectText(
-                languageName: FrmMainApp.AppLanguage,
+                languageName: frmMainAppInstance.AppLanguage,
                 objectType: sender.GetType()
                     .ToString()
                     .Split('.')

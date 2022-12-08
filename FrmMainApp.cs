@@ -46,7 +46,7 @@ public partial class FrmMainApp : Form
     internal static DataTable ObjectTagNamesIn;
     internal static DataTable ObjectTagNamesOut;
     internal static string FolderName;
-    internal static string AppLanguage = "english"; // default to english 
+    internal static string _AppLanguage = "english"; // default to english 
 
     internal static string ShowLocToMapDialogChoice = "default";
     internal FrmSettings FrmSettings;
@@ -73,6 +73,11 @@ public partial class FrmMainApp : Form
     internal static bool RemoveGeoDataIsRunning;
 
     #endregion
+
+    /// <summary>
+    /// Returns the currently set application language for localization.
+    /// </summary>
+    public string AppLanguage { get => _AppLanguage; }
 
     #region Methods
 
@@ -133,7 +138,7 @@ public partial class FrmMainApp : Form
         // read language and objectnames
         try
         {
-            AppLanguage = HelperStatic.DataReadSQLiteSettings(
+            _AppLanguage = HelperStatic.DataReadSQLiteSettings(
                 tableName: "settings",
                 settingTabPage: "tpg_Application",
                 settingId: "cbx_Language"
@@ -383,9 +388,23 @@ public partial class FrmMainApp : Form
             }
         }
 
+        // Text for ImagePreview
+        pbx_imagePreview.EmptyText = HelperStatic.DataReadSQLiteObjectText(
+            languageName: AppLanguage,
+            objectType: "PictureBox",
+            objectName: "pbx_imagePreview",
+            actionType: "EmptyText"
+            );
+
         // don't think the menustrip above is working
         List<ToolStripItem> allMenuItems = new();
         foreach (ToolStripItem toolItem in mns_MenuStrip.Items)
+        {
+            allMenuItems.Add(item: toolItem);
+            //add sub items
+            allMenuItems.AddRange(collection: helperNonstatic.GetMenuItems(item: toolItem));
+        }
+        foreach (ToolStripItem toolItem in cms_FileListView.Items)
         {
             allMenuItems.Add(item: toolItem);
             //add sub items
@@ -396,8 +415,7 @@ public partial class FrmMainApp : Form
         {
             if (cItem is ToolStripMenuItem)
             {
-                ToolStripMenuItem tsmi = cItem as ToolStripMenuItem;
-                cItem.Text = cItem.Text = HelperStatic.DataReadSQLiteObjectText(
+                cItem.Text = HelperStatic.DataReadSQLiteObjectText(
                     languageName: AppLanguage,
                     objectType: cItem.GetType()
                         .ToString()
@@ -405,10 +423,6 @@ public partial class FrmMainApp : Form
                         .Last(),
                     objectName: cItem.Name
                 );
-            }
-            else if (cItem is ToolStripSeparator)
-            {
-                ToolStripSeparator tss = cItem as ToolStripSeparator;
             }
         }
 
@@ -427,6 +441,13 @@ public partial class FrmMainApp : Form
                                          objectName: "ttp_NavigateMapGo"
                                      )
         );
+
+        tmi_ShowHideCols.Text = HelperStatic.DataReadSQLiteObjectText(
+            languageName: AppLanguage,
+            objectType: "MenuStrip",
+            objectName: "pbx_imagePreview",
+            actionType: "EmptyText"
+            );
 
         #endregion
 
@@ -721,7 +742,7 @@ public partial class FrmMainApp : Form
         List<string> col_order_headername = new();
 
         string settingIdToSend;
-        int colWidth = 0;
+        string colWidth = null;
         // logic: see if it's in SQL first...if not then set to Auto
         foreach (ColumnHeader columnHeader in frmMainApp.lvw_FileList.Columns)
         {
@@ -744,35 +765,13 @@ public partial class FrmMainApp : Form
 
             // Read and process width
             settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_width";
-            colWidth = Convert.ToInt16(value: HelperStatic.DataReadSQLiteSettings(
+            colWidth = HelperStatic.DataReadSQLiteSettings(
                                            tableName: "applayout",
                                            settingTabPage: "lvw_FileList",
-                                           settingId: settingIdToSend)
-            );
-            if (colWidth == 0) // a null value would be parsed to zero
-            {
-                switch (columnHeader.Name.Substring(startIndex: 4))
-                {
-                    case "GPSLatitude" or "GPSLatitudeRef" or "GPSLongitude" or "GPSLongitudeRef" or "GPSSpeedRef" or "GPSAltitudeRef" or "DestCoordinates" or "GPSDestLatitude" or "GPSDestLatitudeRef" or "GPSDestLongitude" or "GPSDestLongitudeRef" or "GPSImgDirection" or "GPSImgDirectionRef":
-                        columnHeader.Width = 0;
-                        break;
-                    default:
-                        columnHeader.Width = -2;
-                        break;
-                }
-            }
-            else
-            {
-                switch (columnHeader.Name.Substring(startIndex: 4))
-                {
-                    case "GPSLatitude" or "GPSLatitudeRef" or "GPSLongitude" or "GPSLongitudeRef" or "GPSSpeedRef" or "GPSAltitudeRef" or "DestCoordinates" or "GPSDestLatitude" or "GPSDestLatitudeRef" or "GPSDestLongitude" or "GPSDestLongitudeRef" or "GPSImgDirection" or "GPSImgDirectionRef":
-                        columnHeader.Width = 0;
-                        break;
-                    default:
-                        columnHeader.Width = colWidth;
-                        break;
-                }
-            }
+                                           settingId: settingIdToSend);
+
+            if ((colWidth != null) && (colWidth.Length > 0))
+                columnHeader.Width = Convert.ToInt16(colWidth);
         }
 
         // Finally set the column order - setting them from first to last col
@@ -784,7 +783,8 @@ public partial class FrmMainApp : Form
             foreach (ColumnHeader columnHeader in frmMainApp.lvw_FileList.Columns)
             {
                 // We go for case-insensitive!
-                if (string.Equals(a: columnHeader.Name, b: arr_col_order_headername[idx], comparisonType: StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(a: columnHeader.Name, b: arr_col_order_headername[idx], 
+                    comparisonType: StringComparison.OrdinalIgnoreCase))
                 {
                     columnHeader.DisplayIndex = idx;
                     break;
@@ -813,16 +813,13 @@ public partial class FrmMainApp : Form
                 settingValue: columnHeader.DisplayIndex.ToString()
             );
 
-            if (columnHeader.Width != -2) // actually this doesn't work but low-pri to fix
-            {
-                settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_width";
-                HelperStatic.DataWriteSQLiteSettings(
-                    tableName: "applayout",
-                    settingTabPage: "lvw_FileList",
-                    settingId: settingIdToSend,
-                    settingValue: columnHeader.Width.ToString()
-                );
-            }
+            settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_width";
+            HelperStatic.DataWriteSQLiteSettings(
+                tableName: "applayout",
+                settingTabPage: "lvw_FileList",
+                settingId: settingIdToSend,
+                settingValue: columnHeader.Width.ToString()
+            );
         }
     }
 
@@ -1807,6 +1804,41 @@ public partial class FrmMainApp : Form
 
 
     /// <summary>
+    ///     Handles an update of map location and image preview based on selected file
+    /// </summary>
+    private async Task lvw_HandleSelectionChange()
+    {
+        if (lvw_FileList.FocusedItem != null)
+        {
+            await HelperStatic.LvwItemClickNavigate();
+            // it's easier to call the create-preview here than in the other one because focusedItems misbehave/I don't quite understand it/them
+            if (lvw_FileList.SelectedItems.Count > 0)
+            {
+                if (File.Exists(path: Path.Combine(FolderName +
+                                                   lvw_FileList.SelectedItems[index: 0]
+                                                       .Text)))
+                {
+                    await HelperStatic.LvwItemCreatePreview(
+                        fileNameWithPath: Path.Combine(FolderName + lvw_FileList.SelectedItems[index: 0].Text));
+                }
+                else
+                {
+                    pbx_imagePreview.Image = null;
+                }
+            }
+
+            // for folders and other non-valid items, don't do anything.
+            if (HelperStatic.HsMapMarkers.Count > 0)
+            {
+                NavigateMapGo();
+                pbx_imagePreview.Image = null;
+            }
+        }
+    }
+
+
+
+    /// <summary>
     ///     Handles the lvw_FileList_MouseDoubleClick event -> if user clicked on a folder then enter, if a file then edit
     ///     ... else warn and don't do anything.
     /// </summary>
@@ -1890,28 +1922,7 @@ public partial class FrmMainApp : Form
             e.KeyCode == Keys.End
         )
         {
-            if (lvw_FileList.FocusedItem != null)
-            {
-                await HelperStatic.LvwItemClickNavigate();
-                // it's easier to call the create-preview here than in the other one because focusedItems misbehave/I don't quite understand it/them
-                if (lvw_FileList.SelectedItems.Count > 0)
-                {
-                    if (File.Exists(path: Path.Combine(FolderName +
-                                                       lvw_FileList.SelectedItems[index: 0]
-                                                           .Text)))
-                    {
-                        await HelperStatic.LvwItemCreatePreview(fileNameWithPath: Path.Combine(FolderName +
-                                                                                               lvw_FileList.SelectedItems[index: 0]
-                                                                                                   .Text));
-                    }
-                }
-
-                // for folders and other non-valid items, don't do anything.
-                if (HelperStatic.HsMapMarkers.Count > 0)
-                {
-                    NavigateMapGo();
-                }
-            }
+            await lvw_HandleSelectionChange();
         }
     }
 
@@ -2186,15 +2197,7 @@ public partial class FrmMainApp : Form
     private async void lvw_FileList_MouseUp(object sender,
                                             MouseEventArgs e)
     {
-        if (!HelperStatic.SNowSelectingAllItems)
-        {
-            await HelperStatic.LvwItemClickNavigate();
-            // for folders and other non-valid items, don't do anything.
-            if (HelperStatic.HsMapMarkers.Count > 0)
-            {
-                NavigateMapGo();
-            }
-        }
+        await lvw_HandleSelectionChange();
     }
 
     /// <summary>
@@ -2342,6 +2345,27 @@ public partial class FrmMainApp : Form
     private void FrmMainApp_ResizeEnd(object sender, EventArgs e)
     {
         wbv_MapArea.Show();
+    }
+
+
+    private void selectColumnsToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        FrmColumnSelection frm_ColSel = new FrmColumnSelection(
+            this.lvw_FileList.Columns, AppLanguage);
+        Point lvwLoc = this.lvw_FileList.PointToScreen(new Point(0,0));
+        lvwLoc.Offset(20, 10);          // Relative to list view top left
+        frm_ColSel.Location = lvwLoc;   // in screen coords...
+        frm_ColSel.ShowDialog(this.lvw_FileList);
+    }
+
+    private void lvw_FileList_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
+    {
+        // Columns with width = 0 should stay hidden / may not be resized.
+        if (lvw_FileList.Columns[e.ColumnIndex].Width == 0)
+        {
+            e.Cancel = true;
+            e.NewWidth = 0;
+        }
     }
 }
 

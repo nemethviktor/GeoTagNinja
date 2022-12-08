@@ -173,14 +173,14 @@
   <data name="tsb_RemoveGeoData.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGZSURBVDhPlZG9S0JhFMaPd6m1sUGvooMU+LEVSdZUtEZQ
-        YZNTovf2LUTQ1JQQCuq19AbR0lJGENQSgWP/QRa0VkMEOrTUc/TVrl+XeuBwXs57fg/nvC91UzB43O8f
-        1Z85i5JRksPhSCEqdrt9T9R+5RsreH0B/cwf0L/r+cgjrlgSoALge1mWJ61W62e9HLqNU+hmi48mBk3Y
-        5XINcUYkAQNcuH6phTDh0b2BfNmwggXNWRiUnE7nMPIdQkdd6mrQJhO4IQYNcD5CsqbSTjZGGx63TTeH
-        DUrGqI9BLUzVnEKl5LLl6iAsVZemB2Z4Z8AFtHWHtRhNIx73VfrSFDpJRekto9AsDNfYxOO2nqKtE+Zx
-        MeqFFqUngIsMMZxVKdEwSUYslzCPC6RVgB5yKhXz69h7hQY52k14HfTtCqRVaJpojisMjCa8TkKhCk8q
-        kE6ZmYg32RatvYUxA1mFXrHOXGaVRvB4m6jNpxUq8++INnPxJIDeER95lcbTKpUPVZoS139TYx2YFPEz
-        56L8P7FJ7XcUsolSDxH9AMjnxW/3+zMqAAAAAElFTkSuQmCC
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGYSURBVDhPlZG9S0JhFMaPLrU2Nlw/0EEK/NiKJGsqWiOo
+        sMkp0Xv7FiJwahNCQb3W9QbR0lJGENQSgWP/QRa0VkMEOrTUc/TVrl+XeuBwXs57fg/nvC/1Uih0PBgY
+        1585i5JRVqfTmUFUHQ7Hvqj9yj9R9PmD+lkgqH838pFXXLGsgIqA7+12+7QkSZ+Ncvg2QeGbHT6aGLRg
+        t9s9whmRBgxw6fqlHsKER/cFtYphBQua8zAou1yuUeQ7hI66tadBh0zgphg0wFqU7KpCe/k4bXk9Nt0c
+        NigdpwEG1QjVCjKV06uWq4OItbYyOzTHOwMuoq03rMZpFvGYVOhLlekkE6O3nEzzMNxgE69HOkVbN8zj
+        YtQLNUZPAJcZYjivUKppko5aLmGeEEi7AD0UFCppm9h7jYY5Ok14HfQlBdIuNE21xhUGRhNeJyVTlScV
+        SLfMTMSb7IrW/sKYwbxMr1hnIbdOY3i8bdQWszJV+HdEm7l4EkDviA9NocmsQpVDhWbE9d/UXAcmJfzM
+        uSj/T2xS/x2ZbKLUR0Q/oJfFV0mRrVYAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="tsb_ImportGPX.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -206,6 +206,9 @@
   <metadata name="folderBrowserDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>153, 17</value>
   </metadata>
+  <metadata name="cms_FileListView.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>473, 17</value>
+  </metadata>
   <metadata name="igl_RightHandSide.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>322, 17</value>
   </metadata>
@@ -214,7 +217,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAAu
-        CAAAAk1TRnQBSQFMAwEBAAEYAQABGAEAARABAAEQAQAE/wEJAQAI/wFCAU0BNgEEBgABNgEEAgABKAMA
+        CAAAAk1TRnQBSQFMAwEBAAGYAQABmAEAARABAAEQAQAE/wEJAQAI/wFCAU0BNgEEBgABNgEEAgABKAMA
         AUADAAEQAwABAQEAAQgGAAEEGAABgAIAAYADAAKAAQABgAMAAYABAAGAAQACgAIAA8ABAAHAAdwBwAEA
         AfABygGmAQABMwUAATMBAAEzAQABMwEAAjMCAAMWAQADHAEAAyIBAAMpAQADVQEAA00BAANCAQADOQEA
         AYABfAH/AQACUAH/AQABkwEAAdYBAAH/AewBzAEAAcYB1gHvAQAB1gLnAQABkAGpAa0CAAH/ATMDAAFm

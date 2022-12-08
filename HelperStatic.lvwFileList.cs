@@ -328,6 +328,12 @@ internal static partial class HelperStatic
                 }
 
                 //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
+                string ip_ErrorMsg = HelperStatic.DataReadSQLiteObjectText(
+                    languageName: frmMainAppInstance.AppLanguage,
+                    objectType: "PictureBox",
+                    objectName: "pbx_imagePreview",
+                    actionType: "CouldNotRetrieve"
+                    );
                 if (File.Exists(path: generatedFileName))
                 {
                     try
@@ -338,8 +344,11 @@ internal static partial class HelperStatic
                     }
                     catch
                     {
-                        // nothing.
+                        frmMainAppInstance.pbx_imagePreview.SetErrorMessage(ip_ErrorMsg);
                     }
+                } else
+                {
+                    frmMainAppInstance.pbx_imagePreview.SetErrorMessage(ip_ErrorMsg);
                 }
             }
         }

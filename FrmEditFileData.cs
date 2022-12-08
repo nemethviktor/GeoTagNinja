@@ -1305,10 +1305,10 @@ public partial class FrmEditFileData : Form
                                                EventArgs e)
     {
         ToolTip ttp = new();
-
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         ttp.SetToolTip(control: pbx_OffsetTimeInfo,
                        caption: HelperStatic.DataReadSQLiteObjectText(
-                           languageName: AppLanguage,
+                           languageName: frmMainAppInstance.AppLanguage,
                            objectType: "ToolTip",
                            objectName: "ttp_OffsetTime"
                        ));
