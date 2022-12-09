@@ -44,6 +44,7 @@ public partial class FrmMainApp : Form
     internal static string LatCoordinate;
     internal static string LngCoordinate;
 
+    internal static DataTable DtLangaugeLabels;
     internal static DataTable DtObjectNames;
     internal static DataTable DtObjectTagNamesIn;
     internal static DataTable DtObjectTagNamesOut;

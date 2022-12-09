@@ -97,7 +97,7 @@ public partial class FrmMainApp
     private static void AppStartupReadObjectNames()
     {
         // read language and objectnames
-
+        HelperStatic.DataReadSQLiteObjectTextFromFiles();
         Logger.Debug(message: "Starting");
 
         try
