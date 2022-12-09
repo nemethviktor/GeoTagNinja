@@ -52,10 +52,10 @@
             this.ckb_OverwriteOriginal = new System.Windows.Forms.CheckBox();
             this.ckb_AddXMPSideCar = new System.Windows.Forms.CheckBox();
             this.lbx_fileExtensions = new System.Windows.Forms.ListBox();
+            this.igl_Settings = new System.Windows.Forms.ImageList(this.components);
             this.btn_OK = new System.Windows.Forms.Button();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.fbd_StartupFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.igl_Settings = new System.Windows.Forms.ImageList(this.components);
             this.tct_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).BeginInit();
@@ -272,7 +272,7 @@
             this.ckb_ResetFileDateToCreated.Location = new System.Drawing.Point(419, 67);
             this.ckb_ResetFileDateToCreated.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_ResetFileDateToCreated.Name = "ckb_ResetFileDateToCreated";
-            this.ckb_ResetFileDateToCreated.Size = new System.Drawing.Size(168, 38);
+            this.ckb_ResetFileDateToCreated.Size = new System.Drawing.Size(168, 62);
             this.ckb_ResetFileDateToCreated.TabIndex = 4;
             this.ckb_ResetFileDateToCreated.Text = "ckb_ResetFileDateToCreated";
             this.ckb_ResetFileDateToCreated.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -295,7 +295,7 @@
             // ckb_OverwriteOriginal
             // 
             this.ckb_OverwriteOriginal.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_OverwriteOriginal.Location = new System.Drawing.Point(397, 183);
+            this.ckb_OverwriteOriginal.Location = new System.Drawing.Point(397, 195);
             this.ckb_OverwriteOriginal.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_OverwriteOriginal.Name = "ckb_OverwriteOriginal";
             this.ckb_OverwriteOriginal.Size = new System.Drawing.Size(190, 38);
@@ -308,7 +308,7 @@
             // ckb_AddXMPSideCar
             // 
             this.ckb_AddXMPSideCar.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_AddXMPSideCar.Location = new System.Drawing.Point(397, 123);
+            this.ckb_AddXMPSideCar.Location = new System.Drawing.Point(397, 135);
             this.ckb_AddXMPSideCar.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_AddXMPSideCar.Name = "ckb_AddXMPSideCar";
             this.ckb_AddXMPSideCar.Size = new System.Drawing.Size(190, 38);
@@ -326,6 +326,14 @@
             this.lbx_fileExtensions.Size = new System.Drawing.Size(385, 368);
             this.lbx_fileExtensions.TabIndex = 0;
             this.lbx_fileExtensions.SelectedIndexChanged += new System.EventHandler(this.Lbx_fileExtensions_SelectedIndexChanged);
+            // 
+            // igl_Settings
+            // 
+            this.igl_Settings.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("igl_Settings.ImageStream")));
+            this.igl_Settings.TransparentColor = System.Drawing.Color.Transparent;
+            this.igl_Settings.Images.SetKeyName(0, "LibrarySettings.png");
+            this.igl_Settings.Images.SetKeyName(1, "Settings.png");
+            this.igl_Settings.Images.SetKeyName(2, "SettingsFile.png");
             // 
             // btn_OK
             // 
@@ -357,14 +365,6 @@
             // 
             this.fbd_StartupFolder.Description = "fbd_StartupFolder";
             this.fbd_StartupFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
-            // 
-            // igl_Settings
-            // 
-            this.igl_Settings.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("igl_Settings.ImageStream")));
-            this.igl_Settings.TransparentColor = System.Drawing.Color.Transparent;
-            this.igl_Settings.Images.SetKeyName(0, "LibrarySettings.png");
-            this.igl_Settings.Images.SetKeyName(1, "Settings.png");
-            this.igl_Settings.Images.SetKeyName(2, "SettingsFile.png");
             // 
             // FrmSettings
             // 
