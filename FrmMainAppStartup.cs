@@ -444,9 +444,9 @@ public partial class FrmMainApp
             }
         }
 
-        tmi_ShowHideCols.Text = HelperStatic.DataReadSQLiteObjectText(
+        pbx_imagePreview.EmptyText = HelperStatic.DataReadSQLiteObjectText(
             languageName: AppLanguage,
-            objectType: "MenuStrip",
+            objectType: "PictureBox",
             objectName: "pbx_imagePreview",
             actionType: "EmptyText"
             );
