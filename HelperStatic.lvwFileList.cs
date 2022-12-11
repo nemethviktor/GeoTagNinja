@@ -15,31 +15,27 @@ internal static partial class HelperStatic
     ///     dt_fileDataToWriteStage3ReadyToWrite for the file
     /// </summary>
     /// <param name="lvi"></param>
-    internal static async Task LwvUpdateRowFromDTWriteStage3ReadyToWrite(ListViewItem lvi)
+    internal static Task LwvUpdateRowFromDTWriteStage3ReadyToWrite(ListViewItem lvi)
     {
-        FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         string tmpCoordinates;
-        if (FrmMainAppInstance != null)
+        if (frmMainAppInstance != null)
         {
-            ListView lvw = FrmMainAppInstance.lvw_FileList;
-            ListView.ColumnHeaderCollection lvchs = FrmMainAppInstance.ListViewColumnHeaders;
+            ListView lvw = frmMainAppInstance.lvw_FileList;
+            ListView.ColumnHeaderCollection lvchs = frmMainAppInstance.ListViewColumnHeaders;
 
             int d = lvi.Index;
             string fileNameWithoutPath = lvi.Text;
 
-            DataView dataViewRelevantRows = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
-            dataViewRelevantRows.RowFilter = "fileNameWithoutPath = '" +
-                                             fileNameWithoutPath +
-                                             "'";
-            DataTable dataTableRelevant = dataViewRelevantRows.ToTable();
-            if (dataTableRelevant.Rows.Count > 0)
+            DataRow[] drRelevantRows = FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'");
+            if (drRelevantRows.Length > 0)
             {
                 try
                 {
                     lvw.BeginUpdate();
                     FrmMainApp.HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Red);
 
-                    foreach (DataRow drTagData in dataTableRelevant.Rows)
+                    foreach (DataRow drTagData in drRelevantRows)
                     {
                         // theoretically we'd want to update the columns for each tag but for example when removing all data
                         // this becomes tricky bcs we're also firing a "-gps*=" tag.
@@ -89,6 +85,8 @@ internal static partial class HelperStatic
                 Application.DoEvents();
             }
         }
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -96,15 +94,15 @@ internal static partial class HelperStatic
     /// </summary>
     internal static void LwvCopyGeoData()
     {
-        FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        if (FrmMainAppInstance.lvw_FileList.SelectedItems.Count == 1)
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        if (frmMainAppInstance.lvw_FileList.SelectedItems.Count == 1)
         {
-            ListViewItem lvi = FrmMainAppInstance.lvw_FileList.SelectedItems[index: 0];
+            ListViewItem lvi = frmMainAppInstance.lvw_FileList.SelectedItems[index: 0];
             if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text)))
             {
                 FrmMainApp.FileDateCopySourceFileNameWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text);
                 FrmMainApp.DtFileDataCopyPool.Rows.Clear();
-                List<string> listOfTagsToCopy = new()
+                List<string> listOfTagsToCopyExclShifts = new()
                 {
                     "Coordinates",
                     "GPSLatitude",
@@ -132,15 +130,44 @@ internal static partial class HelperStatic
                     "OffsetTime"
                 };
 
-                foreach (ColumnHeader clh in FrmMainAppInstance.lvw_FileList.Columns)
+                List<string> listOfTagsToCopyTimeShifts = new()
                 {
-                    if (listOfTagsToCopy.IndexOf(item: clh.Name.Substring(startIndex: 4)) >= 0)
+                    "TakenDateSecondsShift",
+                    "TakenDateMinutesShift",
+                    "TakenDateHoursShift ",
+                    "TakenDateDaysShift",
+                    "CreateDateSecondsShift",
+                    "CreateDateMinutesShift",
+                    "CreateDateHoursShift",
+                    "CreateDateDaysShift"
+                };
+
+                string fileNameWithoutPath = lvi.Text;
+                foreach (ColumnHeader clh in frmMainAppInstance.lvw_FileList.Columns)
+                {
+                    if (listOfTagsToCopyExclShifts.IndexOf(item: clh.Name.Substring(startIndex: 4)) >= 0)
                     {
-                        DataRow dr_FileDataRow = FrmMainApp.DtFileDataCopyPool.NewRow();
-                        dr_FileDataRow[columnName: "settingId"] = clh.Name.Substring(startIndex: 4);
-                        dr_FileDataRow[columnName: "settingValue"] = lvi.SubItems[index: clh.Index]
+                        DataRow drFileDataRow = FrmMainApp.DtFileDataCopyPool.NewRow();
+                        drFileDataRow[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
+                        drFileDataRow[columnName: "settingId"] = clh.Name.Substring(startIndex: 4);
+                        drFileDataRow[columnName: "settingValue"] = lvi.SubItems[index: clh.Index]
                             .Text;
-                        FrmMainApp.DtFileDataCopyPool.Rows.Add(row: dr_FileDataRow);
+                        FrmMainApp.DtFileDataCopyPool.Rows.Add(row: drFileDataRow);
+                    }
+                }
+
+                // when COPYING we use the main grid, therefore timeshifts can only possibly live in DtFileDataToWriteStage3ReadyToWrite
+                foreach (string settingId in listOfTagsToCopyTimeShifts)
+                {
+                    DataRow[] dtDateShifted = FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "' AND settingId = '" + settingId + "'");
+                    if (dtDateShifted.Length > 0)
+                    {
+                        DataRow drFileDataRow = FrmMainApp.DtFileDataCopyPool.NewRow();
+                        drFileDataRow[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
+                        drFileDataRow[columnName: "settingId"] = settingId;
+                        drFileDataRow[columnName: "settingValue"] = dtDateShifted[0][columnName: "settingValue"]
+                            .ToString();
+                        FrmMainApp.DtFileDataCopyPool.Rows.Add(row: drFileDataRow);
                     }
                 }
             }
@@ -176,17 +203,17 @@ internal static partial class HelperStatic
     /// <returns>Nothing in reality</returns>
     internal static async Task LvwItemClickNavigate()
     {
-        FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         HtmlAddMarker = "";
         HsMapMarkers.Clear();
 
-        foreach (ListViewItem lvw_FileListItem in FrmMainAppInstance.lvw_FileList.SelectedItems)
+        foreach (ListViewItem lvw_FileListItem in frmMainAppInstance.lvw_FileList.SelectedItems)
         {
             // make sure file still exists. just in case someone deleted it elsewhere
             string fileNameWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: lvw_FileListItem.Text);
             if (File.Exists(path: fileNameWithPath) && lvw_FileListItem.SubItems.Count > 1)
             {
-                string firstSelectedItem = lvw_FileListItem.SubItems[index: FrmMainAppInstance.lvw_FileList.Columns[key: "clh_Coordinates"]
+                string firstSelectedItem = lvw_FileListItem.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_Coordinates"]
                                                                          .Index]
                     .Text;
                 if (firstSelectedItem != "-" && firstSelectedItem != "")
@@ -195,11 +222,11 @@ internal static partial class HelperStatic
                     string strLng;
                     try
                     {
-                        strLat = lvw_FileListItem.SubItems[index: FrmMainAppInstance.lvw_FileList.Columns[key: "clh_Coordinates"]
+                        strLat = lvw_FileListItem.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_Coordinates"]
                                                                .Index]
                             .Text.Split(';')[0]
                             .Replace(oldChar: ',', newChar: '.');
-                        strLng = lvw_FileListItem.SubItems[index: FrmMainAppInstance.lvw_FileList.Columns[key: "clh_Coordinates"]
+                        strLng = lvw_FileListItem.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_Coordinates"]
                                                                .Index]
                             .Text.Split(';')[1]
                             .Replace(oldChar: ',', newChar: '.');
@@ -214,25 +241,25 @@ internal static partial class HelperStatic
                     double parsedLng;
                     if (double.TryParse(s: strLat, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strLng, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
                     {
-                        FrmMainAppInstance.tbx_lat.Text = strLat;
-                        FrmMainAppInstance.tbx_lng.Text = strLng;
+                        frmMainAppInstance.tbx_lat.Text = strLat;
+                        frmMainAppInstance.tbx_lng.Text = strLng;
                         HsMapMarkers.Add(item: (strLat, strLng));
                     }
                 }
                 else if (SResetMapToZero)
                 {
-                    FrmMainAppInstance.tbx_lat.Text = "0";
-                    FrmMainAppInstance.tbx_lng.Text = "0";
+                    frmMainAppInstance.tbx_lat.Text = "0";
+                    frmMainAppInstance.tbx_lng.Text = "0";
                     HsMapMarkers.Add(item: ("0", "0"));
                 }
                 // leave as-is (most likely the last photo)
             }
 
             // don't try and create an preview img unless it's the last file
-            if (FrmMainAppInstance.lvw_FileList.FocusedItem != null && lvw_FileListItem.Text != null)
+            if (frmMainAppInstance.lvw_FileList.FocusedItem != null && lvw_FileListItem.Text != null)
             {
-                if (FrmMainAppInstance.lvw_FileList.FocusedItem.Text == lvw_FileListItem.Text ||
-                    FrmMainAppInstance.lvw_FileList.SelectedItems[index: 0]
+                if (frmMainAppInstance.lvw_FileList.FocusedItem.Text == lvw_FileListItem.Text ||
+                    frmMainAppInstance.lvw_FileList.SelectedItems[index: 0]
                         .Text ==
                     lvw_FileListItem.Text)
                 {

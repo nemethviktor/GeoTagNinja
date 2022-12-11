@@ -222,7 +222,7 @@ public partial class FrmSettings : Form
                 object lbi = lbx_fileExtensions.SelectedItem;
                 string tmpCtrlName = lbi.ToString()
                                          .Split('\t')
-                                         .First() +
+                                         .FirstOrDefault() +
                                      '_' +
                                      subctrl.Name;
 
@@ -263,7 +263,7 @@ public partial class FrmSettings : Form
                         {
                             string tmptmpCtrlName = lbi.ToString()
                                                         .Split('\t')
-                                                        .First() +
+                                                        .FirstOrDefault() +
                                                     '_'; // 'tis ok as is
                             string tmpCtrlGroup = lbi.ToString()
                                 .Split('\t')
@@ -370,7 +370,7 @@ public partial class FrmSettings : Form
             {
                 tmpCtrlName = lbi.ToString()
                                   .Split('\t')
-                                  .First() +
+                                  .FirstOrDefault() +
                               '_' +
                               ((CheckBox)sender).Name;
             }

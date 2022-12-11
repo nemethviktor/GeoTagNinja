@@ -14,8 +14,6 @@ namespace GeoTagNinja;
 
 internal static partial class HelperStatic
 {
-    #region Generic
-
     private static readonly object TableLock = new();
     internal static HashSet<string> FilesBeingProcessed = new();
     internal static bool FileListBeingUpdated;
@@ -151,106 +149,6 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    ///     Custom-made equivalent for a dialogbox w/ checkbox
-    /// </summary>
-    internal static class GenericCheckboxDialog
-    {
-        /// <summary>
-        ///     A custom dialogbox-like form that includes a checkbox too.
-        ///     TODO: make it more reusable. Atm it's a bit fixed as there's only 1 place that calls it. Basically a "source"
-        ///     parameter needs to be added in at some stage.
-        /// </summary>
-        /// <param name="labelText">String of the "main" message.</param>
-        /// <param name="caption">Caption of the box - the one that appears on the top.</param>
-        /// <param name="checkboxText">Text of the checkbox.</param>
-        /// <param name="returnCheckboxText">A yes-no style logic that gets returned/amended to the return string if checked.</param>
-        /// <param name="button1Text">Label of the button</param>
-        /// <param name="returnButton1Text">String val of what's sent further if the btn is pressed</param>
-        /// <param name="button2Text">Same as above</param>
-        /// <param name="returnButton2Text">Same as above</param>
-        /// <returns>A string that can be reused. Needs fine-tuning in the future as it's single-purpose atm. Lazy. </returns>
-        internal static string ShowDialogWithCheckBox(string labelText,
-                                                      string caption,
-                                                      string checkboxText,
-                                                      string returnCheckboxText,
-                                                      string button1Text,
-                                                      string returnButton1Text,
-                                                      string button2Text,
-                                                      string returnButton2Text)
-        {
-            FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-            string returnString = "";
-            Form promptBox = new();
-            promptBox.Text = caption;
-            promptBox.ControlBox = false;
-            promptBox.FormBorderStyle = FormBorderStyle.Fixed3D;
-            FlowLayoutPanel panel = new();
-
-            Label lblText = new();
-            lblText.Text = labelText;
-            lblText.AutoSize = true;
-            panel.SetFlowBreak(control: lblText, value: true);
-            panel.Controls.Add(value: lblText);
-
-            Button btnYes = new()
-                { Text = button1Text };
-            btnYes.Click += (sender,
-                             e) =>
-            {
-                returnString = returnButton1Text;
-                promptBox.Close();
-            };
-            btnYes.Location = new Point(x: 10, y: lblText.Bottom + 5);
-            btnYes.AutoSize = true;
-            panel.Controls.Add(value: btnYes);
-
-            Button btnNo = new()
-                { Text = button2Text };
-            btnNo.Click += (sender,
-                            e) =>
-            {
-                returnString = returnButton2Text;
-                promptBox.Close();
-            };
-
-            btnNo.Location = new Point(x: btnYes.Width + 20, y: lblText.Bottom + 5);
-            btnNo.AutoSize = true;
-            panel.SetFlowBreak(control: btnNo, value: true);
-            panel.Controls.Add(value: btnNo);
-
-            CheckBox chk = new();
-            chk.Text = checkboxText;
-            chk.AutoSize = true;
-            chk.Location = new Point(x: 10, y: btnYes.Bottom + 5);
-
-            panel.Controls.Add(value: chk);
-            panel.Padding = new Padding(all: 5);
-            panel.AutoSize = true;
-
-            promptBox.Controls.Add(value: panel);
-            promptBox.Size = new Size(width: lblText.Width + 40, height: chk.Bottom + 50);
-            promptBox.ShowInTaskbar = false;
-
-            promptBox.StartPosition = FormStartPosition.CenterScreen;
-            promptBox.ShowDialog();
-
-            if (chk.Checked)
-            {
-                returnString += returnCheckboxText;
-            }
-
-            // in case of idiots break glass -- basically if someone ALT+F4s then we reset stuff to "no".
-            if (!returnString.Contains(value: returnButton1Text) && !returnString.Contains(value: returnButton2Text))
-            {
-                returnString = returnButton2Text;
-            }
-
-            ;
-            return returnString;
-        }
-    }
-
-    /// <summary>
     ///     This (mostly) sets the various texts for most Controls in various forms, especially labels and buttons/boxes.
     /// </summary>
     /// <param name="cItem">The Control whose details need adjusting</param>
@@ -258,6 +156,7 @@ internal static partial class HelperStatic
                                                   Form senderForm)
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmMainApp.Logger.Trace(message: "Starting - cItem: " + cItem.Name);
         if (
             cItem is Label ||
             cItem is GroupBox ||
@@ -351,6 +250,8 @@ internal static partial class HelperStatic
     /// </summary>
     internal static async Task GenericCheckForNewVersions()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         // check when the last polling took place
         long nowUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
         long lastCheckUnixTime = 0;
@@ -377,17 +278,26 @@ internal static partial class HelperStatic
             lastCheckUnixTime = long.Parse(s: strLastOnlineVersionCheck);
         }
 
+        FrmMainApp.Logger.Trace(message: "nowUnixTime > lastCheckUnixTime:" + (nowUnixTime - lastCheckUnixTime));
+
         if (nowUnixTime > lastCheckUnixTime + 604800) //604800 is a week's worth of seconds
         {
+            FrmMainApp.Logger.Trace(message: "Checking for new versions.");
+
             // get current & newest exiftool version -- do this here at the end so it doesn't hold up the process
             decimal currentExifToolVersionLocal = await ExifGetExifToolVersion();
             decimal newestExifToolVersionOnline = API_ExifGetExifToolVersionFromWeb();
+
+            FrmMainApp.Logger.Trace(message: "currentExifToolVersionLocal: " + currentExifToolVersionLocal + " / newestExifToolVersionOnline: " + newestExifToolVersionOnline);
+
             decimal currentExifToolVersionInSQL;
             string strCurrentExifToolVersionInSQL = DataReadSQLiteSettings(
                 tableName: "settings",
                 settingTabPage: "generic",
                 settingId: "exifToolVer"
             );
+
+            FrmMainApp.Logger.Trace(message: "strCurrentExifToolVersionInSQL: " + strCurrentExifToolVersionInSQL);
 
             if (!decimal.TryParse(s: strCurrentExifToolVersionInSQL, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out currentExifToolVersionInSQL))
             {
@@ -396,6 +306,7 @@ internal static partial class HelperStatic
 
             if (newestExifToolVersionOnline > currentExifToolVersionLocal && newestExifToolVersionOnline > currentExifToolVersionInSQL && currentExifToolVersionLocal + newestExifToolVersionOnline > 0)
             {
+                FrmMainApp.Logger.Trace(message: "Writing new version to SQL: " + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture));
                 // write current to SQL
                 DataWriteSQLiteSettings(
                     tableName: "settings",
@@ -407,6 +318,11 @@ internal static partial class HelperStatic
                 if (MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewExifToolVersionExists") + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture), caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Asterisk) == DialogResult.Yes)
                 {
                     Process.Start(fileName: "https://exiftool.org/exiftool-" + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture) + ".zip");
+                    FrmMainApp.Logger.Trace(message: "User Launched Browser to Download");
+                }
+                else
+                {
+                    FrmMainApp.Logger.Trace(message: "User Declined Launch to Download");
                 }
             }
 
@@ -444,6 +360,10 @@ internal static partial class HelperStatic
                 settingValue: nowUnixTime.ToString()
             );
         }
+        else
+        {
+            FrmMainApp.Logger.Trace(message: "Not checking for new versions.");
+        }
     }
 
     /// <summary>
@@ -452,9 +372,12 @@ internal static partial class HelperStatic
     /// </summary>
     public static void GenericCreateDataTables()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         // DtFileDataCopyPool
         FrmMainApp.DtFileDataCopyPool = new DataTable();
         FrmMainApp.DtFileDataCopyPool.Clear();
+        FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "fileNameWithoutPath");
         FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "settingValue");
 
@@ -490,6 +413,20 @@ internal static partial class HelperStatic
         FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "fileNameWithPath");
         FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingValue");
+
+        // DtOriginalTakenDate
+        FrmMainApp.DtOriginalTakenDate = new DataTable();
+        FrmMainApp.DtOriginalTakenDate.Clear();
+        FrmMainApp.DtOriginalTakenDate.Columns.Add(columnName: "fileNameWithoutPath");
+        FrmMainApp.DtOriginalTakenDate.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtOriginalTakenDate.Columns.Add(columnName: "settingValue");
+
+        // DtOriginalCreateDate
+        FrmMainApp.DtOriginalCreateDate = new DataTable();
+        FrmMainApp.DtOriginalCreateDate.Clear();
+        FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "fileNameWithoutPath");
+        FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "settingValue");
     }
 
     /// <summary>
@@ -521,5 +458,102 @@ internal static partial class HelperStatic
         return FilesBeingProcessed.Contains(item: fileNameWithoutPath);
     }
 
-    #endregion
+    /// <summary>
+    ///     Custom-made equivalent for a dialogbox w/ checkbox
+    /// </summary>
+    internal static class GenericCheckboxDialog
+    {
+        /// <summary>
+        ///     A custom dialogbox-like form that includes a checkbox too.
+        ///     TODO: make it more reusable. Atm it's a bit fixed as there's only 1 place that calls it. Basically a "source"
+        ///     parameter needs to be added in at some stage.
+        /// </summary>
+        /// <param name="labelText">String of the "main" message.</param>
+        /// <param name="caption">Caption of the box - the one that appears on the top.</param>
+        /// <param name="checkboxText">Text of the checkbox.</param>
+        /// <param name="returnCheckboxText">A yes-no style logic that gets returned/amended to the return string if checked.</param>
+        /// <param name="button1Text">Label of the button</param>
+        /// <param name="returnButton1Text">String val of what's sent further if the btn is pressed</param>
+        /// <param name="button2Text">Same as above</param>
+        /// <param name="returnButton2Text">Same as above</param>
+        /// <returns>A string that can be reused. Needs fine-tuning in the future as it's single-purpose atm. Lazy. </returns>
+        internal static string ShowDialogWithCheckBox(string labelText,
+                                                      string caption,
+                                                      string checkboxText,
+                                                      string returnCheckboxText,
+                                                      string button1Text,
+                                                      string returnButton1Text,
+                                                      string button2Text,
+                                                      string returnButton2Text)
+        {
+            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+            string returnString = "";
+            Form promptBox = new();
+            promptBox.Text = caption;
+            promptBox.ControlBox = false;
+            promptBox.FormBorderStyle = FormBorderStyle.Fixed3D;
+            FlowLayoutPanel panel = new();
+
+            Label lblText = new();
+            lblText.Text = labelText;
+            lblText.AutoSize = true;
+            panel.SetFlowBreak(control: lblText, value: true);
+            panel.Controls.Add(value: lblText);
+
+            Button btnYes = new()
+                { Text = button1Text };
+            btnYes.Click += (sender,
+                             e) =>
+            {
+                returnString = returnButton1Text;
+                promptBox.Close();
+            };
+            btnYes.Location = new Point(x: 10, y: lblText.Bottom + 5);
+            btnYes.AutoSize = true;
+            panel.Controls.Add(value: btnYes);
+
+            Button btnNo = new()
+                { Text = button2Text };
+            btnNo.Click += (sender,
+                            e) =>
+            {
+                returnString = returnButton2Text;
+                promptBox.Close();
+            };
+
+            btnNo.Location = new Point(x: btnYes.Width + 20, y: lblText.Bottom + 5);
+            btnNo.AutoSize = true;
+            panel.SetFlowBreak(control: btnNo, value: true);
+            panel.Controls.Add(value: btnNo);
+
+            CheckBox chk = new();
+            chk.Text = checkboxText;
+            chk.AutoSize = true;
+            chk.Location = new Point(x: 10, y: btnYes.Bottom + 5);
+
+            panel.Controls.Add(value: chk);
+            panel.Padding = new Padding(all: 5);
+            panel.AutoSize = true;
+
+            promptBox.Controls.Add(value: panel);
+            promptBox.Size = new Size(width: lblText.Width + 40, height: chk.Bottom + 50);
+            promptBox.ShowInTaskbar = false;
+
+            promptBox.StartPosition = FormStartPosition.CenterScreen;
+            promptBox.ShowDialog();
+
+            if (chk.Checked)
+            {
+                returnString += returnCheckboxText;
+            }
+
+            // in case of idiots break glass -- basically if someone ALT+F4s then we reset stuff to "no".
+            if (!returnString.Contains(value: returnButton1Text) && !returnString.Contains(value: returnButton2Text))
+            {
+                returnString = returnButton2Text;
+            }
+
+            return returnString;
+        }
+    }
 }

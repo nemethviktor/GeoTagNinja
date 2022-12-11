@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,6 +16,9 @@ using CoenM.ExifToolLib;
 using geoTagNinja;
 using GeoTagNinja.Properties;
 using Microsoft.Web.WebView2.Core;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
 using TimeZoneConverter;
 using static System.Environment;
 
@@ -34,27 +36,28 @@ public partial class FrmMainApp : Form
 
     #region Variables
 
-    internal static string ResourcesFolderPath = Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "Resources");
-    internal static string UserDataFolderPath = Path.Combine(path1: GetFolderPath(folder: SpecialFolder.ApplicationData), path2: "GeoTagNinja");
+    internal static readonly string ResourcesFolderPath = Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "Resources");
+    internal static readonly string UserDataFolderPath = Path.Combine(path1: GetFolderPath(folder: SpecialFolder.ApplicationData), path2: "GeoTagNinja");
     internal const string DoubleQuote = "\"";
 
     internal const string ParentFolder = "..";
     internal static string LatCoordinate;
     internal static string LngCoordinate;
 
-    internal static DataTable ObjectNames;
-    internal static DataTable ObjectTagNamesIn;
-    internal static DataTable ObjectTagNamesOut;
+    internal static DataTable DtLangaugeLabels;
+    internal static DataTable DtObjectNames;
+    internal static DataTable DtObjectTagNamesIn;
+    internal static DataTable DtObjectTagNamesOut;
     internal static string FolderName;
-    internal static string _AppLanguage = "english"; // default to english 
+    internal static string _AppLanguage = "english"; // default to english
 
     internal static string ShowLocToMapDialogChoice = "default";
     internal FrmSettings FrmSettings;
     internal FrmEditFileData FrmEditFileData;
     internal FrmImportGpx FrmImportGpx;
-    internal ListViewColumnSorter lvw_ColumnSorter;
+    internal ListViewColumnSorter LvwColumnSorter;
 
-    internal readonly AsyncExifTool AsyncExifTool;
+    internal AsyncExifTool AsyncExifTool;
 
     // this is for copy-paste
     internal static DataTable DtFileDataCopyPool;
@@ -66,11 +69,21 @@ public partial class FrmMainApp : Form
     internal static DataTable DtFileDataToWriteStage2QueuePendingSave;
     internal static DataTable DtFileDataToWriteStage3ReadyToWrite;
 
+    // just to keep myself sane here....
+    // the "queue" tables have the following structure:
+    // (columnName: "fileNameWithoutPath");
+    // (columnName: "settingId");
+    // (columnName: "settingValue");
+
     // this is for checking if files need to be re-parsed.
     //internal static DataTable DtFilesSeenInThisSession;
     internal static DataTable DtFileDataSeenInThisSession;
 
     internal static bool RemoveGeoDataIsRunning;
+
+    // these are for storing the inital values of TakenDate and CreateDate. Needed for TimeShift.
+    internal static DataTable DtOriginalTakenDate;
+    internal static DataTable DtOriginalCreateDate;
 
     #endregion
 
@@ -83,166 +96,55 @@ public partial class FrmMainApp : Form
 
     #region Form/App Related
 
+    internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
     /// <summary>
     ///     This is the main Form for the app. This particular section handles the initialisation of the form and loading
     ///     various defaults.
     /// </summary>
     public FrmMainApp()
     {
-        // initialise exifTool - leave as-is
+        #region Logging
 
-        #region ExifToolConfiguration
+        // Set up logging
 
-        string exifToolExe = Path.Combine(path1: ResourcesFolderPath, path2: "exiftool.exe");
+        LoggingConfiguration config = new();
+        string logFileLocation = Path.Combine(path1: UserDataFolderPath, path2: "logfile.txt");
+        File.Delete(path: logFileLocation);
+        FileTarget logfile = new(name: "logfile") { FileName = logFileLocation };
+        #if(DEBUG)
+        config.AddRule(minLevel: LogLevel.Trace, maxLevel: LogLevel.Fatal, target: logfile);
+        #else
+        config.AddRule(minLevel: LogLevel.Info, maxLevel: LogLevel.Fatal, target: logfile);
+        #endif
 
-        Encoding exifToolEncoding = Encoding.UTF8;
+        logfile.Layout = @"${longdate}|${level:uppercase=true}|${callsite:includeNamespace=false:includeSourcePath=false:methodName=true}|${message:withexception=true}";
+        ConsoleTarget logconsole = new(name: "logconsole");
 
-        List<string> commonArgs = new();
+        config.AddRule(minLevel: LogLevel.Info, maxLevel: LogLevel.Fatal, target: logconsole);
 
-        string customExifToolConfigFile = @".ExifTool_config";
-
-        AsyncExifToolConfiguration asyncExifToolConfiguration = string.IsNullOrWhiteSpace(value: customExifToolConfigFile)
-            ? new AsyncExifToolConfiguration(exifToolFullFilename: exifToolExe, exifToolResultEncoding: exifToolEncoding, commonArgs: commonArgs)
-            : new AsyncExifToolConfiguration(exifToolFullFilename: exifToolExe, configurationFilename: customExifToolConfigFile, exifToolResultEncoding: exifToolEncoding, commonArgs: commonArgs);
-
-        AsyncExifTool = new AsyncExifTool(configuration: asyncExifToolConfiguration);
-        AsyncExifTool.Initialize();
-
-        #endregion
-
-        #region Load Settings
-
-        // load all settings
-        try
-        {
-            Directory.CreateDirectory(path: Path.Combine(path1: GetFolderPath(folder: SpecialFolder.ApplicationData), path2: "GeoTagNinja"));
-            HelperStatic.DataCreateSQLiteDB();
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorCantCreateSQLiteDB") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-            Application.Exit();
-        }
-
-        // write settings for combobox defaults etc
-        try
-        {
-            HelperStatic.DataWriteSQLiteSettingsDefaultSettings();
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorCantWriteSQLiteDB") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-            Application.Exit();
-        }
-
-        // read language and objectnames
-        try
-        {
-            _AppLanguage = HelperStatic.DataReadSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "tpg_Application",
-                settingId: "cbx_Language"
-            );
-            ObjectNames = HelperStatic.DataReadSQLiteObjectMapping(
-                tableName: "objectNames",
-                orderBy: "sqlOrder"
-            );
-            ObjectTagNamesIn = HelperStatic.DataReadSQLiteObjectMapping(tableName: "objectTagNames_In");
-            ObjectTagNamesOut = HelperStatic.DataReadSQLiteObjectMapping(tableName: "objectTagNames_Out");
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorCantLoadSQLiteDB") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-            Application.Exit();
-        }
-
-        // get some defaults
-        try
-        {
-            HelperStatic.SArcGisApiKey = HelperStatic.DataSelectTbxARCGIS_APIKey_FromSQLite();
-            HelperStatic.SGeoNamesUserName = HelperStatic.DataReadSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "tpg_Application",
-                settingId: "tbx_GeoNames_UserName"
-            );
-            HelperStatic.SGeoNamesPwd = HelperStatic.DataReadSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "tpg_Application",
-                settingId: "tbx_GeoNames_Pwd"
-            );
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-        }
-
-        // check webView2 is available
-        try
-        {
-            string version = "";
-            version = CoreWebView2Environment.GetAvailableBrowserVersionString();
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorCantLoadWebView2") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-            Application.Exit();
-        }
-
-        // InitializeComponent();
-        try
-        {
-            InitializeComponent();
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeComponent") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-        }
-
-        // get double-buffering to avoid flickering listviews
-        try
-        {
-            lvw_FileList.DoubleBuffered(enable: true);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorDoubleBuffer") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-        }
-
-        // get objectnames (col names, etc.)
-        try
-        {
-            ObjectNames.DefaultView.Sort = "sqlOrder";
-            DataTable dt = ObjectNames.DefaultView.ToTable();
-            foreach (DataRow dr in dt.Rows)
-            {
-                ColumnHeader clh = new();
-                clh.Name = "clh_" + dr[columnName: "objectName"];
-                lvw_FileList.Columns.Add(value: clh);
-            }
-
-            foreach (ColumnHeader clh in lvw_FileList.Columns)
-            {
-                clh.Text = HelperStatic.DataReadSQLiteObjectText(
-                    languageName: AppLanguage,
-                    objectType: "ColumnHeader",
-                    objectName: clh.Name
-                );
-            }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorLanguageFileColumnHeaders") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-        }
-
-        // Create the sorter for the list view
-        lvw_ColumnSorter = new ListViewColumnSorter();
-        lvw_FileList.ListViewItemSorter = lvw_ColumnSorter;
+        // Apply config           
+        LogManager.Configuration = config;
 
         #endregion
+
+        Logger.Info(message: "Starting");
+
+        AppStartupExifToolConfig();
+        AppStartupCreateDataBaseFile();
+        AppStartupWriteDefaultSettings();
+        AppStartupReadObjectNames();
+        AppStartupApplyDefaults();
+        AppStartupCheckWebView2();
+        AppStartupInitializeComponentFrmMainApp();
+        AppStartupEnableDoubleBuffering();
+        AppStartupApplyObjectNames();
+        AppStartupApplyColumnSorting();
 
         FormClosing += FrmMainApp_FormClosing;
 
         HelperStatic.GenericCreateDataTables();
+        Logger.Info(message: "Done");
     }
 
     /// <summary>
@@ -253,17 +155,24 @@ public partial class FrmMainApp : Form
     private async void FrmMainApp_Load(object sender,
                                        EventArgs e)
     {
+        Logger.Info(message: "Starting");
         // icon
+
+        Logger.Trace(message: "Setting Icon");
         Icon = Resources.AppIcon;
 
         // clear both tables, just in case + generic cleanup
         try
         {
+            Logger.Debug(message: "Clear DtFileDataToWriteStage1PreQueue");
             DtFileDataToWriteStage1PreQueue.Rows.Clear();
+
+            Logger.Debug(message: "Clear DtFileDataToWriteStage3ReadyToWrite");
             DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
         }
         catch (Exception ex)
         {
+            Logger.Fatal(message: "Error: " + ex.Message);
             MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorClearingFileDataQTables") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
         }
 
@@ -271,9 +180,10 @@ public partial class FrmMainApp : Form
         {
             HelperStatic.FsoCleanUpUserFolder();
         }
-        catch
+        catch (Exception ex)
         {
-            // ignored
+            // not really fatal
+            Logger.Error(message: "Error: " + ex.Message);
         }
 
         // resize columns and set order
@@ -283,176 +193,26 @@ public partial class FrmMainApp : Form
         }
         catch (Exception ex)
         {
+            Logger.Error(message: "Error: " + ex.Message);
             MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorResizingColumns") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
         }
 
+        // can't log inside.
+        Logger.Debug(message: "Run CoreWebView2InitializationCompleted");
         wbv_MapArea.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
 
-        #region StartupFolder
+        AppSetupInitialiseStartupFolder();
 
-        string valStartupFolder = "";
-        try
-        {
-            valStartupFolder = HelperStatic.DataReadSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "tpg_Application",
-                settingId: "tbx_Startup_Folder"
-            );
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorSettingStartupFolder") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-        }
-
-        if (valStartupFolder == null)
-        {
-            valStartupFolder = GetFolderPath(folder: SpecialFolder.MyPictures);
-        }
-
-        if (valStartupFolder.EndsWith(value: "\\"))
-        {
-            tbx_FolderName.Text = valStartupFolder;
-        }
-        else
-        {
-            tbx_FolderName.Text = valStartupFolder + "\\";
-        }
-
-        #endregion
-
-        // initialise webview2
+        // initialise webView2
         await InitialiseWebView();
 
-        //assign labels to objects
-
-        #region AppLanguage
-
-        HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        foreach (Control cItem in c)
-        {
-            if (
-                cItem.GetType() == typeof(MenuStrip) ||
-                cItem.GetType() == typeof(ToolStrip) ||
-                cItem.GetType() == typeof(Label) ||
-                cItem.GetType() == typeof(Button) ||
-                cItem.GetType() == typeof(CheckBox) ||
-                cItem.GetType() == typeof(TabPage) ||
-                cItem.GetType() == typeof(ToolStripButton)
-                // cItem.GetType() == typeof(ToolTip) // tooltips are not controls.
-            )
-            {
-                if (cItem.Name == "lbl_ParseProgress")
-                {
-                    cItem.Text = cItem.Text = HelperStatic.DataReadSQLiteObjectText(
-                        languageName: AppLanguage,
-                        objectType: cItem.GetType()
-                            .ToString()
-                            .Split('.')
-                            .Last(),
-                        actionType: "Normal",
-                        objectName: cItem.Name
-                    );
-                }
-                else if (cItem is ToolStrip)
-                {
-                    // https://www.codeproject.com/Messages/3329190/How-to-convert-a-Control-into-a-ToolStripButton.aspx
-                    ToolStrip ts = cItem as ToolStrip;
-                    foreach (ToolStripItem tsi in ts.Items)
-                    {
-                        ToolStripButton tsb = tsi as ToolStripButton;
-                        if (tsb != null)
-                        {
-                            tsb.ToolTipText = HelperStatic.DataReadSQLiteObjectText(
-                                languageName: AppLanguage,
-                                objectType: tsb.GetType()
-                                    .ToString()
-                                    .Split('.')
-                                    .Last(),
-                                objectName: tsb.Name
-                            );
-                        }
-                    }
-                }
-                else
-                {
-                    cItem.Text = HelperStatic.DataReadSQLiteObjectText(
-                        languageName: AppLanguage,
-                        objectType: cItem.GetType()
-                            .ToString()
-                            .Split('.')
-                            .Last(),
-                        objectName: cItem.Name
-                    );
-                }
-            }
-        }
-
-        // Text for ImagePreview
-        pbx_imagePreview.EmptyText = HelperStatic.DataReadSQLiteObjectText(
-            languageName: AppLanguage,
-            objectType: "PictureBox",
-            objectName: "pbx_imagePreview",
-            actionType: "EmptyText"
-            );
-
-        // don't think the menustrip above is working
-        List<ToolStripItem> allMenuItems = new();
-        foreach (ToolStripItem toolItem in mns_MenuStrip.Items)
-        {
-            allMenuItems.Add(item: toolItem);
-            //add sub items
-            allMenuItems.AddRange(collection: helperNonstatic.GetMenuItems(item: toolItem));
-        }
-        foreach (ToolStripItem toolItem in cms_FileListView.Items)
-        {
-            allMenuItems.Add(item: toolItem);
-            //add sub items
-            allMenuItems.AddRange(collection: helperNonstatic.GetMenuItems(item: toolItem));
-        }
-
-        foreach (ToolStripItem cItem in allMenuItems)
-        {
-            if (cItem is ToolStripMenuItem)
-            {
-                cItem.Text = HelperStatic.DataReadSQLiteObjectText(
-                    languageName: AppLanguage,
-                    objectType: cItem.GetType()
-                        .ToString()
-                        .Split('.')
-                        .Last(),
-                    objectName: cItem.Name
-                );
-            }
-        }
-
-        ttp_loctToFile.SetToolTip(control: this.btn_loctToFile,
-                                  caption: HelperStatic.DataReadSQLiteObjectText(
-                                      languageName: AppLanguage,
-                                      objectType: "ToolTip",
-                                      objectName: "ttp_loctToFile"
-                                  )
-        );
-
-        ttp_NavigateMapGo.SetToolTip(control: this.btn_NavigateMapGo,
-                                     caption: HelperStatic.DataReadSQLiteObjectText(
-                                         languageName: AppLanguage,
-                                         objectType: "ToolTip",
-                                         objectName: "ttp_NavigateMapGo"
-                                     )
-        );
-
-        tmi_ShowHideCols.Text = HelperStatic.DataReadSQLiteObjectText(
-            languageName: AppLanguage,
-            objectType: "MenuStrip",
-            objectName: "pbx_imagePreview",
-            actionType: "EmptyText"
-            );
-
-        #endregion
+        // assign labels to objects
+        AppStartupAssignLabelsToObjects();
 
         // load lvwFileList
         lvwFileList_LoadOrUpdate();
+
+        Logger.Trace(message: "Assign 'Enter' Key behaviour to tbx_lng");
         tbx_lng.KeyPress += (sndr,
                              ev) =>
         {
@@ -462,39 +222,16 @@ public partial class FrmMainApp : Form
                 ev.Handled = true; // suppress default handling
             }
         };
-        try
-        {
-            tbx_lat.Text = HelperStatic.DataReadSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "generic",
-                settingId: "lastLat"
-            );
-            tbx_lng.Text = HelperStatic.DataReadSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "generic",
-                settingId: "lastLng"
-            );
-        }
-        catch
-        {
-            // ignored
-        }
 
-        if (tbx_lat.Text == "" || tbx_lat.Text == "0")
-        {
-            // NASA HQ
-            string defaultLat = "38.883056";
-            string defaultLng = "-77.016389";
-            tbx_lat.Text = defaultLat;
-            tbx_lng.Text = defaultLng;
-        }
+        AppStartupPullLastLatLngFromSettings();
 
-        HelperStatic.HsMapMarkers.Clear();
-        HelperStatic.HsMapMarkers.Add(item: (tbx_lat.Text.Replace(oldChar: ',', newChar: '.'), tbx_lng.Text.Replace(oldChar: ',', newChar: '.')));
         NavigateMapGo();
 
         await HelperStatic.GenericCheckForNewVersions();
+
+        Logger.Info(message: "Done.");
     }
+
 
     /// <summary>
     ///     Initialises the map in the app and browses to the default or last-used location.
@@ -502,11 +239,13 @@ public partial class FrmMainApp : Form
     /// <returns></returns>
     private async Task InitialiseWebView()
     {
+        Logger.Debug(message: "Starting");
+
         try
         {
             // silly thing dumps the folder by default right into Program Files where it can't write further due to permission issues
             // need to move it elsewhere.
-
+            Logger.Trace(message: "await CoreWebView2Environment");
             CoreWebView2Environment c2Wv = await CoreWebView2Environment.CreateAsync(browserExecutableFolder: null,
                                                                                      userDataFolder: Path.GetTempPath(),
                                                                                      options: new CoreWebView2EnvironmentOptions(additionalBrowserArguments: null, language: "en"));
@@ -514,6 +253,7 @@ public partial class FrmMainApp : Form
         }
         catch (Exception ex)
         {
+            Logger.Fatal(message: "Error: " + ex.Message);
             MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
         }
 
@@ -521,11 +261,13 @@ public partial class FrmMainApp : Form
         {
             if (wbv_MapArea.CoreWebView2 != null)
             {
+                Logger.Trace(message: "CoreWebView2.Settings.IsWebMessageEnabled");
                 wbv_MapArea.CoreWebView2.Settings.IsWebMessageEnabled = true;
             }
         }
         catch (Exception ex)
         {
+            Logger.Fatal(message: "Error: " + ex.Message);
             MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
         }
 
@@ -533,15 +275,19 @@ public partial class FrmMainApp : Form
         string htmlCode = "";
         try
         {
+            Logger.Trace(message: "Read map.html file");
             htmlCode = File.ReadAllText(path: Path.Combine(path1: ResourcesFolderPath, path2: "map.html"));
+            Logger.Trace(message: "Read map.html file OK");
         }
         catch (Exception ex)
         {
+            Logger.Fatal(message: "Read map.html file - Error: " + ex.Message);
             MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
         }
 
         try
         {
+            Logger.Trace(message: "ParseCoordsFromHTMLFile");
             string strLatCoordinate = tbx_lat.Text.Replace(oldChar: ',', newChar: '.');
             string strLngCoordinate = tbx_lng.Text.Replace(oldChar: ',', newChar: '.');
 
@@ -551,10 +297,13 @@ public partial class FrmMainApp : Form
             {
                 LatCoordinate = strLatCoordinate;
                 LngCoordinate = strLngCoordinate;
+                Logger.Trace(message: "ParseCoordsFromHTMLFile OK");
+                Logger.Trace(message: "ParseCoordsFromHTMLFile - LatCoordinate: " + strLatCoordinate + " - LngCoordinate: " + strLngCoordinate);
             }
         }
         catch (Exception ex)
         {
+            Logger.Fatal(message: "Error: " + ex.Message);
             MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
         }
 
@@ -563,34 +312,42 @@ public partial class FrmMainApp : Form
         {
             if (HelperStatic.SArcGisApiKey == null)
             {
+                Logger.Trace(message: "Replace hard-coded values in the html code - SArcGisApiKey is null");
                 HelperStatic.SArcGisApiKey = HelperStatic.DataSelectTbxARCGIS_APIKey_FromSQLite();
+                Logger.Trace(message: "Replace hard-coded values in the html code - SArcGisApiKey obtained from SQLite OK");
             }
 
             htmlCode = htmlCode.Replace(oldValue: "yourApiKey", newValue: HelperStatic.SArcGisApiKey);
             htmlCode = htmlCode.Replace(oldValue: "replaceLat", newValue: LatCoordinate);
             htmlCode = htmlCode.Replace(oldValue: "replaceLng", newValue: LngCoordinate);
+            Logger.Trace(message: "Replace hard-coded values in the html code - Replacing Data OK");
         }
         catch (Exception ex)
         {
+            Logger.Fatal(message: "Error: " + ex.Message);
             MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewReplaceStringInHTMLFile") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
         }
 
         // show the decoded location on the map
         try
         {
+            Logger.Trace(message: "NavigateToString");
             wbv_MapArea.NavigateToString(htmlContent: htmlCode);
         }
         catch (Exception ex)
         {
+            Logger.Fatal(message: "Error: " + ex.Message);
             MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
         }
 
         try
         {
+            Logger.Trace(message: "wbv_MapArea.WebMessageReceived");
             wbv_MapArea.WebMessageReceived += wbv_MapArea_WebMessageReceived;
         }
         catch (Exception ex)
         {
+            Logger.Fatal(message: "Error:" + ex.Message);
             MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
         }
     }
@@ -604,6 +361,9 @@ public partial class FrmMainApp : Form
     private async void FrmMainApp_FormClosing(object sender,
                                               FormClosingEventArgs e)
     {
+        Logger.Debug(message: "Starting");
+
+        Logger.Trace(message: "DtFileDataToWriteStage3ReadyToWrite.Rows.Count:" + DtFileDataToWriteStage3ReadyToWrite.Rows.Count);
         // check if there is any data in the write-Q
         if (DtFileDataToWriteStage3ReadyToWrite.Rows.Count > 0)
         {
@@ -615,20 +375,27 @@ public partial class FrmMainApp : Form
                     await Task.Delay(millisecondsDelay: 10);
                 }
 
+                Logger.Debug(message: "Starting ExifWriteExifToFile");
                 await HelperStatic.ExifWriteExifToFile();
+
                 // shouldn't be needed but just in case.
                 HelperStatic.FilesAreBeingSaved = false;
+
+                Logger.Debug(message: "Finished ExifWriteExifToFile");
             }
             else if (dialogResult == DialogResult.No)
             {
+                Logger.Debug(message: "User Chose not to Save.");
                 DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
             }
         }
 
-        // write column widths to db
+        // Write column widths to db
+        Logger.Trace(message: "Write column widths to db");
         VisualWriteLvw_FileList_ColOrderAndWidth(frmMainApp: this);
 
-        // write lat/long for future reference to db
+        // Write lat/long for future reference to db
+        Logger.Trace(message: "Write lat/long for future reference to db [lat/lng]: " + tbx_lat.Text + "/" + tbx_lng.Text);
         HelperStatic.DataWriteSQLiteSettings(
             tableName: "settings",
             settingTabPage: "generic",
@@ -643,10 +410,13 @@ public partial class FrmMainApp : Form
         );
 
         // clean up
+        Logger.Trace(message: "Set pbx_imagePreview.Image = null");
         pbx_imagePreview.Image = null; // unlocks files. theoretically.
+
         HelperStatic.FsoCleanUpUserFolder();
 
         // force it otherwise it keeps a lock on for a few seconds.
+        Logger.Trace(message: "AsyncExifTool.DisposeAsync");
         await AsyncExifTool.DisposeAsync();
     }
 
@@ -732,14 +502,16 @@ public partial class FrmMainApp : Form
     ///     Reads the widths of individual CLHs from SQL, if not found assigns them "auto" (-2)
     /// </summary>
     /// <param name="frmMainApp">Make a guess</param>
-    /// <exception cref="InvalidOperationException">If it encounters a missingCLH</exception>
+    /// <exception cref="InvalidOperationException">If it encounters a missing CLH</exception>
     private void VisualReadLvw_FileList_ColOrderAndWidth(FrmMainApp frmMainApp)
     {
+        Logger.Debug(message: "Starting");
+
         frmMainApp.lvw_FileList.BeginUpdate(); // stop drawing
 
         // While reading col widths, gather order data
-        List<int> col_order_index = new();
-        List<string> col_order_headername = new();
+        List<int> colOrderIndex = new();
+        List<string> colOrderHeadername = new();
 
         string settingIdToSend;
         string colWidth = null;
@@ -756,37 +528,54 @@ public partial class FrmMainApp : Form
 
             // Read index / order
             settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_index";
-            col_order_headername.Add(item: columnHeader.Name);
-            col_order_index.Add(item: Convert.ToInt16(value: HelperStatic.DataReadSQLiteSettings(
-                                                          tableName: "applayout",
-                                                          settingTabPage: "lvw_FileList",
-                                                          settingId: settingIdToSend)
-                                ));
+            colOrderHeadername.Add(item: columnHeader.Name);
+            int colOrderIndexInt = Convert.ToInt16(value: HelperStatic.DataReadSQLiteSettings(
+                                                       tableName: "applayout",
+                                                       settingTabPage: "lvw_FileList",
+                                                       settingId: settingIdToSend));
+            colOrderIndex.Add(item: colOrderIndexInt);
+
+            Logger.Trace(message: "columnHeader: " +
+                                  columnHeader.Name +
+                                  " - colOrderIndex: " +
+                                  colOrderIndexInt);
 
             // Read and process width
             settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_width";
             colWidth = HelperStatic.DataReadSQLiteSettings(
                                            tableName: "applayout",
                                            settingTabPage: "lvw_FileList",
-                                           settingId: settingIdToSend);
+                                           settingId: settingIdToSend
+            );
 
+            // We only set col width if there actually is a setting for it.
+            // New columns thus will have a default size
             if ((colWidth != null) && (colWidth.Length > 0))
                 columnHeader.Width = Convert.ToInt16(colWidth);
+
+
+            Logger.Trace(message: "columnHeader: " +
+                                  columnHeader.Name +
+                                  " - columnHeader.Width: " +
+                                  columnHeader.Width);
         }
 
         // Finally set the column order - setting them from first to last col
-        int[] arr_col_order_index = col_order_index.ToArray();
-        string[] arr_col_order_headername = col_order_headername.ToArray();
-        Array.Sort(keys: arr_col_order_index, items: arr_col_order_headername);
-        for (int idx = 0; idx < arr_col_order_headername.Length; idx++)
+        int[] arrColOrderIndex = colOrderIndex.ToArray();
+        string[] arrColOrderHeadername = colOrderHeadername.ToArray();
+        Array.Sort(keys: arrColOrderIndex, items: arrColOrderHeadername);
+        for (int idx = 0; idx < arrColOrderHeadername.Length; idx++)
         {
             foreach (ColumnHeader columnHeader in frmMainApp.lvw_FileList.Columns)
             {
                 // We go for case-insensitive!
-                if (string.Equals(a: columnHeader.Name, b: arr_col_order_headername[idx], 
-                    comparisonType: StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(a: columnHeader.Name, b: arrColOrderHeadername[idx], comparisonType: StringComparison.OrdinalIgnoreCase))
                 {
                     columnHeader.DisplayIndex = idx;
+                    Logger.Trace(message: "columnHeader: " +
+                                          columnHeader.Name +
+                                          " - columnHeader.DisplayIndex: " +
+                                          columnHeader.DisplayIndex);
                     break;
                 }
             }
@@ -1014,6 +803,7 @@ public partial class FrmMainApp : Form
             }
         }
 
+        // Not logging this.
         HelperStatic.LvwCountItemsWithGeoData();
     }
 
@@ -1023,6 +813,8 @@ public partial class FrmMainApp : Form
     /// </summary>
     private void NavigateMapGo()
     {
+        Logger.Debug(message: "Starting");
+
         string htmlCode = "";
         HelperStatic.HtmlAddMarker = "";
         HelperStatic.MinLat = null;
@@ -1040,6 +832,7 @@ public partial class FrmMainApp : Form
         }
         catch (Exception ex)
         {
+            Logger.Fatal(message: "ReadAllText map.html Error:" + ex.Message);
             MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
         }
 
@@ -1047,6 +840,8 @@ public partial class FrmMainApp : Form
         {
             HelperStatic.SArcGisApiKey = HelperStatic.DataSelectTbxARCGIS_APIKey_FromSQLite();
         }
+
+        Logger.Trace(message: "HelperStatic.SArcGisApiKey == null: " + (HelperStatic.SArcGisApiKey == null));
 
         foreach ((string strLat, string strLng) locationCoord in HelperStatic.HsMapMarkers)
         {
@@ -1087,9 +882,13 @@ public partial class FrmMainApp : Form
                 {
                     HelperStatic.MaxLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
                 }
+
+                Logger.Trace(message: "Added marker: strLatCoordinate: " + strLatCoordinate + " / strLngCoordinate:" + strLngCoordinate);
             }
         }
 
+        Logger.Trace(message: "Added " + HelperStatic.HsMapMarkers.Count + " map markers.");
+        Logger.Trace(message: "Replacing Hard-Coded Values in HTML.");
         htmlCode = htmlCode.Replace(oldValue: "replaceLat", newValue: strLatCoordinate);
         htmlCode = htmlCode.Replace(oldValue: "replaceLng", newValue: strLngCoordinate);
         htmlCode = htmlCode.Replace(oldValue: "replaceMinLat", newValue: HelperStatic.MinLat.ToString()
@@ -1103,7 +902,13 @@ public partial class FrmMainApp : Form
 
         htmlCode = htmlCode.Replace(oldValue: "yourApiKey", newValue: HelperStatic.SArcGisApiKey);
         htmlCode = htmlCode.Replace(oldValue: "{ HTMLAddMarker }", newValue: HelperStatic.HtmlAddMarker);
+
+        Logger.Trace(message: "Replacing Hard-Coded Values in HTML. - OK");
+
+        // can't log inside.
+        Logger.Trace(message: "Calling wbv_MapArea.NavigateToString");
         wbv_MapArea.NavigateToString(htmlContent: htmlCode);
+        Logger.Trace(message: "Calling wbv_MapArea.NavigateToString - OK");
     }
 
     #endregion
@@ -1145,9 +950,15 @@ public partial class FrmMainApp : Form
     {
         if (lvw_FileList.SelectedItems.Count > 0)
         {
+            Logger.Debug(message: "Starting");
+
             int fileCount = 0;
+
+            Logger.Trace(message: "Trigger FrmEditFileData");
             FrmEditFileData = new FrmEditFileData();
             FrmEditFileData.lvw_FileListEditImages.Items.Clear();
+
+            Logger.Trace(message: "Add Files To lvw_FileListEditImages");
             foreach (ListViewItem selectedItem in lvw_FileList.SelectedItems)
             {
                 if (File.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: selectedItem.Text)))
@@ -1155,16 +966,20 @@ public partial class FrmMainApp : Form
                     FolderName = tbx_FolderName.Text;
                     FrmEditFileData.lvw_FileListEditImages.Items.Add(text: selectedItem.Text);
                     fileCount++;
+                    Logger.Trace(message: "Added " + selectedItem.Text);
                 }
             }
 
             if (fileCount > 0)
             {
+                Logger.Trace(message: "FrmEditFileData Get objectTexts");
                 FrmEditFileData.Text = HelperStatic.DataReadSQLiteObjectText(
                     languageName: AppLanguage,
                     objectType: "Form",
                     objectName: "FrmEditFileData"
                 );
+
+                Logger.Trace(message: "FrmEditFileData ShowDialog");
                 FrmEditFileData.ShowDialog();
             }
         }
@@ -1274,6 +1089,8 @@ public partial class FrmMainApp : Form
     private async void tsb_Refresh_lvwFileList_Click(object sender,
                                                      EventArgs e)
     {
+        Logger.Debug(message: "Starting");
+
         HelperStatic.SChangeFolderIsOkay = false;
         await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
         if (HelperStatic.SChangeFolderIsOkay)
@@ -1442,10 +1259,9 @@ public partial class FrmMainApp : Form
                 // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
                 HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
-
-                HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
             }
 
+            HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
             HandlerUpdateItemColour(lvw: lvw_FileList, itemText: fileNameWithoutPath, color: Color.Red);
         }
 
@@ -1465,9 +1281,9 @@ public partial class FrmMainApp : Form
                 // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
                 HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
-                HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
             }
 
+            HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
             HandlerUpdateItemColour(lvw: lvw_FileList, itemText: fileNameWithoutPath, color: Color.Red);
         }
     }
@@ -1480,8 +1296,12 @@ public partial class FrmMainApp : Form
     private async void btn_ts_Refresh_lvwFileList_Click(object sender,
                                                         EventArgs e)
     {
+        Logger.Debug(message: "Starting");
+
         HelperStatic.SChangeFolderIsOkay = false;
         await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
+        Logger.Trace(message: "SChangeFolderIsOkay: " + HelperStatic.SChangeFolderIsOkay);
+
         if (HelperStatic.SChangeFolderIsOkay)
         {
             tsb_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
@@ -1497,8 +1317,12 @@ public partial class FrmMainApp : Form
     private async void btn_OneFolderUp_Click(object sender,
                                              EventArgs e)
     {
+        Logger.Debug(message: "Starting");
+
         HelperStatic.SChangeFolderIsOkay = false;
         await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
+        Logger.Trace(message: "SChangeFolderIsOkay: " + HelperStatic.SChangeFolderIsOkay);
+
         if (HelperStatic.SChangeFolderIsOkay)
         {
             string? tmpStrParent = null;
@@ -1527,7 +1351,10 @@ public partial class FrmMainApp : Form
 
             Application.DoEvents();
             FolderName = tbx_FolderName.Text;
-            btn_ts_Refresh_lvwFileList_Click(sender: this, e: new EventArgs());
+
+            Logger.Trace(message: "FolderName: " + FolderName);
+
+            btn_ts_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
         }
     }
 
@@ -1640,9 +1467,14 @@ public partial class FrmMainApp : Form
     /// </summary>
     private async void lvwFileList_LoadOrUpdate()
     {
+        Logger.Debug(message: "Starting");
+
         // Temp. disable sorting of the list view
-        ListViewColumnSorter old_sorter = (ListViewColumnSorter)lvw_FileList.ListViewItemSorter;
+        Logger.Trace(message: "Disable ListViewItemSorter");
+        ListViewColumnSorter oldSorter = (ListViewColumnSorter)lvw_FileList.ListViewItemSorter;
         lvw_FileList.ListViewItemSorter = null;
+
+        Logger.Trace(message: "Clear lvw_FileList.Items");
         lvw_FileList.Items.Clear();
         Application.DoEvents();
         HelperStatic.FilesBeingProcessed.Clear();
@@ -1650,6 +1482,7 @@ public partial class FrmMainApp : Form
 
         #region PleaseWaitBox
 
+        Logger.Trace(message: "Create PleaseWaitBox");
         Form pleaseWaitBox = new();
         pleaseWaitBox.Text = "Wait...";
         pleaseWaitBox.ControlBox = false;
@@ -1673,14 +1506,18 @@ public partial class FrmMainApp : Form
         pleaseWaitBox.ShowInTaskbar = false;
 
         pleaseWaitBox.StartPosition = FormStartPosition.CenterScreen;
+        Logger.Trace(message: "Show PleaseWaitBox");
         pleaseWaitBox.Show();
+        Logger.Trace(message: "Disable FrmMainApp");
         Enabled = false;
 
         #endregion
 
+        Logger.Trace(message: "tbx_FolderName.Text: " + tbx_FolderName.Text);
         if (tbx_FolderName.Text != null)
         {
             // this shouldn't really happen but just in case
+            Logger.Trace(message: "FolderName: " + FolderName);
             if (FolderName is null)
             {
                 if (Directory.Exists(path: tbx_FolderName.Text))
@@ -1693,15 +1530,20 @@ public partial class FrmMainApp : Form
                 }
 
                 FolderName = tbx_FolderName.Text;
+                Logger.Trace(message: "FolderName [was null, now updated]: " + FolderName);
             }
 
             // check for drives
             if (FolderName == SpecialFolder.MyComputer.ToString())
             {
+                Logger.Trace(message: "Listing Drives");
                 foreach (DriveInfo drive in DriveInfo.GetDrives())
                 {
+                    Logger.Trace(message: "Drive:" + drive.Name);
                     lvw_FileList_addListItem(fileNameWithoutPath: drive.Name);
                 }
+
+                Logger.Trace(message: "Listing Drives - OK");
             }
             else
             {
@@ -1710,23 +1552,27 @@ public partial class FrmMainApp : Form
                 List<string> dirs = new();
                 try
                 {
+                    Logger.Trace(message: "Listing Folders");
                     DirectoryInfo di = new(path: FolderName);
-                    foreach (DirectoryInfo sub in di.GetDirectories())
+                    foreach (DirectoryInfo directoryInfo in di.GetDirectories())
                     {
-                        if (sub.Attributes.ToString()
+                        if (directoryInfo.Attributes.ToString()
                                 .Contains(value: "Directory") &&
-                            !sub.Attributes.ToString()
+                            !directoryInfo.Attributes.ToString()
                                 .Contains(value: "ReparsePoint"))
                         {
-                            dirs.Add(item: sub.Name);
+                            Logger.Trace(message: "Folder: " + directoryInfo.Name);
+                            dirs.Add(item: directoryInfo.Name);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
+                    Logger.Error(message: "Error: " + ex.Message);
                     MessageBox.Show(text: ex.Message);
                 }
 
+                Logger.Trace(message: "Loading allowedExtensions");
                 string[] allowedExtensions = new string[AncillaryListsArrays.AllCompatibleExtensions()
                     .Length];
                 Array.Copy(sourceArray: allowedExtensions, destinationArray: AncillaryListsArrays.AllCompatibleExtensions(), length: 0);
@@ -1734,7 +1580,7 @@ public partial class FrmMainApp : Form
                 {
                     allowedExtensions[i] = AncillaryListsArrays.AllCompatibleExtensions()[i]
                         .Split('\t')
-                        .First();
+                        .FirstOrDefault();
                     List<string> subItemList = new();
                     foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
                     {
@@ -1745,7 +1591,10 @@ public partial class FrmMainApp : Form
                     }
                 }
 
+                Logger.Trace(message: "Loading allowedExtensions - OK");
+
                 // list files that have whitelisted extensions
+                Logger.Trace(message: "Files: Listing Files");
                 List<string> listFilesWithPath = new();
                 try
                 {
@@ -1757,8 +1606,11 @@ public partial class FrmMainApp : Form
                 }
                 catch (Exception ex)
                 {
+                    Logger.Trace(message: "Files: Listing Files - Error: " + ex.Message);
                     MessageBox.Show(text: ex.Message);
                 }
+
+                Logger.Trace(message: "Files: Listing Files - OK");
 
                 listFilesWithPath = listFilesWithPath.OrderBy(keySelector: o => o)
                     .ToList();
@@ -1766,42 +1618,140 @@ public partial class FrmMainApp : Form
                 // add a parent folder. "dot dot"
                 try
                 {
+                    Logger.Trace(message: "Files: Adding Parent Folder");
                     string tmpStrParent = HelperStatic.FsoGetParent(path: tbx_FolderName.Text);
                     if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
                     {
                         lvw_FileList.Items.Add(text: ParentFolder);
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // ignored
+                    Logger.Error(message: "Error: " + ex.Message);
                 }
 
+                Logger.Trace(message: "Listing Folders");
+                HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: Directories");
                 foreach (string currentDir in dirs)
                 {
+                    Logger.Trace(message: "Folder: " + currentDir);
                     lvw_FileList_addListItem(fileNameWithoutPath: Path.GetFileName(path: currentDir));
                 }
 
+                Logger.Trace(message: "Listing Folders - OK");
+
+                Logger.Trace(message: "Listing Files");
                 foreach (string fileNameWithPath in listFilesWithPath)
                 {
+                    Logger.Trace(message: "File: " + fileNameWithPath);
                     string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
+                    HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
                     lvw_FileList_addListItem(fileNameWithoutPath: Path.GetFileName(path: fileNameWithoutPath));
                 }
 
+                Logger.Trace(message: "Listing Folders - OK");
+
+                Logger.Trace(message: "Calling ExifGetExifFromFolder - " + FolderName);
                 await HelperStatic.ExifGetExifFromFolder(folderNameToUse: FolderName);
+                Logger.Trace(message: "Finished ExifGetExifFromFolder - " + FolderName);
             }
         }
 
         HelperStatic.FileListBeingUpdated = false;
+        HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Ready.");
+        Logger.Trace(message: "Enable FrmMainApp");
         Enabled = true;
+        Logger.Trace(message: "Hide PleaseWaitBox");
         pleaseWaitBox.Hide();
+
+        // Not logging this.
         HelperStatic.LvwCountItemsWithGeoData();
 
         // Resume sorting...
-        lvw_FileList.ListViewItemSorter = old_sorter;
+        Logger.Trace(message: "Enable ListViewItemSorter");
+        lvw_FileList.ListViewItemSorter = oldSorter;
         lvw_FileList.Sort();
     }
 
+
+    /// <summary>
+    ///     Handles the lvw_FileList_MouseDoubleClick event -> if user clicked on a folder then enter, if a file then edit
+    ///     ... else warn and don't do anything.
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private async void lvw_FileList_MouseDoubleClick(object sender,
+                                                     MouseEventArgs e)
+    {
+        Logger.Debug(message: "Starting");
+
+        ListViewHitTestInfo info = lvw_FileList.HitTest(x: e.X, y: e.Y);
+        ListViewItem item = info.Item;
+
+        if (item != null)
+        {
+            Logger.Trace(message: "item: " + item.Text);
+
+            bool isDrive = HelperStatic.LvwItemIsDrive(lvwFileListItem: item);
+            // if .. (parent) then do a folder-up
+            if (item.Text == ParentFolder)
+            {
+                btn_OneFolderUp_Click(sender: sender, e: EventArgs.Empty);
+            }
+            // if this is a folder or drive, enter
+            else if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)) || isDrive)
+            {
+                // check for outstanding files first and save if user wants
+                HelperStatic.SChangeFolderIsOkay = false;
+                await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
+                if (HelperStatic.SChangeFolderIsOkay)
+                {
+                    if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
+                    {
+                        tbx_FolderName.Text = Path.Combine(path1: tbx_FolderName.Text, path2: item.Text);
+                    }
+                    else
+                    {
+                        // itemText.Text here will be something like "C_Windows_320GB_M2_nVME (C:\)"
+                        // so just extract whatever is in the parentheses
+                        tbx_FolderName.Text = item.Text.Split('(')
+                                                  .Last()
+                                                  .Split(')')
+                                                  .FirstOrDefault() +
+                                              @"\";
+                    }
+
+                    btn_ts_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
+                }
+            }
+            // if this is a file
+            else if (File.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
+            {
+                Logger.Trace(message: "Trigger FrmEditFileData");
+                FrmEditFileData = new FrmEditFileData();
+
+                FolderName = tbx_FolderName.Text;
+
+                Logger.Trace(message: "Add File To lvw_FileListEditImages");
+                FrmEditFileData.lvw_FileListEditImages.Items.Add(text: item.Text);
+
+                Logger.Trace(message: "FrmEditFileData Get objectTexts");
+                FrmEditFileData.Text = HelperStatic.DataReadSQLiteObjectText(
+                    languageName: AppLanguage,
+                    objectType: "Form",
+                    objectName: "FrmEditFileData"
+                );
+
+                Logger.Trace(message: "FrmEditFileData ShowDialog");
+                FrmEditFileData.ShowDialog();
+            }
+        }
+        else
+        {
+            lvw_FileList.SelectedItems.Clear();
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+        }
+    }
 
     /// <summary>
     ///     Handles an update of map location and image preview based on selected file
@@ -1831,77 +1781,8 @@ public partial class FrmMainApp : Form
             if (HelperStatic.HsMapMarkers.Count > 0)
             {
                 NavigateMapGo();
-                pbx_imagePreview.Image = null;
+                // pbx_imagePreview.Image = null;
             }
-        }
-    }
-
-
-
-    /// <summary>
-    ///     Handles the lvw_FileList_MouseDoubleClick event -> if user clicked on a folder then enter, if a file then edit
-    ///     ... else warn and don't do anything.
-    /// </summary>
-    /// <param name="sender">Unused</param>
-    /// <param name="e">Unused</param>
-    private async void lvw_FileList_MouseDoubleClick(object sender,
-                                                     MouseEventArgs e)
-    {
-        ListViewHitTestInfo info = lvw_FileList.HitTest(x: e.X, y: e.Y);
-        ListViewItem item = info.Item;
-
-        if (item != null)
-        {
-            bool isDrive = HelperStatic.LvwItemIsDrive(lvwFileListItem: item);
-            // if .. (parent) then do a folder-up
-            if (item.Text == ParentFolder)
-            {
-                btn_OneFolderUp_Click(sender: sender, e: EventArgs.Empty);
-            }
-            // if this is a folder or drive, enter
-            else if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)) || isDrive)
-            {
-                // check for outstanding files first and save if user wants
-                HelperStatic.SChangeFolderIsOkay = false;
-                await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-                if (HelperStatic.SChangeFolderIsOkay)
-                {
-                    if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
-                    {
-                        tbx_FolderName.Text = Path.Combine(path1: tbx_FolderName.Text, path2: item.Text);
-                    }
-                    else
-                    {
-                        // itemText.Text here will be something like "C_Windows_320GB_M2_nVME (C:\)"
-                        // so just extract whatever is in the parentheses
-                        tbx_FolderName.Text = item.Text.Split('(')
-                                                  .Last()
-                                                  .Split(')')
-                                                  .First() +
-                                              @"\";
-                    }
-
-                    btn_ts_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
-                }
-            }
-            // if this is a file
-            else if (File.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
-            {
-                FrmEditFileData = new FrmEditFileData();
-                FolderName = tbx_FolderName.Text;
-                FrmEditFileData.lvw_FileListEditImages.Items.Add(text: item.Text);
-                FrmEditFileData.Text = HelperStatic.DataReadSQLiteObjectText(
-                    languageName: AppLanguage,
-                    objectType: "Form",
-                    objectName: "FrmEditFileData"
-                );
-                FrmEditFileData.ShowDialog();
-            }
-        }
-        else
-        {
-            lvw_FileList.SelectedItems.Clear();
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
         }
     }
 
@@ -1959,19 +1840,19 @@ public partial class FrmMainApp : Form
             HelperStatic.SNowSelectingAllItems = false;
         }
 
-        // Shift Control C -> copy details
+        // Shift Ctrl C -> copy details
         else if (e.Control && e.Shift && e.KeyCode == Keys.C)
         {
             HelperStatic.LwvCopyGeoData();
         }
 
-        // Shift Control V -> paste details
+        // Shift Ctrl V -> paste details
         else if (e.Control && e.Shift && e.KeyCode == Keys.V)
         {
             HelperStatic.LwvPasteGeoData();
         }
 
-        // Control Enter -> Edit File
+        // Ctrl Enter -> Edit File
         else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Enter)
         {
             HelperStatic.ExifShowEditFrm();
@@ -2208,22 +2089,22 @@ public partial class FrmMainApp : Form
     private void lvw_FileList_ColumnClick(object sender,
                                           ColumnClickEventArgs e)
     {
-        if (e.Column == lvw_ColumnSorter.SortColumn)
+        if (e.Column == LvwColumnSorter.SortColumn)
         {
             // Column clicked is current sort column --> Reverse order
-            if (lvw_ColumnSorter.SortOrder == SortOrder.Ascending)
+            if (LvwColumnSorter.SortOrder == SortOrder.Ascending)
             {
-                lvw_ColumnSorter.SortOrder = SortOrder.Descending;
+                LvwColumnSorter.SortOrder = SortOrder.Descending;
             }
             else
             {
-                lvw_ColumnSorter.SortOrder = SortOrder.Ascending;
+                LvwColumnSorter.SortOrder = SortOrder.Ascending;
             }
         }
         else
         {
-            lvw_ColumnSorter.SortColumn = e.Column;
-            lvw_ColumnSorter.SortOrder = SortOrder.Ascending;
+            LvwColumnSorter.SortColumn = e.Column;
+            LvwColumnSorter.SortOrder = SortOrder.Ascending;
         }
 
         // Perform the sort with these new sort options.
@@ -2321,6 +2202,7 @@ public partial class FrmMainApp : Form
         // If we're running on the UI thread, we'll get here, and can safely update 
         // the label's text.
         label.Text = text;
+        label.Refresh();
     }
 
 
@@ -2335,24 +2217,23 @@ public partial class FrmMainApp : Form
         // note to self: the one you're looking for is called wbv_MapArea_WebMessageReceived
     }
 
-    #endregion
-
-    private void FrmMainApp_ResizeBegin(object sender, EventArgs e)
+    private void FrmMainApp_ResizeBegin(object sender,
+                                        EventArgs e)
     {
         wbv_MapArea.Hide();
     }
 
-    private void FrmMainApp_ResizeEnd(object sender, EventArgs e)
+    private void FrmMainApp_ResizeEnd(object sender,
+                                      EventArgs e)
     {
         wbv_MapArea.Show();
     }
-
 
     private void selectColumnsToolStripMenuItem_Click(object sender, EventArgs e)
     {
         FrmColumnSelection frm_ColSel = new FrmColumnSelection(
             this.lvw_FileList.Columns, AppLanguage);
-        Point lvwLoc = this.lvw_FileList.PointToScreen(new Point(0,0));
+        Point lvwLoc = this.lvw_FileList.PointToScreen(new Point(0, 0));
         lvwLoc.Offset(20, 10);          // Relative to list view top left
         frm_ColSel.Location = lvwLoc;   // in screen coords...
         frm_ColSel.ShowDialog(this.lvw_FileList);
@@ -2367,6 +2248,8 @@ public partial class FrmMainApp : Form
             e.NewWidth = 0;
         }
     }
+
+    #endregion
 }
 
 public static class ControlExtensions

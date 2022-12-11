@@ -1,5 +1,7 @@
 ﻿# GeoTagNinja Changelog
-v0.6.83XX [202212XX]
+v0.7.83XX [202212XX]
+- Updated Time-Shift to work properly w/ Copy Paste. 
+-- Version bump as for new feature.
 - Updated Read-in logic to process the whole folder in one go. Should run _a lot_ faster now.
 - Eliminate MD5 checks. Basically the bloody thing takes longer than re-parsing the whole folder.
 - Column Sort (kudos to Urmel, thank you!)

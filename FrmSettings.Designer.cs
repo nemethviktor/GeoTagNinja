@@ -272,7 +272,7 @@
             this.ckb_ResetFileDateToCreated.Location = new System.Drawing.Point(419, 67);
             this.ckb_ResetFileDateToCreated.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_ResetFileDateToCreated.Name = "ckb_ResetFileDateToCreated";
-            this.ckb_ResetFileDateToCreated.Size = new System.Drawing.Size(168, 38);
+            this.ckb_ResetFileDateToCreated.Size = new System.Drawing.Size(168, 62);
             this.ckb_ResetFileDateToCreated.TabIndex = 4;
             this.ckb_ResetFileDateToCreated.Text = "ckb_ResetFileDateToCreated";
             this.ckb_ResetFileDateToCreated.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -295,7 +295,7 @@
             // ckb_OverwriteOriginal
             // 
             this.ckb_OverwriteOriginal.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_OverwriteOriginal.Location = new System.Drawing.Point(397, 183);
+            this.ckb_OverwriteOriginal.Location = new System.Drawing.Point(397, 195);
             this.ckb_OverwriteOriginal.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_OverwriteOriginal.Name = "ckb_OverwriteOriginal";
             this.ckb_OverwriteOriginal.Size = new System.Drawing.Size(190, 38);
@@ -308,7 +308,7 @@
             // ckb_AddXMPSideCar
             // 
             this.ckb_AddXMPSideCar.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_AddXMPSideCar.Location = new System.Drawing.Point(397, 123);
+            this.ckb_AddXMPSideCar.Location = new System.Drawing.Point(397, 135);
             this.ckb_AddXMPSideCar.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_AddXMPSideCar.Name = "ckb_AddXMPSideCar";
             this.ckb_AddXMPSideCar.Size = new System.Drawing.Size(190, 38);

@@ -1,17 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GeoTagNinja;
 
 internal static partial class HelperStatic
 {
-    #region SQL
-
     #region Database Creation SQL & Startup Checks
 
     /// <summary>
@@ -19,20 +20,25 @@ internal static partial class HelperStatic
     /// </summary>
     internal static void DataCreateSQLiteDB()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         try
         {
             // create folder in Appdata if doesn't exist
-
+            string sqldbPath = SSettingsDataBasePath;
+            FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath is " + SSettingsDataBasePath);
             FileInfo fi = new(fileName: SSettingsDataBasePath);
 
             if (fi.Exists && fi.Length == 0)
             {
+                FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath exists");
                 fi.Delete();
+                FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath deleted");
             }
 
-            string sqldbPath = SSettingsDataBasePath;
             if (!fi.Exists)
             {
+                FrmMainApp.Logger.Trace(message: "Creating " + SSettingsDataBasePath);
                 try
                 {
                     SQLiteConnection.CreateFile(databaseFileName: Path.Combine(SSettingsDataBasePath));
@@ -83,6 +89,7 @@ internal static partial class HelperStatic
                 }
                 catch (Exception ex)
                 {
+                    FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
                     MessageBox.Show(text: ex.Message);
                 }
             }
@@ -94,6 +101,7 @@ internal static partial class HelperStatic
         }
         catch (Exception ex)
         {
+            FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
             MessageBox.Show(text: ex.Message);
         }
     }
@@ -103,6 +111,8 @@ internal static partial class HelperStatic
     /// </summary>
     internal static void DataWriteSQLiteSettingsDefaultSettings()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         string[] controlNamesToAdd =
         {
             "ckb_AddXMPSideCar",
@@ -118,7 +128,7 @@ internal static partial class HelperStatic
             foreach (string ext in AncillaryListsArrays.AllCompatibleExtensions())
             {
                 string tmptmpCtrlName = ext.Split('\t')
-                                            .First() +
+                                            .FirstOrDefault() +
                                         '_'; // 'tis ok as is
                 string tmpCtrlName = tmptmpCtrlName + controlName;
                 string tmpCtrlGroup = ext.Split('\t')
@@ -237,6 +247,8 @@ internal static partial class HelperStatic
     /// <returns>A DataTable with the complete list of tags stored in the database w/o filter.</returns>
     private static DataTable DataReadSQLiteObjectMappingTagsToPass()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "objectMapping.sqlite"));
         sqliteDB.Open();
 
@@ -407,73 +419,6 @@ internal static partial class HelperStatic
     #region language SQL
 
     /// <summary>
-    ///     Reads the language value of a specific item from the database.
-    /// </summary>
-    /// <param name="languageName">e.g "English"</param>
-    /// <param name="objectType">e.g. "button" or "columnheader"</param>
-    /// <param name="objectName">This is the name of the object e.g. "btn_OK"</param>
-    /// <returns>The value of the object's labal in the given language. E.g. for btn_Cancel this will be "Cancel"</returns>
-    internal static string DataReadSQLiteObjectText(string languageName,
-                                                    string objectType,
-                                                    string objectName)
-    {
-        string returnString = "";
-        string languagesFolderPath = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "Languages");
-        string languageFilePath = Path.Combine(path1: languagesFolderPath, path2: languageName + ".sqlite");
-        string englishLanguagefilePath = Path.Combine(path1: languagesFolderPath, path2: "english.sqlite");
-        using (SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + languageFilePath))
-        {
-            sqliteDB.Open();
-
-            string sqlCommandStr = @"
-                                SELECT objectText
-                                FROM " +
-                                   objectType +
-                                   " " +
-                                   @"WHERE 1=1
-                                    AND objectName = @objectName
-                                LIMIT 1
-                                ;"
-                ;
-            SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-            sqlToRun.Parameters.AddWithValue(parameterName: "@objectName", value: objectName);
-
-            using SQLiteDataReader reader = sqlToRun.ExecuteReader();
-            while (reader.Read())
-            {
-                returnString = reader.GetString(i: 0);
-            }
-        }
-
-        if (returnString == "")
-        {
-            using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + englishLanguagefilePath);
-            sqliteDB.Open();
-
-            string sqlCommandStr = @"
-                                SELECT objectText
-                                FROM " +
-                                   objectType +
-                                   " " +
-                                   @"WHERE 1=1
-                                    AND objectName = @objectName
-                                LIMIT 1
-                                ;"
-                ;
-            SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-            sqlToRun.Parameters.AddWithValue(parameterName: "@objectName", value: objectName);
-
-            using SQLiteDataReader reader = sqlToRun.ExecuteReader();
-            while (reader.Read())
-            {
-                returnString = reader.GetString(i: 0);
-            }
-        }
-
-        return returnString;
-    }
-
-    /// <summary>
     ///     Generally identical to the above but with an "actionType" - basically a parameter/breakdown.
     /// </summary>
     /// <param name="languageName">e.g "English"</param>
@@ -481,71 +426,85 @@ internal static partial class HelperStatic
     /// <param name="actionType">e.g. "reading" or "writing". </param>
     /// <param name="objectName">This is the name of the object e.g. "btn_OK"</param>
     /// <returns>The value of the object's labal in the given language. E.g. for btn_Cancel this will be "Cancel"</returns>
-    internal static string DataReadSQLiteObjectText(string languageName,
-                                                    string objectType,
-                                                    string actionType,
-                                                    string objectName)
+    /// 
+    internal static string DataReadSQLiteObjectText(
+        string languageName,
+        string objectType,
+        string objectName,
+        string actionType = null
+    )
     {
-        string returnString = "";
-        string resourcesFolderPath = FrmMainApp.ResourcesFolderPath;
-        string languagesFolderPath = Path.Combine(path1: resourcesFolderPath, path2: "Languages");
+        EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in FrmMainApp.DtLangaugeLabels.AsEnumerable()
+                                                           where dataRow.Field<string>(columnName: "languageName") == languageName &&
+                                                                 dataRow.Field<string>(columnName: "objectType") == objectType &&
+                                                                 dataRow.Field<string>(columnName: "objectName") == objectName &&
+                                                                 dataRow.Field<string>(columnName: "actionType") == actionType
+                                                           select dataRow;
+        List<string> lstReturn = new();
 
-        string languageFilePath = Path.Combine(path1: languagesFolderPath, path2: languageName + ".sqlite");
-        string englishLanguagefilePath = Path.Combine(path1: languagesFolderPath, path2: "english.sqlite");
-        using (SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + languageFilePath))
-        {
-            sqliteDB.Open();
-
-            string sqlCommandStr = @"
-                                SELECT objectText
-                                FROM " +
-                                   objectType +
-                                   " " +
-                                   @"WHERE 1=1
-                                    AND objectName = @objectName
-                                    AND actionType = @actionType
-                                LIMIT 1
-                                ;"
-                ;
-            SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-            sqlToRun.Parameters.AddWithValue(parameterName: "@actionType", value: actionType);
-            sqlToRun.Parameters.AddWithValue(parameterName: "@objectName", value: objectName);
-
-            using SQLiteDataReader reader = sqlToRun.ExecuteReader();
-            while (reader.Read())
+        Parallel.ForEach(source: drDataTableData, body: dataRow =>
             {
-                returnString = reader.GetString(i: 0);
-            }
+                string settingValue = dataRow[columnName: "objectText"]
+                    .ToString();
+                lstReturn.Add(item: settingValue);
+            })
+            ;
+
+        // try English
+        if (lstReturn.Count == 0)
+        {
+            drDataTableData = from DataRow dataRow in FrmMainApp.DtLangaugeLabels.AsEnumerable()
+                              where dataRow.Field<string>(columnName: "languageName") == "English" &&
+                                    dataRow.Field<string>(columnName: "objectType") == objectType &&
+                                    dataRow.Field<string>(columnName: "objectName") == objectName &&
+                                    dataRow.Field<string>(columnName: "actionType") == actionType
+                              select dataRow;
+
+            Parallel.ForEach(source: drDataTableData, body: dataRow =>
+                {
+                    string settingValue = dataRow[columnName: "objectText"]
+                        .ToString();
+                    lstReturn.Add(item: settingValue);
+                })
+                ;
         }
 
-        if (returnString == "")
+        return lstReturn.FirstOrDefault();
+    }
+
+    /// <summary>
+    /// Reads all the language SQLite files into one table (FrmMainApp.DtLangaugeLabels)
+    /// </summary>
+    internal static void DataReadSQLiteObjectTextFromFiles()
+    {
+        string languagesFolderPath = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "Languages");
+
+        FrmMainApp.DtLangaugeLabels = new DataTable();
+
+        foreach (string file in Directory.GetFiles(languagesFolderPath, "*.sqlite"))
         {
-            using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + englishLanguagefilePath);
+            string languageName = Path.GetFileNameWithoutExtension(file);
+
+            using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + file);
             sqliteDB.Open();
+            DataTable dtTablesInSQLite = sqliteDB.GetSchema("Tables");
 
-            string sqlCommandStr = @"
-                                SELECT objectText
-                                FROM " +
-                                   objectType +
-                                   " " +
-                                   @"WHERE 1=1
-                                    AND objectName = @objectName
-                                    AND actionType = @actionType
-                                LIMIT 1
-                                ;"
-                ;
-            SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-            sqlToRun.Parameters.AddWithValue(parameterName: "@actionType", value: actionType);
-            sqlToRun.Parameters.AddWithValue(parameterName: "@objectName", value: objectName);
-
-            using SQLiteDataReader reader = sqlToRun.ExecuteReader();
-            while (reader.Read())
+            SQLiteCommand dbCommand = sqliteDB.CreateCommand();
+            dbCommand.CommandText = "";
+            foreach (DataRow dr in dtTablesInSQLite.Rows)
             {
-                returnString = reader.GetString(i: 0);
+                string tableName = (string)dr[2];
+                dbCommand.CommandText += "SELECT '" + languageName + "' AS languageName, '" + tableName + "' AS objectType , * FROM " + tableName + " UNION ";
             }
-        }
 
-        return returnString;
+            dbCommand.CommandText = dbCommand.CommandText.Substring(0, dbCommand.CommandText.Length - " UNION ".Length);
+
+            SQLiteDataReader executeReader = dbCommand.ExecuteReader(CommandBehavior.SingleResult);
+            DataTable dt = new DataTable();
+            dt.Load(executeReader);
+
+            FrmMainApp.DtLangaugeLabels.Merge(dt);
+        }
     }
 
     #endregion
@@ -679,6 +638,8 @@ internal static partial class HelperStatic
     /// </summary>
     private static void DataDeleteSQLiteToponomy()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
@@ -706,6 +667,8 @@ internal static partial class HelperStatic
     /// </summary>
     private static void DataDeleteSQLiteAltitude()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
@@ -734,6 +697,7 @@ internal static partial class HelperStatic
                                                         string lng,
                                                         string Altitude = "")
     {
+        FrmMainApp.Logger.Trace(message: "Starting - lat: " + lat + " lng: " + lng + " Altitude: " + Altitude);
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
@@ -798,7 +762,47 @@ internal static partial class HelperStatic
         return returnString;
     }
 
-    #endregion
+    /// <summary>
+    ///     Does a filter on a DataTable - just faster.
+    ///     via https://stackoverflow.com/a/47692754/3968494
+    /// </summary>
+    /// <param name="dt">DataTable to query</param>
+    /// <param name="filePathColumnName">The "column" part of WHERE</param>
+    /// <param name="filePathValue">The "value" part of WHERE</param>
+    /// <returns>List of KVP String/String</returns>
+    internal static List<KeyValuePair<string, string>> DataReadFilterDataTable(DataTable dt,
+                                                                               string filePathColumnName,
+                                                                               string filePathValue)
+    {
+        EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in dt.AsEnumerable()
+                                                           where dataRow.Field<string>(columnName: filePathColumnName) == filePathValue
+                                                           select dataRow;
+        List<KeyValuePair<string, string>> lstReturn = new();
+
+        Parallel.ForEach(source: drDataTableData, body: dataRow =>
+            {
+                string settingId = dataRow[columnName: "settingId"]
+                    .ToString();
+                string settingValue = dataRow[columnName: "settingValue"]
+                    .ToString();
+                lstReturn.Add(item: new KeyValuePair<string, string>(key: settingId, value: settingValue));
+            })
+            ;
+        return lstReturn;
+    }
+
+    /// <summary>
+    ///     Gets the "FirstOrDefault" from a List of KVP
+    /// </summary>
+    /// <param name="lstIn">List (KVP) to check</param>
+    /// <param name="keyEqualsWhat">Key filter</param>
+    /// <returns>String of Value</returns>
+    internal static string DataGetFirstOrDefaultFromKVPList(List<KeyValuePair<string, string>> lstIn,
+                                                            string keyEqualsWhat)
+    {
+        return lstIn.FirstOrDefault(predicate: kvp => kvp.Key == keyEqualsWhat)
+            .Value;
+    }
 
     #endregion
 }

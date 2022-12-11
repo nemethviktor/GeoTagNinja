@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Security.Cryptography;
+﻿using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Environment;
@@ -76,14 +74,17 @@ internal static partial class HelperStatic
     /// </summary>
     internal static void FsoCleanUpUserFolder()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         DirectoryInfo di = new(path: FrmMainApp.UserDataFolderPath);
 
         foreach (FileInfo file in di.EnumerateFiles())
         {
-            if (file.Extension != ".sqlite")
+            if (file.Extension != ".sqlite" && file.Name != "logfile.txt")
             {
                 try
                 {
+                    FrmMainApp.Logger.Trace(message: "Deleting:" + file.Name);
                     file.Delete();
                 }
                 catch
@@ -91,28 +92,6 @@ internal static partial class HelperStatic
                     // nothing
                 }
             }
-        }
-    }
-
-    /// <summary>
-    ///     Creates an MD5 hash of the given fileNameWithPath.
-    ///     Via https://lonewolfonline.net/calculate-md5-checksum-file/
-    /// </summary>
-    /// <param name="fileNameWithPath">Filename to process</param>
-    /// <returns>MD5 hash</returns>
-    internal static string Md5SumByProcess(string fileNameWithPath)
-    {
-        HashAlgorithm MD5 = new MD5CryptoServiceProvider();
-
-        try
-        {
-            using BufferedStream stream = new(stream: File.OpenRead(path: fileNameWithPath), bufferSize: 100000);
-            return BitConverter.ToString(value: MD5.ComputeHash(inputStream: stream))
-                .Replace(oldValue: "-", newValue: string.Empty);
-        }
-        catch
-        {
-            return string.Empty;
         }
     }
 }

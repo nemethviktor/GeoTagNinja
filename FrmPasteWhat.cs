@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -9,7 +10,7 @@ namespace GeoTagNinja;
 
 public partial class FrmPasteWhat : Form
 {
-    private static string initiatorName;
+    private static string _initiatorName;
 
     /// <summary>
     ///     This form controls what data to paste from a "current file" to "selected files".
@@ -17,13 +18,14 @@ public partial class FrmPasteWhat : Form
     /// <param name="initiator">This will be either the Edit File Form (FrmEditFileData) or the Main Form(FrmMainApp)</param>
     public FrmPasteWhat(string initiator)
     {
-        initiatorName = initiator;
+        _initiatorName = initiator;
         InitializeComponent();
 
-        //// pre-load "All"
-        //btn_GPSData_All_Click(sender: null, e: null);
-        //btn_LocationData_All_Click(sender: null, e: null);
-        //btn_Dates_None_Click(sender: null, e: null);
+        rbt_PasteTakenDateActual.Enabled = ckb_TakenDate.Checked;
+        rbt_PasteTakenDateShift.Enabled = ckb_TakenDate.Checked;
+
+        rbt_PasteCreateDateActual.Enabled = ckb_CreateDate.Checked;
+        rbt_PasteCreateDateShift.Enabled = ckb_CreateDate.Checked;
     }
 
     /// <summary>
@@ -40,7 +42,14 @@ public partial class FrmPasteWhat : Form
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
-            if (cItem.GetType() == typeof(Label) || cItem.GetType() == typeof(GroupBox) || cItem.GetType() == typeof(Button) || cItem.GetType() == typeof(CheckBox) || cItem.GetType() == typeof(TabPage))
+            if (cItem is Label ||
+                cItem is GroupBox ||
+                cItem is Button ||
+                cItem is CheckBox ||
+                cItem is TabPage ||
+                cItem is RadioButton
+               )
+
             {
                 HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
             }
@@ -74,9 +83,8 @@ public partial class FrmPasteWhat : Form
         string pasteValueStr = null;
 
         // get the name of the file we're pasting FROM.
-        if (initiatorName == "FrmEditFileData")
+        if (_initiatorName == "FrmEditFileData")
         {
-            FrmMainApp.DtFileDataPastePool.Clear();
             FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
             if (frmEditFileDataInstance != null)
             {
@@ -87,7 +95,7 @@ public partial class FrmPasteWhat : Form
                 fileNameSourceWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameSourceWithoutPath);
             }
         }
-        else if (initiatorName == "FrmMainApp")
+        else if (_initiatorName == "FrmMainApp")
         {
             FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
             if (frmMainAppInstance != null)
@@ -96,7 +104,6 @@ public partial class FrmPasteWhat : Form
 
                 fileNameSourceWithoutPath = Path.GetFileName(path: FrmMainApp.FileDateCopySourceFileNameWithPath);
                 fileNameSourceWithPath = FrmMainApp.FileDateCopySourceFileNameWithPath;
-                ;
             }
         }
         else
@@ -114,18 +121,59 @@ public partial class FrmPasteWhat : Form
                 if (thisCheckBox.Checked)
                 {
                     string tagName = cItem.Name.Substring(startIndex: 4);
-                    tagsToPaste.Add(item: tagName);
+
+                    // "EndsWith" doesn't work here because the CheckBox.Name never ends with "Shift".
+                    if (tagName == "TakenDate" || tagName == "CreateDate")
+                    {
+                        string pasteWhichDate = tagName.Replace(oldValue: "Date", newValue: "");
+                        string[] timeUnitArr = { "Days", "Hours", "Minutes", "Seconds" };
+                        switch (pasteWhichDate)
+                        {
+                            case "Taken":
+                                if (rbt_PasteTakenDateActual.Checked)
+                                {
+                                    tagsToPaste.Add(item: tagName);
+                                }
+                                else if (rbt_PasteTakenDateShift.Checked)
+                                {
+                                    // want: TakenDateDaysShift
+                                    foreach (string timeUnit in timeUnitArr)
+                                    {
+                                        tagsToPaste.Add(item: tagName + timeUnit + "Shift");
+                                    }
+                                }
+
+                                break;
+                            case "Create":
+                                if (rbt_PasteCreateDateActual.Checked)
+                                {
+                                    tagsToPaste.Add(item: tagName);
+                                }
+                                else if (rbt_PasteCreateDateShift.Checked)
+                                {
+                                    foreach (string timeUnit in timeUnitArr)
+                                    {
+                                        tagsToPaste.Add(item: tagName + timeUnit + "Shift");
+                                    }
+                                }
+
+                                break;
+                        }
+                    }
+                    // also do all the CountryCode 
+                    else if (tagName == "Country")
+                    {
+                        tagsToPaste.Add(item: "CountryCode");
+                    }
+                    else
+                    {
+                        tagsToPaste.Add(item: tagName);
+                    }
 
                     // any in the Ref lot
                     if (tagsWithRefList.Contains(item: tagName))
                     {
                         tagsToPaste.Add(item: tagName + "Ref");
-                    }
-
-                    // also do all the CountryCode 
-                    if (tagName == "Country")
-                    {
-                        tagsToPaste.Add(item: "CountryCode");
                     }
                 }
             }
@@ -139,38 +187,70 @@ public partial class FrmPasteWhat : Form
             btn_Cancel.Enabled = false;
 
             // check it's sitting somewhere already?
-            DataView dvSqlDataQ = new(table: FrmMainApp.DtFileDataToWriteStage1PreQueue);
-            dvSqlDataQ.RowFilter = "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId ='" + tagName + "'";
-
-            DataView dvSqlDataRTW = new(table: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
-            dvSqlDataRTW.RowFilter = "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId ='" + tagName + "'";
-
-            DataView dvSqlDataInFile = new(table: FrmMainApp.DtFileDataSeenInThisSession);
-            // this holds fileNameWithPath with a Directory attached to the string 
-            dvSqlDataInFile.RowFilter = "fileNameWithPath = '" + fileNameSourceWithPath + "' AND settingId ='" + tagName + "'";
-
-            if (dvSqlDataQ.Count > 0 || dvSqlDataRTW.Count > 0 || dvSqlDataInFile.Count > 0)
+            DataTable dtSqlDataQ;
+            try
             {
-                // see if data in temp-queue
-                if (dvSqlDataQ.Count > 0)
-                {
-                    pasteValueStr = dvSqlDataQ[recordIndex: 0][property: "settingValue"]
-                        .ToString();
-                }
-                // see if data is ready to be written
-                else if (dvSqlDataRTW.Count > 0)
-                {
-                    pasteValueStr = dvSqlDataRTW[recordIndex: 0][property: "settingValue"]
-                        .ToString();
-                }
-                // take it from the file then
-                else if (dvSqlDataInFile.Count > 0)
-                {
-                    pasteValueStr = dvSqlDataInFile[recordIndex: 0][property: "settingValue"]
-                        .ToString();
-                }
+                dtSqlDataQ = FrmMainApp.DtFileDataToWriteStage1PreQueue.Select(filterExpression: "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId ='" + tagName + "'")
+                    .CopyToDataTable();
+            }
+            catch
+            {
+                dtSqlDataQ = null;
+            }
 
-                if (pasteValueStr == "-")
+            DataTable dtSqlDataReadyToWrite;
+            try
+            {
+                dtSqlDataReadyToWrite = FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Select(filterExpression: "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId ='" + tagName + "'")
+                    .CopyToDataTable();
+            }
+            catch
+            {
+                dtSqlDataReadyToWrite = null;
+            }
+
+            DataTable dtSqlDataInFile;
+            try
+            {
+                dtSqlDataInFile = FrmMainApp.DtFileDataSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameSourceWithPath + "' AND settingId ='" + tagName + "'")
+                    .CopyToDataTable();
+            }
+            catch
+            {
+                dtSqlDataInFile = null;
+            }
+
+            // see if data in temp-queue
+            if (dtSqlDataQ != null && dtSqlDataQ.Rows.Count > 0)
+            {
+                pasteValueStr = dtSqlDataQ.Rows[index: 0][columnName: "settingValue"]
+                    .ToString();
+            }
+            // see if data is ready to be written
+            else if (dtSqlDataReadyToWrite != null && dtSqlDataReadyToWrite.Rows.Count > 0)
+            {
+                pasteValueStr = dtSqlDataReadyToWrite.Rows[index: 0][columnName: "settingValue"]
+                    .ToString();
+            }
+            // take it from the file then
+            else if (dtSqlDataInFile != null && dtSqlDataInFile.Rows.Count > 0)
+            {
+                pasteValueStr = dtSqlDataInFile.Rows[index: 0][columnName: "settingValue"]
+                    .ToString();
+            }
+
+            else
+            {
+                pasteValueStr = "-";
+            }
+
+            if (pasteValueStr == "-" || pasteValueStr is null)
+            {
+                if (tagName.EndsWith(value: "Shift"))
+                {
+                    pasteValueStr = "0";
+                }
+                else
                 {
                     pasteValueStr = "";
                 }
@@ -184,7 +264,7 @@ public partial class FrmPasteWhat : Form
         }
 
         // do paste into the tables + grid as req'd
-        if (initiatorName == "FrmEditFileData")
+        if (_initiatorName == "FrmEditFileData")
         {
             string fileNameWithoutPathToUpdate = null;
             FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
@@ -204,7 +284,7 @@ public partial class FrmPasteWhat : Form
                         string settingValue = drPRow[columnIndex: 1]
                             .ToString();
 
-                        // this is for FrmEditData
+                        // this is for FrmEditData -> no need to separate the "Shifts".
                         HelperStatic.GenericUpdateAddToDataTable(
                             dt: FrmMainApp.DtFileDataToWriteStage1PreQueue,
                             fileNameWithoutPath: fileNameWithoutPathToUpdate,
@@ -215,7 +295,7 @@ public partial class FrmPasteWhat : Form
             }
         }
 
-        else if (initiatorName == "FrmMainApp")
+        else if (_initiatorName == "FrmMainApp")
         {
             FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
             if (frmMainAppInstance != null)
@@ -225,25 +305,131 @@ public partial class FrmPasteWhat : Form
                 {
                     string fileNameWithoutPathToUpdate = lvi.Text;
 
-                    // paste from copy-pool (no filename needed)
-                    // update each tag
-                    foreach (DataRow drPRow in FrmMainApp.DtFileDataPastePool.Rows)
+                    // TimeShifts go separately. -- Also while this could be done in one step it's easier for now if we split Taken and Create
+                    // TakenDate
+                    DataRow[] dtDateTakenDateShifted = FrmMainApp.DtFileDataPastePool.Select(filterExpression: "settingId LIKE 'Taken%' AND settingId LIKE '%Shift'");
+                    if (dtDateTakenDateShifted.Length > 0)
                     {
-                        string settingId = drPRow[columnIndex: 0]
-                            .ToString();
-                        string settingValue = drPRow[columnIndex: 1]
-                            .ToString();
-
-                        if (settingValue == "-")
+                        int shiftedDays = 0;
+                        int shiftedHours = 0;
+                        int shiftedMinutes = 0;
+                        int shiftedSeconds = 0;
+                        foreach (DataRow drPRow in dtDateTakenDateShifted)
                         {
-                            settingValue = "";
+                            switch (drPRow[columnIndex: 0])
+                            {
+                                case "TakenDateDaysShift":
+                                    shiftedDays = int.Parse(s: drPRow[columnIndex: 1]
+                                                                .ToString());
+                                    break;
+                                case "TakenDateHoursShift":
+                                    shiftedHours = int.Parse(s: drPRow[columnIndex: 1]
+                                                                 .ToString());
+                                    break;
+                                case "TakenDateMinutesShift":
+                                    shiftedMinutes = int.Parse(s: drPRow[columnIndex: 1]
+                                                                   .ToString());
+                                    break;
+                                case "TakenDateSecondsShift":
+                                    shiftedSeconds = int.Parse(s: drPRow[columnIndex: 1]
+                                                                   .ToString());
+                                    break;
+                            }
                         }
 
-                        HelperStatic.GenericUpdateAddToDataTable(
-                            dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                            fileNameWithoutPath: fileNameWithoutPathToUpdate,
-                            settingId: settingId,
-                            settingValue: settingValue);
+                        int totalShiftedSeconds = shiftedSeconds +
+                                                  shiftedMinutes * 60 +
+                                                  shiftedHours * 60 * 60 +
+                                                  shiftedDays * 60 * 60 * 24;
+
+                        DataRow[] drTakenDate = FrmMainApp.DtOriginalTakenDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPathToUpdate + "'");
+                        if (drTakenDate.Length > 0)
+                        {
+                            DateTime originalTakenDateTime = Convert.ToDateTime(value: drTakenDate[0][columnName: "settingValue"]
+                                                                                    .ToString());
+
+                            DateTime modifiedTakenDateTime = originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
+                            HelperStatic.GenericUpdateAddToDataTable(
+                                dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
+                                fileNameWithoutPath: fileNameWithoutPathToUpdate,
+                                settingId: "TakenDate",
+                                settingValue: modifiedTakenDateTime.ToString(provider: CultureInfo.CurrentUICulture));
+                        }
+                    }
+
+                    // CreateDate
+                    DataRow[] dtDateCreateDateShifted = FrmMainApp.DtFileDataPastePool.Select(filterExpression: "settingId LIKE 'Create%' AND settingId LIKE '%Shift'");
+                    if (dtDateCreateDateShifted.Length > 0)
+                    {
+                        int shiftedDays = 0;
+                        int shiftedHours = 0;
+                        int shiftedMinutes = 0;
+                        int shiftedSeconds = 0;
+                        foreach (DataRow drPRow in dtDateCreateDateShifted)
+                        {
+                            switch (drPRow[columnIndex: 0])
+                            {
+                                case "CreateDateDaysShift":
+                                    shiftedDays = int.Parse(s: drPRow[columnIndex: 1]
+                                                                .ToString());
+                                    break;
+                                case "CreateDateHoursShift":
+                                    shiftedHours = int.Parse(s: drPRow[columnIndex: 1]
+                                                                 .ToString());
+                                    break;
+                                case "CreateDateMinutesShift":
+                                    shiftedMinutes = int.Parse(s: drPRow[columnIndex: 1]
+                                                                   .ToString());
+                                    break;
+                                case "CreateDateSecondsShift":
+                                    shiftedSeconds = int.Parse(s: drPRow[columnIndex: 1]
+                                                                   .ToString());
+                                    break;
+                            }
+                        }
+
+                        int totalShiftedSeconds = shiftedSeconds +
+                                                  shiftedMinutes * 60 +
+                                                  shiftedHours * 60 * 60 +
+                                                  shiftedDays * 60 * 60 * 24;
+
+                        DataRow[] drCreateDate = FrmMainApp.DtOriginalCreateDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPathToUpdate + "'");
+                        if (drCreateDate.Length > 0)
+                        {
+                            DateTime originalCreateDateTime = Convert.ToDateTime(value: drCreateDate[0][columnName: "settingValue"]
+                                                                                     .ToString());
+
+                            DateTime modifiedCreateDateTime = originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
+                            HelperStatic.GenericUpdateAddToDataTable(
+                                dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
+                                fileNameWithoutPath: fileNameWithoutPathToUpdate,
+                                settingId: "CreateDate",
+                                settingValue: modifiedCreateDateTime.ToString(provider: CultureInfo.CurrentUICulture));
+                        }
+                    }
+
+                    // update each non-TimeShift Tag
+                    DataRow[] dtDateNotShifted = FrmMainApp.DtFileDataPastePool.Select(filterExpression: "settingId NOT LIKE '%Shift'");
+                    if (dtDateNotShifted.Length > 0)
+                    {
+                        foreach (DataRow drPRow in dtDateNotShifted)
+                        {
+                            string settingId = drPRow[columnIndex: 0]
+                                .ToString();
+                            string settingValue = drPRow[columnIndex: 1]
+                                .ToString();
+
+                            if (settingValue == "-")
+                            {
+                                settingValue = "";
+                            }
+
+                            HelperStatic.GenericUpdateAddToDataTable(
+                                dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
+                                fileNameWithoutPath: fileNameWithoutPathToUpdate,
+                                settingId: settingId,
+                                settingValue: settingValue);
+                        }
                     }
 
                     // update listview
@@ -356,7 +542,9 @@ public partial class FrmPasteWhat : Form
         }
     }
 
-    #region Dates
+    #endregion
+
+    #region DateTimes
 
     private void btn_Dates_All_Click(object sender,
                                      EventArgs e)
@@ -367,7 +555,7 @@ public partial class FrmPasteWhat : Form
         {
             if (cItem.GetType() == typeof(GroupBox) || cItem.GetType() == typeof(CheckBox))
             {
-                if (cItem.Parent.Name == "gbx_Dates" && cItem.GetType() == typeof(CheckBox))
+                if (cItem.Parent.Name.Contains(value: "Date") && cItem.GetType() == typeof(CheckBox))
                 {
                     CheckBox thisCheckBox = (CheckBox)cItem;
                     thisCheckBox.Checked = true;
@@ -385,7 +573,7 @@ public partial class FrmPasteWhat : Form
         {
             if (cItem.GetType() == typeof(GroupBox) || cItem.GetType() == typeof(CheckBox))
             {
-                if (cItem.Parent.Name == "gbx_Dates" && cItem.GetType() == typeof(CheckBox))
+                if (cItem.Parent.Name.Contains(value: "Date") && cItem.GetType() == typeof(CheckBox))
                 {
                     CheckBox thisCheckBox = (CheckBox)cItem;
                     thisCheckBox.Checked = false;
@@ -394,7 +582,142 @@ public partial class FrmPasteWhat : Form
         }
     }
 
-    #endregion
+
+    private void ckb_TakenDate_CheckedChanged(object sender,
+                                              EventArgs e)
+    {
+        rbt_PasteTakenDateActual.Enabled = ckb_TakenDate.Checked;
+        if (ckb_TakenDate.Checked)
+        {
+            rbt_PasteTakenDateActual.Checked = true;
+        }
+
+        rbt_PasteTakenDateShift.Enabled = ckb_TakenDate.Checked;
+    }
+
+    private void ckb_CreateDate_CheckedChanged(object sender,
+                                               EventArgs e)
+    {
+        rbt_PasteCreateDateActual.Enabled = ckb_CreateDate.Checked;
+        if (ckb_CreateDate.Checked)
+        {
+            rbt_PasteCreateDateActual.Checked = true;
+        }
+
+        rbt_PasteCreateDateShift.Enabled = ckb_CreateDate.Checked;
+    }
+
+
+    private void rbt_PasteTakenDateShift_CheckedChanged(object sender,
+                                                        EventArgs e)
+    {
+        if (rbt_PasteTakenDateShift.Checked)
+        {
+            bool takenDateShiftDataExists = false;
+
+            if (_initiatorName == "FrmEditFileData")
+            {
+                FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
+                if (frmEditFileDataInstance != null)
+                {
+                    ListView lvw = frmEditFileDataInstance.lvw_FileListEditImages;
+
+                    string fileNameSourceWithoutPath = lvw.SelectedItems[index: 0]
+                        .Text;
+
+                    List<string> listOfTagsToCopyTimeShifts = new()
+                    {
+                        "TakenDateSecondsShift",
+                        "TakenDateMinutesShift",
+                        "TakenDateHoursShift ",
+                        "TakenDateDaysShift"
+                    };
+                    // when USING EDIT we use the local data, therefore timeshifts can only possibly live in DtFileDataToWriteStage1PreQueue
+                    foreach (string settingId in listOfTagsToCopyTimeShifts)
+                    {
+                        DataRow[] dtDateShifted = FrmMainApp.DtFileDataToWriteStage1PreQueue.Select(filterExpression: "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId = '" + settingId + "'");
+                        if (dtDateShifted.Length > 0)
+                        {
+                            takenDateShiftDataExists = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            else if (_initiatorName == "FrmMainApp")
+            {
+                // see if there is actually any paste-able data for the SOURCE file
+                string sourceFileNameWithoutPath = FrmMainApp.DtFileDataCopyPool.Rows[index: 0][columnName: "fileNameWithoutPath"]
+                    .ToString();
+                DataRow[] dtDateShifted = FrmMainApp.DtFileDataCopyPool.Select(filterExpression: "fileNameWithoutPath = '" + sourceFileNameWithoutPath + "' AND settingId LIKE 'TakenDate%' AND settingId LIKE '%Shift'");
+
+                if (dtDateShifted.Length > 0)
+                {
+                    takenDateShiftDataExists = true;
+                }
+            }
+
+            if (!takenDateShiftDataExists)
+            {
+                rbt_PasteTakenDateActual.Checked = true;
+                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"), caption: "Info");
+            }
+        }
+    }
+
+    private void rbt_PasteCreateDateShift_CheckedChanged(object sender,
+                                                         EventArgs e)
+    {
+        bool CreateDateShiftDataExists = false;
+
+        if (_initiatorName == "FrmEditFileData")
+        {
+            FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
+            if (frmEditFileDataInstance != null)
+            {
+                ListView lvw = frmEditFileDataInstance.lvw_FileListEditImages;
+
+                string fileNameSourceWithoutPath = lvw.SelectedItems[index: 0]
+                    .Text;
+
+                List<string> listOfTagsToCopyTimeShifts = new()
+                {
+                    "CreateDateSecondsShift",
+                    "CreateDateMinutesShift",
+                    "CreateDateHoursShift ",
+                    "CreateDateDaysShift"
+                };
+                // when USING EDIT we use the local data, therefore timeshifts can only possibly live in DtFileDataToWriteStage1PreQueue
+                foreach (string settingId in listOfTagsToCopyTimeShifts)
+                {
+                    DataRow[] dtDateShifted = FrmMainApp.DtFileDataToWriteStage1PreQueue.Select(filterExpression: "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId = '" + settingId + "'");
+                    if (dtDateShifted.Length > 0)
+                    {
+                        CreateDateShiftDataExists = true;
+                        break;
+                    }
+                }
+            }
+        }
+        else if (_initiatorName == "FrmMainApp")
+        {
+            // see if there is actually any paste-able data for the SOURCE file
+            string sourceFileNameWithoutPath = FrmMainApp.DtFileDataCopyPool.Rows[index: 0][columnName: "fileNameWithoutPath"]
+                .ToString();
+            DataRow[] dtDateShifted = FrmMainApp.DtFileDataCopyPool.Select(filterExpression: "fileNameWithoutPath = '" + sourceFileNameWithoutPath + "' AND settingId LIKE 'CreateDate%' AND settingId LIKE '%Shift'");
+
+            if (dtDateShifted.Length > 0)
+            {
+                CreateDateShiftDataExists = true;
+            }
+        }
+
+        if (!CreateDateShiftDataExists)
+        {
+            rbt_PasteCreateDateActual.Checked = true;
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"), caption: "Info");
+        }
+    }
 
     #endregion
 }

@@ -49,14 +49,22 @@
             this.btn_GPSData_All = new System.Windows.Forms.Button();
             this.ckb_GPSLatitude = new System.Windows.Forms.CheckBox();
             this.gbx_Dates = new System.Windows.Forms.GroupBox();
+            this.gbx_CreateDate = new System.Windows.Forms.GroupBox();
             this.ckb_CreateDate = new System.Windows.Forms.CheckBox();
-            this.btn_Dates_None = new System.Windows.Forms.Button();
-            this.btn_Dates_All = new System.Windows.Forms.Button();
+            this.rbt_PasteCreateDateShift = new System.Windows.Forms.RadioButton();
+            this.rbt_PasteCreateDateActual = new System.Windows.Forms.RadioButton();
+            this.gbx_TakenDate = new System.Windows.Forms.GroupBox();
+            this.rbt_PasteTakenDateShift = new System.Windows.Forms.RadioButton();
+            this.rbt_PasteTakenDateActual = new System.Windows.Forms.RadioButton();
             this.ckb_TakenDate = new System.Windows.Forms.CheckBox();
             this.ckb_OffsetTime = new System.Windows.Forms.CheckBox();
+            this.btn_Dates_None = new System.Windows.Forms.Button();
+            this.btn_Dates_All = new System.Windows.Forms.Button();
             this.gbx_LocationData.SuspendLayout();
             this.gbx_GPSData.SuspendLayout();
             this.gbx_Dates.SuspendLayout();
+            this.gbx_CreateDate.SuspendLayout();
+            this.gbx_TakenDate.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn_OK
@@ -266,31 +274,123 @@
             // 
             // gbx_Dates
             // 
+            this.gbx_Dates.Controls.Add(this.gbx_CreateDate);
+            this.gbx_Dates.Controls.Add(this.gbx_TakenDate);
             this.gbx_Dates.Controls.Add(this.ckb_OffsetTime);
-            this.gbx_Dates.Controls.Add(this.ckb_CreateDate);
             this.gbx_Dates.Controls.Add(this.btn_Dates_None);
             this.gbx_Dates.Controls.Add(this.btn_Dates_All);
-            this.gbx_Dates.Controls.Add(this.ckb_TakenDate);
             this.gbx_Dates.Location = new System.Drawing.Point(436, 30);
             this.gbx_Dates.Name = "gbx_Dates";
-            this.gbx_Dates.Size = new System.Drawing.Size(386, 172);
+            this.gbx_Dates.Size = new System.Drawing.Size(386, 347);
             this.gbx_Dates.TabIndex = 19;
             this.gbx_Dates.TabStop = false;
             this.gbx_Dates.Text = "gbx_Dates";
             // 
+            // gbx_CreateDate
+            // 
+            this.gbx_CreateDate.Controls.Add(this.ckb_CreateDate);
+            this.gbx_CreateDate.Controls.Add(this.rbt_PasteCreateDateShift);
+            this.gbx_CreateDate.Controls.Add(this.rbt_PasteCreateDateActual);
+            this.gbx_CreateDate.Location = new System.Drawing.Point(14, 140);
+            this.gbx_CreateDate.Name = "gbx_CreateDate";
+            this.gbx_CreateDate.Size = new System.Drawing.Size(333, 115);
+            this.gbx_CreateDate.TabIndex = 24;
+            this.gbx_CreateDate.TabStop = false;
+            this.gbx_CreateDate.Text = "gbx_CreateDate";
+            // 
             // ckb_CreateDate
             // 
             this.ckb_CreateDate.AutoSize = true;
-            this.ckb_CreateDate.Location = new System.Drawing.Point(25, 65);
+            this.ckb_CreateDate.Location = new System.Drawing.Point(11, 29);
             this.ckb_CreateDate.Name = "ckb_CreateDate";
             this.ckb_CreateDate.Size = new System.Drawing.Size(104, 17);
-            this.ckb_CreateDate.TabIndex = 5;
+            this.ckb_CreateDate.TabIndex = 14;
             this.ckb_CreateDate.Text = "ckb_CreateDate";
             this.ckb_CreateDate.UseVisualStyleBackColor = true;
+            this.ckb_CreateDate.CheckedChanged += new System.EventHandler(this.ckb_CreateDate_CheckedChanged);
+            // 
+            // rbt_PasteCreateDateShift
+            // 
+            this.rbt_PasteCreateDateShift.AutoSize = true;
+            this.rbt_PasteCreateDateShift.Location = new System.Drawing.Point(41, 75);
+            this.rbt_PasteCreateDateShift.Name = "rbt_PasteCreateDateShift";
+            this.rbt_PasteCreateDateShift.Size = new System.Drawing.Size(145, 17);
+            this.rbt_PasteCreateDateShift.TabIndex = 13;
+            this.rbt_PasteCreateDateShift.TabStop = true;
+            this.rbt_PasteCreateDateShift.Text = "rbt_PasteCreateDateShift";
+            this.rbt_PasteCreateDateShift.UseVisualStyleBackColor = true;
+            this.rbt_PasteCreateDateShift.CheckedChanged += new System.EventHandler(this.rbt_PasteCreateDateShift_CheckedChanged);
+            // 
+            // rbt_PasteCreateDateActual
+            // 
+            this.rbt_PasteCreateDateActual.AutoSize = true;
+            this.rbt_PasteCreateDateActual.Location = new System.Drawing.Point(41, 52);
+            this.rbt_PasteCreateDateActual.Name = "rbt_PasteCreateDateActual";
+            this.rbt_PasteCreateDateActual.Size = new System.Drawing.Size(154, 17);
+            this.rbt_PasteCreateDateActual.TabIndex = 12;
+            this.rbt_PasteCreateDateActual.TabStop = true;
+            this.rbt_PasteCreateDateActual.Text = "rbt_PasteCreateDateActual";
+            this.rbt_PasteCreateDateActual.UseVisualStyleBackColor = true;
+            // 
+            // gbx_TakenDate
+            // 
+            this.gbx_TakenDate.Controls.Add(this.rbt_PasteTakenDateShift);
+            this.gbx_TakenDate.Controls.Add(this.rbt_PasteTakenDateActual);
+            this.gbx_TakenDate.Controls.Add(this.ckb_TakenDate);
+            this.gbx_TakenDate.Location = new System.Drawing.Point(14, 19);
+            this.gbx_TakenDate.Name = "gbx_TakenDate";
+            this.gbx_TakenDate.Size = new System.Drawing.Size(333, 115);
+            this.gbx_TakenDate.TabIndex = 23;
+            this.gbx_TakenDate.TabStop = false;
+            this.gbx_TakenDate.Text = "gbx_TakenDate";
+            // 
+            // rbt_PasteTakenDateShift
+            // 
+            this.rbt_PasteTakenDateShift.AutoSize = true;
+            this.rbt_PasteTakenDateShift.Location = new System.Drawing.Point(41, 78);
+            this.rbt_PasteTakenDateShift.Name = "rbt_PasteTakenDateShift";
+            this.rbt_PasteTakenDateShift.Size = new System.Drawing.Size(145, 17);
+            this.rbt_PasteTakenDateShift.TabIndex = 12;
+            this.rbt_PasteTakenDateShift.TabStop = true;
+            this.rbt_PasteTakenDateShift.Text = "rbt_PasteTakenDateShift";
+            this.rbt_PasteTakenDateShift.UseVisualStyleBackColor = true;
+            this.rbt_PasteTakenDateShift.CheckedChanged += new System.EventHandler(this.rbt_PasteTakenDateShift_CheckedChanged);
+            // 
+            // rbt_PasteTakenDateActual
+            // 
+            this.rbt_PasteTakenDateActual.AutoSize = true;
+            this.rbt_PasteTakenDateActual.Location = new System.Drawing.Point(41, 55);
+            this.rbt_PasteTakenDateActual.Name = "rbt_PasteTakenDateActual";
+            this.rbt_PasteTakenDateActual.Size = new System.Drawing.Size(154, 17);
+            this.rbt_PasteTakenDateActual.TabIndex = 11;
+            this.rbt_PasteTakenDateActual.TabStop = true;
+            this.rbt_PasteTakenDateActual.Text = "rbt_PasteTakenDateActual";
+            this.rbt_PasteTakenDateActual.UseVisualStyleBackColor = true;
+            // 
+            // ckb_TakenDate
+            // 
+            this.ckb_TakenDate.AutoSize = true;
+            this.ckb_TakenDate.Location = new System.Drawing.Point(11, 32);
+            this.ckb_TakenDate.Name = "ckb_TakenDate";
+            this.ckb_TakenDate.Size = new System.Drawing.Size(104, 17);
+            this.ckb_TakenDate.TabIndex = 9;
+            this.ckb_TakenDate.Text = "ckb_TakenDate";
+            this.ckb_TakenDate.UseVisualStyleBackColor = true;
+            this.ckb_TakenDate.CheckedChanged += new System.EventHandler(this.ckb_TakenDate_CheckedChanged);
+            // 
+            // ckb_OffsetTime
+            // 
+            this.ckb_OffsetTime.AutoSize = true;
+            this.ckb_OffsetTime.Location = new System.Drawing.Point(25, 270);
+            this.ckb_OffsetTime.Name = "ckb_OffsetTime";
+            this.ckb_OffsetTime.Size = new System.Drawing.Size(101, 17);
+            this.ckb_OffsetTime.TabIndex = 6;
+            this.ckb_OffsetTime.Text = "ckb_OffsetTime";
+            this.ckb_OffsetTime.UseVisualStyleBackColor = true;
             // 
             // btn_Dates_None
             // 
-            this.btn_Dates_None.Location = new System.Drawing.Point(272, 132);
+            this.btn_Dates_None.Location = new System.Drawing.Point(272, 305);
             this.btn_Dates_None.Name = "btn_Dates_None";
             this.btn_Dates_None.Size = new System.Drawing.Size(75, 23);
             this.btn_Dates_None.TabIndex = 4;
@@ -300,33 +400,13 @@
             // 
             // btn_Dates_All
             // 
-            this.btn_Dates_All.Location = new System.Drawing.Point(191, 132);
+            this.btn_Dates_All.Location = new System.Drawing.Point(191, 305);
             this.btn_Dates_All.Name = "btn_Dates_All";
             this.btn_Dates_All.Size = new System.Drawing.Size(75, 23);
             this.btn_Dates_All.TabIndex = 3;
             this.btn_Dates_All.Text = "btn_Dates_All";
             this.btn_Dates_All.UseVisualStyleBackColor = true;
             this.btn_Dates_All.Click += new System.EventHandler(this.btn_Dates_All_Click);
-            // 
-            // ckb_TakenDate
-            // 
-            this.ckb_TakenDate.AutoSize = true;
-            this.ckb_TakenDate.Location = new System.Drawing.Point(25, 32);
-            this.ckb_TakenDate.Name = "ckb_TakenDate";
-            this.ckb_TakenDate.Size = new System.Drawing.Size(104, 17);
-            this.ckb_TakenDate.TabIndex = 0;
-            this.ckb_TakenDate.Text = "ckb_TakenDate";
-            this.ckb_TakenDate.UseVisualStyleBackColor = true;
-            // 
-            // ckb_OffsetTime
-            // 
-            this.ckb_OffsetTime.AutoSize = true;
-            this.ckb_OffsetTime.Location = new System.Drawing.Point(25, 97);
-            this.ckb_OffsetTime.Name = "ckb_OffsetTime";
-            this.ckb_OffsetTime.Size = new System.Drawing.Size(101, 17);
-            this.ckb_OffsetTime.TabIndex = 6;
-            this.ckb_OffsetTime.Text = "ckb_OffsetTime";
-            this.ckb_OffsetTime.UseVisualStyleBackColor = true;
             // 
             // FrmPasteWhat
             // 
@@ -354,6 +434,10 @@
             this.gbx_GPSData.PerformLayout();
             this.gbx_Dates.ResumeLayout(false);
             this.gbx_Dates.PerformLayout();
+            this.gbx_CreateDate.ResumeLayout(false);
+            this.gbx_CreateDate.PerformLayout();
+            this.gbx_TakenDate.ResumeLayout(false);
+            this.gbx_TakenDate.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -380,10 +464,16 @@
         private System.Windows.Forms.CheckBox ckb_GPSLongitude;
         private System.Windows.Forms.CheckBox ckb_GPSDestLongitude;
         private System.Windows.Forms.GroupBox gbx_Dates;
-        private System.Windows.Forms.CheckBox ckb_CreateDate;
         private System.Windows.Forms.Button btn_Dates_None;
         private System.Windows.Forms.Button btn_Dates_All;
-        private System.Windows.Forms.CheckBox ckb_TakenDate;
         private System.Windows.Forms.CheckBox ckb_OffsetTime;
+        private System.Windows.Forms.GroupBox gbx_CreateDate;
+        private System.Windows.Forms.CheckBox ckb_CreateDate;
+        private System.Windows.Forms.RadioButton rbt_PasteCreateDateShift;
+        private System.Windows.Forms.RadioButton rbt_PasteCreateDateActual;
+        private System.Windows.Forms.GroupBox gbx_TakenDate;
+        private System.Windows.Forms.RadioButton rbt_PasteTakenDateShift;
+        private System.Windows.Forms.RadioButton rbt_PasteTakenDateActual;
+        private System.Windows.Forms.CheckBox ckb_TakenDate;
     }
 }
