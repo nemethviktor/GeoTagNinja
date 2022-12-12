@@ -102,13 +102,13 @@ public partial class FrmMainApp
 
         try
         {
-            AppLanguage = HelperStatic.DataReadSQLiteSettings(
+            _AppLanguage = HelperStatic.DataReadSQLiteSettings(
                 tableName: "settings",
                 settingTabPage: "tpg_Application",
                 settingId: "cbx_Language"
             );
 
-            Logger.Trace(message: "AppLanguage is" + AppLanguage);
+            Logger.Trace(message: "AppLanguage is" + _AppLanguage);
 
             Logger.Debug(message: "Reading dtObjectNames");
             DtObjectNames = HelperStatic.DataReadSQLiteObjectMapping(
@@ -402,6 +402,14 @@ public partial class FrmMainApp
             }
         }
 
+        // Text for ImagePreview
+        pbx_imagePreview.EmptyText = HelperStatic.DataReadSQLiteObjectText(
+            languageName: AppLanguage,
+            objectType: "PictureBox",
+            objectName: "pbx_imagePreview",
+            actionType: "EmptyText"
+            );
+
         // don't think the menustrip above is working
         List<ToolStripItem> allMenuItems = new();
         foreach (ToolStripItem toolItem in mns_MenuStrip.Items)
@@ -411,12 +419,17 @@ public partial class FrmMainApp
             //add sub items - not logging this.
             allMenuItems.AddRange(collection: helperNonstatic.GetMenuItems(item: toolItem));
         }
+        foreach (ToolStripItem toolItem in cms_FileListView.Items)
+        {
+            allMenuItems.Add(item: toolItem);
+            //add sub items
+            allMenuItems.AddRange(collection: helperNonstatic.GetMenuItems(item: toolItem));
+        }
 
         foreach (ToolStripItem cItem in allMenuItems)
         {
             if (cItem is ToolStripMenuItem)
             {
-                ToolStripMenuItem tsmi = cItem as ToolStripMenuItem;
                 objectName = cItem.Name;
                 objectText = HelperStatic.DataReadSQLiteObjectText(
                     languageName: AppLanguage,
@@ -429,11 +442,14 @@ public partial class FrmMainApp
                 cItem.Text = objectText;
                 Logger.Trace(message: objectName + ": " + objectText);
             }
-            else if (cItem is ToolStripSeparator)
-            {
-                ToolStripSeparator tss = cItem as ToolStripSeparator;
-            }
         }
+
+        pbx_imagePreview.EmptyText = HelperStatic.DataReadSQLiteObjectText(
+            languageName: AppLanguage,
+            objectType: "PictureBox",
+            objectName: "pbx_imagePreview",
+            actionType: "EmptyText"
+            );
 
         Logger.Trace(message: "Setting Tooltips");
         ttp_loctToFile.SetToolTip(control: btn_loctToFile,
@@ -451,6 +467,7 @@ public partial class FrmMainApp
                                          objectName: "ttp_NavigateMapGo"
                                      )
         );
+
     }
 
     /// <summary>
