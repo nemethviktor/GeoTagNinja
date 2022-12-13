@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.OleDb;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -15,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using CsvHelper;
 using geoTagNinja;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -503,7 +503,7 @@ internal static partial class HelperStatic
                     FrmMainApp.Logger.Trace(message: "csvFilePath output length > 20");
 
                     FrmMainApp.Logger.Trace(message: "Reading csvFilePath to dtCSV");
-                    DataTable dtCSV = GetDataTableFromCsv(fileNameWithPath: csvFilePath, isFirstRowHeader: true);
+                    DataTable dtCSV = GetDataTableFromCsv(fileNameWithPath: csvFilePath);
                     FrmMainApp.Logger.Trace(message: "Reading csvFilePath to dtCSV - OK");
 
                     // parse file data 
@@ -2394,37 +2394,19 @@ internal static partial class HelperStatic
 
     /// <summary>
     ///     Parses a CSV file to a DataTable
-    ///     via https://stackoverflow.com/a/1050278/3968494
+    ///     I've given up the original logic of OLEDB because it gets very bitchy with Culture stuff. This works better.
     /// </summary>
     /// <param name="fileNameWithPath">Path of CSV file</param>
-    /// <param name="isFirstRowHeader">True/False for whether Headers are in the first row.</param>
     /// <returns>Converted Datatable</returns>
-    private static DataTable GetDataTableFromCsv(string fileNameWithPath,
-                                                 bool isFirstRowHeader)
+    private static DataTable GetDataTableFromCsv(string fileNameWithPath)
     {
-        string header = isFirstRowHeader
-            ? "Yes"
-            : "No";
+        DataTable dt = new();
+        using StreamReader reader = new StreamReader(path: fileNameWithPath);
+        using CsvReader csv = new CsvReader(reader: reader, culture: CultureInfo.InvariantCulture);
+        // Do any configuration to `CsvReader` before creating CsvDataReader.
+        using CsvDataReader dr = new CsvDataReader(csv: csv);
+        dt.Load(reader: dr);
 
-        string pathOnly = Path.GetDirectoryName(path: fileNameWithPath);
-        string fileName = Path.GetFileName(path: fileNameWithPath);
-
-        string sql = @"SELECT * FROM [" + fileName + "]";
-
-        // VN: CharacterSet=65001 is important. Don't use "Unicode". (it'd then require the CSV file to be byte-ordered, which it is not.)
-        using (OleDbConnection connection = new(
-                   connectionString: @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" +
-                                     pathOnly +
-                                     ";Extended Properties=\"Text;CharacterSet=65001;HDR=" +
-                                     header +
-                                     "\""))
-        using (OleDbCommand command = new(cmdText: sql, connection: connection))
-        using (OleDbDataAdapter adapter = new(selectCommand: command))
-        {
-            DataTable dataTable = new();
-            dataTable.Locale = CultureInfo.InvariantCulture;
-            adapter.Fill(dataTable: dataTable);
-            return dataTable;
-        }
+        return dt;
     }
 }
