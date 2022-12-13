@@ -554,16 +554,15 @@ public partial class FrmEditFileData : Form
     /// <param name="fileNameWithoutPath">Blank if used as "pull one file" otherwise the name of the file w/o Path</param>
     private void getFromWeb_Toponomy(string fileNameWithoutPath = "")
     {
-        DataTable dtToponomy;
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         double parsedLat;
         double parsedLng;
         DateTime createDate = default; // can't leave it null because it's updated in various IFs and C# perceives it as uninitialised.
 
-        string strGpsLatitude;
-        string strGpsLongitude;
+        string strGpsLatitude = null;
+        string strGpsLongitude = null;
 
-        dtToponomy = new DataTable();
+        DataTable dtToponomy = new();
 
         // this is "current file"
         if (fileNameWithoutPath == "")
@@ -587,19 +586,22 @@ public partial class FrmEditFileData : Form
         // this is all the other files
         else
         {
-            strGpsLatitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
-                .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLatitude"]
-                              .Index]
-                .Text.ToString(provider: CultureInfo.InvariantCulture);
-            strGpsLongitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
-                .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLongitude"]
-                              .Index]
-                .Text.ToString(provider: CultureInfo.InvariantCulture);
-            string strCreateDate = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
-                .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_CreateDate"]
-                              .Index]
-                .Text.ToString(provider: CultureInfo.InvariantCulture);
-            bool _ = DateTime.TryParse(s: strCreateDate.ToString(provider: CultureInfo.InvariantCulture), result: out createDate);
+            if (frmMainAppInstance != null)
+            {
+                strGpsLatitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
+                    .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLatitude"]
+                                  .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+                strGpsLongitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
+                    .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLongitude"]
+                                  .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+                string strCreateDate = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
+                    .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_CreateDate"]
+                                  .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+                bool _ = DateTime.TryParse(s: strCreateDate.ToString(provider: CultureInfo.InvariantCulture), result: out createDate);
+            }
 
             if (double.TryParse(s: strGpsLatitude,
                                 style: NumberStyles.Any,
@@ -616,142 +618,145 @@ public partial class FrmEditFileData : Form
 
         // Pull the data from the web regardless.
         List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
-        toponomyOverwrites.Add(item: ("CountryCode", dtToponomy.Rows[index: 0][columnName: "CountryCode"]
-                                          .ToString()));
-        toponomyOverwrites.Add(item: ("Country", dtToponomy.Rows[index: 0][columnName: "Country"]
-                                          .ToString()));
-        toponomyOverwrites.Add(item: ("City", dtToponomy.Rows[index: 0][columnName: "City"]
-                                          .ToString()));
-        toponomyOverwrites.Add(item: ("State", dtToponomy.Rows[index: 0][columnName: "State"]
-                                          .ToString()));
-        toponomyOverwrites.Add(item: ("Sub_location", dtToponomy.Rows[index: 0][columnName: "Sub_location"]
-                                          .ToString()));
-
-        string TZ = dtToponomy.Rows[index: 0][columnName: "timeZoneId"]
-            .ToString();
-
-        if (fileNameWithoutPath == "")
+        if (dtToponomy != null && dtToponomy.Rows.Count > 0)
         {
-            const int tzStartInt = 18;
+            toponomyOverwrites.Add(item: ("CountryCode", dtToponomy.Rows[index: 0][columnName: "CountryCode"]
+                                              .ToString()));
+            toponomyOverwrites.Add(item: ("Country", dtToponomy.Rows[index: 0][columnName: "Country"]
+                                              .ToString()));
+            toponomyOverwrites.Add(item: ("City", dtToponomy.Rows[index: 0][columnName: "City"]
+                                              .ToString()));
+            toponomyOverwrites.Add(item: ("State", dtToponomy.Rows[index: 0][columnName: "State"]
+                                              .ToString()));
+            toponomyOverwrites.Add(item: ("Sub_location", dtToponomy.Rows[index: 0][columnName: "Sub_location"]
+                                              .ToString()));
 
-            bool _ = DateTime.TryParse(s: tbx_CreateDate.Text.ToString(provider: CultureInfo.InvariantCulture), result: out createDate);
+            string TZ = dtToponomy.Rows[index: 0][columnName: "timeZoneId"]
+                .ToString();
 
-            // cbx_OffsetTimeList.FindString(TZ, 18) doesn't seem to work so....
-            for (int i = 0; i <= cbx_OffsetTimeList.Items.Count; i++)
+            if (fileNameWithoutPath == "")
             {
-                string cbxText = cbx_OffsetTimeList.Items[index: i]
-                    .ToString();
-                if (cbxText.Length >= tzStartInt)
+                const int tzStartInt = 18;
+
+                bool _ = DateTime.TryParse(s: tbx_CreateDate.Text.ToString(provider: CultureInfo.InvariantCulture), result: out createDate);
+
+                // cbx_OffsetTimeList.FindString(TZ, 18) doesn't seem to work so....
+                for (int i = 0; i <= cbx_OffsetTimeList.Items.Count; i++)
                 {
-                    if (cbxText
-                        .Substring(startIndex: tzStartInt)
-                        .Contains(value: TZ))
+                    string cbxText = cbx_OffsetTimeList.Items[index: i]
+                        .ToString();
+                    if (cbxText.Length >= tzStartInt)
                     {
-                        // this controls the logic that the ckb_UseDST should not be re-parsed again manually on the Change event that would otherwise fire.
-                        _tzChangedByApi = true;
-                        cbx_OffsetTimeList.SelectedIndex = i;
-                        try
+                        if (cbxText
+                            .Substring(startIndex: tzStartInt)
+                            .Contains(value: TZ))
                         {
-                            if (TZ != null)
+                            // this controls the logic that the ckb_UseDST should not be re-parsed again manually on the Change event that would otherwise fire.
+                            _tzChangedByApi = true;
+                            cbx_OffsetTimeList.SelectedIndex = i;
+                            try
                             {
-                                string IANATZ = TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
-                                string TZOffset;
-                                TimeZoneInfo tst = TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
-                                ckb_UseDST.Checked = tst.IsDaylightSavingTime(dateTime: createDate);
-                                TZOffset = tst.GetUtcOffset(dateTime: createDate)
-                                    .ToString()
-                                    .Substring(startIndex: 0, length: tst.GetUtcOffset(dateTime: createDate)
-                                                                          .ToString()
-                                                                          .Length -
-                                                                      3);
-                                if (!TZOffset.StartsWith(value: "-"))
+                                if (TZ != null)
                                 {
-                                    toponomyOverwrites.Add(item: ("OffsetTime", "+" + TZOffset));
-                                }
-                                else
-                                {
-                                    toponomyOverwrites.Add(item: ("OffsetTime", TZOffset));
+                                    string IANATZ = TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
+                                    string TZOffset;
+                                    TimeZoneInfo tst = TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
+                                    ckb_UseDST.Checked = tst.IsDaylightSavingTime(dateTime: createDate);
+                                    TZOffset = tst.GetUtcOffset(dateTime: createDate)
+                                        .ToString()
+                                        .Substring(startIndex: 0, length: tst.GetUtcOffset(dateTime: createDate)
+                                                                              .ToString()
+                                                                              .Length -
+                                                                          3);
+                                    if (!TZOffset.StartsWith(value: "-"))
+                                    {
+                                        toponomyOverwrites.Add(item: ("OffsetTime", "+" + TZOffset));
+                                    }
+                                    else
+                                    {
+                                        toponomyOverwrites.Add(item: ("OffsetTime", TZOffset));
+                                    }
                                 }
                             }
+                            catch
+                            {
+                                // add a zero
+                                toponomyOverwrites.Add(item: ("OffsetTime", "+00:00"));
+                            }
+
+                            _tzChangedByApi = false;
+                            break;
                         }
-                        catch
+                    }
+                }
+
+                // send it back to the Form + SQL
+                foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+                {
+                    switch (toponomyDetail.toponomyOverwriteName)
+                    {
+                        case "CountryCode":
+                            cbx_CountryCode.Text = toponomyDetail.toponomyOverwriteVal;
+                            break;
+                        case "Country":
+                            cbx_Country.Text = toponomyDetail.toponomyOverwriteVal;
+                            break;
+                        case "City":
+                            tbx_City.Text = toponomyDetail.toponomyOverwriteVal;
+                            break;
+                        case "State":
+                            tbx_State.Text = toponomyDetail.toponomyOverwriteVal;
+                            break;
+                        case "Sub_location":
+                            tbx_Sub_location.Text = toponomyDetail.toponomyOverwriteVal;
+                            break;
+                        case "OffsetTime":
+                            tbx_OffsetTime.Text = toponomyDetail.toponomyOverwriteVal;
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                try
+                {
+                    if (TZ != null)
+                    {
+                        string IANATZ = TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
+                        string TZOffset;
+                        TimeZoneInfo tst = TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
+
+                        TZOffset = tst.GetUtcOffset(dateTime: createDate)
+                            .ToString()
+                            .Substring(startIndex: 0, length: tst.GetUtcOffset(dateTime: createDate)
+                                                                  .ToString()
+                                                                  .Length -
+                                                              3);
+                        if (!TZOffset.StartsWith(value: "-"))
                         {
-                            // add a zero
-                            toponomyOverwrites.Add(item: ("OffsetTime", "+00:00"));
+                            toponomyOverwrites.Add(item: ("OffsetTime", "+" + TZOffset));
                         }
-
-                        _tzChangedByApi = false;
-                        break;
+                        else
+                        {
+                            toponomyOverwrites.Add(item: ("OffsetTime", TZOffset));
+                        }
                     }
                 }
-            }
-
-            // send it back to the Form + SQL
-            foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
-            {
-                switch (toponomyDetail.toponomyOverwriteName)
+                catch
                 {
-                    case "CountryCode":
-                        cbx_CountryCode.Text = toponomyDetail.toponomyOverwriteVal;
-                        break;
-                    case "Country":
-                        cbx_Country.Text = toponomyDetail.toponomyOverwriteVal;
-                        break;
-                    case "City":
-                        tbx_City.Text = toponomyDetail.toponomyOverwriteVal;
-                        break;
-                    case "State":
-                        tbx_State.Text = toponomyDetail.toponomyOverwriteVal;
-                        break;
-                    case "Sub_location":
-                        tbx_Sub_location.Text = toponomyDetail.toponomyOverwriteVal;
-                        break;
-                    case "OffsetTime":
-                        tbx_OffsetTime.Text = toponomyDetail.toponomyOverwriteVal;
-                        break;
+                    // add a zero
+                    toponomyOverwrites.Add(item: ("OffsetTime", "+00:00"));
                 }
-            }
-        }
-        else
-        {
-            try
-            {
-                if (TZ != null)
+
+                foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
                 {
-                    string IANATZ = TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
-                    string TZOffset;
-                    TimeZoneInfo tst = TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
-
-                    TZOffset = tst.GetUtcOffset(dateTime: createDate)
-                        .ToString()
-                        .Substring(startIndex: 0, length: tst.GetUtcOffset(dateTime: createDate)
-                                                              .ToString()
-                                                              .Length -
-                                                          3);
-                    if (!TZOffset.StartsWith(value: "-"))
-                    {
-                        toponomyOverwrites.Add(item: ("OffsetTime", "+" + TZOffset));
-                    }
-                    else
-                    {
-                        toponomyOverwrites.Add(item: ("OffsetTime", TZOffset));
-                    }
+                    HelperStatic.GenericUpdateAddToDataTable(
+                        dt: DtFileDataToWriteStage1PreQueue,
+                        fileNameWithoutPath: fileNameWithoutPath,
+                        settingId: toponomyDetail.toponomyOverwriteName,
+                        settingValue: toponomyDetail.toponomyOverwriteVal
+                    );
                 }
-            }
-            catch
-            {
-                // add a zero
-                toponomyOverwrites.Add(item: ("OffsetTime", "+00:00"));
-            }
-
-            foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
-            {
-                HelperStatic.GenericUpdateAddToDataTable(
-                    dt: DtFileDataToWriteStage1PreQueue,
-                    fileNameWithoutPath: fileNameWithoutPath,
-                    settingId: toponomyDetail.toponomyOverwriteName,
-                    settingValue: toponomyDetail.toponomyOverwriteVal
-                );
             }
         }
     }

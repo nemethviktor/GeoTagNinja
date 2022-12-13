@@ -317,6 +317,7 @@
       <DependentUpon>ImagePreview.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="changelog.md" />
+    <None Include="contributors.md" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

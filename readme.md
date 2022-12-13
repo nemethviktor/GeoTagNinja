@@ -40,8 +40,7 @@ I'm generally happy for anyone competent to add pull requests but I don't always
 
 ## ToDos
 
-- [WIP] Column reorg.
-- [later] Destination stuff not working atm, todo.
+- [later] Destination stuff untested.
 
 
 ## Known Issues
