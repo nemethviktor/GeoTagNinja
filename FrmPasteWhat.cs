@@ -21,11 +21,110 @@ public partial class FrmPasteWhat : Form
         _initiatorName = initiator;
         InitializeComponent();
 
+        ListView lvw;
+        string fileNameSourceWithoutPath;
+        List<string> tagsToPasteList = null;
+
+        // get the name of the file we're pasting FROM.
+        // in this case this will be used to pre-fill/check the checkboxes
+        if (_initiatorName == "FrmEditFileData")
+        {
+            FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
+            if (frmEditFileDataInstance != null)
+            {
+                lvw = frmEditFileDataInstance.lvw_FileListEditImages;
+
+                fileNameSourceWithoutPath = lvw.SelectedItems[index: 0]
+                    .Text;
+
+                // stuff will live in DT1
+                tagsToPasteList = GetTagsToPaste(FrmMainApp.DtFileDataToWriteStage1PreQueue);
+            }
+        }
+        else if (_initiatorName == "FrmMainApp")
+        {
+            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+            if (frmMainAppInstance != null)
+            {
+                lvw = frmMainAppInstance.lvw_FileList;
+
+                fileNameSourceWithoutPath = Path.GetFileName(path: FrmMainApp.FileDateCopySourceFileNameWithPath);
+
+                // stuff will live in DT3
+                tagsToPasteList = GetTagsToPaste(FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
+                // Basically there is no requirement per se that DT3 is in fact filled in for this option.
+                // It is entirely reasonable that user wants to copypaste not just edited bits.
+                // In that case however there won't be data in the list and so no defaults, which I think is sensible.
+            }
+        }
+        else
+        {
+            throw new NotImplementedException();
+        }
+
+        HelperNonStatic helperNonstatic = new();
+        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
+        foreach (Control cItem in c)
+        {
+            if (cItem is CheckBox)
+            {
+                string tagName;
+                if (cItem.Name.Substring(4) == "OffsetTime")
+
+                {
+                    tagName = "OffsetTimeList"; // fml. basically the actual tbx_OffsetTimeList is a TextBox so it would not be picked up as a change.
+                }
+                else
+                {
+                    tagName = cItem.Name.Substring(4);
+                }
+
+                if (tagsToPasteList.Contains(tagName))
+                {
+                    CheckBox sndr = (CheckBox)cItem;
+                    sndr.Checked = true;
+                }
+            }
+        }
+
         rbt_PasteTakenDateActual.Enabled = ckb_TakenDate.Checked;
         rbt_PasteTakenDateShift.Enabled = ckb_TakenDate.Checked;
 
         rbt_PasteCreateDateActual.Enabled = ckb_CreateDate.Checked;
         rbt_PasteCreateDateShift.Enabled = ckb_CreateDate.Checked;
+
+        // enable the shift-radiobuttons if there's data
+        if (tagsToPasteList != null)
+        {
+            foreach (string tagName in tagsToPasteList)
+            {
+                if (tagName.StartsWith("TakenDate") && tagName.EndsWith("Shift"))
+                {
+                    rbt_PasteTakenDateShift.Checked = true;
+                }
+                else if (tagName.StartsWith("CreateDate") && tagName.EndsWith("Shift"))
+                {
+                    rbt_PasteCreateDateShift.Checked = true;
+                }
+            }
+        }
+
+        List<string> GetTagsToPaste(DataTable dt)
+        {
+            List<string> tagsList = new List<string>();
+            EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in dt.AsEnumerable()
+                                                               where dataRow.Field<string>(columnName: "fileNameWithoutPath") == fileNameSourceWithoutPath
+                                                               select dataRow;
+
+            Parallel.ForEach(source: drDataTableData, body: dataRow =>
+                {
+                    string settingId = dataRow[columnName: "settingId"]
+                        .ToString();
+                    tagsList.Add(item: settingId);
+                })
+                ;
+            return tagsList;
+        }
     }
 
     /// <summary>
