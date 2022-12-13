@@ -27,8 +27,8 @@ public partial class FrmColumnSelection : Form
                                                             objectType: "Button", objectName: "btn_OK");
         lbl_SelectColsTitle.Text = HelperStatic.DataReadSQLiteObjectText(languageName: AppLanguage,
                                                                          objectType: "Label", objectName: "lbl_SelectColsTitle");
-        cb_DeSelectAll.Text = HelperStatic.DataReadSQLiteObjectText(languageName: AppLanguage,
-                                                                    objectType: "CheckBox", objectName: "cb_DeSelectAll");
+        ckb_DeSelectAll.Text = HelperStatic.DataReadSQLiteObjectText(languageName: AppLanguage,
+                                                                     objectType: "CheckBox", objectName: "ckb_DeSelectAll");
 
         foreach (ColumnHeader col in _colList)
         {
@@ -77,10 +77,10 @@ public partial class FrmColumnSelection : Form
     ///     Handles click on the check box to de/select all items by setting
     ///     all items to the current state of the check box.
     /// </summary>
-    private void cb_DeSelectAll_CheckedChanged(object sender,
-                                               EventArgs e)
+    private void ckb_DeSelectAll_CheckedChanged(object sender,
+                                                EventArgs e)
     {
-        bool state = cb_DeSelectAll.Checked;
+        bool state = ckb_DeSelectAll.Checked;
         for (int i = 0; i < clb_ColList.Items.Count; i++)
         {
             clb_ColList.SetItemChecked(index: i, value: state);

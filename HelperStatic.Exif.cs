@@ -718,244 +718,323 @@ internal static partial class HelperStatic
     {
         _sErrorMsg = "";
         _sOutputMsg = "";
-        List<string> trackFileList = new();
-        if (trackFileLocationType == "file")
-        {
-            trackFileList.Add(item: trackFileLocationVal);
-        }
-        else if (trackFileLocationType == "folder")
-        {
-            trackFileList = Directory
-                .GetFiles(path: trackFileLocationVal)
-                .Where(predicate: file => AncillaryListsArrays.GpxExtensions()
-                           .Any(predicate: file.ToLower()
-                                    .EndsWith))
-                .ToList();
-        }
-
-        #region ExifToolConfiguration
-
-        string exifToolExe = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe");
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
-        string folderNameToUse = frmMainAppInstance.tbx_FolderName.Text;
-        string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 ";
-
-        List<string> exifArgs = new();
-        // needs a space before and after.
-        string commonArgs = " -a -s -s -struct -sort -G -ee -args ";
-
-        #endregion
-
-        // add track listOfAsyncCompatibleFileNamesWithOutPath
-        foreach (string trackFile in trackFileList)
+        // this is a list of files to be tagged
+        List<string> tagFileList = new();
+        if (frmMainAppInstance != null)
         {
-            exiftoolCmd += " -geotag=" + SDoubleQuote + trackFile + SDoubleQuote;
-        }
-
-        // add what to compare against + TZ
-        string tmpTZAdjust = SDoubleQuote;
-        if (useTZAdjust)
-        {
-            tmpTZAdjust = TZVal + SDoubleQuote;
-        }
-
-        exiftoolCmd += " " + SDoubleQuote + "-geotime<${" + compareTZAgainst + "#}" + tmpTZAdjust;
-
-        // time shift
-        if (timeShiftSeconds < 0)
-        {
-            exiftoolCmd += " -geosync=" + timeShiftSeconds;
-        }
-        else if (timeShiftSeconds > 0)
-        {
-            exiftoolCmd += " -geosync=+" + timeShiftSeconds;
-        }
-
-        // add -api GeoMaxIntSecs & -api GeoMaxExtSecs
-        exiftoolCmd += " -api GeoMaxIntSecs=" + GeoMaxIntSecs.ToString(provider: CultureInfo.InvariantCulture);
-        exiftoolCmd += " -api GeoMaxExtSecs=" + GeoMaxExtSecs.ToString(provider: CultureInfo.InvariantCulture);
-
-        // add "what folder to act upon"
-        exiftoolCmd += " " + SDoubleQuote + frmMainAppInstance.tbx_FolderName.Text.TrimEnd('\\') + SDoubleQuote;
-
-        // verbose logging
-        exiftoolCmd += " -v2";
-
-        // add output path to tmp xmp
-
-        // make sure tmp exists -> this goes into "our" folder
-        Directory.CreateDirectory(path: FrmMainApp.UserDataFolderPath + @"\tmpLocFiles");
-        string tmpFolder = Path.Combine(FrmMainApp.UserDataFolderPath + @"\tmpLocFiles");
-
-        // this is a little superflous but...
-        DirectoryInfo di_tmpLocFiles = new(path: tmpFolder);
-
-        foreach (FileInfo file in di_tmpLocFiles.EnumerateFiles())
-        {
-            file.Delete();
-        }
-
-        exiftoolCmd += " " + " -srcfile " + SDoubleQuote + tmpFolder + @"\%F.xmp" + SDoubleQuote;
-        exiftoolCmd += " -overwrite_original_in_place";
-
-        ///////////////
-        // via https://stackoverflow.com/a/68616297/3968494
-        await Task.Run(action: () =>
-        {
-            using Process prcExifTool = new();
-            prcExifTool.StartInfo = new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
+            foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
             {
-                Arguments = @"/k " + SDoubleQuote + SDoubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + SDoubleQuote + " " + commonArgs + exiftoolCmd + SDoubleQuote + "&& exit",
-                UseShellExecute = false,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
-            };
-
-            prcExifTool.EnableRaisingEvents = true;
-
-            //s_ErrorMsg = "";
-            //s_OutputMsg = "";
-            prcExifTool.OutputDataReceived += (_,
-                                               data) =>
-            {
-                if (data.Data != null && data.Data.Length > 0)
+                string pathToTag = Path.Combine(frmMainAppInstance.tbx_FolderName.Text, lvi.Text);
+                if (File.Exists(pathToTag))
                 {
-                    _sOutputMsg += data.Data.ToString() + Environment.NewLine;
+                    tagFileList.Add(pathToTag);
                 }
-            };
+            }
 
-            prcExifTool.ErrorDataReceived += (_,
-                                              data) =>
+            // this is the list of gpx or json (or other) files that contain the timestamped data. 
+            List<string> trackFileList = new();
+            if (trackFileLocationType == "file")
             {
-                if (data.Data != null && data.Data.Length > 0)
+                trackFileList.Add(item: trackFileLocationVal);
+            }
+            else if (trackFileLocationType == "folder")
+            {
+                trackFileList = Directory
+                    .GetFiles(path: trackFileLocationVal)
+                    .Where(predicate: file => AncillaryListsArrays.GpxExtensions()
+                               .Any(predicate: file.ToLower()
+                                        .EndsWith))
+                    .ToList();
+            }
+
+            #region ExifToolConfiguration
+
+            string exifToolExe = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe");
+
+            string folderNameToUse = frmMainAppInstance.tbx_FolderName.Text;
+            string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 ";
+
+            List<string> exifArgs = new();
+            // needs a space before and after.
+            string commonArgs = " -a -s -s -struct -sort -G -ee -args ";
+
+            #endregion
+
+            // add track listOfAsyncCompatibleFileNamesWithOutPath
+            foreach (string trackFile in trackFileList)
+            {
+                exiftoolCmd += " -geotag=" + SDoubleQuote + trackFile + SDoubleQuote;
+            }
+
+            // add what to compare against + TZ
+            string tmpTZAdjust = SDoubleQuote;
+            if (useTZAdjust)
+            {
+                tmpTZAdjust = TZVal + SDoubleQuote;
+            }
+
+            exiftoolCmd += " " + SDoubleQuote + "-geotime<${" + compareTZAgainst + "#}" + tmpTZAdjust;
+
+            // time shift
+            if (timeShiftSeconds < 0)
+            {
+                exiftoolCmd += " -geosync=" + timeShiftSeconds;
+            }
+            else if (timeShiftSeconds > 0)
+            {
+                exiftoolCmd += " -geosync=+" + timeShiftSeconds;
+            }
+
+            // add -api GeoMaxIntSecs & -api GeoMaxExtSecs
+            exiftoolCmd += " -api GeoMaxIntSecs=" + GeoMaxIntSecs.ToString(provider: CultureInfo.InvariantCulture);
+            exiftoolCmd += " -api GeoMaxExtSecs=" + GeoMaxExtSecs.ToString(provider: CultureInfo.InvariantCulture);
+
+            // add "what files to act upon"
+            foreach (string pathToTagFile in tagFileList)
+            {
+                exiftoolCmd += " " + SDoubleQuote + pathToTagFile + SDoubleQuote;
+            }
+
+            // verbose logging
+            exiftoolCmd += " -v2";
+
+            // add output path to tmp xmp
+
+            // make sure tmp exists -> this goes into "our" folder
+            Directory.CreateDirectory(path: FrmMainApp.UserDataFolderPath + @"\tmpLocFiles");
+            string tmpFolder = Path.Combine(FrmMainApp.UserDataFolderPath + @"\tmpLocFiles");
+
+            // this is a little superflous but...
+            DirectoryInfo di_tmpLocFiles = new(path: tmpFolder);
+
+            foreach (FileInfo file in di_tmpLocFiles.EnumerateFiles())
+            {
+                file.Delete();
+            }
+
+            exiftoolCmd += " " + " -srcfile " + SDoubleQuote + tmpFolder + @"\%F.xmp" + SDoubleQuote;
+            exiftoolCmd += " -overwrite_original_in_place";
+
+            ///////////////
+            // via https://stackoverflow.com/a/68616297/3968494
+            await Task.Run(action: () =>
+            {
+                using Process prcExifTool = new();
+                prcExifTool.StartInfo = new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
                 {
-                    _sErrorMsg += data.Data.ToString() + Environment.NewLine;
-                    try
+                    Arguments = @"/k " + SDoubleQuote + SDoubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + SDoubleQuote + " " + commonArgs + exiftoolCmd + SDoubleQuote + "&& exit",
+                    UseShellExecute = false,
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
+                };
+
+                prcExifTool.EnableRaisingEvents = true;
+
+                //s_ErrorMsg = "";
+                //s_OutputMsg = "";
+                prcExifTool.OutputDataReceived += (_,
+                                                   data) =>
+                {
+                    if (data.Data != null && data.Data.Length > 0)
                     {
-                        prcExifTool.Kill();
+                        _sOutputMsg += data.Data.ToString() + Environment.NewLine;
                     }
-                    catch
-                    { } // else it will be stuck running forever
-                }
-            };
+                };
 
-            prcExifTool.Start();
-            prcExifTool.BeginOutputReadLine();
-            prcExifTool.BeginErrorReadLine();
-            prcExifTool.WaitForExit();
-            prcExifTool.Close();
-            FrmMainApp.Logger.Trace(message: "Closing exifTool");
+                prcExifTool.ErrorDataReceived += (_,
+                                                  data) =>
+                {
+                    if (data.Data != null && data.Data.Length > 0)
+                    {
+                        _sErrorMsg += data.Data.ToString() + Environment.NewLine;
+                        try
+                        {
+                            prcExifTool.Kill();
+                        }
+                        catch
+                        { } // else it will be stuck running forever
+                    }
+                };
 
-            // if still here then exorcise
-            try
-            {
-                FrmMainApp.Logger.Trace(message: "Killing exifTool");
-                prcExifTool.Kill();
-            }
-            catch
-            {
-                // "funnily" enough this seems to persist for some reason. Unsure why.
-                FrmMainApp.Logger.Error(message: "Killing exifTool failed");
-            }
-        });
+                prcExifTool.Start();
+                prcExifTool.BeginOutputReadLine();
+                prcExifTool.BeginErrorReadLine();
+                prcExifTool.WaitForExit();
+                prcExifTool.Close();
+                FrmMainApp.Logger.Trace(message: "Closing exifTool");
 
-        ///////////////
-        //// try to collect the xmp/xml listOfAsyncCompatibleFileNamesWithOutPath and then read them back into the listview.
-
-        foreach (FileInfo exifFileIn in di_tmpLocFiles.EnumerateFiles())
-        {
-            if (exifFileIn.Extension == ".xmp")
-            {
+                // if still here then exorcise
                 try
                 {
-                    string XMP = File.ReadAllText(path: Path.Combine(path1: tmpFolder, path2: exifFileIn.Name));
+                    FrmMainApp.Logger.Trace(message: "Killing exifTool");
+                    prcExifTool.Kill();
+                }
+                catch
+                {
+                    // "funnily" enough this seems to persist for some reason. Unsure why.
+                    FrmMainApp.Logger.Error(message: "Killing exifTool failed");
+                }
+            });
 
-                    XmlSerializer serializer = new(type: typeof(xmpmeta));
-                    xmpmeta trackFileXMPData;
-                    using (StringReader reader = new(s: XMP))
+            ///////////////
+            //// try to collect the xmp/xml listOfAsyncCompatibleFileNamesWithOutPath and then read them back into the listview.
+
+            foreach (FileInfo exifFileIn in di_tmpLocFiles.EnumerateFiles())
+            {
+                if (exifFileIn.Extension == ".xmp")
+                {
+                    try
                     {
-                        trackFileXMPData = (xmpmeta)serializer.Deserialize(textReader: reader);
-                    }
+                        string XMP = File.ReadAllText(path: Path.Combine(path1: tmpFolder, path2: exifFileIn.Name));
 
-                    if (trackFileXMPData != null)
-                    {
-                        DataTable dt_fileExifTable = new();
-                        dt_fileExifTable.Clear();
-                        dt_fileExifTable.Columns.Add(columnName: "TagName");
-                        dt_fileExifTable.Columns.Add(columnName: "TagValue");
-
-                        PropertyInfo[] props = typeof(RDFDescription).GetProperties(bindingAttr: BindingFlags.Instance | BindingFlags.Public);
-
-                        foreach (PropertyInfo trackData in props)
+                        XmlSerializer serializer = new(type: typeof(xmpmeta));
+                        xmpmeta trackFileXMPData;
+                        using (StringReader reader = new(s: XMP))
                         {
-                            string TagName = "exif:" + trackData.Name;
-                            object TagValue = trackData.GetValue(obj: trackFileXMPData.RDF.Description);
-
-                            DataRow dr = dt_fileExifTable.NewRow();
-                            dr[columnName: "TagName"] = TagName;
-                            dr[columnName: "TagValue"] = TagValue;
-                            dt_fileExifTable.Rows.Add(row: dr);
+                            trackFileXMPData = (xmpmeta)serializer.Deserialize(textReader: reader);
                         }
 
-                        // de-dupe. this is pretty poor performance but the dataset is small
-                        DataTable dt_distinctFileExifTable = dt_fileExifTable.DefaultView.ToTable(distinct: true);
-
-                        ListView lvw = frmMainAppInstance.lvw_FileList;
-                        ListViewItem lvi = frmMainAppInstance.lvw_FileList.FindItemWithText(text: exifFileIn.Name.Substring(startIndex: 0, length: exifFileIn.Name.Length - 4));
-
-                        if (lvi != null)
+                        if (trackFileXMPData != null)
                         {
-                            ListView.ColumnHeaderCollection lvchs = frmMainAppInstance.ListViewColumnHeaders;
-                            string[] toponomyChangers = { "GPSLatitude", "GPSLongitude" };
-                            string[] toponomyDeletes = { "CountryCode", "Country", "City", "State", "Sub_location" };
-                            string strParsedLat = "0.0";
-                            string strParsedLng = "0.0";
-                            bool coordinatesHaveChanged = false;
-                            string fileNameWithoutPath = lvi.Text;
+                            DataTable dt_fileExifTable = new();
+                            dt_fileExifTable.Clear();
+                            dt_fileExifTable.Columns.Add(columnName: "TagName");
+                            dt_fileExifTable.Columns.Add(columnName: "TagValue");
 
-                            for (int i = 1; i < lvi.SubItems.Count; i++)
+                            PropertyInfo[] props = typeof(RDFDescription).GetProperties(bindingAttr: BindingFlags.Instance | BindingFlags.Public);
+
+                            foreach (PropertyInfo trackData in props)
                             {
-                                string tagToWrite = lvchs[index: i]
-                                    .Name.Substring(startIndex: 4);
-                                string str = ExifGetStandardisedDataPointFromExif(dtFileExif: dt_distinctFileExifTable, dataPoint: tagToWrite);
-                                FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+                                string TagName = "exif:" + trackData.Name;
+                                object TagValue = trackData.GetValue(obj: trackFileXMPData.RDF.Description);
 
-                                // don't update stuff that hasn't changed
-                                if (lvi.SubItems[index: i]
-                                        .Text !=
-                                    str &&
-                                    (AncillaryListsArrays.GpxTagsToOverwrite()
-                                         .Contains(value: tagToWrite) ||
-                                     tagToWrite == "Coordinates"))
+                                DataRow dr = dt_fileExifTable.NewRow();
+                                dr[columnName: "TagName"] = TagName;
+                                dr[columnName: "TagValue"] = TagValue;
+                                dt_fileExifTable.Rows.Add(row: dr);
+                            }
+
+                            // de-dupe. this is pretty poor performance but the dataset is small
+                            DataTable dt_distinctFileExifTable = dt_fileExifTable.DefaultView.ToTable(distinct: true);
+
+                            ListView lvw = frmMainAppInstance.lvw_FileList;
+                            ListViewItem lvi = frmMainAppInstance.lvw_FileList.FindItemWithText(text: exifFileIn.Name.Substring(startIndex: 0, length: exifFileIn.Name.Length - 4));
+
+                            if (lvi != null)
+                            {
+                                ListView.ColumnHeaderCollection lvchs = frmMainAppInstance.ListViewColumnHeaders;
+                                string[] toponomyChangers = { "GPSLatitude", "GPSLongitude" };
+                                string[] toponomyDeletes = { "CountryCode", "Country", "City", "State", "Sub_location" };
+                                string strParsedLat = "0.0";
+                                string strParsedLng = "0.0";
+                                bool coordinatesHaveChanged = false;
+                                string fileNameWithoutPath = lvi.Text;
+
+                                for (int i = 1; i < lvi.SubItems.Count; i++)
                                 {
-                                    lvi.SubItems[index: i]
-                                        .Text = str;
-                                    if (AncillaryListsArrays.GpxTagsToOverwrite()
-                                        .Contains(value: tagToWrite))
-                                    {
-                                        if (toponomyChangers.Contains(value: tagToWrite))
-                                        {
-                                            coordinatesHaveChanged = true;
-                                        }
+                                    string tagToWrite = lvchs[index: i]
+                                        .Name.Substring(startIndex: 4);
+                                    string str = ExifGetStandardisedDataPointFromExif(dtFileExif: dt_distinctFileExifTable, dataPoint: tagToWrite);
+                                    FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
 
+                                    // don't update stuff that hasn't changed
+                                    if (lvi.SubItems[index: i]
+                                            .Text !=
+                                        str &&
+                                        (AncillaryListsArrays.GpxTagsToOverwrite()
+                                             .Contains(value: tagToWrite) ||
+                                         tagToWrite == "Coordinates"))
+                                    {
+                                        lvi.SubItems[index: i]
+                                            .Text = str;
+                                        if (AncillaryListsArrays.GpxTagsToOverwrite()
+                                            .Contains(value: tagToWrite))
+                                        {
+                                            if (toponomyChangers.Contains(value: tagToWrite))
+                                            {
+                                                coordinatesHaveChanged = true;
+                                            }
+
+                                            GenericUpdateAddToDataTable(
+                                                dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
+                                                fileNameWithoutPath: lvi.Text,
+                                                settingId: lvchs[index: i]
+                                                    .Name.Substring(startIndex: 4),
+                                                settingValue: str
+                                            );
+
+                                            if (tagToWrite == "GPSLatitude")
+                                            {
+                                                strParsedLat = str;
+                                            }
+
+                                            if (tagToWrite == "GPSLongitude")
+                                            {
+                                                strParsedLng = str;
+                                            }
+
+                                            if (lvi.Index % 10 == 0)
+                                            {
+                                                Application.DoEvents();
+                                                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                                FrmMainApp.HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
+                                            }
+
+                                            FrmMainApp.HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Red);
+                                        }
+                                    }
+                                }
+
+                                if (coordinatesHaveChanged)
+                                {
+                                    // clear city, state etc
+                                    foreach (string category in toponomyDeletes)
+                                    {
                                         GenericUpdateAddToDataTable(
                                             dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
                                             fileNameWithoutPath: lvi.Text,
-                                            settingId: lvchs[index: i]
-                                                .Name.Substring(startIndex: 4),
-                                            settingValue: str
+                                            settingId: category,
+                                            settingValue: "-"
                                         );
 
-                                        if (tagToWrite == "GPSLatitude")
-                                        {
-                                            strParsedLat = str;
-                                        }
+                                        lvi.SubItems[index: lvw.Columns[key: "clh_" + category]
+                                                         .Index]
+                                            .Text = "-";
+                                    }
 
-                                        if (tagToWrite == "GPSLongitude")
+                                    // pull from web
+                                    SApiOkay = true;
+                                    DataTable dt_Toponomy = DTFromAPIExifGetToponomyFromWebOrSQL(lat: strParsedLat.ToString(provider: CultureInfo.InvariantCulture), lng: strParsedLng.ToString(provider: CultureInfo.InvariantCulture));
+
+                                    if (SApiOkay)
+                                    {
+                                        List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
+                                        toponomyOverwrites.Add(item: ("CountryCode", dt_Toponomy.Rows[index: 0][columnName: "CountryCode"]
+                                                                          .ToString()));
+                                        toponomyOverwrites.Add(item: ("Country", dt_Toponomy.Rows[index: 0][columnName: "Country"]
+                                                                          .ToString()));
+                                        toponomyOverwrites.Add(item: ("City", dt_Toponomy.Rows[index: 0][columnName: "City"]
+                                                                          .ToString()));
+                                        toponomyOverwrites.Add(item: ("State", dt_Toponomy.Rows[index: 0][columnName: "State"]
+                                                                          .ToString()));
+                                        toponomyOverwrites.Add(item: ("Sub_location", dt_Toponomy.Rows[index: 0][columnName: "Sub_location"]
+                                                                          .ToString()));
+
+                                        foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
                                         {
-                                            strParsedLng = str;
+                                            GenericUpdateAddToDataTable(
+                                                dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
+                                                fileNameWithoutPath: lvi.Text,
+                                                settingId: toponomyDetail.toponomyOverwriteName,
+                                                settingValue: toponomyDetail.toponomyOverwriteVal
+                                            );
+                                            lvi.SubItems[index: lvw.Columns[key: "clh_" + toponomyDetail.toponomyOverwriteName]
+                                                             .Index]
+                                                .Text = toponomyDetail.toponomyOverwriteVal;
                                         }
 
                                         if (lvi.Index % 10 == 0)
@@ -970,76 +1049,16 @@ internal static partial class HelperStatic
                                     }
                                 }
                             }
-
-                            if (coordinatesHaveChanged)
-                            {
-                                // clear city, state etc
-                                foreach (string category in toponomyDeletes)
-                                {
-                                    GenericUpdateAddToDataTable(
-                                        dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                                        fileNameWithoutPath: lvi.Text,
-                                        settingId: category,
-                                        settingValue: "-"
-                                    );
-
-                                    lvi.SubItems[index: lvw.Columns[key: "clh_" + category]
-                                                     .Index]
-                                        .Text = "-";
-                                }
-
-                                // pull from web
-                                SApiOkay = true;
-                                DataTable dt_Toponomy = DTFromAPIExifGetToponomyFromWebOrSQL(lat: strParsedLat.ToString(provider: CultureInfo.InvariantCulture), lng: strParsedLng.ToString(provider: CultureInfo.InvariantCulture));
-
-                                if (SApiOkay)
-                                {
-                                    List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
-                                    toponomyOverwrites.Add(item: ("CountryCode", dt_Toponomy.Rows[index: 0][columnName: "CountryCode"]
-                                                                      .ToString()));
-                                    toponomyOverwrites.Add(item: ("Country", dt_Toponomy.Rows[index: 0][columnName: "Country"]
-                                                                      .ToString()));
-                                    toponomyOverwrites.Add(item: ("City", dt_Toponomy.Rows[index: 0][columnName: "City"]
-                                                                      .ToString()));
-                                    toponomyOverwrites.Add(item: ("State", dt_Toponomy.Rows[index: 0][columnName: "State"]
-                                                                      .ToString()));
-                                    toponomyOverwrites.Add(item: ("Sub_location", dt_Toponomy.Rows[index: 0][columnName: "Sub_location"]
-                                                                      .ToString()));
-
-                                    foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
-                                    {
-                                        GenericUpdateAddToDataTable(
-                                            dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                                            fileNameWithoutPath: lvi.Text,
-                                            settingId: toponomyDetail.toponomyOverwriteName,
-                                            settingValue: toponomyDetail.toponomyOverwriteVal
-                                        );
-                                        lvi.SubItems[index: lvw.Columns[key: "clh_" + toponomyDetail.toponomyOverwriteName]
-                                                         .Index]
-                                            .Text = toponomyDetail.toponomyOverwriteVal;
-                                    }
-
-                                    if (lvi.Index % 10 == 0)
-                                    {
-                                        Application.DoEvents();
-                                        // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                        FrmMainApp.HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
-                                    }
-
-                                    FrmMainApp.HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Red);
-                                }
-                            }
                         }
                     }
-                }
-                catch
-                {
-                    // nothing. errors should have already come up
-                }
-                finally
-                {
-                    File.Delete(path: exifFileIn.FullName); // clean up
+                    catch
+                    {
+                        // nothing. errors should have already come up
+                    }
+                    finally
+                    {
+                        File.Delete(path: exifFileIn.FullName); // clean up
+                    }
                 }
             }
         }

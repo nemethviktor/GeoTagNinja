@@ -57,7 +57,6 @@ namespace GeoTagNinja
             this.tsr_FolderControl = new System.Windows.Forms.ToolStrip();
             this.tbx_FolderName = new System.Windows.Forms.ToolStripTextBox();
             this.tsb_OneFolderUp = new System.Windows.Forms.ToolStripButton();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.splitContainerLeftTop = new System.Windows.Forms.SplitContainer();
             this.lvw_FileList = new System.Windows.Forms.ListView();
@@ -656,7 +655,6 @@ namespace GeoTagNinja
         private ToolStripButton tsb_RemoveGeoData;
         private ToolStripMenuItem tmi_File_ImportGPX;
         private ToolStripButton tsb_ImportGPX;
-        private FolderBrowserDialog folderBrowserDialog1;
         private ToolStripButton tsb_GetAllFromWeb;
         private SplitContainer splitContainerMain;
         private SplitContainer splitContainerLeftTop;

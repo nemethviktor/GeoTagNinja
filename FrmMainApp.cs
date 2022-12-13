@@ -1397,8 +1397,25 @@ public partial class FrmMainApp : Form
     private void tsb_ImportGPX_Click(object sender,
                                      EventArgs e)
     {
-        FrmImportGpx frmImportGpx = new();
-        frmImportGpx.ShowDialog();
+        bool validFilesToImport = false;
+        foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
+        {
+            if (File.Exists(Path.Combine(FolderName, lvi.Text)))
+            {
+                validFilesToImport = true;
+                break;
+            }
+        }
+
+        if (validFilesToImport)
+        {
+            FrmImportGpx frmImportGpx = new();
+            frmImportGpx.ShowDialog();
+        }
+        else
+        {
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportGpx_NoFileSelected"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+        }
     }
 
     /// <summary>

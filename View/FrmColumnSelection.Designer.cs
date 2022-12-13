@@ -30,7 +30,7 @@
         {
             this.clb_ColList = new System.Windows.Forms.CheckedListBox();
             this.lbl_SelectColsTitle = new System.Windows.Forms.Label();
-            this.cb_DeSelectAll = new System.Windows.Forms.CheckBox();
+            this.ckb_DeSelectAll = new System.Windows.Forms.CheckBox();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.tlp_Buttons = new System.Windows.Forms.TableLayoutPanel();
             this.btn_Ok = new System.Windows.Forms.Button();
@@ -62,19 +62,19 @@
             this.lbl_SelectColsTitle.Text = "Select Columns";
             this.lbl_SelectColsTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // cb_DeSelectAll
+            // ckb_DeSelectAll
             // 
-            this.cb_DeSelectAll.AutoSize = true;
-            this.cb_DeSelectAll.CausesValidation = false;
-            this.cb_DeSelectAll.Dock = System.Windows.Forms.DockStyle.Top;
-            this.cb_DeSelectAll.Location = new System.Drawing.Point(5, 25);
-            this.cb_DeSelectAll.Name = "cb_DeSelectAll";
-            this.cb_DeSelectAll.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.cb_DeSelectAll.Size = new System.Drawing.Size(182, 17);
-            this.cb_DeSelectAll.TabIndex = 2;
-            this.cb_DeSelectAll.Text = "(Un)Check All";
-            this.cb_DeSelectAll.UseVisualStyleBackColor = true;
-            this.cb_DeSelectAll.CheckedChanged += new System.EventHandler(this.cb_DeSelectAll_CheckedChanged);
+            this.ckb_DeSelectAll.AutoSize = true;
+            this.ckb_DeSelectAll.CausesValidation = false;
+            this.ckb_DeSelectAll.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ckb_DeSelectAll.Location = new System.Drawing.Point(5, 25);
+            this.ckb_DeSelectAll.Name = "ckb_DeSelectAll";
+            this.ckb_DeSelectAll.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.ckb_DeSelectAll.Size = new System.Drawing.Size(182, 17);
+            this.ckb_DeSelectAll.TabIndex = 2;
+            this.ckb_DeSelectAll.Text = "(Un)Check All";
+            this.ckb_DeSelectAll.UseVisualStyleBackColor = true;
+            this.ckb_DeSelectAll.CheckedChanged += new System.EventHandler(this.ckb_DeSelectAll_CheckedChanged);
             // 
             // btn_Cancel
             // 
@@ -128,7 +128,7 @@
             this.ControlBox = false;
             this.Controls.Add(this.clb_ColList);
             this.Controls.Add(this.tlp_Buttons);
-            this.Controls.Add(this.cb_DeSelectAll);
+            this.Controls.Add(this.ckb_DeSelectAll);
             this.Controls.Add(this.lbl_SelectColsTitle);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FrmColumnSelection";
@@ -148,7 +148,7 @@
 
         private System.Windows.Forms.CheckedListBox clb_ColList;
         private System.Windows.Forms.Label lbl_SelectColsTitle;
-        private System.Windows.Forms.CheckBox cb_DeSelectAll;
+        private System.Windows.Forms.CheckBox ckb_DeSelectAll;
         private System.Windows.Forms.Button btn_Cancel;
         private System.Windows.Forms.TableLayoutPanel tlp_Buttons;
         private System.Windows.Forms.Button btn_Ok;

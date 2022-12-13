@@ -444,7 +444,10 @@ internal static partial class HelperStatic
             {
                 string settingValue = dataRow[columnName: "objectText"]
                     .ToString();
-                lstReturn.Add(item: settingValue);
+                if (settingValue != "")
+                {
+                    lstReturn.Add(item: settingValue);
+                }
             })
             ;
 
@@ -462,7 +465,10 @@ internal static partial class HelperStatic
                 {
                     string settingValue = dataRow[columnName: "objectText"]
                         .ToString();
-                    lstReturn.Add(item: settingValue);
+                    if (settingValue != "")
+                    {
+                        lstReturn.Add(item: settingValue);
+                    }
                 })
                 ;
         }
