@@ -408,7 +408,7 @@ public partial class FrmMainApp
             objectType: "PictureBox",
             objectName: "pbx_imagePreview",
             actionType: "EmptyText"
-            );
+        );
 
         // don't think the menustrip above is working
         List<ToolStripItem> allMenuItems = new();
@@ -419,6 +419,7 @@ public partial class FrmMainApp
             //add sub items - not logging this.
             allMenuItems.AddRange(collection: helperNonstatic.GetMenuItems(item: toolItem));
         }
+
         foreach (ToolStripItem toolItem in cms_FileListView.Items)
         {
             allMenuItems.Add(item: toolItem);
@@ -449,7 +450,7 @@ public partial class FrmMainApp
             objectType: "PictureBox",
             objectName: "pbx_imagePreview",
             actionType: "EmptyText"
-            );
+        );
 
         Logger.Trace(message: "Setting Tooltips");
         ttp_loctToFile.SetToolTip(control: btn_loctToFile,
@@ -467,7 +468,6 @@ public partial class FrmMainApp
                                          objectName: "ttp_NavigateMapGo"
                                      )
         );
-
     }
 
     /// <summary>

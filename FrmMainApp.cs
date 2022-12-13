@@ -34,6 +34,11 @@ public partial class FrmMainApp : Form
 
     public ListView.ColumnHeaderCollection ListViewColumnHeaders => lvw_FileList.Columns;
 
+    /// <summary>
+    ///     Returns the currently set application language for localization.
+    /// </summary>
+    public string AppLanguage => _AppLanguage;
+
     #region Variables
 
     internal static readonly string ResourcesFolderPath = Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "Resources");
@@ -86,11 +91,6 @@ public partial class FrmMainApp : Form
     internal static DataTable DtOriginalCreateDate;
 
     #endregion
-
-    /// <summary>
-    /// Returns the currently set application language for localization.
-    /// </summary>
-    public string AppLanguage { get => _AppLanguage; }
 
     #region Methods
 
@@ -543,16 +543,17 @@ public partial class FrmMainApp : Form
             // Read and process width
             settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_width";
             colWidth = HelperStatic.DataReadSQLiteSettings(
-                                           tableName: "applayout",
-                                           settingTabPage: "lvw_FileList",
-                                           settingId: settingIdToSend
+                tableName: "applayout",
+                settingTabPage: "lvw_FileList",
+                settingId: settingIdToSend
             );
 
             // We only set col width if there actually is a setting for it.
             // New columns thus will have a default size
-            if ((colWidth != null) && (colWidth.Length > 0))
-                columnHeader.Width = Convert.ToInt16(colWidth);
-
+            if (colWidth != null && colWidth.Length > 0)
+            {
+                columnHeader.Width = Convert.ToInt16(value: colWidth);
+            }
 
             Logger.Trace(message: "columnHeader: " +
                                   columnHeader.Name +
@@ -1769,7 +1770,9 @@ public partial class FrmMainApp : Form
                                                        .Text)))
                 {
                     await HelperStatic.LvwItemCreatePreview(
-                        fileNameWithPath: Path.Combine(FolderName + lvw_FileList.SelectedItems[index: 0].Text));
+                        fileNameWithPath: Path.Combine(FolderName +
+                                                       lvw_FileList.SelectedItems[index: 0]
+                                                           .Text));
                 }
                 else
                 {
@@ -2229,20 +2232,24 @@ public partial class FrmMainApp : Form
         wbv_MapArea.Show();
     }
 
-    private void selectColumnsToolStripMenuItem_Click(object sender, EventArgs e)
+    private void selectColumnsToolStripMenuItem_Click(object sender,
+                                                      EventArgs e)
     {
-        FrmColumnSelection frm_ColSel = new FrmColumnSelection(
-            this.lvw_FileList.Columns, AppLanguage);
-        Point lvwLoc = this.lvw_FileList.PointToScreen(new Point(0, 0));
-        lvwLoc.Offset(20, 10);          // Relative to list view top left
-        frm_ColSel.Location = lvwLoc;   // in screen coords...
-        frm_ColSel.ShowDialog(this.lvw_FileList);
+        FrmColumnSelection frm_ColSel = new(
+            ColList: lvw_FileList.Columns, AppLanguage: AppLanguage);
+        Point lvwLoc = lvw_FileList.PointToScreen(p: new Point(x: 0, y: 0));
+        lvwLoc.Offset(dx: 20, dy: 10); // Relative to list view top left
+        frm_ColSel.Location = lvwLoc; // in screen coords...
+        frm_ColSel.ShowDialog(owner: lvw_FileList);
     }
 
-    private void lvw_FileList_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
+    private void lvw_FileList_ColumnWidthChanging(object sender,
+                                                  ColumnWidthChangingEventArgs e)
     {
         // Columns with width = 0 should stay hidden / may not be resized.
-        if (lvw_FileList.Columns[e.ColumnIndex].Width == 0)
+        if (lvw_FileList.Columns[index: e.ColumnIndex]
+                .Width ==
+            0)
         {
             e.Cancel = true;
             e.NewWidth = 0;

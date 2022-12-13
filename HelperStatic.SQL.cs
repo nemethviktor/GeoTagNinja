@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Data.SQLite;
 using System.Globalization;
 using System.IO;
@@ -426,7 +425,6 @@ internal static partial class HelperStatic
     /// <param name="actionType">e.g. "reading" or "writing". </param>
     /// <param name="objectName">This is the name of the object e.g. "btn_OK"</param>
     /// <returns>The value of the object's labal in the given language. E.g. for btn_Cancel this will be "Cancel"</returns>
-    /// 
     internal static string DataReadSQLiteObjectText(
         string languageName,
         string objectType,
@@ -473,7 +471,7 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    /// Reads all the language SQLite files into one table (FrmMainApp.DtLangaugeLabels)
+    ///     Reads all the language SQLite files into one table (FrmMainApp.DtLangaugeLabels)
     /// </summary>
     internal static void DataReadSQLiteObjectTextFromFiles()
     {
@@ -481,29 +479,29 @@ internal static partial class HelperStatic
 
         FrmMainApp.DtLangaugeLabels = new DataTable();
 
-        foreach (string file in Directory.GetFiles(languagesFolderPath, "*.sqlite"))
+        foreach (string file in Directory.GetFiles(path: languagesFolderPath, searchPattern: "*.sqlite"))
         {
-            string languageName = Path.GetFileNameWithoutExtension(file);
+            string languageName = Path.GetFileNameWithoutExtension(path: file);
 
             using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + file);
             sqliteDB.Open();
-            DataTable dtTablesInSQLite = sqliteDB.GetSchema("Tables");
+            DataTable dtTablesInSQLite = sqliteDB.GetSchema(collectionName: "Tables");
 
             SQLiteCommand dbCommand = sqliteDB.CreateCommand();
             dbCommand.CommandText = "";
             foreach (DataRow dr in dtTablesInSQLite.Rows)
             {
-                string tableName = (string)dr[2];
+                string tableName = (string)dr[columnIndex: 2];
                 dbCommand.CommandText += "SELECT '" + languageName + "' AS languageName, '" + tableName + "' AS objectType , * FROM " + tableName + " UNION ";
             }
 
-            dbCommand.CommandText = dbCommand.CommandText.Substring(0, dbCommand.CommandText.Length - " UNION ".Length);
+            dbCommand.CommandText = dbCommand.CommandText.Substring(startIndex: 0, length: dbCommand.CommandText.Length - " UNION ".Length);
 
-            SQLiteDataReader executeReader = dbCommand.ExecuteReader(CommandBehavior.SingleResult);
-            DataTable dt = new DataTable();
-            dt.Load(executeReader);
+            SQLiteDataReader executeReader = dbCommand.ExecuteReader(behavior: CommandBehavior.SingleResult);
+            DataTable dt = new();
+            dt.Load(reader: executeReader);
 
-            FrmMainApp.DtLangaugeLabels.Merge(dt);
+            FrmMainApp.DtLangaugeLabels.Merge(table: dt);
         }
     }
 

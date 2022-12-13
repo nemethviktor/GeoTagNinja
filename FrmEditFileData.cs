@@ -319,7 +319,7 @@ public partial class FrmEditFileData : Form
                                 settingId: cItemNumericUpDown.Name.Substring(startIndex: 4),
                                 settingValue: cItemValStr);
 
-                            cItemNumericUpDown.Value = int.Parse(cItemValStr);
+                            cItemNumericUpDown.Value = int.Parse(s: cItemValStr);
                         }
 
                         if (cItem is TextBox txt)
