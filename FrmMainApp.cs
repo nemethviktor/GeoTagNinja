@@ -529,10 +529,36 @@ public partial class FrmMainApp : Form
             // Read index / order
             settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_index";
             colOrderHeadername.Add(item: columnHeader.Name);
-            int colOrderIndexInt = Convert.ToInt16(value: HelperStatic.DataReadSQLiteSettings(
-                                                       tableName: "applayout",
-                                                       settingTabPage: "lvw_FileList",
-                                                       settingId: settingIdToSend));
+            int colOrderIndexInt = 0;
+
+            colOrderIndexInt = Convert.ToInt16(value: HelperStatic.DataReadSQLiteSettings(
+                                                   tableName: "applayout",
+                                                   settingTabPage: "lvw_FileList",
+                                                   settingId: settingIdToSend));
+
+            // this would be the default case 
+            if (colOrderIndexInt == 0)
+            {
+                EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in DtObjectNames.AsEnumerable()
+                                                                   where dataRow.Field<string>(columnName: "objectName") == columnHeader.Name.Substring(startIndex: 4)
+                                                                   select dataRow;
+                List<int> lstReturn = new();
+
+                Parallel.ForEach(source: drDataTableData, body: dataRow =>
+                    {
+                        int settingValue = int.Parse(s: dataRow[columnName: "sqlOrder"]
+                                                         .ToString());
+                        lstReturn.Add(item: settingValue);
+                    })
+                    ;
+
+                // basically fileName will always come 0.
+                if (lstReturn.Count > 0)
+                {
+                    colOrderIndexInt = lstReturn[index: 0];
+                }
+            }
+
             colOrderIndex.Add(item: colOrderIndexInt);
 
             Logger.Trace(message: "columnHeader: " +
@@ -1400,7 +1426,7 @@ public partial class FrmMainApp : Form
         bool validFilesToImport = false;
         foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
         {
-            if (File.Exists(Path.Combine(FolderName, lvi.Text)))
+            if (File.Exists(path: Path.Combine(path1: FolderName, path2: lvi.Text)))
             {
                 validFilesToImport = true;
                 break;
