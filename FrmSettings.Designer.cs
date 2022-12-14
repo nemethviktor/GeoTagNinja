@@ -56,6 +56,7 @@
             this.btn_OK = new System.Windows.Forms.Button();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.fbd_StartupFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.ckb_RemoveGeoDataRemovesTimeOffset = new System.Windows.Forms.CheckBox();
             this.tct_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).BeginInit();
@@ -82,6 +83,7 @@
             // tpg_Application
             // 
             this.tpg_Application.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tpg_Application.Controls.Add(this.ckb_RemoveGeoDataRemovesTimeOffset);
             this.tpg_Application.Controls.Add(this.ckb_ResetMapToZero);
             this.tpg_Application.Controls.Add(this.cbx_Language);
             this.tpg_Application.Controls.Add(this.rbx_Register_ArcGIS);
@@ -366,6 +368,16 @@
             this.fbd_StartupFolder.Description = "fbd_StartupFolder";
             this.fbd_StartupFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
+            // ckb_RemoveGeoDataRemovesTimeOffset
+            // 
+            this.ckb_RemoveGeoDataRemovesTimeOffset.AutoSize = true;
+            this.ckb_RemoveGeoDataRemovesTimeOffset.Location = new System.Drawing.Point(20, 281);
+            this.ckb_RemoveGeoDataRemovesTimeOffset.Name = "ckb_RemoveGeoDataRemovesTimeOffset";
+            this.ckb_RemoveGeoDataRemovesTimeOffset.Size = new System.Drawing.Size(229, 17);
+            this.ckb_RemoveGeoDataRemovesTimeOffset.TabIndex = 16;
+            this.ckb_RemoveGeoDataRemovesTimeOffset.Text = "ckb_RemoveGeoDataRemovesTimeOffset";
+            this.ckb_RemoveGeoDataRemovesTimeOffset.UseVisualStyleBackColor = true;
+            // 
             // FrmSettings
             // 
             this.AcceptButton = this.btn_OK;
@@ -423,5 +435,6 @@
         private System.Windows.Forms.CheckBox ckb_ProcessOriginalFile;
         private System.Windows.Forms.CheckBox ckb_ResetFileDateToCreated;
         private System.Windows.Forms.ImageList igl_Settings;
+        private System.Windows.Forms.CheckBox ckb_RemoveGeoDataRemovesTimeOffset;
     }
 }

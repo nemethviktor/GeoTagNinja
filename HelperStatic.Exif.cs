@@ -2320,7 +2320,7 @@ internal static partial class HelperStatic
     /// <param name="senderName">At this point this can either be the main listview or the one from Edit (file) data</param>
     internal static async Task ExifRemoveLocationData(string senderName)
     {
-        string[] toponomyOverwrites =
+        List<string> toponomyOverwrites = new List<string>()
         {
             "GPSLatitude",
             "GPSLongitude",
@@ -2330,34 +2330,58 @@ internal static partial class HelperStatic
             "State",
             "Sub_location",
             "GPSAltitude",
-            "gps*",
-            "OffsetTime"
+            "gps*"
         };
+
+        if (HelperStatic.DataReadSQLiteSettings(
+                tableName: "settings",
+                settingTabPage: "tpg_Application",
+                settingId: "ckb_RemoveGeoDataRemovesTimeOffset") ==
+            "true")
+
+        {
+            toponomyOverwrites.Add("OffsetTime");
+        }
+
+        ;
         if (senderName == "FrmEditFileData")
         {
             // for the time being i'll leave this as "remove data from the active selection file" rather than "all".
-            FrmEditFileData FrmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
+            FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
 
             // setting this to True prevents the code from checking the values are valid numbers.
             FrmEditFileData.FrmEditFileDataNowRemovingGeoData = true;
-            FrmEditFileDataInstance.tbx_GPSLatitude.Text = "";
-            FrmEditFileDataInstance.tbx_GPSLongitude.Text = "";
-            FrmEditFileDataInstance.tbx_GPSAltitude.Text = "";
-            FrmEditFileDataInstance.tbx_City.Text = "";
-            FrmEditFileDataInstance.tbx_State.Text = "";
-            FrmEditFileDataInstance.tbx_Sub_location.Text = "";
-            FrmEditFileDataInstance.cbx_CountryCode.Text = "";
-            FrmEditFileDataInstance.cbx_Country.Text = "";
-            FrmEditFileData.FrmEditFileDataNowRemovingGeoData = false;
-            // no need to write back to sql because it's done automatically on textboxChange except for "special tag"
+            if (frmEditFileDataInstance != null)
+            {
+                string fileNameWithoutPath = frmEditFileDataInstance.lvw_FileListEditImages.SelectedItems[index: 0]
+                    .Text;
+                frmEditFileDataInstance.tbx_GPSLatitude.Text = "";
+                frmEditFileDataInstance.tbx_GPSLongitude.Text = "";
+                frmEditFileDataInstance.tbx_GPSAltitude.Text = "";
+                frmEditFileDataInstance.tbx_City.Text = "";
+                frmEditFileDataInstance.tbx_State.Text = "";
+                frmEditFileDataInstance.tbx_Sub_location.Text = "";
+                frmEditFileDataInstance.cbx_CountryCode.Text = "";
+                frmEditFileDataInstance.cbx_Country.Text = "";
+                FrmEditFileData.FrmEditFileDataNowRemovingGeoData = false;
 
-            GenericUpdateAddToDataTable(
-                dt: FrmMainApp.DtFileDataToWriteStage1PreQueue,
-                fileNameWithoutPath: FrmEditFileDataInstance.lvw_FileListEditImages.SelectedItems[index: 0]
-                    .Text,
-                settingId: "gps*",
-                settingValue: ""
-            );
+                foreach (string toponomyDetail in toponomyOverwrites)
+                {
+                    GenericUpdateAddToDataTable(
+                        dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
+                        fileNameWithoutPath: fileNameWithoutPath,
+                        settingId: toponomyDetail,
+                        settingValue: ""
+                    );
+                }
+
+                GenericUpdateAddToDataTable(
+                    dt: FrmMainApp.DtFileDataToWriteStage1PreQueue,
+                    fileNameWithoutPath: fileNameWithoutPath,
+                    settingId: "gps*",
+                    settingValue: ""
+                );
+            }
         }
         else if (senderName == "FrmMainApp")
         {
