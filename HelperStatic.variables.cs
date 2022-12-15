@@ -22,6 +22,8 @@ internal static partial class HelperStatic
     internal static double? MinLng;
     internal static double? MaxLat;
     internal static double? MaxLng;
+    internal static double? LastLat;
+    internal static double? LastLng;
     internal static bool SNowSelectingAllItems = false;
     internal static bool SResetMapToZero;
     internal static long FolderEnterLastEpoch = 0;

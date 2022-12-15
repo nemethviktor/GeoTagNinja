@@ -844,10 +844,10 @@ public partial class FrmMainApp : Form
 
         string htmlCode = "";
         HelperStatic.HtmlAddMarker = "";
-        HelperStatic.MinLat = null;
-        HelperStatic.MinLng = null;
-        HelperStatic.MaxLat = null;
-        HelperStatic.MaxLng = null;
+        double? dblMinLat = default;
+        double? dblMinLng = default;
+        double? dblMaxLat = default;
+        double? dblMaxLng = default;
 
         // lazy
         string strLatCoordinate = "0";
@@ -870,54 +870,76 @@ public partial class FrmMainApp : Form
 
         Logger.Trace(message: "HelperStatic.SArcGisApiKey == null: " + (HelperStatic.SArcGisApiKey == null));
 
-        foreach ((string strLat, string strLng) locationCoord in HelperStatic.HsMapMarkers)
+        if (HelperStatic.HsMapMarkers.Count > 0)
         {
-            HelperStatic.HtmlAddMarker += "var marker = L.marker([" + locationCoord.strLat + ", " + locationCoord.strLng + "]).addTo(map).openPopup();" + "\n";
-            strLatCoordinate = locationCoord.strLat;
-            strLngCoordinate = locationCoord.strLng;
-
-            // set scene for mix/max so map zoom can be set automatically
+            foreach ((string strLat, string strLng) locationCoord in HelperStatic.HsMapMarkers)
             {
-                if (HelperStatic.MinLat == null)
-                {
-                    HelperStatic.MinLat = double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture);
-                    HelperStatic.MaxLat = HelperStatic.MinLat;
-                }
+                HelperStatic.HtmlAddMarker += "var marker = L.marker([" + locationCoord.strLat + ", " + locationCoord.strLng + "]).addTo(map).openPopup();" + "\n";
+                strLatCoordinate = locationCoord.strLat;
+                strLngCoordinate = locationCoord.strLng;
 
-                if (double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture) < HelperStatic.MinLat)
+                // set scene for mix/max so map zoom can be set automatically
                 {
-                    HelperStatic.MinLat = double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture);
-                }
+                    if (dblMinLat == null)
+                    {
+                        dblMinLat = double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture);
+                        dblMaxLat = dblMinLat;
+                    }
 
-                if (double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture) > HelperStatic.MaxLat)
-                {
-                    HelperStatic.MaxLat = double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture);
-                }
+                    if (double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture) < dblMinLat)
+                    {
+                        dblMinLat = double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture);
+                    }
 
-                if (HelperStatic.MinLng == null)
-                {
-                    HelperStatic.MinLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
-                    HelperStatic.MaxLng = HelperStatic.MinLng;
-                }
+                    if (double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture) > dblMaxLat)
+                    {
+                        dblMaxLat = double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture);
+                    }
 
-                if (double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture) < HelperStatic.MinLng)
-                {
-                    HelperStatic.MinLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
-                }
+                    if (dblMinLng == null)
+                    {
+                        dblMinLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
+                        dblMaxLng = dblMinLng;
+                    }
 
-                if (double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture) > HelperStatic.MaxLng)
-                {
-                    HelperStatic.MaxLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
-                }
+                    if (double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture) < dblMinLng)
+                    {
+                        dblMinLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
+                    }
 
-                Logger.Trace(message: "Added marker: strLatCoordinate: " + strLatCoordinate + " / strLngCoordinate:" + strLngCoordinate);
+                    if (double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture) > dblMaxLng)
+                    {
+                        dblMaxLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
+                    }
+
+                    HelperStatic.MinLat = dblMinLat;
+                    HelperStatic.MinLng = dblMinLng;
+                    HelperStatic.MaxLat = dblMaxLat;
+                    HelperStatic.MaxLng = dblMaxLng;
+
+                    Logger.Trace(message: "Added marker: strLatCoordinate: " + strLatCoordinate + " / strLngCoordinate:" + strLngCoordinate);
+                }
             }
         }
 
         Logger.Trace(message: "Added " + HelperStatic.HsMapMarkers.Count + " map markers.");
         Logger.Trace(message: "Replacing Hard-Coded Values in HTML.");
-        htmlCode = htmlCode.Replace(oldValue: "replaceLat", newValue: strLatCoordinate);
-        htmlCode = htmlCode.Replace(oldValue: "replaceLng", newValue: strLngCoordinate);
+
+        if (HelperStatic.HsMapMarkers.Count > 0)
+        {
+            HelperStatic.LastLat = double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture);
+            HelperStatic.LastLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
+
+            htmlCode = htmlCode.Replace(oldValue: "{ HTMLAddMarker }", newValue: HelperStatic.HtmlAddMarker);
+        }
+        else
+        {
+            htmlCode = htmlCode.Replace(oldValue: "{ HTMLAddMarker }", newValue: "");
+        }
+
+        htmlCode = htmlCode.Replace(oldValue: "replaceLat", newValue: HelperStatic.LastLat.ToString());
+        htmlCode = htmlCode.Replace(oldValue: "replaceLng", newValue: HelperStatic.LastLng.ToString());
+
         htmlCode = htmlCode.Replace(oldValue: "replaceMinLat", newValue: HelperStatic.MinLat.ToString()
                                         .Replace(oldChar: ',', newChar: '.'));
         htmlCode = htmlCode.Replace(oldValue: "replaceMinLng", newValue: HelperStatic.MinLng.ToString()
@@ -928,8 +950,6 @@ public partial class FrmMainApp : Form
                                         .Replace(oldChar: ',', newChar: '.'));
 
         htmlCode = htmlCode.Replace(oldValue: "yourApiKey", newValue: HelperStatic.SArcGisApiKey);
-        htmlCode = htmlCode.Replace(oldValue: "{ HTMLAddMarker }", newValue: HelperStatic.HtmlAddMarker);
-
         Logger.Trace(message: "Replacing Hard-Coded Values in HTML. - OK");
 
         // can't log inside.
@@ -1808,14 +1828,14 @@ public partial class FrmMainApp : Form
             // it's easier to call the create-preview here than in the other one because focusedItems misbehave/I don't quite understand it/them
             if (lvw_FileList.SelectedItems.Count > 0)
             {
-                if (File.Exists(path: Path.Combine(FolderName +
-                                                   lvw_FileList.SelectedItems[index: 0]
-                                                       .Text)))
+                string fileNameWithPath = Path.Combine(FolderName +
+                                                       lvw_FileList.SelectedItems[index: 0]
+                                                           .Text);
+
+                if (File.Exists(path: fileNameWithPath))
                 {
                     await HelperStatic.LvwItemCreatePreview(
-                        fileNameWithPath: Path.Combine(FolderName +
-                                                       lvw_FileList.SelectedItems[index: 0]
-                                                           .Text));
+                        fileNameWithPath: fileNameWithPath);
                 }
                 else
                 {
@@ -1823,12 +1843,8 @@ public partial class FrmMainApp : Form
                 }
             }
 
-            // for folders and other non-valid items, don't do anything.
-            if (HelperStatic.HsMapMarkers.Count > 0)
-            {
-                NavigateMapGo();
-                // pbx_imagePreview.Image = null;
-            }
+            NavigateMapGo();
+            // pbx_imagePreview.Image = null;
         }
     }
 
@@ -1875,10 +1891,7 @@ public partial class FrmMainApp : Form
                 {
                     HelperStatic.SNowSelectingAllItems = false;
                     await HelperStatic.LvwItemClickNavigate();
-                    if (HelperStatic.HsMapMarkers.Count > 0)
-                    {
-                        NavigateMapGo();
-                    }
+                    NavigateMapGo();
                 }
             }
 

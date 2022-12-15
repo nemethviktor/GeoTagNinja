@@ -10,6 +10,7 @@ v0.7.83XX [202212XX]
 - Removed the built-in webView2 installer because it was more of a pain in the backside than benefit. Updated the readme w/ instructions should this cause a problem.
 - Updates to Paste logic (preselection based on what has changed in the source file.)
 - Updated GPX import to only apply to selected files, not the whole folder
+- Updated logic so that map refreshes without markers when there are no files with coordinates selected (rather than leave markers on, which can be misleading)
 
 
 v0.6.8370 [20221201]

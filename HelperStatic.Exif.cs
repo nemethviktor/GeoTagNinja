@@ -726,10 +726,10 @@ internal static partial class HelperStatic
         {
             foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
             {
-                string pathToTag = Path.Combine(frmMainAppInstance.tbx_FolderName.Text, lvi.Text);
-                if (File.Exists(pathToTag))
+                string pathToTag = Path.Combine(path1: frmMainAppInstance.tbx_FolderName.Text, path2: lvi.Text);
+                if (File.Exists(path: pathToTag))
                 {
-                    tagFileList.Add(pathToTag);
+                    tagFileList.Add(item: pathToTag);
                 }
             }
 
@@ -2320,7 +2320,7 @@ internal static partial class HelperStatic
     /// <param name="senderName">At this point this can either be the main listview or the one from Edit (file) data</param>
     internal static async Task ExifRemoveLocationData(string senderName)
     {
-        List<string> toponomyOverwrites = new List<string>()
+        List<string> toponomyOverwrites = new()
         {
             "GPSLatitude",
             "GPSLongitude",
@@ -2333,14 +2333,14 @@ internal static partial class HelperStatic
             "gps*"
         };
 
-        if (HelperStatic.DataReadSQLiteSettings(
+        if (DataReadSQLiteSettings(
                 tableName: "settings",
                 settingTabPage: "tpg_Application",
                 settingId: "ckb_RemoveGeoDataRemovesTimeOffset") ==
             "true")
 
         {
-            toponomyOverwrites.Add("OffsetTime");
+            toponomyOverwrites.Add(item: "OffsetTime");
         }
 
         ;
@@ -2444,10 +2444,10 @@ internal static partial class HelperStatic
     private static DataTable GetDataTableFromCsv(string fileNameWithPath)
     {
         DataTable dt = new();
-        using StreamReader reader = new StreamReader(path: fileNameWithPath);
-        using CsvReader csv = new CsvReader(reader: reader, culture: CultureInfo.InvariantCulture);
+        using StreamReader reader = new(path: fileNameWithPath);
+        using CsvReader csv = new(reader: reader, culture: CultureInfo.InvariantCulture);
         // Do any configuration to `CsvReader` before creating CsvDataReader.
-        using CsvDataReader dr = new CsvDataReader(csv: csv);
+        using CsvDataReader dr = new(csv: csv);
         dt.Load(reader: dr);
 
         return dt;

@@ -40,7 +40,7 @@ I'm generally happy for anyone competent to add pull requests but I don't always
 
 ## ToDos
 
-- [later] Destination stuff untested.
+- [later] Destination stuff untested / not showing cones on map / generally likely not working.
 
 
 ## Known Issues
