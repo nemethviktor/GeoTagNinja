@@ -1,8 +1,17 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 using System.Windows.Forms;
 
 namespace GeoTagNinja;
+
+// drives, folders, files
+internal enum LviType
+{
+    Drive,
+    Folder,
+    File
+}
 
 /// <summary>
 ///     Comparer for columns. Currently supports only case insensitive string comparison.
@@ -71,26 +80,76 @@ internal class ListViewColumnSorter : IComparer
                        object y)
     {
         int result = 0;
-        ListViewItem lvi_x = (ListViewItem)x;
-        ListViewItem lvi_y = (ListViewItem)y;
+        ListViewItem lviX = (ListViewItem)x;
+        ListViewItem lviY = (ListViewItem)y;
 
-        try
+        int lviTypeX;
+        int lviTypeY;
+        if (lviX != null && lviY != null)
         {
-            result = Comparer.Compare(a: lvi_x.SubItems[index: ColumnToSort]
-                                          .Text, b: lvi_y.SubItems[index: ColumnToSort]
-                                          .Text);
-        }
-        catch
-        {
-            result = 0; // bit redundant but for good measure.
-        }
+            // lviX
+            if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: lviX.Text)))
+            {
+                lviTypeX = (int)LviType.File;
+            }
+            else if (Directory.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: lviX.Text)))
+            {
+                lviTypeX = (int)LviType.Folder;
+            }
+            else
+            {
+                lviTypeX = (int)LviType.Drive;
+            }
 
-        // Inverse if descending
-        if (ColumnSortOrder == SortOrder.Ascending)
-        {
-            return result;
-        }
+            // lviY
+            if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: lviY.Text)))
+            {
+                lviTypeY = (int)LviType.File;
+            }
+            else if (Directory.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: lviY.Text)))
+            {
+                lviTypeY = (int)LviType.Folder;
+            }
+            else
+            {
+                lviTypeY = (int)LviType.Drive;
+            }
 
-        return -result;
+            // parentfolder ("..") always on top, this shouldn't appear for any Root folders anyway.
+            if (lviX.Text == FrmMainApp.ParentFolder)
+            {
+                return -1;
+            }
+
+            if (lviTypeX < lviTypeY)
+            {
+                return -1;
+            }
+
+            try
+            {
+                string compareWhat = lviX.SubItems[index: ColumnToSort]
+                    .Text;
+                string compareToWhat = lviY.SubItems[index: ColumnToSort]
+                    .Text;
+                result = Comparer.Compare(a: compareWhat, b: compareToWhat);
+            }
+            catch
+            {
+                result = 0; // bit redundant but for good measure.
+            }
+
+            // Inverse if descending - doesn't affect folders.
+            if (ColumnSortOrder == SortOrder.Ascending)
+            {
+                return result;
+            }
+
+            return -result;
+        }
+        else
+        {
+            return 0;
+        }
     }
 }
