@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using CoenM.ExifToolLib;
 using Microsoft.Web.WebView2.Core;
 using static System.Environment;
 
@@ -14,31 +13,6 @@ namespace GeoTagNinja;
 
 public partial class FrmMainApp
 {
-    /// <summary>
-    ///     Sets up exifTool & AsyncExiftool configs
-    /// </summary>
-    private void AppStartupExifToolConfig()
-    {
-        Logger.Info(message: "Starting");
-        string exifToolExe = Path.Combine(path1: ResourcesFolderPath, path2: "exiftool.exe");
-
-        Encoding exifToolEncoding = Encoding.UTF8;
-
-        List<string> commonArgs = new();
-
-        string customExifToolConfigFile = @".ExifTool_config";
-
-        Logger.Debug(message: "AyncExifTool Config");
-        AsyncExifToolConfiguration asyncExifToolConfiguration = string.IsNullOrWhiteSpace(value: customExifToolConfigFile)
-            ? new AsyncExifToolConfiguration(exifToolFullFilename: exifToolExe, exifToolResultEncoding: exifToolEncoding, commonArgs: commonArgs)
-            : new AsyncExifToolConfiguration(exifToolFullFilename: exifToolExe, configurationFilename: customExifToolConfigFile, exifToolResultEncoding: exifToolEncoding, commonArgs: commonArgs);
-
-        AsyncExifTool = new AsyncExifTool(configuration: asyncExifToolConfiguration);
-
-        Logger.Debug(message: "AyncExifTool Initialize");
-        AsyncExifTool.Initialize();
-    }
-
     /// <summary>
     ///     Creates the database sqlite file
     /// </summary>

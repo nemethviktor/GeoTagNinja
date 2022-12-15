@@ -27,6 +27,7 @@ internal static partial class HelperStatic
     internal static bool SNowSelectingAllItems = false;
     internal static bool SResetMapToZero;
     internal static long FolderEnterLastEpoch = 0;
+    private static decimal _currentExifToolVersionLocal;
 
     #endregion
 }

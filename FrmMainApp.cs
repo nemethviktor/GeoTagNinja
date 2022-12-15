@@ -12,7 +12,6 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using CoenM.ExifToolLib;
 using geoTagNinja;
 using GeoTagNinja.Properties;
 using Microsoft.Web.WebView2.Core;
@@ -62,7 +61,6 @@ public partial class FrmMainApp : Form
     internal FrmImportGpx FrmImportGpx;
     internal ListViewColumnSorter LvwColumnSorter;
 
-    internal AsyncExifTool AsyncExifTool;
 
     // this is for copy-paste
     internal static DataTable DtFileDataCopyPool;
@@ -130,7 +128,6 @@ public partial class FrmMainApp : Form
 
         Logger.Info(message: "Starting");
 
-        AppStartupExifToolConfig();
         AppStartupCreateDataBaseFile();
         AppStartupWriteDefaultSettings();
         AppStartupReadObjectNames();
@@ -414,10 +411,6 @@ public partial class FrmMainApp : Form
         pbx_imagePreview.Image = null; // unlocks files. theoretically.
 
         HelperStatic.FsoCleanUpUserFolder();
-
-        // force it otherwise it keeps a lock on for a few seconds.
-        Logger.Trace(message: "AsyncExifTool.DisposeAsync");
-        await AsyncExifTool.DisposeAsync();
     }
 
     /// <summary>

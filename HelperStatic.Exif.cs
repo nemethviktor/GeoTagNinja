@@ -10,7 +10,6 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -464,18 +463,18 @@ internal static partial class HelperStatic
 
             FrmMainApp.Logger.Trace(message: "Starting exifTool");
             ///////////////
-            // via https://stackoverflow.com/a/68616297/3968494
+            // for the time being i'm not relegating this to runExifTool() because strictly speaking we aren't running ET here, not directly anyway.
             await Task.Run(action: () =>
             {
-                Process prcExifTool = new();
-                prcExifTool.StartInfo.FileName = batchFilePath;
+                Process prcETBatch = new();
+                prcETBatch.StartInfo.FileName = batchFilePath;
 
-                prcExifTool.StartInfo.CreateNoWindow = true;
-                prcExifTool.StartInfo.UseShellExecute = false;
+                prcETBatch.StartInfo.CreateNoWindow = true;
+                prcETBatch.StartInfo.UseShellExecute = false;
 
-                prcExifTool.Start();
-                prcExifTool.WaitForExit();
-                prcExifTool.Close();
+                prcETBatch.Start();
+                prcETBatch.WaitForExit();
+                prcETBatch.Close();
 
                 FrmMainApp.Logger.Trace(message: "Closing exifTool");
 
@@ -483,7 +482,7 @@ internal static partial class HelperStatic
                 try
                 {
                     FrmMainApp.Logger.Trace(message: "Killing exifTool");
-                    prcExifTool.Kill();
+                    prcETBatch.Kill();
                 }
                 catch
                 {
@@ -807,9 +806,9 @@ internal static partial class HelperStatic
             string tmpFolder = Path.Combine(FrmMainApp.UserDataFolderPath + @"\tmpLocFiles");
 
             // this is a little superflous but...
-            DirectoryInfo di_tmpLocFiles = new(path: tmpFolder);
+            DirectoryInfo diTmpLocFiles = new(path: tmpFolder);
 
-            foreach (FileInfo file in di_tmpLocFiles.EnumerateFiles())
+            foreach (FileInfo file in diTmpLocFiles.EnumerateFiles())
             {
                 file.Delete();
             }
@@ -818,71 +817,14 @@ internal static partial class HelperStatic
             exiftoolCmd += " -overwrite_original_in_place";
 
             ///////////////
-            // via https://stackoverflow.com/a/68616297/3968494
-            await Task.Run(action: () =>
-            {
-                using Process prcExifTool = new();
-                prcExifTool.StartInfo = new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
-                {
-                    Arguments = @"/k " + SDoubleQuote + SDoubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + SDoubleQuote + " " + commonArgs + exiftoolCmd + SDoubleQuote + "&& exit",
-                    UseShellExecute = false,
-                    RedirectStandardError = true,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true
-                };
-
-                prcExifTool.EnableRaisingEvents = true;
-
-                //s_ErrorMsg = "";
-                //s_OutputMsg = "";
-                prcExifTool.OutputDataReceived += (_,
-                                                   data) =>
-                {
-                    if (data.Data != null && data.Data.Length > 0)
-                    {
-                        _sOutputMsg += data.Data.ToString() + Environment.NewLine;
-                    }
-                };
-
-                prcExifTool.ErrorDataReceived += (_,
-                                                  data) =>
-                {
-                    if (data.Data != null && data.Data.Length > 0)
-                    {
-                        _sErrorMsg += data.Data.ToString() + Environment.NewLine;
-                        try
-                        {
-                            prcExifTool.Kill();
-                        }
-                        catch
-                        { } // else it will be stuck running forever
-                    }
-                };
-
-                prcExifTool.Start();
-                prcExifTool.BeginOutputReadLine();
-                prcExifTool.BeginErrorReadLine();
-                prcExifTool.WaitForExit();
-                prcExifTool.Close();
-                FrmMainApp.Logger.Trace(message: "Closing exifTool");
-
-                // if still here then exorcise
-                try
-                {
-                    FrmMainApp.Logger.Trace(message: "Killing exifTool");
-                    prcExifTool.Kill();
-                }
-                catch
-                {
-                    // "funnily" enough this seems to persist for some reason. Unsure why.
-                    FrmMainApp.Logger.Error(message: "Killing exifTool failed");
-                }
-            });
+            await RunExifTool(exiftoolCmd: commonArgs + exiftoolCmd,
+                              frmMainAppInstance: null,
+                              initiator: "ExifGetTrackSyncData");
 
             ///////////////
             //// try to collect the xmp/xml listOfAsyncCompatibleFileNamesWithOutPath and then read them back into the listview.
 
-            foreach (FileInfo exifFileIn in di_tmpLocFiles.EnumerateFiles())
+            foreach (FileInfo exifFileIn in diTmpLocFiles.EnumerateFiles())
             {
                 if (exifFileIn.Extension == ".xmp")
                 {
@@ -1109,72 +1051,6 @@ internal static partial class HelperStatic
         }
     }
 
-    /// <summary>
-    ///     Gets the app version of the current exifTool.
-    ///     <returns>A double of the current exifTool version.</returns>
-    /// </summary>
-    private static async Task<decimal> ExifGetExifToolVersion()
-    {
-        string exifToolResult;
-        decimal returnVal = 0.0m;
-        bool parsedResult;
-        decimal parsedDecimal = 0.0m;
-
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        IEnumerable<string> exifToolCommand = Enumerable.Empty<string>();
-        List<string> commonArgList = new()
-        {
-            "-ver"
-        };
-
-        foreach (string arg in commonArgList)
-        {
-            exifToolCommand = exifToolCommand.Concat(second: new[]
-            {
-                arg
-            });
-        }
-
-        CancellationToken ct = CancellationToken.None;
-
-        try
-        {
-            exifToolResult = await frmMainAppInstance.AsyncExifTool.ExecuteAsync(args: exifToolCommand);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-            exifToolResult = null;
-        }
-
-        string[] exifToolResultArr = Convert.ToString(value: exifToolResult)
-            .Split(
-                separator: new[] { "\r\n", "\r", "\n" },
-                options: StringSplitOptions.None
-            )
-            .Distinct()
-            .ToArray();
-
-        // really this should only be 1 row but I copied from the larger code blocks and is easier that way.
-        foreach (string exifToolReturnStr in exifToolResultArr)
-        {
-            if (exifToolReturnStr is not null && exifToolReturnStr.Length > 0)
-            {
-                //this only returns something like "12.42" and that's all
-                parsedResult = decimal.TryParse(s: exifToolReturnStr, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedDecimal);
-                if (parsedResult)
-                {
-                    returnVal = parsedDecimal;
-                }
-                else
-                {
-                    returnVal = 0.0m;
-                }
-            }
-        }
-
-        return returnVal;
-    }
 
     /// <summary>
     ///     This generates (technically, extracts) the image previews from listOfAsyncCompatibleFileNamesWithOutPath for the
@@ -1213,51 +1089,9 @@ internal static partial class HelperStatic
 
         FrmMainApp.Logger.Trace(message: "Starting ExifTool");
         ///////////////
-        // via https://stackoverflow.com/a/68616297/3968494
-        await Task.Run(action: () =>
-        {
-            using Process prcExifTool = new();
-            prcExifTool.StartInfo = new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
-            {
-                Arguments = @"/k " + SDoubleQuote + SDoubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + SDoubleQuote + " " + exiftoolCmd + SDoubleQuote + "&& exit",
-                UseShellExecute = false,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
-            };
-
-            prcExifTool.EnableRaisingEvents = true;
-            prcExifTool.OutputDataReceived += (_,
-                                               data) =>
-            {
-                // don't care
-            };
-
-            prcExifTool.ErrorDataReceived += (_,
-                                              data) =>
-            {
-                // don't care
-            };
-
-            prcExifTool.Start();
-            prcExifTool.BeginOutputReadLine();
-            prcExifTool.BeginErrorReadLine();
-            prcExifTool.WaitForExit();
-            prcExifTool.Close();
-            FrmMainApp.Logger.Trace(message: "Closing exifTool");
-
-            // if still here then exorcise
-            try
-            {
-                FrmMainApp.Logger.Trace(message: "Killing exifTool");
-                prcExifTool.Kill();
-            }
-            catch
-            {
-                // "funnily" enough this seems to persist for some reason. Unsure why.
-                FrmMainApp.Logger.Error(message: "Killing exifTool failed");
-            }
-        });
+        await RunExifTool(exiftoolCmd: exiftoolCmd,
+                          frmMainAppInstance: null,
+                          initiator: "ExifGetImagePreviews");
         ///////////////
         FrmMainApp.Logger.Debug(message: "Done");
     }
@@ -1593,156 +1427,13 @@ internal static partial class HelperStatic
 
         if (!failWriteNothingEnabled && !queueWasEmpty)
         {
-            int lviIndex = 0;
             FrmMainApp.Logger.Info(message: "Starting ExifTool.");
             ///////////////
-            // via https://stackoverflow.com/a/68616297/3968494
-            await Task.Run(action: () =>
-            {
-                using Process prcExifTool = new();
-                prcExifTool.StartInfo = new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
-                {
-                    Arguments = @"/k " + SDoubleQuote + SDoubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + SDoubleQuote + " " + exiftoolCmd + SDoubleQuote + "&& exit",
-                    UseShellExecute = false,
-                    RedirectStandardError = true,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true,
-                    StandardOutputEncoding = Encoding.UTF8,
-                    StandardErrorEncoding = Encoding.UTF8
-                };
 
-                prcExifTool.EnableRaisingEvents = true;
-
-                //string messageStart = "Writing Exif - ";
-                prcExifTool.OutputDataReceived += (_,
-                                                   data) =>
-                {
-                    if (data.Data != null && data.Data.Contains(value: "="))
-                    {
-                        string fileNameWithoutPath = data.Data.Replace(oldValue: "=", newValue: "")
-                            .Split('[')
-                            .FirstOrDefault()
-                            .Trim()
-                            .Split('/')
-                            .Last();
-                        FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-                        FrmMainApp.Logger.Debug(message: "Writing " + fileNameWithoutPath + " [this is via OutputDataReceived]");
-                        try
-                        {
-                            if (lviIndex % 10 == 0)
-                            {
-                                Application.DoEvents();
-
-                                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath);
-                            }
-
-                            FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath, color: Color.Black);
-
-                            if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
-                            {
-                                // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
-                                // FindItemWithText -> https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.finditemwithtext?view=netframework-4.8
-                                // "Finds the first ListViewItem with __that begins with__ the given text value."
-
-                                if (lviIndex % 10 == 0)
-                                {
-                                    Application.DoEvents();
-                                    // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                    FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath); // this is redundant here.
-                                }
-
-                                FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: Path.GetFileNameWithoutExtension(path: fileNameWithoutPath), color: Color.Black);
-                            }
-                        }
-                        catch
-                        {
-                            // ignored
-                        }
-
-                        lviIndex++;
-                    }
-                    else if (data.Data != null && !data.Data.Contains(value: "files updated") && !data.Data.Contains(value: "files created") && data.Data.Length > 0)
-                    {
-                        MessageBox.Show(text: data.Data);
-                    }
-                };
-
-                prcExifTool.ErrorDataReceived += (_,
-                                                  data) =>
-                {
-                    if (data.Data != null && data.Data.Contains(value: "="))
-                    {
-                        string fileNameWithoutPath = data.Data.Replace(oldValue: "=", newValue: "")
-                            .Split('[')
-                            .FirstOrDefault()
-                            .Trim()
-                            .Split('/')
-                            .Last();
-                        FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-                        FrmMainApp.Logger.Debug(message: "Writing " + fileNameWithoutPath + " [this is via ErrorDataReceived]");
-
-                        try
-                        {
-                            {
-                                Application.DoEvents();
-                                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath);
-                            }
-
-                            FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath, color: Color.Black);
-
-                            if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
-                            {
-                                // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
-                                // FindItemWithText -> https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.finditemwithtext?view=netframework-4.8
-                                // "Finds the first ListViewItem with __that begins with__ the given text value."
-                                if (lviIndex % 10 == 0)
-                                {
-                                    Application.DoEvents();
-                                    // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                    FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath); // this is redundant here
-                                }
-
-                                FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: Path.GetFileNameWithoutExtension(path: fileNameWithoutPath), color: Color.Black);
-                            }
-                        }
-                        catch
-                        {
-                            // ignored
-                        }
-
-                        lviIndex++;
-                    }
-                    else if (data.Data != null && !data.Data.Contains(value: "files updated") && data.Data.Length > 0)
-                    {
-                        MessageBox.Show(text: data.Data);
-                    }
-                };
-
-                prcExifTool.Start();
-                prcExifTool.BeginOutputReadLine();
-                prcExifTool.BeginErrorReadLine();
-                prcExifTool.WaitForExit();
-                prcExifTool.Close();
-                FrmMainApp.Logger.Trace(message: "Closing exifTool");
-
-                // if still here then exorcise
-                try
-                {
-                    FrmMainApp.Logger.Trace(message: "Killing exifTool");
-                    prcExifTool.Kill();
-                }
-                catch
-                {
-                    // "funnily" enough this seems to persist for some reason. Unsure why.
-                    FrmMainApp.Logger.Error(message: "Killing exifTool failed");
-                }
-            });
+            ;
+            await RunExifTool(exiftoolCmd: exiftoolCmd,
+                              frmMainAppInstance: frmMainAppInstance,
+                              initiator: "ExifWriteExifToFile");
         }
         else if (!queueWasEmpty)
         {
@@ -1758,6 +1449,202 @@ internal static partial class HelperStatic
         ///////////////
         FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Ready.");
         FilesAreBeingSaved = false;
+    }
+
+    /// <summary>
+    ///     This is a unified method for calling ExifTool. Any special "dealings" are done inside the message handling.
+    ///     (possibly the wrong spot to do it)
+    /// </summary>
+    /// <param name="exiftoolCmd">Variables that need to be passed to ET</param>
+    /// <param name="frmMainAppInstance">
+    ///     Only relevant when called from ExifWriteExifToFile -> used to update the values/colour
+    ///     in the main listView
+    /// </param>
+    /// <param name="initiator">String value of "who called it". </param>
+    /// <returns>Empty Task</returns>
+    private static async Task RunExifTool(string exiftoolCmd,
+                                          FrmMainApp frmMainAppInstance,
+                                          string initiator)
+    {
+        int lviIndex = 0;
+        await Task.Run(action: () =>
+        {
+            using Process prcExifTool = new();
+
+            prcExifTool.StartInfo = new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
+            {
+                Arguments = @"/k " + SDoubleQuote + SDoubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + SDoubleQuote + " " + exiftoolCmd + SDoubleQuote + "&& exit",
+                UseShellExecute = false,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true,
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardErrorEncoding = Encoding.UTF8
+            };
+
+            prcExifTool.EnableRaisingEvents = true;
+
+            switch (initiator)
+            {
+                case "ExifWriteExifToFile":
+                    prcExifTool.OutputDataReceived += (_,
+                                                       data) =>
+                    {
+                        if (data.Data != null && data.Data.Contains(value: "="))
+                        {
+                            string fileNameWithoutPath = data.Data.Replace(oldValue: "=", newValue: "")
+                                .Split('[')
+                                .FirstOrDefault()
+                                .Trim()
+                                .Split('/')
+                                .Last();
+                            FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+                            FrmMainApp.Logger.Debug(message: "Writing " + fileNameWithoutPath + " [this is via OutputDataReceived]");
+                            try
+                            {
+                                if (lviIndex % 10 == 0)
+                                {
+                                    Application.DoEvents();
+
+                                    // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                    FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath);
+                                }
+
+                                FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath, color: Color.Black);
+
+                                if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
+                                {
+                                    // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
+                                    // FindItemWithText -> https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.finditemwithtext?view=netframework-4.8
+                                    // "Finds the first ListViewItem with __that begins with__ the given text value."
+
+                                    if (lviIndex % 10 == 0)
+                                    {
+                                        Application.DoEvents();
+                                        // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                        FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath); // this is redundant here.
+                                    }
+
+                                    FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: Path.GetFileNameWithoutExtension(path: fileNameWithoutPath), color: Color.Black);
+                                }
+                            }
+                            catch
+                            {
+                                // ignored
+                            }
+
+                            lviIndex++;
+                        }
+                        else if (data.Data != null && !data.Data.Contains(value: "files updated") && !data.Data.Contains(value: "files created") && data.Data.Length > 0)
+                        {
+                            MessageBox.Show(text: data.Data);
+                        }
+                    };
+
+                    prcExifTool.ErrorDataReceived += (_,
+                                                      data) =>
+                    {
+                        if (data.Data != null && data.Data.Contains(value: "="))
+                        {
+                            string fileNameWithoutPath = data.Data.Replace(oldValue: "=", newValue: "")
+                                .Split('[')
+                                .FirstOrDefault()
+                                .Trim()
+                                .Split('/')
+                                .Last();
+                            FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+                            FrmMainApp.Logger.Debug(message: "Writing " + fileNameWithoutPath + " [this is via ErrorDataReceived]");
+
+                            try
+                            {
+                                {
+                                    Application.DoEvents();
+                                    // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                    FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath);
+                                }
+
+                                FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath, color: Color.Black);
+
+                                if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
+                                {
+                                    // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
+                                    // FindItemWithText -> https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.finditemwithtext?view=netframework-4.8
+                                    // "Finds the first ListViewItem with __that begins with__ the given text value."
+                                    if (lviIndex % 10 == 0)
+                                    {
+                                        Application.DoEvents();
+                                        // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                        FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath); // this is redundant here
+                                    }
+
+                                    FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: Path.GetFileNameWithoutExtension(path: fileNameWithoutPath), color: Color.Black);
+                                }
+                            }
+                            catch
+                            {
+                                // ignored
+                            }
+
+                            lviIndex++;
+                        }
+                        else if (data.Data != null && !data.Data.Contains(value: "files updated") && data.Data.Length > 0)
+                        {
+                            MessageBox.Show(text: data.Data);
+                        }
+                    };
+                    break;
+                case "GenericCheckForNewVersions":
+                    prcExifTool.OutputDataReceived += (_,
+                                                       data) =>
+                    {
+                        if (data.Data != null && data.Data.Length > 0)
+                        {
+                            _sOutputMsg += data.Data.ToString() + Environment.NewLine;
+                        }
+
+                        decimal.TryParse(s: _sOutputMsg.Replace(oldValue: "\r", newValue: "")
+                                             .Replace(oldValue: "\n", newValue: ""), result: out _currentExifToolVersionLocal);
+                    };
+
+                    break;
+                default:
+                    prcExifTool.OutputDataReceived += (_,
+                                                       data) =>
+                    {
+                        // don't care
+                    };
+
+                    prcExifTool.ErrorDataReceived += (_,
+                                                      data) =>
+                    {
+                        // don't care
+                    };
+                    break;
+            }
+
+            prcExifTool.Start();
+            prcExifTool.BeginOutputReadLine();
+            prcExifTool.BeginErrorReadLine();
+            prcExifTool.WaitForExit();
+            prcExifTool.Close();
+            FrmMainApp.Logger.Trace(message: "Closing exifTool");
+
+            // if still here then exorcise
+            try
+            {
+                FrmMainApp.Logger.Trace(message: "Killing exifTool");
+                prcExifTool.Kill();
+            }
+            catch
+            {
+                // "funnily" enough this seems to persist for some reason. Unsure why.
+                FrmMainApp.Logger.Error(message: "Killing exifTool failed");
+            }
+        });
     }
 
 
