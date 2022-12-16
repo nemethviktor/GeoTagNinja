@@ -13,6 +13,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using geoTagNinja;
+using GeoTagNinja.Model;
 using GeoTagNinja.Properties;
 using Microsoft.Web.WebView2.Core;
 using NLog;
@@ -37,6 +38,13 @@ public partial class FrmMainApp : Form
     ///     Returns the currently set application language for localization.
     /// </summary>
     public string AppLanguage => _AppLanguage;
+
+
+    private DirectoryElementCollection _directoryElements = new DirectoryElementCollection();
+    /// <summary>
+    ///     Returns the list of elements in the currently opened directory.
+    /// </summary>
+    public DirectoryElementCollection DirectoryElements => _directoryElements;
 
     #region Variables
 
@@ -1144,6 +1152,7 @@ public partial class FrmMainApp : Form
 
                 try
                 {
+                    DirectoryElements.Clear();
                     lvw_FileList.Items.Clear();
                     HelperStatic.FsoCleanUpUserFolder();
                     FolderName = tbx_FolderName.Text;
@@ -1532,6 +1541,7 @@ public partial class FrmMainApp : Form
         lvw_FileList.ListViewItemSorter = null;
 
         Logger.Trace(message: "Clear lvw_FileList.Items");
+        DirectoryElements.Clear();
         lvw_FileList.Items.Clear();
         Application.DoEvents();
         HelperStatic.FilesBeingProcessed.Clear();
@@ -1679,7 +1689,13 @@ public partial class FrmMainApp : Form
                     string tmpStrParent = HelperStatic.FsoGetParent(path: tbx_FolderName.Text);
                     if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
                     {
-                        lvw_FileList.Items.Add(text: ParentFolder);
+                        DirectoryElement de = new DirectoryElement(ParentFolder,
+                            DirectoryElement.ElementType.ParentDirectory);
+                        de.FullPathAndName = tmpStrParent;
+                        DirectoryElements.Add(de);
+                        ListViewItem lvi = new ListViewItem(text: ParentFolder);
+                        lvi.Tag = de;
+                        lvw_FileList.Items.Add(lvi);
                     }
                 }
                 catch (Exception ex)
@@ -1986,6 +2002,29 @@ public partial class FrmMainApp : Form
         List<string> subItemList = new();
         string fileNameWithPath = Path.Combine(path1: FolderName, path2: fileNameWithoutPath);
 
+        // For now, have object model running in parallel...
+        // First check on element type
+        DirectoryElement.ElementType deType = DirectoryElement.ElementType.Unknown;
+        if (fileNameWithoutPath == ParentFolder)
+        {
+            deType = DirectoryElement.ElementType.ParentDirectory;
+        }
+        else if (File.Exists(path: fileNameWithPath))
+        {
+            deType = DirectoryElement.ElementType.File;
+        }
+        else if (Directory.Exists(path: fileNameWithPath))
+        {
+            deType = DirectoryElement.ElementType.SubDirectory;
+        }
+        else
+        {
+            deType = DirectoryElement.ElementType.Drive;
+        }
+        DirectoryElement de = new DirectoryElement(fileNameWithoutPath, deType);
+        de.FullPathAndName = fileNameWithPath;
+
+
         #region icon handlers
 
         //https://stackoverflow.com/a/37806517/3968494
@@ -2037,8 +2076,8 @@ public partial class FrmMainApp : Form
 
         #endregion
 
-        if (File.Exists(path: fileNameWithPath))
 
+        if (deType == DirectoryElement.ElementType.File)
         {
             foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
             {
@@ -2051,6 +2090,7 @@ public partial class FrmMainApp : Form
         }
         else
         {
+
             foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
             {
                 if (columnHeader.Name != "clh_FileName")
@@ -2074,33 +2114,39 @@ public partial class FrmMainApp : Form
 
         // With that in mind if we're missing the extension then we'll force it back on.
         string fileExtension = Path.GetExtension(path: fileNameWithPath);
+        de.Extension = fileExtension;
         if (!string.IsNullOrEmpty(value: fileExtension))
         {
             if (shfi.szDisplayName.Contains(value: fileExtension))
             {
                 lvi.Text = shfi.szDisplayName;
+                de.DisplayName = shfi.szDisplayName;
             }
             else
             {
                 lvi.Text = shfi.szDisplayName + fileExtension;
+                de.DisplayName = shfi.szDisplayName + fileExtension;
             }
         }
         else
         {
             // this should prevent showing silly string values for special folders (like if your Pictures folder has been moved to say Digi, it'd have shown "Digi" but since that doesn't exist per se it'd have caused an error.
             // same for non-English places. E.g. "Documents and Settings" in HU would be displayed as "Felhasználók" but that folder is still actually called Documents and Settings, but the label is "fake".
-            if (Directory.Exists(path: fileNameWithPath))
+            if (de.Type == DirectoryElement.ElementType.SubDirectory || 
+                    de.Type == DirectoryElement.ElementType.ParentDirectory)
             {
                 lvi.Text = fileNameWithoutPath;
+                de.DisplayName = fileNameWithoutPath;
             }
             else
             {
                 lvi.Text = shfi.szDisplayName;
+                de.DisplayName = shfi.szDisplayName;
             }
         }
 
         lvi.ImageIndex = shfi.iIcon;
-        if (File.Exists(path: fileNameWithPath))
+        if (deType == DirectoryElement.ElementType.File)
         {
             if (lvi.Index % 10 == 0)
             {
@@ -2116,6 +2162,8 @@ public partial class FrmMainApp : Form
         // don't add twice. this could happen if user does F5 too fast/too many times/is derp. (mostly the last one.)
         if (lvw_FileList.FindItemWithText(text: lvi.Text) == null)
         {
+            this.DirectoryElements.Add(de, true);
+            lvi.Tag = de;
             lvw_FileList.Items.Add(value: lvi)
                 .SubItems.AddRange(items: subItemList.ToArray());
         }
@@ -2303,6 +2351,12 @@ public partial class FrmMainApp : Form
             e.Cancel = true;
             e.NewWidth = 0;
         }
+    }
+
+    private void lvw_FileList_ColumnReordered(object sender, ColumnReorderedEventArgs e)
+    {
+        // Prevent FileName column to be moved
+        if (e.Header.Index == 0) e.Cancel = true;
     }
 
     #endregion

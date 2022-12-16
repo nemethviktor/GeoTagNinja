@@ -214,6 +214,8 @@
     <Compile Include="FrmAboutBox.Designer.cs">
       <DependentUpon>FrmAboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\DirectoryElementCollection.cs" />
+    <Compile Include="Model\DirectoryElement.cs" />
     <Compile Include="View\FrmColumnSelection.cs">
       <SubType>Form</SubType>
     </Compile>
