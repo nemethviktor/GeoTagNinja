@@ -1,17 +1,10 @@
-﻿using System;
+﻿using GeoTagNinja.Model;
+using System;
 using System.Collections;
-using System.IO;
 using System.Windows.Forms;
 
 namespace GeoTagNinja;
 
-// drives, folders, files
-internal enum LviType
-{
-    Drive,
-    Folder,
-    File
-}
 
 /// <summary>
 ///     Comparer for columns. Currently supports only case insensitive string comparison.
@@ -68,6 +61,16 @@ internal class ListViewColumnSorter : IComparer
         get => ColumnSortOrder;
     }
 
+    private int GetSortGroup(DirectoryElement de)
+    {
+        if (de.Type == DirectoryElement.ElementType.ParentDirectory) return 0;
+        else if (de.Type == DirectoryElement.ElementType.Drive) return 1;
+        else if (de.Type == DirectoryElement.ElementType.SubDirectory) return 2;
+        else if (de.Type == DirectoryElement.ElementType.Unknown) return 3;
+        else return 4;
+    }
+
+
     /// <summary>
     ///     Compare two objects of type ListViewItem by looking at the set SortColumn.
     ///     If descending sort order is set, the inverse result is returned.
@@ -79,77 +82,52 @@ internal class ListViewColumnSorter : IComparer
     public int Compare(object x,
                        object y)
     {
-        int result = 0;
-        ListViewItem lviX = (ListViewItem)x;
-        ListViewItem lviY = (ListViewItem)y;
-
-        int lviTypeX;
-        int lviTypeY;
-        if (lviX != null && lviY != null)
-        {
-            // lviX
-            if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: lviX.Text)))
-            {
-                lviTypeX = (int)LviType.File;
-            }
-            else if (Directory.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: lviX.Text)))
-            {
-                lviTypeX = (int)LviType.Folder;
-            }
-            else
-            {
-                lviTypeX = (int)LviType.Drive;
-            }
-
-            // lviY
-            if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: lviY.Text)))
-            {
-                lviTypeY = (int)LviType.File;
-            }
-            else if (Directory.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: lviY.Text)))
-            {
-                lviTypeY = (int)LviType.Folder;
-            }
-            else
-            {
-                lviTypeY = (int)LviType.Drive;
-            }
-
-            // parentfolder ("..") always on top, this shouldn't appear for any Root folders anyway.
-            if (lviX.Text == FrmMainApp.ParentFolder)
-            {
-                return -1;
-            }
-
-            if (lviTypeX < lviTypeY)
-            {
-                return -1;
-            }
-
-            try
-            {
-                string compareWhat = lviX.SubItems[index: ColumnToSort]
-                    .Text;
-                string compareToWhat = lviY.SubItems[index: ColumnToSort]
-                    .Text;
-                result = Comparer.Compare(a: compareWhat, b: compareToWhat);
-            }
-            catch
-            {
-                result = 0; // bit redundant but for good measure.
-            }
-
-            // Inverse if descending - doesn't affect folders.
-            if (ColumnSortOrder == SortOrder.Ascending)
-            {
-                return result;
-            }
-
-            return -result;
-        }
-        else
+        // Comparison with NULL returns equal
+        if (x == null && y == null)
         {
             return 0;
         }
+        
+        int result = 0;
+        ListViewItem lviX = (ListViewItem)x;
+        ListViewItem lviY = (ListViewItem)y;
+        DirectoryElement deX = (DirectoryElement)lviX.Tag;
+        DirectoryElement deY = (DirectoryElement)lviY.Tag;
+
+        // We want to keep parent folder above all others and
+        // below that all folders. This is not subject to sort order!
+
+        // Assign type per group
+        int lviTypeX = GetSortGroup(deX);
+        int lviTypeY = GetSortGroup(deY);
+
+        // If items not in same group, group rules
+        if (lviTypeX != lviTypeY)
+        {
+            if (lviTypeX < lviTypeY) return -1;
+            else return 1;
+        }
+
+        // Item of same group - compare their texts in clicked column...
+        try
+        {
+            string compareWhat = lviX.SubItems[index: ColumnToSort]
+                .Text;
+            string compareToWhat = lviY.SubItems[index: ColumnToSort]
+                .Text;
+            result = Comparer.Compare(a: compareWhat, b: compareToWhat);
+        }
+        catch
+        {
+            result = 0; // bit redundant but for good measure.
+        }
+
+        // Inverse if descending - doesn't affect folders.
+        if (ColumnSortOrder == SortOrder.Ascending)
+        {
+            return result;
+        }
+
+        return -result;
     }
 }
