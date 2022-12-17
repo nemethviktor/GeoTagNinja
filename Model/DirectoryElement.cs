@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace GeoTagNinja.Model
@@ -19,9 +20,14 @@ namespace GeoTagNinja.Model
         }
 
         public ElementType Type { get; }
-        public string FullPathAndName;
+        public string FullPathAndName { get; }
         public string ItemName { get; }
         private string _DisplayName = null;
+
+        /// <summary>
+        ///     Returns the set display name (text to display). If it was not
+        ///     set, it returns the ItemName.
+        /// </summary>
         public string DisplayName
         {
             get {
@@ -30,13 +36,20 @@ namespace GeoTagNinja.Model
             }
             set => _DisplayName = value;
         }
-        public string Extension;
+
+        private string _extension = null;
+        public string Extension
+        {
+            get => _extension;
+        }
         public override string ToString() { return ItemName; }
 
-        public DirectoryElement(string itemName, ElementType type)
+        public DirectoryElement(string itemName, ElementType type, string fullPathAndName)
         {
             ItemName = itemName;
             Type = type;
+            FullPathAndName = fullPathAndName;
+            _extension = Path.GetExtension(path: FullPathAndName); ;
         }
 
     }
