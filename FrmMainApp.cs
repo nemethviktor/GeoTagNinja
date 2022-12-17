@@ -53,8 +53,6 @@ public partial class FrmMainApp : Form
     internal const string DoubleQuote = "\"";
 
     internal const string ParentFolder = "..";
-    internal static string LatCoordinate;
-    internal static string LngCoordinate;
 
     internal static DataTable DtLangaugeLabels;
     internal static DataTable DtObjectNames;
@@ -67,6 +65,8 @@ public partial class FrmMainApp : Form
     internal FrmSettings FrmSettings;
     internal FrmEditFileData FrmEditFileData;
     internal FrmImportGpx FrmImportGpx;
+
+    internal string _mapHtmlTemplateCode = "";
 
 
     // this is for copy-paste
@@ -235,125 +235,6 @@ public partial class FrmMainApp : Form
 
 
     /// <summary>
-    ///     Initialises the map in the app and browses to the default or last-used location.
-    /// </summary>
-    /// <returns></returns>
-    private async Task InitialiseWebView()
-    {
-        Logger.Debug(message: "Starting");
-
-        try
-        {
-            // silly thing dumps the folder by default right into Program Files where it can't write further due to permission issues
-            // need to move it elsewhere.
-            Logger.Trace(message: "await CoreWebView2Environment");
-            CoreWebView2Environment c2Wv = await CoreWebView2Environment.CreateAsync(browserExecutableFolder: null,
-                                                                                     userDataFolder: Path.GetTempPath(),
-                                                                                     options: new CoreWebView2EnvironmentOptions(additionalBrowserArguments: null, language: "en"));
-            await wbv_MapArea.EnsureCoreWebView2Async(environment: c2Wv);
-        }
-        catch (Exception ex)
-        {
-            Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-        }
-
-        try
-        {
-            if (wbv_MapArea.CoreWebView2 != null)
-            {
-                Logger.Trace(message: "CoreWebView2.Settings.IsWebMessageEnabled");
-                wbv_MapArea.CoreWebView2.Settings.IsWebMessageEnabled = true;
-            }
-        }
-        catch (Exception ex)
-        {
-            Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-        }
-
-        // read the "map.html" file.
-        string htmlCode = "";
-        try
-        {
-            Logger.Trace(message: "Read map.html file");
-            htmlCode = File.ReadAllText(path: Path.Combine(path1: ResourcesFolderPath, path2: "map.html"));
-            Logger.Trace(message: "Read map.html file OK");
-        }
-        catch (Exception ex)
-        {
-            Logger.Fatal(message: "Read map.html file - Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-        }
-
-        try
-        {
-            Logger.Trace(message: "ParseCoordsFromHTMLFile");
-            string strLatCoordinate = tbx_lat.Text.Replace(oldChar: ',', newChar: '.');
-            string strLngCoordinate = tbx_lng.Text.Replace(oldChar: ',', newChar: '.');
-
-            double parsedLat;
-            double parsedLng;
-            if (double.TryParse(s: strLatCoordinate, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strLngCoordinate, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
-            {
-                LatCoordinate = strLatCoordinate;
-                LngCoordinate = strLngCoordinate;
-                Logger.Trace(message: "ParseCoordsFromHTMLFile OK");
-                Logger.Trace(message: "ParseCoordsFromHTMLFile - LatCoordinate: " + strLatCoordinate + " - LngCoordinate: " + strLngCoordinate);
-            }
-        }
-        catch (Exception ex)
-        {
-            Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-        }
-
-        // replace hard-coded values in the html code
-        try
-        {
-            if (HelperStatic.SArcGisApiKey == null)
-            {
-                Logger.Trace(message: "Replace hard-coded values in the html code - SArcGisApiKey is null");
-                HelperStatic.SArcGisApiKey = HelperStatic.DataSelectTbxARCGIS_APIKey_FromSQLite();
-                Logger.Trace(message: "Replace hard-coded values in the html code - SArcGisApiKey obtained from SQLite OK");
-            }
-
-            htmlCode = htmlCode.Replace(oldValue: "yourApiKey", newValue: HelperStatic.SArcGisApiKey);
-            htmlCode = htmlCode.Replace(oldValue: "replaceLat", newValue: LatCoordinate);
-            htmlCode = htmlCode.Replace(oldValue: "replaceLng", newValue: LngCoordinate);
-            Logger.Trace(message: "Replace hard-coded values in the html code - Replacing Data OK");
-        }
-        catch (Exception ex)
-        {
-            Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewReplaceStringInHTMLFile") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-        }
-
-        // show the decoded location on the map
-        try
-        {
-            Logger.Trace(message: "NavigateToString");
-            wbv_MapArea.NavigateToString(htmlContent: htmlCode);
-        }
-        catch (Exception ex)
-        {
-            Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-        }
-
-        try
-        {
-            Logger.Trace(message: "wbv_MapArea.WebMessageReceived");
-            wbv_MapArea.WebMessageReceived += wbv_MapArea_WebMessageReceived;
-        }
-        catch (Exception ex)
-        {
-            Logger.Fatal(message: "Error:" + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-        }
-    }
-
-    /// <summary>
     ///     When the app closes we want to make sure there's nothing in the write-queue.
     ///     ...once that's dealt with we write the details of the app layout (e.g. column widths) to sqlite.
     /// </summary>
@@ -486,7 +367,7 @@ public partial class FrmMainApp : Form
                                          EventArgs e)
     {
         HelperStatic.HsMapMarkers.Clear();
-        HelperStatic.HsMapMarkers.Add(item: (tbx_lat.Text.Replace(oldChar: ',', newChar: '.'), tbx_lng.Text.Replace(oldChar: ',', newChar: '.')));
+        HelperStatic.HsMapMarkers.Add(item: parseLatLngTextBox());
         NavigateMapGo();
     }
 
@@ -613,6 +494,85 @@ public partial class FrmMainApp : Form
         HelperStatic.LvwCountItemsWithGeoData();
     }
 
+
+    /// <summary>
+    ///     Parses the tbx_lat and tbx_lng text boxes.
+    ///     If the contents is a valid double, returns touple (lat, lng)
+    ///     with values as string and dec separator ".".
+    ///     Otherwise default "0" is returned for both.
+    /// </summary>
+    private (string, string) parseLatLngTextBox()
+    {
+        Logger.Trace(message: "Starting parseLatLngTextBox ...");
+
+        // Default values if text field is empty
+        string LatCoordinate = "0";
+        string LngCoordinate = "0";
+
+        // Get txtbox contents
+        string strLatCoordinate = "";
+        string strLngCoordinate = "";
+        if (tbx_lat.Text != null) strLatCoordinate = tbx_lat.Text.Replace(oldChar: ',', newChar: '.');
+        if (tbx_lng.Text != null) strLngCoordinate = tbx_lng.Text.Replace(oldChar: ',', newChar: '.');
+
+        // Check if it's a valid double -> otherwise defaults above
+        try
+        {
+            Logger.Trace(message: "parseLatLngTextBox");
+            double parsedLat;
+            double parsedLng;
+            if (double.TryParse(s: strLatCoordinate, style: NumberStyles.Any,
+                provider: CultureInfo.InvariantCulture, result: out parsedLat) &&
+                double.TryParse(s: strLngCoordinate, style: NumberStyles.Any,
+                provider: CultureInfo.InvariantCulture, result: out parsedLng))
+            {
+                LatCoordinate = strLatCoordinate;
+                LngCoordinate = strLngCoordinate;
+                Logger.Trace(message: "parseLatLngTextBox OK - LatCoordinate: " + strLatCoordinate + " - LngCoordinate: " + strLngCoordinate);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.Fatal(message: "Error: " + ex.Message);
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "parseLatLngTextBox_ParseDouble") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+        }
+
+        return (LatCoordinate, LngCoordinate);
+    }
+
+
+
+    private void updateWebView(IDictionary<string, string> replacements)
+    {
+        string htmlCode = _mapHtmlTemplateCode;
+
+        // If set, replace arcgis key
+        if (HelperStatic.SArcGisApiKey != null)
+            htmlCode = htmlCode.Replace(oldValue: "yourApiKey", newValue: HelperStatic.SArcGisApiKey);
+        Logger.Trace(message: "HelperStatic.SArcGisApiKey == null: " + (HelperStatic.SArcGisApiKey == null));
+
+        foreach (KeyValuePair<string, string> replacement in replacements)
+        {
+            Logger.Trace(message: string.Format("Replace: {0} -> {1}",
+                replacement.Key, replacement.Value));
+            htmlCode = htmlCode.Replace(oldValue: replacement.Key, newValue: replacement.Value);
+        }
+
+        // show the decoded location on the map
+        try
+        {
+            Logger.Trace(message: "Calling wbv_MapArea.NavigateToString");
+            wbv_MapArea.NavigateToString(htmlContent: htmlCode);
+            Logger.Trace(message: "Calling wbv_MapArea.NavigateToString - OK");
+        }
+        catch (Exception ex)
+        {
+            Logger.Fatal(message: "Error: " + ex.Message);
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+        }
+    }
+
+
     /// <summary>
     ///     Handles the navigation to a coordinate on the map. Replaces hard-coded values w/ user-provided ones
     ///     ... and executes the navigation action.
@@ -621,120 +581,149 @@ public partial class FrmMainApp : Form
     {
         Logger.Debug(message: "Starting");
 
-        string htmlCode = "";
+        // Set up replacements
+        IDictionary<string, string> htmlReplacements = new Dictionary<string, string>();
+
         HelperStatic.HtmlAddMarker = "";
-        double? dblMinLat = default;
-        double? dblMinLng = default;
-        double? dblMaxLat = default;
-        double? dblMaxLng = default;
+        double dblMinLat = 900;
+        double dblMinLng = 900;
+        double dblMaxLat = -1;
+        double dblMaxLng = -1;
 
-        // lazy
-        string strLatCoordinate = "0";
-        string strLngCoordinate = "0";
-
-        try
-        {
-            htmlCode = File.ReadAllText(path: Path.Combine(path1: ResourcesFolderPath, path2: "map.html"));
-        }
-        catch (Exception ex)
-        {
-            Logger.Fatal(message: "ReadAllText map.html Error:" + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-        }
-
-        if (HelperStatic.SArcGisApiKey == null)
-        {
-            HelperStatic.SArcGisApiKey = HelperStatic.DataSelectTbxARCGIS_APIKey_FromSQLite();
-        }
-
-        Logger.Trace(message: "HelperStatic.SArcGisApiKey == null: " + (HelperStatic.SArcGisApiKey == null));
-
+        // Add markers on map for every marker-item and
+        // find viewing rect. for map (min / max of all markers to enclose all of them)
         if (HelperStatic.HsMapMarkers.Count > 0)
         {
+            double dLat=0;
+            double dLng=0;
             foreach ((string strLat, string strLng) locationCoord in HelperStatic.HsMapMarkers)
             {
+                // Add marker location
                 HelperStatic.HtmlAddMarker += "var marker = L.marker([" + locationCoord.strLat + ", " + locationCoord.strLng + "]).addTo(map).openPopup();" + "\n";
-                strLatCoordinate = locationCoord.strLat;
-                strLngCoordinate = locationCoord.strLng;
 
-                // set scene for mix/max so map zoom can be set automatically
-                {
-                    if (dblMinLat == null)
-                    {
-                        dblMinLat = double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture);
-                        dblMaxLat = dblMinLat;
-                    }
+                // Update viewing rectangle if neede
+                dLat = double.Parse(s: locationCoord.strLat, provider: CultureInfo.InvariantCulture);
+                dLng = double.Parse(s: locationCoord.strLng, provider: CultureInfo.InvariantCulture);
+                dblMinLat = Math.Min(dblMinLat, dLat);
+                dblMaxLat = Math.Max(dblMaxLat, dLat);
+                dblMinLng = Math.Min(dblMinLng, dLng);
+                dblMaxLng = Math.Max(dblMaxLng, dLng);
 
-                    if (double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture) < dblMinLat)
-                    {
-                        dblMinLat = double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture);
-                    }
-
-                    if (double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture) > dblMaxLat)
-                    {
-                        dblMaxLat = double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture);
-                    }
-
-                    if (dblMinLng == null)
-                    {
-                        dblMinLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
-                        dblMaxLng = dblMinLng;
-                    }
-
-                    if (double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture) < dblMinLng)
-                    {
-                        dblMinLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
-                    }
-
-                    if (double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture) > dblMaxLng)
-                    {
-                        dblMaxLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
-                    }
-
-                    HelperStatic.MinLat = dblMinLat;
-                    HelperStatic.MinLng = dblMinLng;
-                    HelperStatic.MaxLat = dblMaxLat;
-                    HelperStatic.MaxLng = dblMaxLng;
-
-                    Logger.Trace(message: "Added marker: strLatCoordinate: " + strLatCoordinate + " / strLngCoordinate:" + strLngCoordinate);
-                }
+                Logger.Trace(message: "Added marker: strLatCoordinate: " + locationCoord.strLat + " / strLngCoordinate:" + locationCoord.strLng);
             }
-        }
 
-        Logger.Trace(message: "Added " + HelperStatic.HsMapMarkers.Count + " map markers.");
-        Logger.Trace(message: "Replacing Hard-Coded Values in HTML.");
+            HelperStatic.LastLat = dLat;
+            HelperStatic.LastLng = dLng;
 
-        if (HelperStatic.HsMapMarkers.Count > 0)
-        {
-            HelperStatic.LastLat = double.Parse(s: strLatCoordinate, provider: CultureInfo.InvariantCulture);
-            HelperStatic.LastLng = double.Parse(s: strLngCoordinate, provider: CultureInfo.InvariantCulture);
-
-            htmlCode = htmlCode.Replace(oldValue: "{ HTMLAddMarker }", newValue: HelperStatic.HtmlAddMarker);
+            HelperStatic.MinLat = dblMinLat;
+            HelperStatic.MinLng = dblMinLng;
+            HelperStatic.MaxLat = dblMaxLat;
+            HelperStatic.MaxLng = dblMaxLng;
+            htmlReplacements.Add("{ HTMLAddMarker }", HelperStatic.HtmlAddMarker);
         }
         else
         {
-            htmlCode = htmlCode.Replace(oldValue: "{ HTMLAddMarker }", newValue: "");
+            // No markers added
+            htmlReplacements.Add("{ HTMLAddMarker }", "");
+        }
+        Logger.Trace(message: "Added " + HelperStatic.HsMapMarkers.Count + " map markers.");
+
+
+        htmlReplacements.Add("replaceLat",    HelperStatic.LastLat.ToString().Replace(oldChar: ',', newChar: '.'));
+        htmlReplacements.Add("replaceLng",    HelperStatic.LastLng.ToString().Replace(oldChar: ',', newChar: '.'));
+        htmlReplacements.Add("replaceMinLat", HelperStatic.MinLat.ToString().Replace(oldChar: ',', newChar: '.'));
+        htmlReplacements.Add("replaceMinLng", HelperStatic.MinLng.ToString().Replace(oldChar: ',', newChar: '.'));
+        htmlReplacements.Add("replaceMaxLat", HelperStatic.MaxLat.ToString().Replace(oldChar: ',', newChar: '.'));
+        htmlReplacements.Add("replaceMaxLng", HelperStatic.MaxLng.ToString().Replace(oldChar: ',', newChar: '.'));
+
+        updateWebView(htmlReplacements);
+    }
+
+
+
+    /// <summary>
+    ///     Initialises the map in the app and browses to the default or last-used location.
+    /// </summary>
+    /// <returns></returns>
+    private async Task InitialiseWebView()
+    {
+        Logger.Debug(message: "Starting");
+
+        // Create Browser Connection
+        try
+        {
+            // silly thing dumps the folder by default right into Program Files where it can't write further due to permission issues
+            // need to move it elsewhere.
+            Logger.Trace(message: "await CoreWebView2Environment");
+            CoreWebView2Environment c2Wv = await CoreWebView2Environment.CreateAsync(browserExecutableFolder: null,
+                                                                                     userDataFolder: Path.GetTempPath(),
+                                                                                     options: new CoreWebView2EnvironmentOptions(additionalBrowserArguments: null, language: "en"));
+            await wbv_MapArea.EnsureCoreWebView2Async(environment: c2Wv);
+        }
+        catch (Exception ex)
+        {
+            Logger.Fatal(message: "Error: " + ex.Message);
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
         }
 
-        htmlCode = htmlCode.Replace(oldValue: "replaceLat", newValue: HelperStatic.LastLat.ToString().Replace(oldChar: ',', newChar: '.'));
-        htmlCode = htmlCode.Replace(oldValue: "replaceLng", newValue: HelperStatic.LastLng.ToString().Replace(oldChar: ',', newChar: '.'));
+        // Initialize WebView
+        try
+        {
+            if (wbv_MapArea.CoreWebView2 != null)
+            {
+                Logger.Trace(message: "CoreWebView2.Settings.IsWebMessageEnabled");
+                wbv_MapArea.CoreWebView2.Settings.IsWebMessageEnabled = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.Fatal(message: "Error: " + ex.Message);
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+        }
 
-        htmlCode = htmlCode.Replace(oldValue: "replaceMinLat", newValue: HelperStatic.MinLat.ToString()
-                                        .Replace(oldChar: ',', newChar: '.'));
-        htmlCode = htmlCode.Replace(oldValue: "replaceMinLng", newValue: HelperStatic.MinLng.ToString()
-                                        .Replace(oldChar: ',', newChar: '.'));
-        htmlCode = htmlCode.Replace(oldValue: "replaceMaxLat", newValue: HelperStatic.MaxLat.ToString()
-                                        .Replace(oldChar: ',', newChar: '.'));
-        htmlCode = htmlCode.Replace(oldValue: "replaceMaxLng", newValue: HelperStatic.MaxLng.ToString()
-                                        .Replace(oldChar: ',', newChar: '.'));
+        // read the "map.html" file.
+        try
+        {
+            Logger.Trace(message: "Read map.html file");
+            _mapHtmlTemplateCode = File.ReadAllText(path: Path.Combine(path1: ResourcesFolderPath, path2: "map.html"));
+            Logger.Trace(message: "Read map.html file OK");
+        }
+        catch (Exception ex)
+        {
+            Logger.Fatal(message: "Read map.html file - Error: " + ex.Message);
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+        }
 
-        htmlCode = htmlCode.Replace(oldValue: "yourApiKey", newValue: HelperStatic.SArcGisApiKey);
-        Logger.Trace(message: "Replacing Hard-Coded Values in HTML. - OK");
+        // Get the ArcGis API Key
+        if (HelperStatic.SArcGisApiKey == null)
+        {
+            Logger.Trace(message: "Replace hard-coded values in the html code - SArcGisApiKey is null");
+            HelperStatic.SArcGisApiKey = HelperStatic.DataSelectTbxARCGIS_APIKey_FromSQLite();
+            Logger.Trace(message: "Replace hard-coded values in the html code - SArcGisApiKey obtained from SQLite OK");
+        }
 
-        // can't log inside.
-        Logger.Trace(message: "Calling wbv_MapArea.NavigateToString");
-        wbv_MapArea.NavigateToString(htmlContent: htmlCode);
-        Logger.Trace(message: "Calling wbv_MapArea.NavigateToString - OK");
+        // Parse coords from lat/lng text box
+        (string LatCoordinate, string LngCoordinate) = parseLatLngTextBox();
+
+        // Set up replacements
+        IDictionary<string, string> htmlReplacements = new Dictionary<string, string>();
+        htmlReplacements.Add("replaceLat", LatCoordinate);
+        htmlReplacements.Add("replaceLng", LngCoordinate);
+
+        // Show on Map
+        updateWebView(htmlReplacements);
+
+        // Set up event handler for clicks in map
+        try
+        {
+            Logger.Trace(message: "wbv_MapArea.WebMessageReceived");
+            wbv_MapArea.WebMessageReceived += wbv_MapArea_WebMessageReceived;
+        }
+        catch (Exception ex)
+        {
+            Logger.Fatal(message: "Error:" + ex.Message);
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+        }
     }
 
     #endregion
