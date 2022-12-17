@@ -33,7 +33,7 @@ internal static partial class HelperStatic
                 try
                 {
                     lvw.BeginUpdate();
-                    FrmMainApp.HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Red);
+                    frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
 
                     foreach (DataRow drTagData in drRelevantRows)
                     {

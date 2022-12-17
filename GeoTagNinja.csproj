@@ -277,6 +277,12 @@
     <Compile Include="View\ImagePreview.Designer.cs">
       <DependentUpon>ImagePreview.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\ListView\FileListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\ListView\FileListView.Designer.cs">
+      <DependentUpon>FileListView.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="FrmAboutBox.resx">
       <DependentUpon>FrmAboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -314,6 +320,9 @@
     </AdditionalFiles>
     <EmbeddedResource Include="View\ImagePreview.resx">
       <DependentUpon>ImagePreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\ListView\FileListView.resx">
+      <DependentUpon>FileListView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="changelog.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

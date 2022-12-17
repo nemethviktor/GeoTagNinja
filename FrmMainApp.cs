@@ -67,7 +67,6 @@ public partial class FrmMainApp : Form
     internal FrmSettings FrmSettings;
     internal FrmEditFileData FrmEditFileData;
     internal FrmImportGpx FrmImportGpx;
-    internal ListViewColumnSorter LvwColumnSorter;
 
 
     // this is for copy-paste
@@ -98,7 +97,6 @@ public partial class FrmMainApp : Form
 
     #endregion
 
-    #region Methods
 
     #region Form/App Related
 
@@ -143,8 +141,6 @@ public partial class FrmMainApp : Form
         AppStartupCheckWebView2();
         AppStartupInitializeComponentFrmMainApp();
         AppStartupEnableDoubleBuffering();
-        AppStartupApplyObjectNames();
-        AppStartupApplyColumnSorting();
 
         FormClosing += FrmMainApp_FormClosing;
 
@@ -191,10 +187,10 @@ public partial class FrmMainApp : Form
             Logger.Error(message: "Error: " + ex.Message);
         }
 
-        // resize columns and set order
+        // Setup the List View
         try
         {
-            VisualReadLvw_FileList_ColOrderAndWidth(frmMainApp: this);
+            lvw_FileList.ReadAndApplySetting(AppLanguage, DtObjectNames);
         }
         catch (Exception ex)
         {
@@ -397,7 +393,7 @@ public partial class FrmMainApp : Form
 
         // Write column widths to db
         Logger.Trace(message: "Write column widths to db");
-        VisualWriteLvw_FileList_ColOrderAndWidth(frmMainApp: this);
+        lvw_FileList.PersistSettings();
 
         // Write lat/long for future reference to db
         Logger.Trace(message: "Write lat/long for future reference to db [lat/lng]: " + tbx_lat.Text + "/" + tbx_lng.Text);
@@ -421,226 +417,8 @@ public partial class FrmMainApp : Form
         HelperStatic.FsoCleanUpUserFolder();
     }
 
-    /// <summary>
-    ///     this is to deal with the icons in listview
-    ///     from https://stackoverflow.com/a/37806517/3968494
-    /// </summary>
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming"), SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local"), SuppressMessage(category: "ReSharper", checkId: "IdentifierTypo"), SuppressMessage(category: "ReSharper", checkId: "StringLiteralTypo"), SuppressMessage(category: "ReSharper", checkId: "MemberCanBePrivate.Local"), SuppressMessage(category: "ReSharper", checkId: "FieldCanBeMadeReadOnly.Local")]
-    private static class NativeMethods
-    {
-        public const uint LVM_FIRST = 0x1000;
-        public const uint LVM_GETIMAGELIST = LVM_FIRST + 2;
-        public const uint LVM_SETIMAGELIST = LVM_FIRST + 3;
-
-        public const uint LVSIL_NORMAL = 0;
-        public const uint LVSIL_SMALL = 1;
-        public const uint LVSIL_STATE = 2;
-        public const uint LVSIL_GROUPHEADER = 3;
-
-        public const uint SHGFI_DISPLAYNAME = 0x200;
-        public const uint SHGFI_ICON = 0x100;
-        public const uint SHGFI_LARGEICON = 0x0;
-        public const uint SHGFI_SMALLICON = 0x1;
-        public const uint SHGFI_SYSICONINDEX = 0x4000;
-
-        [DllImport(dllName: "user32")]
-        public static extern IntPtr SendMessage(IntPtr hWnd,
-                                                uint msg,
-                                                uint wParam,
-                                                IntPtr lParam);
-
-        [DllImport(dllName: "comctl32")]
-        public static extern bool ImageList_Destroy(IntPtr hImageList);
-
-        [DllImport(dllName: "shell32", CharSet = CharSet.Unicode)]
-        public static extern IntPtr SHGetFileInfo(string pszPath,
-                                                  uint dwFileAttributes,
-                                                  ref SHFILEINFOW psfi,
-                                                  uint cbSizeFileInfo,
-                                                  uint uFlags);
-
-        [DllImport(dllName: "uxtheme", CharSet = CharSet.Unicode)]
-        public static extern int SetWindowTheme(IntPtr hWnd,
-                                                string pszSubAppName,
-                                                string pszSubIdList);
-
-
-        [StructLayout(layoutKind: LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct SHFILEINFOW
-        {
-            public IntPtr hIcon;
-            public int iIcon;
-            public uint dwAttributes;
-
-            [MarshalAs(unmanagedType: UnmanagedType.ByValTStr, SizeConst = 260 * 2)]
-            public string szDisplayName;
-
-            [MarshalAs(unmanagedType: UnmanagedType.ByValTStr, SizeConst = 80 * 2)]
-            public string szTypeName;
-        }
-
-
-        [StructLayout(layoutKind: LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct Shfileinfow
-        {
-            public readonly IntPtr hIcon;
-            public readonly int iIcon;
-            public readonly uint dwAttributes;
-
-            [MarshalAs(unmanagedType: UnmanagedType.ByValTStr, SizeConst = 260 * 2)]
-            public readonly string szDisplayName;
-
-            [MarshalAs(unmanagedType: UnmanagedType.ByValTStr, SizeConst = 80 * 2)]
-            public readonly string szTypeName;
-        }
-    }
-
     #endregion
 
-    #region Resizing Stuff
-
-    /// <summary>
-    ///     Reads the widths of individual CLHs from SQL, if not found assigns them "auto" (-2)
-    /// </summary>
-    /// <param name="frmMainApp">Make a guess</param>
-    /// <exception cref="InvalidOperationException">If it encounters a missing CLH</exception>
-    private void VisualReadLvw_FileList_ColOrderAndWidth(FrmMainApp frmMainApp)
-    {
-        Logger.Debug(message: "Starting");
-
-        frmMainApp.lvw_FileList.BeginUpdate(); // stop drawing
-
-        // While reading col widths, gather order data
-        List<int> colOrderIndex = new();
-        List<string> colOrderHeadername = new();
-
-        string settingIdToSend;
-        string colWidth = null;
-        // logic: see if it's in SQL first...if not then set to Auto
-        foreach (ColumnHeader columnHeader in frmMainApp.lvw_FileList.Columns)
-        {
-            // columnHeader.Name doesn't get automatically recorded, i think that's a VSC bug.
-            // anyway will introduce a breaking-line here for that.
-            // oh and can't convert bool to str but it's not letting to deal w it otherwise anyway so going for length == 0 instead
-            if (columnHeader.Name.Length == 0)
-            {
-                throw new InvalidOperationException(message: "columnHeader name missing");
-            }
-
-            // Read index / order
-            settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_index";
-            colOrderHeadername.Add(item: columnHeader.Name);
-            int colOrderIndexInt = 0;
-
-            colOrderIndexInt = Convert.ToInt16(value: HelperStatic.DataReadSQLiteSettings(
-                                                   tableName: "applayout",
-                                                   settingTabPage: "lvw_FileList",
-                                                   settingId: settingIdToSend));
-
-            // this would be the default case 
-            if (colOrderIndexInt == 0)
-            {
-                EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in DtObjectNames.AsEnumerable()
-                                                                   where dataRow.Field<string>(columnName: "objectName") == columnHeader.Name.Substring(startIndex: 4)
-                                                                   select dataRow;
-                List<int> lstReturn = new();
-
-                Parallel.ForEach(source: drDataTableData, body: dataRow =>
-                    {
-                        int settingValue = int.Parse(s: dataRow[columnName: "sqlOrder"]
-                                                         .ToString());
-                        lstReturn.Add(item: settingValue);
-                    })
-                    ;
-
-                // basically fileName will always come 0.
-                if (lstReturn.Count > 0)
-                {
-                    colOrderIndexInt = lstReturn[index: 0];
-                }
-            }
-
-            colOrderIndex.Add(item: colOrderIndexInt);
-
-            Logger.Trace(message: "columnHeader: " +
-                                  columnHeader.Name +
-                                  " - colOrderIndex: " +
-                                  colOrderIndexInt);
-
-            // Read and process width
-            settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_width";
-            colWidth = HelperStatic.DataReadSQLiteSettings(
-                tableName: "applayout",
-                settingTabPage: "lvw_FileList",
-                settingId: settingIdToSend
-            );
-
-            // We only set col width if there actually is a setting for it.
-            // New columns thus will have a default size
-            if (colWidth != null && colWidth.Length > 0)
-            {
-                columnHeader.Width = Convert.ToInt16(value: colWidth);
-            }
-
-            Logger.Trace(message: "columnHeader: " +
-                                  columnHeader.Name +
-                                  " - columnHeader.Width: " +
-                                  columnHeader.Width);
-        }
-
-        // Finally set the column order - setting them from first to last col
-        int[] arrColOrderIndex = colOrderIndex.ToArray();
-        string[] arrColOrderHeadername = colOrderHeadername.ToArray();
-        Array.Sort(keys: arrColOrderIndex, items: arrColOrderHeadername);
-        for (int idx = 0; idx < arrColOrderHeadername.Length; idx++)
-        {
-            foreach (ColumnHeader columnHeader in frmMainApp.lvw_FileList.Columns)
-            {
-                // We go for case-insensitive!
-                if (string.Equals(a: columnHeader.Name, b: arrColOrderHeadername[idx], comparisonType: StringComparison.OrdinalIgnoreCase))
-                {
-                    columnHeader.DisplayIndex = idx;
-                    Logger.Trace(message: "columnHeader: " +
-                                          columnHeader.Name +
-                                          " - columnHeader.DisplayIndex: " +
-                                          columnHeader.DisplayIndex);
-                    break;
-                }
-            }
-        }
-
-        frmMainApp.lvw_FileList.EndUpdate(); // continue drawing
-    }
-
-
-    /// <summary>
-    ///     Sends the CLH width and column order to SQL for writing.
-    /// </summary>
-    /// <param name="frmMainApp">Make a guess</param>
-    private void VisualWriteLvw_FileList_ColOrderAndWidth(FrmMainApp frmMainApp)
-    {
-        string settingIdToSend;
-        foreach (ColumnHeader columnHeader in frmMainApp.lvw_FileList.Columns)
-        {
-            settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_index";
-            HelperStatic.DataWriteSQLiteSettings(
-                tableName: "applayout",
-                settingTabPage: "lvw_FileList",
-                settingId: settingIdToSend,
-                settingValue: columnHeader.DisplayIndex.ToString()
-            );
-
-            settingIdToSend = lvw_FileList.Name + "_" + columnHeader.Name + "_width";
-            HelperStatic.DataWriteSQLiteSettings(
-                tableName: "applayout",
-                settingTabPage: "lvw_FileList",
-                settingId: settingIdToSend,
-                settingValue: columnHeader.Width.ToString()
-            );
-        }
-    }
-
-    #endregion
 
     #region Map Stuff
 
@@ -938,8 +716,8 @@ public partial class FrmMainApp : Form
             htmlCode = htmlCode.Replace(oldValue: "{ HTMLAddMarker }", newValue: "");
         }
 
-        htmlCode = htmlCode.Replace(oldValue: "replaceLat", newValue: HelperStatic.LastLat.ToString());
-        htmlCode = htmlCode.Replace(oldValue: "replaceLng", newValue: HelperStatic.LastLng.ToString());
+        htmlCode = htmlCode.Replace(oldValue: "replaceLat", newValue: HelperStatic.LastLat.ToString().Replace(oldChar: ',', newChar: '.'));
+        htmlCode = htmlCode.Replace(oldValue: "replaceLng", newValue: HelperStatic.LastLng.ToString().Replace(oldChar: ',', newChar: '.'));
 
         htmlCode = htmlCode.Replace(oldValue: "replaceMinLat", newValue: HelperStatic.MinLat.ToString()
                                         .Replace(oldChar: ',', newChar: '.'));
@@ -961,7 +739,6 @@ public partial class FrmMainApp : Form
 
     #endregion
 
-    #region Menu Stuff
 
     #region File
 
@@ -1087,6 +864,7 @@ public partial class FrmMainApp : Form
 
     #endregion
 
+
     #region Settings
 
     /// <summary>
@@ -1108,6 +886,7 @@ public partial class FrmMainApp : Form
 
     #endregion
 
+
     #region Help
 
     /// <summary>
@@ -1124,7 +903,6 @@ public partial class FrmMainApp : Form
 
     #endregion
 
-    #endregion
 
     #region TaskBar Stuff
 
@@ -1152,8 +930,8 @@ public partial class FrmMainApp : Form
 
                 try
                 {
-                    DirectoryElements.Clear();
-                    lvw_FileList.Items.Clear();
+                    lvw_FileList.ClearData();
+                    _directoryElements.Clear();
                     HelperStatic.FsoCleanUpUserFolder();
                     FolderName = tbx_FolderName.Text;
                     lvwFileList_LoadOrUpdate();
@@ -1307,11 +1085,11 @@ public partial class FrmMainApp : Form
                 Application.DoEvents();
                 // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
-                HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
+                lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
             }
 
             HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-            HandlerUpdateItemColour(lvw: lvw_FileList, itemText: fileNameWithoutPath, color: Color.Red);
+            lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
         }
 
         DataTable dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
@@ -1329,11 +1107,11 @@ public partial class FrmMainApp : Form
                 Application.DoEvents();
                 // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
-                HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
+                lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
             }
 
             HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-            HandlerUpdateItemColour(lvw: lvw_FileList, itemText: fileNameWithoutPath, color: Color.Red);
+            lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
         }
     }
 
@@ -1522,6 +1300,7 @@ public partial class FrmMainApp : Form
 
     #endregion
 
+
     #region lvw_FileList Interaction
 
     /// <summary>
@@ -1535,14 +1314,9 @@ public partial class FrmMainApp : Form
     {
         Logger.Debug(message: "Starting");
 
-        // Temp. disable sorting of the list view
-        Logger.Trace(message: "Disable ListViewItemSorter");
-        ListViewColumnSorter oldSorter = (ListViewColumnSorter)lvw_FileList.ListViewItemSorter;
-        lvw_FileList.ListViewItemSorter = null;
-
-        Logger.Trace(message: "Clear lvw_FileList.Items");
-        DirectoryElements.Clear();
-        lvw_FileList.Items.Clear();
+        Logger.Trace(message: "Clear lvw_FileList");
+        lvw_FileList.ClearData();
+        _directoryElements.Clear();
         Application.DoEvents();
         HelperStatic.FilesBeingProcessed.Clear();
         RemoveGeoDataIsRunning = false;
@@ -1600,134 +1374,12 @@ public partial class FrmMainApp : Form
                 Logger.Trace(message: "FolderName [was null, now updated]: " + FolderName);
             }
 
-            // check for drives
-            if (FolderName == SpecialFolder.MyComputer.ToString())
-            {
-                Logger.Trace(message: "Listing Drives");
-                foreach (DriveInfo drive in DriveInfo.GetDrives())
-                {
-                    Logger.Trace(message: "Drive:" + drive.Name);
-                    lvw_FileList_addListItem(fileNameWithoutPath: drive.Name);
-                }
+            ParseCurrentDirectoryToDEs();
+            lvw_FileList.ReloadFromDEs(_directoryElements);
 
-                Logger.Trace(message: "Listing Drives - OK");
-            }
-            else
-            {
-                // list folders and stick them at the beginning of the listview
-                // ReparsePoint means these are links. 
-                List<string> dirs = new();
-                try
-                {
-                    Logger.Trace(message: "Listing Folders");
-                    DirectoryInfo di = new(path: FolderName);
-                    foreach (DirectoryInfo directoryInfo in di.GetDirectories())
-                    {
-                        if (directoryInfo.Attributes.ToString()
-                                .Contains(value: "Directory") &&
-                            !directoryInfo.Attributes.ToString()
-                                .Contains(value: "ReparsePoint"))
-                        {
-                            Logger.Trace(message: "Folder: " + directoryInfo.Name);
-                            dirs.Add(item: directoryInfo.Name);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(message: "Error: " + ex.Message);
-                    MessageBox.Show(text: ex.Message);
-                }
-
-                Logger.Trace(message: "Loading allowedExtensions");
-                string[] allowedExtensions = new string[AncillaryListsArrays.AllCompatibleExtensions()
-                    .Length];
-                Array.Copy(sourceArray: allowedExtensions, destinationArray: AncillaryListsArrays.AllCompatibleExtensions(), length: 0);
-                for (int i = 0; i < allowedExtensions.Length; i++)
-                {
-                    allowedExtensions[i] = AncillaryListsArrays.AllCompatibleExtensions()[i]
-                        .Split('\t')
-                        .FirstOrDefault();
-                    List<string> subItemList = new();
-                    foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
-                    {
-                        if (columnHeader.Name != "clh_FileName")
-                        {
-                            subItemList.Add(item: "");
-                        }
-                    }
-                }
-
-                Logger.Trace(message: "Loading allowedExtensions - OK");
-
-                // list files that have whitelisted extensions
-                Logger.Trace(message: "Files: Listing Files");
-                List<string> listFilesWithPath = new();
-                try
-                {
-                    listFilesWithPath = Directory
-                        .GetFiles(path: FolderName)
-                        .Where(predicate: file => allowedExtensions.Any(predicate: file.ToLower()
-                                                                            .EndsWith))
-                        .ToList();
-                }
-                catch (Exception ex)
-                {
-                    Logger.Trace(message: "Files: Listing Files - Error: " + ex.Message);
-                    MessageBox.Show(text: ex.Message);
-                }
-
-                Logger.Trace(message: "Files: Listing Files - OK");
-
-                listFilesWithPath = listFilesWithPath.OrderBy(keySelector: o => o)
-                    .ToList();
-
-                // add a parent folder. "dot dot"
-                try
-                {
-                    Logger.Trace(message: "Files: Adding Parent Folder");
-                    string tmpStrParent = HelperStatic.FsoGetParent(path: tbx_FolderName.Text);
-                    if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
-                    {
-                        DirectoryElement de = new DirectoryElement(ParentFolder,
-                            DirectoryElement.ElementType.ParentDirectory);
-                        de.FullPathAndName = tmpStrParent;
-                        DirectoryElements.Add(de);
-                        ListViewItem lvi = new ListViewItem(text: ParentFolder);
-                        lvi.Tag = de;
-                        lvw_FileList.Items.Add(lvi);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(message: "Error: " + ex.Message);
-                }
-
-                Logger.Trace(message: "Listing Folders");
-                HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: Directories");
-                foreach (string currentDir in dirs)
-                {
-                    Logger.Trace(message: "Folder: " + currentDir);
-                    lvw_FileList_addListItem(fileNameWithoutPath: Path.GetFileName(path: currentDir));
-                }
-
-                Logger.Trace(message: "Listing Folders - OK");
-
-                Logger.Trace(message: "Listing Files");
-                foreach (string fileNameWithPath in listFilesWithPath)
-                {
-                    Logger.Trace(message: "File: " + fileNameWithPath);
-                    string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
-                    HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-                    lvw_FileList_addListItem(fileNameWithoutPath: Path.GetFileName(path: fileNameWithoutPath));
-                }
-
-                Logger.Trace(message: "Listing Folders - OK");
-
-                Logger.Trace(message: "Calling ExifGetExifFromFolder - " + FolderName);
-                await HelperStatic.ExifGetExifFromFolder(folderNameToUse: FolderName);
-                Logger.Trace(message: "Finished ExifGetExifFromFolder - " + FolderName);
-            }
+            Logger.Trace(message: "Calling ExifGetExifFromFolder - " + FolderName);
+            await HelperStatic.ExifGetExifFromFolder(folderNameToUse: FolderName);
+            Logger.Trace(message: "Finished ExifGetExifFromFolder - " + FolderName);
         }
 
         HelperStatic.FileListBeingUpdated = false;
@@ -1739,11 +1391,137 @@ public partial class FrmMainApp : Form
 
         // Not logging this.
         HelperStatic.LvwCountItemsWithGeoData();
+    }
 
-        // Resume sorting...
-        Logger.Trace(message: "Enable ListViewItemSorter");
-        lvw_FileList.ListViewItemSorter = oldSorter;
-        lvw_FileList.Sort();
+    private void ParseCurrentDirectoryToDEs()
+    {
+        // Special Case is "MyComputer"...
+        // Only list drives...
+        if (FolderName == SpecialFolder.MyComputer.ToString())
+        {
+            Logger.Trace(message: "Listing Drives");
+            foreach (DriveInfo drive in DriveInfo.GetDrives())
+            {
+                Logger.Trace(message: "Drive:" + drive.Name);
+                _directoryElements.Add(new DirectoryElement(
+                    itemName: drive.Name,
+                    type: DirectoryElement.ElementType.Drive,
+                    fullPathAndName: drive.RootDirectory.FullName
+                    ));
+            }
+
+            Logger.Trace(message: "Listing Drives - OK");
+            return;
+        }
+
+        // add a parent folder. "dot dot"
+        try
+        {
+            Logger.Trace(message: "Files: Adding Parent Folder");
+            string tmpStrParent = HelperStatic.FsoGetParent(path: tbx_FolderName.Text);
+            if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
+            {
+                _directoryElements.Add(new DirectoryElement(
+                    itemName: ParentFolder,
+                    type: DirectoryElement.ElementType.ParentDirectory,
+                    fullPathAndName: tmpStrParent
+                    ));
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(message: "Error: " + ex.Message);
+        }
+
+
+        // list folders, ReparsePoint means these are links.
+        HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: Directories");
+        Logger.Trace(message: "Listing Folders");
+        List<string> dirs = new();
+        try
+        {
+            DirectoryInfo di = new(path: FolderName);
+            foreach (DirectoryInfo directoryInfo in di.GetDirectories())
+            {
+                if (directoryInfo.Attributes.ToString()
+                        .Contains(value: "Directory") &&
+                    !directoryInfo.Attributes.ToString()
+                        .Contains(value: "ReparsePoint"))
+                {
+                    Logger.Trace(message: "Folder: " + directoryInfo.Name);
+                    _directoryElements.Add(new DirectoryElement(
+                        itemName: directoryInfo.Name,
+                        type: DirectoryElement.ElementType.SubDirectory,
+                        fullPathAndName: directoryInfo.FullName
+                        ));
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(message: "Error: " + ex.Message);
+            MessageBox.Show(text: ex.Message);
+        }
+        Logger.Trace(message: "Listing Folders - OK");
+
+
+
+        Logger.Trace(message: "Loading allowedExtensions");
+        string[] allowedExtensions = new string[AncillaryListsArrays.AllCompatibleExtensions()
+            .Length];
+        Array.Copy(sourceArray: allowedExtensions, destinationArray: AncillaryListsArrays.AllCompatibleExtensions(), length: 0);
+        for (int i = 0; i < allowedExtensions.Length; i++)
+        {
+            allowedExtensions[i] = AncillaryListsArrays.AllCompatibleExtensions()[i]
+                .Split('\t')
+                .FirstOrDefault();
+            List<string> subItemList = new();
+            foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
+            {
+                if (columnHeader.Name != "clh_FileName")
+                {
+                    subItemList.Add(item: "");
+                }
+            }
+        }
+
+        Logger.Trace(message: "Loading allowedExtensions - OK");
+
+        // list files that have whitelisted extensions
+        Logger.Trace(message: "Files: Listing Files");
+        List<string> listFilesWithPath = new();
+        try
+        {
+            listFilesWithPath = Directory
+                .GetFiles(path: FolderName)
+                .Where(predicate: file => allowedExtensions.Any(predicate: file.ToLower()
+                                                                    .EndsWith))
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            Logger.Trace(message: "Files: Listing Files - Error: " + ex.Message);
+            MessageBox.Show(text: ex.Message);
+        }
+
+        Logger.Trace(message: "Files: Listing Files - OK");
+
+        listFilesWithPath = listFilesWithPath.OrderBy(keySelector: o => o)
+            .ToList();
+
+        Logger.Trace(message: "Listing Files");
+        foreach (string fileNameWithPath in listFilesWithPath)
+        {
+            Logger.Trace(message: "File: " + fileNameWithPath);
+            string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
+            HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+            _directoryElements.Add(new DirectoryElement(
+                itemName: Path.GetFileName(path: fileNameWithoutPath),
+                type: DirectoryElement.ElementType.File,
+                fullPathAndName: fileNameWithPath
+                        ));
+        }
+        Logger.Trace(message: "Listing Folders - OK");
     }
 
 
@@ -1993,181 +1771,6 @@ public partial class FrmMainApp : Form
         }
     }
 
-    /// <summary>
-    ///     Adds a new listitem to lvw_FileList listview
-    /// </summary>
-    /// <param name="fileNameWithoutPath">Name of file to be added</param>
-    private void lvw_FileList_addListItem(string fileNameWithoutPath)
-    {
-        List<string> subItemList = new();
-        string fileNameWithPath = Path.Combine(path1: FolderName, path2: fileNameWithoutPath);
-
-        // For now, have object model running in parallel...
-        // First check on element type
-        DirectoryElement.ElementType deType = DirectoryElement.ElementType.Unknown;
-        if (fileNameWithoutPath == ParentFolder)
-        {
-            deType = DirectoryElement.ElementType.ParentDirectory;
-        }
-        else if (File.Exists(path: fileNameWithPath))
-        {
-            deType = DirectoryElement.ElementType.File;
-        }
-        else if (Directory.Exists(path: fileNameWithPath))
-        {
-            deType = DirectoryElement.ElementType.SubDirectory;
-        }
-        else
-        {
-            deType = DirectoryElement.ElementType.Drive;
-        }
-        DirectoryElement de = new DirectoryElement(fileNameWithoutPath, deType);
-        de.FullPathAndName = fileNameWithPath;
-
-
-        #region icon handlers
-
-        //https://stackoverflow.com/a/37806517/3968494
-        NativeMethods.SHFILEINFOW shfi = new();
-        IntPtr hSysImgList = NativeMethods.SHGetFileInfo(pszPath: "",
-                                                         dwFileAttributes: 0,
-                                                         psfi: ref shfi,
-                                                         cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
-                                                         uFlags: NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
-        Debug.Assert(condition: hSysImgList != IntPtr.Zero); // cross our fingers and hope to succeed!
-
-        // Set the ListView control to use that image list.
-        IntPtr hOldImgList = NativeMethods.SendMessage(hWnd: lvw_FileList.Handle,
-                                                       msg: NativeMethods.LVM_SETIMAGELIST,
-                                                       wParam: NativeMethods.LVSIL_SMALL,
-                                                       lParam: hSysImgList);
-
-        // If the ListView control already had an image list, delete the old one.
-        if (hOldImgList != IntPtr.Zero)
-        {
-            NativeMethods.ImageList_Destroy(hImageList: hOldImgList);
-        }
-
-        // Set up the ListView control's basic properties.
-        // Set its theme so it will look like the one used by Explorer.
-        NativeMethods.SetWindowTheme(hWnd: lvw_FileList.Handle, pszSubAppName: "Explorer", pszSubIdList: null);
-
-        // Get the items from the file system, and add each of them to the ListView,
-        // complete with their corresponding name and icon indices.
-        IntPtr himl;
-        if (tbx_FolderName.Text != SpecialFolder.MyComputer.ToString())
-        {
-            himl = NativeMethods.SHGetFileInfo(pszPath: Path.Combine(path1: tbx_FolderName.Text, path2: fileNameWithoutPath),
-                                               dwFileAttributes: 0,
-                                               psfi: ref shfi,
-                                               cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
-                                               uFlags: NativeMethods.SHGFI_DISPLAYNAME | NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
-        }
-        else
-        {
-            himl = NativeMethods.SHGetFileInfo(pszPath: fileNameWithoutPath,
-                                               dwFileAttributes: 0,
-                                               psfi: ref shfi,
-                                               cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
-                                               uFlags: NativeMethods.SHGFI_DISPLAYNAME | NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
-        }
-
-        //Debug.Assert(himl == hSysImgList); // should be the same imagelist as the one we set
-
-        #endregion
-
-
-        if (deType == DirectoryElement.ElementType.File)
-        {
-            foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
-            {
-                if (columnHeader.Name != "clh_FileName")
-                {
-                    subItemList.Add(item: "-");
-                }
-            }
-            // For each non-file (i.e. dirs), create empty sub items (needed for sorting)
-        }
-        else
-        {
-
-            foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
-            {
-                if (columnHeader.Name != "clh_FileName")
-                {
-                    subItemList.Add(item: "");
-                }
-            }
-        }
-
-        ListViewItem lvi = new();
-
-        // dev comment --> https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow
-        // SHGFI_DISPLAYNAME (0x000000200)
-        // Retrieve the display name for the file, which is the name as it appears in Windows Explorer.
-        // The name is copied to the szDisplayName member of the structure specified in psfi.
-        // The returned display name uses the long file name, if there is one, rather than the 8.3 form of the file name.
-        // [!!!!] Note that the display name can be affected by settings such as whether extensions are shown.
-
-        // TLDR if Windows User has "show extensions" set to OFF in Windows Explorer, they won't show here either.
-        // The repercussions of that is w/o an extension fileinfo.exists will return false and exiftool won't run/find it.
-
-        // With that in mind if we're missing the extension then we'll force it back on.
-        string fileExtension = Path.GetExtension(path: fileNameWithPath);
-        de.Extension = fileExtension;
-        if (!string.IsNullOrEmpty(value: fileExtension))
-        {
-            if (shfi.szDisplayName.Contains(value: fileExtension))
-            {
-                lvi.Text = shfi.szDisplayName;
-                de.DisplayName = shfi.szDisplayName;
-            }
-            else
-            {
-                lvi.Text = shfi.szDisplayName + fileExtension;
-                de.DisplayName = shfi.szDisplayName + fileExtension;
-            }
-        }
-        else
-        {
-            // this should prevent showing silly string values for special folders (like if your Pictures folder has been moved to say Digi, it'd have shown "Digi" but since that doesn't exist per se it'd have caused an error.
-            // same for non-English places. E.g. "Documents and Settings" in HU would be displayed as "Felhasználók" but that folder is still actually called Documents and Settings, but the label is "fake".
-            if (de.Type == DirectoryElement.ElementType.SubDirectory || 
-                    de.Type == DirectoryElement.ElementType.ParentDirectory)
-            {
-                lvi.Text = fileNameWithoutPath;
-                de.DisplayName = fileNameWithoutPath;
-            }
-            else
-            {
-                lvi.Text = shfi.szDisplayName;
-                de.DisplayName = shfi.szDisplayName;
-            }
-        }
-
-        lvi.ImageIndex = shfi.iIcon;
-        if (deType == DirectoryElement.ElementType.File)
-        {
-            if (lvi.Index % 10 == 0)
-            {
-                Application.DoEvents();
-                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                HandlerLvwScrollToDataPoint(lvw: lvw_FileList, itemText: fileNameWithoutPath);
-            }
-
-            HandlerUpdateItemColour(lvw: lvw_FileList, itemText: fileNameWithoutPath, color: Color.Gray);
-        }
-
-        // don't add twice. this could happen if user does F5 too fast/too many times/is derp. (mostly the last one.)
-        if (lvw_FileList.FindItemWithText(text: lvi.Text) == null)
-        {
-            this.DirectoryElements.Add(de, true);
-            lvi.Tag = de;
-            lvw_FileList.Items.Add(value: lvi)
-                .SubItems.AddRange(items: subItemList.ToArray());
-        }
-    }
 
     /// <summary>
     ///     Watches for the user to lift the mouse button while over the listview. This will trigger the collection of
@@ -2181,106 +1784,10 @@ public partial class FrmMainApp : Form
         await lvw_HandleSelectionChange();
     }
 
-    /// <summary>
-    ///     Handles the sorting and reordering.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void lvw_FileList_ColumnClick(object sender,
-                                          ColumnClickEventArgs e)
-    {
-        if (e.Column == LvwColumnSorter.SortColumn)
-        {
-            // Column clicked is current sort column --> Reverse order
-            if (LvwColumnSorter.SortOrder == SortOrder.Ascending)
-            {
-                LvwColumnSorter.SortOrder = SortOrder.Descending;
-            }
-            else
-            {
-                LvwColumnSorter.SortOrder = SortOrder.Ascending;
-            }
-        }
-        else
-        {
-            LvwColumnSorter.SortColumn = e.Column;
-            LvwColumnSorter.SortOrder = SortOrder.Ascending;
-        }
-
-        // Perform the sort with these new sort options.
-        lvw_FileList.Sort();
-    }
-
     #endregion
 
-    #endregion
 
     #region handlers
-
-    internal static int HandlerReturnItemIndes(ListView lvw,
-                                               string itemText)
-    {
-        int retVal = 0;
-        // If the current thread is not the UI thread, InvokeRequired will be true
-        if (lvw.InvokeRequired)
-        {
-            lvw.Invoke(method: (Action)(() => HandlerReturnItemIndes(lvw: lvw, itemText: itemText)));
-        }
-        else
-        {
-            retVal = lvw.FindItemWithText(text: itemText)
-                .Index;
-        }
-
-        return retVal;
-    }
-
-    /// <summary>
-    ///     Deals with invoking the listview (from outside the thread) and updating the colour of a particular row (Item) to
-    ///     the assigned colour.
-    /// </summary>
-    /// <param name="lvw">The listView Control that needs updating. Most likely the one in the main Form</param>
-    /// <param name="itemText">The particular ListViewItem (by text) that needs updating</param>
-    /// <param name="color">Parameter to assign a particular colour (prob red or black) to the whole row</param>
-    internal static void HandlerUpdateItemColour(ListView lvw,
-                                                 string itemText,
-                                                 Color color)
-    {
-        // If the current thread is not the UI thread, InvokeRequired will be true
-        if (lvw.InvokeRequired)
-        {
-            lvw.Invoke(method: (Action)(() => HandlerUpdateItemColour(lvw: lvw, itemText: itemText, color: color)));
-            return;
-        }
-
-        ListViewItem itemToModify = lvw.FindItemWithText(text: itemText);
-        if (itemToModify != null)
-        {
-            itemToModify.ForeColor = color;
-        }
-    }
-
-    /// <summary>
-    ///     Scrolls to the relevant line of the listview
-    /// </summary>
-    /// <param name="lvw">The listView Control that needs updating. Most likely the one in the main Form</param>
-    /// <param name="itemText">The particular ListViewItem (by text) that needs updating</param>
-    internal static void HandlerLvwScrollToDataPoint(ListView lvw,
-                                                     string itemText)
-    {
-        // If the current thread is not the UI thread, InvokeRequired will be true
-        if (lvw.InvokeRequired)
-        {
-            lvw.Invoke(method: (Action)(() => HandlerLvwScrollToDataPoint(lvw: lvw, itemText: itemText)));
-            return;
-        }
-
-        ListViewItem itemToModify = lvw.FindItemWithText(text: itemText);
-        if (itemToModify != null)
-        {
-            lvw.EnsureVisible(index: itemToModify.Index);
-        }
-    }
 
     /// <summary>
     ///     Updates the Text of any Label from outside the thread.
@@ -2332,35 +1839,12 @@ public partial class FrmMainApp : Form
     private void selectColumnsToolStripMenuItem_Click(object sender,
                                                       EventArgs e)
     {
-        FrmColumnSelection frm_ColSel = new(
-            ColList: lvw_FileList.Columns, AppLanguage: AppLanguage);
-        Point lvwLoc = lvw_FileList.PointToScreen(p: new Point(x: 0, y: 0));
-        lvwLoc.Offset(dx: 20, dy: 10); // Relative to list view top left
-        frm_ColSel.Location = lvwLoc; // in screen coords...
-        frm_ColSel.ShowDialog(owner: lvw_FileList);
-    }
-
-    private void lvw_FileList_ColumnWidthChanging(object sender,
-                                                  ColumnWidthChangingEventArgs e)
-    {
-        // Columns with width = 0 should stay hidden / may not be resized.
-        if (lvw_FileList.Columns[index: e.ColumnIndex]
-                .Width ==
-            0)
-        {
-            e.Cancel = true;
-            e.NewWidth = 0;
-        }
-    }
-
-    private void lvw_FileList_ColumnReordered(object sender, ColumnReorderedEventArgs e)
-    {
-        // Prevent FileName column to be moved
-        if (e.Header.Index == 0) e.Cancel = true;
+        lvw_FileList.ShowColumnSelectionDialog();
     }
 
     #endregion
 }
+
 
 public static class ControlExtensions
 {

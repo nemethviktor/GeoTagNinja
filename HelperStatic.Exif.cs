@@ -668,10 +668,10 @@ internal static partial class HelperStatic
                                     Application.DoEvents();
                                     // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
-                                    FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath);
+                                    frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
                                 }
 
-                                FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath, color: Color.Black);
+                                frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Black);
                                 GenericLockUnLockFile(fileNameWithoutPath: fileNameWithoutPath);
                             }
                             else
@@ -923,10 +923,10 @@ internal static partial class HelperStatic
                                                 Application.DoEvents();
                                                 // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
-                                                FrmMainApp.HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
+                                                frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
                                             }
 
-                                            FrmMainApp.HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Red);
+                                            frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
                                         }
                                     }
                                 }
@@ -984,10 +984,10 @@ internal static partial class HelperStatic
                                             Application.DoEvents();
                                             // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
-                                            FrmMainApp.HandlerLvwScrollToDataPoint(lvw: lvw, itemText: fileNameWithoutPath);
+                                            frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
                                         }
 
-                                        FrmMainApp.HandlerUpdateItemColour(lvw: lvw, itemText: fileNameWithoutPath, color: Color.Red);
+                                        frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
                                     }
                                 }
                             }
@@ -1508,10 +1508,10 @@ internal static partial class HelperStatic
 
                                     // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
-                                    FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath);
+                                    frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
                                 }
 
-                                FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath, color: Color.Black);
+                                frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Black);
 
                                 if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
                                 {
@@ -1524,10 +1524,10 @@ internal static partial class HelperStatic
                                         Application.DoEvents();
                                         // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
-                                        FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath); // this is redundant here.
+                                        frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath); // this is redundant here.
                                     }
 
-                                    FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: Path.GetFileNameWithoutExtension(path: fileNameWithoutPath), color: Color.Black);
+                                    frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: Path.GetFileNameWithoutExtension(path: fileNameWithoutPath), color: Color.Black);
                                 }
                             }
                             catch
@@ -1563,10 +1563,10 @@ internal static partial class HelperStatic
                                     Application.DoEvents();
                                     // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
-                                    FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath);
+                                    frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
                                 }
 
-                                FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath, color: Color.Black);
+                                frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Black);
 
                                 if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
                                 {
@@ -1578,10 +1578,10 @@ internal static partial class HelperStatic
                                         Application.DoEvents();
                                         // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
-                                        FrmMainApp.HandlerLvwScrollToDataPoint(lvw: frmMainAppInstance.lvw_FileList, itemText: fileNameWithoutPath); // this is redundant here
+                                        frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath); // this is redundant here
                                     }
 
-                                    FrmMainApp.HandlerUpdateItemColour(lvw: frmMainAppInstance.lvw_FileList, itemText: Path.GetFileNameWithoutExtension(path: fileNameWithoutPath), color: Color.Black);
+                                    frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: Path.GetFileNameWithoutExtension(path: fileNameWithoutPath), color: Color.Black);
                                 }
                             }
                             catch
