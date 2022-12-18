@@ -534,7 +534,7 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "parseLatLngTextBox_ParseDouble") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
         }
 
         return (LatCoordinate, LngCoordinate);
