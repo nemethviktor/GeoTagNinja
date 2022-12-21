@@ -1,17 +1,24 @@
 ﻿# GeoTagNinja Changelog
 v0.7.83XX [202212XX]
-- Updated Time-Shift to work properly w/ Copy Paste. 
--- Version bump as for new feature.
-- Updated Read-in logic to process the whole folder in one go. Should run _a lot_ faster now.
-- Eliminate MD5 checks. Basically the bloody thing takes longer than re-parsing the whole folder.
-- Column Sort (kudos to Urmel, thank you!)
-- Added Column Show/Hide (kudos to Urmel, thank you!)
-- Updated Translations. (thanks pbranly)
-- Removed the built-in webView2 installer because it was more of a pain in the backside than benefit. Updated the readme w/ instructions should this cause a problem.
-- Updates to Paste logic (preselection based on what has changed in the source file.)
-- Updated GPX import to only apply to selected files, not the whole folder
-- Updated logic so that map refreshes without markers when there are no files with coordinates selected (rather than leave markers on, which can be misleading)
+- NEW & UPDATED:
+-- Added Column Sort (kudos to Urmel, thank you!)
+-- Added Column Show/Hide (kudos to Urmel, thank you!)
+-- Added a Setting to return X rows of data from the API within Y miles radius (I think it's miles anyway, maybe KM)
+-- Added a Setting to optionally replace empty Toponomy values with whatever the user wants
+-- Updated Time-Shift to work properly w/ Copy Paste. 
+-- Updated Read-in logic to process the whole folder in one go. Should run _a lot_ faster now.
+-- Updated the Paste logic (preselection based on what has changed in the source file.)
+-- Updated GPX import to only apply to selected files, not the whole folder
+-- Updated logic so that map refreshes without markers when there are no files with coordinates selected (rather than leave markers on, which can be misleading)
+-- Updated Translations. (thanks pbranly)
+-- Updated City/Sublocation logic (thanks Clariden)
+-- Bumped exifTool to v12.52
 
+- BUGS & FIXES:
+-- Eliminate MD5 checks. Basically the bloody thing takes longer than re-parsing the whole folder.
+-- Removed the built-in webView2 installer because it was more of a pain in the backside than benefit. Updated the readme w/ instructions should this cause a problem.
+-- Fixed logic to ensure if a value in the FrmEdit is replaced with a blank it actually does get queued up for writing.
+-- Stuff I don't remember.
 
 v0.6.8370 [20221201]
 - NEW FEATURE: Modify TakenDate & CreateDate (it's in the Edit File section - and no the time-shift cannot be copy-pasted yet -> shift works in terms of modifying the literal DateTime at the moment not as in a proper copyable "shift" value.)

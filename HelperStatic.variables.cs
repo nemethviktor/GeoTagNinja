@@ -26,8 +26,11 @@ internal static partial class HelperStatic
     internal static double? LastLng;
     internal static bool SNowSelectingAllItems = false;
     internal static bool SResetMapToZero;
-    internal static long FolderEnterLastEpoch = 0;
     private static decimal _currentExifToolVersionLocal;
+    internal static bool ToponomyReplace = false;
+    internal static string ToponomyReplaceWithWhat = null;
+    internal static string ToponomyMaxRows = "1";
+    internal static string ToponomyRadiusValue = "10";
 
     #endregion
 }

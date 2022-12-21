@@ -4,7 +4,6 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using static System.Environment;
@@ -435,6 +434,54 @@ public partial class FrmMainApp
         HelperStatic.LastLng = double.Parse(s: tbx_lng.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
     }
 
+    /// <summary>
+    ///     Pulls the settings for overwriting empty toponomy details if req'd
+    /// </summary>
+    internal static void AppStartupPullOverWriteBlankToponomy()
+    {
+        bool.TryParse(value: HelperStatic.DataReadSQLiteSettings(
+                          tableName: "settings",
+                          settingTabPage: "tpg_Application",
+                          settingId: "ckb_ReplaceBlankToponyms"), result: out HelperStatic.ToponomyReplace);
+
+        if (HelperStatic.ToponomyReplace)
+        {
+            string replaceEmpty = HelperStatic.DataReadSQLiteSettings(
+                tableName: "settings",
+                settingTabPage: "tpg_Application",
+                settingId: "tbx_ReplaceBlankToponyms");
+            ;
+            if (!string.IsNullOrEmpty(value: replaceEmpty))
+            {
+                HelperStatic.ToponomyReplaceWithWhat = replaceEmpty;
+            }
+        }
+    }
+
+    /// <summary>
+    ///     Pulls data related to user's Settings re how many choices an API pull should offer and what should be the default
+    ///     radius
+    /// </summary>
+    internal static void AppStartupPullToponomyRadiusAndMaxRows()
+    {
+        string choiceCountValue = HelperStatic.DataReadSQLiteSettings(
+                                      tableName: "settings",
+                                      settingTabPage: "tpg_Application",
+                                      settingId: "nud_ChoiceOfferCount"
+                                  ) ??
+                                  "1";
+
+        HelperStatic.ToponomyMaxRows = choiceCountValue;
+
+        string radiusValue = HelperStatic.DataReadSQLiteSettings(
+                                 tableName: "settings",
+                                 settingTabPage: "tpg_Application",
+                                 settingId: "nud_ChoiceRadius"
+                             ) ??
+                             "10";
+        HelperStatic.ToponomyRadiusValue = radiusValue;
+    }
+
     private static DataTable AppStartupLoadFavourites()
     {
         Logger.Info(message: "Starting");
@@ -442,17 +489,17 @@ public partial class FrmMainApp
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         LstFavourites.Clear();
-        AutoCompleteStringCollection autoCompleteCustomSource = new AutoCompleteStringCollection();
+        AutoCompleteStringCollection autoCompleteCustomSource = new();
         frmMainAppInstance.cbx_Favourites.Items.Clear();
         foreach (DataRow drFavorite in dtFavourites.Rows)
         {
-            string locationName = drFavorite["locationName"]
+            string locationName = drFavorite[columnName: "locationName"]
                 .ToString();
-            LstFavourites.Add(locationName);
-            autoCompleteCustomSource.Add(locationName);
+            LstFavourites.Add(item: locationName);
+            autoCompleteCustomSource.Add(value: locationName);
             if (frmMainAppInstance != null)
             {
-                frmMainAppInstance.cbx_Favourites.Items.Add(locationName);
+                frmMainAppInstance.cbx_Favourites.Items.Add(item: locationName);
             }
         }
 

@@ -86,6 +86,7 @@ namespace GeoTagNinja
             this.ttp_loctToFile = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_SaveFavourite = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_LoadFavourite = new System.Windows.Forms.ToolTip(this.components);
+            this.tmi_removeCachedData = new System.Windows.Forms.ToolStripMenuItem();
             this.mns_MenuStrip.SuspendLayout();
             this.tsr_MainAppToolStrip.SuspendLayout();
             this.tsr_FolderControl.SuspendLayout();
@@ -411,15 +412,16 @@ namespace GeoTagNinja
             // 
             this.cms_FileListView.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cms_FileListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tmi_ShowHideCols});
+            this.tmi_ShowHideCols,
+            this.tmi_removeCachedData});
             this.cms_FileListView.Name = "cms_FileListView";
-            this.cms_FileListView.Size = new System.Drawing.Size(157, 26);
+            this.cms_FileListView.Size = new System.Drawing.Size(181, 70);
             // 
             // tmi_ShowHideCols
             // 
             this.tmi_ShowHideCols.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.tmi_ShowHideCols.Name = "tmi_ShowHideCols";
-            this.tmi_ShowHideCols.Size = new System.Drawing.Size(156, 22);
+            this.tmi_ShowHideCols.Size = new System.Drawing.Size(187, 22);
             this.tmi_ShowHideCols.Text = "Select Columns";
             this.tmi_ShowHideCols.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.tmi_ShowHideCols.Click += new System.EventHandler(this.selectColumnsToolStripMenuItem_Click);
@@ -640,6 +642,13 @@ namespace GeoTagNinja
             this.btn_LoadFavourite.UseVisualStyleBackColor = true;
             this.btn_LoadFavourite.Click += new System.EventHandler(this.btn_LoadFavourite_Click);
             // 
+            // tmi_removeCachedData
+            // 
+            this.tmi_removeCachedData.Name = "tmi_removeCachedData";
+            this.tmi_removeCachedData.Size = new System.Drawing.Size(180, 22);
+            this.tmi_removeCachedData.Text = "Remove Cached";
+            this.tmi_removeCachedData.Click += new System.EventHandler(this.tmi_removeCachedData_Click);
+            // 
             // FrmMainApp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -741,6 +750,7 @@ namespace GeoTagNinja
         private Button btn_LoadFavourite;
         private ToolTip ttp_SaveFavourite;
         private ToolTip ttp_LoadFavourite;
+        private ToolStripMenuItem tmi_removeCachedData;
     }
 }
 

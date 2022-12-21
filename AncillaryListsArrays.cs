@@ -394,6 +394,13 @@ internal static class AncillaryListsArrays
         return result;
     }
 
+    internal static string[] ToponomyReplaces()
+    {
+        string[] result =
+            { "City", "State", "Sub_location" };
+        return result;
+    }
+
     internal static string[] GetFavouriteTags()
     {
         string[] result =

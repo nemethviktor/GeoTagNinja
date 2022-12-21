@@ -63,24 +63,6 @@ internal static partial class HelperStatic
                                 settingValue NTEXT(2000)    DEFAULT "",
                                 PRIMARY KEY([settingTabPage], [settingId])
                             );
-                            DROP TABLE IF EXISTS [toponymyData];
-                            CREATE TABLE [toponymyData](
-                                        [Lat] DECIMAL(19, 6) NOT NULL, 
-                                        [Lng] DECIMAL(19, 6) NOT NULL, 
-                                        [AdminName1] NTEXT, 
-                                        [AdminName2] NTEXT, 
-                                        [ToponymName] NTEXT, 
-                                        [CountryCode] NTEXT,
-                                        [timezoneId] NTEXT,
-                                        PRIMARY KEY([Lat], [Lng]))
-                            ;
-                            DROP TABLE IF EXISTS [altitudeData];
-                            CREATE TABLE [altitudeData](
-                                        [Lat] DECIMAL(19, 6) NOT NULL, 
-                                        [Lng] DECIMAL(19, 6) NOT NULL,
-                                        [Srtm1] NTEXT, 
-                                        PRIMARY KEY([Lat], [Lng]))
-                            ;
                             CREATE TABLE [Favourites](
                                         [locationName] NTEXT NOT NULL PRIMARY KEY,
                                         [GPSLatitude] NTEXT NOT NULL,
@@ -111,8 +93,6 @@ internal static partial class HelperStatic
             else
             {
                 DataCreateSQLiteFavourites();
-                DataDeleteSQLiteToponomy();
-                DataDeleteSQLiteAltitude();
             }
         }
         catch (Exception ex)
@@ -166,14 +146,6 @@ internal static partial class HelperStatic
                 else if (controlName == "ckb_ProcessOriginalFile")
                 {
                     tmpVal = "true";
-                    //if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
-                    //{
-                    //    tmpVal = "false";
-                    //}
-                    //else
-                    //{
-                    //    tmpVal = "true";
-                    //}
                 }
 
                 else if (controlName == "ckb_ResetFileDateToCreated")
@@ -530,128 +502,7 @@ internal static partial class HelperStatic
 
     #endregion
 
-    #region Toponomy SQL
-
-    /// <summary>
-    ///     Attempts to read SQLite to see if the toponomy data exists. The idea is that a particular location on the planet
-    ///     isn't likely to change so ...
-    ///     ... it's silly to keep querying the API each time for the same thing. I've explained in the readme but the API I
-    ///     use doesn't really follow political changes...
-    ///     ... as of 2022 for example it still returns Ukraine for Crimea.
-    /// </summary>
-    /// <param name="lat">
-    ///     latitude/longitude. String values; were initially numeric but this caused problems on non-English
-    ///     systems and strings are easier to coerce to work.
-    /// </param>
-    /// <param name="lng">
-    ///     latitude/longitude. String values; were initially numeric but this caused problems on non-English
-    ///     systems and strings are easier to coerce to work.
-    /// </param>
-    /// <returns>DataTable with toponomy data if exists</returns>
-    private static DataTable DataReadSQLiteToponomyWholeRow(string lat,
-                                                            string lng)
-    {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
-        sqliteDB.Open();
-
-        string sqlCommandStr = @"
-                                SELECT *
-                                FROM toponymyData
-                                WHERE 1=1
-									AND lat = @lat
-									AND lng = @lng
-                                ;
-								"
-            ;
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@lat", value: lat);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@lng", value: lng);
-        SQLiteDataReader reader = sqlToRun.ExecuteReader();
-        DataTable dataTable = new();
-        dataTable.Load(reader: reader);
-        return dataTable;
-    }
-
-    /// <summary>
-    ///     Identical to the above but for altitude data.
-    /// </summary>
-    /// <param name="lat">
-    ///     latitude/longitude. String values; were initially numeric but this caused problems on non-English
-    ///     systems and strings are easier to coerce to work.
-    /// </param>
-    /// <param name="lng">
-    ///     latitude/longitude. String values; were initially numeric but this caused problems on non-English
-    ///     systems and strings are easier to coerce to work.
-    /// </param>
-    /// <returns>DataTable with toponomy data if exists</returns>
-    private static DataTable DataReadSQLiteAltitudeWholeRow(string lat,
-                                                            string lng)
-    {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
-        sqliteDB.Open();
-
-        string sqlCommandStr = @"
-                                SELECT *
-                                FROM altitudeData
-                                WHERE 1=1
-									AND lat = @lat
-									AND lng = @lng
-                                ;
-								"
-            ;
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@lat", value: lat);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@lng", value: lng);
-        SQLiteDataReader reader = sqlToRun.ExecuteReader();
-        DataTable dataTable = new();
-        dataTable.Load(reader: reader);
-        return dataTable;
-    }
-
-    /// <summary>
-    ///     Writes topopnomy data from the API to SQL for future use. I explained the logic above at
-    ///     DataReadSQLiteToponomyWholeRow.
-    /// </summary>
-    /// <param name="lat">
-    ///     latitude/longitude. String values; were initially numeric but this caused problems on non-English
-    ///     systems and strings are easier to coerce to work.
-    /// </param>
-    /// <param name="lng">
-    ///     latitude/longitude. String values; were initially numeric but this caused problems on non-English
-    ///     systems and strings are easier to coerce to work.
-    /// </param>
-    /// <param name="AdminName1">API Response for this particular tag.</param>
-    /// <param name="AdminName2">API Response for this particular tag.</param>
-    /// <param name="ToponymName">API Response for this particular tag.</param>
-    /// <param name="CountryCode">API Response for this particular tag.</param>
-    private static void DataWriteSQLiteToponomyWholeRow(string lat,
-                                                        string lng,
-                                                        string AdminName1 = "",
-                                                        string AdminName2 = "",
-                                                        string ToponymName = "",
-                                                        string CountryCode = "",
-                                                        string timezoneId = ""
-    )
-    {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
-        sqliteDB.Open();
-
-        string sqlCommandStr = @"
-                                REPLACE INTO toponymyData (lat, lng, AdminName1, AdminName2, ToponymName, CountryCode, timezoneId) " +
-                               "VALUES (@lat, @lng, @AdminName1, @AdminName2, @ToponymName, @CountryCode, @timezoneId);"
-            ;
-
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@lat", value: lat.ToString(provider: CultureInfo.InvariantCulture));
-        sqlToRun.Parameters.AddWithValue(parameterName: "@lng", value: lng.ToString(provider: CultureInfo.InvariantCulture));
-        sqlToRun.Parameters.AddWithValue(parameterName: "@AdminName1", value: AdminName1);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@AdminName2", value: AdminName2);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@ToponymName", value: ToponymName);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@CountryCode", value: CountryCode);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@timezoneId", value: timezoneId);
-
-        sqlToRun.ExecuteNonQuery();
-    }
+    #region favourites SQL
 
     /// <summary>
     ///     Creates a table for the user's "favourites".
@@ -712,7 +563,7 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    /// Deletes the given "favourite" from the relevant table
+    ///     Deletes the given "favourite" from the relevant table
     /// </summary>
     /// <param name="locationName">Name of the "favourite" (like "home")</param>
     internal static void DataDeleteSQLiteFavourites(string locationName)
@@ -735,7 +586,7 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    /// Writes back the relevant "favourite" to the table
+    ///     Writes back the relevant "favourite" to the table
     /// </summary>
     /// <param name="locationName">Value to write for relevant column</param>
     /// <param name="GPSAltitude">Value to write for relevant column</param>
@@ -801,88 +652,6 @@ internal static partial class HelperStatic
         sqlToRun.Parameters.AddWithValue(parameterName: "@Country", value: Country);
         sqlToRun.Parameters.AddWithValue(parameterName: "@State", value: State);
         sqlToRun.Parameters.AddWithValue(parameterName: "@Sub_location", value: Sub_location);
-
-        sqlToRun.ExecuteNonQuery();
-    }
-
-    /// <summary>
-    ///     Clears the data from the Toponomy table. Run at session start.
-    ///     This was changed from a simple DELETE FROM because timezoneId had been added as of 20221128
-    /// </summary>
-    private static void DataDeleteSQLiteToponomy()
-    {
-        FrmMainApp.Logger.Debug(message: "Starting");
-
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
-        sqliteDB.Open();
-
-        string sqlCommandStr = @"
-                                DROP TABLE IF EXISTS [toponymyData];
-                                CREATE TABLE [toponymyData](
-                                            [Lat] DECIMAL(19, 6) NOT NULL, 
-                                            [Lng] DECIMAL(19, 6) NOT NULL, 
-                                            [AdminName1] NTEXT, 
-                                            [AdminName2] NTEXT, 
-                                            [ToponymName] NTEXT, 
-                                            [CountryCode] NTEXT,
-                                            [timezoneId] NTEXT,
-                                            PRIMARY KEY([Lat], [Lng]))
-                                ;"
-            ;
-
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-
-        sqlToRun.ExecuteNonQuery();
-    }
-
-    /// <summary>
-    ///     Clears the data from the Altitude table. Run at session start.
-    /// </summary>
-    private static void DataDeleteSQLiteAltitude()
-    {
-        FrmMainApp.Logger.Debug(message: "Starting");
-
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
-        sqliteDB.Open();
-
-        string sqlCommandStr = @"
-                                DELETE FROM altitudeData;"
-            ;
-
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-
-        sqlToRun.ExecuteNonQuery();
-    }
-
-    /// <summary>
-    ///     Identical to the above but for altitude data
-    /// </summary>
-    /// <param name="lat">
-    ///     latitude/longitude. String values; were initially numeric but this caused problems on non-English
-    ///     systems and strings are easier to coerce to work.
-    /// </param>
-    /// <param name="lng">
-    ///     latitude/longitude. String values; were initially numeric but this caused problems on non-English
-    ///     systems and strings are easier to coerce to work.
-    /// </param>
-    /// <param name="Altitude">API Response for this particular tag.</param>
-    private static void DataWriteSQLiteAltitudeWholeRow(string lat,
-                                                        string lng,
-                                                        string Altitude = "")
-    {
-        FrmMainApp.Logger.Trace(message: "Starting - lat: " + lat + " lng: " + lng + " Altitude: " + Altitude);
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
-        sqliteDB.Open();
-
-        string sqlCommandStr = @"
-                                REPLACE INTO altitudeData (lat, lng, Srtm1) " +
-                               "VALUES (@lat, @lng, @Altitude);"
-            ;
-
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@lat", value: lat.ToString(provider: CultureInfo.InvariantCulture));
-        sqlToRun.Parameters.AddWithValue(parameterName: "@lng", value: lng.ToString(provider: CultureInfo.InvariantCulture));
-        sqlToRun.Parameters.AddWithValue(parameterName: "@Altitude", value: Altitude.ToString(provider: CultureInfo.InvariantCulture));
 
         sqlToRun.ExecuteNonQuery();
     }

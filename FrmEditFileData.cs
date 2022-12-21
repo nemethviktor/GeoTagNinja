@@ -788,7 +788,7 @@ public partial class FrmEditFileData : Form
                                 provider: CultureInfo.InvariantCulture,
                                 result: out parsedLng))
             {
-                dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
+                dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrDT(lat: strGpsLatitude, lng: strGpsLongitude);
 
                 if (dtAltitude.Rows.Count > 0)
                 {
@@ -814,7 +814,7 @@ public partial class FrmEditFileData : Form
                         .Text.ToString(provider: CultureInfo.InvariantCulture);
                     if (double.TryParse(s: strGpsLatitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strGpsLongitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
                     {
-                        dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
+                        dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrDT(lat: strGpsLatitude, lng: strGpsLongitude);
                         if (dtAltitude.Rows.Count > 0)
                         {
                             string altitude = dtAltitude.Rows[index: 0][columnName: "Altitude"]
@@ -984,6 +984,7 @@ public partial class FrmEditFileData : Form
 
                         foreach ((string settingId, string settingValue) lstDr3RowToAdd in lstDr3RowsToAdd)
                         {
+                            // TakenDate
                             HelperStatic.GenericUpdateAddToDataTable(dt: DtFileDataToWriteStage3ReadyToWrite,
                                                                      fileNameWithoutPath: fileNameWithoutPath,
                                                                      settingId: lstDr3RowToAdd.settingId,
@@ -1014,6 +1015,7 @@ public partial class FrmEditFileData : Form
 
                             DateTime modifiedTakenDateTime = originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
 
+                            // TakenDate 
                             HelperStatic.GenericUpdateAddToDataTable(dt: DtFileDataToWriteStage3ReadyToWrite,
                                                                      fileNameWithoutPath: fileNameWithoutPath,
                                                                      settingId: "TakenDate",
@@ -1073,6 +1075,7 @@ public partial class FrmEditFileData : Form
 
                         foreach ((string settingId, string settingValue) lstDr3RowToAdd in lstDr3RowsToAdd)
                         {
+                            // CreateDate
                             HelperStatic.GenericUpdateAddToDataTable(dt: DtFileDataToWriteStage3ReadyToWrite,
                                                                      fileNameWithoutPath: fileNameWithoutPath,
                                                                      settingId: lstDr3RowToAdd.settingId,
@@ -1102,6 +1105,7 @@ public partial class FrmEditFileData : Form
 
                             DateTime modifiedCreateDateTime = originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
 
+                            // CreateDate
                             HelperStatic.GenericUpdateAddToDataTable(dt: DtFileDataToWriteStage3ReadyToWrite,
                                                                      fileNameWithoutPath: fileNameWithoutPath,
                                                                      settingId: "CreateDate",
@@ -1130,9 +1134,10 @@ public partial class FrmEditFileData : Form
                         {
                             string settingId = drS1[columnName: "settingId"]
                                 .ToString();
-                            string settingValue = drS1[columnName: "settingValue"]
-                                .ToString();
+                            string settingValue = HelperStatic.ReplaceBlankToponomy(settingId: settingId, settingValue: drS1[columnName: "settingValue"]
+                                                                                        .ToString());
 
+                            // NotShifted (everything else)
                             HelperStatic.GenericUpdateAddToDataTable(dt: DtFileDataToWriteStage3ReadyToWrite,
                                                                      fileNameWithoutPath: fileNameWithoutPath,
                                                                      settingId: settingId,
@@ -1381,7 +1386,6 @@ public partial class FrmEditFileData : Form
                 newText = sndr.Value.ToString(provider: CultureInfo.InvariantCulture);
             }
             else
-
             {
                 Control sndr = (Control)sender;
                 senderName = sndr.Name;
@@ -1406,6 +1410,10 @@ public partial class FrmEditFileData : Form
                 {
                     previousText = dtPreviousText.Rows[index: 0][columnName: "settingValue"]
                         .ToString();
+                }
+                else
+                {
+                    previousText = "herp-derp"; // anything really, just to handle changes to blanks.
                 }
 
                 newText = sndr.Text;

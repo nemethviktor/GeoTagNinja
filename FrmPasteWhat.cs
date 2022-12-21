@@ -38,7 +38,7 @@ public partial class FrmPasteWhat : Form
                     .Text;
 
                 // stuff will live in DT1
-                tagsToPasteList = GetTagsToPaste(FrmMainApp.DtFileDataToWriteStage1PreQueue);
+                tagsToPasteList = GetTagsToPaste(dt: FrmMainApp.DtFileDataToWriteStage1PreQueue);
             }
         }
         else if (_initiatorName == "FrmMainApp")
@@ -51,7 +51,7 @@ public partial class FrmPasteWhat : Form
                 fileNameSourceWithoutPath = Path.GetFileName(path: FrmMainApp.FileDateCopySourceFileNameWithPath);
 
                 // stuff will live in DT3
-                tagsToPasteList = GetTagsToPaste(FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
+                tagsToPasteList = GetTagsToPaste(dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
                 // Basically there is no requirement per se that DT3 is in fact filled in for this option.
                 // It is entirely reasonable that user wants to copypaste not just edited bits.
                 // In that case however there won't be data in the list and so no defaults, which I think is sensible.
@@ -69,17 +69,17 @@ public partial class FrmPasteWhat : Form
             if (cItem is CheckBox)
             {
                 string tagName;
-                if (cItem.Name.Substring(4) == "OffsetTime")
+                if (cItem.Name.Substring(startIndex: 4) == "OffsetTime")
 
                 {
                     tagName = "OffsetTimeList"; // fml. basically the actual tbx_OffsetTimeList is a TextBox so it would not be picked up as a change.
                 }
                 else
                 {
-                    tagName = cItem.Name.Substring(4);
+                    tagName = cItem.Name.Substring(startIndex: 4);
                 }
 
-                if (tagsToPasteList.Contains(tagName))
+                if (tagsToPasteList.Contains(item: tagName))
                 {
                     CheckBox sndr = (CheckBox)cItem;
                     sndr.Checked = true;
@@ -98,11 +98,11 @@ public partial class FrmPasteWhat : Form
         {
             foreach (string tagName in tagsToPasteList)
             {
-                if (tagName.StartsWith("TakenDate") && tagName.EndsWith("Shift"))
+                if (tagName.StartsWith(value: "TakenDate") && tagName.EndsWith(value: "Shift"))
                 {
                     rbt_PasteTakenDateShift.Checked = true;
                 }
-                else if (tagName.StartsWith("CreateDate") && tagName.EndsWith("Shift"))
+                else if (tagName.StartsWith(value: "CreateDate") && tagName.EndsWith(value: "Shift"))
                 {
                     rbt_PasteCreateDateShift.Checked = true;
                 }
@@ -111,7 +111,7 @@ public partial class FrmPasteWhat : Form
 
         List<string> GetTagsToPaste(DataTable dt)
         {
-            List<string> tagsList = new List<string>();
+            List<string> tagsList = new();
             EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in dt.AsEnumerable()
                                                                where dataRow.Field<string>(columnName: "fileNameWithoutPath") == fileNameSourceWithoutPath
                                                                select dataRow;

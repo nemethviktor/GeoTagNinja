@@ -37,10 +37,12 @@ public partial class FrmMainApp : Form
     /// </summary>
     public string AppLanguage => _AppLanguage;
 
+    private DirectoryElementCollection _directoryElements = new DirectoryElementCollection();
+
     /// <summary>
     ///     Returns the list of elements in the currently opened directory.
     /// </summary>
-    public DirectoryElementCollection DirectoryElements { get; } = new();
+    public DirectoryElementCollection DirectoryElements => _directoryElements;
 
 
     #region Settings
@@ -81,179 +83,6 @@ public partial class FrmMainApp : Form
 
     #endregion
 
-    private void btn_SaveLocation_Click(object sender,
-                                        EventArgs e)
-    {
-        if (cbx_Favourites.Text.Length > 0)
-        {
-            ListView lvw = lvw_FileList;
-            if (lvw_FileList.SelectedItems.Count > 0)
-            {
-                ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
-
-                string locationName = cbx_Favourites.Text;
-
-                // fml -- anyhone cares to enumerate through these somehow?!
-                string GPSLatitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLatitude"]
-                                                      .Index]
-                    .Text.ToString(provider: CultureInfo.InvariantCulture);
-                string GPSLatitudeRef = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLatitudeRef"]
-                                                         .Index]
-                    .Text.ToString(provider: CultureInfo.InvariantCulture);
-                string GPSLongitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLongitude"]
-                                                       .Index]
-                    .Text.ToString(provider: CultureInfo.InvariantCulture);
-                string GPSLongitudeRef = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLongitudeRef"]
-                                                          .Index]
-                    .Text.ToString(provider: CultureInfo.InvariantCulture);
-                string GPSAltitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSAltitude"]
-                                                      .Index]
-                    .Text.ToString(provider: CultureInfo.InvariantCulture);
-                string GPSAltitudeRef = lvi.SubItems[index: lvw.Columns[key: "clh_GPSAltitudeRef"]
-                                                         .Index]
-                    .Text.ToString(provider: CultureInfo.InvariantCulture);
-                string Coordinates = lvi.SubItems[index: lvw.Columns[key: "clh_Coordinates"]
-                                                      .Index]
-                    .Text.ToString(provider: CultureInfo.InvariantCulture);
-                string City = lvi.SubItems[index: lvw.Columns[key: "clh_City"]
-                                               .Index]
-                    .Text.ToString(provider: CultureInfo.InvariantCulture);
-                string CountryCode = lvi.SubItems[index: lvw.Columns[key: "clh_CountryCode"]
-                                                      .Index]
-                    .Text.ToString(provider: CultureInfo.InvariantCulture);
-                string Country = lvi.SubItems[index: lvw.Columns[key: "clh_Country"]
-                                                  .Index]
-                    .Text.ToString(provider: CultureInfo.InvariantCulture);
-                string State = lvi.SubItems[index: lvw.Columns[key: "clh_State"]
-                                                .Index]
-                    .Text.ToString(provider: CultureInfo.InvariantCulture);
-                string Sub_location = lvi.SubItems[index: lvw.Columns[key: "clh_Sub_location"]
-                                                       .Index]
-                    .Text.ToString(provider: CultureInfo.InvariantCulture);
-
-                HelperStatic.DataDeleteSQLiteFavourites(locationName: locationName);
-
-                // fml2
-                if (GPSAltitude == "-")
-                    GPSAltitude = "";
-                if (GPSAltitudeRef == "-")
-                    GPSAltitudeRef = "";
-                if (GPSLatitude == "-")
-                    GPSLatitude = "";
-                if (GPSLatitudeRef == "-")
-                    GPSLatitudeRef = "";
-                if (GPSLongitude == "-")
-                    GPSLongitude = "";
-                if (GPSLongitudeRef == "-")
-                    GPSLongitudeRef = "";
-                if (Coordinates == "-")
-                    Coordinates = "";
-                if (City == "-")
-                    City = "";
-                if (CountryCode == "-")
-                    CountryCode = "";
-                if (Country == "-")
-                    Country = "";
-                if (State == "-")
-                    State = "";
-                if (Sub_location == "-")
-                    Sub_location = "";
-
-                HelperStatic.DataWriteSQLiteFavourites(
-                    locationName: locationName,
-                    GPSAltitude: GPSAltitude,
-                    GPSAltitudeRef: GPSAltitudeRef,
-                    GPSLatitude: GPSLatitude,
-                    GPSLatitudeRef: GPSLatitudeRef,
-                    GPSLongitude: GPSLongitude,
-                    GPSLongitudeRef: GPSLongitudeRef,
-                    Coordinates: Coordinates,
-                    City: City,
-                    CountryCode: CountryCode,
-                    Country: Country,
-                    State: State,
-                    Sub_location: Sub_location);
-                DataTable dtFavourites = AppStartupLoadFavourites();
-                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
-            }
-
-            else
-            {
-                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
-            }
-        }
-        else
-        {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
-        }
-    }
-
-    private async void btn_LoadFavourite_Click(object sender,
-                                               EventArgs e)
-    {
-        string favouriteToLoad = cbx_Favourites.Text;
-
-        // pull favs (this needs doing each time as user may have changed it)
-        DataTable dtFavourites = AppStartupLoadFavourites();
-
-        if (LstFavourites.Contains(item: favouriteToLoad))
-        {
-            EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in dtFavourites.AsEnumerable()
-                                                               where dataRow.Field<string>(columnName: "locationName") == favouriteToLoad
-                                                               select dataRow;
-
-            DataRow drFavouriteData = drDataTableData.FirstOrDefault();
-
-            bool filesAreSelected = false;
-            if (lvw_FileList.SelectedItems.Count > 0)
-            {
-                foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
-                {
-                    string fileNameWithoutPath = lvi.Text;
-                    if (File.Exists(path: Path.Combine(path1: FolderName, path2: fileNameWithoutPath)))
-                    {
-                        filesAreSelected = true;
-                        break;
-                    }
-                }
-            }
-
-            if (filesAreSelected && drFavouriteData != null)
-            {
-                foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
-                {
-                    string fileNameWithoutPath = lvi.Text;
-                    if (File.Exists(path: Path.Combine(path1: FolderName, path2: fileNameWithoutPath)))
-                    {
-                        foreach (string favouriteTag in AncillaryListsArrays.GetFavouriteTags())
-                        {
-                            string settingId = favouriteTag;
-                            string settingValue = drFavouriteData[columnName: settingId]
-                                .ToString();
-
-                            HelperStatic.GenericUpdateAddToDataTable(
-                                dt: DtFileDataToWriteStage3ReadyToWrite,
-                                fileNameWithoutPath: fileNameWithoutPath,
-                                settingId: settingId,
-                                settingValue: settingValue
-                            );
-                        }
-
-                        await HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
-                    }
-                }
-            }
-
-            else
-            {
-                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
-            }
-        }
-        else
-        {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteNotValid"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
-        }
-    }
 
     #region Variables
 
@@ -278,16 +107,12 @@ public partial class FrmMainApp : Form
 
     internal string _mapHtmlTemplateCode = "";
 
+    internal static bool RemoveGeoDataIsRunning;
 
     // this is for copy-paste
     internal static DataTable DtFileDataCopyPool;
     internal static DataTable DtFileDataPastePool;
     internal static string FileDateCopySourceFileNameWithPath;
-
-    // these are for queueing files up
-    internal static DataTable DtFileDataToWriteStage1PreQueue;
-    internal static DataTable DtFileDataToWriteStage2QueuePendingSave;
-    internal static DataTable DtFileDataToWriteStage3ReadyToWrite;
 
     // just to keep myself sane here....
     // the "queue" tables have the following structure:
@@ -295,11 +120,17 @@ public partial class FrmMainApp : Form
     // (columnName: "settingId");
     // (columnName: "settingValue");
 
+    // these are for queueing files up
+    internal static DataTable DtFileDataToWriteStage1PreQueue;
+    internal static DataTable DtFileDataToWriteStage2QueuePendingSave;
+    internal static DataTable DtFileDataToWriteStage3ReadyToWrite;
+
     // this is for checking if files need to be re-parsed.
-    //internal static DataTable DtFilesSeenInThisSession;
     internal static DataTable DtFileDataSeenInThisSession;
 
-    internal static bool RemoveGeoDataIsRunning;
+    internal static DataTable DtToponomySessionData;
+    internal static DataTable DtAltitudeSessionData;
+
 
     // these are for storing the inital values of TakenDate and CreateDate. Needed for TimeShift.
     internal static DataTable DtOriginalTakenDate;
@@ -436,7 +267,8 @@ public partial class FrmMainApp : Form
 
         AppStartupLoadFavourites();
         AppStartupPullLastLatLngFromSettings();
-
+        AppStartupPullOverWriteBlankToponomy();
+        AppStartupPullToponomyRadiusAndMaxRows();
         NavigateMapGo();
 
         await HelperStatic.GenericCheckForNewVersions();
@@ -1199,12 +1031,14 @@ public partial class FrmMainApp : Form
                                               .ToString()));
             toponomyOverwrites.Add(item: ("Country", dtToponomy.Rows[index: 0][columnName: "Country"]
                                               .ToString()));
-            toponomyOverwrites.Add(item: ("City", dtToponomy.Rows[index: 0][columnName: "City"]
-                                              .ToString()));
-            toponomyOverwrites.Add(item: ("State", dtToponomy.Rows[index: 0][columnName: "State"]
-                                              .ToString()));
-            toponomyOverwrites.Add(item: ("Sub_location", dtToponomy.Rows[index: 0][columnName: "Sub_location"]
-                                              .ToString()));
+
+            foreach (string toponomyReplace in AncillaryListsArrays.ToponomyReplaces())
+            {
+                string settingId = toponomyReplace;
+                string settingVal = HelperStatic.ReplaceBlankToponomy(settingId: settingId, settingValue: dtToponomy.Rows[index: 0][columnName: toponomyReplace]
+                                                                          .ToString());
+                toponomyOverwrites.Add(item: (settingId, settingVal));
+            }
 
             // timeZone is a bit special but that's just how we all love it....not.
             string TZ = dtToponomy.Rows[index: 0][columnName: "timeZoneId"]
@@ -1267,7 +1101,7 @@ public partial class FrmMainApp : Form
             lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
         }
 
-        DataTable dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
+        DataTable dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrDT(lat: strGpsLatitude, lng: strGpsLongitude);
         if (dtAltitude.Rows.Count > 0)
         {
             HelperStatic.GenericUpdateAddToDataTable(
@@ -1578,11 +1412,11 @@ public partial class FrmMainApp : Form
             foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
                 Logger.Trace(message: "Drive:" + drive.Name);
-                DirectoryElements.Add(item: new DirectoryElement(
-                                          itemName: drive.Name,
-                                          type: DirectoryElement.ElementType.Drive,
-                                          fullPathAndName: drive.RootDirectory.FullName
-                                      ));
+                _directoryElements.Add(item: new DirectoryElement(
+                                           itemName: drive.Name,
+                                           type: DirectoryElement.ElementType.Drive,
+                                           fullPathAndName: drive.RootDirectory.FullName
+                                       ));
             }
 
             Logger.Trace(message: "Listing Drives - OK");
@@ -1596,11 +1430,11 @@ public partial class FrmMainApp : Form
             string tmpStrParent = HelperStatic.FsoGetParent(path: tbx_FolderName.Text);
             if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
             {
-                DirectoryElements.Add(item: new DirectoryElement(
-                                          itemName: ParentFolder,
-                                          type: DirectoryElement.ElementType.ParentDirectory,
-                                          fullPathAndName: tmpStrParent
-                                      ));
+                _directoryElements.Add(item: new DirectoryElement(
+                                           itemName: ParentFolder,
+                                           type: DirectoryElement.ElementType.ParentDirectory,
+                                           fullPathAndName: tmpStrParent
+                                       ));
             }
         }
         catch (Exception ex)
@@ -1623,11 +1457,11 @@ public partial class FrmMainApp : Form
                         .Contains(value: "ReparsePoint"))
                 {
                     Logger.Trace(message: "Folder: " + directoryInfo.Name);
-                    DirectoryElements.Add(item: new DirectoryElement(
-                                              itemName: directoryInfo.Name,
-                                              type: DirectoryElement.ElementType.SubDirectory,
-                                              fullPathAndName: directoryInfo.FullName
-                                          ));
+                    _directoryElements.Add(item: new DirectoryElement(
+                                               itemName: directoryInfo.Name,
+                                               type: DirectoryElement.ElementType.SubDirectory,
+                                               fullPathAndName: directoryInfo.FullName
+                                           ));
                 }
             }
         }
@@ -1688,11 +1522,11 @@ public partial class FrmMainApp : Form
             Logger.Trace(message: "File: " + fileNameWithPath);
             string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
             HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-            DirectoryElements.Add(item: new DirectoryElement(
-                                      itemName: Path.GetFileName(path: fileNameWithoutPath),
-                                      type: DirectoryElement.ElementType.File,
-                                      fullPathAndName: fileNameWithPath
-                                  ));
+            _directoryElements.Add(item: new DirectoryElement(
+                                       itemName: Path.GetFileName(path: fileNameWithoutPath),
+                                       type: DirectoryElement.ElementType.File,
+                                       fullPathAndName: fileNameWithPath
+                                   ));
         }
 
         Logger.Trace(message: "Listing Folders - OK");
@@ -2014,6 +1848,282 @@ public partial class FrmMainApp : Form
                                                       EventArgs e)
     {
         lvw_FileList.ShowColumnSelectionDialog();
+    }
+
+    private void btn_SaveLocation_Click(object sender,
+                                        EventArgs e)
+    {
+        if (cbx_Favourites.Text.Length > 0)
+        {
+            ListView lvw = lvw_FileList;
+            if (lvw_FileList.SelectedItems.Count > 0)
+            {
+                ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
+
+                string locationName = cbx_Favourites.Text;
+
+                // fml -- anyhone cares to enumerate through these somehow?!
+                string GPSLatitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLatitude"]
+                                                      .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+                string GPSLatitudeRef = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLatitudeRef"]
+                                                         .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+                string GPSLongitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLongitude"]
+                                                       .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+                string GPSLongitudeRef = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLongitudeRef"]
+                                                          .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+                string GPSAltitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSAltitude"]
+                                                      .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+                string GPSAltitudeRef = lvi.SubItems[index: lvw.Columns[key: "clh_GPSAltitudeRef"]
+                                                         .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+                string Coordinates = lvi.SubItems[index: lvw.Columns[key: "clh_Coordinates"]
+                                                      .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+                string City = lvi.SubItems[index: lvw.Columns[key: "clh_City"]
+                                               .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+                string CountryCode = lvi.SubItems[index: lvw.Columns[key: "clh_CountryCode"]
+                                                      .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+                string Country = lvi.SubItems[index: lvw.Columns[key: "clh_Country"]
+                                                  .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+                string State = lvi.SubItems[index: lvw.Columns[key: "clh_State"]
+                                                .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+                string Sub_location = lvi.SubItems[index: lvw.Columns[key: "clh_Sub_location"]
+                                                       .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+
+                HelperStatic.DataDeleteSQLiteFavourites(locationName: locationName);
+
+                // fml2
+                if (GPSAltitude == "-")
+                {
+                    GPSAltitude = "";
+                }
+
+                if (GPSAltitudeRef == "-")
+                {
+                    GPSAltitudeRef = "";
+                }
+
+                if (GPSLatitude == "-")
+                {
+                    GPSLatitude = "";
+                }
+
+                if (GPSLatitudeRef == "-")
+                {
+                    GPSLatitudeRef = "";
+                }
+
+                if (GPSLongitude == "-")
+                {
+                    GPSLongitude = "";
+                }
+
+                if (GPSLongitudeRef == "-")
+                {
+                    GPSLongitudeRef = "";
+                }
+
+                if (Coordinates == "-")
+                {
+                    Coordinates = "";
+                }
+
+                if (City == "-")
+                {
+                    City = "";
+                }
+
+                if (CountryCode == "-")
+                {
+                    CountryCode = "";
+                }
+
+                if (Country == "-")
+                {
+                    Country = "";
+                }
+
+                if (State == "-")
+                {
+                    State = "";
+                }
+
+                if (Sub_location == "-")
+                {
+                    Sub_location = "";
+                }
+
+                HelperStatic.DataWriteSQLiteFavourites(
+                    locationName: locationName,
+                    GPSAltitude: GPSAltitude,
+                    GPSAltitudeRef: GPSAltitudeRef,
+                    GPSLatitude: GPSLatitude,
+                    GPSLatitudeRef: GPSLatitudeRef,
+                    GPSLongitude: GPSLongitude,
+                    GPSLongitudeRef: GPSLongitudeRef,
+                    Coordinates: Coordinates,
+                    City: City,
+                    CountryCode: CountryCode,
+                    Country: Country,
+                    State: State,
+                    Sub_location: Sub_location);
+
+                DataTable dtFavourites = AppStartupLoadFavourites();
+                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            }
+
+            else
+            {
+                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            }
+        }
+        else
+        {
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+        }
+    }
+
+    private async void btn_LoadFavourite_Click(object sender,
+                                               EventArgs e)
+    {
+        string favouriteToLoad = cbx_Favourites.Text;
+
+        // pull favs (this needs doing each time as user may have changed it)
+        DataTable dtFavourites = AppStartupLoadFavourites();
+
+        if (LstFavourites.Contains(item: favouriteToLoad))
+        {
+            EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in dtFavourites.AsEnumerable()
+                                                               where dataRow.Field<string>(columnName: "locationName") == favouriteToLoad
+                                                               select dataRow;
+
+            DataRow drFavouriteData = drDataTableData.FirstOrDefault();
+
+            bool filesAreSelected = false;
+            if (lvw_FileList.SelectedItems.Count > 0)
+            {
+                foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
+                {
+                    string fileNameWithoutPath = lvi.Text;
+                    if (File.Exists(path: Path.Combine(path1: FolderName, path2: fileNameWithoutPath)))
+                    {
+                        filesAreSelected = true;
+                        break;
+                    }
+                }
+            }
+
+            if (filesAreSelected && drFavouriteData != null)
+            {
+                foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
+                {
+                    string fileNameWithoutPath = lvi.Text;
+                    if (File.Exists(path: Path.Combine(path1: FolderName, path2: fileNameWithoutPath)))
+                    {
+                        foreach (string favouriteTag in AncillaryListsArrays.GetFavouriteTags())
+                        {
+                            string settingId = favouriteTag;
+                            string settingValue = drFavouriteData[columnName: settingId]
+                                .ToString();
+
+                            HelperStatic.GenericUpdateAddToDataTable(
+                                dt: DtFileDataToWriteStage3ReadyToWrite,
+                                fileNameWithoutPath: fileNameWithoutPath,
+                                settingId: settingId,
+                                settingValue: settingValue
+                            );
+                        }
+
+                        await HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
+                    }
+                }
+            }
+
+            else
+            {
+                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            }
+        }
+        else
+        {
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteNotValid"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
+        }
+    }
+
+    /// <summary>
+    /// Clears cached data for any selected items if there is any to clear
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void tmi_removeCachedData_Click(object sender,
+                                            EventArgs e)
+    {
+        bool dataHasBeenRemoved = false;
+        foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
+        {
+            try
+            {
+                string lat = lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GPSLatitude"]
+                                              .Index]
+                    .Text;
+                string lng = lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GPSLongitude"]
+                                              .Index]
+                    .Text;
+
+                for (int i = FrmMainApp.DtToponomySessionData.Rows.Count - 1; i >= 0; i--)
+                {
+                    DataRow dr = FrmMainApp.DtToponomySessionData.Rows[i];
+                    if (dr["lat"]
+                            .ToString() ==
+                        lat &&
+                        dr["lng"]
+                            .ToString() ==
+                        lng)
+                        dr.Delete();
+                    dataHasBeenRemoved = true;
+                }
+
+                FrmMainApp.DtToponomySessionData.AcceptChanges();
+
+                for (int i = FrmMainApp.DtAltitudeSessionData.Rows.Count - 1; i >= 0; i--)
+                {
+                    DataRow dr = FrmMainApp.DtAltitudeSessionData.Rows[i];
+                    if (dr["lat"]
+                            .ToString() ==
+                        lat &&
+                        dr["lng"]
+                            .ToString() ==
+                        lng)
+                        dr.Delete();
+                    dataHasBeenRemoved = true;
+                }
+
+                FrmMainApp.DtAltitudeSessionData.AcceptChanges();
+            }
+            catch
+            {
+                // nothing
+            }
+        }
+
+        if (dataHasBeenRemoved)
+        {
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoCahcedDataRemoved"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
+        }
+        else
+        {
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoCahcedDataNotRemoved"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
+        }
     }
 
     #endregion

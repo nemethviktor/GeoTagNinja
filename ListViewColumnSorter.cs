@@ -1,10 +1,9 @@
-﻿using GeoTagNinja.Model;
-using System;
+﻿using System;
 using System.Collections;
 using System.Windows.Forms;
+using GeoTagNinja.Model;
 
 namespace GeoTagNinja;
-
 
 /// <summary>
 ///     Comparer for columns. Currently supports only case insensitive string comparison.
@@ -61,15 +60,6 @@ internal class ListViewColumnSorter : IComparer
         get => ColumnSortOrder;
     }
 
-    private int GetSortGroup(DirectoryElement de)
-    {
-        if (de.Type == DirectoryElement.ElementType.ParentDirectory) return 0;
-        else if (de.Type == DirectoryElement.ElementType.Drive) return 1;
-        else if (de.Type == DirectoryElement.ElementType.SubDirectory) return 2;
-        else if (de.Type == DirectoryElement.ElementType.Unknown) return 3;
-        else return 4;
-    }
-
 
     /// <summary>
     ///     Compare two objects of type ListViewItem by looking at the set SortColumn.
@@ -87,7 +77,7 @@ internal class ListViewColumnSorter : IComparer
         {
             return 0;
         }
-        
+
         int result = 0;
         ListViewItem lviX = (ListViewItem)x;
         ListViewItem lviY = (ListViewItem)y;
@@ -98,14 +88,18 @@ internal class ListViewColumnSorter : IComparer
         // below that all folders. This is not subject to sort order!
 
         // Assign type per group
-        int lviTypeX = GetSortGroup(deX);
-        int lviTypeY = GetSortGroup(deY);
+        int lviTypeX = GetSortGroup(de: deX);
+        int lviTypeY = GetSortGroup(de: deY);
 
         // If items not in same group, group rules
         if (lviTypeX != lviTypeY)
         {
-            if (lviTypeX < lviTypeY) return -1;
-            else return 1;
+            if (lviTypeX < lviTypeY)
+            {
+                return -1;
+            }
+
+            return 1;
         }
 
         // Item of same group - compare their texts in clicked column...
@@ -129,5 +123,30 @@ internal class ListViewColumnSorter : IComparer
         }
 
         return -result;
+    }
+
+    private int GetSortGroup(DirectoryElement de)
+    {
+        if (de.Type == DirectoryElement.ElementType.ParentDirectory)
+        {
+            return 0;
+        }
+
+        if (de.Type == DirectoryElement.ElementType.Drive)
+        {
+            return 1;
+        }
+
+        if (de.Type == DirectoryElement.ElementType.SubDirectory)
+        {
+            return 2;
+        }
+
+        if (de.Type == DirectoryElement.ElementType.Unknown)
+        {
+            return 3;
+        }
+
+        return 4;
     }
 }

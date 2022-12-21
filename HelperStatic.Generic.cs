@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
 
 namespace GeoTagNinja;
 
@@ -246,6 +247,110 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
+    /// Updates the sessions storage for the Altitude DT
+    /// </summary>
+    /// <param name="lat">string value of lat</param>
+    /// <param name="lng">string value of lng</param>
+    /// <param name="altitude">Value to write</param>
+    internal static void GenericUpdateAddToDataTableAltitude(
+        string lat,
+        string lng,
+        string altitude)
+    {
+        lock (TableLock)
+        {
+            // delete any existing rows with the current combination
+            for (int i = FrmMainApp.DtAltitudeSessionData.Rows.Count - 1; i >= 0; i--)
+            {
+                DataRow thisDr = FrmMainApp.DtAltitudeSessionData.Rows[index: i];
+                if (
+                    thisDr[columnName: "lat"]
+                        .ToString() ==
+                    lat &&
+                    thisDr[columnName: "lng"]
+                        .ToString() ==
+                    lng
+                )
+                {
+                    thisDr.Delete();
+                }
+            }
+
+            FrmMainApp.DtAltitudeSessionData.AcceptChanges();
+
+            // add new
+            DataRow newDr = FrmMainApp.DtAltitudeSessionData.NewRow();
+            newDr[columnName: "lat"] = lat;
+            newDr[columnName: "lng"] = lng;
+            newDr[columnName: "Altitude"] = altitude;
+            FrmMainApp.DtAltitudeSessionData.Rows.Add(row: newDr);
+            FrmMainApp.DtAltitudeSessionData.AcceptChanges();
+        }
+    }
+
+    /// <summary>
+    /// Updates the sessions storage for the Toponomy DT
+    /// </summary>
+    /// <param name="lat">string value of lat</param>
+    /// <param name="lng">string value of lng</param>
+    /// <param name="adminName1">Value to write</param>
+    /// <param name="adminName2">Value to write</param>
+    /// <param name="adminName3">Value to write</param>
+    /// <param name="adminName4">Value to write</param>
+    /// <param name="toponymName">Value to write</param>
+    /// <param name="countryCode">Value to write</param>
+    /// <param name="timezoneId">Value to write</param>
+    internal static void GenericUpdateAddToDataTableTopopnomy(
+        string lat,
+        string lng,
+        string adminName1,
+        string adminName2,
+        string adminName3,
+        string adminName4,
+        string toponymName,
+        string countryCode,
+        string timezoneId
+    )
+    {
+        lock (TableLock)
+        {
+            // delete any existing rows with the current combination
+            for (int i = FrmMainApp.DtToponomySessionData.Rows.Count - 1; i >= 0; i--)
+            {
+                DataRow thisDr = FrmMainApp.DtToponomySessionData.Rows[index: i];
+                if (
+                    thisDr[columnName: "lat"]
+                        .ToString() ==
+                    lat &&
+                    thisDr[columnName: "lng"]
+                        .ToString() ==
+                    lng
+                )
+                {
+                    thisDr.Delete();
+                }
+            }
+
+            FrmMainApp.DtToponomySessionData.AcceptChanges();
+
+            // add new
+            DataRow newDr = FrmMainApp.DtToponomySessionData.NewRow();
+            newDr[columnName: "lat"] = lat;
+            newDr[columnName: "lng"] = lng;
+            newDr[columnName: "AdminName1"] = adminName1;
+            newDr[columnName: "AdminName2"] = adminName2;
+            newDr[columnName: "AdminName3"] = adminName3;
+            newDr[columnName: "AdminName4"] = adminName4;
+            newDr[columnName: "ToponymName"] = toponymName;
+            newDr[columnName: "CountryCode"] = countryCode;
+            newDr[columnName: "timezoneId"] = timezoneId;
+
+            FrmMainApp.DtToponomySessionData.Rows.Add(row: newDr);
+            FrmMainApp.DtToponomySessionData.AcceptChanges();
+        }
+    }
+
+    /// <summary>
     ///     Checks for new versions of GTN and eT.
     /// </summary>
     internal static async Task GenericCheckForNewVersions()
@@ -434,6 +539,26 @@ internal static partial class HelperStatic
         FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "fileNameWithoutPath");
         FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "settingId");
         FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "settingValue");
+
+        // DtToponomySessionData;
+        FrmMainApp.DtToponomySessionData = new DataTable();
+        FrmMainApp.DtToponomySessionData.Clear();
+        FrmMainApp.DtToponomySessionData.Columns.Add("lat");
+        FrmMainApp.DtToponomySessionData.Columns.Add("lng");
+        FrmMainApp.DtToponomySessionData.Columns.Add("AdminName1");
+        FrmMainApp.DtToponomySessionData.Columns.Add("AdminName2");
+        FrmMainApp.DtToponomySessionData.Columns.Add("AdminName3");
+        FrmMainApp.DtToponomySessionData.Columns.Add("AdminName4");
+        FrmMainApp.DtToponomySessionData.Columns.Add("ToponymName");
+        FrmMainApp.DtToponomySessionData.Columns.Add("CountryCode");
+        FrmMainApp.DtToponomySessionData.Columns.Add("timezoneId");
+
+        //DtAltitudeSessionData;
+        FrmMainApp.DtAltitudeSessionData = new DataTable();
+        FrmMainApp.DtAltitudeSessionData.Clear();
+        FrmMainApp.DtAltitudeSessionData.Columns.Add("lat");
+        FrmMainApp.DtAltitudeSessionData.Columns.Add("lng");
+        FrmMainApp.DtAltitudeSessionData.Columns.Add("Altitude");
     }
 
     /// <summary>

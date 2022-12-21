@@ -1655,7 +1655,8 @@ internal static partial class HelperStatic
     /// <param name="longitude">As on the tin.</param>
     /// <returns>Structured toponomy response</returns>
     private static GeoResponseToponomy API_ExifGetGeoDataFromWebToponomy(string latitude,
-                                                                         string longitude)
+                                                                         string longitude,
+                                                                         string radius)
     {
         if (SGeoNamesUserName == null)
         {
@@ -1676,25 +1677,25 @@ internal static partial class HelperStatic
             Authenticator = new HttpBasicAuthenticator(username: SGeoNamesUserName, password: SGeoNamesPwd)
         };
 
-        RestRequest request_Toponomy = new(resource: "findNearbyPlaceNameJSON?lat=" + latitude + "&lng=" + longitude + "&style=FULL");
-        RestResponse response_Toponomy = client.ExecuteGet(request: request_Toponomy);
+        RestRequest requestToponomy = new(resource: "findNearbyPlaceNameJSON?lat=" + latitude + "&lng=" + longitude + "&style=FULL&radius=" + radius + "&maxRows=" + ToponomyMaxRows);
+        RestResponse responseToponomy = client.ExecuteGet(request: requestToponomy);
         // check API reponse is OK
-        if (response_Toponomy.Content != null && response_Toponomy.Content.Contains(value: "the hourly limit of "))
+        if (responseToponomy.Content != null && responseToponomy.Content.Contains(value: "the hourly limit of "))
         {
             SApiOkay = false;
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + response_Toponomy.Content, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + responseToponomy.Content, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
         }
-        else if (response_Toponomy.StatusCode.ToString() == "OK")
+        else if (responseToponomy.StatusCode.ToString() == "OK")
         {
             SApiOkay = true;
-            JObject data = (JObject)JsonConvert.DeserializeObject(value: response_Toponomy.Content);
-            GeoResponseToponomy geoResponse_Toponomy = GeoResponseToponomy.FromJson(Json: data.ToString());
-            returnVal = geoResponse_Toponomy;
+            JObject data = (JObject)JsonConvert.DeserializeObject(value: responseToponomy.Content);
+            GeoResponseToponomy geoResponseToponomy = GeoResponseToponomy.FromJson(Json: data.ToString());
+            returnVal = geoResponseToponomy;
         }
         else
         {
             SApiOkay = false;
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + response_Toponomy.StatusCode, caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + responseToponomy.StatusCode, caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
         }
 
         return returnVal;
@@ -1879,28 +1880,30 @@ internal static partial class HelperStatic
     internal static DataTable DTFromAPIExifGetToponomyFromWebOrSQL(string lat,
                                                                    string lng)
     {
-        DataTable dt_Return = new();
-        dt_Return.Clear();
-        dt_Return.Columns.Add(columnName: "CountryCode");
-        dt_Return.Columns.Add(columnName: "Country");
-        dt_Return.Columns.Add(columnName: "City");
-        dt_Return.Columns.Add(columnName: "State");
-        dt_Return.Columns.Add(columnName: "Sub_location");
-        dt_Return.Columns.Add(columnName: "timezoneId");
+        DataTable dtReturn = new();
+        dtReturn.Clear();
+        dtReturn.Columns.Add(columnName: "Distance"); // this won't actually be used for data purposes.
+        dtReturn.Columns.Add(columnName: "CountryCode");
+        dtReturn.Columns.Add(columnName: "Country");
+        dtReturn.Columns.Add(columnName: "City");
+        dtReturn.Columns.Add(columnName: "State");
+        dtReturn.Columns.Add(columnName: "Sub_location");
+        dtReturn.Columns.Add(columnName: "timezoneId");
 
         // logic: it's likely that API info doesn't change much...ever. 
         // Given that in 2022 Crimea is still part of Ukraine according to API response I think this data is static
         // ....so no need to query stuff that may already be locally available.
         // FYI this only gets amended when this button gets pressed or if map-to-location button gets pressed on the main form.
         // ... also on an unrelated note Toponomy vs Toponmy the API calls it one thing and Wikipedia calls it another so go figure
-        DataTable dt_ToponomyInSQL = DataReadSQLiteToponomyWholeRow(
-            lat: lat.ToString(provider: CultureInfo.InvariantCulture),
-            lng: lng.ToString(provider: CultureInfo.InvariantCulture)
-        );
+        EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in FrmMainApp.DtToponomySessionData.AsEnumerable()
+                                                           where dataRow.Field<string>(columnName: "lat") == lat && dataRow.Field<string>(columnName: "lng") == lng
+                                                           select dataRow;
+
+        List<DataRow> lstReturnToponomyData = drDataTableData.ToList();
 
         GeoResponseToponomy readJsonToponomy;
-        GeoResponseTimeZone readJsonTimeZone;
 
+        string Distance = "";
         string CountryCode = "";
         string Country = "";
         string City = "";
@@ -1908,10 +1911,16 @@ internal static partial class HelperStatic
         string Sub_location = "";
         string timezoneId = "";
 
+        // As per https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 (see below comment a few lines down)
+        string[] arrCityNameIsAdminName1 = { "LIE", "SMR", "MNE", "MKD", "MLT", "SVN" };
+        string[] arrCityNameIsAdminName2 = { "ALA", "BRA", "COL", "CUB", "CYP", "DNK", "FRO", "GTM", "HND", "HRV", "ISL", "LUX", "LVA", "NIC", "NLD", "NOR", "PRI", "PRT", "ROU", "SWE" };
+        string[] arrCityNameIsAdminName3 = { "AUT", "CHE", "CHL", "CZE", "EST", "ESP", "FIN", "GRC", "ITA", "PAN", "PER", "POL", "SRB", "SVK", "USA", "ZAF" };
+        string[] arrCityNameIsAdminName4 = { "BEL", "DEU", "FRA", "GUF", "GLP", "MTQ" };
+
         // read from SQL
-        if (dt_ToponomyInSQL.Rows.Count > 0)
+        if (lstReturnToponomyData.Count > 0)
         {
-            CountryCode = dt_ToponomyInSQL.Rows[index: 0][columnName: "CountryCode"]
+            CountryCode = lstReturnToponomyData[index: 0][columnName: "CountryCode"]
                 .ToString();
             Country = DataReadSQLiteCountryCodesNames(
                     queryWhat: "ISO_3166_1A3",
@@ -1919,129 +1928,410 @@ internal static partial class HelperStatic
                     returnWhat: "Country")
                 ;
 
-            timezoneId = dt_ToponomyInSQL.Rows[index: 0][columnName: "timezoneId"]
+            timezoneId = lstReturnToponomyData[index: 0][columnName: "timezoneId"]
                 .ToString();
 
-            if (CountryCode == "GBR" &&
-                dt_ToponomyInSQL.Rows[index: 0][columnName: "AdminName2"]
-                    .ToString()
-                    .Contains(value: "London"))
+            // In a country where you know, which admin level the cities belong to (see arrays), use the adminNameX as city name.
+            // If the toponymName doesn't match the adminNameX, use the toponymName as sublocation name. toponymNames ...
+            // ... for populated places may be city names or names of some populated entity below city level, but they're never used for something above city level.
+            // In a country where city names are not assigned to a specific admin level, I'd use the toponymName as the city name and leave the sublocation name blank.
+            Sub_location = lstReturnToponomyData[index: 0][columnName: "ToponymName"]
+                .ToString();
+
+            if (arrCityNameIsAdminName1.Contains(value: CountryCode))
             {
-                City = dt_ToponomyInSQL.Rows[index: 0][columnName: "AdminName2"]
+                City = lstReturnToponomyData[index: 0][columnName: "AdminName1"]
                     .ToString();
-                State = dt_ToponomyInSQL.Rows[index: 0][columnName: "AdminName1"]
+                if (City == Sub_location)
+                {
+                    Sub_location = "";
+                }
+            }
+            else if (arrCityNameIsAdminName2.Contains(value: CountryCode))
+            {
+                City = lstReturnToponomyData[index: 0][columnName: "AdminName2"]
                     .ToString();
-                Sub_location = dt_ToponomyInSQL.Rows[index: 0][columnName: "ToponymName"]
+                if (City == Sub_location)
+                {
+                    Sub_location = "";
+                }
+            }
+            else if (arrCityNameIsAdminName3.Contains(value: CountryCode))
+            {
+                City = lstReturnToponomyData[index: 0][columnName: "AdminName3"]
                     .ToString();
+                if (City == Sub_location)
+                {
+                    Sub_location = "";
+                }
+            }
+            else if (arrCityNameIsAdminName4.Contains(value: CountryCode))
+            {
+                City = lstReturnToponomyData[index: 0][columnName: "AdminName4"]
+                    .ToString();
+                if (City == Sub_location)
+                {
+                    Sub_location = "";
+                }
             }
             else
             {
-                City = dt_ToponomyInSQL.Rows[index: 0][columnName: "ToponymName"]
-                    .ToString();
-                State = dt_ToponomyInSQL.Rows[index: 0][columnName: "AdminName1"]
-                    .ToString();
-                Sub_location = dt_ToponomyInSQL.Rows[index: 0][columnName: "AdminName2"]
+                // i'll do something more generic and user-editable eventually.
+                if (lstReturnToponomyData[index: 0][columnName: "adminName2"]
+                        .ToString() ==
+                    "Greater London")
+                {
+                    City = lstReturnToponomyData[index: 0][columnName: "adminName2"]
+                        .ToString();
+                    Sub_location = lstReturnToponomyData[index: 0][columnName: "ToponymName"]
+                        .ToString();
+                }
+                else
+                {
+                    City = lstReturnToponomyData[index: 0][columnName: "ToponymName"]
+                        .ToString();
+                    Sub_location = "";
+                }
+            }
+
+            if (arrCityNameIsAdminName1.Contains(value: CountryCode))
+            {
+                State = "";
+            }
+            else
+            {
+                State = lstReturnToponomyData[index: 0][columnName: "AdminName1"]
                     .ToString();
             }
+
+            DataRow drReturnRow = dtReturn.NewRow();
+            drReturnRow[columnName: "Distance"] = Distance;
+            drReturnRow[columnName: "CountryCode"] = CountryCode;
+            drReturnRow[columnName: "Country"] = Country;
+            drReturnRow[columnName: "City"] = City;
+            drReturnRow[columnName: "State"] = State;
+            drReturnRow[columnName: "Sub_location"] = Sub_location;
+            drReturnRow[columnName: "timezoneId"] = timezoneId;
+
+            dtReturn.Rows.Add(row: drReturnRow);
         }
         // read from API
         else if (SApiOkay)
         {
             readJsonToponomy = API_ExifGetGeoDataFromWebToponomy(
                 latitude: lat,
-                longitude: lng
+                longitude: lng,
+                radius: ToponomyRadiusValue
             );
 
-            readJsonTimeZone = API_ExifGetGeoDataFromWebTimeZone(
-                latitude: lat,
-                longitude: lng
-            );
+            // if that returns nothing then try again with something bigger.
+            if (readJsonToponomy.Geonames.Length == 0)
+            {
+                readJsonToponomy = API_ExifGetGeoDataFromWebToponomy(
+                    latitude: lat,
+                    longitude: lng,
+                    radius: "300"
+                );
+            }
 
             // ignore if unauthorised or some such
-            if (readJsonToponomy.Geonames != null && readJsonTimeZone.TimezoneId != null)
+            if (readJsonToponomy.Geonames != null)
             {
-                if (readJsonToponomy.Geonames.Length + readJsonTimeZone.TimezoneId.Length > 0)
+                if (readJsonToponomy.Geonames.Length > 0)
                 {
-                    string APICountryCode = readJsonToponomy.Geonames[0]
-                        .CountryCode;
-                    if (APICountryCode != null || APICountryCode != "")
+                    // this is to pseudo-replicate the dtReturn table but for SQL, which has a different logic. (of course it does.)
+                    DataTable dtWriteToSQLite = new();
+                    dtWriteToSQLite.Clear();
+                    dtWriteToSQLite.Columns.Add(columnName: "lat");
+                    dtWriteToSQLite.Columns.Add(columnName: "lng");
+                    dtWriteToSQLite.Columns.Add(columnName: "AdminName1");
+                    dtWriteToSQLite.Columns.Add(columnName: "AdminName2");
+                    dtWriteToSQLite.Columns.Add(columnName: "AdminName3");
+                    dtWriteToSQLite.Columns.Add(columnName: "AdminName4");
+                    dtWriteToSQLite.Columns.Add(columnName: "ToponymName");
+                    dtWriteToSQLite.Columns.Add(columnName: "CountryCode");
+                    dtWriteToSQLite.Columns.Add(columnName: "timezoneId");
+
+                    for (int index = 0; index < readJsonToponomy.Geonames.Length; index++)
                     {
-                        CountryCode = DataReadSQLiteCountryCodesNames(
-                            queryWhat: "ISO_3166_1A2",
-                            inputVal: APICountryCode,
-                            returnWhat: "ISO_3166_1A3"
-                        );
-                        Country = DataReadSQLiteCountryCodesNames(
-                            queryWhat: "ISO_3166_1A2",
-                            inputVal: APICountryCode,
-                            returnWhat: "Country"
-                        );
+                        DataRow drApiToponomyRow = dtReturn.NewRow();
+                        DataRow drWriteToSqLiteRow = dtWriteToSQLite.NewRow();
+
+                        string APICountryCode = readJsonToponomy.Geonames[index]
+                            .CountryCode;
+                        if (APICountryCode.Length == 2)
+                        {
+                            CountryCode = DataReadSQLiteCountryCodesNames(
+                                queryWhat: "ISO_3166_1A2",
+                                inputVal: APICountryCode,
+                                returnWhat: "ISO_3166_1A3"
+                            );
+                            Country = DataReadSQLiteCountryCodesNames(
+                                queryWhat: "ISO_3166_1A2",
+                                inputVal: APICountryCode,
+                                returnWhat: "Country"
+                            );
+                        }
+
+                        Distance = readJsonToponomy.Geonames[index]
+                            .Distance;
+
+                        // Comments are copied from above.
+                        // In a country where you know, which admin level the cities belong to (see arrays), use the adminNameX as city name.
+                        // If the toponymName doesn't match the adminNameX, use the toponymName as sublocation name. toponymNames ...
+                        // ... for populated places may be city names or names of some populated entity below city level, but they're never used for something above city level.
+                        // In a country where city names are not assigned to a specific admin level, I'd use the toponymName as the city name and leave the sublocation name blank.
+                        Sub_location = readJsonToponomy.Geonames[index]
+                            .ToponymName;
+
+                        if (arrCityNameIsAdminName1.Contains(value: CountryCode))
+                        {
+                            City = readJsonToponomy.Geonames[index]
+                                .AdminName1;
+                            if (City == Sub_location)
+                            {
+                                Sub_location = "";
+                            }
+                        }
+                        else if (arrCityNameIsAdminName2.Contains(value: CountryCode))
+                        {
+                            City = readJsonToponomy.Geonames[index]
+                                .AdminName2;
+                            if (City == Sub_location)
+                            {
+                                Sub_location = "";
+                            }
+                        }
+                        else if (arrCityNameIsAdminName3.Contains(value: CountryCode))
+                        {
+                            City = readJsonToponomy.Geonames[index]
+                                .AdminName3;
+                            if (City == Sub_location)
+                            {
+                                Sub_location = "";
+                            }
+                        }
+                        else if (arrCityNameIsAdminName4.Contains(value: CountryCode))
+                        {
+                            City = readJsonToponomy.Geonames[index]
+                                .AdminName4;
+                            if (City == Sub_location)
+                            {
+                                Sub_location = "";
+                            }
+                        }
+                        else
+                        {
+                            // i'll do something more generic and user-editable eventually.
+                            if (readJsonToponomy.Geonames[index]
+                                    .AdminName2 ==
+                                "Greater London")
+                            {
+                                City = readJsonToponomy.Geonames[index]
+                                    .AdminName2;
+                                Sub_location = readJsonToponomy.Geonames[index]
+                                    .ToponymName;
+                            }
+                            else
+                            {
+                                City = readJsonToponomy.Geonames[index]
+                                    .ToponymName;
+                                Sub_location = "";
+                            }
+                        }
+
+                        if (arrCityNameIsAdminName1.Contains(value: CountryCode))
+                        {
+                            State = "";
+                        }
+                        else
+                        {
+                            State = readJsonToponomy.Geonames[index]
+                                .AdminName1;
+                        }
+
+                        // this is already String.
+                        timezoneId = readJsonToponomy.Geonames[index]
+                            .Timezone.TimeZoneId;
+
+                        // add to return-table to offer to user
+                        drApiToponomyRow[columnName: "Distance"] = Distance;
+                        drApiToponomyRow[columnName: "CountryCode"] = CountryCode;
+                        drApiToponomyRow[columnName: "Country"] = Country;
+                        drApiToponomyRow[columnName: "City"] = City;
+                        drApiToponomyRow[columnName: "State"] = State;
+                        drApiToponomyRow[columnName: "Sub_location"] = Sub_location;
+                        drApiToponomyRow[columnName: "timezoneId"] = timezoneId;
+
+                        dtReturn.Rows.Add(row: drApiToponomyRow);
+
+                        // write back the new stuff to sql
+
+                        drWriteToSqLiteRow[columnName: "lat"] = lat;
+                        drWriteToSqLiteRow[columnName: "lng"] = lng;
+                        drWriteToSqLiteRow[columnName: "AdminName1"] = readJsonToponomy.Geonames[index]
+                            .AdminName1;
+                        drWriteToSqLiteRow[columnName: "AdminName2"] = readJsonToponomy.Geonames[index]
+                            .AdminName2;
+                        drWriteToSqLiteRow[columnName: "AdminName3"] = readJsonToponomy.Geonames[index]
+                            .AdminName3;
+                        drWriteToSqLiteRow[columnName: "AdminName4"] = readJsonToponomy.Geonames[index]
+                            .AdminName4;
+                        drWriteToSqLiteRow[columnName: "ToponymName"] = readJsonToponomy.Geonames[index]
+                            .ToponymName;
+                        drWriteToSqLiteRow[columnName: "CountryCode"] = CountryCode;
+                        drWriteToSqLiteRow[columnName: "timezoneId"] = timezoneId;
+
+                        dtWriteToSQLite.Rows.Add(row: drWriteToSqLiteRow);
                     }
 
-                    // api sends back some misaligned stuff for the UK
-                    if (CountryCode == "GBR" &&
-                        readJsonToponomy.Geonames[0]
-                            .AdminName2
-                            .Contains(value: "London"))
+                    if (dtReturn.Rows.Count == 1)
                     {
-                        City = readJsonToponomy.Geonames[0]
-                            .AdminName2;
-                        State = readJsonToponomy.Geonames[0]
-                            .AdminName1;
-                        Sub_location = readJsonToponomy.Geonames[0]
-                            .ToponymName;
+                        // not adding anything to dtReturn because it has 1 row, and that's the one that will be returned.
+
+                        GenericUpdateAddToDataTableTopopnomy(
+                            lat: dtWriteToSQLite.Rows[index: 0][columnName: "lat"]
+                                .ToString(),
+                            lng: dtWriteToSQLite.Rows[index: 0][columnName: "lng"]
+                                .ToString(),
+                            adminName1: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName1"]
+                                .ToString(),
+                            adminName2: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName2"]
+                                .ToString(),
+                            adminName3: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName3"]
+                                .ToString(),
+                            adminName4: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName4"]
+                                .ToString(),
+                            toponymName: dtWriteToSQLite.Rows[index: 0][columnName: "ToponymName"]
+                                .ToString(),
+                            countryCode: dtWriteToSQLite.Rows[index: 0][columnName: "CountryCode"]
+                                .ToString(),
+                            timezoneId: dtWriteToSQLite.Rows[index: 0][columnName: "timezoneId"]
+                                .ToString()
+                        );
                     }
                     else
                     {
-                        City = readJsonToponomy.Geonames[0]
-                            .ToponymName;
-                        State = readJsonToponomy.Geonames[0]
-                            .AdminName1;
-                        Sub_location = readJsonToponomy.Geonames[0]
-                            .AdminName2;
+                        int useDr = useDrRow(dtIn: dtReturn);
+                        dtReturn = dtReturn.AsEnumerable()
+                            .Where(predicate: (row,
+                                               index) => index == useDr)
+                            .CopyToDataTable();
+
+                        dtWriteToSQLite = dtWriteToSQLite.AsEnumerable()
+                            .Where(predicate: (row,
+                                               index) => index == useDr)
+                            .CopyToDataTable();
+
+                        // [0] because we just killed off the other rows above.
+                        GenericUpdateAddToDataTableTopopnomy(
+                            lat: dtWriteToSQLite.Rows[index: 0][columnName: "lat"]
+                                .ToString(),
+                            lng: dtWriteToSQLite.Rows[index: 0][columnName: "lng"]
+                                .ToString(),
+                            adminName1: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName1"]
+                                .ToString(),
+                            adminName2: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName2"]
+                                .ToString(),
+                            adminName3: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName3"]
+                                .ToString(),
+                            adminName4: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName4"]
+                                .ToString(),
+                            toponymName: dtWriteToSQLite.Rows[index: 0][columnName: "ToponymName"]
+                                .ToString(),
+                            countryCode: dtWriteToSQLite.Rows[index: 0][columnName: "CountryCode"]
+                                .ToString(),
+                            timezoneId: dtWriteToSQLite.Rows[index: 0][columnName: "timezoneId"]
+                                .ToString()
+                        );
+
+                        int useDrRow(DataTable dtIn)
+                        {
+                            Form pickRowBox = new();
+
+                            pickRowBox.ControlBox = false;
+                            FlowLayoutPanel panel = new();
+
+                            ListView lvwDataChoices = new();
+                            lvwDataChoices.Size = new Size(width: 800, height: 200);
+                            lvwDataChoices.View = System.Windows.Forms.View.Details;
+                            lvwDataChoices.Columns.Add(text: "Index");
+                            foreach (DataColumn dc in dtIn.Columns)
+                            {
+                                lvwDataChoices.Columns.Add(text: dc.ColumnName, width: -2);
+                            }
+
+                            foreach (DataRow drItem in dtReturn.Rows)
+                            {
+                                ListViewItem lvi = new(text: dtReturn.Rows.IndexOf(row: drItem)
+                                                           .ToString());
+                                foreach (DataColumn dc in dtIn.Columns)
+                                {
+                                    lvi.SubItems.Add(text: drItem[column: dc]
+                                                         .ToString());
+                                }
+
+                                lvwDataChoices.Items.Add(value: lvi);
+                            }
+
+                            lvwDataChoices.MultiSelect = false;
+                            lvwDataChoices.FullRowSelect = true;
+
+                            panel.Controls.Add(value: lvwDataChoices);
+                            panel.SetFlowBreak(control: lvwDataChoices, value: true);
+
+                            Button btnOk = new()
+                                { Text = "OK" };
+                            btnOk.Click += (sender,
+                                            e) =>
+                            {
+                                pickRowBox.Close();
+                            };
+                            btnOk.Location = new Point(x: 10, y: lvwDataChoices.Bottom + 5);
+                            btnOk.AutoSize = true;
+                            panel.Controls.Add(value: btnOk);
+
+                            panel.Padding = new Padding(all: 5);
+                            panel.AutoSize = true;
+
+                            pickRowBox.Controls.Add(value: panel);
+                            pickRowBox.MinimumSize = new Size(width: lvwDataChoices.Width + 40, height: btnOk.Bottom + 50);
+                            pickRowBox.ShowInTaskbar = false;
+
+                            pickRowBox.StartPosition = FormStartPosition.CenterScreen;
+                            pickRowBox.ShowDialog();
+
+                            try
+                            {
+                                return lvwDataChoices.SelectedItems[index: 0]
+                                    .Index;
+                            }
+                            catch
+                            {
+                                return 0;
+                            }
+                        }
                     }
-
-                    // this is already String.
-                    timezoneId = readJsonTimeZone.TimezoneId;
-
-                    // write back to sql the new stuff
-                    DataWriteSQLiteToponomyWholeRow(
-                        lat: lat,
-                        lng: lng,
-                        AdminName1: readJsonToponomy.Geonames[0]
-                            .AdminName1,
-                        AdminName2: readJsonToponomy.Geonames[0]
-                            .AdminName2,
-                        ToponymName: readJsonToponomy.Geonames[0]
-                            .ToponymName,
-                        CountryCode: CountryCode,
-                        timezoneId: timezoneId
-                    );
                 }
                 else if (SApiOkay)
                 {
                     // write back empty
-                    DataWriteSQLiteToponomyWholeRow(
+                    GenericUpdateAddToDataTableTopopnomy(
                         lat: lat,
-                        lng: lng
+                        lng: lng,
+                        adminName1: "",
+                        adminName2: "",
+                        adminName3: "",
+                        adminName4: "",
+                        toponymName: "",
+                        countryCode: "",
+                        timezoneId: ""
                     );
                 }
             }
         }
 
-        if (SApiOkay || dt_ToponomyInSQL.Rows.Count > 0)
-        {
-            DataRow dr_ReturnRow = dt_Return.NewRow();
-            dr_ReturnRow[columnName: "CountryCode"] = CountryCode;
-            dr_ReturnRow[columnName: "Country"] = Country;
-            dr_ReturnRow[columnName: "City"] = City;
-            dr_ReturnRow[columnName: "State"] = State;
-            dr_ReturnRow[columnName: "Sub_location"] = Sub_location;
-            dr_ReturnRow[columnName: "timezoneId"] = timezoneId;
-            dt_Return.Rows.Add(row: dr_ReturnRow);
-        }
-
-        return dt_Return;
+        return dtReturn;
     }
 
     /// <summary>
@@ -2054,35 +2344,41 @@ internal static partial class HelperStatic
     ///     See summary. Returns the altitude info either from SQLite if available or the API in DataTable for further
     ///     processing
     /// </returns>
-    internal static DataTable DTFromAPIExifGetAltitudeFromWebOrSQL(string lat,
-                                                                   string lng)
+    internal static DataTable DTFromAPIExifGetAltitudeFromWebOrDT(string lat,
+                                                                  string lng)
     {
         DataTable dt_Return = new();
         dt_Return.Clear();
         dt_Return.Columns.Add(columnName: "Altitude");
 
-        string Altitude = "0";
+        string altitude = "0";
 
-        DataTable dt_AltitudeInSQL = DataReadSQLiteAltitudeWholeRow(
-            lat: lat,
-            lng: lng
-        );
+        EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in FrmMainApp.DtAltitudeSessionData.AsEnumerable()
+                                                           where dataRow.Field<string>(columnName: "lat") == lat && dataRow.Field<string>(columnName: "lng") == lng
+                                                           select dataRow;
+        List<string> lstReturnAltitudeSessionData = new();
 
-        if (dt_AltitudeInSQL.Rows.Count > 0)
+        Parallel.ForEach(source: drDataTableData, body: dataRow =>
+            {
+                string settingValue = dataRow[columnName: "Altitude"]
+                    .ToString();
+                lstReturnAltitudeSessionData.Add(item: settingValue);
+            })
+            ;
+
+        if (lstReturnAltitudeSessionData.Count > 0)
         {
-            Altitude = dt_AltitudeInSQL.Rows[index: 0][columnName: "Srtm1"]
-                .ToString();
-            Altitude = Altitude.ToString(provider: CultureInfo.InvariantCulture);
+            altitude = lstReturnAltitudeSessionData.FirstOrDefault();
         }
         else if (SApiOkay)
         {
-            GeoResponseAltitude readJson_Altitude = API_ExifGetGeoDataFromWebAltitude(
+            GeoResponseAltitude readJsonAltitude = API_ExifGetGeoDataFromWebAltitude(
                 latitude: lat,
                 longitude: lng
             );
-            if (readJson_Altitude.Srtm1 != null)
+            if (readJsonAltitude.Srtm1 != null)
             {
-                string tmpAltitude = readJson_Altitude.Srtm1.ToString();
+                string tmpAltitude = readJsonAltitude.Srtm1.ToString();
                 tmpAltitude = tmpAltitude.ToString(provider: CultureInfo.InvariantCulture);
 
                 // ignore if the API sends back something silly.
@@ -2093,31 +2389,33 @@ internal static partial class HelperStatic
                     tmpAltitude = "0";
                 }
 
-                Altitude = tmpAltitude;
+                altitude = tmpAltitude;
                 // write back to sql the new stuff
-                DataWriteSQLiteAltitudeWholeRow(
+
+                GenericUpdateAddToDataTableAltitude(
                     lat: lat,
                     lng: lng,
-                    Altitude: Altitude
+                    altitude: altitude
                 );
             }
 
             // this will be a null value if Unauthorised, we'll ignore that.
-            if (readJson_Altitude.Lat == null && SApiOkay)
+            if (readJsonAltitude.Lat == null && SApiOkay)
             {
                 // write back blank
-                DataWriteSQLiteAltitudeWholeRow(
+                GenericUpdateAddToDataTableAltitude(
                     lat: lat,
-                    lng: lng
+                    lng: lng,
+                    altitude: ""
                 );
             }
         }
 
-        if (SApiOkay || dt_AltitudeInSQL.Rows.Count > 0)
+        if (SApiOkay || lstReturnAltitudeSessionData.Count > 0)
         {
-            DataRow dr_ReturnRow = dt_Return.NewRow();
-            dr_ReturnRow[columnName: "Altitude"] = Altitude;
-            dt_Return.Rows.Add(row: dr_ReturnRow);
+            DataRow drReturnRow = dt_Return.NewRow();
+            drReturnRow[columnName: "Altitude"] = altitude;
+            dt_Return.Rows.Add(row: drReturnRow);
         }
 
         return dt_Return;
@@ -2338,5 +2636,26 @@ internal static partial class HelperStatic
         dt.Load(reader: dr);
 
         return dt;
+    }
+
+    /// <summary>
+    ///     Checks and replaces blank toponomy values as required
+    /// </summary>
+    /// <param name="settingId"></param>
+    /// <param name="settingValue"></param>
+    /// <returns></returns>
+    internal static string ReplaceBlankToponomy(string settingId,
+                                                string settingValue)
+    {
+        string retStr = settingValue;
+        if (AncillaryListsArrays.ToponomyReplaces()
+                .Contains(value: settingId) &&
+            ToponomyReplace &&
+            settingValue.Length == 0)
+        {
+            retStr = ToponomyReplaceWithWhat;
+        }
+
+        return retStr;
     }
 }

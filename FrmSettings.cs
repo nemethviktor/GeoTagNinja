@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -31,7 +32,6 @@ public partial class FrmSettings : Form
 
             if (cItem.Name == "cbx_Language")
             {
-                string resourcesFolderPath = FrmMainApp.ResourcesFolderPath;
                 string languagesFolderPath = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "Languages");
 
                 string[] files = Directory.GetFiles(path: languagesFolderPath, searchPattern: "*.sqlite");
@@ -127,6 +127,36 @@ public partial class FrmSettings : Form
                             cbx.CheckState = CheckState.Unchecked;
                         }
                     }
+                    else if (subctrl is NumericUpDown nud)
+                    {
+                        string nudTempValue = HelperStatic.DataReadSQLiteSettings(
+                            tableName: "settings",
+                            settingTabPage: ctrl.Name,
+                            settingId: subctrl.Name
+                        );
+
+                        if (nudTempValue != null)
+                        {
+                            nud.Value = Convert.ToInt32(value: nudTempValue);
+                        }
+                        else
+                        {
+                            switch (nud.Name)
+                            {
+                                case "nud_ChoiceOfferCount":
+                                    nud.Value = 1;
+                                    nud.Text = "1";
+                                    break;
+                                case "nud_ChoiceRadius":
+                                    nud.Value = 10;
+                                    nud.Text = "10";
+                                    break;
+                                default:
+                                    nud.Value = 1;
+                                    break;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -185,6 +215,9 @@ public partial class FrmSettings : Form
         {
             HelperStatic.SResetMapToZero = false;
         }
+
+        FrmMainApp.AppStartupPullOverWriteBlankToponomy();
+        FrmMainApp.AppStartupPullToponomyRadiusAndMaxRows();
 
         Hide();
     }
@@ -362,8 +395,8 @@ public partial class FrmSettings : Form
     {
         if (!_nowLoadingSettingsData)
         {
-            CheckBox txt = (CheckBox)sender;
-            txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Bold);
+            CheckBox ckb = (CheckBox)sender;
+            ckb.Font = new Font(prototype: ckb.Font, newStyle: FontStyle.Bold);
             string tmpCtrlName = "";
             object lbi = lbx_fileExtensions.SelectedItem;
             if (lbi != null)
@@ -377,6 +410,11 @@ public partial class FrmSettings : Form
             else
             {
                 tmpCtrlName = ((CheckBox)sender).Name;
+            }
+
+            if (tmpCtrlName == "ckb_ReplaceBlankToponyms")
+            {
+                tbx_ReplaceBlankToponyms.Enabled = ckb.Checked;
             }
 
             // stick it into settings-Q
@@ -439,5 +477,49 @@ public partial class FrmSettings : Form
                 MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmSettings_cbx_Language_TextChanged"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
             }
         }
+    }
+
+    /// <summary>
+    ///     Handles the event where any nud's value changed.
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void Any_nud_ValueChanged(object sender,
+                                      EventArgs e)
+    {
+        if (!_nowLoadingSettingsData)
+        {
+            NumericUpDown nud = (NumericUpDown)sender;
+            nud.Font = new Font(prototype: nud.Font, newStyle: FontStyle.Bold);
+
+            HelperStatic.DataWriteSQLiteSettings(
+                tableName: "settingsToWritePreQueue",
+                settingTabPage: ((Control)sender).Parent.Name,
+                settingId: ((NumericUpDown)sender).Name,
+                settingValue: ((NumericUpDown)sender).Value.ToString(provider: CultureInfo.InvariantCulture)
+            );
+        }
+    }
+
+    /// <summary>
+    ///     Disables AcceptButton -> so that user can't hit "Enter" because it wouldn't be saved. VS is a bit silly.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void Any_nud_Enter(object sender,
+                               EventArgs e)
+    {
+        AcceptButton = null;
+    }
+
+    /// <summary>
+    ///     Reinstates AcceptButton
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void Any_nud_Leave(object sender,
+                               EventArgs e)
+    {
+        AcceptButton = btn_OK;
     }
 }
