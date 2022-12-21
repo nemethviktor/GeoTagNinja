@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Model;
+﻿
+using GeoTagNinja.Model;
 using NLog;
 using System;
 using System.Collections.Generic;

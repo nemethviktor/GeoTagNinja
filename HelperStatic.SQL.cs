@@ -81,6 +81,22 @@ internal static partial class HelperStatic
                                         [Srtm1] NTEXT, 
                                         PRIMARY KEY([Lat], [Lng]))
                             ;
+                            CREATE TABLE [Favourites](
+                                        [locationName] NTEXT NOT NULL PRIMARY KEY,
+                                        [GPSLatitude] NTEXT NOT NULL,
+                                        [GPSLatitudeRef] NTEXT NOT NULL,
+                                        [GPSLongitude] NTEXT NOT NULL,
+                                        [GPSLongitudeRef] NTEXT NOT NULL,
+                                        [GPSAltitude] NTEXT,
+                                        [GPSAltitudeRef] NTEXT,
+                                        [Coordinates] NTEXT NOT NULL,
+                                        [City] NTEXT,
+                                        [CountryCode] NTEXT,
+                                        [Country] NTEXT,
+                                        [State] NTEXT,
+                                        [Sub_location] NTEXT
+                                        )
+                            ;
                             """;
                     SQLiteCommand sqlCommandStr = new(commandText: sql, connection: sqliteDB);
                     sqlCommandStr.ExecuteNonQuery();
@@ -94,6 +110,7 @@ internal static partial class HelperStatic
             }
             else
             {
+                DataCreateSQLiteFavourites();
                 DataDeleteSQLiteToponomy();
                 DataDeleteSQLiteAltitude();
             }
@@ -632,6 +649,158 @@ internal static partial class HelperStatic
         sqlToRun.Parameters.AddWithValue(parameterName: "@ToponymName", value: ToponymName);
         sqlToRun.Parameters.AddWithValue(parameterName: "@CountryCode", value: CountryCode);
         sqlToRun.Parameters.AddWithValue(parameterName: "@timezoneId", value: timezoneId);
+
+        sqlToRun.ExecuteNonQuery();
+    }
+
+    /// <summary>
+    ///     Creates a table for the user's "favourites".
+    /// </summary>
+    private static void DataCreateSQLiteFavourites()
+    {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = @"
+                                CREATE TABLE IF NOT EXISTS [Favourites](
+                                        [locationName] NTEXT NOT NULL PRIMARY KEY,
+                                        [GPSLatitude] NTEXT NOT NULL,
+                                        [GPSLatitudeRef] NTEXT NOT NULL,
+                                        [GPSLongitude] NTEXT NOT NULL,
+                                        [GPSLongitudeRef] NTEXT NOT NULL,
+                                        [GPSAltitude] NTEXT,
+                                        [GPSAltitudeRef] NTEXT,
+                                        [Coordinates] NTEXT NOT NULL,
+                                        [City] NTEXT,
+                                        [CountryCode] NTEXT,
+                                        [Country] NTEXT,
+                                        [State] NTEXT,
+                                        [Sub_location] NTEXT
+                                        )
+                                ;"
+            ;
+
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+
+        sqlToRun.ExecuteNonQuery();
+    }
+
+    /// <summary>
+    ///     Reads the favourites table
+    /// </summary>
+    /// <returns></returns>
+    internal static DataTable DataReadSQLiteFavourites()
+    {
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = @"
+                                SELECT *
+                                FROM Favourites
+                                WHERE 1=1
+                                ORDER BY 1;
+								"
+            ;
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+
+        SQLiteDataReader reader = sqlToRun.ExecuteReader();
+        DataTable dataTable = new();
+        dataTable.Load(reader: reader);
+        return dataTable;
+    }
+
+    /// <summary>
+    /// Deletes the given "favourite" from the relevant table
+    /// </summary>
+    /// <param name="locationName">Name of the "favourite" (like "home")</param>
+    internal static void DataDeleteSQLiteFavourites(string locationName)
+    {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = @"
+                                DELETE FROM Favourites
+                                WHERE locationName = @locationName
+                                ;"
+            ;
+
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@locationName", value: locationName);
+
+        sqlToRun.ExecuteNonQuery();
+    }
+
+    /// <summary>
+    /// Writes back the relevant "favourite" to the table
+    /// </summary>
+    /// <param name="locationName">Value to write for relevant column</param>
+    /// <param name="GPSAltitude">Value to write for relevant column</param>
+    /// <param name="GPSAltitudeRef">Value to write for relevant column</param>
+    /// <param name="GPSLatitude">Value to write for relevant column</param>
+    /// <param name="GPSLatitudeRef">Value to write for relevant column</param>
+    /// <param name="GPSLongitude">Value to write for relevant column</param>
+    /// <param name="GPSLongitudeRef">Value to write for relevant column</param>
+    /// <param name="Coordinates">Value to write for relevant column</param>
+    /// <param name="City">Value to write for relevant column</param>
+    /// <param name="CountryCode">Value to write for relevant column</param>
+    /// <param name="Country">Value to write for relevant column</param>
+    /// <param name="State">Value to write for relevant column</param>
+    /// <param name="Sub_location">Value to write for relevant column</param>
+    internal static void DataWriteSQLiteFavourites(string locationName,
+                                                   string GPSAltitude,
+                                                   string GPSAltitudeRef,
+                                                   string GPSLatitude,
+                                                   string GPSLatitudeRef,
+                                                   string GPSLongitude,
+                                                   string GPSLongitudeRef,
+                                                   string Coordinates,
+                                                   string City,
+                                                   string CountryCode,
+                                                   string Country,
+                                                   string State,
+                                                   string Sub_location)
+    {
+        FrmMainApp.Logger.Trace(message: "Starting");
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = @"
+                                REPLACE INTO Favourites (
+                                    locationName,
+                                    GPSAltitude,
+                                    GPSAltitudeRef,
+                                    GPSLatitude,
+                                    GPSLatitudeRef,
+                                    GPSLongitude,
+                                    GPSLongitudeRef,
+                                    Coordinates,
+                                    City,
+                                    CountryCode,
+                                    Country,
+                                    State,
+                                    Sub_location
+                                    ) " +
+                               "VALUES (@locationName, @GPSAltitude,@GPSAltitudeRef,@GPSLatitude,@GPSLatitudeRef,@GPSLongitude,@GPSLongitudeRef,@Coordinates,@City,@CountryCode,@Country,@State,@Sub_location);"
+            ;
+
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@locationName", value: locationName);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSAltitude", value: GPSAltitude);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSAltitudeRef", value: GPSAltitudeRef);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSLatitude", value: GPSLatitude);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSLatitudeRef", value: GPSLatitudeRef);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSLongitude", value: GPSLongitude);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSLongitudeRef", value: GPSLongitudeRef);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@Coordinates", value: Coordinates);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@City", value: City);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@CountryCode", value: CountryCode);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@Country", value: Country);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@State", value: State);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@Sub_location", value: Sub_location);
 
         sqlToRun.ExecuteNonQuery();
     }

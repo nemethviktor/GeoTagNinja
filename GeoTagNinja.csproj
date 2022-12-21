@@ -292,12 +292,14 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmEditFileData.resx">
       <DependentUpon>FrmEditFileData.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmImportGpx.resx">
       <DependentUpon>FrmImportGpx.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMainApp.resx">
       <DependentUpon>FrmMainApp.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmPasteWhat.resx">
       <DependentUpon>FrmPasteWhat.cs</DependentUpon>

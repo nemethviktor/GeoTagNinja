@@ -394,6 +394,26 @@ internal static class AncillaryListsArrays
         return result;
     }
 
+    internal static string[] GetFavouriteTags()
+    {
+        string[] result =
+        {
+            "GPSAltitude",
+            "GPSAltitudeRef",
+            "GPSLatitude",
+            "GPSLatitudeRef",
+            "GPSLongitude",
+            "GPSLongitudeRef",
+            "Coordinates",
+            "City",
+            "CountryCode",
+            "Country",
+            "State",
+            "Sub_location"
+        };
+        return result;
+    }
+
     #endregion
 
     #region Countries & Country Codes

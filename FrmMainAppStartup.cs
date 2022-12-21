@@ -379,6 +379,20 @@ public partial class FrmMainApp
                                          objectName: "ttp_NavigateMapGo"
                                      )
         );
+        ttp_SaveFavourite.SetToolTip(control: btn_SaveLocation,
+                                     caption: HelperStatic.DataReadSQLiteObjectText(
+                                         languageName: AppLanguage,
+                                         objectType: "ToolTip",
+                                         objectName: "ttp_SaveFavourite"
+                                     )
+        );
+        ttp_LoadFavourite.SetToolTip(control: btn_LoadFavourite,
+                                     caption: HelperStatic.DataReadSQLiteObjectText(
+                                         languageName: AppLanguage,
+                                         objectType: "ToolTip",
+                                         objectName: "ttp_LoadFavourite"
+                                     )
+        );
     }
 
     /// <summary>
@@ -419,5 +433,35 @@ public partial class FrmMainApp
         HelperStatic.HsMapMarkers.Add(item: (tbx_lat.Text.Replace(oldChar: ',', newChar: '.'), tbx_lng.Text.Replace(oldChar: ',', newChar: '.')));
         HelperStatic.LastLat = double.Parse(s: tbx_lat.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
         HelperStatic.LastLng = double.Parse(s: tbx_lng.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
+    }
+
+    private static DataTable AppStartupLoadFavourites()
+    {
+        Logger.Info(message: "Starting");
+        DataTable dtFavourites = HelperStatic.DataReadSQLiteFavourites();
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+
+        LstFavourites.Clear();
+        AutoCompleteStringCollection autoCompleteCustomSource = new AutoCompleteStringCollection();
+        frmMainAppInstance.cbx_Favourites.Items.Clear();
+        foreach (DataRow drFavorite in dtFavourites.Rows)
+        {
+            string locationName = drFavorite["locationName"]
+                .ToString();
+            LstFavourites.Add(locationName);
+            autoCompleteCustomSource.Add(locationName);
+            if (frmMainAppInstance != null)
+            {
+                frmMainAppInstance.cbx_Favourites.Items.Add(locationName);
+            }
+        }
+
+        if (frmMainAppInstance != null)
+        {
+            frmMainAppInstance.cbx_Favourites.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            frmMainAppInstance.cbx_Favourites.AutoCompleteCustomSource = autoCompleteCustomSource;
+        }
+
+        return dtFavourites;
     }
 }
