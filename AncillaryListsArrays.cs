@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Windows.Documents;
 
 namespace GeoTagNinja;
 
 internal static class AncillaryListsArrays
 {
+    internal static List<KeyValuePair<string, string>> commonNamesKVP = new List<KeyValuePair<string, string>>();
+
     #region Time zones
 
     internal static string[] GetTimeZones()
@@ -1017,6 +1021,20 @@ internal static class AncillaryListsArrays
             "txt", // Winplus Beacon .TXT	
             "json", // Google Takeout .JSON	
             "csv" // GPS/IMU .CSV + // DJI .CSV + // ExifTool .CSV file	
+        };
+
+        return result;
+    }
+
+    #endregion
+
+    #region Languages
+    internal static List<KeyValuePair<string, string>> GetLanguages()
+    {
+        List<KeyValuePair<string, string>> result = new List<KeyValuePair<string, string>>()
+        {
+            new KeyValuePair<string, string>("English", "English"),
+            new KeyValuePair<string, string>("French", "Française")
         };
 
         return result;

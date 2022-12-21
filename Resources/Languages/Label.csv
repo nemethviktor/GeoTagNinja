@@ -1,0 +1,67 @@
+﻿objectName,English,French
+lbl_ARCGIS_APIKey,ARCGIS API Key,ARCGIS API Key
+lbl_GeoNames_Pwd,GeoNames Password,Mot de passe GeoNames
+lbl_GeoNames_UserName,GeoNames Username,Utilisateur GeoNames
+lbl_lat,Latitude,Latitude
+lbl_lng,Longitude,Longitude
+lbl_ParseProgress_Read,Reading:,Lecture:
+lbl_ParseProgress_Write,Writing:,Ecriture:
+lbl_ParseProgress_Normal,Ready,Pret
+lbl_Startup_Folder,Startup Folder,Dossier de démarrage
+lbl_Language,Language,Langage
+lbl_Decimal,Decimal,Decimal
+lbl_GPSAltitude,Altitude [m],Altitude [m]
+lbl_GPSAltitudeRef,Altitude Ref,Ref d'Altitude
+lbl_GPSDestLatitude,Dest Latitude,Latitude de destination
+lbl_GPSDestLatitudeRef,Dest Latitude Ref,Ref de latitude de destination
+lbl_GPSDestLongitude,Dest Longitude,Longitude de destination
+lbl_GPSDestLongitudeRef,Dest Longitude Ref,Ref de longitude de destination
+lbl_GPSImgDirection,Img Direction,Img Direction
+lbl_GPSImgDirectionRef,Img Direction Ref,Ref de direction de la photo
+lbl_GPSLatitude,Latitude,Latitude
+lbl_GPSLatitudeRef,Latitude Ref,Ref de latitude
+lbl_GPSLongitude,Longitude,Longitude
+lbl_GPSLongitudeRef,Longitude Ref,Ref de longitude
+lbl_GPSSpeed,Speed,Vitesse
+lbl_GPSSpeedRef,Speed Ref,Ref de vitesse
+lbl_City,City,Ville
+lbl_CountryCode,Country Code,Code pays
+lbl_Country,Country,Pays
+lbl_State,State/Province,Etat/Province
+lbl_Sub_location,Sublocation,Departement
+lbl_QuestionAddToponomy,"Do you want to also assign Altitude and Toponomy values?
+If you pick No, your lat/long data may become out of sync with any embedded toponomy data.
+If you click 'stop asking' it will take the answer as Yes and won't ask again this session. Restart to reset.","Voulez-vous également attribuer des valeurs d'altitude et de toponymie ?
+Si vous choisissez Non, vos données lat/long peuvent ne plus être synchronisées avec les données de toponymie intégrées.
+Si vous cliquez sur 'Arrêter de demander', la réponse sera 'Oui' et ne redemandera pas cette session. Redémarrez pour réinitialiser."
+lbl_ImportTimeAgainst,Compare the timestamp in the Track Files against:,Comparez l'horodatage dans les fichiers de suivi avec :
+lbl_ShiftTrackTimeBy,Shift Track File Time by:,Décaler l'heure du fichier de tracking de :
+lbl_CameraTime,Camera Date/Time,Date/heure de la caméra
+lbl_TZTime,Time Zone Adjustment:,Réglage du fuseau horaire :
+lbl_TZNote,"Note: If the date/time tag does not include a timezone then one may be added (see below), otherwise the local system time is assumed.","Remarque : Si la balise de date/heure n'inclut pas de fuseau horaire, il est possible d'en ajouter un (voir ci-dessous), sinon l'heure du système local est utilisée."
+lbl_CameraTimeNote,Note: Time Shift is needed only when the image timestamps are not properly synchronized with GPS time. Leave as 0s unless required.,Remarque : Time Shift n'est nécessaire que lorsque les horodatages des images ne sont pas correctement synchronisés avec l'heure GPS. Laissez à 0 sauf si nécessaire.
+lbl_TrackParseExperimental,This is an experimental feature. Please report bugs via the issue tracker. You can run the same track files over the same images multiple times and with different settings. Any new data will be added to the write-queue ('red row texts'). From then onwards it's the usual.,Il s'agit d'une fonctionnalité expérimentale. Veuillez signaler les bogues via l'outil de suivi des problèmes. Vous pouvez exécuter les mêmes fichiers de piste sur les mêmes images plusieurs fois et avec des paramètres différents. Toute nouvelle donnée sera ajoutée à la file d'attente d'écriture ('textes de ligne rouges'). A partir de là c'est comme d'habitude.
+lbl_importOneFile,<-- Click there set the Import Source File,<-- Cliquez ici pour définir le fichier source d'importation
+lbl_importFromAnotherFolder,<-- Click there set the Import Source Folder,<-- Cliquez ici pour définir le dossier source d'importation
+lbl_GeoMaxIntSecs,Max interpolation ('path guessing') time in seconds. Set to 0 to disable.,Durée maximale d'interpolation ('devinette de chemin') en secs. Mettre à 0 pour désactiver.
+lbl_GeoMaxExtSecs,Max extrapolation (time diff between Taken TimeStamp and Trackpoint TS) time in seconds.,Durée maximale d'extrapolation (différence de temps entre la photo et le fichier de tracking) en secs.
+lbl_FolderIsLoading,"Please wait while the folder loads. 
+(If you start interacting now some of the write operations can misfire)","Veuillez patienter pendant le chargement du dossier.
+(Si vous commencez à interagir maintenant, certaines des opérations d'écriture peuvent échouer)"
+lbl_ImportGPXDays,Days,Journées
+lbl_ImportGPXHours,Hrs,Heures
+lbl_ImportGPXMinutes,Mins,Minutes
+lbl_ImportGPXSeconds,Secs,Secs
+lbl_TakenDateDaysShift,Days,Journées
+lbl_TakenDateHoursShift,Hrs,Heures
+lbl_TakenDateMinutesShift,Mins,Minutes
+lbl_TakenDateSecondsShift,Secs,Secs
+lbl_CreateDateDaysShift,Days,Journées
+lbl_CreateDateHoursShift,Hrs,Heures
+lbl_CreateDateMinutesShift,Mins,Minutes
+lbl_CreateDateSecondsShift,Secs,Secs
+lbl_OffsetTime,Time Zone,Fuseau horaire
+lbl_SelectColsTitle,Select Columns,Selectionner les colonnes
+lbl_ChoiceOfferCount,Show this many toponym options,
+lbl_ChoiceRadius,In the Radius [kms],
+lbl_Favourites,Favourites,

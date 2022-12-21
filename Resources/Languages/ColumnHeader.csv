@@ -1,0 +1,36 @@
+﻿objectName,English,French
+clh_FileName,File Name,Nom du fichier
+clh_GPSAltitude,Altitude [m],Altitude [m]
+clh_GPSAltitudeRef,Altitude Ref,Altitude Ref
+clh_GPSDestLatitude,Dest Latitude,Latitude de destination
+clh_GPSDestLatitudeRef,Dest Latitude Ref,Ref de latitude de destination
+clh_GPSDestLongitude,Dest Longitude,Longitude de destination
+clh_GPSDestLongitudeRef,Dest Longitude Ref,Ref de longitude de destination
+clh_GPSImgDirection,Img Direction,Direction de la photo
+clh_GPSImgDirectionRef,Img Direction Ref,Ref de Direction de la photo
+clh_GPSLatitude,Latitude,Latitude
+clh_GPSLatitudeRef,Latitude Ref,Ref de Latitude
+clh_GPSLongitude,Longitude,Longitude
+clh_GPSLongitudeRef,Longitude Ref,Ref de longitude
+clh_GPSSpeed,Speed,Vitesse
+clh_GPSSpeedRef,Speed Ref,Ref de vitesse
+clh_Coordinates,Coordinates,Coordonées
+clh_DestCoordinates,Dest Coordinates,Coordonnées de destination
+clh_City,City,Ville
+clh_CountryCode,Country Code,Code pays
+clh_Country,Country,Pays
+clh_State,State/Province,Etat/Province
+clh_Sub_location,Sublocation,Departement
+clh_Make,Make,Fait
+clh_Model,Model,Modèle
+clh_Rating,Rating,Rating
+clh_ExposureTime,Exposure Time,Temps d'exposition
+clh_Fnumber,Aperture,Ouverture
+clh_FocalLength,Focal Length,Longueur focale
+clh_FocalLengthIn35mmFormat,Focal Length (35mm),Longueur focale (35mm)
+clh_ISO,ISO Speed,Vitesse ISO
+clh_LensSpec,Lens,Optique
+clh_FileModifyDate,File Date,Date de Fichier
+clh_TakenDate,Taken Date,Date de prise
+clh_CreateDate,Create Date,Date de création
+clh_OffsetTime,Time Offset,Offset de temps

@@ -21,13 +21,13 @@ public partial class FrmColumnSelection : Form
         _colList = ColList;
         InitializeComponent();
 
-        btn_Cancel.Text = HelperStatic.DataReadSQLiteObjectText(languageName: AppLanguage,
+        btn_Cancel.Text = HelperStatic.DataReadDTObjectText(
                                                                 objectType: "Button", objectName: "btn_Cancel");
-        btn_Ok.Text = HelperStatic.DataReadSQLiteObjectText(languageName: AppLanguage,
+        btn_Ok.Text = HelperStatic.DataReadDTObjectText(
                                                             objectType: "Button", objectName: "btn_OK");
-        lbl_SelectColsTitle.Text = HelperStatic.DataReadSQLiteObjectText(languageName: AppLanguage,
+        lbl_SelectColsTitle.Text = HelperStatic.DataReadDTObjectText(
                                                                          objectType: "Label", objectName: "lbl_SelectColsTitle");
-        ckb_DeSelectAll.Text = HelperStatic.DataReadSQLiteObjectText(languageName: AppLanguage,
+        ckb_DeSelectAll.Text = HelperStatic.DataReadDTObjectText(
                                                                      objectType: "CheckBox", objectName: "ckb_DeSelectAll");
 
         foreach (ColumnHeader col in _colList)

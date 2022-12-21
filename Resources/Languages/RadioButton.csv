@@ -1,0 +1,12 @@
+﻿objectName,English,French
+rbt_importOneFile,Import from a chosen file,Importer depuis un fichier donné
+rbt_importFromCurrentFolder,Import from the current folder,Importer depuis le dossier actuel
+rbt_importFromAnotherFolder,Import from another folder,Importer depuis un autre dossier
+rbt_TakenDateSetToFixedDate,Set to Fixed Date,Définir à une date fixe
+rbt_TakenDateTimeShift,Time Shift,Décalage dans le temps
+rbt_CreateDateSetToFixedDate,Set to Fixed Date,Définir à une date fixe
+rbt_CreateDateTimeShift,Time Shift,Décalage dans le temps
+rbt_PasteTakenDateActual,Actual (Fixed values),Réel (valeurs fixes)
+rbt_PasteTakenDateShift,Time Shift,Décalage dans le temps
+rbt_PasteCreateDateActual,Actual (Fixed values),Réel (valeurs fixes)
+rbt_PasteCreateDateShift,Time Shift,Décalage dans le temps

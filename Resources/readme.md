@@ -3,7 +3,7 @@
 This folder is used by the app to function properly - (most) files are as follows:
 
 **Languages\**
-Folder where language SQLite files are kept
+Folder where language CSV files are kept
 
 **.ExifTool_config**
 Config file for ExifTool - don't modify.

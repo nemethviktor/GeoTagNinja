@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using CheckBox = System.Windows.Forms.CheckBox;
+using ComboBox = System.Windows.Forms.ComboBox;
+using Control = System.Windows.Forms.Control;
+using TextBox = System.Windows.Forms.TextBox;
 
 namespace GeoTagNinja;
 
@@ -28,31 +33,28 @@ public partial class FrmSettings : Form
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
-            HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
-
             if (cItem.Name == "cbx_Language")
             {
-                string languagesFolderPath = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "Languages");
-
-                string[] files = Directory.GetFiles(path: languagesFolderPath, searchPattern: "*.sqlite");
-                foreach (string file in files)
+                List<KeyValuePair<string, string>> kvps = AncillaryListsArrays.GetLanguages();
+                for (int index = 0; index < kvps.Count; index++)
                 {
-                    // this should only come up in debugging not prod but if the database is open in sqliteexpert this pulls in a blank .sqlite file
-                    string fileName = file.Replace(oldValue: languagesFolderPath, newValue: "")
-                        .Replace(oldValue: ".sqlite", newValue: "")
-                        .Substring(startIndex: 1);
-                    if (fileName.Length > 1)
+                    KeyValuePair<string, string> kvp = kvps[index];
+                    string thisLanguage = kvp.Value + " (" + kvp.Key + ")";
+                    cbx_Language.Items.Add(thisLanguage);
+                    if (thisLanguage.Contains(HelperStatic.DataReadSQLiteSettings(
+                                                  tableName: "settings",
+                                                  settingTabPage: cItem.Parent.Name,
+                                                  settingId: cItem.Name
+                                              )))
                     {
-                        cbx_Language.Items.Add(item: file.Replace(oldValue: languagesFolderPath, newValue: "")
-                                                   .Replace(oldValue: ".sqlite", newValue: "")
-                                                   .Substring(startIndex: 1));
-                        cbx_Language.SelectedItem = HelperStatic.DataReadSQLiteSettings(
-                            tableName: "settings",
-                            settingTabPage: cItem.Parent.Name,
-                            settingId: cItem.Name
-                        );
+                        cbx_Language.SelectedIndex = index;
                     }
                 }
+            }
+
+            else
+            {
+                HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
             }
         }
 
@@ -463,19 +465,29 @@ public partial class FrmSettings : Form
         {
             ComboBox cbx = (ComboBox)sender;
             cbx.Font = new Font(prototype: cbx.Font, newStyle: FontStyle.Bold);
+            string settingValue = ((ComboBox)sender).Text;
+
+            if (cbx.Name == "cbx_Language")
+            {
+                // convert e.g. "Française (French)" to "French"
+                settingValue = settingValue.Split('(')
+                    .Last()
+                    .Substring(startIndex: 0, length: settingValue.Split('(')
+                                                          .Last()
+                                                          .Length -
+                                                      1);
+
+                // fire a warning if language has changed. 
+                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmSettings_cbx_Language_TextChanged"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            }
 
             // stick it into settings-Q
             HelperStatic.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
                 settingTabPage: ((Control)sender).Parent.Name,
                 settingId: ((ComboBox)sender).Name,
-                settingValue: ((ComboBox)sender).Text
+                settingValue: settingValue
             );
-            // fire a warning if language has changed. 
-            if (((ComboBox)sender).Name == "cbx_Language")
-            {
-                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmSettings_cbx_Language_TextChanged"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
-            }
         }
     }
 

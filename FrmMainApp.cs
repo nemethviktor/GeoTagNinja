@@ -44,46 +44,6 @@ public partial class FrmMainApp : Form
     /// </summary>
     public DirectoryElementCollection DirectoryElements => _directoryElements;
 
-
-    #region Settings
-
-    /// <summary>
-    ///     Handles the tmi_Settings_Settings_Click event -> brings up the Settings Form
-    /// </summary>
-    /// <param name="sender">Unused</param>
-    /// <param name="e">Unused</param>
-    private void tmi_Settings_Settings_Click(object sender,
-                                             EventArgs e)
-    {
-        FrmSettings = new FrmSettings();
-        FrmSettings.Text = HelperStatic.DataReadSQLiteObjectText(
-            languageName: AppLanguage,
-            objectType: "Form",
-            objectName: "FrmSettings"
-        );
-        FrmSettings.ShowDialog();
-    }
-
-    #endregion
-
-
-    #region Help
-
-    /// <summary>
-    ///     Handles the tmi_Help_About_Click event -> brings up the About Form
-    /// </summary>
-    /// <param name="sender">Unused</param>
-    /// <param name="e">Unused</param>
-    private void tmi_Help_About_Click(object sender,
-                                      EventArgs e)
-    {
-        FrmAboutBox frmAboutBox = new();
-        frmAboutBox.ShowDialog();
-    }
-
-    #endregion
-
-
     #region Variables
 
     internal static readonly string ResourcesFolderPath = Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "Resources");
@@ -92,12 +52,12 @@ public partial class FrmMainApp : Form
 
     internal const string ParentFolder = "..";
 
-    internal static DataTable DtLangaugeLabels;
+    internal static DataTable DtLanguageLabels;
     internal static DataTable DtObjectNames;
     internal static DataTable DtObjectTagNamesIn;
     internal static DataTable DtObjectTagNamesOut;
     internal static string FolderName;
-    internal static string _AppLanguage = "english"; // default to english
+    internal static string _AppLanguage = "English"; // default to english
     internal static List<string> LstFavourites = new();
 
     internal static string ShowLocToMapDialogChoice = "default";
@@ -175,9 +135,10 @@ public partial class FrmMainApp : Form
 
         Logger.Info(message: "Starting");
 
+        HelperStatic.GenericCreateDataTables();
         AppStartupCreateDataBaseFile();
         AppStartupWriteDefaultSettings();
-        AppStartupReadObjectNames();
+        AppStartupReadObjectNamesAndLanguage();
         AppStartupApplyDefaults();
         AppStartupCheckWebView2();
         AppStartupInitializeComponentFrmMainApp();
@@ -185,7 +146,6 @@ public partial class FrmMainApp : Form
 
         FormClosing += FrmMainApp_FormClosing;
 
-        HelperStatic.GenericCreateDataTables();
         Logger.Info(message: "Done");
     }
 
@@ -475,26 +435,22 @@ public partial class FrmMainApp : Form
                 {
                     // via https://stackoverflow.com/a/17385937/3968494
                     ShowLocToMapDialogChoice = HelperStatic.GenericCheckboxDialog.ShowDialogWithCheckBox(
-                        labelText: HelperStatic.DataReadSQLiteObjectText(
-                            languageName: AppLanguage,
+                        labelText: HelperStatic.DataReadDTObjectText(
                             objectType: "Label",
                             objectName: "lbl_QuestionAddToponomy"
                         ),
                         caption: "Info",
-                        checkboxText: HelperStatic.DataReadSQLiteObjectText(
-                            languageName: AppLanguage,
+                        checkboxText: HelperStatic.DataReadDTObjectText(
                             objectType: "CheckBox",
                             objectName: "ckb_QuestionAddToponomyDontAskAgain"
                         ),
                         returnCheckboxText: "_remember",
-                        button1Text: HelperStatic.DataReadSQLiteObjectText(
-                            languageName: AppLanguage,
+                        button1Text: HelperStatic.DataReadDTObjectText(
                             objectType: "Button",
                             objectName: "btn_Yes"
                         ),
                         returnButton1Text: "yes",
-                        button2Text: HelperStatic.DataReadSQLiteObjectText(
-                            languageName: AppLanguage,
+                        button2Text: HelperStatic.DataReadDTObjectText(
                             objectType: "Button",
                             objectName: "btn_No"
                         ),
@@ -844,8 +800,7 @@ public partial class FrmMainApp : Form
             if (fileCount > 0)
             {
                 Logger.Trace(message: "FrmEditFileData Get objectTexts");
-                FrmEditFileData.Text = HelperStatic.DataReadSQLiteObjectText(
-                    languageName: AppLanguage,
+                FrmEditFileData.Text = HelperStatic.DataReadDTObjectText(
                     objectType: "Form",
                     objectName: "FrmEditFileData"
                 );
@@ -888,8 +843,7 @@ public partial class FrmMainApp : Form
                                           EventArgs e)
     {
         FrmImportGpx = new FrmImportGpx();
-        FrmImportGpx.Text = HelperStatic.DataReadSQLiteObjectText(
-            languageName: AppLanguage,
+        FrmImportGpx.Text = HelperStatic.DataReadDTObjectText(
             objectType: "Form",
             objectName: "FrmImportGpx"
         );
@@ -1339,8 +1293,7 @@ public partial class FrmMainApp : Form
         FlowLayoutPanel panel = new();
 
         Label lblText = new();
-        lblText.Text = HelperStatic.DataReadSQLiteObjectText(
-            languageName: AppLanguage,
+        lblText.Text = HelperStatic.DataReadDTObjectText(
             objectType: "Label",
             objectName: "lbl_FolderIsLoading"
         );
@@ -1595,8 +1548,7 @@ public partial class FrmMainApp : Form
                 FrmEditFileData.lvw_FileListEditImages.Items.Add(text: item.Text);
 
                 Logger.Trace(message: "FrmEditFileData Get objectTexts");
-                FrmEditFileData.Text = HelperStatic.DataReadSQLiteObjectText(
-                    languageName: AppLanguage,
+                FrmEditFileData.Text = HelperStatic.DataReadDTObjectText(
                     objectType: "Form",
                     objectName: "FrmEditFileData"
                 );
@@ -1796,6 +1748,34 @@ public partial class FrmMainApp : Form
 
 
     #region handlers
+
+    /// <summary>
+    ///     Handles the tmi_Settings_Settings_Click event -> brings up the Settings Form
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void tmi_Settings_Settings_Click(object sender,
+                                             EventArgs e)
+    {
+        FrmSettings = new FrmSettings();
+        FrmSettings.Text = HelperStatic.DataReadDTObjectText(
+            objectType: "Form",
+            objectName: "FrmSettings"
+        );
+        FrmSettings.ShowDialog();
+    }
+
+    /// <summary>
+    ///     Handles the tmi_Help_About_Click event -> brings up the About Form
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void tmi_Help_About_Click(object sender,
+                                      EventArgs e)
+    {
+        FrmAboutBox frmAboutBox = new();
+        frmAboutBox.ShowDialog();
+    }
 
     /// <summary>
     ///     Updates the Text of any Label from outside the thread.

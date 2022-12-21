@@ -142,8 +142,7 @@ internal static partial class HelperStatic
     internal static string GenericGetMessageBoxText(string messageBoxName)
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        return DataReadSQLiteObjectText(
-            languageName: frmMainAppInstance.AppLanguage,
+        return DataReadDTObjectText(
             objectType: "messageBox",
             objectName: messageBoxName
         );
@@ -170,8 +169,7 @@ internal static partial class HelperStatic
         )
         {
             // for some reason there is no .Last() being offered here
-            cItem.Text = DataReadSQLiteObjectText(
-                languageName: frmMainAppInstance.AppLanguage,
+            cItem.Text = DataReadDTObjectText(
                 objectType: cItem.GetType()
                     .ToString()
                     .Split('.')[cItem.GetType()
@@ -184,8 +182,7 @@ internal static partial class HelperStatic
         }
         else if (cItem is Form)
         {
-            cItem.Text = DataReadSQLiteObjectText(
-                languageName: frmMainAppInstance.AppLanguage,
+            cItem.Text = DataReadDTObjectText(
                 objectType: "Form",
                 objectName: cItem.Name);
         }
@@ -485,6 +482,14 @@ internal static partial class HelperStatic
     public static void GenericCreateDataTables()
     {
         FrmMainApp.Logger.Debug(message: "Starting");
+
+        // DtLanguageLabels
+        FrmMainApp.DtLanguageLabels = new DataTable();
+        FrmMainApp.DtLanguageLabels.Clear();
+        FrmMainApp.DtLanguageLabels.Columns.Add(columnName: "languageName");
+        FrmMainApp.DtLanguageLabels.Columns.Add(columnName: "objectType");
+        FrmMainApp.DtLanguageLabels.Columns.Add(columnName: "objectName");
+        FrmMainApp.DtLanguageLabels.Columns.Add(columnName: "objectText");
 
         // DtFileDataCopyPool
         FrmMainApp.DtFileDataCopyPool = new DataTable();

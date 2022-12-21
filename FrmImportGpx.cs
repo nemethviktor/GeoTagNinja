@@ -259,13 +259,12 @@ public partial class FrmImportGpx : Form
         if ((trackFileLocationType == "file" && File.Exists(path: trackFileLocationVal)) || (trackFileLocationType == "folder" && Directory.Exists(path: trackFileLocationVal)))
         {
             // indicate that something is going on
-            btn_OK.Text = HelperStatic.DataReadSQLiteObjectText(
-                languageName: frmMainAppInstance.AppLanguage,
+            btn_OK.Text = HelperStatic.DataReadDTObjectText(
                 objectType: sender.GetType()
-                    .ToString()
-                    .Split('.')
-                    .Last(),
-                actionType: "Working",
+                                .ToString()
+                                .Split('.')
+                                .Last() +
+                            "_Working",
                 objectName: "btn_OK"
             );
             btn_OK.AutoSize = true;

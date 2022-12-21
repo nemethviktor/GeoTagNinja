@@ -1,0 +1,8 @@
+﻿objectName,English,French
+tsb_Refresh_lvwFileList,Refresh File List,Actualiser la liste des fichiers
+tsb_SaveFiles,Save Files,Enregistrer les fichiers
+tsb_EditFile,Edit File,Modifier le fichier
+tsb_RemoveGeoData,Remove All Location Data,Supprimer toutes les données de localisation
+tsb_ImportGPX,Import GPX/JSON Track Files,Importer des fichiers de piste GPX/JSON
+tsb_OneFolderUp,Parent Folder,Dossier parent
+tsb_GetAllFromWeb,Get Toponomy & Altitude info for all of the selected files,Obtenez des informations sur la toponymie et l'altitude pour tous les fichiers sélectionnés

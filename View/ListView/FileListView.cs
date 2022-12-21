@@ -451,8 +451,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
             foreach (ColumnHeader clh in Columns)
             {
-                clh.Text = HelperStatic.DataReadSQLiteObjectText(
-                    languageName: _AppLanguage,
+                clh.Text = HelperStatic.DataReadDTObjectText(
                     objectType: "ColumnHeader",
                     objectName: clh.Name
                 );

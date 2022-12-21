@@ -234,10 +234,9 @@
             this.cbx_Language.FormattingEnabled = true;
             this.cbx_Language.Location = new System.Drawing.Point(136, 199);
             this.cbx_Language.Name = "cbx_Language";
-            this.cbx_Language.Size = new System.Drawing.Size(121, 21);
+            this.cbx_Language.Size = new System.Drawing.Size(155, 21);
             this.cbx_Language.TabIndex = 13;
             this.cbx_Language.SelectedValueChanged += new System.EventHandler(this.Any_cbx_TextChanged);
-            this.cbx_Language.TextChanged += new System.EventHandler(this.Any_cbx_TextChanged);
             // 
             // rbx_Register_ArcGIS
             // 

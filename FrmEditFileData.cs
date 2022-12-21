@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Input;
 using TimeZoneConverter;
 using static GeoTagNinja.FrmMainApp;
 
@@ -173,7 +174,10 @@ public partial class FrmEditFileData : Form
                 )
                 {
                     // gets logged inside.
-                    HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
+                    cItem.Text = HelperStatic.DataReadDTObjectText(cItem.GetType()
+                                                                       .ToString()
+                                                                       .Split('.')
+                                                                       .Last(), cItem.Name);
                 }
                 else if (cItem is TextBox || cItem is ComboBox || cItem is DateTimePicker || cItem is NumericUpDown)
                 {
@@ -183,9 +187,10 @@ public partial class FrmEditFileData : Form
 
                     string cItemValStr = "-";
 
-                    Logger.Trace(message: "cItem: " + cItem.Name + " - keyEqualsWhat: " + exifTag + " - Pulling from SQL");
+                    Logger.Trace(message: "cItem: " + cItem.Name + " - keyEqualsWhat: " + exifTag + " - Pulling from KVP");
                     strSqlDataDT1 = HelperStatic.DataGetFirstOrDefaultFromKVPList(lstIn: lstSqlDataDT1, keyEqualsWhat: exifTag);
                     strSqlDataDT3 = HelperStatic.DataGetFirstOrDefaultFromKVPList(lstIn: lstSqlDataDT3, keyEqualsWhat: exifTag);
+                    Logger.Trace(message: "cItem: " + cItem.Name + " - keyEqualsWhat: " + exifTag + " - Pulling from KVP - Done");
 
                     // Basically not all Tags exist as CLHs.
                     List<string> lstObjectNamesIn = DtObjectTagNamesIn.Rows.OfType<DataRow>()
@@ -1756,8 +1761,7 @@ public partial class FrmEditFileData : Form
         ToolTip ttp = new();
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         ttp.SetToolTip(control: pbx_OffsetTimeInfo,
-                       caption: HelperStatic.DataReadSQLiteObjectText(
-                           languageName: frmMainAppInstance.AppLanguage,
+                       caption: HelperStatic.DataReadDTObjectText(
                            objectType: "ToolTip",
                            objectName: "ttp_OffsetTime"
                        ));

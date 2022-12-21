@@ -1,0 +1,3 @@
+﻿objectName,English,French
+rbx_Register_ArcGIS,You'll need a free ArcGIS API Key to use the map search functionality.Get one here: https://goto.arcgis.com/production-developers-signup,Vous aurez besoin d'une clé API ArcGIS gratuite pour utiliser la fonctionnalité de recherche de carte. Obtenez-en une ici : https://goto.arcgis.com/production-developers-signup
+rbx_Register_GeoNames,You'll need a GeoNames Account to use the reverse geocoding/search function (lat/long --> country/city/...). Get one here: http://www.geonames.org/login,Vous aurez besoin d'un compte GeoNames pour utiliser la fonction de géocodage inversé/recherche (lat/long --> pays/ville/...). Obtenez-en un ici : http://www.geonames.org/login

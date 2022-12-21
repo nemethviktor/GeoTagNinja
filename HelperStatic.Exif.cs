@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using CsvHelper;
+using CsvHelper.Configuration;
 using geoTagNinja;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -502,7 +503,7 @@ internal static partial class HelperStatic
                     FrmMainApp.Logger.Trace(message: "csvFilePath output length > 20");
 
                     FrmMainApp.Logger.Trace(message: "Reading csvFilePath to dtCSV");
-                    DataTable dtCSV = GetDataTableFromCsv(fileNameWithPath: csvFilePath);
+                    DataTable dtCSV = GetDataTableFromCsv(fileNameWithPath: csvFilePath, isUTF: false);
                     FrmMainApp.Logger.Trace(message: "Reading csvFilePath to dtCSV - OK");
 
                     // parse file data 
@@ -2625,11 +2626,22 @@ internal static partial class HelperStatic
     ///     I've given up the original logic of OLEDB because it gets very bitchy with Culture stuff. This works better.
     /// </summary>
     /// <param name="fileNameWithPath">Path of CSV file</param>
+    /// <param name="isUTF">whether the file is UTF8-encoded</param>
     /// <returns>Converted Datatable</returns>
-    private static DataTable GetDataTableFromCsv(string fileNameWithPath)
+    private static DataTable GetDataTableFromCsv(string fileNameWithPath,
+                                                 bool isUTF)
     {
         DataTable dt = new();
-        using StreamReader reader = new(path: fileNameWithPath);
+        StreamReader reader;
+        if (isUTF)
+        {
+            reader = new StreamReader(path: fileNameWithPath, encoding: Encoding.UTF8);
+        }
+        else
+        {
+            reader = new StreamReader(path: fileNameWithPath);
+        }
+
         using CsvReader csv = new(reader: reader, culture: CultureInfo.InvariantCulture);
         // Do any configuration to `CsvReader` before creating CsvDataReader.
         using CsvDataReader dr = new(csv: csv);
@@ -2637,6 +2649,7 @@ internal static partial class HelperStatic
 
         return dt;
     }
+
 
     /// <summary>
     ///     Checks and replaces blank toponomy values as required

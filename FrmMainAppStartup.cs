@@ -66,12 +66,10 @@ public partial class FrmMainApp
     }
 
     /// <summary>
-    ///     Reads object names from SQLlite
+    ///     Reads object names from SQLite
     /// </summary>
-    private static void AppStartupReadObjectNames()
+    private static void AppStartupReadObjectNamesAndLanguage()
     {
-        // read language and objectnames
-        HelperStatic.DataReadSQLiteObjectTextFromFiles();
         Logger.Debug(message: "Starting");
 
         try
@@ -100,6 +98,9 @@ public partial class FrmMainApp
             MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorCantLoadSQLiteDB") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
             Application.Exit();
         }
+
+        // read language and objectnames
+        HelperStatic.DataReadObjectTextFromFiles();
     }
 
     /// <summary>
@@ -260,13 +261,12 @@ public partial class FrmMainApp
                 if (cItem.Name == "lbl_ParseProgress")
                 {
                     objectName = cItem.Name;
-                    objectText = HelperStatic.DataReadSQLiteObjectText(
-                        languageName: AppLanguage,
+                    objectText = HelperStatic.DataReadDTObjectText(
                         objectType: cItem.GetType()
-                            .ToString()
-                            .Split('.')
-                            .Last(),
-                        actionType: "Normal",
+                                        .ToString()
+                                        .Split('.')
+                                        .Last() +
+                                    "_Normal",
                         objectName: objectName
                     );
                     cItem.Text = objectText;
@@ -282,8 +282,7 @@ public partial class FrmMainApp
                         if (tsb != null)
                         {
                             objectName = tsb.Name;
-                            objectText = HelperStatic.DataReadSQLiteObjectText(
-                                languageName: AppLanguage,
+                            objectText = HelperStatic.DataReadDTObjectText(
                                 objectType: tsb.GetType()
                                     .ToString()
                                     .Split('.')
@@ -298,8 +297,7 @@ public partial class FrmMainApp
                 else
                 {
                     objectName = cItem.Name;
-                    objectText = HelperStatic.DataReadSQLiteObjectText(
-                        languageName: AppLanguage,
+                    objectText = HelperStatic.DataReadDTObjectText(
                         objectType: cItem.GetType()
                             .ToString()
                             .Split('.')
@@ -313,11 +311,9 @@ public partial class FrmMainApp
         }
 
         // Text for ImagePreview
-        pbx_imagePreview.EmptyText = HelperStatic.DataReadSQLiteObjectText(
-            languageName: AppLanguage,
+        pbx_imagePreview.EmptyText = HelperStatic.DataReadDTObjectText(
             objectType: "PictureBox",
-            objectName: "pbx_imagePreview",
-            actionType: "EmptyText"
+            objectName: "pbx_imagePreviewEmptyText"
         );
 
         // don't think the menustrip above is working
@@ -342,8 +338,7 @@ public partial class FrmMainApp
             if (cItem is ToolStripMenuItem)
             {
                 objectName = cItem.Name;
-                objectText = HelperStatic.DataReadSQLiteObjectText(
-                    languageName: AppLanguage,
+                objectText = HelperStatic.DataReadDTObjectText(
                     objectType: cItem.GetType()
                         .ToString()
                         .Split('.')
@@ -355,39 +350,33 @@ public partial class FrmMainApp
             }
         }
 
-        pbx_imagePreview.EmptyText = HelperStatic.DataReadSQLiteObjectText(
-            languageName: AppLanguage,
+        pbx_imagePreview.EmptyText = HelperStatic.DataReadDTObjectText(
             objectType: "PictureBox",
-            objectName: "pbx_imagePreview",
-            actionType: "EmptyText"
+            objectName: "pbx_imagePreviewEmptyText"
         );
 
         Logger.Trace(message: "Setting Tooltips");
         ttp_loctToFile.SetToolTip(control: btn_loctToFile,
-                                  caption: HelperStatic.DataReadSQLiteObjectText(
-                                      languageName: AppLanguage,
+                                  caption: HelperStatic.DataReadDTObjectText(
                                       objectType: "ToolTip",
                                       objectName: "ttp_loctToFile"
                                   )
         );
 
         ttp_NavigateMapGo.SetToolTip(control: btn_NavigateMapGo,
-                                     caption: HelperStatic.DataReadSQLiteObjectText(
-                                         languageName: AppLanguage,
+                                     caption: HelperStatic.DataReadDTObjectText(
                                          objectType: "ToolTip",
                                          objectName: "ttp_NavigateMapGo"
                                      )
         );
         ttp_SaveFavourite.SetToolTip(control: btn_SaveLocation,
-                                     caption: HelperStatic.DataReadSQLiteObjectText(
-                                         languageName: AppLanguage,
+                                     caption: HelperStatic.DataReadDTObjectText(
                                          objectType: "ToolTip",
                                          objectName: "ttp_SaveFavourite"
                                      )
         );
         ttp_LoadFavourite.SetToolTip(control: btn_LoadFavourite,
-                                     caption: HelperStatic.DataReadSQLiteObjectText(
-                                         languageName: AppLanguage,
+                                     caption: HelperStatic.DataReadDTObjectText(
                                          objectType: "ToolTip",
                                          objectName: "ttp_LoadFavourite"
                                      )

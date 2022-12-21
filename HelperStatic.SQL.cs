@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -404,99 +403,109 @@ internal static partial class HelperStatic
 
     #endregion
 
-    #region language SQL
+    #region language DT
 
-    /// <summary>
-    ///     Generally identical to the above but with an "actionType" - basically a parameter/breakdown.
-    /// </summary>
-    /// <param name="languageName">e.g "English"</param>
-    /// <param name="objectType">e.g. "button" or "columnheader"</param>
-    /// <param name="actionType">e.g. "reading" or "writing". </param>
-    /// <param name="objectName">This is the name of the object e.g. "btn_OK"</param>
-    /// <returns>The value of the object's labal in the given language. E.g. for btn_Cancel this will be "Cancel"</returns>
-    internal static string DataReadSQLiteObjectText(
-        string languageName,
-        string objectType,
-        string objectName,
-        string actionType = null
-    )
+    internal static string DataReadDTObjectText(string objectType,
+                                                string objectName)
     {
-        EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in FrmMainApp.DtLangaugeLabels.AsEnumerable()
-                                                           where dataRow.Field<string>(columnName: "languageName") == languageName &&
-                                                                 dataRow.Field<string>(columnName: "objectType") == objectType &&
-                                                                 dataRow.Field<string>(columnName: "objectName") == objectName &&
-                                                                 dataRow.Field<string>(columnName: "actionType") == actionType
-                                                           select dataRow;
-        List<string> lstReturn = new();
-
-        Parallel.ForEach(source: drDataTableData, body: dataRow =>
-            {
-                string settingValue = dataRow[columnName: "objectText"]
-                    .ToString();
-                if (settingValue != "")
-                {
-                    lstReturn.Add(item: settingValue);
-                }
-            })
-            ;
-
-        // try English
-        if (lstReturn.Count == 0)
-        {
-            drDataTableData = from DataRow dataRow in FrmMainApp.DtLangaugeLabels.AsEnumerable()
-                              where dataRow.Field<string>(columnName: "languageName") == "English" &&
-                                    dataRow.Field<string>(columnName: "objectType") == objectType &&
-                                    dataRow.Field<string>(columnName: "objectName") == objectName &&
-                                    dataRow.Field<string>(columnName: "actionType") == actionType
-                              select dataRow;
-
-            Parallel.ForEach(source: drDataTableData, body: dataRow =>
-                {
-                    string settingValue = dataRow[columnName: "objectText"]
-                        .ToString();
-                    if (settingValue != "")
-                    {
-                        lstReturn.Add(item: settingValue);
-                    }
-                })
-                ;
-        }
-
-        return lstReturn.FirstOrDefault();
+        return (from kvp in AncillaryListsArrays.commonNamesKVP
+                where kvp.Key == objectType + "_" + objectName
+                select kvp.Value).FirstOrDefault();
     }
 
     /// <summary>
-    ///     Reads all the language SQLite files into one table (FrmMainApp.DtLangaugeLabels)
+    ///     Reads all the language CSV files into one table (FrmMainApp.DtLanguageLabels)
     /// </summary>
-    internal static void DataReadSQLiteObjectTextFromFiles()
+    internal static void DataReadObjectTextFromFiles()
     {
         string languagesFolderPath = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "Languages");
 
-        FrmMainApp.DtLangaugeLabels = new DataTable();
+        DataTable dtParsed = new();
+        dtParsed.Clear();
+        dtParsed.Columns.Add(columnName: "languageName");
+        dtParsed.Columns.Add(columnName: "objectType");
+        dtParsed.Columns.Add(columnName: "objectName");
+        dtParsed.Columns.Add(columnName: "objectText");
 
-        foreach (string file in Directory.GetFiles(path: languagesFolderPath, searchPattern: "*.sqlite"))
+        foreach (string fileNameWithPath in Directory.GetFiles(path: languagesFolderPath, searchPattern: "*.csv"))
         {
-            string languageName = Path.GetFileNameWithoutExtension(path: file);
+            DataTable dtObject = GetDataTableFromCsv(fileNameWithPath: fileNameWithPath, isUTF: true);
 
-            using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + file);
-            sqliteDB.Open();
-            DataTable dtTablesInSQLite = sqliteDB.GetSchema(collectionName: "Tables");
+            dtParsed.Clear();
 
-            SQLiteCommand dbCommand = sqliteDB.CreateCommand();
-            dbCommand.CommandText = "";
-            foreach (DataRow dr in dtTablesInSQLite.Rows)
+            string objectType = Path.GetFileNameWithoutExtension(path: fileNameWithPath); // e.g. "Button.csv" -> Button
+
+            foreach (DataRow drObjectRow in dtObject.Rows)
             {
-                string tableName = (string)dr[columnIndex: 2];
-                dbCommand.CommandText += "SELECT '" + languageName + "' AS languageName, '" + tableName + "' AS objectType , * FROM " + tableName + " UNION ";
+                string objectName = drObjectRow[columnName: "objectName"]
+                    .ToString();
+
+                for (int i = 1; i < dtObject.Columns.Count; i++)
+                {
+                    string languageName = dtObject.Columns[index: i]
+                        .ColumnName;
+                    string objectText = drObjectRow[columnName: languageName]
+                        .ToString();
+                    if (objectText.Length == 0)
+                    {
+                        objectText = null;
+                    }
+
+                    DataRow drOut = dtParsed.NewRow();
+                    drOut[columnName: "languageName"] = languageName;
+                    drOut[columnName: "objectType"] = objectType;
+                    drOut[columnName: "objectName"] = objectName;
+                    drOut[columnName: "objectText"] = objectText;
+                    dtParsed.Rows.Add(row: drOut);
+                }
             }
 
-            dbCommand.CommandText = dbCommand.CommandText.Substring(startIndex: 0, length: dbCommand.CommandText.Length - " UNION ".Length);
+            FrmMainApp.DtLanguageLabels.Merge(table: dtParsed);
+        }
 
-            SQLiteDataReader executeReader = dbCommand.ExecuteReader(behavior: CommandBehavior.SingleResult);
-            DataTable dt = new();
-            dt.Load(reader: executeReader);
+        // this is far from optimal but for what we need it will do
+        // it's only used for pre-caching some Form labels (for now, Edit.)
+        for (int i = 1; i <= 2; i++)
+        {
+            // run 1 is English
+            // run 2 is FrmMainApp._AppLanguage
+            // hashset takes care of the rest
+            string languageNameToGet = null;
 
-            FrmMainApp.DtLangaugeLabels.Merge(table: dt);
+            languageNameToGet = i == 1
+                ? "English"
+                : FrmMainApp._AppLanguage;
+
+            // no need to waste resource.
+            if (!(i == 2 && FrmMainApp._AppLanguage == "English"))
+            {
+                EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in FrmMainApp.DtLanguageLabels.AsEnumerable()
+                                                                   where dataRow.Field<string>(columnName: "languageName") == languageNameToGet
+                                                                   select dataRow;
+
+                foreach (DataRow drObject in drDataTableData)
+                {
+                    if (drObject[columnName: "objectText"] != null &&
+                        drObject[columnName: "objectText"]
+                            .ToString()
+                            .Length >
+                        0)
+                    {
+                        string objectName = drObject[columnName: "objectType"] +
+                                            "_" +
+                                            drObject[columnName: "objectName"];
+                        string objectText = drObject[columnName: "objectText"]
+                            .ToString();
+
+                        if (i == 2)
+                        {
+                            AncillaryListsArrays.commonNamesKVP.RemoveAll(match: item => item.Key.Equals(obj: objectName));
+                        }
+
+                        AncillaryListsArrays.commonNamesKVP.Add(item: new KeyValuePair<string, string>(key: objectName, value: objectText));
+                    }
+                }
+            }
         }
     }
 

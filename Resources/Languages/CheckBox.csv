@@ -1,0 +1,27 @@
+﻿objectName,English,French
+ckb_ProcessOriginalFile,Process the Image File itself,Modifier le fichier image
+ckb_ResetFileDateToCreated,Reset Image File DateTime to CreateDate,Réinitialiser la date et l'heure du fichier image avec sa date de creation
+ckb_AddXMPSideCar,Add/Overwrite Sidecar XMP,Créer/remplacer les tags dans un fichier XMP séparé
+ckb_OverwriteOriginal,Do NOT Make a xxx_original Backup,Ne pas conserver de sauvegarde xxxx_original
+ckb_ResetMapToZero,Set Map to 0/0 if no GeoData,Pointer la carte sur 0/0 s'il n'y a pas de GeoData
+ckb_QuestionAddToponomyDontAskAgain,Don't Ask again,Ne plus demander
+ckb_UseTimeZone,Use this Time Zone:,Utilisez ce fuseau horaire :
+ckb_UseDST,Use DST?,Utiliser l'heure d'été ?
+ckb_GPSAltitude,Altitude [m],Altitude [m]
+ckb_GPSDestLatitude,Dest Latitude,Latitude de destination
+ckb_GPSDestLongitude,Dest Longitude,Longitude de destination
+ckb_GPSImgDirection,Img Direction,Direction de la photo
+ckb_GPSLatitude,Latitude,Latitude
+ckb_GPSLongitude,Longitude,Longitude
+ckb_GPSSpeed,Speed,Vitesse
+ckb_City,City,Ville
+ckb_CountryCode,Country Code,Code pays
+ckb_Country,Country,Pays
+ckb_State,State/Province,Etat/Province
+ckb_Sub_location,Sublocation,Departement
+ckb_TakenDate,Taken Date,Date de prise de vue
+ckb_CreateDate,Create Date,Date de création
+ckb_OffsetTime,Time Zone Offset,Décalage horaire
+ckb_DeSelectAll,(Un)Check All,Devalider tout
+ckb_RemoveGeoDataRemovesTimeOffset,"The ""Remove Geodata"" function also removes TimeZone Offset","La fonction "" retirer les geodata"" efface le time-offset egalement"
+ckb_ReplaceBlankToponyms,"Replace blank City, State, Sublocation values with: ",
