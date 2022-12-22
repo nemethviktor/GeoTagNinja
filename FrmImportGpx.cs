@@ -224,6 +224,7 @@ public partial class FrmImportGpx : Form
     {
         string trackFileLocationType = "";
         string trackFileLocationVal = "";
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         // one source:
         // exiftool -geotag "c:\gps logs\track.log" x.jpg
@@ -245,8 +246,6 @@ public partial class FrmImportGpx : Form
             }
         }
 
-        ;
-
         int timeShiftSeconds = 0;
         // adjust time as needed
         if (nud_Days.Value != 0 || nud_Hours.Value != 0 || nud_Minutes.Value != 0 || nud_Seconds.Value != 0)
@@ -260,13 +259,12 @@ public partial class FrmImportGpx : Form
         if ((trackFileLocationType == "file" && File.Exists(path: trackFileLocationVal)) || (trackFileLocationType == "folder" && Directory.Exists(path: trackFileLocationVal)))
         {
             // indicate that something is going on
-            btn_OK.Text = HelperStatic.DataReadSQLiteObjectText(
-                languageName: FrmMainApp.AppLanguage,
+            btn_OK.Text = HelperStatic.DataReadDTObjectText(
                 objectType: sender.GetType()
-                    .ToString()
-                    .Split('.')
-                    .Last(),
-                actionType: "Working",
+                                .ToString()
+                                .Split('.')
+                                .Last() +
+                            "_Working",
                 objectName: "btn_OK"
             );
             btn_OK.AutoSize = true;

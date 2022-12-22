@@ -1,17 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
-using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GeoTagNinja;
 
 internal static partial class HelperStatic
 {
-    #region SQL
-
     #region Database Creation SQL & Startup Checks
 
     /// <summary>
@@ -19,20 +18,25 @@ internal static partial class HelperStatic
     /// </summary>
     internal static void DataCreateSQLiteDB()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         try
         {
             // create folder in Appdata if doesn't exist
-
+            string sqldbPath = SSettingsDataBasePath;
+            FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath is " + SSettingsDataBasePath);
             FileInfo fi = new(fileName: SSettingsDataBasePath);
 
             if (fi.Exists && fi.Length == 0)
             {
+                FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath exists");
                 fi.Delete();
+                FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath deleted");
             }
 
-            string sqldbPath = SSettingsDataBasePath;
             if (!fi.Exists)
             {
+                FrmMainApp.Logger.Trace(message: "Creating " + SSettingsDataBasePath);
                 try
                 {
                     SQLiteConnection.CreateFile(databaseFileName: Path.Combine(SSettingsDataBasePath));
@@ -58,23 +62,21 @@ internal static partial class HelperStatic
                                 settingValue NTEXT(2000)    DEFAULT "",
                                 PRIMARY KEY([settingTabPage], [settingId])
                             );
-                            DROP TABLE IF EXISTS [toponymyData];
-                            CREATE TABLE [toponymyData](
-                                        [Lat] DECIMAL(19, 6) NOT NULL, 
-                                        [Lng] DECIMAL(19, 6) NOT NULL, 
-                                        [AdminName1] NTEXT, 
-                                        [AdminName2] NTEXT, 
-                                        [ToponymName] NTEXT, 
+                            CREATE TABLE [Favourites](
+                                        [locationName] NTEXT NOT NULL PRIMARY KEY,
+                                        [GPSLatitude] NTEXT NOT NULL,
+                                        [GPSLatitudeRef] NTEXT NOT NULL,
+                                        [GPSLongitude] NTEXT NOT NULL,
+                                        [GPSLongitudeRef] NTEXT NOT NULL,
+                                        [GPSAltitude] NTEXT,
+                                        [GPSAltitudeRef] NTEXT,
+                                        [Coordinates] NTEXT NOT NULL,
+                                        [City] NTEXT,
                                         [CountryCode] NTEXT,
-                                        [timezoneId] NTEXT,
-                                        PRIMARY KEY([Lat], [Lng]))
-                            ;
-                            DROP TABLE IF EXISTS [altitudeData];
-                            CREATE TABLE [altitudeData](
-                                        [Lat] DECIMAL(19, 6) NOT NULL, 
-                                        [Lng] DECIMAL(19, 6) NOT NULL,
-                                        [Srtm1] NTEXT, 
-                                        PRIMARY KEY([Lat], [Lng]))
+                                        [Country] NTEXT,
+                                        [State] NTEXT,
+                                        [Sub_location] NTEXT
+                                        )
                             ;
                             """;
                     SQLiteCommand sqlCommandStr = new(commandText: sql, connection: sqliteDB);
@@ -83,17 +85,18 @@ internal static partial class HelperStatic
                 }
                 catch (Exception ex)
                 {
+                    FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
                     MessageBox.Show(text: ex.Message);
                 }
             }
             else
             {
-                DataDeleteSQLiteToponomy();
-                DataDeleteSQLiteAltitude();
+                DataCreateSQLiteFavourites();
             }
         }
         catch (Exception ex)
         {
+            FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
             MessageBox.Show(text: ex.Message);
         }
     }
@@ -103,6 +106,8 @@ internal static partial class HelperStatic
     /// </summary>
     internal static void DataWriteSQLiteSettingsDefaultSettings()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         string[] controlNamesToAdd =
         {
             "ckb_AddXMPSideCar",
@@ -118,7 +123,7 @@ internal static partial class HelperStatic
             foreach (string ext in AncillaryListsArrays.AllCompatibleExtensions())
             {
                 string tmptmpCtrlName = ext.Split('\t')
-                                            .First() +
+                                            .FirstOrDefault() +
                                         '_'; // 'tis ok as is
                 string tmpCtrlName = tmptmpCtrlName + controlName;
                 string tmpCtrlGroup = ext.Split('\t')
@@ -140,14 +145,6 @@ internal static partial class HelperStatic
                 else if (controlName == "ckb_ProcessOriginalFile")
                 {
                     tmpVal = "true";
-                    //if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
-                    //{
-                    //    tmpVal = "false";
-                    //}
-                    //else
-                    //{
-                    //    tmpVal = "true";
-                    //}
                 }
 
                 else if (controlName == "ckb_ResetFileDateToCreated")
@@ -237,6 +234,8 @@ internal static partial class HelperStatic
     /// <returns>A DataTable with the complete list of tags stored in the database w/o filter.</returns>
     private static DataTable DataReadSQLiteObjectMappingTagsToPass()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "objectMapping.sqlite"));
         sqliteDB.Open();
 
@@ -404,295 +403,142 @@ internal static partial class HelperStatic
 
     #endregion
 
-    #region language SQL
+    #region language DT
 
-    /// <summary>
-    ///     Reads the language value of a specific item from the database.
-    /// </summary>
-    /// <param name="languageName">e.g "English"</param>
-    /// <param name="objectType">e.g. "button" or "columnheader"</param>
-    /// <param name="objectName">This is the name of the object e.g. "btn_OK"</param>
-    /// <returns>The value of the object's labal in the given language. E.g. for btn_Cancel this will be "Cancel"</returns>
-    internal static string DataReadSQLiteObjectText(string languageName,
-                                                    string objectType,
-                                                    string objectName)
+    internal static string DataReadDTObjectText(string objectType,
+                                                string objectName)
     {
-        string returnString = "";
-        string languagesFolderPath = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "Languages");
-        string languageFilePath = Path.Combine(path1: languagesFolderPath, path2: languageName + ".sqlite");
-        string englishLanguagefilePath = Path.Combine(path1: languagesFolderPath, path2: "english.sqlite");
-        using (SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + languageFilePath))
-        {
-            sqliteDB.Open();
-
-            string sqlCommandStr = @"
-                                SELECT objectText
-                                FROM " +
-                                   objectType +
-                                   " " +
-                                   @"WHERE 1=1
-                                    AND objectName = @objectName
-                                LIMIT 1
-                                ;"
-                ;
-            SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-            sqlToRun.Parameters.AddWithValue(parameterName: "@objectName", value: objectName);
-
-            using SQLiteDataReader reader = sqlToRun.ExecuteReader();
-            while (reader.Read())
-            {
-                returnString = reader.GetString(i: 0);
-            }
-        }
-
-        if (returnString == "")
-        {
-            using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + englishLanguagefilePath);
-            sqliteDB.Open();
-
-            string sqlCommandStr = @"
-                                SELECT objectText
-                                FROM " +
-                                   objectType +
-                                   " " +
-                                   @"WHERE 1=1
-                                    AND objectName = @objectName
-                                LIMIT 1
-                                ;"
-                ;
-            SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-            sqlToRun.Parameters.AddWithValue(parameterName: "@objectName", value: objectName);
-
-            using SQLiteDataReader reader = sqlToRun.ExecuteReader();
-            while (reader.Read())
-            {
-                returnString = reader.GetString(i: 0);
-            }
-        }
-
-        return returnString;
+        return (from kvp in AncillaryListsArrays.commonNamesKVP
+                where kvp.Key == objectType + "_" + objectName
+                select kvp.Value).FirstOrDefault();
     }
 
     /// <summary>
-    ///     Generally identical to the above but with an "actionType" - basically a parameter/breakdown.
+    ///     Reads all the language CSV files into one table (FrmMainApp.DtLanguageLabels)
     /// </summary>
-    /// <param name="languageName">e.g "English"</param>
-    /// <param name="objectType">e.g. "button" or "columnheader"</param>
-    /// <param name="actionType">e.g. "reading" or "writing". </param>
-    /// <param name="objectName">This is the name of the object e.g. "btn_OK"</param>
-    /// <returns>The value of the object's labal in the given language. E.g. for btn_Cancel this will be "Cancel"</returns>
-    internal static string DataReadSQLiteObjectText(string languageName,
-                                                    string objectType,
-                                                    string actionType,
-                                                    string objectName)
+    internal static void DataReadObjectTextFromFiles()
     {
-        string returnString = "";
-        string resourcesFolderPath = FrmMainApp.ResourcesFolderPath;
-        string languagesFolderPath = Path.Combine(path1: resourcesFolderPath, path2: "Languages");
+        string languagesFolderPath = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "Languages");
 
-        string languageFilePath = Path.Combine(path1: languagesFolderPath, path2: languageName + ".sqlite");
-        string englishLanguagefilePath = Path.Combine(path1: languagesFolderPath, path2: "english.sqlite");
-        using (SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + languageFilePath))
+        DataTable dtParsed = new();
+        dtParsed.Clear();
+        dtParsed.Columns.Add(columnName: "languageName");
+        dtParsed.Columns.Add(columnName: "objectType");
+        dtParsed.Columns.Add(columnName: "objectName");
+        dtParsed.Columns.Add(columnName: "objectText");
+
+        foreach (string fileNameWithPath in Directory.GetFiles(path: languagesFolderPath, searchPattern: "*.csv"))
         {
-            sqliteDB.Open();
+            DataTable dtObject = GetDataTableFromCsv(fileNameWithPath: fileNameWithPath, isUTF: true);
 
-            string sqlCommandStr = @"
-                                SELECT objectText
-                                FROM " +
-                                   objectType +
-                                   " " +
-                                   @"WHERE 1=1
-                                    AND objectName = @objectName
-                                    AND actionType = @actionType
-                                LIMIT 1
-                                ;"
-                ;
-            SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-            sqlToRun.Parameters.AddWithValue(parameterName: "@actionType", value: actionType);
-            sqlToRun.Parameters.AddWithValue(parameterName: "@objectName", value: objectName);
+            dtParsed.Clear();
 
-            using SQLiteDataReader reader = sqlToRun.ExecuteReader();
-            while (reader.Read())
+            string objectType = Path.GetFileNameWithoutExtension(path: fileNameWithPath); // e.g. "Button.csv" -> Button
+
+            foreach (DataRow drObjectRow in dtObject.Rows)
             {
-                returnString = reader.GetString(i: 0);
+                string objectName = drObjectRow[columnName: "objectName"]
+                    .ToString();
+
+                for (int i = 1; i < dtObject.Columns.Count; i++)
+                {
+                    string languageName = dtObject.Columns[index: i]
+                        .ColumnName;
+                    string objectText = drObjectRow[columnName: languageName]
+                        .ToString();
+                    if (objectText.Length == 0)
+                    {
+                        objectText = null;
+                    }
+
+                    DataRow drOut = dtParsed.NewRow();
+                    drOut[columnName: "languageName"] = languageName;
+                    drOut[columnName: "objectType"] = objectType;
+                    drOut[columnName: "objectName"] = objectName;
+                    drOut[columnName: "objectText"] = objectText;
+                    dtParsed.Rows.Add(row: drOut);
+                }
             }
+
+            FrmMainApp.DtLanguageLabels.Merge(table: dtParsed);
         }
 
-        if (returnString == "")
+        // this is far from optimal but for what we need it will do
+        // it's only used for pre-caching some Form labels (for now, Edit.)
+        for (int i = 1; i <= 2; i++)
         {
-            using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + englishLanguagefilePath);
-            sqliteDB.Open();
+            // run 1 is English
+            // run 2 is FrmMainApp._AppLanguage
+            // hashset takes care of the rest
+            string languageNameToGet = null;
 
-            string sqlCommandStr = @"
-                                SELECT objectText
-                                FROM " +
-                                   objectType +
-                                   " " +
-                                   @"WHERE 1=1
-                                    AND objectName = @objectName
-                                    AND actionType = @actionType
-                                LIMIT 1
-                                ;"
-                ;
-            SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-            sqlToRun.Parameters.AddWithValue(parameterName: "@actionType", value: actionType);
-            sqlToRun.Parameters.AddWithValue(parameterName: "@objectName", value: objectName);
+            languageNameToGet = i == 1
+                ? "English"
+                : FrmMainApp._AppLanguage;
 
-            using SQLiteDataReader reader = sqlToRun.ExecuteReader();
-            while (reader.Read())
+            // no need to waste resource.
+            if (!(i == 2 && FrmMainApp._AppLanguage == "English"))
             {
-                returnString = reader.GetString(i: 0);
+                EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in FrmMainApp.DtLanguageLabels.AsEnumerable()
+                                                                   where dataRow.Field<string>(columnName: "languageName") == languageNameToGet
+                                                                   select dataRow;
+
+                foreach (DataRow drObject in drDataTableData)
+                {
+                    if (drObject[columnName: "objectText"] != null &&
+                        drObject[columnName: "objectText"]
+                            .ToString()
+                            .Length >
+                        0)
+                    {
+                        string objectName = drObject[columnName: "objectType"] +
+                                            "_" +
+                                            drObject[columnName: "objectName"];
+                        string objectText = drObject[columnName: "objectText"]
+                            .ToString();
+
+                        if (i == 2)
+                        {
+                            AncillaryListsArrays.commonNamesKVP.RemoveAll(match: item => item.Key.Equals(obj: objectName));
+                        }
+
+                        AncillaryListsArrays.commonNamesKVP.Add(item: new KeyValuePair<string, string>(key: objectName, value: objectText));
+                    }
+                }
             }
         }
-
-        return returnString;
     }
 
     #endregion
 
-    #region Toponomy SQL
+    #region favourites SQL
 
     /// <summary>
-    ///     Attempts to read SQLite to see if the toponomy data exists. The idea is that a particular location on the planet
-    ///     isn't likely to change so ...
-    ///     ... it's silly to keep querying the API each time for the same thing. I've explained in the readme but the API I
-    ///     use doesn't really follow political changes...
-    ///     ... as of 2022 for example it still returns Ukraine for Crimea.
+    ///     Creates a table for the user's "favourites".
     /// </summary>
-    /// <param name="lat">
-    ///     latitude/longitude. String values; were initially numeric but this caused problems on non-English
-    ///     systems and strings are easier to coerce to work.
-    /// </param>
-    /// <param name="lng">
-    ///     latitude/longitude. String values; were initially numeric but this caused problems on non-English
-    ///     systems and strings are easier to coerce to work.
-    /// </param>
-    /// <returns>DataTable with toponomy data if exists</returns>
-    private static DataTable DataReadSQLiteToponomyWholeRow(string lat,
-                                                            string lng)
+    private static void DataCreateSQLiteFavourites()
     {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
-                                SELECT *
-                                FROM toponymyData
-                                WHERE 1=1
-									AND lat = @lat
-									AND lng = @lng
-                                ;
-								"
-            ;
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@lat", value: lat);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@lng", value: lng);
-        SQLiteDataReader reader = sqlToRun.ExecuteReader();
-        DataTable dataTable = new();
-        dataTable.Load(reader: reader);
-        return dataTable;
-    }
-
-    /// <summary>
-    ///     Identical to the above but for altitude data.
-    /// </summary>
-    /// <param name="lat">
-    ///     latitude/longitude. String values; were initially numeric but this caused problems on non-English
-    ///     systems and strings are easier to coerce to work.
-    /// </param>
-    /// <param name="lng">
-    ///     latitude/longitude. String values; were initially numeric but this caused problems on non-English
-    ///     systems and strings are easier to coerce to work.
-    /// </param>
-    /// <returns>DataTable with toponomy data if exists</returns>
-    private static DataTable DataReadSQLiteAltitudeWholeRow(string lat,
-                                                            string lng)
-    {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
-        sqliteDB.Open();
-
-        string sqlCommandStr = @"
-                                SELECT *
-                                FROM altitudeData
-                                WHERE 1=1
-									AND lat = @lat
-									AND lng = @lng
-                                ;
-								"
-            ;
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@lat", value: lat);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@lng", value: lng);
-        SQLiteDataReader reader = sqlToRun.ExecuteReader();
-        DataTable dataTable = new();
-        dataTable.Load(reader: reader);
-        return dataTable;
-    }
-
-    /// <summary>
-    ///     Writes topopnomy data from the API to SQL for future use. I explained the logic above at
-    ///     DataReadSQLiteToponomyWholeRow.
-    /// </summary>
-    /// <param name="lat">
-    ///     latitude/longitude. String values; were initially numeric but this caused problems on non-English
-    ///     systems and strings are easier to coerce to work.
-    /// </param>
-    /// <param name="lng">
-    ///     latitude/longitude. String values; were initially numeric but this caused problems on non-English
-    ///     systems and strings are easier to coerce to work.
-    /// </param>
-    /// <param name="AdminName1">API Response for this particular tag.</param>
-    /// <param name="AdminName2">API Response for this particular tag.</param>
-    /// <param name="ToponymName">API Response for this particular tag.</param>
-    /// <param name="CountryCode">API Response for this particular tag.</param>
-    private static void DataWriteSQLiteToponomyWholeRow(string lat,
-                                                        string lng,
-                                                        string AdminName1 = "",
-                                                        string AdminName2 = "",
-                                                        string ToponymName = "",
-                                                        string CountryCode = "",
-                                                        string timezoneId = ""
-    )
-    {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
-        sqliteDB.Open();
-
-        string sqlCommandStr = @"
-                                REPLACE INTO toponymyData (lat, lng, AdminName1, AdminName2, ToponymName, CountryCode, timezoneId) " +
-                               "VALUES (@lat, @lng, @AdminName1, @AdminName2, @ToponymName, @CountryCode, @timezoneId);"
-            ;
-
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@lat", value: lat.ToString(provider: CultureInfo.InvariantCulture));
-        sqlToRun.Parameters.AddWithValue(parameterName: "@lng", value: lng.ToString(provider: CultureInfo.InvariantCulture));
-        sqlToRun.Parameters.AddWithValue(parameterName: "@AdminName1", value: AdminName1);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@AdminName2", value: AdminName2);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@ToponymName", value: ToponymName);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@CountryCode", value: CountryCode);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@timezoneId", value: timezoneId);
-
-        sqlToRun.ExecuteNonQuery();
-    }
-
-    /// <summary>
-    ///     Clears the data from the Toponomy table. Run at session start.
-    ///     This was changed from a simple DELETE FROM because timezoneId had been added as of 20221128
-    /// </summary>
-    private static void DataDeleteSQLiteToponomy()
-    {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
-        sqliteDB.Open();
-
-        string sqlCommandStr = @"
-                                DROP TABLE IF EXISTS [toponymyData];
-                                CREATE TABLE [toponymyData](
-                                            [Lat] DECIMAL(19, 6) NOT NULL, 
-                                            [Lng] DECIMAL(19, 6) NOT NULL, 
-                                            [AdminName1] NTEXT, 
-                                            [AdminName2] NTEXT, 
-                                            [ToponymName] NTEXT, 
-                                            [CountryCode] NTEXT,
-                                            [timezoneId] NTEXT,
-                                            PRIMARY KEY([Lat], [Lng]))
+                                CREATE TABLE IF NOT EXISTS [Favourites](
+                                        [locationName] NTEXT NOT NULL PRIMARY KEY,
+                                        [GPSLatitude] NTEXT NOT NULL,
+                                        [GPSLatitudeRef] NTEXT NOT NULL,
+                                        [GPSLongitude] NTEXT NOT NULL,
+                                        [GPSLongitudeRef] NTEXT NOT NULL,
+                                        [GPSAltitude] NTEXT,
+                                        [GPSAltitudeRef] NTEXT,
+                                        [Coordinates] NTEXT NOT NULL,
+                                        [City] NTEXT,
+                                        [CountryCode] NTEXT,
+                                        [Country] NTEXT,
+                                        [State] NTEXT,
+                                        [Sub_location] NTEXT
+                                        )
                                 ;"
             ;
 
@@ -702,50 +548,119 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    ///     Clears the data from the Altitude table. Run at session start.
+    ///     Reads the favourites table
     /// </summary>
-    private static void DataDeleteSQLiteAltitude()
+    /// <returns></returns>
+    internal static DataTable DataReadSQLiteFavourites()
     {
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
-                                DELETE FROM altitudeData;"
+                                SELECT *
+                                FROM Favourites
+                                WHERE 1=1
+                                ORDER BY 1;
+								"
+            ;
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+
+        SQLiteDataReader reader = sqlToRun.ExecuteReader();
+        DataTable dataTable = new();
+        dataTable.Load(reader: reader);
+        return dataTable;
+    }
+
+    /// <summary>
+    ///     Deletes the given "favourite" from the relevant table
+    /// </summary>
+    /// <param name="locationName">Name of the "favourite" (like "home")</param>
+    internal static void DataDeleteSQLiteFavourites(string locationName)
+    {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = @"
+                                DELETE FROM Favourites
+                                WHERE locationName = @locationName
+                                ;"
             ;
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@locationName", value: locationName);
 
         sqlToRun.ExecuteNonQuery();
     }
 
     /// <summary>
-    ///     Identical to the above but for altitude data
+    ///     Writes back the relevant "favourite" to the table
     /// </summary>
-    /// <param name="lat">
-    ///     latitude/longitude. String values; were initially numeric but this caused problems on non-English
-    ///     systems and strings are easier to coerce to work.
-    /// </param>
-    /// <param name="lng">
-    ///     latitude/longitude. String values; were initially numeric but this caused problems on non-English
-    ///     systems and strings are easier to coerce to work.
-    /// </param>
-    /// <param name="Altitude">API Response for this particular tag.</param>
-    private static void DataWriteSQLiteAltitudeWholeRow(string lat,
-                                                        string lng,
-                                                        string Altitude = "")
+    /// <param name="locationName">Value to write for relevant column</param>
+    /// <param name="GPSAltitude">Value to write for relevant column</param>
+    /// <param name="GPSAltitudeRef">Value to write for relevant column</param>
+    /// <param name="GPSLatitude">Value to write for relevant column</param>
+    /// <param name="GPSLatitudeRef">Value to write for relevant column</param>
+    /// <param name="GPSLongitude">Value to write for relevant column</param>
+    /// <param name="GPSLongitudeRef">Value to write for relevant column</param>
+    /// <param name="Coordinates">Value to write for relevant column</param>
+    /// <param name="City">Value to write for relevant column</param>
+    /// <param name="CountryCode">Value to write for relevant column</param>
+    /// <param name="Country">Value to write for relevant column</param>
+    /// <param name="State">Value to write for relevant column</param>
+    /// <param name="Sub_location">Value to write for relevant column</param>
+    internal static void DataWriteSQLiteFavourites(string locationName,
+                                                   string GPSAltitude,
+                                                   string GPSAltitudeRef,
+                                                   string GPSLatitude,
+                                                   string GPSLatitudeRef,
+                                                   string GPSLongitude,
+                                                   string GPSLongitudeRef,
+                                                   string Coordinates,
+                                                   string City,
+                                                   string CountryCode,
+                                                   string Country,
+                                                   string State,
+                                                   string Sub_location)
     {
+        FrmMainApp.Logger.Trace(message: "Starting");
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
-                                REPLACE INTO altitudeData (lat, lng, Srtm1) " +
-                               "VALUES (@lat, @lng, @Altitude);"
+                                REPLACE INTO Favourites (
+                                    locationName,
+                                    GPSAltitude,
+                                    GPSAltitudeRef,
+                                    GPSLatitude,
+                                    GPSLatitudeRef,
+                                    GPSLongitude,
+                                    GPSLongitudeRef,
+                                    Coordinates,
+                                    City,
+                                    CountryCode,
+                                    Country,
+                                    State,
+                                    Sub_location
+                                    ) " +
+                               "VALUES (@locationName, @GPSAltitude,@GPSAltitudeRef,@GPSLatitude,@GPSLatitudeRef,@GPSLongitude,@GPSLongitudeRef,@Coordinates,@City,@CountryCode,@Country,@State,@Sub_location);"
             ;
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@lat", value: lat.ToString(provider: CultureInfo.InvariantCulture));
-        sqlToRun.Parameters.AddWithValue(parameterName: "@lng", value: lng.ToString(provider: CultureInfo.InvariantCulture));
-        sqlToRun.Parameters.AddWithValue(parameterName: "@Altitude", value: Altitude.ToString(provider: CultureInfo.InvariantCulture));
+        sqlToRun.Parameters.AddWithValue(parameterName: "@locationName", value: locationName);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSAltitude", value: GPSAltitude);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSAltitudeRef", value: GPSAltitudeRef);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSLatitude", value: GPSLatitude);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSLatitudeRef", value: GPSLatitudeRef);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSLongitude", value: GPSLongitude);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSLongitudeRef", value: GPSLongitudeRef);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@Coordinates", value: Coordinates);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@City", value: City);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@CountryCode", value: CountryCode);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@Country", value: Country);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@State", value: State);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@Sub_location", value: Sub_location);
 
         sqlToRun.ExecuteNonQuery();
     }
@@ -798,7 +713,47 @@ internal static partial class HelperStatic
         return returnString;
     }
 
-    #endregion
+    /// <summary>
+    ///     Does a filter on a DataTable - just faster.
+    ///     via https://stackoverflow.com/a/47692754/3968494
+    /// </summary>
+    /// <param name="dt">DataTable to query</param>
+    /// <param name="filePathColumnName">The "column" part of WHERE</param>
+    /// <param name="filePathValue">The "value" part of WHERE</param>
+    /// <returns>List of KVP String/String</returns>
+    internal static List<KeyValuePair<string, string>> DataReadFilterDataTable(DataTable dt,
+                                                                               string filePathColumnName,
+                                                                               string filePathValue)
+    {
+        EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in dt.AsEnumerable()
+                                                           where dataRow.Field<string>(columnName: filePathColumnName) == filePathValue
+                                                           select dataRow;
+        List<KeyValuePair<string, string>> lstReturn = new();
+
+        Parallel.ForEach(source: drDataTableData, body: dataRow =>
+            {
+                string settingId = dataRow[columnName: "settingId"]
+                    .ToString();
+                string settingValue = dataRow[columnName: "settingValue"]
+                    .ToString();
+                lstReturn.Add(item: new KeyValuePair<string, string>(key: settingId, value: settingValue));
+            })
+            ;
+        return lstReturn;
+    }
+
+    /// <summary>
+    ///     Gets the "FirstOrDefault" from a List of KVP
+    /// </summary>
+    /// <param name="lstIn">List (KVP) to check</param>
+    /// <param name="keyEqualsWhat">Key filter</param>
+    /// <returns>String of Value</returns>
+    internal static string DataGetFirstOrDefaultFromKVPList(List<KeyValuePair<string, string>> lstIn,
+                                                            string keyEqualsWhat)
+    {
+        return lstIn.FirstOrDefault(predicate: kvp => kvp.Key == keyEqualsWhat)
+            .Value;
+    }
 
     #endregion
 }

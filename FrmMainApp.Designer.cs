@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using GeoTagNinja.View.ListView;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace GeoTagNinja
@@ -57,27 +58,35 @@ namespace GeoTagNinja
             this.tsr_FolderControl = new System.Windows.Forms.ToolStrip();
             this.tbx_FolderName = new System.Windows.Forms.ToolStripTextBox();
             this.tsb_OneFolderUp = new System.Windows.Forms.ToolStripButton();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.splitContainerLeftTop = new System.Windows.Forms.SplitContainer();
-            this.lvw_FileList = new System.Windows.Forms.ListView();
+            this.lvw_FileList = new GeoTagNinja.View.ListView.FileListView();
             this.clh_FileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.splitContainerLeftBottom = new System.Windows.Forms.SplitContainer();
-            this.pbx_imagePreview = new System.Windows.Forms.PictureBox();
+            this.cms_FileListView = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tmi_ShowHideCols = new System.Windows.Forms.ToolStripMenuItem();
+            this.pbx_imagePreview = new GeoTagNinja.ImagePreview();
+            this.flp_ProcessingInfo = new System.Windows.Forms.FlowLayoutPanel();
             this.lbl_ParseProgress = new System.Windows.Forms.Label();
-            this.splitContainerRight = new System.Windows.Forms.SplitContainer();
             this.tct_Main = new System.Windows.Forms.TabControl();
             this.tpg_Map = new System.Windows.Forms.TabPage();
             this.wbv_MapArea = new Microsoft.Web.WebView2.WinForms.WebView2();
-            this.btn_loctToFile = new System.Windows.Forms.Button();
-            this.btn_NavigateMapGo = new System.Windows.Forms.Button();
-            this.lbl_lng = new System.Windows.Forms.Label();
-            this.tbx_lng = new System.Windows.Forms.TextBox();
+            this.igl_RightHandSide = new System.Windows.Forms.ImageList(this.components);
+            this.flp_GeoCoords = new System.Windows.Forms.FlowLayoutPanel();
             this.lbl_lat = new System.Windows.Forms.Label();
             this.tbx_lat = new System.Windows.Forms.TextBox();
+            this.lbl_lng = new System.Windows.Forms.Label();
+            this.tbx_lng = new System.Windows.Forms.TextBox();
+            this.btn_NavigateMapGo = new System.Windows.Forms.Button();
+            this.btn_loctToFile = new System.Windows.Forms.Button();
+            this.lbl_Favourites = new System.Windows.Forms.Label();
+            this.cbx_Favourites = new System.Windows.Forms.ComboBox();
+            this.btn_SaveLocation = new System.Windows.Forms.Button();
+            this.btn_LoadFavourite = new System.Windows.Forms.Button();
             this.ttp_NavigateMapGo = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_loctToFile = new System.Windows.Forms.ToolTip(this.components);
-            this.igl_RightHandSide = new System.Windows.Forms.ImageList(this.components);
+            this.ttp_SaveFavourite = new System.Windows.Forms.ToolTip(this.components);
+            this.ttp_LoadFavourite = new System.Windows.Forms.ToolTip(this.components);
+            this.tmi_removeCachedData = new System.Windows.Forms.ToolStripMenuItem();
             this.mns_MenuStrip.SuspendLayout();
             this.tsr_MainAppToolStrip.SuspendLayout();
             this.tsr_FolderControl.SuspendLayout();
@@ -89,18 +98,13 @@ namespace GeoTagNinja
             this.splitContainerLeftTop.Panel1.SuspendLayout();
             this.splitContainerLeftTop.Panel2.SuspendLayout();
             this.splitContainerLeftTop.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerLeftBottom)).BeginInit();
-            this.splitContainerLeftBottom.Panel1.SuspendLayout();
-            this.splitContainerLeftBottom.Panel2.SuspendLayout();
-            this.splitContainerLeftBottom.SuspendLayout();
+            this.cms_FileListView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_imagePreview)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerRight)).BeginInit();
-            this.splitContainerRight.Panel1.SuspendLayout();
-            this.splitContainerRight.Panel2.SuspendLayout();
-            this.splitContainerRight.SuspendLayout();
+            this.flp_ProcessingInfo.SuspendLayout();
             this.tct_Main.SuspendLayout();
             this.tpg_Map.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.wbv_MapArea)).BeginInit();
+            this.flp_GeoCoords.SuspendLayout();
             this.SuspendLayout();
             // 
             // mns_MenuStrip
@@ -112,6 +116,7 @@ namespace GeoTagNinja
             this.tmi_Help});
             this.mns_MenuStrip.Location = new System.Drawing.Point(0, 0);
             this.mns_MenuStrip.Name = "mns_MenuStrip";
+            this.mns_MenuStrip.Padding = new System.Windows.Forms.Padding(4, 1, 0, 1);
             this.mns_MenuStrip.Size = new System.Drawing.Size(730, 24);
             this.mns_MenuStrip.TabIndex = 9;
             this.mns_MenuStrip.Text = "mns_MenuStrip";
@@ -127,7 +132,7 @@ namespace GeoTagNinja
             this.tss_ToolStripSeparator_Main,
             this.tmi_File_Quit});
             this.tmi_File.Name = "tmi_File";
-            this.tmi_File.Size = new System.Drawing.Size(60, 20);
+            this.tmi_File.Size = new System.Drawing.Size(60, 22);
             this.tmi_File.Text = "tmi_File";
             // 
             // tmi_File_SaveAll
@@ -187,7 +192,7 @@ namespace GeoTagNinja
             this.tmi_Settings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tmi_Settings_Settings});
             this.tmi_Settings.Name = "tmi_Settings";
-            this.tmi_Settings.Size = new System.Drawing.Size(84, 20);
+            this.tmi_Settings.Size = new System.Drawing.Size(84, 22);
             this.tmi_Settings.Text = "tmi_Settings";
             // 
             // tmi_Settings_Settings
@@ -202,7 +207,7 @@ namespace GeoTagNinja
             this.tmi_Help.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tmi_Help_About});
             this.tmi_Help.Name = "tmi_Help";
-            this.tmi_Help.Size = new System.Drawing.Size(67, 20);
+            this.tmi_Help.Size = new System.Drawing.Size(67, 22);
             this.tmi_Help.Text = "tmi_Help";
             // 
             // tmi_Help_About
@@ -333,25 +338,31 @@ namespace GeoTagNinja
             // 
             // splitContainerMain
             // 
-            this.splitContainerMain.Location = new System.Drawing.Point(0, 77);
+            this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerMain.Location = new System.Drawing.Point(0, 74);
             this.splitContainerMain.Name = "splitContainerMain";
             // 
             // splitContainerMain.Panel1
             // 
             this.splitContainerMain.Panel1.Controls.Add(this.splitContainerLeftTop);
+            this.splitContainerMain.Panel1.Controls.Add(this.flp_ProcessingInfo);
+            this.splitContainerMain.Panel1.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
             // 
             // splitContainerMain.Panel2
             // 
-            this.splitContainerMain.Panel2.Controls.Add(this.splitContainerRight);
-            this.splitContainerMain.Size = new System.Drawing.Size(718, 396);
-            this.splitContainerMain.SplitterDistance = 330;
+            this.splitContainerMain.Panel2.Controls.Add(this.tct_Main);
+            this.splitContainerMain.Panel2.Controls.Add(this.flp_GeoCoords);
+            this.splitContainerMain.Panel2.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
+            this.splitContainerMain.Size = new System.Drawing.Size(730, 411);
+            this.splitContainerMain.SplitterDistance = 334;
+            this.splitContainerMain.SplitterWidth = 6;
             this.splitContainerMain.TabIndex = 19;
-            this.splitContainerMain.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainerMain_SplitterMoved);
             // 
             // splitContainerLeftTop
             // 
             this.splitContainerLeftTop.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerLeftTop.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerLeftTop.Location = new System.Drawing.Point(5, 0);
+            this.splitContainerLeftTop.Margin = new System.Windows.Forms.Padding(0);
             this.splitContainerLeftTop.Name = "splitContainerLeftTop";
             this.splitContainerLeftTop.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -362,11 +373,12 @@ namespace GeoTagNinja
             // 
             // splitContainerLeftTop.Panel2
             // 
-            this.splitContainerLeftTop.Panel2.Controls.Add(this.splitContainerLeftBottom);
-            this.splitContainerLeftTop.Size = new System.Drawing.Size(330, 396);
-            this.splitContainerLeftTop.SplitterDistance = 318;
+            this.splitContainerLeftTop.Panel2.Controls.Add(this.pbx_imagePreview);
+            this.splitContainerLeftTop.Panel2MinSize = 100;
+            this.splitContainerLeftTop.Size = new System.Drawing.Size(329, 381);
+            this.splitContainerLeftTop.SplitterDistance = 182;
+            this.splitContainerLeftTop.SplitterWidth = 6;
             this.splitContainerLeftTop.TabIndex = 0;
-            this.splitContainerLeftTop.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainerLeftTop_SplitterMoved);
             // 
             // lvw_FileList
             // 
@@ -374,17 +386,18 @@ namespace GeoTagNinja
             this.lvw_FileList.BackColor = System.Drawing.Color.SeaShell;
             this.lvw_FileList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.clh_FileName});
+            this.lvw_FileList.ContextMenuStrip = this.cms_FileListView;
+            this.lvw_FileList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvw_FileList.FullRowSelect = true;
             this.lvw_FileList.GridLines = true;
             this.lvw_FileList.HideSelection = false;
-            this.lvw_FileList.Location = new System.Drawing.Point(2, 2);
+            this.lvw_FileList.Location = new System.Drawing.Point(0, 0);
             this.lvw_FileList.Margin = new System.Windows.Forms.Padding(2);
             this.lvw_FileList.Name = "lvw_FileList";
-            this.lvw_FileList.Size = new System.Drawing.Size(326, 314);
+            this.lvw_FileList.Size = new System.Drawing.Size(329, 182);
             this.lvw_FileList.TabIndex = 12;
             this.lvw_FileList.UseCompatibleStateImageBehavior = false;
             this.lvw_FileList.View = System.Windows.Forms.View.Details;
-            this.lvw_FileList.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvw_FileList_ColumnClick);
             this.lvw_FileList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvw_FileList_KeyDown);
             this.lvw_FileList.KeyUp += new System.Windows.Forms.KeyEventHandler(this.lvw_FileList_KeyUp);
             this.lvw_FileList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvw_FileList_MouseDoubleClick);
@@ -395,77 +408,71 @@ namespace GeoTagNinja
             this.clh_FileName.Name = "clh_FileName";
             this.clh_FileName.Text = "clh_FileName";
             // 
-            // splitContainerLeftBottom
+            // cms_FileListView
             // 
-            this.splitContainerLeftBottom.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerLeftBottom.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainerLeftBottom.Location = new System.Drawing.Point(0, 0);
-            this.splitContainerLeftBottom.Name = "splitContainerLeftBottom";
-            this.splitContainerLeftBottom.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.cms_FileListView.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.cms_FileListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tmi_ShowHideCols,
+            this.tmi_removeCachedData});
+            this.cms_FileListView.Name = "cms_FileListView";
+            this.cms_FileListView.Size = new System.Drawing.Size(181, 70);
             // 
-            // splitContainerLeftBottom.Panel1
+            // tmi_ShowHideCols
             // 
-            this.splitContainerLeftBottom.Panel1.Controls.Add(this.pbx_imagePreview);
-            // 
-            // splitContainerLeftBottom.Panel2
-            // 
-            this.splitContainerLeftBottom.Panel2.Controls.Add(this.lbl_ParseProgress);
-            this.splitContainerLeftBottom.Size = new System.Drawing.Size(330, 74);
-            this.splitContainerLeftBottom.SplitterDistance = 36;
-            this.splitContainerLeftBottom.TabIndex = 0;
+            this.tmi_ShowHideCols.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tmi_ShowHideCols.Name = "tmi_ShowHideCols";
+            this.tmi_ShowHideCols.Size = new System.Drawing.Size(187, 22);
+            this.tmi_ShowHideCols.Text = "Select Columns";
+            this.tmi_ShowHideCols.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.tmi_ShowHideCols.Click += new System.EventHandler(this.selectColumnsToolStripMenuItem_Click);
             // 
             // pbx_imagePreview
             // 
-            this.pbx_imagePreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbx_imagePreview.Location = new System.Drawing.Point(0, 2);
+            this.pbx_imagePreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pbx_imagePreview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbx_imagePreview.EmptyText = "No image to show";
+            this.pbx_imagePreview.Image = null;
+            this.pbx_imagePreview.Location = new System.Drawing.Point(0, 0);
             this.pbx_imagePreview.Margin = new System.Windows.Forms.Padding(2);
             this.pbx_imagePreview.Name = "pbx_imagePreview";
-            this.pbx_imagePreview.Size = new System.Drawing.Size(328, 32);
+            this.pbx_imagePreview.Size = new System.Drawing.Size(329, 193);
             this.pbx_imagePreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbx_imagePreview.TabIndex = 19;
             this.pbx_imagePreview.TabStop = false;
             // 
+            // flp_ProcessingInfo
+            // 
+            this.flp_ProcessingInfo.Controls.Add(this.lbl_ParseProgress);
+            this.flp_ProcessingInfo.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.flp_ProcessingInfo.Location = new System.Drawing.Point(5, 381);
+            this.flp_ProcessingInfo.MaximumSize = new System.Drawing.Size(0, 30);
+            this.flp_ProcessingInfo.MinimumSize = new System.Drawing.Size(0, 30);
+            this.flp_ProcessingInfo.Name = "flp_ProcessingInfo";
+            this.flp_ProcessingInfo.Size = new System.Drawing.Size(329, 30);
+            this.flp_ProcessingInfo.TabIndex = 16;
+            this.flp_ProcessingInfo.WrapContents = false;
+            // 
             // lbl_ParseProgress
             // 
-            this.lbl_ParseProgress.Location = new System.Drawing.Point(0, 6);
+            this.lbl_ParseProgress.AutoSize = true;
+            this.lbl_ParseProgress.Location = new System.Drawing.Point(0, 7);
+            this.lbl_ParseProgress.Margin = new System.Windows.Forms.Padding(0, 7, 3, 0);
             this.lbl_ParseProgress.Name = "lbl_ParseProgress";
-            this.lbl_ParseProgress.Size = new System.Drawing.Size(154, 19);
+            this.lbl_ParseProgress.Size = new System.Drawing.Size(91, 13);
             this.lbl_ParseProgress.TabIndex = 15;
             this.lbl_ParseProgress.Text = "lbl_ParseProgress";
-            // 
-            // splitContainerRight
-            // 
-            this.splitContainerRight.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerRight.IsSplitterFixed = true;
-            this.splitContainerRight.Location = new System.Drawing.Point(0, 0);
-            this.splitContainerRight.Name = "splitContainerRight";
-            this.splitContainerRight.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainerRight.Panel1
-            // 
-            this.splitContainerRight.Panel1.Controls.Add(this.tct_Main);
-            // 
-            // splitContainerRight.Panel2
-            // 
-            this.splitContainerRight.Panel2.Controls.Add(this.btn_loctToFile);
-            this.splitContainerRight.Panel2.Controls.Add(this.btn_NavigateMapGo);
-            this.splitContainerRight.Panel2.Controls.Add(this.lbl_lng);
-            this.splitContainerRight.Panel2.Controls.Add(this.tbx_lng);
-            this.splitContainerRight.Panel2.Controls.Add(this.lbl_lat);
-            this.splitContainerRight.Panel2.Controls.Add(this.tbx_lat);
-            this.splitContainerRight.Size = new System.Drawing.Size(384, 396);
-            this.splitContainerRight.SplitterDistance = 318;
-            this.splitContainerRight.TabIndex = 0;
             // 
             // tct_Main
             // 
             this.tct_Main.Controls.Add(this.tpg_Map);
+            this.tct_Main.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tct_Main.ImageList = this.igl_RightHandSide;
-            this.tct_Main.Location = new System.Drawing.Point(2, 2);
+            this.tct_Main.Location = new System.Drawing.Point(0, 0);
             this.tct_Main.Margin = new System.Windows.Forms.Padding(2);
             this.tct_Main.Name = "tct_Main";
+            this.tct_Main.Padding = new System.Drawing.Point(0, 0);
             this.tct_Main.SelectedIndex = 0;
-            this.tct_Main.Size = new System.Drawing.Size(380, 245);
+            this.tct_Main.Size = new System.Drawing.Size(385, 365);
             this.tct_Main.TabIndex = 2;
             // 
             // tpg_Map
@@ -476,7 +483,7 @@ namespace GeoTagNinja
             this.tpg_Map.Margin = new System.Windows.Forms.Padding(2);
             this.tpg_Map.Name = "tpg_Map";
             this.tpg_Map.Padding = new System.Windows.Forms.Padding(2);
-            this.tpg_Map.Size = new System.Drawing.Size(372, 218);
+            this.tpg_Map.Size = new System.Drawing.Size(377, 338);
             this.tpg_Map.TabIndex = 0;
             this.tpg_Map.Text = "tpg_Map";
             this.tpg_Map.UseVisualStyleBackColor = true;
@@ -490,65 +497,41 @@ namespace GeoTagNinja
             this.wbv_MapArea.Location = new System.Drawing.Point(2, 2);
             this.wbv_MapArea.Name = "wbv_MapArea";
             this.wbv_MapArea.Padding = new System.Windows.Forms.Padding(1);
-            this.wbv_MapArea.Size = new System.Drawing.Size(368, 214);
+            this.wbv_MapArea.Size = new System.Drawing.Size(373, 334);
             this.wbv_MapArea.TabIndex = 1;
             this.wbv_MapArea.ZoomFactor = 1D;
             // 
-            // btn_loctToFile
+            // igl_RightHandSide
             // 
-            this.btn_loctToFile.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_loctToFile.BackgroundImage")));
-            this.btn_loctToFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btn_loctToFile.Location = new System.Drawing.Point(196, 17);
-            this.btn_loctToFile.Margin = new System.Windows.Forms.Padding(2);
-            this.btn_loctToFile.Name = "btn_loctToFile";
-            this.btn_loctToFile.Size = new System.Drawing.Size(24, 24);
-            this.btn_loctToFile.TabIndex = 10;
-            this.btn_loctToFile.Text = "btn_loctToFile";
-            this.btn_loctToFile.UseVisualStyleBackColor = true;
-            this.btn_loctToFile.Click += new System.EventHandler(this.btn_loctToFile_Click);
+            this.igl_RightHandSide.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("igl_RightHandSide.ImageStream")));
+            this.igl_RightHandSide.TransparentColor = System.Drawing.Color.Transparent;
+            this.igl_RightHandSide.Images.SetKeyName(0, "PublishOnDemand.png");
             // 
-            // btn_NavigateMapGo
+            // flp_GeoCoords
             // 
-            this.btn_NavigateMapGo.BackColor = System.Drawing.SystemColors.Menu;
-            this.btn_NavigateMapGo.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_NavigateMapGo.BackgroundImage")));
-            this.btn_NavigateMapGo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btn_NavigateMapGo.Location = new System.Drawing.Point(151, 17);
-            this.btn_NavigateMapGo.Margin = new System.Windows.Forms.Padding(2);
-            this.btn_NavigateMapGo.Name = "btn_NavigateMapGo";
-            this.btn_NavigateMapGo.Size = new System.Drawing.Size(24, 24);
-            this.btn_NavigateMapGo.TabIndex = 11;
-            this.btn_NavigateMapGo.Text = "btn_NavigateMapGo";
-            this.btn_NavigateMapGo.UseVisualStyleBackColor = false;
-            this.btn_NavigateMapGo.Click += new System.EventHandler(this.btn_NavigateMapGo_Click);
-            // 
-            // lbl_lng
-            // 
-            this.lbl_lng.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.lbl_lng.AutoSize = true;
-            this.lbl_lng.Location = new System.Drawing.Point(137, 29);
-            this.lbl_lng.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lbl_lng.Name = "lbl_lng";
-            this.lbl_lng.Size = new System.Drawing.Size(37, 13);
-            this.lbl_lng.TabIndex = 8;
-            this.lbl_lng.Text = "lbl_lng";
-            // 
-            // tbx_lng
-            // 
-            this.tbx_lng.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.tbx_lng.Location = new System.Drawing.Point(172, 27);
-            this.tbx_lng.Margin = new System.Windows.Forms.Padding(0);
-            this.tbx_lng.MaxLength = 20;
-            this.tbx_lng.Name = "tbx_lng";
-            this.tbx_lng.Size = new System.Drawing.Size(79, 20);
-            this.tbx_lng.TabIndex = 9;
-            this.tbx_lng.Text = "0";
+            this.flp_GeoCoords.Controls.Add(this.lbl_lat);
+            this.flp_GeoCoords.Controls.Add(this.tbx_lat);
+            this.flp_GeoCoords.Controls.Add(this.lbl_lng);
+            this.flp_GeoCoords.Controls.Add(this.tbx_lng);
+            this.flp_GeoCoords.Controls.Add(this.btn_NavigateMapGo);
+            this.flp_GeoCoords.Controls.Add(this.btn_loctToFile);
+            this.flp_GeoCoords.Controls.Add(this.lbl_Favourites);
+            this.flp_GeoCoords.Controls.Add(this.cbx_Favourites);
+            this.flp_GeoCoords.Controls.Add(this.btn_SaveLocation);
+            this.flp_GeoCoords.Controls.Add(this.btn_LoadFavourite);
+            this.flp_GeoCoords.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.flp_GeoCoords.Location = new System.Drawing.Point(0, 365);
+            this.flp_GeoCoords.MinimumSize = new System.Drawing.Size(0, 30);
+            this.flp_GeoCoords.Name = "flp_GeoCoords";
+            this.flp_GeoCoords.Size = new System.Drawing.Size(385, 46);
+            this.flp_GeoCoords.TabIndex = 12;
             // 
             // lbl_lat
             // 
             this.lbl_lat.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lbl_lat.AutoSize = true;
-            this.lbl_lat.Location = new System.Drawing.Point(19, 29);
-            this.lbl_lat.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_lat.Location = new System.Drawing.Point(10, 7);
+            this.lbl_lat.Margin = new System.Windows.Forms.Padding(10, 0, 2, 0);
             this.lbl_lat.Name = "lbl_lat";
             this.lbl_lat.Size = new System.Drawing.Size(34, 13);
             this.lbl_lat.TabIndex = 6;
@@ -557,7 +540,7 @@ namespace GeoTagNinja
             // tbx_lat
             // 
             this.tbx_lat.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.tbx_lat.Location = new System.Drawing.Point(49, 27);
+            this.tbx_lat.Location = new System.Drawing.Point(46, 4);
             this.tbx_lat.Margin = new System.Windows.Forms.Padding(0);
             this.tbx_lat.MaxLength = 20;
             this.tbx_lat.Name = "tbx_lat";
@@ -565,11 +548,106 @@ namespace GeoTagNinja
             this.tbx_lat.TabIndex = 7;
             this.tbx_lat.Text = "0";
             // 
-            // igl_RightHandSide
+            // lbl_lng
             // 
-            this.igl_RightHandSide.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("igl_RightHandSide.ImageStream")));
-            this.igl_RightHandSide.TransparentColor = System.Drawing.Color.Transparent;
-            this.igl_RightHandSide.Images.SetKeyName(0, "PublishOnDemand.png");
+            this.lbl_lng.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lbl_lng.AutoSize = true;
+            this.lbl_lng.Location = new System.Drawing.Point(145, 7);
+            this.lbl_lng.Margin = new System.Windows.Forms.Padding(20, 0, 2, 0);
+            this.lbl_lng.Name = "lbl_lng";
+            this.lbl_lng.Size = new System.Drawing.Size(37, 13);
+            this.lbl_lng.TabIndex = 8;
+            this.lbl_lng.Text = "lbl_lng";
+            // 
+            // tbx_lng
+            // 
+            this.tbx_lng.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tbx_lng.Location = new System.Drawing.Point(184, 4);
+            this.tbx_lng.Margin = new System.Windows.Forms.Padding(0);
+            this.tbx_lng.MaxLength = 20;
+            this.tbx_lng.Name = "tbx_lng";
+            this.tbx_lng.Size = new System.Drawing.Size(79, 20);
+            this.tbx_lng.TabIndex = 9;
+            this.tbx_lng.Text = "0";
+            // 
+            // btn_NavigateMapGo
+            // 
+            this.btn_NavigateMapGo.BackColor = System.Drawing.SystemColors.Menu;
+            this.btn_NavigateMapGo.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_NavigateMapGo.BackgroundImage")));
+            this.btn_NavigateMapGo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btn_NavigateMapGo.Location = new System.Drawing.Point(283, 2);
+            this.btn_NavigateMapGo.Margin = new System.Windows.Forms.Padding(20, 2, 2, 2);
+            this.btn_NavigateMapGo.Name = "btn_NavigateMapGo";
+            this.btn_NavigateMapGo.Size = new System.Drawing.Size(24, 24);
+            this.btn_NavigateMapGo.TabIndex = 11;
+            this.btn_NavigateMapGo.Text = "btn_NavigateMapGo";
+            this.btn_NavigateMapGo.UseVisualStyleBackColor = false;
+            this.btn_NavigateMapGo.Click += new System.EventHandler(this.btn_NavigateMapGo_Click);
+            // 
+            // btn_loctToFile
+            // 
+            this.btn_loctToFile.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_loctToFile.BackgroundImage")));
+            this.btn_loctToFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btn_loctToFile.Location = new System.Drawing.Point(311, 2);
+            this.btn_loctToFile.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_loctToFile.Name = "btn_loctToFile";
+            this.btn_loctToFile.Size = new System.Drawing.Size(24, 24);
+            this.btn_loctToFile.TabIndex = 10;
+            this.btn_loctToFile.Text = "btn_loctToFile";
+            this.btn_loctToFile.UseVisualStyleBackColor = true;
+            this.btn_loctToFile.Click += new System.EventHandler(this.btn_loctToFile_Click);
+            // 
+            // lbl_Favourites
+            // 
+            this.lbl_Favourites.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lbl_Favourites.AutoSize = true;
+            this.lbl_Favourites.Location = new System.Drawing.Point(10, 35);
+            this.lbl_Favourites.Margin = new System.Windows.Forms.Padding(10, 0, 2, 0);
+            this.lbl_Favourites.Name = "lbl_Favourites";
+            this.lbl_Favourites.Size = new System.Drawing.Size(72, 13);
+            this.lbl_Favourites.TabIndex = 12;
+            this.lbl_Favourites.Text = "lbl_Favourites";
+            // 
+            // cbx_Favourites
+            // 
+            this.cbx_Favourites.FormattingEnabled = true;
+            this.cbx_Favourites.Location = new System.Drawing.Point(87, 31);
+            this.cbx_Favourites.Name = "cbx_Favourites";
+            this.cbx_Favourites.Size = new System.Drawing.Size(148, 21);
+            this.cbx_Favourites.TabIndex = 13;
+            // 
+            // btn_SaveLocation
+            // 
+            this.btn_SaveLocation.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_SaveLocation.BackgroundImage")));
+            this.btn_SaveLocation.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btn_SaveLocation.Location = new System.Drawing.Point(240, 30);
+            this.btn_SaveLocation.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_SaveLocation.Name = "btn_SaveLocation";
+            this.btn_SaveLocation.Size = new System.Drawing.Size(24, 24);
+            this.btn_SaveLocation.TabIndex = 14;
+            this.btn_SaveLocation.Text = "btn_SaveLocation";
+            this.btn_SaveLocation.UseVisualStyleBackColor = true;
+            this.btn_SaveLocation.Click += new System.EventHandler(this.btn_SaveLocation_Click);
+            // 
+            // btn_LoadFavourite
+            // 
+            this.btn_LoadFavourite.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_LoadFavourite.BackgroundImage")));
+            this.btn_LoadFavourite.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btn_LoadFavourite.Location = new System.Drawing.Point(268, 30);
+            this.btn_LoadFavourite.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_LoadFavourite.Name = "btn_LoadFavourite";
+            this.btn_LoadFavourite.Size = new System.Drawing.Size(24, 24);
+            this.btn_LoadFavourite.TabIndex = 15;
+            this.btn_LoadFavourite.Text = "button2";
+            this.btn_LoadFavourite.UseVisualStyleBackColor = true;
+            this.btn_LoadFavourite.Click += new System.EventHandler(this.btn_LoadFavourite_Click);
+            // 
+            // tmi_removeCachedData
+            // 
+            this.tmi_removeCachedData.Name = "tmi_removeCachedData";
+            this.tmi_removeCachedData.Size = new System.Drawing.Size(180, 22);
+            this.tmi_removeCachedData.Text = "Remove Cached";
+            this.tmi_removeCachedData.Click += new System.EventHandler(this.tmi_removeCachedData_Click);
             // 
             // FrmMainApp
             // 
@@ -583,14 +661,15 @@ namespace GeoTagNinja
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mns_MenuStrip;
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.MinimumSize = new System.Drawing.Size(673, 415);
+            this.MinimumSize = new System.Drawing.Size(671, 409);
             this.Name = "FrmMainApp";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GeoTagNinja";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMainApp_FormClosing);
             this.Load += new System.EventHandler(this.FrmMainApp_Load);
-            this.SizeChanged += new System.EventHandler(this.FrmMainApp_SizeChanged);
+            this.ResizeBegin += new System.EventHandler(this.FrmMainApp_ResizeBegin);
+            this.ResizeEnd += new System.EventHandler(this.FrmMainApp_ResizeEnd);
             this.mns_MenuStrip.ResumeLayout(false);
             this.mns_MenuStrip.PerformLayout();
             this.tsr_MainAppToolStrip.ResumeLayout(false);
@@ -605,19 +684,15 @@ namespace GeoTagNinja
             this.splitContainerLeftTop.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerLeftTop)).EndInit();
             this.splitContainerLeftTop.ResumeLayout(false);
-            this.splitContainerLeftBottom.Panel1.ResumeLayout(false);
-            this.splitContainerLeftBottom.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerLeftBottom)).EndInit();
-            this.splitContainerLeftBottom.ResumeLayout(false);
+            this.cms_FileListView.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbx_imagePreview)).EndInit();
-            this.splitContainerRight.Panel1.ResumeLayout(false);
-            this.splitContainerRight.Panel2.ResumeLayout(false);
-            this.splitContainerRight.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerRight)).EndInit();
-            this.splitContainerRight.ResumeLayout(false);
+            this.flp_ProcessingInfo.ResumeLayout(false);
+            this.flp_ProcessingInfo.PerformLayout();
             this.tct_Main.ResumeLayout(false);
             this.tpg_Map.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.wbv_MapArea)).EndInit();
+            this.flp_GeoCoords.ResumeLayout(false);
+            this.flp_GeoCoords.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -646,16 +721,13 @@ namespace GeoTagNinja
         private ToolStripButton tsb_RemoveGeoData;
         private ToolStripMenuItem tmi_File_ImportGPX;
         private ToolStripButton tsb_ImportGPX;
-        private FolderBrowserDialog folderBrowserDialog1;
         private ToolStripButton tsb_GetAllFromWeb;
         private SplitContainer splitContainerMain;
         private SplitContainer splitContainerLeftTop;
-        internal ListView lvw_FileList;
+        internal FileListView lvw_FileList;
         private ColumnHeader clh_FileName;
-        private SplitContainer splitContainerLeftBottom;
-        internal PictureBox pbx_imagePreview;
+        internal ImagePreview pbx_imagePreview;
         internal Label lbl_ParseProgress;
-        private SplitContainer splitContainerRight;
         private TabControl tct_Main;
         private TabPage tpg_Map;
         private Microsoft.Web.WebView2.WinForms.WebView2 wbv_MapArea;
@@ -668,6 +740,17 @@ namespace GeoTagNinja
         private ToolTip ttp_NavigateMapGo;
         private ToolTip ttp_loctToFile;
         private ImageList igl_RightHandSide;
+        private FlowLayoutPanel flp_GeoCoords;
+        private FlowLayoutPanel flp_ProcessingInfo;
+        private ContextMenuStrip cms_FileListView;
+        private ToolStripMenuItem tmi_ShowHideCols;
+        private Label lbl_Favourites;
+        private ComboBox cbx_Favourites;
+        private Button btn_SaveLocation;
+        private Button btn_LoadFavourite;
+        private ToolTip ttp_SaveFavourite;
+        private ToolTip ttp_LoadFavourite;
+        private ToolStripMenuItem tmi_removeCachedData;
     }
 }
 

@@ -32,6 +32,13 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmSettings));
             this.tct_Settings = new System.Windows.Forms.TabControl();
             this.tpg_Application = new System.Windows.Forms.TabPage();
+            this.ckb_ReplaceBlankToponyms = new System.Windows.Forms.CheckBox();
+            this.tbx_ReplaceBlankToponyms = new System.Windows.Forms.TextBox();
+            this.lbl_ChoiceRadius = new System.Windows.Forms.Label();
+            this.lbl_ChoiceOfferCount = new System.Windows.Forms.Label();
+            this.nud_ChoiceRadius = new System.Windows.Forms.NumericUpDown();
+            this.nud_ChoiceOfferCount = new System.Windows.Forms.NumericUpDown();
+            this.ckb_RemoveGeoDataRemovesTimeOffset = new System.Windows.Forms.CheckBox();
             this.ckb_ResetMapToZero = new System.Windows.Forms.CheckBox();
             this.cbx_Language = new System.Windows.Forms.ComboBox();
             this.rbx_Register_ArcGIS = new System.Windows.Forms.RichTextBox();
@@ -52,12 +59,14 @@
             this.ckb_OverwriteOriginal = new System.Windows.Forms.CheckBox();
             this.ckb_AddXMPSideCar = new System.Windows.Forms.CheckBox();
             this.lbx_fileExtensions = new System.Windows.Forms.ListBox();
+            this.igl_Settings = new System.Windows.Forms.ImageList(this.components);
             this.btn_OK = new System.Windows.Forms.Button();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.fbd_StartupFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.igl_Settings = new System.Windows.Forms.ImageList(this.components);
             this.tct_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_ChoiceRadius)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_ChoiceOfferCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).BeginInit();
             this.tpg_FileOptions.SuspendLayout();
             this.SuspendLayout();
@@ -81,7 +90,15 @@
             // 
             // tpg_Application
             // 
+            this.tpg_Application.AutoScroll = true;
             this.tpg_Application.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tpg_Application.Controls.Add(this.ckb_ReplaceBlankToponyms);
+            this.tpg_Application.Controls.Add(this.tbx_ReplaceBlankToponyms);
+            this.tpg_Application.Controls.Add(this.lbl_ChoiceRadius);
+            this.tpg_Application.Controls.Add(this.lbl_ChoiceOfferCount);
+            this.tpg_Application.Controls.Add(this.nud_ChoiceRadius);
+            this.tpg_Application.Controls.Add(this.nud_ChoiceOfferCount);
+            this.tpg_Application.Controls.Add(this.ckb_RemoveGeoDataRemovesTimeOffset);
             this.tpg_Application.Controls.Add(this.ckb_ResetMapToZero);
             this.tpg_Application.Controls.Add(this.cbx_Language);
             this.tpg_Application.Controls.Add(this.rbx_Register_ArcGIS);
@@ -105,10 +122,105 @@
             this.tpg_Application.TabIndex = 0;
             this.tpg_Application.Text = "tpg_Application";
             // 
+            // ckb_ReplaceBlankToponyms
+            // 
+            this.ckb_ReplaceBlankToponyms.AutoSize = true;
+            this.ckb_ReplaceBlankToponyms.Location = new System.Drawing.Point(20, 313);
+            this.ckb_ReplaceBlankToponyms.Name = "ckb_ReplaceBlankToponyms";
+            this.ckb_ReplaceBlankToponyms.Size = new System.Drawing.Size(166, 17);
+            this.ckb_ReplaceBlankToponyms.TabIndex = 24;
+            this.ckb_ReplaceBlankToponyms.Text = "ckb_ReplaceBlankToponyms";
+            this.ckb_ReplaceBlankToponyms.UseVisualStyleBackColor = true;
+            this.ckb_ReplaceBlankToponyms.CheckedChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            // 
+            // tbx_ReplaceBlankToponyms
+            // 
+            this.tbx_ReplaceBlankToponyms.Location = new System.Drawing.Point(416, 310);
+            this.tbx_ReplaceBlankToponyms.Margin = new System.Windows.Forms.Padding(2);
+            this.tbx_ReplaceBlankToponyms.Name = "tbx_ReplaceBlankToponyms";
+            this.tbx_ReplaceBlankToponyms.Size = new System.Drawing.Size(155, 20);
+            this.tbx_ReplaceBlankToponyms.TabIndex = 22;
+            this.tbx_ReplaceBlankToponyms.TextChanged += new System.EventHandler(this.Any_tbx_TextChanged);
+            // 
+            // lbl_ChoiceRadius
+            // 
+            this.lbl_ChoiceRadius.AutoSize = true;
+            this.lbl_ChoiceRadius.Location = new System.Drawing.Point(311, 277);
+            this.lbl_ChoiceRadius.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_ChoiceRadius.Name = "lbl_ChoiceRadius";
+            this.lbl_ChoiceRadius.Size = new System.Drawing.Size(89, 13);
+            this.lbl_ChoiceRadius.TabIndex = 20;
+            this.lbl_ChoiceRadius.Text = "lbl_ChoiceRadius";
+            // 
+            // lbl_ChoiceOfferCount
+            // 
+            this.lbl_ChoiceOfferCount.AutoSize = true;
+            this.lbl_ChoiceOfferCount.Location = new System.Drawing.Point(18, 277);
+            this.lbl_ChoiceOfferCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_ChoiceOfferCount.Name = "lbl_ChoiceOfferCount";
+            this.lbl_ChoiceOfferCount.Size = new System.Drawing.Size(107, 13);
+            this.lbl_ChoiceOfferCount.TabIndex = 19;
+            this.lbl_ChoiceOfferCount.Text = "lbl_ChoiceOfferCount";
+            // 
+            // nud_ChoiceRadius
+            // 
+            this.nud_ChoiceRadius.Location = new System.Drawing.Point(465, 277);
+            this.nud_ChoiceRadius.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nud_ChoiceRadius.Name = "nud_ChoiceRadius";
+            this.nud_ChoiceRadius.Size = new System.Drawing.Size(43, 20);
+            this.nud_ChoiceRadius.TabIndex = 18;
+            this.nud_ChoiceRadius.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nud_ChoiceRadius.ValueChanged += new System.EventHandler(this.Any_nud_ValueChanged);
+            this.nud_ChoiceRadius.Enter += new System.EventHandler(this.Any_nud_Enter);
+            this.nud_ChoiceRadius.Leave += new System.EventHandler(this.Any_nud_Leave);
+            // 
+            // nud_ChoiceOfferCount
+            // 
+            this.nud_ChoiceOfferCount.Location = new System.Drawing.Point(241, 275);
+            this.nud_ChoiceOfferCount.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nud_ChoiceOfferCount.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nud_ChoiceOfferCount.Name = "nud_ChoiceOfferCount";
+            this.nud_ChoiceOfferCount.Size = new System.Drawing.Size(43, 20);
+            this.nud_ChoiceOfferCount.TabIndex = 17;
+            this.nud_ChoiceOfferCount.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nud_ChoiceOfferCount.ValueChanged += new System.EventHandler(this.Any_nud_ValueChanged);
+            this.nud_ChoiceOfferCount.Enter += new System.EventHandler(this.Any_nud_Enter);
+            this.nud_ChoiceOfferCount.Leave += new System.EventHandler(this.Any_nud_Leave);
+            // 
+            // ckb_RemoveGeoDataRemovesTimeOffset
+            // 
+            this.ckb_RemoveGeoDataRemovesTimeOffset.AutoSize = true;
+            this.ckb_RemoveGeoDataRemovesTimeOffset.Location = new System.Drawing.Point(21, 252);
+            this.ckb_RemoveGeoDataRemovesTimeOffset.Name = "ckb_RemoveGeoDataRemovesTimeOffset";
+            this.ckb_RemoveGeoDataRemovesTimeOffset.Size = new System.Drawing.Size(229, 17);
+            this.ckb_RemoveGeoDataRemovesTimeOffset.TabIndex = 16;
+            this.ckb_RemoveGeoDataRemovesTimeOffset.Text = "ckb_RemoveGeoDataRemovesTimeOffset";
+            this.ckb_RemoveGeoDataRemovesTimeOffset.UseVisualStyleBackColor = true;
+            // 
             // ckb_ResetMapToZero
             // 
             this.ckb_ResetMapToZero.AutoSize = true;
-            this.ckb_ResetMapToZero.Location = new System.Drawing.Point(21, 258);
+            this.ckb_ResetMapToZero.Location = new System.Drawing.Point(21, 229);
             this.ckb_ResetMapToZero.Name = "ckb_ResetMapToZero";
             this.ckb_ResetMapToZero.Size = new System.Drawing.Size(134, 17);
             this.ckb_ResetMapToZero.TabIndex = 15;
@@ -120,12 +232,11 @@
             // 
             this.cbx_Language.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbx_Language.FormattingEnabled = true;
-            this.cbx_Language.Location = new System.Drawing.Point(136, 228);
+            this.cbx_Language.Location = new System.Drawing.Point(136, 199);
             this.cbx_Language.Name = "cbx_Language";
-            this.cbx_Language.Size = new System.Drawing.Size(121, 21);
+            this.cbx_Language.Size = new System.Drawing.Size(155, 21);
             this.cbx_Language.TabIndex = 13;
             this.cbx_Language.SelectedValueChanged += new System.EventHandler(this.Any_cbx_TextChanged);
-            this.cbx_Language.TextChanged += new System.EventHandler(this.Any_cbx_TextChanged);
             // 
             // rbx_Register_ArcGIS
             // 
@@ -172,7 +283,7 @@
             // lbl_Language
             // 
             this.lbl_Language.AutoSize = true;
-            this.lbl_Language.Location = new System.Drawing.Point(18, 232);
+            this.lbl_Language.Location = new System.Drawing.Point(18, 203);
             this.lbl_Language.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_Language.Name = "lbl_Language";
             this.lbl_Language.Size = new System.Drawing.Size(71, 13);
@@ -182,7 +293,7 @@
             // lbl_GeoNames_Pwd
             // 
             this.lbl_GeoNames_Pwd.AutoSize = true;
-            this.lbl_GeoNames_Pwd.Location = new System.Drawing.Point(17, 204);
+            this.lbl_GeoNames_Pwd.Location = new System.Drawing.Point(297, 175);
             this.lbl_GeoNames_Pwd.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_GeoNames_Pwd.Name = "lbl_GeoNames_Pwd";
             this.lbl_GeoNames_Pwd.Size = new System.Drawing.Size(103, 13);
@@ -221,11 +332,11 @@
             // 
             // tbx_GeoNames_Pwd
             // 
-            this.tbx_GeoNames_Pwd.Location = new System.Drawing.Point(136, 200);
+            this.tbx_GeoNames_Pwd.Location = new System.Drawing.Point(416, 171);
             this.tbx_GeoNames_Pwd.Margin = new System.Windows.Forms.Padding(2);
             this.tbx_GeoNames_Pwd.Name = "tbx_GeoNames_Pwd";
             this.tbx_GeoNames_Pwd.PasswordChar = '*';
-            this.tbx_GeoNames_Pwd.Size = new System.Drawing.Size(372, 20);
+            this.tbx_GeoNames_Pwd.Size = new System.Drawing.Size(155, 20);
             this.tbx_GeoNames_Pwd.TabIndex = 4;
             this.tbx_GeoNames_Pwd.TextChanged += new System.EventHandler(this.Any_tbx_TextChanged);
             // 
@@ -234,7 +345,7 @@
             this.tbx_GeoNames_UserName.Location = new System.Drawing.Point(136, 172);
             this.tbx_GeoNames_UserName.Margin = new System.Windows.Forms.Padding(2);
             this.tbx_GeoNames_UserName.Name = "tbx_GeoNames_UserName";
-            this.tbx_GeoNames_UserName.Size = new System.Drawing.Size(372, 20);
+            this.tbx_GeoNames_UserName.Size = new System.Drawing.Size(155, 20);
             this.tbx_GeoNames_UserName.TabIndex = 3;
             this.tbx_GeoNames_UserName.TextChanged += new System.EventHandler(this.Any_tbx_TextChanged);
             // 
@@ -272,7 +383,7 @@
             this.ckb_ResetFileDateToCreated.Location = new System.Drawing.Point(419, 67);
             this.ckb_ResetFileDateToCreated.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_ResetFileDateToCreated.Name = "ckb_ResetFileDateToCreated";
-            this.ckb_ResetFileDateToCreated.Size = new System.Drawing.Size(168, 38);
+            this.ckb_ResetFileDateToCreated.Size = new System.Drawing.Size(168, 62);
             this.ckb_ResetFileDateToCreated.TabIndex = 4;
             this.ckb_ResetFileDateToCreated.Text = "ckb_ResetFileDateToCreated";
             this.ckb_ResetFileDateToCreated.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -295,7 +406,7 @@
             // ckb_OverwriteOriginal
             // 
             this.ckb_OverwriteOriginal.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_OverwriteOriginal.Location = new System.Drawing.Point(397, 183);
+            this.ckb_OverwriteOriginal.Location = new System.Drawing.Point(397, 195);
             this.ckb_OverwriteOriginal.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_OverwriteOriginal.Name = "ckb_OverwriteOriginal";
             this.ckb_OverwriteOriginal.Size = new System.Drawing.Size(190, 38);
@@ -308,7 +419,7 @@
             // ckb_AddXMPSideCar
             // 
             this.ckb_AddXMPSideCar.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_AddXMPSideCar.Location = new System.Drawing.Point(397, 123);
+            this.ckb_AddXMPSideCar.Location = new System.Drawing.Point(397, 135);
             this.ckb_AddXMPSideCar.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_AddXMPSideCar.Name = "ckb_AddXMPSideCar";
             this.ckb_AddXMPSideCar.Size = new System.Drawing.Size(190, 38);
@@ -326,6 +437,14 @@
             this.lbx_fileExtensions.Size = new System.Drawing.Size(385, 368);
             this.lbx_fileExtensions.TabIndex = 0;
             this.lbx_fileExtensions.SelectedIndexChanged += new System.EventHandler(this.Lbx_fileExtensions_SelectedIndexChanged);
+            // 
+            // igl_Settings
+            // 
+            this.igl_Settings.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("igl_Settings.ImageStream")));
+            this.igl_Settings.TransparentColor = System.Drawing.Color.Transparent;
+            this.igl_Settings.Images.SetKeyName(0, "LibrarySettings.png");
+            this.igl_Settings.Images.SetKeyName(1, "Settings.png");
+            this.igl_Settings.Images.SetKeyName(2, "SettingsFile.png");
             // 
             // btn_OK
             // 
@@ -358,14 +477,6 @@
             this.fbd_StartupFolder.Description = "fbd_StartupFolder";
             this.fbd_StartupFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
-            // igl_Settings
-            // 
-            this.igl_Settings.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("igl_Settings.ImageStream")));
-            this.igl_Settings.TransparentColor = System.Drawing.Color.Transparent;
-            this.igl_Settings.Images.SetKeyName(0, "LibrarySettings.png");
-            this.igl_Settings.Images.SetKeyName(1, "Settings.png");
-            this.igl_Settings.Images.SetKeyName(2, "SettingsFile.png");
-            // 
             // FrmSettings
             // 
             this.AcceptButton = this.btn_OK;
@@ -390,6 +501,8 @@
             this.tct_Settings.ResumeLayout(false);
             this.tpg_Application.ResumeLayout(false);
             this.tpg_Application.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_ChoiceRadius)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_ChoiceOfferCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).EndInit();
             this.tpg_FileOptions.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -423,5 +536,12 @@
         private System.Windows.Forms.CheckBox ckb_ProcessOriginalFile;
         private System.Windows.Forms.CheckBox ckb_ResetFileDateToCreated;
         private System.Windows.Forms.ImageList igl_Settings;
+        private System.Windows.Forms.CheckBox ckb_RemoveGeoDataRemovesTimeOffset;
+        private System.Windows.Forms.Label lbl_ChoiceRadius;
+        private System.Windows.Forms.Label lbl_ChoiceOfferCount;
+        private System.Windows.Forms.NumericUpDown nud_ChoiceRadius;
+        private System.Windows.Forms.NumericUpDown nud_ChoiceOfferCount;
+        public System.Windows.Forms.TextBox tbx_ReplaceBlankToponyms;
+        private System.Windows.Forms.CheckBox ckb_ReplaceBlankToponyms;
     }
 }

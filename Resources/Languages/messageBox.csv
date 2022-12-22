@@ -1,0 +1,76 @@
+﻿objectName,English,French
+mbx_FrmEditFileData_WarningLatLongMustBeNumbers,This needs to have numbers only. Will default to zero.,N'utiliser que des chiffres. 0 par défaut
+mbx_FrmEditFileData_InfoDataUpdated,Data Updated.,Données mises à jour
+mbx_FrmEditFileData_ErrorInvalidSender,This will be a bug.  Please file an issue on github and that the 'sender' was: ,C'est un bug. Merci de saisir une issue sur Github sous l'expéditeur:
+mbx_FrmEditFileData_ErrorAPIError,"The app encountered errors communicating with the API. If you got an Unauthorised error, pls set your username as password in the settings.","L'application a rencontré des erreurs de communication avec l'API.Si l'erreur concerne un probléme d'autorisation, merci de rentrer vos login/password dans l'API."
+mbx_FrmEditFileData_WarningFileDisappeared,Your files seem to have disappeared.,Vos fichiers semblent avoir disparu.
+mbx_FrmMainApp_ErrorCantCreateSQLiteDB,Can't create SQLite database (Please file an issue on github): ,Ne peut créer la base SQLite (merci de générer une issue dans Github):
+mbx_FrmMainApp_ErrorCantWriteSQLiteDB,Created but can't write SQLite database (Please file an issue on github): ,Créé mais ne peut écrire dans la base SQLite (merci de générer une issue dans Github):
+mbx_FrmMainApp_ErrorCantLoadSQLiteDB,Loading data from SQL Failed (Please file an issue on github): ,Erreur de chargement de la base SQLite (merci de générer une issue dans Github):
+mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB,Failed to read default values from SQL (Please file an issue on github): ,Erreur de lecture des valeurs par défaut de la base SQLite (merci de générer une issue dans Github):
+mbx_FrmMainApp_ErrorCantLoadWebView2,Error loading webview2 - Have you installed it?: ,Erreur de chargement dewebview2 - l'avez-vous installée ?
+mbx_FrmMainApp_ErrorInitializeComponent,Error in FrmMainApp.InitializeComponent (Please file an issue on github): ,Erreur dans FrmMainApp.InitializeComponent  (merci de générer une issue dans Github):
+mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async,Error in FrmMainApp.InitialiseWebView (await wbv_MapArea.EnsureCoreWebView2Async(c2wv)) (Please file an issue on github): ,Erreur dans FrmMainApp.InitialiseWebView (await wbv_MapArea.EnsureCoreWebView2Async(c2wv))  (merci de générer une issue dans Github):
+mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled,Error in FrmMainApp.InitialiseWebView (IsWebMessageEnabled) (Please file an issue on github): ,Erreur dans FrmMainApp.InitialiseWebView (IsWebMessageEnabled)  (merci de générer une issue dans Github):
+mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile,Error in FrmMainApp.InitialiseWebView (reading HTMLCode file) (Please file an issue on github): ,Erreur dans FrmMainApp.InitialiseWebView (reading HTMLCode file)  (merci de générer une issue dans Github):
+mbx_FrmMainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile,Error in FrmMainApp.InitialiseWebView (parsing coordinates from HTMLCode file) (Please file an issue on github): ,Erreur dans FrmMainApp.InitialiseWebView (parsing coordinates from HTMLCode file)  (merci de générer une issue dans Github):
+mbx_FrmMainApp_ErrorInitializeWebViewReplaceStringInHTMLFile,Error in FrmMainApp.InitialiseWebView (replacing constants in HTMLCode file) (Please file an issue on github): ,Erreur dans FrmMainApp.InitialiseWebView (replacing constants in HTMLCode file)  (merci de générer une issue dans Github):
+mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile,Error in FrmMainApp.InitialiseWebView (NavigateToString in HTMLCode file) (Please file an issue on github): ,Erreur dans FrmMainApp.InitialiseWebView (NavigateToString in HTMLCode file)  (merci de générer une issue dans Github):
+mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode,Error in FrmMainApp.NavigateMapGo (string HTMLCode) (Please file an issue on github): ,Erreur dans FrmMainApp.NavigateMapGo (string HTMLCode)  (merci de générer une issue dans Github):
+mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived,Error while performing  wbv_MapArea_WebMessageReceived (Please file an issue on github): ,Erreur dans l'exécution de  wbv_MapArea_WebMessageReceived  (merci de générer une issue dans Github):
+mbx_FrmMainApp_ErrorDoubleBuffer,DoubleBuffer Error (Please file an issue on github): ,Erreur de DoubleBuffer (merci de générer une issue dans Github):
+mbx_FrmMainApp_ErrorLanguageFileColumnHeaders,There was an error reading the language file and assigning columnheaders (Please file an issue on github): ,Erreur de lecture du fichier de langue et d'assignation de colonne (merci de générer une issue dans Github):
+mbx_FrmMainApp_ErrorClearingFileDataQTables,Error clearing the filedata-Q tables (Please file an issue on github): ,Erreur d'effacement des tables filedata-Q  (merci de générer une issue dans Github):
+mbx_FrmMainApp_ErrorResizingColumns,Resizing Columns failed (Please file an issue on github): ,Erreur de redimensionnement des colonnes  (merci de générer une issue dans Github):
+mbx_FrmMainApp_ErrorSettingStartupFolder,Setting Default Startup folder failed (Please file an issue on github): ,Erreur de mise a jour du dossier par défaut de démarrage  (merci de générer une issue dans Github):
+mbx_FrmMainApp_QuestionFileQIsNotEmpty,"Some data has been changed - want to save? 
+Data will be discarded if you click No","Des données ont été modifiées - Voulez-vous sauver ?
+Les mises à jour seront perdues si vous clickez Non"
+mbx_FrmMainApp_ErrorInvalidFolder,The folder you entered doesn't seem valid.,Le repertoire saisi ne semble pas valide.
+mbx_FrmMainApp_QuestionDontShowIncompatibleFileWarningAgain,"Your folder and/or file list contains nonstandard characters.
+These will need to be run in 'compatibility mode', which is slower. 
+Suggesting renaming your path and/or files if you have a large number of item.
+
+Press OK to continue and be reminded again or Cancel to continue and not be reminded again about this.","Votre répertoire et/ou vos fichiers contiennent des caractères non valides
+Le programme fonctionnera en 'mode de compatibilité' pluys lentement
+Il est souhaitable de renommer vos répertoires/fichiers si vouis avez beaucoup de fichiers
+Pressez OK pour continuer et le rappel sera répété sinon Cancel pour continuer sans rappel."
+mbx_FrmMainApp_ErrorFileGoneMissing,File no longer appears to exist: ,Le fichier ne semble plus exister
+mbx_FrmMainApp_WarningNoItemSelected,No Item selected.,Pas de fichier séléctionné.
+mbx_Helper_WarningNoWriteSettingEnabled,You've disabled both processing of the original file _and_ the sidecar XMP so there is nothing to write to.,"Vous avez désactivé à la fois le traitement du fichier d'origine _et_ le XMP sidecar, il n'y a donc rien sur quoi écrire."
+mbx_Helper_WarningNothingInWriteQueue,There's nothing in your write-queue.,Il n'y a rien dans votre file d'attente d'écriture.
+mbx_Helper_WarningNoARCGISKey,You'll need to provide an ArcGIS API Key in the Settings for the app to work properly.,Vous devez fournir une clef API ArcGis dans les paramètres afin que le programme fonctionne correctement.
+mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed,asyncExifTool.ExecuteAsync failed (Please file an issue on github): ,Erreur dans asyncExifTool.ExecuteAsync (merci de générer une issue dans Github):
+mbx_Helper_ErrorCantReadDefaultSQLiteDB,Failed to read default values from SQL (Please file an issue on github): ,Ne peut lire les valeurs par défaut de la base SQL (merci de générer une issue dans Github):
+mbx_Helper_WarningGeoNamesAPIResponse,GeoNames API Returned the following response: ,L'API Geonames a retourné la reponse suivante:
+mbx_Helper_WarningFileDisappeared,Your files seem to have disappeared.,Vos fichiers paraissent avoir disparu.
+mbx_Helper_QuestionFileQIsNotEmpty,"Some data has been changed - want to save? 
+Data will be discarded if you click No","Des données ont été modifiées - Voulez-vous sauver ?
+Les mises à jour seront perdues si vous clickez Non"
+mbx_Helper_WarningTooManyFilesSelected,This will only work if you have one and only one file selected.,Ne fonctionne qu'avec un seul fichier séléctionné.
+mbx_Helper_WarningNothingToPaste,Nothing to Paste.,Rien à coller.
+mbx_Helper_WarningExifToolVerAPIResponse,ExifToolVerAPIResponse API Returned the following response: ,L'API ExifToolVerAPIResponse a donné la reponse suivante:
+mbx_FrmMainApp_InfoNewExifToolVersionExists,"There is a new exifTool version available for download. 
+If you click Yes, your default browser will open to exiftool.org where you can download manually. If you click No, this message will close (and you won't be notified again until yet another new version is out.)
+If you download, extract the zip file, rename exiftool(-k).exe to exiftool.exe and replace the current file in your GeoTagNinja installation folder's Resources subfolder (most likely Program Files\GeoTagNinja\Resources.)
+New version: ","Une nouvelle version d'exiftool est disponible au telechargement.
+Si vous cliquez Oui, votre browser par defaut ouvrira le site exiftool,org ou vous pourrez telecharger la derniere version manuellement. 
+Si vous cliquer Non, ce message se fermera (et vous ne serez plus notifié jusquà la prochaine version).
+Apres telechargement, extraire le fichier zip, renommer le fichier exiftool(-k),exe en exiftool,exe et remplacer le fichier existant dans le repertoire 'Ressources' du repertoire d'installation de GeoTagNinja (a priori dans C:\Program Files\GeoTagNinja\Resources"
+mbx_Helper_WarningGTNVerAPIResponse,GitHub API Returned the following response: ,L'API Github a renvoyé l'erreur suivante:
+mbx_FrmMainApp_InfoNewGTNVersionExists,"There is a new GeoTagNinja version available for download. 
+If you click Yes, your default browser will open directly to the release's installer link on GitHub, which you can then install manually. If you click No, this message will close (but will show again next time.)
+New version: ","Une nouvelle version de GeoTagNinja est disponible au téléchargement.
+Si vous cliquez Oui, vore browser par défaut ouvrira directement l'installeur dans Github, Vous pourrez ensuite installer cette version.
+Si vous cliquez Non, ce message se fermera (mais sera representé au prochain lancement)
+Nouvelle version:"
+mbx_FrmSettings_cbx_Language_TextChanged,Please restart the app for the language change to take place.,Veuillez redémarrer l'application pour que le changement de langue ait lieu.
+mbx_FrmImportGpx_FileOrFolderDoesntExist,The file or folder you picked is invalid.,Le fichier ou le dossier que vous avez sélectionné n'est pas valide.
+mbx_FrmImportGpx_AskUserWantsReport,Do you want to see the report on the import process?,Voulez-vous voir le rapport sur le processus d'importation ?
+mbx_FrmPasteWhat_NoDateShiftToPaste,No values specified in the Copy Pool for DateTime Shift,Pas de valeurs détectées dans le groupe de valeurs pour le décalage de temps
+mbx_FrmImportGpx_NoFileSelected,No files have been selected to import for.,Aucun fichier n'a été sélectionné pour l'importation
+mbx_FrmMainApp_InfoFavouriteNotValid,The saved item you selected isn't valid,
+mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank,Name cannot be empty/blank,
+mbx_FrmMainApp_InfoFavouriteSaved,Favourite saved OK,
+mbx_FrmMainApp_InfoCahcedDataRemoved,"If there was any, cached data for selected items has been removed.",
+mbx_FrmMainApp_InfoCahcedDataNotRemoved,No data has been removed. Either you didn't select valid items or the ones you picked didn't have cached data.,

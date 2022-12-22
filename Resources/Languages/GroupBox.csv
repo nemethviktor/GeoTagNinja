@@ -1,0 +1,11 @@
+﻿objectName,English,French
+gbx_GPSData,GPS Data,Données GPS
+gbx_LocationData,Location Data,Données de localisation
+gbx_ImportGPXSource,Source,Source
+gbx_ImportGPXTimeSetting,Time Setting,Réglage de l'heure
+gbx_Dates,Dates,Dates
+gbx_TakenDate,Date (Image) Taken,Date à laquelle l'image a été prise
+gbx_CreateDate,Created Date,Date de création
+gbx_EditImageList,Images selected for editing,Images selectionnées pour edition
+gbx_GetAltitude,Get Altitude data,Obtenir les données d'altitude
+gbx_GetToponomy,Get Toponomy data,Obtenir les données de toponymie

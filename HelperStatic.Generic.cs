@@ -9,13 +9,12 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
 
 namespace GeoTagNinja;
 
 internal static partial class HelperStatic
 {
-    #region Generic
-
     private static readonly object TableLock = new();
     internal static HashSet<string> FilesBeingProcessed = new();
     internal static bool FileListBeingUpdated;
@@ -142,11 +141,458 @@ internal static partial class HelperStatic
     /// <returns>Messagebox text contents</returns>
     internal static string GenericGetMessageBoxText(string messageBoxName)
     {
-        return DataReadSQLiteObjectText(
-            languageName: FrmMainApp.AppLanguage,
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        return DataReadDTObjectText(
             objectType: "messageBox",
             objectName: messageBoxName
         );
+    }
+
+    /// <summary>
+    ///     This (mostly) sets the various texts for most Controls in various forms, especially labels and buttons/boxes.
+    /// </summary>
+    /// <param name="cItem">The Control whose details need adjusting</param>
+    internal static void GenericReturnControlText(Control cItem,
+                                                  Form senderForm)
+    {
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmMainApp.Logger.Trace(message: "Starting - cItem: " + cItem.Name);
+        if (
+            cItem is Label ||
+            cItem is GroupBox ||
+            cItem is Button ||
+            cItem is CheckBox ||
+            cItem is TabPage ||
+            cItem is RichTextBox ||
+            cItem is RadioButton
+            //||
+        )
+        {
+            // for some reason there is no .Last() being offered here
+            cItem.Text = DataReadDTObjectText(
+                objectType: cItem.GetType()
+                    .ToString()
+                    .Split('.')[cItem.GetType()
+                                    .ToString()
+                                    .Split('.')
+                                    .Length -
+                                1],
+                objectName: cItem.Name
+            );
+        }
+        else if (cItem is Form)
+        {
+            cItem.Text = DataReadDTObjectText(
+                objectType: "Form",
+                objectName: cItem.Name);
+        }
+        else if (cItem is TextBox || cItem is ComboBox)
+        {
+            if (senderForm.Name == "FrmSettings")
+            {
+                cItem.Text = DataReadSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: cItem.Parent.Name,
+                    settingId: cItem.Name
+                );
+            }
+        }
+    }
+
+    /// <summary>
+    ///     A centralised way to interact with datatables containing exif data. Checks if the table already contains an element
+    ///     for the given combination and if so deletes it, then writes the new data.
+    /// </summary>
+    /// <param name="dt">Name of the datatable. Realistically this is one of the three "queue" DTs</param>
+    /// <param name="fileNameWithoutPath"></param>
+    /// <param name="settingId">Name of the column or tag (e.g. GPSLatitude)</param>
+    /// <param name="settingValue">Value to write</param>
+    internal static void GenericUpdateAddToDataTable(DataTable dt,
+                                                     string fileNameWithoutPath,
+                                                     string settingId,
+                                                     string settingValue)
+    {
+        lock (TableLock)
+        {
+            // delete any existing rows with the current combination
+            for (int i = dt.Rows.Count - 1; i >= 0; i--)
+            {
+                DataRow thisDr = dt.Rows[index: i];
+                if (
+                    thisDr[columnName: "fileNameWithoutPath"]
+                        .ToString() ==
+                    fileNameWithoutPath &&
+                    thisDr[columnName: "settingId"]
+                        .ToString() ==
+                    settingId
+                )
+                {
+                    thisDr.Delete();
+                }
+            }
+
+            dt.AcceptChanges();
+
+            // add new
+            DataRow newDr = dt.NewRow();
+            newDr[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
+            newDr[columnName: "settingId"] = settingId;
+            newDr[columnName: "settingValue"] = settingValue;
+            dt.Rows.Add(row: newDr);
+            dt.AcceptChanges();
+        }
+    }
+
+    /// <summary>
+    /// Updates the sessions storage for the Altitude DT
+    /// </summary>
+    /// <param name="lat">string value of lat</param>
+    /// <param name="lng">string value of lng</param>
+    /// <param name="altitude">Value to write</param>
+    internal static void GenericUpdateAddToDataTableAltitude(
+        string lat,
+        string lng,
+        string altitude)
+    {
+        lock (TableLock)
+        {
+            // delete any existing rows with the current combination
+            for (int i = FrmMainApp.DtAltitudeSessionData.Rows.Count - 1; i >= 0; i--)
+            {
+                DataRow thisDr = FrmMainApp.DtAltitudeSessionData.Rows[index: i];
+                if (
+                    thisDr[columnName: "lat"]
+                        .ToString() ==
+                    lat &&
+                    thisDr[columnName: "lng"]
+                        .ToString() ==
+                    lng
+                )
+                {
+                    thisDr.Delete();
+                }
+            }
+
+            FrmMainApp.DtAltitudeSessionData.AcceptChanges();
+
+            // add new
+            DataRow newDr = FrmMainApp.DtAltitudeSessionData.NewRow();
+            newDr[columnName: "lat"] = lat;
+            newDr[columnName: "lng"] = lng;
+            newDr[columnName: "Altitude"] = altitude;
+            FrmMainApp.DtAltitudeSessionData.Rows.Add(row: newDr);
+            FrmMainApp.DtAltitudeSessionData.AcceptChanges();
+        }
+    }
+
+    /// <summary>
+    /// Updates the sessions storage for the Toponomy DT
+    /// </summary>
+    /// <param name="lat">string value of lat</param>
+    /// <param name="lng">string value of lng</param>
+    /// <param name="adminName1">Value to write</param>
+    /// <param name="adminName2">Value to write</param>
+    /// <param name="adminName3">Value to write</param>
+    /// <param name="adminName4">Value to write</param>
+    /// <param name="toponymName">Value to write</param>
+    /// <param name="countryCode">Value to write</param>
+    /// <param name="timezoneId">Value to write</param>
+    internal static void GenericUpdateAddToDataTableTopopnomy(
+        string lat,
+        string lng,
+        string adminName1,
+        string adminName2,
+        string adminName3,
+        string adminName4,
+        string toponymName,
+        string countryCode,
+        string timezoneId
+    )
+    {
+        lock (TableLock)
+        {
+            // delete any existing rows with the current combination
+            for (int i = FrmMainApp.DtToponomySessionData.Rows.Count - 1; i >= 0; i--)
+            {
+                DataRow thisDr = FrmMainApp.DtToponomySessionData.Rows[index: i];
+                if (
+                    thisDr[columnName: "lat"]
+                        .ToString() ==
+                    lat &&
+                    thisDr[columnName: "lng"]
+                        .ToString() ==
+                    lng
+                )
+                {
+                    thisDr.Delete();
+                }
+            }
+
+            FrmMainApp.DtToponomySessionData.AcceptChanges();
+
+            // add new
+            DataRow newDr = FrmMainApp.DtToponomySessionData.NewRow();
+            newDr[columnName: "lat"] = lat;
+            newDr[columnName: "lng"] = lng;
+            newDr[columnName: "AdminName1"] = adminName1;
+            newDr[columnName: "AdminName2"] = adminName2;
+            newDr[columnName: "AdminName3"] = adminName3;
+            newDr[columnName: "AdminName4"] = adminName4;
+            newDr[columnName: "ToponymName"] = toponymName;
+            newDr[columnName: "CountryCode"] = countryCode;
+            newDr[columnName: "timezoneId"] = timezoneId;
+
+            FrmMainApp.DtToponomySessionData.Rows.Add(row: newDr);
+            FrmMainApp.DtToponomySessionData.AcceptChanges();
+        }
+    }
+
+    /// <summary>
+    ///     Checks for new versions of GTN and eT.
+    /// </summary>
+    internal static async Task GenericCheckForNewVersions()
+    {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
+        // check when the last polling took place
+        long nowUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
+        long lastCheckUnixTime = 0;
+
+        string strLastOnlineVersionCheck = DataReadSQLiteSettings(
+            tableName: "settings",
+            settingTabPage: "generic",
+            settingId: "onlineVersionCheckDate"
+        );
+
+        if (strLastOnlineVersionCheck == null)
+        {
+            lastCheckUnixTime = nowUnixTime;
+            // write back to SQL so it doesn't remain blank
+            DataWriteSQLiteSettings(
+                tableName: "settings",
+                settingTabPage: "generic",
+                settingId: "onlineVersionCheckDate",
+                settingValue: nowUnixTime.ToString(provider: CultureInfo.InvariantCulture)
+            );
+        }
+        else
+        {
+            lastCheckUnixTime = long.Parse(s: strLastOnlineVersionCheck);
+        }
+
+        FrmMainApp.Logger.Trace(message: "nowUnixTime > lastCheckUnixTime:" + (nowUnixTime - lastCheckUnixTime));
+        int checkUpdateVal = 604800; //604800 is a week's worth of seconds
+        #if DEBUG
+        checkUpdateVal = 1;
+        #endif
+
+        if (nowUnixTime > lastCheckUnixTime + checkUpdateVal)
+        {
+            FrmMainApp.Logger.Trace(message: "Checking for new versions.");
+
+            // get current & newest exiftool version -- do this here at the end so it doesn't hold up the process
+            ///////////////
+
+            string exiftoolCmd = "-ver";
+            await RunExifTool(exiftoolCmd: exiftoolCmd,
+                              frmMainAppInstance: null,
+                              initiator: "GenericCheckForNewVersions");
+            decimal newestExifToolVersionOnline = API_ExifGetExifToolVersionFromWeb();
+
+            FrmMainApp.Logger.Trace(message: "currentExifToolVersionLocal: " + _currentExifToolVersionLocal + " / newestExifToolVersionOnline: " + newestExifToolVersionOnline);
+
+            string strCurrentExifToolVersionInSQL = DataReadSQLiteSettings(
+                tableName: "settings",
+                settingTabPage: "generic",
+                settingId: "exifToolVer"
+            );
+
+            FrmMainApp.Logger.Trace(message: "strCurrentExifToolVersionInSQL: " + strCurrentExifToolVersionInSQL);
+
+            if (!decimal.TryParse(s: strCurrentExifToolVersionInSQL, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out decimal currentExifToolVersionInSQL))
+            {
+                currentExifToolVersionInSQL = _currentExifToolVersionLocal;
+            }
+
+            if (newestExifToolVersionOnline > _currentExifToolVersionLocal && newestExifToolVersionOnline > currentExifToolVersionInSQL && _currentExifToolVersionLocal + newestExifToolVersionOnline > 0)
+            {
+                FrmMainApp.Logger.Trace(message: "Writing new version to SQL: " + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture));
+                // write current to SQL
+                DataWriteSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: "generic",
+                    settingId: "exifToolVer",
+                    settingValue: newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture)
+                );
+
+                if (MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewExifToolVersionExists") + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture), caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                {
+                    Process.Start(fileName: "https://exiftool.org/exiftool-" + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture) + ".zip");
+                    FrmMainApp.Logger.Trace(message: "User Launched Browser to Download");
+                }
+                else
+                {
+                    FrmMainApp.Logger.Trace(message: "User Declined Launch to Download");
+                }
+            }
+
+            // current version may be something like "0.5.8251.40825"
+            // Assembly.GetExecutingAssembly().GetName().Version.Build is just "8251"
+            int currentGTNVersionBuild = Assembly.GetExecutingAssembly()
+                .GetName()
+                .Version.Build;
+
+            SApiOkay = true;
+            DataTable dtApigtnVersion = DTFromAPI_GetGTNVersion();
+            // newest may be something like "v0.5.8251"
+            string newestGTNVersionFull = dtApigtnVersion.Rows[index: 0][columnName: "version"]
+                .ToString()
+                .Replace(oldValue: "v", newValue: "");
+            int newestGTNVersion = 0;
+
+            int.TryParse(s: newestGTNVersionFull.Split('.')
+                             .Last(), result: out newestGTNVersion);
+
+            if (newestGTNVersion > currentGTNVersionBuild)
+            {
+                if (MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewGTNVersionExists") + newestGTNVersion, caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                {
+                    Process.Start(fileName: "https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dtApigtnVersion.Rows[index: 0][columnName: "version"] + "/GeoTagNinja_Setup.msi");
+                }
+            }
+
+            // write back to SQL
+            DataWriteSQLiteSettings(
+                tableName: "settings",
+                settingTabPage: "generic",
+                settingId: "onlineVersionCheckDate",
+                settingValue: nowUnixTime.ToString()
+            );
+        }
+        else
+        {
+            FrmMainApp.Logger.Trace(message: "Not checking for new versions.");
+        }
+    }
+
+    /// <summary>
+    ///     This creates the DataTables for the main Form - been moved out here because it's otherwise tedious to keep track
+    ///     of.
+    /// </summary>
+    public static void GenericCreateDataTables()
+    {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
+        // DtLanguageLabels
+        FrmMainApp.DtLanguageLabels = new DataTable();
+        FrmMainApp.DtLanguageLabels.Clear();
+        FrmMainApp.DtLanguageLabels.Columns.Add(columnName: "languageName");
+        FrmMainApp.DtLanguageLabels.Columns.Add(columnName: "objectType");
+        FrmMainApp.DtLanguageLabels.Columns.Add(columnName: "objectName");
+        FrmMainApp.DtLanguageLabels.Columns.Add(columnName: "objectText");
+
+        // DtFileDataCopyPool
+        FrmMainApp.DtFileDataCopyPool = new DataTable();
+        FrmMainApp.DtFileDataCopyPool.Clear();
+        FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "fileNameWithoutPath");
+        FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "settingValue");
+
+        // DtFileDataPastePool 
+        FrmMainApp.DtFileDataPastePool = new DataTable();
+        FrmMainApp.DtFileDataPastePool.Clear();
+        FrmMainApp.DtFileDataPastePool.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtFileDataPastePool.Columns.Add(columnName: "settingValue");
+
+        // DtFileDataToWriteStage1PreQueue 
+        FrmMainApp.DtFileDataToWriteStage1PreQueue = new DataTable();
+        FrmMainApp.DtFileDataToWriteStage1PreQueue.Clear();
+        FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "fileNameWithoutPath");
+        FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingValue");
+
+        // DtFileDataToWriteStage2QueuePendingSave 
+        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave = new DataTable();
+        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Clear();
+        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "fileNameWithoutPath");
+        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingValue");
+
+        // DtFileDataToWriteStage3ReadyToWrite 
+        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite = new DataTable();
+        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Clear();
+        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "fileNameWithoutPath");
+        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingValue");
+        // DtFileDataSeenInThisSession
+        FrmMainApp.DtFileDataSeenInThisSession = new DataTable();
+        FrmMainApp.DtFileDataSeenInThisSession.Clear();
+        FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "fileNameWithPath");
+        FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingValue");
+
+        // DtOriginalTakenDate
+        FrmMainApp.DtOriginalTakenDate = new DataTable();
+        FrmMainApp.DtOriginalTakenDate.Clear();
+        FrmMainApp.DtOriginalTakenDate.Columns.Add(columnName: "fileNameWithoutPath");
+        FrmMainApp.DtOriginalTakenDate.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtOriginalTakenDate.Columns.Add(columnName: "settingValue");
+
+        // DtOriginalCreateDate
+        FrmMainApp.DtOriginalCreateDate = new DataTable();
+        FrmMainApp.DtOriginalCreateDate.Clear();
+        FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "fileNameWithoutPath");
+        FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "settingId");
+        FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "settingValue");
+
+        // DtToponomySessionData;
+        FrmMainApp.DtToponomySessionData = new DataTable();
+        FrmMainApp.DtToponomySessionData.Clear();
+        FrmMainApp.DtToponomySessionData.Columns.Add("lat");
+        FrmMainApp.DtToponomySessionData.Columns.Add("lng");
+        FrmMainApp.DtToponomySessionData.Columns.Add("AdminName1");
+        FrmMainApp.DtToponomySessionData.Columns.Add("AdminName2");
+        FrmMainApp.DtToponomySessionData.Columns.Add("AdminName3");
+        FrmMainApp.DtToponomySessionData.Columns.Add("AdminName4");
+        FrmMainApp.DtToponomySessionData.Columns.Add("ToponymName");
+        FrmMainApp.DtToponomySessionData.Columns.Add("CountryCode");
+        FrmMainApp.DtToponomySessionData.Columns.Add("timezoneId");
+
+        //DtAltitudeSessionData;
+        FrmMainApp.DtAltitudeSessionData = new DataTable();
+        FrmMainApp.DtAltitudeSessionData.Clear();
+        FrmMainApp.DtAltitudeSessionData.Columns.Add("lat");
+        FrmMainApp.DtAltitudeSessionData.Columns.Add("lng");
+        FrmMainApp.DtAltitudeSessionData.Columns.Add("Altitude");
+    }
+
+    /// <summary>
+    ///     Adds fileNameWithoutPath to FilesBeingProcessed
+    /// </summary>
+    /// <param name="fileNameWithoutPath">The file name without the path.</param>
+    internal static void GenericLockLockFile(string fileNameWithoutPath)
+    {
+        FilesBeingProcessed.Add(item: fileNameWithoutPath);
+    }
+
+    /// <summary>
+    ///     Removes fileNameWithoutPath from FilesBeingProcessed
+    /// </summary>
+    /// <param name="fileNameWithoutPath">The file name without the path.</param>
+    internal static void GenericLockUnLockFile(string fileNameWithoutPath)
+    {
+        FilesBeingProcessed.Remove(item: fileNameWithoutPath);
+    }
+
+    /// <summary>
+    ///     Checks if a file is currently locked by any other running operation - checks if the fileNameWithoutPath is
+    ///     currently in FilesBeingProcessed
+    /// </summary>
+    /// <param name="fileNameWithoutPath">The file name without the path.</param>
+    /// <returns>A true/false</returns>
+    internal static bool GenericLockCheckLockFile(string fileNameWithoutPath)
+    {
+        return FilesBeingProcessed.Contains(item: fileNameWithoutPath);
     }
 
     /// <summary>
@@ -177,7 +623,7 @@ internal static partial class HelperStatic
                                                       string button2Text,
                                                       string returnButton2Text)
         {
-            FrmMainApp FrmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
             string returnString = "";
             Form promptBox = new();
             promptBox.Text = caption;
@@ -244,287 +690,7 @@ internal static partial class HelperStatic
                 returnString = returnButton2Text;
             }
 
-            ;
             return returnString;
         }
     }
-
-    /// <summary>
-    ///     This (mostly) sets the various texts for most Controls in various forms, especially labels and buttons/boxes.
-    /// </summary>
-    /// <param name="cItem">The Control whose details need adjusting</param>
-    internal static void GenericReturnControlText(Control cItem,
-                                                  Form senderForm)
-    {
-        if (
-            cItem is Label ||
-            cItem is GroupBox ||
-            cItem is Button ||
-            cItem is CheckBox ||
-            cItem is TabPage ||
-            cItem is RichTextBox ||
-            cItem is RadioButton
-            //||
-        )
-        {
-            // for some reason there is no .Last() being offered here
-            cItem.Text = DataReadSQLiteObjectText(
-                languageName: FrmMainApp.AppLanguage,
-                objectType: cItem.GetType()
-                    .ToString()
-                    .Split('.')[cItem.GetType()
-                                    .ToString()
-                                    .Split('.')
-                                    .Length -
-                                1],
-                objectName: cItem.Name
-            );
-        }
-        else if (cItem is Form)
-        {
-            cItem.Text = DataReadSQLiteObjectText(
-                languageName: FrmMainApp.AppLanguage,
-                objectType: "Form",
-                objectName: cItem.Name);
-        }
-        else if (cItem is TextBox || cItem is ComboBox)
-        {
-            if (senderForm.Name == "FrmSettings")
-            {
-                cItem.Text = DataReadSQLiteSettings(
-                    tableName: "settings",
-                    settingTabPage: cItem.Parent.Name,
-                    settingId: cItem.Name
-                );
-            }
-        }
-    }
-
-    /// <summary>
-    ///     A centralised way to interact with datatables containing exif data. Checks if the table already contains an element
-    ///     for the given combination and if so deletes it, then writes the new data.
-    /// </summary>
-    /// <param name="dt">Name of the datatable. Realistically this is one of the three "queue" DTs</param>
-    /// <param name="fileNameWithoutPath"></param>
-    /// <param name="settingId">Name of the column or tag (e.g. GPSLatitude)</param>
-    /// <param name="settingValue">Value to write</param>
-    internal static void GenericUpdateAddToDataTable(DataTable dt,
-                                                     string fileNameWithoutPath,
-                                                     string settingId,
-                                                     string settingValue)
-    {
-        lock (TableLock)
-        {
-            // delete any existing rows with the current combination
-            for (int i = dt.Rows.Count - 1; i >= 0; i--)
-            {
-                DataRow thisDr = dt.Rows[index: i];
-                if (
-                    thisDr[columnName: "fileNameWithoutPath"]
-                        .ToString() ==
-                    fileNameWithoutPath &&
-                    thisDr[columnName: "settingId"]
-                        .ToString() ==
-                    settingId
-                )
-                {
-                    thisDr.Delete();
-                }
-            }
-
-            dt.AcceptChanges();
-
-            // add new
-            DataRow newDr = dt.NewRow();
-            newDr[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
-            newDr[columnName: "settingId"] = settingId;
-            newDr[columnName: "settingValue"] = settingValue;
-            dt.Rows.Add(row: newDr);
-            dt.AcceptChanges();
-        }
-    }
-
-    /// <summary>
-    ///     Checks for new versions of GTN and eT.
-    /// </summary>
-    internal static async Task GenericCheckForNewVersions()
-    {
-        // check when the last polling took place
-        long nowUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
-        long lastCheckUnixTime = 0;
-
-        string strLastOnlineVersionCheck = DataReadSQLiteSettings(
-            tableName: "settings",
-            settingTabPage: "generic",
-            settingId: "onlineVersionCheckDate"
-        );
-
-        if (strLastOnlineVersionCheck == null)
-        {
-            lastCheckUnixTime = nowUnixTime;
-            // write back to SQL so it doesn't remain blank
-            DataWriteSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "generic",
-                settingId: "onlineVersionCheckDate",
-                settingValue: nowUnixTime.ToString(provider: CultureInfo.InvariantCulture)
-            );
-        }
-        else
-        {
-            lastCheckUnixTime = long.Parse(s: strLastOnlineVersionCheck);
-        }
-
-        if (nowUnixTime > lastCheckUnixTime + 604800) //604800 is a week's worth of seconds
-        {
-            // get current & newest exiftool version -- do this here at the end so it doesn't hold up the process
-            decimal currentExifToolVersionLocal = await ExifGetExifToolVersion();
-            decimal newestExifToolVersionOnline = API_ExifGetExifToolVersionFromWeb();
-            decimal currentExifToolVersionInSQL;
-            string strCurrentExifToolVersionInSQL = DataReadSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "generic",
-                settingId: "exifToolVer"
-            );
-
-            if (!decimal.TryParse(s: strCurrentExifToolVersionInSQL, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out currentExifToolVersionInSQL))
-            {
-                currentExifToolVersionInSQL = currentExifToolVersionLocal;
-            }
-
-            if (newestExifToolVersionOnline > currentExifToolVersionLocal && newestExifToolVersionOnline > currentExifToolVersionInSQL && currentExifToolVersionLocal + newestExifToolVersionOnline > 0)
-            {
-                // write current to SQL
-                DataWriteSQLiteSettings(
-                    tableName: "settings",
-                    settingTabPage: "generic",
-                    settingId: "exifToolVer",
-                    settingValue: newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture)
-                );
-
-                if (MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewExifToolVersionExists") + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture), caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Asterisk) == DialogResult.Yes)
-                {
-                    Process.Start(fileName: "https://exiftool.org/exiftool-" + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture) + ".zip");
-                }
-            }
-
-            // current version may be something like "0.5.8251.40825"
-            // Assembly.GetExecutingAssembly().GetName().Version.Build is just "8251"
-            int currentGTNVersionBuild = Assembly.GetExecutingAssembly()
-                .GetName()
-                .Version.Build;
-
-            SApiOkay = true;
-            DataTable dt_APIGTNVersion = DTFromAPI_GetGTNVersion();
-            // newest may be something like "v0.5.8251"
-            string newestGTNVersionFull = dt_APIGTNVersion.Rows[index: 0][columnName: "version"]
-                .ToString()
-                .Replace(oldValue: "v", newValue: "");
-            int newestGTNVersion = 0;
-
-            bool intParse;
-            intParse = int.TryParse(s: newestGTNVersionFull.Split('.')
-                                        .Last(), result: out newestGTNVersion);
-
-            if (newestGTNVersion > currentGTNVersionBuild)
-            {
-                if (MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewGTNVersionExists") + newestGTNVersion, caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Asterisk) == DialogResult.Yes)
-                {
-                    Process.Start(fileName: "https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dt_APIGTNVersion.Rows[index: 0][columnName: "version"] + "/GeoTagNinja_Setup.msi");
-                }
-            }
-
-            // write back to SQL
-            DataWriteSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "generic",
-                settingId: "onlineVersionCheckDate",
-                settingValue: nowUnixTime.ToString()
-            );
-        }
-    }
-
-    /// <summary>
-    ///     This creates the DataTables for the main Form - been moved out here because it's otherwise tedious to keep track
-    ///     of.
-    /// </summary>
-    public static void GenericCreateDataTables()
-    {
-        // DtFileDataCopyPool
-        FrmMainApp.DtFileDataCopyPool = new DataTable();
-        FrmMainApp.DtFileDataCopyPool.Clear();
-        FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "settingId");
-        FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "settingValue");
-
-        // DtFileDataPastePool 
-        FrmMainApp.DtFileDataPastePool = new DataTable();
-        FrmMainApp.DtFileDataPastePool.Clear();
-        FrmMainApp.DtFileDataPastePool.Columns.Add(columnName: "settingId");
-        FrmMainApp.DtFileDataPastePool.Columns.Add(columnName: "settingValue");
-
-        // DtFileDataToWriteStage1PreQueue 
-        FrmMainApp.DtFileDataToWriteStage1PreQueue = new DataTable();
-        FrmMainApp.DtFileDataToWriteStage1PreQueue.Clear();
-        FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "fileNameWithoutPath");
-        FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingId");
-        FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingValue");
-
-        // DtFileDataToWriteStage2QueuePendingSave 
-        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave = new DataTable();
-        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Clear();
-        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "fileNameWithoutPath");
-        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingId");
-        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingValue");
-
-        // DtFileDataToWriteStage3ReadyToWrite 
-        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite = new DataTable();
-        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Clear();
-        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "fileNameWithoutPath");
-        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingId");
-        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingValue");
-
-        // DtFilesSeenInThisSession
-        FrmMainApp.DtFilesSeenInThisSession = new DataTable();
-        FrmMainApp.DtFilesSeenInThisSession.Clear();
-        FrmMainApp.DtFilesSeenInThisSession.Columns.Add(columnName: "fileNameWithPath");
-        FrmMainApp.DtFilesSeenInThisSession.Columns.Add(columnName: "fileMD5Hash");
-
-        // DtFileDataSeenInThisSession
-        FrmMainApp.DtFileDataSeenInThisSession = new DataTable();
-        FrmMainApp.DtFileDataSeenInThisSession.Clear();
-        FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "fileNameWithPath");
-        FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingId");
-        FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingValue");
-    }
-
-    /// <summary>
-    ///     Adds fileNameWithoutPath to FilesBeingProcessed
-    /// </summary>
-    /// <param name="fileNameWithoutPath">The file name without the path.</param>
-    internal static void GenericLockLockFile(string fileNameWithoutPath)
-    {
-        FilesBeingProcessed.Add(item: fileNameWithoutPath);
-    }
-
-    /// <summary>
-    ///     Removes fileNameWithoutPath from FilesBeingProcessed
-    /// </summary>
-    /// <param name="fileNameWithoutPath">The file name without the path.</param>
-    internal static void GenericLockUnLockFile(string fileNameWithoutPath)
-    {
-        FilesBeingProcessed.Remove(item: fileNameWithoutPath);
-    }
-
-    /// <summary>
-    ///     Checks if a file is currently locked by any other running operation - checks if the fileNameWithoutPath is
-    ///     currently in FilesBeingProcessed
-    /// </summary>
-    /// <param name="fileNameWithoutPath">The file name without the path.</param>
-    /// <returns>A true/false</returns>
-    internal static bool GenericLockCheckLockFile(string fileNameWithoutPath)
-    {
-        return FilesBeingProcessed.Contains(item: fileNameWithoutPath);
-    }
-
-    #endregion
 }

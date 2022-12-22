@@ -7,6 +7,7 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 ## Download (Windows 7+ only)
 
 Download the .msi file from [Releases](https://github.com/nemethviktor/GeoTagNinja/releases) - Find the newest release (topmost, easy) then click on Assets if they are not showing. 
+As of 20221202 I've removed the built-in webView2 installer because it was more of a pain in the backside than benefit. If the app breaks complaining about the lack of webView2, it's available [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703)
 
 ## Things to Note, Usage
 
@@ -17,7 +18,6 @@ Download the .msi file from [Releases](https://github.com/nemethviktor/GeoTagNin
 - I have tried to test reasonably thoroughly but bugs probably remain.
 -- Basically until the program hits version 1 (currently it's v0.x) most probably save your original files before using this. This particularly applies if you happen to be using a non-English version of Windows or if your various file paths contain non-standard characters.
 - As per usual I don't accept any liability for damage and/or any other inconvenience you may suffer while/from using this app, no warranties and/or guarantees. The script is open source and everyone is welcome to read it. 
-- During Setup the installer will trigger the webView2 installer as well. This is an Edge/Chromium-based engine that is required to show the map. This should run in Silent Mode.
 - I'm kinda hoping this won't come up a problem but don't bash me about country names please. I'm thinking disputed country names and areas here. They are ISO standards, the API returns those values, that's it. Being from the UK I do think that the long name of "United Kingdom of Great Britain and Northern Ireland (the)" is a bit lengthy but it is what it is (and it's relatively rarely disputed but for example Crimea does return Ukraine as a value, regardless of what's been going on there since 2014; again, this isn't a statement either way, it's the API reply). 
 -- On this particular note above --> the script won't change existing country details in files unless you explicitly edit them. So it may happen that your existing file has the CountryCode GBR and the Country "United Kingdom", that won't be changed unless you do a "Get From Web" because the CountryCode-to-Country matching only runs in that case. That's a feature, not a bug.
 - Altitude: in some cases the API returns 32K or negative 32K as an altitude. Those are being blanked out.
@@ -28,7 +28,8 @@ Download the .msi file from [Releases](https://github.com/nemethviktor/GeoTagNin
 ## Building & Testing
 
 There "tends to be" an alpha-version stored [on my public Google Drive](https://drive.google.com/file/d/18iI77SIdrIv-joOtyT0-MzqOVtB5OgM0/view?usp=share_link). This is not really a maintained location and by definition the version is likely to be messier than the published ones. It may even happen that this version is actually older than the published one (I don't always upload here but only when someone opens a ticket and I'd like them to test a change)
-- v0.6.8362 [20221123]+: I've added a small change to the About Box to show the Build DateTime alongside with Version. This is mostly for people that want to play with the dev versions because it can happen that there are more than 1 releases per day in which case the build number would be identical and difficult to guess what's newer or older.
+On that note there is a dev branch that feeds the link above more or less. It's manual and I only do it when there is a request or something to do/share with people.
+There is currently no preset release cycle. I don't expect one to happen in a systematic way.
 
 If you want to build the project probably use Visual Studio - I used v2022 Community. Instead of downloading the source code as zip please pull from Git, you can do that via VS if you want. 
 There are 2 parts to the project. One is the "main" the other is the installer. You'll generally have problems w/ the installer bcs it hasn't been pushed to git so it's going to be missing that half.
@@ -40,19 +41,15 @@ I'm generally happy for anyone competent to add pull requests but I don't always
 
 ## ToDos
 
-- [WIP] Column reorg.
-- [later] Destination stuff not working atm, todo.
-
+- [later] Destination stuff untested / not showing cones on map / generally likely not working.
 
 ## Known Issues
 
 - There is a likelyhood that the app will struggle to read file data if your files are kept in folders with accent marks (umlauts, non-standard English characters) in the path and/or filename. This is a limitation of exifTool + cmd. If you encounter a problem, move your files to something like "C:\temp" and see if it works better.
 -- On top of that above exifTool has a hard limit of 260 characters for file names including paths. Anything beyond that will fail. Again, rename your files or temporarily move them to C:\temp if this is an issue. Unicode (e.g. most Chinese and other Asian) characters have an up to 4-byte size per character. This is to say you'll run into errors with these files more often than not.
 -- Alternatively you can enable [this](https://stackoverflow.com/questions/56419639/what-does-beta-use-unicode-utf-8-for-worldwide-language-support-actually-do) feature if you're running v1903 Windows 10 or later but it may have some unwanted effects so keep an eye out for changes caused by it. 
-- For UK the API returns city/sublocation in an odd way. this has been *probably* fixed in code but do test.
-- Listview columns hiding/reorg capability is lacking. 
--- On a related note there is an attempt to clean up the user folder (C:\Users\username\AppData\Roaming\GeoTagNinja\) on application exit but it might fail due to a file lock. This doesn't crash the app but some files may remain, they'll be cleaned up the next time the app runs.
-- Sometimes a number of cmd.exe handles remain open. Not sure why but they only consume about 800kbytes of memory each so while not great, not terrible. You can force-kill them with "taskkill /f /im cmd.exe" ; I didn't want to put that into the code as it kills _all_ cmd instances regardless of what conjured them up so it would kill any instances you're otherwise running.
+- The API has its rather odd ways of dealing with the "City" tag [not the least because there isn't such a tag in the API] - eventually I'll try to work on adding in some user-defined controls to enable ppl to design their own rules (e.g. for larger UK cities things are kept in the API's adminName2 field, which is an exception to the rule as cities tend to be kept in TopnomyName unless otherwise defined). 
+-- For a detailed rundown on the above see the code if interested + an overall discussion [here](https://github.com/nemethviktor/GeoTagNinja/issues/38)
 - Pressing Get From Web either in Edit mode or on the map will always set the affected file to write-queue even if the values don't actually change.
 - Preview images don't respect orientation.
 - If user zooms "too far out" on Map they will get odd longitude values. The code handles this internally but map feedback is what it is.
@@ -84,7 +81,7 @@ I'm generally happy for anyone competent to add pull requests but I don't always
 
 ## System Requirements
 
-- Windows 7+ is needed. The WebView2 installer runs along Setup (in Silent Mode). Should you need separately, it's available [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703) - the installer should take care of it tho'.
+- Windows 7+ is needed. 
 - SQLite is running x86 but fwiw the app isn't really memory-hungry so it will do. Chances are if you're still on a 1st-gen Intel Core you're not on Windows 7. Hopefully.
 - You'll need an ArcGIS API key to use the map search functionality. Register for free [here](https://developers.arcgis.com/)
 - You'll need a geoNames username and password to use toponomy search. Register for free [here](https://www.geonames.org/)

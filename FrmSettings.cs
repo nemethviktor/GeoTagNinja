@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
+using System.Globalization;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using CheckBox = System.Windows.Forms.CheckBox;
+using ComboBox = System.Windows.Forms.ComboBox;
+using Control = System.Windows.Forms.Control;
+using TextBox = System.Windows.Forms.TextBox;
 
 namespace GeoTagNinja;
 
@@ -27,32 +33,28 @@ public partial class FrmSettings : Form
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
-            HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
-
             if (cItem.Name == "cbx_Language")
             {
-                string resourcesFolderPath = FrmMainApp.ResourcesFolderPath;
-                string languagesFolderPath = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "Languages");
-
-                string[] files = Directory.GetFiles(path: languagesFolderPath, searchPattern: "*.sqlite");
-                foreach (string file in files)
+                List<KeyValuePair<string, string>> kvps = AncillaryListsArrays.GetLanguages();
+                for (int index = 0; index < kvps.Count; index++)
                 {
-                    // this should only come up in debugging not prod but if the database is open in sqliteexpert this pulls in a blank .sqlite file
-                    string fileName = file.Replace(oldValue: languagesFolderPath, newValue: "")
-                        .Replace(oldValue: ".sqlite", newValue: "")
-                        .Substring(startIndex: 1);
-                    if (fileName.Length > 1)
+                    KeyValuePair<string, string> kvp = kvps[index];
+                    string thisLanguage = kvp.Value + " (" + kvp.Key + ")";
+                    cbx_Language.Items.Add(thisLanguage);
+                    if (thisLanguage.Contains(HelperStatic.DataReadSQLiteSettings(
+                                                  tableName: "settings",
+                                                  settingTabPage: cItem.Parent.Name,
+                                                  settingId: cItem.Name
+                                              )))
                     {
-                        cbx_Language.Items.Add(item: file.Replace(oldValue: languagesFolderPath, newValue: "")
-                                                   .Replace(oldValue: ".sqlite", newValue: "")
-                                                   .Substring(startIndex: 1));
-                        cbx_Language.SelectedItem = HelperStatic.DataReadSQLiteSettings(
-                            tableName: "settings",
-                            settingTabPage: cItem.Parent.Name,
-                            settingId: cItem.Name
-                        );
+                        cbx_Language.SelectedIndex = index;
                     }
                 }
+            }
+
+            else
+            {
+                HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
             }
         }
 
@@ -127,6 +129,36 @@ public partial class FrmSettings : Form
                             cbx.CheckState = CheckState.Unchecked;
                         }
                     }
+                    else if (subctrl is NumericUpDown nud)
+                    {
+                        string nudTempValue = HelperStatic.DataReadSQLiteSettings(
+                            tableName: "settings",
+                            settingTabPage: ctrl.Name,
+                            settingId: subctrl.Name
+                        );
+
+                        if (nudTempValue != null)
+                        {
+                            nud.Value = Convert.ToInt32(value: nudTempValue);
+                        }
+                        else
+                        {
+                            switch (nud.Name)
+                            {
+                                case "nud_ChoiceOfferCount":
+                                    nud.Value = 1;
+                                    nud.Text = "1";
+                                    break;
+                                case "nud_ChoiceRadius":
+                                    nud.Value = 10;
+                                    nud.Text = "10";
+                                    break;
+                                default:
+                                    nud.Value = 1;
+                                    break;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -186,6 +218,9 @@ public partial class FrmSettings : Form
             HelperStatic.SResetMapToZero = false;
         }
 
+        FrmMainApp.AppStartupPullOverWriteBlankToponomy();
+        FrmMainApp.AppStartupPullToponomyRadiusAndMaxRows();
+
         Hide();
     }
 
@@ -222,7 +257,7 @@ public partial class FrmSettings : Form
                 object lbi = lbx_fileExtensions.SelectedItem;
                 string tmpCtrlName = lbi.ToString()
                                          .Split('\t')
-                                         .First() +
+                                         .FirstOrDefault() +
                                      '_' +
                                      subctrl.Name;
 
@@ -263,7 +298,7 @@ public partial class FrmSettings : Form
                         {
                             string tmptmpCtrlName = lbi.ToString()
                                                         .Split('\t')
-                                                        .First() +
+                                                        .FirstOrDefault() +
                                                     '_'; // 'tis ok as is
                             string tmpCtrlGroup = lbi.ToString()
                                 .Split('\t')
@@ -362,21 +397,26 @@ public partial class FrmSettings : Form
     {
         if (!_nowLoadingSettingsData)
         {
-            CheckBox txt = (CheckBox)sender;
-            txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Bold);
+            CheckBox ckb = (CheckBox)sender;
+            ckb.Font = new Font(prototype: ckb.Font, newStyle: FontStyle.Bold);
             string tmpCtrlName = "";
             object lbi = lbx_fileExtensions.SelectedItem;
             if (lbi != null)
             {
                 tmpCtrlName = lbi.ToString()
                                   .Split('\t')
-                                  .First() +
+                                  .FirstOrDefault() +
                               '_' +
                               ((CheckBox)sender).Name;
             }
             else
             {
                 tmpCtrlName = ((CheckBox)sender).Name;
+            }
+
+            if (tmpCtrlName == "ckb_ReplaceBlankToponyms")
+            {
+                tbx_ReplaceBlankToponyms.Enabled = ckb.Checked;
             }
 
             // stick it into settings-Q
@@ -425,19 +465,73 @@ public partial class FrmSettings : Form
         {
             ComboBox cbx = (ComboBox)sender;
             cbx.Font = new Font(prototype: cbx.Font, newStyle: FontStyle.Bold);
+            string settingValue = ((ComboBox)sender).Text;
+
+            if (cbx.Name == "cbx_Language")
+            {
+                // convert e.g. "Française (French)" to "French"
+                settingValue = settingValue.Split('(')
+                    .Last()
+                    .Substring(startIndex: 0, length: settingValue.Split('(')
+                                                          .Last()
+                                                          .Length -
+                                                      1);
+
+                // fire a warning if language has changed. 
+                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmSettings_cbx_Language_TextChanged"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            }
 
             // stick it into settings-Q
             HelperStatic.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
                 settingTabPage: ((Control)sender).Parent.Name,
                 settingId: ((ComboBox)sender).Name,
-                settingValue: ((ComboBox)sender).Text
+                settingValue: settingValue
             );
-            // fire a warning if language has changed. 
-            if (((ComboBox)sender).Name == "cbx_Language")
-            {
-                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmSettings_cbx_Language_TextChanged"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
-            }
         }
+    }
+
+    /// <summary>
+    ///     Handles the event where any nud's value changed.
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void Any_nud_ValueChanged(object sender,
+                                      EventArgs e)
+    {
+        if (!_nowLoadingSettingsData)
+        {
+            NumericUpDown nud = (NumericUpDown)sender;
+            nud.Font = new Font(prototype: nud.Font, newStyle: FontStyle.Bold);
+
+            HelperStatic.DataWriteSQLiteSettings(
+                tableName: "settingsToWritePreQueue",
+                settingTabPage: ((Control)sender).Parent.Name,
+                settingId: ((NumericUpDown)sender).Name,
+                settingValue: ((NumericUpDown)sender).Value.ToString(provider: CultureInfo.InvariantCulture)
+            );
+        }
+    }
+
+    /// <summary>
+    ///     Disables AcceptButton -> so that user can't hit "Enter" because it wouldn't be saved. VS is a bit silly.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void Any_nud_Enter(object sender,
+                               EventArgs e)
+    {
+        AcceptButton = null;
+    }
+
+    /// <summary>
+    ///     Reinstates AcceptButton
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void Any_nud_Leave(object sender,
+                               EventArgs e)
+    {
+        AcceptButton = btn_OK;
     }
 }
