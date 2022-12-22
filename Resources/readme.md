@@ -26,9 +26,8 @@ Hopefully obvious
 **readme.md**
 This file
 
-**isoCountryCodeMapping.sqlite**
-SQLite file containing ISO codes and country codes as well as timezone data.
-TZ data from https://timezonedb.com/download -- truncated to exclude dates cca +/- 20 years from now. Even that's a bit pointless as the app will only look at "current" time zones.
+**isoCountryCodeMapping.csv**
+CSV file containing ISO codes and country codes as well as timezone data.
 
 **objectMapping.sqlite**
 Output from the XLSM file in the ExtraFiles folder.

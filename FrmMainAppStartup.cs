@@ -100,7 +100,8 @@ public partial class FrmMainApp
         }
 
         // read language and objectnames
-        HelperStatic.DataReadObjectTextFromFiles();
+        HelperStatic.DataReadLanguageDataFromCSV();
+        HelperStatic.DataReadTZDataFromCSV();
     }
 
     /// <summary>

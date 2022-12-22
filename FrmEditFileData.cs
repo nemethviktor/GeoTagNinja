@@ -352,7 +352,7 @@ public partial class FrmEditFileData : Form
                                 string sqliteText;
                                 if (cItem.Name == "cbx_CountryCode" && cItem.Text == "")
                                 {
-                                    sqliteText = HelperStatic.DataReadSQLiteCountryCodesNames(
+                                    sqliteText = HelperStatic.DataReadDTCountryCodesNames(
                                         queryWhat: "Country",
                                         inputVal: cbx_Country.Text,
                                         returnWhat: "ISO_3166_1A3"
@@ -364,7 +364,7 @@ public partial class FrmEditFileData : Form
                                 }
                                 else if (cItem.Name == "cbx_Country" && cItem.Text == "")
                                 {
-                                    sqliteText = HelperStatic.DataReadSQLiteCountryCodesNames(
+                                    sqliteText = HelperStatic.DataReadDTCountryCodesNames(
                                         queryWhat: "ISO_3166_1A3",
                                         inputVal: cbx_CountryCode.Text,
                                         returnWhat: "Country");
@@ -1499,7 +1499,7 @@ public partial class FrmEditFileData : Form
                     string sqliteText;
                     if (senderName == "cbx_CountryCode")
                     {
-                        sqliteText = HelperStatic.DataReadSQLiteCountryCodesNames(
+                        sqliteText = HelperStatic.DataReadDTCountryCodesNames(
                             queryWhat: "ISO_3166_1A3",
                             inputVal: sndr.Text,
                             returnWhat: "Country"
@@ -1511,7 +1511,7 @@ public partial class FrmEditFileData : Form
                     }
                     else if (senderName == "cbx_Country")
                     {
-                        sqliteText = HelperStatic.DataReadSQLiteCountryCodesNames(
+                        sqliteText = HelperStatic.DataReadDTCountryCodesNames(
                             queryWhat: "Country",
                             inputVal: sndr.Text,
                             returnWhat: "ISO_3166_1A3"

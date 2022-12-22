@@ -56,6 +56,7 @@ public partial class FrmMainApp : Form
     internal static DataTable DtObjectNames;
     internal static DataTable DtObjectTagNamesIn;
     internal static DataTable DtObjectTagNamesOut;
+    internal static DataTable DtIsoCountryCodeMapping;
     internal static string FolderName;
     internal static string _AppLanguage = "English"; // default to english
     internal static List<string> LstFavourites = new();

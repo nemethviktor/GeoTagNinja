@@ -1923,7 +1923,7 @@ internal static partial class HelperStatic
         {
             CountryCode = lstReturnToponomyData[index: 0][columnName: "CountryCode"]
                 .ToString();
-            Country = DataReadSQLiteCountryCodesNames(
+            Country = DataReadDTCountryCodesNames(
                     queryWhat: "ISO_3166_1A3",
                     inputVal: CountryCode,
                     returnWhat: "Country")
@@ -2062,12 +2062,12 @@ internal static partial class HelperStatic
                             .CountryCode;
                         if (APICountryCode.Length == 2)
                         {
-                            CountryCode = DataReadSQLiteCountryCodesNames(
+                            CountryCode = DataReadDTCountryCodesNames(
                                 queryWhat: "ISO_3166_1A2",
                                 inputVal: APICountryCode,
                                 returnWhat: "ISO_3166_1A3"
                             );
-                            Country = DataReadSQLiteCountryCodesNames(
+                            Country = DataReadDTCountryCodesNames(
                                 queryWhat: "ISO_3166_1A2",
                                 inputVal: APICountryCode,
                                 returnWhat: "Country"

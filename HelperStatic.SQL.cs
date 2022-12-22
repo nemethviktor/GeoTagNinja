@@ -403,7 +403,7 @@ internal static partial class HelperStatic
 
     #endregion
 
-    #region language DT
+    #region language & TZ DT
 
     internal static string DataReadDTObjectText(string objectType,
                                                 string objectName)
@@ -416,7 +416,7 @@ internal static partial class HelperStatic
     /// <summary>
     ///     Reads all the language CSV files into one table (FrmMainApp.DtLanguageLabels)
     /// </summary>
-    internal static void DataReadObjectTextFromFiles()
+    internal static void DataReadLanguageDataFromCSV()
     {
         string languagesFolderPath = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "Languages");
 
@@ -507,6 +507,40 @@ internal static partial class HelperStatic
                 }
             }
         }
+    }
+
+    /// <summary>
+    ///     Reads the Country -> TZ data from the CSV file into a DT
+    /// </summary>
+    internal static void DataReadTZDataFromCSV()
+    {
+        string countryCodeCsvFilePath = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "isoCountryCodeMapping.csv");
+        FrmMainApp.DtIsoCountryCodeMapping = GetDataTableFromCsv(fileNameWithPath: countryCodeCsvFilePath, isUTF: true);
+    }
+
+    /// <summary>
+    ///     Reads the FrmMainApp.DtIsoCountryCodeMapping and basically translates between code types. We store ALPHA-2, ALPHA-3
+    ///     and plain English country names.
+    /// </summary>
+    /// <param name="queryWhat">ALPHA-2, ALPHA-3 and plain English country names</param>
+    /// <param name="inputVal">e.g US or USA or United States of America</param>
+    /// <param name="returnWhat">ALPHA-2, ALPHA-3 and plain English country names</param>
+    internal static string DataReadDTCountryCodesNames(string queryWhat,
+                                                       string inputVal,
+                                                       string returnWhat)
+    {
+        EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in FrmMainApp.DtIsoCountryCodeMapping.AsEnumerable()
+                                                           where dataRow.Field<string>(columnName: queryWhat) == inputVal
+                                                           select dataRow;
+
+        string returnString = "";
+        Parallel.ForEach(source: drDataTableData, body: dataRow =>
+            {
+                returnString = dataRow[columnName: returnWhat]
+                    .ToString();
+            })
+            ;
+        return returnString;
     }
 
     #endregion
@@ -667,52 +701,9 @@ internal static partial class HelperStatic
 
     #endregion
 
-    #region Other SQL
+    #region Other DT
 
-    /// <summary>
-    ///     Reads SQL and basically translates between code types. We store ALPHA-2, ALPHA-3 and plain English country names.
-    /// </summary>
-    /// <param name="queryWhat">ALPHA-2, ALPHA-3 and plain English country names</param>
-    /// <param name="inputVal">e.g US or USA or United States of America</param>
-    /// <param name="returnWhat">ALPHA-2, ALPHA-3 and plain English country names</param>
     /// <returns>ALPHA-2, ALPHA-3 and plain English country names</returns>
-    internal static string DataReadSQLiteCountryCodesNames(string queryWhat,
-                                                           string inputVal,
-                                                           string returnWhat)
-    {
-        string returnString = "";
-        // need to account for lack of data actually
-        if (inputVal != " ")
-        {
-            string countryCodeSQLiteFilePath = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "isoCountryCodeMapping.sqlite");
-            using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + countryCodeSQLiteFilePath);
-            sqliteDB.Open();
-
-            string sqlCommandStr = @"
-                                SELECT " +
-                                   returnWhat +
-                                   "\n " +
-                                   "FROM isoCountryCodeMapping \n" +
-                                   "WHERE 1=1 \n" +
-                                   "AND " +
-                                   queryWhat +
-                                   "= '" +
-                                   inputVal +
-                                   "' \n " +
-                                   "LIMIT 1;"
-                ;
-            SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-
-            using SQLiteDataReader reader = sqlToRun.ExecuteReader();
-            while (reader.Read())
-            {
-                returnString = reader.GetString(i: 0);
-            }
-        }
-
-        return returnString;
-    }
-
     /// <summary>
     ///     Does a filter on a DataTable - just faster.
     ///     via https://stackoverflow.com/a/47692754/3968494

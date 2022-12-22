@@ -345,7 +345,7 @@
     <None Include="readme.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\isoCountryCodeMapping.sqlite">
+    <None Include="Resources\isoCountryCodeMapping.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\Languages\Button.csv">
