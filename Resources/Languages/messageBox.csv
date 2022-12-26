@@ -69,8 +69,8 @@ mbx_FrmImportGpx_FileOrFolderDoesntExist,The file or folder you picked is invali
 mbx_FrmImportGpx_AskUserWantsReport,Do you want to see the report on the import process?,Voulez-vous voir le rapport sur le processus d'importation ?
 mbx_FrmPasteWhat_NoDateShiftToPaste,No values specified in the Copy Pool for DateTime Shift,Pas de valeurs détectées dans le groupe de valeurs pour le décalage de temps
 mbx_FrmImportGpx_NoFileSelected,No files have been selected to import for.,Aucun fichier n'a été sélectionné pour l'importation
-mbx_FrmMainApp_InfoFavouriteNotValid,The saved item you selected isn't valid,
-mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank,Name cannot be empty/blank,
-mbx_FrmMainApp_InfoFavouriteSaved,Favourite saved OK,
-mbx_FrmMainApp_InfoCahcedDataRemoved,"If there was any, cached data for selected items has been removed.",
-mbx_FrmMainApp_InfoCahcedDataNotRemoved,No data has been removed. Either you didn't select valid items or the ones you picked didn't have cached data.,
+mbx_FrmMainApp_InfoFavouriteNotValid,The saved item you selected isn't valid,La donnée sauvée sélectionnée n'est pas valide
+mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank,Name cannot be empty/blank,Le nom ne peut etre vide
+mbx_FrmMainApp_InfoFavouriteSaved,Favourite saved OK, Favori sauvé correctement
+mbx_FrmMainApp_InfoCahcedDataRemoved,"If there was any, cached data for selected items has been removed.",Si des données existent, les données en cache des fichiers séléctionnés ont été supprimées
+mbx_FrmMainApp_InfoCahcedDataNotRemoved,No data has been removed. Either you didn't select valid items or the ones you picked didn't have cached data.,Aucune donnée n'a été supprimée. Soit vous n'avez pas sélectionné les champs corrects, soit les champs séléctionnés n'ont pas de cache.
