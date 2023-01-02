@@ -10,6 +10,7 @@ public class DirectoryElement
         SubDirectory = 1,
         ParentDirectory = 2,
         File = 3,
+        MyComputer = 4,
         Unknown = 99
     }
 

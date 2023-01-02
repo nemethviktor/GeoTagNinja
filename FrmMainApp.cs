@@ -1405,7 +1405,17 @@ public partial class FrmMainApp : Form
             DirectoryInfo di = new(path: FolderName);
             foreach (DirectoryInfo directoryInfo in di.GetDirectories())
             {
-                if (directoryInfo.Attributes.ToString()
+                if (directoryInfo.FullName == SpecialFolder.MyComputer.ToString())
+                {
+                    // It's the MyComputer entry
+                    Logger.Trace(message: "MyComputer: " + directoryInfo.Name);
+                    _directoryElements.Add(item: new DirectoryElement(
+                                               itemName: directoryInfo.Name,
+                                               type: DirectoryElement.ElementType.MyComputer,
+                                               fullPathAndName: directoryInfo.FullName
+                                           ));
+                }
+                else if (directoryInfo.Attributes.ToString()
                         .Contains(value: "Directory") &&
                     !directoryInfo.Attributes.ToString()
                         .Contains(value: "ReparsePoint"))
@@ -1521,6 +1531,7 @@ public partial class FrmMainApp : Form
 
             // if this is a folder or drive, enter
             case DirectoryElement.ElementType.SubDirectory:
+            case DirectoryElement.ElementType.MyComputer:
             case DirectoryElement.ElementType.Drive:
                 // check for outstanding files first and save if user wants
                 HelperStatic.SChangeFolderIsOkay = false;

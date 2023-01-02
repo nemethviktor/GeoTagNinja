@@ -152,7 +152,16 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     internal bool _isInitialized = false;
 
+    /// <summary>
+    /// Counter for files in the list - incremented in addListItem method.
+    /// </summary>
     internal int _fileCount = -1;
+
+    /// <summary>
+    /// Pointer to the SHFILEINFO Structure that is initialized to be
+    /// used for this list view.
+    /// </summary>
+    private NativeMethods.SHFILEINFOW shfi = new();
 
     #endregion
 
@@ -180,8 +189,6 @@ public partial class FileListView : System.Windows.Forms.ListView
     {
         Logger.Info(message: "Creating List View ...");
         InitializeComponent();
-        SetStyle();
-        InitializeImageList();
     }
 
 
@@ -199,10 +206,9 @@ public partial class FileListView : System.Windows.Forms.ListView
         // Get the items from the file system, and add each of them to the ListView,
         // complete with their corresponding name and icon indices.
         
-        NativeMethods.SHFILEINFOW shfi = new();
         IntPtr himl;
 
-        if (item.FullPathAndName != SpecialFolder.MyComputer.ToString())
+        if (item.Type != DirectoryElement.ElementType.MyComputer)
         {
             himl = NativeMethods.SHGetFileInfo(pszPath: item.FullPathAndName,
                                                dwFileAttributes: 0,
@@ -285,6 +291,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             // would be displayed as "Felhasználók" but that folder is still
             // actually called Documents and Settings, but the label is "fake".
             if (item.Type == DirectoryElement.ElementType.SubDirectory ||
+                item.Type == DirectoryElement.ElementType.MyComputer ||
                 item.Type == DirectoryElement.ElementType.ParentDirectory)
             {
                 lvi.Text = item.ItemName;
@@ -554,7 +561,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     private void InitializeImageList()
     {
         //https://stackoverflow.com/a/37806517/3968494
-        NativeMethods.SHFILEINFOW shfi = new();
+        shfi = new();
         IntPtr hSysImgList = NativeMethods.SHGetFileInfo(pszPath: "",
                                                          dwFileAttributes: 0,
                                                          psfi: ref shfi,
@@ -585,9 +592,13 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <param name="objectNames">A data table containing the list of
     /// columns to be used in column "objectName" and the default ordering
     /// of these in column "sqlOrder"</param>
+    /// <exception cref="InvalidOperationException">If this method is called
+    /// more than once.</exception>
     public void ReadAndApplySetting(string appLanguage,
                                     DataTable objectNames)
     {
+        if (_isInitialized) throw new InvalidOperationException("Trying to initialize the FileListView more than once.");
+
         Logger.Debug(message: "Starting");
         _AppLanguage = appLanguage;
 
@@ -601,9 +612,17 @@ public partial class FileListView : System.Windows.Forms.ListView
         // Apply column order and size
         ColOrderAndWidth_Read();
 
+        // Finally set style and icons
+        SetStyle();
+        InitializeImageList();  // must be here - if called in constructor, it won't work
+
         _isInitialized = true;
     }
 
+    /// <summary>
+    /// Can be called to make the FileListView persist its user
+    /// settings (like column order and width).
+    /// </summary>
     public void PersistSettings()
     {
         ColOrderAndWidth_Write();
@@ -677,7 +696,11 @@ public partial class FileListView : System.Windows.Forms.ListView
     #region Updating
 
     /// <summary>
-    ///     Restaff the list view with the set of directory elements handed
+    /// Restaff the list view with the set of directory elements handed.
+    /// 
+    /// Note that the DirectoryElementCollection is assumed to be
+    /// in scope of the FileListView. Calling FileListView.Clear will
+    /// also clear it.
     /// </summary>
     public void ReloadFromDEs(DirectoryElementCollection directoryElements)
     {
@@ -700,11 +723,19 @@ public partial class FileListView : System.Windows.Forms.ListView
     }
 
 
+    /// <summary>
+    /// Clears the FileListView.
+    /// 
+    /// Should be used instead Items.Clear, etc. as it correctly handles
+    /// all due other things to do for clearing, like clearing the
+    /// the Directory Elements collection.
+    /// </summary>
     public void ClearData()
     {
         Items.Clear();
         DirectoryElements.Clear();
     }
+
 
     /// <summary>
     ///     Scrolls to the relevant line of the listview
@@ -725,6 +756,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             EnsureVisible(index: itemToModify.Index);
         }
     }
+
 
     /// <summary>
     ///     Deals with invoking the listview (from outside the thread) and updating the colour of a particular row (Item) to
