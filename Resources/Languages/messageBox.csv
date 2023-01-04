@@ -72,5 +72,6 @@ mbx_FrmImportGpx_NoFileSelected,No files have been selected to import for.,Aucun
 mbx_FrmMainApp_InfoFavouriteNotValid,The saved item you selected isn't valid,La donnée sauvée sélectionnée n'est pas valide
 mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank,Name cannot be empty/blank,Le nom ne peut etre vide
 mbx_FrmMainApp_InfoFavouriteSaved,Favourite saved OK, Favori sauvé correctement
-mbx_FrmMainApp_InfoCahcedDataRemoved,"If there was any, cached data for selected items has been removed.",Si des données existent, les données en cache des fichiers séléctionnés ont été supprimées
-mbx_FrmMainApp_InfoCahcedDataNotRemoved,No data has been removed. Either you didn't select valid items or the ones you picked didn't have cached data.,Aucune donnée n'a été supprimée. Soit vous n'avez pas sélectionné les champs corrects, soit les champs séléctionnés n'ont pas de cache.
+mbx_FrmMainApp_InfoCahcedDataRemoved,"If there was any, cached data for selected items has been removed.",Si des données existent les données en cache des fichiers séléctionnés ont été supprimées
+mbx_FrmMainApp_InfoCahcedDataNotRemoved,No data has been removed. Either you didn't select valid items or the ones you picked didn't have cached data.,Aucune donnée n'a été supprimée. Soit vous n'avez pas sélectionné les champs corrects soit les champs séléctionnés n'ont pas de cache.
+mbx_FrmMainApp_NoFavouritesDefined,You have no favourites defined. Add one using the buttons under the map.,

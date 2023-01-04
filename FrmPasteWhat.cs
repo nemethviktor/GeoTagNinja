@@ -262,6 +262,7 @@ public partial class FrmPasteWhat : Form
                     // also do all the CountryCode 
                     else if (tagName == "Country")
                     {
+                        tagsToPaste.Add(item: tagName);
                         tagsToPaste.Add(item: "CountryCode");
                     }
                     else

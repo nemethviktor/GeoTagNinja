@@ -382,6 +382,12 @@ public partial class FrmMainApp
                                          objectName: "ttp_LoadFavourite"
                                      )
         );
+        ttp_ManageFavourites.SetToolTip(control: btn_LoadFavourite,
+                                        caption: HelperStatic.DataReadDTObjectText(
+                                            objectType: "ToolTip",
+                                            objectName: "ttp_ManageFavourites"
+                                        )
+        );
     }
 
     /// <summary>
@@ -472,7 +478,11 @@ public partial class FrmMainApp
         HelperStatic.ToponomyRadiusValue = radiusValue;
     }
 
-    private static DataTable AppStartupLoadFavourites()
+    /// <summary>
+    ///     Loads existing favourites
+    /// </summary>
+    /// <returns></returns>
+    internal static DataTable AppStartupLoadFavourites()
     {
         Logger.Info(message: "Starting");
         DataTable dtFavourites = HelperStatic.DataReadSQLiteFavourites();
@@ -481,9 +491,9 @@ public partial class FrmMainApp
         LstFavourites.Clear();
         AutoCompleteStringCollection autoCompleteCustomSource = new();
         frmMainAppInstance.cbx_Favourites.Items.Clear();
-        foreach (DataRow drFavorite in dtFavourites.Rows)
+        foreach (DataRow drFavourite in dtFavourites.Rows)
         {
-            string locationName = drFavorite[columnName: "locationName"]
+            string locationName = drFavourite[columnName: "locationName"]
                 .ToString();
             LstFavourites.Add(item: locationName);
             autoCompleteCustomSource.Add(value: locationName);

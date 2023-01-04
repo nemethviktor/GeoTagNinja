@@ -1754,57 +1754,6 @@ internal static partial class HelperStatic
         return returnVal;
     }
 
-    /// <summary>
-    ///     Responsible for pulling the altitude response for the API
-    /// </summary>
-    /// <param name="latitude">As on the tin.</param>
-    /// <param name="longitude">As on the tin.</param>
-    /// <returns>Structured altitude response</returns>
-    private static GeoResponseAltitude API_ExifGetGeoDataFromWebAltitude(string latitude,
-                                                                         string longitude)
-    {
-        if (SGeoNamesUserName == null)
-        {
-            try
-            {
-                SGeoNamesUserName = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_UserName");
-                SGeoNamesPwd = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_Pwd");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-            }
-        }
-
-        GeoResponseAltitude returnVal = new();
-        RestClient client = new(baseUrl: "http://api.geonames.org/")
-        {
-            Authenticator = new HttpBasicAuthenticator(username: SGeoNamesUserName, password: SGeoNamesPwd)
-        };
-
-        RestRequest request_Altitude = new(resource: "srtm1JSON?lat=" + latitude + "&lng=" + longitude);
-        RestResponse response_Altitude = client.ExecuteGet(request: request_Altitude);
-        // check API reponse is OK
-        if (response_Altitude.Content != null && response_Altitude.Content.Contains(value: "the hourly limit of "))
-        {
-            SApiOkay = false;
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + response_Altitude.Content, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
-        }
-        else if (response_Altitude.StatusCode.ToString() == "OK")
-        {
-            SApiOkay = true;
-            JObject data = (JObject)JsonConvert.DeserializeObject(value: response_Altitude.Content);
-            GeoResponseAltitude geoResponseAltitude = GeoResponseAltitude.FromJson(Json: data.ToString());
-            returnVal = geoResponseAltitude;
-        }
-        else
-        {
-            SApiOkay = false;
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + response_Altitude.StatusCode, caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
-        }
-
-        return returnVal;
-    }
 
     /// <summary>
     ///     Responsible for pulling the latest prod-version number of exifTool from exiftool.org
@@ -1889,13 +1838,9 @@ internal static partial class HelperStatic
         dtReturn.Columns.Add(columnName: "City");
         dtReturn.Columns.Add(columnName: "State");
         dtReturn.Columns.Add(columnName: "Sub_location");
+        dtReturn.Columns.Add(columnName: "GPSAltitude");
         dtReturn.Columns.Add(columnName: "timezoneId");
 
-        // logic: it's likely that API info doesn't change much...ever. 
-        // Given that in 2022 Crimea is still part of Ukraine according to API response I think this data is static
-        // ....so no need to query stuff that may already be locally available.
-        // FYI this only gets amended when this button gets pressed or if map-to-location button gets pressed on the main form.
-        // ... also on an unrelated note Toponomy vs Toponmy the API calls it one thing and Wikipedia calls it another so go figure
         EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in FrmMainApp.DtToponomySessionData.AsEnumerable()
                                                            where dataRow.Field<string>(columnName: "lat") == lat && dataRow.Field<string>(columnName: "lng") == lng
                                                            select dataRow;
@@ -1910,6 +1855,7 @@ internal static partial class HelperStatic
         string City = "";
         string State = "";
         string Sub_location = "";
+        string Altitude = "0";
         string timezoneId = "";
 
         // As per https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 (see below comment a few lines down)
@@ -1928,6 +1874,9 @@ internal static partial class HelperStatic
                     inputVal: CountryCode,
                     returnWhat: "Country")
                 ;
+
+            Altitude = lstReturnToponomyData[index: 0][columnName: "GPSAltitude"]
+                .ToString();
 
             timezoneId = lstReturnToponomyData[index: 0][columnName: "timezoneId"]
                 .ToString();
@@ -2012,6 +1961,7 @@ internal static partial class HelperStatic
             drReturnRow[columnName: "City"] = City;
             drReturnRow[columnName: "State"] = State;
             drReturnRow[columnName: "Sub_location"] = Sub_location;
+            drReturnRow[columnName: "GPSAltitude"] = Altitude;
             drReturnRow[columnName: "timezoneId"] = timezoneId;
 
             dtReturn.Rows.Add(row: drReturnRow);
@@ -2051,6 +2001,7 @@ internal static partial class HelperStatic
                     dtWriteToSQLite.Columns.Add(columnName: "AdminName4");
                     dtWriteToSQLite.Columns.Add(columnName: "ToponymName");
                     dtWriteToSQLite.Columns.Add(columnName: "CountryCode");
+                    dtWriteToSQLite.Columns.Add(columnName: "GPSAltitude");
                     dtWriteToSQLite.Columns.Add(columnName: "timezoneId");
 
                     for (int index = 0; index < readJsonToponomy.Geonames.Length; index++)
@@ -2073,6 +2024,9 @@ internal static partial class HelperStatic
                                 returnWhat: "Country"
                             );
                         }
+
+                        Altitude = readJsonToponomy.Geonames[index]
+                            .Srtm3.ToString();
 
                         Distance = readJsonToponomy.Geonames[index]
                             .Distance;
@@ -2162,6 +2116,7 @@ internal static partial class HelperStatic
                         drApiToponomyRow[columnName: "City"] = City;
                         drApiToponomyRow[columnName: "State"] = State;
                         drApiToponomyRow[columnName: "Sub_location"] = Sub_location;
+                        drApiToponomyRow[columnName: "GPSAltitude"] = Altitude;
                         drApiToponomyRow[columnName: "timezoneId"] = timezoneId;
 
                         dtReturn.Rows.Add(row: drApiToponomyRow);
@@ -2181,6 +2136,7 @@ internal static partial class HelperStatic
                         drWriteToSqLiteRow[columnName: "ToponymName"] = readJsonToponomy.Geonames[index]
                             .ToponymName;
                         drWriteToSqLiteRow[columnName: "CountryCode"] = CountryCode;
+                        drWriteToSqLiteRow[columnName: "GPSAltitude"] = Altitude;
                         drWriteToSqLiteRow[columnName: "timezoneId"] = timezoneId;
 
                         dtWriteToSQLite.Rows.Add(row: drWriteToSqLiteRow);
@@ -2206,6 +2162,8 @@ internal static partial class HelperStatic
                             toponymName: dtWriteToSQLite.Rows[index: 0][columnName: "ToponymName"]
                                 .ToString(),
                             countryCode: dtWriteToSQLite.Rows[index: 0][columnName: "CountryCode"]
+                                .ToString(),
+                            altitude: dtWriteToSQLite.Rows[index: 0][columnName: "GPSAltitude"]
                                 .ToString(),
                             timezoneId: dtWriteToSQLite.Rows[index: 0][columnName: "timezoneId"]
                                 .ToString()
@@ -2241,6 +2199,8 @@ internal static partial class HelperStatic
                             toponymName: dtWriteToSQLite.Rows[index: 0][columnName: "ToponymName"]
                                 .ToString(),
                             countryCode: dtWriteToSQLite.Rows[index: 0][columnName: "CountryCode"]
+                                .ToString(),
+                            altitude: dtWriteToSQLite.Rows[index: 0][columnName: "GPSAltitude"]
                                 .ToString(),
                             timezoneId: dtWriteToSQLite.Rows[index: 0][columnName: "timezoneId"]
                                 .ToString()
@@ -2326,6 +2286,7 @@ internal static partial class HelperStatic
                         adminName4: "",
                         toponymName: "",
                         countryCode: "",
+                        altitude: "",
                         timezoneId: ""
                     );
                 }
@@ -2335,92 +2296,6 @@ internal static partial class HelperStatic
         return dtReturn;
     }
 
-    /// <summary>
-    ///     Performs a search in the local SQLite database for cached altitude info and if finds it, returns that, else queries
-    ///     the API
-    /// </summary>
-    /// <param name="lat">latitude/longitude to be queried</param>
-    /// <param name="lng">latitude/longitude to be queried</param>
-    /// <returns>
-    ///     See summary. Returns the altitude info either from SQLite if available or the API in DataTable for further
-    ///     processing
-    /// </returns>
-    internal static DataTable DTFromAPIExifGetAltitudeFromWebOrDT(string lat,
-                                                                  string lng)
-    {
-        DataTable dt_Return = new();
-        dt_Return.Clear();
-        dt_Return.Columns.Add(columnName: "Altitude");
-
-        string altitude = "0";
-
-        EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in FrmMainApp.DtAltitudeSessionData.AsEnumerable()
-                                                           where dataRow.Field<string>(columnName: "lat") == lat && dataRow.Field<string>(columnName: "lng") == lng
-                                                           select dataRow;
-        List<string> lstReturnAltitudeSessionData = new();
-
-        Parallel.ForEach(source: drDataTableData, body: dataRow =>
-            {
-                string settingValue = dataRow[columnName: "Altitude"]
-                    .ToString();
-                lstReturnAltitudeSessionData.Add(item: settingValue);
-            })
-            ;
-
-        if (lstReturnAltitudeSessionData.Count > 0)
-        {
-            altitude = lstReturnAltitudeSessionData.FirstOrDefault();
-        }
-        else if (SApiOkay)
-        {
-            GeoResponseAltitude readJsonAltitude = API_ExifGetGeoDataFromWebAltitude(
-                latitude: lat,
-                longitude: lng
-            );
-            if (readJsonAltitude.Srtm1 != null)
-            {
-                string tmpAltitude = readJsonAltitude.Srtm1.ToString();
-                tmpAltitude = tmpAltitude.ToString(provider: CultureInfo.InvariantCulture);
-
-                // ignore if the API sends back something silly.
-                // basically i'm assuming some ppl might take pics on an airplane but even those don't fly this high.
-                // also if you're in the Mariana Trench, do send me a photo, will you?
-                if (Math.Abs(value: int.Parse(s: tmpAltitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture)) > 32000)
-                {
-                    tmpAltitude = "0";
-                }
-
-                altitude = tmpAltitude;
-                // write back to sql the new stuff
-
-                GenericUpdateAddToDataTableAltitude(
-                    lat: lat,
-                    lng: lng,
-                    altitude: altitude
-                );
-            }
-
-            // this will be a null value if Unauthorised, we'll ignore that.
-            if (readJsonAltitude.Lat == null && SApiOkay)
-            {
-                // write back blank
-                GenericUpdateAddToDataTableAltitude(
-                    lat: lat,
-                    lng: lng,
-                    altitude: ""
-                );
-            }
-        }
-
-        if (SApiOkay || lstReturnAltitudeSessionData.Count > 0)
-        {
-            DataRow drReturnRow = dt_Return.NewRow();
-            drReturnRow[columnName: "Altitude"] = altitude;
-            dt_Return.Rows.Add(row: drReturnRow);
-        }
-
-        return dt_Return;
-    }
 
     /// <summary>
     ///     Converts the API response from gitHub (to check GTN's newest version) to a DataTable

@@ -19,3 +19,7 @@ btn_Dates_None,None,Aucun
 btn_InsertTakenDate,Insert,Insérer
 btn_InsertCreateDate,Insert,Insérer
 btn_InsertFromTakenDate,Use TakenDate,Utiliser la Date de prise de vue
+btn_Save,Save the Current Changes,
+btn_Close,Close,
+btn_Delete,Delete,
+btn_Rename,Rename,

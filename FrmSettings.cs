@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Windows.Controls;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using CheckBox = System.Windows.Forms.CheckBox;
@@ -31,30 +30,33 @@ public partial class FrmSettings : Form
 
         // Gets the various controls' labels and values (eg "latitude" and "51.002")
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        foreach (Control cItem in c)
+        if (c != null)
         {
-            if (cItem.Name == "cbx_Language")
+            foreach (Control cItem in c)
             {
-                List<KeyValuePair<string, string>> kvps = AncillaryListsArrays.GetLanguages();
-                for (int index = 0; index < kvps.Count; index++)
+                if (cItem.Name == "cbx_Language")
                 {
-                    KeyValuePair<string, string> kvp = kvps[index];
-                    string thisLanguage = kvp.Value + " (" + kvp.Key + ")";
-                    cbx_Language.Items.Add(thisLanguage);
-                    if (thisLanguage.Contains(HelperStatic.DataReadSQLiteSettings(
-                                                  tableName: "settings",
-                                                  settingTabPage: cItem.Parent.Name,
-                                                  settingId: cItem.Name
-                                              )))
+                    List<KeyValuePair<string, string>> kvps = AncillaryListsArrays.GetLanguages();
+                    for (int index = 0; index < kvps.Count; index++)
                     {
-                        cbx_Language.SelectedIndex = index;
+                        KeyValuePair<string, string> kvp = kvps[index];
+                        string thisLanguage = kvp.Value + " (" + kvp.Key + ")";
+                        cbx_Language.Items.Add(thisLanguage);
+                        if (thisLanguage.Contains(HelperStatic.DataReadSQLiteSettings(
+                                                      tableName: "settings",
+                                                      settingTabPage: cItem.Parent.Name,
+                                                      settingId: cItem.Name
+                                                  )))
+                        {
+                            cbx_Language.SelectedIndex = index;
+                        }
                     }
                 }
-            }
 
-            else
-            {
-                HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
+                else
+                {
+                    HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
+                }
             }
         }
 

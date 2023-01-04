@@ -481,7 +481,6 @@ public partial class FrmEditFileData : Form
                                       EventArgs e)
     {
         DataTable dtToponomy = new();
-        DataTable dtAltitude = new();
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         //reset this just in case.
@@ -506,32 +505,6 @@ public partial class FrmEditFileData : Form
                     else
                     {
                         getFromWeb_Toponomy(fileNameWithoutPath: lvi.Text);
-                        // get lat/long from main listview
-                        lvi.ForeColor = Color.Red;
-                    }
-                }
-
-                break;
-            case "btn_getFromWeb_Altitude":
-                getFromWeb_Altitude(fileNameWithoutPath: "");
-
-                break;
-            case "btn_getAllFromWeb_Altitude":
-                foreach (ListViewItem lvi in lvw_FileListEditImages.Items)
-                {
-                    string fileName = lvi.Text;
-                    // for "this" file do the same as "normal" getfromweb
-                    if (fileName ==
-                        lvw_FileListEditImages.SelectedItems[index: 0]
-                            .Text)
-                    {
-                        getFromWeb_Altitude(fileNameWithoutPath: "");
-
-                        // no need to write back to sql because it's done automatically on textboxChange
-                    }
-                    else
-                    {
-                        getFromWeb_Altitude(fileNameWithoutPath: lvi.Text);
                         // get lat/long from main listview
                         lvi.ForeColor = Color.Red;
                     }
@@ -635,6 +608,8 @@ public partial class FrmEditFileData : Form
                                               .ToString()));
             toponomyOverwrites.Add(item: ("Sub_location", dtToponomy.Rows[index: 0][columnName: "Sub_location"]
                                               .ToString()));
+            toponomyOverwrites.Add(item: ("GPSAltitude", dtToponomy.Rows[index: 0][columnName: "GPSAltitude"]
+                                              .ToString()));
 
             string TZ = dtToponomy.Rows[index: 0][columnName: "timeZoneId"]
                 .ToString();
@@ -715,6 +690,9 @@ public partial class FrmEditFileData : Form
                         case "Sub_location":
                             tbx_Sub_location.Text = toponomyDetail.toponomyOverwriteVal;
                             break;
+                        case "GPSAltitude":
+                            tbx_GPSAltitude.Text = toponomyDetail.toponomyOverwriteVal;
+                            break;
                         case "OffsetTime":
                             tbx_OffsetTime.Text = toponomyDetail.toponomyOverwriteVal;
                             break;
@@ -761,77 +739,6 @@ public partial class FrmEditFileData : Form
                         settingId: toponomyDetail.toponomyOverwriteName,
                         settingValue: toponomyDetail.toponomyOverwriteVal
                     );
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    ///     Pulls data from the various APIs and fills up the listView and fills the TextBoxes and/or SQLite.
-    /// </summary>
-    /// <param name="fileNameWithoutPath">Blank if used as "pull one file" otherwise the name of the file w/o Path</param>
-    private void getFromWeb_Altitude(string fileNameWithoutPath = "")
-    {
-        DataTable dtAltitude;
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        double parsedLat;
-        double parsedLng;
-        string strGpsLatitude;
-        string strGpsLongitude;
-
-        if (fileNameWithoutPath == "")
-        {
-            strGpsLatitude = tbx_GPSLatitude.Text.ToString(provider: CultureInfo.InvariantCulture);
-            strGpsLongitude = tbx_GPSLongitude.Text.ToString(provider: CultureInfo.InvariantCulture);
-
-            if (double.TryParse(s: strGpsLatitude,
-                                style: NumberStyles.Any,
-                                provider: CultureInfo.InvariantCulture,
-                                result: out parsedLat) &&
-                double.TryParse(s: strGpsLongitude,
-                                style: NumberStyles.Any,
-                                provider: CultureInfo.InvariantCulture,
-                                result: out parsedLng))
-            {
-                dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrDT(lat: strGpsLatitude, lng: strGpsLongitude);
-
-                if (dtAltitude.Rows.Count > 0)
-                {
-                    tbx_GPSAltitude.Text = dtAltitude.Rows[index: 0][columnName: "Altitude"]
-                        .ToString();
-                }
-                // no need to write back to sql because it's done automatically on textboxChange
-            }
-            else
-            {
-                foreach (ListViewItem lvi in lvw_FileListEditImages.Items)
-                {
-                    string fileName = lvi.Text;
-
-                    // get lat/long from main listview
-                    strGpsLatitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileName)
-                        .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLatitude"]
-                                      .Index]
-                        .Text.ToString(provider: CultureInfo.InvariantCulture);
-                    strGpsLongitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileName)
-                        .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLongitude"]
-                                      .Index]
-                        .Text.ToString(provider: CultureInfo.InvariantCulture);
-                    if (double.TryParse(s: strGpsLatitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strGpsLongitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
-                    {
-                        dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrDT(lat: strGpsLatitude, lng: strGpsLongitude);
-                        if (dtAltitude.Rows.Count > 0)
-                        {
-                            string altitude = dtAltitude.Rows[index: 0][columnName: "Altitude"]
-                                .ToString();
-                            HelperStatic.GenericUpdateAddToDataTable(
-                                dt: DtFileDataToWriteStage1PreQueue,
-                                fileNameWithoutPath: lvi.Text,
-                                settingId: "GPSAltitude",
-                                settingValue: altitude
-                            );
-                        }
-                    }
                 }
             }
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Documents;
 
 namespace GeoTagNinja;
 
@@ -401,7 +400,7 @@ internal static class AncillaryListsArrays
     internal static string[] ToponomyReplaces()
     {
         string[] result =
-            { "City", "State", "Sub_location" };
+            { "City", "State", "Sub_location", "GPSAltitude" };
         return result;
     }
 

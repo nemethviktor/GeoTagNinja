@@ -156,7 +156,6 @@ internal static partial class HelperStatic
                                                   Form senderForm)
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        FrmMainApp.Logger.Trace(message: "Starting - cItem: " + cItem.Name);
         if (
             cItem is Label ||
             cItem is GroupBox ||
@@ -168,6 +167,7 @@ internal static partial class HelperStatic
             //||
         )
         {
+            FrmMainApp.Logger.Trace(message: "Starting - cItem: " + cItem.Name);
             // for some reason there is no .Last() being offered here
             cItem.Text = DataReadDTObjectText(
                 objectType: cItem.GetType()
@@ -195,6 +195,22 @@ internal static partial class HelperStatic
                     settingTabPage: cItem.Parent.Name,
                     settingId: cItem.Name
                 );
+            }
+        }
+        else if (cItem is NumericUpDown)
+        {
+            if (senderForm.Name == "FrmSettings")
+            {
+                NumericUpDown nud = (NumericUpDown)cItem;
+                FrmMainApp.Logger.Trace(message: "Starting - cItem: " + nud.Name);
+                _ = decimal.TryParse(DataReadSQLiteSettings(
+                                         tableName: "settings",
+                                         settingTabPage: cItem.Parent.Name,
+                                         settingId: cItem.Name
+                                     ), out decimal outVal);
+
+                nud.Value = outVal;
+                nud.Text = outVal.ToString(CultureInfo.InvariantCulture);
             }
         }
     }
@@ -244,48 +260,6 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    /// Updates the sessions storage for the Altitude DT
-    /// </summary>
-    /// <param name="lat">string value of lat</param>
-    /// <param name="lng">string value of lng</param>
-    /// <param name="altitude">Value to write</param>
-    internal static void GenericUpdateAddToDataTableAltitude(
-        string lat,
-        string lng,
-        string altitude)
-    {
-        lock (TableLock)
-        {
-            // delete any existing rows with the current combination
-            for (int i = FrmMainApp.DtAltitudeSessionData.Rows.Count - 1; i >= 0; i--)
-            {
-                DataRow thisDr = FrmMainApp.DtAltitudeSessionData.Rows[index: i];
-                if (
-                    thisDr[columnName: "lat"]
-                        .ToString() ==
-                    lat &&
-                    thisDr[columnName: "lng"]
-                        .ToString() ==
-                    lng
-                )
-                {
-                    thisDr.Delete();
-                }
-            }
-
-            FrmMainApp.DtAltitudeSessionData.AcceptChanges();
-
-            // add new
-            DataRow newDr = FrmMainApp.DtAltitudeSessionData.NewRow();
-            newDr[columnName: "lat"] = lat;
-            newDr[columnName: "lng"] = lng;
-            newDr[columnName: "Altitude"] = altitude;
-            FrmMainApp.DtAltitudeSessionData.Rows.Add(row: newDr);
-            FrmMainApp.DtAltitudeSessionData.AcceptChanges();
-        }
-    }
-
-    /// <summary>
     /// Updates the sessions storage for the Toponomy DT
     /// </summary>
     /// <param name="lat">string value of lat</param>
@@ -296,8 +270,9 @@ internal static partial class HelperStatic
     /// <param name="adminName4">Value to write</param>
     /// <param name="toponymName">Value to write</param>
     /// <param name="countryCode">Value to write</param>
+    /// <param name="GPSAltitude">Value to write</param>
     /// <param name="timezoneId">Value to write</param>
-    internal static void GenericUpdateAddToDataTableTopopnomy(
+    private static void GenericUpdateAddToDataTableTopopnomy(
         string lat,
         string lng,
         string adminName1,
@@ -306,6 +281,7 @@ internal static partial class HelperStatic
         string adminName4,
         string toponymName,
         string countryCode,
+        string altitude,
         string timezoneId
     )
     {
@@ -340,6 +316,7 @@ internal static partial class HelperStatic
             newDr[columnName: "AdminName4"] = adminName4;
             newDr[columnName: "ToponymName"] = toponymName;
             newDr[columnName: "CountryCode"] = countryCode;
+            newDr[columnName: "GPSAltitude"] = altitude;
             newDr[columnName: "timezoneId"] = timezoneId;
 
             FrmMainApp.DtToponomySessionData.Rows.Add(row: newDr);
@@ -556,14 +533,8 @@ internal static partial class HelperStatic
         FrmMainApp.DtToponomySessionData.Columns.Add("AdminName4");
         FrmMainApp.DtToponomySessionData.Columns.Add("ToponymName");
         FrmMainApp.DtToponomySessionData.Columns.Add("CountryCode");
+        FrmMainApp.DtToponomySessionData.Columns.Add("GPSAltitude");
         FrmMainApp.DtToponomySessionData.Columns.Add("timezoneId");
-
-        //DtAltitudeSessionData;
-        FrmMainApp.DtAltitudeSessionData = new DataTable();
-        FrmMainApp.DtAltitudeSessionData.Clear();
-        FrmMainApp.DtAltitudeSessionData.Columns.Add("lat");
-        FrmMainApp.DtAltitudeSessionData.Columns.Add("lng");
-        FrmMainApp.DtAltitudeSessionData.Columns.Add("Altitude");
     }
 
     /// <summary>
