@@ -62,6 +62,6 @@ lbl_CreateDateMinutesShift,Mins,Minutes
 lbl_CreateDateSecondsShift,Secs,Secs
 lbl_OffsetTime,Time Zone,Fuseau horaire
 lbl_SelectColsTitle,Select Columns,Selectionner les colonnes
-lbl_ChoiceOfferCount,Show this many toponym options,
-lbl_ChoiceRadius,In the Radius [kms],
-lbl_Favourites,Favourites,
+lbl_ChoiceOfferCount,Show this many toponym options,Montrer toutes les options de toponymie
+lbl_ChoiceRadius,In the Radius [kms],Dans un rayon de [kms]
+lbl_Favourites,Favourites,Favoris
