@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
 using NLog;
@@ -16,179 +15,19 @@ namespace GeoTagNinja.View.ListView;
  * TODOs
  * * Check if to migrate Context Menu into this class
  * * Hide Items.Clear
+ * * When EXIFTool, etc do not use the value of column "Text" anymore,
+ *   remove adding item extension and showing file system dir names
  */
 
 public partial class FileListView : System.Windows.Forms.ListView
 {
-    internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-    internal DataTable _objectNames;
-
-    internal ListViewColumnSorter LvwColumnSorter;
-
-
-    public FileListView()
-    {
-        Logger.Info(message: "Creating List View ...");
-        InitializeComponent();
-        SetStyle();
-    }
 
     /// <summary>
-    ///     The list of directory elements to display.
-    /// </summary>
-    public DirectoryElementCollection DirectoryElements { get; private set; } = new();
-
-
-    #region Internal Update Logic
-
-    /// <summary>
-    ///     Adds a new listitem to lvw_FileList listview
-    /// </summary>
-    /// <param name="fileNameWithoutPath">Name of file to be added</param>
-    private void addListItem(DirectoryElement item)
-    {
-        #region icon handlers
-
-        //https://stackoverflow.com/a/37806517/3968494
-        NativeMethods.SHFILEINFOW shfi = new();
-        IntPtr hSysImgList = NativeMethods.SHGetFileInfo(pszPath: "",
-                                                         dwFileAttributes: 0,
-                                                         psfi: ref shfi,
-                                                         cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
-                                                         uFlags: NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
-        Debug.Assert(condition: hSysImgList != IntPtr.Zero); // cross our fingers and hope to succeed!
-
-        // Set the ListView control to use that image list.
-        IntPtr hOldImgList = NativeMethods.SendMessage(hWnd: Handle,
-                                                       msg: NativeMethods.LVM_SETIMAGELIST,
-                                                       wParam: NativeMethods.LVSIL_SMALL,
-                                                       lParam: hSysImgList);
-
-        // If the ListView control already had an image list, delete the old one.
-        if (hOldImgList != IntPtr.Zero)
-        {
-            NativeMethods.ImageList_Destroy(hImageList: hOldImgList);
-        }
-
-        // Get the items from the file system, and add each of them to the ListView,
-        // complete with their corresponding name and icon indices.
-        IntPtr himl;
-        if (item.FullPathAndName != SpecialFolder.MyComputer.ToString())
-        {
-            himl = NativeMethods.SHGetFileInfo(pszPath: item.FullPathAndName,
-                                               dwFileAttributes: 0,
-                                               psfi: ref shfi,
-                                               cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
-                                               uFlags: NativeMethods.SHGFI_DISPLAYNAME | NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
-        }
-        else
-        {
-            himl = NativeMethods.SHGetFileInfo(pszPath: item.ItemName,
-                                               dwFileAttributes: 0,
-                                               psfi: ref shfi,
-                                               cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
-                                               uFlags: NativeMethods.SHGFI_DISPLAYNAME | NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
-        }
-
-        //Debug.Assert(himl == hSysImgList); // should be the same imagelist as the one we set
-
-        #endregion
-
-        List<string> subItemList = new();
-        if (item.Type == DirectoryElement.ElementType.File)
-        {
-            foreach (ColumnHeader columnHeader in Columns)
-            {
-                if (columnHeader.Name != "clh_FileName")
-                {
-                    subItemList.Add(item: "-");
-                }
-            }
-            // For each non-file (i.e. dirs), create empty sub items (needed for sorting)
-        }
-        else
-        {
-            foreach (ColumnHeader columnHeader in Columns)
-            {
-                if (columnHeader.Name != "clh_FileName")
-                {
-                    subItemList.Add(item: "");
-                }
-            }
-        }
-
-        ListViewItem lvi = new();
-
-        // dev comment --> https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow
-        // SHGFI_DISPLAYNAME (0x000000200)
-        // Retrieve the display name for the file, which is the name as it appears in Windows Explorer.
-        // The name is copied to the szDisplayName member of the structure specified in psfi.
-        // The returned display name uses the long file name, if there is one, rather than the 8.3 form of the file name.
-        // [!!!!] Note that the display name can be affected by settings such as whether extensions are shown.
-
-        // TLDR if Windows User has "show extensions" set to OFF in Windows Explorer, they won't show here either.
-        // The repercussions of that is w/o an extension fileinfo.exists will return false and exiftool won't run/find it.
-
-        // With that in mind if we're missing the extension then we'll force it back on.
-        if (!string.IsNullOrEmpty(value: item.Extension))
-        {
-            if (shfi.szDisplayName.Contains(value: item.Extension))
-            {
-                lvi.Text = shfi.szDisplayName;
-                item.DisplayName = shfi.szDisplayName;
-            }
-            else
-            {
-                lvi.Text = shfi.szDisplayName + item.Extension;
-                item.DisplayName = shfi.szDisplayName + item.Extension;
-            }
-        }
-        else
-        {
-            // this should prevent showing silly string values for special folders (like if your Pictures folder has been moved to say Digi, it'd have shown "Digi" but since that doesn't exist per se it'd have caused an error.
-            // same for non-English places. E.g. "Documents and Settings" in HU would be displayed as "Felhasználók" but that folder is still actually called Documents and Settings, but the label is "fake".
-            if (item.Type == DirectoryElement.ElementType.SubDirectory ||
-                item.Type == DirectoryElement.ElementType.ParentDirectory)
-            {
-                lvi.Text = item.ItemName;
-                item.DisplayName = item.ItemName;
-            }
-            else
-            {
-                lvi.Text = shfi.szDisplayName;
-                item.DisplayName = shfi.szDisplayName;
-            }
-        }
-
-        lvi.ImageIndex = shfi.iIcon;
-        if (item.Type == DirectoryElement.ElementType.File)
-        {
-            if (lvi.Index % 10 == 0)
-            {
-                Application.DoEvents();
-                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                ScrollToDataPoint(itemText: item.ItemName);
-            }
-
-            UpdateItemColour(itemText: item.ItemName, color: Color.Gray);
-        }
-
-        // don't add twice. this could happen if user does F5 too fast/too many times/is derp. (mostly the last one.)
-        if (FindItemWithText(text: lvi.Text) == null)
-        {
-            lvi.Tag = item;
-            Items.Add(value: lvi)
-                .SubItems.AddRange(items: subItemList.ToArray());
-        }
-    }
-
-    #endregion
-
-    /// <summary>
-    ///     this is to deal with the icons in listview
-    ///     from https://stackoverflow.com/a/37806517/3968494
+    /// Class containing native method (shell32, etc) definitions in order
+    /// to retrieve file and directory information.
+    /// 
+    /// This is to deal with the icons in listview
+    /// from https://stackoverflow.com/a/37806517/3968494
     /// </summary>
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming"), SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local"), SuppressMessage(category: "ReSharper", checkId: "IdentifierTypo"), SuppressMessage(category: "ReSharper", checkId: "StringLiteralTypo"), SuppressMessage(category: "ReSharper", checkId: "MemberCanBePrivate.Local"), SuppressMessage(category: "ReSharper", checkId: "FieldCanBeMadeReadOnly.Local")]
     private static class NativeMethods
@@ -261,10 +100,244 @@ public partial class FileListView : System.Windows.Forms.ListView
     }
 
 
+    /// <summary>
+    /// Class containing all the relevant column names to be used
+    /// when e.g. querying for information.
+    /// </summary>
+    public static class ColumnNames
+    {
+        public static string FILENAME = "FileName";
+        public static string COORDINATES = "Coordinates";
+    }
+
+
+    // Default values to set for entries
+    public static string UNKNOWN_VALUE_FILE = "-";
+    // Note - if this is changed, all checks for unknown need to be udpated
+    // because currently this works via item.replace and check versus ""
+    // but replace did not take ""
+    public static string UNKNOWN_VALUE_DIR = "";
+
+    /// <summary>
+    /// Every column has this prefix for its name when it is created.
+    /// </summary>
+    public static string COL_NAME_PREFIX = "clh_";
+
+    #region internal vars
+
+    internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+    /// <summary>
+    ///     The used application language
+    /// </summary>
+    private string _AppLanguage = "";
+
+    /// <summary>
+    ///     The list of columns to show (without prefix)
+    /// </summary>
+    internal List<string> _cfg_Col_Names = new List<string>();
+
+    /// <summary>
+    ///     The default order of the columns to show (without prefix)
+    /// </summary>
+    internal Dictionary<string, int> _cfg_Col_Order_Default = new Dictionary<string, int>();
+
+    /// <summary>
+    ///     The used sorter
+    /// </summary>
+    internal ListViewColumnSorter LvwColumnSorter;
+
+    /// <summary>
+    ///     Tracks if the initializer ReadAndApplySetting was called.
+    /// </summary>
+    internal bool _isInitialized = false;
+
+    /// <summary>
+    /// Counter for files in the list - incremented in addListItem method.
+    /// </summary>
+    internal int _fileCount = -1;
+
+    /// <summary>
+    /// Pointer to the SHFILEINFO Structure that is initialized to be
+    /// used for this list view.
+    /// </summary>
+    private NativeMethods.SHFILEINFOW shfi = new();
+
+    #endregion
+
+
+    #region External Visible Properties
+
+    /// <summary>
+    ///     The list of directory elements to display.
+    /// </summary>
+    public DirectoryElementCollection DirectoryElements { get; private set; } = new();
+
+    /// <summary>
+    /// The number of elements of type file in the view as
+    /// loaded.
+    /// </summary>
+    public int FileCount { get { return _fileCount; } }
+
+    #endregion
+
+
+    /// <summary>
+    ///     Constructor
+    /// </summary>
+    public FileListView()
+    {
+        Logger.Info(message: "Creating List View ...");
+        InitializeComponent();
+    }
+
+
+    #region Internal Update Logic
+
+    /// <summary>
+    ///     Adds a new listitem to lvw_FileList listview
+    /// </summary>
+    /// <param name="fileNameWithoutPath">Name of file to be added</param>
+    private void addListItem(DirectoryElement item)
+    {
+        #region icon handlers
+
+        //https://stackoverflow.com/a/37806517/3968494
+        // Get the items from the file system, and add each of them to the ListView,
+        // complete with their corresponding name and icon indices.
+        
+        IntPtr himl;
+
+        if (item.Type != DirectoryElement.ElementType.MyComputer)
+        {
+            himl = NativeMethods.SHGetFileInfo(pszPath: item.FullPathAndName,
+                                               dwFileAttributes: 0,
+                                               psfi: ref shfi,
+                                               cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
+                                               uFlags: NativeMethods.SHGFI_DISPLAYNAME | NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
+        }
+        else
+        {
+            himl = NativeMethods.SHGetFileInfo(pszPath: item.ItemName,
+                                               dwFileAttributes: 0,
+                                               psfi: ref shfi,
+                                               cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
+                                               uFlags: NativeMethods.SHGFI_DISPLAYNAME | NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
+        }
+
+        //Debug.Assert(himl == hSysImgList); // should be the same imagelist as the one we set
+
+        #endregion
+
+        // Create a default ("empty") set of col entries for the new list item entry
+        List<string> subItemList = new();
+        if (item.Type == DirectoryElement.ElementType.File)
+        {
+            foreach (ColumnHeader columnHeader in Columns)
+            {
+                if (columnHeader.Name != COL_NAME_PREFIX + ColumnNames.FILENAME)
+                {
+                    subItemList.Add(item: UNKNOWN_VALUE_FILE);
+                }
+            }
+            // For each non-file (i.e. dirs), create empty sub items (needed for sorting)
+        }
+        else
+        {
+            foreach (ColumnHeader columnHeader in Columns)
+            {
+                if (columnHeader.Name != COL_NAME_PREFIX + ColumnNames.FILENAME)
+                {
+                    subItemList.Add(item: UNKNOWN_VALUE_DIR);
+                }
+            }
+        }
+
+        ListViewItem lvi = new();
+
+        item.DisplayName = shfi.szDisplayName;
+
+        #region Set LVI Text depending on whether displayname is usable for FS operations
+
+        // dev comment --> https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow
+        // SHGFI_DISPLAYNAME (0x000000200)
+        // Retrieve the display name for the file, which is the name as it appears in Windows Explorer.
+        // The name is copied to the szDisplayName member of the structure specified in psfi.
+        // The returned display name uses the long file name, if there is one, rather than the 8.3 form of the file name.
+        // [!!!!] Note that the display name can be affected by settings such as whether extensions are shown.
+
+        // TLDR if Windows User has "show extensions" set to OFF in Windows Explorer, they won't show here either.
+        // The repercussions of that is w/o an extension fileinfo.exists will return false and exiftool won't run/find it.
+
+        // With that in mind if we're missing the extension then we'll force it back on.
+        if (!string.IsNullOrEmpty(value: item.Extension))
+        {
+            if (shfi.szDisplayName.Contains(value: item.Extension))
+            {
+                lvi.Text = shfi.szDisplayName;
+            }
+            else
+            {
+                lvi.Text = shfi.szDisplayName + item.Extension;
+            }
+        }
+        else
+        {
+            // this should prevent showing silly string values for special folder
+            // (like if your Pictures folder has been moved to say Digi, it'd have
+            // shown "Digi" but since that doesn't exist per se it'd have caused
+            // an error.
+            // same for non-English places. E.g. "Documents and Settings" in HU
+            // would be displayed as "Felhasználók" but that folder is still
+            // actually called Documents and Settings, but the label is "fake".
+            if (item.Type == DirectoryElement.ElementType.SubDirectory ||
+                item.Type == DirectoryElement.ElementType.MyComputer ||
+                item.Type == DirectoryElement.ElementType.ParentDirectory)
+            {
+                lvi.Text = item.ItemName;
+            }
+            else
+            {
+                lvi.Text = shfi.szDisplayName;
+            }
+        }
+
+        #endregion
+
+        // Set the icon to use out of the explorer icons
+        lvi.ImageIndex = shfi.iIcon;
+
+        // File items (to be parsed by exif tool) set in gray
+        if (item.Type == DirectoryElement.ElementType.File)
+        {
+            lvi.ForeColor = Color.Gray;
+        }
+
+        // Show progress every 10th item
+        if (lvi.Index % 10 == 0)
+        {
+            Application.DoEvents();
+            // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+            ScrollToDataPoint(itemText: item.ItemName);
+        }
+
+        // don't add twice. this could happen if user does F5 too fast/too many times/is derp. (mostly the last one.)
+        if (FindItemWithText(text: lvi.Text) == null)
+        {
+            lvi.Tag = item;
+            Items.Add(value: lvi)
+                .SubItems.AddRange(items: subItemList.ToArray());
+        }
+    }
+
+    #endregion
+
+
     #region Column Size and Order
 
     /// <summary>
-    ///     Reads the widths of individual CLHs from SQL, if not found assigns them "auto" (-2)
+    ///     Reads the widths of individual CLHs from SQL
     /// </summary>
     /// <exception cref="InvalidOperationException">If it encounters a missing CLH</exception>
     private void ColOrderAndWidth_Read()
@@ -300,26 +373,13 @@ public partial class FileListView : System.Windows.Forms.ListView
                                                    settingTabPage: "lvw_FileList",
                                                    settingId: settingIdToSend));
 
-            // this would be the default case 
+            // If no user preset is found, retrieve the default
+            // col order value
             if (colOrderIndexInt == 0)
             {
-                EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in _objectNames.AsEnumerable()
-                                                                   where dataRow.Field<string>(columnName: "objectName") == columnHeader.Name.Substring(startIndex: 4)
-                                                                   select dataRow;
-                List<int> lstReturn = new();
-
-                Parallel.ForEach(source: drDataTableData, body: dataRow =>
-                    {
-                        int settingValue = int.Parse(s: dataRow[columnName: "sqlOrder"]
-                                                         .ToString());
-                        lstReturn.Add(item: settingValue);
-                    })
-                    ;
-
-                // basically fileName will always come 0.
-                if (lstReturn.Count > 0)
+                if (_cfg_Col_Order_Default.ContainsKey(key: columnHeader.Name.Substring(startIndex: 4)))
                 {
-                    colOrderIndexInt = lstReturn[index: 0];
+                    colOrderIndexInt = _cfg_Col_Order_Default[columnHeader.Name.Substring(startIndex: 4)];
                 }
             }
 
@@ -379,7 +439,6 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <summary>
     ///     Sends the CLH width and column order to SQL for writing.
     /// </summary>
-    /// <param name="frmMainApp">Make a guess</param>
     private void ColOrderAndWidth_Write()
     {
         string settingIdToSend;
@@ -420,42 +479,35 @@ public partial class FileListView : System.Windows.Forms.ListView
     #endregion
 
 
-    #region SettingsStuff
-
-    private string _AppLanguage = "";
-    private readonly List<string> _columnIndizes = new();
+    #region Further Settings Stuff
 
 
     /// <summary>
-    ///     applies the names of columnheaders
+    ///     Setup the columns as read from the data table.
     /// </summary>
-    /// The list of columns as read from the defaults.
     private void SetupColumns()
     {
         Logger.Debug(message: "Starting");
 
+        foreach (string colName in _cfg_Col_Names)
+        {
+            ColumnHeader clh = new();
+            clh.Name = COL_NAME_PREFIX + colName;
+            Columns.Add(value: clh);
+            Logger.Trace(message: "Added column: " + colName);
+        }
+
+        // Encapsulate locatization - in case it fails above column setup still there...
         try
         {
-            _objectNames.DefaultView.Sort = "sqlOrder";
-            DataTable dt = _objectNames.DefaultView.ToTable();
-            foreach (DataRow dr in dt.Rows)
-            {
-                ColumnHeader clh = new();
-                string objectName = dr[columnName: "objectName"]
-                    .ToString();
-                clh.Name = "clh_" + objectName;
-                Columns.Add(value: clh);
-                _columnIndizes.Add(item: objectName);
-                Logger.Trace(message: "Loading: " + objectName);
-            }
-
             foreach (ColumnHeader clh in Columns)
             {
+                Logger.Trace(message: "Loading localization for: " + clh.Name);
                 clh.Text = HelperStatic.DataReadDTObjectText(
                     objectType: "ColumnHeader",
                     objectName: clh.Name
                 );
-                Logger.Trace(message: "Loading: " + clh.Name + " --> " + clh.Text);
+                Logger.Trace(message: "Loaded localization: " + clh.Name + " --> " + clh.Text);
             }
         }
         catch (Exception ex)
@@ -466,25 +518,36 @@ public partial class FileListView : System.Windows.Forms.ListView
     }
 
 
-    public void ReadAndApplySetting(string appLanguage,
-                                    DataTable objectNames)
+    /// <summary>
+    /// Extract the column names as well as their default ordering
+    /// from the given data table.
+    /// </summary>
+    /// <param name="dt"></param>
+    private void ExtractConfigInfoFromDT(DataTable dt)
     {
-        Logger.Debug(message: "Starting");
-        _AppLanguage = appLanguage;
-        _objectNames = objectNames;
-        SetupColumns();
+        // The columns to look in
+        string CFGCOL_COL_NAME = "objectName";
+        string CFGCOL_COL_ORDER_DEFAULT = "sqlOrder";
 
-        // Create the sorter for the list view
-        LvwColumnSorter = new ListViewColumnSorter();
-        ListViewItemSorter = LvwColumnSorter;
+        int backup_order_idx = 999;
 
-        // Apply column order and size
-        ColOrderAndWidth_Read();
-    }
-
-    public void PersistSettings()
-    {
-        ColOrderAndWidth_Write();
+        dt.DefaultView.Sort = "sqlOrder";
+        foreach (DataRow row in dt.DefaultView.ToTable().Rows)
+        {
+            string colName = row[CFGCOL_COL_NAME].ToString();
+            _cfg_Col_Names.Add(colName);
+            try
+            {
+                _cfg_Col_Order_Default[colName] = int.Parse(s: row[CFGCOL_COL_ORDER_DEFAULT].ToString());
+            }
+            catch
+            {
+                // There was no default set (or it was invalid) -> set backup default
+                Logger.Warn(message: "No order default found for column: " + colName);
+                _cfg_Col_Order_Default[CFGCOL_COL_NAME] = backup_order_idx;
+                backup_order_idx += 1;
+            }
+        }
     }
 
 
@@ -495,7 +558,118 @@ public partial class FileListView : System.Windows.Forms.ListView
         NativeMethods.SetWindowTheme(hWnd: Handle, pszSubAppName: "Explorer", pszSubIdList: null);
     }
 
+    private void InitializeImageList()
+    {
+        //https://stackoverflow.com/a/37806517/3968494
+        shfi = new();
+        IntPtr hSysImgList = NativeMethods.SHGetFileInfo(pszPath: "",
+                                                         dwFileAttributes: 0,
+                                                         psfi: ref shfi,
+                                                         cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
+                                                         uFlags: NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
+        Debug.Assert(condition: hSysImgList != IntPtr.Zero); // cross our fingers and hope to succeed!
+
+        // Set the ListView control to use that image list.
+        IntPtr hOldImgList = NativeMethods.SendMessage(hWnd: Handle,
+                                                       msg: NativeMethods.LVM_SETIMAGELIST,
+                                                       wParam: NativeMethods.LVSIL_SMALL,
+                                                       lParam: hSysImgList);
+
+        // If the ListView control already had an image list, delete the old one.
+        if (hOldImgList != IntPtr.Zero)
+        {
+            NativeMethods.ImageList_Destroy(hImageList: hOldImgList);
+        }
+    }
+
+
+    /// <summary>
+    ///     Initialize the list view.
+    ///     
+    /// Must be called before items are added to it.
+    /// </summary>
+    /// <param name="appLanguage">The application language to use</param>
+    /// <param name="objectNames">A data table containing the list of
+    /// columns to be used in column "objectName" and the default ordering
+    /// of these in column "sqlOrder"</param>
+    /// <exception cref="InvalidOperationException">If this method is called
+    /// more than once.</exception>
+    public void ReadAndApplySetting(string appLanguage,
+                                    DataTable objectNames)
+    {
+        if (_isInitialized) throw new InvalidOperationException("Trying to initialize the FileListView more than once.");
+
+        Logger.Debug(message: "Starting");
+        _AppLanguage = appLanguage;
+
+        ExtractConfigInfoFromDT(objectNames);
+        SetupColumns();
+
+        // Create the sorter for the list view
+        LvwColumnSorter = new ListViewColumnSorter();
+        ListViewItemSorter = LvwColumnSorter;
+
+        // Apply column order and size
+        ColOrderAndWidth_Read();
+
+        // Finally set style and icons
+        SetStyle();
+        InitializeImageList();  // must be here - if called in constructor, it won't work
+
+        _isInitialized = true;
+    }
+
+    /// <summary>
+    /// Can be called to make the FileListView persist its user
+    /// settings (like column order and width).
+    /// </summary>
+    public void PersistSettings()
+    {
+        ColOrderAndWidth_Write();
+    }
+
     #endregion
+
+
+    /// <summary>
+    /// Returns the number of items in the list view that actually
+    /// have an entry in the given column.
+    /// </summary>
+    /// <param name="column">The column to check for values</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">If the column was not found</exception>
+    public int CountItemsWithData(string column)
+    {
+        int colIndex = GetColumnIndex(column);
+        int itemCount = 0;
+
+        foreach (ListViewItem lvi in Items)
+        {
+            if (lvi.SubItems.Count > 1)
+            {
+                if (lvi.SubItems[index: colIndex].Text
+                        .Replace(oldValue: UNKNOWN_VALUE_FILE, newValue: "")
+                        != "")
+                {
+                    itemCount++;
+                }
+            }
+        }
+        return itemCount;
+    }
+
+
+    /// <summary>
+    /// Returns the (sub items) index of the column (not the visualized one).
+    /// </summary>
+    /// <param name="column">The column to look for w/o prefix</param>
+    /// <returns>The index</returns>
+    /// <exception cref="ArgumentException">If the column was not found</exception>
+    public int GetColumnIndex(string column) {
+        if (!_cfg_Col_Names.Contains(column)) throw new ArgumentException("Column with name '" + column + "' not found.");
+
+        return this.Columns[COL_NAME_PREFIX + column].Index;
+    }
 
 
     #region Modes
@@ -522,7 +696,11 @@ public partial class FileListView : System.Windows.Forms.ListView
     #region Updating
 
     /// <summary>
-    ///     Restaff the list view with the set of directory elements handed
+    /// Restaff the list view with the set of directory elements handed.
+    /// 
+    /// Note that the DirectoryElementCollection is assumed to be
+    /// in scope of the FileListView. Calling FileListView.Clear will
+    /// also clear it.
     /// </summary>
     public void ReloadFromDEs(DirectoryElementCollection directoryElements)
     {
@@ -531,9 +709,11 @@ public partial class FileListView : System.Windows.Forms.ListView
         SuspendColumnSorting();
 
         DirectoryElements = directoryElements;
+        _fileCount = 0;
         foreach (DirectoryElement item in DirectoryElements)
         {
             addListItem(item: item);
+            if (item.Type == DirectoryElement.ElementType.File) _fileCount++;
         }
 
         // Resume sorting...
@@ -543,11 +723,19 @@ public partial class FileListView : System.Windows.Forms.ListView
     }
 
 
+    /// <summary>
+    /// Clears the FileListView.
+    /// 
+    /// Should be used instead Items.Clear, etc. as it correctly handles
+    /// all due other things to do for clearing, like clearing the
+    /// the Directory Elements collection.
+    /// </summary>
     public void ClearData()
     {
         Items.Clear();
         DirectoryElements.Clear();
     }
+
 
     /// <summary>
     ///     Scrolls to the relevant line of the listview
@@ -568,6 +756,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             EnsureVisible(index: itemToModify.Index);
         }
     }
+
 
     /// <summary>
     ///     Deals with invoking the listview (from outside the thread) and updating the colour of a particular row (Item) to

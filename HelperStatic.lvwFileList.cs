@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using GeoTagNinja.Model;
+using GeoTagNinja.View.ListView;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
@@ -209,27 +211,21 @@ internal static partial class HelperStatic
 
         foreach (ListViewItem lvw_FileListItem in frmMainAppInstance.lvw_FileList.SelectedItems)
         {
+            DirectoryElement de = lvw_FileListItem.Tag as DirectoryElement;
+
             // make sure file still exists. just in case someone deleted it elsewhere
-            string fileNameWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: lvw_FileListItem.Text);
-            if (File.Exists(path: fileNameWithPath) && lvw_FileListItem.SubItems.Count > 1)
+            if (File.Exists(path: de.FullPathAndName) && lvw_FileListItem.SubItems.Count > 1)
             {
-                string firstSelectedItem = lvw_FileListItem.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_Coordinates"]
-                                                                         .Index]
-                    .Text;
-                if (firstSelectedItem != "-" && firstSelectedItem != "")
+                int coordCol = frmMainAppInstance.lvw_FileList.GetColumnIndex(FileListView.ColumnNames.COORDINATES);
+                string firstSelectedItem = lvw_FileListItem.SubItems[index: coordCol].Text;
+                if (firstSelectedItem.Replace(FileListView.UNKNOWN_VALUE_FILE, "") != "")
                 {
                     string strLat;
                     string strLng;
                     try
                     {
-                        strLat = lvw_FileListItem.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_Coordinates"]
-                                                               .Index]
-                            .Text.Split(';')[0]
-                            .Replace(oldChar: ',', newChar: '.');
-                        strLng = lvw_FileListItem.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_Coordinates"]
-                                                               .Index]
-                            .Text.Split(';')[1]
-                            .Replace(oldChar: ',', newChar: '.');
+                        strLat = firstSelectedItem.Split(';')[0].Replace(oldChar: ',', newChar: '.');
+                        strLng = firstSelectedItem.Split(';')[1].Replace(oldChar: ',', newChar: '.');
                     }
                     catch
                     {
@@ -263,58 +259,24 @@ internal static partial class HelperStatic
                         .Text ==
                     lvw_FileListItem.Text)
                 {
-                    if (File.Exists(path: fileNameWithPath))
+                    if (File.Exists(path: de.FullPathAndName))
                     {
-                        await LvwItemCreatePreview(fileNameWithPath: fileNameWithPath);
+                        await LvwItemCreatePreview(fileNameWithPath: de.FullPathAndName);
                     }
-                    else if (Directory.Exists(path: fileNameWithPath))
+                    else if (Directory.Exists(path: de.FullPathAndName))
                     {
                         // nothing.
                     }
                     else // check it's a drive? --> if so, don't do anything, otherwise warn the item is gone
                     {
-                        bool isDrive = LvwItemIsDrive(lvwFileListItem: lvw_FileListItem);
-
-                        if (isDrive)
+                        if (de.Type != DirectoryElement.ElementType.Drive)
                         {
-                            // nothing
-                        }
-                        else
-                        {
-                            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorFileGoneMissing") + fileNameWithPath, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorFileGoneMissing") + de.FullPathAndName, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
                         }
                     }
                 }
             }
         }
-    }
-
-    /// <summary>
-    ///     Checks if a ListViewItem is a drive (e.g. C:\) or not
-    /// </summary>
-    /// <param name="lvwFileListItem">The ListViewItem to check</param>
-    /// <returns></returns>
-    internal static bool LvwItemIsDrive(ListViewItem lvwFileListItem)
-    {
-        DriveInfo[] allDrives = DriveInfo.GetDrives();
-        bool isDrive = false;
-        foreach (DriveInfo d in allDrives)
-        {
-            try
-            {
-                if (lvwFileListItem.Text.Contains(value: "(" + d.Name.Replace(oldValue: "\\", newValue: "") + ")"))
-                {
-                    isDrive = true;
-                    break;
-                }
-            }
-            catch
-            {
-                //MessageBox.Show(ex.Message);
-            }
-        }
-
-        return isDrive;
     }
 
     /// <summary>
@@ -386,32 +348,10 @@ internal static partial class HelperStatic
     internal static void LvwCountItemsWithGeoData()
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        int fileCount = 0;
-        int filesWithGeoData = 0;
-        string fileNameWithoutPath;
 
-        if (frmMainAppInstance != null)
-        {
-            foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.Items)
-            {
-                fileNameWithoutPath = lvi.Text;
-                if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath)))
-                {
-                    fileCount++;
-                }
-
-                if (lvi.SubItems.Count > 1)
-                {
-                    if (lvi.SubItems[index: 1]
-                            .Text.Replace(oldValue: "-", newValue: "") !=
-                        "")
-                    {
-                        filesWithGeoData++;
-                    }
-                }
-            }
-
-            FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Ready. Files: Total: " + fileCount + " Geodata: " + filesWithGeoData);
-        }
+        if (frmMainAppInstance != null) FrmMainApp.HandlerUpdateLabelText(
+                label: frmMainAppInstance.lbl_ParseProgress,
+                text: "Ready. Files: Total: " + frmMainAppInstance.lvw_FileList.FileCount + 
+                    " Geodata: " + frmMainAppInstance.lvw_FileList.CountItemsWithData(FileListView.ColumnNames.COORDINATES));
     }
 }

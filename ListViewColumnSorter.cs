@@ -127,26 +127,25 @@ internal class ListViewColumnSorter : IComparer
 
     private int GetSortGroup(DirectoryElement de)
     {
-        if (de.Type == DirectoryElement.ElementType.ParentDirectory)
+        switch(de.Type)
         {
-            return 0;
-        }
+            case DirectoryElement.ElementType.ParentDirectory:
+                return 0;
 
-        if (de.Type == DirectoryElement.ElementType.Drive)
-        {
-            return 1;
-        }
+            case DirectoryElement.ElementType.MyComputer:
+                return 1;
 
-        if (de.Type == DirectoryElement.ElementType.SubDirectory)
-        {
-            return 2;
-        }
+            case DirectoryElement.ElementType.Drive:
+                return 2;
 
-        if (de.Type == DirectoryElement.ElementType.Unknown)
-        {
-            return 3;
-        }
+            case DirectoryElement.ElementType.SubDirectory:
+                return 3;
 
-        return 4;
+            case DirectoryElement.ElementType.Unknown:
+                return 4;
+
+            default:
+                return 5;
+        }
     }
 }

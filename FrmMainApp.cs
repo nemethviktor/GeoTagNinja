@@ -1405,7 +1405,17 @@ public partial class FrmMainApp : Form
             DirectoryInfo di = new(path: FolderName);
             foreach (DirectoryInfo directoryInfo in di.GetDirectories())
             {
-                if (directoryInfo.Attributes.ToString()
+                if (directoryInfo.FullName == SpecialFolder.MyComputer.ToString())
+                {
+                    // It's the MyComputer entry
+                    Logger.Trace(message: "MyComputer: " + directoryInfo.Name);
+                    _directoryElements.Add(item: new DirectoryElement(
+                                               itemName: directoryInfo.Name,
+                                               type: DirectoryElement.ElementType.MyComputer,
+                                               fullPathAndName: directoryInfo.FullName
+                                           ));
+                }
+                else if (directoryInfo.Attributes.ToString()
                         .Contains(value: "Directory") &&
                     !directoryInfo.Attributes.ToString()
                         .Contains(value: "ReparsePoint"))
@@ -1501,19 +1511,28 @@ public partial class FrmMainApp : Form
         ListViewHitTestInfo info = lvw_FileList.HitTest(x: e.X, y: e.Y);
         ListViewItem item = info.Item;
 
-        if (item != null)
+        if (item == null)
         {
-            Logger.Trace(message: "item: " + item.Text);
+            lvw_FileList.SelectedItems.Clear();
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            return;
+        }
 
-            bool isDrive = HelperStatic.LvwItemIsDrive(lvwFileListItem: item);
+
+        DirectoryElement item_de = (DirectoryElement)item.Tag;
+        Logger.Trace(message: "item: " + item.Text);
+
+        switch(item_de.Type)
+        {
             // if .. (parent) then do a folder-up
-            if (item.Text == ParentFolder)
-            {
+            case DirectoryElement.ElementType.ParentDirectory:
                 btn_OneFolderUp_Click(sender: sender, e: EventArgs.Empty);
-            }
+                break;
+
             // if this is a folder or drive, enter
-            else if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)) || isDrive)
-            {
+            case DirectoryElement.ElementType.SubDirectory:
+            case DirectoryElement.ElementType.MyComputer:
+            case DirectoryElement.ElementType.Drive:
                 // check for outstanding files first and save if user wants
                 HelperStatic.SChangeFolderIsOkay = false;
                 await HelperStatic.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
@@ -1528,25 +1547,23 @@ public partial class FrmMainApp : Form
                         // itemText.Text here will be something like "C_Windows_320GB_M2_nVME (C:\)"
                         // so just extract whatever is in the parentheses
                         tbx_FolderName.Text = item.Text.Split('(')
-                                                  .Last()
-                                                  .Split(')')
-                                                  .FirstOrDefault() +
-                                              @"\";
+                                                    .Last()
+                                                    .Split(')')
+                                                    .FirstOrDefault() +
+                                                @"\";
                     }
 
                     btn_ts_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
                 }
-            }
-            // if this is a file
-            else if (File.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
-            {
+                break;
+
+            // Edit file
+            case DirectoryElement.ElementType.File:
                 Logger.Trace(message: "Trigger FrmEditFileData");
                 FrmEditFileData = new FrmEditFileData();
 
-                FolderName = tbx_FolderName.Text;
-
                 Logger.Trace(message: "Add File To lvw_FileListEditImages");
-                FrmEditFileData.lvw_FileListEditImages.Items.Add(text: item.Text);
+                FrmEditFileData.lvw_FileListEditImages.Items.Add(text: item_de.ItemName);
 
                 Logger.Trace(message: "FrmEditFileData Get objectTexts");
                 FrmEditFileData.Text = HelperStatic.DataReadDTObjectText(
@@ -1556,13 +1573,9 @@ public partial class FrmMainApp : Form
 
                 Logger.Trace(message: "FrmEditFileData ShowDialog");
                 FrmEditFileData.ShowDialog();
-            }
+                break;
         }
-        else
-        {
-            lvw_FileList.SelectedItems.Clear();
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
-        }
+
     }
 
     /// <summary>
