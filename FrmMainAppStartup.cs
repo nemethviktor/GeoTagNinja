@@ -493,13 +493,13 @@ public partial class FrmMainApp
         frmMainAppInstance.cbx_Favourites.Items.Clear();
         foreach (DataRow drFavourite in dtFavourites.Rows)
         {
-            string locationName = drFavourite[columnName: "locationName"]
+            string favouriteName = drFavourite[columnName: "favouriteName"]
                 .ToString();
-            LstFavourites.Add(item: locationName);
-            autoCompleteCustomSource.Add(value: locationName);
+            LstFavourites.Add(item: favouriteName);
+            autoCompleteCustomSource.Add(value: favouriteName);
             if (frmMainAppInstance != null)
             {
-                frmMainAppInstance.cbx_Favourites.Items.Add(item: locationName);
+                frmMainAppInstance.cbx_Favourites.Items.Add(item: favouriteName);
             }
         }
 

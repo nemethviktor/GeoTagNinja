@@ -25,16 +25,16 @@ internal static partial class HelperStatic
             // create folder in Appdata if doesn't exist
             string sqldbPath = SSettingsDataBasePath;
             FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath is " + SSettingsDataBasePath);
-            FileInfo fi = new(fileName: SSettingsDataBasePath);
+            FileInfo userDataBaseFile = new(fileName: SSettingsDataBasePath);
 
-            if (fi.Exists && fi.Length == 0)
+            if (userDataBaseFile.Exists && userDataBaseFile.Length == 0)
             {
                 FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath exists");
-                fi.Delete();
+                userDataBaseFile.Delete();
                 FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath deleted");
             }
 
-            if (!fi.Exists)
+            if (!userDataBaseFile.Exists)
             {
                 FrmMainApp.Logger.Trace(message: "Creating " + SSettingsDataBasePath);
                 try
@@ -92,6 +92,7 @@ internal static partial class HelperStatic
             else
             {
                 DataCreateSQLiteFavourites();
+                DataWriteSQLiteRenameFavouritesLocationNameCol();
             }
         }
         catch (Exception ex)
@@ -549,7 +550,7 @@ internal static partial class HelperStatic
 
     /// <summary>
     ///     Creates a table for the user's "favourites".
-    ///     This is a bit of a f...up because originally this was locationName and then I started using favouriteName, which
+    ///     This is a bit of a f...up because originally this was favouriteName and then I started using favouriteName, which
     ///     lends itself better to what it is but the columnName now has been released so...
     /// </summary>
     private static void DataCreateSQLiteFavourites()
@@ -561,7 +562,7 @@ internal static partial class HelperStatic
 
         string sqlCommandStr = @"
                                 CREATE TABLE IF NOT EXISTS [Favourites](
-                                        [locationName] NTEXT NOT NULL PRIMARY KEY,
+                                        [favouriteName] NTEXT NOT NULL PRIMARY KEY,
                                         [GPSLatitude] NTEXT NOT NULL,
                                         [GPSLatitudeRef] NTEXT NOT NULL,
                                         [GPSLongitude] NTEXT NOT NULL,
@@ -575,12 +576,59 @@ internal static partial class HelperStatic
                                         [State] NTEXT,
                                         [Sub_location] NTEXT
                                         )
-                                ;"
+                                ;
+                                "
             ;
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
 
         sqlToRun.ExecuteNonQuery();
+    }
+
+    /// <summary>
+    ///     See comment above but generally the problem here is that I started the coding as locationName and then at some
+    ///     stage renamed the code to favouriteName so I need to check and eventually rename any user's data if the old column
+    ///     name exists.
+    /// </summary>
+    /// <returns></returns>
+    private static void DataWriteSQLiteRenameFavouritesLocationNameCol()
+    {
+        try
+        {
+            using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+            sqliteDB.Open();
+
+            // Get the schema for the columns in the database.
+            DataTable colsTable = sqliteDB.GetSchema(collectionName: "Columns");
+
+            // Query the columns schema using SQL statements to work out if the required columns exist.
+            bool locationNameExists = colsTable.Select(filterExpression: "COLUMN_NAME='locationName' AND TABLE_NAME='Favourites'")
+                                          .Length !=
+                                      0;
+            bool favouriteNameExists = colsTable.Select(filterExpression: "COLUMN_NAME='favouriteName' AND TABLE_NAME='Favourites'")
+                                           .Length !=
+                                       0;
+            if (locationNameExists)
+            {
+                string sqlCommandStr = @"
+                                ALTER TABLE [Favourites]
+                                RENAME COLUMN [locationName] TO [favouriteName]
+
+                                ;
+                                "
+                    ;
+
+                SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+
+                sqlToRun.ExecuteNonQuery();
+            }
+
+            sqliteDB.Close();
+        }
+        catch (Exception ex)
+        {
+            // nothing
+        }
     }
 
     /// <summary>
@@ -631,8 +679,8 @@ internal static partial class HelperStatic
 
         string sqlCommandStr = @"
                                 UPDATE Favourites
-                                SET locationName = @newName
-                                WHERE locationName = @oldName
+                                SET favouriteName = @newName
+                                WHERE favouriteName = @oldName
                                 ;"
             ;
 
@@ -656,7 +704,7 @@ internal static partial class HelperStatic
 
         string sqlCommandStr = @"
                                 DELETE FROM Favourites
-                                WHERE locationName = @favouriteName
+                                WHERE favouriteName = @favouriteName
                                 ;"
             ;
 
@@ -688,7 +736,7 @@ internal static partial class HelperStatic
                                     City = @City,
                                     State = @State,
                                     Sub_location = @Sub_location
-                                WHERE locationName = @favouriteName;
+                                WHERE favouriteName = @favouriteName;
                                 "
             ;
 
@@ -712,7 +760,7 @@ internal static partial class HelperStatic
 
         string sqlCommandStr = @"
                                 REPLACE INTO Favourites (
-                                    locationName,
+                                    favouriteName,
                                     GPSAltitude,
                                     GPSAltitudeRef,
                                     GPSLatitude,

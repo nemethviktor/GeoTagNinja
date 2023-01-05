@@ -48,14 +48,14 @@ public partial class FrmManageFavourites : Form
     }
 
 
-    private void cbx_locationName_SelectedIndexChanged(object sender,
-                                                       EventArgs e)
+    private void cbx_favouriteName_SelectedIndexChanged(object sender,
+                                                        EventArgs e)
     {
         lstOriginals.Clear();
         _frmNowLoadingFavouriteData = true;
-        string locationName = cbx_Favourites.Text;
+        string favouriteName = cbx_Favourites.Text;
         EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in _dtFavourites.AsEnumerable()
-                                                           where dataRow.Field<string>(columnName: "locationName") == locationName
+                                                           where dataRow.Field<string>(columnName: "favouriteName") == favouriteName
                                                            select dataRow;
 
         DataRow drFavouriteDataRow = drDataTableData.FirstOrDefault();
@@ -125,7 +125,7 @@ public partial class FrmManageFavourites : Form
             _dtFavourites = HelperStatic.DataReadSQLiteFavourites();
             foreach (DataRow drRow in _dtFavourites.Rows)
             {
-                frmMainAppInstance.cbx_Favourites.Items.Add(item: drRow[columnName: "locationName"]
+                frmMainAppInstance.cbx_Favourites.Items.Add(item: drRow[columnName: "favouriteName"]
                                                                 .ToString());
             }
         }
@@ -193,7 +193,7 @@ public partial class FrmManageFavourites : Form
     }
 
     /// <summary>
-    ///     Fills up the cbx_locationName
+    ///     Fills up the cbx_favouriteName
     /// </summary>
     private void LoadFavouritesList()
     {
@@ -201,7 +201,7 @@ public partial class FrmManageFavourites : Form
         _dtFavourites = HelperStatic.DataReadSQLiteFavourites();
         foreach (DataRow drRow in _dtFavourites.Rows)
         {
-            cbx_Favourites.Items.Add(item: drRow[columnName: "locationName"]
+            cbx_Favourites.Items.Add(item: drRow[columnName: "favouriteName"]
                                          .ToString());
         }
     }

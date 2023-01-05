@@ -1865,12 +1865,12 @@ public partial class FrmMainApp : Form
             {
                 ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
 
-                string locationName = cbx_Favourites.Text;
+                string favouriteName = cbx_Favourites.Text;
 
                 DataTable dtFavourite = HelperStatic.DataReadSQLiteFavourites(structureOnly: true);
                 dtFavourite.Clear();
                 DataRow drFavourite = dtFavourite.NewRow();
-                drFavourite[columnName: "favouriteName"] = locationName;
+                drFavourite[columnName: "favouriteName"] = favouriteName;
 
                 foreach (string tagName in AncillaryListsArrays.GetFavouriteTags())
                 {
@@ -1886,7 +1886,7 @@ public partial class FrmMainApp : Form
                     drFavourite[columnName: tagName] = addStr;
                 }
 
-                HelperStatic.DataDeleteSQLiteFavourite(favouriteName: locationName);
+                HelperStatic.DataDeleteSQLiteFavourite(favouriteName: favouriteName);
 
                 HelperStatic.DataWriteSQLiteAddNewFavourite(drFavourite: drFavourite);
 

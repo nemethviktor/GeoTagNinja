@@ -57,7 +57,7 @@
             this.cbx_Favourites.Name = "cbx_Favourites";
             this.cbx_Favourites.Size = new System.Drawing.Size(244, 21);
             this.cbx_Favourites.TabIndex = 0;
-            this.cbx_Favourites.SelectedIndexChanged += new System.EventHandler(this.cbx_locationName_SelectedIndexChanged);
+            this.cbx_Favourites.SelectedIndexChanged += new System.EventHandler(this.cbx_favouriteName_SelectedIndexChanged);
             // 
             // btn_Close
             // 
