@@ -9,7 +9,6 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.AxHost;
 
 namespace GeoTagNinja;
 
@@ -203,14 +202,15 @@ internal static partial class HelperStatic
             {
                 NumericUpDown nud = (NumericUpDown)cItem;
                 FrmMainApp.Logger.Trace(message: "Starting - cItem: " + nud.Name);
-                _ = decimal.TryParse(DataReadSQLiteSettings(
+                _ = decimal.TryParse(s: DataReadSQLiteSettings(
                                          tableName: "settings",
                                          settingTabPage: cItem.Parent.Name,
                                          settingId: cItem.Name
-                                     ), out decimal outVal);
+                                     ), result: out decimal outVal);
 
-                nud.Value = outVal;
-                nud.Text = outVal.ToString(CultureInfo.InvariantCulture);
+                // if this doesn't exist, it'd return 0, which is illegal because the min-values can be higher than that
+                nud.Value = Math.Max(val1: nud.Minimum, val2: outVal);
+                nud.Text = outVal.ToString(provider: CultureInfo.InvariantCulture);
             }
         }
     }
@@ -260,7 +260,7 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    /// Updates the sessions storage for the Toponomy DT
+    ///     Updates the sessions storage for the Toponomy DT
     /// </summary>
     /// <param name="lat">string value of lat</param>
     /// <param name="lng">string value of lng</param>
@@ -270,7 +270,7 @@ internal static partial class HelperStatic
     /// <param name="adminName4">Value to write</param>
     /// <param name="toponymName">Value to write</param>
     /// <param name="countryCode">Value to write</param>
-    /// <param name="GPSAltitude">Value to write</param>
+    /// <param name="altitude">Value to write</param>
     /// <param name="timezoneId">Value to write</param>
     private static void GenericUpdateAddToDataTableTopopnomy(
         string lat,
@@ -525,16 +525,16 @@ internal static partial class HelperStatic
         // DtToponomySessionData;
         FrmMainApp.DtToponomySessionData = new DataTable();
         FrmMainApp.DtToponomySessionData.Clear();
-        FrmMainApp.DtToponomySessionData.Columns.Add("lat");
-        FrmMainApp.DtToponomySessionData.Columns.Add("lng");
-        FrmMainApp.DtToponomySessionData.Columns.Add("AdminName1");
-        FrmMainApp.DtToponomySessionData.Columns.Add("AdminName2");
-        FrmMainApp.DtToponomySessionData.Columns.Add("AdminName3");
-        FrmMainApp.DtToponomySessionData.Columns.Add("AdminName4");
-        FrmMainApp.DtToponomySessionData.Columns.Add("ToponymName");
-        FrmMainApp.DtToponomySessionData.Columns.Add("CountryCode");
-        FrmMainApp.DtToponomySessionData.Columns.Add("GPSAltitude");
-        FrmMainApp.DtToponomySessionData.Columns.Add("timezoneId");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "lat");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "lng");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "AdminName1");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "AdminName2");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "AdminName3");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "AdminName4");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "ToponymName");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "CountryCode");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "GPSAltitude");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "timezoneId");
     }
 
     /// <summary>

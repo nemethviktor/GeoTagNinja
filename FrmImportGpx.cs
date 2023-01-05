@@ -261,14 +261,15 @@ public partial class FrmImportGpx : Form
             // indicate that something is going on
             btn_OK.Text = HelperStatic.DataReadDTObjectText(
                 objectType: sender.GetType()
-                                .ToString()
-                                .Split('.')
-                                .Last() +
-                            "_Working",
-                objectName: "btn_OK"
+                    .ToString()
+                    .Split('.')
+                    .Last()
+                ,
+                objectName: "btn_OK_Working"
             );
             btn_OK.AutoSize = true;
             btn_OK.Enabled = false;
+            btn_Cancel.Enabled = false;
 
             await HelperStatic.ExifGetTrackSyncData(
                 trackFileLocationType: trackFileLocationType,

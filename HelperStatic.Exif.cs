@@ -1023,9 +1023,6 @@ internal static partial class HelperStatic
             tbxText.WordWrap = true;
             tbxText.ReadOnly = true;
 
-            //Label lblText = new Label();
-            //lblText.Text = s_OutputMsg;
-            //lblText.AutoSize = true;
             panel.SetFlowBreak(control: tbxText, value: true);
             panel.Controls.Add(value: tbxText);
 
@@ -1474,7 +1471,7 @@ internal static partial class HelperStatic
 
             prcExifTool.StartInfo = new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
             {
-                Arguments = @"/k " + SDoubleQuote + SDoubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + SDoubleQuote + " " + exiftoolCmd + SDoubleQuote + "&& exit",
+                Arguments = @"/c " + SDoubleQuote + SDoubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + SDoubleQuote + " " + exiftoolCmd + SDoubleQuote,
                 UseShellExecute = false,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
@@ -1611,6 +1608,16 @@ internal static partial class HelperStatic
                                              .Replace(oldValue: "\n", newValue: ""), result: out _currentExifToolVersionLocal);
                     };
 
+                    break;
+                case "ExifGetTrackSyncData":
+                    prcExifTool.OutputDataReceived += (_,
+                                                       data) =>
+                    {
+                        if (data.Data != null && data.Data.Length > 0)
+                        {
+                            _sOutputMsg += data.Data.ToString() + Environment.NewLine;
+                        }
+                    };
                     break;
                 default:
                     prcExifTool.OutputDataReceived += (_,
