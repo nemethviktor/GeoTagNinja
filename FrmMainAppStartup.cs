@@ -101,7 +101,7 @@ public partial class FrmMainApp
 
         // read language and objectnames
         HelperStatic.DataReadLanguageDataFromCSV();
-        HelperStatic.DataReadTZDataFromCSV();
+        HelperStatic.DataReadCountryCodeDataFromCSV();
     }
 
     /// <summary>
@@ -510,5 +510,14 @@ public partial class FrmMainApp
         }
 
         return dtFavourites;
+    }
+
+    /// <summary>
+    /// Loads Custom Rules
+    /// </summary>
+    /// <returns></returns>
+    private static void AppStartupLoadCustomRules()
+    {
+        FrmSettings.dtCustomRules = HelperStatic.DataReadSQLiteCustomRules();
     }
 }

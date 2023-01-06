@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using CheckBox = System.Windows.Forms.CheckBox;
-using ComboBox = System.Windows.Forms.ComboBox;
-using Control = System.Windows.Forms.Control;
-using TextBox = System.Windows.Forms.TextBox;
+using static System.String;
 
 namespace GeoTagNinja;
 
 public partial class FrmSettings : Form
 {
+    internal static DataTable dtCustomRules = new();
     private bool _nowLoadingSettingsData;
 
     /// <summary>
@@ -39,10 +39,10 @@ public partial class FrmSettings : Form
                     List<KeyValuePair<string, string>> kvps = AncillaryListsArrays.GetLanguages();
                     for (int index = 0; index < kvps.Count; index++)
                     {
-                        KeyValuePair<string, string> kvp = kvps[index];
+                        KeyValuePair<string, string> kvp = kvps[index: index];
                         string thisLanguage = kvp.Value + " (" + kvp.Key + ")";
-                        cbx_Language.Items.Add(thisLanguage);
-                        if (thisLanguage.Contains(HelperStatic.DataReadSQLiteSettings(
+                        cbx_Language.Items.Add(item: thisLanguage);
+                        if (thisLanguage.Contains(value: HelperStatic.DataReadSQLiteSettings(
                                                       tableName: "settings",
                                                       settingTabPage: cItem.Parent.Name,
                                                       settingId: cItem.Name
@@ -166,6 +166,110 @@ public partial class FrmSettings : Form
         }
 
         _nowLoadingSettingsData = false;
+
+        LoadCustomRulesDGV();
+    }
+
+    /// <summary>
+    ///     Loads up the datagridview from sqlite.
+    ///     Some of the columns are dropdowns (technically DataGridViewComboBoxColumn) so they need to have a few extra
+    ///     settings loaded.
+    /// </summary>
+    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
+    private void LoadCustomRulesDGV()
+    {
+        dtCustomRules = HelperStatic.DataReadSQLiteCustomRules();
+        dgv_CustomRules.AutoGenerateColumns = false;
+
+        BindingSource source = new();
+        source.DataSource = dtCustomRules;
+        dgv_CustomRules.DataSource = source;
+
+        List<KeyValuePair<string, string>> clh_CountryCodeOptions = new();
+        DataGridViewComboBoxColumn clh_CountryCode = new()
+        {
+            DataPropertyName = "CountryCode",
+            Name = "clh_CountryCode",
+            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_Country"),
+            DataSource = clh_CountryCodeOptions,
+            ValueMember = "Key",
+            DisplayMember = "Value"
+        };
+        foreach (DataRow dataRow in FrmMainApp.DtIsoCountryCodeMapping.Rows)
+        {
+            clh_CountryCodeOptions.Add(item: new KeyValuePair<string, string>(key: dataRow[columnName: "ISO_3166_1A3"]
+                                                                                  .ToString()
+                                                                              , value: dataRow[columnName: "Country"]
+                                                                                  .ToString()));
+        }
+
+        DataGridViewComboBoxColumn clh_DataPointName = new()
+        {
+            DataPropertyName = "DataPointName",
+            Name = "clh_DataPointName",
+            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_DataPointName")
+        };
+        foreach (string itemName in AncillaryListsArrays.CustomRulesDataSources())
+        {
+            clh_DataPointName.Items.Add(item: itemName);
+        }
+
+        DataGridViewComboBoxColumn clh_DataPointConditionType = new()
+        {
+            DataPropertyName = "DataPointConditionType",
+            Name = "clh_DataPointConditionType",
+            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_DataPointConditionType")
+        };
+        foreach (string itemName in AncillaryListsArrays.CustomRulesDataConditions())
+        {
+            clh_DataPointConditionType.Items.Add(item: itemName);
+        }
+
+        DataGridViewTextBoxColumn clh_DataPointConditionValue = new()
+        {
+            DataPropertyName = "DataPointConditionValue",
+            Name = "clh_DataPointConditionValue",
+            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_DataPointConditionValue")
+        };
+
+        DataGridViewComboBoxColumn clh_TargetPointName = new()
+        {
+            DataPropertyName = "TargetPointName",
+            Name = "clh_TargetPointName",
+            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointName")
+        };
+        foreach (string itemName in AncillaryListsArrays.CustomRulesDataTargets())
+        {
+            clh_TargetPointName.Items.Add(item: itemName);
+        }
+
+        DataGridViewComboBoxColumn clh_TargetPointOutcome = new()
+        {
+            DataPropertyName = "TargetPointOutcome",
+            Name = "clh_TargetPointOutcome",
+            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointOutcome")
+        };
+        foreach (string itemName in AncillaryListsArrays.CustomRulesDataSources(isOutcome: true))
+        {
+            clh_TargetPointOutcome.Items.Add(item: itemName);
+        }
+
+        DataGridViewTextBoxColumn clh_TargetPointOutcomeCustom = new()
+        {
+            DataPropertyName = "TargetPointOutcomeCustom",
+            Name = "clh_TargetPointOutcomeCustom",
+            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointOutcomeCustom")
+        };
+
+        dgv_CustomRules.Columns.AddRange(
+            clh_CountryCode,
+            clh_DataPointName,
+            clh_DataPointConditionType,
+            clh_DataPointConditionValue,
+            clh_TargetPointName,
+            clh_TargetPointOutcome,
+            clh_TargetPointOutcomeCustom
+        );
     }
 
     /// <summary>
@@ -223,6 +327,11 @@ public partial class FrmSettings : Form
         FrmMainApp.AppStartupPullOverWriteBlankToponomy();
         FrmMainApp.AppStartupPullToponomyRadiusAndMaxRows();
 
+        // save customRules
+        HelperStatic.DataWriteSQLiteCustomRules();
+
+        // in case it changed or something.
+        dtCustomRules = HelperStatic.DataReadSQLiteCustomRules();
         Hide();
     }
 
@@ -535,5 +644,44 @@ public partial class FrmSettings : Form
                                EventArgs e)
     {
         AcceptButton = btn_OK;
+    }
+
+    private void rbx_CustomRulesExplanation_LinkClicked(object sender,
+                                                        LinkClickedEventArgs e)
+    {
+        Process.Start(fileName: e.LinkText);
+    }
+
+
+    private void dgv_CustomRules_DataError(object sender,
+                                           DataGridViewDataErrorEventArgs e)
+    {
+        //MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+        if (e.Exception != null &&
+            e.Context == DataGridViewDataErrorContexts.Commit)
+        {
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+        }
+    }
+
+
+    private void dgv_CustomRules_RowValidating(object sender,
+                                               DataGridViewCellCancelEventArgs e)
+    {
+        if (e.ColumnIndex ==
+            dgv_CustomRules.Columns[columnName: "clh_TargetPointOutcome"]
+                .Index)
+        {
+            string clh_TargetPointOutcomeValue = Convert.ToString(value: (dgv_CustomRules.Rows[index: e.RowIndex]
+                                                                      .Cells[columnName: "clh_TargetPointOutcome"] as DataGridViewComboBoxCell)?.EditedFormattedValue);
+
+            string clh_TargetPointOutcomeCustomValue = Convert.ToString(value: (dgv_CustomRules.Rows[index: e.RowIndex]
+                                                                            .Cells[columnName: "clh_TargetPointOutcomeCustom"] as DataGridViewTextBoxCell)?.EditedFormattedValue);
+            if (clh_TargetPointOutcomeValue == "Custom" && IsNullOrEmpty(value: clh_TargetPointOutcomeCustomValue))
+            {
+                e.Cancel = true;
+                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            }
+        }
     }
 }

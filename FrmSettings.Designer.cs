@@ -59,6 +59,9 @@
             this.ckb_OverwriteOriginal = new System.Windows.Forms.CheckBox();
             this.ckb_AddXMPSideCar = new System.Windows.Forms.CheckBox();
             this.lbx_fileExtensions = new System.Windows.Forms.ListBox();
+            this.tpg_CustomRules = new System.Windows.Forms.TabPage();
+            this.rbx_CustomRulesExplanation = new System.Windows.Forms.RichTextBox();
+            this.dgv_CustomRules = new System.Windows.Forms.DataGridView();
             this.igl_Settings = new System.Windows.Forms.ImageList(this.components);
             this.btn_OK = new System.Windows.Forms.Button();
             this.btn_Cancel = new System.Windows.Forms.Button();
@@ -69,6 +72,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.nud_ChoiceOfferCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).BeginInit();
             this.tpg_FileOptions.SuspendLayout();
+            this.tpg_CustomRules.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_CustomRules)).BeginInit();
             this.SuspendLayout();
             // 
             // tct_Settings
@@ -78,12 +83,13 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tct_Settings.Controls.Add(this.tpg_Application);
             this.tct_Settings.Controls.Add(this.tpg_FileOptions);
+            this.tct_Settings.Controls.Add(this.tpg_CustomRules);
             this.tct_Settings.ImageList = this.igl_Settings;
             this.tct_Settings.Location = new System.Drawing.Point(16, 12);
             this.tct_Settings.Margin = new System.Windows.Forms.Padding(2);
             this.tct_Settings.Name = "tct_Settings";
             this.tct_Settings.SelectedIndex = 0;
-            this.tct_Settings.Size = new System.Drawing.Size(621, 428);
+            this.tct_Settings.Size = new System.Drawing.Size(906, 428);
             this.tct_Settings.TabIndex = 0;
             this.tct_Settings.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.Tab_Settings_Selecting);
             this.tct_Settings.Deselecting += new System.Windows.Forms.TabControlCancelEventHandler(this.Tab_Settings_Deselecting);
@@ -118,7 +124,7 @@
             this.tpg_Application.Margin = new System.Windows.Forms.Padding(2);
             this.tpg_Application.Name = "tpg_Application";
             this.tpg_Application.Padding = new System.Windows.Forms.Padding(2);
-            this.tpg_Application.Size = new System.Drawing.Size(613, 401);
+            this.tpg_Application.Size = new System.Drawing.Size(898, 401);
             this.tpg_Application.TabIndex = 0;
             this.tpg_Application.Text = "tpg_Application";
             // 
@@ -244,7 +250,7 @@
             this.rbx_Register_ArcGIS.Location = new System.Drawing.Point(20, 45);
             this.rbx_Register_ArcGIS.Name = "rbx_Register_ArcGIS";
             this.rbx_Register_ArcGIS.ReadOnly = true;
-            this.rbx_Register_ArcGIS.Size = new System.Drawing.Size(405, 42);
+            this.rbx_Register_ArcGIS.Size = new System.Drawing.Size(488, 42);
             this.rbx_Register_ArcGIS.TabIndex = 12;
             this.rbx_Register_ArcGIS.Text = "rbx_Register_ArcGIS";
             // 
@@ -254,7 +260,7 @@
             this.rbx_Register_GeoNames.Location = new System.Drawing.Point(20, 126);
             this.rbx_Register_GeoNames.Name = "rbx_Register_GeoNames";
             this.rbx_Register_GeoNames.ReadOnly = true;
-            this.rbx_Register_GeoNames.Size = new System.Drawing.Size(405, 42);
+            this.rbx_Register_GeoNames.Size = new System.Drawing.Size(488, 42);
             this.rbx_Register_GeoNames.TabIndex = 12;
             this.rbx_Register_GeoNames.Text = "rbx_Register_GeoNames";
             // 
@@ -293,7 +299,7 @@
             // lbl_GeoNames_Pwd
             // 
             this.lbl_GeoNames_Pwd.AutoSize = true;
-            this.lbl_GeoNames_Pwd.Location = new System.Drawing.Point(297, 175);
+            this.lbl_GeoNames_Pwd.Location = new System.Drawing.Point(297, 177);
             this.lbl_GeoNames_Pwd.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_GeoNames_Pwd.Name = "lbl_GeoNames_Pwd";
             this.lbl_GeoNames_Pwd.Size = new System.Drawing.Size(103, 13);
@@ -332,7 +338,7 @@
             // 
             // tbx_GeoNames_Pwd
             // 
-            this.tbx_GeoNames_Pwd.Location = new System.Drawing.Point(416, 171);
+            this.tbx_GeoNames_Pwd.Location = new System.Drawing.Point(416, 173);
             this.tbx_GeoNames_Pwd.Margin = new System.Windows.Forms.Padding(2);
             this.tbx_GeoNames_Pwd.Name = "tbx_GeoNames_Pwd";
             this.tbx_GeoNames_Pwd.PasswordChar = '*';
@@ -372,7 +378,7 @@
             this.tpg_FileOptions.Margin = new System.Windows.Forms.Padding(2);
             this.tpg_FileOptions.Name = "tpg_FileOptions";
             this.tpg_FileOptions.Padding = new System.Windows.Forms.Padding(2);
-            this.tpg_FileOptions.Size = new System.Drawing.Size(613, 401);
+            this.tpg_FileOptions.Size = new System.Drawing.Size(898, 401);
             this.tpg_FileOptions.TabIndex = 1;
             this.tpg_FileOptions.Text = "tpg_FileOptions";
             this.tpg_FileOptions.Enter += new System.EventHandler(this.Pg_fileoptions_Enter);
@@ -380,10 +386,10 @@
             // ckb_ResetFileDateToCreated
             // 
             this.ckb_ResetFileDateToCreated.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_ResetFileDateToCreated.Location = new System.Drawing.Point(419, 67);
+            this.ckb_ResetFileDateToCreated.Location = new System.Drawing.Point(567, 62);
             this.ckb_ResetFileDateToCreated.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_ResetFileDateToCreated.Name = "ckb_ResetFileDateToCreated";
-            this.ckb_ResetFileDateToCreated.Size = new System.Drawing.Size(168, 62);
+            this.ckb_ResetFileDateToCreated.Size = new System.Drawing.Size(264, 62);
             this.ckb_ResetFileDateToCreated.TabIndex = 4;
             this.ckb_ResetFileDateToCreated.Text = "ckb_ResetFileDateToCreated";
             this.ckb_ResetFileDateToCreated.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -393,10 +399,10 @@
             // ckb_ProcessOriginalFile
             // 
             this.ckb_ProcessOriginalFile.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_ProcessOriginalFile.Location = new System.Drawing.Point(397, 23);
+            this.ckb_ProcessOriginalFile.Location = new System.Drawing.Point(545, 18);
             this.ckb_ProcessOriginalFile.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_ProcessOriginalFile.Name = "ckb_ProcessOriginalFile";
-            this.ckb_ProcessOriginalFile.Size = new System.Drawing.Size(190, 38);
+            this.ckb_ProcessOriginalFile.Size = new System.Drawing.Size(286, 38);
             this.ckb_ProcessOriginalFile.TabIndex = 3;
             this.ckb_ProcessOriginalFile.Text = "ckb_ProcessOriginalFile";
             this.ckb_ProcessOriginalFile.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -406,10 +412,10 @@
             // ckb_OverwriteOriginal
             // 
             this.ckb_OverwriteOriginal.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_OverwriteOriginal.Location = new System.Drawing.Point(397, 195);
+            this.ckb_OverwriteOriginal.Location = new System.Drawing.Point(545, 190);
             this.ckb_OverwriteOriginal.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_OverwriteOriginal.Name = "ckb_OverwriteOriginal";
-            this.ckb_OverwriteOriginal.Size = new System.Drawing.Size(190, 38);
+            this.ckb_OverwriteOriginal.Size = new System.Drawing.Size(286, 38);
             this.ckb_OverwriteOriginal.TabIndex = 1;
             this.ckb_OverwriteOriginal.Text = "ckb_OverwriteOriginal";
             this.ckb_OverwriteOriginal.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -419,10 +425,10 @@
             // ckb_AddXMPSideCar
             // 
             this.ckb_AddXMPSideCar.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_AddXMPSideCar.Location = new System.Drawing.Point(397, 135);
+            this.ckb_AddXMPSideCar.Location = new System.Drawing.Point(545, 130);
             this.ckb_AddXMPSideCar.MinimumSize = new System.Drawing.Size(100, 20);
             this.ckb_AddXMPSideCar.Name = "ckb_AddXMPSideCar";
-            this.ckb_AddXMPSideCar.Size = new System.Drawing.Size(190, 38);
+            this.ckb_AddXMPSideCar.Size = new System.Drawing.Size(286, 38);
             this.ckb_AddXMPSideCar.TabIndex = 1;
             this.ckb_AddXMPSideCar.Text = "ckb_AddXMPSideCar";
             this.ckb_AddXMPSideCar.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -434,9 +440,45 @@
             this.lbx_fileExtensions.FormattingEnabled = true;
             this.lbx_fileExtensions.Location = new System.Drawing.Point(6, 6);
             this.lbx_fileExtensions.Name = "lbx_fileExtensions";
-            this.lbx_fileExtensions.Size = new System.Drawing.Size(385, 368);
+            this.lbx_fileExtensions.Size = new System.Drawing.Size(512, 368);
             this.lbx_fileExtensions.TabIndex = 0;
             this.lbx_fileExtensions.SelectedIndexChanged += new System.EventHandler(this.Lbx_fileExtensions_SelectedIndexChanged);
+            // 
+            // tpg_CustomRules
+            // 
+            this.tpg_CustomRules.Controls.Add(this.rbx_CustomRulesExplanation);
+            this.tpg_CustomRules.Controls.Add(this.dgv_CustomRules);
+            this.tpg_CustomRules.ImageKey = "CustomAction.png";
+            this.tpg_CustomRules.Location = new System.Drawing.Point(4, 23);
+            this.tpg_CustomRules.Name = "tpg_CustomRules";
+            this.tpg_CustomRules.Padding = new System.Windows.Forms.Padding(3);
+            this.tpg_CustomRules.Size = new System.Drawing.Size(898, 401);
+            this.tpg_CustomRules.TabIndex = 2;
+            this.tpg_CustomRules.Text = "tpg_CustomRules";
+            this.tpg_CustomRules.UseVisualStyleBackColor = true;
+            // 
+            // rbx_CustomRulesExplanation
+            // 
+            this.rbx_CustomRulesExplanation.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rbx_CustomRulesExplanation.Location = new System.Drawing.Point(7, 6);
+            this.rbx_CustomRulesExplanation.Name = "rbx_CustomRulesExplanation";
+            this.rbx_CustomRulesExplanation.ReadOnly = true;
+            this.rbx_CustomRulesExplanation.Size = new System.Drawing.Size(885, 135);
+            this.rbx_CustomRulesExplanation.TabIndex = 1;
+            this.rbx_CustomRulesExplanation.Text = "";
+            this.rbx_CustomRulesExplanation.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.rbx_CustomRulesExplanation_LinkClicked);
+            // 
+            // dgv_CustomRules
+            // 
+            this.dgv_CustomRules.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgv_CustomRules.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            this.dgv_CustomRules.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_CustomRules.Location = new System.Drawing.Point(7, 147);
+            this.dgv_CustomRules.Name = "dgv_CustomRules";
+            this.dgv_CustomRules.Size = new System.Drawing.Size(885, 248);
+            this.dgv_CustomRules.TabIndex = 0;
+            this.dgv_CustomRules.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_CustomRules_DataError);
+            this.dgv_CustomRules.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dgv_CustomRules_RowValidating);
             // 
             // igl_Settings
             // 
@@ -445,12 +487,13 @@
             this.igl_Settings.Images.SetKeyName(0, "LibrarySettings.png");
             this.igl_Settings.Images.SetKeyName(1, "Settings.png");
             this.igl_Settings.Images.SetKeyName(2, "SettingsFile.png");
+            this.igl_Settings.Images.SetKeyName(3, "CustomAction.png");
             // 
             // btn_OK
             // 
             this.btn_OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btn_OK.Location = new System.Drawing.Point(506, 459);
+            this.btn_OK.Location = new System.Drawing.Point(791, 459);
             this.btn_OK.Margin = new System.Windows.Forms.Padding(2);
             this.btn_OK.Name = "btn_OK";
             this.btn_OK.Size = new System.Drawing.Size(60, 19);
@@ -463,7 +506,7 @@
             // 
             this.btn_Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_Cancel.Location = new System.Drawing.Point(576, 459);
+            this.btn_Cancel.Location = new System.Drawing.Point(861, 459);
             this.btn_Cancel.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Cancel.Name = "btn_Cancel";
             this.btn_Cancel.Size = new System.Drawing.Size(60, 19);
@@ -484,7 +527,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.CancelButton = this.btn_Cancel;
-            this.ClientSize = new System.Drawing.Size(652, 485);
+            this.ClientSize = new System.Drawing.Size(937, 485);
             this.Controls.Add(this.btn_Cancel);
             this.Controls.Add(this.btn_OK);
             this.Controls.Add(this.tct_Settings);
@@ -505,6 +548,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.nud_ChoiceOfferCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).EndInit();
             this.tpg_FileOptions.ResumeLayout(false);
+            this.tpg_CustomRules.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_CustomRules)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -543,5 +588,8 @@
         private System.Windows.Forms.NumericUpDown nud_ChoiceOfferCount;
         public System.Windows.Forms.TextBox tbx_ReplaceBlankToponyms;
         private System.Windows.Forms.CheckBox ckb_ReplaceBlankToponyms;
+        private System.Windows.Forms.TabPage tpg_CustomRules;
+        private System.Windows.Forms.DataGridView dgv_CustomRules;
+        private System.Windows.Forms.RichTextBox rbx_CustomRulesExplanation;
     }
 }

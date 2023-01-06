@@ -78,6 +78,17 @@ internal static partial class HelperStatic
                                         [Sub_location] NTEXT
                                         )
                             ;
+                            CREATE TABLE [customRules](
+                                        [ruleId] INTEGER PRIMARY KEY AUTOINCREMENT,
+                                        [CountryCode] NTEXT NOT NULL,
+                                        [DataPointName] NTEXT NOT NULL,
+                                        [DataPointConditionType] NTEXT NOT NULL,
+                                        [DataPointConditionValue] NTEXT NOT NULL,
+                                        [TargetPointName] NTEXT NOT NULL,
+                                        [TargetPointOutcome] NTEXT NOT NULL,
+                                        [TargetPointOutcomeCustom] NTEXT
+                                        )
+                            ;
                             """;
                     SQLiteCommand sqlCommandStr = new(commandText: sql, connection: sqliteDB);
                     sqlCommandStr.ExecuteNonQuery();
@@ -92,6 +103,7 @@ internal static partial class HelperStatic
             else
             {
                 DataCreateSQLiteFavourites();
+                DataCreateSQLiteCustomRules();
                 DataWriteSQLiteRenameFavouritesLocationNameCol();
             }
         }
@@ -511,9 +523,9 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    ///     Reads the Country -> TZ data from the CSV file into a DT
+    ///     Reads the CountryCodes/Country data from the CSV file into a DT
     /// </summary>
-    internal static void DataReadTZDataFromCSV()
+    internal static void DataReadCountryCodeDataFromCSV()
     {
         string countryCodeCsvFilePath = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "isoCountryCodeMapping.csv");
         FrmMainApp.DtIsoCountryCodeMapping = GetDataTableFromCsv(fileNameWithPath: countryCodeCsvFilePath, isUTF: true);
@@ -625,7 +637,7 @@ internal static partial class HelperStatic
 
             sqliteDB.Close();
         }
-        catch (Exception ex)
+        catch
         {
             // nothing
         }
@@ -785,6 +797,89 @@ internal static partial class HelperStatic
             sqlToRun.Parameters.AddWithValue(parameterName: "@" + tagName, value: drFavourite[columnName: tagName]
                                                  .ToString());
         }
+
+        sqlToRun.ExecuteNonQuery();
+    }
+
+    #endregion
+
+    #region customRules
+
+    private static void DataCreateSQLiteCustomRules()
+    {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = @"
+                                CREATE TABLE IF NOT EXISTS [customRules](
+                                        [ruleId] INTEGER PRIMARY KEY AUTOINCREMENT,
+                                        [CountryCode] NTEXT NOT NULL,
+                                        [DataPointName] NTEXT NOT NULL,
+                                        [DataPointConditionType] NTEXT NOT NULL,
+                                        [DataPointConditionValue] NTEXT NOT NULL,
+                                        [TargetPointName] NTEXT NOT NULL,
+                                        [TargetPointOutcome] NTEXT NOT NULL,
+                                        [TargetPointOutcomeCustom] NTEXT
+                                        )
+                                    ;
+                                "
+            ;
+
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+
+        sqlToRun.ExecuteNonQuery();
+    }
+
+    internal static DataTable DataReadSQLiteCustomRules()
+    {
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = @"
+                                SELECT *
+                                FROM CustomRules
+                                WHERE 1=1
+                                ;
+								"
+            ;
+
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+
+        SQLiteDataReader reader = sqlToRun.ExecuteReader();
+        DataTable dataTable = new();
+        dataTable.Load(reader: reader);
+        return dataTable;
+    }
+
+
+    internal static void DataWriteSQLiteCustomRules()
+    {
+        // write back
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
+
+        using SQLiteDataAdapter sqliteAdapter = new(commandText: @"select * from customRules", connection: sqliteDB);
+        SQLiteCommandBuilder commandBuilder = new(adp: sqliteAdapter);
+        sqliteAdapter.Update(dataTable: FrmSettings.dtCustomRules);
+
+        // this is stupid but Update doesn't seem to work with a delete/AcceptChange so...
+        string sqlCommandStr = @"
+                                DELETE FROM customRules
+                                WHERE 1=1
+                                    AND TargetPointOutcome = 'Custom'
+                                    AND TargetPointOutcomeCustom IS NULL
+                                ;
+                                UPDATE customRules
+                                SET TargetPointOutcomeCustom = NULL
+                                WHERE 1=1
+                                    AND TargetPointOutcome != 'Custom'
+                                ;
+                                "
+            ;
+
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
 
         sqlToRun.ExecuteNonQuery();
     }

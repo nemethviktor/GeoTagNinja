@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -14,7 +15,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using CsvHelper;
-using CsvHelper.Configuration;
 using geoTagNinja;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -314,7 +314,7 @@ internal static partial class HelperStatic
                                                               row2) =>
                                                                  row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "objectName"));
 
-        DataTable dtObjectTagNameIn = null;
+        DataTable? dtObjectTagNameIn = null;
         try
         {
             dtObjectTagNameIn = dtObjectTagNamesIn.Select(filterExpression: "objectName = '" + dataPoint + "'")
@@ -526,7 +526,7 @@ internal static partial class HelperStatic
                             string fileNameWithPathForwardSlash = fileNameWithPath
                                 .Replace(oldValue: @"\", newValue: "/");
 
-                            DataTable dtThisFileCsvData = null;
+                            DataTable? dtThisFileCsvData = null;
                             try
                             {
                                 dtThisFileCsvData = dtCSV.Select(filterExpression: "SourceFile = '" + fileNameWithPathForwardSlash + "'")
@@ -1888,77 +1888,251 @@ internal static partial class HelperStatic
             timezoneId = lstReturnToponomyData[index: 0][columnName: "timezoneId"]
                 .ToString();
 
+            string? AdminName1InSQL = lstReturnToponomyData[index: 0][columnName: "AdminName1"]
+                .ToString();
+            string? AdminName2InSQL = lstReturnToponomyData[index: 0][columnName: "AdminName2"]
+                .ToString();
+            string? AdminName3InSQL = lstReturnToponomyData[index: 0][columnName: "AdminName3"]
+                .ToString();
+            string? AdminName4InSQL = lstReturnToponomyData[index: 0][columnName: "AdminName4"]
+                .ToString();
+            string? ToponymNameInSQL = lstReturnToponomyData[index: 0][columnName: "ToponymName"]
+                .ToString();
+
             // In a country where you know, which admin level the cities belong to (see arrays), use the adminNameX as city name.
             // If the toponymName doesn't match the adminNameX, use the toponymName as sublocation name. toponymNames ...
             // ... for populated places may be city names or names of some populated entity below city level, but they're never used for something above city level.
             // In a country where city names are not assigned to a specific admin level, I'd use the toponymName as the city name and leave the sublocation name blank.
-            Sub_location = lstReturnToponomyData[index: 0][columnName: "ToponymName"]
-                .ToString();
 
-            if (arrCityNameIsAdminName1.Contains(value: CountryCode))
+            if (arrCityNameIsAdminName1.Contains(value: CountryCode) || arrCityNameIsAdminName2.Contains(value: CountryCode) || arrCityNameIsAdminName3.Contains(value: CountryCode) || arrCityNameIsAdminName4.Contains(value: CountryCode))
             {
-                City = lstReturnToponomyData[index: 0][columnName: "AdminName1"]
-                    .ToString();
+                Sub_location = ToponymNameInSQL;
+
+                if (arrCityNameIsAdminName1.Contains(value: CountryCode))
+                {
+                    City = AdminName1InSQL;
+                    State = "";
+                }
+                else if (arrCityNameIsAdminName2.Contains(value: CountryCode))
+                {
+                    City = AdminName2InSQL;
+                }
+                else if (arrCityNameIsAdminName3.Contains(value: CountryCode))
+                {
+                    City = AdminName3InSQL;
+                }
+                else if (arrCityNameIsAdminName4.Contains(value: CountryCode))
+                {
+                    City = AdminName4InSQL;
+                }
+
                 if (City == Sub_location)
                 {
                     Sub_location = "";
                 }
-            }
-            else if (arrCityNameIsAdminName2.Contains(value: CountryCode))
-            {
-                City = lstReturnToponomyData[index: 0][columnName: "AdminName2"]
-                    .ToString();
-                if (City == Sub_location)
+
+                if (!arrCityNameIsAdminName1.Contains(value: CountryCode))
                 {
-                    Sub_location = "";
-                }
-            }
-            else if (arrCityNameIsAdminName3.Contains(value: CountryCode))
-            {
-                City = lstReturnToponomyData[index: 0][columnName: "AdminName3"]
-                    .ToString();
-                if (City == Sub_location)
-                {
-                    Sub_location = "";
-                }
-            }
-            else if (arrCityNameIsAdminName4.Contains(value: CountryCode))
-            {
-                City = lstReturnToponomyData[index: 0][columnName: "AdminName4"]
-                    .ToString();
-                if (City == Sub_location)
-                {
-                    Sub_location = "";
-                }
-            }
-            else
-            {
-                // i'll do something more generic and user-editable eventually.
-                if (lstReturnToponomyData[index: 0][columnName: "adminName2"]
-                        .ToString() ==
-                    "Greater London")
-                {
-                    City = lstReturnToponomyData[index: 0][columnName: "adminName2"]
-                        .ToString();
-                    Sub_location = lstReturnToponomyData[index: 0][columnName: "ToponymName"]
-                        .ToString();
-                }
-                else
-                {
-                    City = lstReturnToponomyData[index: 0][columnName: "ToponymName"]
-                        .ToString();
-                    Sub_location = "";
+                    State = AdminName1InSQL;
                 }
             }
 
-            if (arrCityNameIsAdminName1.Contains(value: CountryCode))
-            {
-                State = "";
-            }
             else
             {
-                State = lstReturnToponomyData[index: 0][columnName: "AdminName1"]
-                    .ToString();
+                bool customRuleChangedState = false;
+                bool customRuleChangedCity = false;
+                bool customRuleChangedSub_location = false;
+
+                EnumerableRowCollection<DataRow> drCustomRulesData = from DataRow dataRow in FrmSettings.dtCustomRules.AsEnumerable()
+                                                                     where dataRow.Field<string>(columnName: "CountryCode") == CountryCode
+                                                                     select dataRow;
+
+                if (drCustomRulesData.Any())
+                {
+                    foreach (DataRow dataRow in drCustomRulesData)
+                    {
+                        string DataPointName = dataRow[columnName: "DataPointName"]
+                            .ToString();
+
+                        string DataPointConditionType = dataRow[columnName: "DataPointConditionType"]
+                            .ToString();
+
+                        string DataPointValueInSQL = null;
+
+                        switch (DataPointName)
+                        {
+                            case "AdminName1":
+                                DataPointValueInSQL = AdminName1InSQL;
+                                break;
+                            case "AdminName2":
+                                DataPointValueInSQL = AdminName2InSQL;
+                                break;
+                            case "AdminName3":
+                                DataPointValueInSQL = AdminName3InSQL;
+                                break;
+                            case "AdminName4":
+                                DataPointValueInSQL = AdminName4InSQL;
+                                break;
+                            case "ToponymName":
+                                DataPointValueInSQL = ToponymNameInSQL;
+                                break;
+                        }
+
+                        // don't bother if null
+                        if (!string.IsNullOrEmpty(value: DataPointValueInSQL))
+                        {
+                            string? DataPointConditionValue = dataRow[columnName: "DataPointConditionValue"]
+                                .ToString();
+                            string? DataPointValueInSQLLC = DataPointValueInSQL.ToLower();
+                            string? DataPointConditionValueLC = DataPointConditionValue.ToLower();
+                            bool comparisonIsTrue = false;
+                            switch (DataPointConditionType)
+                            {
+                                case "Is":
+                                    if (DataPointValueInSQLLC == DataPointConditionValueLC)
+                                    {
+                                        comparisonIsTrue = true;
+                                    }
+
+                                    break;
+                                case "Contains":
+                                    if (DataPointValueInSQLLC.Contains(value: DataPointConditionValueLC))
+                                    {
+                                        comparisonIsTrue = true;
+                                    }
+
+                                    break;
+                                case "StartsWith":
+                                    if (DataPointValueInSQLLC.StartsWith(value: DataPointConditionValueLC))
+                                    {
+                                        comparisonIsTrue = true;
+                                    }
+
+                                    break;
+                                case "EndsWith":
+                                    if (DataPointValueInSQLLC.EndsWith(value: DataPointConditionValueLC))
+                                    {
+                                        comparisonIsTrue = true;
+                                    }
+
+                                    break;
+                            }
+
+                            if (comparisonIsTrue)
+                            {
+                                string? TargetPointName = dataRow[columnName: "TargetPointName"]
+                                    .ToString();
+                                string? TargetPointOutcome = dataRow[columnName: "TargetPointOutcome"]
+                                    .ToString();
+                                string? TargetPointOutcomeCustom = dataRow[columnName: "TargetPointOutcomeCustom"]
+                                    .ToString();
+
+                                switch (TargetPointName)
+                                {
+                                    case "State":
+                                        switch (TargetPointOutcome)
+                                        {
+                                            case "AdminName1":
+                                                State = AdminName1InSQL;
+                                                break;
+                                            case "AdminName2":
+                                                State = AdminName2InSQL;
+                                                break;
+                                            case "AdminName3":
+                                                State = AdminName3InSQL;
+                                                break;
+                                            case "AdminName4":
+                                                State = AdminName4InSQL;
+                                                break;
+                                            case "ToponymName":
+                                                State = ToponymNameInSQL;
+                                                break;
+                                            case "Null (empty)":
+                                                State = "";
+                                                break;
+                                            case "Custom":
+                                                State = TargetPointOutcomeCustom;
+                                                break;
+                                        }
+
+                                        customRuleChangedState = true;
+                                        break;
+                                    case "City":
+                                        switch (TargetPointOutcome)
+                                        {
+                                            case "AdminName1":
+                                                City = AdminName1InSQL;
+                                                break;
+                                            case "AdminName2":
+                                                City = AdminName2InSQL;
+                                                break;
+                                            case "AdminName3":
+                                                City = AdminName3InSQL;
+                                                break;
+                                            case "AdminName4":
+                                                City = AdminName4InSQL;
+                                                break;
+                                            case "ToponymName":
+                                                City = ToponymNameInSQL;
+                                                break;
+                                            case "Null (empty)":
+                                                City = "";
+                                                break;
+                                            case "Custom":
+                                                City = TargetPointOutcomeCustom;
+                                                break;
+                                        }
+
+                                        customRuleChangedCity = true;
+                                        break;
+                                    case "Sub_location":
+                                        switch (TargetPointOutcome)
+                                        {
+                                            case "AdminName1":
+                                                Sub_location = AdminName1InSQL;
+                                                break;
+                                            case "AdminName2":
+                                                Sub_location = AdminName2InSQL;
+                                                break;
+                                            case "AdminName3":
+                                                Sub_location = AdminName3InSQL;
+                                                break;
+                                            case "AdminName4":
+                                                Sub_location = AdminName4InSQL;
+                                                break;
+                                            case "ToponymName":
+                                                Sub_location = ToponymNameInSQL;
+                                                break;
+                                            case "Null (empty)":
+                                                Sub_location = "";
+                                                break;
+                                            case "Custom":
+                                                Sub_location = TargetPointOutcomeCustom;
+                                                break;
+                                        }
+
+                                        customRuleChangedSub_location = true;
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (!customRuleChangedState)
+                {
+                    State = AdminName1InSQL;
+                }
+
+                if (!customRuleChangedCity)
+                {
+                    City = ToponymNameInSQL;
+                }
+
+                if (!customRuleChangedSub_location)
+                {
+                    Sub_location = "";
+                }
             }
 
             DataRow drReturnRow = dtReturn.NewRow();
@@ -1983,13 +2157,27 @@ internal static partial class HelperStatic
             );
 
             // if that returns nothing then try again with something bigger.
-            if (readJsonToponomy.Geonames.Length == 0)
+            try
             {
-                readJsonToponomy = API_ExifGetGeoDataFromWebToponomy(
-                    latitude: lat,
-                    longitude: lng,
-                    radius: "300"
-                );
+                if (readJsonToponomy.Geonames != null)
+                {
+                    if (readJsonToponomy.Geonames.Length == 0)
+                    {
+                        readJsonToponomy = API_ExifGetGeoDataFromWebToponomy(
+                            latitude: lat,
+                            longitude: lng,
+                            radius: "300"
+                        );
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_HelperStaticExifNoAPI"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                }
+            }
+            catch
+            {
+                MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_HelperStaticExifNoAPI"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
             }
 
             // ignore if unauthorised or some such
@@ -2035,86 +2223,259 @@ internal static partial class HelperStatic
                         Altitude = readJsonToponomy.Geonames[index]
                             .Srtm3.ToString();
 
+                        // this is already String.
+                        timezoneId = readJsonToponomy.Geonames[index]
+                            .Timezone.TimeZoneId;
+
                         Distance = readJsonToponomy.Geonames[index]
                             .Distance;
+
+                        string? AdminName1InAPI = readJsonToponomy.Geonames[index]
+                            .AdminName1;
+                        string? AdminName2InAPI = readJsonToponomy.Geonames[index]
+                            .AdminName2;
+                        string? AdminName3InAPI = readJsonToponomy.Geonames[index]
+                            .AdminName3;
+                        string? AdminName4InAPI = readJsonToponomy.Geonames[index]
+                            .AdminName4;
+                        string? ToponymNameInAPI = readJsonToponomy.Geonames[index]
+                            .ToponymName;
 
                         // Comments are copied from above.
                         // In a country where you know, which admin level the cities belong to (see arrays), use the adminNameX as city name.
                         // If the toponymName doesn't match the adminNameX, use the toponymName as sublocation name. toponymNames ...
                         // ... for populated places may be city names or names of some populated entity below city level, but they're never used for something above city level.
                         // In a country where city names are not assigned to a specific admin level, I'd use the toponymName as the city name and leave the sublocation name blank.
-                        Sub_location = readJsonToponomy.Geonames[index]
-                            .ToponymName;
 
-                        if (arrCityNameIsAdminName1.Contains(value: CountryCode))
+                        if (arrCityNameIsAdminName1.Contains(value: CountryCode) || arrCityNameIsAdminName2.Contains(value: CountryCode) || arrCityNameIsAdminName3.Contains(value: CountryCode) || arrCityNameIsAdminName4.Contains(value: CountryCode))
                         {
-                            City = readJsonToponomy.Geonames[index]
-                                .AdminName1;
+                            Sub_location = readJsonToponomy.Geonames[index]
+                                .ToponymName;
+                            if (arrCityNameIsAdminName1.Contains(value: CountryCode))
+                            {
+                                City = AdminName1InAPI;
+                                State = "";
+                            }
+                            else if (arrCityNameIsAdminName2.Contains(value: CountryCode))
+                            {
+                                City = AdminName2InAPI;
+                            }
+                            else if (arrCityNameIsAdminName3.Contains(value: CountryCode))
+                            {
+                                City = AdminName3InAPI;
+                            }
+                            else if (arrCityNameIsAdminName4.Contains(value: CountryCode))
+                            {
+                                City = AdminName4InAPI;
+                            }
+
                             if (City == Sub_location)
                             {
                                 Sub_location = "";
                             }
-                        }
-                        else if (arrCityNameIsAdminName2.Contains(value: CountryCode))
-                        {
-                            City = readJsonToponomy.Geonames[index]
-                                .AdminName2;
-                            if (City == Sub_location)
+
+                            if (!arrCityNameIsAdminName1.Contains(value: CountryCode))
                             {
-                                Sub_location = "";
+                                State = AdminName1InAPI;
                             }
                         }
-                        else if (arrCityNameIsAdminName3.Contains(value: CountryCode))
-                        {
-                            City = readJsonToponomy.Geonames[index]
-                                .AdminName3;
-                            if (City == Sub_location)
-                            {
-                                Sub_location = "";
-                            }
-                        }
-                        else if (arrCityNameIsAdminName4.Contains(value: CountryCode))
-                        {
-                            City = readJsonToponomy.Geonames[index]
-                                .AdminName4;
-                            if (City == Sub_location)
-                            {
-                                Sub_location = "";
-                            }
-                        }
+
                         else
                         {
-                            // i'll do something more generic and user-editable eventually.
-                            if (readJsonToponomy.Geonames[index]
-                                    .AdminName2 ==
-                                "Greater London")
+                            bool customRuleChangedState = false;
+                            bool customRuleChangedCity = false;
+                            bool customRuleChangedSub_location = false;
+
+                            EnumerableRowCollection<DataRow> drCustomRulesData = from DataRow dataRow in FrmSettings.dtCustomRules.AsEnumerable()
+                                                                                 where dataRow.Field<string>(columnName: "CountryCode") == CountryCode
+                                                                                 select dataRow;
+
+                            if (drCustomRulesData.Any())
                             {
-                                City = readJsonToponomy.Geonames[index]
-                                    .AdminName2;
-                                Sub_location = readJsonToponomy.Geonames[index]
-                                    .ToponymName;
+                                foreach (DataRow dataRow in drCustomRulesData)
+                                {
+                                    string? DataPointName = dataRow[columnName: "DataPointName"]
+                                        .ToString();
+
+                                    string? DataPointConditionType = dataRow[columnName: "DataPointConditionType"]
+                                        .ToString();
+
+                                    string? DataPointValueInAPI = null;
+                                    switch (DataPointName)
+                                    {
+                                        case "AdminName1":
+                                            DataPointValueInAPI = AdminName1InAPI;
+                                            break;
+                                        case "AdminName2":
+                                            DataPointValueInAPI = AdminName2InAPI;
+                                            break;
+                                        case "AdminName3":
+                                            DataPointValueInAPI = AdminName3InAPI;
+                                            break;
+                                        case "AdminName4":
+                                            DataPointValueInAPI = AdminName4InAPI;
+                                            break;
+                                        case "ToponymName":
+                                            DataPointValueInAPI = ToponymNameInAPI;
+                                            break;
+                                    }
+
+                                    // don't bother if null
+                                    if (!string.IsNullOrEmpty(value: DataPointValueInAPI))
+                                    {
+                                        string? DataPointConditionValue = dataRow[columnName: "DataPointConditionValue"]
+                                            .ToString();
+                                        string? DataPointValueInAPILC = DataPointValueInAPI?.ToLower();
+                                        string? DataPointConditionValueLC = DataPointConditionValue.ToLower();
+                                        bool comparisonIsTrue = false;
+                                        switch (DataPointConditionType)
+                                        {
+                                            case "Is":
+                                                if (DataPointValueInAPILC == DataPointConditionValueLC)
+                                                {
+                                                    comparisonIsTrue = true;
+                                                }
+
+                                                break;
+                                            case "Contains":
+                                                if (DataPointValueInAPILC.Contains(value: DataPointConditionValueLC))
+                                                {
+                                                    comparisonIsTrue = true;
+                                                }
+
+                                                break;
+                                            case "StartsWith":
+                                                if (DataPointValueInAPILC.StartsWith(value: DataPointConditionValueLC))
+                                                {
+                                                    comparisonIsTrue = true;
+                                                }
+
+                                                break;
+                                            case "EndsWith":
+                                                if (DataPointValueInAPILC.EndsWith(value: DataPointConditionValueLC))
+                                                {
+                                                    comparisonIsTrue = true;
+                                                }
+
+                                                break;
+                                        }
+
+                                        if (comparisonIsTrue)
+                                        {
+                                            string? TargetPointName = dataRow[columnName: "TargetPointName"]
+                                                .ToString();
+                                            string? TargetPointOutcome = dataRow[columnName: "TargetPointOutcome"]
+                                                .ToString();
+                                            string? TargetPointOutcomeCustom = dataRow[columnName: "TargetPointOutcomeCustom"]
+                                                .ToString();
+
+                                            switch (TargetPointName)
+                                            {
+                                                case "State":
+                                                    switch (TargetPointOutcome)
+                                                    {
+                                                        case "AdminName1":
+                                                            State = AdminName1InAPI;
+                                                            break;
+                                                        case "AdminName2":
+                                                            State = AdminName2InAPI;
+                                                            break;
+                                                        case "AdminName3":
+                                                            State = AdminName3InAPI;
+                                                            break;
+                                                        case "AdminName4":
+                                                            State = AdminName4InAPI;
+                                                            break;
+                                                        case "ToponymName":
+                                                            State = ToponymNameInAPI;
+                                                            break;
+                                                        case "Null (empty)":
+                                                            State = "";
+                                                            break;
+                                                        case "Custom":
+                                                            State = TargetPointOutcomeCustom;
+                                                            break;
+                                                    }
+
+                                                    customRuleChangedState = true;
+                                                    break;
+                                                case "City":
+                                                    switch (TargetPointOutcome)
+                                                    {
+                                                        case "AdminName1":
+                                                            City = AdminName1InAPI;
+                                                            break;
+                                                        case "AdminName2":
+                                                            City = AdminName2InAPI;
+                                                            break;
+                                                        case "AdminName3":
+                                                            City = AdminName3InAPI;
+                                                            break;
+                                                        case "AdminName4":
+                                                            City = AdminName4InAPI;
+                                                            break;
+                                                        case "ToponymName":
+                                                            City = ToponymNameInAPI;
+                                                            break;
+                                                        case "Null (empty)":
+                                                            City = "";
+                                                            break;
+                                                        case "Custom":
+                                                            City = TargetPointOutcomeCustom;
+                                                            break;
+                                                    }
+
+                                                    customRuleChangedCity = true;
+                                                    break;
+                                                case "Sub_location":
+                                                    switch (TargetPointOutcome)
+                                                    {
+                                                        case "AdminName1":
+                                                            Sub_location = AdminName1InAPI;
+                                                            break;
+                                                        case "AdminName2":
+                                                            Sub_location = AdminName2InAPI;
+                                                            break;
+                                                        case "AdminName3":
+                                                            Sub_location = AdminName3InAPI;
+                                                            break;
+                                                        case "AdminName4":
+                                                            Sub_location = AdminName4InAPI;
+                                                            break;
+                                                        case "ToponymName":
+                                                            Sub_location = ToponymNameInAPI;
+                                                            break;
+                                                        case "Null (empty)":
+                                                            Sub_location = "";
+                                                            break;
+                                                        case "Custom":
+                                                            Sub_location = TargetPointOutcomeCustom;
+                                                            break;
+                                                    }
+
+                                                    customRuleChangedSub_location = true;
+                                                    break;
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                            else
+
+                            if (!customRuleChangedState)
                             {
-                                City = readJsonToponomy.Geonames[index]
-                                    .ToponymName;
+                                State = AdminName1InAPI;
+                            }
+
+                            if (!customRuleChangedCity)
+                            {
+                                City = ToponymNameInAPI;
+                            }
+
+                            if (!customRuleChangedSub_location)
+                            {
                                 Sub_location = "";
                             }
                         }
-
-                        if (arrCityNameIsAdminName1.Contains(value: CountryCode))
-                        {
-                            State = "";
-                        }
-                        else
-                        {
-                            State = readJsonToponomy.Geonames[index]
-                                .AdminName1;
-                        }
-
-                        // this is already String.
-                        timezoneId = readJsonToponomy.Geonames[index]
-                            .Timezone.TimeZoneId;
 
                         // add to return-table to offer to user
                         drApiToponomyRow[columnName: "Distance"] = Distance;

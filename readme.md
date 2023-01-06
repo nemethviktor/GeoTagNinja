@@ -85,3 +85,4 @@ I'm generally happy for anyone competent to add pull requests but I don't always
 - SQLite is running x86 but fwiw the app isn't really memory-hungry so it will do. Chances are if you're still on a 1st-gen Intel Core you're not on Windows 7. Hopefully.
 - You'll need an ArcGIS API key to use the map search functionality. Register for free [here](https://developers.arcgis.com/)
 - You'll need a geoNames username and password to use toponomy search. Register for free [here](https://www.geonames.org/)
+- WebView2 is required but should come with your OS most likely. If not, get it from [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703)

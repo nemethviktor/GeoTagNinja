@@ -124,11 +124,20 @@ public partial class FrmMainApp : Form
     {
         #region Logging
 
-        // Set up logging
+        if (!Directory.Exists(UserDataFolderPath))
+        {
+            Directory.CreateDirectory(UserDataFolderPath);
+        }
 
+        // Set up logging
         LoggingConfiguration config = new();
+
         string logFileLocation = Path.Combine(path1: UserDataFolderPath, path2: "logfile.txt");
-        File.Delete(path: logFileLocation);
+        if (File.Exists(logFileLocation))
+        {
+            File.Delete(path: logFileLocation);
+        }
+
         FileTarget logfile = new(name: "logfile") { FileName = logFileLocation };
         #if(DEBUG)
         config.AddRule(minLevel: LogLevel.Trace, maxLevel: LogLevel.Fatal, target: logfile);
@@ -239,6 +248,7 @@ public partial class FrmMainApp : Form
         };
 
         AppStartupLoadFavourites();
+        AppStartupLoadCustomRules();
         AppStartupPullLastLatLngFromSettings();
         AppStartupPullOverWriteBlankToponomy();
         AppStartupPullToponomyRadiusAndMaxRows();

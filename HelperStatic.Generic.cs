@@ -422,29 +422,37 @@ internal static partial class HelperStatic
             SApiOkay = true;
             DataTable dtApigtnVersion = DTFromAPI_GetGTNVersion();
             // newest may be something like "v0.5.8251"
-            string newestGTNVersionFull = dtApigtnVersion.Rows[index: 0][columnName: "version"]
-                .ToString()
-                .Replace(oldValue: "v", newValue: "");
-            int newestGTNVersion = 0;
-
-            int.TryParse(s: newestGTNVersionFull.Split('.')
-                             .Last(), result: out newestGTNVersion);
-
-            if (newestGTNVersion > currentGTNVersionBuild)
+            try // could be offline etc
             {
-                if (MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewGTNVersionExists") + newestGTNVersion, caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Asterisk) == DialogResult.Yes)
-                {
-                    Process.Start(fileName: "https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dtApigtnVersion.Rows[index: 0][columnName: "version"] + "/GeoTagNinja_Setup.msi");
-                }
-            }
+                string newestGTNVersionFull = dtApigtnVersion.Rows[index: 0][columnName: "version"]
+                    .ToString()
+                    .Replace(oldValue: "v", newValue: "");
 
-            // write back to SQL
-            DataWriteSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "generic",
-                settingId: "onlineVersionCheckDate",
-                settingValue: nowUnixTime.ToString()
-            );
+                int newestGTNVersion = 0;
+
+                int.TryParse(s: newestGTNVersionFull.Split('.')
+                                 .Last(), result: out newestGTNVersion);
+
+                if (newestGTNVersion > currentGTNVersionBuild)
+                {
+                    if (MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewGTNVersionExists") + newestGTNVersion, caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                    {
+                        Process.Start(fileName: "https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dtApigtnVersion.Rows[index: 0][columnName: "version"] + "/GeoTagNinja_Setup.msi");
+                    }
+                }
+
+                // write back to SQL
+                DataWriteSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: "generic",
+                    settingId: "onlineVersionCheckDate",
+                    settingValue: nowUnixTime.ToString()
+                );
+            }
+            catch
+            {
+                // nothing
+            }
         }
         else
         {

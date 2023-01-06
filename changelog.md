@@ -3,11 +3,14 @@
 **v0.7.84XX [202301XX]**
 - NEW & UPDATED:
   - Added a "Manage Favourites" element to the Settings area.
+  - Added Custom Rules. This is experimental for now. Eventually I'll add a Wiki for it.
   - Updated CountryCode ISO SQLite logic with CSV
   - Updated Altitude-pull (from Web) logic. At the same time removed the separate button(s) to do that as it's now part of the Toponomy pull.
   - Bumped exifTool to v12.53
 - BUGS & FIXES:
   - Fixed Paste not actually pasting Country
+  - Fixed crash when API offline or Unauth'd
+  - Fixed crash when User Folder not existing
 
 **v0.7.8391 [20221222]**
 - NEW & UPDATED:

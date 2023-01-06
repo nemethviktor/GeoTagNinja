@@ -75,3 +75,6 @@ mbx_FrmMainApp_InfoFavouriteSaved,Favourite saved OK, Favori sauvé correctement
 mbx_FrmMainApp_InfoCahcedDataRemoved,"If there was any, cached data for selected items has been removed.",Si des données existent les données en cache des fichiers séléctionnés ont été supprimées
 mbx_FrmMainApp_InfoCahcedDataNotRemoved,No data has been removed. Either you didn't select valid items or the ones you picked didn't have cached data.,Aucune donnée n'a été supprimée. Soit vous n'avez pas sélectionné les champs corrects soit les champs séléctionnés n'ont pas de cache.
 mbx_FrmMainApp_NoFavouritesDefined,You have no favourites defined. Add one using the buttons under the map.,
+mbx_HelperStaticExifNoAPI,Failed to reach the API - are you offline by any chance?,
+mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty,"All dropdown columns must have a non-empty value and also the ""if"" condition value must not be empty.",
+mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty,"If you pick ""Custom"" for Outcome then the Custom Outcome column must not be empty. If you close the Settings Form and this isn't fixed, your row will be deleted.",
