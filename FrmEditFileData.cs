@@ -246,6 +246,7 @@ public partial class FrmEditFileData : Form
                                     if (cItemGbx_TakenDate != btn_InsertTakenDate)
                                     {
                                         cItemGbx_TakenDate.Enabled = false;
+                                        btn_InsertTakenDate.Enabled = true;
                                         btn_InsertFromTakenDate.Enabled = false;
                                     }
                                 }
@@ -259,6 +260,7 @@ public partial class FrmEditFileData : Form
                                     if (cItemGbx_CrateDate != btn_InsertCreateDate)
                                     {
                                         cItemGbx_CrateDate.Enabled = false;
+                                        btn_InsertCreateDate.Enabled = true;
                                         btn_InsertFromTakenDate.Enabled = false;
                                     }
                                 }
@@ -277,6 +279,37 @@ public partial class FrmEditFileData : Form
                     // if has value...
                     else
                     {
+                        if (cItem.Parent.Name.StartsWith(value: "gbx_") && cItem.Parent.Name.EndsWith(value: "Date") && cItem is not NumericUpDown)
+                        {
+                            if (cItem.Parent.Name == "gbx_TakenDate")
+                            {
+                                IEnumerable<Control> cGbx_TakenDate = helperNonstatic.GetAllControls(control: gbx_TakenDate);
+                                foreach (Control cItemGbx_TakenDate in cGbx_TakenDate)
+                                {
+                                    if (cItemGbx_TakenDate != btn_InsertTakenDate)
+                                    {
+                                        cItemGbx_TakenDate.Enabled = true;
+                                        btn_InsertTakenDate.Enabled = false;
+                                        btn_InsertFromTakenDate.Enabled = false;
+                                    }
+                                }
+                            }
+
+                            else if (cItem.Parent.Name == "gbx_CreateDate")
+                            {
+                                IEnumerable<Control> cGbx_CreateDate = helperNonstatic.GetAllControls(control: gbx_CreateDate);
+                                foreach (Control cItemGbx_CrateDate in cGbx_CreateDate)
+                                {
+                                    if (cItemGbx_CrateDate != btn_InsertCreateDate)
+                                    {
+                                        cItemGbx_CrateDate.Enabled = true;
+                                        btn_InsertCreateDate.Enabled = false;
+                                        btn_InsertFromTakenDate.Enabled = false;
+                                    }
+                                }
+                            }
+                        }
+
                         // this is related to storing the default DateTimes for TakenDate and CreateDate
                         if (cItem == dtp_TakenDate)
                         {
