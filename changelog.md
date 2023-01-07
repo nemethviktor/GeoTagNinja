@@ -6,7 +6,7 @@
   - Added Custom Rules. This is experimental for now. Eventually I'll add a Wiki for it.
   - Updated CountryCode ISO SQLite logic with CSV
   - Updated Altitude-pull (from Web) logic. At the same time removed the separate button(s) to do that as it's now part of the Toponomy pull.
-  - Bumped exifTool to v12.53
+  - Bumped exifTool to v12.54
 - BUGS & FIXES:
   - Fixed Paste not actually pasting Country
   - Fixed crash when API offline or Unauth'd

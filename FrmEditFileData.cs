@@ -455,6 +455,15 @@ public partial class FrmEditFileData : Form
                         Logger.Trace(message: "Bitmap failed");
                     }
                 }
+
+                try
+                {
+                    frmEditFileDataInstance.pbx_imagePreview.ImageLocation = generatedFileName;
+                }
+                catch
+                {
+                    // nothing
+                }
             }
         }
 
