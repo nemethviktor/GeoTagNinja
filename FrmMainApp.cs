@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ExifToolWrapper;
 using geoTagNinja;
 using GeoTagNinja.Model;
 using GeoTagNinja.Properties;
@@ -135,7 +136,7 @@ public partial class FrmMainApp : Form
         string logFileLocation = Path.Combine(path1: UserDataFolderPath, path2: "logfile.txt");
         if (File.Exists(path: logFileLocation))
         {
-            File.Delete(path: logFileLocation);
+        File.Delete(path: logFileLocation);
         }
 
         FileTarget logfile = new(name: "logfile") { FileName = logFileLocation };
@@ -947,44 +948,44 @@ public partial class FrmMainApp : Form
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         if (frmMainAppInstance != null)
         {
-            ListView lvw = frmMainAppInstance.lvw_FileList;
-            if (lvw.SelectedItems.Count > 0)
+        ListView lvw = frmMainAppInstance.lvw_FileList;
+        if (lvw.SelectedItems.Count > 0)
+        {
+            foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
             {
-                foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
+                // don't do folders...
+                string fileNameWithPath = Path.Combine(path1: FolderName, path2: lvi.Text);
+                string fileNameWithoutPath = lvi.Text;
+                if (File.Exists(path: fileNameWithPath))
                 {
-                    // don't do folders...
-                    string fileNameWithPath = Path.Combine(path1: FolderName, path2: lvi.Text);
-                    string fileNameWithoutPath = lvi.Text;
-                    if (File.Exists(path: fileNameWithPath))
+                    // check it's not in the read-queue.
+                    while (HelperStatic.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
                     {
-                        // check it's not in the read-queue.
-                        while (HelperStatic.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
-                        {
-                            await Task.Delay(millisecondsDelay: 10);
-                        }
+                        await Task.Delay(millisecondsDelay: 10);
+                    }
 
-                        string strGpsLatitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLatitude"]
-                                                                 .Index]
-                            .Text.ToString(provider: CultureInfo.InvariantCulture);
-                        string strGpsLongitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLongitude"]
-                                                                  .Index]
-                            .Text.ToString(provider: CultureInfo.InvariantCulture);
-                        double parsedLat = 0.0;
-                        double parsedLng = 0.0;
-                        if (double.TryParse(s: strGpsLatitude,
-                                            style: NumberStyles.Any,
-                                            provider: CultureInfo.InvariantCulture,
-                                            result: out parsedLat) &&
-                            double.TryParse(s: strGpsLongitude,
-                                            style: NumberStyles.Any,
-                                            provider: CultureInfo.InvariantCulture,
-                                            result: out parsedLng))
-                        {
-                            lvwUpdateTagsFromWeb(strGpsLatitude: strGpsLatitude, strGpsLongitude: strGpsLongitude, lvi: lvi);
-                        }
+                    string strGpsLatitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLatitude"]
+                                                             .Index]
+                        .Text.ToString(provider: CultureInfo.InvariantCulture);
+                    string strGpsLongitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLongitude"]
+                                                              .Index]
+                        .Text.ToString(provider: CultureInfo.InvariantCulture);
+                    double parsedLat = 0.0;
+                    double parsedLng = 0.0;
+                    if (double.TryParse(s: strGpsLatitude,
+                                        style: NumberStyles.Any,
+                                        provider: CultureInfo.InvariantCulture,
+                                        result: out parsedLat) &&
+                        double.TryParse(s: strGpsLongitude,
+                                        style: NumberStyles.Any,
+                                        provider: CultureInfo.InvariantCulture,
+                                        result: out parsedLng))
+                    {
+                        lvwUpdateTagsFromWeb(strGpsLatitude: strGpsLatitude, strGpsLongitude: strGpsLongitude, lvi: lvi);
                     }
                 }
             }
+        }
         }
 
         //done
@@ -1086,7 +1087,7 @@ public partial class FrmMainApp : Form
             HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
             lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
         }
-    }
+            }
 
     /// <summary>
     ///     Generally similar to the above.(btn_Refresh_lvwFileList_Click)
@@ -1376,10 +1377,10 @@ public partial class FrmMainApp : Form
             {
                 Logger.Trace(message: "Drive:" + drive.Name);
                 DirectoryElements.Add(item: new DirectoryElement(
-                                          itemName: drive.Name,
-                                          type: DirectoryElement.ElementType.Drive,
-                                          fullPathAndName: drive.RootDirectory.FullName
-                                      ));
+                                           itemName: drive.Name,
+                                           type: DirectoryElement.ElementType.Drive,
+                                           fullPathAndName: drive.RootDirectory.FullName
+                                       ));
             }
 
             Logger.Trace(message: "Listing Drives - OK");
@@ -1394,16 +1395,18 @@ public partial class FrmMainApp : Form
             if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
             {
                 DirectoryElements.Add(item: new DirectoryElement(
-                                          itemName: ParentFolder,
-                                          type: DirectoryElement.ElementType.ParentDirectory,
-                                          fullPathAndName: tmpStrParent
-                                      ));
+                                           itemName: ParentFolder,
+                                           type: DirectoryElement.ElementType.ParentDirectory,
+                                           fullPathAndName: tmpStrParent
+                                       ));
             }
         }
         catch (Exception ex)
         {
             Logger.Error(message: "Error: " + ex.Message);
         }
+
+        // ExifTool etw = new ExifTool();
 
         // list folders, ReparsePoint means these are links.
         HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: Directories");
@@ -1419,22 +1422,22 @@ public partial class FrmMainApp : Form
                     // It's the MyComputer entry
                     Logger.Trace(message: "MyComputer: " + directoryInfo.Name);
                     DirectoryElements.Add(item: new DirectoryElement(
-                                              itemName: directoryInfo.Name,
-                                              type: DirectoryElement.ElementType.MyComputer,
-                                              fullPathAndName: directoryInfo.FullName
-                                          ));
+                                               itemName: directoryInfo.Name,
+                                               type: DirectoryElement.ElementType.MyComputer,
+                                               fullPathAndName: directoryInfo.FullName
+                                           ));
                 }
                 else if (directoryInfo.Attributes.ToString()
-                             .Contains(value: "Directory") &&
-                         !directoryInfo.Attributes.ToString()
-                             .Contains(value: "ReparsePoint"))
+                        .Contains(value: "Directory") &&
+                    !directoryInfo.Attributes.ToString()
+                        .Contains(value: "ReparsePoint"))
                 {
                     Logger.Trace(message: "Folder: " + directoryInfo.Name);
                     DirectoryElements.Add(item: new DirectoryElement(
-                                              itemName: directoryInfo.Name,
-                                              type: DirectoryElement.ElementType.SubDirectory,
-                                              fullPathAndName: directoryInfo.FullName
-                                          ));
+                                               itemName: directoryInfo.Name,
+                                               type: DirectoryElement.ElementType.SubDirectory,
+                                               fullPathAndName: directoryInfo.FullName
+                                           ));
                 }
             }
         }
@@ -1495,11 +1498,15 @@ public partial class FrmMainApp : Form
             Logger.Trace(message: "File: " + fileNameWithPath);
             string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
             HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-            DirectoryElements.Add(item: new DirectoryElement(
-                                      itemName: Path.GetFileName(path: fileNameWithoutPath),
-                                      type: DirectoryElement.ElementType.File,
-                                      fullPathAndName: fileNameWithPath
-                                  ));
+            DirectoryElement de = new DirectoryElement(
+                                       itemName: Path.GetFileName(path: fileNameWithoutPath),
+                                       type: DirectoryElement.ElementType.File,
+                                       fullPathAndName: fileNameWithPath
+                                   );
+            // ICollection<KeyValuePair<string, string>> props = new Dictionary<string, string>();
+            // etw.GetProperties(fileNameWithPath, props);
+            // de.ReplaceAttributesList(SourcesAndAttributes.Sources.ExifImageFile, (IDictionary<string, string>)props);
+            DirectoryElements.Add(item: de);
         }
 
         Logger.Trace(message: "Listing Folders - OK");
@@ -1530,7 +1537,7 @@ public partial class FrmMainApp : Form
         DirectoryElement item_de = (DirectoryElement)item.Tag;
         Logger.Trace(message: "item: " + item.Text);
 
-        switch (item_de.Type)
+        switch(item_de.Type)
         {
             // if .. (parent) then do a folder-up
             case DirectoryElement.ElementType.ParentDirectory:
@@ -1555,10 +1562,10 @@ public partial class FrmMainApp : Form
                         // itemText.Text here will be something like "C_Windows_320GB_M2_nVME (C:\)"
                         // so just extract whatever is in the parentheses
                         tbx_FolderName.Text = item.Text.Split('(')
-                                                  .Last()
-                                                  .Split(')')
-                                                  .FirstOrDefault() +
-                                              @"\";
+                                                    .Last()
+                                                    .Split(')')
+                                                    .FirstOrDefault() +
+                                                @"\";
                     }
 
                     btn_ts_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
@@ -1892,13 +1899,13 @@ public partial class FrmMainApp : Form
                 foreach (string tagName in AncillaryListsArrays.GetFavouriteTags())
                 {
                     string addStr = lvi.SubItems[index: lvw.Columns[key: "clh_" + tagName]
-                                                     .Index]
-                        .Text.ToString(provider: CultureInfo.InvariantCulture);
+                                                      .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
 
                     if (addStr == "-")
-                    {
+                {
                         addStr = "";
-                    }
+                }
 
                     drFavourite[columnName: tagName] = addStr;
                 }
@@ -1990,7 +1997,7 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    ///     Clears cached data for any selected items if there is any to clear
+    /// Clears cached data for any selected items if there is any to clear
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -2020,7 +2027,7 @@ public partial class FrmMainApp : Form
                         lng)
                     {
                         dr.Delete();
-                    }
+                }
 
                     dataHasBeenRemoved = true;
                 }

@@ -362,6 +362,7 @@ internal static partial class HelperStatic
     /// </summary>
     internal static async Task GenericCheckForNewVersions()
     {
+        return;
         FrmMainApp.Logger.Debug(message: "Starting");
 
         // check when the last polling took place

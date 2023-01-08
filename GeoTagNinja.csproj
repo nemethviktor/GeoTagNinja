@@ -176,6 +176,8 @@
     </Compile>
     <Compile Include="Model\DirectoryElementCollection.cs" />
     <Compile Include="Model\DirectoryElement.cs" />
+    <Compile Include="Model\ExifToolWrapper.cs" />
+    <Compile Include="Model\SourcesAndAttributes.cs" />
     <Compile Include="View\FrmColumnSelection.cs">
       <SubType>Form</SubType>
     </Compile>

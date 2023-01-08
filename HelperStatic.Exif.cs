@@ -406,6 +406,9 @@ internal static partial class HelperStatic
         if (frmMainAppInstance != null)
         {
             FrmMainApp.DtFileDataSeenInThisSession.Clear();
+
+            #region Run EXIF on all relevant files in Dir and output to CSV
+
             string batchFileContents = "";
             string exifToolExe = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe");
             string argsFile = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "exifArgs.args");
@@ -499,6 +502,8 @@ internal static partial class HelperStatic
                 }
             });
             ///////////////
+
+#endregion
 
             if (File.Exists(path: csvFilePath))
             {
@@ -1531,6 +1536,8 @@ internal static partial class HelperStatic
         FilesAreBeingSaved = false;
     }
 
+    private static int _exifInvokeCounter = 0;
+
     /// <summary>
     ///     This is a unified method for calling ExifTool. Any special "dealings" are done inside the message handling.
     ///     (possibly the wrong spot to do it)
@@ -1547,6 +1554,8 @@ internal static partial class HelperStatic
                                           string initiator)
     {
         int lviIndex = 0;
+        _exifInvokeCounter += 1;
+        FrmMainApp.Logger.Trace(message: "Start EXIF Tool number " + _exifInvokeCounter.ToString() + " for " + initiator + " with cmdLine: " + exiftoolCmd);
         await Task.Run(action: () =>
         {
             using Process prcExifTool = new();
@@ -1709,21 +1718,30 @@ internal static partial class HelperStatic
                     prcExifTool.OutputDataReceived += (_,
                                                        data) =>
                     {
-                        // don't care
+                        if (data.Data != null && data.Data.Length > 0)
+                        {
+                            _sOutputMsg += data.Data.ToString() + Environment.NewLine;
+                        }
                     };
 
                     prcExifTool.ErrorDataReceived += (_,
                                                       data) =>
                     {
-                        // don't care
+                        if (data.Data != null && data.Data.Length > 0)
+                        {
+                            _sOutputMsg += "ERROR: " + data.Data.ToString() + Environment.NewLine;
+                        }
                     };
                     break;
             }
 
+            FrmMainApp.Logger.Trace(message: "EXIF number " + _exifInvokeCounter.ToString() + ": Start");
             prcExifTool.Start();
             prcExifTool.BeginOutputReadLine();
             prcExifTool.BeginErrorReadLine();
+            FrmMainApp.Logger.Trace(message: "EXIF number " + _exifInvokeCounter.ToString() + ": Wait for Exit");
             prcExifTool.WaitForExit();
+            FrmMainApp.Logger.Trace(message: "EXIF number " + _exifInvokeCounter.ToString() + ": Close");
             prcExifTool.Close();
             FrmMainApp.Logger.Trace(message: "Closing exifTool");
 
