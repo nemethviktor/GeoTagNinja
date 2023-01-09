@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace GeoTagNinja;
 
@@ -762,6 +764,25 @@ internal static class AncillaryListsArrays
         };
         return result;
     }
+
+    /// <summary>
+    /// Extracts only the file name extensions from the list of
+    /// AllCompatibleExtensions. The returned array is a copy and
+    /// can be used freely.
+    /// </summary>
+    /// <returns>An array of file extensions supported</returns>
+    internal static string[] AllCompatibleExtensionsExt()
+    {
+        string[] allowedExtensions = AllCompatibleExtensions();
+
+        // List contains the extension at then beginning and
+        // after white space more description --> loop
+        // to get only the extensions
+        for (int i = 0; i < allowedExtensions.Length; i++)
+            allowedExtensions[i] = allowedExtensions[i].Split('\t').FirstOrDefault();
+        return allowedExtensions;
+    }
+
 
     internal static string[] GpxExtensions()
     {

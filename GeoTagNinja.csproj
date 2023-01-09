@@ -245,6 +245,7 @@
     <Compile Include="View\ListView\FileListView.Designer.cs">
       <DependentUpon>FileListView.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\ListView\ModelToColumnValueTransformations.cs" />
     <EmbeddedResource Include="FrmAboutBox.resx">
       <DependentUpon>FrmAboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>

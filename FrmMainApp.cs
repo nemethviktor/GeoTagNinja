@@ -64,7 +64,7 @@ public partial class FrmMainApp : Form
     internal static readonly string UserDataFolderPath = Path.Combine(path1: GetFolderPath(folder: SpecialFolder.ApplicationData), path2: "GeoTagNinja");
     internal const string DoubleQuote = "\"";
 
-    internal const string ParentFolder = "..";
+    public const string ParentFolder = "..";
 
     internal static DataTable DtLanguageLabels;
     internal static DataTable DtObjectNames;
@@ -1347,11 +1347,21 @@ public partial class FrmMainApp : Form
                 Logger.Trace(message: "FolderName [was null, now updated]: " + FolderName);
             }
 
-            ParseCurrentDirectoryToDEs();
+            // Clear Tables that keep track of things...
+            Logger.Trace(message: "Clear FrmMainApp.DtOriginalTakenDate && FrmMainApp.DtOriginalCreateDate");
+            FrmMainApp.DtOriginalTakenDate.Clear();
+            FrmMainApp.DtOriginalCreateDate.Clear();
+
+            // Load data (and add to tables)
+            DirectoryElements.ParseFolderToDEs(FolderName, delegate (string statusText) {
+                HandlerUpdateLabelText(label: lbl_ParseProgress, text: statusText);
+            });
+
+            // Show
             lvw_FileList.ReloadFromDEs(directoryElements: DirectoryElements);
 
             Logger.Trace(message: "Calling ExifGetExifFromFolder - " + FolderName);
-            await HelperStatic.ExifGetExifFromFolder(folderNameToUse: FolderName);
+            // await HelperStatic.ExifGetExifFromFolder(folderNameToUse: FolderName);
             Logger.Trace(message: "Finished ExifGetExifFromFolder - " + FolderName);
         }
 
@@ -1365,153 +1375,6 @@ public partial class FrmMainApp : Form
         // Not logging this.
         HelperStatic.LvwCountItemsWithGeoData();
     }
-
-    private void ParseCurrentDirectoryToDEs()
-    {
-        // Special Case is "MyComputer"...
-        // Only list drives...
-        if (FolderName == SpecialFolder.MyComputer.ToString())
-        {
-            Logger.Trace(message: "Listing Drives");
-            foreach (DriveInfo drive in DriveInfo.GetDrives())
-            {
-                Logger.Trace(message: "Drive:" + drive.Name);
-                DirectoryElements.Add(item: new DirectoryElement(
-                                           itemName: drive.Name,
-                                           type: DirectoryElement.ElementType.Drive,
-                                           fullPathAndName: drive.RootDirectory.FullName
-                                       ));
-            }
-
-            Logger.Trace(message: "Listing Drives - OK");
-            return;
-        }
-
-        // add a parent folder. "dot dot"
-        try
-        {
-            Logger.Trace(message: "Files: Adding Parent Folder");
-            string tmpStrParent = HelperStatic.FsoGetParent(path: tbx_FolderName.Text);
-            if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
-            {
-                DirectoryElements.Add(item: new DirectoryElement(
-                                           itemName: ParentFolder,
-                                           type: DirectoryElement.ElementType.ParentDirectory,
-                                           fullPathAndName: tmpStrParent
-                                       ));
-            }
-        }
-        catch (Exception ex)
-        {
-            Logger.Error(message: "Error: " + ex.Message);
-        }
-
-        // ExifTool etw = new ExifTool();
-
-        // list folders, ReparsePoint means these are links.
-        HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: Directories");
-        Logger.Trace(message: "Listing Folders");
-        List<string> dirs = new();
-        try
-        {
-            DirectoryInfo di = new(path: FolderName);
-            foreach (DirectoryInfo directoryInfo in di.GetDirectories())
-            {
-                if (directoryInfo.FullName == SpecialFolder.MyComputer.ToString())
-                {
-                    // It's the MyComputer entry
-                    Logger.Trace(message: "MyComputer: " + directoryInfo.Name);
-                    DirectoryElements.Add(item: new DirectoryElement(
-                                               itemName: directoryInfo.Name,
-                                               type: DirectoryElement.ElementType.MyComputer,
-                                               fullPathAndName: directoryInfo.FullName
-                                           ));
-                }
-                else if (directoryInfo.Attributes.ToString()
-                        .Contains(value: "Directory") &&
-                    !directoryInfo.Attributes.ToString()
-                        .Contains(value: "ReparsePoint"))
-                {
-                    Logger.Trace(message: "Folder: " + directoryInfo.Name);
-                    DirectoryElements.Add(item: new DirectoryElement(
-                                               itemName: directoryInfo.Name,
-                                               type: DirectoryElement.ElementType.SubDirectory,
-                                               fullPathAndName: directoryInfo.FullName
-                                           ));
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Logger.Error(message: "Error: " + ex.Message);
-            MessageBox.Show(text: ex.Message);
-        }
-
-        Logger.Trace(message: "Listing Folders - OK");
-
-        Logger.Trace(message: "Loading allowedExtensions");
-        string[] allowedExtensions = new string[AncillaryListsArrays.AllCompatibleExtensions()
-            .Length];
-        Array.Copy(sourceArray: allowedExtensions, destinationArray: AncillaryListsArrays.AllCompatibleExtensions(), length: 0);
-        for (int i = 0; i < allowedExtensions.Length; i++)
-        {
-            allowedExtensions[i] = AncillaryListsArrays.AllCompatibleExtensions()[i]
-                .Split('\t')
-                .FirstOrDefault();
-            List<string> subItemList = new();
-            foreach (ColumnHeader columnHeader in lvw_FileList.Columns)
-            {
-                if (columnHeader.Name != "clh_FileName")
-                {
-                    subItemList.Add(item: "");
-                }
-            }
-        }
-
-        Logger.Trace(message: "Loading allowedExtensions - OK");
-
-        // list files that have whitelisted extensions
-        Logger.Trace(message: "Files: Listing Files");
-        List<string> listFilesWithPath = new();
-        try
-        {
-            listFilesWithPath = Directory
-                .GetFiles(path: FolderName)
-                .Where(predicate: file => allowedExtensions.Any(predicate: file.ToLower()
-                                                                    .EndsWith))
-                .ToList();
-        }
-        catch (Exception ex)
-        {
-            Logger.Trace(message: "Files: Listing Files - Error: " + ex.Message);
-            MessageBox.Show(text: ex.Message);
-        }
-
-        Logger.Trace(message: "Files: Listing Files - OK");
-
-        listFilesWithPath = listFilesWithPath.OrderBy(keySelector: o => o)
-            .ToList();
-
-        Logger.Trace(message: "Listing Files");
-        foreach (string fileNameWithPath in listFilesWithPath)
-        {
-            Logger.Trace(message: "File: " + fileNameWithPath);
-            string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
-            HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-            DirectoryElement de = new DirectoryElement(
-                                       itemName: Path.GetFileName(path: fileNameWithoutPath),
-                                       type: DirectoryElement.ElementType.File,
-                                       fullPathAndName: fileNameWithPath
-                                   );
-            // ICollection<KeyValuePair<string, string>> props = new Dictionary<string, string>();
-            // etw.GetProperties(fileNameWithPath, props);
-            // de.ReplaceAttributesList(SourcesAndAttributes.Sources.ExifImageFile, (IDictionary<string, string>)props);
-            DirectoryElements.Add(item: de);
-        }
-
-        Logger.Trace(message: "Listing Folders - OK");
-    }
-
 
     /// <summary>
     ///     Handles the lvw_FileList_MouseDoubleClick event -> if user clicked on a folder then enter, if a file then edit
