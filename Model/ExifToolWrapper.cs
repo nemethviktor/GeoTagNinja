@@ -54,7 +54,7 @@ namespace ExifToolWrapper
     {
         string c_exeName = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe");    // "exiftool.exe";
         const string c_arguments = @"-stay_open 1 -@ - -common_args -charset UTF8 -G1 -args";
-        const string c_exitCommand = "-stay_open\n0\n-execute\n";
+        const string c_exitCommand = "-stay_open\nFalse\n";
         const int c_timeout = 30000;    // in milliseconds
         const int c_exitTimeout = 15000;
 
@@ -139,8 +139,8 @@ namespace ExifToolWrapper
                 if (!m_exifTool.HasExited)
                 {
                     m_in.Write(c_exitCommand);
-                    m_in.Flush();
-
+                    m_in.Close();
+ 
                     if (!m_exifTool.WaitForExit(c_exitTimeout))
                     {
                         m_exifTool.Kill();

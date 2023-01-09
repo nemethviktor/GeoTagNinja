@@ -1,120 +1,260 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GeoTagNinja.Model
 {
     public class SourcesAndAttributes
     {
-
-        /// <summary>
-        /// Lists the defined sources for metadata as string constants
-        /// </summary>
-        public enum Sources
+        public enum ElementAttribute
         {
-            ExifImageFile = 0,
-            SidecarFile = 1,
-            Unknown = 999
+            GPSAltitude,
+            GPSAltitudeRef,
+            GPSDestLatitude,
+            GPSDestLatitudeRef,
+            GPSDestLongitude,
+            GPSDestLongitudeRef,
+            GPSImgDirection,
+            GPSImgDirectionRef,
+            GPSLatitude,
+            GPSLatitudeRef,
+            GPSLongitude,
+            GPSLongitudeRef,
+            GPSSpeed,
+            GPSSpeedRef,
+//            Coordinates,
+//            DestCoordinates,
+            City,
+            CountryCode,
+            Country,
+            State,
+            Sub_location,
+            Make,
+            Model,
+            Rating,
+            ExposureTime,
+            Fnumber,
+            FocalLength,
+            FocalLengthIn35mmFormat,
+            ISO,
+            LensSpec,
+            TakenDate,
+            CreateDate,
+            OffsetTime
         }
 
-
-        public static Sources[] SOURCES_LIST = new Sources[2] {
-            Sources.ExifImageFile,
-            Sources.SidecarFile
-        };
-
-
-        public enum ConsolidatedAttributes
+        public static string GetAttributeName(ElementAttribute attribute)
         {
-            Longitude = 0,
-            Latitude = 1,
-            Camera = 2,
-            Undefined = 999
-        }
-
-
-        /// <summary>
-        /// Declaration dictionary for which Tags from the source are mapped
-        /// to which consolidated attributes.
-        /// </summary>
-        private static IDictionary<Sources, IDictionary<string, ConsolidatedAttributes>> _Source2CAMapping =
-            new Dictionary<Sources, IDictionary<string, ConsolidatedAttributes>>()
-            {
-                // Mapping for EXIF Image File
-                {
-                    Sources.ExifImageFile, new Dictionary<string, ConsolidatedAttributes> ()
-                    {
-                        { "Tag", ConsolidatedAttributes.Longitude }
-                    }
-                },
-
-                // Mapping for Sidecar File
-                {
-                    Sources.SidecarFile, new Dictionary<string, ConsolidatedAttributes> ()
-                    {
-                        { "DummyTag", ConsolidatedAttributes.Longitude }
-                    }
-                }
-            };
-
-
-        private static IDictionary<ConsolidatedAttributes, IDictionary<Sources, List<string>>> _CA2SourceMapping = null;
-
-        private static void BuildCA2SourceMapping()
-        {
-            _CA2SourceMapping = new Dictionary<ConsolidatedAttributes, IDictionary<Sources, List<string>>>();
-
-            // At least have a dict per CA - maybe empty at the end...
-            foreach (ConsolidatedAttributes attribute in Enum.GetValues(typeof(ConsolidatedAttributes)).Cast<ConsolidatedAttributes>())
-                _CA2SourceMapping[attribute] = new Dictionary<Sources, List<string>>();
-
-
-            // Iterate over _Source2CAMapping and add values in _CA2SourceMapping
-            Sources source = Sources.Unknown;
-            foreach (KeyValuePair<Sources, IDictionary<string, ConsolidatedAttributes>> sourceentry in _Source2CAMapping)
-            {
-                source = sourceentry.Key;
-                foreach (KeyValuePair<string, ConsolidatedAttributes> entry in sourceentry.Value)
-                {
-
-                    // Ensure the string list is available
-                    if (!(_CA2SourceMapping[entry.Value]).ContainsKey(source))
-                        _CA2SourceMapping[entry.Value] = new Dictionary<Sources, List<string>>();
-                    // Add entry to it
-                    (_CA2SourceMapping[entry.Value])[source].Add(entry.Key);
-                }
+            switch (attribute) {
+                case ElementAttribute.GPSAltitude:
+                    return "GPSAltitude";
+                case ElementAttribute.GPSAltitudeRef:
+                    return "GPSAltitudeRef";
+                case ElementAttribute.GPSDestLatitude:
+                    return "GPSDestLatitude";
+                case ElementAttribute.GPSDestLatitudeRef:
+                    return "GPSDestLatitudeRef";
+                case ElementAttribute.GPSDestLongitude:
+                    return "GPSDestLongitude";
+                case ElementAttribute.GPSDestLongitudeRef:
+                    return "GPSDestLongitudeRef";
+                case ElementAttribute.GPSImgDirection:
+                    return "GPSImgDirection";
+                case ElementAttribute.GPSImgDirectionRef:
+                    return "GPSImgDirectionRef";
+                case ElementAttribute.GPSLatitude:
+                    return "GPSLatitude";
+                case ElementAttribute.GPSLatitudeRef:
+                    return "GPSLatitudeRef";
+                case ElementAttribute.GPSLongitude:
+                    return "GPSLongitude";
+                case ElementAttribute.GPSLongitudeRef:
+                    return "GPSLongitudeRef";
+                case ElementAttribute.GPSSpeed:
+                    return "GPSSpeed";
+                case ElementAttribute.GPSSpeedRef:
+                    return "GPSSpeedRef";
+/*                case ElementAttribute.Coordinates:
+                    return "Coordinates";
+                case ElementAttribute.DestCoordinates:
+                    return "DestCoordinates";
+*/                case ElementAttribute.City:
+                    return "City";
+                case ElementAttribute.CountryCode:
+                    return "CountryCode";
+                case ElementAttribute.Country:
+                    return "Country";
+                case ElementAttribute.State:
+                    return "State";
+                case ElementAttribute.Sub_location:
+                    return "Sub_location";
+                case ElementAttribute.Make:
+                    return "Make";
+                case ElementAttribute.Model:
+                    return "Model";
+                case ElementAttribute.Rating:
+                    return "Rating";
+                case ElementAttribute.ExposureTime:
+                    return "ExposureTime";
+                case ElementAttribute.Fnumber:
+                    return "Fnumber";
+                case ElementAttribute.FocalLength:
+                    return "FocalLength";
+                case ElementAttribute.FocalLengthIn35mmFormat:
+                    return "FocalLengthIn35mmFormat";
+                case ElementAttribute.ISO:
+                    return "ISO";
+                case ElementAttribute.LensSpec:
+                    return "LensSpec";
+                case ElementAttribute.TakenDate:
+                    return "TakenDate";
+                case ElementAttribute.CreateDate:
+                    return "CreateDate";
+                case ElementAttribute.OffsetTime:
+                    return "OffsetTime";
+                default:
+                    Debug.Fail("Trying to get attribute name of unknown attribute with value " + attribute.ToString());
+                    break;
             }
+            return null;
         }
 
 
-        public static IDictionary<Sources, IDictionary<string, ConsolidatedAttributes>> Source2CAMapping { get => _Source2CAMapping; }
-
-        /// <summary>
-        /// Defines which attributes per source are to be identified with a
-        /// consolidated attribute.
-        /// 
-        /// Dict -> Dict:
-        /// ConsAttr --> (Source --> Array of Attributes)
-        /// </summary>
-        public static IDictionary<ConsolidatedAttributes, IDictionary<Sources, List<string>>> GetCA2SourceMapping()
-        {
-            if (_CA2SourceMapping == null)
+        public readonly static IDictionary<ElementAttribute, List<string>> TagsToAttributesOrder =
+            new Dictionary<ElementAttribute, List<string>>()
             {
-                BuildCA2SourceMapping();
-            }
-            return _CA2SourceMapping;
-        }
-        
+                { ElementAttribute.City, new List<string>() {
+                    "XMP:City",
+                    "IPTC:City"
+                } },
+                { ElementAttribute.Country, new List<string>()
+                {
+                    "IPTC:Country-PrimaryLocationName",
+                    "XMP:Country"
+                } },
+                { ElementAttribute.CountryCode, new List<string>() {
+                    "XMP:CountryCode",
+                    "IPTC:Country-PrimaryLocationCode"
+                } },
+                { ElementAttribute.CreateDate, new List<string>() {
+                    "XMP:CreateDate",
+                    "EXIF:CreateDate"
+                } },
+                { ElementAttribute.ExposureTime, new List<string>() {
+                    "XMP:ExposureTime",
+                    "EXIF:ExposureTime"
+                } },
+                { ElementAttribute.Fnumber, new List<string>() {
+                    "XMP:FNumber",
+                    "EXIF:FNumber"
+                } },
+                { ElementAttribute.FocalLength, new List<string>() {
+                    "XMP:FocalLength",
+                    "EXIF:FocalLength"
+                } },
+                { ElementAttribute.FocalLengthIn35mmFormat, new List<string>() {
+                    "XMP:FocalLengthIn35mmFormat",
+                    "EXIF:FocalLengthIn35mmFormat",
+                    "Composite:FocalLength35efl"
+                } },
+                { ElementAttribute.GPSAltitude, new List<string>() {
+                    "XMP:GPSAltitude",
+                    "EXIF:GPSAltitude",
+                    "Composite:GPSAltitude"
+                } },
+                { ElementAttribute.GPSAltitudeRef, new List<string>() {
+                    "XMP:GPSAltitudeRef",
+                    "EXIF:GPSAltitudeRef"
+                } },
+                { ElementAttribute.GPSDestLatitude, new List<string>() {
+                    "XMP:GPSDestLatitude",
+                    "EXIF:GPSDestLatitude"
+                } },
+                { ElementAttribute.GPSDestLatitudeRef, new List<string>() {
+                    "EXIF:GPSDestLatitudeRef",
+                    "Composite:GPSDestLatitudeRef"
+                } },
+                { ElementAttribute.GPSDestLongitude, new List<string>() {
+                    "XMP:GPSDestLongitude",
+                    "EXIF:GPSDestLongitude"
+                } },
+                { ElementAttribute.GPSDestLongitudeRef, new List<string>() {
+                    "EXIF:GPSDestLongitudeRef",
+                    "Composite:GPSDestLongitudeRef"
+                } },
+                { ElementAttribute.GPSImgDirection, new List<string>() {
+                    "XMP:GPSImgDirection",
+                    "EXIF:GPSImgDirection"
+                } },
+                { ElementAttribute.GPSImgDirectionRef, new List<string>() {
+                    "XMP:GPSImgDirectionRef",
+                    "EXIF:GPSImgDirectionRef"
+                } },
+                { ElementAttribute.GPSLatitude, new List<string>() {
+                    "XMP:GPSLatitude",
+                    "EXIF:GPSLatitude",
+                    "Composite:GPSLatitude"
+                } },
+                { ElementAttribute.GPSLatitudeRef, new List<string>() {
+                    "EXIF:GPSLatitudeRef",
+                    "Composite:GPSLatitudeRef"
+                } },
+                { ElementAttribute.GPSLongitude, new List<string>() {
+                    "XMP:GPSLongitude",
+                    "EXIF:GPSLongitude",
+                    "Composite:GPSLongitude"
+                } },
+                { ElementAttribute.GPSLongitudeRef, new List<string>() {
+                    "EXIF:GPSLongitudeRef",
+                    "Composite:GPSLongitudeRef"
+                } },
+                { ElementAttribute.GPSSpeed, new List<string>() {
+                    "XMP:GPSSpeed",
+                    "EXIF:GPSSpeed"
+                } },
+                { ElementAttribute.GPSSpeedRef, new List<string>() {
+                    "XMP:GPSSpeedRef",
+                    "EXIF:GPSSpeedRef"
+                } },
+                { ElementAttribute.ISO, new List<string>() {
+                    "XMP:ISO",
+                    "EXIF:ISO",
+                    "Composite:ISO"
+                } },
+                { ElementAttribute.LensSpec, new List<string>() {
+                    "XMP:LensInfo",
+                    "EXIF:LensModel",
+                    "Composite:Lens"
+                } },
+                { ElementAttribute.Make, new List<string>() {
+                    "XMP:Make",
+                    "EXIF:Make"
+                } },
+                { ElementAttribute.Model, new List<string>() {
+                    "XMP:Model",
+                    "EXIF:Model"
+                } },
+                { ElementAttribute.OffsetTime, new List<string>() {
+                    "EXIF:OffsetTimeOriginal",
+                    "EXIF:OffsetTime"
+                } },
+                { ElementAttribute.Rating, new List<string>() {
+                    "XMP:Rating",
+                    "EXIF:Rating"
+                } },
+                { ElementAttribute.State, new List<string>() {
+                    "XMP:State",
+                    "IPTC:Province-State"
+                } },
+                { ElementAttribute.Sub_location, new List<string>() {
+                    "XMP:Location",
+                    "IPTC:Sub-location"
+                } },
+                { ElementAttribute.TakenDate, new List<string>() {
+                    "XMP:DateTimeOriginal",
+                    "EXIF:DateTimeOriginal"
+                } }
 
-        private static class SourcePriorityRules
-        {
-            public static Sources[] GENERAL_PRIOS = new Sources[2] {
-            Sources.ExifImageFile,
-            Sources.SidecarFile
             };
-        }
 
     }
 }
