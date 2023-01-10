@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoTagNinja", "GeoTagNinja.
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "GeoTagNinja_Setup", "..\GeoTagNinja_Setup\GeoTagNinja_Setup.vdproj", "{BDD0DA26-6231-4789-9DBA-110989DD1422}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoTagNinjaTests", "GeoTagNinjaTests\GeoTagNinjaTests\GeoTagNinjaTests.csproj", "{5EFE1130-D31C-4450-81AD-F8D928885CBC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{BDD0DA26-6231-4789-9DBA-110989DD1422}.Debug|Any CPU.Build.0 = Debug
 		{BDD0DA26-6231-4789-9DBA-110989DD1422}.Release|Any CPU.ActiveCfg = Release
 		{BDD0DA26-6231-4789-9DBA-110989DD1422}.Release|Any CPU.Build.0 = Release
+		{5EFE1130-D31C-4450-81AD-F8D928885CBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EFE1130-D31C-4450-81AD-F8D928885CBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EFE1130-D31C-4450-81AD-F8D928885CBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EFE1130-D31C-4450-81AD-F8D928885CBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

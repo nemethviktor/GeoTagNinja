@@ -8,7 +8,6 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
 using NLog;
-using static System.Environment;
 
 namespace GeoTagNinja.View.ListView;
 /*
@@ -106,8 +105,12 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     public static class ColumnNames
     {
-        public static string FILENAME = "FileName";
-        public static string COORDINATES = "Coordinates";
+        public const string FILENAME = "FileName";
+        public const string GPS_LATITUDE = "GPSLatitude";
+        public const string GPS_LATITUDE_REF = "GPSLatitudeRef";
+        public const string COORDINATES = "Coordinates";
+        public const string EXPOSURE_TIME = "ExposureTime";
+        public const string GPS_ALTITUDE = "GPSAltitude";
     }
 
 
@@ -194,6 +197,51 @@ public partial class FileListView : System.Windows.Forms.ListView
 
     #region Internal Update Logic
 
+
+
+    private string pickModelValueForColumn(DirectoryElement item, ColumnHeader column)
+    {
+        // The displayed file name has to be derived using shell32.dll,
+        // which is done in the actual addListItem method.
+        if (column.Name == COL_NAME_PREFIX + ColumnNames.FILENAME)
+            throw new ArgumentException("The contents of the filename column cannot be requested from the method 'pickModelValueForColumn'.");
+
+        // Set the value if no model value is found
+        string nfVal = UNKNOWN_VALUE_DIR;
+        if (item.Type == DirectoryElement.ElementType.File)
+            nfVal = UNKNOWN_VALUE_FILE;
+
+        switch (column.Name.Substring(startIndex: 4))
+        {
+            case ColumnNames.COORDINATES:
+                return item.GetAttributeValue(
+                        attribute: SourcesAndAttributes.ElementAttribute.GPSLatitude,
+                        notFoundValue: nfVal);
+            case ColumnNames.GPS_LATITUDE:
+                return item.GetAttributeValue(
+                        attribute: SourcesAndAttributes.ElementAttribute.GPSLatitude,
+                        notFoundValue: nfVal);
+            case ColumnNames.GPS_LATITUDE_REF:
+                return item.GetAttributeValue(
+                        attribute: SourcesAndAttributes.ElementAttribute.GPSLatitudeRef,
+                        notFoundValue: nfVal);
+            case ColumnNames.EXPOSURE_TIME:
+                return item.GetAttributeValue(
+                        attribute: SourcesAndAttributes.ElementAttribute.ExposureTime,
+                        notFoundValue: nfVal);
+            case ColumnNames.GPS_ALTITUDE:
+                return ModelToColumnValueTransformations.M2C_GPSAltitude(
+                    item.GetAttributeValue(
+                        attribute: SourcesAndAttributes.ElementAttribute.GPSAltitude,
+                        notFoundValue: nfVal) );
+            default:
+                return nfVal;
+        }
+    }
+
+
+
+
     /// <summary>
     ///     Adds a new listitem to lvw_FileList listview
     /// </summary>
@@ -228,30 +276,6 @@ public partial class FileListView : System.Windows.Forms.ListView
         //Debug.Assert(himl == hSysImgList); // should be the same imagelist as the one we set
 
         #endregion
-
-        // Create a default ("empty") set of col entries for the new list item entry
-        List<string> subItemList = new();
-        if (item.Type == DirectoryElement.ElementType.File)
-        {
-            foreach (ColumnHeader columnHeader in Columns)
-            {
-                if (columnHeader.Name != COL_NAME_PREFIX + ColumnNames.FILENAME)
-                {
-                    subItemList.Add(item: UNKNOWN_VALUE_FILE);
-                }
-            }
-            // For each non-file (i.e. dirs), create empty sub items (needed for sorting)
-        }
-        else
-        {
-            foreach (ColumnHeader columnHeader in Columns)
-            {
-                if (columnHeader.Name != COL_NAME_PREFIX + ColumnNames.FILENAME)
-                {
-                    subItemList.Add(item: UNKNOWN_VALUE_DIR);
-                }
-            }
-        }
 
         ListViewItem lvi = new();
 
@@ -320,6 +344,28 @@ public partial class FileListView : System.Windows.Forms.ListView
             // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
             ScrollToDataPoint(itemText: item.ItemName);
+        }
+
+        // Set the values for the columns
+        List<string> subItemList = new();
+        if (item.Type == DirectoryElement.ElementType.File)
+        {
+            foreach (ColumnHeader columnHeader in Columns)
+            {
+                if (columnHeader.Name != COL_NAME_PREFIX + ColumnNames.FILENAME)
+                    subItemList.Add(item: pickModelValueForColumn(item, columnHeader));
+            }
+            // For each non-file (i.e. dirs), create empty sub items (needed for sorting)
+        }
+        else
+        {
+            foreach (ColumnHeader columnHeader in Columns)
+            {
+                if (columnHeader.Name != COL_NAME_PREFIX + ColumnNames.FILENAME)
+                {
+                    subItemList.Add(item: UNKNOWN_VALUE_DIR);
+                }
+            }
         }
 
         // don't add twice. this could happen if user does F5 too fast/too many times/is derp. (mostly the last one.)
@@ -710,12 +756,17 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         DirectoryElements = directoryElements;
         _fileCount = 0;
+
         foreach (DirectoryElement item in DirectoryElements)
         {
             addListItem(item: item);
             if (item.Type == DirectoryElement.ElementType.File) _fileCount++;
+            if (_fileCount % 10 == 0)
+            {
+                Application.DoEvents();
+                ScrollToDataPoint(itemText: item.ItemName);
+            }
         }
-
         // Resume sorting...
         Logger.Trace(message: "Enable ListViewItemSorter");
         ResumeColumnSorting();
