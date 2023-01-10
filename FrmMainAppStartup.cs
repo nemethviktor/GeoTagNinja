@@ -382,7 +382,7 @@ public partial class FrmMainApp
                                          objectName: "ttp_LoadFavourite"
                                      )
         );
-        ttp_ManageFavourites.SetToolTip(control: btn_LoadFavourite,
+        ttp_ManageFavourites.SetToolTip(control: btn_ManageFavourites,
                                         caption: HelperStatic.DataReadDTObjectText(
                                             objectType: "ToolTip",
                                             objectName: "ttp_ManageFavourites"
@@ -513,7 +513,7 @@ public partial class FrmMainApp
     }
 
     /// <summary>
-    /// Loads Custom Rules
+    ///     Loads Custom Rules
     /// </summary>
     /// <returns></returns>
     private static void AppStartupLoadCustomRules()

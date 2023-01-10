@@ -316,6 +316,32 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
+    /// Checks the SQLite database for checkbox-settings and returns true/false accordingly
+    /// </summary>
+    /// <param name="tableName">TableName where the particular checkbox is - this is almost always "settings"</param>
+    /// <param name="settingTabPage">TabPage of the above</param>
+    /// <param name="settingId">The Checkbox's name itself</param>
+    /// <returns>true or false</returns>
+    internal static bool DataReadCheckBoxSettingTrueOrFalse(string tableName,
+                                                            string settingTabPage,
+                                                            string settingId)
+    {
+        string valueInSQL = HelperStatic.DataReadSQLiteSettings(
+            tableName: tableName,
+            settingTabPage: settingTabPage,
+            settingId: settingId
+        );
+        if (valueInSQL == "true")
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
     ///     Similar to the one above (which reads the data) - this one writes it.
     /// </summary>
     /// <param name="tableName">
@@ -421,7 +447,7 @@ internal static partial class HelperStatic
     internal static string DataReadDTObjectText(string objectType,
                                                 string objectName)
     {
-        return (from kvp in AncillaryListsArrays.commonNamesKVP
+        return (from kvp in AncillaryListsArrays.CommonNamesKvp
                 where kvp.Key == objectType + "_" + objectName
                 select kvp.Value).FirstOrDefault();
     }
@@ -512,10 +538,10 @@ internal static partial class HelperStatic
 
                         if (i == 2)
                         {
-                            AncillaryListsArrays.commonNamesKVP.RemoveAll(match: item => item.Key.Equals(obj: objectName));
+                            AncillaryListsArrays.CommonNamesKvp.RemoveAll(match: item => item.Key.Equals(obj: objectName));
                         }
 
-                        AncillaryListsArrays.commonNamesKVP.Add(item: new KeyValuePair<string, string>(key: objectName, value: objectText));
+                        AncillaryListsArrays.CommonNamesKvp.Add(item: new KeyValuePair<string, string>(key: objectName, value: objectText));
                     }
                 }
             }

@@ -60,6 +60,8 @@
             this.ckb_AddXMPSideCar = new System.Windows.Forms.CheckBox();
             this.lbx_fileExtensions = new System.Windows.Forms.ListBox();
             this.tpg_CustomRules = new System.Windows.Forms.TabPage();
+            this.ckb_StopProcessingRules = new System.Windows.Forms.CheckBox();
+            this.ckb_IncludePredeterminedCountries = new System.Windows.Forms.CheckBox();
             this.rbx_CustomRulesExplanation = new System.Windows.Forms.RichTextBox();
             this.dgv_CustomRules = new System.Windows.Forms.DataGridView();
             this.igl_Settings = new System.Windows.Forms.ImageList(this.components);
@@ -91,8 +93,6 @@
             this.tct_Settings.SelectedIndex = 0;
             this.tct_Settings.Size = new System.Drawing.Size(906, 428);
             this.tct_Settings.TabIndex = 0;
-            this.tct_Settings.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.Tab_Settings_Selecting);
-            this.tct_Settings.Deselecting += new System.Windows.Forms.TabControlCancelEventHandler(this.Tab_Settings_Deselecting);
             // 
             // tpg_Application
             // 
@@ -131,7 +131,7 @@
             // ckb_ReplaceBlankToponyms
             // 
             this.ckb_ReplaceBlankToponyms.AutoSize = true;
-            this.ckb_ReplaceBlankToponyms.Location = new System.Drawing.Point(20, 313);
+            this.ckb_ReplaceBlankToponyms.Location = new System.Drawing.Point(19, 350);
             this.ckb_ReplaceBlankToponyms.Name = "ckb_ReplaceBlankToponyms";
             this.ckb_ReplaceBlankToponyms.Size = new System.Drawing.Size(166, 17);
             this.ckb_ReplaceBlankToponyms.TabIndex = 24;
@@ -141,7 +141,7 @@
             // 
             // tbx_ReplaceBlankToponyms
             // 
-            this.tbx_ReplaceBlankToponyms.Location = new System.Drawing.Point(416, 310);
+            this.tbx_ReplaceBlankToponyms.Location = new System.Drawing.Point(415, 347);
             this.tbx_ReplaceBlankToponyms.Margin = new System.Windows.Forms.Padding(2);
             this.tbx_ReplaceBlankToponyms.Name = "tbx_ReplaceBlankToponyms";
             this.tbx_ReplaceBlankToponyms.Size = new System.Drawing.Size(155, 20);
@@ -151,7 +151,7 @@
             // lbl_ChoiceRadius
             // 
             this.lbl_ChoiceRadius.AutoSize = true;
-            this.lbl_ChoiceRadius.Location = new System.Drawing.Point(311, 277);
+            this.lbl_ChoiceRadius.Location = new System.Drawing.Point(310, 314);
             this.lbl_ChoiceRadius.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_ChoiceRadius.Name = "lbl_ChoiceRadius";
             this.lbl_ChoiceRadius.Size = new System.Drawing.Size(89, 13);
@@ -161,7 +161,7 @@
             // lbl_ChoiceOfferCount
             // 
             this.lbl_ChoiceOfferCount.AutoSize = true;
-            this.lbl_ChoiceOfferCount.Location = new System.Drawing.Point(18, 277);
+            this.lbl_ChoiceOfferCount.Location = new System.Drawing.Point(17, 314);
             this.lbl_ChoiceOfferCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_ChoiceOfferCount.Name = "lbl_ChoiceOfferCount";
             this.lbl_ChoiceOfferCount.Size = new System.Drawing.Size(107, 13);
@@ -170,7 +170,7 @@
             // 
             // nud_ChoiceRadius
             // 
-            this.nud_ChoiceRadius.Location = new System.Drawing.Point(465, 277);
+            this.nud_ChoiceRadius.Location = new System.Drawing.Point(464, 314);
             this.nud_ChoiceRadius.Minimum = new decimal(new int[] {
             1,
             0,
@@ -190,7 +190,7 @@
             // 
             // nud_ChoiceOfferCount
             // 
-            this.nud_ChoiceOfferCount.Location = new System.Drawing.Point(241, 275);
+            this.nud_ChoiceOfferCount.Location = new System.Drawing.Point(240, 312);
             this.nud_ChoiceOfferCount.Maximum = new decimal(new int[] {
             10,
             0,
@@ -216,7 +216,7 @@
             // ckb_RemoveGeoDataRemovesTimeOffset
             // 
             this.ckb_RemoveGeoDataRemovesTimeOffset.AutoSize = true;
-            this.ckb_RemoveGeoDataRemovesTimeOffset.Location = new System.Drawing.Point(21, 252);
+            this.ckb_RemoveGeoDataRemovesTimeOffset.Location = new System.Drawing.Point(20, 289);
             this.ckb_RemoveGeoDataRemovesTimeOffset.Name = "ckb_RemoveGeoDataRemovesTimeOffset";
             this.ckb_RemoveGeoDataRemovesTimeOffset.Size = new System.Drawing.Size(229, 17);
             this.ckb_RemoveGeoDataRemovesTimeOffset.TabIndex = 16;
@@ -226,7 +226,7 @@
             // ckb_ResetMapToZero
             // 
             this.ckb_ResetMapToZero.AutoSize = true;
-            this.ckb_ResetMapToZero.Location = new System.Drawing.Point(21, 229);
+            this.ckb_ResetMapToZero.Location = new System.Drawing.Point(20, 266);
             this.ckb_ResetMapToZero.Name = "ckb_ResetMapToZero";
             this.ckb_ResetMapToZero.Size = new System.Drawing.Size(134, 17);
             this.ckb_ResetMapToZero.TabIndex = 15;
@@ -238,7 +238,7 @@
             // 
             this.cbx_Language.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbx_Language.FormattingEnabled = true;
-            this.cbx_Language.Location = new System.Drawing.Point(136, 199);
+            this.cbx_Language.Location = new System.Drawing.Point(193, 237);
             this.cbx_Language.Name = "cbx_Language";
             this.cbx_Language.Size = new System.Drawing.Size(155, 21);
             this.cbx_Language.TabIndex = 13;
@@ -289,7 +289,7 @@
             // lbl_Language
             // 
             this.lbl_Language.AutoSize = true;
-            this.lbl_Language.Location = new System.Drawing.Point(18, 203);
+            this.lbl_Language.Location = new System.Drawing.Point(17, 240);
             this.lbl_Language.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_Language.Name = "lbl_Language";
             this.lbl_Language.Size = new System.Drawing.Size(71, 13);
@@ -299,7 +299,7 @@
             // lbl_GeoNames_Pwd
             // 
             this.lbl_GeoNames_Pwd.AutoSize = true;
-            this.lbl_GeoNames_Pwd.Location = new System.Drawing.Point(297, 177);
+            this.lbl_GeoNames_Pwd.Location = new System.Drawing.Point(17, 207);
             this.lbl_GeoNames_Pwd.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_GeoNames_Pwd.Name = "lbl_GeoNames_Pwd";
             this.lbl_GeoNames_Pwd.Size = new System.Drawing.Size(103, 13);
@@ -338,7 +338,7 @@
             // 
             // tbx_GeoNames_Pwd
             // 
-            this.tbx_GeoNames_Pwd.Location = new System.Drawing.Point(416, 173);
+            this.tbx_GeoNames_Pwd.Location = new System.Drawing.Point(194, 204);
             this.tbx_GeoNames_Pwd.Margin = new System.Windows.Forms.Padding(2);
             this.tbx_GeoNames_Pwd.Name = "tbx_GeoNames_Pwd";
             this.tbx_GeoNames_Pwd.PasswordChar = '*';
@@ -348,7 +348,7 @@
             // 
             // tbx_GeoNames_UserName
             // 
-            this.tbx_GeoNames_UserName.Location = new System.Drawing.Point(136, 172);
+            this.tbx_GeoNames_UserName.Location = new System.Drawing.Point(194, 173);
             this.tbx_GeoNames_UserName.Margin = new System.Windows.Forms.Padding(2);
             this.tbx_GeoNames_UserName.Name = "tbx_GeoNames_UserName";
             this.tbx_GeoNames_UserName.Size = new System.Drawing.Size(155, 20);
@@ -446,6 +446,8 @@
             // 
             // tpg_CustomRules
             // 
+            this.tpg_CustomRules.Controls.Add(this.ckb_StopProcessingRules);
+            this.tpg_CustomRules.Controls.Add(this.ckb_IncludePredeterminedCountries);
             this.tpg_CustomRules.Controls.Add(this.rbx_CustomRulesExplanation);
             this.tpg_CustomRules.Controls.Add(this.dgv_CustomRules);
             this.tpg_CustomRules.ImageKey = "CustomAction.png";
@@ -457,13 +459,35 @@
             this.tpg_CustomRules.Text = "tpg_CustomRules";
             this.tpg_CustomRules.UseVisualStyleBackColor = true;
             // 
+            // ckb_StopProcessingRules
+            // 
+            this.ckb_StopProcessingRules.AutoSize = true;
+            this.ckb_StopProcessingRules.Location = new System.Drawing.Point(535, 143);
+            this.ckb_StopProcessingRules.Name = "ckb_StopProcessingRules";
+            this.ckb_StopProcessingRules.Size = new System.Drawing.Size(151, 17);
+            this.ckb_StopProcessingRules.TabIndex = 17;
+            this.ckb_StopProcessingRules.Text = "ckb_StopProcessingRules";
+            this.ckb_StopProcessingRules.UseVisualStyleBackColor = true;
+            this.ckb_StopProcessingRules.CheckedChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            // 
+            // ckb_IncludePredeterminedCountries
+            // 
+            this.ckb_IncludePredeterminedCountries.AutoSize = true;
+            this.ckb_IncludePredeterminedCountries.Location = new System.Drawing.Point(7, 143);
+            this.ckb_IncludePredeterminedCountries.Name = "ckb_IncludePredeterminedCountries";
+            this.ckb_IncludePredeterminedCountries.Size = new System.Drawing.Size(197, 17);
+            this.ckb_IncludePredeterminedCountries.TabIndex = 16;
+            this.ckb_IncludePredeterminedCountries.Text = "ckb_IncludePredeterminedCountries";
+            this.ckb_IncludePredeterminedCountries.UseVisualStyleBackColor = true;
+            this.ckb_IncludePredeterminedCountries.CheckedChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            // 
             // rbx_CustomRulesExplanation
             // 
             this.rbx_CustomRulesExplanation.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.rbx_CustomRulesExplanation.Location = new System.Drawing.Point(7, 6);
             this.rbx_CustomRulesExplanation.Name = "rbx_CustomRulesExplanation";
             this.rbx_CustomRulesExplanation.ReadOnly = true;
-            this.rbx_CustomRulesExplanation.Size = new System.Drawing.Size(885, 135);
+            this.rbx_CustomRulesExplanation.Size = new System.Drawing.Size(885, 127);
             this.rbx_CustomRulesExplanation.TabIndex = 1;
             this.rbx_CustomRulesExplanation.Text = "";
             this.rbx_CustomRulesExplanation.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.rbx_CustomRulesExplanation_LinkClicked);
@@ -473,9 +497,9 @@
             this.dgv_CustomRules.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv_CustomRules.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
             this.dgv_CustomRules.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_CustomRules.Location = new System.Drawing.Point(7, 147);
+            this.dgv_CustomRules.Location = new System.Drawing.Point(7, 178);
             this.dgv_CustomRules.Name = "dgv_CustomRules";
-            this.dgv_CustomRules.Size = new System.Drawing.Size(885, 248);
+            this.dgv_CustomRules.Size = new System.Drawing.Size(885, 217);
             this.dgv_CustomRules.TabIndex = 0;
             this.dgv_CustomRules.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_CustomRules_DataError);
             this.dgv_CustomRules.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dgv_CustomRules_RowValidating);
@@ -549,6 +573,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).EndInit();
             this.tpg_FileOptions.ResumeLayout(false);
             this.tpg_CustomRules.ResumeLayout(false);
+            this.tpg_CustomRules.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_CustomRules)).EndInit();
             this.ResumeLayout(false);
 
@@ -591,5 +616,7 @@
         private System.Windows.Forms.TabPage tpg_CustomRules;
         private System.Windows.Forms.DataGridView dgv_CustomRules;
         private System.Windows.Forms.RichTextBox rbx_CustomRulesExplanation;
+        private System.Windows.Forms.CheckBox ckb_StopProcessingRules;
+        private System.Windows.Forms.CheckBox ckb_IncludePredeterminedCountries;
     }
 }

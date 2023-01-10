@@ -1943,15 +1943,25 @@ internal static partial class HelperStatic
         string? Altitude = "0";
         string? timezoneId = "";
 
+        bool includePredeterminedCountries = DataReadCheckBoxSettingTrueOrFalse(
+            tableName: "settings",
+            settingTabPage: "tpg_CustomRules",
+            settingId: "ckb_IncludePredeterminedCountries"
+        );
+
+        bool stopProcessingRules = DataReadCheckBoxSettingTrueOrFalse(
+            tableName: "settings",
+            settingTabPage: "tpg_CustomRules",
+            settingId: "ckb_StopProcessingRules"
+        );
+
         // As per https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 (see below comment a few lines down)
-        string[] arrCityNameIsAdminName1 = { "LIE", "SMR", "MNE", "MKD", "MLT", "SVN" };
-        string[] arrCityNameIsAdminName2 = { "ALA", "BRA", "COL", "CUB", "CYP", "DNK", "FRO", "GTM", "HND", "HRV", "ISL", "LUX", "LVA", "NIC", "NLD", "NOR", "PRI", "PRT", "ROU", "SWE" };
-        string[] arrCityNameIsAdminName3 = { "AUT", "CHE", "CHL", "CZE", "EST", "ESP", "FIN", "GRC", "ITA", "PAN", "PER", "POL", "SRB", "SVK", "USA", "ZAF" };
-        string[] arrCityNameIsAdminName4 = { "BEL", "DEU", "FRA", "GUF", "GLP", "MTQ" };
 
         // read from SQL
         if (lstReturnToponomyData.Count > 0)
         {
+            bool isPredeterminedCountry = false;
+
             CountryCode = lstReturnToponomyData[index: 0][columnName: "CountryCode"]
                 .ToString();
             Country = DataReadDTCountryCodesNames(
@@ -1982,24 +1992,30 @@ internal static partial class HelperStatic
             // ... for populated places may be city names or names of some populated entity below city level, but they're never used for something above city level.
             // In a country where city names are not assigned to a specific admin level, I'd use the toponymName as the city name and leave the sublocation name blank.
 
-            if (arrCityNameIsAdminName1.Contains(value: CountryCode) || arrCityNameIsAdminName2.Contains(value: CountryCode) || arrCityNameIsAdminName3.Contains(value: CountryCode) || arrCityNameIsAdminName4.Contains(value: CountryCode))
+            if (AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode) ||
+                AncillaryListsArrays.CityNameIsAdminName2Arr.Contains(value: CountryCode) ||
+                AncillaryListsArrays.CityNameIsAdminName3Arr.Contains(value: CountryCode) ||
+                AncillaryListsArrays.CityNameIsAdminName4Arr.Contains(value: CountryCode)
+               )
             {
+                isPredeterminedCountry = true;
+
                 Sub_location = ToponymNameInSQL;
 
-                if (arrCityNameIsAdminName1.Contains(value: CountryCode))
+                if (AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode))
                 {
                     City = AdminName1InSQL;
                     State = "";
                 }
-                else if (arrCityNameIsAdminName2.Contains(value: CountryCode))
+                else if (AncillaryListsArrays.CityNameIsAdminName2Arr.Contains(value: CountryCode))
                 {
                     City = AdminName2InSQL;
                 }
-                else if (arrCityNameIsAdminName3.Contains(value: CountryCode))
+                else if (AncillaryListsArrays.CityNameIsAdminName3Arr.Contains(value: CountryCode))
                 {
                     City = AdminName3InSQL;
                 }
-                else if (arrCityNameIsAdminName4.Contains(value: CountryCode))
+                else if (AncillaryListsArrays.CityNameIsAdminName4Arr.Contains(value: CountryCode))
                 {
                     City = AdminName4InSQL;
                 }
@@ -2009,13 +2025,13 @@ internal static partial class HelperStatic
                     Sub_location = "";
                 }
 
-                if (!arrCityNameIsAdminName1.Contains(value: CountryCode))
+                if (!AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode))
                 {
                     State = AdminName1InSQL;
                 }
             }
 
-            else
+            if (!isPredeterminedCountry || includePredeterminedCountries)
             {
                 bool customRuleChangedState = false;
                 bool customRuleChangedCity = false;
@@ -2096,7 +2112,7 @@ internal static partial class HelperStatic
                                     break;
                             }
 
-                            if (comparisonIsTrue)
+                            if (comparisonIsTrue && ((stopProcessingRules && !customRuleChangedSub_location) || !stopProcessingRules))
                             {
                                 string? TargetPointName = dataRow[columnName: "TargetPointName"]
                                     .ToString();
@@ -2166,6 +2182,7 @@ internal static partial class HelperStatic
                                     case "Sub_location":
                                         switch (TargetPointOutcome)
                                         {
+                                            //todo dontprocessmorerules
                                             case "AdminName1":
                                                 Sub_location = AdminName1InSQL;
                                                 break;
@@ -2228,6 +2245,8 @@ internal static partial class HelperStatic
         // read from API
         else if (SApiOkay)
         {
+            bool isPredeterminedCountry = false;
+
             readJsonToponomy = API_ExifGetGeoDataFromWebToponomy(
                 latitude: lat,
                 longitude: lng,
@@ -2346,24 +2365,30 @@ internal static partial class HelperStatic
                         // ... for populated places may be city names or names of some populated entity below city level, but they're never used for something above city level.
                         // In a country where city names are not assigned to a specific admin level, I'd use the toponymName as the city name and leave the sublocation name blank.
 
-                        if (arrCityNameIsAdminName1.Contains(value: CountryCode) || arrCityNameIsAdminName2.Contains(value: CountryCode) || arrCityNameIsAdminName3.Contains(value: CountryCode) || arrCityNameIsAdminName4.Contains(value: CountryCode))
+                        if (AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode) ||
+                            AncillaryListsArrays.CityNameIsAdminName2Arr.Contains(value: CountryCode) ||
+                            AncillaryListsArrays.CityNameIsAdminName3Arr.Contains(value: CountryCode) ||
+                            AncillaryListsArrays.CityNameIsAdminName4Arr.Contains(value: CountryCode)
+                           )
                         {
+                            isPredeterminedCountry = true;
+
                             Sub_location = readJsonToponomy.Geonames[index]
                                 .ToponymName;
-                            if (arrCityNameIsAdminName1.Contains(value: CountryCode))
+                            if (AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode))
                             {
                                 City = AdminName1InAPI;
                                 State = "";
                             }
-                            else if (arrCityNameIsAdminName2.Contains(value: CountryCode))
+                            else if (AncillaryListsArrays.CityNameIsAdminName2Arr.Contains(value: CountryCode))
                             {
                                 City = AdminName2InAPI;
                             }
-                            else if (arrCityNameIsAdminName3.Contains(value: CountryCode))
+                            else if (AncillaryListsArrays.CityNameIsAdminName3Arr.Contains(value: CountryCode))
                             {
                                 City = AdminName3InAPI;
                             }
-                            else if (arrCityNameIsAdminName4.Contains(value: CountryCode))
+                            else if (AncillaryListsArrays.CityNameIsAdminName4Arr.Contains(value: CountryCode))
                             {
                                 City = AdminName4InAPI;
                             }
@@ -2373,13 +2398,13 @@ internal static partial class HelperStatic
                                 Sub_location = "";
                             }
 
-                            if (!arrCityNameIsAdminName1.Contains(value: CountryCode))
+                            if (!AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode))
                             {
                                 State = AdminName1InAPI;
                             }
                         }
 
-                        else
+                        if (!isPredeterminedCountry || includePredeterminedCountries)
                         {
                             bool customRuleChangedState = false;
                             bool customRuleChangedCity = false;
@@ -2459,7 +2484,7 @@ internal static partial class HelperStatic
                                                 break;
                                         }
 
-                                        if (comparisonIsTrue)
+                                        if (comparisonIsTrue && ((stopProcessingRules && !customRuleChangedSub_location) || !stopProcessingRules))
                                         {
                                             string? TargetPointName = dataRow[columnName: "TargetPointName"]
                                                 .ToString();

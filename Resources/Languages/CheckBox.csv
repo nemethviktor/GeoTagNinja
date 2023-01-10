@@ -25,3 +25,5 @@ ckb_OffsetTime,Time Zone Offset,Décalage horaire
 ckb_DeSelectAll,(Un)Check All,Devalider tout
 ckb_RemoveGeoDataRemovesTimeOffset,"The ""Remove Geodata"" function also removes TimeZone Offset","La fonction "" retirer les geodata"" efface le time-offset egalement"
 ckb_ReplaceBlankToponyms,"Replace blank City, State, Sublocation values with: ",
+ckb_IncludePredeterminedCountries,"Include ""Predetermined"" countries? (see link above + caveat/warning)",
+ckb_StopProcessingRules,Stop processing rules after first Country+Target match,

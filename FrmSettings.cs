@@ -111,20 +111,13 @@ public partial class FrmSettings : Form
                     {
                         try
                         {
-                            string cbxTempValue = HelperStatic.DataReadSQLiteSettings(
+                            cbx.CheckState = HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
                                 tableName: "settings",
                                 settingTabPage: ctrl.Name,
-                                settingId: subctrl.Name
-                            );
-
-                            if (cbxTempValue == "true")
-                            {
-                                cbx.CheckState = CheckState.Checked;
-                            }
-                            else
-                            {
-                                cbx.CheckState = CheckState.Unchecked;
-                            }
+                                settingId: cbx.Name
+                            )
+                                ? CheckState.Checked
+                                : CheckState.Unchecked;
                         }
                         catch (InvalidOperationException) // nonesuch
                         {
@@ -185,7 +178,11 @@ public partial class FrmSettings : Form
         source.DataSource = dtCustomRules;
         dgv_CustomRules.DataSource = source;
 
-        List<KeyValuePair<string, string>> clh_CountryCodeOptions = new();
+        List<KeyValuePair<string, string>> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
+                                                                                                      tableName: "settings",
+                                                                                                      settingTabPage: "tpg_CustomRules",
+                                                                                                      settingId: "ckb_IncludePredeterminedCountries"
+                                                                                                  ));
         DataGridViewComboBoxColumn clh_CountryCode = new()
         {
             DataPropertyName = "CountryCode",
@@ -195,13 +192,6 @@ public partial class FrmSettings : Form
             ValueMember = "Key",
             DisplayMember = "Value"
         };
-        foreach (DataRow dataRow in FrmMainApp.DtIsoCountryCodeMapping.Rows)
-        {
-            clh_CountryCodeOptions.Add(item: new KeyValuePair<string, string>(key: dataRow[columnName: "ISO_3166_1A3"]
-                                                                                  .ToString()
-                                                                              , value: dataRow[columnName: "Country"]
-                                                                                  .ToString()));
-        }
 
         DataGridViewComboBoxColumn clh_DataPointName = new()
         {
@@ -209,6 +199,8 @@ public partial class FrmSettings : Form
             Name = "clh_DataPointName",
             HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_DataPointName")
         };
+
+        // e.g.: "AdminName1","AdminName2"...
         foreach (string itemName in AncillaryListsArrays.CustomRulesDataSources())
         {
             clh_DataPointName.Items.Add(item: itemName);
@@ -220,6 +212,8 @@ public partial class FrmSettings : Form
             Name = "clh_DataPointConditionType",
             HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_DataPointConditionType")
         };
+
+        // e.g.: "Is","Contains"...
         foreach (string itemName in AncillaryListsArrays.CustomRulesDataConditions())
         {
             clh_DataPointConditionType.Items.Add(item: itemName);
@@ -238,6 +232,8 @@ public partial class FrmSettings : Form
             Name = "clh_TargetPointName",
             HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointName")
         };
+
+        // e.g.:  "State","City"...
         foreach (string itemName in AncillaryListsArrays.CustomRulesDataTargets())
         {
             clh_TargetPointName.Items.Add(item: itemName);
@@ -249,6 +245,8 @@ public partial class FrmSettings : Form
             Name = "clh_TargetPointOutcome",
             HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointOutcome")
         };
+
+        // e.g.: "AdminName1","AdminName2"... +Null (empty)" + Custom
         foreach (string itemName in AncillaryListsArrays.CustomRulesDataSources(isOutcome: true))
         {
             clh_TargetPointOutcome.Items.Add(item: itemName);
@@ -270,6 +268,48 @@ public partial class FrmSettings : Form
             clh_TargetPointOutcome,
             clh_TargetPointOutcomeCustom
         );
+    }
+
+    /// <summary>
+    ///     Refreshes the list that feeds the country-codes column. Separated because it would also be called when the relevant
+    ///     checkbox changes.
+    /// </summary>
+    /// <returns>KVP list of country codes and countries</returns>
+    private static List<KeyValuePair<string, string>> refreshClh_CountryCodeOptions(bool ckb_IncludePredeterminedCountries)
+    {
+        List<KeyValuePair<string, string>> clh_CountryCodeOptions = new();
+        // e.g. "GBR//United Kingdom of...."
+        foreach (DataRow dataRow in FrmMainApp.DtIsoCountryCodeMapping.Rows)
+        {
+            clh_CountryCodeOptions.Add(item: new KeyValuePair<string, string>(key: dataRow[columnName: "ISO_3166_1A3"]
+                                                                                  .ToString()
+                                                                              , value: dataRow[columnName: "Country"]
+                                                                                  .ToString()));
+        }
+
+        // if _do not_ IncludeNonPredeterminedCountries then remove those
+        if (!ckb_IncludePredeterminedCountries)
+        {
+            foreach (DataRow dataRow in FrmMainApp.DtIsoCountryCodeMapping.Rows)
+            {
+                string countryCode = dataRow[columnName: "ISO_3166_1A3"]
+                    .ToString();
+                if (
+                    AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: countryCode) ||
+                    AncillaryListsArrays.CityNameIsAdminName2Arr.Contains(value: countryCode) ||
+                    AncillaryListsArrays.CityNameIsAdminName3Arr.Contains(value: countryCode) ||
+                    AncillaryListsArrays.CityNameIsAdminName4Arr.Contains(value: countryCode)
+                )
+                {
+                    clh_CountryCodeOptions.Remove(item: new KeyValuePair<string, string>(key: dataRow[columnName: "ISO_3166_1A3"]
+                                                                                             .ToString()
+                                                                                         , value: dataRow[columnName: "Country"]
+                                                                                             .ToString()));
+                }
+            }
+        }
+
+        return clh_CountryCodeOptions;
     }
 
     /// <summary>
@@ -310,19 +350,11 @@ public partial class FrmSettings : Form
             settingId: "tbx_GeoNames_Pwd"
         );
 
-        string tmpSettingVal = HelperStatic.DataReadSQLiteSettings(
+        HelperStatic.SResetMapToZero = HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
             tableName: "settings",
             settingTabPage: "tpg_Application",
             settingId: "ckb_ResetMapToZero"
         );
-        if (tmpSettingVal == "true")
-        {
-            HelperStatic.SResetMapToZero = true;
-        }
-        else
-        {
-            HelperStatic.SResetMapToZero = false;
-        }
 
         FrmMainApp.AppStartupPullOverWriteBlankToponomy();
         FrmMainApp.AppStartupPullToponomyRadiusAndMaxRows();
@@ -475,29 +507,6 @@ public partial class FrmSettings : Form
     }
 
     /// <summary>
-    ///     Handles the event when the "settings" tab gets activated (technically this fires before that)
-    /// </summary>
-    /// <param name="sender">Unused</param>
-    /// <param name="e">Unused</param>
-    private void Tab_Settings_Selecting(object sender,
-                                        TabControlCancelEventArgs e)
-    {
-        // this is for the "new" selected page
-        _nowLoadingSettingsData = true;
-    }
-
-    /// <summary>
-    ///     Handles the event when the "settings" tab gets deactivated (technically this fires before that)
-    /// </summary>
-    /// <param name="sender">Unused</param>
-    /// <param name="e">Unused</param>
-    private void Tab_Settings_Deselecting(object sender,
-                                          TabControlCancelEventArgs e)
-    {
-        _nowLoadingSettingsData = false;
-    }
-
-    /// <summary>
     ///     Handles the event where any checkbox's true/false value changes. If changed makes them bold and queues up for
     ///     saving.
     /// </summary>
@@ -528,6 +537,16 @@ public partial class FrmSettings : Form
             if (tmpCtrlName == "ckb_ReplaceBlankToponyms")
             {
                 tbx_ReplaceBlankToponyms.Enabled = ckb.Checked;
+            }
+
+            if (tmpCtrlName == "ckb_IncludePredeterminedCountries")
+            {
+                List<KeyValuePair<string, string>> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: ckb_IncludePredeterminedCountries.Checked);
+                DataGridViewComboBoxColumn clh_CountryCode = (DataGridViewComboBoxColumn)dgv_CustomRules.Columns[columnName: "clh_CountryCode"];
+                if (clh_CountryCode != null) // shouldn't really be null but just in case.
+                {
+                    clh_CountryCode.DataSource = clh_CountryCodeOptions;
+                }
             }
 
             // stick it into settings-Q

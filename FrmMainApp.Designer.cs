@@ -84,11 +84,11 @@ namespace GeoTagNinja
             this.cbx_Favourites = new System.Windows.Forms.ComboBox();
             this.btn_SaveLocation = new System.Windows.Forms.Button();
             this.btn_LoadFavourite = new System.Windows.Forms.Button();
+            this.btn_ManageFavourites = new System.Windows.Forms.Button();
             this.ttp_NavigateMapGo = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_loctToFile = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_SaveFavourite = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_LoadFavourite = new System.Windows.Forms.ToolTip(this.components);
-            this.btn_ManageFavourites = new System.Windows.Forms.Button();
             this.ttp_ManageFavourites = new System.Windows.Forms.ToolTip(this.components);
             this.mns_MenuStrip.SuspendLayout();
             this.tsr_MainAppToolStrip.SuspendLayout();
@@ -403,7 +403,7 @@ namespace GeoTagNinja
             this.lvw_FileList.GridLines = true;
             this.lvw_FileList.HideSelection = false;
             this.lvw_FileList.Location = new System.Drawing.Point(0, 0);
-            this.lvw_FileList.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.lvw_FileList.Margin = new System.Windows.Forms.Padding(2);
             this.lvw_FileList.Name = "lvw_FileList";
             this.lvw_FileList.Size = new System.Drawing.Size(328, 181);
             this.lvw_FileList.TabIndex = 12;
@@ -451,7 +451,7 @@ namespace GeoTagNinja
             this.pbx_imagePreview.EmptyText = "No image to show";
             this.pbx_imagePreview.Image = null;
             this.pbx_imagePreview.Location = new System.Drawing.Point(0, 0);
-            this.pbx_imagePreview.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pbx_imagePreview.Margin = new System.Windows.Forms.Padding(2);
             this.pbx_imagePreview.Name = "pbx_imagePreview";
             this.pbx_imagePreview.Size = new System.Drawing.Size(328, 194);
             this.pbx_imagePreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -486,7 +486,7 @@ namespace GeoTagNinja
             this.tct_Main.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tct_Main.ImageList = this.igl_RightHandSide;
             this.tct_Main.Location = new System.Drawing.Point(0, 0);
-            this.tct_Main.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tct_Main.Margin = new System.Windows.Forms.Padding(2);
             this.tct_Main.Name = "tct_Main";
             this.tct_Main.Padding = new System.Drawing.Point(0, 0);
             this.tct_Main.SelectedIndex = 0;
@@ -498,9 +498,9 @@ namespace GeoTagNinja
             this.tpg_Map.Controls.Add(this.wbv_MapArea);
             this.tpg_Map.ImageKey = "PublishOnDemand.png";
             this.tpg_Map.Location = new System.Drawing.Point(4, 23);
-            this.tpg_Map.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpg_Map.Margin = new System.Windows.Forms.Padding(2);
             this.tpg_Map.Name = "tpg_Map";
-            this.tpg_Map.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpg_Map.Padding = new System.Windows.Forms.Padding(2);
             this.tpg_Map.Size = new System.Drawing.Size(378, 338);
             this.tpg_Map.TabIndex = 0;
             this.tpg_Map.Text = "tpg_Map";
@@ -514,7 +514,7 @@ namespace GeoTagNinja
             this.wbv_MapArea.Dock = System.Windows.Forms.DockStyle.Fill;
             this.wbv_MapArea.Location = new System.Drawing.Point(2, 2);
             this.wbv_MapArea.Name = "wbv_MapArea";
-            this.wbv_MapArea.Padding = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.wbv_MapArea.Padding = new System.Windows.Forms.Padding(1);
             this.wbv_MapArea.Size = new System.Drawing.Size(374, 334);
             this.wbv_MapArea.TabIndex = 1;
             this.wbv_MapArea.ZoomFactor = 1D;
@@ -608,7 +608,7 @@ namespace GeoTagNinja
             this.btn_loctToFile.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_loctToFile.BackgroundImage")));
             this.btn_loctToFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btn_loctToFile.Location = new System.Drawing.Point(311, 2);
-            this.btn_loctToFile.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_loctToFile.Margin = new System.Windows.Forms.Padding(2);
             this.btn_loctToFile.Name = "btn_loctToFile";
             this.btn_loctToFile.Size = new System.Drawing.Size(24, 24);
             this.btn_loctToFile.TabIndex = 10;
@@ -640,7 +640,7 @@ namespace GeoTagNinja
             this.btn_SaveLocation.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_SaveLocation.BackgroundImage")));
             this.btn_SaveLocation.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btn_SaveLocation.Location = new System.Drawing.Point(240, 30);
-            this.btn_SaveLocation.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_SaveLocation.Margin = new System.Windows.Forms.Padding(2);
             this.btn_SaveLocation.Name = "btn_SaveLocation";
             this.btn_SaveLocation.Size = new System.Drawing.Size(24, 24);
             this.btn_SaveLocation.TabIndex = 14;
@@ -653,11 +653,11 @@ namespace GeoTagNinja
             this.btn_LoadFavourite.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_LoadFavourite.BackgroundImage")));
             this.btn_LoadFavourite.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btn_LoadFavourite.Location = new System.Drawing.Point(268, 30);
-            this.btn_LoadFavourite.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_LoadFavourite.Margin = new System.Windows.Forms.Padding(2);
             this.btn_LoadFavourite.Name = "btn_LoadFavourite";
             this.btn_LoadFavourite.Size = new System.Drawing.Size(24, 24);
             this.btn_LoadFavourite.TabIndex = 15;
-            this.btn_LoadFavourite.Text = "button2";
+            this.btn_LoadFavourite.Text = "btn_LoadFavourite";
             this.btn_LoadFavourite.UseVisualStyleBackColor = true;
             this.btn_LoadFavourite.Click += new System.EventHandler(this.btn_LoadFavourite_Click);
             // 
@@ -685,7 +685,7 @@ namespace GeoTagNinja
             this.Controls.Add(this.mns_MenuStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mns_MenuStrip;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimumSize = new System.Drawing.Size(669, 403);
             this.Name = "FrmMainApp";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
