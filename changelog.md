@@ -11,6 +11,10 @@
   - Fixed Paste not actually pasting Country
   - Fixed crash when API offline or Unauth'd
   - Fixed crash when User Folder not existing
+  - Fixed a bug re: the API sending back invalid Altitude data. While I can't do much about that per se but now if there is existing data in the file then that will be retained rather than making it -32756m or some such.
+  - Fixed a recursion bug while loading the Edit Form. Should run faster now.
+  - Fixed a bug re: how DateTime formats are handled. 
+  - Fixed a bug re: Time-Shift values not being properly recalled if user didn't explicitly refresh folder.
 
 **v0.7.8391 [20221222]**
 - NEW & UPDATED:

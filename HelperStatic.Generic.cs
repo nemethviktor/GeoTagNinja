@@ -29,6 +29,29 @@ internal static partial class HelperStatic
         return strings.FirstOrDefault(predicate: s => !string.IsNullOrWhiteSpace(value: s));
     }
 
+    private static string GenericStringToDateTimeBackToString(string dateTimeToConvert)
+    {
+        bool isDT = DateTime.TryParse(s: dateTimeToConvert, result: out DateTime tryDataValueDT);
+        string tryDataValueStr = tryDataValueDT.ToString(format: CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern);
+        if (isDT)
+        {
+            return tryDataValueStr;
+        }
+
+        return "-";
+    }
+
+    private static DateTime? GenericStringToDateTime(string dateTimeToConvert)
+    {
+        bool isDT = DateTime.TryParse(s: dateTimeToConvert, result: out DateTime tryDataValueDT);
+        if (isDT)
+        {
+            return tryDataValueDT;
+        }
+
+        return null;
+    }
+
     /// <summary>
     ///     Wrangles the actual coordinate out of a point. (e.g. 4.54 East to -4.54)
     /// </summary>

@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Input;
 using TimeZoneConverter;
 using static GeoTagNinja.FrmMainApp;
 
@@ -140,9 +139,7 @@ public partial class FrmEditFileData : Form
         string fileNameWithoutPath = lvw_FileListEditImages.SelectedItems[index: 0]
             .Text;
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        string strSqlDataDT1 = null;
-        string strSqlDataDT3 = null;
-        string strFLData = null;
+        btn_InsertFromTakenDate.Enabled = false;
 
         // via https://stackoverflow.com/a/47692754/3968494
 
@@ -160,6 +157,9 @@ public partial class FrmEditFileData : Form
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
+            string strSqlDataDT1 = null;
+            string strSqlDataDT3 = null;
+            string strFLData = null;
             string exifTag = cItem.Name; // this is for debugging only (particularly here, that is.)
             try
             {
@@ -174,10 +174,10 @@ public partial class FrmEditFileData : Form
                 )
                 {
                     // gets logged inside.
-                    cItem.Text = HelperStatic.DataReadDTObjectText(cItem.GetType()
+                    cItem.Text = HelperStatic.DataReadDTObjectText(objectType: cItem.GetType()
                                                                        .ToString()
                                                                        .Split('.')
-                                                                       .Last(), cItem.Name);
+                                                                       .Last(), objectName: cItem.Name);
                 }
                 else if (cItem is TextBox || cItem is ComboBox || cItem is DateTimePicker || cItem is NumericUpDown)
                 {
@@ -195,6 +195,8 @@ public partial class FrmEditFileData : Form
                     // Basically not all Tags exist as CLHs.
                     List<string> lstObjectNamesIn = DtObjectTagNamesIn.Rows.OfType<DataRow>()
                         .Select(selector: dr => dr.Field<string>(columnName: "objectName"))
+                        .ToList();
+                    lstObjectNamesIn = lstObjectNamesIn.Distinct()
                         .ToList();
 
                     if (lstObjectNamesIn.Contains(item: exifTag))
@@ -290,7 +292,7 @@ public partial class FrmEditFileData : Form
                                     {
                                         cItemGbx_TakenDate.Enabled = true;
                                         btn_InsertTakenDate.Enabled = false;
-                                        btn_InsertFromTakenDate.Enabled = false;
+                                        btn_InsertFromTakenDate.Enabled = true;
                                     }
                                 }
                             }
@@ -304,7 +306,6 @@ public partial class FrmEditFileData : Form
                                     {
                                         cItemGbx_CrateDate.Enabled = true;
                                         btn_InsertCreateDate.Enabled = false;
-                                        btn_InsertFromTakenDate.Enabled = false;
                                     }
                                 }
                             }
@@ -356,7 +357,6 @@ public partial class FrmEditFileData : Form
                                 fileNameWithoutPath: fileNameWithoutPath,
                                 settingId: cItemNumericUpDown.Name.Substring(startIndex: 4),
                                 settingValue: cItemValStr);
-
                             cItemNumericUpDown.Value = int.Parse(s: cItemValStr);
                         }
 
@@ -590,6 +590,9 @@ public partial class FrmEditFileData : Form
             strGpsLatitude = tbx_GPSLatitude.Text.ToString(provider: CultureInfo.InvariantCulture);
             strGpsLongitude = tbx_GPSLongitude.Text.ToString(provider: CultureInfo.InvariantCulture);
 
+            HelperStatic.CurrentAltitude = null;
+            HelperStatic.CurrentAltitude = tbx_GPSAltitude.Text.ToString(provider: CultureInfo.InvariantCulture);
+
             if (double.TryParse(s: strGpsLatitude,
                                 style: NumberStyles.Any,
                                 provider: CultureInfo.InvariantCulture,
@@ -608,6 +611,12 @@ public partial class FrmEditFileData : Form
         {
             if (frmMainAppInstance != null)
             {
+                HelperStatic.CurrentAltitude = null;
+                HelperStatic.CurrentAltitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
+                    .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSAltitude"]
+                                  .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+
                 strGpsLatitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
                     .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLatitude"]
                                   .Index]

@@ -124,16 +124,16 @@ public partial class FrmMainApp : Form
     {
         #region Logging
 
-        if (!Directory.Exists(UserDataFolderPath))
+        if (!Directory.Exists(path: UserDataFolderPath))
         {
-            Directory.CreateDirectory(UserDataFolderPath);
+            Directory.CreateDirectory(path: UserDataFolderPath);
         }
 
         // Set up logging
         LoggingConfiguration config = new();
 
         string logFileLocation = Path.Combine(path1: UserDataFolderPath, path2: "logfile.txt");
-        if (File.Exists(logFileLocation))
+        if (File.Exists(path: logFileLocation))
         {
             File.Delete(path: logFileLocation);
         }
@@ -1001,6 +1001,12 @@ public partial class FrmMainApp : Form
                                       ListViewItem lvi)
     {
         string fileNameWithoutPath = lvi.Text;
+        HelperStatic.CurrentAltitude = null;
+        HelperStatic.CurrentAltitude = lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
+            .SubItems[index: lvw_FileList.Columns[key: "clh_GPSAltitude"]
+                          .Index]
+            .Text.ToString(provider: CultureInfo.InvariantCulture);
+
         DataTable dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
         if (dtToponomy.Rows.Count > 0)
         {

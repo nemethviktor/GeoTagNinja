@@ -273,7 +273,7 @@ internal static partial class HelperStatic
             {
                 if (DateTime.TryParse(s: tryDataValue, result: out DateTime outDateTime))
                 {
-                    tryDataValue = outDateTime.ToString(format: CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern);
+                    tryDataValue = GenericStringToDateTimeBackToString(dateTimeToConvert: tryDataValue);
                 }
                 else
                 {
@@ -411,9 +411,16 @@ internal static partial class HelperStatic
             string argsFile = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "exifArgs.args");
             string extraArgs = "";
 
-            File.Delete(path: csvFilePath);
-            File.Delete(path: batchFilePath);
-            File.Delete(path: argsFile);
+            try
+            {
+                File.Delete(path: csvFilePath);
+                File.Delete(path: batchFilePath);
+                File.Delete(path: argsFile);
+            }
+            catch
+            {
+                // nothing
+            }
 
             List<string> exifArgs = new();
 
@@ -629,9 +636,7 @@ internal static partial class HelperStatic
                                         DataRow drTakenDate = FrmMainApp.DtOriginalTakenDate.NewRow();
                                         drTakenDate[columnName: "fileNameWithoutPath"] = lvi.Text;
                                         drTakenDate[columnName: "settingId"] = "originalTakenDate";
-                                        drTakenDate[columnName: "settingValue"] = DateTime.Parse(s: str,
-                                                                                                 provider: CultureInfo.CurrentUICulture)
-                                            .ToString(provider: CultureInfo.CurrentUICulture);
+                                        drTakenDate[columnName: "settingValue"] = GenericStringToDateTime(dateTimeToConvert: str);
                                         FrmMainApp.DtOriginalTakenDate.Rows.Add(row: drTakenDate);
                                         FrmMainApp.DtOriginalTakenDate.AcceptChanges();
                                     }
@@ -643,9 +648,7 @@ internal static partial class HelperStatic
                                         DataRow drCreateDate = FrmMainApp.DtOriginalCreateDate.NewRow();
                                         drCreateDate[columnName: "fileNameWithoutPath"] = lvi.Text;
                                         drCreateDate[columnName: "settingId"] = "originalCreateDate";
-                                        drCreateDate[columnName: "settingValue"] = DateTime.Parse(s: str,
-                                                                                                  provider: CultureInfo.CurrentUICulture)
-                                            .ToString(provider: CultureInfo.CurrentUICulture);
+                                        drCreateDate[columnName: "settingValue"] = GenericStringToDateTime(dateTimeToConvert: str);
 
                                         FrmMainApp.DtOriginalCreateDate.Rows.Add(row: drCreateDate);
                                         FrmMainApp.DtOriginalCreateDate.AcceptChanges();
@@ -917,6 +920,12 @@ internal static partial class HelperStatic
                                             if (tagToWrite == "GPSLongitude")
                                             {
                                                 strParsedLng = str;
+                                            }
+
+                                            if (tagToWrite == "GPSAltitude")
+                                            {
+                                                CurrentAltitude = null;
+                                                CurrentAltitude = str;
                                             }
 
                                             if (lvi.Index % 10 == 0)
@@ -1354,11 +1363,23 @@ internal static partial class HelperStatic
                         }
                         else
                         {
-                            if (objectTagNameOut == "EXIF:DateTimeOriginal" ||
-                                objectTagNameOut == "EXIF:CreateDate" ||
-                                objectTagNameOut == "XMP:DateTimeOriginal" ||
-                                objectTagNameOut == "XMP:CreateDate")
+                            if (objectTagNameOut == "EXIF:DateTimeOriginal" || // TakenDate
+                                objectTagNameOut == "EXIF:CreateDate" || // CreateDate
+                                objectTagNameOut == "XMP:DateTimeOriginal" || // TakenDate
+                                objectTagNameOut == "XMP:CreateDate" // CreateDate
+                               )
                             {
+                                bool isTakenDate = false;
+                                bool isCreateDate = false;
+                                if (objectTagNameOut == "EXIF:DateTimeOriginal" || objectTagNameOut == "XMP:DateTimeOriginal")
+                                {
+                                    isTakenDate = true;
+                                }
+                                else if (objectTagNameOut == "EXIF:CreateDate" || objectTagNameOut == "XMP:CreateDate")
+                                {
+                                    isCreateDate = true;
+                                }
+
                                 try
                                 {
                                     updateExifVal = DateTime.Parse(s: settingValue)
@@ -1367,6 +1388,63 @@ internal static partial class HelperStatic
                                 catch
                                 {
                                     updateExifVal = "";
+                                }
+
+                                if (isCreateDate)
+                                {
+                                    // update FrmMainApp.DtOriginalCreateDate -- there should be only 1 row
+                                    for (int i = FrmMainApp.DtOriginalCreateDate.Rows.Count - 1; i >= 0; i--)
+                                    {
+                                        DataRow dr = FrmMainApp.DtOriginalCreateDate.Rows[index: i];
+                                        if (dr[columnName: "fileNameWithoutPath"]
+                                                .ToString() ==
+                                            fileNameWithoutPath)
+                                        {
+                                            dr.Delete();
+                                        }
+
+                                        break;
+                                    }
+
+                                    FrmMainApp.DtOriginalCreateDate.AcceptChanges();
+                                    if (updateExifVal != "")
+                                    {
+                                        DataRow drCreateDate = FrmMainApp.DtOriginalCreateDate.NewRow();
+                                        drCreateDate[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
+                                        drCreateDate[columnName: "settingId"] = "originalCreateDate";
+                                        drCreateDate[columnName: "settingValue"] = GenericStringToDateTime(dateTimeToConvert: updateExifVal);
+
+                                        FrmMainApp.DtOriginalCreateDate.Rows.Add(row: drCreateDate);
+                                        FrmMainApp.DtOriginalCreateDate.AcceptChanges();
+                                    }
+                                }
+                                else if (isTakenDate)
+                                {
+                                    // update FrmMainApp.DtOriginalTakenDate -- there should be only 1 row
+                                    for (int i = FrmMainApp.DtOriginalTakenDate.Rows.Count - 1; i >= 0; i--)
+                                    {
+                                        DataRow dr = FrmMainApp.DtOriginalTakenDate.Rows[index: i];
+                                        if (dr[columnName: "fileNameWithoutPath"]
+                                                .ToString() ==
+                                            fileNameWithoutPath)
+                                        {
+                                            dr.Delete();
+                                        }
+
+                                        break;
+                                    }
+
+                                    FrmMainApp.DtOriginalTakenDate.AcceptChanges();
+                                    if (updateExifVal != "")
+                                    {
+                                        DataRow drTakenDate = FrmMainApp.DtOriginalTakenDate.NewRow();
+                                        drTakenDate[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
+                                        drTakenDate[columnName: "settingId"] = "originalTakenDate";
+                                        drTakenDate[columnName: "settingValue"] = GenericStringToDateTime(dateTimeToConvert: updateExifVal);
+
+                                        FrmMainApp.DtOriginalTakenDate.Rows.Add(row: drTakenDate);
+                                        FrmMainApp.DtOriginalTakenDate.AcceptChanges();
+                                    }
                                 }
                             }
 
@@ -1856,14 +1934,14 @@ internal static partial class HelperStatic
 
         GeoResponseToponomy readJsonToponomy;
 
-        string Distance = "";
-        string CountryCode = "";
-        string Country = "";
-        string City = "";
-        string State = "";
-        string Sub_location = "";
-        string Altitude = "0";
-        string timezoneId = "";
+        string? Distance = "";
+        string? CountryCode = "";
+        string? Country = "";
+        string? City = "";
+        string? State = "";
+        string? Sub_location = "";
+        string? Altitude = "0";
+        string? timezoneId = "";
 
         // As per https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 (see below comment a few lines down)
         string[] arrCityNameIsAdminName1 = { "LIE", "SMR", "MNE", "MKD", "MLT", "SVN" };
@@ -2220,8 +2298,29 @@ internal static partial class HelperStatic
                             );
                         }
 
-                        Altitude = readJsonToponomy.Geonames[index]
-                            .Srtm3.ToString();
+                        bool _ = double.TryParse(s: readJsonToponomy.Geonames[index]
+                                                     .Srtm3.ToString(), result: out double tmpAlt);
+                        try
+                        {
+                            // can return 32768 or -32768 in some cases. this is the API's "fault" (not that of the code.)
+                            if (Math.Abs(value: tmpAlt) > 32000.0)
+                            {
+                                if (!string.IsNullOrEmpty(value: CurrentAltitude))
+                                {
+                                    _ = double.TryParse(s: CurrentAltitude, result: out tmpAlt);
+                                }
+                                else
+                                {
+                                    tmpAlt = 0.0;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            tmpAlt = 0.0;
+                        }
+
+                        Altitude = tmpAlt.ToString();
 
                         // this is already String.
                         timezoneId = readJsonToponomy.Geonames[index]
