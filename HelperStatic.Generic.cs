@@ -58,7 +58,7 @@ internal static partial class HelperStatic
     /// </summary>
     /// <param name="point">This is a raw coordinate. Could contain numbers or things like "East" on top of numbers</param>
     /// <returns>Double - an actual coordinate</returns>
-    private static double GenericAdjustLatLongNegative(string point)
+    public static double GenericAdjustLatLongNegative(string point)
     {
         string pointOrig = point.Replace(oldValue: " ", newValue: "")
             .Replace(oldChar: ',', newChar: '.');

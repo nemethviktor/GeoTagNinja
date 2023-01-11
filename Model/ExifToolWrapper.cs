@@ -53,7 +53,11 @@ namespace ExifToolWrapper
     class ExifTool : IDisposable
     {
         string c_exeName = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe");    // "exiftool.exe";
-        const string c_arguments = @"-stay_open 1 -@ - -common_args -charset UTF8 -G1 -args";
+        // const string c_arguments = @"-stay_open 1 -@ - -common_args -charset UTF8 -G1 -args";
+        // -stay_open 1 -@ - -common_args invokes to stay open, parse args from stdin/cmdline and
+        // use args for all future -execute command
+        const string c_arguments = @"-stay_open 1 -@ - -common_args -api ""Filter=s/\r|\n/ /g "" -a -s -s -struct -G -ee -charset UTF8 -charset filename=utf8 -args";
+        // TODO:                             string commonArgs = @" -api ""Filter=s/\r|\n/ /g "" -a -s -s -struct -sort -G -ee -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 ";
         const string c_exitCommand = "-stay_open\nFalse\n";
         const int c_timeout = 30000;    // in milliseconds
         const int c_exitTimeout = 15000;
@@ -92,8 +96,6 @@ namespace ExifToolWrapper
             m_in = new StreamWriter(m_exifTool.StandardInput.BaseStream, s_Utf8NoBOM);
             m_out = m_exifTool.StandardOutput;
         }
-
-        // TODO: string commonArgs = @" -api ""Filter=s/\r|\n/ /g "" -a -s -s -struct -sort -G -ee -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 ";
 
         public void GetProperties(string filename, ICollection<KeyValuePair<string, string>> propsRead)
         {

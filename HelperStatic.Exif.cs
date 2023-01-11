@@ -62,6 +62,10 @@ internal static partial class HelperStatic
                 if (tryDataValue != "-")
                 {
                     // we want N instead of North etc.
+                    // Get the Ref Tag for the corresponding data point and thereof the first character
+                    // (Should be N of North, etc.)
+                    // If this character is not contained in the data point value, add it before it
+                    // Finally ensure that dec sep. is "."
                     try
                     {
                         tmpLatLongRefVal = ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: dataPoint + "Ref")

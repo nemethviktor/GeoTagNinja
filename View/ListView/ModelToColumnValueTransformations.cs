@@ -1,48 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GeoTagNinja.Model;
+using static GeoTagNinja.View.ListView.FileListView;
 
 namespace GeoTagNinja.View.ListView
 {
     internal class ModelToColumnValueTransformations
     {
-        public static string M2C_GPSAltitude(string modelValue)
+        /// <summary>
+        /// Combine the values of lat & long into one column
+        /// </summary>
+        public static string M2C_CoordinatesInclDest(string column,
+            DirectoryElement item, string nfVal)
         {
-            if (modelValue.Contains(value: "m"))
+            // Pick the right attribs depending on which column
+            SourcesAndAttributes.ElementAttribute latAttrib = SourcesAndAttributes.ElementAttribute.GPSLatitude;
+            SourcesAndAttributes.ElementAttribute longAttrib = SourcesAndAttributes.ElementAttribute.GPSLongitude;
+            if (column == FileListColumns.DEST_COORDINATES)
             {
-                modelValue = modelValue.Split('m')[0]
-                    .Trim()
-                    .Replace(oldChar: ',', newChar: '.');
+                latAttrib = SourcesAndAttributes.ElementAttribute.GPSDestLatitude;
+                longAttrib = SourcesAndAttributes.ElementAttribute.GPSDestLongitude;
             }
 
-            if (modelValue.Contains(value: "/"))
-            {
-                if (modelValue.Contains(value: ",") || modelValue.Contains(value: "."))
-                {
-                    modelValue = modelValue.Split('/')[0]
-                        .Trim()
-                        .Replace(oldChar: ',', newChar: '.');
-                }
-                else // attempt to convert it to decimal
-                {
-                    try
-                    {
-                        bool parseBool = double.TryParse(s: modelValue.Split('/')[0], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double numerator);
-                        parseBool = double.TryParse(s: modelValue.Split('/')[1], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double denominator);
-                        modelValue = Math.Round(value: numerator / denominator, digits: 2)
-                            .ToString(provider: CultureInfo.InvariantCulture);
-                    }
-                    catch
-                    {
-                        modelValue = "0.0";
-                    }
-                }
-            }
+            string latValue = item.GetAttributeValueString(
+                        attribute: latAttrib,
+                        notFoundValue: nfVal);
+            string longValue = item.GetAttributeValueString(
+                        attribute: longAttrib,
+                        notFoundValue: nfVal);
 
-            return modelValue;
+            return latValue + ";" + longValue;
         }
+
     }
 }

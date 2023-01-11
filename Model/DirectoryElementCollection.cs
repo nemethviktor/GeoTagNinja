@@ -192,9 +192,17 @@ public class DirectoryElementCollection : List<DirectoryElement>
                                        type: DirectoryElement.ElementType.File,
                                        fullPathAndName: fileNameWithPath
                                    );
-            ICollection<KeyValuePair<string, string>> props = new Dictionary<string, string>();
-            etw.GetProperties(fileNameWithPath, props);
-            de.ParseAttributesFromExifToolOutput((IDictionary<string, string>)props);
+
+            // EXIF Tool can return duplicate properties - handle, but ignore these...
+            ICollection<KeyValuePair<string, string>> propsRead = new List<KeyValuePair<string, string>>();
+            etw.GetProperties(fileNameWithPath, propsRead);
+            IDictionary<string, string> props = new Dictionary<string, string>();
+            foreach (KeyValuePair<string, string> kvp in propsRead)
+                if (!props.ContainsKey(kvp.Key))
+                    props.Add(kvp.Key, kvp.Value);
+
+            // Insert into model
+            de.ParseAttributesFromExifToolOutput(props);
             this.Add(item: de);
             count++;
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace GeoTagNinja.Model
@@ -112,12 +113,85 @@ namespace GeoTagNinja.Model
                 case ElementAttribute.OffsetTime:
                     return "OffsetTime";
                 default:
-                    Debug.Fail("Trying to get attribute name of unknown attribute with value " + attribute.ToString());
-                    break;
+                    throw new ArgumentException($"Trying to get attribute name of unknown attribute with value " + attribute.ToString());
             }
-            return null;
         }
 
+        public static Type GetAttributeType(ElementAttribute attribute)
+        {
+            switch (attribute)
+            {
+                case ElementAttribute.GPSAltitude:
+                    return typeof(double);
+                case ElementAttribute.GPSAltitudeRef:
+                    return typeof(string);
+                case ElementAttribute.GPSDestLatitude:
+                    return typeof(double);
+                case ElementAttribute.GPSDestLatitudeRef:
+                    return typeof(string);
+                case ElementAttribute.GPSDestLongitude:
+                    return typeof(double);
+                case ElementAttribute.GPSDestLongitudeRef:
+                    return typeof(string);
+                case ElementAttribute.GPSImgDirection:
+                    return typeof(string);
+                case ElementAttribute.GPSImgDirectionRef:
+                    return typeof(string);
+                case ElementAttribute.GPSLatitude:
+                    return typeof(double);
+                case ElementAttribute.GPSLatitudeRef:
+                    return typeof(string);
+                case ElementAttribute.GPSLongitude:
+                    return typeof(double);
+                case ElementAttribute.GPSLongitudeRef:
+                    return typeof(string);
+                case ElementAttribute.GPSSpeed:
+                    return typeof(string);
+                case ElementAttribute.GPSSpeedRef:
+                    return typeof(string);
+                /*                case ElementAttribute.Coordinates:
+                                    return "Coordinates";
+                                case ElementAttribute.DestCoordinates:
+                                    return "DestCoordinates";
+                */
+                case ElementAttribute.City:
+                    return typeof(string);
+                case ElementAttribute.CountryCode:
+                    return typeof(string);
+                case ElementAttribute.Country:
+                    return typeof(string);
+                case ElementAttribute.State:
+                    return typeof(string);
+                case ElementAttribute.Sub_location:
+                    return typeof(string);
+                case ElementAttribute.Make:
+                    return typeof(string);
+                case ElementAttribute.Model:
+                    return typeof(string);
+                case ElementAttribute.Rating:
+                    return typeof(string);
+                case ElementAttribute.ExposureTime:
+                    return typeof(string);
+                case ElementAttribute.Fnumber:
+                    return typeof(string);
+                case ElementAttribute.FocalLength:
+                    return typeof(string);
+                case ElementAttribute.FocalLengthIn35mmFormat:
+                    return typeof(string);
+                case ElementAttribute.ISO:
+                    return typeof(string);
+                case ElementAttribute.LensSpec:
+                    return typeof(string);
+                case ElementAttribute.TakenDate:
+                    return typeof(string);
+                case ElementAttribute.CreateDate:
+                    return typeof(string);
+                case ElementAttribute.OffsetTime:
+                    return typeof(string);
+                default:
+                    throw new ArgumentException($"Trying to get attribute type of unknown attribute with value " + attribute.ToString());
+            }
+        }
 
         public readonly static IDictionary<ElementAttribute, List<string>> TagsToAttributesOrder =
             new Dictionary<ElementAttribute, List<string>>()
