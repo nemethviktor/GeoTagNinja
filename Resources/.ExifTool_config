@@ -7,21 +7,25 @@
     'Image::ExifTool::Composite' => {
         GTNPreview => {
             Groups => { 2 => 'Preview' },
-            Desire => {
+			Desire => {
                 0 => 'PreviewImage',
-                1 => 'JpgFromRaw',
-                2 => 'MPImage3',
-                3 => 'OtherImage',
-                4 => 'ThumbnailImage',
+				1 => 'JpgFromRaw',
+				2 => 'MPImage3',
+				3 => 'OtherImage',
+				4 => 'ThumbnailImage',
             },
-            ValueConv => sub {
-                my $val = shift;
-                my $image;
-                foreach $image (@$val) {
-                    next unless ref $image eq 'SCALAR';
-                    return $image;
+			Require => {
+                1 => 'Orientation',
+            },
+            ValueConv => q{
+                if (defined $val[1]) {
+                    my $et = new Image::ExifTool;
+                    $et->SetNewValue('Orientation#', $val[1]);
+                    my $rotatedImage;
+                    my $success = $et->WriteInfo($val[0], \$rotatedImage);
+                    return \$rotatedImage if $success == 1;
                 }
-                return undef;
+                return $val[0];
             },
         },
     },

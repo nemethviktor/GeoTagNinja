@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -595,6 +596,98 @@ internal static partial class HelperStatic
     internal static bool GenericLockCheckLockFile(string fileNameWithoutPath)
     {
         return FilesBeingProcessed.Contains(item: fileNameWithoutPath);
+    }
+
+    /// <summary>
+    ///     Triggers the "create preview" process for the file it's sent to check
+    /// </summary>
+    /// <param name="fileNameWithPath">Filename w/ path to check</param>
+    /// <param name="initiator"></param>
+    /// <returns></returns>
+    internal static async Task GenericCreateImagePreview(string fileNameWithPath,
+                                                         string initiator)
+    {
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
+        Image img = null;
+        FileInfo fi = new(fileName: fileNameWithPath);
+        string generatedFileName = null;
+
+        if (initiator == "FrmMainApp" && frmMainAppInstance != null)
+        {
+            frmMainAppInstance.pbx_imagePreview.Image = null;
+            generatedFileName = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: frmMainAppInstance.lvw_FileList.SelectedItems[index: 0]
+                                                                                              .Text +
+                                                                                          ".jpg");
+        }
+        else if (initiator == "FrmEditFileData" && frmEditFileDataInstance != null)
+        {
+            frmEditFileDataInstance.pbx_imagePreview.Image = null;
+            generatedFileName = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: frmEditFileDataInstance.lvw_FileListEditImages.SelectedItems[index: 0]
+                                                                                              .Text +
+                                                                                          ".jpg");
+        }
+
+        //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
+        string pbxErrorMsg = DataReadDTObjectText(
+            objectType: "PictureBox",
+            objectName: "pbx_imagePreviewCouldNotRetrieve"
+        );
+
+        try
+        {
+            img = Image.FromFile(filename: fileNameWithPath);
+        }
+        catch
+        {
+            // nothing.
+        }
+
+        if (img == null)
+        {
+            // don't run the thing again if file has already been generated
+            if (!File.Exists(path: generatedFileName))
+            {
+                await ExifGetImagePreviews(fileNameWithoutPath: fileNameWithPath);
+            }
+
+            if (File.Exists(path: generatedFileName))
+            {
+                try
+                {
+                    img = Image.FromFile(filename: generatedFileName);
+                    ExifRotate(img: img);
+                }
+                catch
+                {
+                    // nothing
+                }
+            }
+        }
+
+        if (img != null)
+        {
+            if (initiator == "FrmMainApp" && frmMainAppInstance != null)
+            {
+                frmMainAppInstance.pbx_imagePreview.Image = img;
+            }
+            else if (initiator == "FrmEditFileData" && frmEditFileDataInstance != null)
+            {
+                frmEditFileDataInstance.pbx_imagePreview.Image = img;
+            }
+        }
+
+        else
+        {
+            if (initiator == "FrmMainApp" && frmMainAppInstance != null)
+            {
+                frmMainAppInstance.pbx_imagePreview.SetErrorMessage(message: pbxErrorMsg);
+            }
+            else if (initiator == "FrmEditFileData" && frmEditFileDataInstance != null)
+            {
+                // frmEditFileDataInstance.pbx_imagePreview.SetErrorMessage(message: pbxErrorMsg); // <- nonesuch.
+            }
+        }
     }
 
     /// <summary>

@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TimeZoneConverter;
 using static GeoTagNinja.FrmMainApp;
@@ -435,74 +434,6 @@ public partial class FrmEditFileData : Form
     }
 
 
-    /// <summary>
-    ///     Attempts to generate preview image for the image that was clicked on.
-    /// </summary>
-    /// <param name="fileNameWithPath">Name (path) of the file that was clicked on.</param>
-    /// <returns></returns>
-    private static async Task pbx_imgPreviewPicGenerator(string fileNameWithPath)
-    {
-        Logger.Debug(message: "Starting");
-
-        string fileName = Path.GetFileName(path: fileNameWithPath);
-        // via https://stackoverflow.com/a/8701748/3968494
-        FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
-        Image img = null;
-        if (frmEditFileDataInstance != null)
-        {
-            try
-            {
-                Logger.Trace(message: "Trying Bitmap");
-                using Bitmap bmpTemp = new(filename: fileNameWithPath);
-                img = new Bitmap(original: bmpTemp);
-                frmEditFileDataInstance.pbx_imagePreview.Image = img;
-            }
-            catch
-            {
-                Logger.Trace(message: "Bitmap failed");
-            }
-
-            if (img == null)
-            {
-                Logger.Trace(message: "Img doesn't exist.");
-                string generatedFileName = Path.Combine(path1: UserDataFolderPath, path2: fileName + ".jpg");
-                // don't run the thing again if file has already been generated
-                if (!File.Exists(path: generatedFileName))
-                {
-                    await HelperStatic.ExifGetImagePreviews(fileNameWithoutPath: fileNameWithPath);
-                }
-
-                //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
-                if (!File.Exists(path: generatedFileName))
-                {
-                    Logger.Trace(message: "Exiftool Failed to extract file");
-                    try
-                    {
-                        Logger.Trace(message: "Trying bitmap again");
-                        using Bitmap bmpTemp = new(filename: generatedFileName);
-                        img = new Bitmap(original: bmpTemp);
-                        frmEditFileDataInstance.pbx_imagePreview.Image = img;
-                    }
-                    catch
-                    {
-                        Logger.Trace(message: "Bitmap failed");
-                    }
-                }
-
-                try
-                {
-                    frmEditFileDataInstance.pbx_imagePreview.ImageLocation = generatedFileName;
-                }
-                catch
-                {
-                    // nothing
-                }
-            }
-        }
-
-        Logger.Debug(message: "Done");
-    }
-
     #region Variables
 
     private static bool _frmEditFileDataNowLoadingFileData;
@@ -847,7 +778,8 @@ public partial class FrmEditFileData : Form
                 lvw_EditorFileListImagesGetData();
 
                 pbx_imagePreview.Image = null;
-                await pbx_imgPreviewPicGenerator(fileNameWithPath: fileNameWithPath);
+                await HelperStatic.GenericCreateImagePreview(fileNameWithPath: fileNameWithPath,
+                                                             initiator: "FrmEditFileData");
             }
             else
             {

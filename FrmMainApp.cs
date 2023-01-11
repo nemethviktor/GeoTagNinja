@@ -1602,8 +1602,8 @@ public partial class FrmMainApp : Form
 
                 if (File.Exists(path: fileNameWithPath))
                 {
-                    await HelperStatic.LvwItemCreatePreview(
-                        fileNameWithPath: fileNameWithPath);
+                    await HelperStatic.GenericCreateImagePreview(
+                        fileNameWithPath: fileNameWithPath, initiator: "FrmMainApp");
                 }
                 else
                 {

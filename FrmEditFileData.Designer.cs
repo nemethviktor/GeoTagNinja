@@ -1012,7 +1012,8 @@
         }
 
         #endregion
-        private System.Windows.Forms.PictureBox pbx_imagePreview;
+
+        internal System.Windows.Forms.PictureBox pbx_imagePreview;
         private System.Windows.Forms.TabPage tpg_Location;
         private System.Windows.Forms.GroupBox gbx_LocationData;
         private System.Windows.Forms.Button btn_RemoveGeoData;
