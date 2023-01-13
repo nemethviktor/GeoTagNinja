@@ -379,6 +379,13 @@ internal static partial class HelperStatic
     /// <summary>
     ///     Parses the whole folder for relevant files and outputs a temp CSV that gets converted into a DataTable and fed into
     ///     the main ListView
+    ///     
+    /// * Trigger EXIFTool with a config file to parse all supported files in folder
+    ///   (i.e. all allowed image extensions + XMP files)
+    /// * Output is directed into a CSV file
+    /// * The CSV file is read and all lines pertaining to the same file (i.e. the image file
+    ///   + pot. a XMP with the same name) are mapped to the same file.
+    /// 
     /// </summary>
     /// <param name="folderNameToUse">The folder to Parse</param>
     internal static async Task ExifGetExifFromFolder(string folderNameToUse)

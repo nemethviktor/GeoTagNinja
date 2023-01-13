@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using ExifToolWrapper;
+using Newtonsoft.Json.Linq;
+using Microsoft.VisualBasic.Devices;
 
 namespace GeoTagNinja.Model;
 
@@ -153,61 +155,112 @@ public class DirectoryElementCollection : List<DirectoryElement>
         Logger.Trace(message: "Listing Folders - OK");
 
         Logger.Trace(message: "Loading allowedExtensions");
-        string[] allowedExtensions = AncillaryListsArrays.AllCompatibleExtensionsExt();
+        string[] allowedImageExtensions = AncillaryListsArrays.AllCompatibleExtensionsExt();
+        string[] allowedSideCarExt = AncillaryListsArrays.GetSideCarExtensionsArray();
         Logger.Trace(message: "Loading allowedExtensions - OK");
 
         // ******************************
         // list files that have supported extensions
+        // separate these into side car and image files
         statusMethod("Scanning folder: processing supported files ...");
         Logger.Trace(message: "Files: Listing Files");
-        List<string> listFilesWithPath = new();
+        List<string> imageFiles = new();
+        List<string> sidecarFiles = new List<string>();
+
+        string[] filesInDir;
         try
         {
-            listFilesWithPath = Directory
-                .GetFiles(path: folder)
-                .Where(predicate: file => allowedExtensions.Any(predicate: file.ToLower()
-                                                                    .EndsWith))
-                .ToList();
+            filesInDir = Directory.GetFiles(path: folder);
         }
         catch (Exception ex)
         {
             Logger.Trace(message: "Files: Listing Files - Error: " + ex.Message);
             MessageBox.Show(text: ex.Message);
+            return;
         }
-        listFilesWithPath.Sort();
+
+        foreach (string filename in filesInDir)
+        {
+            // Check, if it is a side car file. If so,
+            // add it to the list to attach to image files later
+            if (allowedSideCarExt.Contains(Path.GetExtension(path: filename).ToLower().Replace(".", "")))
+                sidecarFiles.Add(filename.ToLower());
+
+            // Image file
+            else if (allowedImageExtensions.Contains(Path.GetExtension(path: filename).ToLower().Replace(".", "")))
+                imageFiles.Add(filename.ToLower());
+        }
         Logger.Trace(message: "Files: Listing Files - OK");
+
+        // ******************************
+        // Map side car files to image file
+        // All filenames are in lower...
+        IDictionary<string,string> image2sidecar = new Dictionary<string,string>();
+        foreach (string sidecarFile in sidecarFiles)
+        {
+            // Get (by comparing w/o extension) list of matching image files
+            string scFilenameWOExt = Path.GetFileNameWithoutExtension(sidecarFile);
+            List<string> matchingImageFiles = imageFiles
+                .Where(predicate: imgFile => Path.GetFileNameWithoutExtension(imgFile) == scFilenameWOExt)
+                .ToList();
+            if (matchingImageFiles.Count>1)
+                Logger.Warn(message: $"Sidecar file '{sidecarFile}' matches multiple image files!");
+            foreach (string imgFile in matchingImageFiles)
+                image2sidecar[imgFile] = sidecarFile;
+        }
 
         // ******************************
         // Extract data for all files that are supported
         Logger.Trace(message: "Files: Extracting File Data");
         ExifTool etw = new ExifTool();
         int count = 0;
-        foreach (string fileNameWithPath in listFilesWithPath)
+        foreach (string fileNameWithPath in imageFiles)
         {
             Logger.Trace(message: $"File: {fileNameWithPath}");
             string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
-            statusMethod($"Scanning folder {100*count/listFilesWithPath.Count:0}%: processing file '{fileNameWithoutPath}'");
-            DirectoryElement de = new DirectoryElement(
-                                       itemName: Path.GetFileName(path: fileNameWithoutPath),
-                                       type: DirectoryElement.ElementType.File,
-                                       fullPathAndName: fileNameWithPath
-                                   );
+            statusMethod($"Scanning folder {100*count/imageFiles.Count:0}%: processing file '{fileNameWithoutPath}'");
 
-            // EXIF Tool can return duplicate properties - handle, but ignore these...
-            ICollection<KeyValuePair<string, string>> propsRead = new List<KeyValuePair<string, string>>();
-            etw.GetProperties(fileNameWithPath, propsRead);
+            // Regular (image) files are added to the list of
+            // Directory Elements...
+            DirectoryElement de = new DirectoryElement(
+                                        itemName: Path.GetFileName(path: fileNameWithoutPath),
+                                        type: DirectoryElement.ElementType.File,
+                                        fullPathAndName: fileNameWithPath
+                                    );
+
+            // Parse EXIF Props
             IDictionary<string, string> props = new Dictionary<string, string>();
-            foreach (KeyValuePair<string, string> kvp in propsRead)
-                if (!props.ContainsKey(kvp.Key))
-                    props.Add(kvp.Key, kvp.Value);
+            InitiateEXIFParsing(etw, fileNameWithPath, props);
+
+            // Add sidecar file and data if available
+            if (image2sidecar.ContainsKey(fileNameWithPath.ToLower()))
+            {
+                string scFile = image2sidecar[fileNameWithPath.ToLower()];
+                Logger.Trace(message: $"Files: Extracting File Data - adding side car file '{scFile}'");
+                de.SidecarFile = scFile;
+                InitiateEXIFParsing(etw, scFile, props);
+            }
 
             // Insert into model
             de.ParseAttributesFromExifToolOutput(props);
+
             this.Add(item: de);
             count++;
         }
         etw.Dispose();
         Logger.Trace(message: "Files: Extracting File Data - OK");
     }
+
+    private void InitiateEXIFParsing(ExifTool etw, string fileToParse, IDictionary<string, string> props)
+    {
+        // Gather EXIF data for the image file
+        ICollection<KeyValuePair<string, string>> propsRead = new List<KeyValuePair<string, string>>();
+        etw.GetProperties(fileToParse, propsRead);
+        // EXIF Tool can return duplicate properties - handle, but ignore these...
+        foreach (KeyValuePair<string, string> kvp in propsRead)
+            if (!props.ContainsKey(kvp.Key))
+                props.Add(kvp.Key, kvp.Value);
+    }
+
 
 }

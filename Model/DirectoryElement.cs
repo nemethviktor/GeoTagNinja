@@ -131,6 +131,11 @@ public class DirectoryElement
     /// </summary>
     public string Extension { get; }
 
+    /// <summary>
+    /// The sidecar file associated with this directory element.
+    /// </summary>
+    public string SidecarFile { set; get; }
+
     #endregion
 
 

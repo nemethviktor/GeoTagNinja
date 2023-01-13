@@ -784,6 +784,33 @@ internal static class AncillaryListsArrays
     }
 
 
+    /// <summary>
+    /// List of supported side car file extensions.
+    /// 
+    /// The extension must be in lower case due to its use in comparisons!
+    /// 
+    /// Dictionary Extension -> Description
+    /// </summary>
+    internal static IDictionary<string,string> SideCarExtensions()
+    {
+        IDictionary<string, string> result = new Dictionary<string, string>()
+        {
+            { "xmp", "XMP SideCar File" }
+        };
+        return result;
+    }
+
+
+    /// <summary>
+    /// Returns an array of extensions (string) of compatible side car files.
+    /// 
+    /// The returned array is a copy and can be used freely.
+    /// </summary>
+    internal static string[] GetSideCarExtensionsArray()
+    {
+        return SideCarExtensions().Keys.ToArray();
+    }
+
     internal static string[] GpxExtensions()
     {
         string[] result =
