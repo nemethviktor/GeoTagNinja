@@ -202,8 +202,8 @@ namespace GeoTagNinja.Model
                 } },
                 { ElementAttribute.Country, new List<string>()
                 {
-                    "IPTC:Country-PrimaryLocationName",
-                    "XMP:Country"
+                    "XMP:Country",
+                    "IPTC:Country-PrimaryLocationName"
                 } },
                 { ElementAttribute.CountryCode, new List<string>() {
                     "XMP:CountryCode",
