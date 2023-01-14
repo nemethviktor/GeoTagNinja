@@ -224,7 +224,6 @@ internal static partial class HelperStatic
             // make sure file still exists. just in case someone deleted it elsewhere
             if (File.Exists(path: de.FullPathAndName) && lvw_FileListItem.SubItems.Count > 1)
             {
-                int coordCol = frmMainAppInstance.lvw_FileList.GetColumnIndex(FileListView.FileListColumns.COORDINATES);
                 int coordCol = frmMainAppInstance.lvw_FileList.GetColumnIndex(column: FileListView.FileListColumns.COORDINATES);
                 string firstSelectedItem = lvw_FileListItem.SubItems[index: coordCol]
                     .Text;
