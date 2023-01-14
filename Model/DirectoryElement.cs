@@ -1,13 +1,10 @@
 ﻿using NLog;
-using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity.Core.Common.EntitySql;
 using System.Globalization;
 using System.IO;
-using static GeoTagNinja.Model.DirectoryElement;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Model;
@@ -17,6 +14,8 @@ namespace GeoTagNinja.Model;
 /// </summary>
 public class DirectoryElement
 {
+    internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
     /// <summary>
     /// Classification of a directory element in terms of its type.
     /// </summary>
@@ -30,6 +29,8 @@ public class DirectoryElement
         Unknown = 99
     }
 
+    #region Attribute Values Support
+
     /// <summary>
     /// Possible versions of an element. Initial loads receive the
     /// original version tag, updates the modified one.
@@ -42,7 +43,7 @@ public class DirectoryElement
 
     // We need a non generics super class that can be referenced
     // independent of the concrete values type (generic).
-    public class AttributeValueContainer
+    internal class AttributeValueContainer
     {
         internal Type _myValueType = null;
         internal IDictionary _valueDict = null;
@@ -50,7 +51,7 @@ public class DirectoryElement
         public IDictionary ValueDict { get => _valueDict; }
     }
 
-    public class AttributeValuesString : AttributeValueContainer
+    internal class AttributeValuesString : AttributeValueContainer
     {
         public AttributeValuesString(string initialValue = null, AttributeVersion initialVersion = AttributeVersion.Original)
         {
@@ -60,7 +61,7 @@ public class DirectoryElement
         }
     }
 
-    public class AttributeValuesInt : AttributeValueContainer
+    internal class AttributeValuesInt : AttributeValueContainer
     {
         public AttributeValuesInt(int? initialValue = null, AttributeVersion initialVersion = AttributeVersion.Original)
         {
@@ -70,7 +71,7 @@ public class DirectoryElement
         }
     }
 
-    public class AttributeValuesDouble : AttributeValueContainer
+    internal class AttributeValuesDouble : AttributeValueContainer
     {
         public AttributeValuesDouble(double? initialValue = null, AttributeVersion initialVersion = AttributeVersion.Original)
         {
@@ -80,8 +81,7 @@ public class DirectoryElement
         }
     }
 
-
-    internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+    #endregion
 
     #region private variables
 
@@ -152,12 +152,13 @@ public class DirectoryElement
         ItemName = itemName;
         Type = type;
         FullPathAndName = fullPathAndName;
-        Extension = Path.GetExtension(path: FullPathAndName);
+        Extension = Path.GetExtension(path: FullPathAndName).Replace(".","");
         
         _Attributes = new Dictionary<ElementAttribute, AttributeValueContainer>();
     }
 
 
+    #region Members for attribute setting and retrieval
 
     /// <summary>
     /// Checks the given value container for which version to return
@@ -175,6 +176,15 @@ public class DirectoryElement
     }
 
 
+    /// <summary>
+    /// Returns an attribute in string format. If it is a number,
+    /// a localized conversion is done.
+    /// </summary>
+    /// <param name="attribute">The attribute to return the value for</param>
+    /// <param name="version">The version to return or null if latest version</param>
+    /// <param name="notFoundValue">The value to return if no suitable value was found</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     public string GetAttributeValueString(ElementAttribute attribute,
         AttributeVersion? version = null,
         string notFoundValue = null)
@@ -215,7 +225,10 @@ public class DirectoryElement
 
 
     /// <summary>
-    /// Returns the value of an attribute.
+    /// Returns the value of an attribute as the given generic.
+    /// 
+    /// If the attribute has a different type than the generic, an exception is thrown.
+    /// (The attribute type is taken from SourcesAndAttributes.GetAttributeType().
     /// 
     /// If the version needed is given only that version is checked for and returned.
     /// If no version is given, the latest version (ie. modified) is returned if
@@ -299,7 +312,19 @@ public class DirectoryElement
         _Attributes[attribute] = avc;
     }
 
+    #endregion
 
+    #region Members for Parsing attribute values out of a tag list
+
+    /// <summary>
+    /// Searches the given tag list to yield the value for the given attribute.
+    /// 
+    /// Hereby the TagsToAttributesOrder list is used to determine which
+    /// tags are taken in which priority for the attribute.
+    /// </summary>
+    /// <param name="attribute">The attribute to find the value for</param>
+    /// <param name="tags">The tag list to parse</param>
+    /// <returns>A touple (name of tag chosen, value)</returns>
     private (string, string) GetDataPointFromTags(ElementAttribute attribute, IDictionary<string, string> tags)
     {
         Logger.Trace("Starting to parse dict for attribute: " + GetAttributeName(attribute));
@@ -327,7 +352,22 @@ public class DirectoryElement
         return (null, null);
     }
 
-
+    /// <summary>
+    /// Handles retrieving the value for the given attribute into the
+    /// temporary value list.
+    /// 
+    /// If required (due to dependencies for conversion), another value
+    /// retrieval is triggered. All results are put into the temporary
+    /// lists.
+    /// 
+    /// Transformations are done if needed - they are kept separately in TagsToModelValueTransformations.
+    /// </summary>
+    /// <param name="attribute">The attribute to retrieve the value for</param>
+    /// <param name="parsed_Values">The list of already parsed values (in case another value is needed)</param>
+    /// <param name="parsed_Fails">The list of attributes, parsing failed for</param>
+    /// <param name="tags">The tags provided to retrieve the value from</param>
+    /// <param name="call_depth">The recursive call depth to allow for tracking of loops</param>
+    /// <returns>True if parsing succeeded (resulting values are put into the passed lists).</returns>
     private bool ParseAttribute(ElementAttribute attribute,
         IDictionary<ElementAttribute, IConvertible> parsed_Values,
         List<ElementAttribute> parsed_Fails,
@@ -409,11 +449,20 @@ public class DirectoryElement
                     });
                 break;
 
+            case ElementAttribute.ExposureTime:
+                res_typed = TagsToModelValueTransformations.T2M_ExposureTime(parse_result);
+                break;
+
             case ElementAttribute.Fnumber:
             case ElementAttribute.FocalLength:
             case ElementAttribute.FocalLengthIn35mmFormat:
             case ElementAttribute.ISO:
                 res_typed = TagsToModelValueTransformations.T2M_F_FocalLength_ISO(attribute, parse_result);
+                break;
+
+            case ElementAttribute.TakenDate:
+            case ElementAttribute.CreateDate:
+                res_typed = TagsToModelValueTransformations.T2M_TakenCreatedDate(parse_result);
                 break;
 
             default:
@@ -435,7 +484,14 @@ public class DirectoryElement
     }
 
 
-
+    /// <summary>
+    /// Parses all attrbites of this DirectoryElement from the given tag list.
+    /// 
+    /// The list of attributes of this DE is cleared beforehand. Then, the
+    /// values are retrieved and finally (after all values are retrieved into
+    /// a temporary list) the values are put into the "public attribute list".
+    /// </summary>
+    /// <param name="tags_in">The tags to parse</param>
     public void ParseAttributesFromExifToolOutput(IDictionary<string, string> tags_in)
     {
         Logger.Trace($"Parse dict for item '{ItemName}'...");
@@ -470,4 +526,6 @@ public class DirectoryElement
             SetAttributeValue(attribute, parsed_Values[attribute], AttributeVersion.Original);
         Logger.Trace($"Parse dict for item '{ItemName}' - OK");
     }
+
+    #endregion
 }

@@ -6,8 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using ExifToolWrapper;
-using Newtonsoft.Json.Linq;
-using Microsoft.VisualBasic.Devices;
 
 namespace GeoTagNinja.Model;
 
@@ -66,11 +64,22 @@ public class DirectoryElementCollection : List<DirectoryElement>
         }
     }
 
-
+    /// <summary>
+    /// Parses the given folder into DirectoryElements.
+    /// 
+    /// The previous collection of directory elements is cleared before.
+    /// The statusMethod to be passed optionally accepts a string
+    /// containing a short status text.
+    /// </summary>
+    /// <param name="folder">The folder to parse</param>
+    /// <param name="statusMethod">The method to call for status updates</param>
     public void ParseFolderToDEs(string folder, Action<string> statusMethod)
     {
         Logger.Trace(message: $"Start Parsing Folder '{folder}'");
         statusMethod("Scanning folder: Initializing ...");
+
+        if (folder.EndsWith(value: @"\"))
+            folder = folder.Substring(startIndex: 0, length: folder.Length - 1);
 
         // ******************************
         // Special Case is "MyComputer"...
@@ -251,6 +260,10 @@ public class DirectoryElementCollection : List<DirectoryElement>
         Logger.Trace(message: "Files: Extracting File Data - OK");
     }
 
+    /// <summary>
+    /// Parses the given file using the given EXIF Tool object into the given
+    /// dictionary. Thereby, ignoring duplicate tags.
+    /// </summary>
     private void InitiateEXIFParsing(ExifTool etw, string fileToParse, IDictionary<string, string> props)
     {
         // Gather EXIF data for the image file

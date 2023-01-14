@@ -226,7 +226,15 @@ public partial class FileListView : System.Windows.Forms.ListView
     #region Internal Update Logic
 
 
-
+    /// <summary>
+    /// Retrieves the value for the given column from the given
+    /// Directory Element (also does transformations if necessary).
+    /// 
+    /// Transformations are kept in class ModelToColumnValueTransformations.
+    /// </summary>
+    /// <param name="item">The Directory Element of which data is to be displayed</param>
+    /// <param name="column">The column in this list view to get data for</param>
+    /// <returns>The value for the column as a string</returns>
     private string pickModelValueForColumn(DirectoryElement item, ColumnHeader column)
     {
         // The displayed file name has to be derived using shell32.dll,
@@ -375,7 +383,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         // With that in mind if we're missing the extension then we'll force it back on.
         if (!string.IsNullOrEmpty(value: item.Extension))
         {
-            if (shfi.szDisplayName.Contains(value: item.Extension))
+            if (shfi.szDisplayName.ToLower().Contains(value: item.Extension.ToLower()))
             {
                 lvi.Text = shfi.szDisplayName;
             }
@@ -409,12 +417,6 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         // Set the icon to use out of the explorer icons
         lvi.ImageIndex = shfi.iIcon;
-
-        // File items (to be parsed by exif tool) set in gray
-        if (item.Type == DirectoryElement.ElementType.File)
-        {
-            lvi.ForeColor = Color.Gray;
-        }
 
         // Show progress every 10th item
         if (lvi.Index % 10 == 0)

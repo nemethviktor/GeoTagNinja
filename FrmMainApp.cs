@@ -1334,23 +1334,18 @@ public partial class FrmMainApp : Form
             Logger.Trace(message: "FolderName: " + FolderName);
             if (FolderName is null)
             {
-                if (Directory.Exists(path: tbx_FolderName.Text))
-                {
-                    // nothing
-                }
-                else
-                {
+                if (!Directory.Exists(path: tbx_FolderName.Text))
                     tbx_FolderName.Text = @"C:\";
-                }
 
                 FolderName = tbx_FolderName.Text;
                 Logger.Trace(message: "FolderName [was null, now updated]: " + FolderName);
             }
 
-            // Clear Tables that keep track of things...
-            Logger.Trace(message: "Clear FrmMainApp.DtOriginalTakenDate && FrmMainApp.DtOriginalCreateDate");
-            FrmMainApp.DtOriginalTakenDate.Clear();
-            FrmMainApp.DtOriginalCreateDate.Clear();
+            // Clear Tables that keep track of the current folder...
+            Logger.Trace(message: "Clear DtOriginalTakenDate, DtOriginalCreateDate and DtFileDataSeenInThisSession");
+            DtOriginalTakenDate.Clear();
+            DtOriginalCreateDate.Clear();
+            DtFileDataSeenInThisSession.Clear();
 
             // Load data (and add to tables)
             DirectoryElements.ParseFolderToDEs(FolderName, delegate (string statusText) {
@@ -1359,10 +1354,6 @@ public partial class FrmMainApp : Form
 
             // Show
             lvw_FileList.ReloadFromDEs(directoryElements: DirectoryElements);
-
-            Logger.Trace(message: "Calling ExifGetExifFromFolder - " + FolderName);
-            // await HelperStatic.ExifGetExifFromFolder(folderNameToUse: FolderName);
-            Logger.Trace(message: "Finished ExifGetExifFromFolder - " + FolderName);
         }
 
         HelperStatic.FileListBeingUpdated = false;

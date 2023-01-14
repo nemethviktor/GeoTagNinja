@@ -107,7 +107,7 @@ namespace GeoTagNinja.Model
                     }
                     catch
                     {
-                        parse_result = "0.0";
+                        return null;
                     }
                 }
             }
@@ -116,11 +116,13 @@ namespace GeoTagNinja.Model
             try
             {
                 bool parseBool = double.TryParse(s: parse_result, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dbl_result);
-                return dbl_result;
+                if (parseBool)
+                    return dbl_result;
+                return null;
             }
             catch
             {
-                return 0.0;
+                return null;
             }
         }
 
@@ -139,6 +141,16 @@ namespace GeoTagNinja.Model
             return "Above Sea Level";
         }
 
+        /// <summary>
+        /// Standardize the exposure time value - removing "sec" and
+        /// trail/lead white space.
+        /// </summary>
+        public static string T2M_ExposureTime(string parse_result)
+        {
+            if (parse_result == null) return null;  // not set
+
+            return parse_result.Replace(oldValue: "sec", newValue: "").Trim();
+        }
 
         /// <summary>
         /// Extract a numeric value from the attribute by also removing
@@ -183,6 +195,18 @@ namespace GeoTagNinja.Model
                     digits: 1).ToString();
 
             return parse_result;
+        }
+    
+        /// <summary>
+        /// Ensure the value is an actual date-time...
+        /// </summary>
+        public static string T2M_TakenCreatedDate(string parse_result)
+        {
+            if (parse_result == null) return null;  // not set
+
+            if (DateTime.TryParse(s: parse_result, result: out DateTime outDateTime))
+                return outDateTime.ToString(format: CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern);
+            return null;
         }
     }
 }
