@@ -27,3 +27,4 @@ ckb_RemoveGeoDataRemovesTimeOffset,"The ""Remove Geodata"" function also removes
 ckb_ReplaceBlankToponyms,"Replace blank City, State, Sublocation values with: ",
 ckb_IncludePredeterminedCountries,"Include ""Predetermined"" countries? (see link above + caveat/warning)",
 ckb_StopProcessingRules,Stop processing rules after first Country+Target match,
+ckb_DoNotQueryAPI,"Do NOT do reverse geocoding (only get the coordinates, but not the City/state/etc)",

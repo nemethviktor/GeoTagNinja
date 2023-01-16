@@ -67,6 +67,7 @@
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.ofd_importOneFile = new System.Windows.Forms.OpenFileDialog();
             this.lbl_TrackParseExperimental = new System.Windows.Forms.Label();
+            this.ckb_DoNotQueryAPI = new System.Windows.Forms.CheckBox();
             this.gbx_ImportGPXSource.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_importOneFile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_importFromAnotherFolder)).BeginInit();
@@ -516,6 +517,16 @@
             this.lbl_TrackParseExperimental.TabIndex = 18;
             this.lbl_TrackParseExperimental.Text = "lbl_TrackParseExperimental";
             // 
+            // ckb_DoNotQueryAPI
+            // 
+            this.ckb_DoNotQueryAPI.AutoSize = true;
+            this.ckb_DoNotQueryAPI.Location = new System.Drawing.Point(43, 590);
+            this.ckb_DoNotQueryAPI.Name = "ckb_DoNotQueryAPI";
+            this.ckb_DoNotQueryAPI.Size = new System.Drawing.Size(126, 17);
+            this.ckb_DoNotQueryAPI.TabIndex = 25;
+            this.ckb_DoNotQueryAPI.Text = "ckb_DoNotQueryAPI";
+            this.ckb_DoNotQueryAPI.UseVisualStyleBackColor = true;
+            // 
             // FrmImportGpx
             // 
             this.AcceptButton = this.btn_OK;
@@ -524,6 +535,7 @@
             this.CancelButton = this.btn_Cancel;
             this.ClientSize = new System.Drawing.Size(760, 626);
             this.ControlBox = false;
+            this.Controls.Add(this.ckb_DoNotQueryAPI);
             this.Controls.Add(this.lbl_TrackParseExperimental);
             this.Controls.Add(this.btn_Cancel);
             this.Controls.Add(this.btn_OK);
@@ -592,5 +604,6 @@
         private System.Windows.Forms.Label lbl_GeoMaxIntSecs;
         private System.Windows.Forms.NumericUpDown nud_GeoMaxExtSecs;
         private System.Windows.Forms.NumericUpDown nud_GeoMaxIntSecs;
+        private System.Windows.Forms.CheckBox ckb_DoNotQueryAPI;
     }
 }

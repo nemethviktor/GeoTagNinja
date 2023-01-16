@@ -708,7 +708,10 @@ internal static partial class HelperStatic
     /// <param name="useTZAdjust">True or False to whether to adjust Time Zone</param>
     /// <param name="compareTZAgainst">If TZ should be compared against CreateDate or DateTimeOriginal</param>
     /// <param name="TZVal">Value as string, e.g "+01:00"</param>
+    /// <param name="GeoMaxIntSecs"></param>
+    /// <param name="GeoMaxExtSecs"></param>
     /// <param name="timeShiftSeconds">Int value if GPS time should be shifted.</param>
+    /// <param name="doNotReverseGeoCode">Whether reverse geocoding should be skipped</param>
     /// <returns></returns>
     internal static async Task ExifGetTrackSyncData(string trackFileLocationType,
                                                     string trackFileLocationVal,
@@ -717,7 +720,9 @@ internal static partial class HelperStatic
                                                     string TZVal,
                                                     int GeoMaxIntSecs,
                                                     int GeoMaxExtSecs,
-                                                    int timeShiftSeconds = 0)
+                                                    bool doNotReverseGeoCode,
+                                                    int timeShiftSeconds = 0
+    )
     {
         _sErrorMsg = "";
         _sOutputMsg = "";
@@ -959,45 +964,48 @@ internal static partial class HelperStatic
                                     }
 
                                     // pull from web
-                                    SApiOkay = true;
-                                    DataTable dt_Toponomy = DTFromAPIExifGetToponomyFromWebOrSQL(lat: strParsedLat.ToString(provider: CultureInfo.InvariantCulture), lng: strParsedLng.ToString(provider: CultureInfo.InvariantCulture));
-
-                                    if (SApiOkay)
+                                    if (!doNotReverseGeoCode)
                                     {
-                                        List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
-                                        toponomyOverwrites.Add(item: ("CountryCode", dt_Toponomy.Rows[index: 0][columnName: "CountryCode"]
-                                                                          .ToString()));
-                                        toponomyOverwrites.Add(item: ("Country", dt_Toponomy.Rows[index: 0][columnName: "Country"]
-                                                                          .ToString()));
-                                        toponomyOverwrites.Add(item: ("City", dt_Toponomy.Rows[index: 0][columnName: "City"]
-                                                                          .ToString()));
-                                        toponomyOverwrites.Add(item: ("State", dt_Toponomy.Rows[index: 0][columnName: "State"]
-                                                                          .ToString()));
-                                        toponomyOverwrites.Add(item: ("Sub_location", dt_Toponomy.Rows[index: 0][columnName: "Sub_location"]
-                                                                          .ToString()));
+                                        SApiOkay = true;
+                                        DataTable dtToponomy = DTFromAPIExifGetToponomyFromWebOrSQL(lat: strParsedLat.ToString(provider: CultureInfo.InvariantCulture), lng: strParsedLng.ToString(provider: CultureInfo.InvariantCulture));
 
-                                        foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+                                        if (SApiOkay)
                                         {
-                                            GenericUpdateAddToDataTable(
-                                                dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                                                fileNameWithoutPath: lvi.Text,
-                                                settingId: toponomyDetail.toponomyOverwriteName,
-                                                settingValue: toponomyDetail.toponomyOverwriteVal
-                                            );
-                                            lvi.SubItems[index: lvw.Columns[key: "clh_" + toponomyDetail.toponomyOverwriteName]
-                                                             .Index]
-                                                .Text = toponomyDetail.toponomyOverwriteVal;
+                                            List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
+                                            toponomyOverwrites.Add(item: ("CountryCode", dtToponomy.Rows[index: 0][columnName: "CountryCode"]
+                                                                              .ToString()));
+                                            toponomyOverwrites.Add(item: ("Country", dtToponomy.Rows[index: 0][columnName: "Country"]
+                                                                              .ToString()));
+                                            toponomyOverwrites.Add(item: ("City", dtToponomy.Rows[index: 0][columnName: "City"]
+                                                                              .ToString()));
+                                            toponomyOverwrites.Add(item: ("State", dtToponomy.Rows[index: 0][columnName: "State"]
+                                                                              .ToString()));
+                                            toponomyOverwrites.Add(item: ("Sub_location", dtToponomy.Rows[index: 0][columnName: "Sub_location"]
+                                                                              .ToString()));
+
+                                            foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+                                            {
+                                                GenericUpdateAddToDataTable(
+                                                    dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
+                                                    fileNameWithoutPath: lvi.Text,
+                                                    settingId: toponomyDetail.toponomyOverwriteName,
+                                                    settingValue: toponomyDetail.toponomyOverwriteVal
+                                                );
+                                                lvi.SubItems[index: lvw.Columns[key: "clh_" + toponomyDetail.toponomyOverwriteName]
+                                                                 .Index]
+                                                    .Text = toponomyDetail.toponomyOverwriteVal;
+                                            }
+
+                                            if (lvi.Index % 10 == 0)
+                                            {
+                                                Application.DoEvents();
+                                                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                                frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
+                                            }
+
+                                            frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
                                         }
-
-                                        if (lvi.Index % 10 == 0)
-                                        {
-                                            Application.DoEvents();
-                                            // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                            frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
-                                        }
-
-                                        frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
                                     }
                                 }
                             }

@@ -279,8 +279,8 @@ public partial class FrmImportGpx : Form
                 TZVal: lbl_TZValue.Text,
                 GeoMaxIntSecs: (int)nud_GeoMaxIntSecs.Value,
                 GeoMaxExtSecs: (int)nud_GeoMaxExtSecs.Value,
-                timeShiftSeconds: timeShiftSeconds
-            );
+                timeShiftSeconds: timeShiftSeconds,
+                doNotReverseGeoCode: ckb_DoNotQueryAPI.Checked);
             Hide();
         }
         else
