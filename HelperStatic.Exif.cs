@@ -1112,12 +1112,7 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    ///     Writes outstanding exif changes to the listOfAsyncCompatibleFileNamesWithOutPath (all
-    ///     listOfAsyncCompatibleFileNamesWithOutPath in the queue).
-    ///     This logic is very similar to the "incompatible read" above - it's safer. While it's also probably slower
-    ///     ... the assumption is that users will read a lot of listOfAsyncCompatibleFileNamesWithOutPath but will write
-    ///     proportionately fewer listOfAsyncCompatibleFileNamesWithOutPath so
-    ///     ... speed is less of an essence against safety.
+    ///     Writes outstanding exif changes to files.
     /// </summary>
     /// <returns>Reastically nothing but writes the exif tags and updates the listview rows where necessary</returns>
     internal static async Task ExifWriteExifToFile()
@@ -1273,7 +1268,7 @@ internal static partial class HelperStatic
                         // this is prob not the best way to go around this....
                         foreach (DataRow drFileTags in dtFileWriteQueue.Rows)
                         {
-                            string tmpSettingValue = drFileTags[columnName: "settingValue"]
+                            string tmpSettingValue = drFileTags[columnName: "settingId"]
                                 .ToString();
                             if (tmpSettingValue == @"gps*")
                             {
