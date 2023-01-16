@@ -207,24 +207,23 @@ public class DirectoryElementCollection : List<DirectoryElement>
             // Check, if it is a side car file. If so,
             // add it to the list to attach to image files later
             if (allowedSideCarExt.Contains(Path.GetExtension(path: filename).ToLower().Replace(".", "")))
-                sidecarFiles.Add(filename.ToLower());
+                sidecarFiles.Add(filename);
 
             // Image file
             else if (allowedImageExtensions.Contains(Path.GetExtension(path: filename).ToLower().Replace(".", "")))
-                imageFiles.Add(filename.ToLower());
+                imageFiles.Add(filename);
         }
         Logger.Trace(message: "Files: Listing Files - OK");
 
         // ******************************
         // Map side car files to image file
-        // All filenames are in lower...
         IDictionary<string,string> image2sidecar = new Dictionary<string,string>();
         foreach (string sidecarFile in sidecarFiles)
         {
-            // Get (by comparing w/o extension) list of matching image files
-            string scFilenameWOExt = Path.GetFileNameWithoutExtension(sidecarFile);
+            // Get (by comparing w/o extension) list of matching image files in lower case
+            string scFilenameWOExt = Path.GetFileNameWithoutExtension(sidecarFile).ToLower();
             List<string> matchingImageFiles = imageFiles
-                .Where(predicate: imgFile => Path.GetFileNameWithoutExtension(imgFile) == scFilenameWOExt)
+                .Where(predicate: imgFile => Path.GetFileNameWithoutExtension(imgFile).ToLower() == scFilenameWOExt)
                 .ToList();
             if (matchingImageFiles.Count>1)
                 Logger.Warn(message: $"Sidecar file '{sidecarFile}' matches multiple image files!");
@@ -257,9 +256,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
             InitiateEXIFParsing(fileNameWithPath, props);
 
             // Add sidecar file and data if available
-            if (image2sidecar.ContainsKey(fileNameWithPath.ToLower()))
+            if (image2sidecar.ContainsKey(fileNameWithPath))
             {
-                string scFile = image2sidecar[fileNameWithPath.ToLower()];
+                string scFile = image2sidecar[fileNameWithPath];
                 Logger.Trace(message: $"Files: Extracting File Data - adding side car file '{scFile}'");
                 de.SidecarFile = scFile;
                 InitiateEXIFParsing(scFile, props);
