@@ -43,6 +43,13 @@ public partial class FrmMainApp : Form
     /// </summary>
     public DirectoryElementCollection DirectoryElements { get; } = new();
 
+    /// <summary>
+    /// The EXIFTool used in this application.
+    /// 
+    /// Note that it must be disposed of (done by Form_Closing)!
+    /// </summary>
+    private ExifTool _ExifTool = new ExifTool();
+
     private void btn_ManageFavourites_Click(object sender,
                                             EventArgs e)
     {
@@ -157,6 +164,8 @@ public partial class FrmMainApp : Form
         #endregion
 
         Logger.Info(message: "Starting");
+
+        DirectoryElements.ExifTool = _ExifTool;
 
         HelperStatic.GenericCreateDataTables();
         AppStartupCreateDataBaseFile();
@@ -322,6 +331,9 @@ public partial class FrmMainApp : Form
         // clean up
         Logger.Trace(message: "Set pbx_imagePreview.Image = null");
         pbx_imagePreview.Image = null; // unlocks files. theoretically.
+        
+        // Shutdown Exif Tool
+        _ExifTool.Dispose();
 
         HelperStatic.FsoCleanUpUserFolder();
     }

@@ -14,6 +14,17 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
     internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+    internal ExifTool _ExifTool = null;
+
+    public ExifTool ExifTool {
+        get { return _ExifTool; }
+        set {
+            if (_ExifTool != null)
+                _ExifTool.Dispose();
+            _ExifTool = value;
+        }
+    }
+
     /// <summary>
     ///     Searches through the list of directory elements for the element
     ///     with the given item name. If nothing is found, return null.
@@ -77,6 +88,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
     {
         Logger.Trace(message: $"Start Parsing Folder '{folder}'");
         statusMethod("Scanning folder: Initializing ...");
+
+        if (_ExifTool == null)
+            throw new InvalidOperationException($"Cannot scan a folder (currently '{folder}') when the EXIF Tool was not set for the DirectoryElementCollection.");
 
         if (folder.EndsWith(value: @"\"))
             folder = folder.Substring(startIndex: 0, length: folder.Length - 1);
@@ -221,13 +235,14 @@ public class DirectoryElementCollection : List<DirectoryElement>
         // ******************************
         // Extract data for all files that are supported
         Logger.Trace(message: "Files: Extracting File Data");
-        ExifTool etw = new ExifTool();
         int count = 0;
+        if (_ExifTool == null) _ExifTool = new ExifTool();
         foreach (string fileNameWithPath in imageFiles)
         {
             Logger.Trace(message: $"File: {fileNameWithPath}");
             string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
-            statusMethod($"Scanning folder {100*count/imageFiles.Count:0}%: processing file '{fileNameWithoutPath}'");
+            if (count % 10 == 0)
+                statusMethod($"Scanning folder {100*count/imageFiles.Count:0}%: processing file '{fileNameWithoutPath}'");
 
             // Regular (image) files are added to the list of
             // Directory Elements...
@@ -239,7 +254,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
             // Parse EXIF Props
             IDictionary<string, string> props = new Dictionary<string, string>();
-            InitiateEXIFParsing(etw, fileNameWithPath, props);
+            InitiateEXIFParsing(fileNameWithPath, props);
 
             // Add sidecar file and data if available
             if (image2sidecar.ContainsKey(fileNameWithPath.ToLower()))
@@ -247,7 +262,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 string scFile = image2sidecar[fileNameWithPath.ToLower()];
                 Logger.Trace(message: $"Files: Extracting File Data - adding side car file '{scFile}'");
                 de.SidecarFile = scFile;
-                InitiateEXIFParsing(etw, scFile, props);
+                InitiateEXIFParsing(scFile, props);
             }
 
             // Insert into model
@@ -256,7 +271,6 @@ public class DirectoryElementCollection : List<DirectoryElement>
             this.Add(item: de);
             count++;
         }
-        etw.Dispose();
         Logger.Trace(message: "Files: Extracting File Data - OK");
     }
 
@@ -264,11 +278,11 @@ public class DirectoryElementCollection : List<DirectoryElement>
     /// Parses the given file using the given EXIF Tool object into the given
     /// dictionary. Thereby, ignoring duplicate tags.
     /// </summary>
-    private void InitiateEXIFParsing(ExifTool etw, string fileToParse, IDictionary<string, string> props)
+    private void InitiateEXIFParsing(string fileToParse, IDictionary<string, string> props)
     {
         // Gather EXIF data for the image file
         ICollection<KeyValuePair<string, string>> propsRead = new List<KeyValuePair<string, string>>();
-        etw.GetProperties(fileToParse, propsRead);
+        _ExifTool.GetProperties(fileToParse, propsRead);
         // EXIF Tool can return duplicate properties - handle, but ignore these...
         foreach (KeyValuePair<string, string> kvp in propsRead)
             if (!props.ContainsKey(kvp.Key))

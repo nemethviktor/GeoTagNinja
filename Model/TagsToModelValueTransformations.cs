@@ -36,10 +36,10 @@ namespace GeoTagNinja.Model
                     refAttrib = ElementAttribute.GPSLatitudeRef;
                     break;
                 case ElementAttribute.GPSLongitude:
-                    refAttrib = ElementAttribute.GPSLatitudeRef;
+                    refAttrib = ElementAttribute.GPSLongitudeRef;
                     break;
                 case ElementAttribute.GPSDestLongitude:
-                    refAttrib = ElementAttribute.GPSLatitudeRef;
+                    refAttrib = ElementAttribute.GPSLongitudeRef;
                     break;
                 default:
                     throw new ArgumentException($"T2M_GPSLatLong does not support attribute '{GetAttributeName(attribute)}'");

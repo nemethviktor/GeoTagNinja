@@ -50,7 +50,7 @@ using GeoTagNinja;
 
 namespace ExifToolWrapper
 {
-    class ExifTool : IDisposable
+    public class ExifTool : IDisposable
     {
         string c_exeName = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe");    // "exiftool.exe";
         // const string c_arguments = @"-stay_open 1 -@ - -common_args -charset UTF8 -G1 -args";

@@ -389,7 +389,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             }
             else
             {
-                lvi.Text = shfi.szDisplayName + item.Extension;
+                lvi.Text = shfi.szDisplayName + "." + item.Extension;
             }
         }
         else
@@ -842,7 +842,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         {
             addListItem(item: item);
             if (item.Type == DirectoryElement.ElementType.File) _fileCount++;
-            if (_fileCount % 10 == 0)
+            if (_fileCount % 20 == 0)
             {
                 Application.DoEvents();
                 ScrollToDataPoint(itemText: item.ItemName);
