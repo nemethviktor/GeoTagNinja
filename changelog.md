@@ -3,10 +3,11 @@
 **v0.7.84XX [202301XX]**
 - NEW & UPDATED:
   - Added a "Manage Favourites" element to the Settings area.
-  - Added Custom Rules. This is experimental for now. Eventually I'll add a Wiki for it.
+  - Added Custom Rules. This is experimental for now. Wiki [here](https://github.com/nemethviktor/GeoTagNinja/wiki/Settings-&-Custom-Rules).
   - Updated CountryCode ISO SQLite logic with CSV
   - Updated Altitude-pull (from Web) logic. At the same time removed the separate button(s) to do that as it's now part of the Toponomy pull.
   - Bumped exifTool to v12.54
+  - Made the installer look a tad prettier. (I know, right?!)
 - BUGS & FIXES:
   - Fixed Paste not actually pasting Country
   - Fixed crash when API offline or Unauth'd
