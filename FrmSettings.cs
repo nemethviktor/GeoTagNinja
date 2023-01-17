@@ -14,6 +14,8 @@ namespace GeoTagNinja;
 public partial class FrmSettings : Form
 {
     internal static DataTable dtCustomRules = new();
+    private static List<Control> lstTpgApplicationControls = new();
+    private readonly string languageSavedInSQL;
     private bool _nowLoadingSettingsData;
 
     /// <summary>
@@ -29,38 +31,96 @@ public partial class FrmSettings : Form
         HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
 
         // Gets the various controls' labels and values (eg "latitude" and "51.002")
+        lstTpgApplicationControls = helperNonstatic.GetAllControls(control: tpg_Application)
+            .ToList();
+
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         if (c != null)
         {
             foreach (Control cItem in c)
             {
-                if (cItem.Name == "cbx_Language")
+                string parentNameToUse = GetParentNameToUse(cItem: cItem, cTpgApplication: lstTpgApplicationControls);
+
+                if (cItem.Name == "cbx_Language" || cItem.Name == "cbx_TryUseGeoNamesLanguage")
                 {
-                    List<KeyValuePair<string, string>> kvps = AncillaryListsArrays.GetLanguages();
-                    for (int index = 0; index < kvps.Count; index++)
+                    ComboBox cbx = (ComboBox)cItem;
+
+                    string[] alreadyTranslatedLanguages = { "en", "fr" };
+                    languageSavedInSQL = HelperStatic.DataReadSQLiteSettings(
+                        tableName: "settings",
+                        settingTabPage: parentNameToUse,
+                        settingId: cbx.Name
+                    );
+
+                    List<KeyValuePair<string, string>> kvpLanguage = AncillaryListsArrays.GetISO_639_1_Languages();
+                    for (int index = 0; index < kvpLanguage.Count; index++)
                     {
-                        KeyValuePair<string, string> kvp = kvps[index: index];
-                        string thisLanguage = kvp.Value + " (" + kvp.Key + ")";
-                        cbx_Language.Items.Add(item: thisLanguage);
-                        if (thisLanguage.Contains(value: HelperStatic.DataReadSQLiteSettings(
-                                                      tableName: "settings",
-                                                      settingTabPage: cItem.Parent.Name,
-                                                      settingId: cItem.Name
-                                                  )))
+                        KeyValuePair<string, string> kvp = kvpLanguage[index: index];
+                        string thisLanguage = kvp.Value;
+
+                        if ((cItem.Name == "cbx_Language" && alreadyTranslatedLanguages.Contains(value: kvp.Key)) ||
+                            cItem.Name == "cbx_TryUseGeoNamesLanguage")
                         {
-                            cbx_Language.SelectedIndex = index;
+                            cbx.Items.Add(item: thisLanguage);
+                        }
+                    }
+
+                    if (languageSavedInSQL == null)
+                    {
+                        cbx.SelectedIndex = cbx.FindStringExact(s: HelperStatic.defaultEnglishString);
+                    }
+                    else
+                    {
+                        for (int i = 0; i < cbx.Items.Count; i++)
+                        {
+                            string value = cbx.GetItemText(item: cbx.Items[index: i]);
+                            if (value.Contains(value: languageSavedInSQL))
+                            {
+                                cbx.SelectedIndex = i;
+                                break;
+                            }
                         }
                     }
                 }
 
                 else
                 {
-                    HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
+                    HelperStatic.GenericReturnControlText(cItem: cItem,
+                                                          senderForm: this,
+                                                          parentNameToUse: parentNameToUse);
                 }
             }
         }
 
         _nowLoadingSettingsData = false;
+    }
+
+    /// <summary>
+    ///     The groupboxes on tpg_Application interfere with the Parent Name logic so this corrects/fakes that.
+    /// </summary>
+    /// <param name="cItem">The Control to check if it sits in tpg_Application</param>
+    /// <param name="cTpgApplication">List of Controls that are children of tabpage tpg_Application</param>
+    /// <returns>The actual Parent Name if tpg_Application isn't a parent or string literal "tpg_Application" if it is.</returns>
+    private static string GetParentNameToUse(Control cItem,
+                                             List<Control> cTpgApplication)
+    {
+        string parentNameToUse = null;
+        try
+        {
+            parentNameToUse = cItem.Parent.Name;
+        }
+        catch
+        {
+            // nothing
+        }
+
+        ;
+        if (cTpgApplication.Contains(item: cItem))
+        {
+            parentNameToUse = "tpg_Application";
+        }
+
+        return parentNameToUse;
     }
 
     /// <summary>
@@ -86,55 +146,59 @@ public partial class FrmSettings : Form
         }
 
         // get values by name
-        foreach (Control ctrl in tct_Settings.Controls)
+        HelperNonStatic helperNonstatic = new();
+        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
+        if (c != null)
         {
-            if (ctrl is TabPage)
+            foreach (Control cItem in c)
             {
-                foreach (Control subctrl in ctrl.Controls)
+                string parentNameToUse = GetParentNameToUse(cItem: cItem, cTpgApplication: lstTpgApplicationControls);
+
                 {
-                    if (subctrl is TextBox box)
+                    if (cItem is TextBox tbx)
                     {
                         try
                         {
-                            box.Text = HelperStatic.DataReadSQLiteSettings(
+                            tbx.Text = HelperStatic.DataReadSQLiteSettings(
                                 tableName: "settings",
-                                settingTabPage: ctrl.Name,
-                                settingId: subctrl.Name
+                                settingTabPage: parentNameToUse,
+                                settingId: cItem.Name
                             );
                         }
                         catch (InvalidOperationException) // nonesuch
                         {
-                            box.Text = "";
+                            tbx.Text = "";
                         }
                     }
-                    else if (subctrl is CheckBox cbx)
+                    else if (cItem is CheckBox ckb)
                     {
                         try
                         {
-                            cbx.CheckState = HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
+                            ckb.CheckState = HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
                                 tableName: "settings",
-                                settingTabPage: ctrl.Name,
-                                settingId: cbx.Name
+                                settingTabPage: parentNameToUse,
+                                settingId: ckb.Name
                             )
                                 ? CheckState.Checked
                                 : CheckState.Unchecked;
                         }
                         catch (InvalidOperationException) // nonesuch
                         {
-                            cbx.CheckState = CheckState.Unchecked;
+                            ckb.CheckState = CheckState.Unchecked;
                         }
                     }
-                    else if (subctrl is NumericUpDown nud)
+                    else if (cItem is NumericUpDown nud)
                     {
                         string nudTempValue = HelperStatic.DataReadSQLiteSettings(
                             tableName: "settings",
-                            settingTabPage: ctrl.Name,
-                            settingId: subctrl.Name
+                            settingTabPage: parentNameToUse,
+                            settingId: cItem.Name
                         );
 
                         if (nudTempValue != null)
                         {
                             nud.Value = Convert.ToInt32(value: nudTempValue);
+                            nud.Text = nudTempValue;
                         }
                         else
                         {
@@ -154,8 +218,36 @@ public partial class FrmSettings : Form
                             }
                         }
                     }
+                    else if (cItem is RadioButton rbt)
+                    {
+                        try
+                        {
+                            rbt.Checked = HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
+                                tableName: "settings",
+                                settingTabPage: parentNameToUse,
+                                settingId: rbt.Name
+                            )
+                                ? true
+                                : false;
+                        }
+                        catch (InvalidOperationException) // nonesuch
+                        {
+                            rbt.Checked = false;
+                        }
+                    }
                 }
             }
+        }
+
+        // (re)set cbx_TryUseGeoNamesLanguage 
+        if (rbt_UseGeoNamesLocalLanguage.Checked)
+        {
+            HelperStatic.APILanguageToUse = "local";
+            cbx_TryUseGeoNamesLanguage.Enabled = false;
+        }
+        else
+        {
+            cbx_TryUseGeoNamesLanguage.Enabled = true;
         }
 
         _nowLoadingSettingsData = false;
@@ -333,6 +425,59 @@ public partial class FrmSettings : Form
     private void Btn_OK_Click(object sender,
                               EventArgs e)
     {
+        HelperNonStatic helperNonstatic = new();
+        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
+        if (c != null)
+        {
+            foreach (Control cItem in c)
+            {
+                if (cItem.Name == "cbx_Language" || cItem.Name == "cbx_TryUseGeoNamesLanguage")
+                {
+                    ComboBox cbx = (ComboBox)cItem;
+                    if ((cbx.Font.Style & FontStyle.Bold) != 0)
+                    {
+                        if (cbx.Name == "cbx_Language")
+                        {
+                            // fire a warning if language has changed. 
+                            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmSettings_cbx_Language_TextChanged"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+                        }
+                        else if (cbx.Name == "cbx_TryUseGeoNamesLanguage")
+                        {
+                            IEnumerable<KeyValuePair<string, string>> result = AncillaryListsArrays.GetISO_639_1_Languages()
+                                .Where(predicate: kvp => kvp.Value == cbx.SelectedItem.ToString());
+
+                            HelperStatic.APILanguageToUse = result.FirstOrDefault()
+                                .Key;
+                        }
+                    }
+                }
+
+                // this needs to be an IF rather than an ELSE IF
+                if (cItem.Name == "rbt_UseGeoNamesLocalLanguage" || cItem.Name == "rbt_TryUseGeoNamesLanguage")
+                {
+                    RadioButton rbt = (RadioButton)cItem;
+                    if ((rbt.Font.Style & FontStyle.Bold) != 0 && rbt.Checked)
+                    {
+                        ComboBox cbx = cbx_TryUseGeoNamesLanguage;
+                        if (rbt.Name == "rbt_UseGeoNamesLocalLanguage")
+                        {
+                            HelperStatic.APILanguageToUse = "local";
+                            cbx.Enabled = false;
+                        }
+                        else if (rbt.Name == "rbt_TryUseGeoNamesLanguage")
+                        {
+                            cbx.Enabled = true;
+                            IEnumerable<KeyValuePair<string, string>> result = AncillaryListsArrays.GetISO_639_1_Languages()
+                                .Where(predicate: kvp => kvp.Value == cbx.SelectedItem.ToString());
+
+                            HelperStatic.APILanguageToUse = result.FirstOrDefault()
+                                .Key;
+                        }
+                    }
+                }
+            }
+        }
+
         // push data back into sqlite
         HelperStatic.DataTransferSQLiteSettings();
         HelperStatic.DataDeleteSQLitesettingsToWritePreQueue();
@@ -496,13 +641,55 @@ public partial class FrmSettings : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private void Pg_fileoptions_Enter(object sender,
-                                      EventArgs e)
+    private void tpg_FileOptions_Enter(object sender,
+                                       EventArgs e)
     {
         // at this point lbx_fileExtensions.SelectedIndex == 0;
         if (lbx_fileExtensions.SelectedItems.Count == 0)
         {
             lbx_fileExtensions.SelectedIndex = 0;
+        }
+    }
+
+
+    /// <summary>
+    ///     Handles the event where any rbt's checkstate changed.
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void Any_rbt_CheckedChanged(object sender,
+                                        EventArgs e)
+    {
+        if (!_nowLoadingSettingsData)
+        {
+            RadioButton rbt = (RadioButton)sender;
+            GroupBox gbx = (GroupBox)rbt.Parent;
+            gbx.Font = new Font(prototype: gbx.Font, newStyle: FontStyle.Bold);
+
+            string actualParentName = rbt.Parent.Name;
+            switch (actualParentName)
+            {
+                case "gbx_GeoNamesLanguageSettings":
+                    if (rbt.Name == "rbt_UseGeoNamesLocalLanguage")
+                    {
+                        cbx_TryUseGeoNamesLanguage.Enabled = !rbt.Checked;
+                    }
+
+                    break;
+            }
+
+            // stick it into settings-Q
+            HelperNonStatic helperNonstatic = new();
+
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: lstTpgApplicationControls);
+
+            HelperStatic.DataWriteSQLiteSettings(
+                tableName: "settingsToWritePreQueue",
+                settingTabPage: parentNameToUse,
+                settingId: rbt.Name,
+                settingValue: rbt.Checked.ToString()
+                    .ToLower()
+            );
         }
     }
 
@@ -517,29 +704,37 @@ public partial class FrmSettings : Form
     {
         if (!_nowLoadingSettingsData)
         {
+            FrmSettings frmSettingsInstance = (FrmSettings)Application.OpenForms[name: "FrmSettings"];
+
             CheckBox ckb = (CheckBox)sender;
             ckb.Font = new Font(prototype: ckb.Font, newStyle: FontStyle.Bold);
-            string tmpCtrlName = "";
-            object lbi = lbx_fileExtensions.SelectedItem;
+            string cItemName = "";
+
+            object lbi = null;
+            if (frmSettingsInstance != null && frmSettingsInstance.tct_Settings.SelectedTab.Name == "tpg_FileOptions")
+            {
+                lbi = lbx_fileExtensions.SelectedItem;
+            }
+
             if (lbi != null)
             {
-                tmpCtrlName = lbi.ToString()
-                                  .Split('\t')
-                                  .FirstOrDefault() +
-                              '_' +
-                              ((CheckBox)sender).Name;
+                cItemName = lbi.ToString()
+                                .Split('\t')
+                                .FirstOrDefault() +
+                            '_' +
+                            ckb.Name;
             }
             else
             {
-                tmpCtrlName = ((CheckBox)sender).Name;
+                cItemName = ckb.Name;
             }
 
-            if (tmpCtrlName == "ckb_ReplaceBlankToponyms")
+            if (cItemName == "ckb_ReplaceBlankToponyms")
             {
                 tbx_ReplaceBlankToponyms.Enabled = ckb.Checked;
             }
 
-            if (tmpCtrlName == "ckb_IncludePredeterminedCountries")
+            if (cItemName == "ckb_IncludePredeterminedCountries")
             {
                 List<KeyValuePair<string, string>> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: ckb_IncludePredeterminedCountries.Checked);
                 DataGridViewComboBoxColumn clh_CountryCode = (DataGridViewComboBoxColumn)dgv_CustomRules.Columns[columnName: "clh_CountryCode"];
@@ -550,12 +745,15 @@ public partial class FrmSettings : Form
             }
 
             // stick it into settings-Q
+            HelperNonStatic helperNonstatic = new();
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: lstTpgApplicationControls);
+
             HelperStatic.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
-                settingTabPage: ((Control)sender).Parent.Name,
-                settingId: tmpCtrlName,
-                settingValue: ((CheckBox)sender).Checked.ToString()
-                .ToLower()
+                settingTabPage: parentNameToUse,
+                settingId: cItemName,
+                settingValue: ckb.Checked.ToString()
+                    .ToLower()
             );
         }
     }
@@ -570,15 +768,18 @@ public partial class FrmSettings : Form
     {
         if (!_nowLoadingSettingsData)
         {
-            TextBox txt = (TextBox)sender;
-            txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Bold);
+            TextBox tbx = (TextBox)sender;
+            tbx.Font = new Font(prototype: tbx.Font, newStyle: FontStyle.Bold);
 
             // stick it into settings-Q
+            HelperNonStatic helperNonstatic = new();
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: lstTpgApplicationControls);
+
             HelperStatic.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
-                settingTabPage: ((Control)sender).Parent.Name,
-                settingId: ((TextBox)sender).Name,
-                settingValue: ((TextBox)sender).Text
+                settingTabPage: parentNameToUse,
+                settingId: tbx.Name,
+                settingValue: tbx.Text
             );
         }
     }
@@ -595,27 +796,27 @@ public partial class FrmSettings : Form
         {
             ComboBox cbx = (ComboBox)sender;
             cbx.Font = new Font(prototype: cbx.Font, newStyle: FontStyle.Bold);
-            string settingValue = ((ComboBox)sender).Text;
+            string settingValue = cbx.Text;
 
-            if (cbx.Name == "cbx_Language")
+            if (cbx.Name == "cbx_Language" || cbx.Name == "cbx_TryUseGeoNamesLanguage")
             {
-                // convert e.g. "Française (French)" to "French"
-                settingValue = settingValue.Split('(')
+                // convert e.g. "Français [French]" to "French"
+                settingValue = settingValue.Split('[')
                     .Last()
-                    .Substring(startIndex: 0, length: settingValue.Split('(')
+                    .Substring(startIndex: 0, length: settingValue.Split('[')
                                                           .Last()
                                                           .Length -
                                                       1);
-
-                // fire a warning if language has changed. 
-                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmSettings_cbx_Language_TextChanged"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
             }
 
             // stick it into settings-Q
+            HelperNonStatic helperNonstatic = new();
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: lstTpgApplicationControls);
+
             HelperStatic.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
-                settingTabPage: ((Control)sender).Parent.Name,
-                settingId: ((ComboBox)sender).Name,
+                settingTabPage: parentNameToUse,
+                settingId: cbx.Name,
                 settingValue: settingValue
             );
         }
@@ -634,11 +835,15 @@ public partial class FrmSettings : Form
             NumericUpDown nud = (NumericUpDown)sender;
             nud.Font = new Font(prototype: nud.Font, newStyle: FontStyle.Bold);
 
+            // stick it into settings-Q
+            HelperNonStatic helperNonstatic = new();
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: lstTpgApplicationControls);
+
             HelperStatic.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
-                settingTabPage: ((Control)sender).Parent.Name,
-                settingId: ((NumericUpDown)sender).Name,
-                settingValue: ((NumericUpDown)sender).Value.ToString(provider: CultureInfo.InvariantCulture)
+                settingTabPage: parentNameToUse,
+                settingId: nud.Name,
+                settingValue: nud.Value.ToString(provider: CultureInfo.InvariantCulture)
             );
         }
     }
@@ -665,17 +870,25 @@ public partial class FrmSettings : Form
         AcceptButton = btn_OK;
     }
 
+    /// <summary>
+    ///     Launches the browser to open the link in the richtextbox
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void rbx_CustomRulesExplanation_LinkClicked(object sender,
                                                         LinkClickedEventArgs e)
     {
         Process.Start(fileName: e.LinkText);
     }
 
-
+    /// <summary>
+    ///     Displays an error msg if DGV failed validation
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void dgv_CustomRules_DataError(object sender,
                                            DataGridViewDataErrorEventArgs e)
     {
-        //MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
         if (e.Exception != null &&
             e.Context == DataGridViewDataErrorContexts.Commit)
         {
@@ -683,7 +896,11 @@ public partial class FrmSettings : Form
         }
     }
 
-
+    /// <summary>
+    ///     Responsible for the DGV validation
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void dgv_CustomRules_RowValidating(object sender,
                                                DataGridViewCellCancelEventArgs e)
     {

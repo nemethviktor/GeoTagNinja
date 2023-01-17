@@ -115,23 +115,28 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    ///     Fills the SQLite database with defaults (such as file-type-specific settings
+    ///     Fills the SQLite database with defaults (such as file-type-specific settings)
     /// </summary>
     internal static void DataWriteSQLiteSettingsDefaultSettings()
     {
         FrmMainApp.Logger.Debug(message: "Starting");
 
-        string[] controlNamesToAdd =
+        string[] ExtensionSpecificControlNamesToAdd =
         {
             "ckb_AddXMPSideCar",
             "ckb_OverwriteOriginal",
             "ckb_ProcessOriginalFile",
             "ckb_ResetFileDateToCreated"
         };
+
+        string[] NotExtensionSpecificControlNamesToAdd =
+        {
+            "rbt_UseGeoNamesLocalLanguage"
+        };
         string existingSQLVal;
 
         // extension-specific
-        foreach (string controlName in controlNamesToAdd)
+        foreach (string controlName in ExtensionSpecificControlNamesToAdd)
         {
             foreach (string ext in AncillaryListsArrays.AllCompatibleExtensions())
             {
@@ -142,54 +147,86 @@ internal static partial class HelperStatic
                 string tmpCtrlGroup = ext.Split('\t')
                     .Last()
                     .ToLower();
-                string tmpVal = "false";
+                string controlDefaultValue = "false";
+                string settingTabPage = "tpg_FileOptions";
 
                 if (controlName == "ckb_AddXMPSideCar")
                 {
                     if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
                     {
-                        tmpVal = "true";
+                        controlDefaultValue = "true";
                     }
                     else
                     {
-                        tmpVal = "false";
+                        controlDefaultValue = "false";
                     }
                 }
                 else if (controlName == "ckb_ProcessOriginalFile")
                 {
-                    tmpVal = "true";
+                    controlDefaultValue = "true";
                 }
 
                 else if (controlName == "ckb_ResetFileDateToCreated")
                 {
                     if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
                     {
-                        tmpVal = "true";
+                        controlDefaultValue = "true";
                     }
                     else
                     {
-                        tmpVal = "false";
+                        controlDefaultValue = "false";
                     }
                 }
 
                 else if (controlName == "ckb_OverwriteOriginal")
                 {
-                    tmpVal = "true";
+                    controlDefaultValue = "true";
                 }
 
-                existingSQLVal = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: tmpCtrlName);
-                if (existingSQLVal == "" || existingSQLVal is null)
-                {
-                    DataWriteSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: tmpCtrlName, settingValue: tmpVal);
-                }
+                UpdateSQLite(settingTabPage: settingTabPage, settingId: tmpCtrlName, controlDefaultValue: controlDefaultValue);
             }
         }
 
+        foreach (string controlName in NotExtensionSpecificControlNamesToAdd)
+        {
+            string controlDefaultValue = null;
+            string settingTabPage = null;
+            if (controlName == "rbt_UseGeoNamesLocalLanguage")
+            {
+                controlDefaultValue = "true";
+                settingTabPage = "tpg_Application";
+            }
+
+            UpdateSQLite(settingTabPage: settingTabPage, settingId: controlName, controlDefaultValue: controlDefaultValue);
+        }
+
         // language
-        existingSQLVal = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "cbx_Language");
+        existingSQLVal = DataReadSQLiteSettings(tableName: "settings",
+                                                settingTabPage: "tpg_Application",
+                                                settingId: "cbx_Language");
         if (existingSQLVal == "" || existingSQLVal is null)
         {
-            DataWriteSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "cbx_Language", settingValue: "English");
+            DataWriteSQLiteSettings(tableName: "settings",
+                                    settingTabPage: "tpg_Application",
+                                    settingId: "cbx_Language",
+                                    settingValue: "English");
+        }
+
+        void UpdateSQLite(string settingTabPage,
+                          string settingId,
+                          string controlDefaultValue)
+        {
+            existingSQLVal = DataReadSQLiteSettings(tableName: "settings",
+                                                    settingTabPage: settingTabPage,
+                                                    settingId: settingId);
+
+            if (existingSQLVal == "" || existingSQLVal is null)
+            {
+                DataWriteSQLiteSettings(tableName: "settings",
+                                        settingTabPage: settingTabPage,
+                                        settingId: settingId,
+                                        settingValue: controlDefaultValue);
+            }
         }
     }
 
@@ -316,7 +353,7 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    /// Checks the SQLite database for checkbox-settings and returns true/false accordingly
+    ///     Checks the SQLite database for checkbox-settings and returns true/false accordingly
     /// </summary>
     /// <param name="tableName">TableName where the particular checkbox is - this is almost always "settings"</param>
     /// <param name="settingTabPage">TabPage of the above</param>
@@ -326,7 +363,7 @@ internal static partial class HelperStatic
                                                             string settingTabPage,
                                                             string settingId)
     {
-        string valueInSQL = HelperStatic.DataReadSQLiteSettings(
+        string valueInSQL = DataReadSQLiteSettings(
             tableName: tableName,
             settingTabPage: settingTabPage,
             settingId: settingId
@@ -335,10 +372,8 @@ internal static partial class HelperStatic
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     /// <summary>

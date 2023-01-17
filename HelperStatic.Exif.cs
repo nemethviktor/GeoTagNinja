@@ -710,8 +710,9 @@ internal static partial class HelperStatic
     /// <param name="TZVal">Value as string, e.g "+01:00"</param>
     /// <param name="GeoMaxIntSecs"></param>
     /// <param name="GeoMaxExtSecs"></param>
-    /// <param name="timeShiftSeconds">Int value if GPS time should be shifted.</param>
     /// <param name="doNotReverseGeoCode">Whether reverse geocoding should be skipped</param>
+    /// <param name="language"></param>
+    /// <param name="timeShiftSeconds">Int value if GPS time should be shifted.</param>
     /// <returns></returns>
     internal static async Task ExifGetTrackSyncData(string trackFileLocationType,
                                                     string trackFileLocationVal,
@@ -721,8 +722,8 @@ internal static partial class HelperStatic
                                                     int GeoMaxIntSecs,
                                                     int GeoMaxExtSecs,
                                                     bool doNotReverseGeoCode,
-                                                    int timeShiftSeconds = 0
-    )
+                                                    string language,
+                                                    int timeShiftSeconds = 0)
     {
         _sErrorMsg = "";
         _sOutputMsg = "";
@@ -1766,7 +1767,7 @@ internal static partial class HelperStatic
             Authenticator = new HttpBasicAuthenticator(username: SGeoNamesUserName, password: SGeoNamesPwd)
         };
 
-        RestRequest requestToponomy = new(resource: "findNearbyPlaceNameJSON?lat=" + latitude + "&lng=" + longitude + "&style=FULL&radius=" + radius + "&maxRows=" + ToponomyMaxRows);
+        RestRequest requestToponomy = new(resource: "findNearbyPlaceNameJSON?lat=" + latitude + "&lng=" + longitude + "&lang=" + HelperStatic.APILanguageToUse + "&style=FULL&radius=" + radius + "&maxRows=" + ToponomyMaxRows);
         RestResponse responseToponomy = client.ExecuteGet(request: requestToponomy);
         // check API reponse is OK
         if (responseToponomy.Content != null && responseToponomy.Content.Contains(value: "the hourly limit of "))

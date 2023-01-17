@@ -161,6 +161,7 @@ public partial class FrmMainApp : Form
         AppStartupCreateDataBaseFile();
         AppStartupWriteDefaultSettings();
         AppStartupReadObjectNamesAndLanguage();
+        AppStartupReadAPILanguage();
         AppStartupApplyDefaults();
         AppStartupCheckWebView2();
         AppStartupInitializeComponentFrmMainApp();

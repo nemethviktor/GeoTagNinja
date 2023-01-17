@@ -175,10 +175,19 @@ internal static partial class HelperStatic
     ///     This (mostly) sets the various texts for most Controls in various forms, especially labels and buttons/boxes.
     /// </summary>
     /// <param name="cItem">The Control whose details need adjusting</param>
+    /// <param name="senderForm"></param>
+    /// <param name="parentNameToUse"></param>
     internal static void GenericReturnControlText(Control cItem,
-                                                  Form senderForm)
+                                                  Form senderForm,
+                                                  string parentNameToUse = null)
     {
+        if (parentNameToUse == null && !(cItem is Form))
+        {
+            parentNameToUse = cItem.Parent.Name;
+        }
+
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+
         if (
             cItem is Label ||
             cItem is GroupBox ||
@@ -215,7 +224,7 @@ internal static partial class HelperStatic
             {
                 cItem.Text = DataReadSQLiteSettings(
                     tableName: "settings",
-                    settingTabPage: cItem.Parent.Name,
+                    settingTabPage: parentNameToUse,
                     settingId: cItem.Name
                 );
             }
@@ -228,7 +237,7 @@ internal static partial class HelperStatic
                 FrmMainApp.Logger.Trace(message: "Starting - cItem: " + nud.Name);
                 _ = decimal.TryParse(s: DataReadSQLiteSettings(
                                          tableName: "settings",
-                                         settingTabPage: cItem.Parent.Name,
+                                         settingTabPage: parentNameToUse,
                                          settingId: cItem.Name
                                      ), result: out decimal outVal);
 

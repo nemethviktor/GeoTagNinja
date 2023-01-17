@@ -6,8 +6,11 @@
   - Added Custom Rules. This is experimental for now. Wiki [here](https://github.com/nemethviktor/GeoTagNinja/wiki/Settings-&-Custom-Rules).
   - Updated CountryCode ISO SQLite logic with CSV
   - Updated Altitude-pull (from Web) logic. At the same time removed the separate button(s) to do that as it's now part of the Toponomy pull.
+  - Added an option for changing the API language. This won't affect countrynames though because they derive from the CountryCode so there might be little visibility of this change in practice.
+  - Added an option for GPX import to ignore reverse geocoding.
   - Bumped exifTool to v12.54
   - Made the installer look a tad prettier. (I know, right?!)
+  - Rewrote parts of the Settings Form and the underlying logic.
 - BUGS & FIXES:
   - Fixed Paste not actually pasting Country
   - Fixed crash when API offline or Unauth'd
@@ -16,6 +19,7 @@
   - Fixed a recursion bug while loading the Edit Form. Should run faster now.
   - Fixed a bug re: how DateTime formats are handled. 
   - Fixed a bug re: Time-Shift values not being properly recalled if user didn't explicitly refresh folder.
+  - Fixed a bug in Settings where subject to certain preceding actions the wrong checkbox value would be saved.
 
 **v0.7.8391 [20221222]**
 - NEW & UPDATED:

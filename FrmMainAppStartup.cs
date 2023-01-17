@@ -105,6 +105,49 @@ public partial class FrmMainApp
     }
 
     /// <summary>
+    ///     Reads the value for API-language-use from SQLite.
+    /// </summary>
+    private static void AppStartupReadAPILanguage()
+    {
+        Logger.Debug(message: "Starting");
+        string TryUseGeoNamesLanguage = null;
+        try
+        {
+            TryUseGeoNamesLanguage = HelperStatic.DataReadSQLiteSettings(
+                tableName: "settings",
+                settingTabPage: "tpg_Application",
+                settingId: "rbt_UseGeoNamesLocalLanguage"
+            );
+
+            if (TryUseGeoNamesLanguage == "true") // bit derpy but works
+            {
+                HelperStatic.APILanguageToUse = "local";
+            }
+            else
+            {
+                TryUseGeoNamesLanguage = HelperStatic.DataReadSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: "tpg_Application",
+                    settingId: "cbx_TryUseGeoNamesLanguage"
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            TryUseGeoNamesLanguage = HelperStatic.defaultEnglishString;
+        }
+
+        if (TryUseGeoNamesLanguage != "true")
+        {
+            IEnumerable<KeyValuePair<string, string>> result = AncillaryListsArrays.GetISO_639_1_Languages()
+                .Where(predicate: kvp => kvp.Value == TryUseGeoNamesLanguage);
+
+            HelperStatic.APILanguageToUse = result.FirstOrDefault()
+                .Key;
+        }
+    }
+
+    /// <summary>
     ///     Applies default settings
     /// </summary>
     private static void AppStartupApplyDefaults()
@@ -482,7 +525,7 @@ public partial class FrmMainApp
     ///     Loads existing favourites
     /// </summary>
     /// <returns></returns>
-    internal static DataTable AppStartupLoadFavourites()
+    private static DataTable AppStartupLoadFavourites()
     {
         Logger.Info(message: "Starting");
         DataTable dtFavourites = HelperStatic.DataReadSQLiteFavourites();
