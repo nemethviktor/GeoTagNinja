@@ -1687,7 +1687,11 @@ internal static partial class HelperStatic
                         }
 
                         decimal.TryParse(s: _sOutputMsg.Replace(oldValue: "\r", newValue: "")
-                                             .Replace(oldValue: "\n", newValue: ""), result: out _currentExifToolVersionLocal);
+                                             .Replace(oldValue: "\n", newValue: ""),
+                                         provider: CultureInfo.InvariantCulture,
+                                         style: NumberStyles.Any,
+                                         result: out _currentExifToolVersionLocal
+                        );
                     };
 
                     break;
@@ -1767,7 +1771,7 @@ internal static partial class HelperStatic
             Authenticator = new HttpBasicAuthenticator(username: SGeoNamesUserName, password: SGeoNamesPwd)
         };
 
-        RestRequest requestToponomy = new(resource: "findNearbyPlaceNameJSON?lat=" + latitude + "&lng=" + longitude + "&lang=" + HelperStatic.APILanguageToUse + "&style=FULL&radius=" + radius + "&maxRows=" + ToponomyMaxRows);
+        RestRequest requestToponomy = new(resource: "findNearbyPlaceNameJSON?lat=" + latitude + "&lng=" + longitude + "&lang=" + APILanguageToUse + "&style=FULL&radius=" + radius + "&maxRows=" + ToponomyMaxRows);
         RestResponse responseToponomy = client.ExecuteGet(request: requestToponomy);
         // check API reponse is OK
         if (responseToponomy.Content != null && responseToponomy.Content.Contains(value: "the hourly limit of "))

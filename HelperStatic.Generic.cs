@@ -659,7 +659,9 @@ internal static partial class HelperStatic
 
         try
         {
-            img = Image.FromFile(filename: fileNameWithPath);
+            // via https://stackoverflow.com/a/6576645/3968494
+            using FileStream stream = new(path: fileNameWithPath, mode: FileMode.Open, access: FileAccess.Read);
+            img = Image.FromStream(stream: stream);
         }
         catch
         {
@@ -678,7 +680,9 @@ internal static partial class HelperStatic
             {
                 try
                 {
-                    img = Image.FromFile(filename: generatedFileName);
+                    using FileStream stream = new(path: generatedFileName, mode: FileMode.Open, access: FileAccess.Read);
+                    img = Image.FromStream(stream: stream);
+
                     ExifRotate(img: img);
                 }
                 catch

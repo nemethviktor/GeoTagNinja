@@ -8,7 +8,7 @@
   - Updated Altitude-pull (from Web) logic. At the same time removed the separate button(s) to do that as it's now part of the Toponomy pull.
   - Added an option for changing the API language. This won't affect countrynames though because they derive from the CountryCode so there might be little visibility of this change in practice.
   - Added an option for GPX import to ignore reverse geocoding.
-  - Bumped exifTool to v12.54
+  - Bumped exifTool to v12.55
   - Made the installer look a tad prettier. (I know, right?!)
   - Rewrote parts of the Settings Form and the underlying logic.
 - BUGS & FIXES:
