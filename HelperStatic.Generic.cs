@@ -424,6 +424,20 @@ internal static partial class HelperStatic
                 currentExifToolVersionInSQL = _currentExifToolVersionLocal;
             }
 
+            // shouldn't really happen but...
+            if (_currentExifToolVersionLocal != currentExifToolVersionInSQL)
+            {
+                // write current to SQL
+                DataWriteSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: "generic",
+                    settingId: "exifToolVer",
+                    settingValue: _currentExifToolVersionLocal.ToString(provider: CultureInfo.InvariantCulture)
+                );
+
+                currentExifToolVersionInSQL = _currentExifToolVersionLocal;
+            }
+
             if (newestExifToolVersionOnline > _currentExifToolVersionLocal && newestExifToolVersionOnline > currentExifToolVersionInSQL && _currentExifToolVersionLocal + newestExifToolVersionOnline > 0)
             {
                 FrmMainApp.Logger.Trace(message: "Writing new version to SQL: " + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture));
