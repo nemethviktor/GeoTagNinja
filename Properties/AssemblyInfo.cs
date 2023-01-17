@@ -6,13 +6,14 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle(title: "GeoTagNinja")]
 [assembly: AssemblyDescription(description: """
-            GeoTagNinja is an Open Source GPS Photo Tagger reminiscient of GeoSetter but written from scratch. 
-            Contributions on GitHub are most welcome. For detailed dependencies used please refer to the code.
+            GeoTagNinja is an Open Source GPS Photo Tagger. 
+            Contributions on GitHub are most welcome. 
+            For detailed dependencies used and list of contributors please refer to the code.
             """)]
 [assembly: AssemblyConfiguration(configuration: "")]
-[assembly: AssemblyCompany(company: "Viktor Nemeth")]
+[assembly: AssemblyCompany(company: "Viktor Nemeth & Contributors")]
 [assembly: AssemblyProduct(product: "GeoTagNinja")]
-[assembly: AssemblyCopyright(copyright: "Viktor Nemeth - GPLv3 - 2022")]
+[assembly: AssemblyCopyright(copyright: "Viktor Nemeth - GPLv3 - 2022-2023")]
 [assembly: AssemblyTrademark(trademark: "")]
 [assembly: AssemblyCulture(culture: "")]
 
