@@ -92,9 +92,6 @@ public class DirectoryElementCollection : List<DirectoryElement>
         if (_ExifTool == null)
             throw new InvalidOperationException($"Cannot scan a folder (currently '{folder}') when the EXIF Tool was not set for the DirectoryElementCollection.");
 
-        if (folder.EndsWith(value: @"\"))
-            folder = folder.Substring(startIndex: 0, length: folder.Length - 1);
-
         // ******************************
         // Special Case is "MyComputer"...
         // Only list drives... then exit

@@ -418,15 +418,6 @@ public partial class FileListView : System.Windows.Forms.ListView
         // Set the icon to use out of the explorer icons
         lvi.ImageIndex = shfi.iIcon;
 
-        // Show progress every 10th item
-        if (lvi.Index % 10 == 0)
-        {
-            Application.DoEvents();
-            // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-            ScrollToDataPoint(itemText: item.ItemName);
-        }
-
         // Set the values for the columns
         List<string> subItemList = new();
         if (item.Type == DirectoryElement.ElementType.File)
@@ -842,11 +833,6 @@ public partial class FileListView : System.Windows.Forms.ListView
         {
             addListItem(item: item);
             if (item.Type == DirectoryElement.ElementType.File) _fileCount++;
-            if (_fileCount % 20 == 0)
-            {
-                Application.DoEvents();
-                ScrollToDataPoint(itemText: item.ItemName);
-            }
         }
         // Resume sorting...
         Logger.Trace(message: "Enable ListViewItemSorter");
