@@ -176,6 +176,9 @@
     </Compile>
     <Compile Include="Model\DirectoryElementCollection.cs" />
     <Compile Include="Model\DirectoryElement.cs" />
+    <Compile Include="Model\ExifToolWrapper.cs" />
+    <Compile Include="Model\SourcesAndAttributes.cs" />
+    <Compile Include="Model\TagsToModelValueTransformations.cs" />
     <Compile Include="View\FrmColumnSelection.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -243,6 +246,7 @@
     <Compile Include="View\ListView\FileListView.Designer.cs">
       <DependentUpon>FileListView.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\ListView\ModelToColumnValueTransformations.cs" />
     <EmbeddedResource Include="FrmAboutBox.resx">
       <DependentUpon>FrmAboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>

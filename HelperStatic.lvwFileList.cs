@@ -224,7 +224,7 @@ internal static partial class HelperStatic
             // make sure file still exists. just in case someone deleted it elsewhere
             if (File.Exists(path: de.FullPathAndName) && lvw_FileListItem.SubItems.Count > 1)
             {
-                int coordCol = frmMainAppInstance.lvw_FileList.GetColumnIndex(column: FileListView.ColumnNames.COORDINATES);
+                int coordCol = frmMainAppInstance.lvw_FileList.GetColumnIndex(column: FileListView.FileListColumns.COORDINATES);
                 string firstSelectedItem = lvw_FileListItem.SubItems[index: coordCol]
                     .Text;
                 if (firstSelectedItem.Replace(oldValue: FileListView.UNKNOWN_VALUE_FILE, newValue: "") != "")
@@ -298,16 +298,14 @@ internal static partial class HelperStatic
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
-        if (frmMainAppInstance != null)
-        {
-            FrmMainApp.HandlerUpdateLabelText(
+        if (frmMainAppInstance != null) FrmMainApp.HandlerUpdateLabelText(
                 label: frmMainAppInstance.lbl_ParseProgress,
                 text: "Ready. Files: Total: " +
                       frmMainAppInstance.lvw_FileList.FileCount +
                       " Geodata: " +
-                      frmMainAppInstance.lvw_FileList.CountItemsWithData(column: FileListView.ColumnNames.COORDINATES));
-        }
+                      frmMainAppInstance.lvw_FileList.CountItemsWithData(column: FileListView.FileListColumns.COORDINATES));
     }
+
 
     internal static void ExifRotate(this Image img)
     {

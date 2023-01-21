@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace GeoTagNinja;
 
@@ -761,6 +763,52 @@ internal static class AncillaryListsArrays
             "x3f	Sigma/Foveon RAW"
         };
         return result;
+    }
+
+    /// <summary>
+    /// Extracts only the file name extensions from the list of
+    /// AllCompatibleExtensions. The returned array is a copy and
+    /// can be used freely.
+    /// </summary>
+    /// <returns>An array of file extensions supported</returns>
+    internal static string[] AllCompatibleExtensionsExt()
+    {
+        string[] allowedExtensions = AllCompatibleExtensions();
+
+        // List contains the extension at then beginning and
+        // after white space more description --> loop
+        // to get only the extensions
+        for (int i = 0; i < allowedExtensions.Length; i++)
+            allowedExtensions[i] = allowedExtensions[i].Split('\t').FirstOrDefault();
+        return allowedExtensions;
+    }
+
+
+    /// <summary>
+    /// List of supported side car file extensions.
+    /// 
+    /// The extension must be in lower case due to its use in comparisons!
+    /// 
+    /// Dictionary Extension -> Description
+    /// </summary>
+    internal static IDictionary<string,string> SideCarExtensions()
+    {
+        IDictionary<string, string> result = new Dictionary<string, string>()
+        {
+            { "xmp", "XMP SideCar File" }
+        };
+        return result;
+    }
+
+
+    /// <summary>
+    /// Returns an array of extensions (string) of compatible side car files.
+    /// 
+    /// The returned array is a copy and can be used freely.
+    /// </summary>
+    internal static string[] GetSideCarExtensionsArray()
+    {
+        return SideCarExtensions().Keys.ToArray();
     }
 
     internal static string[] GpxExtensions()
