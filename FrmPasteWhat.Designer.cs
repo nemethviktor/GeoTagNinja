@@ -416,6 +416,7 @@
             this.AutoSize = true;
             this.CancelButton = this.btn_Cancel;
             this.ClientSize = new System.Drawing.Size(844, 642);
+            this.ControlBox = false;
             this.Controls.Add(this.gbx_Dates);
             this.Controls.Add(this.gbx_GPSData);
             this.Controls.Add(this.gbx_LocationData);

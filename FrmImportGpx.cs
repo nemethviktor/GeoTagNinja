@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -14,6 +15,7 @@ public partial class FrmImportGpx : Form
     private static string LocalIanatZname;
     private static string SelectedIanatzName;
     private static string SelectedTzAdjustment;
+    private static string ISO639Lang;
 
     private readonly FrmMainApp _frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
@@ -130,6 +132,27 @@ public partial class FrmImportGpx : Form
         }
 
         return SelectedTzAdjustment;
+    }
+
+    private void cbx_TryUseGeoNamesLanguage_SelectedIndexChanged(object sender,
+                                                                 EventArgs e)
+    {
+        try
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            string selected = (string)comboBox.SelectedItem;
+
+            List<string> keys = (from kvp in AncillaryListsArrays.GetISO_639_1_Languages()
+                                 where kvp.Value == selected
+                                 select kvp.Key).ToList();
+
+            ISO639Lang = keys.First()
+                .ToUpper();
+        }
+        catch
+        {
+            ISO639Lang = "en";
+        }
     }
 
     #region Events
@@ -261,14 +284,15 @@ public partial class FrmImportGpx : Form
             // indicate that something is going on
             btn_OK.Text = HelperStatic.DataReadDTObjectText(
                 objectType: sender.GetType()
-                                .ToString()
-                                .Split('.')
-                                .Last() +
-                            "_Working",
-                objectName: "btn_OK"
+                    .ToString()
+                    .Split('.')
+                    .Last()
+                ,
+                objectName: "btn_OK_Working"
             );
             btn_OK.AutoSize = true;
             btn_OK.Enabled = false;
+            btn_Cancel.Enabled = false;
 
             await HelperStatic.ExifGetTrackSyncData(
                 trackFileLocationType: trackFileLocationType,
@@ -278,6 +302,8 @@ public partial class FrmImportGpx : Form
                 TZVal: lbl_TZValue.Text,
                 GeoMaxIntSecs: (int)nud_GeoMaxIntSecs.Value,
                 GeoMaxExtSecs: (int)nud_GeoMaxExtSecs.Value,
+                doNotReverseGeoCode: ckb_DoNotQueryAPI.Checked,
+                language: ISO639Lang,
                 timeShiftSeconds: timeShiftSeconds
             );
             Hide();

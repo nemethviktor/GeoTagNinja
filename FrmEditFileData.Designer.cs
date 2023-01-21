@@ -53,9 +53,6 @@
             this.lbl_Country = new System.Windows.Forms.Label();
             this.lbl_CountryCode = new System.Windows.Forms.Label();
             this.gbx_GPSData = new System.Windows.Forms.GroupBox();
-            this.gbx_GetAltitude = new System.Windows.Forms.GroupBox();
-            this.btn_getFromWeb_Altitude = new System.Windows.Forms.Button();
-            this.btn_getAllFromWeb_Altitude = new System.Windows.Forms.Button();
             this.tbx_GPSAltitude = new System.Windows.Forms.TextBox();
             this.tbx_GPSImgDirection = new System.Windows.Forms.TextBox();
             this.tbx_GPSLongitude = new System.Windows.Forms.TextBox();
@@ -109,7 +106,6 @@
             this.gbx_GetToponomy.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_OffsetTimeInfo)).BeginInit();
             this.gbx_GPSData.SuspendLayout();
-            this.gbx_GetAltitude.SuspendLayout();
             this.tcr_EditData.SuspendLayout();
             this.tpg_DateTime.SuspendLayout();
             this.gbx_CreateDate.SuspendLayout();
@@ -301,7 +297,6 @@
             this.cbx_Country.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cbx_Country.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbx_Country.FormattingEnabled = true;
-            
             this.cbx_Country.Location = new System.Drawing.Point(124, 57);
             this.cbx_Country.Name = "cbx_Country";
             this.cbx_Country.Size = new System.Drawing.Size(176, 21);
@@ -374,7 +369,6 @@
             // 
             // gbx_GPSData
             // 
-            this.gbx_GPSData.Controls.Add(this.gbx_GetAltitude);
             this.gbx_GPSData.Controls.Add(this.tbx_GPSAltitude);
             this.gbx_GPSData.Controls.Add(this.tbx_GPSImgDirection);
             this.gbx_GPSData.Controls.Add(this.tbx_GPSLongitude);
@@ -392,37 +386,6 @@
             this.gbx_GPSData.TabIndex = 0;
             this.gbx_GPSData.TabStop = false;
             this.gbx_GPSData.Text = "gbx_GPSData";
-            // 
-            // gbx_GetAltitude
-            // 
-            this.gbx_GetAltitude.Controls.Add(this.btn_getFromWeb_Altitude);
-            this.gbx_GetAltitude.Controls.Add(this.btn_getAllFromWeb_Altitude);
-            this.gbx_GetAltitude.Location = new System.Drawing.Point(277, 35);
-            this.gbx_GetAltitude.Name = "gbx_GetAltitude";
-            this.gbx_GetAltitude.Size = new System.Drawing.Size(200, 100);
-            this.gbx_GetAltitude.TabIndex = 14;
-            this.gbx_GetAltitude.TabStop = false;
-            this.gbx_GetAltitude.Text = "gbx_GetAltitude";
-            // 
-            // btn_getFromWeb_Altitude
-            // 
-            this.btn_getFromWeb_Altitude.Location = new System.Drawing.Point(15, 25);
-            this.btn_getFromWeb_Altitude.Name = "btn_getFromWeb_Altitude";
-            this.btn_getFromWeb_Altitude.Size = new System.Drawing.Size(166, 23);
-            this.btn_getFromWeb_Altitude.TabIndex = 13;
-            this.btn_getFromWeb_Altitude.Text = "btn_getFromWeb_Altitude";
-            this.btn_getFromWeb_Altitude.UseVisualStyleBackColor = true;
-            this.btn_getFromWeb_Altitude.Click += new System.EventHandler(this.btn_getFromWeb_Click);
-            // 
-            // btn_getAllFromWeb_Altitude
-            // 
-            this.btn_getAllFromWeb_Altitude.Location = new System.Drawing.Point(15, 60);
-            this.btn_getAllFromWeb_Altitude.Name = "btn_getAllFromWeb_Altitude";
-            this.btn_getAllFromWeb_Altitude.Size = new System.Drawing.Size(166, 23);
-            this.btn_getAllFromWeb_Altitude.TabIndex = 5;
-            this.btn_getAllFromWeb_Altitude.Text = "btn_getAllFromWeb_Altitude";
-            this.btn_getAllFromWeb_Altitude.UseVisualStyleBackColor = true;
-            this.btn_getAllFromWeb_Altitude.Click += new System.EventHandler(this.btn_getFromWeb_Click);
             // 
             // tbx_GPSAltitude
             // 
@@ -1029,7 +992,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbx_OffsetTimeInfo)).EndInit();
             this.gbx_GPSData.ResumeLayout(false);
             this.gbx_GPSData.PerformLayout();
-            this.gbx_GetAltitude.ResumeLayout(false);
             this.tcr_EditData.ResumeLayout(false);
             this.tpg_DateTime.ResumeLayout(false);
             this.gbx_CreateDate.ResumeLayout(false);
@@ -1050,7 +1012,8 @@
         }
 
         #endregion
-        private System.Windows.Forms.PictureBox pbx_imagePreview;
+
+        internal System.Windows.Forms.PictureBox pbx_imagePreview;
         private System.Windows.Forms.TabPage tpg_Location;
         private System.Windows.Forms.GroupBox gbx_LocationData;
         private System.Windows.Forms.Button btn_RemoveGeoData;
@@ -1067,7 +1030,6 @@
         private System.Windows.Forms.Label lbl_Country;
         private System.Windows.Forms.Label lbl_CountryCode;
         private System.Windows.Forms.GroupBox gbx_GPSData;
-        private System.Windows.Forms.Button btn_getFromWeb_Altitude;
         internal System.Windows.Forms.TextBox tbx_GPSAltitude;
         internal System.Windows.Forms.TextBox tbx_GPSImgDirection;
         internal System.Windows.Forms.TextBox tbx_GPSLongitude;
@@ -1076,7 +1038,6 @@
         private System.Windows.Forms.Label lbl_GPSImgDirection;
         private System.Windows.Forms.Label lbl_GPSLongitude;
         private System.Windows.Forms.Label lbl_GPSLatitude;
-        private System.Windows.Forms.Button btn_getAllFromWeb_Altitude;
         private System.Windows.Forms.Label lbl_Decimal;
         private System.Windows.Forms.TabControl tcr_EditData;
         private System.Windows.Forms.Button btn_Cancel;
@@ -1122,6 +1083,5 @@
         internal System.Windows.Forms.ListView lvw_FileListEditImages;
         public System.Windows.Forms.ColumnHeader clh_FileName;
         private System.Windows.Forms.GroupBox gbx_GetToponomy;
-        private System.Windows.Forms.GroupBox gbx_GetAltitude;
     }
 }

@@ -5,9 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Input;
 using TimeZoneConverter;
 using static GeoTagNinja.FrmMainApp;
 
@@ -140,9 +138,7 @@ public partial class FrmEditFileData : Form
         string fileNameWithoutPath = lvw_FileListEditImages.SelectedItems[index: 0]
             .Text;
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        string strSqlDataDT1 = null;
-        string strSqlDataDT3 = null;
-        string strFLData = null;
+        btn_InsertFromTakenDate.Enabled = false;
 
         // via https://stackoverflow.com/a/47692754/3968494
 
@@ -160,6 +156,9 @@ public partial class FrmEditFileData : Form
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
+            string strSqlDataDT1 = null;
+            string strSqlDataDT3 = null;
+            string strFLData = null;
             string exifTag = cItem.Name; // this is for debugging only (particularly here, that is.)
             try
             {
@@ -174,10 +173,10 @@ public partial class FrmEditFileData : Form
                 )
                 {
                     // gets logged inside.
-                    cItem.Text = HelperStatic.DataReadDTObjectText(cItem.GetType()
+                    cItem.Text = HelperStatic.DataReadDTObjectText(objectType: cItem.GetType()
                                                                        .ToString()
                                                                        .Split('.')
-                                                                       .Last(), cItem.Name);
+                                                                       .Last(), objectName: cItem.Name);
                 }
                 else if (cItem is TextBox || cItem is ComboBox || cItem is DateTimePicker || cItem is NumericUpDown)
                 {
@@ -195,6 +194,8 @@ public partial class FrmEditFileData : Form
                     // Basically not all Tags exist as CLHs.
                     List<string> lstObjectNamesIn = DtObjectTagNamesIn.Rows.OfType<DataRow>()
                         .Select(selector: dr => dr.Field<string>(columnName: "objectName"))
+                        .ToList();
+                    lstObjectNamesIn = lstObjectNamesIn.Distinct()
                         .ToList();
 
                     if (lstObjectNamesIn.Contains(item: exifTag))
@@ -246,6 +247,7 @@ public partial class FrmEditFileData : Form
                                     if (cItemGbx_TakenDate != btn_InsertTakenDate)
                                     {
                                         cItemGbx_TakenDate.Enabled = false;
+                                        btn_InsertTakenDate.Enabled = true;
                                         btn_InsertFromTakenDate.Enabled = false;
                                     }
                                 }
@@ -259,6 +261,7 @@ public partial class FrmEditFileData : Form
                                     if (cItemGbx_CrateDate != btn_InsertCreateDate)
                                     {
                                         cItemGbx_CrateDate.Enabled = false;
+                                        btn_InsertCreateDate.Enabled = true;
                                         btn_InsertFromTakenDate.Enabled = false;
                                     }
                                 }
@@ -277,6 +280,36 @@ public partial class FrmEditFileData : Form
                     // if has value...
                     else
                     {
+                        if (cItem.Parent.Name.StartsWith(value: "gbx_") && cItem.Parent.Name.EndsWith(value: "Date") && cItem is not NumericUpDown)
+                        {
+                            if (cItem.Parent.Name == "gbx_TakenDate")
+                            {
+                                IEnumerable<Control> cGbx_TakenDate = helperNonstatic.GetAllControls(control: gbx_TakenDate);
+                                foreach (Control cItemGbx_TakenDate in cGbx_TakenDate)
+                                {
+                                    if (cItemGbx_TakenDate != btn_InsertTakenDate)
+                                    {
+                                        cItemGbx_TakenDate.Enabled = true;
+                                        btn_InsertTakenDate.Enabled = false;
+                                        btn_InsertFromTakenDate.Enabled = true;
+                                    }
+                                }
+                            }
+
+                            else if (cItem.Parent.Name == "gbx_CreateDate")
+                            {
+                                IEnumerable<Control> cGbx_CreateDate = helperNonstatic.GetAllControls(control: gbx_CreateDate);
+                                foreach (Control cItemGbx_CrateDate in cGbx_CreateDate)
+                                {
+                                    if (cItemGbx_CrateDate != btn_InsertCreateDate)
+                                    {
+                                        cItemGbx_CrateDate.Enabled = true;
+                                        btn_InsertCreateDate.Enabled = false;
+                                    }
+                                }
+                            }
+                        }
+
                         // this is related to storing the default DateTimes for TakenDate and CreateDate
                         if (cItem == dtp_TakenDate)
                         {
@@ -323,7 +356,6 @@ public partial class FrmEditFileData : Form
                                 fileNameWithoutPath: fileNameWithoutPath,
                                 settingId: cItemNumericUpDown.Name.Substring(startIndex: 4),
                                 settingValue: cItemValStr);
-
                             cItemNumericUpDown.Value = int.Parse(s: cItemValStr);
                         }
 
@@ -352,7 +384,7 @@ public partial class FrmEditFileData : Form
                                 string sqliteText;
                                 if (cItem.Name == "cbx_CountryCode" && cItem.Text == "")
                                 {
-                                    sqliteText = HelperStatic.DataReadSQLiteCountryCodesNames(
+                                    sqliteText = HelperStatic.DataReadDTCountryCodesNames(
                                         queryWhat: "Country",
                                         inputVal: cbx_Country.Text,
                                         returnWhat: "ISO_3166_1A3"
@@ -364,7 +396,7 @@ public partial class FrmEditFileData : Form
                                 }
                                 else if (cItem.Name == "cbx_Country" && cItem.Text == "")
                                 {
-                                    sqliteText = HelperStatic.DataReadSQLiteCountryCodesNames(
+                                    sqliteText = HelperStatic.DataReadDTCountryCodesNames(
                                         queryWhat: "ISO_3166_1A3",
                                         inputVal: cbx_CountryCode.Text,
                                         returnWhat: "Country");
@@ -402,65 +434,6 @@ public partial class FrmEditFileData : Form
     }
 
 
-    /// <summary>
-    ///     Attempts to generate preview image for the image that was clicked on.
-    /// </summary>
-    /// <param name="fileNameWithPath">Name (path) of the file that was clicked on.</param>
-    /// <returns></returns>
-    private static async Task pbx_imgPreviewPicGenerator(string fileNameWithPath)
-    {
-        Logger.Debug(message: "Starting");
-
-        string fileName = Path.GetFileName(path: fileNameWithPath);
-        // via https://stackoverflow.com/a/8701748/3968494
-        FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
-        Image img = null;
-        if (frmEditFileDataInstance != null)
-        {
-            try
-            {
-                Logger.Trace(message: "Trying Bitmap");
-                using Bitmap bmpTemp = new(filename: fileNameWithPath);
-                img = new Bitmap(original: bmpTemp);
-                frmEditFileDataInstance.pbx_imagePreview.Image = img;
-            }
-            catch
-            {
-                Logger.Trace(message: "Bitmap failed");
-            }
-
-            if (img == null)
-            {
-                Logger.Trace(message: "Img doesn't exist.");
-                string generatedFileName = Path.Combine(path1: UserDataFolderPath, path2: fileName + ".jpg");
-                // don't run the thing again if file has already been generated
-                if (!File.Exists(path: generatedFileName))
-                {
-                    await HelperStatic.ExifGetImagePreviews(fileNameWithoutPath: fileNameWithPath);
-                }
-
-                //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
-                if (!File.Exists(path: generatedFileName))
-                {
-                    Logger.Trace(message: "Exiftool Failed to extract file");
-                    try
-                    {
-                        Logger.Trace(message: "Trying bitmap again");
-                        using Bitmap bmpTemp = new(filename: generatedFileName);
-                        img = new Bitmap(original: bmpTemp);
-                        frmEditFileDataInstance.pbx_imagePreview.Image = img;
-                    }
-                    catch
-                    {
-                        Logger.Trace(message: "Bitmap failed");
-                    }
-                }
-            }
-        }
-
-        Logger.Debug(message: "Done");
-    }
-
     #region Variables
 
     private static bool _frmEditFileDataNowLoadingFileData;
@@ -481,7 +454,6 @@ public partial class FrmEditFileData : Form
                                       EventArgs e)
     {
         DataTable dtToponomy = new();
-        DataTable dtAltitude = new();
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         //reset this just in case.
@@ -506,32 +478,6 @@ public partial class FrmEditFileData : Form
                     else
                     {
                         getFromWeb_Toponomy(fileNameWithoutPath: lvi.Text);
-                        // get lat/long from main listview
-                        lvi.ForeColor = Color.Red;
-                    }
-                }
-
-                break;
-            case "btn_getFromWeb_Altitude":
-                getFromWeb_Altitude(fileNameWithoutPath: "");
-
-                break;
-            case "btn_getAllFromWeb_Altitude":
-                foreach (ListViewItem lvi in lvw_FileListEditImages.Items)
-                {
-                    string fileName = lvi.Text;
-                    // for "this" file do the same as "normal" getfromweb
-                    if (fileName ==
-                        lvw_FileListEditImages.SelectedItems[index: 0]
-                            .Text)
-                    {
-                        getFromWeb_Altitude(fileNameWithoutPath: "");
-
-                        // no need to write back to sql because it's done automatically on textboxChange
-                    }
-                    else
-                    {
-                        getFromWeb_Altitude(fileNameWithoutPath: lvi.Text);
                         // get lat/long from main listview
                         lvi.ForeColor = Color.Red;
                     }
@@ -575,6 +521,9 @@ public partial class FrmEditFileData : Form
             strGpsLatitude = tbx_GPSLatitude.Text.ToString(provider: CultureInfo.InvariantCulture);
             strGpsLongitude = tbx_GPSLongitude.Text.ToString(provider: CultureInfo.InvariantCulture);
 
+            HelperStatic.CurrentAltitude = null;
+            HelperStatic.CurrentAltitude = tbx_GPSAltitude.Text.ToString(provider: CultureInfo.InvariantCulture);
+
             if (double.TryParse(s: strGpsLatitude,
                                 style: NumberStyles.Any,
                                 provider: CultureInfo.InvariantCulture,
@@ -593,6 +542,12 @@ public partial class FrmEditFileData : Form
         {
             if (frmMainAppInstance != null)
             {
+                HelperStatic.CurrentAltitude = null;
+                HelperStatic.CurrentAltitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
+                    .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSAltitude"]
+                                  .Index]
+                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+
                 strGpsLatitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
                     .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLatitude"]
                                   .Index]
@@ -634,6 +589,8 @@ public partial class FrmEditFileData : Form
             toponomyOverwrites.Add(item: ("State", dtToponomy.Rows[index: 0][columnName: "State"]
                                               .ToString()));
             toponomyOverwrites.Add(item: ("Sub_location", dtToponomy.Rows[index: 0][columnName: "Sub_location"]
+                                              .ToString()));
+            toponomyOverwrites.Add(item: ("GPSAltitude", dtToponomy.Rows[index: 0][columnName: "GPSAltitude"]
                                               .ToString()));
 
             string TZ = dtToponomy.Rows[index: 0][columnName: "timeZoneId"]
@@ -715,6 +672,9 @@ public partial class FrmEditFileData : Form
                         case "Sub_location":
                             tbx_Sub_location.Text = toponomyDetail.toponomyOverwriteVal;
                             break;
+                        case "GPSAltitude":
+                            tbx_GPSAltitude.Text = toponomyDetail.toponomyOverwriteVal;
+                            break;
                         case "OffsetTime":
                             tbx_OffsetTime.Text = toponomyDetail.toponomyOverwriteVal;
                             break;
@@ -761,77 +721,6 @@ public partial class FrmEditFileData : Form
                         settingId: toponomyDetail.toponomyOverwriteName,
                         settingValue: toponomyDetail.toponomyOverwriteVal
                     );
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    ///     Pulls data from the various APIs and fills up the listView and fills the TextBoxes and/or SQLite.
-    /// </summary>
-    /// <param name="fileNameWithoutPath">Blank if used as "pull one file" otherwise the name of the file w/o Path</param>
-    private void getFromWeb_Altitude(string fileNameWithoutPath = "")
-    {
-        DataTable dtAltitude;
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        double parsedLat;
-        double parsedLng;
-        string strGpsLatitude;
-        string strGpsLongitude;
-
-        if (fileNameWithoutPath == "")
-        {
-            strGpsLatitude = tbx_GPSLatitude.Text.ToString(provider: CultureInfo.InvariantCulture);
-            strGpsLongitude = tbx_GPSLongitude.Text.ToString(provider: CultureInfo.InvariantCulture);
-
-            if (double.TryParse(s: strGpsLatitude,
-                                style: NumberStyles.Any,
-                                provider: CultureInfo.InvariantCulture,
-                                result: out parsedLat) &&
-                double.TryParse(s: strGpsLongitude,
-                                style: NumberStyles.Any,
-                                provider: CultureInfo.InvariantCulture,
-                                result: out parsedLng))
-            {
-                dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrDT(lat: strGpsLatitude, lng: strGpsLongitude);
-
-                if (dtAltitude.Rows.Count > 0)
-                {
-                    tbx_GPSAltitude.Text = dtAltitude.Rows[index: 0][columnName: "Altitude"]
-                        .ToString();
-                }
-                // no need to write back to sql because it's done automatically on textboxChange
-            }
-            else
-            {
-                foreach (ListViewItem lvi in lvw_FileListEditImages.Items)
-                {
-                    string fileName = lvi.Text;
-
-                    // get lat/long from main listview
-                    strGpsLatitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileName)
-                        .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLatitude"]
-                                      .Index]
-                        .Text.ToString(provider: CultureInfo.InvariantCulture);
-                    strGpsLongitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileName)
-                        .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLongitude"]
-                                      .Index]
-                        .Text.ToString(provider: CultureInfo.InvariantCulture);
-                    if (double.TryParse(s: strGpsLatitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strGpsLongitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
-                    {
-                        dtAltitude = HelperStatic.DTFromAPIExifGetAltitudeFromWebOrDT(lat: strGpsLatitude, lng: strGpsLongitude);
-                        if (dtAltitude.Rows.Count > 0)
-                        {
-                            string altitude = dtAltitude.Rows[index: 0][columnName: "Altitude"]
-                                .ToString();
-                            HelperStatic.GenericUpdateAddToDataTable(
-                                dt: DtFileDataToWriteStage1PreQueue,
-                                fileNameWithoutPath: lvi.Text,
-                                settingId: "GPSAltitude",
-                                settingValue: altitude
-                            );
-                        }
-                    }
                 }
             }
         }
@@ -889,7 +778,8 @@ public partial class FrmEditFileData : Form
                 lvw_EditorFileListImagesGetData();
 
                 pbx_imagePreview.Image = null;
-                await pbx_imgPreviewPicGenerator(fileNameWithPath: fileNameWithPath);
+                await HelperStatic.GenericCreateImagePreview(fileNameWithPath: fileNameWithPath,
+                                                             initiator: "FrmEditFileData");
             }
             else
             {
@@ -1499,7 +1389,7 @@ public partial class FrmEditFileData : Form
                     string sqliteText;
                     if (senderName == "cbx_CountryCode")
                     {
-                        sqliteText = HelperStatic.DataReadSQLiteCountryCodesNames(
+                        sqliteText = HelperStatic.DataReadDTCountryCodesNames(
                             queryWhat: "ISO_3166_1A3",
                             inputVal: sndr.Text,
                             returnWhat: "Country"
@@ -1511,7 +1401,7 @@ public partial class FrmEditFileData : Form
                     }
                     else if (senderName == "cbx_Country")
                     {
-                        sqliteText = HelperStatic.DataReadSQLiteCountryCodesNames(
+                        sqliteText = HelperStatic.DataReadDTCountryCodesNames(
                             queryWhat: "Country",
                             inputVal: sndr.Text,
                             returnWhat: "ISO_3166_1A3"

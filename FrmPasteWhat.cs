@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -262,6 +261,7 @@ public partial class FrmPasteWhat : Form
                     // also do all the CountryCode 
                     else if (tagName == "Country")
                     {
+                        tagsToPaste.Add(item: tagName);
                         tagsToPaste.Add(item: "CountryCode");
                     }
                     else
@@ -279,92 +279,92 @@ public partial class FrmPasteWhat : Form
         }
 
         // stick the tagNames + values into DtFileDataPastePool
-        foreach (string tagName in tagsToPaste)
-        {
-            // by this point we know there is something to paste.
-            btn_OK.Enabled = false;
-            btn_Cancel.Enabled = false;
-
-            // check it's sitting somewhere already?
-            DataTable dtSqlDataQ;
-            try
-            {
-                dtSqlDataQ = FrmMainApp.DtFileDataToWriteStage1PreQueue.Select(filterExpression: "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId ='" + tagName + "'")
-                    .CopyToDataTable();
-            }
-            catch
-            {
-                dtSqlDataQ = null;
-            }
-
-            DataTable dtSqlDataReadyToWrite;
-            try
-            {
-                dtSqlDataReadyToWrite = FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Select(filterExpression: "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId ='" + tagName + "'")
-                    .CopyToDataTable();
-            }
-            catch
-            {
-                dtSqlDataReadyToWrite = null;
-            }
-
-            DataTable dtSqlDataInFile;
-            try
-            {
-                dtSqlDataInFile = FrmMainApp.DtFileDataSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameSourceWithPath + "' AND settingId ='" + tagName + "'")
-                    .CopyToDataTable();
-            }
-            catch
-            {
-                dtSqlDataInFile = null;
-            }
-
-            // see if data in temp-queue
-            if (dtSqlDataQ != null && dtSqlDataQ.Rows.Count > 0)
-            {
-                pasteValueStr = dtSqlDataQ.Rows[index: 0][columnName: "settingValue"]
-                    .ToString();
-            }
-            // see if data is ready to be written
-            else if (dtSqlDataReadyToWrite != null && dtSqlDataReadyToWrite.Rows.Count > 0)
-            {
-                pasteValueStr = dtSqlDataReadyToWrite.Rows[index: 0][columnName: "settingValue"]
-                    .ToString();
-            }
-            // take it from the file then
-            else if (dtSqlDataInFile != null && dtSqlDataInFile.Rows.Count > 0)
-            {
-                pasteValueStr = dtSqlDataInFile.Rows[index: 0][columnName: "settingValue"]
-                    .ToString();
-            }
-
-            else
-            {
-                pasteValueStr = "-";
-            }
-
-            if (pasteValueStr == "-" || pasteValueStr is null)
-            {
-                if (tagName.EndsWith(value: "Shift"))
-                {
-                    pasteValueStr = "0";
-                }
-                else
-                {
-                    pasteValueStr = "";
-                }
-            }
-
-            DataRow newDr = FrmMainApp.DtFileDataPastePool.NewRow();
-            newDr[columnName: "settingId"] = tagName;
-            newDr[columnName: "settingValue"] = pasteValueStr;
-            FrmMainApp.DtFileDataPastePool.Rows.Add(row: newDr);
-            FrmMainApp.DtFileDataPastePool.AcceptChanges();
-        }
-
         // do paste into the tables + grid as req'd
         if (_initiatorName == "FrmEditFileData")
         {
+            foreach (string tagName in tagsToPaste)
+            {
+                // by this point we know there is something to paste.
+                btn_OK.Enabled = false;
+                btn_Cancel.Enabled = false;
+
+                // check it's sitting somewhere already?
+                DataTable dtSqlDataQ;
+                try
+                {
+                    dtSqlDataQ = FrmMainApp.DtFileDataToWriteStage1PreQueue.Select(filterExpression: "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId ='" + tagName + "'")
+                        .CopyToDataTable();
+                }
+                catch
+                {
+                    dtSqlDataQ = null;
+                }
+
+                DataTable dtSqlDataReadyToWrite;
+                try
+                {
+                    dtSqlDataReadyToWrite = FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Select(filterExpression: "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId ='" + tagName + "'")
+                        .CopyToDataTable();
+                }
+                catch
+                {
+                    dtSqlDataReadyToWrite = null;
+                }
+
+                DataTable dtSqlDataInFile;
+                try
+                {
+                    dtSqlDataInFile = FrmMainApp.DtFileDataSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameSourceWithPath + "' AND settingId ='" + tagName + "'")
+                        .CopyToDataTable();
+                }
+                catch
+                {
+                    dtSqlDataInFile = null;
+                }
+
+                // see if data in temp-queue
+                if (dtSqlDataQ != null && dtSqlDataQ.Rows.Count > 0)
+                {
+                    pasteValueStr = dtSqlDataQ.Rows[index: 0][columnName: "settingValue"]
+                        .ToString();
+                }
+                // see if data is ready to be written
+                else if (dtSqlDataReadyToWrite != null && dtSqlDataReadyToWrite.Rows.Count > 0)
+                {
+                    pasteValueStr = dtSqlDataReadyToWrite.Rows[index: 0][columnName: "settingValue"]
+                        .ToString();
+                }
+                // take it from the file then
+                else if (dtSqlDataInFile != null && dtSqlDataInFile.Rows.Count > 0)
+                {
+                    pasteValueStr = dtSqlDataInFile.Rows[index: 0][columnName: "settingValue"]
+                        .ToString();
+                }
+
+                else
+                {
+                    pasteValueStr = "-";
+                }
+
+                if (pasteValueStr == "-" || pasteValueStr is null)
+                {
+                    if (tagName.EndsWith(value: "Shift"))
+                    {
+                        pasteValueStr = "0";
+                    }
+                    else
+                    {
+                        pasteValueStr = "";
+                    }
+                }
+
+                DataRow newDr = FrmMainApp.DtFileDataPastePool.NewRow();
+                newDr[columnName: "settingId"] = tagName;
+                newDr[columnName: "settingValue"] = pasteValueStr;
+                FrmMainApp.DtFileDataPastePool.Rows.Add(row: newDr);
+                FrmMainApp.DtFileDataPastePool.AcceptChanges();
+            }
+
             string fileNameWithoutPathToUpdate = null;
             FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
             if (frmEditFileDataInstance != null)
@@ -393,7 +393,6 @@ public partial class FrmPasteWhat : Form
                 }
             }
         }
-
         else if (_initiatorName == "FrmMainApp")
         {
             FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
@@ -403,126 +402,20 @@ public partial class FrmPasteWhat : Form
                 foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
                 {
                     string fileNameWithoutPathToUpdate = lvi.Text;
-
-                    // TimeShifts go separately. -- Also while this could be done in one step it's easier for now if we split Taken and Create
-                    // TakenDate
-                    DataRow[] dtDateTakenDateShifted = FrmMainApp.DtFileDataPastePool.Select(filterExpression: "settingId LIKE 'Taken%' AND settingId LIKE '%Shift'");
-                    if (dtDateTakenDateShifted.Length > 0)
+                    foreach (DataRow drCopyPoolRow in FrmMainApp.DtFileDataCopyPool.Rows)
                     {
-                        int shiftedDays = 0;
-                        int shiftedHours = 0;
-                        int shiftedMinutes = 0;
-                        int shiftedSeconds = 0;
-                        foreach (DataRow drPRow in dtDateTakenDateShifted)
+                        string settingId = drCopyPoolRow[columnName: "settingId"]
+                            .ToString();
+                        string settingValue = drCopyPoolRow[columnName: "settingValue"]
+                            .ToString();
+
+                        if (settingValue == "-")
                         {
-                            switch (drPRow[columnIndex: 0])
-                            {
-                                case "TakenDateDaysShift":
-                                    shiftedDays = int.Parse(s: drPRow[columnIndex: 1]
-                                                                .ToString());
-                                    break;
-                                case "TakenDateHoursShift":
-                                    shiftedHours = int.Parse(s: drPRow[columnIndex: 1]
-                                                                 .ToString());
-                                    break;
-                                case "TakenDateMinutesShift":
-                                    shiftedMinutes = int.Parse(s: drPRow[columnIndex: 1]
-                                                                   .ToString());
-                                    break;
-                                case "TakenDateSecondsShift":
-                                    shiftedSeconds = int.Parse(s: drPRow[columnIndex: 1]
-                                                                   .ToString());
-                                    break;
-                            }
+                            settingValue = "";
                         }
 
-                        int totalShiftedSeconds = shiftedSeconds +
-                                                  shiftedMinutes * 60 +
-                                                  shiftedHours * 60 * 60 +
-                                                  shiftedDays * 60 * 60 * 24;
-
-                        DataRow[] drTakenDate = FrmMainApp.DtOriginalTakenDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPathToUpdate + "'");
-                        if (drTakenDate.Length > 0)
+                        if (tagsToPaste.Contains(item: settingId))
                         {
-                            DateTime originalTakenDateTime = Convert.ToDateTime(value: drTakenDate[0][columnName: "settingValue"]
-                                                                                    .ToString());
-
-                            DateTime modifiedTakenDateTime = originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
-                            HelperStatic.GenericUpdateAddToDataTable(
-                                dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                                fileNameWithoutPath: fileNameWithoutPathToUpdate,
-                                settingId: "TakenDate",
-                                settingValue: modifiedTakenDateTime.ToString(provider: CultureInfo.CurrentUICulture));
-                        }
-                    }
-
-                    // CreateDate
-                    DataRow[] dtDateCreateDateShifted = FrmMainApp.DtFileDataPastePool.Select(filterExpression: "settingId LIKE 'Create%' AND settingId LIKE '%Shift'");
-                    if (dtDateCreateDateShifted.Length > 0)
-                    {
-                        int shiftedDays = 0;
-                        int shiftedHours = 0;
-                        int shiftedMinutes = 0;
-                        int shiftedSeconds = 0;
-                        foreach (DataRow drPRow in dtDateCreateDateShifted)
-                        {
-                            switch (drPRow[columnIndex: 0])
-                            {
-                                case "CreateDateDaysShift":
-                                    shiftedDays = int.Parse(s: drPRow[columnIndex: 1]
-                                                                .ToString());
-                                    break;
-                                case "CreateDateHoursShift":
-                                    shiftedHours = int.Parse(s: drPRow[columnIndex: 1]
-                                                                 .ToString());
-                                    break;
-                                case "CreateDateMinutesShift":
-                                    shiftedMinutes = int.Parse(s: drPRow[columnIndex: 1]
-                                                                   .ToString());
-                                    break;
-                                case "CreateDateSecondsShift":
-                                    shiftedSeconds = int.Parse(s: drPRow[columnIndex: 1]
-                                                                   .ToString());
-                                    break;
-                            }
-                        }
-
-                        int totalShiftedSeconds = shiftedSeconds +
-                                                  shiftedMinutes * 60 +
-                                                  shiftedHours * 60 * 60 +
-                                                  shiftedDays * 60 * 60 * 24;
-
-                        DataRow[] drCreateDate = FrmMainApp.DtOriginalCreateDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPathToUpdate + "'");
-                        if (drCreateDate.Length > 0)
-                        {
-                            DateTime originalCreateDateTime = Convert.ToDateTime(value: drCreateDate[0][columnName: "settingValue"]
-                                                                                     .ToString());
-
-                            DateTime modifiedCreateDateTime = originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
-                            HelperStatic.GenericUpdateAddToDataTable(
-                                dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                                fileNameWithoutPath: fileNameWithoutPathToUpdate,
-                                settingId: "CreateDate",
-                                settingValue: modifiedCreateDateTime.ToString(provider: CultureInfo.CurrentUICulture));
-                        }
-                    }
-
-                    // update each non-TimeShift Tag
-                    DataRow[] dtDateNotShifted = FrmMainApp.DtFileDataPastePool.Select(filterExpression: "settingId NOT LIKE '%Shift'");
-                    if (dtDateNotShifted.Length > 0)
-                    {
-                        foreach (DataRow drPRow in dtDateNotShifted)
-                        {
-                            string settingId = drPRow[columnIndex: 0]
-                                .ToString();
-                            string settingValue = drPRow[columnIndex: 1]
-                                .ToString();
-
-                            if (settingValue == "-")
-                            {
-                                settingValue = "";
-                            }
-
                             HelperStatic.GenericUpdateAddToDataTable(
                                 dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
                                 fileNameWithoutPath: fileNameWithoutPathToUpdate,

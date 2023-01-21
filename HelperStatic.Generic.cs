@@ -4,12 +4,12 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.AxHost;
 
 namespace GeoTagNinja;
 
@@ -28,6 +28,29 @@ internal static partial class HelperStatic
     internal static string GenericCoalesce(params string[] strings)
     {
         return strings.FirstOrDefault(predicate: s => !string.IsNullOrWhiteSpace(value: s));
+    }
+
+    private static string GenericStringToDateTimeBackToString(string dateTimeToConvert)
+    {
+        bool isDT = DateTime.TryParse(s: dateTimeToConvert, result: out DateTime tryDataValueDT);
+        string tryDataValueStr = tryDataValueDT.ToString(format: CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern);
+        if (isDT)
+        {
+            return tryDataValueStr;
+        }
+
+        return "-";
+    }
+
+    private static DateTime? GenericStringToDateTime(string dateTimeToConvert)
+    {
+        bool isDT = DateTime.TryParse(s: dateTimeToConvert, result: out DateTime tryDataValueDT);
+        if (isDT)
+        {
+            return tryDataValueDT;
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -152,11 +175,19 @@ internal static partial class HelperStatic
     ///     This (mostly) sets the various texts for most Controls in various forms, especially labels and buttons/boxes.
     /// </summary>
     /// <param name="cItem">The Control whose details need adjusting</param>
+    /// <param name="senderForm"></param>
+    /// <param name="parentNameToUse"></param>
     internal static void GenericReturnControlText(Control cItem,
-                                                  Form senderForm)
+                                                  Form senderForm,
+                                                  string parentNameToUse = null)
     {
+        if (parentNameToUse == null && !(cItem is Form))
+        {
+            parentNameToUse = cItem.Parent.Name;
+        }
+
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        FrmMainApp.Logger.Trace(message: "Starting - cItem: " + cItem.Name);
+
         if (
             cItem is Label ||
             cItem is GroupBox ||
@@ -168,6 +199,7 @@ internal static partial class HelperStatic
             //||
         )
         {
+            FrmMainApp.Logger.Trace(message: "Starting - cItem: " + cItem.Name);
             // for some reason there is no .Last() being offered here
             cItem.Text = DataReadDTObjectText(
                 objectType: cItem.GetType()
@@ -192,9 +224,26 @@ internal static partial class HelperStatic
             {
                 cItem.Text = DataReadSQLiteSettings(
                     tableName: "settings",
-                    settingTabPage: cItem.Parent.Name,
+                    settingTabPage: parentNameToUse,
                     settingId: cItem.Name
                 );
+            }
+        }
+        else if (cItem is NumericUpDown)
+        {
+            if (senderForm.Name == "FrmSettings")
+            {
+                NumericUpDown nud = (NumericUpDown)cItem;
+                FrmMainApp.Logger.Trace(message: "Starting - cItem: " + nud.Name);
+                _ = decimal.TryParse(s: DataReadSQLiteSettings(
+                                         tableName: "settings",
+                                         settingTabPage: parentNameToUse,
+                                         settingId: cItem.Name
+                                     ), result: out decimal outVal);
+
+                // if this doesn't exist, it'd return 0, which is illegal because the min-values can be higher than that
+                nud.Value = Math.Max(val1: nud.Minimum, val2: outVal);
+                nud.Text = outVal.ToString(provider: CultureInfo.InvariantCulture);
             }
         }
     }
@@ -244,49 +293,7 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    /// Updates the sessions storage for the Altitude DT
-    /// </summary>
-    /// <param name="lat">string value of lat</param>
-    /// <param name="lng">string value of lng</param>
-    /// <param name="altitude">Value to write</param>
-    internal static void GenericUpdateAddToDataTableAltitude(
-        string lat,
-        string lng,
-        string altitude)
-    {
-        lock (TableLock)
-        {
-            // delete any existing rows with the current combination
-            for (int i = FrmMainApp.DtAltitudeSessionData.Rows.Count - 1; i >= 0; i--)
-            {
-                DataRow thisDr = FrmMainApp.DtAltitudeSessionData.Rows[index: i];
-                if (
-                    thisDr[columnName: "lat"]
-                        .ToString() ==
-                    lat &&
-                    thisDr[columnName: "lng"]
-                        .ToString() ==
-                    lng
-                )
-                {
-                    thisDr.Delete();
-                }
-            }
-
-            FrmMainApp.DtAltitudeSessionData.AcceptChanges();
-
-            // add new
-            DataRow newDr = FrmMainApp.DtAltitudeSessionData.NewRow();
-            newDr[columnName: "lat"] = lat;
-            newDr[columnName: "lng"] = lng;
-            newDr[columnName: "Altitude"] = altitude;
-            FrmMainApp.DtAltitudeSessionData.Rows.Add(row: newDr);
-            FrmMainApp.DtAltitudeSessionData.AcceptChanges();
-        }
-    }
-
-    /// <summary>
-    /// Updates the sessions storage for the Toponomy DT
+    ///     Updates the sessions storage for the Toponomy DT
     /// </summary>
     /// <param name="lat">string value of lat</param>
     /// <param name="lng">string value of lng</param>
@@ -296,8 +303,9 @@ internal static partial class HelperStatic
     /// <param name="adminName4">Value to write</param>
     /// <param name="toponymName">Value to write</param>
     /// <param name="countryCode">Value to write</param>
+    /// <param name="altitude">Value to write</param>
     /// <param name="timezoneId">Value to write</param>
-    internal static void GenericUpdateAddToDataTableTopopnomy(
+    private static void GenericUpdateAddToDataTableTopopnomy(
         string lat,
         string lng,
         string adminName1,
@@ -306,6 +314,7 @@ internal static partial class HelperStatic
         string adminName4,
         string toponymName,
         string countryCode,
+        string altitude,
         string timezoneId
     )
     {
@@ -340,6 +349,7 @@ internal static partial class HelperStatic
             newDr[columnName: "AdminName4"] = adminName4;
             newDr[columnName: "ToponymName"] = toponymName;
             newDr[columnName: "CountryCode"] = countryCode;
+            newDr[columnName: "GPSAltitude"] = altitude;
             newDr[columnName: "timezoneId"] = timezoneId;
 
             FrmMainApp.DtToponomySessionData.Rows.Add(row: newDr);
@@ -414,6 +424,20 @@ internal static partial class HelperStatic
                 currentExifToolVersionInSQL = _currentExifToolVersionLocal;
             }
 
+            // shouldn't really happen but...
+            if (_currentExifToolVersionLocal != currentExifToolVersionInSQL)
+            {
+                // write current to SQL
+                DataWriteSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: "generic",
+                    settingId: "exifToolVer",
+                    settingValue: _currentExifToolVersionLocal.ToString(provider: CultureInfo.InvariantCulture)
+                );
+
+                currentExifToolVersionInSQL = _currentExifToolVersionLocal;
+            }
+
             if (newestExifToolVersionOnline > _currentExifToolVersionLocal && newestExifToolVersionOnline > currentExifToolVersionInSQL && _currentExifToolVersionLocal + newestExifToolVersionOnline > 0)
             {
                 FrmMainApp.Logger.Trace(message: "Writing new version to SQL: " + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture));
@@ -445,29 +469,37 @@ internal static partial class HelperStatic
             SApiOkay = true;
             DataTable dtApigtnVersion = DTFromAPI_GetGTNVersion();
             // newest may be something like "v0.5.8251"
-            string newestGTNVersionFull = dtApigtnVersion.Rows[index: 0][columnName: "version"]
-                .ToString()
-                .Replace(oldValue: "v", newValue: "");
-            int newestGTNVersion = 0;
-
-            int.TryParse(s: newestGTNVersionFull.Split('.')
-                             .Last(), result: out newestGTNVersion);
-
-            if (newestGTNVersion > currentGTNVersionBuild)
+            try // could be offline etc
             {
-                if (MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewGTNVersionExists") + newestGTNVersion, caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Asterisk) == DialogResult.Yes)
-                {
-                    Process.Start(fileName: "https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dtApigtnVersion.Rows[index: 0][columnName: "version"] + "/GeoTagNinja_Setup.msi");
-                }
-            }
+                string newestGTNVersionFull = dtApigtnVersion.Rows[index: 0][columnName: "version"]
+                    .ToString()
+                    .Replace(oldValue: "v", newValue: "");
 
-            // write back to SQL
-            DataWriteSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "generic",
-                settingId: "onlineVersionCheckDate",
-                settingValue: nowUnixTime.ToString()
-            );
+                int newestGTNVersion = 0;
+
+                int.TryParse(s: newestGTNVersionFull.Split('.')
+                                 .Last(), result: out newestGTNVersion);
+
+                if (newestGTNVersion > currentGTNVersionBuild)
+                {
+                    if (MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewGTNVersionExists") + newestGTNVersion, caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                    {
+                        Process.Start(fileName: "https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dtApigtnVersion.Rows[index: 0][columnName: "version"] + "/GeoTagNinja_Setup.msi");
+                    }
+                }
+
+                // write back to SQL
+                DataWriteSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: "generic",
+                    settingId: "onlineVersionCheckDate",
+                    settingValue: nowUnixTime.ToString()
+                );
+            }
+            catch
+            {
+                // nothing
+            }
         }
         else
         {
@@ -548,22 +580,16 @@ internal static partial class HelperStatic
         // DtToponomySessionData;
         FrmMainApp.DtToponomySessionData = new DataTable();
         FrmMainApp.DtToponomySessionData.Clear();
-        FrmMainApp.DtToponomySessionData.Columns.Add("lat");
-        FrmMainApp.DtToponomySessionData.Columns.Add("lng");
-        FrmMainApp.DtToponomySessionData.Columns.Add("AdminName1");
-        FrmMainApp.DtToponomySessionData.Columns.Add("AdminName2");
-        FrmMainApp.DtToponomySessionData.Columns.Add("AdminName3");
-        FrmMainApp.DtToponomySessionData.Columns.Add("AdminName4");
-        FrmMainApp.DtToponomySessionData.Columns.Add("ToponymName");
-        FrmMainApp.DtToponomySessionData.Columns.Add("CountryCode");
-        FrmMainApp.DtToponomySessionData.Columns.Add("timezoneId");
-
-        //DtAltitudeSessionData;
-        FrmMainApp.DtAltitudeSessionData = new DataTable();
-        FrmMainApp.DtAltitudeSessionData.Clear();
-        FrmMainApp.DtAltitudeSessionData.Columns.Add("lat");
-        FrmMainApp.DtAltitudeSessionData.Columns.Add("lng");
-        FrmMainApp.DtAltitudeSessionData.Columns.Add("Altitude");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "lat");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "lng");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "AdminName1");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "AdminName2");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "AdminName3");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "AdminName4");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "ToponymName");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "CountryCode");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "GPSAltitude");
+        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "timezoneId");
     }
 
     /// <summary>
@@ -593,6 +619,102 @@ internal static partial class HelperStatic
     internal static bool GenericLockCheckLockFile(string fileNameWithoutPath)
     {
         return FilesBeingProcessed.Contains(item: fileNameWithoutPath);
+    }
+
+    /// <summary>
+    ///     Triggers the "create preview" process for the file it's sent to check
+    /// </summary>
+    /// <param name="fileNameWithPath">Filename w/ path to check</param>
+    /// <param name="initiator"></param>
+    /// <returns></returns>
+    internal static async Task GenericCreateImagePreview(string fileNameWithPath,
+                                                         string initiator)
+    {
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
+        Image img = null;
+        FileInfo fi = new(fileName: fileNameWithPath);
+        string generatedFileName = null;
+
+        if (initiator == "FrmMainApp" && frmMainAppInstance != null)
+        {
+            frmMainAppInstance.pbx_imagePreview.Image = null;
+            generatedFileName = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: frmMainAppInstance.lvw_FileList.SelectedItems[index: 0]
+                                                                                              .Text +
+                                                                                          ".jpg");
+        }
+        else if (initiator == "FrmEditFileData" && frmEditFileDataInstance != null)
+        {
+            frmEditFileDataInstance.pbx_imagePreview.Image = null;
+            generatedFileName = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: frmEditFileDataInstance.lvw_FileListEditImages.SelectedItems[index: 0]
+                                                                                              .Text +
+                                                                                          ".jpg");
+        }
+
+        //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
+        string pbxErrorMsg = DataReadDTObjectText(
+            objectType: "PictureBox",
+            objectName: "pbx_imagePreviewCouldNotRetrieve"
+        );
+
+        try
+        {
+            // via https://stackoverflow.com/a/6576645/3968494
+            using FileStream stream = new(path: fileNameWithPath, mode: FileMode.Open, access: FileAccess.Read);
+            img = Image.FromStream(stream: stream);
+        }
+        catch
+        {
+            // nothing.
+        }
+
+        if (img == null)
+        {
+            // don't run the thing again if file has already been generated
+            if (!File.Exists(path: generatedFileName))
+            {
+                await ExifGetImagePreviews(fileNameWithoutPath: fileNameWithPath);
+            }
+
+            if (File.Exists(path: generatedFileName))
+            {
+                try
+                {
+                    using FileStream stream = new(path: generatedFileName, mode: FileMode.Open, access: FileAccess.Read);
+                    img = Image.FromStream(stream: stream);
+
+                    ExifRotate(img: img);
+                }
+                catch
+                {
+                    // nothing
+                }
+            }
+        }
+
+        if (img != null)
+        {
+            if (initiator == "FrmMainApp" && frmMainAppInstance != null)
+            {
+                frmMainAppInstance.pbx_imagePreview.Image = img;
+            }
+            else if (initiator == "FrmEditFileData" && frmEditFileDataInstance != null)
+            {
+                frmEditFileDataInstance.pbx_imagePreview.Image = img;
+            }
+        }
+
+        else
+        {
+            if (initiator == "FrmMainApp" && frmMainAppInstance != null)
+            {
+                frmMainAppInstance.pbx_imagePreview.SetErrorMessage(message: pbxErrorMsg);
+            }
+            else if (initiator == "FrmEditFileData" && frmEditFileDataInstance != null)
+            {
+                // frmEditFileDataInstance.pbx_imagePreview.SetErrorMessage(message: pbxErrorMsg); // <- nonesuch.
+            }
+        }
     }
 
     /// <summary>

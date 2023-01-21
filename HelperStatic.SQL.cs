@@ -25,16 +25,16 @@ internal static partial class HelperStatic
             // create folder in Appdata if doesn't exist
             string sqldbPath = SSettingsDataBasePath;
             FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath is " + SSettingsDataBasePath);
-            FileInfo fi = new(fileName: SSettingsDataBasePath);
+            FileInfo userDataBaseFile = new(fileName: SSettingsDataBasePath);
 
-            if (fi.Exists && fi.Length == 0)
+            if (userDataBaseFile.Exists && userDataBaseFile.Length == 0)
             {
                 FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath exists");
-                fi.Delete();
+                userDataBaseFile.Delete();
                 FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath deleted");
             }
 
-            if (!fi.Exists)
+            if (!userDataBaseFile.Exists)
             {
                 FrmMainApp.Logger.Trace(message: "Creating " + SSettingsDataBasePath);
                 try
@@ -63,7 +63,7 @@ internal static partial class HelperStatic
                                 PRIMARY KEY([settingTabPage], [settingId])
                             );
                             CREATE TABLE [Favourites](
-                                        [locationName] NTEXT NOT NULL PRIMARY KEY,
+                                        [favouriteName] NTEXT NOT NULL PRIMARY KEY,
                                         [GPSLatitude] NTEXT NOT NULL,
                                         [GPSLatitudeRef] NTEXT NOT NULL,
                                         [GPSLongitude] NTEXT NOT NULL,
@@ -76,6 +76,17 @@ internal static partial class HelperStatic
                                         [Country] NTEXT,
                                         [State] NTEXT,
                                         [Sub_location] NTEXT
+                                        )
+                            ;
+                            CREATE TABLE [customRules](
+                                        [ruleId] INTEGER PRIMARY KEY AUTOINCREMENT,
+                                        [CountryCode] NTEXT NOT NULL,
+                                        [DataPointName] NTEXT NOT NULL,
+                                        [DataPointConditionType] NTEXT NOT NULL,
+                                        [DataPointConditionValue] NTEXT NOT NULL,
+                                        [TargetPointName] NTEXT NOT NULL,
+                                        [TargetPointOutcome] NTEXT NOT NULL,
+                                        [TargetPointOutcomeCustom] NTEXT
                                         )
                             ;
                             """;
@@ -92,6 +103,8 @@ internal static partial class HelperStatic
             else
             {
                 DataCreateSQLiteFavourites();
+                DataCreateSQLiteCustomRules();
+                DataWriteSQLiteRenameFavouritesLocationNameCol();
             }
         }
         catch (Exception ex)
@@ -102,23 +115,28 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    ///     Fills the SQLite database with defaults (such as file-type-specific settings
+    ///     Fills the SQLite database with defaults (such as file-type-specific settings)
     /// </summary>
     internal static void DataWriteSQLiteSettingsDefaultSettings()
     {
         FrmMainApp.Logger.Debug(message: "Starting");
 
-        string[] controlNamesToAdd =
+        string[] ExtensionSpecificControlNamesToAdd =
         {
             "ckb_AddXMPSideCar",
             "ckb_OverwriteOriginal",
             "ckb_ProcessOriginalFile",
             "ckb_ResetFileDateToCreated"
         };
+
+        string[] NotExtensionSpecificControlNamesToAdd =
+        {
+            "rbt_UseGeoNamesLocalLanguage"
+        };
         string existingSQLVal;
 
         // extension-specific
-        foreach (string controlName in controlNamesToAdd)
+        foreach (string controlName in ExtensionSpecificControlNamesToAdd)
         {
             foreach (string ext in AncillaryListsArrays.AllCompatibleExtensions())
             {
@@ -129,54 +147,86 @@ internal static partial class HelperStatic
                 string tmpCtrlGroup = ext.Split('\t')
                     .Last()
                     .ToLower();
-                string tmpVal = "false";
+                string controlDefaultValue = "false";
+                string settingTabPage = "tpg_FileOptions";
 
                 if (controlName == "ckb_AddXMPSideCar")
                 {
                     if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
                     {
-                        tmpVal = "true";
+                        controlDefaultValue = "true";
                     }
                     else
                     {
-                        tmpVal = "false";
+                        controlDefaultValue = "false";
                     }
                 }
                 else if (controlName == "ckb_ProcessOriginalFile")
                 {
-                    tmpVal = "true";
+                    controlDefaultValue = "true";
                 }
 
                 else if (controlName == "ckb_ResetFileDateToCreated")
                 {
                     if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
                     {
-                        tmpVal = "true";
+                        controlDefaultValue = "true";
                     }
                     else
                     {
-                        tmpVal = "false";
+                        controlDefaultValue = "false";
                     }
                 }
 
                 else if (controlName == "ckb_OverwriteOriginal")
                 {
-                    tmpVal = "true";
+                    controlDefaultValue = "true";
                 }
 
-                existingSQLVal = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: tmpCtrlName);
-                if (existingSQLVal == "" || existingSQLVal is null)
-                {
-                    DataWriteSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: tmpCtrlName, settingValue: tmpVal);
-                }
+                UpdateSQLite(settingTabPage: settingTabPage, settingId: tmpCtrlName, controlDefaultValue: controlDefaultValue);
             }
         }
 
+        foreach (string controlName in NotExtensionSpecificControlNamesToAdd)
+        {
+            string controlDefaultValue = null;
+            string settingTabPage = null;
+            if (controlName == "rbt_UseGeoNamesLocalLanguage")
+            {
+                controlDefaultValue = "true";
+                settingTabPage = "tpg_Application";
+            }
+
+            UpdateSQLite(settingTabPage: settingTabPage, settingId: controlName, controlDefaultValue: controlDefaultValue);
+        }
+
         // language
-        existingSQLVal = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "cbx_Language");
+        existingSQLVal = DataReadSQLiteSettings(tableName: "settings",
+                                                settingTabPage: "tpg_Application",
+                                                settingId: "cbx_Language");
         if (existingSQLVal == "" || existingSQLVal is null)
         {
-            DataWriteSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "cbx_Language", settingValue: "English");
+            DataWriteSQLiteSettings(tableName: "settings",
+                                    settingTabPage: "tpg_Application",
+                                    settingId: "cbx_Language",
+                                    settingValue: "English");
+        }
+
+        void UpdateSQLite(string settingTabPage,
+                          string settingId,
+                          string controlDefaultValue)
+        {
+            existingSQLVal = DataReadSQLiteSettings(tableName: "settings",
+                                                    settingTabPage: settingTabPage,
+                                                    settingId: settingId);
+
+            if (existingSQLVal == "" || existingSQLVal is null)
+            {
+                DataWriteSQLiteSettings(tableName: "settings",
+                                        settingTabPage: settingTabPage,
+                                        settingId: settingId,
+                                        settingValue: controlDefaultValue);
+            }
         }
     }
 
@@ -303,6 +353,30 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
+    ///     Checks the SQLite database for checkbox-settings and returns true/false accordingly
+    /// </summary>
+    /// <param name="tableName">TableName where the particular checkbox is - this is almost always "settings"</param>
+    /// <param name="settingTabPage">TabPage of the above</param>
+    /// <param name="settingId">The Checkbox's name itself</param>
+    /// <returns>true or false</returns>
+    internal static bool DataReadCheckBoxSettingTrueOrFalse(string tableName,
+                                                            string settingTabPage,
+                                                            string settingId)
+    {
+        string valueInSQL = DataReadSQLiteSettings(
+            tableName: tableName,
+            settingTabPage: settingTabPage,
+            settingId: settingId
+        );
+        if (valueInSQL == "true")
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
     ///     Similar to the one above (which reads the data) - this one writes it.
     /// </summary>
     /// <param name="tableName">
@@ -403,12 +477,12 @@ internal static partial class HelperStatic
 
     #endregion
 
-    #region language DT
+    #region language & TZ DT
 
     internal static string DataReadDTObjectText(string objectType,
                                                 string objectName)
     {
-        return (from kvp in AncillaryListsArrays.commonNamesKVP
+        return (from kvp in AncillaryListsArrays.CommonNamesKvp
                 where kvp.Key == objectType + "_" + objectName
                 select kvp.Value).FirstOrDefault();
     }
@@ -416,7 +490,7 @@ internal static partial class HelperStatic
     /// <summary>
     ///     Reads all the language CSV files into one table (FrmMainApp.DtLanguageLabels)
     /// </summary>
-    internal static void DataReadObjectTextFromFiles()
+    internal static void DataReadLanguageDataFromCSV()
     {
         string languagesFolderPath = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "Languages");
 
@@ -499,14 +573,48 @@ internal static partial class HelperStatic
 
                         if (i == 2)
                         {
-                            AncillaryListsArrays.commonNamesKVP.RemoveAll(match: item => item.Key.Equals(obj: objectName));
+                            AncillaryListsArrays.CommonNamesKvp.RemoveAll(match: item => item.Key.Equals(obj: objectName));
                         }
 
-                        AncillaryListsArrays.commonNamesKVP.Add(item: new KeyValuePair<string, string>(key: objectName, value: objectText));
+                        AncillaryListsArrays.CommonNamesKvp.Add(item: new KeyValuePair<string, string>(key: objectName, value: objectText));
                     }
                 }
             }
         }
+    }
+
+    /// <summary>
+    ///     Reads the CountryCodes/Country data from the CSV file into a DT
+    /// </summary>
+    internal static void DataReadCountryCodeDataFromCSV()
+    {
+        string countryCodeCsvFilePath = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "isoCountryCodeMapping.csv");
+        FrmMainApp.DtIsoCountryCodeMapping = GetDataTableFromCsv(fileNameWithPath: countryCodeCsvFilePath, isUTF: true);
+    }
+
+    /// <summary>
+    ///     Reads the FrmMainApp.DtIsoCountryCodeMapping and basically translates between code types. We store ALPHA-2, ALPHA-3
+    ///     and plain English country names.
+    /// </summary>
+    /// <param name="queryWhat">ALPHA-2, ALPHA-3 and plain English country names</param>
+    /// <param name="inputVal">e.g US or USA or United States of America</param>
+    /// <param name="returnWhat">ALPHA-2, ALPHA-3 and plain English country names</param>
+    internal static string DataReadDTCountryCodesNames(string queryWhat,
+                                                       string inputVal,
+                                                       string returnWhat)
+    {
+        EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in FrmMainApp.DtIsoCountryCodeMapping.AsEnumerable()
+                                                           where dataRow.Field<string>(columnName: queryWhat) == inputVal
+                                                           select dataRow;
+
+        string returnString = "";
+        Parallel.ForEach(source: drDataTableData, body: dataRow =>
+            {
+                returnString = dataRow[columnName: returnWhat]
+                    .ToString();
+            })
+            ;
+        return returnString;
     }
 
     #endregion
@@ -515,6 +623,8 @@ internal static partial class HelperStatic
 
     /// <summary>
     ///     Creates a table for the user's "favourites".
+    ///     This is a bit of a f...up because originally this was favouriteName and then I started using favouriteName, which
+    ///     lends itself better to what it is but the columnName now has been released so...
     /// </summary>
     private static void DataCreateSQLiteFavourites()
     {
@@ -525,7 +635,7 @@ internal static partial class HelperStatic
 
         string sqlCommandStr = @"
                                 CREATE TABLE IF NOT EXISTS [Favourites](
-                                        [locationName] NTEXT NOT NULL PRIMARY KEY,
+                                        [favouriteName] NTEXT NOT NULL PRIMARY KEY,
                                         [GPSLatitude] NTEXT NOT NULL,
                                         [GPSLatitudeRef] NTEXT NOT NULL,
                                         [GPSLongitude] NTEXT NOT NULL,
@@ -539,7 +649,8 @@ internal static partial class HelperStatic
                                         [State] NTEXT,
                                         [Sub_location] NTEXT
                                         )
-                                ;"
+                                ;
+                                "
             ;
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
@@ -548,10 +659,56 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
+    ///     See comment above but generally the problem here is that I started the coding as locationName and then at some
+    ///     stage renamed the code to favouriteName so I need to check and eventually rename any user's data if the old column
+    ///     name exists.
+    /// </summary>
+    /// <returns></returns>
+    private static void DataWriteSQLiteRenameFavouritesLocationNameCol()
+    {
+        try
+        {
+            using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+            sqliteDB.Open();
+
+            // Get the schema for the columns in the database.
+            DataTable colsTable = sqliteDB.GetSchema(collectionName: "Columns");
+
+            // Query the columns schema using SQL statements to work out if the required columns exist.
+            bool locationNameExists = colsTable.Select(filterExpression: "COLUMN_NAME='locationName' AND TABLE_NAME='Favourites'")
+                                          .Length !=
+                                      0;
+            bool favouriteNameExists = colsTable.Select(filterExpression: "COLUMN_NAME='favouriteName' AND TABLE_NAME='Favourites'")
+                                           .Length !=
+                                       0;
+            if (locationNameExists)
+            {
+                string sqlCommandStr = @"
+                                ALTER TABLE [Favourites]
+                                RENAME COLUMN [locationName] TO [favouriteName]
+
+                                ;
+                                "
+                    ;
+
+                SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+
+                sqlToRun.ExecuteNonQuery();
+            }
+
+            sqliteDB.Close();
+        }
+        catch
+        {
+            // nothing
+        }
+    }
+
+    /// <summary>
     ///     Reads the favourites table
     /// </summary>
     /// <returns></returns>
-    internal static DataTable DataReadSQLiteFavourites()
+    internal static DataTable DataReadSQLiteFavourites(bool structureOnly = false)
     {
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
         sqliteDB.Open();
@@ -560,9 +717,18 @@ internal static partial class HelperStatic
                                 SELECT *
                                 FROM Favourites
                                 WHERE 1=1
-                                ORDER BY 1;
+                                ORDER BY 1
+
 								"
             ;
+
+        if (structureOnly)
+        {
+            sqlCommandStr += "LIMIT 0";
+        }
+
+        sqlCommandStr += ";";
+
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
 
         SQLiteDataReader reader = sqlToRun.ExecuteReader();
@@ -572,10 +738,37 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
+    ///     Updates the name (aka renames) a particular Favourite
+    /// </summary>
+    /// <param name="oldName">Existing name</param>
+    /// <param name="newName">New name to use</param>
+    internal static void DataRenameSQLiteFavourite(string oldName,
+                                                   string newName)
+    {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = @"
+                                UPDATE Favourites
+                                SET favouriteName = @newName
+                                WHERE favouriteName = @oldName
+                                ;"
+            ;
+
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@oldName", value: oldName);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@newName", value: newName);
+
+        sqlToRun.ExecuteNonQuery();
+    }
+
+    /// <summary>
     ///     Deletes the given "favourite" from the relevant table
     /// </summary>
-    /// <param name="locationName">Name of the "favourite" (like "home")</param>
-    internal static void DataDeleteSQLiteFavourites(string locationName)
+    /// <param name="favouriteName">Name of the "favourite" (like "home")</param>
+    internal static void DataDeleteSQLiteFavourite(string favouriteName)
     {
         FrmMainApp.Logger.Debug(message: "Starting");
 
@@ -584,45 +777,55 @@ internal static partial class HelperStatic
 
         string sqlCommandStr = @"
                                 DELETE FROM Favourites
-                                WHERE locationName = @locationName
+                                WHERE favouriteName = @favouriteName
                                 ;"
             ;
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@locationName", value: locationName);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@favouriteName", value: favouriteName);
 
         sqlToRun.ExecuteNonQuery();
     }
 
     /// <summary>
-    ///     Writes back the relevant "favourite" to the table
+    ///     Updates an existing Favourite with values
     /// </summary>
-    /// <param name="locationName">Value to write for relevant column</param>
-    /// <param name="GPSAltitude">Value to write for relevant column</param>
-    /// <param name="GPSAltitudeRef">Value to write for relevant column</param>
-    /// <param name="GPSLatitude">Value to write for relevant column</param>
-    /// <param name="GPSLatitudeRef">Value to write for relevant column</param>
-    /// <param name="GPSLongitude">Value to write for relevant column</param>
-    /// <param name="GPSLongitudeRef">Value to write for relevant column</param>
-    /// <param name="Coordinates">Value to write for relevant column</param>
-    /// <param name="City">Value to write for relevant column</param>
-    /// <param name="CountryCode">Value to write for relevant column</param>
-    /// <param name="Country">Value to write for relevant column</param>
-    /// <param name="State">Value to write for relevant column</param>
-    /// <param name="Sub_location">Value to write for relevant column</param>
-    internal static void DataWriteSQLiteFavourites(string locationName,
-                                                   string GPSAltitude,
-                                                   string GPSAltitudeRef,
-                                                   string GPSLatitude,
-                                                   string GPSLatitudeRef,
-                                                   string GPSLongitude,
-                                                   string GPSLongitudeRef,
-                                                   string Coordinates,
-                                                   string City,
-                                                   string CountryCode,
-                                                   string Country,
-                                                   string State,
-                                                   string Sub_location)
+    /// <param name="favouriteName">The one to update</param>
+    /// <param name="city">value to pass</param>
+    /// <param name="state">value to pass</param>
+    /// <param name="subLocation">value to pass</param>
+    internal static void DataWriteSQLiteUpdateFavourite(string favouriteName,
+                                                        string city,
+                                                        string state,
+                                                        string subLocation)
+    {
+        FrmMainApp.Logger.Trace(message: "Starting");
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = @"
+                                UPDATE Favourites 
+                                SET
+                                    City = @City,
+                                    State = @State,
+                                    Sub_location = @Sub_location
+                                WHERE favouriteName = @favouriteName;
+                                "
+            ;
+
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@favouriteName", value: favouriteName);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@City", value: city);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@State", value: state);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@Sub_location", value: subLocation);
+
+        sqlToRun.ExecuteNonQuery();
+    }
+
+    /// <summary>
+    ///     Saves a new Favourite to the table
+    /// </summary>
+    internal static void DataWriteSQLiteAddNewFavourite(DataRow drFavourite)
     {
         FrmMainApp.Logger.Trace(message: "Starting");
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
@@ -630,7 +833,7 @@ internal static partial class HelperStatic
 
         string sqlCommandStr = @"
                                 REPLACE INTO Favourites (
-                                    locationName,
+                                    favouriteName,
                                     GPSAltitude,
                                     GPSAltitudeRef,
                                     GPSLatitude,
@@ -644,75 +847,109 @@ internal static partial class HelperStatic
                                     State,
                                     Sub_location
                                     ) " +
-                               "VALUES (@locationName, @GPSAltitude,@GPSAltitudeRef,@GPSLatitude,@GPSLatitudeRef,@GPSLongitude,@GPSLongitudeRef,@Coordinates,@City,@CountryCode,@Country,@State,@Sub_location);"
+                               "VALUES (@favouriteName, @GPSAltitude,@GPSAltitudeRef,@GPSLatitude,@GPSLatitudeRef,@GPSLongitude,@GPSLongitudeRef,@Coordinates,@City,@CountryCode,@Country,@State,@Sub_location);"
             ;
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@locationName", value: locationName);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSAltitude", value: GPSAltitude);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSAltitudeRef", value: GPSAltitudeRef);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSLatitude", value: GPSLatitude);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSLatitudeRef", value: GPSLatitudeRef);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSLongitude", value: GPSLongitude);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@GPSLongitudeRef", value: GPSLongitudeRef);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@Coordinates", value: Coordinates);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@City", value: City);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@CountryCode", value: CountryCode);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@Country", value: Country);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@State", value: State);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@Sub_location", value: Sub_location);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@favouriteName", value: drFavourite[columnName: "favouriteName"]
+                                             .ToString());
+        foreach (string tagName in AncillaryListsArrays.GetFavouriteTags())
+        {
+            sqlToRun.Parameters.AddWithValue(parameterName: "@" + tagName, value: drFavourite[columnName: tagName]
+                                                 .ToString());
+        }
 
         sqlToRun.ExecuteNonQuery();
     }
 
     #endregion
 
-    #region Other SQL
+    #region customRules
 
-    /// <summary>
-    ///     Reads SQL and basically translates between code types. We store ALPHA-2, ALPHA-3 and plain English country names.
-    /// </summary>
-    /// <param name="queryWhat">ALPHA-2, ALPHA-3 and plain English country names</param>
-    /// <param name="inputVal">e.g US or USA or United States of America</param>
-    /// <param name="returnWhat">ALPHA-2, ALPHA-3 and plain English country names</param>
-    /// <returns>ALPHA-2, ALPHA-3 and plain English country names</returns>
-    internal static string DataReadSQLiteCountryCodesNames(string queryWhat,
-                                                           string inputVal,
-                                                           string returnWhat)
+    private static void DataCreateSQLiteCustomRules()
     {
-        string returnString = "";
-        // need to account for lack of data actually
-        if (inputVal != " ")
-        {
-            string countryCodeSQLiteFilePath = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "isoCountryCodeMapping.sqlite");
-            using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + countryCodeSQLiteFilePath);
-            sqliteDB.Open();
+        FrmMainApp.Logger.Debug(message: "Starting");
 
-            string sqlCommandStr = @"
-                                SELECT " +
-                                   returnWhat +
-                                   "\n " +
-                                   "FROM isoCountryCodeMapping \n" +
-                                   "WHERE 1=1 \n" +
-                                   "AND " +
-                                   queryWhat +
-                                   "= '" +
-                                   inputVal +
-                                   "' \n " +
-                                   "LIMIT 1;"
-                ;
-            SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
 
-            using SQLiteDataReader reader = sqlToRun.ExecuteReader();
-            while (reader.Read())
-            {
-                returnString = reader.GetString(i: 0);
-            }
-        }
+        string sqlCommandStr = @"
+                                CREATE TABLE IF NOT EXISTS [customRules](
+                                        [ruleId] INTEGER PRIMARY KEY AUTOINCREMENT,
+                                        [CountryCode] NTEXT NOT NULL,
+                                        [DataPointName] NTEXT NOT NULL,
+                                        [DataPointConditionType] NTEXT NOT NULL,
+                                        [DataPointConditionValue] NTEXT NOT NULL,
+                                        [TargetPointName] NTEXT NOT NULL,
+                                        [TargetPointOutcome] NTEXT NOT NULL,
+                                        [TargetPointOutcomeCustom] NTEXT
+                                        )
+                                    ;
+                                "
+            ;
 
-        return returnString;
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+
+        sqlToRun.ExecuteNonQuery();
     }
 
+    internal static DataTable DataReadSQLiteCustomRules()
+    {
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = @"
+                                SELECT *
+                                FROM CustomRules
+                                WHERE 1=1
+                                ;
+								"
+            ;
+
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+
+        SQLiteDataReader reader = sqlToRun.ExecuteReader();
+        DataTable dataTable = new();
+        dataTable.Load(reader: reader);
+        return dataTable;
+    }
+
+
+    internal static void DataWriteSQLiteCustomRules()
+    {
+        // write back
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
+
+        using SQLiteDataAdapter sqliteAdapter = new(commandText: @"select * from customRules", connection: sqliteDB);
+        SQLiteCommandBuilder commandBuilder = new(adp: sqliteAdapter);
+        sqliteAdapter.Update(dataTable: FrmSettings.dtCustomRules);
+
+        // this is stupid but Update doesn't seem to work with a delete/AcceptChange so...
+        string sqlCommandStr = @"
+                                DELETE FROM customRules
+                                WHERE 1=1
+                                    AND TargetPointOutcome = 'Custom'
+                                    AND TargetPointOutcomeCustom IS NULL
+                                ;
+                                UPDATE customRules
+                                SET TargetPointOutcomeCustom = NULL
+                                WHERE 1=1
+                                    AND TargetPointOutcome != 'Custom'
+                                ;
+                                "
+            ;
+
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+
+        sqlToRun.ExecuteNonQuery();
+    }
+
+    #endregion
+
+    #region Other DT
+
+    /// <returns>ALPHA-2, ALPHA-3 and plain English country names</returns>
     /// <summary>
     ///     Does a filter on a DataTable - just faster.
     ///     via https://stackoverflow.com/a/47692754/3968494

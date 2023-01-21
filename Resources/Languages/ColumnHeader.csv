@@ -34,3 +34,10 @@ clh_FileModifyDate,File Date,Date de Fichier
 clh_TakenDate,Taken Date,Date de prise
 clh_CreateDate,Create Date,Date de création
 clh_OffsetTime,Time Offset,Offset de temps
+clh_DataPointName,What,
+clh_DataPointConditionType,If,
+clh_DataPointConditionValue,Value,
+clh_TargetPointName,Then,
+clh_TargetPointOutcome,Becomes,
+clh_TargetPointOutcomeCustom,Custom Outcome,
+clh_BlankOutTargetPoint,Blank out?,

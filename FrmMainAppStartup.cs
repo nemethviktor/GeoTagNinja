@@ -100,7 +100,51 @@ public partial class FrmMainApp
         }
 
         // read language and objectnames
-        HelperStatic.DataReadObjectTextFromFiles();
+        HelperStatic.DataReadLanguageDataFromCSV();
+        HelperStatic.DataReadCountryCodeDataFromCSV();
+    }
+
+    /// <summary>
+    ///     Reads the value for API-language-use from SQLite.
+    /// </summary>
+    private static void AppStartupReadAPILanguage()
+    {
+        Logger.Debug(message: "Starting");
+        string TryUseGeoNamesLanguage = null;
+        try
+        {
+            TryUseGeoNamesLanguage = HelperStatic.DataReadSQLiteSettings(
+                tableName: "settings",
+                settingTabPage: "tpg_Application",
+                settingId: "rbt_UseGeoNamesLocalLanguage"
+            );
+
+            if (TryUseGeoNamesLanguage == "true") // bit derpy but works
+            {
+                HelperStatic.APILanguageToUse = "local";
+            }
+            else
+            {
+                TryUseGeoNamesLanguage = HelperStatic.DataReadSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: "tpg_Application",
+                    settingId: "cbx_TryUseGeoNamesLanguage"
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            TryUseGeoNamesLanguage = HelperStatic.defaultEnglishString;
+        }
+
+        if (TryUseGeoNamesLanguage != "true")
+        {
+            IEnumerable<KeyValuePair<string, string>> result = AncillaryListsArrays.GetISO_639_1_Languages()
+                .Where(predicate: kvp => kvp.Value == TryUseGeoNamesLanguage);
+
+            HelperStatic.APILanguageToUse = result.FirstOrDefault()
+                .Key;
+        }
     }
 
     /// <summary>
@@ -381,6 +425,12 @@ public partial class FrmMainApp
                                          objectName: "ttp_LoadFavourite"
                                      )
         );
+        ttp_ManageFavourites.SetToolTip(control: btn_ManageFavourites,
+                                        caption: HelperStatic.DataReadDTObjectText(
+                                            objectType: "ToolTip",
+                                            objectName: "ttp_ManageFavourites"
+                                        )
+        );
     }
 
     /// <summary>
@@ -471,6 +521,10 @@ public partial class FrmMainApp
         HelperStatic.ToponomyRadiusValue = radiusValue;
     }
 
+    /// <summary>
+    ///     Loads existing favourites
+    /// </summary>
+    /// <returns></returns>
     private static DataTable AppStartupLoadFavourites()
     {
         Logger.Info(message: "Starting");
@@ -480,15 +534,15 @@ public partial class FrmMainApp
         LstFavourites.Clear();
         AutoCompleteStringCollection autoCompleteCustomSource = new();
         frmMainAppInstance.cbx_Favourites.Items.Clear();
-        foreach (DataRow drFavorite in dtFavourites.Rows)
+        foreach (DataRow drFavourite in dtFavourites.Rows)
         {
-            string locationName = drFavorite[columnName: "locationName"]
+            string favouriteName = drFavourite[columnName: "favouriteName"]
                 .ToString();
-            LstFavourites.Add(item: locationName);
-            autoCompleteCustomSource.Add(value: locationName);
+            LstFavourites.Add(item: favouriteName);
+            autoCompleteCustomSource.Add(value: favouriteName);
             if (frmMainAppInstance != null)
             {
-                frmMainAppInstance.cbx_Favourites.Items.Add(item: locationName);
+                frmMainAppInstance.cbx_Favourites.Items.Add(item: favouriteName);
             }
         }
 
@@ -499,5 +553,14 @@ public partial class FrmMainApp
         }
 
         return dtFavourites;
+    }
+
+    /// <summary>
+    ///     Loads Custom Rules
+    /// </summary>
+    /// <returns></returns>
+    private static void AppStartupLoadCustomRules()
+    {
+        FrmSettings.dtCustomRules = HelperStatic.DataReadSQLiteCustomRules();
     }
 }

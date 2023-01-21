@@ -51,6 +51,9 @@ namespace geoTagNinja
         [JsonProperty("fcl", NullValueHandling = NullValueHandling.Ignore)]
         public string Fcl { get; set; }
 
+        [JsonProperty("srtm3", NullValueHandling = NullValueHandling.Ignore)]
+        public long Srtm3 { get; set; }
+
         [JsonProperty("population", NullValueHandling = NullValueHandling.Ignore)]
         public long? Population { get; set; }
 
@@ -102,21 +105,6 @@ namespace geoTagNinja
 
         [JsonProperty("dstOffset")]
         public long DstOffset { get; set; }
-    }
-    public partial class GeoResponseAltitude
-    {
-        [JsonProperty("srtm1", NullValueHandling = NullValueHandling.Ignore)]
-        public long? Srtm1 { get; set; }
-
-        [JsonProperty("lng", NullValueHandling = NullValueHandling.Ignore)]
-        public double? Lng { get; set; }
-
-        [JsonProperty("lat", NullValueHandling = NullValueHandling.Ignore)]
-        public double? Lat { get; set; }
-    }
-    public partial class GeoResponseAltitude
-    {
-        public static GeoResponseAltitude FromJson(string Json) => JsonConvert.DeserializeObject<GeoResponseAltitude>(Json, geoTagNinja.Converter.Settings);
     }
     public partial class GeoResponseTimeZone
     {

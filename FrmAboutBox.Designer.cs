@@ -31,13 +31,13 @@
             this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.pbx_Logo = new System.Windows.Forms.PictureBox();
             this.tbx_Description = new System.Windows.Forms.TextBox();
-            this.lbl_CompanyName = new System.Windows.Forms.Label();
-            this.lbl_ProductName = new System.Windows.Forms.Label();
-            this.lbl_Copyright = new System.Windows.Forms.Label();
+            this.tbx_CompanyName = new System.Windows.Forms.TextBox();
+            this.tbx_ProductName = new System.Windows.Forms.TextBox();
+            this.tbx_Copyright = new System.Windows.Forms.TextBox();
             this.btn_OK = new System.Windows.Forms.Button();
-            this.lbl_Paypal = new System.Windows.Forms.LinkLabel();
-            this.lbl_website = new System.Windows.Forms.LinkLabel();
+            this.tbx_Website = new System.Windows.Forms.LinkLabel();
             this.tbx_Version = new System.Windows.Forms.TextBox();
+            this.tbx_Paypal = new System.Windows.Forms.LinkLabel();
             this.tableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Logo)).BeginInit();
             this.SuspendLayout();
@@ -49,13 +49,13 @@
             this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 67F));
             this.tableLayoutPanel.Controls.Add(this.pbx_Logo, 0, 0);
             this.tableLayoutPanel.Controls.Add(this.tbx_Description, 1, 6);
-            this.tableLayoutPanel.Controls.Add(this.lbl_CompanyName, 1, 1);
-            this.tableLayoutPanel.Controls.Add(this.lbl_ProductName, 1, 3);
-            this.tableLayoutPanel.Controls.Add(this.lbl_Copyright, 1, 2);
+            this.tableLayoutPanel.Controls.Add(this.tbx_CompanyName, 1, 1);
+            this.tableLayoutPanel.Controls.Add(this.tbx_ProductName, 1, 3);
+            this.tableLayoutPanel.Controls.Add(this.tbx_Copyright, 1, 2);
             this.tableLayoutPanel.Controls.Add(this.btn_OK, 1, 7);
-            this.tableLayoutPanel.Controls.Add(this.lbl_Paypal, 1, 5);
-            this.tableLayoutPanel.Controls.Add(this.lbl_website, 1, 4);
+            this.tableLayoutPanel.Controls.Add(this.tbx_Website, 1, 4);
             this.tableLayoutPanel.Controls.Add(this.tbx_Version, 1, 0);
+            this.tableLayoutPanel.Controls.Add(this.tbx_Paypal, 1, 5);
             this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel.Location = new System.Drawing.Point(9, 9);
             this.tableLayoutPanel.Name = "tableLayoutPanel";
@@ -65,7 +65,7 @@
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 38F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel.Size = new System.Drawing.Size(556, 265);
@@ -78,60 +78,57 @@
             this.pbx_Logo.Location = new System.Drawing.Point(3, 3);
             this.pbx_Logo.Name = "pbx_Logo";
             this.tableLayoutPanel.SetRowSpan(this.pbx_Logo, 7);
-            this.pbx_Logo.Size = new System.Drawing.Size(177, 231);
+            this.pbx_Logo.Size = new System.Drawing.Size(177, 234);
             this.pbx_Logo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbx_Logo.TabIndex = 12;
             this.pbx_Logo.TabStop = false;
             // 
             // tbx_Description
             // 
+            this.tbx_Description.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tbx_Description.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbx_Description.Location = new System.Drawing.Point(189, 149);
-            this.tbx_Description.Margin = new System.Windows.Forms.Padding(6, 3, 3, 3);
+            this.tbx_Description.Location = new System.Drawing.Point(188, 165);
+            this.tbx_Description.Margin = new System.Windows.Forms.Padding(5);
             this.tbx_Description.Multiline = true;
             this.tbx_Description.Name = "tbx_Description";
             this.tbx_Description.ReadOnly = true;
             this.tbx_Description.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tbx_Description.Size = new System.Drawing.Size(364, 85);
+            this.tbx_Description.Size = new System.Drawing.Size(363, 70);
             this.tbx_Description.TabIndex = 23;
             this.tbx_Description.TabStop = false;
-            this.tbx_Description.Text = "Description";
             // 
-            // lbl_CompanyName
+            // tbx_CompanyName
             // 
-            this.lbl_CompanyName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbl_CompanyName.Location = new System.Drawing.Point(189, 22);
-            this.lbl_CompanyName.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
-            this.lbl_CompanyName.MaximumSize = new System.Drawing.Size(0, 17);
-            this.lbl_CompanyName.Name = "lbl_CompanyName";
-            this.lbl_CompanyName.Size = new System.Drawing.Size(364, 17);
-            this.lbl_CompanyName.TabIndex = 22;
-            this.lbl_CompanyName.Text = "Company Name";
-            this.lbl_CompanyName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.tbx_CompanyName.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tbx_CompanyName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbx_CompanyName.Location = new System.Drawing.Point(188, 20);
+            this.tbx_CompanyName.Margin = new System.Windows.Forms.Padding(5, 0, 0, 0);
+            this.tbx_CompanyName.Name = "tbx_CompanyName";
+            this.tbx_CompanyName.ReadOnly = true;
+            this.tbx_CompanyName.Size = new System.Drawing.Size(368, 13);
+            this.tbx_CompanyName.TabIndex = 22;
             // 
-            // lbl_ProductName
+            // tbx_ProductName
             // 
-            this.lbl_ProductName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbl_ProductName.Location = new System.Drawing.Point(189, 66);
-            this.lbl_ProductName.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
-            this.lbl_ProductName.MaximumSize = new System.Drawing.Size(0, 17);
-            this.lbl_ProductName.Name = "lbl_ProductName";
-            this.lbl_ProductName.Size = new System.Drawing.Size(364, 17);
-            this.lbl_ProductName.TabIndex = 19;
-            this.lbl_ProductName.Text = "Product Name";
-            this.lbl_ProductName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.tbx_ProductName.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tbx_ProductName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbx_ProductName.Location = new System.Drawing.Point(188, 60);
+            this.tbx_ProductName.Margin = new System.Windows.Forms.Padding(5, 0, 0, 0);
+            this.tbx_ProductName.Name = "tbx_ProductName";
+            this.tbx_ProductName.ReadOnly = true;
+            this.tbx_ProductName.Size = new System.Drawing.Size(368, 13);
+            this.tbx_ProductName.TabIndex = 19;
             // 
-            // lbl_Copyright
+            // tbx_Copyright
             // 
-            this.lbl_Copyright.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbl_Copyright.Location = new System.Drawing.Point(189, 44);
-            this.lbl_Copyright.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
-            this.lbl_Copyright.MaximumSize = new System.Drawing.Size(0, 17);
-            this.lbl_Copyright.Name = "lbl_Copyright";
-            this.lbl_Copyright.Size = new System.Drawing.Size(364, 17);
-            this.lbl_Copyright.TabIndex = 21;
-            this.lbl_Copyright.Text = "Copyright";
-            this.lbl_Copyright.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.tbx_Copyright.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tbx_Copyright.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbx_Copyright.Location = new System.Drawing.Point(188, 40);
+            this.tbx_Copyright.Margin = new System.Windows.Forms.Padding(5, 0, 0, 0);
+            this.tbx_Copyright.Name = "tbx_Copyright";
+            this.tbx_Copyright.ReadOnly = true;
+            this.tbx_Copyright.Size = new System.Drawing.Size(368, 13);
+            this.tbx_Copyright.TabIndex = 21;
             // 
             // btn_OK
             // 
@@ -144,37 +141,37 @@
             this.btn_OK.Text = "&OK";
             this.btn_OK.Click += new System.EventHandler(this.Btn_OK_Click);
             // 
-            // lbl_Paypal
+            // tbx_Website
             // 
-            this.lbl_Paypal.Image = global::GeoTagNinja.Properties.Resources.Paypal;
-            this.lbl_Paypal.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-            this.lbl_Paypal.Location = new System.Drawing.Point(185, 108);
-            this.lbl_Paypal.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lbl_Paypal.Name = "lbl_Paypal";
-            this.lbl_Paypal.Size = new System.Drawing.Size(134, 38);
-            this.lbl_Paypal.TabIndex = 25;
-            this.lbl_Paypal.Click += new System.EventHandler(this.lbl_Paypal_Click);
-            // 
-            // lbl_website
-            // 
-            this.lbl_website.AutoSize = true;
-            this.lbl_website.Location = new System.Drawing.Point(186, 86);
-            this.lbl_website.Name = "lbl_website";
-            this.lbl_website.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
-            this.lbl_website.Size = new System.Drawing.Size(51, 13);
-            this.lbl_website.TabIndex = 26;
-            this.lbl_website.TabStop = true;
-            this.lbl_website.Text = "Website";
-            this.lbl_website.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lbl_website_LinkClicked);
+            this.tbx_Website.Location = new System.Drawing.Point(188, 80);
+            this.tbx_Website.Margin = new System.Windows.Forms.Padding(5, 0, 0, 0);
+            this.tbx_Website.Name = "tbx_Website";
+            this.tbx_Website.Size = new System.Drawing.Size(365, 13);
+            this.tbx_Website.TabIndex = 26;
+            this.tbx_Website.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.tbx_Website_LinkClicked);
             // 
             // tbx_Version
             // 
             this.tbx_Version.BackColor = System.Drawing.SystemColors.Control;
-            this.tbx_Version.Location = new System.Drawing.Point(186, 3);
+            this.tbx_Version.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tbx_Version.Location = new System.Drawing.Point(188, 0);
+            this.tbx_Version.Margin = new System.Windows.Forms.Padding(5, 0, 0, 0);
             this.tbx_Version.Name = "tbx_Version";
             this.tbx_Version.ReadOnly = true;
-            this.tbx_Version.Size = new System.Drawing.Size(367, 20);
+            this.tbx_Version.Size = new System.Drawing.Size(365, 13);
             this.tbx_Version.TabIndex = 27;
+            // 
+            // tbx_Paypal
+            // 
+            this.tbx_Paypal.Image = global::GeoTagNinja.Properties.Resources.Paypal;
+            this.tbx_Paypal.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.tbx_Paypal.Location = new System.Drawing.Point(203, 100);
+            this.tbx_Paypal.Margin = new System.Windows.Forms.Padding(20, 0, 2, 0);
+            this.tbx_Paypal.Name = "tbx_Paypal";
+            this.tbx_Paypal.Size = new System.Drawing.Size(188, 60);
+            this.tbx_Paypal.TabIndex = 25;
+            this.tbx_Paypal.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.tbx_Paypal.Click += new System.EventHandler(this.tbx_Paypal_Click);
             // 
             // FrmAboutBox
             // 
@@ -204,13 +201,13 @@
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
         private System.Windows.Forms.PictureBox pbx_Logo;
-        private System.Windows.Forms.Label lbl_ProductName;
-        private System.Windows.Forms.Label lbl_Copyright;
-        private System.Windows.Forms.Label lbl_CompanyName;
+        private System.Windows.Forms.TextBox tbx_ProductName;
+        private System.Windows.Forms.TextBox tbx_Copyright;
+        private System.Windows.Forms.TextBox tbx_CompanyName;
         private System.Windows.Forms.TextBox tbx_Description;
         private System.Windows.Forms.Button btn_OK;
-        private System.Windows.Forms.LinkLabel lbl_Paypal;
-        private System.Windows.Forms.LinkLabel lbl_website;
+        private System.Windows.Forms.LinkLabel tbx_Paypal;
+        private System.Windows.Forms.LinkLabel tbx_Website;
         private System.Windows.Forms.TextBox tbx_Version;
     }
 }

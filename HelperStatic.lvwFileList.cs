@@ -1,15 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GeoTagNinja.Model;
+using GeoTagNinja.View.ListView;
+using static System.Net.Mime.MediaTypeNames;
+using Application = System.Windows.Forms.Application;
+using Image = System.Drawing.Image;
 
 namespace GeoTagNinja;
 
 internal static partial class HelperStatic
 {
+    private const int exifOrientationID = 0x112; //274
+
     /// <summary>
     ///     Updates the data sitting in the main listview if there is anything outstanding in
     ///     dt_fileDataToWriteStage3ReadyToWrite for the file
@@ -209,26 +219,23 @@ internal static partial class HelperStatic
 
         foreach (ListViewItem lvw_FileListItem in frmMainAppInstance.lvw_FileList.SelectedItems)
         {
+            DirectoryElement de = lvw_FileListItem.Tag as DirectoryElement;
+
             // make sure file still exists. just in case someone deleted it elsewhere
-            string fileNameWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: lvw_FileListItem.Text);
-            if (File.Exists(path: fileNameWithPath) && lvw_FileListItem.SubItems.Count > 1)
+            if (File.Exists(path: de.FullPathAndName) && lvw_FileListItem.SubItems.Count > 1)
             {
-                string firstSelectedItem = lvw_FileListItem.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_Coordinates"]
-                                                                         .Index]
+                int coordCol = frmMainAppInstance.lvw_FileList.GetColumnIndex(column: FileListView.ColumnNames.COORDINATES);
+                string firstSelectedItem = lvw_FileListItem.SubItems[index: coordCol]
                     .Text;
-                if (firstSelectedItem != "-" && firstSelectedItem != "")
+                if (firstSelectedItem.Replace(oldValue: FileListView.UNKNOWN_VALUE_FILE, newValue: "") != "")
                 {
                     string strLat;
                     string strLng;
                     try
                     {
-                        strLat = lvw_FileListItem.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_Coordinates"]
-                                                               .Index]
-                            .Text.Split(';')[0]
+                        strLat = firstSelectedItem.Split(';')[0]
                             .Replace(oldChar: ',', newChar: '.');
-                        strLng = lvw_FileListItem.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_Coordinates"]
-                                                               .Index]
-                            .Text.Split(';')[1]
+                        strLng = firstSelectedItem.Split(';')[1]
                             .Replace(oldChar: ',', newChar: '.');
                     }
                     catch
@@ -263,118 +270,22 @@ internal static partial class HelperStatic
                         .Text ==
                     lvw_FileListItem.Text)
                 {
-                    if (File.Exists(path: fileNameWithPath))
+                    if (File.Exists(path: de.FullPathAndName))
                     {
-                        await LvwItemCreatePreview(fileNameWithPath: fileNameWithPath);
+                        await HelperStatic.GenericCreateImagePreview(fileNameWithPath: de.FullPathAndName,
+                                                                     initiator: "FrmMainApp");
                     }
-                    else if (Directory.Exists(path: fileNameWithPath))
+                    else if (Directory.Exists(path: de.FullPathAndName))
                     {
                         // nothing.
                     }
                     else // check it's a drive? --> if so, don't do anything, otherwise warn the item is gone
                     {
-                        bool isDrive = LvwItemIsDrive(lvwFileListItem: lvw_FileListItem);
-
-                        if (isDrive)
+                        if (de.Type != DirectoryElement.ElementType.Drive)
                         {
-                            // nothing
-                        }
-                        else
-                        {
-                            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorFileGoneMissing") + fileNameWithPath, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorFileGoneMissing") + de.FullPathAndName, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
                         }
                     }
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    ///     Checks if a ListViewItem is a drive (e.g. C:\) or not
-    /// </summary>
-    /// <param name="lvwFileListItem">The ListViewItem to check</param>
-    /// <returns></returns>
-    internal static bool LvwItemIsDrive(ListViewItem lvwFileListItem)
-    {
-        DriveInfo[] allDrives = DriveInfo.GetDrives();
-        bool isDrive = false;
-        foreach (DriveInfo d in allDrives)
-        {
-            try
-            {
-                if (lvwFileListItem.Text.Contains(value: "(" + d.Name.Replace(oldValue: "\\", newValue: "") + ")"))
-                {
-                    isDrive = true;
-                    break;
-                }
-            }
-            catch
-            {
-                //MessageBox.Show(ex.Message);
-            }
-        }
-
-        return isDrive;
-    }
-
-    /// <summary>
-    ///     Triggers the "create preview" process for the file it's sent to check
-    /// </summary>
-    /// <param name="fileNameWithPath">Filename w/ path to check</param>
-    /// <returns></returns>
-    internal static async Task LvwItemCreatePreview(string fileNameWithPath)
-    {
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        if (frmMainAppInstance != null)
-        {
-            frmMainAppInstance.pbx_imagePreview.Image = null;
-            // via https://stackoverflow.com/a/8701748/3968494
-            Image img = null;
-
-            FileInfo fi = new(fileName: fileNameWithPath);
-            try
-            {
-                using Bitmap bmpTemp = new(filename: fileNameWithPath);
-                img = new Bitmap(original: bmpTemp);
-                frmMainAppInstance.pbx_imagePreview.Image = img;
-            }
-            catch
-            {
-                // nothing.
-            }
-
-            if (img == null)
-            {
-                string generatedFileName = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: frmMainAppInstance.lvw_FileList.SelectedItems[index: 0]
-                                                                                                         .Text +
-                                                                                                     ".jpg");
-                // don't run the thing again if file has already been generated
-                if (!File.Exists(path: generatedFileName))
-                {
-                    await ExifGetImagePreviews(fileNameWithoutPath: fileNameWithPath);
-                }
-
-                //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
-                string ip_ErrorMsg = DataReadDTObjectText(
-                    objectType: "PictureBox",
-                    objectName: "pbx_imagePreviewCouldNotRetrieve"
-                );
-                if (File.Exists(path: generatedFileName))
-                {
-                    try
-                    {
-                        using Bitmap bmpTemp = new(filename: generatedFileName);
-                        img = new Bitmap(original: bmpTemp);
-                        frmMainAppInstance.pbx_imagePreview.Image = img;
-                    }
-                    catch
-                    {
-                        frmMainAppInstance.pbx_imagePreview.SetErrorMessage(message: ip_ErrorMsg);
-                    }
-                }
-                else
-                {
-                    frmMainAppInstance.pbx_imagePreview.SetErrorMessage(message: ip_ErrorMsg);
                 }
             }
         }
@@ -386,32 +297,52 @@ internal static partial class HelperStatic
     internal static void LvwCountItemsWithGeoData()
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        int fileCount = 0;
-        int filesWithGeoData = 0;
-        string fileNameWithoutPath;
 
         if (frmMainAppInstance != null)
         {
-            foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.Items)
-            {
-                fileNameWithoutPath = lvi.Text;
-                if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath)))
-                {
-                    fileCount++;
-                }
+            FrmMainApp.HandlerUpdateLabelText(
+                label: frmMainAppInstance.lbl_ParseProgress,
+                text: "Ready. Files: Total: " +
+                      frmMainAppInstance.lvw_FileList.FileCount +
+                      " Geodata: " +
+                      frmMainAppInstance.lvw_FileList.CountItemsWithData(column: FileListView.ColumnNames.COORDINATES));
+        }
+    }
 
-                if (lvi.SubItems.Count > 1)
-                {
-                    if (lvi.SubItems[index: 1]
-                            .Text.Replace(oldValue: "-", newValue: "") !=
-                        "")
-                    {
-                        filesWithGeoData++;
-                    }
-                }
-            }
+    internal static void ExifRotate(this Image img)
+    {
+        // via https://stackoverflow.com/a/48347653/3968494
+        if (!img.PropertyIdList.Contains(value: exifOrientationID))
+        {
+            return;
+        }
 
-            FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Ready. Files: Total: " + fileCount + " Geodata: " + filesWithGeoData);
+        PropertyItem prop = img.GetPropertyItem(propid: exifOrientationID);
+        int val = BitConverter.ToUInt16(value: prop.Value, startIndex: 0);
+        RotateFlipType rot = RotateFlipType.RotateNoneFlipNone;
+
+        if (val == 3 || val == 4)
+        {
+            rot = RotateFlipType.Rotate180FlipNone;
+        }
+        else if (val == 5 || val == 6)
+        {
+            rot = RotateFlipType.Rotate90FlipNone;
+        }
+        else if (val == 7 || val == 8)
+        {
+            rot = RotateFlipType.Rotate270FlipNone;
+        }
+
+        if (val == 2 || val == 4 || val == 5 || val == 7)
+        {
+            rot |= RotateFlipType.RotateNoneFlipX;
+        }
+
+        if (rot != RotateFlipType.RotateNoneFlipNone)
+        {
+            img.RotateFlip(rotateFlipType: rot);
+            img.RemovePropertyItem(propid: exifOrientationID);
         }
     }
 }

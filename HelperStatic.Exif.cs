@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -14,7 +15,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using CsvHelper;
-using CsvHelper.Configuration;
 using geoTagNinja;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -273,7 +273,7 @@ internal static partial class HelperStatic
             {
                 if (DateTime.TryParse(s: tryDataValue, result: out DateTime outDateTime))
                 {
-                    tryDataValue = outDateTime.ToString(format: CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern);
+                    tryDataValue = GenericStringToDateTimeBackToString(dateTimeToConvert: tryDataValue);
                 }
                 else
                 {
@@ -314,7 +314,7 @@ internal static partial class HelperStatic
                                                               row2) =>
                                                                  row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "objectName"));
 
-        DataTable dtObjectTagNameIn = null;
+        DataTable? dtObjectTagNameIn = null;
         try
         {
             dtObjectTagNameIn = dtObjectTagNamesIn.Select(filterExpression: "objectName = '" + dataPoint + "'")
@@ -411,9 +411,16 @@ internal static partial class HelperStatic
             string argsFile = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "exifArgs.args");
             string extraArgs = "";
 
-            File.Delete(path: csvFilePath);
-            File.Delete(path: batchFilePath);
-            File.Delete(path: argsFile);
+            try
+            {
+                File.Delete(path: csvFilePath);
+                File.Delete(path: batchFilePath);
+                File.Delete(path: argsFile);
+            }
+            catch
+            {
+                // nothing
+            }
 
             List<string> exifArgs = new();
 
@@ -526,7 +533,7 @@ internal static partial class HelperStatic
                             string fileNameWithPathForwardSlash = fileNameWithPath
                                 .Replace(oldValue: @"\", newValue: "/");
 
-                            DataTable dtThisFileCsvData = null;
+                            DataTable? dtThisFileCsvData = null;
                             try
                             {
                                 dtThisFileCsvData = dtCSV.Select(filterExpression: "SourceFile = '" + fileNameWithPathForwardSlash + "'")
@@ -629,9 +636,7 @@ internal static partial class HelperStatic
                                         DataRow drTakenDate = FrmMainApp.DtOriginalTakenDate.NewRow();
                                         drTakenDate[columnName: "fileNameWithoutPath"] = lvi.Text;
                                         drTakenDate[columnName: "settingId"] = "originalTakenDate";
-                                        drTakenDate[columnName: "settingValue"] = DateTime.Parse(s: str,
-                                                                                                 provider: CultureInfo.CurrentUICulture)
-                                            .ToString(provider: CultureInfo.CurrentUICulture);
+                                        drTakenDate[columnName: "settingValue"] = GenericStringToDateTime(dateTimeToConvert: str);
                                         FrmMainApp.DtOriginalTakenDate.Rows.Add(row: drTakenDate);
                                         FrmMainApp.DtOriginalTakenDate.AcceptChanges();
                                     }
@@ -643,9 +648,7 @@ internal static partial class HelperStatic
                                         DataRow drCreateDate = FrmMainApp.DtOriginalCreateDate.NewRow();
                                         drCreateDate[columnName: "fileNameWithoutPath"] = lvi.Text;
                                         drCreateDate[columnName: "settingId"] = "originalCreateDate";
-                                        drCreateDate[columnName: "settingValue"] = DateTime.Parse(s: str,
-                                                                                                  provider: CultureInfo.CurrentUICulture)
-                                            .ToString(provider: CultureInfo.CurrentUICulture);
+                                        drCreateDate[columnName: "settingValue"] = GenericStringToDateTime(dateTimeToConvert: str);
 
                                         FrmMainApp.DtOriginalCreateDate.Rows.Add(row: drCreateDate);
                                         FrmMainApp.DtOriginalCreateDate.AcceptChanges();
@@ -705,6 +708,10 @@ internal static partial class HelperStatic
     /// <param name="useTZAdjust">True or False to whether to adjust Time Zone</param>
     /// <param name="compareTZAgainst">If TZ should be compared against CreateDate or DateTimeOriginal</param>
     /// <param name="TZVal">Value as string, e.g "+01:00"</param>
+    /// <param name="GeoMaxIntSecs"></param>
+    /// <param name="GeoMaxExtSecs"></param>
+    /// <param name="doNotReverseGeoCode">Whether reverse geocoding should be skipped</param>
+    /// <param name="language"></param>
     /// <param name="timeShiftSeconds">Int value if GPS time should be shifted.</param>
     /// <returns></returns>
     internal static async Task ExifGetTrackSyncData(string trackFileLocationType,
@@ -714,6 +721,8 @@ internal static partial class HelperStatic
                                                     string TZVal,
                                                     int GeoMaxIntSecs,
                                                     int GeoMaxExtSecs,
+                                                    bool doNotReverseGeoCode,
+                                                    string language,
                                                     int timeShiftSeconds = 0)
     {
         _sErrorMsg = "";
@@ -919,6 +928,12 @@ internal static partial class HelperStatic
                                                 strParsedLng = str;
                                             }
 
+                                            if (tagToWrite == "GPSAltitude")
+                                            {
+                                                CurrentAltitude = null;
+                                                CurrentAltitude = str;
+                                            }
+
                                             if (lvi.Index % 10 == 0)
                                             {
                                                 Application.DoEvents();
@@ -950,45 +965,48 @@ internal static partial class HelperStatic
                                     }
 
                                     // pull from web
-                                    SApiOkay = true;
-                                    DataTable dt_Toponomy = DTFromAPIExifGetToponomyFromWebOrSQL(lat: strParsedLat.ToString(provider: CultureInfo.InvariantCulture), lng: strParsedLng.ToString(provider: CultureInfo.InvariantCulture));
-
-                                    if (SApiOkay)
+                                    if (!doNotReverseGeoCode)
                                     {
-                                        List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
-                                        toponomyOverwrites.Add(item: ("CountryCode", dt_Toponomy.Rows[index: 0][columnName: "CountryCode"]
-                                                                          .ToString()));
-                                        toponomyOverwrites.Add(item: ("Country", dt_Toponomy.Rows[index: 0][columnName: "Country"]
-                                                                          .ToString()));
-                                        toponomyOverwrites.Add(item: ("City", dt_Toponomy.Rows[index: 0][columnName: "City"]
-                                                                          .ToString()));
-                                        toponomyOverwrites.Add(item: ("State", dt_Toponomy.Rows[index: 0][columnName: "State"]
-                                                                          .ToString()));
-                                        toponomyOverwrites.Add(item: ("Sub_location", dt_Toponomy.Rows[index: 0][columnName: "Sub_location"]
-                                                                          .ToString()));
+                                        SApiOkay = true;
+                                        DataTable dtToponomy = DTFromAPIExifGetToponomyFromWebOrSQL(lat: strParsedLat.ToString(provider: CultureInfo.InvariantCulture), lng: strParsedLng.ToString(provider: CultureInfo.InvariantCulture));
 
-                                        foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+                                        if (SApiOkay)
                                         {
-                                            GenericUpdateAddToDataTable(
-                                                dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                                                fileNameWithoutPath: lvi.Text,
-                                                settingId: toponomyDetail.toponomyOverwriteName,
-                                                settingValue: toponomyDetail.toponomyOverwriteVal
-                                            );
-                                            lvi.SubItems[index: lvw.Columns[key: "clh_" + toponomyDetail.toponomyOverwriteName]
-                                                             .Index]
-                                                .Text = toponomyDetail.toponomyOverwriteVal;
+                                            List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
+                                            toponomyOverwrites.Add(item: ("CountryCode", dtToponomy.Rows[index: 0][columnName: "CountryCode"]
+                                                                              .ToString()));
+                                            toponomyOverwrites.Add(item: ("Country", dtToponomy.Rows[index: 0][columnName: "Country"]
+                                                                              .ToString()));
+                                            toponomyOverwrites.Add(item: ("City", dtToponomy.Rows[index: 0][columnName: "City"]
+                                                                              .ToString()));
+                                            toponomyOverwrites.Add(item: ("State", dtToponomy.Rows[index: 0][columnName: "State"]
+                                                                              .ToString()));
+                                            toponomyOverwrites.Add(item: ("Sub_location", dtToponomy.Rows[index: 0][columnName: "Sub_location"]
+                                                                              .ToString()));
+
+                                            foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+                                            {
+                                                GenericUpdateAddToDataTable(
+                                                    dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
+                                                    fileNameWithoutPath: lvi.Text,
+                                                    settingId: toponomyDetail.toponomyOverwriteName,
+                                                    settingValue: toponomyDetail.toponomyOverwriteVal
+                                                );
+                                                lvi.SubItems[index: lvw.Columns[key: "clh_" + toponomyDetail.toponomyOverwriteName]
+                                                                 .Index]
+                                                    .Text = toponomyDetail.toponomyOverwriteVal;
+                                            }
+
+                                            if (lvi.Index % 10 == 0)
+                                            {
+                                                Application.DoEvents();
+                                                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                                frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
+                                            }
+
+                                            frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
                                         }
-
-                                        if (lvi.Index % 10 == 0)
-                                        {
-                                            Application.DoEvents();
-                                            // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                            frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
-                                        }
-
-                                        frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
                                     }
                                 }
                             }
@@ -1023,9 +1041,6 @@ internal static partial class HelperStatic
             tbxText.WordWrap = true;
             tbxText.ReadOnly = true;
 
-            //Label lblText = new Label();
-            //lblText.Text = s_OutputMsg;
-            //lblText.AutoSize = true;
             panel.SetFlowBreak(control: tbxText, value: true);
             panel.Controls.Add(value: tbxText);
 
@@ -1098,12 +1113,7 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    ///     Writes outstanding exif changes to the listOfAsyncCompatibleFileNamesWithOutPath (all
-    ///     listOfAsyncCompatibleFileNamesWithOutPath in the queue).
-    ///     This logic is very similar to the "incompatible read" above - it's safer. While it's also probably slower
-    ///     ... the assumption is that users will read a lot of listOfAsyncCompatibleFileNamesWithOutPath but will write
-    ///     proportionately fewer listOfAsyncCompatibleFileNamesWithOutPath so
-    ///     ... speed is less of an essence against safety.
+    ///     Writes outstanding exif changes to files.
     /// </summary>
     /// <returns>Reastically nothing but writes the exif tags and updates the listview rows where necessary</returns>
     internal static async Task ExifWriteExifToFile()
@@ -1259,7 +1269,7 @@ internal static partial class HelperStatic
                         // this is prob not the best way to go around this....
                         foreach (DataRow drFileTags in dtFileWriteQueue.Rows)
                         {
-                            string tmpSettingValue = drFileTags[columnName: "settingValue"]
+                            string tmpSettingValue = drFileTags[columnName: "settingId"]
                                 .ToString();
                             if (tmpSettingValue == @"gps*")
                             {
@@ -1357,11 +1367,23 @@ internal static partial class HelperStatic
                         }
                         else
                         {
-                            if (objectTagNameOut == "EXIF:DateTimeOriginal" ||
-                                objectTagNameOut == "EXIF:CreateDate" ||
-                                objectTagNameOut == "XMP:DateTimeOriginal" ||
-                                objectTagNameOut == "XMP:CreateDate")
+                            if (objectTagNameOut == "EXIF:DateTimeOriginal" || // TakenDate
+                                objectTagNameOut == "EXIF:CreateDate" || // CreateDate
+                                objectTagNameOut == "XMP:DateTimeOriginal" || // TakenDate
+                                objectTagNameOut == "XMP:CreateDate" // CreateDate
+                               )
                             {
+                                bool isTakenDate = false;
+                                bool isCreateDate = false;
+                                if (objectTagNameOut == "EXIF:DateTimeOriginal" || objectTagNameOut == "XMP:DateTimeOriginal")
+                                {
+                                    isTakenDate = true;
+                                }
+                                else if (objectTagNameOut == "EXIF:CreateDate" || objectTagNameOut == "XMP:CreateDate")
+                                {
+                                    isCreateDate = true;
+                                }
+
                                 try
                                 {
                                     updateExifVal = DateTime.Parse(s: settingValue)
@@ -1370,6 +1392,63 @@ internal static partial class HelperStatic
                                 catch
                                 {
                                     updateExifVal = "";
+                                }
+
+                                if (isCreateDate)
+                                {
+                                    // update FrmMainApp.DtOriginalCreateDate -- there should be only 1 row
+                                    for (int i = FrmMainApp.DtOriginalCreateDate.Rows.Count - 1; i >= 0; i--)
+                                    {
+                                        DataRow dr = FrmMainApp.DtOriginalCreateDate.Rows[index: i];
+                                        if (dr[columnName: "fileNameWithoutPath"]
+                                                .ToString() ==
+                                            fileNameWithoutPath)
+                                        {
+                                            dr.Delete();
+                                        }
+
+                                        break;
+                                    }
+
+                                    FrmMainApp.DtOriginalCreateDate.AcceptChanges();
+                                    if (updateExifVal != "")
+                                    {
+                                        DataRow drCreateDate = FrmMainApp.DtOriginalCreateDate.NewRow();
+                                        drCreateDate[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
+                                        drCreateDate[columnName: "settingId"] = "originalCreateDate";
+                                        drCreateDate[columnName: "settingValue"] = GenericStringToDateTime(dateTimeToConvert: updateExifVal);
+
+                                        FrmMainApp.DtOriginalCreateDate.Rows.Add(row: drCreateDate);
+                                        FrmMainApp.DtOriginalCreateDate.AcceptChanges();
+                                    }
+                                }
+                                else if (isTakenDate)
+                                {
+                                    // update FrmMainApp.DtOriginalTakenDate -- there should be only 1 row
+                                    for (int i = FrmMainApp.DtOriginalTakenDate.Rows.Count - 1; i >= 0; i--)
+                                    {
+                                        DataRow dr = FrmMainApp.DtOriginalTakenDate.Rows[index: i];
+                                        if (dr[columnName: "fileNameWithoutPath"]
+                                                .ToString() ==
+                                            fileNameWithoutPath)
+                                        {
+                                            dr.Delete();
+                                        }
+
+                                        break;
+                                    }
+
+                                    FrmMainApp.DtOriginalTakenDate.AcceptChanges();
+                                    if (updateExifVal != "")
+                                    {
+                                        DataRow drTakenDate = FrmMainApp.DtOriginalTakenDate.NewRow();
+                                        drTakenDate[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
+                                        drTakenDate[columnName: "settingId"] = "originalTakenDate";
+                                        drTakenDate[columnName: "settingValue"] = GenericStringToDateTime(dateTimeToConvert: updateExifVal);
+
+                                        FrmMainApp.DtOriginalTakenDate.Rows.Add(row: drTakenDate);
+                                        FrmMainApp.DtOriginalTakenDate.AcceptChanges();
+                                    }
                                 }
                             }
 
@@ -1474,7 +1553,7 @@ internal static partial class HelperStatic
 
             prcExifTool.StartInfo = new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
             {
-                Arguments = @"/k " + SDoubleQuote + SDoubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + SDoubleQuote + " " + exiftoolCmd + SDoubleQuote + "&& exit",
+                Arguments = @"/c " + SDoubleQuote + SDoubleQuote + Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe") + SDoubleQuote + " " + exiftoolCmd + SDoubleQuote,
                 UseShellExecute = false,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
@@ -1608,9 +1687,23 @@ internal static partial class HelperStatic
                         }
 
                         decimal.TryParse(s: _sOutputMsg.Replace(oldValue: "\r", newValue: "")
-                                             .Replace(oldValue: "\n", newValue: ""), result: out _currentExifToolVersionLocal);
+                                             .Replace(oldValue: "\n", newValue: ""),
+                                         provider: CultureInfo.InvariantCulture,
+                                         style: NumberStyles.Any,
+                                         result: out _currentExifToolVersionLocal
+                        );
                     };
 
+                    break;
+                case "ExifGetTrackSyncData":
+                    prcExifTool.OutputDataReceived += (_,
+                                                       data) =>
+                    {
+                        if (data.Data != null && data.Data.Length > 0)
+                        {
+                            _sOutputMsg += data.Data.ToString() + Environment.NewLine;
+                        }
+                    };
                     break;
                 default:
                     prcExifTool.OutputDataReceived += (_,
@@ -1678,7 +1771,7 @@ internal static partial class HelperStatic
             Authenticator = new HttpBasicAuthenticator(username: SGeoNamesUserName, password: SGeoNamesPwd)
         };
 
-        RestRequest requestToponomy = new(resource: "findNearbyPlaceNameJSON?lat=" + latitude + "&lng=" + longitude + "&style=FULL&radius=" + radius + "&maxRows=" + ToponomyMaxRows);
+        RestRequest requestToponomy = new(resource: "findNearbyPlaceNameJSON?lat=" + latitude + "&lng=" + longitude + "&lang=" + APILanguageToUse + "&style=FULL&radius=" + radius + "&maxRows=" + ToponomyMaxRows);
         RestResponse responseToponomy = client.ExecuteGet(request: requestToponomy);
         // check API reponse is OK
         if (responseToponomy.Content != null && responseToponomy.Content.Contains(value: "the hourly limit of "))
@@ -1754,57 +1847,6 @@ internal static partial class HelperStatic
         return returnVal;
     }
 
-    /// <summary>
-    ///     Responsible for pulling the altitude response for the API
-    /// </summary>
-    /// <param name="latitude">As on the tin.</param>
-    /// <param name="longitude">As on the tin.</param>
-    /// <returns>Structured altitude response</returns>
-    private static GeoResponseAltitude API_ExifGetGeoDataFromWebAltitude(string latitude,
-                                                                         string longitude)
-    {
-        if (SGeoNamesUserName == null)
-        {
-            try
-            {
-                SGeoNamesUserName = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_UserName");
-                SGeoNamesPwd = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_Pwd");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-            }
-        }
-
-        GeoResponseAltitude returnVal = new();
-        RestClient client = new(baseUrl: "http://api.geonames.org/")
-        {
-            Authenticator = new HttpBasicAuthenticator(username: SGeoNamesUserName, password: SGeoNamesPwd)
-        };
-
-        RestRequest request_Altitude = new(resource: "srtm1JSON?lat=" + latitude + "&lng=" + longitude);
-        RestResponse response_Altitude = client.ExecuteGet(request: request_Altitude);
-        // check API reponse is OK
-        if (response_Altitude.Content != null && response_Altitude.Content.Contains(value: "the hourly limit of "))
-        {
-            SApiOkay = false;
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + response_Altitude.Content, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
-        }
-        else if (response_Altitude.StatusCode.ToString() == "OK")
-        {
-            SApiOkay = true;
-            JObject data = (JObject)JsonConvert.DeserializeObject(value: response_Altitude.Content);
-            GeoResponseAltitude geoResponseAltitude = GeoResponseAltitude.FromJson(Json: data.ToString());
-            returnVal = geoResponseAltitude;
-        }
-        else
-        {
-            SApiOkay = false;
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + response_Altitude.StatusCode, caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
-        }
-
-        return returnVal;
-    }
 
     /// <summary>
     ///     Responsible for pulling the latest prod-version number of exifTool from exiftool.org
@@ -1889,13 +1931,9 @@ internal static partial class HelperStatic
         dtReturn.Columns.Add(columnName: "City");
         dtReturn.Columns.Add(columnName: "State");
         dtReturn.Columns.Add(columnName: "Sub_location");
+        dtReturn.Columns.Add(columnName: "GPSAltitude");
         dtReturn.Columns.Add(columnName: "timezoneId");
 
-        // logic: it's likely that API info doesn't change much...ever. 
-        // Given that in 2022 Crimea is still part of Ukraine according to API response I think this data is static
-        // ....so no need to query stuff that may already be locally available.
-        // FYI this only gets amended when this button gets pressed or if map-to-location button gets pressed on the main form.
-        // ... also on an unrelated note Toponomy vs Toponmy the API calls it one thing and Wikipedia calls it another so go figure
         EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in FrmMainApp.DtToponomySessionData.AsEnumerable()
                                                            where dataRow.Field<string>(columnName: "lat") == lat && dataRow.Field<string>(columnName: "lng") == lng
                                                            select dataRow;
@@ -1904,105 +1942,300 @@ internal static partial class HelperStatic
 
         GeoResponseToponomy readJsonToponomy;
 
-        string Distance = "";
-        string CountryCode = "";
-        string Country = "";
-        string City = "";
-        string State = "";
-        string Sub_location = "";
-        string timezoneId = "";
+        string? Distance = "";
+        string? CountryCode = "";
+        string? Country = "";
+        string? City = "";
+        string? State = "";
+        string? Sub_location = "";
+        string? Altitude = "0";
+        string? timezoneId = "";
+
+        bool includePredeterminedCountries = DataReadCheckBoxSettingTrueOrFalse(
+            tableName: "settings",
+            settingTabPage: "tpg_CustomRules",
+            settingId: "ckb_IncludePredeterminedCountries"
+        );
+
+        bool stopProcessingRules = DataReadCheckBoxSettingTrueOrFalse(
+            tableName: "settings",
+            settingTabPage: "tpg_CustomRules",
+            settingId: "ckb_StopProcessingRules"
+        );
 
         // As per https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 (see below comment a few lines down)
-        string[] arrCityNameIsAdminName1 = { "LIE", "SMR", "MNE", "MKD", "MLT", "SVN" };
-        string[] arrCityNameIsAdminName2 = { "ALA", "BRA", "COL", "CUB", "CYP", "DNK", "FRO", "GTM", "HND", "HRV", "ISL", "LUX", "LVA", "NIC", "NLD", "NOR", "PRI", "PRT", "ROU", "SWE" };
-        string[] arrCityNameIsAdminName3 = { "AUT", "CHE", "CHL", "CZE", "EST", "ESP", "FIN", "GRC", "ITA", "PAN", "PER", "POL", "SRB", "SVK", "USA", "ZAF" };
-        string[] arrCityNameIsAdminName4 = { "BEL", "DEU", "FRA", "GUF", "GLP", "MTQ" };
 
         // read from SQL
         if (lstReturnToponomyData.Count > 0)
         {
+            bool isPredeterminedCountry = false;
+
             CountryCode = lstReturnToponomyData[index: 0][columnName: "CountryCode"]
                 .ToString();
-            Country = DataReadSQLiteCountryCodesNames(
+            Country = DataReadDTCountryCodesNames(
                     queryWhat: "ISO_3166_1A3",
                     inputVal: CountryCode,
                     returnWhat: "Country")
                 ;
 
+            Altitude = lstReturnToponomyData[index: 0][columnName: "GPSAltitude"]
+                .ToString();
+
             timezoneId = lstReturnToponomyData[index: 0][columnName: "timezoneId"]
+                .ToString();
+
+            string? AdminName1InSQL = lstReturnToponomyData[index: 0][columnName: "AdminName1"]
+                .ToString();
+            string? AdminName2InSQL = lstReturnToponomyData[index: 0][columnName: "AdminName2"]
+                .ToString();
+            string? AdminName3InSQL = lstReturnToponomyData[index: 0][columnName: "AdminName3"]
+                .ToString();
+            string? AdminName4InSQL = lstReturnToponomyData[index: 0][columnName: "AdminName4"]
+                .ToString();
+            string? ToponymNameInSQL = lstReturnToponomyData[index: 0][columnName: "ToponymName"]
                 .ToString();
 
             // In a country where you know, which admin level the cities belong to (see arrays), use the adminNameX as city name.
             // If the toponymName doesn't match the adminNameX, use the toponymName as sublocation name. toponymNames ...
             // ... for populated places may be city names or names of some populated entity below city level, but they're never used for something above city level.
             // In a country where city names are not assigned to a specific admin level, I'd use the toponymName as the city name and leave the sublocation name blank.
-            Sub_location = lstReturnToponomyData[index: 0][columnName: "ToponymName"]
-                .ToString();
 
-            if (arrCityNameIsAdminName1.Contains(value: CountryCode))
+            if (AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode) ||
+                AncillaryListsArrays.CityNameIsAdminName2Arr.Contains(value: CountryCode) ||
+                AncillaryListsArrays.CityNameIsAdminName3Arr.Contains(value: CountryCode) ||
+                AncillaryListsArrays.CityNameIsAdminName4Arr.Contains(value: CountryCode)
+               )
             {
-                City = lstReturnToponomyData[index: 0][columnName: "AdminName1"]
-                    .ToString();
+                isPredeterminedCountry = true;
+
+                Sub_location = ToponymNameInSQL;
+
+                if (AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode))
+                {
+                    City = AdminName1InSQL;
+                    State = "";
+                }
+                else if (AncillaryListsArrays.CityNameIsAdminName2Arr.Contains(value: CountryCode))
+                {
+                    City = AdminName2InSQL;
+                }
+                else if (AncillaryListsArrays.CityNameIsAdminName3Arr.Contains(value: CountryCode))
+                {
+                    City = AdminName3InSQL;
+                }
+                else if (AncillaryListsArrays.CityNameIsAdminName4Arr.Contains(value: CountryCode))
+                {
+                    City = AdminName4InSQL;
+                }
+
                 if (City == Sub_location)
                 {
                     Sub_location = "";
                 }
-            }
-            else if (arrCityNameIsAdminName2.Contains(value: CountryCode))
-            {
-                City = lstReturnToponomyData[index: 0][columnName: "AdminName2"]
-                    .ToString();
-                if (City == Sub_location)
+
+                if (!AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode))
                 {
-                    Sub_location = "";
-                }
-            }
-            else if (arrCityNameIsAdminName3.Contains(value: CountryCode))
-            {
-                City = lstReturnToponomyData[index: 0][columnName: "AdminName3"]
-                    .ToString();
-                if (City == Sub_location)
-                {
-                    Sub_location = "";
-                }
-            }
-            else if (arrCityNameIsAdminName4.Contains(value: CountryCode))
-            {
-                City = lstReturnToponomyData[index: 0][columnName: "AdminName4"]
-                    .ToString();
-                if (City == Sub_location)
-                {
-                    Sub_location = "";
-                }
-            }
-            else
-            {
-                // i'll do something more generic and user-editable eventually.
-                if (lstReturnToponomyData[index: 0][columnName: "adminName2"]
-                        .ToString() ==
-                    "Greater London")
-                {
-                    City = lstReturnToponomyData[index: 0][columnName: "adminName2"]
-                        .ToString();
-                    Sub_location = lstReturnToponomyData[index: 0][columnName: "ToponymName"]
-                        .ToString();
-                }
-                else
-                {
-                    City = lstReturnToponomyData[index: 0][columnName: "ToponymName"]
-                        .ToString();
-                    Sub_location = "";
+                    State = AdminName1InSQL;
                 }
             }
 
-            if (arrCityNameIsAdminName1.Contains(value: CountryCode))
+            if (!isPredeterminedCountry || includePredeterminedCountries)
             {
-                State = "";
-            }
-            else
-            {
-                State = lstReturnToponomyData[index: 0][columnName: "AdminName1"]
-                    .ToString();
+                bool customRuleChangedState = false;
+                bool customRuleChangedCity = false;
+                bool customRuleChangedSub_location = false;
+
+                EnumerableRowCollection<DataRow> drCustomRulesData = from DataRow dataRow in FrmSettings.dtCustomRules.AsEnumerable()
+                                                                     where dataRow.Field<string>(columnName: "CountryCode") == CountryCode
+                                                                     select dataRow;
+
+                if (drCustomRulesData.Any())
+                {
+                    foreach (DataRow dataRow in drCustomRulesData)
+                    {
+                        string DataPointName = dataRow[columnName: "DataPointName"]
+                            .ToString();
+
+                        string DataPointConditionType = dataRow[columnName: "DataPointConditionType"]
+                            .ToString();
+
+                        string DataPointValueInSQL = null;
+
+                        switch (DataPointName)
+                        {
+                            case "AdminName1":
+                                DataPointValueInSQL = AdminName1InSQL;
+                                break;
+                            case "AdminName2":
+                                DataPointValueInSQL = AdminName2InSQL;
+                                break;
+                            case "AdminName3":
+                                DataPointValueInSQL = AdminName3InSQL;
+                                break;
+                            case "AdminName4":
+                                DataPointValueInSQL = AdminName4InSQL;
+                                break;
+                            case "ToponymName":
+                                DataPointValueInSQL = ToponymNameInSQL;
+                                break;
+                        }
+
+                        // don't bother if null
+                        if (!string.IsNullOrEmpty(value: DataPointValueInSQL))
+                        {
+                            string? DataPointConditionValue = dataRow[columnName: "DataPointConditionValue"]
+                                .ToString();
+                            string? DataPointValueInSQLLC = DataPointValueInSQL.ToLower();
+                            string? DataPointConditionValueLC = DataPointConditionValue.ToLower();
+                            bool comparisonIsTrue = false;
+                            switch (DataPointConditionType)
+                            {
+                                case "Is":
+                                    if (DataPointValueInSQLLC == DataPointConditionValueLC)
+                                    {
+                                        comparisonIsTrue = true;
+                                    }
+
+                                    break;
+                                case "Contains":
+                                    if (DataPointValueInSQLLC.Contains(value: DataPointConditionValueLC))
+                                    {
+                                        comparisonIsTrue = true;
+                                    }
+
+                                    break;
+                                case "StartsWith":
+                                    if (DataPointValueInSQLLC.StartsWith(value: DataPointConditionValueLC))
+                                    {
+                                        comparisonIsTrue = true;
+                                    }
+
+                                    break;
+                                case "EndsWith":
+                                    if (DataPointValueInSQLLC.EndsWith(value: DataPointConditionValueLC))
+                                    {
+                                        comparisonIsTrue = true;
+                                    }
+
+                                    break;
+                            }
+
+                            if (comparisonIsTrue && ((stopProcessingRules && !customRuleChangedSub_location) || !stopProcessingRules))
+                            {
+                                string? TargetPointName = dataRow[columnName: "TargetPointName"]
+                                    .ToString();
+                                string? TargetPointOutcome = dataRow[columnName: "TargetPointOutcome"]
+                                    .ToString();
+                                string? TargetPointOutcomeCustom = dataRow[columnName: "TargetPointOutcomeCustom"]
+                                    .ToString();
+
+                                switch (TargetPointName)
+                                {
+                                    case "State":
+                                        switch (TargetPointOutcome)
+                                        {
+                                            case "AdminName1":
+                                                State = AdminName1InSQL;
+                                                break;
+                                            case "AdminName2":
+                                                State = AdminName2InSQL;
+                                                break;
+                                            case "AdminName3":
+                                                State = AdminName3InSQL;
+                                                break;
+                                            case "AdminName4":
+                                                State = AdminName4InSQL;
+                                                break;
+                                            case "ToponymName":
+                                                State = ToponymNameInSQL;
+                                                break;
+                                            case "Null (empty)":
+                                                State = "";
+                                                break;
+                                            case "Custom":
+                                                State = TargetPointOutcomeCustom;
+                                                break;
+                                        }
+
+                                        customRuleChangedState = true;
+                                        break;
+                                    case "City":
+                                        switch (TargetPointOutcome)
+                                        {
+                                            case "AdminName1":
+                                                City = AdminName1InSQL;
+                                                break;
+                                            case "AdminName2":
+                                                City = AdminName2InSQL;
+                                                break;
+                                            case "AdminName3":
+                                                City = AdminName3InSQL;
+                                                break;
+                                            case "AdminName4":
+                                                City = AdminName4InSQL;
+                                                break;
+                                            case "ToponymName":
+                                                City = ToponymNameInSQL;
+                                                break;
+                                            case "Null (empty)":
+                                                City = "";
+                                                break;
+                                            case "Custom":
+                                                City = TargetPointOutcomeCustom;
+                                                break;
+                                        }
+
+                                        customRuleChangedCity = true;
+                                        break;
+                                    case "Sub_location":
+                                        switch (TargetPointOutcome)
+                                        {
+                                            //todo dontprocessmorerules
+                                            case "AdminName1":
+                                                Sub_location = AdminName1InSQL;
+                                                break;
+                                            case "AdminName2":
+                                                Sub_location = AdminName2InSQL;
+                                                break;
+                                            case "AdminName3":
+                                                Sub_location = AdminName3InSQL;
+                                                break;
+                                            case "AdminName4":
+                                                Sub_location = AdminName4InSQL;
+                                                break;
+                                            case "ToponymName":
+                                                Sub_location = ToponymNameInSQL;
+                                                break;
+                                            case "Null (empty)":
+                                                Sub_location = "";
+                                                break;
+                                            case "Custom":
+                                                Sub_location = TargetPointOutcomeCustom;
+                                                break;
+                                        }
+
+                                        customRuleChangedSub_location = true;
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (!customRuleChangedState)
+                {
+                    State = AdminName1InSQL;
+                }
+
+                if (!customRuleChangedCity)
+                {
+                    City = ToponymNameInSQL;
+                }
+
+                if (!customRuleChangedSub_location)
+                {
+                    Sub_location = "";
+                }
             }
 
             DataRow drReturnRow = dtReturn.NewRow();
@@ -2012,6 +2245,7 @@ internal static partial class HelperStatic
             drReturnRow[columnName: "City"] = City;
             drReturnRow[columnName: "State"] = State;
             drReturnRow[columnName: "Sub_location"] = Sub_location;
+            drReturnRow[columnName: "GPSAltitude"] = Altitude;
             drReturnRow[columnName: "timezoneId"] = timezoneId;
 
             dtReturn.Rows.Add(row: drReturnRow);
@@ -2019,6 +2253,8 @@ internal static partial class HelperStatic
         // read from API
         else if (SApiOkay)
         {
+            bool isPredeterminedCountry = false;
+
             readJsonToponomy = API_ExifGetGeoDataFromWebToponomy(
                 latitude: lat,
                 longitude: lng,
@@ -2026,13 +2262,27 @@ internal static partial class HelperStatic
             );
 
             // if that returns nothing then try again with something bigger.
-            if (readJsonToponomy.Geonames.Length == 0)
+            try
             {
-                readJsonToponomy = API_ExifGetGeoDataFromWebToponomy(
-                    latitude: lat,
-                    longitude: lng,
-                    radius: "300"
-                );
+                if (readJsonToponomy.Geonames != null)
+                {
+                    if (readJsonToponomy.Geonames.Length == 0)
+                    {
+                        readJsonToponomy = API_ExifGetGeoDataFromWebToponomy(
+                            latitude: lat,
+                            longitude: lng,
+                            radius: "300"
+                        );
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_HelperStaticExifNoAPI"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                }
+            }
+            catch
+            {
+                MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_HelperStaticExifNoAPI"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
             }
 
             // ignore if unauthorised or some such
@@ -2051,6 +2301,7 @@ internal static partial class HelperStatic
                     dtWriteToSQLite.Columns.Add(columnName: "AdminName4");
                     dtWriteToSQLite.Columns.Add(columnName: "ToponymName");
                     dtWriteToSQLite.Columns.Add(columnName: "CountryCode");
+                    dtWriteToSQLite.Columns.Add(columnName: "GPSAltitude");
                     dtWriteToSQLite.Columns.Add(columnName: "timezoneId");
 
                     for (int index = 0; index < readJsonToponomy.Geonames.Length; index++)
@@ -2062,98 +2313,301 @@ internal static partial class HelperStatic
                             .CountryCode;
                         if (APICountryCode.Length == 2)
                         {
-                            CountryCode = DataReadSQLiteCountryCodesNames(
+                            CountryCode = DataReadDTCountryCodesNames(
                                 queryWhat: "ISO_3166_1A2",
                                 inputVal: APICountryCode,
                                 returnWhat: "ISO_3166_1A3"
                             );
-                            Country = DataReadSQLiteCountryCodesNames(
+                            Country = DataReadDTCountryCodesNames(
                                 queryWhat: "ISO_3166_1A2",
                                 inputVal: APICountryCode,
                                 returnWhat: "Country"
                             );
                         }
 
+                        bool _ = double.TryParse(s: readJsonToponomy.Geonames[index]
+                                                     .Srtm3.ToString(), result: out double tmpAlt);
+                        try
+                        {
+                            // can return 32768 or -32768 in some cases. this is the API's "fault" (not that of the code.)
+                            if (Math.Abs(value: tmpAlt) > 32000.0)
+                            {
+                                if (!string.IsNullOrEmpty(value: CurrentAltitude))
+                                {
+                                    _ = double.TryParse(s: CurrentAltitude, result: out tmpAlt);
+                                }
+                                else
+                                {
+                                    tmpAlt = 0.0;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            tmpAlt = 0.0;
+                        }
+
+                        Altitude = tmpAlt.ToString();
+
+                        // this is already String.
+                        timezoneId = readJsonToponomy.Geonames[index]
+                            .Timezone.TimeZoneId;
+
                         Distance = readJsonToponomy.Geonames[index]
                             .Distance;
+
+                        string? AdminName1InAPI = readJsonToponomy.Geonames[index]
+                            .AdminName1;
+                        string? AdminName2InAPI = readJsonToponomy.Geonames[index]
+                            .AdminName2;
+                        string? AdminName3InAPI = readJsonToponomy.Geonames[index]
+                            .AdminName3;
+                        string? AdminName4InAPI = readJsonToponomy.Geonames[index]
+                            .AdminName4;
+                        string? ToponymNameInAPI = readJsonToponomy.Geonames[index]
+                            .ToponymName;
 
                         // Comments are copied from above.
                         // In a country where you know, which admin level the cities belong to (see arrays), use the adminNameX as city name.
                         // If the toponymName doesn't match the adminNameX, use the toponymName as sublocation name. toponymNames ...
                         // ... for populated places may be city names or names of some populated entity below city level, but they're never used for something above city level.
                         // In a country where city names are not assigned to a specific admin level, I'd use the toponymName as the city name and leave the sublocation name blank.
-                        Sub_location = readJsonToponomy.Geonames[index]
-                            .ToponymName;
 
-                        if (arrCityNameIsAdminName1.Contains(value: CountryCode))
+                        if (AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode) ||
+                            AncillaryListsArrays.CityNameIsAdminName2Arr.Contains(value: CountryCode) ||
+                            AncillaryListsArrays.CityNameIsAdminName3Arr.Contains(value: CountryCode) ||
+                            AncillaryListsArrays.CityNameIsAdminName4Arr.Contains(value: CountryCode)
+                           )
                         {
-                            City = readJsonToponomy.Geonames[index]
-                                .AdminName1;
+                            isPredeterminedCountry = true;
+
+                            Sub_location = readJsonToponomy.Geonames[index]
+                                .ToponymName;
+                            if (AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode))
+                            {
+                                City = AdminName1InAPI;
+                                State = "";
+                            }
+                            else if (AncillaryListsArrays.CityNameIsAdminName2Arr.Contains(value: CountryCode))
+                            {
+                                City = AdminName2InAPI;
+                            }
+                            else if (AncillaryListsArrays.CityNameIsAdminName3Arr.Contains(value: CountryCode))
+                            {
+                                City = AdminName3InAPI;
+                            }
+                            else if (AncillaryListsArrays.CityNameIsAdminName4Arr.Contains(value: CountryCode))
+                            {
+                                City = AdminName4InAPI;
+                            }
+
                             if (City == Sub_location)
                             {
                                 Sub_location = "";
                             }
-                        }
-                        else if (arrCityNameIsAdminName2.Contains(value: CountryCode))
-                        {
-                            City = readJsonToponomy.Geonames[index]
-                                .AdminName2;
-                            if (City == Sub_location)
+
+                            if (!AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode))
                             {
-                                Sub_location = "";
-                            }
-                        }
-                        else if (arrCityNameIsAdminName3.Contains(value: CountryCode))
-                        {
-                            City = readJsonToponomy.Geonames[index]
-                                .AdminName3;
-                            if (City == Sub_location)
-                            {
-                                Sub_location = "";
-                            }
-                        }
-                        else if (arrCityNameIsAdminName4.Contains(value: CountryCode))
-                        {
-                            City = readJsonToponomy.Geonames[index]
-                                .AdminName4;
-                            if (City == Sub_location)
-                            {
-                                Sub_location = "";
-                            }
-                        }
-                        else
-                        {
-                            // i'll do something more generic and user-editable eventually.
-                            if (readJsonToponomy.Geonames[index]
-                                    .AdminName2 ==
-                                "Greater London")
-                            {
-                                City = readJsonToponomy.Geonames[index]
-                                    .AdminName2;
-                                Sub_location = readJsonToponomy.Geonames[index]
-                                    .ToponymName;
-                            }
-                            else
-                            {
-                                City = readJsonToponomy.Geonames[index]
-                                    .ToponymName;
-                                Sub_location = "";
+                                State = AdminName1InAPI;
                             }
                         }
 
-                        if (arrCityNameIsAdminName1.Contains(value: CountryCode))
+                        if (!isPredeterminedCountry || includePredeterminedCountries)
                         {
-                            State = "";
-                        }
-                        else
-                        {
-                            State = readJsonToponomy.Geonames[index]
-                                .AdminName1;
-                        }
+                            bool customRuleChangedState = false;
+                            bool customRuleChangedCity = false;
+                            bool customRuleChangedSub_location = false;
 
-                        // this is already String.
-                        timezoneId = readJsonToponomy.Geonames[index]
-                            .Timezone.TimeZoneId;
+                            EnumerableRowCollection<DataRow> drCustomRulesData = from DataRow dataRow in FrmSettings.dtCustomRules.AsEnumerable()
+                                                                                 where dataRow.Field<string>(columnName: "CountryCode") == CountryCode
+                                                                                 select dataRow;
+
+                            if (drCustomRulesData.Any())
+                            {
+                                foreach (DataRow dataRow in drCustomRulesData)
+                                {
+                                    string? DataPointName = dataRow[columnName: "DataPointName"]
+                                        .ToString();
+
+                                    string? DataPointConditionType = dataRow[columnName: "DataPointConditionType"]
+                                        .ToString();
+
+                                    string? DataPointValueInAPI = null;
+                                    switch (DataPointName)
+                                    {
+                                        case "AdminName1":
+                                            DataPointValueInAPI = AdminName1InAPI;
+                                            break;
+                                        case "AdminName2":
+                                            DataPointValueInAPI = AdminName2InAPI;
+                                            break;
+                                        case "AdminName3":
+                                            DataPointValueInAPI = AdminName3InAPI;
+                                            break;
+                                        case "AdminName4":
+                                            DataPointValueInAPI = AdminName4InAPI;
+                                            break;
+                                        case "ToponymName":
+                                            DataPointValueInAPI = ToponymNameInAPI;
+                                            break;
+                                    }
+
+                                    // don't bother if null
+                                    if (!string.IsNullOrEmpty(value: DataPointValueInAPI))
+                                    {
+                                        string? DataPointConditionValue = dataRow[columnName: "DataPointConditionValue"]
+                                            .ToString();
+                                        string? DataPointValueInAPILC = DataPointValueInAPI?.ToLower();
+                                        string? DataPointConditionValueLC = DataPointConditionValue.ToLower();
+                                        bool comparisonIsTrue = false;
+                                        switch (DataPointConditionType)
+                                        {
+                                            case "Is":
+                                                if (DataPointValueInAPILC == DataPointConditionValueLC)
+                                                {
+                                                    comparisonIsTrue = true;
+                                                }
+
+                                                break;
+                                            case "Contains":
+                                                if (DataPointValueInAPILC.Contains(value: DataPointConditionValueLC))
+                                                {
+                                                    comparisonIsTrue = true;
+                                                }
+
+                                                break;
+                                            case "StartsWith":
+                                                if (DataPointValueInAPILC.StartsWith(value: DataPointConditionValueLC))
+                                                {
+                                                    comparisonIsTrue = true;
+                                                }
+
+                                                break;
+                                            case "EndsWith":
+                                                if (DataPointValueInAPILC.EndsWith(value: DataPointConditionValueLC))
+                                                {
+                                                    comparisonIsTrue = true;
+                                                }
+
+                                                break;
+                                        }
+
+                                        if (comparisonIsTrue && ((stopProcessingRules && !customRuleChangedSub_location) || !stopProcessingRules))
+                                        {
+                                            string? TargetPointName = dataRow[columnName: "TargetPointName"]
+                                                .ToString();
+                                            string? TargetPointOutcome = dataRow[columnName: "TargetPointOutcome"]
+                                                .ToString();
+                                            string? TargetPointOutcomeCustom = dataRow[columnName: "TargetPointOutcomeCustom"]
+                                                .ToString();
+
+                                            switch (TargetPointName)
+                                            {
+                                                case "State":
+                                                    switch (TargetPointOutcome)
+                                                    {
+                                                        case "AdminName1":
+                                                            State = AdminName1InAPI;
+                                                            break;
+                                                        case "AdminName2":
+                                                            State = AdminName2InAPI;
+                                                            break;
+                                                        case "AdminName3":
+                                                            State = AdminName3InAPI;
+                                                            break;
+                                                        case "AdminName4":
+                                                            State = AdminName4InAPI;
+                                                            break;
+                                                        case "ToponymName":
+                                                            State = ToponymNameInAPI;
+                                                            break;
+                                                        case "Null (empty)":
+                                                            State = "";
+                                                            break;
+                                                        case "Custom":
+                                                            State = TargetPointOutcomeCustom;
+                                                            break;
+                                                    }
+
+                                                    customRuleChangedState = true;
+                                                    break;
+                                                case "City":
+                                                    switch (TargetPointOutcome)
+                                                    {
+                                                        case "AdminName1":
+                                                            City = AdminName1InAPI;
+                                                            break;
+                                                        case "AdminName2":
+                                                            City = AdminName2InAPI;
+                                                            break;
+                                                        case "AdminName3":
+                                                            City = AdminName3InAPI;
+                                                            break;
+                                                        case "AdminName4":
+                                                            City = AdminName4InAPI;
+                                                            break;
+                                                        case "ToponymName":
+                                                            City = ToponymNameInAPI;
+                                                            break;
+                                                        case "Null (empty)":
+                                                            City = "";
+                                                            break;
+                                                        case "Custom":
+                                                            City = TargetPointOutcomeCustom;
+                                                            break;
+                                                    }
+
+                                                    customRuleChangedCity = true;
+                                                    break;
+                                                case "Sub_location":
+                                                    switch (TargetPointOutcome)
+                                                    {
+                                                        case "AdminName1":
+                                                            Sub_location = AdminName1InAPI;
+                                                            break;
+                                                        case "AdminName2":
+                                                            Sub_location = AdminName2InAPI;
+                                                            break;
+                                                        case "AdminName3":
+                                                            Sub_location = AdminName3InAPI;
+                                                            break;
+                                                        case "AdminName4":
+                                                            Sub_location = AdminName4InAPI;
+                                                            break;
+                                                        case "ToponymName":
+                                                            Sub_location = ToponymNameInAPI;
+                                                            break;
+                                                        case "Null (empty)":
+                                                            Sub_location = "";
+                                                            break;
+                                                        case "Custom":
+                                                            Sub_location = TargetPointOutcomeCustom;
+                                                            break;
+                                                    }
+
+                                                    customRuleChangedSub_location = true;
+                                                    break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (!customRuleChangedState)
+                            {
+                                State = AdminName1InAPI;
+                            }
+
+                            if (!customRuleChangedCity)
+                            {
+                                City = ToponymNameInAPI;
+                            }
+
+                            if (!customRuleChangedSub_location)
+                            {
+                                Sub_location = "";
+                            }
+                        }
 
                         // add to return-table to offer to user
                         drApiToponomyRow[columnName: "Distance"] = Distance;
@@ -2162,6 +2616,7 @@ internal static partial class HelperStatic
                         drApiToponomyRow[columnName: "City"] = City;
                         drApiToponomyRow[columnName: "State"] = State;
                         drApiToponomyRow[columnName: "Sub_location"] = Sub_location;
+                        drApiToponomyRow[columnName: "GPSAltitude"] = Altitude;
                         drApiToponomyRow[columnName: "timezoneId"] = timezoneId;
 
                         dtReturn.Rows.Add(row: drApiToponomyRow);
@@ -2181,6 +2636,7 @@ internal static partial class HelperStatic
                         drWriteToSqLiteRow[columnName: "ToponymName"] = readJsonToponomy.Geonames[index]
                             .ToponymName;
                         drWriteToSqLiteRow[columnName: "CountryCode"] = CountryCode;
+                        drWriteToSqLiteRow[columnName: "GPSAltitude"] = Altitude;
                         drWriteToSqLiteRow[columnName: "timezoneId"] = timezoneId;
 
                         dtWriteToSQLite.Rows.Add(row: drWriteToSqLiteRow);
@@ -2206,6 +2662,8 @@ internal static partial class HelperStatic
                             toponymName: dtWriteToSQLite.Rows[index: 0][columnName: "ToponymName"]
                                 .ToString(),
                             countryCode: dtWriteToSQLite.Rows[index: 0][columnName: "CountryCode"]
+                                .ToString(),
+                            altitude: dtWriteToSQLite.Rows[index: 0][columnName: "GPSAltitude"]
                                 .ToString(),
                             timezoneId: dtWriteToSQLite.Rows[index: 0][columnName: "timezoneId"]
                                 .ToString()
@@ -2241,6 +2699,8 @@ internal static partial class HelperStatic
                             toponymName: dtWriteToSQLite.Rows[index: 0][columnName: "ToponymName"]
                                 .ToString(),
                             countryCode: dtWriteToSQLite.Rows[index: 0][columnName: "CountryCode"]
+                                .ToString(),
+                            altitude: dtWriteToSQLite.Rows[index: 0][columnName: "GPSAltitude"]
                                 .ToString(),
                             timezoneId: dtWriteToSQLite.Rows[index: 0][columnName: "timezoneId"]
                                 .ToString()
@@ -2326,6 +2786,7 @@ internal static partial class HelperStatic
                         adminName4: "",
                         toponymName: "",
                         countryCode: "",
+                        altitude: "",
                         timezoneId: ""
                     );
                 }
@@ -2335,92 +2796,6 @@ internal static partial class HelperStatic
         return dtReturn;
     }
 
-    /// <summary>
-    ///     Performs a search in the local SQLite database for cached altitude info and if finds it, returns that, else queries
-    ///     the API
-    /// </summary>
-    /// <param name="lat">latitude/longitude to be queried</param>
-    /// <param name="lng">latitude/longitude to be queried</param>
-    /// <returns>
-    ///     See summary. Returns the altitude info either from SQLite if available or the API in DataTable for further
-    ///     processing
-    /// </returns>
-    internal static DataTable DTFromAPIExifGetAltitudeFromWebOrDT(string lat,
-                                                                  string lng)
-    {
-        DataTable dt_Return = new();
-        dt_Return.Clear();
-        dt_Return.Columns.Add(columnName: "Altitude");
-
-        string altitude = "0";
-
-        EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in FrmMainApp.DtAltitudeSessionData.AsEnumerable()
-                                                           where dataRow.Field<string>(columnName: "lat") == lat && dataRow.Field<string>(columnName: "lng") == lng
-                                                           select dataRow;
-        List<string> lstReturnAltitudeSessionData = new();
-
-        Parallel.ForEach(source: drDataTableData, body: dataRow =>
-            {
-                string settingValue = dataRow[columnName: "Altitude"]
-                    .ToString();
-                lstReturnAltitudeSessionData.Add(item: settingValue);
-            })
-            ;
-
-        if (lstReturnAltitudeSessionData.Count > 0)
-        {
-            altitude = lstReturnAltitudeSessionData.FirstOrDefault();
-        }
-        else if (SApiOkay)
-        {
-            GeoResponseAltitude readJsonAltitude = API_ExifGetGeoDataFromWebAltitude(
-                latitude: lat,
-                longitude: lng
-            );
-            if (readJsonAltitude.Srtm1 != null)
-            {
-                string tmpAltitude = readJsonAltitude.Srtm1.ToString();
-                tmpAltitude = tmpAltitude.ToString(provider: CultureInfo.InvariantCulture);
-
-                // ignore if the API sends back something silly.
-                // basically i'm assuming some ppl might take pics on an airplane but even those don't fly this high.
-                // also if you're in the Mariana Trench, do send me a photo, will you?
-                if (Math.Abs(value: int.Parse(s: tmpAltitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture)) > 32000)
-                {
-                    tmpAltitude = "0";
-                }
-
-                altitude = tmpAltitude;
-                // write back to sql the new stuff
-
-                GenericUpdateAddToDataTableAltitude(
-                    lat: lat,
-                    lng: lng,
-                    altitude: altitude
-                );
-            }
-
-            // this will be a null value if Unauthorised, we'll ignore that.
-            if (readJsonAltitude.Lat == null && SApiOkay)
-            {
-                // write back blank
-                GenericUpdateAddToDataTableAltitude(
-                    lat: lat,
-                    lng: lng,
-                    altitude: ""
-                );
-            }
-        }
-
-        if (SApiOkay || lstReturnAltitudeSessionData.Count > 0)
-        {
-            DataRow drReturnRow = dt_Return.NewRow();
-            drReturnRow[columnName: "Altitude"] = altitude;
-            dt_Return.Rows.Add(row: drReturnRow);
-        }
-
-        return dt_Return;
-    }
 
     /// <summary>
     ///     Converts the API response from gitHub (to check GTN's newest version) to a DataTable

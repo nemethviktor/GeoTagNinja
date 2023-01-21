@@ -28,7 +28,7 @@ internal partial class FrmAboutBox : Form
                                                                                            TimeSpan.TicksPerSecond * 2 * version.Revision)); // seconds since midnight, (multiply by 2 to get original)
 
         Text = AssemblyTitle;
-        lbl_ProductName.Text = AssemblyProduct;
+        tbx_ProductName.Text = AssemblyProduct;
         tbx_Version.Text = "Version: " +
                            Assembly.GetExecutingAssembly()
                                .GetName()
@@ -45,11 +45,17 @@ internal partial class FrmAboutBox : Form
                            buildDateTime.ToString(format: "yyyyMMdd:HHmm") +
                            "]";
 
-        lbl_Copyright.Text = AssemblyCopyright;
-        lbl_CompanyName.Text = AssemblyCompany;
+        tbx_Copyright.Text = "Rights: " + AssemblyCopyright;
+
+        tbx_CompanyName.Text = "Written by: " + AssemblyCompany;
+
         tbx_Description.Text = AssemblyDescription;
-        lbl_Paypal.Links.Clear();
-        lbl_Paypal.Links.Add(start: 0, length: lbl_Paypal.Width, linkData: "https://www.paypal.com/donate/?hosted_button_id=R5GSBXW8A5NNN");
+
+        tbx_Paypal.Links.Clear();
+        tbx_Paypal.Links.Add(start: 0, length: tbx_Paypal.Width, linkData: "https://www.paypal.com/donate/?hosted_button_id=R5GSBXW8A5NNN");
+
+        tbx_Website.Text = "Web: https://github.com/nemethviktor/GeoTagNinja";
+        tbx_Website.Links.Add(start: 0, length: tbx_Website.Width, linkData: "https://github.com/nemethviktor/GeoTagNinja");
     }
 
     public sealed override string Text
@@ -64,13 +70,13 @@ internal partial class FrmAboutBox : Form
         Hide();
     }
 
-    private void lbl_Paypal_Click(object sender,
+    private void tbx_Paypal_Click(object sender,
                                   EventArgs e)
     {
         Process.Start(fileName: "https://www.paypal.com/donate/?hosted_button_id=R5GSBXW8A5NNN");
     }
 
-    private void lbl_website_LinkClicked(object sender,
+    private void tbx_Website_LinkClicked(object sender,
                                          LinkLabelLinkClickedEventArgs e)
     {
         Process.Start(fileName: e.Link.LinkData as string);
@@ -81,7 +87,7 @@ internal partial class FrmAboutBox : Form
     {
         LinkLabel.Link link = new();
         link.LinkData = "https://geotag.ninja";
-        lbl_website.Links.Add(value: link);
+        tbx_Website.Links.Add(value: link);
     }
 
     #region Assembly Attribute Accessors

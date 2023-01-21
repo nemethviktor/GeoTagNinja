@@ -214,7 +214,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAAu
-        CAAAAk1TRnQBSQFMAwEBAAFIAQEBSAEBARABAAEQAQAE/wEJAQAI/wFCAU0BNgEEBgABNgEEAgABKAMA
+        CAAAAk1TRnQBSQFMAwEBAAFoAQEBaAEBARABAAEQAQAE/wEJAQAI/wFCAU0BNgEEBgABNgEEAgABKAMA
         AUADAAEQAwABAQEAAQgGAAEEGAABgAIAAYADAAKAAQABgAMAAYABAAGAAQACgAIAA8ABAAHAAdwBwAEA
         AfABygGmAQABMwUAATMBAAEzAQABMwEAAjMCAAMWAQADHAEAAyIBAAMpAQADVQEAA00BAANCAQADOQEA
         AYABfAH/AQACUAH/AQABkwEAAdYBAAH/AewBzAEAAcYB1gHvAQAB1gLnAQABkAGpAa0CAAH/ATMDAAFm
@@ -302,6 +302,17 @@
         OKC5BVTCOC0IAOIGKmADrBZQG2MVpB7+zwAA1b7bc8rATHkAAAAASUVORK5CYII=
 </value>
   </data>
+  <data name="btn_ManageFavourites.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA7BAAAOwQG4kWvtAAAA90lE
+        QVQ4T5WSPQrCQBCFY2OnnYLN5odAIHgbL+EFLLWwSiFY6XW8gJUiFjZRSCHmDvG9YQIxP2R9MMwyM+/b
+        IRunLt/3U0TBrKX/RLMxZsaspf9U3SCKopHneWecM0QSx/FQx/oVhuGYOQiCOSBvhSbStBGGbzTzDMBB
+        AZk0bYThnDcjjmoucH5qu18Y3pXGSqTYaqoj1hrAuAfwRQjy9QdCqtK7Qv4HfNQJzBet3fnUJUDevSvY
+        l0GIN3MD1pil2AAszcKszUNyDUBVICcpCEBN7srdmo35aM5ZrwMaEkBpqtwsGRA7QGmqh/UGbWYNG4DV
+        M7bLcb4Jr4TMRcLwAgAAAABJRU5ErkJggg==
+</value>
+  </data>
   <metadata name="ttp_NavigateMapGo.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>322, 3</value>
   </metadata>
@@ -313,6 +324,9 @@
   </metadata>
   <metadata name="ttp_LoadFavourite.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>762, 17</value>
+  </metadata>
+  <metadata name="ttp_ManageFavourites.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>911, 17</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>58</value>
