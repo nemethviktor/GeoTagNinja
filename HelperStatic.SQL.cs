@@ -140,6 +140,8 @@ internal static partial class HelperStatic
         {
             foreach (string ext in AncillaryListsArrays.AllCompatibleExtensions())
             {
+                string fileExtension = ext.Split('\t')
+                    .FirstOrDefault();
                 string tmptmpCtrlName = ext.Split('\t')
                                             .FirstOrDefault() +
                                         '_'; // 'tis ok as is
@@ -152,7 +154,8 @@ internal static partial class HelperStatic
 
                 if (controlName == "ckb_AddXMPSideCar")
                 {
-                    if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
+                    if (AncillaryListsArrays.FileExtensionsThatUseXMP()
+                        .Contains(fileExtension))
                     {
                         controlDefaultValue = "true";
                     }

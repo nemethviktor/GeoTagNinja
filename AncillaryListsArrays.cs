@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace GeoTagNinja;
 
@@ -766,9 +765,31 @@ internal static class AncillaryListsArrays
     }
 
     /// <summary>
-    /// Extracts only the file name extensions from the list of
-    /// AllCompatibleExtensions. The returned array is a copy and
-    /// can be used freely.
+    ///     List of extensions that take an XMP sidecar
+    /// </summary>
+    internal static string[] FileExtensionsThatUseXMP()
+    {
+        List<string> retList = new();
+        foreach (string extension in AllCompatibleExtensions())
+        {
+            if (extension.ToLower()
+                    .Contains(value: "raw") ||
+                extension.ToLower()
+                    .Contains(value: "tiff"))
+            {
+                retList.Add(item: extension.Split('\t')
+                                .FirstOrDefault());
+            }
+        }
+
+        return retList.ToArray();
+    }
+
+
+    /// <summary>
+    ///     Extracts only the file name extensions from the list of
+    ///     AllCompatibleExtensions. The returned array is a copy and
+    ///     can be used freely.
     /// </summary>
     /// <returns>An array of file extensions supported</returns>
     internal static string[] AllCompatibleExtensionsExt()
@@ -779,21 +800,24 @@ internal static class AncillaryListsArrays
         // after white space more description --> loop
         // to get only the extensions
         for (int i = 0; i < allowedExtensions.Length; i++)
-            allowedExtensions[i] = allowedExtensions[i].Split('\t').FirstOrDefault();
+        {
+            allowedExtensions[i] = allowedExtensions[i]
+                .Split('\t')
+                .FirstOrDefault();
+        }
+
         return allowedExtensions;
     }
 
 
     /// <summary>
-    /// List of supported side car file extensions.
-    /// 
-    /// The extension must be in lower case due to its use in comparisons!
-    /// 
-    /// Dictionary Extension -> Description
+    ///     List of supported side car file extensions.
+    ///     The extension must be in lower case due to its use in comparisons!
+    ///     Dictionary Extension -> Description
     /// </summary>
-    internal static IDictionary<string,string> SideCarExtensions()
+    internal static IDictionary<string, string> SideCarExtensions()
     {
-        IDictionary<string, string> result = new Dictionary<string, string>()
+        IDictionary<string, string> result = new Dictionary<string, string>
         {
             { "xmp", "XMP SideCar File" }
         };
@@ -802,13 +826,13 @@ internal static class AncillaryListsArrays
 
 
     /// <summary>
-    /// Returns an array of extensions (string) of compatible side car files.
-    /// 
-    /// The returned array is a copy and can be used freely.
+    ///     Returns an array of extensions (string) of compatible side car files.
+    ///     The returned array is a copy and can be used freely.
     /// </summary>
     internal static string[] GetSideCarExtensionsArray()
     {
-        return SideCarExtensions().Keys.ToArray();
+        return SideCarExtensions()
+            .Keys.ToArray();
     }
 
     internal static string[] GpxExtensions()
