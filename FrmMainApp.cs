@@ -49,21 +49,6 @@ public partial class FrmMainApp : Form
     /// </summary>
     public DirectoryElementCollection DirectoryElements { get; } = new();
 
-    private void btn_ManageFavourites_Click(object sender,
-                                            EventArgs e)
-    {
-        DataTable DtFavourites = AppStartupLoadFavourites();
-        if (DtFavourites.Rows.Count > 0)
-        {
-            FrmManageFavourites frmManageFavouritesInstance = new();
-            frmManageFavouritesInstance.ShowDialog();
-        }
-        else
-        {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_NoFavouritesDefined"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
-        }
-    }
-
     #region Variables
 
     internal static readonly string ResourcesFolderPath = Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "Resources");
@@ -147,7 +132,7 @@ public partial class FrmMainApp : Form
         }
 
         FileTarget logfile = new(name: "logfile") { FileName = logFileLocation };
-        #if(DEBUG)
+        #if (DEBUG)
         config.AddRule(minLevel: LogLevel.Trace, maxLevel: LogLevel.Fatal, target: logfile);
         #else
         config.AddRule(minLevel: LogLevel.Info, maxLevel: LogLevel.Fatal, target: logfile);
@@ -1771,7 +1756,7 @@ public partial class FrmMainApp : Form
 
                 HelperStatic.DataWriteSQLiteAddNewFavourite(drFavourite: drFavourite);
 
-                DataTable DtFavourites = AppStartupLoadFavourites();
+                DtFavourites = AppStartupLoadFavourites();
                 MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
             }
 
@@ -1792,7 +1777,8 @@ public partial class FrmMainApp : Form
         string favouriteToLoad = cbx_Favourites.Text;
 
         // pull favs (this needs doing each time as user may have changed it)
-        DataTable DtFavourites = AppStartupLoadFavourites();
+
+        DtFavourites = AppStartupLoadFavourites();
 
         if (LstFavourites.Contains(item: favouriteToLoad))
         {
@@ -1950,6 +1936,26 @@ public partial class FrmMainApp : Form
                 tbx_lng.Text = favLng.ToString(provider: CultureInfo.InvariantCulture);
                 btn_NavigateMapGo_Click(sender: null, e: null);
             }
+        }
+    }
+
+    /// <summary>
+    ///     Manages favourites
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void btn_ManageFavourites_Click(object sender,
+                                            EventArgs e)
+    {
+        DtFavourites = AppStartupLoadFavourites();
+        if (DtFavourites.Rows.Count > 0)
+        {
+            FrmManageFavourites frmManageFavouritesInstance = new();
+            frmManageFavouritesInstance.ShowDialog();
+        }
+        else
+        {
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_NoFavouritesDefined"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
         }
     }
 
