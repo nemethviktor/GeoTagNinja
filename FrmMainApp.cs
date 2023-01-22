@@ -27,6 +27,12 @@ namespace GeoTagNinja;
 public partial class FrmMainApp : Form
 {
     /// <summary>
+    ///     The EXIFTool used in this application.
+    ///     Note that it must be disposed of (done by Form_Closing)!
+    /// </summary>
+    private readonly ExifTool _ExifTool = new();
+
+    /// <summary>
     ///     These two make the elements of the main listview accessible to other classes.
     /// </summary>
     public ListView.ListViewItemCollection ListViewItems => lvw_FileList.Items;
@@ -43,18 +49,11 @@ public partial class FrmMainApp : Form
     /// </summary>
     public DirectoryElementCollection DirectoryElements { get; } = new();
 
-    /// <summary>
-    /// The EXIFTool used in this application.
-    /// 
-    /// Note that it must be disposed of (done by Form_Closing)!
-    /// </summary>
-    private ExifTool _ExifTool = new ExifTool();
-
     private void btn_ManageFavourites_Click(object sender,
                                             EventArgs e)
     {
-        DataTable dtFavourites = AppStartupLoadFavourites();
-        if (dtFavourites.Rows.Count > 0)
+        DataTable DtFavourites = AppStartupLoadFavourites();
+        if (DtFavourites.Rows.Count > 0)
         {
             FrmManageFavourites frmManageFavouritesInstance = new();
             frmManageFavouritesInstance.ShowDialog();
@@ -78,6 +77,7 @@ public partial class FrmMainApp : Form
     internal static DataTable DtObjectTagNamesIn;
     internal static DataTable DtObjectTagNamesOut;
     internal static DataTable DtIsoCountryCodeMapping;
+    internal static DataTable DtFavourites;
     internal static string FolderName;
     internal static string _AppLanguage = "English"; // default to english
     internal static List<string> LstFavourites = new();
@@ -143,7 +143,7 @@ public partial class FrmMainApp : Form
         string logFileLocation = Path.Combine(path1: UserDataFolderPath, path2: "logfile.txt");
         if (File.Exists(path: logFileLocation))
         {
-        File.Delete(path: logFileLocation);
+            File.Delete(path: logFileLocation);
         }
 
         FileTarget logfile = new(name: "logfile") { FileName = logFileLocation };
@@ -331,7 +331,7 @@ public partial class FrmMainApp : Form
         // clean up
         Logger.Trace(message: "Set pbx_imagePreview.Image = null");
         pbx_imagePreview.Image = null; // unlocks files. theoretically.
-        
+
         // Shutdown Exif Tool
         _ExifTool.Dispose();
 
@@ -374,18 +374,9 @@ public partial class FrmMainApp : Form
         double.TryParse(s: strLng, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dblLng); // trust me i hate this f...king culture thing as much as possible...
         // if the user zooms out too much they can encounter an "unreal" coordinate.
 
-        if (dblLng < -180)
-        {
-            dblLng = 180 - Math.Abs(value: dblLng) % 180;
-        }
-        else if (dblLng > 180)
-        {
-            dblLng = Math.Abs(value: dblLng) % 180;
-        }
-
-        tbx_lat.Text = Math.Round(value: dblLat, digits: 6)
+        tbx_lat.Text = HelperStatic.GenericCorrectInvalidCoordinate(coordHalfPair: dblLat)
             .ToString(provider: CultureInfo.InvariantCulture);
-        tbx_lng.Text = Math.Round(value: dblLng, digits: 6)
+        tbx_lng.Text = HelperStatic.GenericCorrectInvalidCoordinate(coordHalfPair: dblLng)
             .ToString(provider: CultureInfo.InvariantCulture);
     }
 
@@ -960,44 +951,44 @@ public partial class FrmMainApp : Form
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         if (frmMainAppInstance != null)
         {
-        ListView lvw = frmMainAppInstance.lvw_FileList;
-        if (lvw.SelectedItems.Count > 0)
-        {
-            foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
+            ListView lvw = frmMainAppInstance.lvw_FileList;
+            if (lvw.SelectedItems.Count > 0)
             {
-                // don't do folders...
-                string fileNameWithPath = Path.Combine(path1: FolderName, path2: lvi.Text);
-                string fileNameWithoutPath = lvi.Text;
-                if (File.Exists(path: fileNameWithPath))
+                foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
                 {
-                    // check it's not in the read-queue.
-                    while (HelperStatic.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
+                    // don't do folders...
+                    string fileNameWithPath = Path.Combine(path1: FolderName, path2: lvi.Text);
+                    string fileNameWithoutPath = lvi.Text;
+                    if (File.Exists(path: fileNameWithPath))
                     {
-                        await Task.Delay(millisecondsDelay: 10);
-                    }
+                        // check it's not in the read-queue.
+                        while (HelperStatic.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
+                        {
+                            await Task.Delay(millisecondsDelay: 10);
+                        }
 
-                    string strGpsLatitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLatitude"]
-                                                             .Index]
-                        .Text.ToString(provider: CultureInfo.InvariantCulture);
-                    string strGpsLongitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLongitude"]
-                                                              .Index]
-                        .Text.ToString(provider: CultureInfo.InvariantCulture);
-                    double parsedLat = 0.0;
-                    double parsedLng = 0.0;
-                    if (double.TryParse(s: strGpsLatitude,
-                                        style: NumberStyles.Any,
-                                        provider: CultureInfo.InvariantCulture,
-                                        result: out parsedLat) &&
-                        double.TryParse(s: strGpsLongitude,
-                                        style: NumberStyles.Any,
-                                        provider: CultureInfo.InvariantCulture,
-                                        result: out parsedLng))
-                    {
-                        lvwUpdateTagsFromWeb(strGpsLatitude: strGpsLatitude, strGpsLongitude: strGpsLongitude, lvi: lvi);
+                        string strGpsLatitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLatitude"]
+                                                                 .Index]
+                            .Text.ToString(provider: CultureInfo.InvariantCulture);
+                        string strGpsLongitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLongitude"]
+                                                                  .Index]
+                            .Text.ToString(provider: CultureInfo.InvariantCulture);
+                        double parsedLat = 0.0;
+                        double parsedLng = 0.0;
+                        if (double.TryParse(s: strGpsLatitude,
+                                            style: NumberStyles.Any,
+                                            provider: CultureInfo.InvariantCulture,
+                                            result: out parsedLat) &&
+                            double.TryParse(s: strGpsLongitude,
+                                            style: NumberStyles.Any,
+                                            provider: CultureInfo.InvariantCulture,
+                                            result: out parsedLng))
+                        {
+                            lvwUpdateTagsFromWeb(strGpsLatitude: strGpsLatitude, strGpsLongitude: strGpsLongitude, lvi: lvi);
+                        }
                     }
                 }
             }
-        }
         }
 
         //done
@@ -1099,7 +1090,7 @@ public partial class FrmMainApp : Form
             HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
             lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
         }
-            }
+    }
 
     /// <summary>
     ///     Generally similar to the above.(btn_Refresh_lvwFileList_Click)
@@ -1347,7 +1338,9 @@ public partial class FrmMainApp : Form
             if (FolderName is null)
             {
                 if (!Directory.Exists(path: tbx_FolderName.Text))
+                {
                     tbx_FolderName.Text = @"C:\";
+                }
 
                 FolderName = tbx_FolderName.Text;
                 Logger.Trace(message: "FolderName [was null, now updated]: " + FolderName);
@@ -1360,9 +1353,7 @@ public partial class FrmMainApp : Form
             DtFileDataSeenInThisSession.Clear();
 
             // Load data (and add to tables)
-            DirectoryElements.ParseFolderToDEs(FolderName, delegate (string statusText) {
-                HandlerUpdateLabelText(label: lbl_ParseProgress, text: statusText);
-            });
+            DirectoryElements.ParseFolderToDEs(folder: FolderName, statusMethod: delegate(string statusText) { HandlerUpdateLabelText(label: lbl_ParseProgress, text: statusText); });
 
             // Show
             lvw_FileList.ReloadFromDEs(directoryElements: DirectoryElements);
@@ -1403,7 +1394,7 @@ public partial class FrmMainApp : Form
         DirectoryElement item_de = (DirectoryElement)item.Tag;
         Logger.Trace(message: "item: " + item.Text);
 
-        switch(item_de.Type)
+        switch (item_de.Type)
         {
             // if .. (parent) then do a folder-up
             case DirectoryElement.ElementType.ParentDirectory:
@@ -1428,10 +1419,10 @@ public partial class FrmMainApp : Form
                         // itemText.Text here will be something like "C_Windows_320GB_M2_nVME (C:\)"
                         // so just extract whatever is in the parentheses
                         tbx_FolderName.Text = item.Text.Split('(')
-                                                    .Last()
-                                                    .Split(')')
-                                                    .FirstOrDefault() +
-                                                @"\";
+                                                  .Last()
+                                                  .Split(')')
+                                                  .FirstOrDefault() +
+                                              @"\";
                     }
 
                     btn_ts_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
@@ -1668,8 +1659,8 @@ public partial class FrmMainApp : Form
     private void tmi_Settings_Favourites_Click(object sender,
                                                EventArgs e)
     {
-        DataTable dtFavourites = AppStartupLoadFavourites();
-        if (dtFavourites.Rows.Count > 0)
+        DtFavourites = AppStartupLoadFavourites();
+        if (DtFavourites.Rows.Count > 0)
         {
             FrmManageFavourites frmManageFavouritesInstance = new();
             frmManageFavouritesInstance.ShowDialog();
@@ -1765,13 +1756,13 @@ public partial class FrmMainApp : Form
                 foreach (string tagName in AncillaryListsArrays.GetFavouriteTags())
                 {
                     string addStr = lvi.SubItems[index: lvw.Columns[key: "clh_" + tagName]
-                                                      .Index]
-                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+                                                     .Index]
+                        .Text.ToString(provider: CultureInfo.InvariantCulture);
 
                     if (addStr == "-")
-                {
+                    {
                         addStr = "";
-                }
+                    }
 
                     drFavourite[columnName: tagName] = addStr;
                 }
@@ -1780,7 +1771,7 @@ public partial class FrmMainApp : Form
 
                 HelperStatic.DataWriteSQLiteAddNewFavourite(drFavourite: drFavourite);
 
-                DataTable dtFavourites = AppStartupLoadFavourites();
+                DataTable DtFavourites = AppStartupLoadFavourites();
                 MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
             }
 
@@ -1801,11 +1792,11 @@ public partial class FrmMainApp : Form
         string favouriteToLoad = cbx_Favourites.Text;
 
         // pull favs (this needs doing each time as user may have changed it)
-        DataTable dtFavourites = AppStartupLoadFavourites();
+        DataTable DtFavourites = AppStartupLoadFavourites();
 
         if (LstFavourites.Contains(item: favouriteToLoad))
         {
-            EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in dtFavourites.AsEnumerable()
+            EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in DtFavourites.AsEnumerable()
                                                                where dataRow.Field<string>(columnName: "favouriteName") == favouriteToLoad
                                                                select dataRow;
 
@@ -1863,7 +1854,7 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    /// Clears cached data for any selected items if there is any to clear
+    ///     Clears cached data for any selected items if there is any to clear
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -1893,7 +1884,7 @@ public partial class FrmMainApp : Form
                         lng)
                     {
                         dr.Delete();
-                }
+                    }
 
                     dataHasBeenRemoved = true;
                 }
@@ -1913,6 +1904,52 @@ public partial class FrmMainApp : Form
         else
         {
             MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoCahcedDataNotRemoved"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
+        }
+    }
+
+    private void cbx_Favourites_SelectedValueChanged(object sender,
+                                                     EventArgs e)
+    {
+        string favouriteToLoad = cbx_Favourites.Text;
+
+        // pull favs (this needs doing each time as user may have changed it)
+        DtFavourites = AppStartupLoadFavourites(clearDropDown: false);
+        cbx_Favourites.Text = favouriteToLoad;
+        if (LstFavourites.Contains(item: favouriteToLoad))
+        {
+            EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in DtFavourites.AsEnumerable()
+                                                               where dataRow.Field<string>(columnName: "favouriteName") == favouriteToLoad
+                                                               select dataRow;
+
+            DataRow drFavouriteData = drDataTableData.FirstOrDefault();
+
+            if (drFavouriteData != null)
+            {
+                double favLat = double.Parse(s: drFavouriteData[columnName: "GPSLatitude"]
+                                                 .ToString(), provider: CultureInfo.InvariantCulture);
+                double favLng = double.Parse(s: drFavouriteData[columnName: "GPSLongitude"]
+                                                 .ToString(), provider: CultureInfo.InvariantCulture);
+
+                // this may be redundant but lazy to check
+                char favLatRef = drFavouriteData[columnName: "GPSLatitudeRef"]
+                    .ToString()[index: 0];
+                char favLngRef = drFavouriteData[columnName: "GPSLongitudeRef"]
+                    .ToString()[index: 0];
+
+                if (favLatRef == 'S')
+                {
+                    favLat = Math.Abs(value: favLat) * -1;
+                }
+
+                if (favLngRef == 'W')
+                {
+                    favLng = Math.Abs(value: favLng) * -1;
+                }
+
+                tbx_lat.Text = favLat.ToString(provider: CultureInfo.InvariantCulture);
+                tbx_lng.Text = favLng.ToString(provider: CultureInfo.InvariantCulture);
+                btn_NavigateMapGo_Click(sender: null, e: null);
+            }
         }
     }
 

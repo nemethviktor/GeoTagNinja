@@ -343,4 +343,24 @@ internal static partial class HelperStatic
             img.RemovePropertyItem(propid: exifOrientationID);
         }
     }
+
+    /// <summary>
+    /// Corrects the half-coordinate to be a valid one (in case over/under 180, which can happen if the map is misbehaving.)
+    /// </summary>
+    /// <param name="coordHalfPair">Lat or Long</param>
+    /// <returns>Rounded to 6, corrected Lat or Long</returns>
+    internal static double GenericCorrectInvalidCoordinate(double coordHalfPair)
+    {
+        if (coordHalfPair < -180)
+        {
+            coordHalfPair = 180 - Math.Abs(value: coordHalfPair) % 180;
+        }
+        else if (coordHalfPair > 180)
+        {
+            coordHalfPair = Math.Abs(value: coordHalfPair) % 180;
+        }
+
+        coordHalfPair = Math.Round(value: coordHalfPair, digits: 6);
+        return coordHalfPair;
+    }
 }

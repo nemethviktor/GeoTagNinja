@@ -524,35 +524,34 @@ public partial class FrmMainApp
     /// <summary>
     ///     Loads existing favourites
     /// </summary>
+    /// <param name="clearDropDown"></param>
     /// <returns></returns>
-    private static DataTable AppStartupLoadFavourites()
+    private static DataTable AppStartupLoadFavourites(bool clearDropDown = true)
     {
         Logger.Info(message: "Starting");
-        DataTable dtFavourites = HelperStatic.DataReadSQLiteFavourites();
+        DtFavourites = HelperStatic.DataReadSQLiteFavourites();
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
-        LstFavourites.Clear();
-        AutoCompleteStringCollection autoCompleteCustomSource = new();
-        frmMainAppInstance.cbx_Favourites.Items.Clear();
-        foreach (DataRow drFavourite in dtFavourites.Rows)
+        if (frmMainAppInstance != null && clearDropDown)
         {
-            string favouriteName = drFavourite[columnName: "favouriteName"]
-                .ToString();
-            LstFavourites.Add(item: favouriteName);
-            autoCompleteCustomSource.Add(value: favouriteName);
-            if (frmMainAppInstance != null)
+            LstFavourites.Clear();
+            AutoCompleteStringCollection autoCompleteCustomSource = new();
+            frmMainAppInstance.cbx_Favourites.Items.Clear();
+            foreach (DataRow drFavourite in DtFavourites.Rows)
             {
+                string favouriteName = drFavourite[columnName: "favouriteName"]
+                    .ToString();
+                LstFavourites.Add(item: favouriteName);
+                autoCompleteCustomSource.Add(value: favouriteName);
+
                 frmMainAppInstance.cbx_Favourites.Items.Add(item: favouriteName);
             }
-        }
 
-        if (frmMainAppInstance != null)
-        {
             frmMainAppInstance.cbx_Favourites.AutoCompleteSource = AutoCompleteSource.CustomSource;
             frmMainAppInstance.cbx_Favourites.AutoCompleteCustomSource = autoCompleteCustomSource;
         }
 
-        return dtFavourites;
+        return DtFavourites;
     }
 
     /// <summary>

@@ -634,6 +634,7 @@ namespace GeoTagNinja
             this.cbx_Favourites.Name = "cbx_Favourites";
             this.cbx_Favourites.Size = new System.Drawing.Size(148, 21);
             this.cbx_Favourites.TabIndex = 13;
+            this.cbx_Favourites.SelectedValueChanged += new System.EventHandler(this.cbx_Favourites_SelectedValueChanged);
             // 
             // btn_SaveLocation
             // 
