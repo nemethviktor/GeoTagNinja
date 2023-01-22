@@ -39,6 +39,7 @@
             this.rbt_importFromCurrentFolder = new System.Windows.Forms.RadioButton();
             this.rbt_importOneFile = new System.Windows.Forms.RadioButton();
             this.gbx_ImportGPXTimeSetting = new System.Windows.Forms.GroupBox();
+            this.btn_PullMostRecentTrackSyncShift = new System.Windows.Forms.Button();
             this.nud_GeoMaxExtSecs = new System.Windows.Forms.NumericUpDown();
             this.nud_GeoMaxIntSecs = new System.Windows.Forms.NumericUpDown();
             this.lbl_GeoMaxExtSecs = new System.Windows.Forms.Label();
@@ -66,7 +67,7 @@
             this.btn_OK = new System.Windows.Forms.Button();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.ofd_importOneFile = new System.Windows.Forms.OpenFileDialog();
-            this.gbx_ImportGPXGeoNamesSettings = new System.Windows.Forms.GroupBox();
+            this.gbx_GeoNamesSettings = new System.Windows.Forms.GroupBox();
             this.ckb_DoNotQueryAPI = new System.Windows.Forms.CheckBox();
             this.gbx_ImportGPXSource.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_importOneFile)).BeginInit();
@@ -78,7 +79,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nud_Minutes)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_Hours)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_Days)).BeginInit();
-            this.gbx_ImportGPXGeoNamesSettings.SuspendLayout();
+            this.gbx_GeoNamesSettings.SuspendLayout();
             this.SuspendLayout();
             // 
             // gbx_ImportGPXSource
@@ -179,6 +180,7 @@
             // 
             // gbx_ImportGPXTimeSetting
             // 
+            this.gbx_ImportGPXTimeSetting.Controls.Add(this.btn_PullMostRecentTrackSyncShift);
             this.gbx_ImportGPXTimeSetting.Controls.Add(this.nud_GeoMaxExtSecs);
             this.gbx_ImportGPXTimeSetting.Controls.Add(this.nud_GeoMaxIntSecs);
             this.gbx_ImportGPXTimeSetting.Controls.Add(this.lbl_GeoMaxExtSecs);
@@ -205,10 +207,20 @@
             this.gbx_ImportGPXTimeSetting.Controls.Add(this.lbl_ImportTimeAgainst);
             this.gbx_ImportGPXTimeSetting.Location = new System.Drawing.Point(13, 154);
             this.gbx_ImportGPXTimeSetting.Name = "gbx_ImportGPXTimeSetting";
-            this.gbx_ImportGPXTimeSetting.Size = new System.Drawing.Size(725, 373);
+            this.gbx_ImportGPXTimeSetting.Size = new System.Drawing.Size(725, 417);
             this.gbx_ImportGPXTimeSetting.TabIndex = 15;
             this.gbx_ImportGPXTimeSetting.TabStop = false;
             this.gbx_ImportGPXTimeSetting.Text = "gbx_ImportGPXTimeSetting";
+            // 
+            // btn_PullMostRecentTrackSyncShift
+            // 
+            this.btn_PullMostRecentTrackSyncShift.Location = new System.Drawing.Point(47, 365);
+            this.btn_PullMostRecentTrackSyncShift.Name = "btn_PullMostRecentTrackSyncShift";
+            this.btn_PullMostRecentTrackSyncShift.Size = new System.Drawing.Size(177, 23);
+            this.btn_PullMostRecentTrackSyncShift.TabIndex = 25;
+            this.btn_PullMostRecentTrackSyncShift.Text = "btn_PullMostRecentTrackSyncShift";
+            this.btn_PullMostRecentTrackSyncShift.UseVisualStyleBackColor = true;
+            this.btn_PullMostRecentTrackSyncShift.Click += new System.EventHandler(this.btn_PullMostRecentTrackSyncShift_Click);
             // 
             // nud_GeoMaxExtSecs
             // 
@@ -507,15 +519,15 @@
             this.btn_Cancel.UseVisualStyleBackColor = true;
             this.btn_Cancel.Click += new System.EventHandler(this.btn_Cancel_Click);
             // 
-            // gbx_ImportGPXGeoNamesSettings
+            // gbx_GeoNamesSettings
             // 
-            this.gbx_ImportGPXGeoNamesSettings.Controls.Add(this.ckb_DoNotQueryAPI);
-            this.gbx_ImportGPXGeoNamesSettings.Location = new System.Drawing.Point(13, 533);
-            this.gbx_ImportGPXGeoNamesSettings.Name = "gbx_ImportGPXGeoNamesSettings";
-            this.gbx_ImportGPXGeoNamesSettings.Size = new System.Drawing.Size(725, 113);
-            this.gbx_ImportGPXGeoNamesSettings.TabIndex = 27;
-            this.gbx_ImportGPXGeoNamesSettings.TabStop = false;
-            this.gbx_ImportGPXGeoNamesSettings.Text = "gbx_ImportGPXGeoNamesSettings";
+            this.gbx_GeoNamesSettings.Controls.Add(this.ckb_DoNotQueryAPI);
+            this.gbx_GeoNamesSettings.Location = new System.Drawing.Point(13, 587);
+            this.gbx_GeoNamesSettings.Name = "gbx_GeoNamesSettings";
+            this.gbx_GeoNamesSettings.Size = new System.Drawing.Size(725, 59);
+            this.gbx_GeoNamesSettings.TabIndex = 27;
+            this.gbx_GeoNamesSettings.TabStop = false;
+            this.gbx_GeoNamesSettings.Text = "gbx_GeoNamesSettings";
             // 
             // ckb_DoNotQueryAPI
             // 
@@ -535,7 +547,7 @@
             this.CancelButton = this.btn_Cancel;
             this.ClientSize = new System.Drawing.Size(760, 697);
             this.ControlBox = false;
-            this.Controls.Add(this.gbx_ImportGPXGeoNamesSettings);
+            this.Controls.Add(this.gbx_GeoNamesSettings);
             this.Controls.Add(this.btn_Cancel);
             this.Controls.Add(this.btn_OK);
             this.Controls.Add(this.gbx_ImportGPXTimeSetting);
@@ -559,8 +571,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.nud_Minutes)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_Hours)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_Days)).EndInit();
-            this.gbx_ImportGPXGeoNamesSettings.ResumeLayout(false);
-            this.gbx_ImportGPXGeoNamesSettings.PerformLayout();
+            this.gbx_GeoNamesSettings.ResumeLayout(false);
+            this.gbx_GeoNamesSettings.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -603,7 +615,8 @@
         private System.Windows.Forms.Label lbl_GeoMaxIntSecs;
         private System.Windows.Forms.NumericUpDown nud_GeoMaxExtSecs;
         private System.Windows.Forms.NumericUpDown nud_GeoMaxIntSecs;
-        private System.Windows.Forms.GroupBox gbx_ImportGPXGeoNamesSettings;
+        private System.Windows.Forms.GroupBox gbx_GeoNamesSettings;
         private System.Windows.Forms.CheckBox ckb_DoNotQueryAPI;
+        private System.Windows.Forms.Button btn_PullMostRecentTrackSyncShift;
     }
 }

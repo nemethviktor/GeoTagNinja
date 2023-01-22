@@ -2,6 +2,12 @@
 
 **v0.7.84XX [202301XX]**
 - NEW & UPDATED:
+  - Added functionality to auto-navigate to a selected Favourite in the dropdown.
+  - Added a "recall last Track Sync Shift" option.
+- BUGS & FIXES:
+
+**v0.7.8421 [20230121]**
+- NEW & UPDATED:
   - Added a "Manage Favourites" element to the Settings area.
   - Added Custom Rules. This is experimental for now. Wiki [here](https://github.com/nemethviktor/GeoTagNinja/wiki/Settings-&-Custom-Rules).
   - Updated CountryCode ISO SQLite logic with CSV
