@@ -20,6 +20,11 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Authenticators;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using Button = System.Windows.Forms.Button;
+using ComboBox = System.Windows.Forms.ComboBox;
+using ListView = System.Windows.Forms.ListView;
+using TextBox = System.Windows.Forms.TextBox;
 
 namespace GeoTagNinja;
 
@@ -647,7 +652,11 @@ internal static partial class HelperStatic
                                     if (!doNotReverseGeoCode)
                                     {
                                         SApiOkay = true;
-                                        DataTable dtToponomy = DTFromAPIExifGetToponomyFromWebOrSQL(lat: strParsedLat.ToString(provider: CultureInfo.InvariantCulture), lng: strParsedLng.ToString(provider: CultureInfo.InvariantCulture));
+                                        DataTable dtToponomy = DTFromAPIExifGetToponomyFromWebOrSQL(
+                                            lat: strParsedLat.ToString(provider: CultureInfo.InvariantCulture),
+                                            lng: strParsedLng.ToString(provider: CultureInfo.InvariantCulture),
+                                            fileNameWithoutPath: fileNameWithoutPath
+                                        );
 
                                         if (SApiOkay)
                                         {
@@ -1643,12 +1652,14 @@ internal static partial class HelperStatic
     /// </summary>
     /// <param name="lat">latitude/longitude to be queried</param>
     /// <param name="lng">latitude/longitude to be queried</param>
+    /// <param name="fileNameWithoutPath"></param>
     /// <returns>
     ///     See summary. Returns the toponomy info either from SQLite if available or the API in DataTable for further
     ///     processing
     /// </returns>
     internal static DataTable DTFromAPIExifGetToponomyFromWebOrSQL(string lat,
-                                                                   string lng)
+                                                                   string lng,
+                                                                   string fileNameWithoutPath = "")
     {
         DataTable dtReturn = new();
         dtReturn.Clear();
@@ -2404,6 +2415,20 @@ internal static partial class HelperStatic
                     }
                     else
                     {
+                        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+                        // scroll to the file in question and show the image of it...makes life a lot easier
+                        if (!string.IsNullOrEmpty(fileNameWithoutPath))
+                        {
+                            string fileNameWithPath = Path.Combine(FrmMainApp.FolderName, fileNameWithoutPath);
+                            ListViewItem lvi = frmMainAppInstance.lvw_FileList.FindItemWithText(fileNameWithoutPath);
+                            frmMainAppInstance.lvw_FileList.FocusedItem = lvi;
+                            frmMainAppInstance.lvw_FileList.EnsureVisible(lvi.Index);
+                            HelperStatic.GenericCreateImagePreview(
+                                fileNameWithPath: fileNameWithPath, initiator: "FrmMainAppAPIDataSelection"
+                            );
+                            Application.DoEvents();
+                        }
+
                         int useDr = useDrRow(dtIn: dtReturn);
                         dtReturn = dtReturn.AsEnumerable()
                             .Where(predicate: (row,

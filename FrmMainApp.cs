@@ -1076,7 +1076,9 @@ public partial class FrmMainApp : Form
                           .Index]
             .Text.ToString(provider: CultureInfo.InvariantCulture);
 
-        DataTable dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
+        DataTable dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude,
+                                                                                 lng: strGpsLongitude,
+                                                                                 fileNameWithoutPath: fileNameWithoutPath);
         if (dtToponomy.Rows.Count > 0)
         {
             // Send off to SQL

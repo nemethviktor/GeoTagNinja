@@ -548,7 +548,9 @@ public partial class FrmEditFileData : Form
                 HelperStatic.CurrentAltitude = null;
                 HelperStatic.CurrentAltitude = nud_GPSAltitude.Text.ToString(provider: CultureInfo.InvariantCulture);
 
-                dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
+                dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude,
+                                                                               lng: strGpsLongitude,
+                                                                               fileNameWithoutPath: fileNameWithoutPath);
             }
         }
 
@@ -587,7 +589,7 @@ public partial class FrmEditFileData : Form
                                 provider: CultureInfo.InvariantCulture,
                                 result: out parsedLng))
             {
-                dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
+                dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude, fileNameWithoutPath: fileNameWithoutPath);
             }
         }
 

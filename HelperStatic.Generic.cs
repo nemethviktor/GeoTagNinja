@@ -69,7 +69,13 @@ internal static partial class HelperStatic
         if (pointOrig.Count(predicate: f => f == '.') == 2)
         {
             bool degreeParse = int.TryParse(s: pointOrig.Split('.')[0], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out int degree);
-            bool minuteParse = double.TryParse(s: Regex.Replace(input: pointOrig.Split('.')[1] + "." + pointOrig.Split('.')[2], pattern: "[SWNE\"-]", replacement: ""), style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double minute);
+            bool minuteParse = double.TryParse(s: Regex.Replace(
+                                                   input: pointOrig.Split('.')[1] + "." + pointOrig.Split('.')[2],
+                                                   pattern: "[SWNE\"-]",
+                                                   replacement: ""),
+                                               style: NumberStyles.Any,
+                                               provider: CultureInfo.InvariantCulture,
+                                               result: out double minute);
             minute = minute / 60;
             pointVal = degree + minute;
         }
@@ -669,6 +675,12 @@ internal static partial class HelperStatic
                                                                                               .Text +
                                                                                           ".jpg");
         }
+        else if (initiator == "FrmMainAppAPIDataSelection" && frmMainAppInstance != null)
+        {
+            frmMainAppInstance.pbx_imagePreview.Image = null;
+            string fileNameWithoutPath = Path.GetFileName(fileNameWithPath);
+            generatedFileName = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: fileNameWithoutPath + ".jpg");
+        }
         else if (initiator == "FrmEditFileData" && frmEditFileDataInstance != null)
         {
             frmEditFileDataInstance.pbx_imagePreview.Image = null;
@@ -720,7 +732,7 @@ internal static partial class HelperStatic
 
         if (img != null)
         {
-            if (initiator == "FrmMainApp" && frmMainAppInstance != null)
+            if ((initiator == "FrmMainApp" || initiator == "FrmMainAppAPIDataSelection") && frmMainAppInstance != null)
             {
                 frmMainAppInstance.pbx_imagePreview.Image = img;
             }
