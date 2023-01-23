@@ -4,7 +4,9 @@
 - NEW & UPDATED:
   - Added functionality to auto-navigate to a selected Favourite in the dropdown.
   - Added a "recall last Track Sync Shift" option.
+  - Changed certain numeric TextBoxes to NumericUpDowns.
 - BUGS & FIXES:
+  - Fixed a bug where NumerUpDown changes didn't trigger setting fonts to Bold
 
 **v0.7.8421 [20230121]**
 - NEW & UPDATED:

@@ -2647,27 +2647,57 @@ internal static partial class HelperStatic
             toponomyOverwrites.Add(item: "OffsetTime");
         }
 
-        ;
+        // sort is pointless here but otherwise it pokes my OCD.
+        toponomyOverwrites.Sort();
+
         if (senderName == "FrmEditFileData")
         {
             // for the time being i'll leave this as "remove data from the active selection file" rather than "all".
             FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
 
             // setting this to True prevents the code from checking the values are valid numbers.
-            FrmEditFileData.FrmEditFileDataNowRemovingGeoData = true;
+
             if (frmEditFileDataInstance != null)
             {
                 string fileNameWithoutPath = frmEditFileDataInstance.lvw_FileListEditImages.SelectedItems[index: 0]
                     .Text;
-                frmEditFileDataInstance.tbx_GPSLatitude.Text = "";
-                frmEditFileDataInstance.tbx_GPSLongitude.Text = "";
-                frmEditFileDataInstance.tbx_GPSAltitude.Text = "";
-                frmEditFileDataInstance.tbx_City.Text = "";
-                frmEditFileDataInstance.tbx_State.Text = "";
-                frmEditFileDataInstance.tbx_Sub_location.Text = "";
-                frmEditFileDataInstance.cbx_CountryCode.Text = "";
-                frmEditFileDataInstance.cbx_Country.Text = "";
-                FrmEditFileData.FrmEditFileDataNowRemovingGeoData = false;
+
+                HelperNonStatic helperNonstatic = new();
+                IEnumerable<Control> cGbx_GPSData = helperNonstatic.GetAllControls(control: frmEditFileDataInstance.gbx_GPSData);
+                foreach (Control cItem_cGbx_GPSData in cGbx_GPSData)
+                {
+                    if (cItem_cGbx_GPSData is NumericUpDown nud)
+                    {
+                        nud.Value = 0;
+                        nud.Text = "";
+                    }
+
+                    // no textboxes here but just in case
+                    else if (cItem_cGbx_GPSData is TextBox txt)
+                    {
+                        txt.Text = "";
+                    }
+                }
+
+                IEnumerable<Control> cGbx_LocationData = helperNonstatic.GetAllControls(control: frmEditFileDataInstance.gbx_LocationData);
+                foreach (Control cItem_cGbx_LocationData in cGbx_LocationData)
+                {
+                    // no nuds here but just in case
+                    if (cItem_cGbx_LocationData is NumericUpDown nud)
+                    {
+                        nud.Value = 0;
+                        nud.Text = "";
+                    }
+
+                    else if (cItem_cGbx_LocationData is TextBox txt)
+                    {
+                        txt.Text = "";
+                    }
+                    else if (cItem_cGbx_LocationData is ComboBox cbx)
+                    {
+                        cbx.Text = "";
+                    }
+                }
 
                 foreach (string toponomyDetail in toponomyOverwrites)
                 {

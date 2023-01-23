@@ -79,3 +79,4 @@ mbx_HelperStaticExifNoAPI,Failed to reach the API - are you offline by any chanc
 mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty,"All dropdown columns must have a non-empty value and also the ""if"" condition value must not be empty.",
 mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty,"If you pick ""Custom"" for Outcome then the Custom Outcome column must not be empty. If you close the Settings Form and this isn't fixed, your row will be deleted.",
 mbx_FrmImportNoStoredShiftValues,"No ""shift"" values stored. Data will remain 0.",
+mbx_DirectoryElementCollection_ErrorParsing,Error while parsing folder to DirectoryElements,

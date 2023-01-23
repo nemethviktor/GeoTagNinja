@@ -14,6 +14,14 @@ namespace GeoTagNinja;
 public partial class FrmEditFileData : Form
 {
     private static bool _tzChangedByApi;
+
+
+    #region Variables
+
+    private static bool _frmEditFileDataNowLoadingFileData;
+
+    #endregion
+
     private DateTime _origDateValCreateDate = DateTime.Now;
     private DateTime _origDateValTakenDate = DateTime.Now;
 
@@ -42,7 +50,12 @@ public partial class FrmEditFileData : Form
         Logger.Info(message: "Starting");
         Logger.Trace(message: "Defaults Starting");
         _frmEditFileDataNowLoadingFileData = true;
-        FrmEditFileDataNowRemovingGeoData = false;
+
+        Logger.Trace(message: "Emptying FrmMainApp.DtFileDataToWriteStage1PreQueue + FrmMainApp.DtFileDataToWriteStage2QueuePendingSave");
+        // empty queue
+        DtFileDataToWriteStage1PreQueue.Rows.Clear();
+        // also empty the "original data" table
+        DtFileDataToWriteStage2QueuePendingSave.Rows.Clear();
 
         // Ddeal with Dates
         // TakenDate
@@ -104,18 +117,6 @@ public partial class FrmEditFileData : Form
             {
                 lvw_FileListEditImages.Enabled = false;
             }
-
-            Logger.Trace(message: "Emptying DtFileDataToWriteStage1PreQueue + DtFileDataToWriteStage2QueuePendingSave");
-            // empty queue
-            DtFileDataToWriteStage1PreQueue.Rows.Clear();
-            // also empty the "original data" table
-            DtFileDataToWriteStage2QueuePendingSave.Rows.Clear();
-
-            // This actually gets triggered with the SelectedIndexChange above.
-            // lvw_EditorFileListImagesGetData();
-
-            // This actually gets triggered with the SelectedIndexChange above.
-            //await pbx_imgPreviewPicGenerator(fileNameWithPath: fileNameWithPath);
 
             Logger.Trace(message: "ListViewSelect Done");
         }
@@ -180,8 +181,6 @@ public partial class FrmEditFileData : Form
                 }
                 else if (cItem is TextBox || cItem is ComboBox || cItem is DateTimePicker || cItem is NumericUpDown)
                 {
-                    // reset font to normal
-                    cItem.Font = new Font(prototype: cItem.Font, newStyle: FontStyle.Regular);
                     exifTag = cItem.Name.Substring(startIndex: 4);
 
                     string cItemValStr = "-";
@@ -206,17 +205,21 @@ public partial class FrmEditFileData : Form
                             .Text;
                     }
 
+                    bool isInSqlDT = false;
                     if (strSqlDataDT1 != null)
                     {
                         cItemValStr = strSqlDataDT1;
+                        isInSqlDT = true;
                     }
                     else if (strSqlDataDT3 != null)
                     {
                         cItemValStr = strSqlDataDT3;
+                        isInSqlDT = true;
                     }
                     else if (strFLData != null)
                     {
                         cItemValStr = strFLData;
+                        isInSqlDT = true;
                     }
                     // if not in SQL...
                     else
@@ -231,6 +234,12 @@ public partial class FrmEditFileData : Form
                             Logger.Trace(message: "Not in SQL");
                             // blank on purpose
                         }
+                    }
+
+                    if (isInSqlDT)
+                    {
+                        // reset font to normal
+                        cItem.Font = new Font(prototype: cItem.Font, newStyle: FontStyle.Regular);
                     }
 
                     // if empty...
@@ -311,36 +320,45 @@ public partial class FrmEditFileData : Form
                         }
 
                         // this is related to storing the default DateTimes for TakenDate and CreateDate
-                        if (cItem == dtp_TakenDate)
+                        if (cItem is DateTimePicker dtp)
                         {
-                            btn_InsertTakenDate.Enabled = false;
-                            List<KeyValuePair<string, string>> lstSqlDataDTTakenDate =
-                                HelperStatic.DataReadFilterDataTable(dt: DtOriginalTakenDate,
-                                                                     filePathColumnName: "fileNameWithoutPath",
-                                                                     filePathValue: fileNameWithoutPath);
-
-                            if (lstSqlDataDTTakenDate.Count > 0)
+                            if (dtp == dtp_TakenDate)
                             {
-                                _origDateValTakenDate = Convert.ToDateTime(value: HelperStatic.DataGetFirstOrDefaultFromKVPList(lstIn: lstSqlDataDTTakenDate, keyEqualsWhat: "originalTakenDate"));
+                                btn_InsertTakenDate.Enabled = false;
+                                List<KeyValuePair<string, string>> lstSqlDataDTTakenDate =
+                                    HelperStatic.DataReadFilterDataTable(dt: DtOriginalTakenDate,
+                                                                         filePathColumnName: "fileNameWithoutPath",
+                                                                         filePathValue: fileNameWithoutPath);
+
+                                if (lstSqlDataDTTakenDate.Count > 0)
+                                {
+                                    _origDateValTakenDate = Convert.ToDateTime(value: HelperStatic.DataGetFirstOrDefaultFromKVPList(lstIn: lstSqlDataDTTakenDate, keyEqualsWhat: "originalTakenDate"));
+                                }
+                            }
+                            else if (dtp == dtp_CreateDate)
+                            {
+                                btn_InsertCreateDate.Enabled = false;
+                                List<KeyValuePair<string, string>> lstSqlDataDTCreateDate =
+                                    HelperStatic.DataReadFilterDataTable(dt: DtOriginalCreateDate,
+                                                                         filePathColumnName: "fileNameWithoutPath",
+                                                                         filePathValue: fileNameWithoutPath);
+
+                                if (lstSqlDataDTCreateDate.Count > 0)
+                                {
+                                    _origDateValCreateDate = Convert.ToDateTime(value: HelperStatic.DataGetFirstOrDefaultFromKVPList(lstIn: lstSqlDataDTCreateDate, keyEqualsWhat: "originalCreateDate"));
+                                }
+                            }
+
+                            Logger.Trace(message: "cItem: " + cItem.Name + " - Updating DateTimePicker");
+                            if (strSqlDataDT1 != null || strSqlDataDT3 != null)
+                            {
+                                dtp.Font = new Font(prototype: dtp.Font, newStyle: FontStyle.Bold);
                             }
                         }
-                        else if (cItem == dtp_CreateDate)
-                        {
-                            btn_InsertCreateDate.Enabled = false;
-                            List<KeyValuePair<string, string>> lstSqlDataDTCreateDate =
-                                HelperStatic.DataReadFilterDataTable(dt: DtOriginalCreateDate,
-                                                                     filePathColumnName: "fileNameWithoutPath",
-                                                                     filePathValue: fileNameWithoutPath);
 
-                            if (lstSqlDataDTCreateDate.Count > 0)
-                            {
-                                _origDateValCreateDate = Convert.ToDateTime(value: HelperStatic.DataGetFirstOrDefaultFromKVPList(lstIn: lstSqlDataDTCreateDate, keyEqualsWhat: "originalCreateDate"));
-                            }
-                        }
-
-                        Logger.Trace(message: "cItem: " + cItem.Name + " - Adding to DtFileDataToWriteStage2QueuePendingSave");
+                        Logger.Trace(message: "cItem: " + cItem.Name + " - Adding to FrmMainApp.DtFileDataToWriteStage2QueuePendingSave");
                         // stick into sql ("pending save") - this is to see if the data has changed later.
-                        if (cItem is not NumericUpDown cItemNumericUpDown)
+                        if (cItem is not NumericUpDown nud)
                         {
                             HelperStatic.GenericUpdateAddToDataTable(
                                 dt: DtFileDataToWriteStage2QueuePendingSave,
@@ -349,14 +367,20 @@ public partial class FrmEditFileData : Form
                                 settingValue: cItemValStr);
                             cItem.Text = cItemValStr;
                         }
-                        else
+                        else // if (cItem is NumericUpDown nud)
                         {
                             HelperStatic.GenericUpdateAddToDataTable(
                                 dt: DtFileDataToWriteStage2QueuePendingSave,
                                 fileNameWithoutPath: fileNameWithoutPath,
-                                settingId: cItemNumericUpDown.Name.Substring(startIndex: 4),
+                                settingId: nud.Name.Substring(startIndex: 4),
                                 settingValue: cItemValStr);
-                            cItemNumericUpDown.Value = int.Parse(s: cItemValStr);
+                            nud.Value = Convert.ToDecimal(value: cItemValStr);
+                            nud.Text = cItemValStr;
+
+                            if (strSqlDataDT1 != null || strSqlDataDT3 != null)
+                            {
+                                nud.Font = new Font(prototype: nud.Font, newStyle: FontStyle.Bold);
+                            }
                         }
 
                         if (cItem is TextBox txt)
@@ -409,14 +433,6 @@ public partial class FrmEditFileData : Form
                                 { }
                             }
                         }
-                        else if (cItem is DateTimePicker dtp)
-                        {
-                            Logger.Trace(message: "cItem: " + cItem.Name + " - Updating DateTimePicker");
-                            if (strSqlDataDT1 != null || strSqlDataDT3 != null)
-                            {
-                                dtp.Font = new Font(prototype: dtp.Font, newStyle: FontStyle.Bold);
-                            }
-                        }
                     }
                 }
             }
@@ -432,14 +448,6 @@ public partial class FrmEditFileData : Form
         Logger.Debug(message: "Done");
         _frmEditFileDataNowLoadingFileData = false;
     }
-
-
-    #region Variables
-
-    private static bool _frmEditFileDataNowLoadingFileData;
-    internal static bool FrmEditFileDataNowRemovingGeoData;
-
-    #endregion
 
     #region object events
 
@@ -532,21 +540,14 @@ public partial class FrmEditFileData : Form
         // this is "current file"
         if (fileNameWithoutPath == "")
         {
-            strGpsLatitude = tbx_GPSLatitude.Text.ToString(provider: CultureInfo.InvariantCulture);
-            strGpsLongitude = tbx_GPSLongitude.Text.ToString(provider: CultureInfo.InvariantCulture);
-
-            HelperStatic.CurrentAltitude = null;
-            HelperStatic.CurrentAltitude = tbx_GPSAltitude.Text.ToString(provider: CultureInfo.InvariantCulture);
-
-            if (double.TryParse(s: strGpsLatitude,
-                                style: NumberStyles.Any,
-                                provider: CultureInfo.InvariantCulture,
-                                result: out parsedLat) &&
-                double.TryParse(s: strGpsLongitude,
-                                style: NumberStyles.Any,
-                                provider: CultureInfo.InvariantCulture,
-                                result: out parsedLng))
+            if (nud_GPSLatitude.Text != "" && nud_GPSLongitude.Text != "")
             {
+                strGpsLatitude = nud_GPSLatitude.Value.ToString(provider: CultureInfo.InvariantCulture);
+                strGpsLongitude = nud_GPSLongitude.Value.ToString(provider: CultureInfo.InvariantCulture);
+
+                HelperStatic.CurrentAltitude = null;
+                HelperStatic.CurrentAltitude = nud_GPSAltitude.Text.ToString(provider: CultureInfo.InvariantCulture);
+
                 dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude);
             }
         }
@@ -687,7 +688,8 @@ public partial class FrmEditFileData : Form
                             tbx_Sub_location.Text = toponomyDetail.toponomyOverwriteVal;
                             break;
                         case "GPSAltitude":
-                            tbx_GPSAltitude.Text = toponomyDetail.toponomyOverwriteVal;
+                            nud_GPSAltitude.Text = toponomyDetail.toponomyOverwriteVal;
+                            nud_GPSAltitude.Value = Convert.ToDecimal(value: toponomyDetail.toponomyOverwriteVal);
                             break;
                         case "OffsetTime":
                             tbx_OffsetTime.Text = toponomyDetail.toponomyOverwriteVal;
@@ -1269,67 +1271,44 @@ public partial class FrmEditFileData : Form
             string newText = "";
             string exifTag = null;
 
-            if (sender is NumericUpDown)
+            Control sndr = (Control)sender;
+            senderName = sndr.Name;
+            parentName = sndr.Parent.Name;
+            exifTag = sndr.Name.Substring(startIndex: 4);
+            try
             {
-                // this is a f...ing nightmare because NUDs have Values but everything else has Text
-                NumericUpDown sndr = (NumericUpDown)sender;
-                senderName = sndr.Name;
-                parentName = sndr.Parent.Name;
-                exifTag = sndr.Name.Substring(startIndex: 4);
-                try
-                {
-                    dtPreviousText = DtFileDataToWriteStage2QueuePendingSave.Select(filterExpression: "fileNameWithoutPath = '" +
-                                                                                                      lvw_FileListEditImages.SelectedItems[index: 0]
-                                                                                                          .Text +
-                                                                                                      "' AND settingId = '" +
-                                                                                                      exifTag +
-                                                                                                      "'")
-                        .CopyToDataTable();
-                }
-                catch
-                {
-                    dtPreviousText = null;
-                }
+                dtPreviousText = DtFileDataToWriteStage2QueuePendingSave.Select(filterExpression: "fileNameWithoutPath = '" +
+                                                                                                  lvw_FileListEditImages.SelectedItems[index: 0]
+                                                                                                      .Text +
+                                                                                                  "' AND settingId = '" +
+                                                                                                  exifTag +
+                                                                                                  "'")
+                    .CopyToDataTable();
+            }
+            catch
+            {
+                dtPreviousText = null;
+            }
 
-                if (dtPreviousText != null && dtPreviousText.Rows.Count > 0)
-                {
-                    previousText = dtPreviousText.Rows[index: 0][columnName: "settingValue"]
-                        .ToString();
-                }
-
-                newText = sndr.Value.ToString(provider: CultureInfo.InvariantCulture);
+            if (dtPreviousText != null && dtPreviousText.Rows.Count > 0)
+            {
+                previousText = dtPreviousText.Rows[index: 0][columnName: "settingValue"]
+                    .ToString();
             }
             else
             {
-                Control sndr = (Control)sender;
-                senderName = sndr.Name;
-                parentName = sndr.Parent.Name;
-                exifTag = sndr.Name.Substring(startIndex: 4);
-                try
-                {
-                    dtPreviousText = DtFileDataToWriteStage2QueuePendingSave.Select(filterExpression: "fileNameWithoutPath = '" +
-                                                                                                      lvw_FileListEditImages.SelectedItems[index: 0]
-                                                                                                          .Text +
-                                                                                                      "' AND settingId = '" +
-                                                                                                      exifTag +
-                                                                                                      "'")
-                        .CopyToDataTable();
-                }
-                catch
-                {
-                    dtPreviousText = null;
-                }
+                previousText = "herp-derp"; // anything really, just to handle changes to blanks.
+            }
 
-                if (dtPreviousText != null && dtPreviousText.Rows.Count > 0)
+            if (sndr is NumericUpDown nudTextControl)
+            {
+                if (nudTextControl.Text != "")
                 {
-                    previousText = dtPreviousText.Rows[index: 0][columnName: "settingValue"]
-                        .ToString();
+                    nudTextControl.Text = nudTextControl.Value.ToString(provider: CultureInfo.InvariantCulture);
                 }
-                else
-                {
-                    previousText = "herp-derp"; // anything really, just to handle changes to blanks.
-                }
-
+            }
+            else
+            {
                 newText = sndr.Text;
             }
 
@@ -1351,6 +1330,8 @@ public partial class FrmEditFileData : Form
             if (previousText != newText)
             {
                 string strSndrText = newText.Replace(oldChar: ',', newChar: '.');
+                // 20230123 -- commenting this out rather than deleting in case this ever changes again.
+                /*
                 if (!FrmEditFileDataNowRemovingGeoData && parentName == "gbx_GPSData" && double.TryParse(s: strSndrText, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dbl) == false)
                 {
                     // don't warn on a single "-" as that could be a lead-up to a negative number
@@ -1369,17 +1350,27 @@ public partial class FrmEditFileData : Form
                     }
                 }
                 // yayy for pointless redundancy
-                else if (sender is NumericUpDown numericUpDown)
+                else */
+                if (sndr is NumericUpDown nud)
                 {
-                    // this seems not to be working for some reason.
-                    numericUpDown.Font = new Font(prototype: numericUpDown.Font, newStyle: FontStyle.Bold);
+                    string nudTextStr = nud.Text == ""
+                        ? ""
+                        : nud.Value.ToString(provider: CultureInfo.InvariantCulture);
 
                     HelperStatic.GenericUpdateAddToDataTable(
                         dt: DtFileDataToWriteStage1PreQueue,
                         fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
                             .Text,
                         settingId: exifTag,
-                        settingValue: numericUpDown.Value.ToString(provider: CultureInfo.InvariantCulture)
+                        settingValue: nudTextStr
+                    );
+
+                    HelperStatic.GenericUpdateAddToDataTable(
+                        dt: DtFileDataToWriteStage2QueuePendingSave,
+                        fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
+                            .Text,
+                        settingId: exifTag,
+                        settingValue: nudTextStr
                     );
 
                     // adjust createDate and/or takenDate
@@ -1407,8 +1398,6 @@ public partial class FrmEditFileData : Form
                 }
                 else
                 {
-                    Control sndr = (Control)sender;
-                    sndr.Font = new Font(prototype: sndr.Font, newStyle: FontStyle.Bold);
                     // marry up countrycodes and countrynames
                     string sqliteText;
                     if (senderName == "cbx_CountryCode")
@@ -1443,7 +1432,17 @@ public partial class FrmEditFileData : Form
                         settingId: exifTag,
                         settingValue: sndr.Text
                     );
+
+                    HelperStatic.GenericUpdateAddToDataTable(
+                        dt: DtFileDataToWriteStage2QueuePendingSave,
+                        fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
+                            .Text,
+                        settingId: exifTag,
+                        settingValue: sndr.Text
+                    );
                 }
+
+                sndr.Font = new Font(prototype: sndr.Font, newStyle: FontStyle.Bold);
             }
         }
     }
@@ -1480,7 +1479,7 @@ public partial class FrmEditFileData : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private void dtp_nud_Enter(object sender,
+    private void any_nud_Enter(object sender,
                                EventArgs e)
     {
         AcceptButton = null;
@@ -1491,7 +1490,7 @@ public partial class FrmEditFileData : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private void dtb_nud_Leave(object sender,
+    private void any_nud_Leave(object sender,
                                EventArgs e)
     {
         AcceptButton = btn_OK;
