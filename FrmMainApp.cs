@@ -285,7 +285,7 @@ public partial class FrmMainApp : Form
         {
             DialogResult dialogResult = MessageBox.Show(
                 text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_QuestionFileQIsNotEmpty"),
-                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Question"),
                 buttons: MessageBoxButtons.YesNo,
                 icon: MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
@@ -380,8 +380,8 @@ public partial class FrmMainApp : Form
         nud_lng.Text = HelperStatic.GenericCorrectInvalidCoordinate(coordHalfPair: dblLng)
             .ToString(provider: CultureInfo.InvariantCulture);
 
-        nud_lat.Value = Convert.ToDecimal(nud_lat.Text);
-        nud_lng.Value = Convert.ToDecimal(nud_lng.Text);
+        nud_lat.Value = Convert.ToDecimal(value: nud_lat.Text);
+        nud_lng.Value = Convert.ToDecimal(value: nud_lng.Text);
     }
 
     /// <summary>
@@ -542,12 +542,12 @@ public partial class FrmMainApp : Form
         // Get txtbox contents
         string strLatCoordinate = "";
         string strLngCoordinate = "";
-        if (!string.IsNullOrEmpty(nud_lat.Text))
+        if (!string.IsNullOrEmpty(value: nud_lat.Text))
         {
             strLatCoordinate = nud_lat.Text.Replace(oldChar: ',', newChar: '.');
         }
 
-        if (!string.IsNullOrEmpty(nud_lng.Text))
+        if (!string.IsNullOrEmpty(value: nud_lng.Text))
         {
             strLngCoordinate = nud_lng.Text.Replace(oldChar: ',', newChar: '.');
         }
@@ -1139,6 +1139,45 @@ public partial class FrmMainApp : Form
 
             HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
             lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
+        }
+        else
+        {
+            DialogResult dialogResult = MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_QuestionNoRowsFromAPI"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Question"),
+                buttons: MessageBoxButtons.YesNo,
+                icon: MessageBoxIcon.Question);
+            if (dialogResult == DialogResult.Yes)
+            {
+                List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
+                toponomyOverwrites.Add(item: ("CountryCode", null));
+                toponomyOverwrites.Add(item: ("Country", null));
+
+                foreach (string toponomyReplace in AncillaryListsArrays.ToponomyReplaces())
+                {
+                    string settingId = toponomyReplace;
+                    string settingVal = null;
+                    toponomyOverwrites.Add(item: (settingId, settingVal));
+                }
+
+                foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+                {
+                    HelperStatic.GenericUpdateAddToDataTable(
+                        dt: DtFileDataToWriteStage3ReadyToWrite,
+                        fileNameWithoutPath: lvi.Text,
+                        settingId: toponomyDetail.toponomyOverwriteName,
+                        settingValue: toponomyDetail.toponomyOverwriteVal
+                    );
+
+                    lvi.SubItems[index: lvw_FileList.Columns[key: "clh_" + toponomyDetail.toponomyOverwriteName]
+                                     .Index]
+                        .Text = toponomyDetail.toponomyOverwriteVal;
+                }
+            }
+            else if (dialogResult == DialogResult.No)
+            {
+                // nothing
+            }
         }
     }
 
@@ -2041,8 +2080,8 @@ public partial class FrmMainApp : Form
                 nud_lat.Text = favLat.ToString(provider: CultureInfo.InvariantCulture);
                 nud_lng.Text = favLng.ToString(provider: CultureInfo.InvariantCulture);
 
-                nud_lat.Value = Convert.ToDecimal(nud_lat.Text);
-                nud_lng.Value = Convert.ToDecimal(nud_lng.Text);
+                nud_lat.Value = Convert.ToDecimal(value: nud_lat.Text);
+                nud_lng.Value = Convert.ToDecimal(value: nud_lng.Text);
 
                 btn_NavigateMapGo_Click(sender: null, e: null);
             }

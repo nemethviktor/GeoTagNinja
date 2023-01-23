@@ -80,3 +80,4 @@ mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty,"All dropdown columns must h
 mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty,"If you pick ""Custom"" for Outcome then the Custom Outcome column must not be empty. If you close the Settings Form and this isn't fixed, your row will be deleted.",
 mbx_FrmImportNoStoredShiftValues,"No ""shift"" values stored. Data will remain 0.",
 mbx_DirectoryElementCollection_ErrorParsing,Error while parsing folder to DirectoryElements,
+mbx_FrmMainApp_QuestionNoRowsFromAPI,The API query didn't return any valid information. Do you want to blank out the toponomy values?,
