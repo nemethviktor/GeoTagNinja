@@ -20,13 +20,82 @@ namespace GeoTagNinja.View.ListView;
 
 public partial class FileListView : System.Windows.Forms.ListView
 {
+    // Default values to set for entries
+    public static string UNKNOWN_VALUE_FILE = "-";
+
+    // Note - if this is changed, all checks for unknown need to be udpated
+    // because currently this works via item.replace and check versus ""
+    // but replace did not take ""
+    public static string UNKNOWN_VALUE_DIR = "";
 
     /// <summary>
-    /// Class containing native method (shell32, etc) definitions in order
-    /// to retrieve file and directory information.
-    /// 
-    /// This is to deal with the icons in listview
-    /// from https://stackoverflow.com/a/37806517/3968494
+    ///     Every column has this prefix for its name when it is created.
+    /// </summary>
+    public static string COL_NAME_PREFIX = "clh_";
+
+
+    /// <summary>
+    ///     Constructor
+    /// </summary>
+    public FileListView()
+    {
+        Logger.Info(message: "Creating List View ...");
+        InitializeComponent();
+    }
+
+
+    /// <summary>
+    ///     Returns the number of items in the list view that actually
+    ///     have an entry in the given column.
+    /// </summary>
+    /// <param name="column">The column to check for values</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">If the column was not found</exception>
+    public int CountItemsWithData(string column)
+    {
+        int colIndex = GetColumnIndex(column: column);
+        int itemCount = 0;
+
+        foreach (ListViewItem lvi in Items)
+        {
+            if (lvi.SubItems.Count > 1)
+            {
+                if (lvi.SubItems[index: colIndex]
+                        .Text
+                        .Replace(oldValue: UNKNOWN_VALUE_FILE, newValue: "") !=
+                    "")
+                {
+                    itemCount++;
+                }
+            }
+        }
+
+        return itemCount;
+    }
+
+
+    /// <summary>
+    ///     Returns the (sub items) index of the column (not the visualized one).
+    /// </summary>
+    /// <param name="column">The column to look for w/o prefix</param>
+    /// <returns>The index</returns>
+    /// <exception cref="ArgumentException">If the column was not found</exception>
+    public int GetColumnIndex(string column)
+    {
+        if (!_cfg_Col_Names.Contains(item: column))
+        {
+            throw new ArgumentException(message: "Column with name '" + column + "' not found.");
+        }
+
+        return Columns[key: COL_NAME_PREFIX + column]
+            .Index;
+    }
+
+    /// <summary>
+    ///     Class containing native method (shell32, etc) definitions in order
+    ///     to retrieve file and directory information.
+    ///     This is to deal with the icons in listview
+    ///     from https://stackoverflow.com/a/37806517/3968494
     /// </summary>
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming"), SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local"), SuppressMessage(category: "ReSharper", checkId: "IdentifierTypo"), SuppressMessage(category: "ReSharper", checkId: "StringLiteralTypo"), SuppressMessage(category: "ReSharper", checkId: "MemberCanBePrivate.Local"), SuppressMessage(category: "ReSharper", checkId: "FieldCanBeMadeReadOnly.Local")]
     private static class NativeMethods
@@ -100,8 +169,8 @@ public partial class FileListView : System.Windows.Forms.ListView
 
 
     /// <summary>
-    /// Class containing all the relevant column names to be used
-    /// when e.g. querying for information.
+    ///     Class containing all the relevant column names to be used
+    ///     when e.g. querying for information.
     /// </summary>
     public static class FileListColumns
     {
@@ -141,19 +210,6 @@ public partial class FileListView : System.Windows.Forms.ListView
         public const string OFFSET_TIME = "OffsetTime";
     }
 
-
-    // Default values to set for entries
-    public static string UNKNOWN_VALUE_FILE = "-";
-    // Note - if this is changed, all checks for unknown need to be udpated
-    // because currently this works via item.replace and check versus ""
-    // but replace did not take ""
-    public static string UNKNOWN_VALUE_DIR = "";
-
-    /// <summary>
-    /// Every column has this prefix for its name when it is created.
-    /// </summary>
-    public static string COL_NAME_PREFIX = "clh_";
-
     #region internal vars
 
     internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
@@ -166,12 +222,12 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <summary>
     ///     The list of columns to show (without prefix)
     /// </summary>
-    internal List<string> _cfg_Col_Names = new List<string>();
+    internal List<string> _cfg_Col_Names = new();
 
     /// <summary>
     ///     The default order of the columns to show (without prefix)
     /// </summary>
-    internal Dictionary<string, int> _cfg_Col_Order_Default = new Dictionary<string, int>();
+    internal Dictionary<string, int> _cfg_Col_Order_Default = new();
 
     /// <summary>
     ///     The used sorter
@@ -181,18 +237,18 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <summary>
     ///     Tracks if the initializer ReadAndApplySetting was called.
     /// </summary>
-    internal bool _isInitialized = false;
+    internal bool _isInitialized;
 
     /// <summary>
-    /// Counter for files in the list - incremented in addListItem method.
+    ///     Counter for files in the list - incremented in addListItem method.
     /// </summary>
     internal int _fileCount = -1;
 
     /// <summary>
-    /// Pointer to the SHFILEINFO Structure that is initialized to be
-    /// used for this list view.
+    ///     Pointer to the SHFILEINFO Structure that is initialized to be
+    ///     used for this list view.
     /// </summary>
-    private NativeMethods.SHFILEINFOW shfi = new();
+    private NativeMethods.SHFILEINFOW shfi;
 
     #endregion
 
@@ -205,128 +261,119 @@ public partial class FileListView : System.Windows.Forms.ListView
     public DirectoryElementCollection DirectoryElements { get; private set; } = new();
 
     /// <summary>
-    /// The number of elements of type file in the view as
-    /// loaded.
+    ///     The number of elements of type file in the view as
+    ///     loaded.
     /// </summary>
-    public int FileCount { get { return _fileCount; } }
+    public int FileCount => _fileCount;
 
     #endregion
 
 
-    /// <summary>
-    ///     Constructor
-    /// </summary>
-    public FileListView()
-    {
-        Logger.Info(message: "Creating List View ...");
-        InitializeComponent();
-    }
-
-
     #region Internal Update Logic
 
-
     /// <summary>
-    /// Retrieves the value for the given column from the given
-    /// Directory Element (also does transformations if necessary).
-    /// 
-    /// Transformations are kept in class ModelToColumnValueTransformations.
+    ///     Retrieves the value for the given column from the given
+    ///     Directory Element (also does transformations if necessary).
+    ///     Transformations are kept in class ModelToColumnValueTransformations.
     /// </summary>
     /// <param name="item">The Directory Element of which data is to be displayed</param>
     /// <param name="column">The column in this list view to get data for</param>
     /// <returns>The value for the column as a string</returns>
-    private string pickModelValueForColumn(DirectoryElement item, ColumnHeader column)
+    private string pickModelValueForColumn(DirectoryElement item,
+                                           ColumnHeader column)
     {
         // The displayed file name has to be derived using shell32.dll,
         // which is done in the actual addListItem method.
         if (column.Name == COL_NAME_PREFIX + FileListColumns.FILENAME)
-            throw new ArgumentException("The contents of the filename column cannot be requested from the method 'pickModelValueForColumn'.");
+        {
+            throw new ArgumentException(message: "The contents of the filename column cannot be requested from the method 'pickModelValueForColumn'.");
+        }
 
         // Set the value if no model value is found
         string nfVal = UNKNOWN_VALUE_DIR;
         if (item.Type == DirectoryElement.ElementType.File)
+        {
             nfVal = UNKNOWN_VALUE_FILE;
+        }
 
         Func<SourcesAndAttributes.ElementAttribute, string> defaultStrGetter =
             atrb => item.GetAttributeValueString(
-                        attribute: atrb,
-                        notFoundValue: nfVal);
+                attribute: atrb,
+                notFoundValue: nfVal);
 
         switch (column.Name.Substring(startIndex: 4))
         {
             case FileListColumns.GPS_ALTITUDE:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.GPSAltitude);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.GPSAltitude);
             case FileListColumns.GPS_ALTITUDE_REF:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.GPSAltitudeRef);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.GPSAltitudeRef);
             case FileListColumns.GPS_DEST_LATITUDE:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.GPSDestLatitude);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.GPSDestLatitude);
             case FileListColumns.GPS_DEST_LATITUDE_REF:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.GPSDestLatitudeRef);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.GPSDestLatitudeRef);
             case FileListColumns.GPS_DEST_LONGITUDE:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.GPSDestLongitude);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.GPSDestLongitude);
             case FileListColumns.GPS_DEST_LONGITUDE_REF:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.GPSDestLongitudeRef);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.GPSDestLongitudeRef);
             case FileListColumns.GPS_IMGDIRECTION:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.GPSImgDirection);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.GPSImgDirection);
             case FileListColumns.GPS_IMGDIRECTION_REF:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.GPSImgDirectionRef);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.GPSImgDirectionRef);
             case FileListColumns.GPS_LATITUDE:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.GPSLatitude);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.GPSLatitude);
             case FileListColumns.GPS_LATITUDE_REF:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.GPSLatitudeRef);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.GPSLatitudeRef);
             case FileListColumns.GPS_LONGITUDE:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.GPSLongitude);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.GPSLongitude);
             case FileListColumns.GPS_LONGITUDE_REF:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.GPSLongitudeRef);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.GPSLongitudeRef);
             case FileListColumns.GPS_SPEED:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.GPSSpeed);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.GPSSpeed);
             case FileListColumns.GPS_SPEED_REF:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.GPSSpeedRef);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.GPSSpeedRef);
             case FileListColumns.COORDINATES:
-                return ModelToColumnValueTransformations.M2C_CoordinatesInclDest(FileListColumns.COORDINATES, item, nfVal);
+                return ModelToColumnValueTransformations.M2C_CoordinatesInclDest(column: FileListColumns.COORDINATES, item: item, nfVal: nfVal);
             case FileListColumns.DEST_COORDINATES:
-                return ModelToColumnValueTransformations.M2C_CoordinatesInclDest(FileListColumns.DEST_COORDINATES, item, nfVal);
+                return ModelToColumnValueTransformations.M2C_CoordinatesInclDest(column: FileListColumns.DEST_COORDINATES, item: item, nfVal: nfVal);
             case FileListColumns.CITY:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.City);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.City);
             case FileListColumns.COUNTRY_CODE:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.CountryCode);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.CountryCode);
             case FileListColumns.COUNTRY:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.Country);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.Country);
             case FileListColumns.STATE:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.State);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.State);
             case FileListColumns.SUB_LOCATION:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.Sub_location);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.Sub_location);
             case FileListColumns.MAKE:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.Make);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.Make);
             case FileListColumns.MODEL:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.Model);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.Model);
             case FileListColumns.RATING:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.Rating);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.Rating);
             case FileListColumns.EXPOSURETIME:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.ExposureTime);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.ExposureTime);
             case FileListColumns.FNUMBER:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.Fnumber);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.Fnumber);
             case FileListColumns.FOCAL_LENGTH:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.FocalLength);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.FocalLength);
             case FileListColumns.FOCAL_LENGTH_IN_35MM_FORMAT:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.FocalLengthIn35mmFormat);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.FocalLengthIn35mmFormat);
             case FileListColumns.ISO:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.ISO);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.ISO);
             case FileListColumns.LENS_SPEC:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.LensSpec);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.LensSpec);
             case FileListColumns.TAKEN_DATE:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.TakenDate);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.TakenDate);
             case FileListColumns.CREATE_DATE:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.CreateDate);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.CreateDate);
             case FileListColumns.OFFSET_TIME:
-                return defaultStrGetter(SourcesAndAttributes.ElementAttribute.OffsetTime);
+                return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.OffsetTime);
 
             default:
                 return nfVal;
         }
     }
-
-
 
 
     /// <summary>
@@ -340,7 +387,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         //https://stackoverflow.com/a/37806517/3968494
         // Get the items from the file system, and add each of them to the ListView,
         // complete with their corresponding name and icon indices.
-        
+
         IntPtr himl;
 
         if (item.Type != DirectoryElement.ElementType.MyComputer)
@@ -383,7 +430,8 @@ public partial class FileListView : System.Windows.Forms.ListView
         // With that in mind if we're missing the extension then we'll force it back on.
         if (!string.IsNullOrEmpty(value: item.Extension))
         {
-            if (shfi.szDisplayName.ToLower().Contains(value: item.Extension.ToLower()))
+            if (shfi.szDisplayName.ToLower()
+                .Contains(value: item.Extension.ToLower()))
             {
                 lvi.Text = shfi.szDisplayName;
             }
@@ -425,7 +473,9 @@ public partial class FileListView : System.Windows.Forms.ListView
             foreach (ColumnHeader columnHeader in Columns)
             {
                 if (columnHeader.Name != COL_NAME_PREFIX + FileListColumns.FILENAME)
-                    subItemList.Add(item: pickModelValueForColumn(item, columnHeader));
+                {
+                    subItemList.Add(item: pickModelValueForColumn(item: item, column: columnHeader));
+                }
             }
             // For each non-file (i.e. dirs), create empty sub items (needed for sorting)
         }
@@ -497,7 +547,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             {
                 if (_cfg_Col_Order_Default.ContainsKey(key: columnHeader.Name.Substring(startIndex: 4)))
                 {
-                    colOrderIndexInt = _cfg_Col_Order_Default[columnHeader.Name.Substring(startIndex: 4)];
+                    colOrderIndexInt = _cfg_Col_Order_Default[key: columnHeader.Name.Substring(startIndex: 4)];
                 }
             }
 
@@ -599,7 +649,6 @@ public partial class FileListView : System.Windows.Forms.ListView
 
     #region Further Settings Stuff
 
-
     /// <summary>
     ///     Setup the columns as read from the data table.
     /// </summary>
@@ -631,14 +680,20 @@ public partial class FileListView : System.Windows.Forms.ListView
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorLanguageFileColumnHeaders") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_ErrorLanguageFileColumnHeaders") +
+                      ex.Message,
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
         }
     }
 
 
     /// <summary>
-    /// Extract the column names as well as their default ordering
-    /// from the given data table.
+    ///     Extract the column names as well as their default ordering
+    ///     from the given data table.
     /// </summary>
     /// <param name="dt"></param>
     private void ExtractConfigInfoFromDT(DataTable dt)
@@ -650,19 +705,22 @@ public partial class FileListView : System.Windows.Forms.ListView
         int backup_order_idx = 999;
 
         dt.DefaultView.Sort = "sqlOrder";
-        foreach (DataRow row in dt.DefaultView.ToTable().Rows)
+        foreach (DataRow row in dt.DefaultView.ToTable()
+                     .Rows)
         {
-            string colName = row[CFGCOL_COL_NAME].ToString();
-            _cfg_Col_Names.Add(colName);
+            string colName = row[columnName: CFGCOL_COL_NAME]
+                .ToString();
+            _cfg_Col_Names.Add(item: colName);
             try
             {
-                _cfg_Col_Order_Default[colName] = int.Parse(s: row[CFGCOL_COL_ORDER_DEFAULT].ToString());
+                _cfg_Col_Order_Default[key: colName] = int.Parse(s: row[columnName: CFGCOL_COL_ORDER_DEFAULT]
+                                                                     .ToString());
             }
             catch
             {
                 // There was no default set (or it was invalid) -> set backup default
                 Logger.Warn(message: "No order default found for column: " + colName);
-                _cfg_Col_Order_Default[CFGCOL_COL_NAME] = backup_order_idx;
+                _cfg_Col_Order_Default[key: CFGCOL_COL_NAME] = backup_order_idx;
                 backup_order_idx += 1;
             }
         }
@@ -679,7 +737,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     private void InitializeImageList()
     {
         //https://stackoverflow.com/a/37806517/3968494
-        shfi = new();
+        shfi = new NativeMethods.SHFILEINFOW();
         IntPtr hSysImgList = NativeMethods.SHGetFileInfo(pszPath: "",
                                                          dwFileAttributes: 0,
                                                          psfi: ref shfi,
@@ -703,24 +761,30 @@ public partial class FileListView : System.Windows.Forms.ListView
 
     /// <summary>
     ///     Initialize the list view.
-    ///     
-    /// Must be called before items are added to it.
+    ///     Must be called before items are added to it.
     /// </summary>
     /// <param name="appLanguage">The application language to use</param>
-    /// <param name="objectNames">A data table containing the list of
-    /// columns to be used in column "objectName" and the default ordering
-    /// of these in column "sqlOrder"</param>
-    /// <exception cref="InvalidOperationException">If this method is called
-    /// more than once.</exception>
+    /// <param name="objectNames">
+    ///     A data table containing the list of
+    ///     columns to be used in column "objectName" and the default ordering
+    ///     of these in column "sqlOrder"
+    /// </param>
+    /// <exception cref="InvalidOperationException">
+    ///     If this method is called
+    ///     more than once.
+    /// </exception>
     public void ReadAndApplySetting(string appLanguage,
                                     DataTable objectNames)
     {
-        if (_isInitialized) throw new InvalidOperationException("Trying to initialize the FileListView more than once.");
+        if (_isInitialized)
+        {
+            throw new InvalidOperationException(message: "Trying to initialize the FileListView more than once.");
+        }
 
         Logger.Debug(message: "Starting");
         _AppLanguage = appLanguage;
 
-        ExtractConfigInfoFromDT(objectNames);
+        ExtractConfigInfoFromDT(dt: objectNames);
         SetupColumns();
 
         // Create the sorter for the list view
@@ -732,14 +796,14 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         // Finally set style and icons
         SetStyle();
-        InitializeImageList();  // must be here - if called in constructor, it won't work
+        InitializeImageList(); // must be here - if called in constructor, it won't work
 
         _isInitialized = true;
     }
 
     /// <summary>
-    /// Can be called to make the FileListView persist its user
-    /// settings (like column order and width).
+    ///     Can be called to make the FileListView persist its user
+    ///     settings (like column order and width).
     /// </summary>
     public void PersistSettings()
     {
@@ -747,47 +811,6 @@ public partial class FileListView : System.Windows.Forms.ListView
     }
 
     #endregion
-
-
-    /// <summary>
-    /// Returns the number of items in the list view that actually
-    /// have an entry in the given column.
-    /// </summary>
-    /// <param name="column">The column to check for values</param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException">If the column was not found</exception>
-    public int CountItemsWithData(string column)
-    {
-        int colIndex = GetColumnIndex(column);
-        int itemCount = 0;
-
-        foreach (ListViewItem lvi in Items)
-        {
-            if (lvi.SubItems.Count > 1)
-            {
-                if (lvi.SubItems[index: colIndex].Text
-                        .Replace(oldValue: UNKNOWN_VALUE_FILE, newValue: "")
-                        != "")
-                {
-                    itemCount++;
-                }
-            }
-        }
-        return itemCount;
-    }
-
-
-    /// <summary>
-    /// Returns the (sub items) index of the column (not the visualized one).
-    /// </summary>
-    /// <param name="column">The column to look for w/o prefix</param>
-    /// <returns>The index</returns>
-    /// <exception cref="ArgumentException">If the column was not found</exception>
-    public int GetColumnIndex(string column) {
-        if (!_cfg_Col_Names.Contains(column)) throw new ArgumentException("Column with name '" + column + "' not found.");
-
-        return this.Columns[COL_NAME_PREFIX + column].Index;
-    }
 
 
     #region Modes
@@ -814,11 +837,10 @@ public partial class FileListView : System.Windows.Forms.ListView
     #region Updating
 
     /// <summary>
-    /// Restaff the list view with the set of directory elements handed.
-    /// 
-    /// Note that the DirectoryElementCollection is assumed to be
-    /// in scope of the FileListView. Calling FileListView.Clear will
-    /// also clear it.
+    ///     Restaff the list view with the set of directory elements handed.
+    ///     Note that the DirectoryElementCollection is assumed to be
+    ///     in scope of the FileListView. Calling FileListView.Clear will
+    ///     also clear it.
     /// </summary>
     public void ReloadFromDEs(DirectoryElementCollection directoryElements)
     {
@@ -832,8 +854,12 @@ public partial class FileListView : System.Windows.Forms.ListView
         foreach (DirectoryElement item in DirectoryElements)
         {
             addListItem(item: item);
-            if (item.Type == DirectoryElement.ElementType.File) _fileCount++;
+            if (item.Type == DirectoryElement.ElementType.File)
+            {
+                _fileCount++;
+            }
         }
+
         // Resume sorting...
         Logger.Trace(message: "Enable ListViewItemSorter");
         ResumeColumnSorting();
@@ -842,11 +868,10 @@ public partial class FileListView : System.Windows.Forms.ListView
 
 
     /// <summary>
-    /// Clears the FileListView.
-    /// 
-    /// Should be used instead Items.Clear, etc. as it correctly handles
-    /// all due other things to do for clearing, like clearing the
-    /// the Directory Elements collection.
+    ///     Clears the FileListView.
+    ///     Should be used instead Items.Clear, etc. as it correctly handles
+    ///     all due other things to do for clearing, like clearing the
+    ///     the Directory Elements collection.
     /// </summary>
     public void ClearData()
     {

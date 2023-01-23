@@ -25,6 +25,8 @@ namespace GeoTagNinja;
 
 internal static partial class HelperStatic
 {
+    private static int _exifInvokeCounter;
+
     /// <summary>
     ///     Wrangles data from raw exiftool output to presentable and standardised data.
     /// </summary>
@@ -701,7 +703,11 @@ internal static partial class HelperStatic
             }
         }
 
-        DialogResult dialogResult = MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportGpx_AskUserWantsReport"), caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Question);
+        DialogResult dialogResult = MessageBox.Show(
+            text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportGpx_AskUserWantsReport"),
+            caption: GenericGetMessageBoxCaption(captionType: "Question"),
+            buttons: MessageBoxButtons.YesNo,
+            icon: MessageBoxIcon.Question);
         if (dialogResult == DialogResult.Yes)
         {
             Form reportBox = new();
@@ -1175,7 +1181,11 @@ internal static partial class HelperStatic
                 {
                     failWriteNothingEnabled = true;
                     FrmMainApp.Logger.Info(message: "Both file-writes disabled. Nothing Written.");
-                    MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"), caption: "Errrmmm...", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+                    MessageBox.Show(
+                        text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"),
+                        caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                        buttons: MessageBoxButtons.OK,
+                        icon: MessageBoxIcon.Warning);
                 }
             }
         }
@@ -1195,20 +1205,24 @@ internal static partial class HelperStatic
         else if (!queueWasEmpty)
         {
             FrmMainApp.Logger.Info(message: "Both file-writes disabled. Nothing Written.");
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"), caption: "Errrmmm...", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"),
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
         else
         {
             FrmMainApp.Logger.Info(message: "Queue was empty. Nothing Written.");
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNothingInWriteQueue"), caption: "Errrmmm...", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNothingInWriteQueue"),
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
 
         ///////////////
         FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Ready.");
         FilesAreBeingSaved = false;
     }
-
-    private static int _exifInvokeCounter = 0;
 
     /// <summary>
     ///     This is a unified method for calling ExifTool. Any special "dealings" are done inside the message handling.
@@ -1227,7 +1241,7 @@ internal static partial class HelperStatic
     {
         int lviIndex = 0;
         _exifInvokeCounter += 1;
-        FrmMainApp.Logger.Trace(message: "Start EXIF Tool number " + _exifInvokeCounter.ToString() + " for " + initiator + " with cmdLine: " + exiftoolCmd);
+        FrmMainApp.Logger.Trace(message: "Start EXIF Tool number " + _exifInvokeCounter + " for " + initiator + " with cmdLine: " + exiftoolCmd);
         await Task.Run(action: () =>
         {
             using Process prcExifTool = new();
@@ -1407,13 +1421,13 @@ internal static partial class HelperStatic
                     break;
             }
 
-            FrmMainApp.Logger.Trace(message: "EXIF number " + _exifInvokeCounter.ToString() + ": Start");
+            FrmMainApp.Logger.Trace(message: "EXIF number " + _exifInvokeCounter + ": Start");
             prcExifTool.Start();
             prcExifTool.BeginOutputReadLine();
             prcExifTool.BeginErrorReadLine();
-            FrmMainApp.Logger.Trace(message: "EXIF number " + _exifInvokeCounter.ToString() + ": Wait for Exit");
+            FrmMainApp.Logger.Trace(message: "EXIF number " + _exifInvokeCounter + ": Wait for Exit");
             prcExifTool.WaitForExit();
-            FrmMainApp.Logger.Trace(message: "EXIF number " + _exifInvokeCounter.ToString() + ": Close");
+            FrmMainApp.Logger.Trace(message: "EXIF number " + _exifInvokeCounter + ": Close");
             prcExifTool.Close();
             FrmMainApp.Logger.Trace(message: "Closing exifTool");
 
@@ -1451,7 +1465,12 @@ internal static partial class HelperStatic
             }
             catch (Exception ex)
             {
-                MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                MessageBox.Show(
+                    text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB") +
+                          ex.Message,
+                    caption: GenericGetMessageBoxCaption(captionType: "Error"),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Error);
             }
         }
 
@@ -1467,7 +1486,11 @@ internal static partial class HelperStatic
         if (responseToponomy.Content != null && responseToponomy.Content.Contains(value: "the hourly limit of "))
         {
             SApiOkay = false;
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + responseToponomy.Content, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") +
+                                  responseToponomy.Content,
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
         else if (responseToponomy.StatusCode.ToString() == "OK")
         {
@@ -1479,7 +1502,11 @@ internal static partial class HelperStatic
         else
         {
             SApiOkay = false;
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + responseToponomy.StatusCode, caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") +
+                                  responseToponomy.StatusCode,
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
 
         return returnVal;
@@ -1503,7 +1530,12 @@ internal static partial class HelperStatic
             }
             catch (Exception ex)
             {
-                MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                MessageBox.Show(
+                    text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB") +
+                          ex.Message,
+                    caption: GenericGetMessageBoxCaption(captionType: "Error"),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Error);
             }
         }
 
@@ -1519,7 +1551,11 @@ internal static partial class HelperStatic
         if (response_TimeZone.Content != null && response_TimeZone.Content.Contains(value: "the hourly limit of "))
         {
             SApiOkay = false;
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + response_TimeZone.Content, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") +
+                                  response_TimeZone.Content,
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
         else if (response_TimeZone.StatusCode.ToString() == "OK")
         {
@@ -1531,7 +1567,11 @@ internal static partial class HelperStatic
         else
         {
             SApiOkay = false;
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + response_TimeZone.StatusCode, caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") +
+                                  response_TimeZone.StatusCode,
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
 
         return returnVal;
@@ -1594,7 +1634,11 @@ internal static partial class HelperStatic
         else
         {
             SApiOkay = false;
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGTNVerAPIResponse") + response_GTNVersionQuery.StatusCode, caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGTNVerAPIResponse") +
+                                  response_GTNVersionQuery.StatusCode,
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
 
         return returnVal;
@@ -1967,12 +2011,18 @@ internal static partial class HelperStatic
                 }
                 else
                 {
-                    MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_HelperStaticExifNoAPI"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                    MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_HelperStaticExifNoAPI"),
+                                    caption: GenericGetMessageBoxCaption(captionType: "Error"),
+                                    buttons: MessageBoxButtons.OK,
+                                    icon: MessageBoxIcon.Error);
                 }
             }
             catch
             {
-                MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_HelperStaticExifNoAPI"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_HelperStaticExifNoAPI"),
+                                caption: GenericGetMessageBoxCaption(captionType: "Error"),
+                                buttons: MessageBoxButtons.OK,
+                                icon: MessageBoxIcon.Error);
             }
 
             // ignore if unauthorised or some such
@@ -2560,7 +2610,10 @@ internal static partial class HelperStatic
         // we appear to have lost a file or two.
         else
         {
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningFileDisappeared"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningFileDisappeared"),
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
     }
 

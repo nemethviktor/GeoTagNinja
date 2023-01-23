@@ -172,6 +172,20 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
+    ///     Bit of out sync with the rest but this returns the localised captions for messageboxes (e.g. "info" or "error")
+    /// </summary>
+    /// <param name="captionType">E.g. "info", "error"....</param>
+    /// <returns>Localised version of the above.</returns>
+    internal static string GenericGetMessageBoxCaption(string captionType)
+    {
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        return DataReadDTObjectText(
+            objectType: "messageBoxCaption",
+            objectName: captionType
+        );
+    }
+
+    /// <summary>
     ///     This (mostly) sets the various texts for most Controls in various forms, especially labels and buttons/boxes.
     /// </summary>
     /// <param name="cItem">The Control whose details need adjusting</param>
@@ -449,7 +463,13 @@ internal static partial class HelperStatic
                     settingValue: newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture)
                 );
 
-                if (MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewExifToolVersionExists") + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture), caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                if (MessageBox.Show(
+                        text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewExifToolVersionExists") +
+                              newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture),
+                        caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                        buttons: MessageBoxButtons.YesNo,
+                        icon: MessageBoxIcon.Asterisk) ==
+                    DialogResult.Yes)
                 {
                     Process.Start(fileName: "https://exiftool.org/exiftool-" + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture) + ".zip");
                     FrmMainApp.Logger.Trace(message: "User Launched Browser to Download");
@@ -482,7 +502,13 @@ internal static partial class HelperStatic
 
                 if (newestGTNVersion > currentGTNVersionBuild)
                 {
-                    if (MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewGTNVersionExists") + newestGTNVersion, caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                    if (MessageBox.Show(
+                            text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewGTNVersionExists") +
+                                  newestGTNVersion,
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.YesNo,
+                            icon: MessageBoxIcon.Asterisk) ==
+                        DialogResult.Yes)
                     {
                         Process.Start(fileName: "https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dtApigtnVersion.Rows[index: 0][columnName: "version"] + "/GeoTagNinja_Setup.msi");
                     }

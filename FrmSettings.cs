@@ -439,7 +439,12 @@ public partial class FrmSettings : Form
                         if (cbx.Name == "cbx_Language")
                         {
                             // fire a warning if language has changed. 
-                            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmSettings_cbx_Language_TextChanged"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+                            MessageBox.Show(
+                                text: HelperStatic.GenericGetMessageBoxText(
+                                    messageBoxName: "mbx_FrmSettings_cbx_Language_TextChanged"),
+                                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                                buttons: MessageBoxButtons.OK,
+                                icon: MessageBoxIcon.Warning);
                         }
                         else if (cbx.Name == "cbx_TryUseGeoNamesLanguage")
                         {
@@ -892,7 +897,12 @@ public partial class FrmSettings : Form
         if (e.Exception != null &&
             e.Context == DataGridViewDataErrorContexts.Commit)
         {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Warning);
         }
     }
 
@@ -916,7 +926,12 @@ public partial class FrmSettings : Form
             if (clh_TargetPointOutcomeValue == "Custom" && IsNullOrEmpty(value: clh_TargetPointOutcomeCustomValue))
             {
                 e.Cancel = true;
-                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    text: HelperStatic.GenericGetMessageBoxText(
+                        messageBoxName: "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty"),
+                    caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Warning);
             }
         }
     }

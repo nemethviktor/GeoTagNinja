@@ -485,17 +485,31 @@ public partial class FrmEditFileData : Form
 
                 break;
             default:
-                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_ErrorInvalidSender") + ((Button)sender).Name, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                MessageBox.Show(
+                    text: HelperStatic.GenericGetMessageBoxText(
+                              messageBoxName: "mbx_FrmEditFileData_ErrorInvalidSender") +
+                          ((Button)sender).Name,
+                    caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Error);
                 break;
         }
 
         if (HelperStatic.SApiOkay)
         {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_InfoDataUpdated"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_InfoDataUpdated"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Information);
         }
         else
         {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_ErrorAPIError"), caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_ErrorAPIError"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
         }
     }
 
@@ -784,7 +798,12 @@ public partial class FrmEditFileData : Form
             else
             {
                 Logger.Debug(message: "File disappeared: " + fileNameWithPath);
-                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_WarningFileDisappeared"), caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    text: HelperStatic.GenericGetMessageBoxText(
+                        messageBoxName: "mbx_FrmEditFileData_WarningFileDisappeared"),
+                    caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Warning);
             }
         }
 
@@ -1337,7 +1356,12 @@ public partial class FrmEditFileData : Form
                     // don't warn on a single "-" as that could be a lead-up to a negative number
                     if (strSndrText != "-")
                     {
-                        MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_WarningLatLongMustBeNumbers"), caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+                        MessageBox.Show(
+                            text: HelperStatic.GenericGetMessageBoxText(
+                                messageBoxName: "mbx_FrmEditFileData_WarningLatLongMustBeNumbers"),
+                            caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
                         // find a valid number
                         // gpsdata has no NUDs
                         Control sndr = (Control)sender;

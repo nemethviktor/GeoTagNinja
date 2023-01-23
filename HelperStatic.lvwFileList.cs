@@ -10,9 +10,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.ListView;
-using static System.Net.Mime.MediaTypeNames;
-using Application = System.Windows.Forms.Application;
-using Image = System.Drawing.Image;
 
 namespace GeoTagNinja;
 
@@ -184,7 +181,10 @@ internal static partial class HelperStatic
         }
         else
         {
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningTooManyFilesSelected"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningTooManyFilesSelected"),
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
     }
 
@@ -203,7 +203,10 @@ internal static partial class HelperStatic
         }
         else
         {
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNothingToPaste"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNothingToPaste"),
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
     }
 
@@ -272,8 +275,8 @@ internal static partial class HelperStatic
                 {
                     if (File.Exists(path: de.FullPathAndName))
                     {
-                        await HelperStatic.GenericCreateImagePreview(fileNameWithPath: de.FullPathAndName,
-                                                                     initiator: "FrmMainApp");
+                        await GenericCreateImagePreview(fileNameWithPath: de.FullPathAndName,
+                                                        initiator: "FrmMainApp");
                     }
                     else if (Directory.Exists(path: de.FullPathAndName))
                     {
@@ -283,7 +286,12 @@ internal static partial class HelperStatic
                     {
                         if (de.Type != DirectoryElement.ElementType.Drive)
                         {
-                            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorFileGoneMissing") + de.FullPathAndName, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                            MessageBox.Show(
+                                text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorFileGoneMissing") +
+                                      de.FullPathAndName,
+                                caption: GenericGetMessageBoxCaption(captionType: "Error"),
+                                buttons: MessageBoxButtons.OK,
+                                icon: MessageBoxIcon.Error);
                         }
                     }
                 }
@@ -298,12 +306,15 @@ internal static partial class HelperStatic
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
-        if (frmMainAppInstance != null) FrmMainApp.HandlerUpdateLabelText(
+        if (frmMainAppInstance != null)
+        {
+            FrmMainApp.HandlerUpdateLabelText(
                 label: frmMainAppInstance.lbl_ParseProgress,
                 text: "Ready. Files: Total: " +
                       frmMainAppInstance.lvw_FileList.FileCount +
                       " Geodata: " +
                       frmMainAppInstance.lvw_FileList.CountItemsWithData(column: FileListView.FileListColumns.COORDINATES));
+        }
     }
 
 
@@ -345,7 +356,8 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    /// Corrects the half-coordinate to be a valid one (in case over/under 180, which can happen if the map is misbehaving.)
+    ///     Corrects the half-coordinate to be a valid one (in case over/under 180, which can happen if the map is
+    ///     misbehaving.)
     /// </summary>
     /// <param name="coordHalfPair">Lat or Long</param>
     /// <returns>Rounded to 6, corrected Lat or Long</returns>

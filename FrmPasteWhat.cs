@@ -652,7 +652,9 @@ public partial class FrmPasteWhat : Form
             if (!takenDateShiftDataExists)
             {
                 rbt_PasteTakenDateActual.Checked = true;
-                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"), caption: "Info");
+                MessageBox.Show(
+                    text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
+                    caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"));
             }
         }
     }
@@ -707,7 +709,9 @@ public partial class FrmPasteWhat : Form
         if (!CreateDateShiftDataExists)
         {
             rbt_PasteCreateDateActual.Checked = true;
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"), caption: "Info");
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"));
         }
     }
 

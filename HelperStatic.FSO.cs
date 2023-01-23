@@ -45,7 +45,11 @@ internal static partial class HelperStatic
         // check if there's anything in the write-Q
         if (FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows.Count > 0)
         {
-            DialogResult dialogResult = MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_QuestionFileQIsNotEmpty"), caption: "Info", buttons: MessageBoxButtons.YesNoCancel, icon: MessageBoxIcon.Question);
+            DialogResult dialogResult = MessageBox.Show(
+                text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_QuestionFileQIsNotEmpty"),
+                HelperStatic.GenericGetMessageBoxCaption(captionType: "Question"),
+                buttons: MessageBoxButtons.YesNoCancel,
+                icon: MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
             {
                 while (FileListBeingUpdated || FilesAreBeingSaved)

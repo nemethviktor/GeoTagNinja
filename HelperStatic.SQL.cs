@@ -465,10 +465,6 @@ internal static partial class HelperStatic
         try
         {
             SArcGisApiKey = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_ARCGIS_APIKey");
-            if (SArcGisApiKey == null || SArcGisApiKey == "")
-            {
-                //MessageBox.Show(HelperStatic.GenericGetMessageBoxText("mbx_Helper_WarningNoARCGISKey"), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
         }
         catch
         {

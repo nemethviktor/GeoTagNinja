@@ -193,7 +193,13 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorClearingFileDataQTables") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_ErrorClearingFileDataQTables") +
+                      ex.Message,
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
         }
 
         try
@@ -214,7 +220,13 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Logger.Error(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorResizingColumns") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(
+                    text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorResizingColumns") +
+                          ex.Message,
+                    caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Error)
+                ;
         }
 
         // can't log inside.
@@ -271,7 +283,11 @@ public partial class FrmMainApp : Form
         // check if there is any data in the write-Q
         if (DtFileDataToWriteStage3ReadyToWrite.Rows.Count > 0)
         {
-            DialogResult dialogResult = MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_QuestionFileQIsNotEmpty"), caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Question);
+            DialogResult dialogResult = MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_QuestionFileQIsNotEmpty"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                buttons: MessageBoxButtons.YesNo,
+                icon: MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
             {
                 while (HelperStatic.FileListBeingUpdated || HelperStatic.FilesAreBeingSaved)
@@ -451,7 +467,7 @@ public partial class FrmMainApp : Form
                             objectType: "Label",
                             objectName: "lbl_QuestionAddToponomy"
                         ),
-                        caption: "Info",
+                        caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
                         checkboxText: HelperStatic.DataReadDTObjectText(
                             objectType: "CheckBox",
                             objectName: "ckb_QuestionAddToponomyDontAskAgain"
@@ -552,7 +568,13 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode") +
+                      ex.Message,
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
         }
 
         return (LatCoordinate, LngCoordinate);
@@ -588,7 +610,13 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile") +
+                      ex.Message,
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
         }
     }
 
@@ -688,7 +716,13 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async") +
+                      ex.Message,
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
         }
 
         // Initialize WebView
@@ -703,7 +737,13 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled") +
+                      ex.Message,
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
         }
 
         // read the "map.html" file.
@@ -716,7 +756,13 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Logger.Fatal(message: "Read map.html file - Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile") +
+                      ex.Message,
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
         }
 
         // Get the ArcGis API Key
@@ -747,7 +793,13 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error:" + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived") +
+                      ex.Message,
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
         }
     }
 
@@ -911,7 +963,13 @@ public partial class FrmMainApp : Form
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInvalidFolder") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                    MessageBox.Show(
+                        text: HelperStatic.GenericGetMessageBoxText(
+                                  messageBoxName: "mbx_FrmMainApp_ErrorInvalidFolder") +
+                              ex.Message,
+                        caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                        buttons: MessageBoxButtons.OK,
+                        icon: MessageBoxIcon.Error);
                 }
             }
             else if (tbx_FolderName.Text == SpecialFolder.MyComputer.ToString())
@@ -920,7 +978,11 @@ public partial class FrmMainApp : Form
             }
             else
             {
-                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInvalidFolder"), caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                MessageBox.Show(
+                    text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInvalidFolder"),
+                    caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Error);
             }
         }
     }
@@ -1202,7 +1264,11 @@ public partial class FrmMainApp : Form
         }
         else
         {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportGpx_NoFileSelected"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportGpx_NoFileSelected"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Warning);
         }
     }
 
@@ -1372,7 +1438,11 @@ public partial class FrmMainApp : Form
         if (item == null)
         {
             lvw_FileList.SelectedItems.Clear();
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Warning);
             return;
         }
 
@@ -1652,7 +1722,11 @@ public partial class FrmMainApp : Form
         }
         else
         {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_NoFavouritesDefined"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_NoFavouritesDefined"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Information);
         }
     }
 
@@ -1757,17 +1831,30 @@ public partial class FrmMainApp : Form
                 HelperStatic.DataWriteSQLiteAddNewFavourite(drFavourite: drFavourite);
 
                 DtFavourites = AppStartupLoadFavourites();
-                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
+                MessageBox.Show(
+                    text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"),
+                    caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Information);
             }
 
             else
             {
-                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"),
+                    caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Warning);
             }
         }
         else
         {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Warning);
         }
     }
 
@@ -1830,12 +1917,20 @@ public partial class FrmMainApp : Form
 
             else
             {
-                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"),
+                    caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Warning);
             }
         }
         else
         {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteNotValid"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteNotValid"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Information);
         }
     }
 
@@ -1885,11 +1980,19 @@ public partial class FrmMainApp : Form
 
         if (dataHasBeenRemoved)
         {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoCahcedDataRemoved"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoCahcedDataRemoved"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Information);
         }
         else
         {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoCahcedDataNotRemoved"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoCahcedDataNotRemoved"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Information);
         }
     }
 
@@ -1955,7 +2058,11 @@ public partial class FrmMainApp : Form
         }
         else
         {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_NoFavouritesDefined"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_NoFavouritesDefined"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Information);
         }
     }
 

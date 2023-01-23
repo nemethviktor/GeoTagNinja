@@ -1,26 +1,30 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using static System.Environment;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using ExifToolWrapper;
+using NLog;
+using static System.Environment;
 
 namespace GeoTagNinja.Model;
 
 public class DirectoryElementCollection : List<DirectoryElement>
 {
-
     internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-    internal ExifTool _ExifTool = null;
+    internal ExifTool _ExifTool;
 
-    public ExifTool ExifTool {
-        get { return _ExifTool; }
-        set {
+    public ExifTool ExifTool
+    {
+        get => _ExifTool;
+        set
+        {
             if (_ExifTool != null)
+            {
                 _ExifTool.Dispose();
+            }
+
             _ExifTool = value;
         }
     }
@@ -76,21 +80,23 @@ public class DirectoryElementCollection : List<DirectoryElement>
     }
 
     /// <summary>
-    /// Parses the given folder into DirectoryElements.
-    /// 
-    /// The previous collection of directory elements is cleared before.
-    /// The statusMethod to be passed optionally accepts a string
-    /// containing a short status text.
+    ///     Parses the given folder into DirectoryElements.
+    ///     The previous collection of directory elements is cleared before.
+    ///     The statusMethod to be passed optionally accepts a string
+    ///     containing a short status text.
     /// </summary>
     /// <param name="folder">The folder to parse</param>
     /// <param name="statusMethod">The method to call for status updates</param>
-    public void ParseFolderToDEs(string folder, Action<string> statusMethod)
+    public void ParseFolderToDEs(string folder,
+                                 Action<string> statusMethod)
     {
         Logger.Trace(message: $"Start Parsing Folder '{folder}'");
-        statusMethod("Scanning folder: Initializing ...");
+        statusMethod(obj: "Scanning folder: Initializing ...");
 
         if (_ExifTool == null)
-            throw new InvalidOperationException($"Cannot scan a folder (currently '{folder}') when the EXIF Tool was not set for the DirectoryElementCollection.");
+        {
+            throw new InvalidOperationException(message: $"Cannot scan a folder (currently '{folder}') when the EXIF Tool was not set for the DirectoryElementCollection.");
+        }
 
         // ******************************
         // Special Case is "MyComputer"...
@@ -101,11 +107,11 @@ public class DirectoryElementCollection : List<DirectoryElement>
             foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
                 Logger.Trace(message: "Drive:" + drive.Name);
-                this.Add(item: new DirectoryElement(
-                                           itemName: drive.Name,
-                                           type: DirectoryElement.ElementType.Drive,
-                                           fullPathAndName: drive.RootDirectory.FullName
-                                       ));
+                Add(item: new DirectoryElement(
+                        itemName: drive.Name,
+                        type: DirectoryElement.ElementType.Drive,
+                        fullPathAndName: drive.RootDirectory.FullName
+                    ));
             }
 
             Logger.Trace(message: "Listing Drives - OK");
@@ -120,22 +126,25 @@ public class DirectoryElementCollection : List<DirectoryElement>
             string tmpStrParent = HelperStatic.FsoGetParent(path: folder);
             if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
             {
-                this.Add(item: new DirectoryElement(
-                                           itemName: FrmMainApp.ParentFolder,
-                                           type: DirectoryElement.ElementType.ParentDirectory,
-                                           fullPathAndName: tmpStrParent
-                                       ));
+                Add(item: new DirectoryElement(
+                        itemName: FrmMainApp.ParentFolder,
+                        type: DirectoryElement.ElementType.ParentDirectory,
+                        fullPathAndName: tmpStrParent
+                    ));
             }
         }
         catch (Exception ex)
         {
             Logger.Error(message: $"Could not add parent. Error: {ex.Message}");
-            MessageBox.Show(text: ex.Message, caption: "Error while parsing folder to DEs");
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
+                            caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Error);
         }
 
         // ******************************
         // list folders, ReparsePoint means these are links.
-        statusMethod("Scanning folder: processing directories ...");
+        statusMethod(obj: "Scanning folder: processing directories ...");
         Logger.Trace(message: "Listing Folders");
         List<string> dirs = new();
         try
@@ -147,31 +156,35 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 {
                     // It's the MyComputer entry
                     Logger.Trace(message: "MyComputer: " + directoryInfo.Name);
-                    this.Add(item: new DirectoryElement(
-                                               itemName: directoryInfo.Name,
-                                               type: DirectoryElement.ElementType.MyComputer,
-                                               fullPathAndName: directoryInfo.FullName
-                                           ));
+                    Add(item: new DirectoryElement(
+                            itemName: directoryInfo.Name,
+                            type: DirectoryElement.ElementType.MyComputer,
+                            fullPathAndName: directoryInfo.FullName
+                        ));
                 }
                 else if (directoryInfo.Attributes.ToString()
-                        .Contains(value: "Directory") &&
-                    !directoryInfo.Attributes.ToString()
-                        .Contains(value: "ReparsePoint"))
+                             .Contains(value: "Directory") &&
+                         !directoryInfo.Attributes.ToString()
+                             .Contains(value: "ReparsePoint"))
                 {
                     Logger.Trace(message: "Folder: " + directoryInfo.Name);
-                    this.Add(item: new DirectoryElement(
-                                               itemName: directoryInfo.Name,
-                                               type: DirectoryElement.ElementType.SubDirectory,
-                                               fullPathAndName: directoryInfo.FullName
-                                           ));
+                    Add(item: new DirectoryElement(
+                            itemName: directoryInfo.Name,
+                            type: DirectoryElement.ElementType.SubDirectory,
+                            fullPathAndName: directoryInfo.FullName
+                        ));
                 }
             }
         }
         catch (Exception ex)
         {
             Logger.Error(message: "Error: " + ex.Message);
-            MessageBox.Show(text: ex.Message, caption: "Error while parsing folder to DEs");
+            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
+                            caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Error);
         }
+
         Logger.Trace(message: "Listing Folders - OK");
 
         Logger.Trace(message: "Loading allowedExtensions");
@@ -182,10 +195,10 @@ public class DirectoryElementCollection : List<DirectoryElement>
         // ******************************
         // list files that have supported extensions
         // separate these into side car and image files
-        statusMethod("Scanning folder: processing supported files ...");
+        statusMethod(obj: "Scanning folder: processing supported files ...");
         Logger.Trace(message: "Files: Listing Files");
         List<string> imageFiles = new();
-        List<string> sidecarFiles = new List<string>();
+        List<string> sidecarFiles = new();
 
         string[] filesInDir;
         try
@@ -199,91 +212,118 @@ public class DirectoryElementCollection : List<DirectoryElement>
             return;
         }
 
-        foreach (string filename in filesInDir)
+        foreach (string fileNameWithExtension in filesInDir)
         {
             // Check, if it is a side car file. If so,
             // add it to the list to attach to image files later
-            if (allowedSideCarExt.Contains(Path.GetExtension(path: filename).ToLower().Replace(".", "")))
-                sidecarFiles.Add(filename);
+            if (allowedSideCarExt.Contains(value: Path.GetExtension(path: fileNameWithExtension)
+                                               .ToLower()
+                                               .Replace(oldValue: ".", newValue: "")))
+            {
+                sidecarFiles.Add(item: fileNameWithExtension);
+            }
 
             // Image file
-            else if (allowedImageExtensions.Contains(Path.GetExtension(path: filename).ToLower().Replace(".", "")))
-                imageFiles.Add(filename);
+            else if (allowedImageExtensions.Contains(value: Path.GetExtension(path: fileNameWithExtension)
+                                                         .ToLower()
+                                                         .Replace(oldValue: ".", newValue: "")))
+            {
+                imageFiles.Add(item: fileNameWithExtension);
+            }
         }
+
         Logger.Trace(message: "Files: Listing Files - OK");
 
         // ******************************
         // Map side car files to image file
-        IDictionary<string,string> image2sidecar = new Dictionary<string,string>();
+        IDictionary<string, string> image2sidecar = new Dictionary<string, string>();
         foreach (string sidecarFile in sidecarFiles)
         {
             // Get (by comparing w/o extension) list of matching image files in lower case
-            string scFilenameWOExt = Path.GetFileNameWithoutExtension(sidecarFile).ToLower();
+            string scFilenameWithoutExtension = Path.GetFileNameWithoutExtension(path: sidecarFile)
+                .ToLower();
             List<string> matchingImageFiles = imageFiles
-                .Where(predicate: imgFile => Path.GetFileNameWithoutExtension(imgFile).ToLower() == scFilenameWOExt)
+                .Where(predicate: imgFile => Path.GetFileNameWithoutExtension(path: imgFile)
+                                                 .ToLower() ==
+                                             scFilenameWithoutExtension)
                 .ToList();
-            if (matchingImageFiles.Count>1)
+            if (matchingImageFiles.Count > 1)
+            {
                 Logger.Warn(message: $"Sidecar file '{sidecarFile}' matches multiple image files!");
+            }
+
             foreach (string imgFile in matchingImageFiles)
-                image2sidecar[imgFile] = sidecarFile;
+            {
+                image2sidecar[key: imgFile] = sidecarFile;
+            }
         }
 
         // ******************************
         // Extract data for all files that are supported
         Logger.Trace(message: "Files: Extracting File Data");
         int count = 0;
-        if (_ExifTool == null) _ExifTool = new ExifTool();
+        if (_ExifTool == null)
+        {
+            _ExifTool = new ExifTool();
+        }
+
         foreach (string fileNameWithPath in imageFiles)
         {
             Logger.Trace(message: $"File: {fileNameWithPath}");
             string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
             if (count % 10 == 0)
-                statusMethod($"Scanning folder {100*count/imageFiles.Count:0}%: processing file '{fileNameWithoutPath}'");
+            {
+                statusMethod(obj: $"Scanning folder {100 * count / imageFiles.Count:0}%: processing file '{fileNameWithoutPath}'");
+            }
 
             // Regular (image) files are added to the list of
             // Directory Elements...
-            DirectoryElement de = new DirectoryElement(
-                                        itemName: Path.GetFileName(path: fileNameWithoutPath),
-                                        type: DirectoryElement.ElementType.File,
-                                        fullPathAndName: fileNameWithPath
-                                    );
+            DirectoryElement de = new(
+                itemName: Path.GetFileName(path: fileNameWithoutPath),
+                type: DirectoryElement.ElementType.File,
+                fullPathAndName: fileNameWithPath
+            );
 
             // Parse EXIF Props
             IDictionary<string, string> props = new Dictionary<string, string>();
-            InitiateEXIFParsing(fileNameWithPath, props);
+            InitiateEXIFParsing(fileToParse: fileNameWithPath, props: props);
 
             // Add sidecar file and data if available
-            if (image2sidecar.ContainsKey(fileNameWithPath))
+            if (image2sidecar.ContainsKey(key: fileNameWithPath))
             {
-                string scFile = image2sidecar[fileNameWithPath];
+                string scFile = image2sidecar[key: fileNameWithPath];
                 Logger.Trace(message: $"Files: Extracting File Data - adding side car file '{scFile}'");
                 de.SidecarFile = scFile;
-                InitiateEXIFParsing(scFile, props);
+                InitiateEXIFParsing(fileToParse: scFile, props: props);
             }
 
             // Insert into model
-            de.ParseAttributesFromExifToolOutput(props);
+            de.ParseAttributesFromExifToolOutput(tags_in: props);
 
-            this.Add(item: de);
+            Add(item: de);
             count++;
         }
+
         Logger.Trace(message: "Files: Extracting File Data - OK");
     }
 
     /// <summary>
-    /// Parses the given file using the given EXIF Tool object into the given
-    /// dictionary. Thereby, ignoring duplicate tags.
+    ///     Parses the given file using the given EXIF Tool object into the given
+    ///     dictionary. Thereby, ignoring duplicate tags.
     /// </summary>
-    private void InitiateEXIFParsing(string fileToParse, IDictionary<string, string> props)
+    private void InitiateEXIFParsing(string fileToParse,
+                                     IDictionary<string, string> props)
     {
         // Gather EXIF data for the image file
         ICollection<KeyValuePair<string, string>> propsRead = new List<KeyValuePair<string, string>>();
-        _ExifTool.GetProperties(fileToParse, propsRead);
+        _ExifTool.GetProperties(filename: fileToParse, propsRead: propsRead);
         // EXIF Tool can return duplicate properties - handle, but ignore these...
         foreach (KeyValuePair<string, string> kvp in propsRead)
-            if (!props.ContainsKey(kvp.Key))
-                props.Add(kvp.Key, kvp.Value);
+        {
+            if (!props.ContainsKey(key: kvp.Key))
+            {
+                props.Add(key: kvp.Key, value: kvp.Value);
+            }
+        }
     }
-
-
 }
