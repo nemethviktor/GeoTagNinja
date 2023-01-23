@@ -1190,7 +1190,7 @@ internal static partial class HelperStatic
             }
         }
 
-        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
+        //FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
 
         if (!failWriteNothingEnabled && !queueWasEmpty)
         {
@@ -1262,111 +1262,85 @@ internal static partial class HelperStatic
             switch (initiator)
             {
                 case "ExifWriteExifToFile":
+                    string fileNameWithoutPath = null;
                     prcExifTool.OutputDataReceived += (_,
                                                        data) =>
                     {
-                        if (data.Data != null && data.Data.Contains(value: "="))
+                        if (!string.IsNullOrEmpty(value: data.Data))
                         {
-                            string fileNameWithoutPath = data.Data.Replace(oldValue: "=", newValue: "")
-                                .Split('[')
-                                .FirstOrDefault()
-                                .Trim()
-                                .Split('/')
-                                .Last();
-                            FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-                            FrmMainApp.Logger.Debug(message: "Writing " + fileNameWithoutPath + " [this is via OutputDataReceived]");
-                            try
+                            if (data.Data.Contains(value: "="))
                             {
-                                if (lviIndex % 10 == 0)
+                                fileNameWithoutPath = data.Data.Replace(oldValue: "=", newValue: "")
+                                    .Split('[')
+                                    .FirstOrDefault()
+                                    .Trim()
+                                    .Split('/')
+                                    .Last();
+                                FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+                                FrmMainApp.Logger.Debug(message: "Writing " + fileNameWithoutPath + " [this is via OutputDataReceived]");
+                            }
+
+                            if (!string.IsNullOrEmpty(value: fileNameWithoutPath))
+                            {
+                                try
                                 {
-                                    Application.DoEvents();
-
-                                    // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                    frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
-                                }
-
-                                frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Black);
-
-                                if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
-                                {
-                                    // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
-                                    // FindItemWithText -> https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.finditemwithtext?view=netframework-4.8
-                                    // "Finds the first ListViewItem with __that begins with__ the given text value."
-
                                     if (lviIndex % 10 == 0)
                                     {
                                         Application.DoEvents();
+
                                         // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
-                                        frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath); // this is redundant here.
+                                        frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
                                     }
 
-                                    frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: Path.GetFileNameWithoutExtension(path: fileNameWithoutPath), color: Color.Black);
+                                    if ((data.Data.Contains(value: "files updated") || data.Data.Contains(value: "files created")) &&
+                                        !data.Data.Trim()
+                                            .StartsWith(value: "0"))
+                                    {
+                                        removeFileFromDT3(fileNameWithoutPath: fileNameWithoutPath);
+                                    }
+
+                                    if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
+                                    {
+                                        // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
+                                        // FindItemWithText -> https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.finditemwithtext?view=netframework-4.8
+                                        // "Finds the first ListViewItem with __that begins with__ the given text value."
+
+                                        if (lviIndex % 10 == 0)
+                                        {
+                                            Application.DoEvents();
+                                            // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                            frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath); // this is redundant here.
+                                        }
+
+                                        if ((data.Data.Contains(value: "files updated") || data.Data.Contains(value: "files created")) &&
+                                            !data.Data.Trim()
+                                                .StartsWith(value: "0"))
+                                        {
+                                            removeFileFromDT3(fileNameWithoutPath: fileNameWithoutPath);
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+                                    // ignored
+                                }
+
+                                lviIndex++;
+
+                                if (!data.Data.Contains(value: "files updated") && !data.Data.Contains(value: "files created") && !data.Data.Contains(value: fileNameWithoutPath))
+                                {
+                                    MessageBox.Show(text: data.Data);
                                 }
                             }
-                            catch
-                            {
-                                // ignored
-                            }
-
-                            lviIndex++;
-                        }
-                        else if (data.Data != null && !data.Data.Contains(value: "files updated") && !data.Data.Contains(value: "files created") && data.Data.Length > 0)
-                        {
-                            MessageBox.Show(text: data.Data);
                         }
                     };
 
                     prcExifTool.ErrorDataReceived += (_,
                                                       data) =>
                     {
-                        if (data.Data != null && data.Data.Contains(value: "="))
-                        {
-                            string fileNameWithoutPath = data.Data.Replace(oldValue: "=", newValue: "")
-                                .Split('[')
-                                .FirstOrDefault()
-                                .Trim()
-                                .Split('/')
-                                .Last();
-                            FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-                            FrmMainApp.Logger.Debug(message: "Writing " + fileNameWithoutPath + " [this is via ErrorDataReceived]");
-
-                            try
-                            {
-                                {
-                                    Application.DoEvents();
-                                    // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                    frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
-                                }
-
-                                frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Black);
-
-                                if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
-                                {
-                                    // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
-                                    // FindItemWithText -> https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.finditemwithtext?view=netframework-4.8
-                                    // "Finds the first ListViewItem with __that begins with__ the given text value."
-                                    if (lviIndex % 10 == 0)
-                                    {
-                                        Application.DoEvents();
-                                        // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                        frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath); // this is redundant here
-                                    }
-
-                                    frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: Path.GetFileNameWithoutExtension(path: fileNameWithoutPath), color: Color.Black);
-                                }
-                            }
-                            catch
-                            {
-                                // ignored
-                            }
-
-                            lviIndex++;
-                        }
-                        else if (data.Data != null && !data.Data.Contains(value: "files updated") && data.Data.Length > 0)
+                        if (!string.IsNullOrEmpty(value: data.Data))
                         {
                             MessageBox.Show(text: data.Data);
                         }
@@ -1443,6 +1417,25 @@ internal static partial class HelperStatic
                 FrmMainApp.Logger.Error(message: "Killing exifTool failed");
             }
         });
+
+        void removeFileFromDT3(string fileNameWithoutPath)
+        {
+            IEnumerable<DataRow> drDT3Rows =
+                from drDT3 in FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.AsEnumerable()
+                where drDT3.Field<string>(columnName: "fileNameWithoutPath") != fileNameWithoutPath
+                select drDT3;
+
+            if (drDT3Rows.Any())
+            {
+                FrmMainApp.DtFileDataToWriteStage3ReadyToWrite = drDT3Rows.CopyToDataTable();
+            }
+            else
+            {
+                FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Clear();
+            }
+
+            frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Black);
+        }
     }
 
 

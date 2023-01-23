@@ -776,7 +776,6 @@ internal static partial class HelperStatic
             Form promptBox = new();
             promptBox.Text = caption;
             promptBox.ControlBox = false;
-            promptBox.FormBorderStyle = FormBorderStyle.Fixed3D;
             FlowLayoutPanel panel = new();
 
             Label lblText = new();

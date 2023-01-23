@@ -421,7 +421,14 @@ public partial class FrmMainApp : Form
         GeoResponseToponomy readJsonToponomy = new();
 
         // lat/long gets written regardless of update-toponomy-choice
-        if (double.TryParse(s: strGpsLatitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strGpsLongitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
+        if (double.TryParse(s: strGpsLatitude,
+                            style: NumberStyles.Any,
+                            provider: CultureInfo.InvariantCulture,
+                            result: out parsedLat) &&
+            double.TryParse(s: strGpsLongitude,
+                            style: NumberStyles.Any,
+                            provider: CultureInfo.InvariantCulture,
+                            result: out parsedLng))
         {
             if (lvw_FileList.SelectedItems.Count > 0)
             {
@@ -458,7 +465,14 @@ public partial class FrmMainApp : Form
             }
         }
 
-        if (double.TryParse(s: strGpsLatitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strGpsLongitude, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
+        if (double.TryParse(s: strGpsLatitude,
+                            style: NumberStyles.Any,
+                            provider: CultureInfo.InvariantCulture,
+                            result: out parsedLat) &&
+            double.TryParse(s: strGpsLongitude,
+                            style: NumberStyles.Any,
+                            provider: CultureInfo.InvariantCulture,
+                            result: out parsedLng))
         {
             if (lvw_FileList.SelectedItems.Count > 0)
             {
@@ -831,7 +845,7 @@ public partial class FrmMainApp : Form
         await HelperStatic.ExifWriteExifToFile();
         // shouldn't be needed but just in case.
         HelperStatic.FilesAreBeingSaved = false;
-        DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
+        //DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
     }
 
     /// <summary>
@@ -1365,7 +1379,7 @@ public partial class FrmMainApp : Form
         await HelperStatic.ExifWriteExifToFile();
         // shouldn't be needed but just in case.
         HelperStatic.FilesAreBeingSaved = false;
-        DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
+        //DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
     }
 
     #endregion
@@ -1710,7 +1724,7 @@ public partial class FrmMainApp : Form
             await HelperStatic.ExifWriteExifToFile();
             // shouldn't be needed but just in case.
             HelperStatic.FilesAreBeingSaved = false;
-            DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
+            //DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
         }
     }
 
