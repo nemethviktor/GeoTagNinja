@@ -48,18 +48,29 @@ internal static partial class HelperStatic
         // check if there's anything in the write-Q
 
         // it could happen that there is a ".." (root/parent) in the write-Q, which is erroneous but causes a problem here. 
-        IEnumerable<DataRow> drDT3Rows =
-            from drDT3 in FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.AsEnumerable()
-            where drDT3.Field<string>(columnName: "fileNameWithoutPath") != ".."
-            select drDT3;
+        List<string> distinctNamesInDT3 = FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.AsEnumerable()
+            .Select(r => r.Field<string>("fileNameWithoutPath")) // select only wellbore string value
+            .Distinct() // take only unique items
+            .ToList();
 
-        if (drDT3Rows.Any())
+        foreach (string fileNameWithoutPath in distinctNamesInDT3)
         {
-            FrmMainApp.DtFileDataToWriteStage3ReadyToWrite = drDT3Rows.CopyToDataTable();
-        }
-        else
-        {
-            FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Clear();
+            if (!File.Exists(Path.Combine(FrmMainApp.FolderName.ToString(), fileNameWithoutPath)))
+            {
+                IEnumerable<DataRow> drDT3Rows =
+                    from drDT3 in FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.AsEnumerable()
+                    where drDT3.Field<string>(columnName: "fileNameWithoutPath") != fileNameWithoutPath
+                    select drDT3;
+
+                if (drDT3Rows.Any())
+                {
+                    FrmMainApp.DtFileDataToWriteStage3ReadyToWrite = drDT3Rows.CopyToDataTable();
+                }
+                else
+                {
+                    FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Clear();
+                }
+            }
         }
 
         if (FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows.Count > 0)
