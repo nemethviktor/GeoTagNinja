@@ -251,15 +251,21 @@ internal static partial class HelperStatic
                     double parsedLng;
                     if (double.TryParse(s: strLat, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strLng, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
                     {
-                        frmMainAppInstance.tbx_lat.Text = strLat;
-                        frmMainAppInstance.tbx_lng.Text = strLng;
+                        frmMainAppInstance.nud_lat.Text = strLat;
+                        frmMainAppInstance.nud_lng.Text = strLng;
+
+                        frmMainAppInstance.nud_lat.Value = Convert.ToDecimal(strLat);
+                        frmMainAppInstance.nud_lng.Value = Convert.ToDecimal(strLng);
                         HsMapMarkers.Add(item: (strLat, strLng));
                     }
                 }
                 else if (SResetMapToZero)
                 {
-                    frmMainAppInstance.tbx_lat.Text = "0";
-                    frmMainAppInstance.tbx_lng.Text = "0";
+                    frmMainAppInstance.nud_lat.Text = "0";
+                    frmMainAppInstance.nud_lng.Text = "0";
+
+                    frmMainAppInstance.nud_lat.Value = 0;
+                    frmMainAppInstance.nud_lng.Value = 0;
                     HsMapMarkers.Add(item: ("0", "0"));
                 }
                 // leave as-is (most likely the last photo)

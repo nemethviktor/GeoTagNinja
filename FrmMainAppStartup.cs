@@ -474,35 +474,47 @@ public partial class FrmMainApp
 
         try
         {
-            tbx_lat.Text = HelperStatic.DataReadSQLiteSettings(
+            nud_lat.Text = HelperStatic.DataReadSQLiteSettings(
                 tableName: "settings",
                 settingTabPage: "generic",
                 settingId: "lastLat"
             );
-            tbx_lng.Text = HelperStatic.DataReadSQLiteSettings(
+            if (nud_lat.Text != null)
+            {
+                nud_lat.Value = Convert.ToDecimal(nud_lat.Text);
+            }
+
+            nud_lng.Text = HelperStatic.DataReadSQLiteSettings(
                 tableName: "settings",
                 settingTabPage: "generic",
                 settingId: "lastLng"
             );
+            if (nud_lng.Text != null)
+            {
+                nud_lng.Value = Convert.ToDecimal(nud_lng.Text);
+            }
         }
         catch
         {
             // ignored
         }
 
-        if (tbx_lat.Text == "" || tbx_lat.Text == "0")
+        if (nud_lat.Text == "" || nud_lat.Text == "0")
         {
             // NASA HQ
             string defaultLat = "38.883056";
             string defaultLng = "-77.016389";
-            tbx_lat.Text = defaultLat;
-            tbx_lng.Text = defaultLng;
+            nud_lat.Text = defaultLat;
+            nud_lng.Text = defaultLng;
+
+            nud_lat.Value = Convert.ToDecimal(defaultLat);
+            nud_lng.Value = Convert.ToDecimal(defaultLng);
         }
 
         HelperStatic.HsMapMarkers.Clear();
-        HelperStatic.HsMapMarkers.Add(item: (tbx_lat.Text.Replace(oldChar: ',', newChar: '.'), tbx_lng.Text.Replace(oldChar: ',', newChar: '.')));
-        HelperStatic.LastLat = double.Parse(s: tbx_lat.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
-        HelperStatic.LastLng = double.Parse(s: tbx_lng.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
+        HelperStatic.HsMapMarkers.Add(item: (nud_lat.Text.Replace(oldChar: ',', newChar: '.'), nud_lng.Text.Replace(oldChar: ',', newChar: '.')));
+        HelperStatic.LastLat = double.Parse(s: nud_lat.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
+        HelperStatic.LastLng = double.Parse(s: nud_lng.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
     }
 
     /// <summary>

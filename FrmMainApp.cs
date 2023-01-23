@@ -245,7 +245,7 @@ public partial class FrmMainApp : Form
         lvwFileList_LoadOrUpdate();
 
         Logger.Trace(message: "Assign 'Enter' Key behaviour to tbx_lng");
-        tbx_lng.KeyPress += (sndr,
+        nud_lng.KeyPress += (sndr,
                              ev) =>
         {
             if (ev.KeyChar.Equals(obj: (char)13))
@@ -315,18 +315,18 @@ public partial class FrmMainApp : Form
         lvw_FileList.PersistSettings();
 
         // Write lat/long for future reference to db
-        Logger.Trace(message: "Write lat/long for future reference to db [lat/lng]: " + tbx_lat.Text + "/" + tbx_lng.Text);
+        Logger.Trace(message: "Write lat/long for future reference to db [lat/lng]: " + nud_lat.Text + "/" + nud_lng.Text);
         HelperStatic.DataWriteSQLiteSettings(
             tableName: "settings",
             settingTabPage: "generic",
             settingId: "lastLat",
-            settingValue: tbx_lat.Text
+            settingValue: nud_lat.Text
         );
         HelperStatic.DataWriteSQLiteSettings(
             tableName: "settings",
             settingTabPage: "generic",
             settingId: "lastLng",
-            settingValue: tbx_lng.Text
+            settingValue: nud_lng.Text
         );
 
         // clean up
@@ -375,10 +375,13 @@ public partial class FrmMainApp : Form
         double.TryParse(s: strLng, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dblLng); // trust me i hate this f...king culture thing as much as possible...
         // if the user zooms out too much they can encounter an "unreal" coordinate.
 
-        tbx_lat.Text = HelperStatic.GenericCorrectInvalidCoordinate(coordHalfPair: dblLat)
+        nud_lat.Text = HelperStatic.GenericCorrectInvalidCoordinate(coordHalfPair: dblLat)
             .ToString(provider: CultureInfo.InvariantCulture);
-        tbx_lng.Text = HelperStatic.GenericCorrectInvalidCoordinate(coordHalfPair: dblLng)
+        nud_lng.Text = HelperStatic.GenericCorrectInvalidCoordinate(coordHalfPair: dblLng)
             .ToString(provider: CultureInfo.InvariantCulture);
+
+        nud_lat.Value = Convert.ToDecimal(nud_lat.Text);
+        nud_lng.Value = Convert.ToDecimal(nud_lng.Text);
     }
 
     /// <summary>
@@ -411,8 +414,8 @@ public partial class FrmMainApp : Form
     private async void btn_loctToFile_Click(object sender,
                                             EventArgs e)
     {
-        string strGpsLatitude = tbx_lat.Text.Replace(oldChar: ',', newChar: '.');
-        string strGpsLongitude = tbx_lng.Text.Replace(oldChar: ',', newChar: '.');
+        string strGpsLatitude = nud_lat.Text.Replace(oldChar: ',', newChar: '.');
+        string strGpsLongitude = nud_lng.Text.Replace(oldChar: ',', newChar: '.');
         double parsedLat;
         double parsedLng;
         GeoResponseToponomy readJsonToponomy = new();
@@ -539,14 +542,14 @@ public partial class FrmMainApp : Form
         // Get txtbox contents
         string strLatCoordinate = "";
         string strLngCoordinate = "";
-        if (tbx_lat.Text != null)
+        if (!string.IsNullOrEmpty(nud_lat.Text))
         {
-            strLatCoordinate = tbx_lat.Text.Replace(oldChar: ',', newChar: '.');
+            strLatCoordinate = nud_lat.Text.Replace(oldChar: ',', newChar: '.');
         }
 
-        if (tbx_lng.Text != null)
+        if (!string.IsNullOrEmpty(nud_lng.Text))
         {
-            strLngCoordinate = tbx_lng.Text.Replace(oldChar: ',', newChar: '.');
+            strLngCoordinate = nud_lng.Text.Replace(oldChar: ',', newChar: '.');
         }
 
         // Check if it's a valid double -> otherwise defaults above
@@ -2035,8 +2038,12 @@ public partial class FrmMainApp : Form
                     favLng = Math.Abs(value: favLng) * -1;
                 }
 
-                tbx_lat.Text = favLat.ToString(provider: CultureInfo.InvariantCulture);
-                tbx_lng.Text = favLng.ToString(provider: CultureInfo.InvariantCulture);
+                nud_lat.Text = favLat.ToString(provider: CultureInfo.InvariantCulture);
+                nud_lng.Text = favLng.ToString(provider: CultureInfo.InvariantCulture);
+
+                nud_lat.Value = Convert.ToDecimal(nud_lat.Text);
+                nud_lng.Value = Convert.ToDecimal(nud_lng.Text);
+
                 btn_NavigateMapGo_Click(sender: null, e: null);
             }
         }
