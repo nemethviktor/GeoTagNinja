@@ -10,6 +10,7 @@
   - Changed certain numeric TextBoxes to NumericUpDowns.
 - BUGS & FIXES:
   - Fixed a bug where NumerUpDown changes didn't trigger setting fonts to Bold
+  - Fixed the map zooming way too far out when negative lat/long values are present
   - Changed the pick-from-API-choices Form to be 1-based-index rather than 0-based
 
 **v0.7.8421 [20230121]**

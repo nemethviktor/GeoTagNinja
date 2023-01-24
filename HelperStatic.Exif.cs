@@ -1477,7 +1477,21 @@ internal static partial class HelperStatic
             Authenticator = new HttpBasicAuthenticator(username: SGeoNamesUserName, password: SGeoNamesPwd)
         };
 
-        RestRequest requestToponomy = new(resource: "findNearbyPlaceNameJSON?lat=" + latitude + "&lng=" + longitude + "&lang=" + APILanguageToUse + "&style=FULL&radius=" + radius + "&maxRows=" + ToponomyMaxRows);
+        string SOnlyShowFCodePPL = HelperStatic.SOnlyShowFCodePPL
+            ? "&fcode=PPL"
+            : "";
+
+        RestRequest requestToponomy = new(resource: "findNearbyPlaceNameJSON?lat=" +
+                                                    latitude +
+                                                    "&lng=" +
+                                                    longitude +
+                                                    "&lang=" +
+                                                    APILanguageToUse +
+                                                    SOnlyShowFCodePPL +
+                                                    "&style=FULL&radius=" +
+                                                    radius +
+                                                    "&maxRows=" +
+                                                    ToponomyMaxRows);
         RestResponse responseToponomy = client.ExecuteGet(request: requestToponomy);
         // check API reponse is OK
         if (responseToponomy.Content != null && responseToponomy.Content.Contains(value: "the hourly limit of "))

@@ -74,6 +74,7 @@
             this.btn_OK = new System.Windows.Forms.Button();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.fbd_StartupFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.ckb_PopulatedPlacesOnly = new System.Windows.Forms.CheckBox();
             this.tct_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             this.gbx_GeoNamesSettings.SuspendLayout();
@@ -120,6 +121,7 @@
             // 
             // gbx_GeoNamesSettings
             // 
+            this.gbx_GeoNamesSettings.Controls.Add(this.ckb_PopulatedPlacesOnly);
             this.gbx_GeoNamesSettings.Controls.Add(this.gbx_GeoNamesLanguageSettings);
             this.gbx_GeoNamesSettings.Controls.Add(this.ckb_ReplaceBlankToponyms);
             this.gbx_GeoNamesSettings.Controls.Add(this.tbx_ReplaceBlankToponyms);
@@ -137,7 +139,7 @@
             this.gbx_GeoNamesSettings.Controls.Add(this.tbx_ARCGIS_APIKey);
             this.gbx_GeoNamesSettings.Location = new System.Drawing.Point(16, 163);
             this.gbx_GeoNamesSettings.Name = "gbx_GeoNamesSettings";
-            this.gbx_GeoNamesSettings.Size = new System.Drawing.Size(852, 419);
+            this.gbx_GeoNamesSettings.Size = new System.Drawing.Size(852, 455);
             this.gbx_GeoNamesSettings.TabIndex = 33;
             this.gbx_GeoNamesSettings.TabStop = false;
             this.gbx_GeoNamesSettings.Text = "gbx_GeoNamesSettings";
@@ -621,6 +623,17 @@
             this.fbd_StartupFolder.Description = "fbd_StartupFolder";
             this.fbd_StartupFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
+            // ckb_PopulatedPlacesOnly
+            // 
+            this.ckb_PopulatedPlacesOnly.AutoSize = true;
+            this.ckb_PopulatedPlacesOnly.Location = new System.Drawing.Point(12, 397);
+            this.ckb_PopulatedPlacesOnly.Name = "ckb_PopulatedPlacesOnly";
+            this.ckb_PopulatedPlacesOnly.Size = new System.Drawing.Size(151, 17);
+            this.ckb_PopulatedPlacesOnly.TabIndex = 49;
+            this.ckb_PopulatedPlacesOnly.Text = "ckb_PopulatedPlacesOnly";
+            this.ckb_PopulatedPlacesOnly.UseVisualStyleBackColor = true;
+            this.ckb_PopulatedPlacesOnly.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            // 
             // FrmSettings
             // 
             this.AcceptButton = this.btn_OK;
@@ -707,5 +720,6 @@
         private System.Windows.Forms.PictureBox pbx_Browse_Startup_Folder;
         private System.Windows.Forms.Label lbl_Startup_Folder;
         public System.Windows.Forms.TextBox tbx_Startup_Folder;
+        private System.Windows.Forms.CheckBox ckb_PopulatedPlacesOnly;
     }
 }

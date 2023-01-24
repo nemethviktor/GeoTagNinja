@@ -506,6 +506,12 @@ public partial class FrmSettings : Form
             settingId: "ckb_ResetMapToZero"
         );
 
+        HelperStatic.SOnlyShowFCodePPL = HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
+            tableName: "settings",
+            settingTabPage: "tpg_Application",
+            settingId: "ckb_PopulatedPlacesOnly"
+        );
+
         FrmMainApp.AppStartupPullOverWriteBlankToponomy();
         FrmMainApp.AppStartupPullToponomyRadiusAndMaxRows();
 

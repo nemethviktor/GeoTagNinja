@@ -11,6 +11,7 @@ internal static partial class HelperStatic
     private static readonly string SSettingsDataBasePath = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "database.sqlite");
     internal static bool SChangeFolderIsOkay;
     internal static bool SApiOkay = true;
+    internal static bool SOnlyShowFCodePPL = false;
     internal static string _sErrorMsg = "";
     private static string _sOutputMsg = "";
     private static readonly string SDoubleQuote = "\"";
