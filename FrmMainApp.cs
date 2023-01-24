@@ -650,10 +650,10 @@ public partial class FrmMainApp : Form
         IDictionary<string, string> htmlReplacements = new Dictionary<string, string>();
 
         HelperStatic.HtmlAddMarker = "";
-        double dblMinLat = 900;
-        double dblMinLng = 900;
-        double dblMaxLat = -1;
-        double dblMaxLng = -1;
+        double dblMinLat = 180;
+        double dblMinLng = 180;
+        double dblMaxLat = -180;
+        double dblMaxLng = -180;
 
         // Add markers on map for every marker-item and
         // find viewing rect. for map (min / max of all markers to enclose all of them)
