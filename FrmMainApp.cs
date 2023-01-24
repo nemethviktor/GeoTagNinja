@@ -75,6 +75,7 @@ public partial class FrmMainApp : Form
     internal string _mapHtmlTemplateCode = "";
 
     internal static bool RemoveGeoDataIsRunning;
+    private static bool _StopProcessingRows = false;
 
     // this is for copy-paste
     internal static DataTable DtFileDataCopyPool;
@@ -418,6 +419,7 @@ public partial class FrmMainApp : Form
         string strGpsLongitude = nud_lng.Text.Replace(oldChar: ',', newChar: '.');
         double parsedLat;
         double parsedLng;
+        _StopProcessingRows = false;
         GeoResponseToponomy readJsonToponomy = new();
 
         // lat/long gets written regardless of update-toponomy-choice
@@ -1012,6 +1014,7 @@ public partial class FrmMainApp : Form
     private async void tsb_GetAllFromWeb_Click(object sender,
                                                EventArgs e)
     {
+        _StopProcessingRows = false;
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         if (frmMainAppInstance != null)
         {
@@ -1069,111 +1072,68 @@ public partial class FrmMainApp : Form
                                       string strGpsLongitude,
                                       ListViewItem lvi)
     {
-        string fileNameWithoutPath = lvi.Text;
-        HelperStatic.CurrentAltitude = null;
-        HelperStatic.CurrentAltitude = lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
-            .SubItems[index: lvw_FileList.Columns[key: "clh_GPSAltitude"]
-                          .Index]
-            .Text.ToString(provider: CultureInfo.InvariantCulture);
-
-        DataTable dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude,
-                                                                                 lng: strGpsLongitude,
-                                                                                 fileNameWithoutPath: fileNameWithoutPath);
-        if (dtToponomy.Rows.Count > 0)
+        if (!_StopProcessingRows)
         {
-            // Send off to SQL
-            List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
-            toponomyOverwrites.Add(item: ("CountryCode", dtToponomy.Rows[index: 0][columnName: "CountryCode"]
-                                              .ToString()));
-            toponomyOverwrites.Add(item: ("Country", dtToponomy.Rows[index: 0][columnName: "Country"]
-                                              .ToString()));
+            string fileNameWithoutPath = lvi.Text;
+            HelperStatic.CurrentAltitude = null;
+            HelperStatic.CurrentAltitude = lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
+                .SubItems[index: lvw_FileList.Columns[key: "clh_GPSAltitude"]
+                              .Index]
+                .Text.ToString(provider: CultureInfo.InvariantCulture);
 
-            foreach (string toponomyReplace in AncillaryListsArrays.ToponomyReplaces())
+            DataTable dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude,
+                                                                                     lng: strGpsLongitude,
+                                                                                     fileNameWithoutPath: fileNameWithoutPath);
+            if (dtToponomy.Rows.Count > 0)
             {
-                string settingId = toponomyReplace;
-                string settingVal = HelperStatic.ReplaceBlankToponomy(settingId: settingId, settingValue: dtToponomy.Rows[index: 0][columnName: toponomyReplace]
-                                                                          .ToString());
-                toponomyOverwrites.Add(item: (settingId, settingVal));
-            }
-
-            // timeZone is a bit special but that's just how we all love it....not.
-            string TZ = dtToponomy.Rows[index: 0][columnName: "timeZoneId"]
-                .ToString();
-
-            DateTime createDate;
-            bool _ = DateTime.TryParse(s: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_CreateDate"]
-                                                           .Index]
-                                           .Text.ToString(provider: CultureInfo.InvariantCulture), result: out createDate);
-
-            try
-            {
-                string IANATZ = TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
-                string TZOffset;
-                TimeZoneInfo tst = TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
-
-                TZOffset = tst.GetUtcOffset(dateTime: createDate)
-                    .ToString()
-                    .Substring(startIndex: 0, length: tst.GetUtcOffset(dateTime: createDate)
-                                                          .ToString()
-                                                          .Length -
-                                                      3);
-                if (!TZOffset.StartsWith(value: "-"))
-                {
-                    toponomyOverwrites.Add(item: ("OffsetTime", "+" + TZOffset));
-                }
-                else
-                {
-                    toponomyOverwrites.Add(item: ("OffsetTime", TZOffset));
-                }
-            }
-            catch
-            {
-                // don't do anything.
-            }
-
-            foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
-            {
-                HelperStatic.GenericUpdateAddToDataTable(
-                    dt: DtFileDataToWriteStage3ReadyToWrite,
-                    fileNameWithoutPath: lvi.Text,
-                    settingId: toponomyDetail.toponomyOverwriteName,
-                    settingValue: toponomyDetail.toponomyOverwriteVal
-                );
-
-                lvi.SubItems[index: lvw_FileList.Columns[key: "clh_" + toponomyDetail.toponomyOverwriteName]
-                                 .Index]
-                    .Text = toponomyDetail.toponomyOverwriteVal;
-            }
-
-            if (lvi.Index % 10 == 0)
-            {
-                Application.DoEvents();
-                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
-            }
-
-            HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-            lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
-        }
-        else
-        {
-            DialogResult dialogResult = MessageBox.Show(
-                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_QuestionNoRowsFromAPI"),
-                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Question"),
-                buttons: MessageBoxButtons.YesNo,
-                icon: MessageBoxIcon.Question);
-            if (dialogResult == DialogResult.Yes)
-            {
+                // Send off to SQL
                 List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
-                toponomyOverwrites.Add(item: ("CountryCode", null));
-                toponomyOverwrites.Add(item: ("Country", null));
+                toponomyOverwrites.Add(item: ("CountryCode", dtToponomy.Rows[index: 0][columnName: "CountryCode"]
+                                                  .ToString()));
+                toponomyOverwrites.Add(item: ("Country", dtToponomy.Rows[index: 0][columnName: "Country"]
+                                                  .ToString()));
 
                 foreach (string toponomyReplace in AncillaryListsArrays.ToponomyReplaces())
                 {
                     string settingId = toponomyReplace;
-                    string settingVal = null;
+                    string settingVal = HelperStatic.ReplaceBlankToponomy(settingId: settingId, settingValue: dtToponomy.Rows[index: 0][columnName: toponomyReplace]
+                                                                              .ToString());
                     toponomyOverwrites.Add(item: (settingId, settingVal));
+                }
+
+                // timeZone is a bit special but that's just how we all love it....not.
+                string TZ = dtToponomy.Rows[index: 0][columnName: "timeZoneId"]
+                    .ToString();
+
+                DateTime createDate;
+                bool _ = DateTime.TryParse(s: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_CreateDate"]
+                                                               .Index]
+                                               .Text.ToString(provider: CultureInfo.InvariantCulture), result: out createDate);
+
+                try
+                {
+                    string IANATZ = TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
+                    string TZOffset;
+                    TimeZoneInfo tst = TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
+
+                    TZOffset = tst.GetUtcOffset(dateTime: createDate)
+                        .ToString()
+                        .Substring(startIndex: 0, length: tst.GetUtcOffset(dateTime: createDate)
+                                                              .ToString()
+                                                              .Length -
+                                                          3);
+                    if (!TZOffset.StartsWith(value: "-"))
+                    {
+                        toponomyOverwrites.Add(item: ("OffsetTime", "+" + TZOffset));
+                    }
+                    else
+                    {
+                        toponomyOverwrites.Add(item: ("OffsetTime", TZOffset));
+                    }
+                }
+                catch
+                {
+                    // don't do anything.
                 }
 
                 foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
@@ -1189,10 +1149,76 @@ public partial class FrmMainApp : Form
                                      .Index]
                         .Text = toponomyDetail.toponomyOverwriteVal;
                 }
+
+                if (lvi.Index % 10 == 0)
+                {
+                    Application.DoEvents();
+                    // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                    lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
+                }
+
+                HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+                lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
             }
-            else if (dialogResult == DialogResult.No)
+            else
             {
-                // nothing
+                string APIHandlingChoice = HelperStatic.GenericCheckboxDialog.ShowDialogWithCheckBox(
+                    labelText: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_QuestionNoRowsFromAPI"),
+                    caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Question"),
+                    checkboxText: HelperStatic.DataReadDTObjectText(
+                        objectType: "CheckBox",
+                        objectName: "ckb_QuestionStopProcessingRows"
+                    ),
+                    returnCheckboxText: "_stopprocessing",
+                    button1Text: HelperStatic.DataReadDTObjectText(
+                        objectType: "Button",
+                        objectName: "btn_Yes"
+                    ),
+                    returnButton1Text: "yes",
+                    button2Text: HelperStatic.DataReadDTObjectText(
+                        objectType: "Button",
+                        objectName: "btn_No"
+                    ),
+                    returnButton2Text: "no"
+                );
+
+                if (APIHandlingChoice.Contains("yes"))
+                {
+                    List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
+                    toponomyOverwrites.Add(item: ("CountryCode", null));
+                    toponomyOverwrites.Add(item: ("Country", null));
+
+                    foreach (string toponomyReplace in AncillaryListsArrays.ToponomyReplaces())
+                    {
+                        string settingId = toponomyReplace;
+                        string settingVal = null;
+                        toponomyOverwrites.Add(item: (settingId, settingVal));
+                    }
+
+                    foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+                    {
+                        HelperStatic.GenericUpdateAddToDataTable(
+                            dt: DtFileDataToWriteStage3ReadyToWrite,
+                            fileNameWithoutPath: lvi.Text,
+                            settingId: toponomyDetail.toponomyOverwriteName,
+                            settingValue: toponomyDetail.toponomyOverwriteVal
+                        );
+
+                        lvi.SubItems[index: lvw_FileList.Columns[key: "clh_" + toponomyDetail.toponomyOverwriteName]
+                                         .Index]
+                            .Text = toponomyDetail.toponomyOverwriteVal;
+                    }
+                }
+                else
+                {
+                    // nothing
+                }
+
+                if (APIHandlingChoice.Contains("_stopprocessing"))
+                {
+                    _StopProcessingRows = true;
+                }
             }
         }
     }

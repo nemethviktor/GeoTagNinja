@@ -7,6 +7,7 @@
   - Added logic for the pick-from-API-choices Form to accept doubleClick and (keyboard) Enter (key)
   - Added a button in the Paste Form for generic All/None
   - Added a button in the Paste Form for recalling the last Paste settings
+  - Added an option to halt further API pulls if one failed
   - Changed certain numeric TextBoxes to NumericUpDowns.
 - BUGS & FIXES:
   - Fixed a bug where NumerUpDown changes didn't trigger setting fonts to Bold
