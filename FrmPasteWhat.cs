@@ -455,6 +455,30 @@ public partial class FrmPasteWhat : Form
         Hide();
     }
 
+    private void btn_AllData_All_Click(object sender,
+                                       EventArgs e)
+    {
+        HelperNonStatic helperNonstatic = new();
+        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this, typeof(CheckBox));
+        foreach (Control cItem in c)
+        {
+            CheckBox thisCheckBox = (CheckBox)cItem;
+                thisCheckBox.Checked = true;
+        }
+    }
+
+    private void btn_AllData_None_Click(object sender,
+                                        EventArgs e)
+    {
+        HelperNonStatic helperNonstatic = new();
+        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this, typeof(CheckBox));
+        foreach (Control cItem in c)
+        {
+            CheckBox thisCheckBox = (CheckBox)cItem;
+                thisCheckBox.Checked = false;
+        }
+    }
+
     #region GPSData
 
     private void btn_GPSData_All_Click(object sender,

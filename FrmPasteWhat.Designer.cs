@@ -60,6 +60,8 @@
             this.ckb_OffsetTime = new System.Windows.Forms.CheckBox();
             this.btn_Dates_None = new System.Windows.Forms.Button();
             this.btn_Dates_All = new System.Windows.Forms.Button();
+            this.btn_AllData_None = new System.Windows.Forms.Button();
+            this.btn_AllData_All = new System.Windows.Forms.Button();
             this.gbx_LocationData.SuspendLayout();
             this.gbx_GPSData.SuspendLayout();
             this.gbx_Dates.SuspendLayout();
@@ -408,6 +410,26 @@
             this.btn_Dates_All.UseVisualStyleBackColor = true;
             this.btn_Dates_All.Click += new System.EventHandler(this.btn_Dates_All_Click);
             // 
+            // btn_AllData_None
+            // 
+            this.btn_AllData_None.Location = new System.Drawing.Point(436, 607);
+            this.btn_AllData_None.Name = "btn_AllData_None";
+            this.btn_AllData_None.Size = new System.Drawing.Size(75, 23);
+            this.btn_AllData_None.TabIndex = 9;
+            this.btn_AllData_None.Text = "btn_AllData_None";
+            this.btn_AllData_None.UseVisualStyleBackColor = true;
+            this.btn_AllData_None.Click += new System.EventHandler(this.btn_AllData_None_Click);
+            // 
+            // btn_AllData_All
+            // 
+            this.btn_AllData_All.Location = new System.Drawing.Point(355, 607);
+            this.btn_AllData_All.Name = "btn_AllData_All";
+            this.btn_AllData_All.Size = new System.Drawing.Size(75, 23);
+            this.btn_AllData_All.TabIndex = 8;
+            this.btn_AllData_All.Text = "btn_AllData_All";
+            this.btn_AllData_All.UseVisualStyleBackColor = true;
+            this.btn_AllData_All.Click += new System.EventHandler(this.btn_AllData_All_Click);
+            // 
             // FrmPasteWhat
             // 
             this.AcceptButton = this.btn_OK;
@@ -417,6 +439,8 @@
             this.CancelButton = this.btn_Cancel;
             this.ClientSize = new System.Drawing.Size(844, 642);
             this.ControlBox = false;
+            this.Controls.Add(this.btn_AllData_None);
+            this.Controls.Add(this.btn_AllData_All);
             this.Controls.Add(this.gbx_Dates);
             this.Controls.Add(this.gbx_GPSData);
             this.Controls.Add(this.gbx_LocationData);
@@ -476,5 +500,7 @@
         private System.Windows.Forms.RadioButton rbt_PasteTakenDateShift;
         private System.Windows.Forms.RadioButton rbt_PasteTakenDateActual;
         private System.Windows.Forms.CheckBox ckb_TakenDate;
+        private System.Windows.Forms.Button btn_AllData_None;
+        private System.Windows.Forms.Button btn_AllData_All;
     }
 }
