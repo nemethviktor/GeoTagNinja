@@ -62,6 +62,7 @@
             this.btn_Dates_All = new System.Windows.Forms.Button();
             this.btn_AllData_None = new System.Windows.Forms.Button();
             this.btn_AllData_All = new System.Windows.Forms.Button();
+            this.btn_PullMostRecentPasteSettings = new System.Windows.Forms.Button();
             this.gbx_LocationData.SuspendLayout();
             this.gbx_GPSData.SuspendLayout();
             this.gbx_Dates.SuspendLayout();
@@ -430,6 +431,16 @@
             this.btn_AllData_All.UseVisualStyleBackColor = true;
             this.btn_AllData_All.Click += new System.EventHandler(this.btn_AllData_All_Click);
             // 
+            // btn_PullMostRecentPasteSettings
+            // 
+            this.btn_PullMostRecentPasteSettings.Location = new System.Drawing.Point(95, 607);
+            this.btn_PullMostRecentPasteSettings.Name = "btn_PullMostRecentPasteSettings";
+            this.btn_PullMostRecentPasteSettings.Size = new System.Drawing.Size(197, 23);
+            this.btn_PullMostRecentPasteSettings.TabIndex = 20;
+            this.btn_PullMostRecentPasteSettings.Text = "btn_PullMostRecentPasteSettings";
+            this.btn_PullMostRecentPasteSettings.UseVisualStyleBackColor = true;
+            this.btn_PullMostRecentPasteSettings.Click += new System.EventHandler(this.btn_PullMostRecentPasteSettings_Click);
+            // 
             // FrmPasteWhat
             // 
             this.AcceptButton = this.btn_OK;
@@ -439,6 +450,7 @@
             this.CancelButton = this.btn_Cancel;
             this.ClientSize = new System.Drawing.Size(844, 642);
             this.ControlBox = false;
+            this.Controls.Add(this.btn_PullMostRecentPasteSettings);
             this.Controls.Add(this.btn_AllData_None);
             this.Controls.Add(this.btn_AllData_All);
             this.Controls.Add(this.gbx_Dates);
@@ -502,5 +514,6 @@
         private System.Windows.Forms.CheckBox ckb_TakenDate;
         private System.Windows.Forms.Button btn_AllData_None;
         private System.Windows.Forms.Button btn_AllData_All;
+        private System.Windows.Forms.Button btn_PullMostRecentPasteSettings;
     }
 }

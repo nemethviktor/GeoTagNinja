@@ -5,6 +5,8 @@
   - Added functionality to auto-navigate to a selected Favourite in the dropdown.
   - Added a "recall last Track Sync Shift" option.
   - Added logic for the pick-from-API-choices Form to accept doubleClick and (keyboard) Enter (key)
+  - Added a button in the Paste Form for generic All/None
+  - Added a button in the Paste Form for recalling the last Paste settings
   - Changed certain numeric TextBoxes to NumericUpDowns.
 - BUGS & FIXES:
   - Fixed a bug where NumerUpDown changes didn't trigger setting fonts to Bold

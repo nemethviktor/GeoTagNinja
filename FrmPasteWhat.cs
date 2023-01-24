@@ -10,6 +10,7 @@ namespace GeoTagNinja;
 public partial class FrmPasteWhat : Form
 {
     private static string _initiatorName;
+    private static readonly List<string> _lastCheckedCheckBoxes = new();
 
     /// <summary>
     ///     This form controls what data to paste from a "current file" to "selected files".
@@ -152,6 +153,8 @@ public partial class FrmPasteWhat : Form
                 HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
             }
         }
+
+        btn_PullMostRecentPasteSettings.Enabled = _lastCheckedCheckBoxes.Count > 0;
     }
 
     /// <summary>
@@ -211,6 +214,8 @@ public partial class FrmPasteWhat : Form
 
         // get a list of tag names to paste
         List<string> tagsToPaste = new();
+        _lastCheckedCheckBoxes.Clear();
+
         foreach (Control cItem in c)
         {
             if (cItem.GetType() == typeof(CheckBox))
@@ -219,6 +224,7 @@ public partial class FrmPasteWhat : Form
                 if (thisCheckBox.Checked)
                 {
                     string tagName = cItem.Name.Substring(startIndex: 4);
+                    _lastCheckedCheckBoxes.Add(item: cItem.Name);
 
                     // "EndsWith" doesn't work here because the CheckBox.Name never ends with "Shift".
                     if (tagName == "TakenDate" || tagName == "CreateDate")
@@ -459,11 +465,11 @@ public partial class FrmPasteWhat : Form
                                        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this, typeof(CheckBox));
+        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
         foreach (Control cItem in c)
         {
             CheckBox thisCheckBox = (CheckBox)cItem;
-                thisCheckBox.Checked = true;
+            thisCheckBox.Checked = true;
         }
     }
 
@@ -471,11 +477,24 @@ public partial class FrmPasteWhat : Form
                                         EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this, typeof(CheckBox));
+        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
         foreach (Control cItem in c)
         {
             CheckBox thisCheckBox = (CheckBox)cItem;
-                thisCheckBox.Checked = false;
+            thisCheckBox.Checked = false;
+        }
+    }
+
+
+    private void btn_PullMostRecentPasteSettings_Click(object sender,
+                                                       EventArgs e)
+    {
+        HelperNonStatic helperNonstatic = new();
+        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
+        foreach (Control cItem in c)
+        {
+            CheckBox thisCheckBox = (CheckBox)cItem;
+            thisCheckBox.Checked = _lastCheckedCheckBoxes.Contains(item: cItem.Name);
         }
     }
 
