@@ -20,11 +20,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Authenticators;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using Button = System.Windows.Forms.Button;
-using ComboBox = System.Windows.Forms.ComboBox;
-using ListView = System.Windows.Forms.ListView;
-using TextBox = System.Windows.Forms.TextBox;
 
 namespace GeoTagNinja;
 
@@ -2417,19 +2412,19 @@ internal static partial class HelperStatic
                     {
                         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
                         // scroll to the file in question and show the image of it...makes life a lot easier
-                        if (!string.IsNullOrEmpty(fileNameWithoutPath))
+                        if (!string.IsNullOrEmpty(value: fileNameWithoutPath))
                         {
-                            string fileNameWithPath = Path.Combine(FrmMainApp.FolderName, fileNameWithoutPath);
-                            ListViewItem lvi = frmMainAppInstance.lvw_FileList.FindItemWithText(fileNameWithoutPath);
+                            string fileNameWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath);
+                            ListViewItem lvi = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath);
                             frmMainAppInstance.lvw_FileList.FocusedItem = lvi;
-                            frmMainAppInstance.lvw_FileList.EnsureVisible(lvi.Index);
-                            HelperStatic.GenericCreateImagePreview(
+                            frmMainAppInstance.lvw_FileList.EnsureVisible(index: lvi.Index);
+                            GenericCreateImagePreview(
                                 fileNameWithPath: fileNameWithPath, initiator: "FrmMainAppAPIDataSelection"
                             );
                             Application.DoEvents();
                         }
 
-                        int useDr = useDrRow(dtIn: dtReturn);
+                        int useDr = showDataFromAPIPicker(dtIn: dtReturn);
                         dtReturn = dtReturn.AsEnumerable()
                             .Where(predicate: (row,
                                                index) => index == useDr)
@@ -2464,61 +2459,105 @@ internal static partial class HelperStatic
                                 .ToString()
                         );
 
-                        int useDrRow(DataTable dtIn)
+                        int showDataFromAPIPicker(DataTable dtIn)
                         {
-                            Form pickRowBox = new();
+                            Form FrmPickDataFromAPIBox = new()
+                            {
+                                Text = DataReadDTObjectText(
+                                    objectType: "Form", objectName: "FrmPickDataFromAPIBox"),
+                                MinimizeBox = false,
+                                MaximizeBox = false,
+                                ShowIcon = false,
+                                ShowInTaskbar = false,
+                                StartPosition = FormStartPosition.CenterScreen
+                            };
 
-                            pickRowBox.ControlBox = false;
                             FlowLayoutPanel panel = new();
 
-                            ListView lvwDataChoices = new();
-                            lvwDataChoices.Size = new Size(width: 800, height: 200);
-                            lvwDataChoices.View = System.Windows.Forms.View.Details;
+                            ListView lvwDataChoices = new()
+                            {
+                                Size = new Size(width: 800, height: 200),
+                                View = System.Windows.Forms.View.Details,
+                                MultiSelect = false,
+                                FullRowSelect = true
+                            };
+
                             lvwDataChoices.Columns.Add(text: "Index");
+
                             foreach (DataColumn dc in dtIn.Columns)
                             {
                                 lvwDataChoices.Columns.Add(text: dc.ColumnName, width: -2);
                             }
 
+                            lvwDataChoices.MouseDoubleClick += (sender,
+                                                                args) =>
+                            {
+                                ListViewHitTestInfo info = lvwDataChoices.HitTest(x: args.X, y: args.Y);
+                                ListViewItem item = info.Item;
+
+                                if (item != null)
+                                {
+                                    FrmPickDataFromAPIBox.Close();
+                                }
+                            };
+
                             foreach (DataRow drItem in dtReturn.Rows)
                             {
-                                ListViewItem lvi = new(text: dtReturn.Rows.IndexOf(row: drItem)
-                                                           .ToString());
+                                // make it not-zero based.
+                                ListViewItem lvi = new(text: (dtReturn.Rows.IndexOf(row: drItem) +
+                                                              1)
+                                                       .ToString());
                                 foreach (DataColumn dc in dtIn.Columns)
                                 {
-                                    lvi.SubItems.Add(text: drItem[column: dc]
-                                                         .ToString());
+                                    string dataToAdd = drItem[column: dc]
+                                        .ToString();
+
+                                    lvi.SubItems.Add(text: dataToAdd);
                                 }
 
                                 lvwDataChoices.Items.Add(value: lvi);
                             }
 
-                            lvwDataChoices.MultiSelect = false;
-                            lvwDataChoices.FullRowSelect = true;
+                            lvwDataChoices.Items[index: 0]
+                                .Selected = true;
+                            lvwDataChoices.Select();
+
+                            lvwDataChoices.KeyUp += (sender,
+                                                     args) =>
+                            {
+                                if (args.KeyCode == Keys.Enter)
+                                {
+                                    if (lvwDataChoices.SelectedItems.Count == 1)
+                                    {
+                                        FrmPickDataFromAPIBox.Close();
+                                    }
+                                }
+                            };
 
                             panel.Controls.Add(value: lvwDataChoices);
                             panel.SetFlowBreak(control: lvwDataChoices, value: true);
 
-                            Button btnOk = new()
-                                { Text = "OK" };
-                            btnOk.Click += (sender,
-                                            e) =>
+                            Button btn_OK = new()
                             {
-                                pickRowBox.Close();
+                                Text = DataReadDTObjectText(
+                                    objectType: "Button", objectName: "btn_OK")
                             };
-                            btnOk.Location = new Point(x: 10, y: lvwDataChoices.Bottom + 5);
-                            btnOk.AutoSize = true;
-                            panel.Controls.Add(value: btnOk);
+                            btn_OK.Click += (sender,
+                                             e) =>
+                            {
+                                FrmPickDataFromAPIBox.Close();
+                            };
+                            btn_OK.Location = new Point(x: 10, y: lvwDataChoices.Bottom + 15);
+                            btn_OK.AutoSize = true;
+                            panel.Controls.Add(value: btn_OK);
 
                             panel.Padding = new Padding(all: 5);
                             panel.AutoSize = true;
 
-                            pickRowBox.Controls.Add(value: panel);
-                            pickRowBox.MinimumSize = new Size(width: lvwDataChoices.Width + 40, height: btnOk.Bottom + 50);
-                            pickRowBox.ShowInTaskbar = false;
+                            FrmPickDataFromAPIBox.Controls.Add(value: panel);
+                            FrmPickDataFromAPIBox.MinimumSize = new Size(width: lvwDataChoices.Width + 40, height: btn_OK.Bottom + 20);
 
-                            pickRowBox.StartPosition = FormStartPosition.CenterScreen;
-                            pickRowBox.ShowDialog();
+                            FrmPickDataFromAPIBox.ShowDialog();
 
                             try
                             {

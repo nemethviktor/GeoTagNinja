@@ -4,9 +4,11 @@
 - NEW & UPDATED:
   - Added functionality to auto-navigate to a selected Favourite in the dropdown.
   - Added a "recall last Track Sync Shift" option.
+  - Added logic for the pick-from-API-choices Form to accept doubleClick and (keyboard) Enter (key)
   - Changed certain numeric TextBoxes to NumericUpDowns.
 - BUGS & FIXES:
   - Fixed a bug where NumerUpDown changes didn't trigger setting fonts to Bold
+  - Changed the pick-from-API-choices Form to be 1-based-index rather than 0-based
 
 **v0.7.8421 [20230121]**
 - NEW & UPDATED:
