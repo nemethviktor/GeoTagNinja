@@ -806,6 +806,7 @@ internal static partial class HelperStatic
             };
             btnYes.Location = new Point(x: 10, y: lblText.Bottom + 5);
             btnYes.AutoSize = true;
+
             panel.Controls.Add(value: btnYes);
 
             Button btnNo = new()
@@ -834,7 +835,8 @@ internal static partial class HelperStatic
             promptBox.Controls.Add(value: panel);
             promptBox.Size = new Size(width: lblText.Width + 40, height: chk.Bottom + 50);
             promptBox.ShowInTaskbar = false;
-
+            promptBox.AcceptButton = btnYes;
+            promptBox.CancelButton = btnNo;
             promptBox.StartPosition = FormStartPosition.CenterScreen;
             promptBox.ShowDialog();
 

@@ -94,7 +94,10 @@ public partial class FrmPasteWhat : Form
         rbt_PasteCreateDateShift.Enabled = ckb_CreateDate.Checked;
 
         // enable the shift-radiobuttons if there's data
-        if (tagsToPasteList != null)
+        if (tagsToPasteList is
+            {
+                Count: > 0
+            })
         {
             foreach (string tagName in tagsToPasteList)
             {

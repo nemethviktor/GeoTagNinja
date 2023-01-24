@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
@@ -75,7 +76,7 @@ public partial class FrmMainApp : Form
     internal string _mapHtmlTemplateCode = "";
 
     internal static bool RemoveGeoDataIsRunning;
-    private static bool _StopProcessingRows = false;
+    private static bool _StopProcessingRows;
 
     // this is for copy-paste
     internal static DataTable DtFileDataCopyPool;
@@ -1014,6 +1015,7 @@ public partial class FrmMainApp : Form
     private async void tsb_GetAllFromWeb_Click(object sender,
                                                EventArgs e)
     {
+        HelperStatic.SApiOkay = true;
         _StopProcessingRows = false;
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         if (frmMainAppInstance != null)
@@ -1183,7 +1185,7 @@ public partial class FrmMainApp : Form
                     returnButton2Text: "no"
                 );
 
-                if (APIHandlingChoice.Contains("yes"))
+                if (APIHandlingChoice.Contains(value: "yes"))
                 {
                     List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
                     toponomyOverwrites.Add(item: ("CountryCode", null));
@@ -1210,12 +1212,9 @@ public partial class FrmMainApp : Form
                             .Text = toponomyDetail.toponomyOverwriteVal;
                     }
                 }
-                else
-                {
-                    // nothing
-                }
 
-                if (APIHandlingChoice.Contains("_stopprocessing"))
+                // nothing
+                if (APIHandlingChoice.Contains(value: "_stopprocessing"))
                 {
                     _StopProcessingRows = true;
                 }
@@ -2143,6 +2142,73 @@ public partial class FrmMainApp : Form
                 caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Information);
+        }
+    }
+
+
+    private void tmi_OpenCoordsInAPI_Click(object sender,
+                                           EventArgs e)
+    {
+        bool selectionIsValid = false;
+        bool latParseSuccess = false;
+        double dblLat = 0;
+        bool lngParseSuccess = false;
+        double dblLng = 0;
+        ListView lvw = lvw_FileList;
+
+        if (lvw.SelectedItems.Count == 1)
+        {
+            ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
+
+            if (!File.Exists(path: Path.Combine(path1: FolderName, path2: lvi.Text)))
+            {
+                // ignore
+            }
+            else
+            {
+                latParseSuccess = double.TryParse(s: lvi.SubItems[index: lvw.Columns[key: "clh_GPSLatitude"]
+                                                                      .Index]
+                                                      .Text, result: out dblLat);
+                lngParseSuccess = double.TryParse(s: lvi.SubItems[index: lvw.Columns[key: "clh_GPSLongitude"]
+                                                                      .Index]
+                                                      .Text, result: out dblLng);
+                if (latParseSuccess && lngParseSuccess)
+                {
+                    selectionIsValid = true;
+                }
+            }
+        }
+
+        if (!selectionIsValid)
+        {
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmMainApp_WarningTooManyFilesSelected"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Warning"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Warning);
+        }
+        else
+        {
+            CultureInfo cIEnUS = new(name: "en-US");
+            string SOnlyShowFCodePPL = HelperStatic.SOnlyShowFCodePPL
+                ? "&fcode=PPL"
+                : "";
+            string openAPILink = "http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&lat=" +
+                                 dblLat.ToString(provider: cIEnUS) +
+                                 "&lng=" +
+                                 dblLng.ToString(provider: cIEnUS) +
+                                 HelperStatic.APILanguageToUse +
+                                 SOnlyShowFCodePPL +
+                                 "&style=FULL&radius=" +
+                                 HelperStatic.ToponomyRadiusValue +
+                                 "&maxRows=" +
+                                 HelperStatic.ToponomyMaxRows +
+                                 "&style=FULL&username=" +
+                                 HelperStatic.SGeoNamesUserName +
+                                 "&password=" +
+                                 HelperStatic.SGeoNamesPwd;
+            Process.Start(fileName: openAPILink);
         }
     }
 

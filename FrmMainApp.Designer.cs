@@ -75,7 +75,9 @@ namespace GeoTagNinja
             this.igl_RightHandSide = new System.Windows.Forms.ImageList(this.components);
             this.flp_GeoCoords = new System.Windows.Forms.FlowLayoutPanel();
             this.lbl_lat = new System.Windows.Forms.Label();
+            this.nud_lat = new System.Windows.Forms.NumericUpDown();
             this.lbl_lng = new System.Windows.Forms.Label();
+            this.nud_lng = new System.Windows.Forms.NumericUpDown();
             this.btn_NavigateMapGo = new System.Windows.Forms.Button();
             this.btn_loctToFile = new System.Windows.Forms.Button();
             this.lbl_Favourites = new System.Windows.Forms.Label();
@@ -88,8 +90,7 @@ namespace GeoTagNinja
             this.ttp_SaveFavourite = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_LoadFavourite = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_ManageFavourites = new System.Windows.Forms.ToolTip(this.components);
-            this.nud_lat = new System.Windows.Forms.NumericUpDown();
-            this.nud_lng = new System.Windows.Forms.NumericUpDown();
+            this.tmi_OpenCoordsInAPI = new System.Windows.Forms.ToolStripMenuItem();
             this.mns_MenuStrip.SuspendLayout();
             this.tsr_MainAppToolStrip.SuspendLayout();
             this.tsr_FolderControl.SuspendLayout();
@@ -426,24 +427,25 @@ namespace GeoTagNinja
             this.cms_FileListView.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cms_FileListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tmi_ShowHideCols,
-            this.tmi_removeCachedData});
+            this.tmi_removeCachedData,
+            this.tmi_OpenCoordsInAPI});
             this.cms_FileListView.Name = "cms_FileListView";
-            this.cms_FileListView.Size = new System.Drawing.Size(161, 48);
+            this.cms_FileListView.Size = new System.Drawing.Size(202, 92);
             // 
             // tmi_ShowHideCols
             // 
             this.tmi_ShowHideCols.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.tmi_ShowHideCols.Name = "tmi_ShowHideCols";
-            this.tmi_ShowHideCols.Size = new System.Drawing.Size(160, 22);
-            this.tmi_ShowHideCols.Text = "Select Columns";
+            this.tmi_ShowHideCols.Size = new System.Drawing.Size(201, 22);
+            this.tmi_ShowHideCols.Text = "tmi_ShowHideCols";
             this.tmi_ShowHideCols.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.tmi_ShowHideCols.Click += new System.EventHandler(this.selectColumnsToolStripMenuItem_Click);
             // 
             // tmi_removeCachedData
             // 
             this.tmi_removeCachedData.Name = "tmi_removeCachedData";
-            this.tmi_removeCachedData.Size = new System.Drawing.Size(160, 22);
-            this.tmi_removeCachedData.Text = "Remove Cached";
+            this.tmi_removeCachedData.Size = new System.Drawing.Size(201, 22);
+            this.tmi_removeCachedData.Text = "tmi_removeCachedData";
             this.tmi_removeCachedData.Click += new System.EventHandler(this.tmi_removeCachedData_Click);
             // 
             // pbx_imagePreview
@@ -558,6 +560,24 @@ namespace GeoTagNinja
             this.lbl_lat.TabIndex = 6;
             this.lbl_lat.Text = "lbl_lat";
             // 
+            // nud_lat
+            // 
+            this.nud_lat.DecimalPlaces = 6;
+            this.nud_lat.Location = new System.Drawing.Point(49, 3);
+            this.nud_lat.Maximum = new decimal(new int[] {
+            180,
+            0,
+            0,
+            0});
+            this.nud_lat.Minimum = new decimal(new int[] {
+            180,
+            0,
+            0,
+            -2147483648});
+            this.nud_lat.Name = "nud_lat";
+            this.nud_lat.Size = new System.Drawing.Size(120, 20);
+            this.nud_lat.TabIndex = 17;
+            // 
             // lbl_lng
             // 
             this.lbl_lng.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -568,6 +588,24 @@ namespace GeoTagNinja
             this.lbl_lng.Size = new System.Drawing.Size(37, 13);
             this.lbl_lng.TabIndex = 8;
             this.lbl_lng.Text = "lbl_lng";
+            // 
+            // nud_lng
+            // 
+            this.nud_lng.DecimalPlaces = 6;
+            this.nud_lng.Location = new System.Drawing.Point(234, 3);
+            this.nud_lng.Maximum = new decimal(new int[] {
+            180,
+            0,
+            0,
+            0});
+            this.nud_lng.Minimum = new decimal(new int[] {
+            180,
+            0,
+            0,
+            -2147483648});
+            this.nud_lng.Name = "nud_lng";
+            this.nud_lng.Size = new System.Drawing.Size(120, 20);
+            this.nud_lng.TabIndex = 18;
             // 
             // btn_NavigateMapGo
             // 
@@ -655,41 +693,12 @@ namespace GeoTagNinja
             this.btn_ManageFavourites.UseVisualStyleBackColor = true;
             this.btn_ManageFavourites.Click += new System.EventHandler(this.btn_ManageFavourites_Click);
             // 
-            // nud_lat
+            // tmi_OpenCoordsInAPI
             // 
-            this.nud_lat.DecimalPlaces = 6;
-            this.nud_lat.Location = new System.Drawing.Point(49, 3);
-            this.nud_lat.Maximum = new decimal(new int[] {
-            180,
-            0,
-            0,
-            0});
-            this.nud_lat.Minimum = new decimal(new int[] {
-            180,
-            0,
-            0,
-            -2147483648});
-            this.nud_lat.Name = "nud_lat";
-            this.nud_lat.Size = new System.Drawing.Size(120, 20);
-            this.nud_lat.TabIndex = 17;
-            // 
-            // nud_lng
-            // 
-            this.nud_lng.DecimalPlaces = 6;
-            this.nud_lng.Location = new System.Drawing.Point(234, 3);
-            this.nud_lng.Maximum = new decimal(new int[] {
-            180,
-            0,
-            0,
-            0});
-            this.nud_lng.Minimum = new decimal(new int[] {
-            180,
-            0,
-            0,
-            -2147483648});
-            this.nud_lng.Name = "nud_lng";
-            this.nud_lng.Size = new System.Drawing.Size(120, 20);
-            this.nud_lng.TabIndex = 18;
+            this.tmi_OpenCoordsInAPI.Name = "tmi_OpenCoordsInAPI";
+            this.tmi_OpenCoordsInAPI.Size = new System.Drawing.Size(201, 22);
+            this.tmi_OpenCoordsInAPI.Text = "tmi_OpenCoordsInAPI";
+            this.tmi_OpenCoordsInAPI.Click += new System.EventHandler(this.tmi_OpenCoordsInAPI_Click);
             // 
             // FrmMainApp
             // 
@@ -798,6 +807,7 @@ namespace GeoTagNinja
         private ToolTip ttp_ManageFavourites;
         internal NumericUpDown nud_lat;
         internal NumericUpDown nud_lng;
+        private ToolStripMenuItem tmi_OpenCoordsInAPI;
     }
 }
 

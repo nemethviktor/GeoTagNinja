@@ -81,3 +81,4 @@ mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty,"If you pick ""Custom
 mbx_FrmImportNoStoredShiftValues,"No ""shift"" values stored. Data will remain 0.",
 mbx_DirectoryElementCollection_ErrorParsing,Error while parsing folder to DirectoryElements,
 mbx_FrmMainApp_QuestionNoRowsFromAPI,The API query didn't return any valid information. Do you want to blank out the toponomy values?,
+mbx_FrmMainApp_WarningTooManyFilesSelected,Precisely 1 file must be selected.,
