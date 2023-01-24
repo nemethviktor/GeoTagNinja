@@ -45,9 +45,6 @@ lbl_importOneFile,<-- Click there set the Import Source File,<-- Cliquez ici pou
 lbl_importFromAnotherFolder,<-- Click there set the Import Source Folder,<-- Cliquez ici pour définir le dossier source d'importation
 lbl_GeoMaxIntSecs,Max interpolation ('path guessing') time in seconds. Set to 0 to disable.,Durée maximale d'interpolation ('devinette de chemin') en secs. Mettre à 0 pour désactiver.
 lbl_GeoMaxExtSecs,Max extrapolation (time diff between Taken TimeStamp and Trackpoint TS) time in seconds.,Durée maximale d'extrapolation (différence de temps entre la photo et le fichier de tracking) en secs.
-lbl_FolderIsLoading,"Please wait while the folder loads. 
-(If you start interacting now some of the write operations can misfire)","Veuillez patienter pendant le chargement du dossier.
-(Si vous commencez à interagir maintenant, certaines des opérations d'écriture peuvent échouer)"
 lbl_ImportGPXDays,Days,Journées
 lbl_ImportGPXHours,Hrs,Heures
 lbl_ImportGPXMinutes,Mins,Minutes

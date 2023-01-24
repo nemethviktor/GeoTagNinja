@@ -1396,7 +1396,7 @@ public partial class FrmMainApp : Form
     ///     Also I've introduced a "Please Wait" Form to block the Main Form from being interacted with while the folder is
     ///     refreshing. Soz but needed.
     /// </summary>
-    private async void lvwFileList_LoadOrUpdate()
+    private void lvwFileList_LoadOrUpdate()
     {
         Logger.Debug(message: "Starting");
 
@@ -1407,33 +1407,25 @@ public partial class FrmMainApp : Form
         HelperStatic.FilesBeingProcessed.Clear();
         RemoveGeoDataIsRunning = false;
 
-        #region PleaseWaitBox
+        #region FrmPleaseWaitBox
 
-        Logger.Trace(message: "Create PleaseWaitBox");
-        Form pleaseWaitBox = new();
-        pleaseWaitBox.Text = "Wait...";
-        pleaseWaitBox.ControlBox = false;
-        FlowLayoutPanel panel = new();
+        Logger.Trace(message: "Create FrmPleaseWaitBox");
 
-        Label lblText = new();
-        lblText.Text = HelperStatic.DataReadDTObjectText(
-            objectType: "Label",
-            objectName: "lbl_FolderIsLoading"
-        );
-        lblText.AutoSize = true;
+        Form FrmPleaseWaitBox = new()
+        {
+            ControlBox = false,
+            ShowInTaskbar = false,
+            Size = new Size(width: 300, height: 40),
+            Padding = new Padding(left: 4, top: 2, right: 2, bottom: 4),
+            Text = HelperStatic.DataReadDTObjectText(
+                objectType: "Form",
+                objectName: "FrmPleaseWaitBox"
+            ),
+            StartPosition = FormStartPosition.CenterScreen
+        };
 
-        panel.Controls.Add(value: lblText);
-
-        panel.Padding = new Padding(all: 5);
-        panel.AutoSize = true;
-
-        pleaseWaitBox.Controls.Add(value: panel);
-        pleaseWaitBox.Size = new Size(width: panel.Width + 10, height: panel.Height + 5);
-        pleaseWaitBox.ShowInTaskbar = false;
-
-        pleaseWaitBox.StartPosition = FormStartPosition.CenterScreen;
-        Logger.Trace(message: "Show PleaseWaitBox");
-        pleaseWaitBox.Show();
+        Logger.Trace(message: "Show FrmPleaseWaitBox");
+        FrmPleaseWaitBox.Show();
         Logger.Trace(message: "Disable FrmMainApp");
         Enabled = false;
 
@@ -1473,7 +1465,7 @@ public partial class FrmMainApp : Form
         Logger.Trace(message: "Enable FrmMainApp");
         Enabled = true;
         Logger.Trace(message: "Hide PleaseWaitBox");
-        pleaseWaitBox.Hide();
+        FrmPleaseWaitBox.Hide();
 
         // Not logging this.
         HelperStatic.LvwCountItemsWithGeoData();

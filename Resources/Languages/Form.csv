@@ -5,3 +5,4 @@ FrmImportGpx,Import GPX/JSON Data,Importer des données GPX/JSON
 FrmPasteWhat,Paste…What?,Coller… Quoi ?
 FrmManageFavourites,Manage Favourites,
 FrmPickDataFromAPIBox,Choose Toponymy Values,
+FrmPleaseWaitBox,Please wait while the folder loads. ,Veuillez patienter pendant le chargement du dossier.
