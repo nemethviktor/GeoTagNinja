@@ -33,6 +33,7 @@
             this.tct_Settings = new System.Windows.Forms.TabControl();
             this.tpg_Application = new System.Windows.Forms.TabPage();
             this.gbx_GeoNamesSettings = new System.Windows.Forms.GroupBox();
+            this.ckb_PopulatedPlacesOnly = new System.Windows.Forms.CheckBox();
             this.gbx_GeoNamesLanguageSettings = new System.Windows.Forms.GroupBox();
             this.cbx_TryUseGeoNamesLanguage = new System.Windows.Forms.ComboBox();
             this.rbt_TryUseGeoNamesLanguage = new System.Windows.Forms.RadioButton();
@@ -65,6 +66,10 @@
             this.ckb_OverwriteOriginal = new System.Windows.Forms.CheckBox();
             this.ckb_AddXMPSideCar = new System.Windows.Forms.CheckBox();
             this.lbx_fileExtensions = new System.Windows.Forms.ListBox();
+            this.tpg_CustomCityLogic = new System.Windows.Forms.TabPage();
+            this.btn_ResetToDefaults = new System.Windows.Forms.Button();
+            this.rbx_CustomCityLogicExplanation = new System.Windows.Forms.RichTextBox();
+            this.dgv_CustomCityLogic = new System.Windows.Forms.DataGridView();
             this.tpg_CustomRules = new System.Windows.Forms.TabPage();
             this.ckb_StopProcessingRules = new System.Windows.Forms.CheckBox();
             this.ckb_IncludePredeterminedCountries = new System.Windows.Forms.CheckBox();
@@ -74,7 +79,8 @@
             this.btn_OK = new System.Windows.Forms.Button();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.fbd_StartupFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.ckb_PopulatedPlacesOnly = new System.Windows.Forms.CheckBox();
+            this.rbx_CustomCityLogicExplanationBold = new System.Windows.Forms.RichTextBox();
+            this.rbx_CustomRulesExplanationBold = new System.Windows.Forms.RichTextBox();
             this.tct_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             this.gbx_GeoNamesSettings.SuspendLayout();
@@ -84,6 +90,8 @@
             this.gbx_AppSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).BeginInit();
             this.tpg_FileOptions.SuspendLayout();
+            this.tpg_CustomCityLogic.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_CustomCityLogic)).BeginInit();
             this.tpg_CustomRules.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_CustomRules)).BeginInit();
             this.SuspendLayout();
@@ -95,6 +103,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tct_Settings.Controls.Add(this.tpg_Application);
             this.tct_Settings.Controls.Add(this.tpg_FileOptions);
+            this.tct_Settings.Controls.Add(this.tpg_CustomCityLogic);
             this.tct_Settings.Controls.Add(this.tpg_CustomRules);
             this.tct_Settings.ImageList = this.igl_Settings;
             this.tct_Settings.Location = new System.Drawing.Point(16, 12);
@@ -143,6 +152,17 @@
             this.gbx_GeoNamesSettings.TabIndex = 33;
             this.gbx_GeoNamesSettings.TabStop = false;
             this.gbx_GeoNamesSettings.Text = "gbx_GeoNamesSettings";
+            // 
+            // ckb_PopulatedPlacesOnly
+            // 
+            this.ckb_PopulatedPlacesOnly.AutoSize = true;
+            this.ckb_PopulatedPlacesOnly.Location = new System.Drawing.Point(12, 397);
+            this.ckb_PopulatedPlacesOnly.Name = "ckb_PopulatedPlacesOnly";
+            this.ckb_PopulatedPlacesOnly.Size = new System.Drawing.Size(151, 17);
+            this.ckb_PopulatedPlacesOnly.TabIndex = 49;
+            this.ckb_PopulatedPlacesOnly.Text = "ckb_PopulatedPlacesOnly";
+            this.ckb_PopulatedPlacesOnly.UseVisualStyleBackColor = true;
+            this.ckb_PopulatedPlacesOnly.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
             // gbx_GeoNamesLanguageSettings
             // 
@@ -523,8 +543,56 @@
             this.lbx_fileExtensions.TabIndex = 0;
             this.lbx_fileExtensions.SelectedIndexChanged += new System.EventHandler(this.Lbx_fileExtensions_SelectedIndexChanged);
             // 
+            // tpg_CustomCityLogic
+            // 
+            this.tpg_CustomCityLogic.Controls.Add(this.rbx_CustomCityLogicExplanationBold);
+            this.tpg_CustomCityLogic.Controls.Add(this.btn_ResetToDefaults);
+            this.tpg_CustomCityLogic.Controls.Add(this.rbx_CustomCityLogicExplanation);
+            this.tpg_CustomCityLogic.Controls.Add(this.dgv_CustomCityLogic);
+            this.tpg_CustomCityLogic.ImageKey = "CustomAction.png";
+            this.tpg_CustomCityLogic.Location = new System.Drawing.Point(4, 23);
+            this.tpg_CustomCityLogic.Name = "tpg_CustomCityLogic";
+            this.tpg_CustomCityLogic.Padding = new System.Windows.Forms.Padding(3);
+            this.tpg_CustomCityLogic.Size = new System.Drawing.Size(898, 644);
+            this.tpg_CustomCityLogic.TabIndex = 3;
+            this.tpg_CustomCityLogic.Text = "tpg_CustomCityLogic";
+            this.tpg_CustomCityLogic.UseVisualStyleBackColor = true;
+            // 
+            // btn_ResetToDefaults
+            // 
+            this.btn_ResetToDefaults.Location = new System.Drawing.Point(771, 613);
+            this.btn_ResetToDefaults.Name = "btn_ResetToDefaults";
+            this.btn_ResetToDefaults.Size = new System.Drawing.Size(106, 23);
+            this.btn_ResetToDefaults.TabIndex = 3;
+            this.btn_ResetToDefaults.Text = "btn_ResetToDefaults";
+            this.btn_ResetToDefaults.UseVisualStyleBackColor = true;
+            this.btn_ResetToDefaults.Click += new System.EventHandler(this.btn_ResetToDefaults_Click);
+            // 
+            // rbx_CustomCityLogicExplanation
+            // 
+            this.rbx_CustomCityLogicExplanation.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rbx_CustomCityLogicExplanation.Location = new System.Drawing.Point(7, 6);
+            this.rbx_CustomCityLogicExplanation.Name = "rbx_CustomCityLogicExplanation";
+            this.rbx_CustomCityLogicExplanation.ReadOnly = true;
+            this.rbx_CustomCityLogicExplanation.Size = new System.Drawing.Size(885, 132);
+            this.rbx_CustomCityLogicExplanation.TabIndex = 2;
+            this.rbx_CustomCityLogicExplanation.Text = "";
+            // 
+            // dgv_CustomCityLogic
+            // 
+            this.dgv_CustomCityLogic.AllowUserToAddRows = false;
+            this.dgv_CustomCityLogic.AllowUserToDeleteRows = false;
+            this.dgv_CustomCityLogic.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgv_CustomCityLogic.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            this.dgv_CustomCityLogic.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_CustomCityLogic.Location = new System.Drawing.Point(7, 190);
+            this.dgv_CustomCityLogic.Name = "dgv_CustomCityLogic";
+            this.dgv_CustomCityLogic.Size = new System.Drawing.Size(885, 405);
+            this.dgv_CustomCityLogic.TabIndex = 1;
+            // 
             // tpg_CustomRules
             // 
+            this.tpg_CustomRules.Controls.Add(this.rbx_CustomRulesExplanationBold);
             this.tpg_CustomRules.Controls.Add(this.ckb_StopProcessingRules);
             this.tpg_CustomRules.Controls.Add(this.ckb_IncludePredeterminedCountries);
             this.tpg_CustomRules.Controls.Add(this.rbx_CustomRulesExplanation);
@@ -541,7 +609,7 @@
             // ckb_StopProcessingRules
             // 
             this.ckb_StopProcessingRules.AutoSize = true;
-            this.ckb_StopProcessingRules.Location = new System.Drawing.Point(535, 143);
+            this.ckb_StopProcessingRules.Location = new System.Drawing.Point(535, 190);
             this.ckb_StopProcessingRules.Name = "ckb_StopProcessingRules";
             this.ckb_StopProcessingRules.Size = new System.Drawing.Size(151, 17);
             this.ckb_StopProcessingRules.TabIndex = 17;
@@ -552,7 +620,7 @@
             // ckb_IncludePredeterminedCountries
             // 
             this.ckb_IncludePredeterminedCountries.AutoSize = true;
-            this.ckb_IncludePredeterminedCountries.Location = new System.Drawing.Point(7, 143);
+            this.ckb_IncludePredeterminedCountries.Location = new System.Drawing.Point(7, 190);
             this.ckb_IncludePredeterminedCountries.Name = "ckb_IncludePredeterminedCountries";
             this.ckb_IncludePredeterminedCountries.Size = new System.Drawing.Size(197, 17);
             this.ckb_IncludePredeterminedCountries.TabIndex = 16;
@@ -566,7 +634,7 @@
             this.rbx_CustomRulesExplanation.Location = new System.Drawing.Point(7, 6);
             this.rbx_CustomRulesExplanation.Name = "rbx_CustomRulesExplanation";
             this.rbx_CustomRulesExplanation.ReadOnly = true;
-            this.rbx_CustomRulesExplanation.Size = new System.Drawing.Size(885, 127);
+            this.rbx_CustomRulesExplanation.Size = new System.Drawing.Size(885, 132);
             this.rbx_CustomRulesExplanation.TabIndex = 1;
             this.rbx_CustomRulesExplanation.Text = "";
             this.rbx_CustomRulesExplanation.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.rbx_CustomRulesExplanation_LinkClicked);
@@ -576,9 +644,9 @@
             this.dgv_CustomRules.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv_CustomRules.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
             this.dgv_CustomRules.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_CustomRules.Location = new System.Drawing.Point(7, 178);
+            this.dgv_CustomRules.Location = new System.Drawing.Point(7, 220);
             this.dgv_CustomRules.Name = "dgv_CustomRules";
-            this.dgv_CustomRules.Size = new System.Drawing.Size(885, 217);
+            this.dgv_CustomRules.Size = new System.Drawing.Size(885, 418);
             this.dgv_CustomRules.TabIndex = 0;
             this.dgv_CustomRules.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_CustomRules_DataError);
             this.dgv_CustomRules.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dgv_CustomRules_RowValidating);
@@ -623,16 +691,27 @@
             this.fbd_StartupFolder.Description = "fbd_StartupFolder";
             this.fbd_StartupFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
-            // ckb_PopulatedPlacesOnly
+            // rbx_CustomCityLogicExplanationBold
             // 
-            this.ckb_PopulatedPlacesOnly.AutoSize = true;
-            this.ckb_PopulatedPlacesOnly.Location = new System.Drawing.Point(12, 397);
-            this.ckb_PopulatedPlacesOnly.Name = "ckb_PopulatedPlacesOnly";
-            this.ckb_PopulatedPlacesOnly.Size = new System.Drawing.Size(151, 17);
-            this.ckb_PopulatedPlacesOnly.TabIndex = 49;
-            this.ckb_PopulatedPlacesOnly.Text = "ckb_PopulatedPlacesOnly";
-            this.ckb_PopulatedPlacesOnly.UseVisualStyleBackColor = true;
-            this.ckb_PopulatedPlacesOnly.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            this.rbx_CustomCityLogicExplanationBold.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rbx_CustomCityLogicExplanationBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbx_CustomCityLogicExplanationBold.Location = new System.Drawing.Point(6, 144);
+            this.rbx_CustomCityLogicExplanationBold.Name = "rbx_CustomCityLogicExplanationBold";
+            this.rbx_CustomCityLogicExplanationBold.ReadOnly = true;
+            this.rbx_CustomCityLogicExplanationBold.Size = new System.Drawing.Size(885, 40);
+            this.rbx_CustomCityLogicExplanationBold.TabIndex = 4;
+            this.rbx_CustomCityLogicExplanationBold.Text = "";
+            // 
+            // rbx_CustomRulesExplanationBold
+            // 
+            this.rbx_CustomRulesExplanationBold.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rbx_CustomRulesExplanationBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbx_CustomRulesExplanationBold.Location = new System.Drawing.Point(7, 144);
+            this.rbx_CustomRulesExplanationBold.Name = "rbx_CustomRulesExplanationBold";
+            this.rbx_CustomRulesExplanationBold.ReadOnly = true;
+            this.rbx_CustomRulesExplanationBold.Size = new System.Drawing.Size(885, 40);
+            this.rbx_CustomRulesExplanationBold.TabIndex = 18;
+            this.rbx_CustomRulesExplanationBold.Text = "";
             // 
             // FrmSettings
             // 
@@ -667,6 +746,8 @@
             this.gbx_AppSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).EndInit();
             this.tpg_FileOptions.ResumeLayout(false);
+            this.tpg_CustomCityLogic.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_CustomCityLogic)).EndInit();
             this.tpg_CustomRules.ResumeLayout(false);
             this.tpg_CustomRules.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_CustomRules)).EndInit();
@@ -721,5 +802,11 @@
         private System.Windows.Forms.Label lbl_Startup_Folder;
         public System.Windows.Forms.TextBox tbx_Startup_Folder;
         private System.Windows.Forms.CheckBox ckb_PopulatedPlacesOnly;
+        private System.Windows.Forms.TabPage tpg_CustomCityLogic;
+        private System.Windows.Forms.DataGridView dgv_CustomCityLogic;
+        private System.Windows.Forms.RichTextBox rbx_CustomCityLogicExplanation;
+        private System.Windows.Forms.Button btn_ResetToDefaults;
+        private System.Windows.Forms.RichTextBox rbx_CustomCityLogicExplanationBold;
+        private System.Windows.Forms.RichTextBox rbx_CustomRulesExplanationBold;
     }
 }

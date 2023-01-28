@@ -77,7 +77,7 @@ internal static partial class HelperStatic
         {
             DialogResult dialogResult = MessageBox.Show(
                 text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_QuestionFileQIsNotEmpty"),
-                HelperStatic.GenericGetMessageBoxCaption(captionType: "Question"),
+                caption: GenericGetMessageBoxCaption(captionType: "Question"),
                 buttons: MessageBoxButtons.YesNoCancel,
                 icon: MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)

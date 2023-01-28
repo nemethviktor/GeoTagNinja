@@ -64,6 +64,15 @@ public partial class FrmMainApp : Form
     internal static DataTable DtObjectTagNamesOut;
     internal static DataTable DtIsoCountryCodeMapping;
     internal static DataTable DtFavourites;
+
+    // CustomCityLogic
+    internal static DataTable DtCustomCityLogic;
+    internal static List<string> lstCityNameIsAdminName1 = new();
+    internal static List<string> lstCityNameIsAdminName2 = new();
+    internal static List<string> lstCityNameIsAdminName3 = new();
+    internal static List<string> lstCityNameIsAdminName4 = new();
+    internal static List<string> lstCityNameIsUndefined = new();
+
     internal static string FolderName;
     internal static string _AppLanguage = "English"; // default to english
     internal static List<string> LstFavourites = new();
@@ -155,9 +164,14 @@ public partial class FrmMainApp : Form
         DirectoryElements.ExifTool = _ExifTool;
 
         HelperStatic.GenericCreateDataTables();
+        // read language and objectnames -- moved up here on purpose
+        HelperStatic.DataReadLanguageDataFromCSV();
+        HelperStatic.DataReadCountryCodeDataFromCSV();
+
         AppStartupCreateDataBaseFile();
         AppStartupWriteDefaultSettings();
         AppStartupReadObjectNamesAndLanguage();
+        AppStartupReadCustomCityLogic();
         AppStartupReadAPILanguage();
         AppStartupApplyDefaults();
         AppStartupCheckWebView2();
@@ -2198,16 +2212,17 @@ public partial class FrmMainApp : Form
                                  dblLat.ToString(provider: cIEnUS) +
                                  "&lng=" +
                                  dblLng.ToString(provider: cIEnUS) +
+                                 "&lang=" +
                                  HelperStatic.APILanguageToUse +
                                  SOnlyShowFCodePPL +
-                                 "&style=FULL&radius=" +
+                                 "&style=FULL" +
+                                 "&radius=" +
                                  HelperStatic.ToponomyRadiusValue +
                                  "&maxRows=" +
                                  HelperStatic.ToponomyMaxRows +
-                                 "&style=FULL&username=" +
+                                 "&username=" +
                                  HelperStatic.SGeoNamesUserName +
-                                 "&password=" +
-                                 HelperStatic.SGeoNamesPwd;
+                                 "&password=any";
             Process.Start(fileName: openAPILink);
         }
     }

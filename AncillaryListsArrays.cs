@@ -8,10 +8,6 @@ namespace GeoTagNinja;
 internal static class AncillaryListsArrays
 {
     internal static List<KeyValuePair<string, string>> CommonNamesKvp = new();
-    internal static readonly string[] CityNameIsAdminName1Arr = { "LIE", "SMR", "MNE", "MKD", "MLT", "SVN" };
-    internal static readonly string[] CityNameIsAdminName2Arr = { "ALA", "BRA", "COL", "CUB", "CYP", "DNK", "FRO", "GTM", "HND", "HRV", "ISL", "LUX", "LVA", "NIC", "NLD", "NOR", "PRI", "PRT", "ROU", "SWE" };
-    internal static readonly string[] CityNameIsAdminName3Arr = { "AUT", "CHE", "CHL", "CZE", "EST", "ESP", "FIN", "GRC", "ITA", "PAN", "PER", "POL", "SRB", "SVK", "USA", "ZAF" };
-    internal static readonly string[] CityNameIsAdminName4Arr = { "BEL", "DEU", "FRA", "GUF", "GLP", "MTQ" };
 
     #region Time zones
 
@@ -631,6 +627,21 @@ internal static class AncillaryListsArrays
             "State",
             "City",
             "Sub_location"
+        };
+
+        return result;
+        ;
+    }
+
+    internal static string[] CustomCityLogicDataSources()
+    {
+        string[] result =
+        {
+            "AdminName1",
+            "AdminName2",
+            "AdminName3",
+            "AdminName4",
+            "Undefined"
         };
 
         return result;

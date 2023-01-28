@@ -343,6 +343,9 @@
     <None Include="Resources\Languages\messageBox.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\Languages\messageBoxCaption.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\Languages\PictureBox.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

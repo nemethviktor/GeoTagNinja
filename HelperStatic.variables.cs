@@ -11,7 +11,6 @@ internal static partial class HelperStatic
     private static readonly string SSettingsDataBasePath = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "database.sqlite");
     internal static bool SChangeFolderIsOkay;
     internal static bool SApiOkay = true;
-    internal static bool SOnlyShowFCodePPL = false;
     internal static string _sErrorMsg = "";
     private static string _sOutputMsg = "";
     private static readonly string SDoubleQuote = "\"";
@@ -25,6 +24,7 @@ internal static partial class HelperStatic
     internal static double? LastLng;
     internal static bool SNowSelectingAllItems = false;
     internal static bool SResetMapToZero;
+    internal static bool SOnlyShowFCodePPL = false;
     private static decimal _currentExifToolVersionLocal;
     internal static bool ToponomyReplace = false;
     internal static string ToponomyReplaceWithWhat = null;

@@ -9,10 +9,13 @@
   - Added a button in the Paste Form for recalling the last Paste settings
   - Added an option to halt further API pulls if one failed
   - Changed certain numeric TextBoxes to NumericUpDowns.
+  - Added logic to replace hard-coded City-definition logic with user choices.
 - BUGS & FIXES:
   - Fixed a bug where NumerUpDown changes didn't trigger setting fonts to Bold
   - Fixed the map zooming way too far out when negative lat/long values are present
   - Changed the pick-from-API-choices Form to be 1-based-index rather than 0-based
+  - Fixed messageBox captions always saying "Error" as output
+  - Fixed a bug where one or two Settings were ignored on load
 
 **v0.7.8421 [20230121]**
 - NEW & UPDATED:

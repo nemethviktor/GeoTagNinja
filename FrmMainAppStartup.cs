@@ -103,10 +103,42 @@ public partial class FrmMainApp
                 icon: MessageBoxIcon.Error);
             Application.Exit();
         }
+    }
 
-        // read language and objectnames
-        HelperStatic.DataReadLanguageDataFromCSV();
-        HelperStatic.DataReadCountryCodeDataFromCSV();
+    internal static void AppStartupReadCustomCityLogic()
+    {
+        DtCustomCityLogic = HelperStatic.DataReadSQLiteCustomCityAllocationLogic();
+        lstCityNameIsAdminName1.Clear();
+        lstCityNameIsAdminName2.Clear();
+        lstCityNameIsAdminName3.Clear();
+        lstCityNameIsAdminName4.Clear();
+        lstCityNameIsUndefined.Clear();
+
+        foreach (DataRow drCountryCode in DtCustomCityLogic.Rows)
+        {
+            string countryCode = drCountryCode[columnName: "CountryCode"]
+                .ToString();
+            string targetPointName = drCountryCode[columnName: "TargetPointNameCustomCityLogic"]
+                .ToString();
+            switch (targetPointName)
+            {
+                case "AdminName1":
+                    lstCityNameIsAdminName1.Add(item: countryCode);
+                    break;
+                case "AdminName2":
+                    lstCityNameIsAdminName2.Add(item: countryCode);
+                    break;
+                case "AdminName3":
+                    lstCityNameIsAdminName3.Add(item: countryCode);
+                    break;
+                case "AdminName4":
+                    lstCityNameIsAdminName4.Add(item: countryCode);
+                    break;
+                case "Undefined":
+                    lstCityNameIsUndefined.Add(item: countryCode);
+                    break;
+            }
+        }
     }
 
     /// <summary>
@@ -176,6 +208,18 @@ public partial class FrmMainApp
                 tableName: "settings",
                 settingTabPage: "tpg_Application",
                 settingId: "tbx_GeoNames_Pwd"
+            );
+
+            HelperStatic.SResetMapToZero = HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
+                tableName: "settings",
+                settingTabPage: "tpg_Application",
+                settingId: "ckb_ResetMapToZero"
+            );
+
+            HelperStatic.SOnlyShowFCodePPL = HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
+                tableName: "settings",
+                settingTabPage: "tpg_Application",
+                settingId: "ckb_PopulatedPlacesOnly"
             );
         }
         catch (Exception ex)
@@ -481,7 +525,7 @@ public partial class FrmMainApp
             );
             if (nud_lat.Text != null)
             {
-                nud_lat.Value = Convert.ToDecimal(nud_lat.Text);
+                nud_lat.Value = Convert.ToDecimal(value: nud_lat.Text);
             }
 
             nud_lng.Text = HelperStatic.DataReadSQLiteSettings(
@@ -491,7 +535,7 @@ public partial class FrmMainApp
             );
             if (nud_lng.Text != null)
             {
-                nud_lng.Value = Convert.ToDecimal(nud_lng.Text);
+                nud_lng.Value = Convert.ToDecimal(value: nud_lng.Text);
             }
         }
         catch
@@ -507,8 +551,8 @@ public partial class FrmMainApp
             nud_lat.Text = defaultLat;
             nud_lng.Text = defaultLng;
 
-            nud_lat.Value = Convert.ToDecimal(defaultLat);
-            nud_lng.Value = Convert.ToDecimal(defaultLng);
+            nud_lat.Value = Convert.ToDecimal(value: defaultLat);
+            nud_lng.Value = Convert.ToDecimal(value: defaultLng);
         }
 
         HelperStatic.HsMapMarkers.Clear();
