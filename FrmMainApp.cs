@@ -391,13 +391,13 @@ public partial class FrmMainApp : Form
         double.TryParse(s: strLng, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dblLng); // trust me i hate this f...king culture thing as much as possible...
         // if the user zooms out too much they can encounter an "unreal" coordinate.
 
-        nud_lat.Text = HelperStatic.GenericCorrectInvalidCoordinate(coordHalfPair: dblLat)
-            .ToString(provider: CultureInfo.InvariantCulture);
-        nud_lng.Text = HelperStatic.GenericCorrectInvalidCoordinate(coordHalfPair: dblLng)
-            .ToString(provider: CultureInfo.InvariantCulture);
+        double correctedDblLat = HelperStatic.GenericCorrectInvalidCoordinate(coordHalfPair: dblLat);
+        double correctedDblLng = HelperStatic.GenericCorrectInvalidCoordinate(coordHalfPair: dblLng);
+        nud_lat.Text = correctedDblLat.ToString(provider: CultureInfo.InvariantCulture);
+        nud_lng.Text = correctedDblLng.ToString(provider: CultureInfo.InvariantCulture);
 
-        nud_lat.Value = Convert.ToDecimal(value: nud_lat.Text);
-        nud_lng.Value = Convert.ToDecimal(value: nud_lng.Text);
+        nud_lat.Value = Convert.ToDecimal(value: correctedDblLat, CultureInfo.InvariantCulture);
+        nud_lng.Value = Convert.ToDecimal(value: correctedDblLng, CultureInfo.InvariantCulture);
     }
 
     /// <summary>
@@ -2127,8 +2127,8 @@ public partial class FrmMainApp : Form
                 nud_lat.Text = favLat.ToString(provider: CultureInfo.InvariantCulture);
                 nud_lng.Text = favLng.ToString(provider: CultureInfo.InvariantCulture);
 
-                nud_lat.Value = Convert.ToDecimal(value: nud_lat.Text);
-                nud_lng.Value = Convert.ToDecimal(value: nud_lng.Text);
+                nud_lat.Value = Convert.ToDecimal(value: favLat, provider: CultureInfo.InvariantCulture);
+                nud_lng.Value = Convert.ToDecimal(value: favLng, provider: CultureInfo.InvariantCulture);
 
                 btn_NavigateMapGo_Click(sender: null, e: null);
             }

@@ -66,6 +66,7 @@ namespace GeoTagNinja
             this.cms_FileListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tmi_ShowHideCols = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_removeCachedData = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_OpenCoordsInAPI = new System.Windows.Forms.ToolStripMenuItem();
             this.pbx_imagePreview = new GeoTagNinja.ImagePreview();
             this.flp_ProcessingInfo = new System.Windows.Forms.FlowLayoutPanel();
             this.lbl_ParseProgress = new System.Windows.Forms.Label();
@@ -90,7 +91,6 @@ namespace GeoTagNinja
             this.ttp_SaveFavourite = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_LoadFavourite = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_ManageFavourites = new System.Windows.Forms.ToolTip(this.components);
-            this.tmi_OpenCoordsInAPI = new System.Windows.Forms.ToolStripMenuItem();
             this.mns_MenuStrip.SuspendLayout();
             this.tsr_MainAppToolStrip.SuspendLayout();
             this.tsr_FolderControl.SuspendLayout();
@@ -430,7 +430,7 @@ namespace GeoTagNinja
             this.tmi_removeCachedData,
             this.tmi_OpenCoordsInAPI});
             this.cms_FileListView.Name = "cms_FileListView";
-            this.cms_FileListView.Size = new System.Drawing.Size(202, 92);
+            this.cms_FileListView.Size = new System.Drawing.Size(202, 70);
             // 
             // tmi_ShowHideCols
             // 
@@ -447,6 +447,13 @@ namespace GeoTagNinja
             this.tmi_removeCachedData.Size = new System.Drawing.Size(201, 22);
             this.tmi_removeCachedData.Text = "tmi_removeCachedData";
             this.tmi_removeCachedData.Click += new System.EventHandler(this.tmi_removeCachedData_Click);
+            // 
+            // tmi_OpenCoordsInAPI
+            // 
+            this.tmi_OpenCoordsInAPI.Name = "tmi_OpenCoordsInAPI";
+            this.tmi_OpenCoordsInAPI.Size = new System.Drawing.Size(201, 22);
+            this.tmi_OpenCoordsInAPI.Text = "tmi_OpenCoordsInAPI";
+            this.tmi_OpenCoordsInAPI.Click += new System.EventHandler(this.tmi_OpenCoordsInAPI_Click);
             // 
             // pbx_imagePreview
             // 
@@ -522,6 +529,7 @@ namespace GeoTagNinja
             this.wbv_MapArea.Size = new System.Drawing.Size(374, 334);
             this.wbv_MapArea.TabIndex = 1;
             this.wbv_MapArea.ZoomFactor = 1D;
+            this.wbv_MapArea.Click += new System.EventHandler(this.wbv_MapArea_Click);
             // 
             // igl_RightHandSide
             // 
@@ -692,13 +700,6 @@ namespace GeoTagNinja
             this.btn_ManageFavourites.Text = "btn_ManageFavourites";
             this.btn_ManageFavourites.UseVisualStyleBackColor = true;
             this.btn_ManageFavourites.Click += new System.EventHandler(this.btn_ManageFavourites_Click);
-            // 
-            // tmi_OpenCoordsInAPI
-            // 
-            this.tmi_OpenCoordsInAPI.Name = "tmi_OpenCoordsInAPI";
-            this.tmi_OpenCoordsInAPI.Size = new System.Drawing.Size(201, 22);
-            this.tmi_OpenCoordsInAPI.Text = "tmi_OpenCoordsInAPI";
-            this.tmi_OpenCoordsInAPI.Click += new System.EventHandler(this.tmi_OpenCoordsInAPI_Click);
             // 
             // FrmMainApp
             // 

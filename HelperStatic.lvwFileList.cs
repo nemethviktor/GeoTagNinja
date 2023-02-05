@@ -254,8 +254,8 @@ internal static partial class HelperStatic
                         frmMainAppInstance.nud_lat.Text = strLat;
                         frmMainAppInstance.nud_lng.Text = strLng;
 
-                        frmMainAppInstance.nud_lat.Value = Convert.ToDecimal(strLat);
-                        frmMainAppInstance.nud_lng.Value = Convert.ToDecimal(strLng);
+                        frmMainAppInstance.nud_lat.Value = Convert.ToDecimal(strLat, CultureInfo.InvariantCulture);
+                        frmMainAppInstance.nud_lng.Value = Convert.ToDecimal(strLng, CultureInfo.InvariantCulture);
                         HsMapMarkers.Add(item: (strLat, strLng));
                     }
                 }

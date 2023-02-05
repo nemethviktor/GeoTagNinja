@@ -369,13 +369,15 @@ public partial class FrmEditFileData : Form
                         }
                         else // if (cItem is NumericUpDown nud)
                         {
+                            nud.Value = Convert.ToDecimal(value: cItemValStr, provider: CultureInfo.InvariantCulture);
+                            cItemValStr = nud.Value.ToString();
+
                             HelperStatic.GenericUpdateAddToDataTable(
                                 dt: DtFileDataToWriteStage2QueuePendingSave,
                                 fileNameWithoutPath: fileNameWithoutPath,
                                 settingId: nud.Name.Substring(startIndex: 4),
                                 settingValue: cItemValStr);
-                            nud.Value = Convert.ToDecimal(value: cItemValStr);
-                            nud.Text = cItemValStr;
+                            nud.Text = nud.Value.ToString();
 
                             if (strSqlDataDT1 != null || strSqlDataDT3 != null)
                             {
@@ -779,7 +781,7 @@ public partial class FrmEditFileData : Form
     }
 
     /// <summary>
-    ///     Handles the keyboard interactions (move up/down)
+    ///     Handles change in the listview - generates preview or warns user that the file is gone if deleted
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
@@ -1306,7 +1308,7 @@ public partial class FrmEditFileData : Form
             {
                 if (nudTextControl.Text != "")
                 {
-                    nudTextControl.Text = nudTextControl.Value.ToString(provider: CultureInfo.InvariantCulture);
+                    nudTextControl.Text = nudTextControl.Value.ToString();
                 }
             }
             else
