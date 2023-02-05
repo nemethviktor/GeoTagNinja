@@ -1,6 +1,6 @@
 ﻿# GeoTagNinja Changelog
 
-**v0.7.84XX [202301XX]**
+**Build 84XX [202302XX]**
 - NEW & UPDATED:
   - Added functionality to auto-navigate to a selected Favourite in the dropdown.
   - Added a "recall last Track Sync Shift" option.
@@ -10,6 +10,7 @@
   - Added an option to halt further API pulls if one failed
   - Changed certain numeric TextBoxes to NumericUpDowns.
   - Added logic to replace hard-coded City-definition logic with user choices.
+  - Changed versioning logic. Will use simple build numbers from now on in the "public facing" element of the app. Windows & Visual Studio still require the ##.##.#### logic rather than just a build number but the About section won't show it..
 - BUGS & FIXES:
   - Fixed a bug where NumerUpDown changes didn't trigger setting fonts to Bold
   - Fixed the map zooming way too far out when negative lat/long values are present
@@ -17,7 +18,7 @@
   - Fixed messageBox captions always saying "Error" as output
   - Fixed a bug where one or two Settings were ignored on load
 
-**v0.7.8421 [20230121]**
+**Build 8421 [20230121]**
 - NEW & UPDATED:
   - Added a "Manage Favourites" element to the Settings area.
   - Added Custom Rules. This is experimental for now. Wiki [here](https://github.com/nemethviktor/GeoTagNinja/wiki/Settings-&-Custom-Rules).
@@ -38,7 +39,7 @@
   - Fixed a bug re: Time-Shift values not being properly recalled if user didn't explicitly refresh folder.
   - Fixed a bug in Settings where subject to certain preceding actions the wrong checkbox value would be saved.
 
-**v0.7.8391 [20221222]**
+**Build 8391 [20221222]**
 - NEW & UPDATED:
   - Added Column Sort (kudos to Urmel, thank you!)
   - Added Column Show/Hide (kudos to Urmel, thank you!)
@@ -58,7 +59,7 @@
   - Fixed logic to ensure if a value in the FrmEdit is replaced with a blank it actually does get queued up for writing.
   - Stuff I don't remember.
 
-**v0.6.8370 [20221201]**
+**Build 8370 [20221201]**
 - NEW & UPDATED:
   - Added Modify TakenDate & CreateDate (it's in the Edit File section - and no the time-shift cannot be copy-pasted yet -> shift works in terms of modifying the literal DateTime at the moment not as in a proper copyable "shift" value.)
   - Added a hold/blocker on entering a folder until the folder loads. This is annoying but is needed to prevent users from starting operations before the files are processed.
@@ -77,7 +78,7 @@
   - Thoroughly renamed all my rather ambigous "filePath" variables in the code to specify fileNameWithPath and fileNameWithoutPath. This isn't a material change but it makes things a bit more readable.
   - Further French lang updates. Thanks to pbranly once again.
 
-**v0.6.8358 [20221119]**
+**Build 8358 [20221119]**
 - NEW & UPDATED:
   - Finally managed to get hold of ReSharper so the code has been refactored in totality. Famous last words but it shouldn't affect usage.
   - Added a ".." to the main grid (listView) where applicable (parent folder).
@@ -88,7 +89,7 @@
   - If the user had chosen "Delete All GPS Data" and subsequently added GPS data the addition would not have gone through upon save. This is now fixed.
   - Rewrote the logic of (re)creating sidecar XMP files as the original logic would pull data from the RAW file (only), possibly overwriting Adobe-specific stuff that had been stored in an already-existing XMP.
 
-**v0.6.8350 [20221111]**
+**Build 8350 [20221111]**
 - NEW & UPDATED:
   - Added sync/import GPS Track Files.
   - Added the capability to resize the main elements. Their positions aren't saved for now.
@@ -105,35 +106,35 @@
   - Code updates re how integers and decimals are handled in various culture settings. (tested on HU and FR)
   - IDK (i don't know) - so far 39 files have been updated, that is almost everything. I should do proper commits, not one-huge-commit, it is bad practice.
 
-**v0.5.8334 [20221026]**
+**Build 8334 [20221026]**
 - NEW & UPDATED:
   - Bumped exifTool to v12.49
   - Added Multi-Select capability to the map. (i.e. multiple pins now show properly)
   - Partial French translations added in (thanks to pbranly)
   - Update checks will now only happen once a week. No need to spam the world with API requests.
 
-**v0.5.8333 [20221025]**
+**Build 8333 [20221025]**
 - NEW & UPDATED:
   - Changed the logic relating to checking the newest version of exifTool online. The original was querying an API that hadn't been updated for months.
 
-**v0.5.8314 [20221006] + v0.5.8318 [20221010]**
+**Build 8314 [20221006] + Build 8318 [20221010]**
 - NEW & UPDATED:
-  - Added a "don't ask again" button for the "loc-to-file" dialogbox. This is session specific (if you close/restart the app, it will come back again). [Updated this logic in the v0.5.8318 release]
+  - Added a "don't ask again" button for the "loc-to-file" dialogbox. This is session specific (if you close/restart the app, it will come back again). [Updated this logic in the Build 8318 release]
 - BUGS & FIXES:
   - Minor code cleanup
 
-**v0.5.8304 [20220926]**
+**Build 8304 [20220926]**
 - NEW & UPDATED:
   - Added a new setting to control whether to default to lat/long 0/0 on the map if there is no geodata in the file clicked.
 
-**v0.5.8293 [20220915]**
+**Build 8293 [20220915]**
 - NEW & UPDATED:
   - Disabled the notification for "1 new file created" when saving RAW files that don't already have an XMP s/c file. This came up for each file separately and was a bit annoying.
   - Changed max zoom on map to more "zoomier" (from lvl 13 to 19). FWIW I think the new one is the "zoomiest" the system allows.
 - BUGS & FIXES:
   - Various
 
-**v0.5.8270 [20220823]**
+**Build 8270 [20220823]**
 - NEW & UPDATED:
   - Added check for exifTool version change tracking
   - Added check for GeoTagNinja version change tracking
@@ -142,13 +143,13 @@
 - BUGS & FIXES:
   - Various
 
-**v0.5.8251 [20220804]**
+**Build 8251 [20220804]**
 - NEW & UPDATED:
   - Added "Remove GeoData" to main form as well as Edit form
   - Added this changelog.md file
   - Added a readme to the ExtraFiles folder
   - Added handling to messageBox texts being read from SQLite
  
-**v0.5.8248 [20220801]**
+**Build 8248 [20220801]**
 - NEW & UPDATED:
   - Initial release

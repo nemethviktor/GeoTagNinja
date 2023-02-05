@@ -29,15 +29,7 @@ internal partial class FrmAboutBox : Form
 
         Text = AssemblyTitle;
         tbx_ProductName.Text = AssemblyProduct;
-        tbx_Version.Text = "Version: " +
-                           Assembly.GetExecutingAssembly()
-                               .GetName()
-                               .Version.Major +
-                           "." +
-                           Assembly.GetExecutingAssembly()
-                               .GetName()
-                               .Version.Minor +
-                           "." +
+        tbx_Version.Text = "Version/Build: " +
                            Assembly.GetExecutingAssembly()
                                .GetName()
                                .Version.Build.ToString(provider: CultureInfo.InvariantCulture) +
