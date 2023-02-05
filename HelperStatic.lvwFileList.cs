@@ -270,38 +270,6 @@ internal static partial class HelperStatic
                 }
                 // leave as-is (most likely the last photo)
             }
-
-            // don't try and create an preview img unless it's the last file
-            if (frmMainAppInstance.lvw_FileList.FocusedItem != null && lvw_FileListItem.Text != null)
-            {
-                if (frmMainAppInstance.lvw_FileList.FocusedItem.Text == lvw_FileListItem.Text ||
-                    frmMainAppInstance.lvw_FileList.SelectedItems[index: 0]
-                        .Text ==
-                    lvw_FileListItem.Text)
-                {
-                    if (File.Exists(path: de.FullPathAndName))
-                    {
-                        await GenericCreateImagePreview(fileNameWithPath: de.FullPathAndName,
-                                                        initiator: "FrmMainApp");
-                    }
-                    else if (Directory.Exists(path: de.FullPathAndName))
-                    {
-                        // nothing.
-                    }
-                    else // check it's a drive? --> if so, don't do anything, otherwise warn the item is gone
-                    {
-                        if (de.Type != DirectoryElement.ElementType.Drive)
-                        {
-                            MessageBox.Show(
-                                text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorFileGoneMissing") +
-                                      de.FullPathAndName,
-                                caption: GenericGetMessageBoxCaption(captionType: "Error"),
-                                buttons: MessageBoxButtons.OK,
-                                icon: MessageBoxIcon.Error);
-                        }
-                    }
-                }
-            }
         }
     }
 
