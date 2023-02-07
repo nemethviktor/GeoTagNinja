@@ -3,7 +3,7 @@
 name: ExifToolWrapper.cs
 description: C# Wrapper for Phil Harvey's excellent ExifTool
 url: https://github.com/FileMeta/ExifToolWrapper/raw/master/ExifToolWrapper.cs
-version: 1.2
+version: 1.3.GeoTagNinja (adapted)
 keywords: CodeBit
 dateModified: 2019-12-14
 license: http://unlicense.org
@@ -41,9 +41,7 @@ For more information, please refer to <http://unlicense.org/>
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
 using GeoTagNinja;
@@ -53,14 +51,17 @@ namespace ExifToolWrapper
     public class ExifTool : IDisposable
     {
         string c_exeName = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe");    // "exiftool.exe";
-        // const string c_arguments = @"-stay_open 1 -@ - -common_args -charset UTF8 -G1 -args";
         // -stay_open 1 -@ - -common_args invokes to stay open, parse args from stdin/cmdline and
         // use args for all future -execute command
         const string c_arguments = @"-stay_open 1 -@ - -common_args -api ""Filter=s/\r|\n/ /g "" -a -s -s -struct -G -ee -charset UTF8 -charset filename=utf8 -args";
-        // TODO:                             string commonArgs = @" -api ""Filter=s/\r|\n/ /g "" -a -s -s -struct -sort -G -ee -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 ";
         const string c_exitCommand = "-stay_open\nFalse\n";
         const int c_timeout = 30000;    // in milliseconds
         const int c_exitTimeout = 15000;
+
+        const char SDoubleQuote = '"';
+        const string c_args_tags = "";
+        // const string c_args_image = @"-b -preview:GTNPreview -w! " + SDoubleQuote + FrmMainApp.UserDataFolderPath + @"\%F.jpg" + SDoubleQuote;
+        const string c_args_image = "-b\n-preview:GTNPreview\n";
 
         static Encoding s_Utf8NoBOM = new UTF8Encoding(false);
 
@@ -97,6 +98,41 @@ namespace ExifToolWrapper
             m_out = m_exifTool.StandardOutput;
         }
 
+
+        public void GetImage(string filename)
+        {
+            m_in.Write(c_args_image);
+            m_in.Write(filename);
+            m_in.Write("\n-execute\n");
+            m_in.Flush();
+#if EXIF_TRACE
+            Debug.WriteLine(c_args_image);
+            Debug.WriteLine(filename);
+            Debug.WriteLine("-execute");
+#endif
+            for (; ; )
+            {
+                var line = m_out.ReadLine();
+#if EXIF_TRACE
+                Debug.WriteLine(line);
+#endif
+                //if (line.EndsWith("{ready")) break;
+                // Must be read using m_out.BaseStream.ReadByte
+                // But still contains "{ready}" at the end!
+                break;
+            }
+        }
+
+
+
+        /// <summary>
+        /// Extracts the tags out of a file using the ExifTool.
+        /// 
+        /// Note that duplicate tags may be added - object handed in
+        /// propsRead must thus support duplicate keys.
+        /// </summary>
+        /// <param name="filename">The filename to extract tags from</param>
+        /// <param name="propsRead">A collection to which the tags are added</param>
         public void GetProperties(string filename, ICollection<KeyValuePair<string, string>> propsRead)
         {
             m_in.Write(filename);
