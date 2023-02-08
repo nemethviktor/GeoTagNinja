@@ -1605,23 +1605,28 @@ public partial class FrmMainApp : Form
             // it's easier to call the create-preview here than in the other one because focusedItems misbehave/I don't quite understand it/them
             if (lvw_FileList.SelectedItems.Count > 0)
             {
-                string fileNameWithPath = Path.Combine(FolderName +
-                                                       lvw_FileList.SelectedItems[index: 0]
-                                                           .Text);
+                string fileNameWithPath = Path.Combine(
+                    FolderName + lvw_FileList.SelectedItems[index: 0].Text);
 
                 if (File.Exists(path: fileNameWithPath))
                 {
-                    await HelperStatic.GenericCreateImagePreview(
-                        fileNameWithPath: fileNameWithPath, initiator: "FrmMainApp");
+                    // Todo localized error message in return string
+                    Task<(Image, string)> tImg = HelperStatic.GetImage(fileNameWithPath, _ExifTool, true);
+                    tImg.Wait();
+                    if (tImg.IsCompleted)
+                    {
+                        (Image img, string res) = tImg.Result;
+                        if (img != null)
+                            pbx_imagePreview.Image = img;
+                        else
+                            pbx_imagePreview.SetErrorMessage(res);
+                    }
                 }
-                else
-                {
+                else  // No File ...
                     pbx_imagePreview.Image = null;
-                }
             }
 
             NavigateMapGo();
-            // pbx_imagePreview.Image = null;
         }
     }
 

@@ -45,6 +45,10 @@ using System.Text;
 using System.Diagnostics;
 using System.IO;
 using GeoTagNinja;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using System.Collections;
 
 namespace ExifToolWrapper
 {
@@ -55,13 +59,28 @@ namespace ExifToolWrapper
         // use args for all future -execute command
         const string c_arguments = @"-stay_open 1 -@ - -common_args -api ""Filter=s/\r|\n/ /g "" -a -s -s -struct -G -ee -charset UTF8 -charset filename=utf8 -args";
         const string c_exitCommand = "-stay_open\nFalse\n";
-        const int c_timeout = 30000;    // in milliseconds
+
+        /// <summary>
+        /// Time out in millisecs when reading byte output from the
+        /// exif tool. Will occur at the end of almost every image
+        /// extracted!
+        /// </summary>
+        const int c_timeout = 50;
+
+        /// <summary>
+        /// Time out in millisecs before killing exif tool when trying to
+        /// shutdown the ExifTool instance
+        /// </summary>
         const int c_exitTimeout = 15000;
 
         const char SDoubleQuote = '"';
         const string c_args_tags = "";
         // const string c_args_image = @"-b -preview:GTNPreview -w! " + SDoubleQuote + FrmMainApp.UserDataFolderPath + @"\%F.jpg" + SDoubleQuote;
-        const string c_args_image = "-b\n-preview:GTNPreview\n";
+
+        // Line breaks needed for EXIF to recognize the commands...
+        const string c_args_image = "\n-b\n-preview:%IMAGE_TITLE%\n";
+
+        const string c_read_text = "{ready}";
 
         static Encoding s_Utf8NoBOM = new UTF8Encoding(false);
 
@@ -99,10 +118,17 @@ namespace ExifToolWrapper
         }
 
 
-        public void GetImage(string filename)
+        /// <summary>
+        /// Extracts an image out of a file using the ExifTool.
+        /// </summary>
+        /// <param name="filename">The filename to extract from</param>
+        /// <param name="imageTitle">The image title, defaults to GTNPreview</param>
+        /// <returns>A stream with the image data (jpg, png likely)</returns>
+        public Stream GetImage(string filename, string imageTitle = "GTNPreview")
         {
-            m_in.Write(c_args_image);
+            m_in.Write(c_args_image.Replace("%IMAGE_TITLE%", imageTitle));
             m_in.Write(filename);
+            // Filename has no line breaks - so add it to subsequent message...
             m_in.Write("\n-execute\n");
             m_in.Flush();
 #if EXIF_TRACE
@@ -110,17 +136,94 @@ namespace ExifToolWrapper
             Debug.WriteLine(filename);
             Debug.WriteLine("-execute");
 #endif
+
+            if (!m_out.BaseStream.CanRead)
+            {
+                // TOdo Handle problem
+                throw new IOException("Reading data from EXIFTool resulted in an error - Could not open EXIF Tool output channel.");
+            }
+
+
+            // Read and ReadByte methods expect to read something
+            // --> hangs if there is no more data to read
+            // --> use async method with timeout until {ready} is encountered.
+            //     If it is not encountered within timeout, exif tool hangs...
+            // Note: a readasync operation cannot be canceled
+            // (see https://stackoverflow.com/questions/15273752/how-to-cancel-networkstream-readasync-without-closing-stream)
+            // --> read until full ready message is in result or result < max read size
+
+            byte[] buffer = new byte[4096];
+            List<byte[]> bytesList = new List<byte[]>();
+            MemoryStream thumbStream = new MemoryStream();
+            int bytesRead = 0;
+            Task<int> readTask = null;
+            bool readyReceived = false;
+
             for (; ; )
             {
-                var line = m_out.ReadLine();
-#if EXIF_TRACE
-                Debug.WriteLine(line);
-#endif
-                //if (line.EndsWith("{ready")) break;
-                // Must be read using m_out.BaseStream.ReadByte
-                // But still contains "{ready}" at the end!
+                // Read until time out
+                if (readTask == null)
+                    readTask = m_out.BaseStream.ReadAsync(buffer, 0, buffer.Length);
+                readTask.Wait(c_timeout);
+                int incrementSize = readTask.Result;
+
+                if (readTask.IsCompleted)
+                {
+                    // Signal successful completion
+                    readTask = null;
+
+                    if (incrementSize > 0) // if something was read
+                    {
+                        bytesRead += incrementSize;
+                        byte[] tmp = new byte[incrementSize];   // Account for not adding full buffer size
+                        Array.Copy(buffer, 0, tmp, 0, incrementSize);
+                        bytesList.Add(tmp);
+                        thumbStream.Write(tmp, 0, incrementSize);
+                    }
+                    else  // Pot. academic situation that read completed with no data and previous read did not contain ready mark
+                        break;
+
+                    // Check if the ready mark is at the end
+                    // account for ready text + CR-LF at end
+                    thumbStream.Seek(-(c_read_text.Length + 2), SeekOrigin.End);
+                    byte[] checkText = new byte[c_read_text.Length + 2];
+                    thumbStream.Read(checkText, 0, checkText.Length);
+                    string checkTextStr = System.Text.Encoding.UTF8.GetString(checkText);
+                    if (checkTextStr.Trim() == c_read_text)
+                    {
+                        readyReceived = true;
+                        // remove ready string
+                        thumbStream.Seek(-(c_read_text.Length + 2), SeekOrigin.End);
+                        thumbStream.SetLength((int)thumbStream.Length - c_read_text.Length - 2);
+                        break;
+                    }
+
+                    if (incrementSize < buffer.Length)  // No more data to read, but no ready mark
+                        break;
+
+                    // Still more to read
+                    continue;
+                }
+
+                // Time out reached
                 break;
             }
+
+            // If we have a readTask object, we encountered a time out
+            // --> TODO: Mititgate by killing and restarting exif tool
+            if (readTask != null)
+                throw new IOException("Reading data from EXIFTool resulted in an error - Reading did not finish in time. Exif Tool hangs.");
+
+            // If we have no readTask object and no readyReceived, we have
+            // some other issue. --> return no result
+            if (!readyReceived)
+                throw new IOException("Reading data from EXIFTool resulted in an error - Reading finished with no valid result.");
+
+            // If length is < 10, there is no image result
+            if (thumbStream.Length < 10)
+                return null;
+
+            return thumbStream;
         }
 
 

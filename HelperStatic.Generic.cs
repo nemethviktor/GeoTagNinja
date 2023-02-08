@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ExifToolWrapper;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -668,14 +669,7 @@ internal static partial class HelperStatic
         FileInfo fi = new(fileName: fileNameWithPath);
         string generatedFileName = null;
 
-        if (initiator == "FrmMainApp" && frmMainAppInstance != null)
-        {
-            frmMainAppInstance.pbx_imagePreview.Image = null;
-            generatedFileName = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: frmMainAppInstance.lvw_FileList.SelectedItems[index: 0]
-                                                                                              .Text +
-                                                                                          ".jpg");
-        }
-        else if (initiator == "FrmMainAppAPIDataSelection" && frmMainAppInstance != null)
+        if (initiator == "FrmMainAppAPIDataSelection" && frmMainAppInstance != null)
         {
             frmMainAppInstance.pbx_imagePreview.Image = null;
             string fileNameWithoutPath = Path.GetFileName(fileNameWithPath);
@@ -732,7 +726,7 @@ internal static partial class HelperStatic
 
         if (img != null)
         {
-            if ((initiator == "FrmMainApp" || initiator == "FrmMainAppAPIDataSelection") && frmMainAppInstance != null)
+            if ((initiator == "FrmMainAppAPIDataSelection") && frmMainAppInstance != null)
             {
                 frmMainAppInstance.pbx_imagePreview.Image = img;
             }
@@ -744,16 +738,129 @@ internal static partial class HelperStatic
 
         else
         {
-            if (initiator == "FrmMainApp" && frmMainAppInstance != null)
-            {
-                frmMainAppInstance.pbx_imagePreview.SetErrorMessage(message: pbxErrorMsg);
-            }
-            else if (initiator == "FrmEditFileData" && frmEditFileDataInstance != null)
+            if (initiator == "FrmEditFileData" && frmEditFileDataInstance != null)
             {
                 // frmEditFileDataInstance.pbx_imagePreview.SetErrorMessage(message: pbxErrorMsg); // <- nonesuch.
             }
         }
     }
+
+
+    private static (Image, string) GetImage_DoExifTool(string fileNameWithPath, ExifTool exifTool,
+        string resultTextIn = "")
+    {
+        Image img = null;
+        string resultText = "";
+
+        Stream imgStream = exifTool.GetImage(fileNameWithPath);
+        if (imgStream != null)
+        {
+            try
+            {
+                img = Image.FromStream(imgStream, true, true);
+                ExifRotate(img: img);
+                return (img, "");
+            }
+            catch (Exception ex)
+            {
+                resultText = resultTextIn + "\nError extracting image from exif binary stream: " + ex.Message;
+            }
+        }
+        else
+            resultText = resultTextIn + "\nNo extractable preview contained in image file";
+
+        return (img, resultText);
+    }
+
+    private static (Image, string) GetImage_DoImgLoad(string fileNameWithPath,
+        string resultTextIn = "")
+    {
+        Image img = null;
+        string resultText = "";
+
+        // along the lines of https://stackoverflow.com/a/6576645/3968494
+        using (FileStream stream = new(path: fileNameWithPath, mode: FileMode.Open, access: FileAccess.Read))
+        {
+            if (stream != null)
+            {
+                try
+                {
+                    img = Image.FromStream(stream: stream);
+                    ExifRotate(img: img);
+                }
+                catch (Exception ex)
+                {
+                    resultText = resultTextIn + "\nError loading image file: " + ex.Message;
+                }
+            }
+            else
+                resultText = resultTextIn + "\nNo stream opened to image file";
+        }
+
+        return (img, resultText);
+    }
+
+
+    /// <summary>
+    /// Fetches / creates a (preview) image for the given file name.
+    /// 
+    /// Either read the read image itself or a preview read via exif tool or created
+    /// via downscaling the read image. Note that using original size uses much more
+    /// memory.
+    /// </summary>
+    /// <param name="fileNameWithPath">Filename w/ path to the image</param>
+    /// <param name="exifTool">The ExifTool instance to use for extraction</param>
+    /// <param name="usePreviewIfAvailable">Whether to use preview (resolution)</param>
+    /// <returns></returns>
+    internal static async Task<(Image, string)> GetImage(string fileNameWithPath,
+        ExifTool exifTool, bool usePreviewIfAvailable = true)
+    {
+        // TODO: Use std error message, log details
+        string pbxErrorMsg = DataReadDTObjectText(
+            objectType: "PictureBox",
+            objectName: "pbx_imagePreviewCouldNotRetrieve"
+        );
+
+        Image img = null;
+        string resultText = "unknown error";
+        FileInfo fi = new(fileName: fileNameWithPath);
+
+        if (usePreviewIfAvailable)
+        {
+            (img, resultText) = GetImage_DoExifTool(fileNameWithPath, exifTool);
+            if (img != null)
+                return (img, "");
+        }
+
+        // As of here either full image wanted or preview via EXIF tool failed
+        (img, resultText) = GetImage_DoImgLoad(fileNameWithPath, resultText);
+        
+        if ((img == null) && (usePreviewIfAvailable)) // No solution...
+            return (img, resultText);
+
+        if (img == null) // Fallback to exif tool
+        {
+            (img, resultText) = GetImage_DoExifTool(fileNameWithPath, exifTool, resultText);
+            return (img, resultText);  // No more fallbacks - return anyway
+        }
+
+        if (usePreviewIfAvailable)
+        {
+            // Scale as preview is wanted:
+            // Max width / height is fixed, scale with constant aspect ration
+            const int c_maxSize = 300;
+            int newWidth = c_maxSize;
+            int newHeight = c_maxSize;
+            if (img.Height > img.Width)
+                newWidth = (int)Math.Ceiling((double)(c_maxSize * img.Width / img.Height));
+            else
+                newHeight = (int)Math.Ceiling((double) (c_maxSize * img.Height / img.Width));
+            img = (Image)(new Bitmap(img, new Size(newWidth, newHeight)));
+        }
+        return (img, resultText);
+    }
+
+
 
     /// <summary>
     ///     Custom-made equivalent for a dialogbox w/ checkbox
