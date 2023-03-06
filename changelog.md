@@ -1,6 +1,6 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 84XX [202302XX]**
+**Build 84XX [202303XX]**
 - NEW & UPDATED:
   - Added functionality to auto-navigate to a selected Favourite in the dropdown.
   - Added a "recall last Track Sync Shift" option.
