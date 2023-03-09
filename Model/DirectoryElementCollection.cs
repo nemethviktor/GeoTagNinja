@@ -31,14 +31,14 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
     /// <summary>
     ///     Searches through the list of directory elements for the element
-    ///     with the given item name. If nothing is found, return null.
+    ///     with the given item name. Uses FileNameWithPath. If nothing is found, return null.
     /// </summary>
-    /// <param name="itemName">The file name to search for</param>
-    public DirectoryElement FindElementByItemName(string itemName)
+    /// <param name="FileNameWithPath">The file name to search for (w/ path)</param>
+    public DirectoryElement FindElementByItemName(string FileNameWithPath)
     {
         foreach (DirectoryElement item in this)
         {
-            if (item.ItemName == itemName)
+            if (item.FileNameWithPath == FileNameWithPath)
             {
                 return item;
             }
@@ -61,7 +61,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
     public void Add(DirectoryElement item,
                     bool replaceIfExists)
     {
-        DirectoryElement exstgElement = FindElementByItemName(itemName: item.ItemName);
+        DirectoryElement exstgElement = FindElementByItemName(FileNameWithPath: item.FileNameWithPath);
         if (exstgElement != null)
         {
             if (replaceIfExists)
@@ -72,7 +72,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
             {
                 throw new ArgumentException(
                     message: string.Format(format: "Error when adding element '{0}': the item must be unique but already exists in collection.",
-                                           arg0: item.ItemName));
+                                           arg0: item.FileNameWithPath));
             }
 
             base.Add(item: item);
@@ -108,9 +108,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
             {
                 Logger.Trace(message: "Drive:" + drive.Name);
                 Add(item: new DirectoryElement(
-                        itemName: drive.Name,
+                        itemNameWithoutPath: drive.Name,
                         type: DirectoryElement.ElementType.Drive,
-                        fullPathAndName: drive.RootDirectory.FullName
+                        fileNameWithPath: drive.RootDirectory.FullName
                     ));
             }
 
@@ -127,9 +127,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
             if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
             {
                 Add(item: new DirectoryElement(
-                        itemName: FrmMainApp.ParentFolder,
+                        itemNameWithoutPath: FrmMainApp.ParentFolder,
                         type: DirectoryElement.ElementType.ParentDirectory,
-                        fullPathAndName: tmpStrParent
+                        fileNameWithPath: tmpStrParent
                     ));
             }
         }
@@ -157,9 +157,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     // It's the MyComputer entry
                     Logger.Trace(message: "MyComputer: " + directoryInfo.Name);
                     Add(item: new DirectoryElement(
-                            itemName: directoryInfo.Name,
+                            itemNameWithoutPath: directoryInfo.Name,
                             type: DirectoryElement.ElementType.MyComputer,
-                            fullPathAndName: directoryInfo.FullName
+                            fileNameWithPath: directoryInfo.FullName
                         ));
                 }
                 else if (directoryInfo.Attributes.ToString()
@@ -169,9 +169,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 {
                     Logger.Trace(message: "Folder: " + directoryInfo.Name);
                     Add(item: new DirectoryElement(
-                            itemName: directoryInfo.Name,
+                            itemNameWithoutPath: directoryInfo.Name,
                             type: DirectoryElement.ElementType.SubDirectory,
-                            fullPathAndName: directoryInfo.FullName
+                            fileNameWithPath: directoryInfo.FullName
                         ));
                 }
             }
@@ -261,7 +261,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         // ******************************
         // Extract data for all files that are supported
         Logger.Trace(message: "Files: Extracting File Data");
-        int count = 0;
+        int fileCount = 0;
         if (_ExifTool == null)
         {
             _ExifTool = new ExifTool();
@@ -271,37 +271,37 @@ public class DirectoryElementCollection : List<DirectoryElement>
         {
             Logger.Trace(message: $"File: {fileNameWithPath}");
             string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
-            if (count % 10 == 0)
+            if (fileCount % 10 == 0)
             {
-                statusMethod(obj: $"Scanning folder {100 * count / imageFiles.Count:0}%: processing file '{fileNameWithoutPath}'");
+                statusMethod(obj: $"Scanning folder {100 * fileCount / imageFiles.Count:0}%: processing file '{fileNameWithoutPath}'");
             }
 
             // Regular (image) files are added to the list of
             // Directory Elements...
-            DirectoryElement de = new(
-                itemName: Path.GetFileName(path: fileNameWithoutPath),
+            DirectoryElement fileToParseDictionaryElement = new(
+                itemNameWithoutPath: Path.GetFileName(path: fileNameWithoutPath),
                 type: DirectoryElement.ElementType.File,
-                fullPathAndName: fileNameWithPath
+                fileNameWithPath: fileNameWithPath
             );
 
-            // Parse EXIF Props
-            IDictionary<string, string> props = new Dictionary<string, string>();
-            InitiateEXIFParsing(fileToParse: fileNameWithPath, props: props);
+            // Parse EXIF properties
+            IDictionary<string, string> dictProperties = new Dictionary<string, string>();
+            InitiateEXIFParsing(fileNameWithPathToParse: fileNameWithPath, properties: dictProperties);
 
             // Add sidecar file and data if available
             if (image2sidecar.ContainsKey(key: fileNameWithPath))
             {
-                string scFile = image2sidecar[key: fileNameWithPath];
-                Logger.Trace(message: $"Files: Extracting File Data - adding side car file '{scFile}'");
-                de.SidecarFile = scFile;
-                InitiateEXIFParsing(fileToParse: scFile, props: props);
+                string sideCarFileNameWithPath = image2sidecar[key: fileNameWithPath];
+                Logger.Trace(message: $"Files: Extracting File Data - adding side car file '{sideCarFileNameWithPath}'");
+                fileToParseDictionaryElement.SidecarFile = sideCarFileNameWithPath;
+                InitiateEXIFParsing(fileNameWithPathToParse: sideCarFileNameWithPath, properties: dictProperties);
             }
 
             // Insert into model
-            de.ParseAttributesFromExifToolOutput(tags_in: props);
+            fileToParseDictionaryElement.ParseAttributesFromExifToolOutput(dictTagsIn: dictProperties);
 
-            Add(item: de);
-            count++;
+            Add(item: fileToParseDictionaryElement);
+            fileCount++;
         }
 
         Logger.Trace(message: "Files: Extracting File Data - OK");
@@ -311,18 +311,18 @@ public class DirectoryElementCollection : List<DirectoryElement>
     ///     Parses the given file using the given EXIF Tool object into the given
     ///     dictionary. Thereby, ignoring duplicate tags.
     /// </summary>
-    private void InitiateEXIFParsing(string fileToParse,
-                                     IDictionary<string, string> props)
+    private void InitiateEXIFParsing(string fileNameWithPathToParse,
+                                     IDictionary<string, string> properties)
     {
         // Gather EXIF data for the image file
-        ICollection<KeyValuePair<string, string>> propsRead = new List<KeyValuePair<string, string>>();
-        _ExifTool.GetProperties(filename: fileToParse, propsRead: propsRead);
+        ICollection<KeyValuePair<string, string>> propertiesRead = new Dictionary<string, string>();
+        _ExifTool.GetProperties(filename: fileNameWithPathToParse, propertiesRead: propertiesRead);
         // EXIF Tool can return duplicate properties - handle, but ignore these...
-        foreach (KeyValuePair<string, string> kvp in propsRead)
+        foreach (KeyValuePair<string, string> kvp in propertiesRead)
         {
-            if (!props.ContainsKey(key: kvp.Key))
+            if (!properties.ContainsKey(key: kvp.Key))
             {
-                props.Add(key: kvp.Key, value: kvp.Value);
+                properties.Add(key: kvp.Key, value: kvp.Value);
             }
         }
     }

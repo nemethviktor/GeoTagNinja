@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GeoTagNinja.Model;
 
 namespace GeoTagNinja;
 
@@ -299,10 +300,10 @@ internal static partial class HelperStatic
         sqliteDB.Open();
 
         string sqlCommandStr = @"
-                                SELECT DISTINCT objectTagName_In AS objectTagName_ToPass
+                                SELECT DISTINCT objectTagName_In AS objectattribute_ToPass
                                 FROM objectTagNames_In
                                 UNION 
-                                SELECT DISTINCT objectTagName_Out AS objectTagName_ToPass
+                                SELECT DISTINCT objectTagName_Out AS objectattribute_ToPass
                                 FROM objectTagNames_Out
                                 ORDER BY 1;
                                 "
@@ -487,7 +488,7 @@ internal static partial class HelperStatic
     internal static string DataReadDTObjectText(string objectType,
                                                 string objectName)
     {
-        return (from kvp in AncillaryListsArrays.CommonNamesKvp
+        return (from kvp in AncillaryListsArrays.LanguageStringsDict
                 where kvp.Key == objectType + "_" + objectName
                 select kvp.Value).FirstOrDefault();
     }
@@ -578,10 +579,13 @@ internal static partial class HelperStatic
 
                         if (i == 2)
                         {
-                            AncillaryListsArrays.CommonNamesKvp.RemoveAll(match: item => item.Key.Equals(obj: objectName));
+                            if (AncillaryListsArrays.LanguageStringsDict.ContainsKey(objectName))
+                            {
+                                AncillaryListsArrays.LanguageStringsDict.Remove(objectName);
+                            }
                         }
 
-                        AncillaryListsArrays.CommonNamesKvp.Add(item: new KeyValuePair<string, string>(key: objectName, value: objectText));
+                        AncillaryListsArrays.LanguageStringsDict.Add(key: objectName, value: objectText);
                     }
                 }
             }
@@ -858,9 +862,10 @@ internal static partial class HelperStatic
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
         sqlToRun.Parameters.AddWithValue(parameterName: "@favouriteName", value: drFavourite[columnName: "favouriteName"]
                                              .ToString());
-        foreach (string tagName in AncillaryListsArrays.GetFavouriteTags())
+        foreach (SourcesAndAttributes.ElementAttribute attribute in AncillaryListsArrays.GetFavouriteTags())
         {
-            sqlToRun.Parameters.AddWithValue(parameterName: "@" + tagName, value: drFavourite[columnName: tagName]
+            string attributeStr = SourcesAndAttributes.GetAttributeName(attribute);
+            sqlToRun.Parameters.AddWithValue(parameterName: "@" + attribute, value: drFavourite[columnName: attributeStr]
                                                  .ToString());
         }
 
@@ -927,7 +932,7 @@ internal static partial class HelperStatic
 
         using SQLiteDataAdapter sqliteAdapter = new(commandText: @"select * from customRules", connection: sqliteDB);
         SQLiteCommandBuilder commandBuilder = new(adp: sqliteAdapter);
-        sqliteAdapter.Update(dataTable: FrmSettings.dtCustomRules);
+        sqliteAdapter.Update(dataTable: FrmSettings.DtCustomRules);
 
         // this is stupid but Update doesn't seem to work with a delete/AcceptChange so...
         string sqlCommandStr = @"
@@ -1085,7 +1090,7 @@ internal static partial class HelperStatic
 
         using SQLiteDataAdapter sqliteAdapter = new(commandText: @"select * from customCityAllocationLogic", connection: sqliteDB);
         SQLiteCommandBuilder commandBuilder = new(adp: sqliteAdapter);
-        sqliteAdapter.Update(dataTable: FrmSettings.dtCustomCityLogic);
+        sqliteAdapter.Update(dataTable: FrmSettings.DtCustomCityLogic);
     }
 
     #endregion
@@ -1101,14 +1106,14 @@ internal static partial class HelperStatic
     /// <param name="filePathColumnName">The "column" part of WHERE</param>
     /// <param name="filePathValue">The "value" part of WHERE</param>
     /// <returns>List of KVP String/String</returns>
-    internal static List<KeyValuePair<string, string>> DataReadFilterDataTable(DataTable dt,
-                                                                               string filePathColumnName,
-                                                                               string filePathValue)
+    internal static Dictionary<string, string> DataReadFilterDataTable(DataTable dt,
+                                                                       string filePathColumnName,
+                                                                       string filePathValue)
     {
         EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in dt.AsEnumerable()
                                                            where dataRow.Field<string>(columnName: filePathColumnName) == filePathValue
                                                            select dataRow;
-        List<KeyValuePair<string, string>> lstReturn = new();
+        Dictionary<string, string> lstReturn = new();
 
         Parallel.ForEach(source: drDataTableData, body: dataRow =>
             {
@@ -1116,7 +1121,7 @@ internal static partial class HelperStatic
                     .ToString();
                 string settingValue = dataRow[columnName: "settingValue"]
                     .ToString();
-                lstReturn.Add(item: new KeyValuePair<string, string>(key: settingId, value: settingValue));
+                lstReturn.Add(key: settingId, value: settingValue);
             })
             ;
         return lstReturn;
@@ -1128,7 +1133,7 @@ internal static partial class HelperStatic
     /// <param name="lstIn">List (KVP) to check</param>
     /// <param name="keyEqualsWhat">Key filter</param>
     /// <returns>String of Value</returns>
-    internal static string DataGetFirstOrDefaultFromKVPList(List<KeyValuePair<string, string>> lstIn,
+    internal static string DataGetFirstOrDefaultFromKVPList(Dictionary<string, string> lstIn,
                                                             string keyEqualsWhat)
     {
         return lstIn.FirstOrDefault(predicate: kvp => kvp.Key == keyEqualsWhat)

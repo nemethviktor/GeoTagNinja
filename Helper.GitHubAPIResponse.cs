@@ -39,7 +39,7 @@ namespace geoTagNinja
         public string NodeId { get; set; }
 
         [JsonProperty("tag_name", NullValueHandling = NullValueHandling.Ignore)]
-        public string TagName { get; set; }
+        public string attribute { get; set; }
 
         [JsonProperty("target_commitish", NullValueHandling = NullValueHandling.Ignore)]
         public string TargetCommitish { get; set; }

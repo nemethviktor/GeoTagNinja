@@ -21,6 +21,7 @@ using NLog.Config;
 using NLog.Targets;
 using TimeZoneConverter;
 using static System.Environment;
+using static GeoTagNinja.Model.SourcesAndAttributes;
 
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 namespace GeoTagNinja;
@@ -48,7 +49,7 @@ public partial class FrmMainApp : Form
     /// <summary>
     ///     Returns the list of elements in the currently opened directory.
     /// </summary>
-    public DirectoryElementCollection DirectoryElements { get; } = new();
+    public static DirectoryElementCollection DirectoryElements { get; } = new();
 
     #region Variables
 
@@ -57,21 +58,26 @@ public partial class FrmMainApp : Form
     internal const string DoubleQuote = "\"";
 
     public const string ParentFolder = "..";
+    public const string NullStringEquivalentGeneric = "-";
+    public const string NullStringEquivalentBlank = ""; // fml.
+    public const string NullStringEquivalentZero = "0"; // fml.
+    public const int NullIntEquivalent = 0;
+    public const double NullDoubleEquivalent = 0.0;
 
     internal static DataTable DtLanguageLabels;
     internal static DataTable DtObjectNames;
-    internal static DataTable DtObjectTagNamesIn;
-    internal static DataTable DtObjectTagNamesOut;
+    internal static DataTable DtObjectattributesIn;
+    internal static DataTable DtObjectattributesOut;
     internal static DataTable DtIsoCountryCodeMapping;
     internal static DataTable DtFavourites;
 
     // CustomCityLogic
     internal static DataTable DtCustomCityLogic;
-    internal static List<string> lstCityNameIsAdminName1 = new();
-    internal static List<string> lstCityNameIsAdminName2 = new();
-    internal static List<string> lstCityNameIsAdminName3 = new();
-    internal static List<string> lstCityNameIsAdminName4 = new();
-    internal static List<string> lstCityNameIsUndefined = new();
+    internal static List<string> LstCityNameIsAdminName1 = new();
+    internal static List<string> LstCityNameIsAdminName2 = new();
+    internal static List<string> LstCityNameIsAdminName3 = new();
+    internal static List<string> LstCityNameIsAdminName4 = new();
+    internal static List<string> LstCityNameIsUndefined = new();
 
     internal static string FolderName;
     internal static string _AppLanguage = "English"; // default to english
@@ -88,20 +94,7 @@ public partial class FrmMainApp : Form
     private static bool _StopProcessingRows;
 
     // this is for copy-paste
-    internal static DataTable DtFileDataCopyPool;
-    internal static DataTable DtFileDataPastePool;
-    internal static string FileDateCopySourceFileNameWithPath;
-
-    // just to keep myself sane here....
-    // the "queue" tables have the following structure:
-    // (columnName: "fileNameWithoutPath");
-    // (columnName: "settingId");
-    // (columnName: "settingValue");
-
-    // these are for queueing files up
-    internal static DataTable DtFileDataToWriteStage1PreQueue;
-    internal static DataTable DtFileDataToWriteStage2QueuePendingSave;
-    internal static DataTable DtFileDataToWriteStage3ReadyToWrite;
+    internal static Dictionary<ElementAttribute, string> CopyPoolDict = new();
 
     // this is for checking if files need to be re-parsed.
     internal static DataTable DtFileDataSeenInThisSession;
@@ -110,8 +103,8 @@ public partial class FrmMainApp : Form
 
 
     // these are for storing the inital values of TakenDate and CreateDate. Needed for TimeShift.
-    internal static DataTable DtOriginalTakenDate;
-    internal static DataTable DtOriginalCreateDate;
+    internal static Dictionary<string, string> OriginalTakenDateDict = new();
+    internal static Dictionary<string, string> OriginalCreateDateDict = new();
 
     #endregion
 
@@ -201,10 +194,27 @@ public partial class FrmMainApp : Form
         try
         {
             Logger.Debug(message: "Clear DtFileDataToWriteStage1PreQueue");
-            DtFileDataToWriteStage1PreQueue.Rows.Clear();
+
+            foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
+            {
+                {
+                    foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+                    {
+                        dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
+                    }
+                }
+            }
 
             Logger.Debug(message: "Clear DtFileDataToWriteStage3ReadyToWrite");
-            DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
+            foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
+            {
+                {
+                    foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+                    {
+                        dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                    }
+                }
+            }
         }
         catch (Exception ex)
         {
@@ -294,10 +304,21 @@ public partial class FrmMainApp : Form
                                               FormClosingEventArgs e)
     {
         Logger.Debug(message: "Starting");
+        bool dataWriteQueueIsNotEmpty = true;
+        foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
+        {
+            foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+            {
+                if (dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
+                {
+                    dataWriteQueueIsNotEmpty = false;
+                    break;
+                }
+            }
+        }
 
-        Logger.Trace(message: "DtFileDataToWriteStage3ReadyToWrite.Rows.Count:" + DtFileDataToWriteStage3ReadyToWrite.Rows.Count);
         // check if there is any data in the write-Q
-        if (DtFileDataToWriteStage3ReadyToWrite.Rows.Count > 0)
+        if (!dataWriteQueueIsNotEmpty)
         {
             DialogResult dialogResult = MessageBox.Show(
                 text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_QuestionFileQIsNotEmpty"),
@@ -322,7 +343,13 @@ public partial class FrmMainApp : Form
             else if (dialogResult == DialogResult.No)
             {
                 Logger.Debug(message: "User Chose not to Save.");
-                DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
+                foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
+                {
+                    foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+                    {
+                        dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                    }
+                }
             }
         }
 
@@ -396,8 +423,8 @@ public partial class FrmMainApp : Form
         nud_lat.Text = correctedDblLat.ToString(provider: CultureInfo.InvariantCulture);
         nud_lng.Text = correctedDblLng.ToString(provider: CultureInfo.InvariantCulture);
 
-        nud_lat.Value = Convert.ToDecimal(value: correctedDblLat, CultureInfo.InvariantCulture);
-        nud_lng.Value = Convert.ToDecimal(value: correctedDblLng, CultureInfo.InvariantCulture);
+        nud_lat.Value = Convert.ToDecimal(value: correctedDblLat, provider: CultureInfo.InvariantCulture);
+        nud_lng.Value = Convert.ToDecimal(value: correctedDblLng, provider: CultureInfo.InvariantCulture);
     }
 
     /// <summary>
@@ -430,19 +457,19 @@ public partial class FrmMainApp : Form
     private async void btn_loctToFile_Click(object sender,
                                             EventArgs e)
     {
-        string strGpsLatitude = nud_lat.Text.Replace(oldChar: ',', newChar: '.');
-        string strGpsLongitude = nud_lng.Text.Replace(oldChar: ',', newChar: '.');
+        string strGPSLatitude = nud_lat.Text.Replace(oldChar: ',', newChar: '.');
+        string strGPSLongitude = nud_lng.Text.Replace(oldChar: ',', newChar: '.');
         double parsedLat;
         double parsedLng;
         _StopProcessingRows = false;
         GeoResponseToponomy readJsonToponomy = new();
 
         // lat/long gets written regardless of update-toponomy-choice
-        if (double.TryParse(s: strGpsLatitude,
+        if (double.TryParse(s: strGPSLatitude,
                             style: NumberStyles.Any,
                             provider: CultureInfo.InvariantCulture,
                             result: out parsedLat) &&
-            double.TryParse(s: strGpsLongitude,
+            double.TryParse(s: strGPSLongitude,
                             style: NumberStyles.Any,
                             provider: CultureInfo.InvariantCulture,
                             result: out parsedLng))
@@ -456,37 +483,36 @@ public partial class FrmMainApp : Form
                     string fileNameWithoutPath = lvi.Text;
                     if (File.Exists(path: fileNameWithPath))
                     {
+                        DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemName(Path.Combine(FrmMainApp.FolderName, fileNameWithoutPath));
+
                         // check it's not in the read-queue.
                         while (HelperStatic.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
                         {
                             await Task.Delay(millisecondsDelay: 10);
                         }
 
-                        // Latitude
-                        HelperStatic.GenericUpdateAddToDataTable(
-                            dt: DtFileDataToWriteStage3ReadyToWrite,
-                            fileNameWithoutPath: fileNameWithoutPath,
-                            settingId: "GPSLatitude",
-                            settingValue: strGpsLatitude
-                        );
+                        if (dirElemFileToModify != null)
+                        {
+                            // Latitude
+                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSLatitude,
+                                                                         value: strGPSLatitude,
+                                                                         version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
 
-                        // Longitude
-                        HelperStatic.GenericUpdateAddToDataTable(
-                            dt: DtFileDataToWriteStage3ReadyToWrite,
-                            fileNameWithoutPath: fileNameWithoutPath,
-                            settingId: "GPSLongitude",
-                            settingValue: strGpsLongitude
-                        );
+                            // Longitude
+                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSLongitude,
+                                                                         value: strGPSLongitude,
+                                                                         version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
+                        }
                     }
                 }
             }
         }
 
-        if (double.TryParse(s: strGpsLatitude,
+        if (double.TryParse(s: strGPSLatitude,
                             style: NumberStyles.Any,
                             provider: CultureInfo.InvariantCulture,
                             result: out parsedLat) &&
-            double.TryParse(s: strGpsLongitude,
+            double.TryParse(s: strGPSLongitude,
                             style: NumberStyles.Any,
                             provider: CultureInfo.InvariantCulture,
                             result: out parsedLng))
@@ -539,11 +565,11 @@ public partial class FrmMainApp : Form
                             DataTable dtAltitude = new();
                             if (ShowLocToMapDialogChoice.Contains(value: "yes"))
                             {
-                                lvwUpdateTagsFromWeb(strGpsLatitude: strGpsLatitude, strGpsLongitude: strGpsLongitude, lvi: lvi);
+                                lvwUpdateTagsFromWeb(strGpsLatitude: strGPSLatitude, strGpsLongitude: strGPSLongitude, lvi: lvi);
                             }
                         }
 
-                        await HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
+                        await HelperStatic.LwvUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
                     }
 
                     HelperStatic.FileListBeingUpdated = false;
@@ -1091,6 +1117,8 @@ public partial class FrmMainApp : Form
         if (!_StopProcessingRows)
         {
             string fileNameWithoutPath = lvi.Text;
+            DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FolderName, path2: fileNameWithoutPath));
+
             HelperStatic.CurrentAltitude = null;
             HelperStatic.CurrentAltitude = lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
                 .SubItems[index: lvw_FileList.Columns[key: "clh_GPSAltitude"]
@@ -1103,18 +1131,20 @@ public partial class FrmMainApp : Form
             if (dtToponomy.Rows.Count > 0)
             {
                 // Send off to SQL
-                List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
-                toponomyOverwrites.Add(item: ("CountryCode", dtToponomy.Rows[index: 0][columnName: "CountryCode"]
-                                                  .ToString()));
-                toponomyOverwrites.Add(item: ("Country", dtToponomy.Rows[index: 0][columnName: "Country"]
-                                                  .ToString()));
-
-                foreach (string toponomyReplace in AncillaryListsArrays.ToponomyReplaces())
+                List<(ElementAttribute attribute, string toponomyOverwriteVal)> toponomyOverwrites = new()
                 {
-                    string settingId = toponomyReplace;
-                    string settingVal = HelperStatic.ReplaceBlankToponomy(settingId: settingId, settingValue: dtToponomy.Rows[index: 0][columnName: toponomyReplace]
+                    (ElementAttribute.CountryCode, dtToponomy.Rows[index: 0][columnName: "CountryCode"]
+                         .ToString()),
+                    (ElementAttribute.Country, dtToponomy.Rows[index: 0][columnName: "Country"]
+                         .ToString())
+                };
+
+                foreach (ElementAttribute attribute in AncillaryListsArrays.ToponomyReplaces())
+                {
+                    string colName = GetAttributeName(attribute: attribute);
+                    string settingVal = HelperStatic.ReplaceBlankToponomy(settingId: attribute, settingValue: dtToponomy.Rows[index: 0][columnName: colName]
                                                                               .ToString());
-                    toponomyOverwrites.Add(item: (settingId, settingVal));
+                    toponomyOverwrites.Add(item: (attribute, settingVal));
                 }
 
                 // timeZone is a bit special but that's just how we all love it....not.
@@ -1138,13 +1168,13 @@ public partial class FrmMainApp : Form
                                                               .ToString()
                                                               .Length -
                                                           3);
-                    if (!TZOffset.StartsWith(value: "-"))
+                    if (!TZOffset.StartsWith(value: NullStringEquivalentGeneric))
                     {
-                        toponomyOverwrites.Add(item: ("OffsetTime", "+" + TZOffset));
+                        toponomyOverwrites.Add(item: (ElementAttribute.OffsetTime, "+" + TZOffset));
                     }
                     else
                     {
-                        toponomyOverwrites.Add(item: ("OffsetTime", TZOffset));
+                        toponomyOverwrites.Add(item: (ElementAttribute.OffsetTime, TZOffset));
                     }
                 }
                 catch
@@ -1152,16 +1182,18 @@ public partial class FrmMainApp : Form
                     // don't do anything.
                 }
 
-                foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+                foreach ((ElementAttribute attribute, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
                 {
-                    HelperStatic.GenericUpdateAddToDataTable(
-                        dt: DtFileDataToWriteStage3ReadyToWrite,
-                        fileNameWithoutPath: lvi.Text,
-                        settingId: toponomyDetail.toponomyOverwriteName,
-                        settingValue: toponomyDetail.toponomyOverwriteVal
-                    );
+                    if (dirElemFileToModify != null)
+                    {
+                        dirElemFileToModify.SetAttributeValueAnyType(attribute: toponomyDetail.attribute,
+                                                                     value: toponomyDetail.toponomyOverwriteVal,
+                                                                     version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
+                    }
 
-                    lvi.SubItems[index: lvw_FileList.Columns[key: "clh_" + toponomyDetail.toponomyOverwriteName]
+                    string colName = GetAttributeName(attribute: toponomyDetail.attribute);
+
+                    lvi.SubItems[index: lvw_FileList.Columns[key: "clh_" + colName]
                                      .Index]
                         .Text = toponomyDetail.toponomyOverwriteVal;
                 }
@@ -1201,27 +1233,23 @@ public partial class FrmMainApp : Form
 
                 if (APIHandlingChoice.Contains(value: "yes"))
                 {
-                    List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
-                    toponomyOverwrites.Add(item: ("CountryCode", null));
-                    toponomyOverwrites.Add(item: ("Country", null));
+                    List<(ElementAttribute attribute, string toponomyOverwriteVal)> toponomyOverwrites = new();
+                    toponomyOverwrites.Add(item: (ElementAttribute.CountryCode, null));
+                    toponomyOverwrites.Add(item: (ElementAttribute.Country, null));
 
-                    foreach (string toponomyReplace in AncillaryListsArrays.ToponomyReplaces())
+                    foreach (ElementAttribute attribute in AncillaryListsArrays.ToponomyReplaces())
                     {
-                        string settingId = toponomyReplace;
-                        string settingVal = null;
-                        toponomyOverwrites.Add(item: (settingId, settingVal));
+                        toponomyOverwrites.Add(item: (attribute, null));
                     }
 
-                    foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+                    foreach ((ElementAttribute attribute, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
                     {
-                        HelperStatic.GenericUpdateAddToDataTable(
-                            dt: DtFileDataToWriteStage3ReadyToWrite,
-                            fileNameWithoutPath: lvi.Text,
-                            settingId: toponomyDetail.toponomyOverwriteName,
-                            settingValue: toponomyDetail.toponomyOverwriteVal
-                        );
+                        dirElemFileToModify.SetAttributeValueAnyType(attribute: toponomyDetail.attribute,
+                                                                     value: toponomyDetail.toponomyOverwriteVal,
+                                                                     version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
 
-                        lvi.SubItems[index: lvw_FileList.Columns[key: "clh_" + toponomyDetail.toponomyOverwriteName]
+                        string colName = GetAttributeName(attribute: toponomyDetail.attribute);
+                        lvi.SubItems[index: lvw_FileList.Columns[key: "clh_" + colName]
                                          .Index]
                             .Text = toponomyDetail.toponomyOverwriteVal;
                     }
@@ -1487,9 +1515,9 @@ public partial class FrmMainApp : Form
             }
 
             // Clear Tables that keep track of the current folder...
-            Logger.Trace(message: "Clear DtOriginalTakenDate, DtOriginalCreateDate and DtFileDataSeenInThisSession");
-            DtOriginalTakenDate.Clear();
-            DtOriginalCreateDate.Clear();
+            Logger.Trace(message: "Clear OriginalTakenDateDict, OriginalCreateDateDict and DtFileDataSeenInThisSession");
+            OriginalTakenDateDict.Clear();
+            OriginalCreateDateDict.Clear();
             DtFileDataSeenInThisSession.Clear();
 
             // Load data (and add to tables)
@@ -1580,7 +1608,7 @@ public partial class FrmMainApp : Form
                 FrmEditFileData = new FrmEditFileData();
 
                 Logger.Trace(message: "Add File To lvw_FileListEditImages");
-                FrmEditFileData.lvw_FileListEditImages.Items.Add(text: item_de.ItemName);
+                FrmEditFileData.lvw_FileListEditImages.Items.Add(text: item_de.ItemNameWithoutPath);
 
                 Logger.Trace(message: "FrmEditFileData Get objectTexts");
                 FrmEditFileData.Text = HelperStatic.DataReadDTObjectText(
@@ -1750,10 +1778,6 @@ public partial class FrmMainApp : Form
             // i think having an Item active can cause a lock on it
             lvw_FileList.SelectedItems.Clear();
 
-            // sort alphabetically
-            DtFileDataToWriteStage3ReadyToWrite.DefaultView.Sort = "fileNameWithoutPath ASC";
-            DtFileDataToWriteStage3ReadyToWrite = DtFileDataToWriteStage3ReadyToWrite.DefaultView.ToTable();
-
             await HelperStatic.ExifWriteExifToFile();
             // shouldn't be needed but just in case.
             HelperStatic.FilesAreBeingSaved = false;
@@ -1901,18 +1925,19 @@ public partial class FrmMainApp : Form
                 DataRow drFavourite = dtFavourite.NewRow();
                 drFavourite[columnName: "favouriteName"] = favouriteName;
 
-                foreach (string tagName in AncillaryListsArrays.GetFavouriteTags())
+                foreach (ElementAttribute attribute in AncillaryListsArrays.GetFavouriteTags())
                 {
-                    string addStr = lvi.SubItems[index: lvw.Columns[key: "clh_" + tagName]
+                    string colName = GetAttributeName(attribute: attribute);
+                    string addStr = lvi.SubItems[index: lvw.Columns[key: "clh_" + colName]
                                                      .Index]
                         .Text.ToString(provider: CultureInfo.InvariantCulture);
 
-                    if (addStr == "-")
+                    if (addStr == NullStringEquivalentGeneric)
                     {
                         addStr = "";
                     }
 
-                    drFavourite[columnName: tagName] = addStr;
+                    drFavourite[columnName: colName] = addStr;
                 }
 
                 HelperStatic.DataDeleteSQLiteFavourite(favouriteName: favouriteName);
@@ -1983,23 +2008,25 @@ public partial class FrmMainApp : Form
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
                     string fileNameWithoutPath = lvi.Text;
+
                     if (File.Exists(path: Path.Combine(path1: FolderName, path2: fileNameWithoutPath)))
                     {
-                        foreach (string favouriteTag in AncillaryListsArrays.GetFavouriteTags())
+                        DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FolderName, path2: fileNameWithoutPath));
+                        foreach (ElementAttribute attribute in AncillaryListsArrays.GetFavouriteTags())
                         {
-                            string settingId = favouriteTag;
-                            string settingValue = drFavouriteData[columnName: settingId]
+                            string colName = GetAttributeName(attribute: attribute);
+                            string settingValue = drFavouriteData[columnName: colName]
                                 .ToString();
 
-                            HelperStatic.GenericUpdateAddToDataTable(
-                                dt: DtFileDataToWriteStage3ReadyToWrite,
-                                fileNameWithoutPath: fileNameWithoutPath,
-                                settingId: settingId,
-                                settingValue: settingValue
-                            );
+                            if (dirElemFileToModify != null)
+                            {
+                                dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
+                                                                             value: settingValue,
+                                                                             version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
+                            }
                         }
 
-                        await HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
+                        await HelperStatic.LwvUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
                     }
                 }
             }

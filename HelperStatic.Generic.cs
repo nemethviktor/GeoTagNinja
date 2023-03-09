@@ -39,7 +39,7 @@ internal static partial class HelperStatic
             return tryDataValueStr;
         }
 
-        return "-";
+        return FrmMainApp.NullStringEquivalentGeneric;
     }
 
     private static DateTime? GenericStringToDateTime(string dateTimeToConvert)
@@ -288,7 +288,7 @@ internal static partial class HelperStatic
             {
                 DataRow thisDr = dt.Rows[index: i];
                 if (
-                    thisDr[columnName: "fileNameWithoutPath"]
+                    thisDr[columnName: "ItemNameWithoutPath"]
                         .ToString() ==
                     fileNameWithoutPath &&
                     thisDr[columnName: "settingId"]
@@ -304,7 +304,7 @@ internal static partial class HelperStatic
 
             // add new
             DataRow newDr = dt.NewRow();
-            newDr[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
+            newDr[columnName: "ItemNameWithoutPath"] = fileNameWithoutPath;
             newDr[columnName: "settingId"] = settingId;
             newDr[columnName: "settingValue"] = settingValue;
             dt.Rows.Add(row: newDr);
@@ -555,59 +555,12 @@ internal static partial class HelperStatic
         FrmMainApp.DtLanguageLabels.Columns.Add(columnName: "objectName");
         FrmMainApp.DtLanguageLabels.Columns.Add(columnName: "objectText");
 
-        // DtFileDataCopyPool
-        FrmMainApp.DtFileDataCopyPool = new DataTable();
-        FrmMainApp.DtFileDataCopyPool.Clear();
-        FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "fileNameWithoutPath");
-        FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "settingId");
-        FrmMainApp.DtFileDataCopyPool.Columns.Add(columnName: "settingValue");
-
-        // DtFileDataPastePool 
-        FrmMainApp.DtFileDataPastePool = new DataTable();
-        FrmMainApp.DtFileDataPastePool.Clear();
-        FrmMainApp.DtFileDataPastePool.Columns.Add(columnName: "settingId");
-        FrmMainApp.DtFileDataPastePool.Columns.Add(columnName: "settingValue");
-
-        // DtFileDataToWriteStage1PreQueue 
-        FrmMainApp.DtFileDataToWriteStage1PreQueue = new DataTable();
-        FrmMainApp.DtFileDataToWriteStage1PreQueue.Clear();
-        FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "fileNameWithoutPath");
-        FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingId");
-        FrmMainApp.DtFileDataToWriteStage1PreQueue.Columns.Add(columnName: "settingValue");
-
-        // DtFileDataToWriteStage2QueuePendingSave 
-        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave = new DataTable();
-        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Clear();
-        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "fileNameWithoutPath");
-        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingId");
-        FrmMainApp.DtFileDataToWriteStage2QueuePendingSave.Columns.Add(columnName: "settingValue");
-
-        // DtFileDataToWriteStage3ReadyToWrite 
-        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite = new DataTable();
-        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Clear();
-        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "fileNameWithoutPath");
-        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingId");
-        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Columns.Add(columnName: "settingValue");
         // DtFileDataSeenInThisSession
         FrmMainApp.DtFileDataSeenInThisSession = new DataTable();
         FrmMainApp.DtFileDataSeenInThisSession.Clear();
         FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "fileNameWithPath");
         FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingId");
         FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingValue");
-
-        // DtOriginalTakenDate
-        FrmMainApp.DtOriginalTakenDate = new DataTable();
-        FrmMainApp.DtOriginalTakenDate.Clear();
-        FrmMainApp.DtOriginalTakenDate.Columns.Add(columnName: "fileNameWithoutPath");
-        FrmMainApp.DtOriginalTakenDate.Columns.Add(columnName: "settingId");
-        FrmMainApp.DtOriginalTakenDate.Columns.Add(columnName: "settingValue");
-
-        // DtOriginalCreateDate
-        FrmMainApp.DtOriginalCreateDate = new DataTable();
-        FrmMainApp.DtOriginalCreateDate.Clear();
-        FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "fileNameWithoutPath");
-        FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "settingId");
-        FrmMainApp.DtOriginalCreateDate.Columns.Add(columnName: "settingValue");
 
         // DtToponomySessionData;
         FrmMainApp.DtToponomySessionData = new DataTable();
@@ -625,7 +578,7 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    ///     Adds fileNameWithoutPath to FilesBeingProcessed
+    ///     Adds ItemNameWithoutPath to FilesBeingProcessed
     /// </summary>
     /// <param name="fileNameWithoutPath">The file name without the path.</param>
     internal static void GenericLockLockFile(string fileNameWithoutPath)
@@ -634,7 +587,7 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    ///     Removes fileNameWithoutPath from FilesBeingProcessed
+    ///     Removes ItemNameWithoutPath from FilesBeingProcessed
     /// </summary>
     /// <param name="fileNameWithoutPath">The file name without the path.</param>
     internal static void GenericLockUnLockFile(string fileNameWithoutPath)
@@ -643,7 +596,7 @@ internal static partial class HelperStatic
     }
 
     /// <summary>
-    ///     Checks if a file is currently locked by any other running operation - checks if the fileNameWithoutPath is
+    ///     Checks if a file is currently locked by any other running operation - checks if the ItemNameWithoutPath is
     ///     currently in FilesBeingProcessed
     /// </summary>
     /// <param name="fileNameWithoutPath">The file name without the path.</param>
@@ -853,5 +806,19 @@ internal static partial class HelperStatic
 
             return returnString;
         }
+    }
+
+    public static int? TryParseNullableInt(string val)
+    {
+        return int.TryParse(val, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, out int outValue)
+            ? (int?)outValue
+            : null;
+    }
+
+    public static double? TryParseNullableDouble(string val)
+    {
+        return double.TryParse(val, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, out double outValue)
+            ? (double?)outValue
+            : null;
     }
 }

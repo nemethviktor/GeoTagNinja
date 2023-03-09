@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
+// ReSharper disable InconsistentNaming
+
 /// <remarks />
 [Serializable, DesignerCategory(category: "code"), XmlType(AnonymousType = true, Namespace = "adobe:ns:meta/"), XmlRoot(Namespace = "adobe:ns:meta/", IsNullable = false)]
 public class xmpmeta

@@ -87,9 +87,9 @@ public partial class FrmMainApp
                 tableName: "objectNames",
                 orderBy: "sqlOrder"
             );
-            DtObjectTagNamesIn = HelperStatic.DataReadSQLiteObjectMapping(tableName: "objectTagNames_In");
+            DtObjectattributesIn = HelperStatic.DataReadSQLiteObjectMapping(tableName: "objectTagNames_In");
             Logger.Trace(message: "objectTagNames_In OK");
-            DtObjectTagNamesOut = HelperStatic.DataReadSQLiteObjectMapping(tableName: "objectTagNames_Out");
+            DtObjectattributesOut = HelperStatic.DataReadSQLiteObjectMapping(tableName: "objectTagNames_Out");
             Logger.Trace(message: "objectTagNames_Out OK");
         }
         catch (Exception ex)
@@ -108,11 +108,11 @@ public partial class FrmMainApp
     internal static void AppStartupReadCustomCityLogic()
     {
         DtCustomCityLogic = HelperStatic.DataReadSQLiteCustomCityAllocationLogic();
-        lstCityNameIsAdminName1.Clear();
-        lstCityNameIsAdminName2.Clear();
-        lstCityNameIsAdminName3.Clear();
-        lstCityNameIsAdminName4.Clear();
-        lstCityNameIsUndefined.Clear();
+        LstCityNameIsAdminName1.Clear();
+        LstCityNameIsAdminName2.Clear();
+        LstCityNameIsAdminName3.Clear();
+        LstCityNameIsAdminName4.Clear();
+        LstCityNameIsUndefined.Clear();
 
         foreach (DataRow drCountryCode in DtCustomCityLogic.Rows)
         {
@@ -123,19 +123,19 @@ public partial class FrmMainApp
             switch (targetPointName)
             {
                 case "AdminName1":
-                    lstCityNameIsAdminName1.Add(item: countryCode);
+                    LstCityNameIsAdminName1.Add(item: countryCode);
                     break;
                 case "AdminName2":
-                    lstCityNameIsAdminName2.Add(item: countryCode);
+                    LstCityNameIsAdminName2.Add(item: countryCode);
                     break;
                 case "AdminName3":
-                    lstCityNameIsAdminName3.Add(item: countryCode);
+                    LstCityNameIsAdminName3.Add(item: countryCode);
                     break;
                 case "AdminName4":
-                    lstCityNameIsAdminName4.Add(item: countryCode);
+                    LstCityNameIsAdminName4.Add(item: countryCode);
                     break;
                 case "Undefined":
-                    lstCityNameIsUndefined.Add(item: countryCode);
+                    LstCityNameIsUndefined.Add(item: countryCode);
                     break;
             }
         }
@@ -648,6 +648,6 @@ public partial class FrmMainApp
     /// <returns></returns>
     private static void AppStartupLoadCustomRules()
     {
-        FrmSettings.dtCustomRules = HelperStatic.DataReadSQLiteCustomRules();
+        FrmSettings.DtCustomRules = HelperStatic.DataReadSQLiteCustomRules();
     }
 }

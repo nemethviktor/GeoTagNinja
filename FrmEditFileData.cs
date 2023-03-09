@@ -6,8 +6,12 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GeoTagNinja.Model;
 using TimeZoneConverter;
+using static System.Net.WebRequestMethods;
 using static GeoTagNinja.FrmMainApp;
+using static GeoTagNinja.Model.SourcesAndAttributes;
+using File = System.IO.File;
 
 namespace GeoTagNinja;
 
@@ -52,10 +56,21 @@ public partial class FrmEditFileData : Form
         _frmEditFileDataNowLoadingFileData = true;
 
         Logger.Trace(message: "Emptying FrmMainApp.DtFileDataToWriteStage1PreQueue + FrmMainApp.DtFileDataToWriteStage2QueuePendingSave");
-        // empty queue
-        DtFileDataToWriteStage1PreQueue.Rows.Clear();
-        // also empty the "original data" table
-        DtFileDataToWriteStage2QueuePendingSave.Rows.Clear();
+        foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
+        {
+            {
+                foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+                {
+                    // empty queue
+
+                    dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
+
+                    // also empty the "original data" table
+
+                    dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue);
+                }
+            }
+        }
 
         // Ddeal with Dates
         // TakenDate
@@ -138,17 +153,35 @@ public partial class FrmEditFileData : Form
 
         string fileNameWithoutPath = lvw_FileListEditImages.SelectedItems[index: 0]
             .Text;
+        DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FolderName, path2: fileNameWithoutPath));
+
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         btn_InsertFromTakenDate.Enabled = false;
 
         // via https://stackoverflow.com/a/47692754/3968494
 
-        Logger.Trace(message: "Copying Data From dtSqlDataQ");
+        Logger.Trace(message: "Copying Data From Stage1EditFormIntraTabTransferQueue");
 
-        List<KeyValuePair<string, string>> lstSqlDataDT1 = HelperStatic.DataReadFilterDataTable(dt: DtFileDataToWriteStage1PreQueue, filePathColumnName: "fileNameWithoutPath", filePathValue: fileNameWithoutPath);
+        Dictionary<ElementAttribute, string> datainStage1 = new();
+        foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+        {
+            if (dirElemFileToModify != null && dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue))
+            {
+                string attributeValueString = dirElemFileToModify.GetAttributeValueString(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
+                datainStage1.Add(key: attribute, value: attributeValueString);
+            }
+        }
 
-        Logger.Trace(message: "Copying Data From dtSqlDataF");
-        List<KeyValuePair<string, string>> lstSqlDataDT3 = HelperStatic.DataReadFilterDataTable(dt: DtFileDataToWriteStage3ReadyToWrite, filePathColumnName: "fileNameWithoutPath", filePathValue: fileNameWithoutPath);
+        Logger.Trace(message: "Copying Data From Stage3ReadyToWrite");
+        Dictionary<ElementAttribute, string> dataInStage3 = new();
+        foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+        {
+            if (dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
+            {
+                string attributeValueString = dirElemFileToModify.GetAttributeValueString(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                dataInStage3.Add(key: attribute, value: attributeValueString);
+            }
+        }
 
         Logger.Trace(message: "Data Copy Done");
 
@@ -157,10 +190,11 @@ public partial class FrmEditFileData : Form
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
-            string strSqlDataDT1 = null;
-            string strSqlDataDT3 = null;
-            string strFLData = null;
-            string exifTag = cItem.Name; // this is for debugging only (particularly here, that is.)
+            string strDataInStage1 = null;
+            string strDataInStage3 = null;
+            string strDataInFileList = null;
+            string strExifTag = cItem.Name; // this is for debugging only (particularly here, that is.)
+            ElementAttribute exifTag;
             try
             {
                 Logger.Trace(message: "cItem: " + cItem.Name + " (" + cItem.GetType() + ")");
@@ -179,71 +213,76 @@ public partial class FrmEditFileData : Form
                                                                        .Split('.')
                                                                        .Last(), objectName: cItem.Name);
                 }
-                else if (cItem is TextBox || cItem is ComboBox || cItem is DateTimePicker || cItem is NumericUpDown)
+                else if (cItem is TextBox ||
+                         cItem is ComboBox ||
+                         cItem is DateTimePicker ||
+                         cItem is NumericUpDown
+                        )
                 {
-                    exifTag = cItem.Name.Substring(startIndex: 4);
+                    strExifTag = cItem.Name.Substring(startIndex: 4);
+                    exifTag = GetAttributeFromString(attributeToFind: strExifTag);
 
-                    string cItemValStr = "-";
+                    string cItemValStr = NullStringEquivalentGeneric;
 
-                    Logger.Trace(message: "cItem: " + cItem.Name + " - keyEqualsWhat: " + exifTag + " - Pulling from KVP");
-                    strSqlDataDT1 = HelperStatic.DataGetFirstOrDefaultFromKVPList(lstIn: lstSqlDataDT1, keyEqualsWhat: exifTag);
-                    strSqlDataDT3 = HelperStatic.DataGetFirstOrDefaultFromKVPList(lstIn: lstSqlDataDT3, keyEqualsWhat: exifTag);
-                    Logger.Trace(message: "cItem: " + cItem.Name + " - keyEqualsWhat: " + exifTag + " - Pulling from KVP - Done");
+                    Logger.Trace(message: "cItem: " + cItem.Name + " - keyEqualsWhat: " + strExifTag + " - Pulling from KVP");
+                    strDataInStage1 = dirElemFileToModify.GetAttributeValueString(attribute: exifTag, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
+                    strDataInStage3 = dirElemFileToModify.GetAttributeValueString(attribute: exifTag, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                    Logger.Trace(message: "cItem: " + cItem.Name + " - keyEqualsWhat: " + strExifTag + " - Pulling from KVP - Done");
 
                     // Basically not all Tags exist as CLHs.
-                    List<string> lstObjectNamesIn = DtObjectTagNamesIn.Rows.OfType<DataRow>()
+                    List<string> lstObjectNamesIn = DtObjectattributesIn.Rows.OfType<DataRow>()
                         .Select(selector: dr => dr.Field<string>(columnName: "objectName"))
                         .ToList();
                     lstObjectNamesIn = lstObjectNamesIn.Distinct()
                         .ToList();
 
-                    if (lstObjectNamesIn.Contains(item: exifTag))
+                    if (lstObjectNamesIn.Contains(item: strExifTag))
                     {
-                        strFLData = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
-                            .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_" + exifTag]
+                        strDataInFileList = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
+                            .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_" + strExifTag]
                                           .Index]
                             .Text;
                     }
 
-                    bool isInSqlDT = false;
-                    if (strSqlDataDT1 != null)
+                    bool dataExistsAlready = false;
+                    if (strDataInStage1 != null)
                     {
-                        cItemValStr = strSqlDataDT1;
-                        isInSqlDT = true;
+                        cItemValStr = strDataInStage1;
+                        dataExistsAlready = true;
                     }
-                    else if (strSqlDataDT3 != null)
+                    else if (strDataInStage3 != null)
                     {
-                        cItemValStr = strSqlDataDT3;
-                        isInSqlDT = true;
+                        cItemValStr = strDataInStage3;
+                        dataExistsAlready = true;
                     }
-                    else if (strFLData != null)
+                    else if (strDataInFileList != null)
                     {
-                        cItemValStr = strFLData;
-                        isInSqlDT = true;
+                        cItemValStr = strDataInFileList;
+                        dataExistsAlready = true;
                     }
-                    // if not in SQL...
+                    // if not in DEs...
                     else
                     {
                         if (cItem is NumericUpDown) // These are the Time-Shifts
                         {
-                            Logger.Trace(message: "Not in SQL");
+                            Logger.Trace(message: "Not in DEs");
                             cItemValStr = "0";
                         }
-                        else if (exifTag == "OffsetTimeList") // I hate you.
+                        else if (strExifTag == "OffsetTimeList") // I hate you.
                         {
-                            Logger.Trace(message: "Not in SQL");
+                            Logger.Trace(message: "Not in DEs");
                             // blank on purpose
                         }
                     }
 
-                    if (isInSqlDT)
+                    if (dataExistsAlready)
                     {
                         // reset font to normal
                         cItem.Font = new Font(prototype: cItem.Font, newStyle: FontStyle.Regular);
                     }
 
                     // if empty...
-                    if (cItemValStr == "-" || cItemValStr == "" || cItemValStr is null)
+                    if (cItemValStr == NullStringEquivalentGeneric || string.IsNullOrWhiteSpace(value: cItemValStr))
                     {
                         // okay for gbx_*Date && !NUD -> those are DateTimePickers. If they are NULL then there is either no TakenDate or no CreateDate so the actual controls will have to be disabled.
                         if (cItem.Parent.Name.StartsWith(value: "gbx_") && cItem.Parent.Name.EndsWith(value: "Date") && cItem is not NumericUpDown)
@@ -277,7 +316,7 @@ public partial class FrmEditFileData : Form
                             }
                         }
                         // if it's none of the above then make the cItem be just blank.
-                        else if (exifTag == "OffsetTimeList") // I hate you.
+                        else if (strExifTag == "OffsetTimeList") // I hate you.
                         {
                             // blank on purpose
                         }
@@ -320,37 +359,83 @@ public partial class FrmEditFileData : Form
                         }
 
                         // this is related to storing the default DateTimes for TakenDate and CreateDate
+                        // what we also need to do here is account for any copy-paste shifts. TODO
                         if (cItem is DateTimePicker dtp)
                         {
-                            if (dtp == dtp_TakenDate)
-                            {
-                                btn_InsertTakenDate.Enabled = false;
-                                List<KeyValuePair<string, string>> lstSqlDataDTTakenDate =
-                                    HelperStatic.DataReadFilterDataTable(dt: DtOriginalTakenDate,
-                                                                         filePathColumnName: "fileNameWithoutPath",
-                                                                         filePathValue: fileNameWithoutPath);
+                            int shiftedDays = 0;
+                            int shiftedHours = 0;
+                            int shiftedMinutes = 0;
+                            int shiftedSeconds = 0;
+                            int totalShiftedSeconds = 0;
 
-                                if (lstSqlDataDTTakenDate.Count > 0)
-                                {
-                                    _origDateValTakenDate = Convert.ToDateTime(value: HelperStatic.DataGetFirstOrDefaultFromKVPList(lstIn: lstSqlDataDTTakenDate, keyEqualsWhat: "originalTakenDate"));
-                                }
+                            if (dtp == dtp_TakenDate && OriginalTakenDateDict.ContainsKey(key: fileNameWithoutPath))
+                            {
+                                _origDateValTakenDate = Convert.ToDateTime(value: OriginalTakenDateDict[key: fileNameWithoutPath]);
+
+                                shiftedDays = (int)dirElemFileToModify.GetAttributeValue<int>(
+                                    attribute: ElementAttribute.TakenDateDaysShift,
+                                    version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                                    notFoundValue: 0);
+
+                                shiftedHours = (int)dirElemFileToModify.GetAttributeValue<int>(
+                                    attribute: ElementAttribute.TakenDateHoursShift,
+                                    version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                                    notFoundValue: 0);
+
+                                shiftedMinutes = (int)dirElemFileToModify.GetAttributeValue<int>(
+                                    attribute: ElementAttribute.TakenDateMinutesShift,
+                                    version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                                    notFoundValue: 0);
+
+                                shiftedSeconds = (int)dirElemFileToModify.GetAttributeValue<int>(
+                                    attribute: ElementAttribute.TakenDateSecondsShift,
+                                    version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                                    notFoundValue: 0);
+
+                                totalShiftedSeconds = shiftedSeconds +
+                                                      shiftedMinutes * 60 +
+                                                      shiftedHours * 60 * 60 +
+                                                      shiftedDays * 60 * 60 * 24;
+
+                                DateTime modifiedTakenDateTime = _origDateValTakenDate.AddSeconds(value: totalShiftedSeconds);
+                                cItemValStr = modifiedTakenDateTime.ToString(provider: CultureInfo.CurrentUICulture);
                             }
-                            else if (dtp == dtp_CreateDate)
-                            {
-                                btn_InsertCreateDate.Enabled = false;
-                                List<KeyValuePair<string, string>> lstSqlDataDTCreateDate =
-                                    HelperStatic.DataReadFilterDataTable(dt: DtOriginalCreateDate,
-                                                                         filePathColumnName: "fileNameWithoutPath",
-                                                                         filePathValue: fileNameWithoutPath);
 
-                                if (lstSqlDataDTCreateDate.Count > 0)
-                                {
-                                    _origDateValCreateDate = Convert.ToDateTime(value: HelperStatic.DataGetFirstOrDefaultFromKVPList(lstIn: lstSqlDataDTCreateDate, keyEqualsWhat: "originalCreateDate"));
-                                }
+                            else if (dtp == dtp_CreateDate && OriginalCreateDateDict.ContainsKey(key: fileNameWithoutPath))
+                            {
+                                _origDateValCreateDate = Convert.ToDateTime(value: OriginalCreateDateDict[key: fileNameWithoutPath]);
+
+                                shiftedDays = (int)dirElemFileToModify.GetAttributeValue<int>(
+                                    attribute: ElementAttribute.CreateDateDaysShift,
+                                    version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                                    notFoundValue: 0);
+
+                                shiftedHours = (int)dirElemFileToModify.GetAttributeValue<int>(
+                                    attribute: ElementAttribute.CreateDateHoursShift,
+                                    version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                                    notFoundValue: 0);
+
+                                shiftedMinutes = (int)dirElemFileToModify.GetAttributeValue<int>(
+                                    attribute: ElementAttribute.CreateDateMinutesShift,
+                                    version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                                    notFoundValue: 0);
+
+                                shiftedSeconds = (int)dirElemFileToModify.GetAttributeValue<int>(
+                                    attribute: ElementAttribute.CreateDateSecondsShift,
+                                    version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                                    notFoundValue: 0);
+
+                                totalShiftedSeconds = shiftedSeconds +
+                                                      shiftedMinutes * 60 +
+                                                      shiftedHours * 60 * 60 +
+                                                      shiftedDays * 60 * 60 * 24;
+
+                                DateTime modifiedCreateDateTime = _origDateValCreateDate.AddSeconds(value: totalShiftedSeconds);
+                                cItemValStr = modifiedCreateDateTime.ToString(provider: CultureInfo.CurrentUICulture);
                             }
 
                             Logger.Trace(message: "cItem: " + cItem.Name + " - Updating DateTimePicker");
-                            if (strSqlDataDT1 != null || strSqlDataDT3 != null)
+                            if (strDataInStage1 != null || strDataInStage3 != null || totalShiftedSeconds != 0)
                             {
                                 dtp.Font = new Font(prototype: dtp.Font, newStyle: FontStyle.Bold);
                             }
@@ -360,11 +445,13 @@ public partial class FrmEditFileData : Form
                         // stick into sql ("pending save") - this is to see if the data has changed later.
                         if (cItem is not NumericUpDown nud)
                         {
-                            HelperStatic.GenericUpdateAddToDataTable(
-                                dt: DtFileDataToWriteStage2QueuePendingSave,
-                                fileNameWithoutPath: fileNameWithoutPath,
-                                settingId: cItem.Name.Substring(startIndex: 4),
-                                settingValue: cItemValStr);
+                            ElementAttribute attribute = GetAttributeFromString(attributeToFind: cItem.Name.Substring(startIndex: 4));
+
+                            dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
+                                                                         value: cItemValStr,
+                                                                         version: DirectoryElement.AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue,
+                                                                         isMarkedForDeletion: false);
+
                             cItem.Text = cItemValStr;
                         }
                         else // if (cItem is NumericUpDown nud)
@@ -372,14 +459,30 @@ public partial class FrmEditFileData : Form
                             nud.Value = Convert.ToDecimal(value: cItemValStr, provider: CultureInfo.InvariantCulture);
                             cItemValStr = nud.Value.ToString();
 
-                            HelperStatic.GenericUpdateAddToDataTable(
-                                dt: DtFileDataToWriteStage2QueuePendingSave,
-                                fileNameWithoutPath: fileNameWithoutPath,
-                                settingId: nud.Name.Substring(startIndex: 4),
-                                settingValue: cItemValStr);
+                            if (nud.Name.EndsWith(value: "Shift") && nud.Value != 0)
+                            {
+                                if (nud.Name.Substring(startIndex: 4)
+                                    .StartsWith(value: "Taken"))
+                                {
+                                    rbt_TakenDateTimeShift.Checked = true;
+                                }
+                                else if (nud.Name.Substring(startIndex: 4)
+                                         .StartsWith(value: "Create"))
+                                {
+                                    rbt_CreateDateTimeShift.Checked = true;
+                                }
+                            }
+
+                            ElementAttribute attribute = GetAttributeFromString(attributeToFind: nud.Name.Substring(startIndex: 4));
+
+                            dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
+                                                                         value: cItemValStr,
+                                                                         version: DirectoryElement.AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue,
+                                                                         isMarkedForDeletion: false);
+
                             nud.Text = nud.Value.ToString();
 
-                            if (strSqlDataDT1 != null || strSqlDataDT3 != null)
+                            if (strDataInStage1 != null || strDataInStage3 != null)
                             {
                                 nud.Font = new Font(prototype: nud.Font, newStyle: FontStyle.Bold);
                             }
@@ -388,7 +491,7 @@ public partial class FrmEditFileData : Form
                         if (cItem is TextBox txt)
                         {
                             Logger.Trace(message: "cItem: " + cItem.Name + " - Updating TextBox");
-                            if (strSqlDataDT1 != null || strSqlDataDT3 != null)
+                            if (strDataInStage1 != null || strDataInStage3 != null)
                             {
                                 txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Bold);
                             }
@@ -396,7 +499,7 @@ public partial class FrmEditFileData : Form
                         else if (cItem is ComboBox cmb)
                         {
                             Logger.Trace(message: "cItem: " + cItem.Name + " - Updating ComboBox");
-                            if (strSqlDataDT1 != null || strSqlDataDT3 != null)
+                            if (strDataInStage1 != null || strDataInStage3 != null)
                             {
                                 cmb.Font = new Font(prototype: cmb.Font, newStyle: FontStyle.Bold);
                             }
@@ -596,20 +699,20 @@ public partial class FrmEditFileData : Form
         }
 
         // Pull the data from the web regardless.
-        List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
+        List<(ElementAttribute attribute, string toponomyOverwriteVal)> toponomyOverwrites = new();
         if (dtToponomy != null && dtToponomy.Rows.Count > 0)
         {
-            toponomyOverwrites.Add(item: ("CountryCode", dtToponomy.Rows[index: 0][columnName: "CountryCode"]
+            toponomyOverwrites.Add(item: (ElementAttribute.CountryCode, dtToponomy.Rows[index: 0][columnName: "CountryCode"]
                                               .ToString()));
-            toponomyOverwrites.Add(item: ("Country", dtToponomy.Rows[index: 0][columnName: "Country"]
+            toponomyOverwrites.Add(item: (ElementAttribute.Country, dtToponomy.Rows[index: 0][columnName: "Country"]
                                               .ToString()));
-            toponomyOverwrites.Add(item: ("City", dtToponomy.Rows[index: 0][columnName: "City"]
+            toponomyOverwrites.Add(item: (ElementAttribute.City, dtToponomy.Rows[index: 0][columnName: "City"]
                                               .ToString()));
-            toponomyOverwrites.Add(item: ("State", dtToponomy.Rows[index: 0][columnName: "State"]
+            toponomyOverwrites.Add(item: (ElementAttribute.State, dtToponomy.Rows[index: 0][columnName: "State"]
                                               .ToString()));
-            toponomyOverwrites.Add(item: ("Sub_location", dtToponomy.Rows[index: 0][columnName: "Sub_location"]
+            toponomyOverwrites.Add(item: (ElementAttribute.Sub_location, dtToponomy.Rows[index: 0][columnName: "Sub_location"]
                                               .ToString()));
-            toponomyOverwrites.Add(item: ("GPSAltitude", dtToponomy.Rows[index: 0][columnName: "GPSAltitude"]
+            toponomyOverwrites.Add(item: (ElementAttribute.GPSAltitude, dtToponomy.Rows[index: 0][columnName: "GPSAltitude"]
                                               .ToString()));
 
             string TZ = dtToponomy.Rows[index: 0][columnName: "timeZoneId"]
@@ -649,20 +752,20 @@ public partial class FrmEditFileData : Form
                                                                               .ToString()
                                                                               .Length -
                                                                           3);
-                                    if (!TZOffset.StartsWith(value: "-"))
+                                    if (!TZOffset.StartsWith(value: NullStringEquivalentGeneric))
                                     {
-                                        toponomyOverwrites.Add(item: ("OffsetTime", "+" + TZOffset));
+                                        toponomyOverwrites.Add(item: (ElementAttribute.OffsetTime, "+" + TZOffset));
                                     }
                                     else
                                     {
-                                        toponomyOverwrites.Add(item: ("OffsetTime", TZOffset));
+                                        toponomyOverwrites.Add(item: (ElementAttribute.OffsetTime, TZOffset));
                                     }
                                 }
                             }
                             catch
                             {
                                 // add a zero
-                                toponomyOverwrites.Add(item: ("OffsetTime", "+00:00"));
+                                toponomyOverwrites.Add(item: (ElementAttribute.OffsetTime, "+00:00"));
                             }
 
                             _tzChangedByApi = false;
@@ -672,30 +775,30 @@ public partial class FrmEditFileData : Form
                 }
 
                 // send it back to the Form + SQL
-                foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+                foreach ((ElementAttribute attribute, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
                 {
-                    switch (toponomyDetail.toponomyOverwriteName)
+                    switch (toponomyDetail.attribute)
                     {
-                        case "CountryCode":
+                        case ElementAttribute.CountryCode:
                             cbx_CountryCode.Text = toponomyDetail.toponomyOverwriteVal;
                             break;
-                        case "Country":
+                        case ElementAttribute.Country:
                             cbx_Country.Text = toponomyDetail.toponomyOverwriteVal;
                             break;
-                        case "City":
+                        case ElementAttribute.City:
                             tbx_City.Text = toponomyDetail.toponomyOverwriteVal;
                             break;
-                        case "State":
+                        case ElementAttribute.State:
                             tbx_State.Text = toponomyDetail.toponomyOverwriteVal;
                             break;
-                        case "Sub_location":
+                        case ElementAttribute.Sub_location:
                             tbx_Sub_location.Text = toponomyDetail.toponomyOverwriteVal;
                             break;
-                        case "GPSAltitude":
+                        case ElementAttribute.GPSAltitude:
                             nud_GPSAltitude.Text = toponomyDetail.toponomyOverwriteVal;
                             nud_GPSAltitude.Value = Convert.ToDecimal(value: toponomyDetail.toponomyOverwriteVal);
                             break;
-                        case "OffsetTime":
+                        case ElementAttribute.OffsetTime:
                             tbx_OffsetTime.Text = toponomyDetail.toponomyOverwriteVal;
                             break;
                     }
@@ -717,30 +820,31 @@ public partial class FrmEditFileData : Form
                                                                   .ToString()
                                                                   .Length -
                                                               3);
-                        if (!TZOffset.StartsWith(value: "-"))
+                        if (!TZOffset.StartsWith(value: NullStringEquivalentGeneric))
                         {
-                            toponomyOverwrites.Add(item: ("OffsetTime", "+" + TZOffset));
+                            toponomyOverwrites.Add(item: (ElementAttribute.OffsetTime, "+" + TZOffset));
                         }
                         else
                         {
-                            toponomyOverwrites.Add(item: ("OffsetTime", TZOffset));
+                            toponomyOverwrites.Add(item: (ElementAttribute.OffsetTime, TZOffset));
                         }
                     }
                 }
                 catch
                 {
                     // add a zero
-                    toponomyOverwrites.Add(item: ("OffsetTime", "+00:00"));
+                    toponomyOverwrites.Add(item: (ElementAttribute.OffsetTime, "+00:00"));
                 }
 
-                foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+                DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FolderName, path2: fileNameWithoutPath));
+                foreach ((ElementAttribute attribute, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
                 {
-                    HelperStatic.GenericUpdateAddToDataTable(
-                        dt: DtFileDataToWriteStage1PreQueue,
-                        fileNameWithoutPath: fileNameWithoutPath,
-                        settingId: toponomyDetail.toponomyOverwriteName,
-                        settingValue: toponomyDetail.toponomyOverwriteVal
-                    );
+                    if (dirElemFileToModify != null)
+                    {
+                        dirElemFileToModify.SetAttributeValueAnyType(attribute: toponomyDetail.attribute,
+                                                                     value: toponomyDetail.toponomyOverwriteVal,
+                                                                     version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue, isMarkedForDeletion: false);
+                    }
                 }
             }
         }
@@ -756,6 +860,8 @@ public partial class FrmEditFileData : Form
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> cGbx_TakenDate = helperNonstatic.GetAllControls(control: gbx_TakenDate);
+        string fileNameWithoutPath = lvw_FileListEditImages.SelectedItems[index: 0]
+            .Text;
         foreach (Control cItemGbx_TakenDate in cGbx_TakenDate)
         {
             if (cItemGbx_TakenDate != btn_InsertTakenDate)
@@ -766,13 +872,15 @@ public partial class FrmEditFileData : Form
                 if (cItemGbx_TakenDate is DateTimePicker dtp)
                 {
                     dtp.Font = new Font(prototype: dtp.Font, newStyle: FontStyle.Bold);
-                    HelperStatic.GenericUpdateAddToDataTable(
-                        dt: DtFileDataToWriteStage1PreQueue,
-                        fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
-                            .Text,
-                        settingId: dtp.Name.Substring(startIndex: 4),
-                        settingValue: dtp.Text
-                    );
+                    DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FolderName, path2: fileNameWithoutPath));
+                    ElementAttribute attribute = GetAttributeFromString(attributeToFind: dtp.Name.Substring(startIndex: 4));
+
+                    if (dirElemFileToModify != null)
+                    {
+                        dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
+                                                                     value: dtp.Text,
+                                                                     version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue, isMarkedForDeletion: false);
+                    }
                 }
             }
         }
@@ -827,394 +935,61 @@ public partial class FrmEditFileData : Form
     private async void btn_OK_Click(object sender,
                                     EventArgs e)
     {
-        // move data from temp-queue to write-queue
-        if (DtFileDataToWriteStage1PreQueue.Rows.Count > 0)
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        if (frmMainAppInstance != null)
         {
-            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-            // make a list of files to actually update
-            DataTable dtDistinctFileNames = DtFileDataToWriteStage1PreQueue.DefaultView.ToTable(distinct: true, "fileNameWithoutPath");
-            foreach (DataRow drFileName in dtDistinctFileNames.Rows)
+            // move data from temp-queue to write-queue
+            foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
             {
-                string fileNameWithoutPath = drFileName[columnIndex: 0]
-                    .ToString();
+                bool takenAlreadyShifted = false;
+                bool createAlreadyShifted = false;
 
-                DataTable dtFileWriteQueue = null;
+                foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+                {
+                    if (dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue))
+                    {
+                        dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
+                                                                     value: dirElemFileToModify.GetAttributeValueString(attribute: attribute,
+                                                                                                                        version: DirectoryElement.AttributeVersion
+                                                                                                                            .Stage1EditFormIntraTabTransferQueue
+                                                                     ),
+                                                                     version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                                                                     isMarkedForDeletion: dirElemFileToModify
+                                                                         .IsMarkedForDeletion(attribute: attribute,
+                                                                                              version: DirectoryElement.AttributeVersion
+                                                                                                  .Stage1EditFormIntraTabTransferQueue));
+
+                        // remove from Stage1EditFormIntraTabTransferQueue
+                        dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
+                    }
+
+                    // remove from Stage2EditFormReadyToSaveAndMoveToWriteQueue
+
+                    dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue);
+                }
+
+                ListViewItem lvi = null;
                 try
                 {
-                    dtFileWriteQueue = DtFileDataToWriteStage1PreQueue.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'")
-                        .CopyToDataTable();
+                    lvi = frmMainAppInstance.lvw_FileList.FindItemWithText(text: dirElemFileToModify.ItemNameWithoutPath);
                 }
                 catch
                 {
-                    dtFileWriteQueue = null;
+                    // shouldn't happen
                 }
 
-                // this shouldn't ever be zero...
-                if (dtFileWriteQueue != null && dtFileWriteQueue.Rows.Count > 0)
+                if (lvi != null)
                 {
-                    //---
-                    // TimeShifts go separately. -- Also while this could be done in one step it's easier for now if we split Taken and Create
-                    // TakenDate
-                    DataTable dtDateTakenDateShifted = null;
-                    try
-                    {
-                        dtDateTakenDateShifted = dtFileWriteQueue.Select(filterExpression: "settingId LIKE 'Taken%' AND settingId LIKE '%Shift'")
-                            .CopyToDataTable();
-                    }
-                    catch
-                    {
-                        dtDateTakenDateShifted = null;
-                    }
-
-                    if (dtDateTakenDateShifted != null && dtDateTakenDateShifted.Rows.Count > 0)
-                    {
-                        int shiftedDays = 0;
-                        int shiftedHours = 0;
-                        int shiftedMinutes = 0;
-                        int shiftedSeconds = 0;
-                        List<(string settingId, string settingValue)> lstDr3RowsToAdd = new();
-
-                        foreach (DataRow drDateTakenDateShifted in dtDateTakenDateShifted.Rows)
-                        {
-                            string settingId = drDateTakenDateShifted[columnName: "settingId"]
-                                .ToString();
-                            string settingValue = drDateTakenDateShifted[columnName: "settingValue"]
-                                .ToString();
-                            switch (settingId)
-                            {
-                                case "TakenDateDaysShift":
-                                    shiftedDays = int.Parse(s: settingValue);
-                                    break;
-                                case "TakenDateHoursShift":
-                                    shiftedHours = int.Parse(s: settingValue);
-                                    break;
-                                case "TakenDateMinutesShift":
-                                    shiftedMinutes = int.Parse(s: settingValue);
-                                    break;
-                                case "TakenDateSecondsShift":
-                                    shiftedSeconds = int.Parse(s: settingValue);
-                                    break;
-                            }
-
-                            if (settingValue != "0" && settingValue != null)
-                            {
-                                lstDr3RowsToAdd.Add(item: (settingId, settingValue));
-                            }
-                        }
-
-                        foreach ((string settingId, string settingValue) lstDr3RowToAdd in lstDr3RowsToAdd)
-                        {
-                            // TakenDate
-                            HelperStatic.GenericUpdateAddToDataTable(dt: DtFileDataToWriteStage3ReadyToWrite,
-                                                                     fileNameWithoutPath: fileNameWithoutPath,
-                                                                     settingId: lstDr3RowToAdd.settingId,
-                                                                     settingValue: lstDr3RowToAdd.settingValue);
-                        }
-
-                        int totalShiftedSeconds = shiftedSeconds +
-                                                  shiftedMinutes * 60 +
-                                                  shiftedHours * 60 * 60 +
-                                                  shiftedDays * 60 * 60 * 24;
-
-                        DataTable dtTakenDate = null;
-
-                        try
-                        {
-                            dtTakenDate = DtOriginalTakenDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'")
-                                .CopyToDataTable();
-                        }
-                        catch
-                        {
-                            dtTakenDate = null;
-                        }
-
-                        if (dtTakenDate != null && dtTakenDate.Rows.Count > 0)
-                        {
-                            DateTime originalTakenDateTime = Convert.ToDateTime(value: dtTakenDate.Rows[index: 0][columnName: "settingValue"]
-                                                                                    .ToString());
-
-                            DateTime modifiedTakenDateTime = originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
-
-                            // TakenDate 
-                            HelperStatic.GenericUpdateAddToDataTable(dt: DtFileDataToWriteStage3ReadyToWrite,
-                                                                     fileNameWithoutPath: fileNameWithoutPath,
-                                                                     settingId: "TakenDate",
-                                                                     settingValue: modifiedTakenDateTime
-                                                                         .ToString(provider: CultureInfo
-                                                                                       .CurrentUICulture));
-                        }
-                    }
-
-                    // CreateDate
-                    DataTable dtDateCreateDateShifted = null;
-                    try
-                    {
-                        dtDateCreateDateShifted = dtFileWriteQueue.Select(filterExpression: "settingId LIKE 'Create%' AND settingId LIKE '%Shift'")
-                            .CopyToDataTable();
-                    }
-                    catch
-                    {
-                        dtDateCreateDateShifted = null;
-                    }
-
-                    if (dtDateCreateDateShifted != null && dtDateCreateDateShifted.Rows.Count > 0)
-                    {
-                        int shiftedDays = 0;
-                        int shiftedHours = 0;
-                        int shiftedMinutes = 0;
-                        int shiftedSeconds = 0;
-                        List<(string settingId, string settingValue)> lstDr3RowsToAdd = new();
-
-                        foreach (DataRow drDateCreateDateShifted in dtDateCreateDateShifted.Rows)
-                        {
-                            string settingId = drDateCreateDateShifted[columnName: "settingId"]
-                                .ToString();
-                            string settingValue = drDateCreateDateShifted[columnName: "settingValue"]
-                                .ToString();
-                            switch (settingId)
-                            {
-                                case "CreateDateDaysShift":
-                                    shiftedDays = int.Parse(s: settingValue);
-                                    break;
-                                case "CreateDateHoursShift":
-                                    shiftedHours = int.Parse(s: settingValue);
-                                    break;
-                                case "CreateDateMinutesShift":
-                                    shiftedMinutes = int.Parse(s: settingValue);
-                                    break;
-                                case "CreateDateSecondsShift":
-                                    shiftedSeconds = int.Parse(s: settingValue);
-                                    break;
-                            }
-
-                            if (settingValue != "0" && settingValue != null)
-                            {
-                                lstDr3RowsToAdd.Add(item: (settingId, settingValue));
-                            }
-                        }
-
-                        foreach ((string settingId, string settingValue) lstDr3RowToAdd in lstDr3RowsToAdd)
-                        {
-                            // CreateDate
-                            HelperStatic.GenericUpdateAddToDataTable(dt: DtFileDataToWriteStage3ReadyToWrite,
-                                                                     fileNameWithoutPath: fileNameWithoutPath,
-                                                                     settingId: lstDr3RowToAdd.settingId,
-                                                                     settingValue: lstDr3RowToAdd.settingValue);
-                        }
-
-                        int totalShiftedSeconds = shiftedSeconds +
-                                                  shiftedMinutes * 60 +
-                                                  shiftedHours * 60 * 60 +
-                                                  shiftedDays * 60 * 60 * 24;
-
-                        DataTable dtCreateDate = null;
-                        try
-                        {
-                            dtCreateDate = DtOriginalCreateDate.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'")
-                                .CopyToDataTable();
-                        }
-                        catch
-                        {
-                            dtCreateDate = null;
-                        }
-
-                        if (dtCreateDate != null && dtCreateDate.Rows.Count > 0)
-                        {
-                            DateTime originalCreateDateTime = Convert.ToDateTime(value: dtCreateDate.Rows[index: 0][columnName: "settingValue"]
-                                                                                     .ToString());
-
-                            DateTime modifiedCreateDateTime = originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
-
-                            // CreateDate
-                            HelperStatic.GenericUpdateAddToDataTable(dt: DtFileDataToWriteStage3ReadyToWrite,
-                                                                     fileNameWithoutPath: fileNameWithoutPath,
-                                                                     settingId: "CreateDate",
-                                                                     settingValue: modifiedCreateDateTime
-                                                                         .ToString(provider: CultureInfo
-                                                                                       .CurrentUICulture));
-                        }
-                    }
-
-                    //---
-                    // transfer data from 1 to 3
-                    DataTable dtNotShifted = null;
-                    try
-                    {
-                        dtNotShifted = dtFileWriteQueue.Select(filterExpression: "settingId NOT LIKE '%Shift'")
-                            .CopyToDataTable();
-                    }
-                    catch
-                    {
-                        dtNotShifted = null;
-                    }
-
-                    if (dtNotShifted != null)
-                    {
-                        foreach (DataRow drS1 in dtNotShifted.Rows)
-                        {
-                            string settingId = drS1[columnName: "settingId"]
-                                .ToString();
-                            string settingValue = HelperStatic.ReplaceBlankToponomy(settingId: settingId, settingValue: drS1[columnName: "settingValue"]
-                                                                                        .ToString());
-
-                            // NotShifted (everything else)
-                            HelperStatic.GenericUpdateAddToDataTable(dt: DtFileDataToWriteStage3ReadyToWrite,
-                                                                     fileNameWithoutPath: fileNameWithoutPath,
-                                                                     settingId: settingId,
-                                                                     settingValue: settingValue);
-                        }
-                    }
-
-                    // Also logically if user changed (TakenDate || CreateDate) && ! *Shift* then stick those values into FrmMainApp.DtOriginalTakenDate && FrmMainApp.DtOriginalCreateDate
-                    // Basically they just pressed OK to queue it up to write-queue. If they then amend stuff this will be their basis of reality and if they cancel (by refreshing), the Dt is lost anyway.
-                    // TakenDate
-                    DataRow[] drArrDateChanged = { };
-                    int dateChangeCount = 0;
-                    try
-                    {
-                        drArrDateChanged = dtFileWriteQueue.Select(filterExpression: "settingId = 'TakenDate'");
-                        dateChangeCount = drArrDateChanged.Length;
-                    }
-                    catch
-                    {
-                        // nothing
-                    }
-
-                    DataRow[] drArrDateShifted;
-                    int shiftedChangeCount = 0;
-                    try
-                    {
-                        drArrDateShifted = dtFileWriteQueue.Select(filterExpression: "settingId LIKE 'TakenDate%' AND settingId LIKE '%Shift'");
-                        shiftedChangeCount = drArrDateShifted.Length;
-                    }
-                    catch
-                    {
-                        // nothing
-                    }
-
-                    if (dateChangeCount == 1 && shiftedChangeCount == 0)
-                    {
-                        DataRow drDateChanged = drArrDateChanged[0];
-                        DtOriginalTakenDate.Rows.Cast<DataRow>()
-                            .Where(
-                                predicate: r => r.ItemArray[0]
-                                                    .ToString() ==
-                                                fileNameWithoutPath)
-                            .ToList()
-                            .ForEach(action: r => r.Delete());
-
-                        DtOriginalTakenDate.AcceptChanges();
-                        DataRow drDateChange = DtOriginalTakenDate.NewRow();
-                        drDateChange[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
-                        drDateChange[columnName: "settingId"] = "originalTakenDate";
-                        drDateChange[columnName: "settingValue"] = drDateChanged[columnName: "settingValue"];
-                        DtOriginalTakenDate.Rows.Add(row: drDateChange);
-                        DtOriginalTakenDate.AcceptChanges();
-
-                        // Logically then clear any past-shifts too
-                        DtFileDataToWriteStage3ReadyToWrite.Rows.Cast<DataRow>()
-                            .Where(
-                                predicate: r => r.ItemArray[0]
-                                                    .ToString() ==
-                                                fileNameWithoutPath &&
-                                                r.ItemArray[1]
-                                                    .ToString()
-                                                    .StartsWith(value: "Taken") &&
-                                                r.ItemArray[1]
-                                                    .ToString()
-                                                    .EndsWith(value: "Shift"))
-                            .ToList()
-                            .ForEach(action: r => r.Delete());
-
-                        DtFileDataToWriteStage3ReadyToWrite.AcceptChanges();
-                    }
-
-                    // CreateDate
-                    try
-                    {
-                        drArrDateChanged = dtFileWriteQueue.Select(filterExpression: "settingId = 'CreateDate'");
-                        dateChangeCount = drArrDateChanged.Length;
-                    }
-                    catch
-                    {
-                        // nothing
-                    }
-
-                    try
-                    {
-                        drArrDateShifted = dtFileWriteQueue.Select(filterExpression: "settingId LIKE 'CreateDate%' AND settingId LIKE '%Shift'");
-                        shiftedChangeCount = drArrDateShifted.Length;
-                    }
-                    catch
-                    {
-                        // nothing
-                    }
-
-                    if (dateChangeCount == 1 && shiftedChangeCount == 0)
-                    {
-                        DataRow drDateChanged = drArrDateChanged[0];
-                        DtOriginalCreateDate.Rows.Cast<DataRow>()
-                            .Where(
-                                predicate: r => r.ItemArray[0]
-                                                    .ToString() ==
-                                                fileNameWithoutPath)
-                            .ToList()
-                            .ForEach(action: r => r.Delete());
-
-                        DtOriginalCreateDate.AcceptChanges();
-                        DataRow drDateChange = DtOriginalCreateDate.NewRow();
-                        drDateChange[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
-                        drDateChange[columnName: "settingId"] = "originalCreateDate";
-                        drDateChange[columnName: "settingValue"] = drDateChanged[columnName: "settingValue"];
-                        DtOriginalCreateDate.Rows.Add(row: drDateChange);
-                        DtOriginalCreateDate.AcceptChanges();
-
-                        // Logically then clear any past-shifts too
-                        DtFileDataToWriteStage3ReadyToWrite.Rows.Cast<DataRow>()
-                            .Where(
-                                predicate: r => r.ItemArray[0]
-                                                    .ToString() ==
-                                                fileNameWithoutPath &&
-                                                r.ItemArray[1]
-                                                    .ToString()
-                                                    .StartsWith(value: "Create") &&
-                                                r.ItemArray[1]
-                                                    .ToString()
-                                                    .EndsWith(value: "Shift"))
-                            .ToList()
-                            .ForEach(action: r => r.Delete());
-
-                        DtFileDataToWriteStage3ReadyToWrite.AcceptChanges();
-                    }
-
-                    ListViewItem lvi = null;
-                    try
-                    {
-                        lvi = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath);
-                    }
-                    catch
-                    {
-                        // shouldn't happen
-                    }
-
-                    if (lvi != null)
-                    {
-                        // update listview w new data
-                        HelperStatic.FileListBeingUpdated = true;
-                        await HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
-                        HelperStatic.FileListBeingUpdated = false;
-                    }
+                    // update listview w new data
+                    HelperStatic.FileListBeingUpdated = true;
+                    await HelperStatic.LwvUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                    HelperStatic.FileListBeingUpdated = false;
                 }
             }
 
-            // drop from q
-            DtFileDataToWriteStage1PreQueue.Rows.Clear();
+            // re-center map on new data.
+            await HelperStatic.LvwItemClickNavigate();
         }
-
-        DtFileDataToWriteStage2QueuePendingSave.Rows.Clear();
-
-        // re-center map on new data.
-        await HelperStatic.LvwItemClickNavigate();
     }
 
 
@@ -1227,8 +1002,18 @@ public partial class FrmEditFileData : Form
                                   EventArgs e)
     {
         // clear the queues
-        DtFileDataToWriteStage1PreQueue.Rows.Clear();
-        DtFileDataToWriteStage2QueuePendingSave.Rows.Clear();
+        foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
+        {
+            {
+                foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+                {
+                    dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
+
+                    dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue);
+                }
+            }
+        }
+
         Hide();
     }
 
@@ -1268,45 +1053,27 @@ public partial class FrmEditFileData : Form
     {
         if (!_frmEditFileDataNowLoadingFileData)
         {
-            string senderName;
-            string parentName;
-            DataTable dtPreviousText = null;
-            string previousText = "";
-            string newText = "";
-            string exifTag = null;
-
             Control sndr = (Control)sender;
-            senderName = sndr.Name;
-            parentName = sndr.Parent.Name;
-            exifTag = sndr.Name.Substring(startIndex: 4);
-            try
-            {
-                dtPreviousText = DtFileDataToWriteStage2QueuePendingSave.Select(filterExpression: "fileNameWithoutPath = '" +
-                                                                                                  lvw_FileListEditImages.SelectedItems[index: 0]
-                                                                                                      .Text +
-                                                                                                  "' AND settingId = '" +
-                                                                                                  exifTag +
-                                                                                                  "'")
-                    .CopyToDataTable();
-            }
-            catch
-            {
-                dtPreviousText = null;
-            }
+            string senderName = sndr.Name;
+            string parentName = sndr.Parent.Name;
 
-            if (dtPreviousText != null && dtPreviousText.Rows.Count > 0)
+            string previousText = "herp-derp";
+            string newText = "";
+
+            string fileNameWithoutPath = lvw_FileListEditImages.SelectedItems[index: 0]
+                .Text;
+
+            string exifTagStr = sndr.Name.Substring(startIndex: 4);
+            ElementAttribute attribute = GetAttributeFromString(attributeToFind: exifTagStr);
+            DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FolderName, path2: fileNameWithoutPath));
+            if (dirElemFileToModify != null && dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue))
             {
-                previousText = dtPreviousText.Rows[index: 0][columnName: "settingValue"]
-                    .ToString();
-            }
-            else
-            {
-                previousText = "herp-derp"; // anything really, just to handle changes to blanks.
+                previousText = dirElemFileToModify.GetAttributeValueString(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue);
             }
 
             if (sndr is NumericUpDown nudTextControl)
             {
-                if (nudTextControl.Text != "")
+                if (nudTextControl.Text != NullStringEquivalentBlank)
                 {
                     nudTextControl.Text = nudTextControl.Value.ToString();
                 }
@@ -1333,49 +1100,29 @@ public partial class FrmEditFileData : Form
 
             if (previousText != newText)
             {
-                string strSndrText = newText.Replace(oldChar: ',', newChar: '.');
-                // 20230123 -- commenting this out rather than deleting in case this ever changes again.
-                /*
-                if (!FrmEditFileDataNowRemovingGeoData && parentName == "gbx_GPSData" && double.TryParse(s: strSndrText, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dbl) == false)
-                {
-                    // don't warn on a single "-" as that could be a lead-up to a negative number
-                    if (strSndrText != "-")
-                    {
-                        MessageBox.Show(
-                            text: HelperStatic.GenericGetMessageBoxText(
-                                messageBoxName: "mbx_FrmEditFileData_WarningLatLongMustBeNumbers"),
-                            caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
-                            buttons: MessageBoxButtons.OK,
-                            icon: MessageBoxIcon.Warning);
-                        // find a valid number
-                        // gpsdata has no NUDs
-                        Control sndr = (Control)sender;
-                        sndr.Text = "0.0";
-                    }
-                }
-                // yayy for pointless redundancy
-                else */
                 if (sndr is NumericUpDown nud)
                 {
-                    string nudTextStr = nud.Text == ""
-                        ? ""
+                    string nudTextStr = nud.Text == NullStringEquivalentBlank
+                        ? NullStringEquivalentBlank
                         : nud.Value.ToString(provider: CultureInfo.InvariantCulture);
 
-                    HelperStatic.GenericUpdateAddToDataTable(
-                        dt: DtFileDataToWriteStage1PreQueue,
-                        fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
-                            .Text,
-                        settingId: exifTag,
-                        settingValue: nudTextStr
-                    );
-
-                    HelperStatic.GenericUpdateAddToDataTable(
-                        dt: DtFileDataToWriteStage2QueuePendingSave,
-                        fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
-                            .Text,
-                        settingId: exifTag,
-                        settingValue: nudTextStr
-                    );
+                    if (dirElemFileToModify != null)
+                    {
+                        dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
+                                                                     value: nudTextStr,
+                                                                     version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                                                                     isMarkedForDeletion: dirElemFileToModify
+                                                                         .IsMarkedForDeletion(attribute: attribute,
+                                                                                              version: DirectoryElement.AttributeVersion
+                                                                                                  .Stage1EditFormIntraTabTransferQueue));
+                        dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
+                                                                     value: nudTextStr,
+                                                                     version: DirectoryElement.AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue,
+                                                                     isMarkedForDeletion: dirElemFileToModify
+                                                                         .IsMarkedForDeletion(attribute: attribute,
+                                                                                              version: DirectoryElement.AttributeVersion
+                                                                                                  .Stage2EditFormReadyToSaveAndMoveToWriteQueue));
+                    }
 
                     // adjust createDate and/or takenDate
 
@@ -1388,6 +1135,7 @@ public partial class FrmEditFileData : Form
                             (double)(nud_TakenDateDaysShift.Value * 60 * 60 * 24);
 
                         dtp_TakenDate.Value = _origDateValTakenDate.AddSeconds(value: shiftTakenDateSeconds);
+                        rbt_TakenDateTimeShift.Checked = shiftTakenDateSeconds != 0;
                     }
                     else if (senderName.Contains(value: "CreateDate"))
                     {
@@ -1398,6 +1146,7 @@ public partial class FrmEditFileData : Form
                             (double)(nud_CreateDateDaysShift.Value * 60 * 60 * 24);
 
                         dtp_CreateDate.Value = _origDateValCreateDate.AddSeconds(value: shiftCreateDateSeconds);
+                        rbt_CreateDateTimeShift.Checked = shiftCreateDateSeconds != 0;
                     }
                 }
                 else
@@ -1429,21 +1178,25 @@ public partial class FrmEditFileData : Form
                         }
                     }
 
-                    HelperStatic.GenericUpdateAddToDataTable(
-                        dt: DtFileDataToWriteStage1PreQueue,
-                        fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
-                            .Text,
-                        settingId: exifTag,
-                        settingValue: sndr.Text
-                    );
-
-                    HelperStatic.GenericUpdateAddToDataTable(
-                        dt: DtFileDataToWriteStage2QueuePendingSave,
-                        fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
-                            .Text,
-                        settingId: exifTag,
-                        settingValue: sndr.Text
-                    );
+                    if (dirElemFileToModify != null)
+                    {
+                        dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
+                                                                     value: sndr.Text,
+                                                                     version: DirectoryElement.AttributeVersion
+                                                                         .Stage1EditFormIntraTabTransferQueue,
+                                                                     isMarkedForDeletion: dirElemFileToModify
+                                                                         .IsMarkedForDeletion(attribute: attribute,
+                                                                                              version: DirectoryElement.AttributeVersion
+                                                                                                  .Stage1EditFormIntraTabTransferQueue));
+                        dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
+                                                                     value: sndr.Text,
+                                                                     version: DirectoryElement.AttributeVersion
+                                                                         .Stage2EditFormReadyToSaveAndMoveToWriteQueue,
+                                                                     isMarkedForDeletion: dirElemFileToModify
+                                                                         .IsMarkedForDeletion(attribute: attribute,
+                                                                                              version: DirectoryElement.AttributeVersion
+                                                                                                  .Stage2EditFormReadyToSaveAndMoveToWriteQueue));
+                    }
                 }
 
                 sndr.Font = new Font(prototype: sndr.Font, newStyle: FontStyle.Bold);
@@ -1516,10 +1269,10 @@ public partial class FrmEditFileData : Form
             nud_TakenDateMinutesShift.Enabled = false;
             nud_TakenDateSecondsShift.Enabled = false;
 
-            nud_TakenDateDaysShift.Text = "0";
-            nud_TakenDateHoursShift.Text = "0";
-            nud_TakenDateMinutesShift.Text = "0";
-            nud_TakenDateSecondsShift.Text = "0";
+            nud_TakenDateDaysShift.Text = NullStringEquivalentZero;
+            nud_TakenDateHoursShift.Text = NullStringEquivalentZero;
+            nud_TakenDateMinutesShift.Text = NullStringEquivalentZero;
+            nud_TakenDateSecondsShift.Text = NullStringEquivalentZero;
         }
         else
         {
@@ -1563,10 +1316,10 @@ public partial class FrmEditFileData : Form
             nud_CreateDateMinutesShift.Enabled = false;
             nud_CreateDateSecondsShift.Enabled = false;
 
-            nud_CreateDateDaysShift.Text = "0";
-            nud_CreateDateHoursShift.Text = "0";
-            nud_CreateDateMinutesShift.Text = "0";
-            nud_CreateDateSecondsShift.Text = "0";
+            nud_CreateDateDaysShift.Text = NullStringEquivalentZero;
+            nud_CreateDateHoursShift.Text = NullStringEquivalentZero;
+            nud_CreateDateMinutesShift.Text = NullStringEquivalentZero;
+            nud_CreateDateSecondsShift.Text = NullStringEquivalentZero;
         }
         else
         {
@@ -1631,6 +1384,11 @@ public partial class FrmEditFileData : Form
                                             EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
+
+        string fileNameWithoutPath = lvw_FileListEditImages.SelectedItems[index: 0]
+            .Text;
+        DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FolderName, path2: fileNameWithoutPath));
+
         IEnumerable<Control> cGbx_CreateDate = helperNonstatic.GetAllControls(control: gbx_CreateDate);
         foreach (Control cItemGbx_CreateDate in cGbx_CreateDate)
         {
@@ -1642,13 +1400,17 @@ public partial class FrmEditFileData : Form
                 if (cItemGbx_CreateDate is DateTimePicker dtp)
                 {
                     dtp.Font = new Font(prototype: dtp.Font, newStyle: FontStyle.Bold);
-                    HelperStatic.GenericUpdateAddToDataTable(
-                        dt: DtFileDataToWriteStage1PreQueue,
-                        fileNameWithoutPath: lvw_FileListEditImages.SelectedItems[index: 0]
-                            .Text,
-                        settingId: dtp.Name.Substring(startIndex: 4),
-                        settingValue: dtp.Text
-                    );
+                    if (dirElemFileToModify != null)
+                    {
+                        ElementAttribute attribute = GetAttributeFromString(attributeToFind: dtp.Name.Substring(startIndex: 4));
+                        dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
+                                                                     value: dtp.Text,
+                                                                     version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                                                                     isMarkedForDeletion: dirElemFileToModify
+                                                                         .IsMarkedForDeletion(attribute: attribute,
+                                                                                              version: DirectoryElement.AttributeVersion
+                                                                                                  .Stage1EditFormIntraTabTransferQueue));
+                    }
                 }
             }
         }

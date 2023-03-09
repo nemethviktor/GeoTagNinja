@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using GeoTagNinja.Model;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -46,35 +48,24 @@ internal static partial class HelperStatic
         SChangeFolderIsOkay = false;
 
         // check if there's anything in the write-Q
-
-        // it could happen that there is a ".." (root/parent) in the write-Q, which is erroneous but causes a problem here. 
-        List<string> distinctNamesInDT3 = FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.AsEnumerable()
-            .Select(r => r.Field<string>("fileNameWithoutPath")) // select only wellbore string value
-            .Distinct() // take only unique items
-            .ToList();
-
-        foreach (string fileNameWithoutPath in distinctNamesInDT3)
+        bool dataToWrite = false;
+        foreach (DirectoryElement dirElemFileToModify in FrmMainApp.DirectoryElements)
         {
-            if (!File.Exists(Path.Combine(FrmMainApp.FolderName.ToString(), fileNameWithoutPath)))
             {
-                IEnumerable<DataRow> drDT3Rows =
-                    from drDT3 in FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.AsEnumerable()
-                    where drDT3.Field<string>(columnName: "fileNameWithoutPath") != fileNameWithoutPath
-                    select drDT3;
-
-                if (drDT3Rows.Any())
+                foreach (SourcesAndAttributes.ElementAttribute attribute in (SourcesAndAttributes.ElementAttribute[])Enum.GetValues(typeof(SourcesAndAttributes.ElementAttribute)))
                 {
-                    FrmMainApp.DtFileDataToWriteStage3ReadyToWrite = drDT3Rows.CopyToDataTable();
-                }
-                else
-                {
-                    FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Clear();
+                    if (dirElemFileToModify.HasSpecificAttributeWithVersion(attribute, DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
+                    {
+                        dataToWrite = true;
+                        break;
+                    }
                 }
             }
         }
 
-        if (FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows.Count > 0)
+        if (dataToWrite)
         {
+            // ask: do you want to write/save?
             DialogResult dialogResult = MessageBox.Show(
                 text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_QuestionFileQIsNotEmpty"),
                 caption: GenericGetMessageBoxCaption(captionType: "Question"),
@@ -92,7 +83,16 @@ internal static partial class HelperStatic
             }
             else if (dialogResult == DialogResult.No)
             {
-                FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
+                foreach (DirectoryElement dirElemFileToModify in FrmMainApp.DirectoryElements)
+                {
+                    {
+                        foreach (SourcesAndAttributes.ElementAttribute attribute in (SourcesAndAttributes.ElementAttribute[])Enum.GetValues(typeof(SourcesAndAttributes.ElementAttribute)))
+                        {
+                            dirElemFileToModify.RemoveAttributeValue(attribute, DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                        }
+                    }
+                }
+
                 SChangeFolderIsOkay = true;
             }
         }

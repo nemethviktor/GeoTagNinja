@@ -75,7 +75,7 @@ public partial class FrmManageFavourites : Form
                 cItem.Text = drFavouriteDataRow[columnName: exifTag]
                     .ToString();
 
-                lstOriginals.Add(item: new KeyValuePair<string, string>(key: cItem.Name, value: cItem.Text));
+                lstOriginals.Add(key: cItem.Name, value: cItem.Text);
             }
         }
 
@@ -214,7 +214,7 @@ public partial class FrmManageFavourites : Form
 
     private static bool _frmNowLoadingFavouriteData;
     private DataTable _dtFavourites = new();
-    private readonly List<KeyValuePair<string, string>> lstOriginals = new();
+    private readonly Dictionary<string, string> lstOriginals = new();
 
     #endregion
 }

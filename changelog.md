@@ -2,6 +2,7 @@
 
 **Build 84XX [202303XX]**
 - NEW & UPDATED:
+  - Entirely rewrote the code to work off DirectoryElements rather than DataTables. This is techy so I won't get into it here, for anyone cares read the code or discussion #62
   - Added functionality to auto-navigate to a selected Favourite in the dropdown.
   - Added a "recall last Track Sync Shift" option.
   - Added logic for the pick-from-API-choices Form to accept doubleClick and (keyboard) Enter (key)
@@ -17,6 +18,8 @@
   - Changed the pick-from-API-choices Form to be 1-based-index rather than 0-based
   - Fixed messageBox captions always saying "Error" as output
   - Fixed a bug where one or two Settings were ignored on load
+  - Fixed a variety of random bugs relating to time-shift copypastes not entirely behaving
+  - Further fixed a variety of bugs that yet again I don't entirely remember
 
 **Build 8421 [20230121]**
 - NEW & UPDATED:

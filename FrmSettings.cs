@@ -7,16 +7,17 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using GeoTagNinja.Model;
 using static System.String;
 
 namespace GeoTagNinja;
 
 public partial class FrmSettings : Form
 {
-    internal static DataTable dtCustomRules = new();
-    internal static DataTable dtCustomCityLogic = new();
-    private static List<Control> lstTpgApplicationControls = new();
-    private readonly string languageSavedInSQL;
+    internal static DataTable DtCustomRules = new();
+    internal static DataTable DtCustomCityLogic = new();
+    private static List<Control> _lstTpgApplicationControls = new();
+    private readonly string _languageSavedInSQL;
     private bool _nowLoadingSettingsData;
 
     /// <summary>
@@ -32,7 +33,7 @@ public partial class FrmSettings : Form
         HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
 
         // Gets the various controls' labels and values (eg "latitude" and "51.002")
-        lstTpgApplicationControls = helperNonstatic.GetAllControls(control: tpg_Application)
+        _lstTpgApplicationControls = helperNonstatic.GetAllControls(control: tpg_Application)
             .ToList();
 
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
@@ -40,33 +41,30 @@ public partial class FrmSettings : Form
         {
             foreach (Control cItem in c)
             {
-                string parentNameToUse = GetParentNameToUse(cItem: cItem, cTpgApplication: lstTpgApplicationControls);
+                string parentNameToUse = GetParentNameToUse(cItem: cItem, cTpgApplication: _lstTpgApplicationControls);
 
                 if (cItem.Name == "cbx_Language" || cItem.Name == "cbx_TryUseGeoNamesLanguage")
                 {
                     ComboBox cbx = (ComboBox)cItem;
 
                     string[] alreadyTranslatedLanguages = { "en", "fr" };
-                    languageSavedInSQL = HelperStatic.DataReadSQLiteSettings(
+                    _languageSavedInSQL = HelperStatic.DataReadSQLiteSettings(
                         tableName: "settings",
                         settingTabPage: parentNameToUse,
                         settingId: cbx.Name
                     );
 
-                    List<KeyValuePair<string, string>> kvpLanguage = AncillaryListsArrays.GetISO_639_1_Languages();
-                    for (int index = 0; index < kvpLanguage.Count; index++)
+                    foreach (KeyValuePair<string, string> languagePair in AncillaryListsArrays.GetISO_639_1_Languages())
                     {
-                        KeyValuePair<string, string> kvp = kvpLanguage[index: index];
-                        string thisLanguage = kvp.Value;
-
-                        if ((cItem.Name == "cbx_Language" && alreadyTranslatedLanguages.Contains(value: kvp.Key)) ||
+                        if ((cItem.Name == "cbx_Language" && alreadyTranslatedLanguages.Contains(value: languagePair.Key)) ||
                             cItem.Name == "cbx_TryUseGeoNamesLanguage")
+
                         {
-                            cbx.Items.Add(item: thisLanguage);
+                            cbx.Items.Add(item: languagePair.Value);
                         }
                     }
 
-                    if (languageSavedInSQL == null)
+                    if (_languageSavedInSQL == null)
                     {
                         cbx.SelectedIndex = cbx.FindStringExact(s: HelperStatic.defaultEnglishString);
                     }
@@ -75,7 +73,7 @@ public partial class FrmSettings : Form
                         for (int i = 0; i < cbx.Items.Count; i++)
                         {
                             string value = cbx.GetItemText(item: cbx.Items[index: i]);
-                            if (value.Contains(value: languageSavedInSQL))
+                            if (value.Contains(value: _languageSavedInSQL))
                             {
                                 cbx.SelectedIndex = i;
                                 break;
@@ -153,7 +151,7 @@ public partial class FrmSettings : Form
         {
             foreach (Control cItem in c)
             {
-                string parentNameToUse = GetParentNameToUse(cItem: cItem, cTpgApplication: lstTpgApplicationControls);
+                string parentNameToUse = GetParentNameToUse(cItem: cItem, cTpgApplication: _lstTpgApplicationControls);
 
                 {
                     if (cItem is TextBox tbx)
@@ -265,24 +263,24 @@ public partial class FrmSettings : Form
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     private void LoadCustomRulesDGV()
     {
-        dtCustomRules = HelperStatic.DataReadSQLiteCustomRules();
+        DtCustomRules = HelperStatic.DataReadSQLiteCustomRules();
         dgv_CustomRules.AutoGenerateColumns = false;
 
         BindingSource source = new();
-        source.DataSource = dtCustomRules;
+        source.DataSource = DtCustomRules;
         dgv_CustomRules.DataSource = source;
 
-        List<KeyValuePair<string, string>> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
-                                                                                                      tableName: "settings",
-                                                                                                      settingTabPage: "tpg_CustomRules",
-                                                                                                      settingId: "ckb_IncludePredeterminedCountries"
-                                                                                                  ));
+        Dictionary<string, string> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
+                                                                                              tableName: "settings",
+                                                                                              settingTabPage: "tpg_CustomRules",
+                                                                                              settingId: "ckb_IncludePredeterminedCountries"
+                                                                                          ));
         DataGridViewComboBoxColumn clh_CountryCode = new()
         {
             DataPropertyName = "CountryCode",
             Name = "clh_CountryCode",
             HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_Country"),
-            DataSource = clh_CountryCodeOptions,
+            DataSource = clh_CountryCodeOptions.ToList(), // needs to be a list
             ValueMember = "Key",
             DisplayMember = "Value"
         };
@@ -328,7 +326,7 @@ public partial class FrmSettings : Form
         };
 
         // e.g.:  "State","City"...
-        foreach (string itemName in AncillaryListsArrays.CustomRulesDataTargets())
+        foreach (SourcesAndAttributes.ElementAttribute itemName in AncillaryListsArrays.CustomRulesDataTargets())
         {
             clh_TargetPointName.Items.Add(item: itemName);
         }
@@ -371,20 +369,20 @@ public partial class FrmSettings : Form
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     private void LoadCustomCityLogicDGV()
     {
-        dtCustomCityLogic = HelperStatic.DataReadSQLiteCustomCityAllocationLogic();
+        DtCustomCityLogic = HelperStatic.DataReadSQLiteCustomCityAllocationLogic();
         dgv_CustomCityLogic.AutoGenerateColumns = false;
 
         BindingSource source = new();
-        source.DataSource = dtCustomCityLogic;
+        source.DataSource = DtCustomCityLogic;
         dgv_CustomCityLogic.DataSource = source;
 
-        List<KeyValuePair<string, string>> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: true);
+        Dictionary<string, string> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: true);
         DataGridViewComboBoxColumn clh_CountryCode = new()
         {
             DataPropertyName = "CountryCode",
             Name = "clh_CountryCode",
             HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_Country"),
-            DataSource = clh_CountryCodeOptions,
+            DataSource = clh_CountryCodeOptions.ToList(), // needs to be a list
             ValueMember = "Key",
             DisplayMember = "Value",
             ReadOnly = true
@@ -414,16 +412,16 @@ public partial class FrmSettings : Form
     ///     checkbox changes.
     /// </summary>
     /// <returns>KVP list of country codes and countries</returns>
-    private static List<KeyValuePair<string, string>> refreshClh_CountryCodeOptions(bool ckb_IncludePredeterminedCountries)
+    private static Dictionary<string, string> refreshClh_CountryCodeOptions(bool ckb_IncludePredeterminedCountries)
     {
-        List<KeyValuePair<string, string>> clh_CountryCodeOptions = new();
+        Dictionary<string, string> clh_CountryCodeOptions = new();
         // e.g. "GBR//United Kingdom of...."
         foreach (DataRow dataRow in FrmMainApp.DtIsoCountryCodeMapping.Rows)
         {
-            clh_CountryCodeOptions.Add(item: new KeyValuePair<string, string>(key: dataRow[columnName: "ISO_3166_1A3"]
-                                                                                  .ToString()
-                                                                              , value: dataRow[columnName: "Country"]
-                                                                                  .ToString()));
+            clh_CountryCodeOptions.Add(key: dataRow[columnName: "ISO_3166_1A3"]
+                                           .ToString()
+                                       , value: dataRow[columnName: "Country"]
+                                           .ToString());
         }
 
         // if _do not_ IncludeNonPredeterminedCountries then remove those
@@ -433,12 +431,11 @@ public partial class FrmSettings : Form
             {
                 string countryCode = dataRow[columnName: "ISO_3166_1A3"]
                     .ToString();
-                if (!FrmMainApp.lstCityNameIsUndefined.Contains(item: countryCode))
+                if (!FrmMainApp.LstCityNameIsUndefined.Contains(item: countryCode))
                 {
-                    clh_CountryCodeOptions.Remove(item: new KeyValuePair<string, string>(key: dataRow[columnName: "ISO_3166_1A3"]
-                                                                                             .ToString()
-                                                                                         , value: dataRow[columnName: "Country"]
-                                                                                             .ToString()));
+                    clh_CountryCodeOptions.Remove(key: dataRow[columnName: "ISO_3166_1A3"]
+                                                      .ToString()
+                    );
                 }
             }
         }
@@ -565,7 +562,7 @@ public partial class FrmSettings : Form
         FrmMainApp.AppStartupReadCustomCityLogic();
 
         // in case it changed or something.
-        dtCustomRules = HelperStatic.DataReadSQLiteCustomRules();
+        DtCustomRules = HelperStatic.DataReadSQLiteCustomRules();
         Hide();
     }
 
@@ -738,7 +735,7 @@ public partial class FrmSettings : Form
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
 
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: lstTpgApplicationControls);
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
 
             HelperStatic.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
@@ -793,7 +790,7 @@ public partial class FrmSettings : Form
 
             if (cItemName == "ckb_IncludePredeterminedCountries")
             {
-                List<KeyValuePair<string, string>> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: ckb_IncludePredeterminedCountries.Checked);
+                Dictionary<string, string> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: ckb_IncludePredeterminedCountries.Checked);
                 DataGridViewComboBoxColumn clh_CountryCode = (DataGridViewComboBoxColumn)dgv_CustomRules.Columns[columnName: "clh_CountryCode"];
                 if (clh_CountryCode != null) // shouldn't really be null but just in case.
                 {
@@ -803,7 +800,7 @@ public partial class FrmSettings : Form
 
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: lstTpgApplicationControls);
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
 
             HelperStatic.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
@@ -830,7 +827,7 @@ public partial class FrmSettings : Form
 
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: lstTpgApplicationControls);
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
 
             HelperStatic.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
@@ -868,7 +865,7 @@ public partial class FrmSettings : Form
 
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: lstTpgApplicationControls);
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
 
             HelperStatic.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
@@ -894,7 +891,7 @@ public partial class FrmSettings : Form
 
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: lstTpgApplicationControls);
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
 
             HelperStatic.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",

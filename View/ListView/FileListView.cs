@@ -21,17 +21,17 @@ namespace GeoTagNinja.View.ListView;
 public partial class FileListView : System.Windows.Forms.ListView
 {
     // Default values to set for entries
-    public static string UNKNOWN_VALUE_FILE = "-";
+    public const string UNKNOWN_VALUE_FILE = "-";
 
     // Note - if this is changed, all checks for unknown need to be udpated
     // because currently this works via item.replace and check versus ""
     // but replace did not take ""
-    public static string UNKNOWN_VALUE_DIR = "";
+    public const string UNKNOWN_VALUE_DIR = "";
 
     /// <summary>
     ///     Every column has this prefix for its name when it is created.
     /// </summary>
-    public static string COL_NAME_PREFIX = "clh_";
+    public const string COL_NAME_PREFIX = "clh_";
 
 
     /// <summary>
@@ -392,7 +392,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         if (item.Type != DirectoryElement.ElementType.MyComputer)
         {
-            himl = NativeMethods.SHGetFileInfo(pszPath: item.FullPathAndName,
+            himl = NativeMethods.SHGetFileInfo(pszPath: item.FileNameWithPath,
                                                dwFileAttributes: 0,
                                                psfi: ref shfi,
                                                cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
@@ -400,7 +400,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
         else
         {
-            himl = NativeMethods.SHGetFileInfo(pszPath: item.ItemName,
+            himl = NativeMethods.SHGetFileInfo(pszPath: item.ItemNameWithoutPath,
                                                dwFileAttributes: 0,
                                                psfi: ref shfi,
                                                cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
@@ -453,7 +453,7 @@ public partial class FileListView : System.Windows.Forms.ListView
                 item.Type == DirectoryElement.ElementType.MyComputer ||
                 item.Type == DirectoryElement.ElementType.ParentDirectory)
             {
-                lvi.Text = item.ItemName;
+                lvi.Text = item.ItemNameWithoutPath;
             }
             else
             {
@@ -837,7 +837,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     #region Updating
 
     /// <summary>
-    ///     Restaff the list view with the set of directory elements handed.
+    ///     Reloads the listview's items with data from the DirectoryElementCollection
     ///     Note that the DirectoryElementCollection is assumed to be
     ///     in scope of the FileListView. Calling FileListView.Clear will
     ///     also clear it.

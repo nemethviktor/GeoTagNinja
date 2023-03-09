@@ -16,10 +16,12 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using CsvHelper;
 using geoTagNinja;
+using GeoTagNinja.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Authenticators;
+using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja;
 
@@ -38,11 +40,11 @@ internal static partial class HelperStatic
     {
         string returnVal = "";
 
-        string tmpLongVal = "-";
-        string tryDataValue = "-";
-        string tmpLatRefVal = "-";
-        string tmpLongRefVal = "-";
-        string tmpLatLongRefVal = "-";
+        string tmpLongVal = FrmMainApp.NullStringEquivalentGeneric;
+        string tryDataValue = FrmMainApp.NullStringEquivalentGeneric;
+        string tmpLatRefVal = FrmMainApp.NullStringEquivalentGeneric;
+        string tmpLongRefVal = FrmMainApp.NullStringEquivalentGeneric;
+        string tmpLatLongRefVal = FrmMainApp.NullStringEquivalentGeneric;
 
         string tmpOutLatLongVal = "";
 
@@ -60,8 +62,8 @@ internal static partial class HelperStatic
 
         switch (dataPoint)
         {
-            case "GPSLatitude" or "GPSDestLatitude" or "GPSLongitude" or "GPSDestLongitude":
-                if (tryDataValue != "-")
+            case "GPSLatitude" or "GPSLatitude" or "GPSLongitude" or "GPSLongitude":
+                if (tryDataValue != FrmMainApp.NullStringEquivalentGeneric)
                 {
                     // we want N instead of North etc.
                     // Get the Ref Tag for the corresponding data point and thereof the first character
@@ -75,10 +77,10 @@ internal static partial class HelperStatic
                     }
                     catch
                     {
-                        tmpLatLongRefVal = "-";
+                        tmpLatLongRefVal = FrmMainApp.NullStringEquivalentGeneric;
                     }
 
-                    if (!tryDataValue.Contains(value: tmpLatLongRefVal) && tmpLatLongRefVal != "-")
+                    if (!tryDataValue.Contains(value: tmpLatLongRefVal) && tmpLatLongRefVal != FrmMainApp.NullStringEquivalentGeneric)
                     {
                         tryDataValue = tmpLatLongRefVal + tryDataValue;
                     }
@@ -110,12 +112,12 @@ internal static partial class HelperStatic
                     .Replace(oldChar: ',', newChar: '.');
                 if (tmpLatVal == "")
                 {
-                    tmpLatVal = "-";
+                    tmpLatVal = FrmMainApp.NullStringEquivalentGeneric;
                 }
 
                 if (tmpLongVal == "")
                 {
-                    tmpLongVal = "-";
+                    tmpLongVal = FrmMainApp.NullStringEquivalentGeneric;
                 }
 
                 if (ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: "GPS" + isDest + "LatitudeRef")
@@ -156,12 +158,12 @@ internal static partial class HelperStatic
                 }
                 else
                 {
-                    tmpLatRefVal = "-";
-                    tmpLongRefVal = "-";
+                    tmpLatRefVal = FrmMainApp.NullStringEquivalentGeneric;
+                    tmpLongRefVal = FrmMainApp.NullStringEquivalentGeneric;
                 }
 
                 // check there is one bit of data for both components
-                if (tmpLatVal != "-" && tmpLongVal != "-")
+                if (tmpLatVal != FrmMainApp.NullStringEquivalentGeneric && tmpLongVal != FrmMainApp.NullStringEquivalentGeneric)
                 {
                     // stick Ref at the end of LatLong
                     if (!tmpLatVal.Contains(value: tmpLatRefVal))
@@ -184,7 +186,7 @@ internal static partial class HelperStatic
                 }
                 else
                 {
-                    tryDataValue = "-";
+                    tryDataValue = FrmMainApp.NullStringEquivalentGeneric;
                 }
 
                 break;
@@ -239,7 +241,7 @@ internal static partial class HelperStatic
                     .Trim();
                 break;
             case "Fnumber" or "FocalLength" or "FocalLengthIn35mmFormat" or "ISO":
-                if (tryDataValue != "-")
+                if (tryDataValue != FrmMainApp.NullStringEquivalentGeneric)
                 {
                     if (dataPoint == "FocalLengthIn35mmFormat")
                     {
@@ -283,7 +285,7 @@ internal static partial class HelperStatic
                 }
                 else
                 {
-                    tryDataValue = "-";
+                    tryDataValue = FrmMainApp.NullStringEquivalentGeneric;
                 }
 
                 break;
@@ -312,18 +314,18 @@ internal static partial class HelperStatic
                                                       string dataPoint)
     {
         FrmMainApp.Logger.Trace(message: "Starting - dataPoint:" + dataPoint);
-        string returnVal = "-";
-        string tryDataValue = "-";
+        string returnVal = FrmMainApp.NullStringEquivalentGeneric;
+        string tryDataValue = FrmMainApp.NullStringEquivalentGeneric;
 
-        DataTable dtObjectTagNamesIn = GenericJoinDataTables(t1: FrmMainApp.DtObjectNames, t2: FrmMainApp.DtObjectTagNamesIn,
-                                                             (row1,
-                                                              row2) =>
-                                                                 row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "objectName"));
+        DataTable dtObjectattributesIn = GenericJoinDataTables(t1: FrmMainApp.DtObjectNames, t2: FrmMainApp.DtObjectattributesIn,
+                                                               (row1,
+                                                                row2) =>
+                                                                   row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "objectName"));
 
         DataTable? dtObjectTagNameIn = null;
         try
         {
-            dtObjectTagNameIn = dtObjectTagNamesIn.Select(filterExpression: "objectName = '" + dataPoint + "'")
+            dtObjectTagNameIn = dtObjectattributesIn.Select(filterExpression: "objectName = '" + dataPoint + "'")
                 .CopyToDataTable();
             dtObjectTagNameIn.DefaultView.Sort = "valuePriorityOrder";
             dtObjectTagNameIn = dtObjectTagNameIn.DefaultView.ToTable();
@@ -345,9 +347,9 @@ internal static partial class HelperStatic
                 {
                     try
                     {
-                        string tagNameToSelect = drTagWanted[columnIndex: 0]
+                        string attributeToSelect = drTagWanted[columnIndex: 0]
                             .ToString();
-                        DataRow filteredRows = dtFileExif.Select(filterExpression: "TagName = '" + tagNameToSelect + "'")
+                        DataRow filteredRows = dtFileExif.Select(filterExpression: "attribute = '" + attributeToSelect + "'")
                             .FirstOrDefault();
                         if (filteredRows != null)
                         {
@@ -355,20 +357,20 @@ internal static partial class HelperStatic
                                 ?.ToString();
                             if (!string.IsNullOrEmpty(value: tryDataValue))
                             {
-                                FrmMainApp.Logger.Trace(message: "dataPoint:" + dataPoint + " -> " + tagNameToSelect + ": " + tryDataValue);
+                                FrmMainApp.Logger.Trace(message: "dataPoint:" + dataPoint + " -> " + attributeToSelect + ": " + tryDataValue);
                                 break;
                             }
                         }
                     }
                     catch (ArgumentException)
                     {
-                        tryDataValue = "-";
+                        tryDataValue = FrmMainApp.NullStringEquivalentGeneric;
                     }
                 }
             }
             else
             {
-                tryDataValue = "-";
+                tryDataValue = FrmMainApp.NullStringEquivalentGeneric;
             }
         }
 
@@ -530,26 +532,26 @@ internal static partial class HelperStatic
 
                         if (trackFileXMPData != null)
                         {
-                            DataTable dt_fileExifTable = new();
-                            dt_fileExifTable.Clear();
-                            dt_fileExifTable.Columns.Add(columnName: "TagName");
-                            dt_fileExifTable.Columns.Add(columnName: "TagValue");
+                            DataTable dtFileExifTable = new();
+                            dtFileExifTable.Clear();
+                            dtFileExifTable.Columns.Add(columnName: "attribute");
+                            dtFileExifTable.Columns.Add(columnName: "TagValue");
 
-                            PropertyInfo[] props = typeof(RDFDescription).GetProperties(bindingAttr: BindingFlags.Instance | BindingFlags.Public);
+                            PropertyInfo[] properties = typeof(RDFDescription).GetProperties(bindingAttr: BindingFlags.Instance | BindingFlags.Public);
 
-                            foreach (PropertyInfo trackData in props)
+                            foreach (PropertyInfo trackData in properties)
                             {
-                                string TagName = "exif:" + trackData.Name;
-                                object TagValue = trackData.GetValue(obj: trackFileXMPData.RDF.Description);
+                                string attribute = "exif:" + trackData.Name;
+                                object tagValue = trackData.GetValue(obj: trackFileXMPData.RDF.Description);
 
-                                DataRow dr = dt_fileExifTable.NewRow();
-                                dr[columnName: "TagName"] = TagName;
-                                dr[columnName: "TagValue"] = TagValue;
-                                dt_fileExifTable.Rows.Add(row: dr);
+                                DataRow dr = dtFileExifTable.NewRow();
+                                dr[columnName: "attribute"] = attribute;
+                                dr[columnName: "TagValue"] = tagValue;
+                                dtFileExifTable.Rows.Add(row: dr);
                             }
 
                             // de-dupe. this is pretty poor performance but the dataset is small
-                            DataTable dt_distinctFileExifTable = dt_fileExifTable.DefaultView.ToTable(distinct: true);
+                            DataTable dtDistinctFileExifTable = dtFileExifTable.DefaultView.ToTable(distinct: true);
 
                             ListView lvw = frmMainAppInstance.lvw_FileList;
                             ListViewItem lvi = frmMainAppInstance.lvw_FileList.FindItemWithText(text: exifFileIn.Name.Substring(startIndex: 0, length: exifFileIn.Name.Length - 4));
@@ -557,90 +559,104 @@ internal static partial class HelperStatic
                             if (lvi != null)
                             {
                                 ListView.ColumnHeaderCollection lvchs = frmMainAppInstance.ListViewColumnHeaders;
-                                string[] toponomyChangers = { "GPSLatitude", "GPSLongitude" };
-                                string[] toponomyDeletes = { "CountryCode", "Country", "City", "State", "Sub_location" };
-                                string strParsedLat = "0.0";
-                                string strParsedLng = "0.0";
-                                bool coordinatesHaveChanged = false;
-                                string fileNameWithoutPath = lvi.Text;
 
-                                for (int i = 1; i < lvi.SubItems.Count; i++)
+                                ElementAttribute[] toponomyDeletes =
                                 {
-                                    string tagToWrite = lvchs[index: i]
-                                        .Name.Substring(startIndex: 4);
-                                    string str = ExifGetStandardisedDataPointFromExif(dtFileExif: dt_distinctFileExifTable, dataPoint: tagToWrite);
-                                    FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+                                    ElementAttribute.CountryCode,
+                                    ElementAttribute.Country,
+                                    ElementAttribute.City,
+                                    ElementAttribute.State,
+                                    ElementAttribute.Sub_location
+                                };
 
-                                    // don't update stuff that hasn't changed
-                                    if (lvi.SubItems[index: i]
-                                            .Text !=
-                                        str &&
-                                        (AncillaryListsArrays.GpxTagsToOverwrite()
-                                             .Contains(value: tagToWrite) ||
-                                         tagToWrite == "Coordinates"))
+                                string fileNameWithoutPath = lvi.Text;
+                                DirectoryElement dirElemFileToModify =
+                                    FrmMainApp.DirectoryElements.FindElementByItemName(
+                                        FileNameWithPath: Path.Combine(path1: FrmMainApp.FolderName,
+                                                                       path2: fileNameWithoutPath));
+
+                                // get the current stuff, either from DE3 or Orig or just blank if none.
+                                string currentLat = dirElemFileToModify.GetAttributeValueString(
+                                    attribute: ElementAttribute.GPSLatitude,
+                                    version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                                    notFoundValue: dirElemFileToModify.GetAttributeValueString(
+                                        attribute: ElementAttribute.GPSLatitude,
+                                        version: DirectoryElement.AttributeVersion.Original,
+                                        notFoundValue: FrmMainApp.NullStringEquivalentGeneric));
+                                string currentLng = dirElemFileToModify.GetAttributeValueString(
+                                    attribute: ElementAttribute.GPSLongitude,
+                                    version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                                    notFoundValue: dirElemFileToModify.GetAttributeValueString(
+                                        attribute: ElementAttribute.GPSLongitude,
+                                        version: DirectoryElement.AttributeVersion.Original,
+                                        notFoundValue: FrmMainApp.NullStringEquivalentGeneric));
+                                string currentAltitude = dirElemFileToModify.GetAttributeValueString(
+                                    attribute: ElementAttribute.GPSAltitude,
+                                    version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                                    notFoundValue: dirElemFileToModify.GetAttributeValueString(
+                                        attribute: ElementAttribute.GPSAltitude,
+                                        version: DirectoryElement.AttributeVersion.Original,
+                                        notFoundValue: FrmMainApp.NullStringEquivalentGeneric));
+
+                                string strLatInAPI = FrmMainApp.NullStringEquivalentGeneric;
+                                try
+                                {
+                                    strLatInAPI = ExifGetStandardisedDataPointFromExif(dtFileExif: dtDistinctFileExifTable, dataPoint: GetAttributeName(attribute: ElementAttribute.GPSLatitude));
+                                }
+                                catch
+                                {
+                                    // ignore
+                                }
+
+                                string strLngInAPI = FrmMainApp.NullStringEquivalentGeneric;
+                                try
+                                {
+                                    strLngInAPI = ExifGetStandardisedDataPointFromExif(dtFileExif: dtDistinctFileExifTable, dataPoint: GetAttributeName(attribute: ElementAttribute.GPSLongitude));
+                                }
+                                catch
+                                {
+                                    // ignore
+                                }
+
+                                string altitudeInAPI = FrmMainApp.NullStringEquivalentGeneric;
+                                try
+                                {
+                                    altitudeInAPI = ExifGetStandardisedDataPointFromExif(dtFileExif: dtDistinctFileExifTable, dataPoint: GetAttributeName(attribute: ElementAttribute.GPSAltitude));
+                                    if (int.TryParse(s: altitudeInAPI, result: out int altitudeInAPIInt))
                                     {
-                                        lvi.SubItems[index: i]
-                                            .Text = str;
-                                        if (AncillaryListsArrays.GpxTagsToOverwrite()
-                                            .Contains(value: tagToWrite))
+                                        if (Math.Abs(value: altitudeInAPIInt) > 20000) // API is stupid
                                         {
-                                            if (toponomyChangers.Contains(value: tagToWrite))
-                                            {
-                                                coordinatesHaveChanged = true;
-                                            }
-
-                                            GenericUpdateAddToDataTable(
-                                                dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                                                fileNameWithoutPath: lvi.Text,
-                                                settingId: lvchs[index: i]
-                                                    .Name.Substring(startIndex: 4),
-                                                settingValue: str
-                                            );
-
-                                            if (tagToWrite == "GPSLatitude")
-                                            {
-                                                strParsedLat = str;
-                                            }
-
-                                            if (tagToWrite == "GPSLongitude")
-                                            {
-                                                strParsedLng = str;
-                                            }
-
-                                            if (tagToWrite == "GPSAltitude")
-                                            {
-                                                CurrentAltitude = null;
-                                                CurrentAltitude = str;
-                                            }
-
-                                            if (lvi.Index % 10 == 0)
-                                            {
-                                                Application.DoEvents();
-                                                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                                frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
-                                            }
-
-                                            frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
+                                            altitudeInAPI = currentAltitude;
                                         }
                                     }
                                 }
+                                catch
+                                {
+                                    // ignore
+                                }
 
+                                bool coordinatesHaveChanged = !(currentLat == strLatInAPI && currentLng == strLngInAPI && currentAltitude == altitudeInAPI);
                                 if (coordinatesHaveChanged)
                                 {
-                                    // clear city, state etc
-                                    foreach (string category in toponomyDeletes)
-                                    {
-                                        GenericUpdateAddToDataTable(
-                                            dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                                            fileNameWithoutPath: lvi.Text,
-                                            settingId: category,
-                                            settingValue: "-"
-                                        );
+                                    FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+                                    frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
 
-                                        lvi.SubItems[index: lvw.Columns[key: "clh_" + category]
-                                                         .Index]
-                                            .Text = "-";
+                                    dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSLatitude,
+                                                                                 value: strLatInAPI,
+                                                                                 version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
+
+                                    dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSLongitude,
+                                                                                 value: strLngInAPI,
+                                                                                 version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
+
+                                    dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSAltitude,
+                                                                                 value: altitudeInAPI,
+                                                                                 version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
+
+                                    // clear city, state etc
+                                    foreach (ElementAttribute attribute in toponomyDeletes)
+                                    {
+                                        dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
                                     }
 
                                     // pull from web
@@ -648,49 +664,38 @@ internal static partial class HelperStatic
                                     {
                                         SApiOkay = true;
                                         DataTable dtToponomy = DTFromAPIExifGetToponomyFromWebOrSQL(
-                                            lat: strParsedLat.ToString(provider: CultureInfo.InvariantCulture),
-                                            lng: strParsedLng.ToString(provider: CultureInfo.InvariantCulture),
+                                            lat: strLatInAPI.ToString(provider: CultureInfo.InvariantCulture),
+                                            lng: strLngInAPI.ToString(provider: CultureInfo.InvariantCulture),
                                             fileNameWithoutPath: fileNameWithoutPath
                                         );
 
                                         if (SApiOkay)
                                         {
-                                            List<(string toponomyOverwriteName, string toponomyOverwriteVal)> toponomyOverwrites = new();
-                                            toponomyOverwrites.Add(item: ("CountryCode", dtToponomy.Rows[index: 0][columnName: "CountryCode"]
-                                                                              .ToString()));
-                                            toponomyOverwrites.Add(item: ("Country", dtToponomy.Rows[index: 0][columnName: "Country"]
-                                                                              .ToString()));
-                                            toponomyOverwrites.Add(item: ("City", dtToponomy.Rows[index: 0][columnName: "City"]
-                                                                              .ToString()));
-                                            toponomyOverwrites.Add(item: ("State", dtToponomy.Rows[index: 0][columnName: "State"]
-                                                                              .ToString()));
-                                            toponomyOverwrites.Add(item: ("Sub_location", dtToponomy.Rows[index: 0][columnName: "Sub_location"]
-                                                                              .ToString()));
-
-                                            foreach ((string toponomyOverwriteName, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+                                            List<(ElementAttribute attribute, string toponomyOverwriteVal)> toponomyOverwrites = new()
                                             {
-                                                GenericUpdateAddToDataTable(
-                                                    dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                                                    fileNameWithoutPath: lvi.Text,
-                                                    settingId: toponomyDetail.toponomyOverwriteName,
-                                                    settingValue: toponomyDetail.toponomyOverwriteVal
-                                                );
-                                                lvi.SubItems[index: lvw.Columns[key: "clh_" + toponomyDetail.toponomyOverwriteName]
-                                                                 .Index]
-                                                    .Text = toponomyDetail.toponomyOverwriteVal;
-                                            }
+                                                (ElementAttribute.CountryCode, dtToponomy.Rows[index: 0][columnName: "CountryCode"]
+                                                     .ToString()),
+                                                (ElementAttribute.Country, dtToponomy.Rows[index: 0][columnName: "Country"]
+                                                     .ToString()),
+                                                (ElementAttribute.City, dtToponomy.Rows[index: 0][columnName: "City"]
+                                                     .ToString()),
+                                                (ElementAttribute.State, dtToponomy.Rows[index: 0][columnName: "State"]
+                                                     .ToString()),
+                                                (ElementAttribute.Sub_location, dtToponomy.Rows[index: 0][columnName: "Sub_location"]
+                                                     .ToString())
+                                            };
 
-                                            if (lvi.Index % 10 == 0)
+                                            foreach ((ElementAttribute attribute, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
                                             {
-                                                Application.DoEvents();
-                                                // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                                frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
+                                                // these are all strings
+                                                dirElemFileToModify.SetAttributeValueAnyType(attribute: toponomyDetail.attribute,
+                                                                                             value: toponomyDetail.toponomyOverwriteVal,
+                                                                                             version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
                                             }
-
-                                            frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
                                         }
                                     }
+
+                                    await LwvUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
                                 }
                             }
                         }
@@ -828,368 +833,352 @@ internal static partial class HelperStatic
         bool queueWasEmpty = true;
 
         // get tag names
-        DataTable dtObjectTagNamesOut = GenericJoinDataTables(t1: FrmMainApp.DtObjectNames, t2: FrmMainApp.DtObjectTagNamesOut,
-                                                              (row1,
-                                                               row2) =>
-                                                                  row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "objectName"));
+        DataTable dtObjectattributesOut = GenericJoinDataTables(t1: FrmMainApp.DtObjectNames, t2: FrmMainApp.DtObjectattributesOut,
+                                                                (row1,
+                                                                 row2) =>
+                                                                    row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "objectName"));
 
-        DataTable dtDistinctFileNames = FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.DefaultView.ToTable(distinct: true, "fileNameWithoutPath");
+        HashSet<string> DistinctFileNames = new();
+        foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
+        {
+            foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+            {
+                if (directoryElement.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
+                {
+                    DistinctFileNames.Add(item: directoryElement.ItemNameWithoutPath);
+                    break;
+                }
+            }
+        }
 
         // check there's anything to write.
-        foreach (DataRow drFileName in dtDistinctFileNames.Rows)
+        foreach (string distinctFileName in DistinctFileNames)
         {
-            FrmMainApp.Logger.Trace(message: drFileName.ToString());
+            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FrmMainApp.FolderName, path2: distinctFileName));
+            FrmMainApp.Logger.Trace(message: dirElemFileToModify.FileNameWithPath);
 
-            string fileNameWithoutPath = drFileName[columnIndex: 0]
-                .ToString();
-            string fileNameWithPath = Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath);
-            if (File.Exists(path: fileNameWithPath))
+            if (dirElemFileToModify != null)
             {
-                string exifArgsForOriginalFile = "";
-                string exifArgsForSidecar = "";
-                string fileExtension = Path.GetExtension(path: fileNameWithoutPath)
-                    .Substring(startIndex: 1);
-
-                // this is a bug in Adobe Bridge (unsure). Rating in the XMP needs to be parsed and re-saved.
-                int ratingInXmp = -1;
-                string xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath)) + ".xmp");
-                if (File.Exists(path: xmpFileLocation))
+                string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
+                string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
+                if (File.Exists(path: fileNameWithPath))
                 {
-                    foreach (string line in File.ReadLines(path: xmpFileLocation))
+                    string exifArgsForOriginalFile = "";
+                    string exifArgsForSidecar = "";
+                    string fileExtension = Path.GetExtension(path: fileNameWithoutPath)
+                        .Substring(startIndex: 1);
+
+                    // this is an issue in Adobe Bridge (unsure). Rating in the XMP needs to be parsed and re-saved.
+                    int ratingInXmp = -1;
+                    string xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath)) + ".xmp");
+                    if (File.Exists(path: xmpFileLocation))
                     {
-                        if (line.Contains(value: "xmp:Rating="))
+                        foreach (string line in File.ReadLines(path: xmpFileLocation))
                         {
-                            bool _ = int.TryParse(s: line.Replace(oldValue: "xmp:Rating=", newValue: "")
-                                                      .Replace(oldValue: "\"", newValue: ""), result: out ratingInXmp);
-                            break;
-                        }
-
-                        if (line.Contains(value: "<xmp:Rating>"))
-                        {
-                            bool _ = int.TryParse(s: line.Replace(oldValue: "<xmp:Rating>", newValue: "")
-                                                      .Replace(oldValue: "</xmp:Rating>", newValue: "")
-                                                      .Replace(oldValue: " ", newValue: ""), result: out ratingInXmp);
-                            break;
-                        }
-                    }
-                }
-
-                queueWasEmpty = false;
-
-                processOriginalFile = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_ProcessOriginalFile"));
-                resetFileDateToCreated = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_ResetFileDateToCreated"));
-                writeXMPSideCar = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_AddXMPSideCar"));
-                doNotCreateBackup = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_OverwriteOriginal"));
-
-                List<string> tagsToDelete = new(); // this needs to be injected into the sidecar if req'd
-
-                // it's a lot less complicated to just pretend we want both the Original File and the Sidecar updated and then not-include them later than to have a Yggdrasil of IFs scattered all over.
-                // ... which latter I would inevitable f...k up at some point.
-
-                exifArgsForOriginalFile += Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath) + Environment.NewLine; //needs to include folder name
-                exifArgsForOriginalFile += "-ignoreMinorErrors" + Environment.NewLine;
-                exifArgsForOriginalFile += "-progress" + Environment.NewLine;
-
-                // this doesn't need to be sent back to the actual XMP file, it's a bug.
-                if (ratingInXmp >= 0)
-                {
-                    exifArgsForOriginalFile += "-Rating=" + ratingInXmp + Environment.NewLine;
-                }
-
-                exifArgsForSidecar += Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath)) + ".xmp") + Environment.NewLine; //needs to include folder name
-                exifArgsForSidecar += "-progress" + Environment.NewLine;
-
-                // sidecar copying needs to be in a separate batch, as technically it's a different file
-
-                if (writeXMPSideCar)
-                {
-                    FrmMainApp.Logger.Trace(message: drFileName + " - writeXMPSideCar - " + writeXMPSideCar);
-
-                    if (!File.Exists(path: xmpFileLocation))
-                    {
-                        FrmMainApp.Logger.Trace(message: drFileName + " - writeXMPSideCar - " + writeXMPSideCar + " - File has been created.");
-
-                        // otherwise create a new one. 
-                        xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath);
-                        exifArgsForSidecar += "-tagsfromfile=" + xmpFileLocation + Environment.NewLine;
-                    }
-                }
-
-                exifArgsForSidecar += "-ignoreMinorErrors" + Environment.NewLine;
-
-                DataTable dtFileWriteQueue;
-                try
-                {
-                    dtFileWriteQueue = FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Select(filterExpression: "fileNameWithoutPath = '" + fileNameWithoutPath + "'")
-                        .CopyToDataTable();
-                }
-                catch
-                {
-                    dtFileWriteQueue = null;
-                }
-
-                if (dtFileWriteQueue != null && dtFileWriteQueue.Rows.Count > 0)
-                {
-                    // get tags for this file
-
-                    DataTable dtObjectTagNamesOutWithData = GenericJoinDataTables(t1: dtObjectTagNamesOut, t2: dtFileWriteQueue,
-                                                                                  (row1,
-                                                                                   row2) =>
-                                                                                      row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "settingId"));
-
-                    string exiftoolTagName;
-                    string updateExifVal;
-
-                    bool deleteAllGPSData = false;
-                    bool deleteTagAlreadyAdded = false;
-
-                    // add tags to argsFile
-                    foreach (DataRow dataRow in dtObjectTagNamesOutWithData.Rows)
-                    {
-                        string settingId = dataRow[columnName: "settingId"]
-                            .ToString();
-                        string settingValue = dataRow[columnName: "settingValue"]
-                            .ToString();
-
-                        FrmMainApp.Logger.Trace(message: drFileName + " - " + settingId + ": " + settingValue);
-
-                        // this is prob not the best way to go around this....
-                        foreach (DataRow drFileTags in dtFileWriteQueue.Rows)
-                        {
-                            string tmpSettingValue = drFileTags[columnName: "settingId"]
-                                .ToString();
-                            if (tmpSettingValue == @"gps*")
+                            if (line.Contains(value: "xmp:Rating="))
                             {
-                                deleteAllGPSData = true;
+                                bool _ = int.TryParse(s: line.Replace(oldValue: "xmp:Rating=", newValue: "")
+                                                          .Replace(oldValue: "\"", newValue: ""), result: out ratingInXmp);
+                                break;
+                            }
+
+                            if (line.Contains(value: "<xmp:Rating>"))
+                            {
+                                bool _ = int.TryParse(s: line.Replace(oldValue: "<xmp:Rating>", newValue: "")
+                                                          .Replace(oldValue: "</xmp:Rating>", newValue: "")
+                                                          .Replace(oldValue: " ", newValue: ""), result: out ratingInXmp);
                                 break;
                             }
                         }
+                    }
 
-                        // non-xmp always
-                        if (deleteAllGPSData && !deleteTagAlreadyAdded)
+                    queueWasEmpty = false;
+
+                    processOriginalFile = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_ProcessOriginalFile"));
+                    resetFileDateToCreated = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_ResetFileDateToCreated"));
+                    writeXMPSideCar = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_AddXMPSideCar"));
+                    doNotCreateBackup = Convert.ToBoolean(value: DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_OverwriteOriginal"));
+
+                    // it's a lot less complicated to just pretend we want both the Original File and the Sidecar updated and then not-include them later than to have a Yggdrasil of IFs scattered all over.
+                    // ... which latter I would inevitable f...k up at some point.
+
+                    exifArgsForOriginalFile += Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath) + Environment.NewLine; //needs to include folder name
+                    exifArgsForOriginalFile += "-ignoreMinorErrors" + Environment.NewLine;
+                    exifArgsForOriginalFile += "-progress" + Environment.NewLine;
+
+                    // this doesn't need to be sent back to the actual XMP file, it's a bug.
+                    if (ratingInXmp >= 0)
+                    {
+                        exifArgsForOriginalFile += "-Rating=" + ratingInXmp + Environment.NewLine;
+                    }
+
+                    exifArgsForSidecar += Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath)) + ".xmp") + Environment.NewLine; //needs to include folder name
+                    exifArgsForSidecar += "-progress" + Environment.NewLine;
+
+                    // sidecar copying needs to be in a separate batch, as technically it's a different file
+
+                    if (writeXMPSideCar)
+                    {
+                        FrmMainApp.Logger.Trace(message: fileNameWithPath + " - writeXMPSideCar - " + writeXMPSideCar);
+
+                        if (!File.Exists(path: xmpFileLocation))
                         {
-                            exifArgsForOriginalFile += "-gps*=" + Environment.NewLine;
-                            exifArgsForSidecar += "-gps*=" + Environment.NewLine;
-                            tagsToDelete.Add(item: "gps*");
+                            FrmMainApp.Logger.Trace(message: fileNameWithPath + " - writeXMPSideCar - " + writeXMPSideCar + " - File has been created.");
 
-                            // this is moved up/in here because the deletion of all gps has to come before just about anything else in case user wants to add (rather than delete) in more tags (later).
-
-                            exifArgsForOriginalFile += "-xmp:gps*=" + Environment.NewLine;
-                            exifArgsForSidecar += "-xmp:gps*=" + Environment.NewLine;
-
-                            deleteTagAlreadyAdded = true;
-                        }
-
-                        string objectTagNameOut = dataRow[columnName: "objectTagName_Out"]
-                            .ToString();
-                        exiftoolTagName = dataRow[columnName: "objectTagName_Out"]
-                            .ToString();
-                        updateExifVal = dataRow[columnName: "settingValue"]
-                            .ToString();
-
-                        if (!objectTagNameOut.Contains(value: ":"))
-                        {
-                            if (updateExifVal != "")
-                            {
-                                exifArgsForOriginalFile += "-" + exiftoolTagName + "=" + updateExifVal + Environment.NewLine;
-                                exifArgsForSidecar += "-" + exiftoolTagName + "=" + updateExifVal + Environment.NewLine;
-
-                                //if lat/long then add Ref. 
-                                if (exiftoolTagName == "GPSLatitude" ||
-                                    exiftoolTagName == "GPSDestLatitude" ||
-                                    exiftoolTagName == "exif:GPSLatitude" ||
-                                    exiftoolTagName == "exif:GPSDestLatitude")
-                                {
-                                    if (updateExifVal.Substring(startIndex: 0, length: 1) == "-")
-                                    {
-                                        exifArgsForOriginalFile += "-" + exiftoolTagName + "Ref" + "=" + "South" + Environment.NewLine;
-                                        exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "South" + Environment.NewLine;
-                                    }
-                                    else
-                                    {
-                                        exifArgsForOriginalFile += "-" + exiftoolTagName + "Ref" + "=" + "North" + Environment.NewLine;
-                                        exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "North" + Environment.NewLine;
-                                    }
-                                }
-                                else if (exiftoolTagName == "GPSLongitude" ||
-                                         exiftoolTagName == "GPSDestLongitude" ||
-                                         exiftoolTagName == "exif:GPSLongitude" ||
-                                         exiftoolTagName == "exif:GPSDestLongitude")
-                                {
-                                    if (updateExifVal.Substring(startIndex: 0, length: 1) == "-")
-                                    {
-                                        exifArgsForOriginalFile += "-" + exiftoolTagName + "Ref" + "=" + "West" + Environment.NewLine;
-                                        exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "West" + Environment.NewLine;
-                                    }
-                                    else
-                                    {
-                                        exifArgsForOriginalFile += "-" + exiftoolTagName + "Ref" + "=" + "East" + Environment.NewLine;
-                                        exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + "East" + Environment.NewLine;
-                                    }
-                                }
-                            }
-                            else //delete tag
-                            {
-                                exifArgsForOriginalFile += "-" + exiftoolTagName + "=" + Environment.NewLine;
-                                exifArgsForSidecar += "-" + exiftoolTagName + "=" + Environment.NewLine;
-                                tagsToDelete.Add(item: exiftoolTagName);
-
-                                //if lat/long then add Ref. 
-                                if (
-                                    exiftoolTagName == "GPSLatitude" ||
-                                    exiftoolTagName == "GPSDestLatitude" ||
-                                    exiftoolTagName == "exif:GPSLatitude" ||
-                                    exiftoolTagName == "exif:GPSDestLatitude" ||
-                                    exiftoolTagName == "GPSLongitude" ||
-                                    exiftoolTagName == "GPSDestLongitude" ||
-                                    exiftoolTagName == "exif:GPSLongitude" ||
-                                    exiftoolTagName == "exif:GPSDestLongitude"
-                                )
-                                {
-                                    exifArgsForOriginalFile += "-" + exiftoolTagName + "Ref" + "=" + Environment.NewLine;
-                                    exifArgsForSidecar += "-" + exiftoolTagName + "Ref" + "=" + Environment.NewLine;
-                                    tagsToDelete.Add(item: exiftoolTagName + "Ref");
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (objectTagNameOut == "EXIF:DateTimeOriginal" || // TakenDate
-                                objectTagNameOut == "EXIF:CreateDate" || // CreateDate
-                                objectTagNameOut == "XMP:DateTimeOriginal" || // TakenDate
-                                objectTagNameOut == "XMP:CreateDate" // CreateDate
-                               )
-                            {
-                                bool isTakenDate = false;
-                                bool isCreateDate = false;
-                                if (objectTagNameOut == "EXIF:DateTimeOriginal" || objectTagNameOut == "XMP:DateTimeOriginal")
-                                {
-                                    isTakenDate = true;
-                                }
-                                else if (objectTagNameOut == "EXIF:CreateDate" || objectTagNameOut == "XMP:CreateDate")
-                                {
-                                    isCreateDate = true;
-                                }
-
-                                try
-                                {
-                                    updateExifVal = DateTime.Parse(s: settingValue)
-                                        .ToString(format: "yyyy-MM-dd HH:mm:ss");
-                                }
-                                catch
-                                {
-                                    updateExifVal = "";
-                                }
-
-                                if (isCreateDate)
-                                {
-                                    // update FrmMainApp.DtOriginalCreateDate -- there should be only 1 row
-                                    for (int i = FrmMainApp.DtOriginalCreateDate.Rows.Count - 1; i >= 0; i--)
-                                    {
-                                        DataRow dr = FrmMainApp.DtOriginalCreateDate.Rows[index: i];
-                                        if (dr[columnName: "fileNameWithoutPath"]
-                                                .ToString() ==
-                                            fileNameWithoutPath)
-                                        {
-                                            dr.Delete();
-                                        }
-
-                                        break;
-                                    }
-
-                                    FrmMainApp.DtOriginalCreateDate.AcceptChanges();
-                                    if (updateExifVal != "")
-                                    {
-                                        DataRow drCreateDate = FrmMainApp.DtOriginalCreateDate.NewRow();
-                                        drCreateDate[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
-                                        drCreateDate[columnName: "settingId"] = "originalCreateDate";
-                                        drCreateDate[columnName: "settingValue"] = GenericStringToDateTime(dateTimeToConvert: updateExifVal);
-
-                                        FrmMainApp.DtOriginalCreateDate.Rows.Add(row: drCreateDate);
-                                        FrmMainApp.DtOriginalCreateDate.AcceptChanges();
-                                    }
-                                }
-                                else if (isTakenDate)
-                                {
-                                    // update FrmMainApp.DtOriginalTakenDate -- there should be only 1 row
-                                    for (int i = FrmMainApp.DtOriginalTakenDate.Rows.Count - 1; i >= 0; i--)
-                                    {
-                                        DataRow dr = FrmMainApp.DtOriginalTakenDate.Rows[index: i];
-                                        if (dr[columnName: "fileNameWithoutPath"]
-                                                .ToString() ==
-                                            fileNameWithoutPath)
-                                        {
-                                            dr.Delete();
-                                        }
-
-                                        break;
-                                    }
-
-                                    FrmMainApp.DtOriginalTakenDate.AcceptChanges();
-                                    if (updateExifVal != "")
-                                    {
-                                        DataRow drTakenDate = FrmMainApp.DtOriginalTakenDate.NewRow();
-                                        drTakenDate[columnName: "fileNameWithoutPath"] = fileNameWithoutPath;
-                                        drTakenDate[columnName: "settingId"] = "originalTakenDate";
-                                        drTakenDate[columnName: "settingValue"] = GenericStringToDateTime(dateTimeToConvert: updateExifVal);
-
-                                        FrmMainApp.DtOriginalTakenDate.Rows.Add(row: drTakenDate);
-                                        FrmMainApp.DtOriginalTakenDate.AcceptChanges();
-                                    }
-                                }
-                            }
-
-                            FrmMainApp.Logger.Trace(message: drFileName + " - " + exiftoolTagName + ": " + updateExifVal);
-
-                            exifArgsForOriginalFile += "-" + exiftoolTagName + "=" + updateExifVal + Environment.NewLine;
-                            exifArgsForSidecar += "-" + exiftoolTagName + "=" + updateExifVal + Environment.NewLine;
+                            // otherwise create a new one. 
+                            xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath);
+                            exifArgsForSidecar += "-tagsfromfile=" + xmpFileLocation + Environment.NewLine;
                         }
                     }
-                }
 
-                if (doNotCreateBackup)
-                {
-                    exifArgsForOriginalFile += "-overwrite_original_in_place" + Environment.NewLine;
-                }
+                    exifArgsForSidecar += "-ignoreMinorErrors" + Environment.NewLine;
 
-                exifArgsForOriginalFile += "-iptc:codedcharacterset=utf8" + Environment.NewLine;
+                    DataTable dtFileWriteQueue = new();
+                    dtFileWriteQueue.Clear();
+                    dtFileWriteQueue.Columns.Add(columnName: "ItemNameWithoutPath");
+                    dtFileWriteQueue.Columns.Add(columnName: "settingId");
+                    dtFileWriteQueue.Columns.Add(columnName: "settingValue");
 
-                if (resetFileDateToCreated)
-                {
-                    exifArgsForOriginalFile += "-filemodifydate<datetimeoriginal" + Environment.NewLine;
-                    exifArgsForOriginalFile += "-filecreatedate<datetimeoriginal" + Environment.NewLine;
-                }
+                    foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+                    {
+                        if (dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
+                        {
+                            DataRow drFileDataRow = dtFileWriteQueue.NewRow();
+                            drFileDataRow[columnName: "ItemNameWithoutPath"] = dirElemFileToModify.ItemNameWithoutPath;
+                            drFileDataRow[columnName: "settingId"] = GetAttributeName(attribute: attribute);
+                            if (!dirElemFileToModify.IsMarkedForDeletion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
+                            {
+                                drFileDataRow[columnName: "settingValue"] = dirElemFileToModify.GetAttributeValueString(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                            }
+                            else
+                            {
+                                drFileDataRow[columnName: "settingValue"] = "";
+                            }
 
-                exifArgsForOriginalFile += "-IPTCDigest=" + Environment.NewLine;
+                            dtFileWriteQueue.Rows.Add(row: drFileDataRow);
+                        }
+                    }
 
-                exifArgsForOriginalFile += "-execute" + Environment.NewLine;
+                    if (dtFileWriteQueue.Rows.Count > 0)
+                    {
+                        // get tags for this file
 
-                if (processOriginalFile)
-                {
-                    File.AppendAllText(path: argsFile, contents: exifArgsForOriginalFile, encoding: Encoding.UTF8);
-                }
+                        DataTable dtObjectattributesOutWithData = GenericJoinDataTables(t1: dtObjectattributesOut, t2: dtFileWriteQueue,
+                                                                                        (row1,
+                                                                                         row2) =>
+                                                                                            row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "settingId"));
 
-                if (writeXMPSideCar)
-                {
+                        string exifToolAttribute;
+                        string updateExifVal;
+
+                        bool deleteAllGPSData = dtFileWriteQueue.AsEnumerable()
+                            .Any(predicate: row => "gps*" == row.Field<string>(columnName: "settingId"));
+
+                        bool deleteTagAlreadyAdded = false;
+
+                        // add tags to argsFile
+                        foreach (DataRow dataRow in dtObjectattributesOutWithData.Rows)
+                        {
+                            string settingId = dataRow[columnName: "settingId"]
+                                .ToString();
+                            string settingValue = dataRow[columnName: "settingValue"]
+                                .ToString();
+
+                            FrmMainApp.Logger.Trace(message: fileNameWithPath + " - " + settingId + ": " + settingValue);
+
+                            // non-xmp always
+                            if (deleteAllGPSData && !deleteTagAlreadyAdded)
+                            {
+                                exifArgsForOriginalFile += "-gps*=" + Environment.NewLine;
+                                exifArgsForSidecar += "-gps*=" + Environment.NewLine;
+
+                                // this is moved up/in here because the deletion of all gps has to come before just about anything else in case user wants to add (rather than delete) in more tags (later).
+
+                                exifArgsForOriginalFile += "-xmp:gps*=" + Environment.NewLine;
+                                exifArgsForSidecar += "-xmp:gps*=" + Environment.NewLine;
+
+                                deleteTagAlreadyAdded = true;
+                            }
+
+                            string objectTagNameOut = dataRow[columnName: "objectTagName_Out"]
+                                .ToString();
+                            exifToolAttribute = dataRow[columnName: "objectTagName_Out"]
+                                .ToString();
+                            updateExifVal = dataRow[columnName: "settingValue"]
+                                .ToString();
+
+                            if (!objectTagNameOut.Contains(value: ":"))
+                            {
+                                if (updateExifVal != "")
+                                {
+                                    exifArgsForOriginalFile += "-" + exifToolAttribute + "=" + updateExifVal + Environment.NewLine;
+                                    exifArgsForSidecar += "-" + exifToolAttribute + "=" + updateExifVal + Environment.NewLine;
+
+                                    //if lat/long then add Ref. 
+                                    if (exifToolAttribute == "GPSLatitude" ||
+                                        exifToolAttribute == "GPSLatitude" ||
+                                        exifToolAttribute == "exif:GPSLatitude" ||
+                                        exifToolAttribute == "exif:GPSLatitude")
+                                    {
+                                        if (updateExifVal.Substring(startIndex: 0, length: 1) == FrmMainApp.NullStringEquivalentGeneric)
+                                        {
+                                            exifArgsForOriginalFile += "-" + exifToolAttribute + "Ref" + "=" + "South" + Environment.NewLine;
+                                            exifArgsForSidecar += "-" + exifToolAttribute + "Ref" + "=" + "South" + Environment.NewLine;
+                                        }
+                                        else
+                                        {
+                                            exifArgsForOriginalFile += "-" + exifToolAttribute + "Ref" + "=" + "North" + Environment.NewLine;
+                                            exifArgsForSidecar += "-" + exifToolAttribute + "Ref" + "=" + "North" + Environment.NewLine;
+                                        }
+                                    }
+                                    else if (exifToolAttribute == "GPSLongitude" ||
+                                             exifToolAttribute == "GPSLongitude" ||
+                                             exifToolAttribute == "exif:GPSLongitude" ||
+                                             exifToolAttribute == "exif:GPSLongitude")
+                                    {
+                                        if (updateExifVal.Substring(startIndex: 0, length: 1) == FrmMainApp.NullStringEquivalentGeneric)
+                                        {
+                                            exifArgsForOriginalFile += "-" + exifToolAttribute + "Ref" + "=" + "West" + Environment.NewLine;
+                                            exifArgsForSidecar += "-" + exifToolAttribute + "Ref" + "=" + "West" + Environment.NewLine;
+                                        }
+                                        else
+                                        {
+                                            exifArgsForOriginalFile += "-" + exifToolAttribute + "Ref" + "=" + "East" + Environment.NewLine;
+                                            exifArgsForSidecar += "-" + exifToolAttribute + "Ref" + "=" + "East" + Environment.NewLine;
+                                        }
+                                    }
+                                }
+                                else //delete tag
+                                {
+                                    exifArgsForOriginalFile += "-" + exifToolAttribute + "=" + Environment.NewLine;
+                                    exifArgsForSidecar += "-" + exifToolAttribute + "=" + Environment.NewLine;
+
+                                    //if lat/long then add Ref. 
+                                    if (
+                                        exifToolAttribute == "GPSLatitude" ||
+                                        exifToolAttribute == "GPSLatitude" ||
+                                        exifToolAttribute == "exif:GPSLatitude" ||
+                                        exifToolAttribute == "exif:GPSLatitude" ||
+                                        exifToolAttribute == "GPSLongitude" ||
+                                        exifToolAttribute == "GPSLongitude" ||
+                                        exifToolAttribute == "exif:GPSLongitude" ||
+                                        exifToolAttribute == "exif:GPSLongitude"
+                                    )
+                                    {
+                                        exifArgsForOriginalFile += "-" + exifToolAttribute + "Ref" + "=" + Environment.NewLine;
+                                        exifArgsForSidecar += "-" + exifToolAttribute + "Ref" + "=" + Environment.NewLine;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (objectTagNameOut == "EXIF:DateTimeOriginal" || // TakenDate
+                                    objectTagNameOut == "EXIF:CreateDate" || // CreateDate
+                                    objectTagNameOut == "XMP:DateTimeOriginal" || // TakenDate
+                                    objectTagNameOut == "XMP:CreateDate" // CreateDate
+                                   )
+                                {
+                                    bool isTakenDate = false;
+                                    bool isCreateDate = false;
+                                    if (objectTagNameOut == "EXIF:DateTimeOriginal" || objectTagNameOut == "XMP:DateTimeOriginal")
+                                    {
+                                        isTakenDate = true;
+                                    }
+                                    else if (objectTagNameOut == "EXIF:CreateDate" || objectTagNameOut == "XMP:CreateDate")
+                                    {
+                                        isCreateDate = true;
+                                    }
+
+                                    try
+                                    {
+                                        updateExifVal = DateTime.Parse(s: settingValue)
+                                            .ToString(format: "yyyy-MM-dd HH:mm:ss");
+                                    }
+                                    catch
+                                    {
+                                        updateExifVal = "";
+                                    }
+
+                                    if (isCreateDate)
+                                    {
+                                        // update FrmMainApp.OriginalCreateDateDict -- there should be only 1 row
+                                        if (FrmMainApp.OriginalCreateDateDict.ContainsKey(key: fileNameWithoutPath))
+                                        {
+                                            FrmMainApp.OriginalCreateDateDict.Remove(key: fileNameWithoutPath);
+                                        }
+
+                                        if (updateExifVal != "")
+                                        {
+                                            FrmMainApp.OriginalCreateDateDict[key: fileNameWithoutPath] = updateExifVal;
+                                        }
+                                    }
+                                    else if (isTakenDate)
+                                    {
+                                        // update FrmMainApp.OriginalTakenDateDict -- there should be only 1 row
+                                        if (FrmMainApp.OriginalTakenDateDict.ContainsKey(key: fileNameWithoutPath))
+                                        {
+                                            FrmMainApp.OriginalTakenDateDict.Remove(key: fileNameWithoutPath);
+                                        }
+
+                                        if (updateExifVal != "")
+                                        {
+                                            FrmMainApp.OriginalTakenDateDict[key: fileNameWithoutPath] = updateExifVal;
+                                        }
+                                    }
+                                }
+
+                                FrmMainApp.Logger.Trace(message: fileNameWithPath + " - " + exifToolAttribute + ": " + updateExifVal);
+
+                                exifArgsForOriginalFile += "-" + exifToolAttribute + "=" + updateExifVal + Environment.NewLine;
+                                exifArgsForSidecar += "-" + exifToolAttribute + "=" + updateExifVal + Environment.NewLine;
+                            }
+                        }
+                    }
+
                     if (doNotCreateBackup)
                     {
-                        //exifArgsForSidecar += "-IPTCDigest=" + Environment.NewLine;
-                        exifArgsForSidecar += "-overwrite_original_in_place" + Environment.NewLine;
+                        exifArgsForOriginalFile += "-overwrite_original_in_place" + Environment.NewLine;
                     }
 
-                    exifArgsForSidecar += "-execute" + Environment.NewLine;
-                    File.AppendAllText(path: argsFile, contents: exifArgsForSidecar, encoding: Encoding.UTF8);
-                }
+                    exifArgsForOriginalFile += "-iptc:codedcharacterset=utf8" + Environment.NewLine;
 
-                if (!processOriginalFile && !writeXMPSideCar)
-                {
-                    failWriteNothingEnabled = true;
-                    FrmMainApp.Logger.Info(message: "Both file-writes disabled. Nothing Written.");
-                    MessageBox.Show(
-                        text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"),
-                        caption: GenericGetMessageBoxCaption(captionType: "Warning"),
-                        buttons: MessageBoxButtons.OK,
-                        icon: MessageBoxIcon.Warning);
+                    if (resetFileDateToCreated)
+                    {
+                        exifArgsForOriginalFile += "-filemodifydate<datetimeoriginal" + Environment.NewLine;
+                        exifArgsForOriginalFile += "-filecreatedate<datetimeoriginal" + Environment.NewLine;
+                    }
+
+                    exifArgsForOriginalFile += "-IPTCDigest=" + Environment.NewLine;
+
+                    exifArgsForOriginalFile += "-execute" + Environment.NewLine;
+
+                    if (processOriginalFile)
+                    {
+                        File.AppendAllText(path: argsFile, contents: exifArgsForOriginalFile, encoding: Encoding.UTF8);
+                    }
+
+                    if (writeXMPSideCar)
+                    {
+                        if (doNotCreateBackup)
+                        {
+                            //exifArgsForSidecar += "-IPTCDigest=" + Environment.NewLine;
+                            exifArgsForSidecar += "-overwrite_original_in_place" + Environment.NewLine;
+                        }
+
+                        exifArgsForSidecar += "-execute" + Environment.NewLine;
+                        File.AppendAllText(path: argsFile, contents: exifArgsForSidecar, encoding: Encoding.UTF8);
+                    }
+
+                    if (!processOriginalFile && !writeXMPSideCar)
+                    {
+                        failWriteNothingEnabled = true;
+                        FrmMainApp.Logger.Info(message: "Both file-writes disabled. Nothing Written.");
+                        MessageBox.Show(
+                            text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"),
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
+                    }
                 }
             }
         }
@@ -1301,7 +1290,7 @@ internal static partial class HelperStatic
                                         !data.Data.Trim()
                                             .StartsWith(value: "0"))
                                     {
-                                        removeFileFromDT3(fileNameWithoutPath: fileNameWithoutPath);
+                                        removeFileFromDE3(fileNameWithoutPath: fileNameWithoutPath);
                                     }
 
                                     if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
@@ -1322,7 +1311,7 @@ internal static partial class HelperStatic
                                             !data.Data.Trim()
                                                 .StartsWith(value: "0"))
                                         {
-                                            removeFileFromDT3(fileNameWithoutPath: fileNameWithoutPath);
+                                            removeFileFromDE3(fileNameWithoutPath: fileNameWithoutPath);
                                         }
                                     }
                                 }
@@ -1422,20 +1411,15 @@ internal static partial class HelperStatic
             }
         });
 
-        void removeFileFromDT3(string fileNameWithoutPath)
+        void removeFileFromDE3(string fileNameWithoutPath)
         {
-            IEnumerable<DataRow> drDT3Rows =
-                from drDT3 in FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.AsEnumerable()
-                where drDT3.Field<string>(columnName: "fileNameWithoutPath") != fileNameWithoutPath
-                select drDT3;
-
-            if (drDT3Rows.Any())
+            if (!fileNameWithoutPath.EndsWith(".xmp"))
             {
-                FrmMainApp.DtFileDataToWriteStage3ReadyToWrite = drDT3Rows.CopyToDataTable();
-            }
-            else
-            {
-                FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Clear();
+                DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath));
+                foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+                {
+                    dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                }
             }
 
             frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Black);
@@ -1683,30 +1667,30 @@ internal static partial class HelperStatic
             // ... for populated places may be city names or names of some populated entity below city level, but they're never used for something above city level.
             // In a country where city names are not assigned to a specific admin level, I'd use the toponymName as the city name and leave the sublocation name blank.
 
-            if (FrmMainApp.lstCityNameIsAdminName1.Contains(CountryCode) ||
-                FrmMainApp.lstCityNameIsAdminName2.Contains(CountryCode) ||
-                FrmMainApp.lstCityNameIsAdminName3.Contains(CountryCode) ||
-                FrmMainApp.lstCityNameIsAdminName4.Contains(CountryCode)
+            if (FrmMainApp.LstCityNameIsAdminName1.Contains(item: CountryCode) ||
+                FrmMainApp.LstCityNameIsAdminName2.Contains(item: CountryCode) ||
+                FrmMainApp.LstCityNameIsAdminName3.Contains(item: CountryCode) ||
+                FrmMainApp.LstCityNameIsAdminName4.Contains(item: CountryCode)
                )
             {
                 isPredeterminedCountry = true;
 
                 Sub_location = ToponymNameInSQL;
 
-                if (FrmMainApp.lstCityNameIsAdminName1.Contains(CountryCode))
+                if (FrmMainApp.LstCityNameIsAdminName1.Contains(item: CountryCode))
                 {
                     City = AdminName1InSQL;
                     State = "";
                 }
-                else if (FrmMainApp.lstCityNameIsAdminName2.Contains(CountryCode))
+                else if (FrmMainApp.LstCityNameIsAdminName2.Contains(item: CountryCode))
                 {
                     City = AdminName2InSQL;
                 }
-                else if (FrmMainApp.lstCityNameIsAdminName3.Contains(CountryCode))
+                else if (FrmMainApp.LstCityNameIsAdminName3.Contains(item: CountryCode))
                 {
                     City = AdminName3InSQL;
                 }
-                else if (FrmMainApp.lstCityNameIsAdminName4.Contains(CountryCode))
+                else if (FrmMainApp.LstCityNameIsAdminName4.Contains(item: CountryCode))
                 {
                     City = AdminName4InSQL;
                 }
@@ -1716,7 +1700,7 @@ internal static partial class HelperStatic
                     Sub_location = "";
                 }
 
-                if (!FrmMainApp.lstCityNameIsAdminName1.Contains(CountryCode))
+                if (!FrmMainApp.LstCityNameIsAdminName1.Contains(item: CountryCode))
                 {
                     State = AdminName1InSQL;
                 }
@@ -1728,7 +1712,7 @@ internal static partial class HelperStatic
                 bool customRuleChangedCity = false;
                 bool customRuleChangedSub_location = false;
 
-                EnumerableRowCollection<DataRow> drCustomRulesData = from DataRow dataRow in FrmSettings.dtCustomRules.AsEnumerable()
+                EnumerableRowCollection<DataRow> drCustomRulesData = from DataRow dataRow in FrmSettings.DtCustomRules.AsEnumerable()
                                                                      where dataRow.Field<string>(columnName: "CountryCode") == CountryCode
                                                                      select dataRow;
 
@@ -2062,30 +2046,30 @@ internal static partial class HelperStatic
                         // ... for populated places may be city names or names of some populated entity below city level, but they're never used for something above city level.
                         // In a country where city names are not assigned to a specific admin level, I'd use the toponymName as the city name and leave the sublocation name blank.
 
-                        if (FrmMainApp.lstCityNameIsAdminName1.Contains(CountryCode) ||
-                            FrmMainApp.lstCityNameIsAdminName2.Contains(CountryCode) ||
-                            FrmMainApp.lstCityNameIsAdminName3.Contains(CountryCode) ||
-                            FrmMainApp.lstCityNameIsAdminName4.Contains(CountryCode)
+                        if (FrmMainApp.LstCityNameIsAdminName1.Contains(item: CountryCode) ||
+                            FrmMainApp.LstCityNameIsAdminName2.Contains(item: CountryCode) ||
+                            FrmMainApp.LstCityNameIsAdminName3.Contains(item: CountryCode) ||
+                            FrmMainApp.LstCityNameIsAdminName4.Contains(item: CountryCode)
                            )
                         {
                             isPredeterminedCountry = true;
 
                             Sub_location = readJsonToponomy.Geonames[index]
                                 .ToponymName;
-                            if (FrmMainApp.lstCityNameIsAdminName1.Contains(CountryCode))
+                            if (FrmMainApp.LstCityNameIsAdminName1.Contains(item: CountryCode))
                             {
                                 City = AdminName1InAPI;
                                 State = "";
                             }
-                            else if (FrmMainApp.lstCityNameIsAdminName2.Contains(CountryCode))
+                            else if (FrmMainApp.LstCityNameIsAdminName2.Contains(item: CountryCode))
                             {
                                 City = AdminName2InAPI;
                             }
-                            else if (FrmMainApp.lstCityNameIsAdminName3.Contains(CountryCode))
+                            else if (FrmMainApp.LstCityNameIsAdminName3.Contains(item: CountryCode))
                             {
                                 City = AdminName3InAPI;
                             }
-                            else if (FrmMainApp.lstCityNameIsAdminName4.Contains(CountryCode))
+                            else if (FrmMainApp.LstCityNameIsAdminName4.Contains(item: CountryCode))
                             {
                                 City = AdminName4InAPI;
                             }
@@ -2095,7 +2079,7 @@ internal static partial class HelperStatic
                                 Sub_location = "";
                             }
 
-                            if (!FrmMainApp.lstCityNameIsAdminName1.Contains(CountryCode))
+                            if (!FrmMainApp.LstCityNameIsAdminName1.Contains(item: CountryCode))
                             {
                                 State = AdminName1InAPI;
                             }
@@ -2107,7 +2091,7 @@ internal static partial class HelperStatic
                             bool customRuleChangedCity = false;
                             bool customRuleChangedSub_location = false;
 
-                            EnumerableRowCollection<DataRow> drCustomRulesData = from DataRow dataRow in FrmSettings.dtCustomRules.AsEnumerable()
+                            EnumerableRowCollection<DataRow> drCustomRulesData = from DataRow dataRow in FrmSettings.DtCustomRules.AsEnumerable()
                                                                                  where dataRow.Field<string>(columnName: "CountryCode") == CountryCode
                                                                                  select dataRow;
 
@@ -2560,9 +2544,9 @@ internal static partial class HelperStatic
         if (SApiOkay)
         {
             GtnReleasesApiResponse readJson_GTNVer = API_GenericGetGTNVersionFromWeb();
-            if (readJson_GTNVer.TagName != null)
+            if (readJson_GTNVer.attribute != null)
             {
-                apiVersion = readJson_GTNVer.TagName;
+                apiVersion = readJson_GTNVer.attribute;
             }
             // this will be a null value if Unauthorised, we'll ignore that.
         }
@@ -2631,17 +2615,17 @@ internal static partial class HelperStatic
     /// <param name="senderName">At this point this can either be the main listview or the one from Edit (file) data</param>
     internal static async Task ExifRemoveLocationData(string senderName)
     {
-        List<string> toponomyOverwrites = new()
+        List<ElementAttribute> toponomyOverwritesAttributes = new()
         {
-            "GPSLatitude",
-            "GPSLongitude",
-            "CountryCode",
-            "Country",
-            "City",
-            "State",
-            "Sub_location",
-            "GPSAltitude",
-            "gps*"
+            ElementAttribute.GPSLatitude,
+            ElementAttribute.GPSLongitude,
+            ElementAttribute.CountryCode,
+            ElementAttribute.Country,
+            ElementAttribute.City,
+            ElementAttribute.State,
+            ElementAttribute.Sub_location,
+            ElementAttribute.GPSAltitude,
+            ElementAttribute.RemoveAllGPS //"gps*"
         };
 
         if (DataReadSQLiteSettings(
@@ -2649,25 +2633,19 @@ internal static partial class HelperStatic
                 settingTabPage: "tpg_Application",
                 settingId: "ckb_RemoveGeoDataRemovesTimeOffset") ==
             "true")
-
         {
-            toponomyOverwrites.Add(item: "OffsetTime");
+            toponomyOverwritesAttributes.Add(item: ElementAttribute.OffsetTime);
         }
-
-        // sort is pointless here but otherwise it pokes my OCD.
-        toponomyOverwrites.Sort();
 
         if (senderName == "FrmEditFileData")
         {
-            // for the time being i'll leave this as "remove data from the active selection file" rather than "all".
             FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
-
-            // setting this to True prevents the code from checking the values are valid numbers.
-
             if (frmEditFileDataInstance != null)
             {
                 string fileNameWithoutPath = frmEditFileDataInstance.lvw_FileListEditImages.SelectedItems[index: 0]
                     .Text;
+
+                DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath));
 
                 HelperNonStatic helperNonstatic = new();
                 IEnumerable<Control> cGbx_GPSData = helperNonstatic.GetAllControls(control: frmEditFileDataInstance.gbx_GPSData);
@@ -2706,22 +2684,21 @@ internal static partial class HelperStatic
                     }
                 }
 
-                foreach (string toponomyDetail in toponomyOverwrites)
+                if (dirElemFileToModify != null)
                 {
-                    GenericUpdateAddToDataTable(
-                        dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                        fileNameWithoutPath: fileNameWithoutPath,
-                        settingId: toponomyDetail,
-                        settingValue: ""
-                    );
-                }
+                    foreach (ElementAttribute toponomyDetail in toponomyOverwritesAttributes)
+                    {
+                        dirElemFileToModify.SetAttributeValueAnyType(attribute: toponomyDetail,
+                                                                     value: "",
+                                                                     version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                                                                     isMarkedForDeletion: true);
+                    }
 
-                GenericUpdateAddToDataTable(
-                    dt: FrmMainApp.DtFileDataToWriteStage1PreQueue,
-                    fileNameWithoutPath: fileNameWithoutPath,
-                    settingId: "gps*",
-                    settingValue: ""
-                );
+                    dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.RemoveAllGPS,
+                                                                 value: "",
+                                                                 version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                                                                 isMarkedForDeletion: true);
+                }
             }
         }
         else if (senderName == "FrmMainApp")
@@ -2740,7 +2717,8 @@ internal static partial class HelperStatic
                         string fileNameWithoutPath = lvi.Text;
                         if (File.Exists(path: fileNameWithPath))
                         {
-                            //lvw.BeginUpdate();
+                            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath));
+
                             // check it's not in the read-queue.
                             while (GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
                             {
@@ -2749,19 +2727,22 @@ internal static partial class HelperStatic
 
                             // then put a blocker on
                             GenericLockLockFile(fileNameWithoutPath: fileNameWithoutPath);
-                            foreach (string toponomyDetail in toponomyOverwrites)
+                            foreach (ElementAttribute toponomyDetail in toponomyOverwritesAttributes)
                             {
-                                GenericUpdateAddToDataTable(
-                                    dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                                    fileNameWithoutPath: fileNameWithoutPath,
-                                    settingId: toponomyDetail,
-                                    settingValue: ""
-                                );
+                                dirElemFileToModify.SetAttributeValueAnyType(attribute: toponomyDetail,
+                                                                             value: "",
+                                                                             version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                                                                             isMarkedForDeletion: true);
                             }
+
+                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.RemoveAllGPS,
+                                                                         value: "",
+                                                                         version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                                                                         isMarkedForDeletion: true);
 
                             // then remove lock
 
-                            await LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
+                            await LwvUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
                             GenericLockUnLockFile(fileNameWithoutPath: fileNameWithoutPath);
                             // no need to remove the xmp here because it hasn't been added in the first place.
                         }
@@ -2812,7 +2793,7 @@ internal static partial class HelperStatic
     /// <param name="settingId"></param>
     /// <param name="settingValue"></param>
     /// <returns></returns>
-    internal static string ReplaceBlankToponomy(string settingId,
+    internal static string ReplaceBlankToponomy(ElementAttribute settingId,
                                                 string settingValue)
     {
         string retStr = settingValue;
