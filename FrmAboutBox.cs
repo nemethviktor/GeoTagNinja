@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using GeoTagNinja.Helpers;
 
 namespace GeoTagNinja;
 
@@ -17,7 +18,7 @@ internal partial class FrmAboutBox : Form
     {
         InitializeComponent();
         HelperNonStatic helperNonstatic = new();
-        HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
+        HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
 
         // via https://stackoverflow.com/a/1601079/3968494
         Version version = Assembly.GetEntryAssembly()

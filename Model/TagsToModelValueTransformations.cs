@@ -2,220 +2,251 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using GeoTagNinja.Helpers;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
-namespace GeoTagNinja.Model
+namespace GeoTagNinja.Model;
+
+internal class TagsToModelValueTransformations
 {
-    internal class TagsToModelValueTransformations
+    /// <summary>
+    ///     Compose the GPSLat/Long value with their respective reference (N for North, etc).
+    ///     Ensure dec. sep. is "."
+    /// </summary>
+    public static double? T2M_GPSLatLong(ElementAttribute attribute,
+                                         string parseResult,
+                                         IDictionary<ElementAttribute, IConvertible> parsed_Values,
+                                         Func<ElementAttribute, bool> ParseMissingAttribute)
     {
-        /// <summary>
-        /// Compose the GPSLat/Long value with their respective reference (N for North, etc).
-        /// Ensure dec. sep. is "."
-        /// </summary>
-        public static double? T2M_GPSLatLong(ElementAttribute attribute,
-                                             string parseResult,
-                                             IDictionary<ElementAttribute, IConvertible> parsed_Values,
-                                             Func<ElementAttribute, bool> ParseMissingAttribute)
+        if (parseResult == null)
         {
-            if (parseResult == null)
-                return null; // not set
-
-            // Get the Ref Attribute for the corresponding data point and thereof the first character
-            // (Should be N of North, etc.)
-            // If this character is not contained in the data point value, add it before it
-            ElementAttribute refAttrib;
-            switch (attribute)
-            {
-                case ElementAttribute.GPSLatitude:
-                    refAttrib = ElementAttribute.GPSLatitudeRef;
-                    break;
-                case ElementAttribute.GPSDestLatitude:
-                    refAttrib = ElementAttribute.GPSLatitudeRef;
-                    break;
-                case ElementAttribute.GPSLongitude:
-                    refAttrib = ElementAttribute.GPSLongitudeRef;
-                    break;
-                case ElementAttribute.GPSDestLongitude:
-                    refAttrib = ElementAttribute.GPSLongitudeRef;
-                    break;
-                default:
-                    throw new ArgumentException($"T2M_GPSLatLong does not support attribute '{GetAttributeName(attribute)}'");
-            }
-
-            // If reference is set, concat if needed
-            string tmpLatLongRefVal = "";
-            if (parsed_Values.ContainsKey(refAttrib))
-                // Was parsed already
-                tmpLatLongRefVal = (string)parsed_Values[refAttrib];
-            else
-            {
-                // It was not parsed, yet
-                bool parseOk = ParseMissingAttribute(refAttrib);
-                if (parseOk)
-                    tmpLatLongRefVal = (string)parsed_Values[refAttrib];
-            }
-            // Not set attribs are null
-            if (tmpLatLongRefVal == null) tmpLatLongRefVal = "";
-
-            if (tmpLatLongRefVal.Length > 0)
-            {
-                tmpLatLongRefVal = tmpLatLongRefVal.Substring(startIndex: 0, length: 1);
-                if (!parseResult.Contains(value: tmpLatLongRefVal))
-                    parseResult = tmpLatLongRefVal + parseResult;
-            }
-
-            // Finally ensure that dec sep. is "." and account for direction
-            // of coordinates by using +/-
-            return HelperStatic.GenericAdjustLatLongNegative(point: parseResult);
+            return null; // not set
         }
 
-
-        /// <summary>
-        /// Extract hight from given string that also contains text
-        /// Supports ###/### m bla
-        /// </summary>
-        public static double? T2M_GPSAltitude(string parseResult)
+        // Get the Ref Attribute for the corresponding data point and thereof the first character
+        // (Should be N of North, etc.)
+        // If this character is not contained in the data point value, add it before it
+        ElementAttribute refAttrib;
+        switch (attribute)
         {
-            if (parseResult == null)
-                return null; // not set
+            case ElementAttribute.GPSLatitude:
+                refAttrib = ElementAttribute.GPSLatitudeRef;
+                break;
+            case ElementAttribute.GPSDestLatitude:
+                refAttrib = ElementAttribute.GPSLatitudeRef;
+                break;
+            case ElementAttribute.GPSLongitude:
+                refAttrib = ElementAttribute.GPSLongitudeRef;
+                break;
+            case ElementAttribute.GPSDestLongitude:
+                refAttrib = ElementAttribute.GPSLongitudeRef;
+                break;
+            default:
+                throw new ArgumentException(message: $"T2M_GPSLatLong does not support attribute '{GetAttributeName(attribute: attribute)}'");
+        }
 
-            // Remove the bit with "m"
-            if (parseResult.Contains(value: "m"))
+        // If reference is set, concat if needed
+        string tmpLatLongRefVal = "";
+        if (parsed_Values.ContainsKey(key: refAttrib))
+            // Was parsed already
+        {
+            tmpLatLongRefVal = (string)parsed_Values[key: refAttrib];
+        }
+        else
+        {
+            // It was not parsed, yet
+            bool parseOk = ParseMissingAttribute(arg: refAttrib);
+            if (parseOk)
             {
-                parseResult = parseResult.Split('m')[0]
+                tmpLatLongRefVal = (string)parsed_Values[key: refAttrib];
+            }
+        }
+
+        // Not set attribs are null
+        if (tmpLatLongRefVal == null)
+        {
+            tmpLatLongRefVal = "";
+        }
+
+        if (tmpLatLongRefVal.Length > 0)
+        {
+            tmpLatLongRefVal = tmpLatLongRefVal.Substring(startIndex: 0, length: 1);
+            if (!parseResult.Contains(value: tmpLatLongRefVal))
+            {
+                parseResult = tmpLatLongRefVal + parseResult;
+            }
+        }
+
+        // Finally ensure that dec sep. is "." and account for direction
+        // of coordinates by using +/-
+        return HelperExifDataPointInteractions.AdjustLatLongNegative(point: parseResult);
+    }
+
+
+    /// <summary>
+    ///     Extract hight from given string that also contains text
+    ///     Supports ###/### m bla
+    /// </summary>
+    public static double? T2M_GPSAltitude(string parseResult)
+    {
+        if (parseResult == null)
+        {
+            return null; // not set
+        }
+
+        // Remove the bit with "m"
+        if (parseResult.Contains(value: "m"))
+        {
+            parseResult = parseResult.Split('m')[0]
+                .Trim()
+                .Replace(oldChar: ',', newChar: '.');
+        }
+
+        if (parseResult.Contains(value: "/"))
+        {
+            if (parseResult.Contains(value: ",") || parseResult.Contains(value: "."))
+            {
+                parseResult = parseResult.Split('/')[0]
                     .Trim()
                     .Replace(oldChar: ',', newChar: '.');
             }
-
-            if (parseResult.Contains(value: "/"))
+            else // attempt to convert it to decimal
             {
-                if (parseResult.Contains(value: ",") || parseResult.Contains(value: "."))
+                try
                 {
-                    parseResult = parseResult.Split('/')[0]
-                        .Trim()
-                        .Replace(oldChar: ',', newChar: '.');
+                    bool parseBool = double.TryParse(s: parseResult.Split('/')[0], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double numerator);
+                    parseBool = double.TryParse(s: parseResult.Split('/')[1], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double denominator);
+                    return Math.Round(value: numerator / denominator, digits: 2);
                 }
-                else // attempt to convert it to decimal
+                catch
                 {
-                    try
-                    {
-                        bool parseBool = double.TryParse(s: parseResult.Split('/')[0], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double numerator);
-                        parseBool = double.TryParse(s: parseResult.Split('/')[1], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double denominator);
-                        return Math.Round(value: numerator / denominator, digits: 2);
-                    }
-                    catch
-                    {
-                        return null;
-                    }
+                    return null;
                 }
-            }
-
-            // Finally convert what we have...
-            try
-            {
-                bool parseBool = double.TryParse(s: parseResult, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dbl_result);
-                if (parseBool)
-                    return dbl_result;
-                return null;
-            }
-            catch
-            {
-                return null;
             }
         }
 
-
-        /// <summary>
-        /// Standardize string to "Below Sea Level" or
-        /// "Above Sea Level" (default).
-        /// </summary>
-        public static string T2M_AltitudeRef(string parseResult)
+        // Finally convert what we have...
+        try
         {
-            if (parseResult == null)
-                return null; // not set
-
-            if (parseResult.ToLower()
-                    .Contains(value: "below") ||
-                parseResult.Contains(value: "1"))
-                return "Below Sea Level";
-            return "Above Sea Level";
-        }
-
-        /// <summary>
-        /// Standardize the exposure time value - removing "sec" and
-        /// trail/lead white space.
-        /// </summary>
-        public static string T2M_ExposureTime(string parseResult)
-        {
-            if (parseResult == null)
-                return null; // not set
-
-            return parseResult.Replace(oldValue: "sec", newValue: "")
-                .Trim();
-        }
-
-        /// <summary>
-        /// Extract a numeric value from the attribute by also removing
-        /// identified "clutter". Also calcs encountered quotient.
-        /// </summary>
-        public static string T2M_F_FocalLength_ISO(ElementAttribute attribute,
-                                                   string parseResult)
-        {
-            if (parseResult == null)
-                return null; // not set
-
-            // Pre-work on focal length 35mm:
-            // at least with a Canon 40D this returns stuff like: "51.0 mm (35 mm equivalent: 81.7 mm)" so i think it's safe to assume that 
-            // this might need a bit of debugging and community feeback. or someone with decent regex knowledge
-            if (attribute == ElementAttribute.FocalLengthIn35mmFormat)
+            bool parseBool = double.TryParse(s: parseResult, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dbl_result);
+            if (parseBool)
             {
-                if (parseResult.Contains(value: ':'))
-                {
-                    parseResult = Regex.Replace(input: parseResult, pattern: @"[^\d:.]", replacement: "")
-                        .Split(':')
-                        .Last();
-                }
-                else
-                {
-                    // this is untested. soz. feedback welcome.
-                    parseResult = Regex.Replace(input: parseResult, pattern: @"[^\d:.]", replacement: "");
-                }
+                return dbl_result;
             }
 
-            // Generic removal of other stuff
-            parseResult = parseResult
-                .Replace(oldValue: "mm", newValue: "")
-                .Replace(oldValue: "f/", newValue: "")
-                .Replace(oldValue: "f", newValue: "")
-                .Replace(oldValue: "[", newValue: "")
-                .Replace(oldValue: "]", newValue: "")
-                .Trim();
-
-            // If there is a quotient in it - calculate it
-            if (parseResult.Contains(value: "/"))
-                parseResult = Math.Round(value:
-                                         double.Parse(s: parseResult.Split('/')[0], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture) /
-                                         double.Parse(s: parseResult.Split('/')[1], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture),
-                                         digits: 1)
-                    .ToString();
-
-            return parseResult;
-        }
-
-        /// <summary>
-        /// Ensure the value is an actual date-time...
-        /// </summary>
-        public static string T2M_TakenCreatedDate(string parseResult)
-        {
-            if (parseResult == null)
-                return null; // not set
-
-            if (DateTime.TryParse(s: parseResult, result: out DateTime outDateTime))
-                return outDateTime.ToString(format: CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern);
             return null;
         }
+        catch
+        {
+            return null;
+        }
+    }
+
+
+    /// <summary>
+    ///     Standardize string to "Below Sea Level" or
+    ///     "Above Sea Level" (default).
+    /// </summary>
+    public static string T2M_AltitudeRef(string parseResult)
+    {
+        if (parseResult == null)
+        {
+            return null; // not set
+        }
+
+        if (parseResult.ToLower()
+                .Contains(value: "below") ||
+            parseResult.Contains(value: "1"))
+        {
+            return "Below Sea Level";
+        }
+
+        return "Above Sea Level";
+    }
+
+    /// <summary>
+    ///     Standardize the exposure time value - removing "sec" and
+    ///     trail/lead white space.
+    /// </summary>
+    public static string T2M_ExposureTime(string parseResult)
+    {
+        if (parseResult == null)
+        {
+            return null; // not set
+        }
+
+        return parseResult.Replace(oldValue: "sec", newValue: "")
+            .Trim();
+    }
+
+    /// <summary>
+    ///     Extract a numeric value from the attribute by also removing
+    ///     identified "clutter". Also calcs encountered quotient.
+    /// </summary>
+    public static string T2M_F_FocalLength_ISO(ElementAttribute attribute,
+                                               string parseResult)
+    {
+        if (parseResult == null)
+        {
+            return null; // not set
+        }
+
+        // Pre-work on focal length 35mm:
+        // at least with a Canon 40D this returns stuff like: "51.0 mm (35 mm equivalent: 81.7 mm)" so i think it's safe to assume that 
+        // this might need a bit of debugging and community feeback. or someone with decent regex knowledge
+        if (attribute == ElementAttribute.FocalLengthIn35mmFormat)
+        {
+            if (parseResult.Contains(value: ':'))
+            {
+                parseResult = Regex.Replace(input: parseResult, pattern: @"[^\d:.]", replacement: "")
+                    .Split(':')
+                    .Last();
+            }
+            else
+            {
+                // this is untested. soz. feedback welcome.
+                parseResult = Regex.Replace(input: parseResult, pattern: @"[^\d:.]", replacement: "");
+            }
+        }
+
+        // Generic removal of other stuff
+        parseResult = parseResult
+            .Replace(oldValue: "mm", newValue: "")
+            .Replace(oldValue: "f/", newValue: "")
+            .Replace(oldValue: "f", newValue: "")
+            .Replace(oldValue: "[", newValue: "")
+            .Replace(oldValue: "]", newValue: "")
+            .Trim();
+
+        // If there is a quotient in it - calculate it
+        if (parseResult.Contains(value: "/"))
+        {
+            parseResult = Math.Round(value:
+                                     double.Parse(s: parseResult.Split('/')[0], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture) /
+                                     double.Parse(s: parseResult.Split('/')[1], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture),
+                                     digits: 1)
+                .ToString();
+        }
+
+        return parseResult;
+    }
+
+    /// <summary>
+    ///     Ensure the value is an actual date-time...
+    /// </summary>
+    public static string T2M_TakenCreatedDate(string parseResult)
+    {
+        if (parseResult == null)
+        {
+            return null; // not set
+        }
+
+        if (DateTime.TryParse(s: parseResult, result: out DateTime outDateTime))
+        {
+            return outDateTime.ToString(format: CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern);
+        }
+
+        return null;
     }
 }

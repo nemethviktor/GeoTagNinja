@@ -6,12 +6,11 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using TimeZoneConverter;
-using static System.Net.WebRequestMethods;
 using static GeoTagNinja.FrmMainApp;
 using static GeoTagNinja.Model.SourcesAndAttributes;
-using File = System.IO.File;
 
 namespace GeoTagNinja;
 
@@ -93,25 +92,23 @@ public partial class FrmEditFileData : Form
         dtp_CreateDate.CustomFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern +
                                       " " +
                                       CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern;
-
-        // this just pulls the form's name -- logged inside
-        HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
+        HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
 
         // fills the countries box
 
-        foreach (string country in AncillaryListsArrays.GetCountries())
+        foreach (string country in HelperGenericAncillaryListsArrays.GetCountries())
         {
             cbx_Country.Items.Add(item: country);
         }
 
         // fills the country codes box
-        foreach (string countryCode in AncillaryListsArrays.GetCountryCodes())
+        foreach (string countryCode in HelperGenericAncillaryListsArrays.GetCountryCodes())
         {
             cbx_CountryCode.Items.Add(item: countryCode);
         }
 
         // load TZ-CBX
-        foreach (string timezone in AncillaryListsArrays.GetTimeZones())
+        foreach (string timezone in HelperGenericAncillaryListsArrays.GetTimeZones())
         {
             cbx_OffsetTimeList.Items.Add(item: timezone);
         }
@@ -208,10 +205,10 @@ public partial class FrmEditFileData : Form
                 )
                 {
                     // gets logged inside.
-                    cItem.Text = HelperStatic.DataReadDTObjectText(objectType: cItem.GetType()
-                                                                       .ToString()
-                                                                       .Split('.')
-                                                                       .Last(), objectName: cItem.Name);
+                    cItem.Text = HelperDataLanguageTZ.DataReadDTObjectText(objectType: cItem.GetType()
+                                                                               .ToString()
+                                                                               .Split('.')
+                                                                               .Last(), objectName: cItem.Name);
                 }
                 else if (cItem is TextBox ||
                          cItem is ComboBox ||
@@ -230,7 +227,7 @@ public partial class FrmEditFileData : Form
                     Logger.Trace(message: "cItem: " + cItem.Name + " - keyEqualsWhat: " + strExifTag + " - Pulling from KVP - Done");
 
                     // Basically not all Tags exist as CLHs.
-                    List<string> lstObjectNamesIn = DtObjectattributesIn.Rows.OfType<DataRow>()
+                    List<string> lstObjectNamesIn = HelperVariables.DtObjectattributesIn.Rows.OfType<DataRow>()
                         .Select(selector: dr => dr.Field<string>(columnName: "objectName"))
                         .ToList();
                     lstObjectNamesIn = lstObjectNamesIn.Distinct()
@@ -513,7 +510,7 @@ public partial class FrmEditFileData : Form
                                 string sqliteText;
                                 if (cItem.Name == "cbx_CountryCode" && cItem.Text == "")
                                 {
-                                    sqliteText = HelperStatic.DataReadDTCountryCodesNames(
+                                    sqliteText = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
                                         queryWhat: "Country",
                                         inputVal: cbx_Country.Text,
                                         returnWhat: "ISO_3166_1A3"
@@ -525,7 +522,7 @@ public partial class FrmEditFileData : Form
                                 }
                                 else if (cItem.Name == "cbx_Country" && cItem.Text == "")
                                 {
-                                    sqliteText = HelperStatic.DataReadDTCountryCodesNames(
+                                    sqliteText = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
                                         queryWhat: "ISO_3166_1A3",
                                         inputVal: cbx_CountryCode.Text,
                                         returnWhat: "Country");
@@ -570,7 +567,7 @@ public partial class FrmEditFileData : Form
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         //reset this just in case.
-        HelperStatic.SApiOkay = true;
+        HelperVariables.SApiOkay = true;
         switch (((Button)sender).Name)
         {
             case "btn_getFromWeb_Toponomy":
@@ -599,28 +596,28 @@ public partial class FrmEditFileData : Form
                 break;
             default:
                 MessageBox.Show(
-                    text: HelperStatic.GenericGetMessageBoxText(
+                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                               messageBoxName: "mbx_FrmEditFileData_ErrorInvalidSender") +
                           ((Button)sender).Name,
-                    caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Error);
                 break;
         }
 
-        if (HelperStatic.SApiOkay)
+        if (HelperVariables.SApiOkay)
         {
             MessageBox.Show(
-                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_InfoDataUpdated"),
-                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_InfoDataUpdated"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Information);
         }
         else
         {
             MessageBox.Show(
-                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_ErrorAPIError"),
-                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_ErrorAPIError"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
         }
@@ -650,12 +647,12 @@ public partial class FrmEditFileData : Form
                 strGpsLatitude = nud_GPSLatitude.Value.ToString(provider: CultureInfo.InvariantCulture);
                 strGpsLongitude = nud_GPSLongitude.Value.ToString(provider: CultureInfo.InvariantCulture);
 
-                HelperStatic.CurrentAltitude = null;
-                HelperStatic.CurrentAltitude = nud_GPSAltitude.Text.ToString(provider: CultureInfo.InvariantCulture);
+                HelperVariables.CurrentAltitude = null;
+                HelperVariables.CurrentAltitude = nud_GPSAltitude.Text.ToString(provider: CultureInfo.InvariantCulture);
 
-                dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude,
-                                                                               lng: strGpsLongitude,
-                                                                               fileNameWithoutPath: fileNameWithoutPath);
+                dtToponomy = HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude,
+                                                                                         lng: strGpsLongitude,
+                                                                                         fileNameWithoutPath: fileNameWithoutPath);
             }
         }
 
@@ -664,8 +661,8 @@ public partial class FrmEditFileData : Form
         {
             if (frmMainAppInstance != null)
             {
-                HelperStatic.CurrentAltitude = null;
-                HelperStatic.CurrentAltitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
+                HelperVariables.CurrentAltitude = null;
+                HelperVariables.CurrentAltitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
                     .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSAltitude"]
                                   .Index]
                     .Text.ToString(provider: CultureInfo.InvariantCulture);
@@ -694,7 +691,7 @@ public partial class FrmEditFileData : Form
                                 provider: CultureInfo.InvariantCulture,
                                 result: out parsedLng))
             {
-                dtToponomy = HelperStatic.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude, fileNameWithoutPath: fileNameWithoutPath);
+                dtToponomy = HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude, lng: strGpsLongitude, fileNameWithoutPath: fileNameWithoutPath);
             }
         }
 
@@ -906,16 +903,16 @@ public partial class FrmEditFileData : Form
                 lvw_EditorFileListImagesGetData();
 
                 pbx_imagePreview.Image = null;
-                await HelperStatic.GenericCreateImagePreview(fileNameWithPath: fileNameWithPath,
-                                                             initiator: "FrmEditFileData");
+                await HelperExifReadGetImagePreviews.GenericCreateImagePreview(fileNameWithPath: fileNameWithPath,
+                                                                               initiator: "FrmEditFileData");
             }
             else
             {
                 Logger.Debug(message: "File disappeared: " + fileNameWithPath);
                 MessageBox.Show(
-                    text: HelperStatic.GenericGetMessageBoxText(
+                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                         messageBoxName: "mbx_FrmEditFileData_WarningFileDisappeared"),
-                    caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Warning);
             }
@@ -980,15 +977,14 @@ public partial class FrmEditFileData : Form
 
                 if (lvi != null)
                 {
-                    // update listview w new data
-                    HelperStatic.FileListBeingUpdated = true;
-                    await HelperStatic.LwvUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
-                    HelperStatic.FileListBeingUpdated = false;
+                    HelperGenericFileLocking.FileListBeingUpdated = true;
+                    await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                    HelperGenericFileLocking.FileListBeingUpdated = false;
                 }
             }
 
             // re-center map on new data.
-            await HelperStatic.LvwItemClickNavigate();
+            FileListViewMapNavigation.ListViewItemClickNavigate();
         }
     }
 
@@ -1037,7 +1033,7 @@ public partial class FrmEditFileData : Form
     private async void btn_RemoveGeoData_Click(object sender,
                                                EventArgs e)
     {
-        await HelperStatic.ExifRemoveLocationData(senderName: "FrmEditFileData");
+        await HelperExifDataPointInteractions.ExifRemoveLocationData(senderName: "FrmEditFileData");
     }
 
     #region object text change handlers
@@ -1155,7 +1151,7 @@ public partial class FrmEditFileData : Form
                     string sqliteText;
                     if (senderName == "cbx_CountryCode")
                     {
-                        sqliteText = HelperStatic.DataReadDTCountryCodesNames(
+                        sqliteText = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
                             queryWhat: "ISO_3166_1A3",
                             inputVal: sndr.Text,
                             returnWhat: "Country"
@@ -1167,7 +1163,7 @@ public partial class FrmEditFileData : Form
                     }
                     else if (senderName == "cbx_Country")
                     {
-                        sqliteText = HelperStatic.DataReadDTCountryCodesNames(
+                        sqliteText = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
                             queryWhat: "Country",
                             inputVal: sndr.Text,
                             returnWhat: "ISO_3166_1A3"
@@ -1440,7 +1436,7 @@ public partial class FrmEditFileData : Form
         ToolTip ttp = new();
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         ttp.SetToolTip(control: pbx_OffsetTimeInfo,
-                       caption: HelperStatic.DataReadDTObjectText(
+                       caption: HelperDataLanguageTZ.DataReadDTObjectText(
                            objectType: "ToolTip",
                            objectName: "ttp_OffsetTime"
                        ));

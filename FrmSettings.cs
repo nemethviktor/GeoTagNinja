@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using static System.String;
 
@@ -14,8 +15,6 @@ namespace GeoTagNinja;
 
 public partial class FrmSettings : Form
 {
-    internal static DataTable DtCustomRules = new();
-    internal static DataTable DtCustomCityLogic = new();
     private static List<Control> _lstTpgApplicationControls = new();
     private readonly string _languageSavedInSQL;
     private bool _nowLoadingSettingsData;
@@ -30,7 +29,7 @@ public partial class FrmSettings : Form
         // this one is largely responsible for disabling the detection of "new" (changed) data. (ie when going from "noting" to "something")
         _nowLoadingSettingsData = true;
         HelperNonStatic helperNonstatic = new();
-        HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
+        HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
 
         // Gets the various controls' labels and values (eg "latitude" and "51.002")
         _lstTpgApplicationControls = helperNonstatic.GetAllControls(control: tpg_Application)
@@ -48,13 +47,13 @@ public partial class FrmSettings : Form
                     ComboBox cbx = (ComboBox)cItem;
 
                     string[] alreadyTranslatedLanguages = { "en", "fr" };
-                    _languageSavedInSQL = HelperStatic.DataReadSQLiteSettings(
+                    _languageSavedInSQL = HelperDataApplicationSettings.DataReadSQLiteSettings(
                         tableName: "settings",
                         settingTabPage: parentNameToUse,
                         settingId: cbx.Name
                     );
 
-                    foreach (KeyValuePair<string, string> languagePair in AncillaryListsArrays.GetISO_639_1_Languages())
+                    foreach (KeyValuePair<string, string> languagePair in HelperGenericAncillaryListsArrays.GetISO_639_1_Languages())
                     {
                         if ((cItem.Name == "cbx_Language" && alreadyTranslatedLanguages.Contains(value: languagePair.Key)) ||
                             cItem.Name == "cbx_TryUseGeoNamesLanguage")
@@ -66,7 +65,7 @@ public partial class FrmSettings : Form
 
                     if (_languageSavedInSQL == null)
                     {
-                        cbx.SelectedIndex = cbx.FindStringExact(s: HelperStatic.defaultEnglishString);
+                        cbx.SelectedIndex = cbx.FindStringExact(s: HelperVariables.DefaultEnglishString);
                     }
                     else
                     {
@@ -84,9 +83,9 @@ public partial class FrmSettings : Form
 
                 else
                 {
-                    HelperStatic.GenericReturnControlText(cItem: cItem,
-                                                          senderForm: this,
-                                                          parentNameToUse: parentNameToUse);
+                    HelperControlAndMessageBoxHandling.ReturnControlText(cItem: cItem,
+                                                                         senderForm: this,
+                                                                         parentNameToUse: parentNameToUse);
                 }
             }
         }
@@ -139,7 +138,7 @@ public partial class FrmSettings : Form
 
         // load file extensions
         lbx_fileExtensions.Items.Clear();
-        foreach (string ext in AncillaryListsArrays.AllCompatibleExtensions())
+        foreach (string ext in HelperGenericAncillaryListsArrays.AllCompatibleExtensions())
         {
             lbx_fileExtensions.Items.Add(item: ext);
         }
@@ -158,7 +157,7 @@ public partial class FrmSettings : Form
                     {
                         try
                         {
-                            tbx.Text = HelperStatic.DataReadSQLiteSettings(
+                            tbx.Text = HelperDataApplicationSettings.DataReadSQLiteSettings(
                                 tableName: "settings",
                                 settingTabPage: parentNameToUse,
                                 settingId: cItem.Name
@@ -173,7 +172,7 @@ public partial class FrmSettings : Form
                     {
                         try
                         {
-                            ckb.CheckState = HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
+                            ckb.CheckState = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
                                 tableName: "settings",
                                 settingTabPage: parentNameToUse,
                                 settingId: ckb.Name
@@ -188,7 +187,7 @@ public partial class FrmSettings : Form
                     }
                     else if (cItem is NumericUpDown nud)
                     {
-                        string nudTempValue = HelperStatic.DataReadSQLiteSettings(
+                        string nudTempValue = HelperDataApplicationSettings.DataReadSQLiteSettings(
                             tableName: "settings",
                             settingTabPage: parentNameToUse,
                             settingId: cItem.Name
@@ -221,7 +220,7 @@ public partial class FrmSettings : Form
                     {
                         try
                         {
-                            rbt.Checked = HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
+                            rbt.Checked = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
                                 tableName: "settings",
                                 settingTabPage: parentNameToUse,
                                 settingId: rbt.Name
@@ -241,7 +240,7 @@ public partial class FrmSettings : Form
         // (re)set cbx_TryUseGeoNamesLanguage 
         if (rbt_UseGeoNamesLocalLanguage.Checked)
         {
-            HelperStatic.APILanguageToUse = "local";
+            HelperVariables.APILanguageToUse = "local";
             cbx_TryUseGeoNamesLanguage.Enabled = false;
         }
         else
@@ -263,14 +262,14 @@ public partial class FrmSettings : Form
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     private void LoadCustomRulesDGV()
     {
-        DtCustomRules = HelperStatic.DataReadSQLiteCustomRules();
+        HelperVariables.DtCustomRules = HelperDataCustomRules.DataReadSQLiteCustomRules();
         dgv_CustomRules.AutoGenerateColumns = false;
 
         BindingSource source = new();
-        source.DataSource = DtCustomRules;
+        source.DataSource = HelperVariables.DtCustomRules;
         dgv_CustomRules.DataSource = source;
 
-        Dictionary<string, string> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
+        Dictionary<string, string> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
                                                                                               tableName: "settings",
                                                                                               settingTabPage: "tpg_CustomRules",
                                                                                               settingId: "ckb_IncludePredeterminedCountries"
@@ -279,7 +278,7 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "CountryCode",
             Name = "clh_CountryCode",
-            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_Country"),
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_Country"),
             DataSource = clh_CountryCodeOptions.ToList(), // needs to be a list
             ValueMember = "Key",
             DisplayMember = "Value"
@@ -289,11 +288,11 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "DataPointName",
             Name = "clh_DataPointName",
-            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_DataPointName")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_DataPointName")
         };
 
         // e.g.: "AdminName1","AdminName2"...
-        foreach (string itemName in AncillaryListsArrays.CustomRulesDataSources())
+        foreach (string itemName in HelperGenericAncillaryListsArrays.CustomRulesDataSources())
         {
             clh_DataPointName.Items.Add(item: itemName);
         }
@@ -302,11 +301,11 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "DataPointConditionType",
             Name = "clh_DataPointConditionType",
-            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_DataPointConditionType")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_DataPointConditionType")
         };
 
         // e.g.: "Is","Contains"...
-        foreach (string itemName in AncillaryListsArrays.CustomRulesDataConditions())
+        foreach (string itemName in HelperGenericAncillaryListsArrays.CustomRulesDataConditions())
         {
             clh_DataPointConditionType.Items.Add(item: itemName);
         }
@@ -315,18 +314,18 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "DataPointConditionValue",
             Name = "clh_DataPointConditionValue",
-            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_DataPointConditionValue")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_DataPointConditionValue")
         };
 
         DataGridViewComboBoxColumn clh_TargetPointName = new()
         {
             DataPropertyName = "TargetPointName",
             Name = "clh_TargetPointName",
-            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointName")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointName")
         };
 
         // e.g.:  "State","City"...
-        foreach (SourcesAndAttributes.ElementAttribute itemName in AncillaryListsArrays.CustomRulesDataTargets())
+        foreach (SourcesAndAttributes.ElementAttribute itemName in HelperGenericAncillaryListsArrays.CustomRulesDataTargets())
         {
             clh_TargetPointName.Items.Add(item: itemName);
         }
@@ -335,11 +334,11 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "TargetPointOutcome",
             Name = "clh_TargetPointOutcome",
-            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointOutcome")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointOutcome")
         };
 
         // e.g.: "AdminName1","AdminName2"... +Null (empty)" + Custom
-        foreach (string itemName in AncillaryListsArrays.CustomRulesDataSources(isOutcome: true))
+        foreach (string itemName in HelperGenericAncillaryListsArrays.CustomRulesDataSources(isOutcome: true))
         {
             clh_TargetPointOutcome.Items.Add(item: itemName);
         }
@@ -348,7 +347,7 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "TargetPointOutcomeCustom",
             Name = "clh_TargetPointOutcomeCustom",
-            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointOutcomeCustom")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointOutcomeCustom")
         };
 
         dgv_CustomRules.Columns.AddRange(
@@ -369,11 +368,11 @@ public partial class FrmSettings : Form
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     private void LoadCustomCityLogicDGV()
     {
-        DtCustomCityLogic = HelperStatic.DataReadSQLiteCustomCityAllocationLogic();
+        HelperVariables.DtCustomCityLogic = HelperDataCustomCityAllocationRules.DataReadSQLiteCustomCityAllocationLogic();
         dgv_CustomCityLogic.AutoGenerateColumns = false;
 
         BindingSource source = new();
-        source.DataSource = DtCustomCityLogic;
+        source.DataSource = HelperVariables.DtCustomCityLogic;
         dgv_CustomCityLogic.DataSource = source;
 
         Dictionary<string, string> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: true);
@@ -381,7 +380,7 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "CountryCode",
             Name = "clh_CountryCode",
-            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_Country"),
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_Country"),
             DataSource = clh_CountryCodeOptions.ToList(), // needs to be a list
             ValueMember = "Key",
             DisplayMember = "Value",
@@ -392,11 +391,11 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "TargetPointNameCustomCityLogic",
             Name = "clh_TargetPointNameCustomCityLogic",
-            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointNameCustomCityLogic")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointNameCustomCityLogic")
         };
 
         // e.g.: "AdminName1","AdminName2"... 
-        foreach (string itemName in AncillaryListsArrays.CustomCityLogicDataSources())
+        foreach (string itemName in HelperGenericAncillaryListsArrays.CustomCityLogicDataSources())
         {
             clh_TargetPointNameCustomCityLogic.Items.Add(item: itemName);
         }
@@ -416,7 +415,7 @@ public partial class FrmSettings : Form
     {
         Dictionary<string, string> clh_CountryCodeOptions = new();
         // e.g. "GBR//United Kingdom of...."
-        foreach (DataRow dataRow in FrmMainApp.DtIsoCountryCodeMapping.Rows)
+        foreach (DataRow dataRow in HelperVariables.DtIsoCountryCodeMapping.Rows)
         {
             clh_CountryCodeOptions.Add(key: dataRow[columnName: "ISO_3166_1A3"]
                                            .ToString()
@@ -427,11 +426,11 @@ public partial class FrmSettings : Form
         // if _do not_ IncludeNonPredeterminedCountries then remove those
         if (!ckb_IncludePredeterminedCountries)
         {
-            foreach (DataRow dataRow in FrmMainApp.DtIsoCountryCodeMapping.Rows)
+            foreach (DataRow dataRow in HelperVariables.DtIsoCountryCodeMapping.Rows)
             {
                 string countryCode = dataRow[columnName: "ISO_3166_1A3"]
                     .ToString();
-                if (!FrmMainApp.LstCityNameIsUndefined.Contains(item: countryCode))
+                if (!HelperVariables.LstCityNameIsUndefined.Contains(item: countryCode))
                 {
                     clh_CountryCodeOptions.Remove(key: dataRow[columnName: "ISO_3166_1A3"]
                                                       .ToString()
@@ -452,7 +451,7 @@ public partial class FrmSettings : Form
     private void Btn_Cancel_Click(object sender,
                                   EventArgs e)
     {
-        HelperStatic.DataDeleteSQLitesettingsToWritePreQueue();
+        HelperDataApplicationSettings.DataDeleteSQLitesettingsToWritePreQueue();
         Hide();
     }
 
@@ -479,18 +478,18 @@ public partial class FrmSettings : Form
                         {
                             // fire a warning if language has changed. 
                             MessageBox.Show(
-                                text: HelperStatic.GenericGetMessageBoxText(
+                                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                                     messageBoxName: "mbx_FrmSettings_cbx_Language_TextChanged"),
-                                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Warning"),
+                                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
                                 buttons: MessageBoxButtons.OK,
                                 icon: MessageBoxIcon.Warning);
                         }
                         else if (cbx.Name == "cbx_TryUseGeoNamesLanguage")
                         {
-                            IEnumerable<KeyValuePair<string, string>> result = AncillaryListsArrays.GetISO_639_1_Languages()
+                            IEnumerable<KeyValuePair<string, string>> result = HelperGenericAncillaryListsArrays.GetISO_639_1_Languages()
                                 .Where(predicate: kvp => kvp.Value == cbx.SelectedItem.ToString());
 
-                            HelperStatic.APILanguageToUse = result.FirstOrDefault()
+                            HelperVariables.APILanguageToUse = result.FirstOrDefault()
                                 .Key;
                         }
                     }
@@ -505,16 +504,16 @@ public partial class FrmSettings : Form
                         ComboBox cbx = cbx_TryUseGeoNamesLanguage;
                         if (rbt.Name == "rbt_UseGeoNamesLocalLanguage")
                         {
-                            HelperStatic.APILanguageToUse = "local";
+                            HelperVariables.APILanguageToUse = "local";
                             cbx.Enabled = false;
                         }
                         else if (rbt.Name == "rbt_TryUseGeoNamesLanguage")
                         {
                             cbx.Enabled = true;
-                            IEnumerable<KeyValuePair<string, string>> result = AncillaryListsArrays.GetISO_639_1_Languages()
+                            IEnumerable<KeyValuePair<string, string>> result = HelperGenericAncillaryListsArrays.GetISO_639_1_Languages()
                                 .Where(predicate: kvp => kvp.Value == cbx.SelectedItem.ToString());
 
-                            HelperStatic.APILanguageToUse = result.FirstOrDefault()
+                            HelperVariables.APILanguageToUse = result.FirstOrDefault()
                                 .Key;
                         }
                     }
@@ -522,47 +521,43 @@ public partial class FrmSettings : Form
             }
         }
 
-        // push data back into sqlite
-        HelperStatic.DataTransferSQLiteSettings();
-        HelperStatic.DataDeleteSQLitesettingsToWritePreQueue();
+        HelperDataApplicationSettings.DataTransferSQLiteSettings();
+        HelperDataApplicationSettings.DataDeleteSQLitesettingsToWritePreQueue();
 
         // refresh user data
-        HelperStatic.SArcGisApiKey = HelperStatic.DataSelectTbxARCGIS_APIKey_FromSQLite();
-        HelperStatic.SGeoNamesUserName = HelperStatic.DataReadSQLiteSettings(
+        HelperVariables.SArcGisApiKey = HelperDataApplicationSettings.DataSelectTbxARCGIS_APIKey_FromSQLite();
+        HelperVariables.SGeoNamesUserName = HelperDataApplicationSettings.DataReadSQLiteSettings(
             tableName: "settings",
             settingTabPage: "tpg_Application",
             settingId: "tbx_GeoNames_UserName"
         );
-        HelperStatic.SGeoNamesPwd = HelperStatic.DataReadSQLiteSettings(
+        HelperVariables.SGeoNamesPwd = HelperDataApplicationSettings.DataReadSQLiteSettings(
             tableName: "settings",
             settingTabPage: "tpg_Application",
             settingId: "tbx_GeoNames_Pwd"
         );
 
-        HelperStatic.SResetMapToZero = HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
+        HelperVariables.SResetMapToZero = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
             tableName: "settings",
             settingTabPage: "tpg_Application",
             settingId: "ckb_ResetMapToZero"
         );
 
-        HelperStatic.SOnlyShowFCodePPL = HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
+        HelperVariables.SOnlyShowFCodePPL = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
             tableName: "settings",
             settingTabPage: "tpg_Application",
             settingId: "ckb_PopulatedPlacesOnly"
         );
 
-        FrmMainApp.AppStartupPullOverWriteBlankToponomy();
-        FrmMainApp.AppStartupPullToponomyRadiusAndMaxRows();
-
-        // save customRules
-        HelperStatic.DataWriteSQLiteCustomRules();
-
-        HelperStatic.DataWriteSQLiteCustomCityAllocationLogic();
+        HelperGenericAppStartup.AppStartupPullOverWriteBlankToponomy();
+        HelperGenericAppStartup.AppStartupPullToponomyRadiusAndMaxRows();
+        HelperDataCustomRules.DataWriteSQLiteCustomRules();
+        HelperDataCustomCityAllocationRules.DataWriteSQLiteCustomCityAllocationLogic();
         // read back/refresh lists.
-        FrmMainApp.AppStartupReadCustomCityLogic();
+        HelperGenericAppStartup.AppStartupReadCustomCityLogic();
 
         // in case it changed or something.
-        DtCustomRules = HelperStatic.DataReadSQLiteCustomRules();
+        HelperVariables.DtCustomRules = HelperDataCustomRules.DataReadSQLiteCustomRules();
         Hide();
     }
 
@@ -606,7 +601,7 @@ public partial class FrmSettings : Form
                 CheckBox txt = box;
                 txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Regular);
                 // see if it's in the settings-change-queue
-                string tmpCtrlVal = HelperStatic.DataReadSQLiteSettings(
+                string tmpCtrlVal = HelperDataApplicationSettings.DataReadSQLiteSettings(
                     tableName: "settingsToWritePreQueue",
                     settingTabPage: ((Control)sender).Parent.Name,
                     settingId: tmpCtrlName
@@ -622,7 +617,7 @@ public partial class FrmSettings : Form
                     // if not....
                     try
                     {
-                        tmpCtrlVal = HelperStatic.DataReadSQLiteSettings(
+                        tmpCtrlVal = HelperDataApplicationSettings.DataReadSQLiteSettings(
                             tableName: "settings",
                             settingTabPage: ((Control)sender).Parent.Name,
                             settingId: tmpCtrlName
@@ -663,8 +658,7 @@ public partial class FrmSettings : Form
 
                         tmpCtrlVal = box.Checked.ToString()
                             .ToLower();
-                        // stick it into settings
-                        HelperStatic.DataWriteSQLiteSettings(
+                        HelperDataApplicationSettings.DataWriteSQLiteSettings(
                             tableName: "settings",
                             settingTabPage: ((Control)sender).Parent.Name,
                             settingId: tmpCtrlName,
@@ -736,8 +730,7 @@ public partial class FrmSettings : Form
             HelperNonStatic helperNonstatic = new();
 
             string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
-
-            HelperStatic.DataWriteSQLiteSettings(
+            HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
                 settingTabPage: parentNameToUse,
                 settingId: rbt.Name,
@@ -801,8 +794,7 @@ public partial class FrmSettings : Form
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
             string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
-
-            HelperStatic.DataWriteSQLiteSettings(
+            HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
                 settingTabPage: parentNameToUse,
                 settingId: cItemName,
@@ -828,8 +820,7 @@ public partial class FrmSettings : Form
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
             string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
-
-            HelperStatic.DataWriteSQLiteSettings(
+            HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
                 settingTabPage: parentNameToUse,
                 settingId: tbx.Name,
@@ -866,8 +857,7 @@ public partial class FrmSettings : Form
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
             string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
-
-            HelperStatic.DataWriteSQLiteSettings(
+            HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
                 settingTabPage: parentNameToUse,
                 settingId: cbx.Name,
@@ -892,8 +882,7 @@ public partial class FrmSettings : Form
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
             string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
-
-            HelperStatic.DataWriteSQLiteSettings(
+            HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
                 settingTabPage: parentNameToUse,
                 settingId: nud.Name,
@@ -947,9 +936,9 @@ public partial class FrmSettings : Form
             e.Context == DataGridViewDataErrorContexts.Commit)
         {
             MessageBox.Show(
-                text: HelperStatic.GenericGetMessageBoxText(
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                     messageBoxName: "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty"),
-                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
         }
@@ -976,9 +965,9 @@ public partial class FrmSettings : Form
             {
                 e.Cancel = true;
                 MessageBox.Show(
-                    text: HelperStatic.GenericGetMessageBoxText(
+                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                         messageBoxName: "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty"),
-                    caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Warning);
             }
@@ -988,14 +977,14 @@ public partial class FrmSettings : Form
     private void btn_ResetToDefaults_Click(object sender,
                                            EventArgs e)
     {
-        HelperStatic.DataWriteSQLiteCustomCityAllocationLogicDefaults(resetToDefaults: true);
+        HelperDataCustomCityAllocationRules.DataWriteSQLiteCustomCityAllocationLogicDefaults(resetToDefaults: true);
         // reload
         dgv_CustomCityLogic.Columns.Clear();
         LoadCustomCityLogicDGV();
         MessageBox.Show(
-            text: HelperStatic.GenericGetMessageBoxText(
+            text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                 messageBoxName: "mbx_GenericDone"),
-            caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
             buttons: MessageBoxButtons.OK,
             icon: MessageBoxIcon.Information);
     }

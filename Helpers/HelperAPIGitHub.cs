@@ -15,7 +15,7 @@ namespace geoTagNinja
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
 
-    public partial class GtnReleasesApiResponse
+    public partial class GTNReleaseAPIResponse
     {
         [JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
         public Uri Url { get; set; }
@@ -171,9 +171,9 @@ namespace geoTagNinja
         public bool? SiteAdmin { get; set; }
     }
 
-    public partial class GtnReleasesApiResponse
+    public partial class GTNReleaseAPIResponse
     {
-        public static GtnReleasesApiResponse[] FromJson(string json) => JsonConvert.DeserializeObject<GtnReleasesApiResponse[]>(json, geoTagNinja.Converter.Settings);
+        public static GTNReleaseAPIResponse[] FromJson(string json) => JsonConvert.DeserializeObject<GTNReleaseAPIResponse[]>(json, geoTagNinja.Converter.Settings);
     }
 
     //public static class Serialize

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
+namespace GeoTagNinja.Helpers;
 // ReSharper disable InconsistentNaming
 
 /// <remarks />

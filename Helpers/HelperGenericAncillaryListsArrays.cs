@@ -4,9 +4,9 @@ using System.Data;
 using System.Linq;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
-namespace GeoTagNinja;
+namespace GeoTagNinja.Helpers;
 
-internal static class AncillaryListsArrays
+internal static class HelperGenericAncillaryListsArrays
 {
     // this stores the kvp for language tags and values (ie the label and whatnots + their human-readable counterparts).
     internal static Dictionary<string, string> LanguageStringsDict = new();
@@ -697,7 +697,7 @@ internal static class AncillaryListsArrays
         List<string> retList = new();
 
         retList.Add(item: "");
-        foreach (DataRow dataRow in FrmMainApp.DtIsoCountryCodeMapping.Rows)
+        foreach (DataRow dataRow in HelperVariables.DtIsoCountryCodeMapping.Rows)
         {
             retList.Add(item: dataRow[columnName: "Country"]
                             .ToString());
@@ -710,7 +710,7 @@ internal static class AncillaryListsArrays
     {
         List<string> retList = new();
         retList.Add(item: "");
-        foreach (DataRow dataRow in FrmMainApp.DtIsoCountryCodeMapping.Rows)
+        foreach (DataRow dataRow in HelperVariables.DtIsoCountryCodeMapping.Rows)
         {
             retList.Add(item: dataRow[columnName: "ISO_3166_1A3"]
                             .ToString());

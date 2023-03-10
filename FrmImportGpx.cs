@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GeoTagNinja.Helpers;
 using TimeZoneConverter;
 
 namespace GeoTagNinja;
@@ -34,11 +35,10 @@ public partial class FrmImportGpx : Form
         pbx_importFromAnotherFolder.Enabled = false;
         lbl_importOneFile.Enabled = true;
         lbl_importFromAnotherFolder.Enabled = false;
-
-        HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
+        HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
 
         // load TZ-CBX
-        foreach (string timezone in AncillaryListsArrays.GetTimeZones())
+        foreach (string timezone in HelperGenericAncillaryListsArrays.GetTimeZones())
         {
             cbx_UseTimeZone.Items.Add(item: timezone);
         }
@@ -71,7 +71,7 @@ public partial class FrmImportGpx : Form
 
         // set filter for ofd
         string gpxExtensionsFilter = "Track Files|";
-        foreach (string gpxExtension in AncillaryListsArrays.GpxExtensions())
+        foreach (string gpxExtension in HelperGenericAncillaryListsArrays.GpxExtensions())
         {
             gpxExtensionsFilter += "*." + gpxExtension + ";";
         }
@@ -83,7 +83,7 @@ public partial class FrmImportGpx : Form
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
-            HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
+            HelperControlAndMessageBoxHandling.ReturnControlText(cItem: cItem, senderForm: this);
 
             if (cItem.Name == "cbx_ImportTimeAgainst")
             {
@@ -147,8 +147,8 @@ public partial class FrmImportGpx : Form
         if (_lastShiftSecond == 0 && _lastShiftMinute == 0 && _lastShiftHour == 0 && _lastShiftDay == 0)
         {
             MessageBox.Show(
-                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportNoStoredShiftValues"),
-                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportNoStoredShiftValues"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
         }
@@ -306,7 +306,7 @@ public partial class FrmImportGpx : Form
         if ((trackFileLocationType == "file" && File.Exists(path: trackFileLocationVal)) || (trackFileLocationType == "folder" && Directory.Exists(path: trackFileLocationVal)))
         {
             // indicate that something is going on
-            btn_OK.Text = HelperStatic.DataReadDTObjectText(
+            btn_OK.Text = HelperDataLanguageTZ.DataReadDTObjectText(
                 objectType: sender.GetType()
                     .ToString()
                     .Split('.')
@@ -318,7 +318,7 @@ public partial class FrmImportGpx : Form
             btn_OK.Enabled = false;
             btn_Cancel.Enabled = false;
 
-            await HelperStatic.ExifGetTrackSyncData(
+            await HelperExifReadTrackData.ExifGetTrackSyncData(
                 trackFileLocationType: trackFileLocationType,
                 trackFileLocationVal: trackFileLocationVal,
                 useTZAdjust: ckb_UseTimeZone.Checked,
@@ -335,8 +335,8 @@ public partial class FrmImportGpx : Form
         else
         {
             MessageBox.Show(
-                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportGpx_FileOrFolderDoesntExist"),
-                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportGpx_FileOrFolderDoesntExist"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
         }

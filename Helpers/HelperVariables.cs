@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
-using System.IO;
+using System.Data;
 
-namespace GeoTagNinja;
+namespace GeoTagNinja.Helpers;
 
-internal static partial class HelperStatic
+internal static partial class HelperVariables
 {
+    internal const int exifOrientationID = 0x112; //274
     internal static string SArcGisApiKey;
     internal static string SGeoNamesUserName;
     internal static string SGeoNamesPwd;
-    private static readonly string SSettingsDataBasePath = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "database.sqlite");
     internal static bool SChangeFolderIsOkay;
     internal static bool SApiOkay = true;
     internal static string _sErrorMsg = "";
-    private static string _sOutputMsg = "";
-    private static readonly string SDoubleQuote = "\"";
+    internal static string _sOutputMsg = "";
+    internal static readonly string SDoubleQuote = "\"";
     internal static string HtmlAddMarker;
     internal static HashSet<(string strLat, string strLng)> HsMapMarkers = new();
     internal static double? MinLat;
@@ -25,12 +25,26 @@ internal static partial class HelperStatic
     internal static bool SNowSelectingAllItems = false;
     internal static bool SResetMapToZero;
     internal static bool SOnlyShowFCodePPL = false;
-    private static decimal _currentExifToolVersionLocal;
+    internal static decimal _currentExifToolVersionLocal;
     internal static bool ToponomyReplace = false;
     internal static string ToponomyReplaceWithWhat = null;
     internal static string ToponomyMaxRows = "1";
     internal static string ToponomyRadiusValue = "10";
     internal static string? CurrentAltitude; // this is needed bcs it can happen that a file has altitude, the api returns -32k and then we'd end up with something worse than what it was originally.
-    internal static readonly string defaultEnglishString = "English [English]";
+    internal static readonly string DefaultEnglishString = "English [English]";
     internal static string APILanguageToUse;
+    internal static DataTable DtCustomRules = new();
+    internal static DataTable DtCustomCityLogic = new();
+    internal static string ResourcesFolderPath;
+    internal static string UserDataFolderPath;
+    internal static string SSettingsDataBasePath;
+    internal static DataTable DtObjectNames;
+    internal static DataTable DtObjectattributesIn;
+    internal static DataTable DtObjectattributesOut;
+    internal static DataTable DtIsoCountryCodeMapping;
+    internal static List<string> LstCityNameIsAdminName1 = new();
+    internal static List<string> LstCityNameIsAdminName2 = new();
+    internal static List<string> LstCityNameIsAdminName3 = new();
+    internal static List<string> LstCityNameIsAdminName4 = new();
+    internal static List<string> LstCityNameIsUndefined = new();
 }

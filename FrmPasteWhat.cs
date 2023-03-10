@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
@@ -132,7 +133,7 @@ public partial class FrmPasteWhat : Form
                                    EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
+        HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
 
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
@@ -146,7 +147,7 @@ public partial class FrmPasteWhat : Form
                )
 
             {
-                HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
+                HelperControlAndMessageBoxHandling.ReturnControlText(cItem: cItem, senderForm: this);
             }
         }
 
@@ -585,20 +586,19 @@ public partial class FrmPasteWhat : Form
                     if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPathToUpdate)))
                     {
                         // check it's not in the read-queue.
-                        while (HelperStatic.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPathToUpdate))
+                        while (HelperGenericFileLocking.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPathToUpdate))
                         {
                             await Task.Delay(millisecondsDelay: 10);
                         }
 
-                        HelperStatic.FileListBeingUpdated = true;
-                        await HelperStatic.LwvUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                        HelperGenericFileLocking.FileListBeingUpdated = true;
+                        await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
                         FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPathToUpdate);
-                        HelperStatic.FileListBeingUpdated = false;
+                        HelperGenericFileLocking.FileListBeingUpdated = false;
                     }
                 }
 
-                // just for good measure
-                HelperStatic.FileListBeingUpdated = false;
+                HelperGenericFileLocking.FileListBeingUpdated = false;
             }
         }
 
@@ -940,8 +940,8 @@ public partial class FrmPasteWhat : Form
             {
                 rbt_PasteTakenDateActual.Checked = true;
                 MessageBox.Show(
-                    text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
-                    caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"));
+                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
+                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"));
             }
         }
     }
@@ -995,8 +995,8 @@ public partial class FrmPasteWhat : Form
         {
             rbt_PasteCreateDateActual.Checked = true;
             MessageBox.Show(
-                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
-                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"));
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"));
         }
     }
 

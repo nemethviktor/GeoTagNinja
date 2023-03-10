@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace GeoTagNinja;
+namespace GeoTagNinja.Helpers;
 
 internal partial class HelperNonStatic
 {

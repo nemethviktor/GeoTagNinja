@@ -127,7 +127,7 @@ internal class ListViewColumnSorter : IComparer
 
     private int GetSortGroup(DirectoryElement de)
     {
-        switch(de.Type)
+        switch (de.Type)
         {
             case DirectoryElement.ElementType.ParentDirectory:
                 return 0;

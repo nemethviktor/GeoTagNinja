@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using ExifToolWrapper;
+using GeoTagNinja.Helpers;
 using NLog;
 using static System.Environment;
 
@@ -123,7 +124,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         try
         {
             Logger.Trace(message: "Files: Adding Parent Folder");
-            string tmpStrParent = HelperStatic.FsoGetParent(path: folder);
+            string tmpStrParent = HelperFileSystemOperators.FsoGetParent(path: folder);
             if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
             {
                 Add(item: new DirectoryElement(
@@ -136,8 +137,8 @@ public class DirectoryElementCollection : List<DirectoryElement>
         catch (Exception ex)
         {
             Logger.Error(message: $"Could not add parent. Error: {ex.Message}");
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
-                            caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+            MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
+                            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
                             buttons: MessageBoxButtons.OK,
                             icon: MessageBoxIcon.Error);
         }
@@ -179,8 +180,8 @@ public class DirectoryElementCollection : List<DirectoryElement>
         catch (Exception ex)
         {
             Logger.Error(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
-                            caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+            MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
+                            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
                             buttons: MessageBoxButtons.OK,
                             icon: MessageBoxIcon.Error);
         }
@@ -188,8 +189,8 @@ public class DirectoryElementCollection : List<DirectoryElement>
         Logger.Trace(message: "Listing Folders - OK");
 
         Logger.Trace(message: "Loading allowedExtensions");
-        string[] allowedImageExtensions = AncillaryListsArrays.AllCompatibleExtensionsExt();
-        string[] allowedSideCarExt = AncillaryListsArrays.GetSideCarExtensionsArray();
+        string[] allowedImageExtensions = HelperGenericAncillaryListsArrays.AllCompatibleExtensionsExt();
+        string[] allowedSideCarExt = HelperGenericAncillaryListsArrays.GetSideCarExtensionsArray();
         Logger.Trace(message: "Loading allowedExtensions - OK");
 
         // ******************************

@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using NLog;
 
@@ -536,7 +537,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             colOrderHeadername.Add(item: columnHeader.Name);
             int colOrderIndexInt = 0;
 
-            colOrderIndexInt = Convert.ToInt16(value: HelperStatic.DataReadSQLiteSettings(
+            colOrderIndexInt = Convert.ToInt16(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
                                                    tableName: "applayout",
                                                    settingTabPage: "lvw_FileList",
                                                    settingId: settingIdToSend));
@@ -560,7 +561,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
             // Read and process width
             settingIdToSend = Name + "_" + columnHeader.Name + "_width";
-            colWidth = HelperStatic.DataReadSQLiteSettings(
+            colWidth = HelperDataApplicationSettings.DataReadSQLiteSettings(
                 tableName: "applayout",
                 settingTabPage: "lvw_FileList",
                 settingId: settingIdToSend
@@ -613,7 +614,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         foreach (ColumnHeader columnHeader in Columns)
         {
             settingIdToSend = Name + "_" + columnHeader.Name + "_index";
-            HelperStatic.DataWriteSQLiteSettings(
+            HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "applayout",
                 settingTabPage: "lvw_FileList",
                 settingId: settingIdToSend,
@@ -621,7 +622,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             );
 
             settingIdToSend = Name + "_" + columnHeader.Name + "_width";
-            HelperStatic.DataWriteSQLiteSettings(
+            HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "applayout",
                 settingTabPage: "lvw_FileList",
                 settingId: settingIdToSend,
@@ -670,7 +671,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             foreach (ColumnHeader clh in Columns)
             {
                 Logger.Trace(message: "Loading localization for: " + clh.Name);
-                clh.Text = HelperStatic.DataReadDTObjectText(
+                clh.Text = HelperDataLanguageTZ.DataReadDTObjectText(
                     objectType: "ColumnHeader",
                     objectName: clh.Name
                 );
@@ -681,10 +682,10 @@ public partial class FileListView : System.Windows.Forms.ListView
         {
             Logger.Fatal(message: "Error: " + ex.Message);
             MessageBox.Show(
-                text: HelperStatic.GenericGetMessageBoxText(
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                           messageBoxName: "mbx_FrmMainApp_ErrorLanguageFileColumnHeaders") +
                       ex.Message,
-                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
         }

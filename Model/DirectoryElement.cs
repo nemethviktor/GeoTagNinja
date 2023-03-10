@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using GeoTagNinja.Helpers;
 using NLog;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
@@ -470,7 +471,7 @@ public class DirectoryElement
         }
         else if (typeOfAttribute == typeof(double))
         {
-            double? writeValueDbl = HelperStatic.TryParseNullableDouble(val: value);
+            double? writeValueDbl = HelperGenericTypeOperations.TryParseNullableDouble(val: value);
             SetAttributeValue(attribute: attribute,
                               value: writeValueDbl,
                               version: version,
@@ -478,7 +479,7 @@ public class DirectoryElement
         }
         else if (typeOfAttribute == typeof(int))
         {
-            int? writeValueInt = HelperStatic.TryParseNullableInt(val: value);
+            int? writeValueInt = HelperGenericTypeOperations.TryParseNullableInt(val: value);
             SetAttributeValue(attribute: attribute,
                               value: writeValueInt,
                               version: version,

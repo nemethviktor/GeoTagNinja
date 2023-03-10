@@ -63,7 +63,8 @@ public class ExifTool : IDisposable
     private const int c_exitTimeout = 15000;
 
     private static readonly Encoding s_Utf8NoBOM = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
-    private readonly string c_exeName = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe"); // "exiftool.exe";
+
+    private readonly string c_exeName = Path.Combine(path1: Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "Resources"), path2: "exiftool.exe"); // "exiftool.exe";
 
     private Process m_exifTool;
     private StreamWriter m_in;
@@ -72,7 +73,7 @@ public class ExifTool : IDisposable
     public ExifTool()
     {
         // Prepare process start
-        ProcessStartInfo psi = new ProcessStartInfo(fileName: c_exeName, arguments: c_arguments);
+        ProcessStartInfo psi = new(fileName: c_exeName, arguments: c_arguments);
         psi.UseShellExecute = false;
         psi.CreateNoWindow = true;
         psi.RedirectStandardInput = true;
@@ -127,7 +128,7 @@ public class ExifTool : IDisposable
                     string key = line.Substring(startIndex: 1, length: eq - 1);
                     string value = line.Substring(startIndex: eq + 1)
                         .Trim();
-                    if (!propertiesRead.Any(f => f.Key == key))
+                    if (!propertiesRead.Any(predicate: f => f.Key == key))
                     {
                         propertiesRead.Add(item: new KeyValuePair<string, string>(key: key, value: value));
                     }

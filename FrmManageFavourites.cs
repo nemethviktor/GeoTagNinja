@@ -4,6 +4,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using GeoTagNinja.Helpers;
 using Microsoft.VisualBasic;
 
 namespace GeoTagNinja;
@@ -18,8 +19,7 @@ public partial class FrmManageFavourites : Form
     private void FrmManageFavourites_Load(object sender,
                                           EventArgs e)
     {
-        // this just pulls the form's name -- logged inside
-        HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
+        HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
 
         LoadFavouritesList();
 
@@ -39,10 +39,10 @@ public partial class FrmManageFavourites : Form
             )
             {
                 // gets logged inside.
-                cItem.Text = HelperStatic.DataReadDTObjectText(objectType: cItem.GetType()
-                                                                   .ToString()
-                                                                   .Split('.')
-                                                                   .Last(), objectName: cItem.Name);
+                cItem.Text = HelperDataLanguageTZ.DataReadDTObjectText(objectType: cItem.GetType()
+                                                                           .ToString()
+                                                                           .Split('.')
+                                                                           .Last(), objectName: cItem.Name);
             }
         }
     }
@@ -86,14 +86,14 @@ public partial class FrmManageFavourites : Form
                                 EventArgs e)
     {
         string oldName = cbx_Favourites.Text;
-        HelperStatic.DataWriteSQLiteUpdateFavourite(favouriteName: cbx_Favourites.Text,
-                                                    city: tbx_City.Text,
-                                                    state: tbx_State.Text,
-                                                    subLocation: tbx_Sub_location.Text);
+        HelperDataFavourites.DataWriteSQLiteUpdateFavourite(favouriteName: cbx_Favourites.Text,
+                                                            city: tbx_City.Text,
+                                                            state: tbx_State.Text,
+                                                            subLocation: tbx_Sub_location.Text);
 
         MessageBox.Show(
-            text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"),
-            caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+            text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"),
+            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
             buttons: MessageBoxButtons.OK,
             icon: MessageBoxIcon.Information);
 
@@ -126,7 +126,7 @@ public partial class FrmManageFavourites : Form
         if (frmMainAppInstance != null)
         {
             frmMainAppInstance.cbx_Favourites.Items.Clear();
-            _dtFavourites = HelperStatic.DataReadSQLiteFavourites();
+            _dtFavourites = HelperDataFavourites.DataReadSQLiteFavourites();
             foreach (DataRow drRow in _dtFavourites.Rows)
             {
                 frmMainAppInstance.cbx_Favourites.Items.Add(item: drRow[columnName: "favouriteName"]
@@ -148,7 +148,7 @@ public partial class FrmManageFavourites : Form
             {
                 if (cItem is TextBox txt)
                 {
-                    string oldText = HelperStatic.DataGetFirstOrDefaultFromKVPList(lstIn: lstOriginals, keyEqualsWhat: cItem.Name);
+                    string oldText = HelperDataOtherDataRelated.DataGetFirstOrDefaultFromKVPList(lstIn: lstOriginals, keyEqualsWhat: cItem.Name);
                     if (oldText != txt.Text)
                     {
                         txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Bold);
@@ -169,8 +169,7 @@ public partial class FrmManageFavourites : Form
         string newName = Interaction.InputBox(Prompt: btn_Rename.Text, DefaultResponse: cbx_Favourites.Text);
         if (oldName != newName && newName.Length > 0)
         {
-            // update in sqlite
-            HelperStatic.DataRenameSQLiteFavourite(oldName: oldName, newName: newName);
+            HelperDataFavourites.DataRenameSQLiteFavourite(oldName: oldName, newName: newName);
 
             // update in dropdown
             LoadFavouritesList();
@@ -183,7 +182,7 @@ public partial class FrmManageFavourites : Form
     private void btn_Delete_Click(object sender,
                                   EventArgs e)
     {
-        HelperStatic.DataDeleteSQLiteFavourite(favouriteName: cbx_Favourites.Text);
+        HelperDataFavourites.DataDeleteSQLiteFavourite(favouriteName: cbx_Favourites.Text);
 
         LoadFavouritesList();
         try
@@ -202,7 +201,7 @@ public partial class FrmManageFavourites : Form
     private void LoadFavouritesList()
     {
         cbx_Favourites.Items.Clear();
-        _dtFavourites = HelperStatic.DataReadSQLiteFavourites();
+        _dtFavourites = HelperDataFavourites.DataReadSQLiteFavourites();
         foreach (DataRow drRow in _dtFavourites.Rows)
         {
             cbx_Favourites.Items.Add(item: drRow[columnName: "favouriteName"]
