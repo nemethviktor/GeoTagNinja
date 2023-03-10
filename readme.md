@@ -2,7 +2,7 @@
 
 GeoTagNinja is an open-source geotagger for Windows. It's a lightweight an open-source (written from scratch) reminiscent of GeoSetter.
 GTN uses [exifTool](https://exifTool.org/) to read and write EXIF info. This also sets the limitations and capabilities. If exifTool can read/write a file, chances are so can GTN.
-There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP1ZG7mH-I) if you feel like watching it. 
+There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP1ZG7mH-I) if you feel like watching it. It's from the original (Aug 2022) release but it still covers the main feaures more or less. It's only gotten better since...
 
 ## Download & Install (Windows 7+ only)
 
@@ -15,14 +15,13 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 
 ## Things to Note, Usage
 
-- v0.6.8361 [20221122]+: There is now a hold when the user enters a folder - it is kept on until the folder completes load. This is a bit annoying perhaps but is needed because otherwise people can start issuing write-commands before the read-process finishes and that can result in files being written the wrong info.
+- Build 8361 [20221122]+: There is now a hold when the user enters a folder - it is kept on until the folder completes load. This is a bit annoying perhaps but is needed because otherwise people can start issuing write-commands before the read-process finishes and that can result in files being written the wrong info.
 - This is mentioned in Known Issues briefly but just to reiterate: if you have issues with file data not showing please try renaming/moving your files to a "simple" folder like "C:\temp" and make sure your file names don't contain umlauts, special characters and anything "odd". This is a limitation of exifTool.
 - GPX/Track File Import is very experimental atm. Do report bugs please. This functionality is based on [this](https://exiftool.org/geotag.html) exifTool feature so please read as to what it can and can't do (mostly re: file types etc.).
 - Without being too technical, there are two main ways of handling RAW images via C# (the language GTN is written in)
 	- There are native libraries such as DCRAW/libRAW. The advantage of that is there are native libraries and they are very fast but come with limited file support, e.g. at least as of the time of the initial GTN version's date (summer 2022) CR3s aren't/weren't supported and neither are some others. 
 	- Alternatively there is exifTool, which is what GTN uses for everything. ExifTool supports a lot more extensions but it has to be called externally each time the user interacts with a file or folder. The most visible disadvantage of this is that it takes a second (or two or three or five) to load up exifTool and the app may appear non-responsive when entering a folder.
-- I have tried to test reasonably thoroughly but bugs probably remain.
-	- Basically until the program hits version 1 (currently it's v0.x) most probably save your original files before using this. This particularly applies if you happen to be using a non-English version of Windows or if your various file paths contain non-standard characters.
+- I have tried to test reasonably thoroughly but bugs probably remain. Do make backups of your files if you feel that's the right thing to do.
 - As per usual I don't accept any liability for damage and/or any other inconvenience you may suffer while/from using this app, no warranties and/or guarantees. The script is open source and everyone is welcome to read it. 
 - I'm kinda hoping this won't come up a problem but don't bash me about country names please. I'm thinking disputed country names and areas here. They are ISO standards, the API returns those values, that's it. Being from the UK I do think that the long name of "United Kingdom of Great Britain and Northern Ireland (the)" is a bit lengthy but it is what it is (and it's relatively rarely disputed but for example Crimea does return Ukraine as a value, regardless of what's been going on there since 2014; again, this isn't a statement either way, it's the API reply). 
 	- On this particular note above --> the script won't change existing country details in files unless you explicitly edit them. So it may happen that your existing file has the CountryCode GBR and the Country "United Kingdom", that won't be changed unless you do a "Get From Web" because the CountryCode-to-Country matching only runs in that case. That's a feature, not a bug.

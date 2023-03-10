@@ -10,6 +10,7 @@ namespace GeoTagNinja;
 public partial class FrmPasteWhat : Form
 {
     private static string _initiatorName;
+    private static readonly List<string> _lastCheckedCheckBoxes = new();
 
     /// <summary>
     ///     This form controls what data to paste from a "current file" to "selected files".
@@ -93,7 +94,10 @@ public partial class FrmPasteWhat : Form
         rbt_PasteCreateDateShift.Enabled = ckb_CreateDate.Checked;
 
         // enable the shift-radiobuttons if there's data
-        if (tagsToPasteList != null)
+        if (tagsToPasteList is
+            {
+                Count: > 0
+            })
         {
             foreach (string tagName in tagsToPasteList)
             {
@@ -152,6 +156,8 @@ public partial class FrmPasteWhat : Form
                 HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
             }
         }
+
+        btn_PullMostRecentPasteSettings.Enabled = _lastCheckedCheckBoxes.Count > 0;
     }
 
     /// <summary>
@@ -211,6 +217,8 @@ public partial class FrmPasteWhat : Form
 
         // get a list of tag names to paste
         List<string> tagsToPaste = new();
+        _lastCheckedCheckBoxes.Clear();
+
         foreach (Control cItem in c)
         {
             if (cItem.GetType() == typeof(CheckBox))
@@ -219,6 +227,7 @@ public partial class FrmPasteWhat : Form
                 if (thisCheckBox.Checked)
                 {
                     string tagName = cItem.Name.Substring(startIndex: 4);
+                    _lastCheckedCheckBoxes.Add(item: cItem.Name);
 
                     // "EndsWith" doesn't work here because the CheckBox.Name never ends with "Shift".
                     if (tagName == "TakenDate" || tagName == "CreateDate")
@@ -455,6 +464,43 @@ public partial class FrmPasteWhat : Form
         Hide();
     }
 
+    private void btn_AllData_All_Click(object sender,
+                                       EventArgs e)
+    {
+        HelperNonStatic helperNonstatic = new();
+        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
+        foreach (Control cItem in c)
+        {
+            CheckBox thisCheckBox = (CheckBox)cItem;
+            thisCheckBox.Checked = true;
+        }
+    }
+
+    private void btn_AllData_None_Click(object sender,
+                                        EventArgs e)
+    {
+        HelperNonStatic helperNonstatic = new();
+        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
+        foreach (Control cItem in c)
+        {
+            CheckBox thisCheckBox = (CheckBox)cItem;
+            thisCheckBox.Checked = false;
+        }
+    }
+
+
+    private void btn_PullMostRecentPasteSettings_Click(object sender,
+                                                       EventArgs e)
+    {
+        HelperNonStatic helperNonstatic = new();
+        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
+        foreach (Control cItem in c)
+        {
+            CheckBox thisCheckBox = (CheckBox)cItem;
+            thisCheckBox.Checked = _lastCheckedCheckBoxes.Contains(item: cItem.Name);
+        }
+    }
+
     #region GPSData
 
     private void btn_GPSData_All_Click(object sender,
@@ -652,7 +698,9 @@ public partial class FrmPasteWhat : Form
             if (!takenDateShiftDataExists)
             {
                 rbt_PasteTakenDateActual.Checked = true;
-                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"), caption: "Info");
+                MessageBox.Show(
+                    text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
+                    caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"));
             }
         }
     }
@@ -707,7 +755,9 @@ public partial class FrmPasteWhat : Form
         if (!CreateDateShiftDataExists)
         {
             rbt_PasteCreateDateActual.Checked = true;
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"), caption: "Info");
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"));
         }
     }
 

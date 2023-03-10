@@ -25,6 +25,8 @@ namespace GeoTagNinja;
 
 internal static partial class HelperStatic
 {
+    private static int _exifInvokeCounter;
+
     /// <summary>
     ///     Wrangles data from raw exiftool output to presentable and standardised data.
     /// </summary>
@@ -62,6 +64,10 @@ internal static partial class HelperStatic
                 if (tryDataValue != "-")
                 {
                     // we want N instead of North etc.
+                    // Get the Ref Tag for the corresponding data point and thereof the first character
+                    // (Should be N of North, etc.)
+                    // If this character is not contained in the data point value, add it before it
+                    // Finally ensure that dec sep. is "."
                     try
                     {
                         tmpLatLongRefVal = ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: dataPoint + "Ref")
@@ -373,333 +379,6 @@ internal static partial class HelperStatic
 
 
     /// <summary>
-    ///     Parses the whole folder for relevant files and outputs a temp CSV that gets converted into a DataTable and fed into
-    ///     the main ListView
-    /// </summary>
-    /// <param name="folderNameToUse">The folder to Parse</param>
-    internal static async Task ExifGetExifFromFolder(string folderNameToUse)
-    {
-        FrmMainApp.Logger.Debug(message: "Starting");
-
-        // Clear the FrmMainApp.DtOriginalTakenDate && FrmMainApp.DtOriginalCreateDate tables
-        FrmMainApp.Logger.Trace(message: "Clear FrmMainApp.DtOriginalTakenDate && FrmMainApp.DtOriginalCreateDate");
-        FrmMainApp.DtOriginalTakenDate.Clear();
-        FrmMainApp.DtOriginalCreateDate.Clear();
-
-        if (folderNameToUse.EndsWith(value: @"\"))
-        {
-            folderNameToUse = folderNameToUse.Substring(startIndex: 0, length: folderNameToUse.Length - 1);
-        }
-
-        // using a .bat file actually ensures the process exits come rain or shine.
-        string batchFilePath = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "runme.bat");
-        string csvFilePath = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "out.csv");
-        FrmMainApp.Logger.Trace(message: "batchFilePath: " + batchFilePath);
-        FrmMainApp.Logger.Trace(message: "csvFilePath: " + csvFilePath);
-
-        //basically if the form gets minimised it can turn to null methinks. 
-
-        // I'm not logging the details of this method because they're basically hard-coded.
-        FrmMainApp.Logger.Trace(message: "Setting Up exifTool");
-
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        if (frmMainAppInstance != null)
-        {
-            FrmMainApp.DtFileDataSeenInThisSession.Clear();
-            string batchFileContents = "";
-            string exifToolExe = Path.Combine(path1: FrmMainApp.ResourcesFolderPath, path2: "exiftool.exe");
-            string argsFile = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: "exifArgs.args");
-            string extraArgs = "";
-
-            try
-            {
-                File.Delete(path: csvFilePath);
-                File.Delete(path: batchFilePath);
-                File.Delete(path: argsFile);
-            }
-            catch
-            {
-                // nothing
-            }
-
-            List<string> exifArgs = new();
-
-            // This will convert all Line Feeds and Carriage Returns into spaces in all the outputted data:
-            // -api "Filter=s/\r|\n/ /g "
-
-            string commonArgs = @" -api ""Filter=s/\r|\n/ /g "" -a -s -s -struct -sort -G -ee -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 ";
-
-            // add required tags
-            DataTable dtObjectTagNames = DataReadSQLiteObjectMappingTagsToPass();
-
-            foreach (DataRow dr in dtObjectTagNames.Rows)
-            {
-                exifArgs.Add(item:
-                             dr[columnName: "objectTagName_ToPass"]
-                                 .ToString());
-            }
-
-            exifArgs.Add(item: "execute");
-
-            extraArgs += " -ignoreMinorErrors";
-            extraArgs += " -csv > " + SDoubleQuote + csvFilePath + SDoubleQuote;
-            extraArgs += " -@ " + SDoubleQuote + argsFile + SDoubleQuote;
-
-            // exiftool on its own would query a bunch of file types we don't care about so this isn't particularly neat but puts a blocker.
-            string[] allowedExtensions = new string[AncillaryListsArrays.AllCompatibleExtensions()
-                .Length];
-            Array.Copy(sourceArray: allowedExtensions, destinationArray: AncillaryListsArrays.AllCompatibleExtensions(), length: 0);
-            for (int i = 0; i < allowedExtensions.Length; i++)
-            {
-                allowedExtensions[i] = AncillaryListsArrays.AllCompatibleExtensions()[i]
-                    .Split('\t')
-                    .FirstOrDefault();
-
-                File.AppendAllText(path: argsFile, contents: folderNameToUse + @"\*." + allowedExtensions[i] + Environment.NewLine, encoding: Encoding.UTF8);
-            }
-
-            // add XMP
-            File.AppendAllText(path: argsFile, contents: folderNameToUse + @"\*.xmp" + Environment.NewLine, encoding: Encoding.UTF8);
-
-            foreach (string arg in exifArgs)
-            {
-                File.AppendAllText(path: argsFile, contents: "-" + arg + Environment.NewLine);
-            }
-
-            batchFileContents = SDoubleQuote + exifToolExe + SDoubleQuote + commonArgs + extraArgs;
-            File.AppendAllText(path: batchFilePath, contents: batchFileContents);
-
-            FrmMainApp.Logger.Trace(message: "Starting exifTool");
-            ///////////////
-            // for the time being i'm not relegating this to runExifTool() because strictly speaking we aren't running ET here, not directly anyway.
-            await Task.Run(action: () =>
-            {
-                Process prcETBatch = new();
-                prcETBatch.StartInfo.FileName = batchFilePath;
-
-                prcETBatch.StartInfo.CreateNoWindow = true;
-                prcETBatch.StartInfo.UseShellExecute = false;
-
-                prcETBatch.Start();
-                prcETBatch.WaitForExit();
-                prcETBatch.Close();
-
-                FrmMainApp.Logger.Trace(message: "Closing exifTool");
-
-                // if still here then exorcise
-                try
-                {
-                    FrmMainApp.Logger.Trace(message: "Killing exifTool");
-                    prcETBatch.Kill();
-                }
-                catch
-                {
-                    // "funnily" enough this seems to persist for some reason. Unsure why.
-                    FrmMainApp.Logger.Error(message: "Killing exifTool failed");
-                }
-            });
-            ///////////////
-
-            if (File.Exists(path: csvFilePath))
-            {
-                FrmMainApp.Logger.Trace(message: "csvFilePath output exists OK");
-                long length = new FileInfo(fileName: csvFilePath).Length;
-                // technically "12" would do. If the folder doesn't contain anything useful the csv will be of 12 bytes length.
-                if (length > 20)
-                {
-                    FrmMainApp.Logger.Trace(message: "csvFilePath output length > 20");
-
-                    FrmMainApp.Logger.Trace(message: "Reading csvFilePath to dtCSV");
-                    DataTable dtCSV = GetDataTableFromCsv(fileNameWithPath: csvFilePath, isUTF: false);
-                    FrmMainApp.Logger.Trace(message: "Reading csvFilePath to dtCSV - OK");
-
-                    // parse file data 
-                    foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.Items)
-                    {
-                        string fileNameWithoutPath = lvi.Text;
-                        // obvs don't bother w/ non-files.
-                        if (File.Exists(path: Path.Combine(path1: folderNameToUse, path2: fileNameWithoutPath)))
-                        {
-                            // The requirement is actually transposed. We need a table that is ...TagName/TagValue
-                            DataTable dtFileExifTable = new();
-                            dtFileExifTable.Clear();
-                            dtFileExifTable.Columns.Add(columnName: "TagName");
-                            dtFileExifTable.Columns.Add(columnName: "TagValue");
-
-                            string fileNameWithPath = Path.Combine(path1: folderNameToUse, path2: fileNameWithoutPath);
-
-                            // "normal" files (i.e. not XMP)
-                            // The imported CSV uses fileNameWithPath but with "/" rather than "\". (ie "C:/temp")
-                            string fileNameWithPathForwardSlash = fileNameWithPath
-                                .Replace(oldValue: @"\", newValue: "/");
-
-                            DataTable? dtThisFileCsvData = null;
-                            try
-                            {
-                                dtThisFileCsvData = dtCSV.Select(filterExpression: "SourceFile = '" + fileNameWithPathForwardSlash + "'")
-                                    .CopyToDataTable();
-                            }
-                            catch
-                            {
-                                // not an error per se
-                                FrmMainApp.Logger.Info(message: "Reading csvFilePath - " + fileNameWithoutPath + " - dtThisFileCsvData = null");
-                                dtThisFileCsvData = null;
-                            }
-
-                            if (dtThisFileCsvData != null && dtThisFileCsvData.Rows.Count > 0)
-                            {
-                                // transpose CSV (skip #0, that's filename)
-                                for (int csvCol = 1; csvCol < dtThisFileCsvData.Columns.Count; csvCol++)
-                                {
-                                    string tagName = dtThisFileCsvData.Columns[index: csvCol]
-                                        .ToString();
-                                    string tagValue = dtThisFileCsvData.Rows[index: 0][columnIndex: csvCol]
-                                        .ToString();
-
-                                    if (tagValue != "")
-                                    {
-                                        DataRow drThisFileTags = dtFileExifTable.NewRow();
-                                        drThisFileTags[columnName: "TagName"] = tagName;
-                                        drThisFileTags[columnName: "TagValue"] = tagValue;
-                                        dtFileExifTable.Rows.Add(row: drThisFileTags);
-                                        FrmMainApp.Logger.Trace(message: "Reading csvFilePath - " + fileNameWithoutPath + " - " + tagName + " - " + tagValue);
-                                    }
-                                }
-                            }
-
-                            // "xmp"
-                            string sideCarXMPFilePath = Path.Combine(path1: folderNameToUse, path2: Path.GetFileNameWithoutExtension(path: fileNameWithPath) + ".xmp");
-                            if (File.Exists(path: sideCarXMPFilePath))
-                            {
-                                fileNameWithPathForwardSlash = sideCarXMPFilePath
-                                    .Replace(oldValue: @"\", newValue: "/");
-                                try
-                                {
-                                    dtThisFileCsvData = dtCSV.Select(filterExpression: "SourceFile = '" + fileNameWithPathForwardSlash + "'")
-                                        .CopyToDataTable();
-                                }
-                                catch
-                                {
-                                    FrmMainApp.Logger.Info(message: "Reading csvFilePath [xmp] - " + sideCarXMPFilePath + " - dtThisFileCsvData = null");
-                                    dtThisFileCsvData = null;
-                                }
-
-                                if (dtThisFileCsvData != null && dtThisFileCsvData.Columns.Count > 0)
-                                {
-                                    // transpose CSV (skip #0, that's filename)
-                                    for (int csvCol = 1; csvCol < dtThisFileCsvData.Columns.Count; csvCol++)
-                                    {
-                                        string tagName = dtThisFileCsvData.Columns[index: csvCol]
-                                            .ToString();
-                                        string tagValue = dtThisFileCsvData.Rows[index: 0][columnIndex: csvCol]
-                                            .ToString();
-                                        if (tagValue != "")
-                                        {
-                                            DataRow drThisFileTags = dtFileExifTable.NewRow();
-                                            drThisFileTags[columnName: "TagName"] = tagName;
-                                            drThisFileTags[columnName: "TagValue"] = tagValue;
-                                            dtFileExifTable.Rows.Add(row: drThisFileTags);
-                                            FrmMainApp.Logger.Trace(message: "Reading csvFilePath [xmp] - " + sideCarXMPFilePath + " - " + tagName + " - " + tagValue);
-                                        }
-                                    }
-                                }
-                            }
-
-                            // de-dupe. this is pretty poor performance but the dataset is small
-                            if (dtFileExifTable != null && dtFileExifTable.Rows.Count > 0)
-                            {
-                                dtFileExifTable = dtFileExifTable.DefaultView.ToTable(distinct: true);
-
-                                // lvi uses fileNameWithoutPath
-                                fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
-
-                                GenericLockLockFile(fileNameWithoutPath: fileNameWithoutPath);
-                                FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-
-                                ListView.ColumnHeaderCollection lvchs = frmMainAppInstance.ListViewColumnHeaders;
-
-                                for (int i = 1; i < lvi.SubItems.Count; i++)
-                                {
-                                    string str = ExifGetStandardisedDataPointFromExif(dtFileExif: dtFileExifTable, dataPoint: lvchs[index: i]
-                                                                                          .Name.Substring(startIndex: 4));
-                                    lvi.SubItems[index: i]
-                                        .Text = str;
-
-                                    // Not logging because it gets logged in ExifGetStandardisedDataPointFromExif already.
-
-                                    // TakenDate & CreateDate have to be sent into their respective tables for querying later if user chooses time-shift.
-                                    if (lvchs[index: i]
-                                            .Name ==
-                                        "clh_TakenDate" &&
-                                        str != "-")
-                                    {
-                                        DataRow drTakenDate = FrmMainApp.DtOriginalTakenDate.NewRow();
-                                        drTakenDate[columnName: "fileNameWithoutPath"] = lvi.Text;
-                                        drTakenDate[columnName: "settingId"] = "originalTakenDate";
-                                        drTakenDate[columnName: "settingValue"] = GenericStringToDateTime(dateTimeToConvert: str);
-                                        FrmMainApp.DtOriginalTakenDate.Rows.Add(row: drTakenDate);
-                                        FrmMainApp.DtOriginalTakenDate.AcceptChanges();
-                                    }
-                                    else if (lvchs[index: i]
-                                                 .Name ==
-                                             "clh_CreateDate" &&
-                                             str != "-")
-                                    {
-                                        DataRow drCreateDate = FrmMainApp.DtOriginalCreateDate.NewRow();
-                                        drCreateDate[columnName: "fileNameWithoutPath"] = lvi.Text;
-                                        drCreateDate[columnName: "settingId"] = "originalCreateDate";
-                                        drCreateDate[columnName: "settingValue"] = GenericStringToDateTime(dateTimeToConvert: str);
-
-                                        FrmMainApp.DtOriginalCreateDate.Rows.Add(row: drCreateDate);
-                                        FrmMainApp.DtOriginalCreateDate.AcceptChanges();
-                                    }
-
-                                    // Not adding the xmp here because the current code logic would pull a "unified" data point.
-
-                                    // No need to log everything three times....
-                                    // FrmMainApp.Logger.Trace(message: "Adding file " + fileNameWithPath + "'s details to FrmMainApp.DtFileDataSeenInThisSession");
-
-                                    DataRow dr = FrmMainApp.DtFileDataSeenInThisSession.NewRow();
-                                    dr[columnName: "fileNameWithPath"] = fileNameWithPath;
-                                    dr[columnName: "settingId"] = lvchs[index: i]
-                                        .Name.Substring(startIndex: 4);
-                                    dr[columnName: "settingValue"] = str;
-                                    FrmMainApp.DtFileDataSeenInThisSession.Rows.Add(row: dr);
-                                }
-
-                                if (lvi.Index % 10 == 0)
-                                {
-                                    Application.DoEvents();
-                                    // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                    frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
-                                }
-
-                                frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Black);
-                                GenericLockUnLockFile(fileNameWithoutPath: fileNameWithoutPath);
-                            }
-                            else
-                            {
-                                FrmMainApp.Logger.Info(message: "dtFileExifTable is null || dtFileExifTable has 0 rows");
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    FrmMainApp.Logger.Trace(message: "csvFilePath output length <= 20");
-                }
-            }
-            else
-            {
-                FrmMainApp.Logger.Error(message: "csvFilePath output doesn't exist");
-            }
-        }
-
-        FrmMainApp.Logger.Debug(message: "Done");
-    }
-
-    /// <summary>
     ///     Fires off a command to try to parse Track listOfAsyncCompatibleFileNamesWithOutPath and link them up with data in
     ///     the main grid
     /// </summary>
@@ -968,7 +647,11 @@ internal static partial class HelperStatic
                                     if (!doNotReverseGeoCode)
                                     {
                                         SApiOkay = true;
-                                        DataTable dtToponomy = DTFromAPIExifGetToponomyFromWebOrSQL(lat: strParsedLat.ToString(provider: CultureInfo.InvariantCulture), lng: strParsedLng.ToString(provider: CultureInfo.InvariantCulture));
+                                        DataTable dtToponomy = DTFromAPIExifGetToponomyFromWebOrSQL(
+                                            lat: strParsedLat.ToString(provider: CultureInfo.InvariantCulture),
+                                            lng: strParsedLng.ToString(provider: CultureInfo.InvariantCulture),
+                                            fileNameWithoutPath: fileNameWithoutPath
+                                        );
 
                                         if (SApiOkay)
                                         {
@@ -1024,7 +707,11 @@ internal static partial class HelperStatic
             }
         }
 
-        DialogResult dialogResult = MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportGpx_AskUserWantsReport"), caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Question);
+        DialogResult dialogResult = MessageBox.Show(
+            text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportGpx_AskUserWantsReport"),
+            caption: GenericGetMessageBoxCaption(captionType: "Question"),
+            buttons: MessageBoxButtons.YesNo,
+            icon: MessageBoxIcon.Question);
         if (dialogResult == DialogResult.Yes)
         {
             Form reportBox = new();
@@ -1498,12 +1185,16 @@ internal static partial class HelperStatic
                 {
                     failWriteNothingEnabled = true;
                     FrmMainApp.Logger.Info(message: "Both file-writes disabled. Nothing Written.");
-                    MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"), caption: "Errrmmm...", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+                    MessageBox.Show(
+                        text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"),
+                        caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                        buttons: MessageBoxButtons.OK,
+                        icon: MessageBoxIcon.Warning);
                 }
             }
         }
 
-        FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
+        //FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
 
         if (!failWriteNothingEnabled && !queueWasEmpty)
         {
@@ -1518,12 +1209,18 @@ internal static partial class HelperStatic
         else if (!queueWasEmpty)
         {
             FrmMainApp.Logger.Info(message: "Both file-writes disabled. Nothing Written.");
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"), caption: "Errrmmm...", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"),
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
         else
         {
             FrmMainApp.Logger.Info(message: "Queue was empty. Nothing Written.");
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNothingInWriteQueue"), caption: "Errrmmm...", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNothingInWriteQueue"),
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
 
         ///////////////
@@ -1547,6 +1244,8 @@ internal static partial class HelperStatic
                                           string initiator)
     {
         int lviIndex = 0;
+        _exifInvokeCounter += 1;
+        FrmMainApp.Logger.Trace(message: "Start EXIF Tool number " + _exifInvokeCounter + " for " + initiator + " with cmdLine: " + exiftoolCmd);
         await Task.Run(action: () =>
         {
             using Process prcExifTool = new();
@@ -1567,111 +1266,85 @@ internal static partial class HelperStatic
             switch (initiator)
             {
                 case "ExifWriteExifToFile":
+                    string fileNameWithoutPath = null;
                     prcExifTool.OutputDataReceived += (_,
                                                        data) =>
                     {
-                        if (data.Data != null && data.Data.Contains(value: "="))
+                        if (!string.IsNullOrEmpty(value: data.Data))
                         {
-                            string fileNameWithoutPath = data.Data.Replace(oldValue: "=", newValue: "")
-                                .Split('[')
-                                .FirstOrDefault()
-                                .Trim()
-                                .Split('/')
-                                .Last();
-                            FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-                            FrmMainApp.Logger.Debug(message: "Writing " + fileNameWithoutPath + " [this is via OutputDataReceived]");
-                            try
+                            if (data.Data.Contains(value: "="))
                             {
-                                if (lviIndex % 10 == 0)
+                                fileNameWithoutPath = data.Data.Replace(oldValue: "=", newValue: "")
+                                    .Split('[')
+                                    .FirstOrDefault()
+                                    .Trim()
+                                    .Split('/')
+                                    .Last();
+                                FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+                                FrmMainApp.Logger.Debug(message: "Writing " + fileNameWithoutPath + " [this is via OutputDataReceived]");
+                            }
+
+                            if (!string.IsNullOrEmpty(value: fileNameWithoutPath))
+                            {
+                                try
                                 {
-                                    Application.DoEvents();
-
-                                    // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                    frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
-                                }
-
-                                frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Black);
-
-                                if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
-                                {
-                                    // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
-                                    // FindItemWithText -> https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.finditemwithtext?view=netframework-4.8
-                                    // "Finds the first ListViewItem with __that begins with__ the given text value."
-
                                     if (lviIndex % 10 == 0)
                                     {
                                         Application.DoEvents();
+
                                         // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
-                                        frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath); // this is redundant here.
+                                        frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
                                     }
 
-                                    frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: Path.GetFileNameWithoutExtension(path: fileNameWithoutPath), color: Color.Black);
+                                    if ((data.Data.Contains(value: "files updated") || data.Data.Contains(value: "files created")) &&
+                                        !data.Data.Trim()
+                                            .StartsWith(value: "0"))
+                                    {
+                                        removeFileFromDT3(fileNameWithoutPath: fileNameWithoutPath);
+                                    }
+
+                                    if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
+                                    {
+                                        // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
+                                        // FindItemWithText -> https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.finditemwithtext?view=netframework-4.8
+                                        // "Finds the first ListViewItem with __that begins with__ the given text value."
+
+                                        if (lviIndex % 10 == 0)
+                                        {
+                                            Application.DoEvents();
+                                            // not adding the xmp here because the current code logic would pull a "unified" data point.                         
+
+                                            frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath); // this is redundant here.
+                                        }
+
+                                        if ((data.Data.Contains(value: "files updated") || data.Data.Contains(value: "files created")) &&
+                                            !data.Data.Trim()
+                                                .StartsWith(value: "0"))
+                                        {
+                                            removeFileFromDT3(fileNameWithoutPath: fileNameWithoutPath);
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+                                    // ignored
+                                }
+
+                                lviIndex++;
+
+                                if (!data.Data.Contains(value: "files updated") && !data.Data.Contains(value: "files created") && !data.Data.Contains(value: fileNameWithoutPath))
+                                {
+                                    MessageBox.Show(text: data.Data);
                                 }
                             }
-                            catch
-                            {
-                                // ignored
-                            }
-
-                            lviIndex++;
-                        }
-                        else if (data.Data != null && !data.Data.Contains(value: "files updated") && !data.Data.Contains(value: "files created") && data.Data.Length > 0)
-                        {
-                            MessageBox.Show(text: data.Data);
                         }
                     };
 
                     prcExifTool.ErrorDataReceived += (_,
                                                       data) =>
                     {
-                        if (data.Data != null && data.Data.Contains(value: "="))
-                        {
-                            string fileNameWithoutPath = data.Data.Replace(oldValue: "=", newValue: "")
-                                .Split('[')
-                                .FirstOrDefault()
-                                .Trim()
-                                .Split('/')
-                                .Last();
-                            FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-                            FrmMainApp.Logger.Debug(message: "Writing " + fileNameWithoutPath + " [this is via ErrorDataReceived]");
-
-                            try
-                            {
-                                {
-                                    Application.DoEvents();
-                                    // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                    frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
-                                }
-
-                                frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Black);
-
-                                if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
-                                {
-                                    // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
-                                    // FindItemWithText -> https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.finditemwithtext?view=netframework-4.8
-                                    // "Finds the first ListViewItem with __that begins with__ the given text value."
-                                    if (lviIndex % 10 == 0)
-                                    {
-                                        Application.DoEvents();
-                                        // not adding the xmp here because the current code logic would pull a "unified" data point.                         
-
-                                        frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath); // this is redundant here
-                                    }
-
-                                    frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: Path.GetFileNameWithoutExtension(path: fileNameWithoutPath), color: Color.Black);
-                                }
-                            }
-                            catch
-                            {
-                                // ignored
-                            }
-
-                            lviIndex++;
-                        }
-                        else if (data.Data != null && !data.Data.Contains(value: "files updated") && data.Data.Length > 0)
+                        if (!string.IsNullOrEmpty(value: data.Data))
                         {
                             MessageBox.Show(text: data.Data);
                         }
@@ -1709,21 +1382,30 @@ internal static partial class HelperStatic
                     prcExifTool.OutputDataReceived += (_,
                                                        data) =>
                     {
-                        // don't care
+                        if (data.Data != null && data.Data.Length > 0)
+                        {
+                            _sOutputMsg += data.Data.ToString() + Environment.NewLine;
+                        }
                     };
 
                     prcExifTool.ErrorDataReceived += (_,
                                                       data) =>
                     {
-                        // don't care
+                        if (data.Data != null && data.Data.Length > 0)
+                        {
+                            _sOutputMsg += "ERROR: " + data.Data.ToString() + Environment.NewLine;
+                        }
                     };
                     break;
             }
 
+            FrmMainApp.Logger.Trace(message: "EXIF number " + _exifInvokeCounter + ": Start");
             prcExifTool.Start();
             prcExifTool.BeginOutputReadLine();
             prcExifTool.BeginErrorReadLine();
+            FrmMainApp.Logger.Trace(message: "EXIF number " + _exifInvokeCounter + ": Wait for Exit");
             prcExifTool.WaitForExit();
+            FrmMainApp.Logger.Trace(message: "EXIF number " + _exifInvokeCounter + ": Close");
             prcExifTool.Close();
             FrmMainApp.Logger.Trace(message: "Closing exifTool");
 
@@ -1739,6 +1421,25 @@ internal static partial class HelperStatic
                 FrmMainApp.Logger.Error(message: "Killing exifTool failed");
             }
         });
+
+        void removeFileFromDT3(string fileNameWithoutPath)
+        {
+            IEnumerable<DataRow> drDT3Rows =
+                from drDT3 in FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.AsEnumerable()
+                where drDT3.Field<string>(columnName: "fileNameWithoutPath") != fileNameWithoutPath
+                select drDT3;
+
+            if (drDT3Rows.Any())
+            {
+                FrmMainApp.DtFileDataToWriteStage3ReadyToWrite = drDT3Rows.CopyToDataTable();
+            }
+            else
+            {
+                FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Clear();
+            }
+
+            frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Black);
+        }
     }
 
 
@@ -1761,7 +1462,12 @@ internal static partial class HelperStatic
             }
             catch (Exception ex)
             {
-                MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                MessageBox.Show(
+                    text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB") +
+                          ex.Message,
+                    caption: GenericGetMessageBoxCaption(captionType: "Error"),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Error);
             }
         }
 
@@ -1771,13 +1477,32 @@ internal static partial class HelperStatic
             Authenticator = new HttpBasicAuthenticator(username: SGeoNamesUserName, password: SGeoNamesPwd)
         };
 
-        RestRequest requestToponomy = new(resource: "findNearbyPlaceNameJSON?lat=" + latitude + "&lng=" + longitude + "&lang=" + APILanguageToUse + "&style=FULL&radius=" + radius + "&maxRows=" + ToponomyMaxRows);
+        string SOnlyShowFCodePPL = HelperStatic.SOnlyShowFCodePPL
+            ? "&fcode=PPL"
+            : "";
+
+        RestRequest requestToponomy = new(resource: "findNearbyPlaceNameJSON?lat=" +
+                                                    latitude +
+                                                    "&lng=" +
+                                                    longitude +
+                                                    "&lang=" +
+                                                    APILanguageToUse +
+                                                    SOnlyShowFCodePPL +
+                                                    "&style=FULL" +
+                                                    "&radius=" +
+                                                    radius +
+                                                    "&maxRows=" +
+                                                    ToponomyMaxRows);
         RestResponse responseToponomy = client.ExecuteGet(request: requestToponomy);
         // check API reponse is OK
         if (responseToponomy.Content != null && responseToponomy.Content.Contains(value: "the hourly limit of "))
         {
             SApiOkay = false;
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + responseToponomy.Content, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") +
+                                  responseToponomy.Content,
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
         else if (responseToponomy.StatusCode.ToString() == "OK")
         {
@@ -1789,59 +1514,11 @@ internal static partial class HelperStatic
         else
         {
             SApiOkay = false;
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + responseToponomy.StatusCode, caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
-        }
-
-        return returnVal;
-    }
-
-    /// <summary>
-    ///     Responsible for pulling the TZ response for the API
-    /// </summary>
-    /// <param name="latitude">As on the tin.</param>
-    /// <param name="longitude">As on the tin.</param>
-    /// <returns>Structured TZ response</returns>
-    private static GeoResponseTimeZone API_ExifGetGeoDataFromWebTimeZone(string latitude,
-                                                                         string longitude)
-    {
-        if (SGeoNamesUserName == null)
-        {
-            try
-            {
-                SGeoNamesUserName = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_UserName");
-                SGeoNamesPwd = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_Pwd");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-            }
-        }
-
-        GeoResponseTimeZone returnVal = new();
-        RestClient client = new(baseUrl: "http://api.geonames.org/")
-        {
-            Authenticator = new HttpBasicAuthenticator(username: SGeoNamesUserName, password: SGeoNamesPwd)
-        };
-
-        RestRequest request_TimeZone = new(resource: "timezoneJSON?lat=" + latitude + "&lng=" + longitude);
-        RestResponse response_TimeZone = client.ExecuteGet(request: request_TimeZone);
-        // check API reponse is OK
-        if (response_TimeZone.Content != null && response_TimeZone.Content.Contains(value: "the hourly limit of "))
-        {
-            SApiOkay = false;
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + response_TimeZone.Content, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
-        }
-        else if (response_TimeZone.StatusCode.ToString() == "OK")
-        {
-            SApiOkay = true;
-            JObject data = (JObject)JsonConvert.DeserializeObject(value: response_TimeZone.Content);
-            GeoResponseTimeZone geoResponseTimeZone = GeoResponseTimeZone.FromJson(Json: data.ToString());
-            returnVal = geoResponseTimeZone;
-        }
-        else
-        {
-            SApiOkay = false;
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") + response_TimeZone.StatusCode, caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") +
+                                  responseToponomy.StatusCode,
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
 
         return returnVal;
@@ -1904,7 +1581,11 @@ internal static partial class HelperStatic
         else
         {
             SApiOkay = false;
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGTNVerAPIResponse") + response_GTNVersionQuery.StatusCode, caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGTNVerAPIResponse") +
+                                  response_GTNVersionQuery.StatusCode,
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
 
         return returnVal;
@@ -1916,12 +1597,14 @@ internal static partial class HelperStatic
     /// </summary>
     /// <param name="lat">latitude/longitude to be queried</param>
     /// <param name="lng">latitude/longitude to be queried</param>
+    /// <param name="fileNameWithoutPath"></param>
     /// <returns>
     ///     See summary. Returns the toponomy info either from SQLite if available or the API in DataTable for further
     ///     processing
     /// </returns>
     internal static DataTable DTFromAPIExifGetToponomyFromWebOrSQL(string lat,
-                                                                   string lng)
+                                                                   string lng,
+                                                                   string fileNameWithoutPath = "")
     {
         DataTable dtReturn = new();
         dtReturn.Clear();
@@ -1938,7 +1621,7 @@ internal static partial class HelperStatic
                                                            where dataRow.Field<string>(columnName: "lat") == lat && dataRow.Field<string>(columnName: "lng") == lng
                                                            select dataRow;
 
-        List<DataRow> lstReturnToponomyData = drDataTableData.ToList();
+        List<DataRow> lstToponomySessionData = drDataTableData.ToList();
 
         GeoResponseToponomy readJsonToponomy;
 
@@ -1966,11 +1649,11 @@ internal static partial class HelperStatic
         // As per https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 (see below comment a few lines down)
 
         // read from SQL
-        if (lstReturnToponomyData.Count > 0)
+        if (lstToponomySessionData.Count > 0)
         {
             bool isPredeterminedCountry = false;
 
-            CountryCode = lstReturnToponomyData[index: 0][columnName: "CountryCode"]
+            CountryCode = lstToponomySessionData[index: 0][columnName: "CountryCode"]
                 .ToString();
             Country = DataReadDTCountryCodesNames(
                     queryWhat: "ISO_3166_1A3",
@@ -1978,21 +1661,21 @@ internal static partial class HelperStatic
                     returnWhat: "Country")
                 ;
 
-            Altitude = lstReturnToponomyData[index: 0][columnName: "GPSAltitude"]
+            Altitude = lstToponomySessionData[index: 0][columnName: "GPSAltitude"]
                 .ToString();
 
-            timezoneId = lstReturnToponomyData[index: 0][columnName: "timezoneId"]
+            timezoneId = lstToponomySessionData[index: 0][columnName: "timezoneId"]
                 .ToString();
 
-            string? AdminName1InSQL = lstReturnToponomyData[index: 0][columnName: "AdminName1"]
+            string? AdminName1InSQL = lstToponomySessionData[index: 0][columnName: "AdminName1"]
                 .ToString();
-            string? AdminName2InSQL = lstReturnToponomyData[index: 0][columnName: "AdminName2"]
+            string? AdminName2InSQL = lstToponomySessionData[index: 0][columnName: "AdminName2"]
                 .ToString();
-            string? AdminName3InSQL = lstReturnToponomyData[index: 0][columnName: "AdminName3"]
+            string? AdminName3InSQL = lstToponomySessionData[index: 0][columnName: "AdminName3"]
                 .ToString();
-            string? AdminName4InSQL = lstReturnToponomyData[index: 0][columnName: "AdminName4"]
+            string? AdminName4InSQL = lstToponomySessionData[index: 0][columnName: "AdminName4"]
                 .ToString();
-            string? ToponymNameInSQL = lstReturnToponomyData[index: 0][columnName: "ToponymName"]
+            string? ToponymNameInSQL = lstToponomySessionData[index: 0][columnName: "ToponymName"]
                 .ToString();
 
             // In a country where you know, which admin level the cities belong to (see arrays), use the adminNameX as city name.
@@ -2000,30 +1683,30 @@ internal static partial class HelperStatic
             // ... for populated places may be city names or names of some populated entity below city level, but they're never used for something above city level.
             // In a country where city names are not assigned to a specific admin level, I'd use the toponymName as the city name and leave the sublocation name blank.
 
-            if (AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode) ||
-                AncillaryListsArrays.CityNameIsAdminName2Arr.Contains(value: CountryCode) ||
-                AncillaryListsArrays.CityNameIsAdminName3Arr.Contains(value: CountryCode) ||
-                AncillaryListsArrays.CityNameIsAdminName4Arr.Contains(value: CountryCode)
+            if (FrmMainApp.lstCityNameIsAdminName1.Contains(CountryCode) ||
+                FrmMainApp.lstCityNameIsAdminName2.Contains(CountryCode) ||
+                FrmMainApp.lstCityNameIsAdminName3.Contains(CountryCode) ||
+                FrmMainApp.lstCityNameIsAdminName4.Contains(CountryCode)
                )
             {
                 isPredeterminedCountry = true;
 
                 Sub_location = ToponymNameInSQL;
 
-                if (AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode))
+                if (FrmMainApp.lstCityNameIsAdminName1.Contains(CountryCode))
                 {
                     City = AdminName1InSQL;
                     State = "";
                 }
-                else if (AncillaryListsArrays.CityNameIsAdminName2Arr.Contains(value: CountryCode))
+                else if (FrmMainApp.lstCityNameIsAdminName2.Contains(CountryCode))
                 {
                     City = AdminName2InSQL;
                 }
-                else if (AncillaryListsArrays.CityNameIsAdminName3Arr.Contains(value: CountryCode))
+                else if (FrmMainApp.lstCityNameIsAdminName3.Contains(CountryCode))
                 {
                     City = AdminName3InSQL;
                 }
-                else if (AncillaryListsArrays.CityNameIsAdminName4Arr.Contains(value: CountryCode))
+                else if (FrmMainApp.lstCityNameIsAdminName4.Contains(CountryCode))
                 {
                     City = AdminName4InSQL;
                 }
@@ -2033,7 +1716,7 @@ internal static partial class HelperStatic
                     Sub_location = "";
                 }
 
-                if (!AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode))
+                if (!FrmMainApp.lstCityNameIsAdminName1.Contains(CountryCode))
                 {
                     State = AdminName1InSQL;
                 }
@@ -2277,12 +1960,18 @@ internal static partial class HelperStatic
                 }
                 else
                 {
-                    MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_HelperStaticExifNoAPI"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                    MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_HelperStaticExifNoAPI"),
+                                    caption: GenericGetMessageBoxCaption(captionType: "Error"),
+                                    buttons: MessageBoxButtons.OK,
+                                    icon: MessageBoxIcon.Error);
                 }
             }
             catch
             {
-                MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_HelperStaticExifNoAPI"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_HelperStaticExifNoAPI"),
+                                caption: GenericGetMessageBoxCaption(captionType: "Error"),
+                                buttons: MessageBoxButtons.OK,
+                                icon: MessageBoxIcon.Error);
             }
 
             // ignore if unauthorised or some such
@@ -2373,30 +2062,30 @@ internal static partial class HelperStatic
                         // ... for populated places may be city names or names of some populated entity below city level, but they're never used for something above city level.
                         // In a country where city names are not assigned to a specific admin level, I'd use the toponymName as the city name and leave the sublocation name blank.
 
-                        if (AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode) ||
-                            AncillaryListsArrays.CityNameIsAdminName2Arr.Contains(value: CountryCode) ||
-                            AncillaryListsArrays.CityNameIsAdminName3Arr.Contains(value: CountryCode) ||
-                            AncillaryListsArrays.CityNameIsAdminName4Arr.Contains(value: CountryCode)
+                        if (FrmMainApp.lstCityNameIsAdminName1.Contains(CountryCode) ||
+                            FrmMainApp.lstCityNameIsAdminName2.Contains(CountryCode) ||
+                            FrmMainApp.lstCityNameIsAdminName3.Contains(CountryCode) ||
+                            FrmMainApp.lstCityNameIsAdminName4.Contains(CountryCode)
                            )
                         {
                             isPredeterminedCountry = true;
 
                             Sub_location = readJsonToponomy.Geonames[index]
                                 .ToponymName;
-                            if (AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode))
+                            if (FrmMainApp.lstCityNameIsAdminName1.Contains(CountryCode))
                             {
                                 City = AdminName1InAPI;
                                 State = "";
                             }
-                            else if (AncillaryListsArrays.CityNameIsAdminName2Arr.Contains(value: CountryCode))
+                            else if (FrmMainApp.lstCityNameIsAdminName2.Contains(CountryCode))
                             {
                                 City = AdminName2InAPI;
                             }
-                            else if (AncillaryListsArrays.CityNameIsAdminName3Arr.Contains(value: CountryCode))
+                            else if (FrmMainApp.lstCityNameIsAdminName3.Contains(CountryCode))
                             {
                                 City = AdminName3InAPI;
                             }
-                            else if (AncillaryListsArrays.CityNameIsAdminName4Arr.Contains(value: CountryCode))
+                            else if (FrmMainApp.lstCityNameIsAdminName4.Contains(CountryCode))
                             {
                                 City = AdminName4InAPI;
                             }
@@ -2406,7 +2095,7 @@ internal static partial class HelperStatic
                                 Sub_location = "";
                             }
 
-                            if (!AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: CountryCode))
+                            if (!FrmMainApp.lstCityNameIsAdminName1.Contains(CountryCode))
                             {
                                 State = AdminName1InAPI;
                             }
@@ -2671,7 +2360,21 @@ internal static partial class HelperStatic
                     }
                     else
                     {
-                        int useDr = useDrRow(dtIn: dtReturn);
+                        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+                        // scroll to the file in question and show the image of it...makes life a lot easier
+                        if (!string.IsNullOrEmpty(value: fileNameWithoutPath))
+                        {
+                            string fileNameWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath);
+                            ListViewItem lvi = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath);
+                            frmMainAppInstance.lvw_FileList.FocusedItem = lvi;
+                            frmMainAppInstance.lvw_FileList.EnsureVisible(index: lvi.Index);
+                            GenericCreateImagePreview(
+                                fileNameWithPath: fileNameWithPath, initiator: "FrmMainAppAPIDataSelection"
+                            );
+                            Application.DoEvents();
+                        }
+
+                        int useDr = showDataFromAPIPicker(dtIn: dtReturn);
                         dtReturn = dtReturn.AsEnumerable()
                             .Where(predicate: (row,
                                                index) => index == useDr)
@@ -2706,61 +2409,105 @@ internal static partial class HelperStatic
                                 .ToString()
                         );
 
-                        int useDrRow(DataTable dtIn)
+                        int showDataFromAPIPicker(DataTable dtIn)
                         {
-                            Form pickRowBox = new();
+                            Form FrmPickDataFromAPIBox = new()
+                            {
+                                Text = DataReadDTObjectText(
+                                    objectType: "Form", objectName: "FrmPickDataFromAPIBox"),
+                                MinimizeBox = false,
+                                MaximizeBox = false,
+                                ShowIcon = false,
+                                ShowInTaskbar = false,
+                                StartPosition = FormStartPosition.CenterScreen
+                            };
 
-                            pickRowBox.ControlBox = false;
                             FlowLayoutPanel panel = new();
 
-                            ListView lvwDataChoices = new();
-                            lvwDataChoices.Size = new Size(width: 800, height: 200);
-                            lvwDataChoices.View = System.Windows.Forms.View.Details;
+                            ListView lvwDataChoices = new()
+                            {
+                                Size = new Size(width: 800, height: 200),
+                                View = System.Windows.Forms.View.Details,
+                                MultiSelect = false,
+                                FullRowSelect = true
+                            };
+
                             lvwDataChoices.Columns.Add(text: "Index");
+
                             foreach (DataColumn dc in dtIn.Columns)
                             {
                                 lvwDataChoices.Columns.Add(text: dc.ColumnName, width: -2);
                             }
 
+                            lvwDataChoices.MouseDoubleClick += (sender,
+                                                                args) =>
+                            {
+                                ListViewHitTestInfo info = lvwDataChoices.HitTest(x: args.X, y: args.Y);
+                                ListViewItem item = info.Item;
+
+                                if (item != null)
+                                {
+                                    FrmPickDataFromAPIBox.Close();
+                                }
+                            };
+
                             foreach (DataRow drItem in dtReturn.Rows)
                             {
-                                ListViewItem lvi = new(text: dtReturn.Rows.IndexOf(row: drItem)
-                                                           .ToString());
+                                // make it not-zero based.
+                                ListViewItem lvi = new(text: (dtReturn.Rows.IndexOf(row: drItem) +
+                                                              1)
+                                                       .ToString());
                                 foreach (DataColumn dc in dtIn.Columns)
                                 {
-                                    lvi.SubItems.Add(text: drItem[column: dc]
-                                                         .ToString());
+                                    string dataToAdd = drItem[column: dc]
+                                        .ToString();
+
+                                    lvi.SubItems.Add(text: dataToAdd);
                                 }
 
                                 lvwDataChoices.Items.Add(value: lvi);
                             }
 
-                            lvwDataChoices.MultiSelect = false;
-                            lvwDataChoices.FullRowSelect = true;
+                            lvwDataChoices.Items[index: 0]
+                                .Selected = true;
+                            lvwDataChoices.Select();
+
+                            lvwDataChoices.KeyUp += (sender,
+                                                     args) =>
+                            {
+                                if (args.KeyCode == Keys.Enter)
+                                {
+                                    if (lvwDataChoices.SelectedItems.Count == 1)
+                                    {
+                                        FrmPickDataFromAPIBox.Close();
+                                    }
+                                }
+                            };
 
                             panel.Controls.Add(value: lvwDataChoices);
                             panel.SetFlowBreak(control: lvwDataChoices, value: true);
 
-                            Button btnOk = new()
-                                { Text = "OK" };
-                            btnOk.Click += (sender,
-                                            e) =>
+                            Button btn_OK = new()
                             {
-                                pickRowBox.Close();
+                                Text = DataReadDTObjectText(
+                                    objectType: "Button", objectName: "btn_OK")
                             };
-                            btnOk.Location = new Point(x: 10, y: lvwDataChoices.Bottom + 5);
-                            btnOk.AutoSize = true;
-                            panel.Controls.Add(value: btnOk);
+                            btn_OK.Click += (sender,
+                                             e) =>
+                            {
+                                FrmPickDataFromAPIBox.Close();
+                            };
+                            btn_OK.Location = new Point(x: 10, y: lvwDataChoices.Bottom + 15);
+                            btn_OK.AutoSize = true;
+                            panel.Controls.Add(value: btn_OK);
 
                             panel.Padding = new Padding(all: 5);
                             panel.AutoSize = true;
 
-                            pickRowBox.Controls.Add(value: panel);
-                            pickRowBox.MinimumSize = new Size(width: lvwDataChoices.Width + 40, height: btnOk.Bottom + 50);
-                            pickRowBox.ShowInTaskbar = false;
+                            FrmPickDataFromAPIBox.Controls.Add(value: panel);
+                            FrmPickDataFromAPIBox.MinimumSize = new Size(width: lvwDataChoices.Width + 40, height: btn_OK.Bottom + 20);
 
-                            pickRowBox.StartPosition = FormStartPosition.CenterScreen;
-                            pickRowBox.ShowDialog();
+                            FrmPickDataFromAPIBox.ShowDialog();
 
                             try
                             {
@@ -2870,7 +2617,10 @@ internal static partial class HelperStatic
         // we appear to have lost a file or two.
         else
         {
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningFileDisappeared"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningFileDisappeared"),
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
     }
 
@@ -2904,27 +2654,57 @@ internal static partial class HelperStatic
             toponomyOverwrites.Add(item: "OffsetTime");
         }
 
-        ;
+        // sort is pointless here but otherwise it pokes my OCD.
+        toponomyOverwrites.Sort();
+
         if (senderName == "FrmEditFileData")
         {
             // for the time being i'll leave this as "remove data from the active selection file" rather than "all".
             FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
 
             // setting this to True prevents the code from checking the values are valid numbers.
-            FrmEditFileData.FrmEditFileDataNowRemovingGeoData = true;
+
             if (frmEditFileDataInstance != null)
             {
                 string fileNameWithoutPath = frmEditFileDataInstance.lvw_FileListEditImages.SelectedItems[index: 0]
                     .Text;
-                frmEditFileDataInstance.tbx_GPSLatitude.Text = "";
-                frmEditFileDataInstance.tbx_GPSLongitude.Text = "";
-                frmEditFileDataInstance.tbx_GPSAltitude.Text = "";
-                frmEditFileDataInstance.tbx_City.Text = "";
-                frmEditFileDataInstance.tbx_State.Text = "";
-                frmEditFileDataInstance.tbx_Sub_location.Text = "";
-                frmEditFileDataInstance.cbx_CountryCode.Text = "";
-                frmEditFileDataInstance.cbx_Country.Text = "";
-                FrmEditFileData.FrmEditFileDataNowRemovingGeoData = false;
+
+                HelperNonStatic helperNonstatic = new();
+                IEnumerable<Control> cGbx_GPSData = helperNonstatic.GetAllControls(control: frmEditFileDataInstance.gbx_GPSData);
+                foreach (Control cItem_cGbx_GPSData in cGbx_GPSData)
+                {
+                    if (cItem_cGbx_GPSData is NumericUpDown nud)
+                    {
+                        nud.Value = 0;
+                        nud.Text = "";
+                    }
+
+                    // no textboxes here but just in case
+                    else if (cItem_cGbx_GPSData is TextBox txt)
+                    {
+                        txt.Text = "";
+                    }
+                }
+
+                IEnumerable<Control> cGbx_LocationData = helperNonstatic.GetAllControls(control: frmEditFileDataInstance.gbx_LocationData);
+                foreach (Control cItem_cGbx_LocationData in cGbx_LocationData)
+                {
+                    // no nuds here but just in case
+                    if (cItem_cGbx_LocationData is NumericUpDown nud)
+                    {
+                        nud.Value = 0;
+                        nud.Text = "";
+                    }
+
+                    else if (cItem_cGbx_LocationData is TextBox txt)
+                    {
+                        txt.Text = "";
+                    }
+                    else if (cItem_cGbx_LocationData is ComboBox cbx)
+                    {
+                        cbx.Text = "";
+                    }
+                }
 
                 foreach (string toponomyDetail in toponomyOverwrites)
                 {

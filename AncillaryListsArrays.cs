@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace GeoTagNinja;
 
 internal static class AncillaryListsArrays
 {
     internal static List<KeyValuePair<string, string>> CommonNamesKvp = new();
-    internal static readonly string[] CityNameIsAdminName1Arr = { "LIE", "SMR", "MNE", "MKD", "MLT", "SVN" };
-    internal static readonly string[] CityNameIsAdminName2Arr = { "ALA", "BRA", "COL", "CUB", "CYP", "DNK", "FRO", "GTM", "HND", "HRV", "ISL", "LUX", "LVA", "NIC", "NLD", "NOR", "PRI", "PRT", "ROU", "SWE" };
-    internal static readonly string[] CityNameIsAdminName3Arr = { "AUT", "CHE", "CHL", "CZE", "EST", "ESP", "FIN", "GRC", "ITA", "PAN", "PER", "POL", "SRB", "SVK", "USA", "ZAF" };
-    internal static readonly string[] CityNameIsAdminName4Arr = { "BEL", "DEU", "FRA", "GUF", "GLP", "MTQ" };
 
     #region Time zones
 
@@ -636,6 +633,21 @@ internal static class AncillaryListsArrays
         ;
     }
 
+    internal static string[] CustomCityLogicDataSources()
+    {
+        string[] result =
+        {
+            "AdminName1",
+            "AdminName2",
+            "AdminName3",
+            "AdminName4",
+            "Undefined"
+        };
+
+        return result;
+        ;
+    }
+
     internal static string[] CustomRulesDataSources(bool isOutcome = false)
     {
         string[] result =
@@ -761,6 +773,77 @@ internal static class AncillaryListsArrays
             "x3f	Sigma/Foveon RAW"
         };
         return result;
+    }
+
+    /// <summary>
+    ///     List of extensions that take an XMP sidecar
+    /// </summary>
+    internal static string[] FileExtensionsThatUseXMP()
+    {
+        List<string> retList = new();
+        foreach (string extension in AllCompatibleExtensions())
+        {
+            if (extension.ToLower()
+                    .Contains(value: "raw") ||
+                extension.ToLower()
+                    .Contains(value: "tiff"))
+            {
+                retList.Add(item: extension.Split('\t')
+                                .FirstOrDefault());
+            }
+        }
+
+        return retList.ToArray();
+    }
+
+
+    /// <summary>
+    ///     Extracts only the file name extensions from the list of
+    ///     AllCompatibleExtensions. The returned array is a copy and
+    ///     can be used freely.
+    /// </summary>
+    /// <returns>An array of file extensions supported</returns>
+    internal static string[] AllCompatibleExtensionsExt()
+    {
+        string[] allowedExtensions = AllCompatibleExtensions();
+
+        // List contains the extension at then beginning and
+        // after white space more description --> loop
+        // to get only the extensions
+        for (int i = 0; i < allowedExtensions.Length; i++)
+        {
+            allowedExtensions[i] = allowedExtensions[i]
+                .Split('\t')
+                .FirstOrDefault();
+        }
+
+        return allowedExtensions;
+    }
+
+
+    /// <summary>
+    ///     List of supported side car file extensions.
+    ///     The extension must be in lower case due to its use in comparisons!
+    ///     Dictionary Extension -> Description
+    /// </summary>
+    internal static IDictionary<string, string> SideCarExtensions()
+    {
+        IDictionary<string, string> result = new Dictionary<string, string>
+        {
+            { "xmp", "XMP SideCar File" }
+        };
+        return result;
+    }
+
+
+    /// <summary>
+    ///     Returns an array of extensions (string) of compatible side car files.
+    ///     The returned array is a copy and can be used freely.
+    /// </summary>
+    internal static string[] GetSideCarExtensionsArray()
+    {
+        return SideCarExtensions()
+            .Keys.ToArray();
     }
 
     internal static string[] GpxExtensions()

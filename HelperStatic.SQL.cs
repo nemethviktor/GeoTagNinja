@@ -23,7 +23,6 @@ internal static partial class HelperStatic
         try
         {
             // create folder in Appdata if doesn't exist
-            string sqldbPath = SSettingsDataBasePath;
             FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath is " + SSettingsDataBasePath);
             FileInfo userDataBaseFile = new(fileName: SSettingsDataBasePath);
 
@@ -48,45 +47,51 @@ internal static partial class HelperStatic
                                 settingTabPage TEXT(255)    NOT NULL,
                                 settingId TEXT(255)         NOT NULL, 
                                 settingValue NTEXT(2000)    DEFAULT "",
-                                PRIMARY KEY([settingTabPage], [settingId])
+                                PRIMARY KEY(settingTabPage, settingId)
                             );
                             CREATE TABLE settingsToWritePreQueue(
                                 settingTabPage TEXT(255)    NOT NULL,
                                 settingId TEXT(255)         NOT NULL, 
                                 settingValue NTEXT(2000)    DEFAULT "",
-                                PRIMARY KEY([settingTabPage], [settingId])
+                                PRIMARY KEY(settingTabPage, settingId)
                             );
                             CREATE TABLE appLayout(
                                 settingTabPage TEXT(255)    NOT NULL,
                                 settingId TEXT(255)         NOT NULL, 
                                 settingValue NTEXT(2000)    DEFAULT "",
-                                PRIMARY KEY([settingTabPage], [settingId])
+                                PRIMARY KEY(settingTabPage, settingId)
                             );
-                            CREATE TABLE [Favourites](
-                                        [favouriteName] NTEXT NOT NULL PRIMARY KEY,
-                                        [GPSLatitude] NTEXT NOT NULL,
-                                        [GPSLatitudeRef] NTEXT NOT NULL,
-                                        [GPSLongitude] NTEXT NOT NULL,
-                                        [GPSLongitudeRef] NTEXT NOT NULL,
-                                        [GPSAltitude] NTEXT,
-                                        [GPSAltitudeRef] NTEXT,
-                                        [Coordinates] NTEXT NOT NULL,
-                                        [City] NTEXT,
-                                        [CountryCode] NTEXT,
-                                        [Country] NTEXT,
-                                        [State] NTEXT,
-                                        [Sub_location] NTEXT
+                            CREATE TABLE Favourites(
+                                        favouriteName NTEXT NOT NULL PRIMARY KEY,
+                                        GPSLatitude NTEXT NOT NULL,
+                                        GPSLatitudeRef NTEXT NOT NULL,
+                                        GPSLongitude NTEXT NOT NULL,
+                                        GPSLongitudeRef NTEXT NOT NULL,
+                                        GPSAltitude NTEXT,
+                                        GPSAltitudeRef NTEXT,
+                                        Coordinates NTEXT NOT NULL,
+                                        City NTEXT,
+                                        CountryCode NTEXT,
+                                        Country NTEXT,
+                                        State NTEXT,
+                                        Sub_location NTEXT
                                         )
                             ;
-                            CREATE TABLE [customRules](
-                                        [ruleId] INTEGER PRIMARY KEY AUTOINCREMENT,
-                                        [CountryCode] NTEXT NOT NULL,
-                                        [DataPointName] NTEXT NOT NULL,
-                                        [DataPointConditionType] NTEXT NOT NULL,
-                                        [DataPointConditionValue] NTEXT NOT NULL,
-                                        [TargetPointName] NTEXT NOT NULL,
-                                        [TargetPointOutcome] NTEXT NOT NULL,
-                                        [TargetPointOutcomeCustom] NTEXT
+                            CREATE TABLE customRules(
+                                        ruleId INTEGER PRIMARY KEY AUTOINCREMENT,
+                                        CountryCode NTEXT NOT NULL,
+                                        DataPointName NTEXT NOT NULL,
+                                        DataPointConditionType NTEXT NOT NULL,
+                                        DataPointConditionValue NTEXT NOT NULL,
+                                        TargetPointName NTEXT NOT NULL,
+                                        TargetPointOutcome NTEXT NOT NULL,
+                                        TargetPointOutcomeCustom NTEXT
+                                        )
+                            ;
+                            CREATE TABLE IF NOT EXISTS customCityAllocationLogic(
+                                        CountryCode TEXT(3) NOT NULL,
+                                        TargetPointNameCustomCityLogic TEXT(100) NOT NULL,
+                                        PRIMARY KEY(CountryCode, TargetPointNameCustomCityLogic)
                                         )
                             ;
                             """;
@@ -104,6 +109,7 @@ internal static partial class HelperStatic
             {
                 DataCreateSQLiteFavourites();
                 DataCreateSQLiteCustomRules();
+                DataCreateSQLiteCustomCityAllocationLogic();
                 DataWriteSQLiteRenameFavouritesLocationNameCol();
             }
         }
@@ -140,6 +146,8 @@ internal static partial class HelperStatic
         {
             foreach (string ext in AncillaryListsArrays.AllCompatibleExtensions())
             {
+                string fileExtension = ext.Split('\t')
+                    .FirstOrDefault();
                 string tmptmpCtrlName = ext.Split('\t')
                                             .FirstOrDefault() +
                                         '_'; // 'tis ok as is
@@ -152,7 +160,8 @@ internal static partial class HelperStatic
 
                 if (controlName == "ckb_AddXMPSideCar")
                 {
-                    if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
+                    if (AncillaryListsArrays.FileExtensionsThatUseXMP()
+                        .Contains(value: fileExtension))
                     {
                         controlDefaultValue = "true";
                     }
@@ -462,10 +471,6 @@ internal static partial class HelperStatic
         try
         {
             SArcGisApiKey = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_ARCGIS_APIKey");
-            if (SArcGisApiKey == null || SArcGisApiKey == "")
-            {
-                //MessageBox.Show(HelperStatic.GenericGetMessageBoxText("mbx_Helper_WarningNoARCGISKey"), "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
         }
         catch
         {
@@ -634,20 +639,20 @@ internal static partial class HelperStatic
         sqliteDB.Open();
 
         string sqlCommandStr = @"
-                                CREATE TABLE IF NOT EXISTS [Favourites](
-                                        [favouriteName] NTEXT NOT NULL PRIMARY KEY,
-                                        [GPSLatitude] NTEXT NOT NULL,
-                                        [GPSLatitudeRef] NTEXT NOT NULL,
-                                        [GPSLongitude] NTEXT NOT NULL,
-                                        [GPSLongitudeRef] NTEXT NOT NULL,
-                                        [GPSAltitude] NTEXT,
-                                        [GPSAltitudeRef] NTEXT,
-                                        [Coordinates] NTEXT NOT NULL,
-                                        [City] NTEXT,
-                                        [CountryCode] NTEXT,
-                                        [Country] NTEXT,
-                                        [State] NTEXT,
-                                        [Sub_location] NTEXT
+                                CREATE TABLE IF NOT EXISTS Favourites(
+                                        favouriteName NTEXT NOT NULL PRIMARY KEY,
+                                        GPSLatitude NTEXT NOT NULL,
+                                        GPSLatitudeRef NTEXT NOT NULL,
+                                        GPSLongitude NTEXT NOT NULL,
+                                        GPSLongitudeRef NTEXT NOT NULL,
+                                        GPSAltitude NTEXT,
+                                        GPSAltitudeRef NTEXT,
+                                        Coordinates NTEXT NOT NULL,
+                                        City NTEXT,
+                                        CountryCode NTEXT,
+                                        Country NTEXT,
+                                        State NTEXT,
+                                        Sub_location NTEXT
                                         )
                                 ;
                                 "
@@ -684,8 +689,8 @@ internal static partial class HelperStatic
             if (locationNameExists)
             {
                 string sqlCommandStr = @"
-                                ALTER TABLE [Favourites]
-                                RENAME COLUMN [locationName] TO [favouriteName]
+                                ALTER TABLE Favourites
+                                RENAME COLUMN locationName TO favouriteName
 
                                 ;
                                 "
@@ -874,15 +879,15 @@ internal static partial class HelperStatic
         sqliteDB.Open();
 
         string sqlCommandStr = @"
-                                CREATE TABLE IF NOT EXISTS [customRules](
-                                        [ruleId] INTEGER PRIMARY KEY AUTOINCREMENT,
-                                        [CountryCode] NTEXT NOT NULL,
-                                        [DataPointName] NTEXT NOT NULL,
-                                        [DataPointConditionType] NTEXT NOT NULL,
-                                        [DataPointConditionValue] NTEXT NOT NULL,
-                                        [TargetPointName] NTEXT NOT NULL,
-                                        [TargetPointOutcome] NTEXT NOT NULL,
-                                        [TargetPointOutcomeCustom] NTEXT
+                                CREATE TABLE IF NOT EXISTS customRules(
+                                        ruleId INTEGER PRIMARY KEY AUTOINCREMENT,
+                                        CountryCode NTEXT NOT NULL,
+                                        DataPointName NTEXT NOT NULL,
+                                        DataPointConditionType NTEXT NOT NULL,
+                                        DataPointConditionValue NTEXT NOT NULL,
+                                        TargetPointName NTEXT NOT NULL,
+                                        TargetPointOutcome NTEXT NOT NULL,
+                                        TargetPointOutcomeCustom NTEXT
                                         )
                                     ;
                                 "
@@ -914,7 +919,6 @@ internal static partial class HelperStatic
         return dataTable;
     }
 
-
     internal static void DataWriteSQLiteCustomRules()
     {
         // write back
@@ -943,6 +947,145 @@ internal static partial class HelperStatic
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
 
         sqlToRun.ExecuteNonQuery();
+    }
+
+    #endregion
+
+    #region Custom City Allocation Logic
+
+    private static void DataCreateSQLiteCustomCityAllocationLogic()
+    {
+        FrmMainApp.Logger.Debug(message: "Starting");
+
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = """
+                                    CREATE TABLE IF NOT EXISTS customCityAllocationLogic(
+                                        CountryCode TEXT(3) NOT NULL,
+                                        TargetPointNameCustomCityLogic TEXT(100) NOT NULL,
+                                        PRIMARY KEY(CountryCode, TargetPointNameCustomCityLogic)
+                                );
+                                """
+            ;
+
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+
+        sqlToRun.ExecuteNonQuery();
+        sqliteDB.Close();
+
+        DataWriteSQLiteCustomCityAllocationLogicDefaults();
+    }
+
+    internal static DataTable DataReadSQLiteCustomCityAllocationLogic()
+    {
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = @"
+                                SELECT *
+                                FROM customCityAllocationLogic
+                                WHERE 1=1
+                                ;
+								"
+            ;
+
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+
+        SQLiteDataReader reader = sqlToRun.ExecuteReader();
+        DataTable dataTable = new();
+        dataTable.Load(reader: reader);
+        return dataTable;
+    }
+
+    internal static void DataWriteSQLiteCustomCityAllocationLogicDefaults(bool resetToDefaults = false)
+    {
+        FrmMainApp.Logger.Debug(message: "Starting");
+        string[] defaultCityNameIsAdminName1Arr = { "LIE", "SMR", "MNE", "MKD", "MLT", "SVN" };
+        string[] defaultCityNameIsAdminName2Arr = { "ALA", "BRA", "COL", "CUB", "CYP", "DNK", "FRO", "GTM", "HND", "HRV", "ISL", "LUX", "LVA", "NIC", "NLD", "NOR", "PRI", "PRT", "ROU", "SWE" };
+        string[] defaultCityNameIsAdminName3Arr = { "AUT", "CHE", "CHL", "CZE", "EST", "ESP", "FIN", "GRC", "ITA", "PAN", "PER", "POL", "SRB", "SVK", "USA", "ZAF" };
+        string[] defaultCityNameIsAdminName4Arr = { "BEL", "DEU", "FRA", "GUF", "GLP", "MTQ" };
+
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = null;
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr);
+
+        if (resetToDefaults)
+        {
+            // "SQLite does not have an explicit TRUNCATE TABLE command like other databases" -- what a bunch of idiots.
+            sqlCommandStr = "DELETE FROM customCityAllocationLogic;";
+            sqlToRun = new SQLiteCommand(commandText: sqlCommandStr, connection: sqliteDB);
+            sqlToRun.ExecuteNonQuery();
+        }
+
+        sqlCommandStr = "SELECT COUNT(*) FROM customCityAllocationLogic;";
+
+        sqlToRun = new SQLiteCommand(commandText: sqlCommandStr, connection: sqliteDB);
+
+        // fill w defaults if empty
+        if (!(Convert.ToInt32(value: sqlToRun.ExecuteScalar()) > 0))
+        {
+            string defaultCiltyAllocationLogic = "";
+            foreach (string countryCode in AncillaryListsArrays.GetCountryCodes())
+            {
+                if (!string.IsNullOrEmpty(value: countryCode))
+                {
+                    string countryCodeAllocation;
+                    if (defaultCityNameIsAdminName1Arr.Contains(value: countryCode))
+                    {
+                        countryCodeAllocation = "AdminName1";
+                    }
+                    else if (defaultCityNameIsAdminName2Arr.Contains(value: countryCode))
+                    {
+                        countryCodeAllocation = "AdminName2";
+                    }
+                    else if (defaultCityNameIsAdminName3Arr.Contains(value: countryCode))
+                    {
+                        countryCodeAllocation = "AdminName3";
+                    }
+                    else if (defaultCityNameIsAdminName4Arr.Contains(value: countryCode))
+                    {
+                        countryCodeAllocation = "AdminName4";
+                    }
+                    else
+                    {
+                        countryCodeAllocation = "Undefined";
+                    }
+
+                    defaultCiltyAllocationLogic += "(" + SDoubleQuote + countryCode + SDoubleQuote + "," + SDoubleQuote + countryCodeAllocation + SDoubleQuote + ")," + Environment.NewLine;
+                }
+            }
+
+            // remove last ","
+            defaultCiltyAllocationLogic = defaultCiltyAllocationLogic.Substring(startIndex: 0, length: defaultCiltyAllocationLogic.LastIndexOf(value: ','));
+
+            sqlCommandStr = @"
+                                INSERT INTO customCityAllocationLogic
+                                        (CountryCode,TargetPointNameCustomCityLogic)
+                                        VALUES" +
+                            Environment.NewLine +
+                            defaultCiltyAllocationLogic +
+                            Environment.NewLine +
+                            ";"
+                ;
+
+            sqlToRun = new SQLiteCommand(commandText: sqlCommandStr, connection: sqliteDB);
+
+            sqlToRun.ExecuteNonQuery();
+        }
+    }
+
+    internal static void DataWriteSQLiteCustomCityAllocationLogic()
+    {
+        // write back
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + SSettingsDataBasePath);
+        sqliteDB.Open();
+
+        using SQLiteDataAdapter sqliteAdapter = new(commandText: @"select * from customCityAllocationLogic", connection: sqliteDB);
+        SQLiteCommandBuilder commandBuilder = new(adp: sqliteAdapter);
+        sqliteAdapter.Update(dataTable: FrmSettings.dtCustomCityLogic);
     }
 
     #endregion

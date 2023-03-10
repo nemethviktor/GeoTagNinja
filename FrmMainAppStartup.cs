@@ -33,7 +33,7 @@ public partial class FrmMainApp
             MessageBox.Show(
                 text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorCantCreateSQLiteDB") +
                       ex.Message,
-                caption: "Error",
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             Application.Exit();
@@ -58,7 +58,7 @@ public partial class FrmMainApp
             MessageBox.Show(
                 text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorCantWriteSQLiteDB") +
                       ex.Message,
-                caption: "Error",
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             Application.Exit();
@@ -95,13 +95,50 @@ public partial class FrmMainApp
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorCantLoadSQLiteDB") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorCantLoadSQLiteDB") +
+                      ex.Message,
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
             Application.Exit();
         }
+    }
 
-        // read language and objectnames
-        HelperStatic.DataReadLanguageDataFromCSV();
-        HelperStatic.DataReadCountryCodeDataFromCSV();
+    internal static void AppStartupReadCustomCityLogic()
+    {
+        DtCustomCityLogic = HelperStatic.DataReadSQLiteCustomCityAllocationLogic();
+        lstCityNameIsAdminName1.Clear();
+        lstCityNameIsAdminName2.Clear();
+        lstCityNameIsAdminName3.Clear();
+        lstCityNameIsAdminName4.Clear();
+        lstCityNameIsUndefined.Clear();
+
+        foreach (DataRow drCountryCode in DtCustomCityLogic.Rows)
+        {
+            string countryCode = drCountryCode[columnName: "CountryCode"]
+                .ToString();
+            string targetPointName = drCountryCode[columnName: "TargetPointNameCustomCityLogic"]
+                .ToString();
+            switch (targetPointName)
+            {
+                case "AdminName1":
+                    lstCityNameIsAdminName1.Add(item: countryCode);
+                    break;
+                case "AdminName2":
+                    lstCityNameIsAdminName2.Add(item: countryCode);
+                    break;
+                case "AdminName3":
+                    lstCityNameIsAdminName3.Add(item: countryCode);
+                    break;
+                case "AdminName4":
+                    lstCityNameIsAdminName4.Add(item: countryCode);
+                    break;
+                case "Undefined":
+                    lstCityNameIsUndefined.Add(item: countryCode);
+                    break;
+            }
+        }
     }
 
     /// <summary>
@@ -172,11 +209,29 @@ public partial class FrmMainApp
                 settingTabPage: "tpg_Application",
                 settingId: "tbx_GeoNames_Pwd"
             );
+
+            HelperStatic.SResetMapToZero = HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
+                tableName: "settings",
+                settingTabPage: "tpg_Application",
+                settingId: "ckb_ResetMapToZero"
+            );
+
+            HelperStatic.SOnlyShowFCodePPL = HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
+                tableName: "settings",
+                settingTabPage: "tpg_Application",
+                settingId: "ckb_PopulatedPlacesOnly"
+            );
         }
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB") +
+                      ex.Message,
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
         }
     }
 
@@ -197,7 +252,12 @@ public partial class FrmMainApp
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorCantLoadWebView2") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorCantLoadWebView2") +
+                      ex.Message,
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
             Application.Exit();
         }
     }
@@ -217,7 +277,12 @@ public partial class FrmMainApp
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeComponent") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeComponent") +
+                      ex.Message,
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
         }
     }
 
@@ -235,7 +300,12 @@ public partial class FrmMainApp
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorDoubleBuffer") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorDoubleBuffer") +
+                      ex.Message,
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
         }
     }
 
@@ -259,7 +329,13 @@ public partial class FrmMainApp
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorSettingStartupFolder") + ex.Message, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_ErrorSettingStartupFolder") +
+                      ex.Message,
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
         }
 
         if (startupFolder == null)
@@ -442,35 +518,47 @@ public partial class FrmMainApp
 
         try
         {
-            tbx_lat.Text = HelperStatic.DataReadSQLiteSettings(
+            nud_lat.Text = HelperStatic.DataReadSQLiteSettings(
                 tableName: "settings",
                 settingTabPage: "generic",
                 settingId: "lastLat"
             );
-            tbx_lng.Text = HelperStatic.DataReadSQLiteSettings(
+            if (nud_lat.Text != null)
+            {
+                nud_lat.Value = Convert.ToDecimal(value: nud_lat.Text);
+            }
+
+            nud_lng.Text = HelperStatic.DataReadSQLiteSettings(
                 tableName: "settings",
                 settingTabPage: "generic",
                 settingId: "lastLng"
             );
+            if (nud_lng.Text != null)
+            {
+                nud_lng.Value = Convert.ToDecimal(value: nud_lng.Text);
+            }
         }
         catch
         {
             // ignored
         }
 
-        if (tbx_lat.Text == "" || tbx_lat.Text == "0")
+        if (nud_lat.Text == "" || nud_lat.Text == "0")
         {
             // NASA HQ
             string defaultLat = "38.883056";
             string defaultLng = "-77.016389";
-            tbx_lat.Text = defaultLat;
-            tbx_lng.Text = defaultLng;
+            nud_lat.Text = defaultLat;
+            nud_lng.Text = defaultLng;
+
+            nud_lat.Value = Convert.ToDecimal(value: defaultLat);
+            nud_lng.Value = Convert.ToDecimal(value: defaultLng);
         }
 
         HelperStatic.HsMapMarkers.Clear();
-        HelperStatic.HsMapMarkers.Add(item: (tbx_lat.Text.Replace(oldChar: ',', newChar: '.'), tbx_lng.Text.Replace(oldChar: ',', newChar: '.')));
-        HelperStatic.LastLat = double.Parse(s: tbx_lat.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
-        HelperStatic.LastLng = double.Parse(s: tbx_lng.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
+        HelperStatic.HsMapMarkers.Add(item: (nud_lat.Text.Replace(oldChar: ',', newChar: '.'), nud_lng.Text.Replace(oldChar: ',', newChar: '.')));
+        HelperStatic.LastLat = double.Parse(s: nud_lat.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
+        HelperStatic.LastLng = double.Parse(s: nud_lng.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
     }
 
     /// <summary>
@@ -524,35 +612,34 @@ public partial class FrmMainApp
     /// <summary>
     ///     Loads existing favourites
     /// </summary>
+    /// <param name="clearDropDown"></param>
     /// <returns></returns>
-    private static DataTable AppStartupLoadFavourites()
+    private static DataTable AppStartupLoadFavourites(bool clearDropDown = true)
     {
         Logger.Info(message: "Starting");
-        DataTable dtFavourites = HelperStatic.DataReadSQLiteFavourites();
+        DtFavourites = HelperStatic.DataReadSQLiteFavourites();
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
-        LstFavourites.Clear();
-        AutoCompleteStringCollection autoCompleteCustomSource = new();
-        frmMainAppInstance.cbx_Favourites.Items.Clear();
-        foreach (DataRow drFavourite in dtFavourites.Rows)
+        if (frmMainAppInstance != null && clearDropDown)
         {
-            string favouriteName = drFavourite[columnName: "favouriteName"]
-                .ToString();
-            LstFavourites.Add(item: favouriteName);
-            autoCompleteCustomSource.Add(value: favouriteName);
-            if (frmMainAppInstance != null)
+            LstFavourites.Clear();
+            AutoCompleteStringCollection autoCompleteCustomSource = new();
+            frmMainAppInstance.cbx_Favourites.Items.Clear();
+            foreach (DataRow drFavourite in DtFavourites.Rows)
             {
+                string favouriteName = drFavourite[columnName: "favouriteName"]
+                    .ToString();
+                LstFavourites.Add(item: favouriteName);
+                autoCompleteCustomSource.Add(value: favouriteName);
+
                 frmMainAppInstance.cbx_Favourites.Items.Add(item: favouriteName);
             }
-        }
 
-        if (frmMainAppInstance != null)
-        {
             frmMainAppInstance.cbx_Favourites.AutoCompleteSource = AutoCompleteSource.CustomSource;
             frmMainAppInstance.cbx_Favourites.AutoCompleteCustomSource = autoCompleteCustomSource;
         }
 
-        return dtFavourites;
+        return DtFavourites;
     }
 
     /// <summary>

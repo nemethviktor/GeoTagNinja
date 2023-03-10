@@ -24,6 +24,7 @@ internal static partial class HelperStatic
     internal static double? LastLng;
     internal static bool SNowSelectingAllItems = false;
     internal static bool SResetMapToZero;
+    internal static bool SOnlyShowFCodePPL = false;
     private static decimal _currentExifToolVersionLocal;
     internal static bool ToponomyReplace = false;
     internal static string ToponomyReplaceWithWhat = null;

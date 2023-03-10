@@ -58,7 +58,7 @@ internal static partial class HelperStatic
     /// </summary>
     /// <param name="point">This is a raw coordinate. Could contain numbers or things like "East" on top of numbers</param>
     /// <returns>Double - an actual coordinate</returns>
-    private static double GenericAdjustLatLongNegative(string point)
+    public static double GenericAdjustLatLongNegative(string point)
     {
         string pointOrig = point.Replace(oldValue: " ", newValue: "")
             .Replace(oldChar: ',', newChar: '.');
@@ -69,7 +69,13 @@ internal static partial class HelperStatic
         if (pointOrig.Count(predicate: f => f == '.') == 2)
         {
             bool degreeParse = int.TryParse(s: pointOrig.Split('.')[0], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out int degree);
-            bool minuteParse = double.TryParse(s: Regex.Replace(input: pointOrig.Split('.')[1] + "." + pointOrig.Split('.')[2], pattern: "[SWNE\"-]", replacement: ""), style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double minute);
+            bool minuteParse = double.TryParse(s: Regex.Replace(
+                                                   input: pointOrig.Split('.')[1] + "." + pointOrig.Split('.')[2],
+                                                   pattern: "[SWNE\"-]",
+                                                   replacement: ""),
+                                               style: NumberStyles.Any,
+                                               provider: CultureInfo.InvariantCulture,
+                                               result: out double minute);
             minute = minute / 60;
             pointVal = degree + minute;
         }
@@ -168,6 +174,20 @@ internal static partial class HelperStatic
         return DataReadDTObjectText(
             objectType: "messageBox",
             objectName: messageBoxName
+        );
+    }
+
+    /// <summary>
+    ///     Bit of out sync with the rest but this returns the localised captions for messageboxes (e.g. "info" or "error")
+    /// </summary>
+    /// <param name="captionType">E.g. "info", "error"....</param>
+    /// <returns>Localised version of the above.</returns>
+    internal static string GenericGetMessageBoxCaption(string captionType)
+    {
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        return DataReadDTObjectText(
+            objectType: "messageBoxCaption",
+            objectName: captionType
         );
     }
 
@@ -449,7 +469,13 @@ internal static partial class HelperStatic
                     settingValue: newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture)
                 );
 
-                if (MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewExifToolVersionExists") + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture), caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                if (MessageBox.Show(
+                        text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewExifToolVersionExists") +
+                              newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture),
+                        caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                        buttons: MessageBoxButtons.YesNo,
+                        icon: MessageBoxIcon.Asterisk) ==
+                    DialogResult.Yes)
                 {
                     Process.Start(fileName: "https://exiftool.org/exiftool-" + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture) + ".zip");
                     FrmMainApp.Logger.Trace(message: "User Launched Browser to Download");
@@ -482,7 +508,13 @@ internal static partial class HelperStatic
 
                 if (newestGTNVersion > currentGTNVersionBuild)
                 {
-                    if (MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewGTNVersionExists") + newestGTNVersion, caption: "Info", buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                    if (MessageBox.Show(
+                            text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewGTNVersionExists") +
+                                  newestGTNVersion,
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.YesNo,
+                            icon: MessageBoxIcon.Asterisk) ==
+                        DialogResult.Yes)
                     {
                         Process.Start(fileName: "https://github.com/nemethviktor/GeoTagNinja/releases/download/" + dtApigtnVersion.Rows[index: 0][columnName: "version"] + "/GeoTagNinja_Setup.msi");
                     }
@@ -643,6 +675,12 @@ internal static partial class HelperStatic
                                                                                               .Text +
                                                                                           ".jpg");
         }
+        else if (initiator == "FrmMainAppAPIDataSelection" && frmMainAppInstance != null)
+        {
+            frmMainAppInstance.pbx_imagePreview.Image = null;
+            string fileNameWithoutPath = Path.GetFileName(fileNameWithPath);
+            generatedFileName = Path.Combine(path1: FrmMainApp.UserDataFolderPath, path2: fileNameWithoutPath + ".jpg");
+        }
         else if (initiator == "FrmEditFileData" && frmEditFileDataInstance != null)
         {
             frmEditFileDataInstance.pbx_imagePreview.Image = null;
@@ -694,7 +732,7 @@ internal static partial class HelperStatic
 
         if (img != null)
         {
-            if (initiator == "FrmMainApp" && frmMainAppInstance != null)
+            if ((initiator == "FrmMainApp" || initiator == "FrmMainAppAPIDataSelection") && frmMainAppInstance != null)
             {
                 frmMainAppInstance.pbx_imagePreview.Image = img;
             }
@@ -750,7 +788,6 @@ internal static partial class HelperStatic
             Form promptBox = new();
             promptBox.Text = caption;
             promptBox.ControlBox = false;
-            promptBox.FormBorderStyle = FormBorderStyle.Fixed3D;
             FlowLayoutPanel panel = new();
 
             Label lblText = new();
@@ -769,6 +806,7 @@ internal static partial class HelperStatic
             };
             btnYes.Location = new Point(x: 10, y: lblText.Bottom + 5);
             btnYes.AutoSize = true;
+
             panel.Controls.Add(value: btnYes);
 
             Button btnNo = new()
@@ -797,7 +835,8 @@ internal static partial class HelperStatic
             promptBox.Controls.Add(value: panel);
             promptBox.Size = new Size(width: lblText.Width + 40, height: chk.Bottom + 50);
             promptBox.ShowInTaskbar = false;
-
+            promptBox.AcceptButton = btnYes;
+            promptBox.CancelButton = btnNo;
             promptBox.StartPosition = FormStartPosition.CenterScreen;
             promptBox.ShowDialog();
 

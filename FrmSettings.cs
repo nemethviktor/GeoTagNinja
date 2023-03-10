@@ -14,6 +14,7 @@ namespace GeoTagNinja;
 public partial class FrmSettings : Form
 {
     internal static DataTable dtCustomRules = new();
+    internal static DataTable dtCustomCityLogic = new();
     private static List<Control> lstTpgApplicationControls = new();
     private readonly string languageSavedInSQL;
     private bool _nowLoadingSettingsData;
@@ -253,6 +254,7 @@ public partial class FrmSettings : Form
         _nowLoadingSettingsData = false;
 
         LoadCustomRulesDGV();
+        LoadCustomCityLogicDGV();
     }
 
     /// <summary>
@@ -362,6 +364,51 @@ public partial class FrmSettings : Form
         );
     }
 
+
+    /// <summary>
+    ///     TODO
+    /// </summary>
+    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
+    private void LoadCustomCityLogicDGV()
+    {
+        dtCustomCityLogic = HelperStatic.DataReadSQLiteCustomCityAllocationLogic();
+        dgv_CustomCityLogic.AutoGenerateColumns = false;
+
+        BindingSource source = new();
+        source.DataSource = dtCustomCityLogic;
+        dgv_CustomCityLogic.DataSource = source;
+
+        List<KeyValuePair<string, string>> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: true);
+        DataGridViewComboBoxColumn clh_CountryCode = new()
+        {
+            DataPropertyName = "CountryCode",
+            Name = "clh_CountryCode",
+            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_Country"),
+            DataSource = clh_CountryCodeOptions,
+            ValueMember = "Key",
+            DisplayMember = "Value",
+            ReadOnly = true
+        };
+
+        DataGridViewComboBoxColumn clh_TargetPointNameCustomCityLogic = new()
+        {
+            DataPropertyName = "TargetPointNameCustomCityLogic",
+            Name = "clh_TargetPointNameCustomCityLogic",
+            HeaderText = HelperStatic.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointNameCustomCityLogic")
+        };
+
+        // e.g.: "AdminName1","AdminName2"... 
+        foreach (string itemName in AncillaryListsArrays.CustomCityLogicDataSources())
+        {
+            clh_TargetPointNameCustomCityLogic.Items.Add(item: itemName);
+        }
+
+        dgv_CustomCityLogic.Columns.AddRange(
+            clh_CountryCode,
+            clh_TargetPointNameCustomCityLogic
+        );
+    }
+
     /// <summary>
     ///     Refreshes the list that feeds the country-codes column. Separated because it would also be called when the relevant
     ///     checkbox changes.
@@ -386,12 +433,7 @@ public partial class FrmSettings : Form
             {
                 string countryCode = dataRow[columnName: "ISO_3166_1A3"]
                     .ToString();
-                if (
-                    AncillaryListsArrays.CityNameIsAdminName1Arr.Contains(value: countryCode) ||
-                    AncillaryListsArrays.CityNameIsAdminName2Arr.Contains(value: countryCode) ||
-                    AncillaryListsArrays.CityNameIsAdminName3Arr.Contains(value: countryCode) ||
-                    AncillaryListsArrays.CityNameIsAdminName4Arr.Contains(value: countryCode)
-                )
+                if (!FrmMainApp.lstCityNameIsUndefined.Contains(item: countryCode))
                 {
                     clh_CountryCodeOptions.Remove(item: new KeyValuePair<string, string>(key: dataRow[columnName: "ISO_3166_1A3"]
                                                                                              .ToString()
@@ -439,7 +481,12 @@ public partial class FrmSettings : Form
                         if (cbx.Name == "cbx_Language")
                         {
                             // fire a warning if language has changed. 
-                            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmSettings_cbx_Language_TextChanged"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+                            MessageBox.Show(
+                                text: HelperStatic.GenericGetMessageBoxText(
+                                    messageBoxName: "mbx_FrmSettings_cbx_Language_TextChanged"),
+                                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Warning"),
+                                buttons: MessageBoxButtons.OK,
+                                icon: MessageBoxIcon.Warning);
                         }
                         else if (cbx.Name == "cbx_TryUseGeoNamesLanguage")
                         {
@@ -501,11 +548,21 @@ public partial class FrmSettings : Form
             settingId: "ckb_ResetMapToZero"
         );
 
+        HelperStatic.SOnlyShowFCodePPL = HelperStatic.DataReadCheckBoxSettingTrueOrFalse(
+            tableName: "settings",
+            settingTabPage: "tpg_Application",
+            settingId: "ckb_PopulatedPlacesOnly"
+        );
+
         FrmMainApp.AppStartupPullOverWriteBlankToponomy();
         FrmMainApp.AppStartupPullToponomyRadiusAndMaxRows();
 
         // save customRules
         HelperStatic.DataWriteSQLiteCustomRules();
+
+        HelperStatic.DataWriteSQLiteCustomCityAllocationLogic();
+        // read back/refresh lists.
+        FrmMainApp.AppStartupReadCustomCityLogic();
 
         // in case it changed or something.
         dtCustomRules = HelperStatic.DataReadSQLiteCustomRules();
@@ -892,7 +949,12 @@ public partial class FrmSettings : Form
         if (e.Exception != null &&
             e.Context == DataGridViewDataErrorContexts.Commit)
         {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Warning);
         }
     }
 
@@ -916,8 +978,28 @@ public partial class FrmSettings : Form
             if (clh_TargetPointOutcomeValue == "Custom" && IsNullOrEmpty(value: clh_TargetPointOutcomeCustomValue))
             {
                 e.Cancel = true;
-                MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    text: HelperStatic.GenericGetMessageBoxText(
+                        messageBoxName: "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty"),
+                    caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Warning);
             }
         }
+    }
+
+    private void btn_ResetToDefaults_Click(object sender,
+                                           EventArgs e)
+    {
+        HelperStatic.DataWriteSQLiteCustomCityAllocationLogicDefaults(resetToDefaults: true);
+        // reload
+        dgv_CustomCityLogic.Columns.Clear();
+        LoadCustomCityLogicDGV();
+        MessageBox.Show(
+            text: HelperStatic.GenericGetMessageBoxText(
+                messageBoxName: "mbx_GenericDone"),
+            caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+            buttons: MessageBoxButtons.OK,
+            icon: MessageBoxIcon.Information);
     }
 }

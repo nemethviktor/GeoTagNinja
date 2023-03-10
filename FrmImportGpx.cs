@@ -16,9 +16,11 @@ public partial class FrmImportGpx : Form
     private static string SelectedIanatzName;
     private static string SelectedTzAdjustment;
     private static string ISO639Lang;
-
+    private static int _lastShiftSecond;
+    private static int _lastShiftMinute;
+    private static int _lastShiftHour;
+    private static int _lastShiftDay;
     private readonly FrmMainApp _frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-
 
     /// <summary>
     ///     This form helps import various Track files.
@@ -134,26 +136,48 @@ public partial class FrmImportGpx : Form
         return SelectedTzAdjustment;
     }
 
-    private void cbx_TryUseGeoNamesLanguage_SelectedIndexChanged(object sender,
-                                                                 EventArgs e)
+    /// <summary>
+    ///     Handles the loading of "most recent" time-shift settings
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void btn_PullMostRecentTrackSyncShift_Click(object sender,
+                                                        EventArgs e)
     {
-        try
+        if (_lastShiftSecond == 0 && _lastShiftMinute == 0 && _lastShiftHour == 0 && _lastShiftDay == 0)
         {
-            ComboBox comboBox = (ComboBox)sender;
-            string selected = (string)comboBox.SelectedItem;
-
-            List<string> keys = (from kvp in AncillaryListsArrays.GetISO_639_1_Languages()
-                                 where kvp.Value == selected
-                                 select kvp.Key).ToList();
-
-            ISO639Lang = keys.First()
-                .ToUpper();
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportNoStoredShiftValues"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
         }
-        catch
+
+        if (_lastShiftSecond != 0)
         {
-            ISO639Lang = "en";
+            nud_Seconds.Value = _lastShiftSecond;
+            nud_Seconds.Text = _lastShiftSecond.ToString(provider: CultureInfo.InvariantCulture);
+        }
+
+        if (_lastShiftMinute != 0)
+        {
+            nud_Minutes.Value = _lastShiftMinute;
+            nud_Minutes.Text = _lastShiftMinute.ToString(provider: CultureInfo.InvariantCulture);
+        }
+
+        if (_lastShiftHour != 0)
+        {
+            nud_Hours.Value = _lastShiftHour;
+            nud_Hours.Text = _lastShiftHour.ToString(provider: CultureInfo.InvariantCulture);
+        }
+
+        if (_lastShiftDay != 0)
+        {
+            nud_Days.Value = _lastShiftDay;
+            nud_Days.Text = _lastShiftDay.ToString(provider: CultureInfo.InvariantCulture);
         }
     }
+
 
     #region Events
 
@@ -310,8 +334,17 @@ public partial class FrmImportGpx : Form
         }
         else
         {
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportGpx_FileOrFolderDoesntExist"), caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            MessageBox.Show(
+                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportGpx_FileOrFolderDoesntExist"),
+                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
         }
+
+        _lastShiftSecond = decimal.ToInt16(value: nud_Seconds.Value);
+        _lastShiftMinute = decimal.ToInt16(value: nud_Minutes.Value);
+        _lastShiftHour = decimal.ToInt16(value: nud_Hours.Value);
+        _lastShiftDay = decimal.ToInt16(value: nud_Days.Value);
     }
 
     private void ckb_UseTimeZone_CheckedChanged(object sender,

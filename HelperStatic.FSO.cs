@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Environment;
@@ -43,9 +46,40 @@ internal static partial class HelperStatic
         SChangeFolderIsOkay = false;
 
         // check if there's anything in the write-Q
+
+        // it could happen that there is a ".." (root/parent) in the write-Q, which is erroneous but causes a problem here. 
+        List<string> distinctNamesInDT3 = FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.AsEnumerable()
+            .Select(r => r.Field<string>("fileNameWithoutPath")) // select only wellbore string value
+            .Distinct() // take only unique items
+            .ToList();
+
+        foreach (string fileNameWithoutPath in distinctNamesInDT3)
+        {
+            if (!File.Exists(Path.Combine(FrmMainApp.FolderName.ToString(), fileNameWithoutPath)))
+            {
+                IEnumerable<DataRow> drDT3Rows =
+                    from drDT3 in FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.AsEnumerable()
+                    where drDT3.Field<string>(columnName: "fileNameWithoutPath") != fileNameWithoutPath
+                    select drDT3;
+
+                if (drDT3Rows.Any())
+                {
+                    FrmMainApp.DtFileDataToWriteStage3ReadyToWrite = drDT3Rows.CopyToDataTable();
+                }
+                else
+                {
+                    FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Clear();
+                }
+            }
+        }
+
         if (FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows.Count > 0)
         {
-            DialogResult dialogResult = MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_QuestionFileQIsNotEmpty"), caption: "Info", buttons: MessageBoxButtons.YesNoCancel, icon: MessageBoxIcon.Question);
+            DialogResult dialogResult = MessageBox.Show(
+                text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_QuestionFileQIsNotEmpty"),
+                caption: GenericGetMessageBoxCaption(captionType: "Question"),
+                buttons: MessageBoxButtons.YesNoCancel,
+                icon: MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Yes)
             {
                 while (FileListBeingUpdated || FilesAreBeingSaved)

@@ -91,7 +91,11 @@ public partial class FrmManageFavourites : Form
                                                     state: tbx_State.Text,
                                                     subLocation: tbx_Sub_location.Text);
 
-        MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information);
+        MessageBox.Show(
+            text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"),
+            caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+            buttons: MessageBoxButtons.OK,
+            icon: MessageBoxIcon.Information);
 
         _frmNowLoadingFavouriteData = true;
 

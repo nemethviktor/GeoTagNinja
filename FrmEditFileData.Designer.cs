@@ -53,12 +53,10 @@
             this.lbl_Country = new System.Windows.Forms.Label();
             this.lbl_CountryCode = new System.Windows.Forms.Label();
             this.gbx_GPSData = new System.Windows.Forms.GroupBox();
-            this.tbx_GPSAltitude = new System.Windows.Forms.TextBox();
-            this.tbx_GPSImgDirection = new System.Windows.Forms.TextBox();
-            this.tbx_GPSLongitude = new System.Windows.Forms.TextBox();
-            this.tbx_GPSLatitude = new System.Windows.Forms.TextBox();
+            this.nud_GPSAltitude = new System.Windows.Forms.NumericUpDown();
+            this.nud_GPSLongitude = new System.Windows.Forms.NumericUpDown();
+            this.nud_GPSLatitude = new System.Windows.Forms.NumericUpDown();
             this.lbl_GPSAltitude = new System.Windows.Forms.Label();
-            this.lbl_GPSImgDirection = new System.Windows.Forms.Label();
             this.lbl_GPSLongitude = new System.Windows.Forms.Label();
             this.lbl_GPSLatitude = new System.Windows.Forms.Label();
             this.lbl_Decimal = new System.Windows.Forms.Label();
@@ -106,6 +104,9 @@
             this.gbx_GetToponomy.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_OffsetTimeInfo)).BeginInit();
             this.gbx_GPSData.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_GPSAltitude)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_GPSLongitude)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_GPSLatitude)).BeginInit();
             this.tcr_EditData.SuspendLayout();
             this.tpg_DateTime.SuspendLayout();
             this.gbx_CreateDate.SuspendLayout();
@@ -369,12 +370,10 @@
             // 
             // gbx_GPSData
             // 
-            this.gbx_GPSData.Controls.Add(this.tbx_GPSAltitude);
-            this.gbx_GPSData.Controls.Add(this.tbx_GPSImgDirection);
-            this.gbx_GPSData.Controls.Add(this.tbx_GPSLongitude);
-            this.gbx_GPSData.Controls.Add(this.tbx_GPSLatitude);
+            this.gbx_GPSData.Controls.Add(this.nud_GPSAltitude);
+            this.gbx_GPSData.Controls.Add(this.nud_GPSLongitude);
+            this.gbx_GPSData.Controls.Add(this.nud_GPSLatitude);
             this.gbx_GPSData.Controls.Add(this.lbl_GPSAltitude);
-            this.gbx_GPSData.Controls.Add(this.lbl_GPSImgDirection);
             this.gbx_GPSData.Controls.Add(this.lbl_GPSLongitude);
             this.gbx_GPSData.Controls.Add(this.lbl_GPSLatitude);
             this.gbx_GPSData.Controls.Add(this.lbl_Decimal);
@@ -387,37 +386,63 @@
             this.gbx_GPSData.TabStop = false;
             this.gbx_GPSData.Text = "gbx_GPSData";
             // 
-            // tbx_GPSAltitude
+            // nud_GPSAltitude
             // 
-            this.tbx_GPSAltitude.Location = new System.Drawing.Point(124, 115);
-            this.tbx_GPSAltitude.Name = "tbx_GPSAltitude";
-            this.tbx_GPSAltitude.Size = new System.Drawing.Size(100, 20);
-            this.tbx_GPSAltitude.TabIndex = 4;
-            this.tbx_GPSAltitude.TextChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
+            this.nud_GPSAltitude.DecimalPlaces = 2;
+            this.nud_GPSAltitude.Location = new System.Drawing.Point(124, 117);
+            this.nud_GPSAltitude.Maximum = new decimal(new int[] {
+            65536,
+            0,
+            0,
+            0});
+            this.nud_GPSAltitude.Name = "nud_GPSAltitude";
+            this.nud_GPSAltitude.Size = new System.Drawing.Size(120, 20);
+            this.nud_GPSAltitude.TabIndex = 15;
+            this.nud_GPSAltitude.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
+            this.nud_GPSAltitude.Enter += new System.EventHandler(this.any_nud_Enter);
+            this.nud_GPSAltitude.Leave += new System.EventHandler(this.any_nud_Leave);
             // 
-            // tbx_GPSImgDirection
+            // nud_GPSLongitude
             // 
-            this.tbx_GPSImgDirection.Location = new System.Drawing.Point(124, 89);
-            this.tbx_GPSImgDirection.Name = "tbx_GPSImgDirection";
-            this.tbx_GPSImgDirection.Size = new System.Drawing.Size(100, 20);
-            this.tbx_GPSImgDirection.TabIndex = 3;
-            this.tbx_GPSImgDirection.TextChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
+            this.nud_GPSLongitude.DecimalPlaces = 6;
+            this.nud_GPSLongitude.Location = new System.Drawing.Point(124, 65);
+            this.nud_GPSLongitude.Maximum = new decimal(new int[] {
+            180,
+            0,
+            0,
+            0});
+            this.nud_GPSLongitude.Minimum = new decimal(new int[] {
+            180,
+            0,
+            0,
+            -2147483648});
+            this.nud_GPSLongitude.Name = "nud_GPSLongitude";
+            this.nud_GPSLongitude.Size = new System.Drawing.Size(120, 20);
+            this.nud_GPSLongitude.TabIndex = 14;
+            this.nud_GPSLongitude.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
+            this.nud_GPSLongitude.Enter += new System.EventHandler(this.any_nud_Enter);
+            this.nud_GPSLongitude.Leave += new System.EventHandler(this.any_nud_Leave);
             // 
-            // tbx_GPSLongitude
+            // nud_GPSLatitude
             // 
-            this.tbx_GPSLongitude.Location = new System.Drawing.Point(124, 63);
-            this.tbx_GPSLongitude.Name = "tbx_GPSLongitude";
-            this.tbx_GPSLongitude.Size = new System.Drawing.Size(100, 20);
-            this.tbx_GPSLongitude.TabIndex = 2;
-            this.tbx_GPSLongitude.TextChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
-            // 
-            // tbx_GPSLatitude
-            // 
-            this.tbx_GPSLatitude.Location = new System.Drawing.Point(124, 35);
-            this.tbx_GPSLatitude.Name = "tbx_GPSLatitude";
-            this.tbx_GPSLatitude.Size = new System.Drawing.Size(100, 20);
-            this.tbx_GPSLatitude.TabIndex = 1;
-            this.tbx_GPSLatitude.TextChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
+            this.nud_GPSLatitude.DecimalPlaces = 6;
+            this.nud_GPSLatitude.Location = new System.Drawing.Point(124, 36);
+            this.nud_GPSLatitude.Maximum = new decimal(new int[] {
+            180,
+            0,
+            0,
+            0});
+            this.nud_GPSLatitude.Minimum = new decimal(new int[] {
+            180,
+            0,
+            0,
+            -2147483648});
+            this.nud_GPSLatitude.Name = "nud_GPSLatitude";
+            this.nud_GPSLatitude.Size = new System.Drawing.Size(120, 20);
+            this.nud_GPSLatitude.TabIndex = 13;
+            this.nud_GPSLatitude.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
+            this.nud_GPSLatitude.Enter += new System.EventHandler(this.any_nud_Enter);
+            this.nud_GPSLatitude.Leave += new System.EventHandler(this.any_nud_Leave);
             // 
             // lbl_GPSAltitude
             // 
@@ -427,15 +452,6 @@
             this.lbl_GPSAltitude.Size = new System.Drawing.Size(80, 13);
             this.lbl_GPSAltitude.TabIndex = 12;
             this.lbl_GPSAltitude.Text = "lbl_GPSAltitude";
-            // 
-            // lbl_GPSImgDirection
-            // 
-            this.lbl_GPSImgDirection.AutoSize = true;
-            this.lbl_GPSImgDirection.Location = new System.Drawing.Point(14, 92);
-            this.lbl_GPSImgDirection.Name = "lbl_GPSImgDirection";
-            this.lbl_GPSImgDirection.Size = new System.Drawing.Size(104, 13);
-            this.lbl_GPSImgDirection.TabIndex = 12;
-            this.lbl_GPSImgDirection.Text = "lbl_GPSImgDirection";
             // 
             // lbl_GPSLongitude
             // 
@@ -586,8 +602,8 @@
             this.nud_CreateDateSecondsShift.Size = new System.Drawing.Size(36, 20);
             this.nud_CreateDateSecondsShift.TabIndex = 33;
             this.nud_CreateDateSecondsShift.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
-            this.nud_CreateDateSecondsShift.Enter += new System.EventHandler(this.dtp_nud_Enter);
-            this.nud_CreateDateSecondsShift.Leave += new System.EventHandler(this.dtb_nud_Leave);
+            this.nud_CreateDateSecondsShift.Enter += new System.EventHandler(this.any_nud_Enter);
+            this.nud_CreateDateSecondsShift.Leave += new System.EventHandler(this.any_nud_Leave);
             // 
             // nud_CreateDateMinutesShift
             // 
@@ -606,8 +622,8 @@
             this.nud_CreateDateMinutesShift.Size = new System.Drawing.Size(36, 20);
             this.nud_CreateDateMinutesShift.TabIndex = 32;
             this.nud_CreateDateMinutesShift.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
-            this.nud_CreateDateMinutesShift.Enter += new System.EventHandler(this.dtp_nud_Enter);
-            this.nud_CreateDateMinutesShift.Leave += new System.EventHandler(this.dtb_nud_Leave);
+            this.nud_CreateDateMinutesShift.Enter += new System.EventHandler(this.any_nud_Enter);
+            this.nud_CreateDateMinutesShift.Leave += new System.EventHandler(this.any_nud_Leave);
             // 
             // nud_CreateDateHoursShift
             // 
@@ -626,8 +642,8 @@
             this.nud_CreateDateHoursShift.Size = new System.Drawing.Size(36, 20);
             this.nud_CreateDateHoursShift.TabIndex = 31;
             this.nud_CreateDateHoursShift.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
-            this.nud_CreateDateHoursShift.Enter += new System.EventHandler(this.dtp_nud_Enter);
-            this.nud_CreateDateHoursShift.Leave += new System.EventHandler(this.dtb_nud_Leave);
+            this.nud_CreateDateHoursShift.Enter += new System.EventHandler(this.any_nud_Enter);
+            this.nud_CreateDateHoursShift.Leave += new System.EventHandler(this.any_nud_Leave);
             // 
             // nud_CreateDateDaysShift
             // 
@@ -646,8 +662,8 @@
             this.nud_CreateDateDaysShift.Size = new System.Drawing.Size(36, 20);
             this.nud_CreateDateDaysShift.TabIndex = 30;
             this.nud_CreateDateDaysShift.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
-            this.nud_CreateDateDaysShift.Enter += new System.EventHandler(this.dtp_nud_Enter);
-            this.nud_CreateDateDaysShift.Leave += new System.EventHandler(this.dtb_nud_Leave);
+            this.nud_CreateDateDaysShift.Enter += new System.EventHandler(this.any_nud_Enter);
+            this.nud_CreateDateDaysShift.Leave += new System.EventHandler(this.any_nud_Leave);
             // 
             // dtp_CreateDate
             // 
@@ -773,8 +789,8 @@
             this.nud_TakenDateSecondsShift.Size = new System.Drawing.Size(36, 20);
             this.nud_TakenDateSecondsShift.TabIndex = 21;
             this.nud_TakenDateSecondsShift.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
-            this.nud_TakenDateSecondsShift.Enter += new System.EventHandler(this.dtp_nud_Enter);
-            this.nud_TakenDateSecondsShift.Leave += new System.EventHandler(this.dtp_nud_Enter);
+            this.nud_TakenDateSecondsShift.Enter += new System.EventHandler(this.any_nud_Enter);
+            this.nud_TakenDateSecondsShift.Leave += new System.EventHandler(this.any_nud_Enter);
             // 
             // nud_TakenDateMinutesShift
             // 
@@ -793,8 +809,8 @@
             this.nud_TakenDateMinutesShift.Size = new System.Drawing.Size(36, 20);
             this.nud_TakenDateMinutesShift.TabIndex = 20;
             this.nud_TakenDateMinutesShift.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
-            this.nud_TakenDateMinutesShift.Enter += new System.EventHandler(this.dtp_nud_Enter);
-            this.nud_TakenDateMinutesShift.Leave += new System.EventHandler(this.dtp_nud_Enter);
+            this.nud_TakenDateMinutesShift.Enter += new System.EventHandler(this.any_nud_Enter);
+            this.nud_TakenDateMinutesShift.Leave += new System.EventHandler(this.any_nud_Enter);
             // 
             // nud_TakenDateHoursShift
             // 
@@ -813,8 +829,8 @@
             this.nud_TakenDateHoursShift.Size = new System.Drawing.Size(36, 20);
             this.nud_TakenDateHoursShift.TabIndex = 19;
             this.nud_TakenDateHoursShift.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
-            this.nud_TakenDateHoursShift.Enter += new System.EventHandler(this.dtp_nud_Enter);
-            this.nud_TakenDateHoursShift.Leave += new System.EventHandler(this.dtp_nud_Enter);
+            this.nud_TakenDateHoursShift.Enter += new System.EventHandler(this.any_nud_Enter);
+            this.nud_TakenDateHoursShift.Leave += new System.EventHandler(this.any_nud_Enter);
             // 
             // nud_TakenDateDaysShift
             // 
@@ -833,8 +849,8 @@
             this.nud_TakenDateDaysShift.Size = new System.Drawing.Size(36, 20);
             this.nud_TakenDateDaysShift.TabIndex = 18;
             this.nud_TakenDateDaysShift.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
-            this.nud_TakenDateDaysShift.Enter += new System.EventHandler(this.dtp_nud_Enter);
-            this.nud_TakenDateDaysShift.Leave += new System.EventHandler(this.dtp_nud_Enter);
+            this.nud_TakenDateDaysShift.Enter += new System.EventHandler(this.any_nud_Enter);
+            this.nud_TakenDateDaysShift.Leave += new System.EventHandler(this.any_nud_Enter);
             // 
             // dtp_TakenDate
             // 
@@ -847,8 +863,8 @@
             this.dtp_TakenDate.Size = new System.Drawing.Size(164, 20);
             this.dtp_TakenDate.TabIndex = 17;
             this.dtp_TakenDate.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
-            this.dtp_TakenDate.Enter += new System.EventHandler(this.dtp_nud_Enter);
-            this.dtp_TakenDate.Leave += new System.EventHandler(this.dtb_nud_Leave);
+            this.dtp_TakenDate.Enter += new System.EventHandler(this.any_nud_Enter);
+            this.dtp_TakenDate.Leave += new System.EventHandler(this.any_nud_Leave);
             // 
             // rbt_TakenDateTimeShift
             // 
@@ -992,6 +1008,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbx_OffsetTimeInfo)).EndInit();
             this.gbx_GPSData.ResumeLayout(false);
             this.gbx_GPSData.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_GPSAltitude)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_GPSLongitude)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_GPSLatitude)).EndInit();
             this.tcr_EditData.ResumeLayout(false);
             this.tpg_DateTime.ResumeLayout(false);
             this.gbx_CreateDate.ResumeLayout(false);
@@ -1015,7 +1034,6 @@
 
         internal System.Windows.Forms.PictureBox pbx_imagePreview;
         private System.Windows.Forms.TabPage tpg_Location;
-        private System.Windows.Forms.GroupBox gbx_LocationData;
         private System.Windows.Forms.Button btn_RemoveGeoData;
         private System.Windows.Forms.Button btn_getAllFromWeb_Toponomy;
         private System.Windows.Forms.Button btn_getFromWeb_Toponomy;
@@ -1029,13 +1047,7 @@
         private System.Windows.Forms.Label lbl_State;
         private System.Windows.Forms.Label lbl_Country;
         private System.Windows.Forms.Label lbl_CountryCode;
-        private System.Windows.Forms.GroupBox gbx_GPSData;
-        internal System.Windows.Forms.TextBox tbx_GPSAltitude;
-        internal System.Windows.Forms.TextBox tbx_GPSImgDirection;
-        internal System.Windows.Forms.TextBox tbx_GPSLongitude;
-        internal System.Windows.Forms.TextBox tbx_GPSLatitude;
         private System.Windows.Forms.Label lbl_GPSAltitude;
-        private System.Windows.Forms.Label lbl_GPSImgDirection;
         private System.Windows.Forms.Label lbl_GPSLongitude;
         private System.Windows.Forms.Label lbl_GPSLatitude;
         private System.Windows.Forms.Label lbl_Decimal;
@@ -1083,5 +1095,10 @@
         internal System.Windows.Forms.ListView lvw_FileListEditImages;
         public System.Windows.Forms.ColumnHeader clh_FileName;
         private System.Windows.Forms.GroupBox gbx_GetToponomy;
+        internal System.Windows.Forms.NumericUpDown nud_GPSAltitude;
+        internal System.Windows.Forms.NumericUpDown nud_GPSLongitude;
+        internal System.Windows.Forms.NumericUpDown nud_GPSLatitude;
+        internal System.Windows.Forms.GroupBox gbx_LocationData;
+        internal System.Windows.Forms.GroupBox gbx_GPSData;
     }
 }

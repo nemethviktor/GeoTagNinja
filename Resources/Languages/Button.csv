@@ -14,6 +14,8 @@ btn_GPSData_All,All,Tout
 btn_GPSData_None,None,Aucun
 btn_LocationData_All,All,Tout
 btn_LocationData_None,None,Aucun
+btn_AllData_All,All,Tout
+btn_AllData_None,None,Aucun
 btn_Dates_All,All,Tout
 btn_Dates_None,None,Aucun
 btn_InsertTakenDate,Insert,Insérer
@@ -23,3 +25,6 @@ btn_Save,Save the Current Changes,
 btn_Close,Close,
 btn_Delete,Delete,
 btn_Rename,Rename,
+btn_PullMostRecentTrackSyncShift,"Get the ""latest"" Shift Settings",
+btn_PullMostRecentPasteSettings,"Get the ""latest"" Paste Settings",
+btn_ResetToDefaults,Reset to Defaults,

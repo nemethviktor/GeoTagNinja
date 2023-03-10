@@ -10,9 +10,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.ListView;
-using static System.Net.Mime.MediaTypeNames;
-using Application = System.Windows.Forms.Application;
-using Image = System.Drawing.Image;
 
 namespace GeoTagNinja;
 
@@ -184,7 +181,10 @@ internal static partial class HelperStatic
         }
         else
         {
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningTooManyFilesSelected"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningTooManyFilesSelected"),
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
     }
 
@@ -203,7 +203,10 @@ internal static partial class HelperStatic
         }
         else
         {
-            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNothingToPaste"), caption: "Info", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNothingToPaste"),
+                            caption: GenericGetMessageBoxCaption(captionType: "Warning"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Warning);
         }
     }
 
@@ -224,7 +227,7 @@ internal static partial class HelperStatic
             // make sure file still exists. just in case someone deleted it elsewhere
             if (File.Exists(path: de.FullPathAndName) && lvw_FileListItem.SubItems.Count > 1)
             {
-                int coordCol = frmMainAppInstance.lvw_FileList.GetColumnIndex(column: FileListView.ColumnNames.COORDINATES);
+                int coordCol = frmMainAppInstance.lvw_FileList.GetColumnIndex(column: FileListView.FileListColumns.COORDINATES);
                 string firstSelectedItem = lvw_FileListItem.SubItems[index: coordCol]
                     .Text;
                 if (firstSelectedItem.Replace(oldValue: FileListView.UNKNOWN_VALUE_FILE, newValue: "") != "")
@@ -248,45 +251,24 @@ internal static partial class HelperStatic
                     double parsedLng;
                     if (double.TryParse(s: strLat, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLat) && double.TryParse(s: strLng, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedLng))
                     {
-                        frmMainAppInstance.tbx_lat.Text = strLat;
-                        frmMainAppInstance.tbx_lng.Text = strLng;
+                        frmMainAppInstance.nud_lat.Text = strLat;
+                        frmMainAppInstance.nud_lng.Text = strLng;
+
+                        frmMainAppInstance.nud_lat.Value = Convert.ToDecimal(strLat, CultureInfo.InvariantCulture);
+                        frmMainAppInstance.nud_lng.Value = Convert.ToDecimal(strLng, CultureInfo.InvariantCulture);
                         HsMapMarkers.Add(item: (strLat, strLng));
                     }
                 }
                 else if (SResetMapToZero)
                 {
-                    frmMainAppInstance.tbx_lat.Text = "0";
-                    frmMainAppInstance.tbx_lng.Text = "0";
+                    frmMainAppInstance.nud_lat.Text = "0";
+                    frmMainAppInstance.nud_lng.Text = "0";
+
+                    frmMainAppInstance.nud_lat.Value = 0;
+                    frmMainAppInstance.nud_lng.Value = 0;
                     HsMapMarkers.Add(item: ("0", "0"));
                 }
                 // leave as-is (most likely the last photo)
-            }
-
-            // don't try and create an preview img unless it's the last file
-            if (frmMainAppInstance.lvw_FileList.FocusedItem != null && lvw_FileListItem.Text != null)
-            {
-                if (frmMainAppInstance.lvw_FileList.FocusedItem.Text == lvw_FileListItem.Text ||
-                    frmMainAppInstance.lvw_FileList.SelectedItems[index: 0]
-                        .Text ==
-                    lvw_FileListItem.Text)
-                {
-                    if (File.Exists(path: de.FullPathAndName))
-                    {
-                        await HelperStatic.GenericCreateImagePreview(fileNameWithPath: de.FullPathAndName,
-                                                                     initiator: "FrmMainApp");
-                    }
-                    else if (Directory.Exists(path: de.FullPathAndName))
-                    {
-                        // nothing.
-                    }
-                    else // check it's a drive? --> if so, don't do anything, otherwise warn the item is gone
-                    {
-                        if (de.Type != DirectoryElement.ElementType.Drive)
-                        {
-                            MessageBox.Show(text: GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorFileGoneMissing") + de.FullPathAndName, caption: "Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-                        }
-                    }
-                }
             }
         }
     }
@@ -305,9 +287,10 @@ internal static partial class HelperStatic
                 text: "Ready. Files: Total: " +
                       frmMainAppInstance.lvw_FileList.FileCount +
                       " Geodata: " +
-                      frmMainAppInstance.lvw_FileList.CountItemsWithData(column: FileListView.ColumnNames.COORDINATES));
+                      frmMainAppInstance.lvw_FileList.CountItemsWithData(column: FileListView.FileListColumns.COORDINATES));
         }
     }
+
 
     internal static void ExifRotate(this Image img)
     {
@@ -344,5 +327,26 @@ internal static partial class HelperStatic
             img.RotateFlip(rotateFlipType: rot);
             img.RemovePropertyItem(propid: exifOrientationID);
         }
+    }
+
+    /// <summary>
+    ///     Corrects the half-coordinate to be a valid one (in case over/under 180, which can happen if the map is
+    ///     misbehaving.)
+    /// </summary>
+    /// <param name="coordHalfPair">Lat or Long</param>
+    /// <returns>Rounded to 6, corrected Lat or Long</returns>
+    internal static double GenericCorrectInvalidCoordinate(double coordHalfPair)
+    {
+        if (coordHalfPair < -180)
+        {
+            coordHalfPair = 180 - Math.Abs(value: coordHalfPair) % 180;
+        }
+        else if (coordHalfPair > 180)
+        {
+            coordHalfPair = Math.Abs(value: coordHalfPair) % 180;
+        }
+
+        coordHalfPair = Math.Round(value: coordHalfPair, digits: 6);
+        return coordHalfPair;
     }
 }
