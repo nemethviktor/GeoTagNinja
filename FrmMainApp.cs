@@ -150,8 +150,6 @@ namespace GeoTagNinja
 
             DirectoryElements.ExifTool = _ExifTool;
             HelperDataOtherDataRelated.GenericCreateDataTables();
-            HelperDataLanguageTZ.DataReadLanguageDataFromCSV();
-            HelperDataLanguageTZ.DataReadCountryCodeDataFromCSV();
 
             HelperGenericAppStartup.AppStartupCreateDataBaseFile();
             HelperGenericAppStartup.AppStartupWriteDefaultSettings();
@@ -159,6 +157,8 @@ namespace GeoTagNinja
             HelperGenericAppStartup.AppStartupReadCustomCityLogic();
             HelperGenericAppStartup.AppStartupReadAPILanguage();
             HelperGenericAppStartup.AppStartupApplyDefaults();
+            HelperDataLanguageTZ.DataReadLanguageDataFromCSV();
+            HelperDataLanguageTZ.DataReadCountryCodeDataFromCSV();
             HelperGenericAppStartup.AppStartupCheckWebView2();
             AppStartupInitializeComponentFrmMainApp();
             AppStartupEnableDoubleBuffering();
