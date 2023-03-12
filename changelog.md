@@ -2,6 +2,12 @@
 
 **Build 84XX [202303XX]**
 - NEW & UPDATED:
+  - Added Country to Favourites
+- BUGS & FIXES:
+  - Fixed a bug where the TZ dropdown in Import GPX could cause a crash if the user was in a TZ that wasn't on the dropdown.
+
+**Build 8469 [20230310]**
+- NEW & UPDATED:
   - Entirely rewrote the code to work off DirectoryElements rather than DataTables. This is techy so I won't get into it here, for anyone cares read the code or discussion #62
   - Added functionality to auto-navigate to a selected Favourite in the dropdown.
   - Added a "recall last Track Sync Shift" option.
@@ -13,7 +19,7 @@
   - Added logic to replace hard-coded City-definition logic with user choices.
   - Changed versioning logic. Will use simple build numbers from now on in the "public facing" element of the app. Windows & Visual Studio still require the ##.##.#### logic rather than just a build number but the About section won't show it..
 - BUGS & FIXES:
-  - Fixed a bug where NumerUpDown changes didn't trigger setting fonts to Bold
+  - Fixed a bug where NumericUpDown changes didn't trigger setting fonts to Bold
   - Fixed the map zooming way too far out when negative lat/long values are present
   - Changed the pick-from-API-choices Form to be 1-based-index rather than 0-based
   - Fixed messageBox captions always saying "Error" as output

@@ -134,10 +134,12 @@ internal static class HelperDataFavourites
     ///     Updates an existing Favourite with values
     /// </summary>
     /// <param name="favouriteName">The one to update</param>
+    /// <param name="countryCode"></param>
     /// <param name="city">value to pass</param>
     /// <param name="state">value to pass</param>
     /// <param name="subLocation">value to pass</param>
     internal static void DataWriteSQLiteUpdateFavourite(string favouriteName,
+                                                        string countryCode,
                                                         string city,
                                                         string state,
                                                         string subLocation)
@@ -149,6 +151,7 @@ internal static class HelperDataFavourites
         string sqlCommandStr = @"
                                 UPDATE Favourites 
                                 SET
+                                    CountryCode = @CountryCode,
                                     City = @City,
                                     State = @State,
                                     Sub_location = @Sub_location
@@ -158,6 +161,7 @@ internal static class HelperDataFavourites
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
         sqlToRun.Parameters.AddWithValue(parameterName: "@favouriteName", value: favouriteName);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@CountryCode", value: countryCode);
         sqlToRun.Parameters.AddWithValue(parameterName: "@City", value: city);
         sqlToRun.Parameters.AddWithValue(parameterName: "@State", value: state);
         sqlToRun.Parameters.AddWithValue(parameterName: "@Sub_location", value: subLocation);

@@ -21,10 +21,6 @@ public partial class FrmManageFavourites : Form
     {
         HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
 
-        LoadFavouritesList();
-
-        cbx_Favourites.SelectedIndex = 0;
-
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
@@ -44,9 +40,16 @@ public partial class FrmManageFavourites : Form
                                                                            .Split('.')
                                                                            .Last(), objectName: cItem.Name);
             }
+            // there is only one dropdown atm.
+            else if (cItem.Name == "cbx_Country")
+            {
+                FillCountryDropDown();
+            }
         }
-    }
 
+        LoadFavouritesList();
+        cbx_Favourites.SelectedIndex = 0;
+    }
 
     private void cbx_favouriteName_SelectedIndexChanged(object sender,
                                                         EventArgs e)
@@ -77,6 +80,31 @@ public partial class FrmManageFavourites : Form
 
                 lstOriginals.Add(key: cItem.Name, value: cItem.Text);
             }
+            // there is only one dropdown atm.
+            else if (cItem.Name == "cbx_Country")
+            {
+                string countryCode = cItem.Text = drFavouriteDataRow[columnName: "CountryCode"]
+                    .ToString();
+                string sqliteText = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
+                    queryWhat: "ISO_3166_1A3",
+                    inputVal: countryCode,
+                    returnWhat: "Country");
+
+                if (cbx_Country.Items.Count == 0)
+                {
+                    FillCountryDropDown();
+                }
+
+                try
+                {
+                    cbx_Country.SelectedIndex = cbx_Country.Items.IndexOf(value: sqliteText);
+                }
+                catch
+                {
+                    cbx_Country.SelectedIndex = 0; // blank
+                    break;
+                }
+            }
         }
 
         _frmNowLoadingFavouriteData = false;
@@ -86,7 +114,13 @@ public partial class FrmManageFavourites : Form
                                 EventArgs e)
     {
         string oldName = cbx_Favourites.Text;
+        string countryCode = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
+            queryWhat: "Country",
+            inputVal: cbx_Country.Text,
+            returnWhat: "ISO_3166_1A3");
+
         HelperDataFavourites.DataWriteSQLiteUpdateFavourite(favouriteName: cbx_Favourites.Text,
+                                                            countryCode: countryCode,
                                                             city: tbx_City.Text,
                                                             state: tbx_State.Text,
                                                             subLocation: tbx_Sub_location.Text);
@@ -178,7 +212,6 @@ public partial class FrmManageFavourites : Form
         }
     }
 
-
     private void btn_Delete_Click(object sender,
                                   EventArgs e)
     {
@@ -206,6 +239,15 @@ public partial class FrmManageFavourites : Form
         {
             cbx_Favourites.Items.Add(item: drRow[columnName: "favouriteName"]
                                          .ToString());
+        }
+    }
+
+    private void FillCountryDropDown()
+    {
+        cbx_Country.Items.Clear();
+        foreach (string country in HelperGenericAncillaryListsArrays.GetCountries())
+        {
+            cbx_Country.Items.Add(item: country);
         }
     }
 
