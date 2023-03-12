@@ -53,13 +53,46 @@ public partial class FrmImportGpx : Form
         }
 
         // this is a little lame but works. -> try to default to local TZ
+        bool TZFound = false;
         for (int i = 0; i < cbx_UseTimeZone.Items.Count; i++)
         {
             if (cbx_UseTimeZone.GetItemText(item: cbx_UseTimeZone.Items[index: i])
                 .Contains(value: LocalIanatZname))
             {
                 cbx_UseTimeZone.SelectedIndex = i;
+                TZFound = true;
                 break;
+            }
+        }
+
+        // it's entirely possible that a TZ doesn't get found for whatever reason (largely that I'm a derp and somehow excluded it from the list. In this case we try to find something similar.)
+        if (!TZFound)
+        {
+            bool localTZBaseIsNegative = TimeZoneInfo.Local.BaseUtcOffset.Hours < 0;
+            char plusMinusChar;
+            plusMinusChar = localTZBaseIsNegative
+                ? '-'
+                : '+';
+
+            // loop again. duh.
+            for (int i = 0; i < cbx_UseTimeZone.Items.Count; i++)
+            {
+                if (cbx_UseTimeZone.GetItemText(item: cbx_UseTimeZone.Items[index: i])
+                    .StartsWith(value: "(" +
+                                       plusMinusChar +
+                                       TimeZoneInfo.Local.BaseUtcOffset.ToString()
+                                           .Substring(startIndex: 0, length: 5)))
+                {
+                    cbx_UseTimeZone.SelectedIndex = i;
+                    TZFound = true;
+                    break;
+                }
+            }
+
+            // if still fail then just pick the first and sod it.
+            if (!TZFound)
+            {
+                cbx_UseTimeZone.SelectedIndex = 0;
             }
         }
 
