@@ -84,7 +84,8 @@ public partial class FrmMainApp : Form
     private static bool _StopProcessingRows;
 
     // this is for copy-paste
-    internal static Dictionary<ElementAttribute, string> CopyPoolDict = new();
+    // the elements are: EA, Value, Changed?
+    internal static Dictionary<ElementAttribute, Tuple<string, bool>> CopyPoolDict = new();
 
     // this is for checking if files need to be re-parsed.
     internal static DataTable DtFileDataSeenInThisSession;

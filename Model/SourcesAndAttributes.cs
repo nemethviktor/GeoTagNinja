@@ -281,6 +281,12 @@ public class SourcesAndAttributes
             }
         };
 
+    /// <summary>
+    /// Returns the (usually column-header) equivalent of an Attribute (e.g. ElementAttribute.RemoveAllGPS -> "gps*" or ElementAttribute.GPSAltitude -> "GPSAltitude")
+    /// </summary>
+    /// <param name="attribute">ElementAttribute Name e.g. ElementAttribute.GPSAltitude</param>
+    /// <returns>string, e.g. "GPSAltitude"</returns>
+    /// <exception cref="ArgumentException"></exception>
     public static string GetAttributeName(ElementAttribute attribute)
     {
         switch (attribute)
@@ -374,6 +380,12 @@ public class SourcesAndAttributes
         }
     }
 
+    /// <summary>
+    /// Finds and returns the ElementAttribute eqv of a string (e.g. "gps*" -> ElementAttribute.RemoveAllGPS  or "GPSAltitude" -> ElementAttribute.GPSAltitude )
+    /// </summary>
+    /// <param name="attributeToFind">ColumnHeader or other string (e.g. "gps*", "GPSAltitude")</param>
+    /// <returns>ElementAttribute e.g. ElementAttribute.RemoveAllGPS </returns>
+    /// <exception cref="ArgumentException"></exception>
     public static ElementAttribute GetAttributeFromString(string attributeToFind)
     {
         switch (attributeToFind)

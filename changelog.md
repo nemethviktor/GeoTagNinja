@@ -5,6 +5,7 @@
   - Added Country to Favourites
 - BUGS & FIXES:
   - Fixed a bug where the TZ dropdown in Import GPX could cause a crash if the user was in a TZ that wasn't on the dropdown.
+  - Paste-values logic minor revamp
 
 **Build 8469 [20230310]**
 - NEW & UPDATED:

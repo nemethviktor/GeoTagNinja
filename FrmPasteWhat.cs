@@ -14,7 +14,7 @@ namespace GeoTagNinja;
 public partial class FrmPasteWhat : Form
 {
     private static string _initiatorName;
-    private static readonly List<string> _lastCheckedCheckBoxes = new();
+    private static readonly List<string> LastCheckedCheckBoxes = new();
     internal static string FileDateCopySourceFileNameWithoutPath;
 
     /// <summary>
@@ -25,7 +25,7 @@ public partial class FrmPasteWhat : Form
     ///     - If the latter then things are a bit different because there is no "copy" so to say, only "paste" (ie there is no
     ///     CTRL+C element taking place) and we take data directly from the file
     /// </summary>
-    /// <param name="initiator">This will be either the Edit File Form (FrmEditFileData) or the Main Form(FrmMainApp)</param>
+    /// <param name="initiator">This will be either the Edit File Form (FrmEditFileData) or the Main Form (FrmMainApp)</param>
     public FrmPasteWhat(string initiator)
     {
         _initiatorName = initiator;
@@ -57,44 +57,35 @@ public partial class FrmPasteWhat : Form
                                                                                   .Stage1EditFormIntraTabTransferQueue))
                     {
                         tagsToPasteAttributeList.Add(item: attribute);
+
+                        // https://stackoverflow.com/a/28352807/3968494
+                        if (Controls.Find(key: "ckb_" + GetAttributeName(attribute: attribute), searchAllChildren: true)
+                                .FirstOrDefault() is CheckBox cbx)
+                        {
+                            cbx.Checked = true;
+                        }
                     }
                 }
             }
         }
         else if (_initiatorName == "FrmMainApp")
         {
-            foreach (KeyValuePair<ElementAttribute, string> keyValuePair in FrmMainApp.CopyPoolDict)
+            foreach (KeyValuePair<ElementAttribute, Tuple<string, bool>> keyValuePair in FrmMainApp.CopyPoolDict)
             {
-                tagsToPasteAttributeList.Add(item: keyValuePair.Key);
+                ElementAttribute attribute = keyValuePair.Key;
+                tagsToPasteAttributeList.Add(item: attribute);
+
+                // https://stackoverflow.com/a/28352807/3968494
+                if (Controls.Find(key: "ckb_" + GetAttributeName(attribute: attribute), searchAllChildren: true)
+                        .FirstOrDefault() is CheckBox cbx)
+                {
+                    cbx.Checked = keyValuePair.Value.Item2;
+                }
             }
         }
         else
         {
             throw new NotImplementedException();
-        }
-
-        HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        foreach (Control cItem in c)
-        {
-            if (cItem is CheckBox cbx)
-            {
-                ElementAttribute attribute;
-                if (cbx.Name.Substring(startIndex: 4) == "OffsetTime")
-
-                {
-                    attribute = ElementAttribute.OffsetTime; // fml. basically the actual tbx_OffsetTimeList is a TextBox so it would not be picked up as a change.
-                }
-                else
-                {
-                    attribute = GetAttributeFromString(attributeToFind: cbx.Name.Substring(startIndex: 4));
-                }
-
-                if (tagsToPasteAttributeList.Contains(item: attribute))
-                {
-                    cbx.Checked = true;
-                }
-            }
         }
 
         rbt_PasteTakenDateActual.Enabled = ckb_TakenDate.Checked;
@@ -151,7 +142,7 @@ public partial class FrmPasteWhat : Form
             }
         }
 
-        btn_PullMostRecentPasteSettings.Enabled = _lastCheckedCheckBoxes.Count > 0;
+        btn_PullMostRecentPasteSettings.Enabled = LastCheckedCheckBoxes.Count > 0;
     }
 
     /// <summary>
@@ -209,7 +200,7 @@ public partial class FrmPasteWhat : Form
 
         // get a list of tag names to paste based on what is checked on the checkboxes in the Form
         List<ElementAttribute> tagsToPaste = new();
-        _lastCheckedCheckBoxes.Clear();
+        LastCheckedCheckBoxes.Clear();
 
         foreach (Control cItem in c)
         {
@@ -220,7 +211,7 @@ public partial class FrmPasteWhat : Form
                 {
                     string attributeString = cItem.Name.Substring(startIndex: 4);
                     ElementAttribute attribute = GetAttributeFromString(attributeToFind: attributeString);
-                    _lastCheckedCheckBoxes.Add(item: cItem.Name);
+                    LastCheckedCheckBoxes.Add(item: cItem.Name);
 
                     // "EndsWith" doesn't work here because the CheckBox.Name never ends with "Shift".
                     if (attributeString == "TakenDate" || attributeString == "CreateDate")
@@ -520,7 +511,7 @@ public partial class FrmPasteWhat : Form
                     if (dataInCopyDict)
                     {
                         pasteValueStr = FrmMainApp.CopyPoolDict.First(predicate: c => c.Key == attribute)
-                            .Value; // https://stackoverflow.com/a/25298643/3968494
+                            .Value.Item1; // https://stackoverflow.com/a/25298643/3968494
                         copyPasteDict.Add(key: attribute, value: pasteValueStr);
                     }
                     else // this will be marked as "remove" later
@@ -737,7 +728,7 @@ public partial class FrmPasteWhat : Form
         foreach (Control cItem in c)
         {
             CheckBox thisCheckBox = (CheckBox)cItem;
-            thisCheckBox.Checked = _lastCheckedCheckBoxes.Contains(item: cItem.Name);
+            thisCheckBox.Checked = LastCheckedCheckBoxes.Contains(item: cItem.Name);
         }
     }
 

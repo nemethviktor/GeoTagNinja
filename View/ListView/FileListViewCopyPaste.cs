@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
@@ -70,17 +71,18 @@ internal static class FileListViewCopyPaste
                     if (dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
                     {
                         FrmMainApp.CopyPoolDict.Add(key: attribute,
-                                                    value: dirElemFileToCopyFrom.GetAttributeValueString(
-                                                        attribute: attribute,
-                                                        version: DirectoryElement.AttributeVersion
-                                                            .Stage3ReadyToWrite));
+                                                    value: new Tuple<string, bool>(dirElemFileToCopyFrom.GetAttributeValueString(
+                                                                                       attribute: attribute,
+                                                                                       version: DirectoryElement.AttributeVersion
+                                                                                           .Stage3ReadyToWrite), true));
                     }
                     else if (dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Original))
                     {
                         FrmMainApp.CopyPoolDict.Add(key: attribute,
-                                                    value: dirElemFileToCopyFrom.GetAttributeValueString(
-                                                        attribute: attribute,
-                                                        version: DirectoryElement.AttributeVersion.Original));
+                                                    value: new Tuple<string, bool>(dirElemFileToCopyFrom.GetAttributeValueString(
+                                                                                       attribute: attribute,
+                                                                                       version: DirectoryElement.AttributeVersion
+                                                                                           .Original), false));
                     }
                 }
             }
