@@ -165,6 +165,7 @@
     <Compile Include="FrmMainApp.Startup.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Helpers\HelperExifWriteTrackDataToSideCar.cs" />
     <Compile Include="Helpers\HelperGenericAppStartup.cs" />
     <Compile Include="Helpers\HelperGenericAncillaryListsArrays.cs" />
     <Compile Include="FrmAboutBox.cs">

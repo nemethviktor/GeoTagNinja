@@ -3,9 +3,11 @@
 **Build 84XX [202303XX]**
 - NEW & UPDATED:
   - Added Country to Favourites
+  - Bumped exifTool to v12.58
 - BUGS & FIXES:
   - Fixed a bug where the TZ dropdown in Import GPX could cause a crash if the user was in a TZ that wasn't on the dropdown.
   - Paste-values logic minor revamp
+  - Rewrote the Track Import logic not to overflow when too many files were involved. (see ticket 78)
 
 **Build 8469 [20230310]**
 - NEW & UPDATED:

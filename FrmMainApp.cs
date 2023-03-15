@@ -1213,6 +1213,7 @@ public partial class FrmMainApp : Form
         if (validFilesToImport)
         {
             FrmImportGpx frmImportGpx = new();
+            frmImportGpx.StartPosition = FormStartPosition.CenterScreen;
             frmImportGpx.ShowDialog();
         }
         else

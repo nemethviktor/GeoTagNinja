@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using GeoTagNinja.Model;
+using Microsoft.VisualBasic;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers;
@@ -46,21 +47,13 @@ internal static class HelperExifReadTrackData
         HelperVariables._sOutputMsg = "";
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
-        // this is a list of files to be tagged
-        List<string> tagFileList = new();
+        Directory.CreateDirectory(path: HelperVariables.UserDataFolderPath + @"\tmpLocFiles");
+        List<string> trackFileList = new();
+        List<string> imageFileList = new();
+
         if (frmMainAppInstance != null)
         {
-            foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
-            {
-                string pathToTag = Path.Combine(path1: frmMainAppInstance.tbx_FolderName.Text, path2: lvi.Text);
-                if (File.Exists(path: pathToTag))
-                {
-                    tagFileList.Add(item: pathToTag);
-                }
-            }
-
-            // this is the list of gpx or json (or other) files that contain the timestamped data. 
-            List<string> trackFileList = new();
+            // trackFileList
             if (trackFileLocationType == "file")
             {
                 trackFileList.Add(item: trackFileLocationVal);
@@ -75,61 +68,16 @@ internal static class HelperExifReadTrackData
                     .ToList();
             }
 
-            #region ExifToolConfiguration
-
-            string exifToolExe = Path.Combine(path1: HelperVariables.ResourcesFolderPath, path2: "exiftool.exe");
-
-            string folderNameToUse = frmMainAppInstance.tbx_FolderName.Text;
-            string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 ";
-
-            List<string> exifArgs = new();
-            // needs a space before and after.
-            string commonArgs = " -a -s -s -struct -sort -G -ee -args ";
-
-            #endregion
-
-            // add track listOfAsyncCompatibleFileNamesWithOutPath
-            foreach (string trackFile in trackFileList)
+            // imageFileList
+            foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
             {
-                exiftoolCmd += " -geotag=" + HelperVariables.SDoubleQuote + trackFile + HelperVariables.SDoubleQuote;
+                string pathToTag = Path.Combine(path1: frmMainAppInstance.tbx_FolderName.Text, path2: lvi.Text);
+                if (File.Exists(path: pathToTag))
+                {
+                    imageFileList.Add(item: pathToTag);
+                }
             }
 
-            // add what to compare against + TZ
-            string tmpTZAdjust = HelperVariables.SDoubleQuote;
-            if (useTZAdjust)
-            {
-                tmpTZAdjust = TZVal + HelperVariables.SDoubleQuote;
-            }
-
-            exiftoolCmd += " " + HelperVariables.SDoubleQuote + "-geotime<${" + compareTZAgainst + "#}" + tmpTZAdjust;
-
-            // time shift
-            if (timeShiftSeconds < 0)
-            {
-                exiftoolCmd += " -geosync=" + timeShiftSeconds;
-            }
-            else if (timeShiftSeconds > 0)
-            {
-                exiftoolCmd += " -geosync=+" + timeShiftSeconds;
-            }
-
-            // add -api GeoMaxIntSecs & -api GeoMaxExtSecs
-            exiftoolCmd += " -api GeoMaxIntSecs=" + GeoMaxIntSecs.ToString(provider: CultureInfo.InvariantCulture);
-            exiftoolCmd += " -api GeoMaxExtSecs=" + GeoMaxExtSecs.ToString(provider: CultureInfo.InvariantCulture);
-
-            // add "what files to act upon"
-            foreach (string pathToTagFile in tagFileList)
-            {
-                exiftoolCmd += " " + HelperVariables.SDoubleQuote + pathToTagFile + HelperVariables.SDoubleQuote;
-            }
-
-            // verbose logging
-            exiftoolCmd += " -v2";
-
-            // add output path to tmp xmp
-
-            // make sure tmp exists -> this goes into "our" folder
-            Directory.CreateDirectory(path: HelperVariables.UserDataFolderPath + @"\tmpLocFiles");
             string tmpFolder = Path.Combine(HelperVariables.UserDataFolderPath + @"\tmpLocFiles");
 
             // this is a little superflous but...
@@ -140,16 +88,15 @@ internal static class HelperExifReadTrackData
                 file.Delete();
             }
 
-            exiftoolCmd += " " + " -srcfile " + HelperVariables.SDoubleQuote + tmpFolder + @"\%F.xmp" + HelperVariables.SDoubleQuote;
-            exiftoolCmd += " -overwrite_original_in_place";
-
-            ///////////////
-            await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: commonArgs + exiftoolCmd,
-                                                         frmMainAppInstance: null,
-                                                         initiator: "ExifGetTrackSyncData");
-
-            ///////////////
-            //// try to collect the xmp/xml listOfAsyncCompatibleFileNamesWithOutPath and then read them back into the listview.
+            // this triggers ExifTool
+            await HelperExifWriteTrackDataToSideCar.ExifWriteTrackDataToSideCar(trackFileList: trackFileList,
+                                                                                imageFileList: imageFileList,
+                                                                                compareTZAgainst: compareTZAgainst,
+                                                                                TZVal: TZVal,
+                                                                                GeoMaxIntSecs: GeoMaxIntSecs,
+                                                                                GeoMaxExtSecs: GeoMaxExtSecs,
+                                                                                timeShiftSeconds: timeShiftSeconds
+            );
 
             foreach (FileInfo exifFileIn in diTmpLocFiles.EnumerateFiles())
             {
