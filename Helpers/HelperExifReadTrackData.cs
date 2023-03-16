@@ -18,7 +18,7 @@ namespace GeoTagNinja.Helpers;
 internal static class HelperExifReadTrackData
 {
     /// <summary>
-    ///     Fires off a command to try to parse Track listOfAsyncCompatibleFileNamesWithOutPath and link them up with data in
+    ///     Fires off a command to try to parse Track files and link them up with data in
     ///     the main grid
     /// </summary>
     /// <param name="trackFileLocationType">File or Folder</param>
@@ -50,6 +50,7 @@ internal static class HelperExifReadTrackData
         Directory.CreateDirectory(path: HelperVariables.UserDataFolderPath + @"\tmpLocFiles");
         List<string> trackFileList = new();
         List<string> imageFileList = new();
+        ListView lvw = frmMainAppInstance.lvw_FileList;
 
         if (frmMainAppInstance != null)
         {
@@ -71,7 +72,10 @@ internal static class HelperExifReadTrackData
             // imageFileList
             foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
             {
-                string pathToTag = Path.Combine(path1: frmMainAppInstance.tbx_FolderName.Text, path2: lvi.Text);
+                DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                               .Index]
+                                                                                                                  .Text);
+                string pathToTag = dirElemFileToModify.FileNameWithPath;
                 if (File.Exists(path: pathToTag))
                 {
                     imageFileList.Add(item: pathToTag);
@@ -136,7 +140,7 @@ internal static class HelperExifReadTrackData
                             // de-dupe. this is pretty poor performance but the dataset is small
                             DataTable dtDistinctFileExifTable = dtFileExifTable.DefaultView.ToTable(distinct: true);
 
-                            ListView lvw = frmMainAppInstance.lvw_FileList;
+                            lvw = frmMainAppInstance.lvw_FileList;
                             ListViewItem lvi = frmMainAppInstance.lvw_FileList.FindItemWithText(text: exifFileIn.Name.Substring(startIndex: 0, length: exifFileIn.Name.Length - 4));
 
                             if (lvi != null)
@@ -152,11 +156,11 @@ internal static class HelperExifReadTrackData
                                     ElementAttribute.Sub_location
                                 };
 
-                                string fileNameWithoutPath = lvi.Text;
                                 DirectoryElement dirElemFileToModify =
-                                    FrmMainApp.DirectoryElements.FindElementByItemName(
-                                        FileNameWithPath: Path.Combine(path1: FrmMainApp.FolderName,
-                                                                       path2: fileNameWithoutPath));
+                                    FrmMainApp.DirectoryElements.FindElementByItemUniqueID(lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                            .Index]
+                                                                                               .Text);
+                                string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
 
                                 // get the current stuff, either from DE3 or Orig or just blank if none.
                                 string currentLat = dirElemFileToModify.GetAttributeValueString(

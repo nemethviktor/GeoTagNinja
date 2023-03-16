@@ -32,10 +32,30 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
     /// <summary>
     ///     Searches through the list of directory elements for the element
+    ///     with the given item name. If nothing is found, return null.
+    ///     Prepwork atm for allowing for multiple filenames across folders as these IDs are in fact unique.
+    /// </summary>
+    /// <param name="UniqueID"></param>
+    /// <returns></returns>
+    public DirectoryElement FindElementByItemUniqueID(string UniqueID)
+    {
+        foreach (DirectoryElement item in this)
+        {
+            if (item.UniqueID.ToString() == UniqueID)
+            {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    ///     Searches through the list of directory elements for the element
     ///     with the given item name. Uses FileNameWithPath. If nothing is found, return null.
     /// </summary>
     /// <param name="FileNameWithPath">The file name to search for (w/ path)</param>
-    public DirectoryElement FindElementByItemName(string FileNameWithPath)
+    public DirectoryElement FindElementByFileNameWithPath(string FileNameWithPath)
     {
         foreach (DirectoryElement item in this)
         {
@@ -62,7 +82,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
     public void Add(DirectoryElement item,
                     bool replaceIfExists)
     {
-        DirectoryElement exstgElement = FindElementByItemName(FileNameWithPath: item.FileNameWithPath);
+        DirectoryElement exstgElement = FindElementByFileNameWithPath(FileNameWithPath: item.FileNameWithPath);
         if (exstgElement != null)
         {
             if (replaceIfExists)
@@ -81,112 +101,118 @@ public class DirectoryElementCollection : List<DirectoryElement>
     }
 
     /// <summary>
-    ///     Parses the given folder into DirectoryElements.
+    ///     Parses the given folder (or list of files if in CollectionMode) into DirectoryElements.
     ///     The previous collection of directory elements is cleared before.
     ///     The statusMethod to be passed optionally accepts a string
     ///     containing a short status text.
     /// </summary>
-    /// <param name="folder">The folder to parse</param>
+    /// <param name="folderOrCollectionFileName"></param>
     /// <param name="statusMethod">The method to call for status updates</param>
-    public void ParseFolderToDEs(string folder,
-                                 Action<string> statusMethod)
+    /// <param name="collectionModeEnabled"></param>
+    public void ParseFolderOrFileListToDEs(string folderOrCollectionFileName,
+                                           Action<string> statusMethod,
+                                           bool collectionModeEnabled)
     {
-        Logger.Trace(message: $"Start Parsing Folder '{folder}'");
+        Logger.Trace(message: $"Start Parsing Folder '{folderOrCollectionFileName}'");
         statusMethod(obj: "Scanning folder: Initializing ...");
 
         if (_ExifTool == null)
         {
-            throw new InvalidOperationException(message: $"Cannot scan a folder (currently '{folder}') when the EXIF Tool was not set for the DirectoryElementCollection.");
+            throw new InvalidOperationException(message: $"Cannot scan a folder (currently '{folderOrCollectionFileName}') when the EXIF Tool was not set for the DirectoryElementCollection.");
         }
 
-        // ******************************
-        // Special Case is "MyComputer"...
-        // Only list drives... then exit
-        if (folder == SpecialFolder.MyComputer.ToString())
+        if (!collectionModeEnabled)
         {
-            Logger.Trace(message: "Listing Drives");
-            foreach (DriveInfo drive in DriveInfo.GetDrives())
+            // ******************************
+            // Special Case is "MyComputer"...
+            // Only list drives... then exit
+            if (folderOrCollectionFileName == SpecialFolder.MyComputer.ToString())
             {
-                Logger.Trace(message: "Drive:" + drive.Name);
-                Add(item: new DirectoryElement(
-                        itemNameWithoutPath: drive.Name,
-                        type: DirectoryElement.ElementType.Drive,
-                        fileNameWithPath: drive.RootDirectory.FullName
-                    ));
-            }
-
-            Logger.Trace(message: "Listing Drives - OK");
-            return;
-        }
-
-        // ******************************
-        // first, add a parent folder. "dot dot"
-        try
-        {
-            Logger.Trace(message: "Files: Adding Parent Folder");
-            string tmpStrParent = HelperFileSystemOperators.FsoGetParent(path: folder);
-            if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
-            {
-                Add(item: new DirectoryElement(
-                        itemNameWithoutPath: FrmMainApp.ParentFolder,
-                        type: DirectoryElement.ElementType.ParentDirectory,
-                        fileNameWithPath: tmpStrParent
-                    ));
-            }
-        }
-        catch (Exception ex)
-        {
-            Logger.Error(message: $"Could not add parent. Error: {ex.Message}");
-            MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
-                            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
-                            buttons: MessageBoxButtons.OK,
-                            icon: MessageBoxIcon.Error);
-        }
-
-        // ******************************
-        // list folders, ReparsePoint means these are links.
-        statusMethod(obj: "Scanning folder: processing directories ...");
-        Logger.Trace(message: "Listing Folders");
-        List<string> dirs = new();
-        try
-        {
-            DirectoryInfo di = new(path: folder);
-            foreach (DirectoryInfo directoryInfo in di.GetDirectories())
-            {
-                if (directoryInfo.FullName == SpecialFolder.MyComputer.ToString())
+                Logger.Trace(message: "Listing Drives");
+                foreach (DriveInfo drive in DriveInfo.GetDrives())
                 {
-                    // It's the MyComputer entry
-                    Logger.Trace(message: "MyComputer: " + directoryInfo.Name);
+                    Logger.Trace(message: "Drive:" + drive.Name);
                     Add(item: new DirectoryElement(
-                            itemNameWithoutPath: directoryInfo.Name,
-                            type: DirectoryElement.ElementType.MyComputer,
-                            fileNameWithPath: directoryInfo.FullName
+                            itemNameWithoutPath: drive.Name,
+                            type: DirectoryElement.ElementType.Drive,
+                            fileNameWithPath: drive.RootDirectory.FullName
                         ));
                 }
-                else if (directoryInfo.Attributes.ToString()
-                             .Contains(value: "Directory") &&
-                         !directoryInfo.Attributes.ToString()
-                             .Contains(value: "ReparsePoint"))
+
+                Logger.Trace(message: "Listing Drives - OK");
+                return;
+            }
+
+            // ******************************
+            // first, add a parent folder. "dot dot"
+
+            try
+            {
+                Logger.Trace(message: "Files: Adding Parent Folder");
+                string tmpStrParent = HelperFileSystemOperators.FsoGetParent(path: folderOrCollectionFileName);
+                if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
                 {
-                    Logger.Trace(message: "Folder: " + directoryInfo.Name);
                     Add(item: new DirectoryElement(
-                            itemNameWithoutPath: directoryInfo.Name,
-                            type: DirectoryElement.ElementType.SubDirectory,
-                            fileNameWithPath: directoryInfo.FullName
+                            itemNameWithoutPath: FrmMainApp.ParentFolder,
+                            type: DirectoryElement.ElementType.ParentDirectory,
+                            fileNameWithPath: tmpStrParent
                         ));
                 }
             }
-        }
-        catch (Exception ex)
-        {
-            Logger.Error(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
-                            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
-                            buttons: MessageBoxButtons.OK,
-                            icon: MessageBoxIcon.Error);
-        }
+            catch (Exception ex)
+            {
+                Logger.Error(message: $"Could not add parent. Error: {ex.Message}");
+                MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
+                                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                                buttons: MessageBoxButtons.OK,
+                                icon: MessageBoxIcon.Error);
+            }
 
-        Logger.Trace(message: "Listing Folders - OK");
+            // ******************************
+            // list folders, ReparsePoint means these are links.
+            statusMethod(obj: "Scanning folder: processing directories ...");
+            Logger.Trace(message: "Listing Folders");
+            List<string> dirs = new();
+            try
+            {
+                DirectoryInfo di = new(path: folderOrCollectionFileName);
+                foreach (DirectoryInfo directoryInfo in di.GetDirectories())
+                {
+                    if (directoryInfo.FullName == SpecialFolder.MyComputer.ToString())
+                    {
+                        // It's the MyComputer entry
+                        Logger.Trace(message: "MyComputer: " + directoryInfo.Name);
+                        Add(item: new DirectoryElement(
+                                itemNameWithoutPath: directoryInfo.Name,
+                                type: DirectoryElement.ElementType.MyComputer,
+                                fileNameWithPath: directoryInfo.FullName
+                            ));
+                    }
+                    else if (directoryInfo.Attributes.ToString()
+                                 .Contains(value: "Directory") &&
+                             !directoryInfo.Attributes.ToString()
+                                 .Contains(value: "ReparsePoint"))
+                    {
+                        Logger.Trace(message: "Folder: " + directoryInfo.Name);
+                        Add(item: new DirectoryElement(
+                                itemNameWithoutPath: directoryInfo.Name,
+                                type: DirectoryElement.ElementType.SubDirectory,
+                                fileNameWithPath: directoryInfo.FullName
+                            ));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(message: "Error: " + ex.Message);
+                MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
+                                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                                buttons: MessageBoxButtons.OK,
+                                icon: MessageBoxIcon.Error);
+            }
+
+            Logger.Trace(message: "Listing Folders - OK");
+        }
 
         Logger.Trace(message: "Loading allowedExtensions");
         string[] allowedImageExtensions = HelperGenericAncillaryListsArrays.AllCompatibleExtensionsExt();
@@ -201,16 +227,41 @@ public class DirectoryElementCollection : List<DirectoryElement>
         List<string> imageFiles = new();
         List<string> sidecarFiles = new();
 
-        string[] filesInDir;
-        try
+        string[] filesInDir = { };
+        int filesThatExistWithinCollection = 0;
+
+        // if we're in collection-mode...
+        if (collectionModeEnabled)
         {
-            filesInDir = Directory.GetFiles(path: folder);
+            List<string> filesInCollection = new();
+            foreach (string collectItemWithPath in File.ReadLines(path: Program.collectionFileLocation))
+            {
+                if (File.Exists(path: collectItemWithPath))
+                {
+                    filesInCollection.Add(item: collectItemWithPath);
+                    filesThatExistWithinCollection++;
+                }
+            }
+
+            if (filesThatExistWithinCollection > 0)
+            {
+                filesInDir = filesInCollection.ToArray();
+            }
         }
-        catch (Exception ex)
+
+        // if we're in normal mode or failed to gather any valid files...
+        if (!collectionModeEnabled || (collectionModeEnabled && filesThatExistWithinCollection == 0))
         {
-            Logger.Trace(message: "Files: Listing Files - Error: " + ex.Message);
-            MessageBox.Show(text: ex.Message);
-            return;
+            try
+            {
+                filesInDir = Directory.GetFiles(path: folderOrCollectionFileName);
+            }
+            catch (Exception ex)
+            {
+                Logger.Trace(message: "Files: Listing Files - Error: " + ex.Message);
+                MessageBox.Show(text: ex.Message);
+                return;
+            }
         }
 
         foreach (string fileNameWithExtension in filesInDir)

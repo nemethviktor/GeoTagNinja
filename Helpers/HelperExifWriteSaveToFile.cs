@@ -30,7 +30,6 @@ internal static class HelperExifWriteSaveToFile
 
         // if user switches folder in the process of writing this will keep it standard
         Debug.Assert(condition: frmMainAppInstance != null, message: nameof(frmMainAppInstance) + " != null");
-        string folderNameToWrite = frmMainAppInstance.tbx_FolderName.Text;
 
         File.Delete(path: argsFile);
 
@@ -48,29 +47,30 @@ internal static class HelperExifWriteSaveToFile
                                                                                      row2) =>
                                                                                         row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "objectName"));
 
-        HashSet<string> DistinctFileNames = new();
+        HashSet<string> DistinctGUIDs = new();
         foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
         {
             foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
             {
                 if (directoryElement.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
                 {
-                    DistinctFileNames.Add(item: directoryElement.ItemNameWithoutPath);
+                    DistinctGUIDs.Add(item: directoryElement.UniqueID.ToString());
                     break;
                 }
             }
         }
 
         // check there's anything to write.
-        foreach (string distinctFileName in DistinctFileNames)
+        foreach (string GUID in DistinctGUIDs)
         {
-            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FrmMainApp.FolderName, path2: distinctFileName));
+            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(UniqueID: GUID);
             FrmMainApp.Logger.Trace(message: dirElemFileToModify.FileNameWithPath);
 
             if (dirElemFileToModify != null)
             {
                 string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
                 string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
+                string folderNameToWrite = Path.GetDirectoryName(path: dirElemFileToModify.FileNameWithPath);
                 if (File.Exists(path: fileNameWithPath))
                 {
                     string exifArgsForOriginalFile = "";

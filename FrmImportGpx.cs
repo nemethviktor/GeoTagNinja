@@ -35,6 +35,9 @@ public partial class FrmImportGpx : Form
         pbx_importFromAnotherFolder.Enabled = false;
         lbl_importOneFile.Enabled = true;
         lbl_importFromAnotherFolder.Enabled = false;
+
+        rbt_importFromCurrentFolder.Enabled = !Program.collectionModeEnabled;
+
         HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
 
         // load TZ-CBX
@@ -316,6 +319,7 @@ public partial class FrmImportGpx : Form
         else
         {
             trackFileLocationType = "folder";
+            // this wouldn't exist in collectionMode
             if (rbt_importFromCurrentFolder.Checked)
             {
                 trackFileLocationVal = _frmMainAppInstance.tbx_FolderName.Text;
@@ -341,10 +345,7 @@ public partial class FrmImportGpx : Form
             // indicate that something is going on
             btn_OK.Text = HelperDataLanguageTZ.DataReadDTObjectText(
                 objectType: sender.GetType()
-                    .ToString()
-                    .Split('.')
-                    .Last()
-                ,
+                    .Name,
                 objectName: "btn_OK_Working"
             );
             btn_OK.AutoSize = true;

@@ -70,12 +70,7 @@ internal static class HelperControlAndMessageBoxHandling
             // for some reason there is no .Last() being offered here
             cItem.Text = HelperDataLanguageTZ.DataReadDTObjectText(
                 objectType: cItem.GetType()
-                    .ToString()
-                    .Split('.')[cItem.GetType()
-                                    .ToString()
-                                    .Split('.')
-                                    .Length -
-                                1],
+                    .Name,
                 objectName: cItem.Name
             );
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
@@ -21,7 +20,10 @@ internal static class FileListViewCopyPaste
             ListViewItem lvi = frmMainAppInstance.lvw_FileList.SelectedItems[index: 0];
 
             // don't copy folders....
-            if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text)))
+            DirectoryElement dirElemFileToCopyFrom = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GUID"]
+                                                                                                                                       .Index]
+                                                                                                                .Text);
+            if (dirElemFileToCopyFrom.Type == DirectoryElement.ElementType.File)
             {
                 // The reason why we're using a CopyPoolDict here rather than just read straight out of the DE is because if the user changes folder
                 // ... then the DE-data would be cleared and thus cross-folder-paste wouldn't be possible
@@ -63,26 +65,24 @@ internal static class FileListViewCopyPaste
                     ElementAttribute.CreateDateDaysShift
                 };
 
-                string fileNameWithoutPath = lvi.Text;
-                DirectoryElement dirElemFileToCopyFrom = FrmMainApp.DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath));
                 foreach (ElementAttribute attribute in listOfTagsToCopy)
                 {
                     // this would sit in Stage3ReadyToWrite if exists
                     if (dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
                     {
                         FrmMainApp.CopyPoolDict.Add(key: attribute,
-                                                    value: new Tuple<string, bool>(dirElemFileToCopyFrom.GetAttributeValueString(
+                                                    value: new Tuple<string, bool>(item1: dirElemFileToCopyFrom.GetAttributeValueString(
                                                                                        attribute: attribute,
                                                                                        version: DirectoryElement.AttributeVersion
-                                                                                           .Stage3ReadyToWrite), true));
+                                                                                           .Stage3ReadyToWrite), item2: true));
                     }
                     else if (dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Original))
                     {
                         FrmMainApp.CopyPoolDict.Add(key: attribute,
-                                                    value: new Tuple<string, bool>(dirElemFileToCopyFrom.GetAttributeValueString(
+                                                    value: new Tuple<string, bool>(item1: dirElemFileToCopyFrom.GetAttributeValueString(
                                                                                        attribute: attribute,
                                                                                        version: DirectoryElement.AttributeVersion
-                                                                                           .Original), false));
+                                                                                           .Original), item2: false));
                     }
                 }
             }
@@ -107,6 +107,7 @@ internal static class FileListViewCopyPaste
         if (FrmMainApp.CopyPoolDict.Count > 0 && frmMainAppInstance != null)
         {
             FrmPasteWhat frmPasteWhat = new(initiator: frmMainAppInstance.Name);
+            frmPasteWhat.StartPosition = FormStartPosition.CenterScreen;
             frmPasteWhat.ShowDialog();
         }
         else

@@ -36,9 +36,8 @@ public partial class FrmManageFavourites : Form
             {
                 // gets logged inside.
                 cItem.Text = HelperDataLanguageTZ.DataReadDTObjectText(objectType: cItem.GetType()
-                                                                           .ToString()
-                                                                           .Split('.')
-                                                                           .Last(), objectName: cItem.Name);
+                                                                           .Name,
+                                                                       objectName: cItem.Name);
             }
             // there is only one dropdown atm.
             else if (cItem.Name == "cbx_Country")

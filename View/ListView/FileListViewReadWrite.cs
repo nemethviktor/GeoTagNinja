@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
@@ -27,10 +26,10 @@ internal static class FileListViewReadWrite
             ListView.ColumnHeaderCollection lvchs = frmMainAppInstance.ListViewColumnHeaders;
 
             int d = lvi.Index;
-            string fileNameWithoutPath = lvi.Text;
-            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemName(
-                FileNameWithPath: Path.Combine(path1: FrmMainApp.FolderName,
-                                               path2: fileNameWithoutPath));
+            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                                     .Index]
+                                                                                                              .Text);
+            string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
             bool takenAlreadyShifted = false;
             bool createAlreadyShifted = false;
 

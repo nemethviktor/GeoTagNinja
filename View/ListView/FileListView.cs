@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -176,6 +177,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     public static class FileListColumns
     {
         public const string FILENAME = "FileName";
+        public const string UNIQUEID = "GUID";
         public const string GPS_ALTITUDE = "GPSAltitude";
         public const string GPS_ALTITUDE_REF = "GPSAltitudeRef";
         public const string GPS_DEST_LATITUDE = "GPSDestLatitude";
@@ -304,6 +306,8 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         switch (column.Name.Substring(startIndex: 4))
         {
+            case FileListColumns.UNIQUEID:
+                return item.UniqueID.ToString();
             case FileListColumns.GPS_ALTITUDE:
                 return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.GPSAltitude);
             case FileListColumns.GPS_ALTITUDE_REF:
@@ -478,13 +482,22 @@ public partial class FileListView : System.Windows.Forms.ListView
                     subItemList.Add(item: pickModelValueForColumn(item: item, column: columnHeader));
                 }
             }
+
             // For each non-file (i.e. dirs), create empty sub items (needed for sorting)
         }
         else
         {
             foreach (ColumnHeader columnHeader in Columns)
             {
-                if (columnHeader.Name != COL_NAME_PREFIX + FileListColumns.FILENAME)
+                if (columnHeader.Name == COL_NAME_PREFIX + FileListColumns.FILENAME)
+                {
+                    // nothing
+                }
+                else if (columnHeader.Name == COL_NAME_PREFIX + FileListColumns.UNIQUEID)
+                {
+                    subItemList.Add(item: pickModelValueForColumn(item: item, column: columnHeader));
+                }
+                else
                 {
                     subItemList.Add(item: UNKNOWN_VALUE_DIR);
                 }
@@ -659,8 +672,10 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         foreach (string colName in _cfg_Col_Names)
         {
-            ColumnHeader clh = new();
-            clh.Name = COL_NAME_PREFIX + colName;
+            ColumnHeader clh = new()
+            {
+                Name = COL_NAME_PREFIX + colName
+            };
             Columns.Add(value: clh);
             Logger.Trace(message: "Added column: " + colName);
         }

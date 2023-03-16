@@ -114,6 +114,6 @@ internal class HelperExifWriteTrackDataToSideCar
                                                      initiator: "ExifGetTrackSyncData");
 
         ///////////////
-        //// try to collect the xmp/xml listOfAsyncCompatibleFileNamesWithOutPath and then read them back into the listview.
+        //// try to collect the xmp/xml files and then read them back into the listview.
     }
 }

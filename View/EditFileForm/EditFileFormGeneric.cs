@@ -1,6 +1,6 @@
-﻿using System.IO;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using GeoTagNinja.Helpers;
+using GeoTagNinja.Model;
 
 namespace GeoTagNinja;
 
@@ -15,19 +15,37 @@ internal static class EditFileFormGeneric
         int fileCount = 0;
         int folderCount = 0;
         FrmEditFileData FrmEditFileData = new();
-        FrmEditFileData.lvw_FileListEditImages.Items.Clear();
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        foreach (ListViewItem selectedItem in frmMainAppInstance.lvw_FileList.SelectedItems)
+
+        ListView lvw = FrmEditFileData.lvw_FileListEditImages;
+        lvw.Columns.Clear();
+        lvw.Items.Clear();
+
+        ColumnHeader clh_fileName = new();
+        clh_fileName.Name = "clh_fileName";
+        clh_fileName.Width = lvw.Width;
+        lvw.Columns.Add(value: clh_fileName);
+
+        ColumnHeader clh_GUID = new();
+        clh_GUID.Name = "clh_GUID";
+        clh_GUID.Width = 0;
+        lvw.Columns.Add(value: clh_GUID);
+
+        foreach (string fileToEditGUID in FrmMainApp.filesToEditGUIDStringList)
         {
-            // only deal with listOfAsyncCompatibleFileNamesWithOutPath, not folders
-            if (File.Exists(path: Path.Combine(path1: frmMainAppInstance.tbx_FolderName.Text, path2: selectedItem.Text)))
+            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(UniqueID: fileToEditGUID);
+
+            if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {
                 overallCount++;
-                FrmMainApp.FolderName = frmMainAppInstance.tbx_FolderName.Text;
-                FrmEditFileData.lvw_FileListEditImages.Items.Add(text: selectedItem.Text);
+                ListViewItem lvi = new()
+                {
+                    Text = dirElemFileToModify.ItemNameWithoutPath
+                };
+                lvi.SubItems.Add(text: fileToEditGUID);
+                FrmEditFileData.lvw_FileListEditImages.Items.Add(value: lvi);
                 fileCount++;
             }
-            else if (Directory.Exists(path: Path.Combine(path1: frmMainAppInstance.tbx_FolderName.Text, path2: selectedItem.Text)))
+            else if (dirElemFileToModify.Type == DirectoryElement.ElementType.SubDirectory)
             {
                 overallCount++;
                 folderCount++;
@@ -36,6 +54,7 @@ internal static class EditFileFormGeneric
 
         if (fileCount > 0)
         {
+            FrmEditFileData.StartPosition = FormStartPosition.CenterScreen;
             FrmEditFileData.ShowDialog();
         }
         // basically if the user only selected folders, do nothing

@@ -95,6 +95,8 @@ public partial class FrmMainApp : Form
     internal static Dictionary<string, string> OriginalTakenDateDict = new();
     internal static Dictionary<string, string> OriginalCreateDateDict = new();
 
+    internal static List<string> filesToEditGUIDStringList = new();
+
     #endregion
 
 
@@ -250,7 +252,10 @@ public partial class FrmMainApp : Form
         Logger.Debug(message: "Run CoreWebView2InitializationCompleted");
         wbv_MapArea.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
 
-        HelperGenericAppStartup.AppSetupInitialiseStartupFolder(toolStripTextBox: tbx_FolderName);
+        if (!Program.collectionModeEnabled)
+        {
+            HelperGenericAppStartup.AppSetupInitialiseStartupFolder(toolStripTextBox: tbx_FolderName);
+        }
 
         // initialise webView2
         await InitialiseWebView();
@@ -466,12 +471,13 @@ public partial class FrmMainApp : Form
             {
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
+                    DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GUID"]
+                                                                                                                                  .Index]
+                                                                                                           .Text);
                     // don't do folders...
-                    string fileNameWithPath = Path.Combine(path1: FolderName, path2: lvi.Text);
-                    string fileNameWithoutPath = lvi.Text;
-                    if (File.Exists(path: fileNameWithPath))
+                    if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
-                        DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FolderName, path2: fileNameWithoutPath));
+                        string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
 
                         // check it's not in the read-queue.
                         while (HelperGenericFileLocking.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
@@ -479,18 +485,15 @@ public partial class FrmMainApp : Form
                             await Task.Delay(millisecondsDelay: 10);
                         }
 
-                        if (dirElemFileToModify != null)
-                        {
-                            // Latitude
-                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSLatitude,
-                                                                         value: strGPSLatitude,
-                                                                         version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
+                        // Latitude
+                        dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSLatitude,
+                                                                     value: strGPSLatitude,
+                                                                     version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
 
-                            // Longitude
-                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSLongitude,
-                                                                         value: strGPSLongitude,
-                                                                         version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
-                        }
+                        // Longitude
+                        dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSLongitude,
+                                                                     value: strGPSLongitude,
+                                                                     version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
                     }
                 }
             }
@@ -539,11 +542,15 @@ public partial class FrmMainApp : Form
                     HelperGenericFileLocking.FileListBeingUpdated = true;
                     foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                     {
+                        DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GUID"]
+                                                                                                                                      .Index]
+                                                                                                               .Text);
                         // don't do folders...
-                        string fileNameWithPath = Path.Combine(path1: FolderName, path2: lvi.Text);
-                        string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
-                        if (File.Exists(path: fileNameWithPath))
+                        if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                         {
+                            string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
+                            string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
+
                             while (HelperGenericFileLocking.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
                             {
                                 await Task.Delay(millisecondsDelay: 10);
@@ -897,14 +904,31 @@ public partial class FrmMainApp : Form
             FrmEditFileData.lvw_FileListEditImages.Items.Clear();
 
             Logger.Trace(message: "Add Files To lvw_FileListEditImages");
-            foreach (ListViewItem selectedItem in lvw_FileList.SelectedItems)
+            ListView lvw = lvw_FileList;
+            foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
             {
-                if (File.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: selectedItem.Text)))
+                DirectoryElement fileDirectoryElement = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                               .Index]
+                                                                                                        .Text);
+                if (fileDirectoryElement != null)
                 {
-                    FolderName = tbx_FolderName.Text;
-                    FrmEditFileData.lvw_FileListEditImages.Items.Add(text: selectedItem.Text);
-                    fileCount++;
-                    Logger.Trace(message: "Added " + selectedItem.Text);
+                    if (File.Exists(path: fileDirectoryElement.FileNameWithPath))
+                    {
+                        ListViewItem lviFE = new()
+                        {
+                            Text = fileDirectoryElement.ItemNameWithoutPath
+                        };
+                        ListViewItem.ListViewSubItem lsu = new()
+                        {
+                            Name = "clh_GUID",
+                            Text = fileDirectoryElement.UniqueID.ToString()
+                        };
+                        lviFE.SubItems.Add(item: lsu);
+
+                        FrmEditFileData.lvw_FileListEditImages.Items.Add(value: lviFE);
+                        fileCount++;
+                        Logger.Trace(message: "Added " + lviFE.Text);
+                    }
                 }
             }
 
@@ -993,43 +1017,51 @@ public partial class FrmMainApp : Form
         await HelperFileSystemOperators.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
         if (HelperVariables.SChangeFolderIsOkay)
         {
-            if (Directory.Exists(path: tbx_FolderName.Text))
+            if (!Program.collectionModeEnabled)
             {
-                if (!tbx_FolderName.Text.EndsWith(value: "\\"))
+                if (Directory.Exists(path: tbx_FolderName.Text))
                 {
-                    tbx_FolderName.Text += "\\";
-                }
+                    if (!tbx_FolderName.Text.EndsWith(value: "\\"))
+                    {
+                        tbx_FolderName.Text += "\\";
+                    }
 
-                try
+                    try
+                    {
+                        lvw_FileList.ClearData();
+                        DirectoryElements.Clear();
+                        HelperFileSystemOperators.FsoCleanUpUserFolder();
+                        FolderName = tbx_FolderName.Text;
+                        lvw_FileList_LoadOrUpdate();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(
+                            text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                                      messageBoxName: "mbx_FrmMainApp_ErrorInvalidFolder") +
+                                  ex.Message,
+                            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Error);
+                    }
+                }
+                else if (tbx_FolderName.Text == SpecialFolder.MyComputer.ToString())
                 {
-                    lvw_FileList.ClearData();
-                    DirectoryElements.Clear();
-                    HelperFileSystemOperators.FsoCleanUpUserFolder();
-                    FolderName = tbx_FolderName.Text;
                     lvw_FileList_LoadOrUpdate();
                 }
-                catch (Exception ex)
+
+                else
                 {
                     MessageBox.Show(
-                        text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                                  messageBoxName: "mbx_FrmMainApp_ErrorInvalidFolder") +
-                              ex.Message,
+                        text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInvalidFolder"),
                         caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
                         buttons: MessageBoxButtons.OK,
                         icon: MessageBoxIcon.Error);
                 }
             }
-            else if (tbx_FolderName.Text == SpecialFolder.MyComputer.ToString())
-            {
-                lvw_FileList_LoadOrUpdate();
-            }
             else
             {
-                MessageBox.Show(
-                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInvalidFolder"),
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
-                    buttons: MessageBoxButtons.OK,
-                    icon: MessageBoxIcon.Error);
+                lvw_FileList_LoadOrUpdate();
             }
         }
     }
@@ -1052,11 +1084,15 @@ public partial class FrmMainApp : Form
             {
                 foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
                 {
+                    DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                                  .Index]
+                                                                                                           .Text);
                     // don't do folders...
-                    string fileNameWithPath = Path.Combine(path1: FolderName, path2: lvi.Text);
-                    string fileNameWithoutPath = lvi.Text;
-                    if (File.Exists(path: fileNameWithPath))
+                    if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
+                        string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
+                        string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
+
                         // check it's not in the read-queue.
                         while (HelperGenericFileLocking.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
                         {
@@ -1170,6 +1206,16 @@ public partial class FrmMainApp : Form
     private void tsb_EditFile_Click(object sender,
                                     EventArgs e)
     {
+        filesToEditGUIDStringList.Clear();
+
+        ListView lvw = lvw_FileList;
+        foreach (ListViewItem lvi in lvw.SelectedItems)
+        {
+            filesToEditGUIDStringList.Add(item: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                 .Index]
+                                              .Text);
+        }
+
         EditFileFormGeneric.ShowFrmEditFileData();
     }
 
@@ -1203,7 +1249,10 @@ public partial class FrmMainApp : Form
         bool validFilesToImport = false;
         foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
         {
-            if (File.Exists(path: Path.Combine(path1: FolderName, path2: lvi.Text)))
+            DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GUID"]
+                                                                                                                          .Index]
+                                                                                                   .Text);
+            if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {
                 validFilesToImport = true;
                 break;
@@ -1295,8 +1344,10 @@ public partial class FrmMainApp : Form
     {
         if (!_StopProcessingRows)
         {
-            string fileNameWithoutPath = lvi.Text;
-            DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FolderName, path2: fileNameWithoutPath));
+            DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GUID"]
+                                                                                                                          .Index]
+                                                                                                   .Text);
+            string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
 
             HelperVariables.CurrentAltitude = null;
             HelperVariables.CurrentAltitude = lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
@@ -1363,12 +1414,9 @@ public partial class FrmMainApp : Form
 
                 foreach ((ElementAttribute attribute, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
                 {
-                    if (dirElemFileToModify != null)
-                    {
-                        dirElemFileToModify.SetAttributeValueAnyType(attribute: toponomyDetail.attribute,
-                                                                     value: toponomyDetail.toponomyOverwriteVal,
-                                                                     version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
-                    }
+                    dirElemFileToModify.SetAttributeValueAnyType(attribute: toponomyDetail.attribute,
+                                                                 value: toponomyDetail.toponomyOverwriteVal,
+                                                                 version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
 
                     string colName = GetAttributeName(attribute: toponomyDetail.attribute);
 
@@ -1485,34 +1533,62 @@ public partial class FrmMainApp : Form
 
         #endregion
 
-        Logger.Trace(message: "tbx_FolderName.Text: " + tbx_FolderName.Text);
-        if (tbx_FolderName.Text != null)
+        // Clear Tables that keep track of the current folder...
+        Logger.Trace(message: "Clear OriginalTakenDateDict, OriginalCreateDateDict and DtFileDataSeenInThisSession");
+        OriginalTakenDateDict.Clear();
+        OriginalCreateDateDict.Clear();
+        DtFileDataSeenInThisSession.Clear();
+
+        tbx_FolderName.Enabled = !Program.collectionModeEnabled;
+
+        if (Program.collectionModeEnabled)
         {
-            // this shouldn't really happen but just in case
-            Logger.Trace(message: "FolderName: " + FolderName);
-            if (FolderName is null)
+            Logger.Trace(message: "FolderName: disabled - using collectionModeEnabled");
+            tbx_FolderName.Text = @"** collectionMode enabled **"; // point here is that this doesn't exist and as such will block certain operations (like "go up one level"), which is what we want.
+
+            // Load data (and add to DEs)
+            DirectoryElements.ParseFolderOrFileListToDEs(folderOrCollectionFileName: Program.collectionFileLocation,
+                                                         statusMethod: delegate(string statusText)
+                                                         {
+                                                             HandlerUpdateLabelText(label: lbl_ParseProgress,
+                                                                                    text: statusText);
+                                                         },
+                                                         collectionModeEnabled: Program.collectionModeEnabled);
+        }
+        // not collectionModeEnabled
+        else
+        {
+            tbx_FolderName.Enabled = true;
+
+            Logger.Trace(message: "tbx_FolderName.Text: " + tbx_FolderName.Text);
+            if (tbx_FolderName.Text != null)
             {
-                if (!Directory.Exists(path: tbx_FolderName.Text))
+                // this shouldn't really happen but just in case
+                Logger.Trace(message: "FolderName: " + FolderName);
+                if (FolderName is null)
                 {
-                    tbx_FolderName.Text = @"C:\";
+                    if (!Directory.Exists(path: tbx_FolderName.Text))
+                    {
+                        tbx_FolderName.Text = @"C:\";
+                    }
+
+                    FolderName = tbx_FolderName.Text;
+                    Logger.Trace(message: "FolderName [was null, now updated]: " + FolderName);
                 }
 
-                FolderName = tbx_FolderName.Text;
-                Logger.Trace(message: "FolderName [was null, now updated]: " + FolderName);
+                // Load data (and add to DEs)
+                DirectoryElements.ParseFolderOrFileListToDEs(folderOrCollectionFileName: FolderName,
+                                                             statusMethod: delegate(string statusText)
+                                                             {
+                                                                 HandlerUpdateLabelText(label: lbl_ParseProgress,
+                                                                                        text: statusText);
+                                                             },
+                                                             collectionModeEnabled: Program.collectionModeEnabled);
             }
-
-            // Clear Tables that keep track of the current folder...
-            Logger.Trace(message: "Clear OriginalTakenDateDict, OriginalCreateDateDict and DtFileDataSeenInThisSession");
-            OriginalTakenDateDict.Clear();
-            OriginalCreateDateDict.Clear();
-            DtFileDataSeenInThisSession.Clear();
-
-            // Load data (and add to tables)
-            DirectoryElements.ParseFolderToDEs(folder: FolderName, statusMethod: delegate(string statusText) { HandlerUpdateLabelText(label: lbl_ParseProgress, text: statusText); });
-
-            // Show
-            lvw_FileList.ReloadFromDEs(directoryElements: DirectoryElements);
         }
+
+        // Show Form
+        lvw_FileList.ReloadFromDEs(directoryElements: DirectoryElements);
 
         HelperGenericFileLocking.FileListBeingUpdated = false;
         HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Ready.");
@@ -1592,19 +1668,16 @@ public partial class FrmMainApp : Form
             // Edit file
             case DirectoryElement.ElementType.File:
                 Logger.Trace(message: "Trigger FrmEditFileData");
-                FrmEditFileData = new FrmEditFileData();
+                filesToEditGUIDStringList.Clear();
+
+                ListView lvw = lvw_FileList;
+                ListViewItem lvi = lvw.SelectedItems[index: 0];
+                filesToEditGUIDStringList.Add(item: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                     .Index]
+                                                  .Text);
 
                 Logger.Trace(message: "Add File To lvw_FileListEditImages");
-                FrmEditFileData.lvw_FileListEditImages.Items.Add(text: item_de.ItemNameWithoutPath);
-
-                Logger.Trace(message: "FrmEditFileData Get objectTexts");
-                FrmEditFileData.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: "Form",
-                    objectName: "FrmEditFileData"
-                );
-
-                Logger.Trace(message: "FrmEditFileData ShowDialog");
-                FrmEditFileData.ShowDialog();
+                EditFileFormGeneric.ShowFrmEditFileData();
                 break;
         }
     }
@@ -1620,11 +1693,13 @@ public partial class FrmMainApp : Form
             // it's easier to call the create-preview here than in the other one because focusedItems misbehave/I don't quite understand it/them
             if (lvw_FileList.SelectedItems.Count > 0)
             {
-                string fileNameWithPath = Path.Combine(FolderName +
-                                                       lvw_FileList.SelectedItems[index: 0]
-                                                           .Text);
+                ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
+                DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GUID"]
+                                                                                                                              .Index]
+                                                                                                       .Text);
+                string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
 
-                if (File.Exists(path: fileNameWithPath))
+                if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                 {
                     await HelperExifReadGetImagePreviews.GenericCreateImagePreview(
                         fileNameWithPath: fileNameWithPath, initiator: "FrmMainApp");
@@ -1706,6 +1781,16 @@ public partial class FrmMainApp : Form
         // Ctrl Enter -> Edit File
         else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Enter)
         {
+            filesToEditGUIDStringList.Clear();
+
+            ListView lvw = lvw_FileList;
+            foreach (ListViewItem lvi in lvw.SelectedItems)
+            {
+                filesToEditGUIDStringList.Add(item: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                     .Index]
+                                                  .Text);
+            }
+
             EditFileFormGeneric.ShowFrmEditFileData();
         }
 
@@ -1720,25 +1805,27 @@ public partial class FrmMainApp : Form
         {
             if (lvw_FileList.SelectedItems.Count == 1)
             {
-                ListViewItem item = lvw_FileList.SelectedItems[index: 0];
-                string folderToEnter = item.Text;
+                ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
+                DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GUID"]
+                                                                                                                              .Index]
+                                                                                                       .Text);
 
                 // if .. (parent) then do a folder-up
-                if (folderToEnter == ParentFolder)
+                if (dirElemFileToModify.Type == DirectoryElement.ElementType.ParentDirectory)
                 {
                     btn_OneFolderUp_Click(sender: sender, e: EventArgs.Empty);
                 }
                 // if this is a folder or drive, enter
-                else if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
+                else if (dirElemFileToModify.Type == DirectoryElement.ElementType.SubDirectory)
                 {
                     // check for outstanding files first and save if user wants
                     HelperVariables.SChangeFolderIsOkay = false;
                     await HelperFileSystemOperators.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
                     if (HelperVariables.SChangeFolderIsOkay)
                     {
-                        if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
+                        if (Directory.Exists(path: dirElemFileToModify.FileNameWithPath))
                         {
-                            tbx_FolderName.Text = Path.Combine(path1: tbx_FolderName.Text, path2: item.Text);
+                            tbx_FolderName.Text = dirElemFileToModify.FileNameWithPath;
                         }
 
                         btn_ts_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
@@ -1975,8 +2062,10 @@ public partial class FrmMainApp : Form
             {
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
-                    string fileNameWithoutPath = lvi.Text;
-                    if (File.Exists(path: Path.Combine(path1: FolderName, path2: fileNameWithoutPath)))
+                    DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GUID"]
+                                                                                                                                  .Index]
+                                                                                                           .Text);
+                    if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
                         filesAreSelected = true;
                         break;
@@ -1988,23 +2077,20 @@ public partial class FrmMainApp : Form
             {
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
-                    string fileNameWithoutPath = lvi.Text;
-
-                    if (File.Exists(path: Path.Combine(path1: FolderName, path2: fileNameWithoutPath)))
+                    DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GUID"]
+                                                                                                                                  .Index]
+                                                                                                           .Text);
+                    if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
-                        DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FolderName, path2: fileNameWithoutPath));
                         foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays.GetFavouriteTags())
                         {
                             string colName = GetAttributeName(attribute: attribute);
                             string settingValue = drFavouriteData[columnName: colName]
                                 .ToString();
 
-                            if (dirElemFileToModify != null)
-                            {
-                                dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
-                                                                             value: settingValue,
-                                                                             version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
-                            }
+                            dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
+                                                                         value: settingValue,
+                                                                         version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
                         }
 
                         await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
@@ -2181,12 +2267,10 @@ public partial class FrmMainApp : Form
         if (lvw.SelectedItems.Count == 1)
         {
             ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
-
-            if (!File.Exists(path: Path.Combine(path1: FolderName, path2: lvi.Text)))
-            {
-                // ignore
-            }
-            else
+            DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                .Index]
+                                                                                                   .Text);
+            if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {
                 latParseSuccess = double.TryParse(s: lvi.SubItems[index: lvw.Columns[key: "clh_GPSLatitude"]
                                                                       .Index]

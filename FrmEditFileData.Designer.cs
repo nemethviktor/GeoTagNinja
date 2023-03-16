@@ -97,7 +97,6 @@
             this.ttp_OffsetTime = new System.Windows.Forms.ToolTip(this.components);
             this.gbx_EditImageList = new System.Windows.Forms.GroupBox();
             this.lvw_FileListEditImages = new System.Windows.Forms.ListView();
-            this.clh_FileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.pbx_imagePreview)).BeginInit();
             this.tpg_Location.SuspendLayout();
             this.gbx_LocationData.SuspendLayout();
@@ -955,8 +954,6 @@
             // 
             // lvw_FileListEditImages
             // 
-            this.lvw_FileListEditImages.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.clh_FileName});
             this.lvw_FileListEditImages.FullRowSelect = true;
             this.lvw_FileListEditImages.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lvw_FileListEditImages.HideSelection = false;
@@ -970,11 +967,6 @@
             this.lvw_FileListEditImages.UseCompatibleStateImageBehavior = false;
             this.lvw_FileListEditImages.View = System.Windows.Forms.View.Details;
             this.lvw_FileListEditImages.SelectedIndexChanged += new System.EventHandler(this.lvw_FileListEditImages_SelectedIndexChanged);
-            // 
-            // clh_FileName
-            // 
-            this.clh_FileName.Text = "FileName";
-            this.clh_FileName.Width = 200;
             // 
             // FrmEditFileData
             // 
@@ -1093,7 +1085,6 @@
         private System.Windows.Forms.TextBox tbx_CreateDate;
         private System.Windows.Forms.GroupBox gbx_EditImageList;
         internal System.Windows.Forms.ListView lvw_FileListEditImages;
-        public System.Windows.Forms.ColumnHeader clh_FileName;
         private System.Windows.Forms.GroupBox gbx_GetToponomy;
         internal System.Windows.Forms.NumericUpDown nud_GPSAltitude;
         internal System.Windows.Forms.NumericUpDown nud_GPSLongitude;

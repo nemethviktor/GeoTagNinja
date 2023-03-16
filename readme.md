@@ -9,7 +9,7 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 - Download the .msi file from [Releases](https://github.com/nemethviktor/GeoTagNinja/releases) - Find the newest release (topmost, easy) then click on Assets if they are not showing. 
 	- There "tends to be" a dev(elopment) version stored [on my public Google Drive](https://drive.google.com/file/d/18iI77SIdrIv-joOtyT0-MzqOVtB5OgM0/view?usp=share_link). This is not really a maintained location and by definition the version is likely to be messier than the published ones. It may even happen that this version is actually older than the published one (I don't always upload here but only when someone opens a ticket and I'd like them to test a change)
 - As of 20221202 I've removed the built-in webView2 installer because it was more of a pain in the backside than benefit. If the app breaks complaining about the lack of webView2, it's available [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703)
-- The app is unsigned. This is because a certificate costs in the vicinity of £250 per year but the app is free and I don't particular feel like splurging out on this at the moment. 
+- The app is unsigned. This is because a certificate costs in the vicinity of £250 per year but the app is free and I don't particularly feel like splurging out on this at the moment. 
 	- Due to the lack of a signed certificate, when installing SmartScreen will complain that the app is unsafe. SmartScreen is meant to be called StupidScreen but MS made a typo there. 
 	- Just run the installer. As the code is public and people may compile on their own, everyone is welcome to ascertain the app is safe should they feel like.
 
@@ -17,10 +17,9 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 
 - Build 8361 [20221122]+: There is now a hold when the user enters a folder - it is kept on until the folder completes load. This is a bit annoying perhaps but is needed because otherwise people can start issuing write-commands before the read-process finishes and that can result in files being written the wrong info.
 - This is mentioned in Known Issues briefly but just to reiterate: if you have issues with file data not showing please try renaming/moving your files to a "simple" folder like "C:\temp" and make sure your file names don't contain umlauts, special characters and anything "odd". This is a limitation of exifTool.
-- GPX/Track File Import is very experimental atm. Do report bugs please. This functionality is based on [this](https://exiftool.org/geotag.html) exifTool feature so please read as to what it can and can't do (mostly re: file types etc.).
 - Without being too technical, there are two main ways of handling RAW images via C# (the language GTN is written in)
 	- There are native libraries such as DCRAW/libRAW. The advantage of that is there are native libraries and they are very fast but come with limited file support, e.g. at least as of the time of the initial GTN version's date (summer 2022) CR3s aren't/weren't supported and neither are some others. 
-	- Alternatively there is exifTool, which is what GTN uses for everything. ExifTool supports a lot more extensions but it has to be called externally each time the user interacts with a file or folder. The most visible disadvantage of this is that it takes a second (or two or three or five) to load up exifTool and the app may appear non-responsive when entering a folder.
+	- Alternatively there is exifTool, which is what GTN uses for everything. ExifTool supports a lot more extensions but it has to be called externally in certain cases. In the more recent version there is a keep-alive exifTool running in the background, so this should be less of an issue.
 - I have tried to test reasonably thoroughly but bugs probably remain. Do make backups of your files if you feel that's the right thing to do.
 - As per usual I don't accept any liability for damage and/or any other inconvenience you may suffer while/from using this app, no warranties and/or guarantees. The script is open source and everyone is welcome to read it. 
 - I'm kinda hoping this won't come up a problem but don't bash me about country names please. I'm thinking disputed country names and areas here. They are ISO standards, the API returns those values, that's it. Being from the UK I do think that the long name of "United Kingdom of Great Britain and Northern Ireland (the)" is a bit lengthy but it is what it is (and it's relatively rarely disputed but for example Crimea does return Ukraine as a value, regardless of what's been going on there since 2014; again, this isn't a statement either way, it's the API reply). 
@@ -31,6 +30,22 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 - See my comment above re: the app being unsigned and SmartScreen getting derpy once in a while. On top of that...
 	- If you have Avast running or some other nightmare that tries to capture iframes within apps the app will most likely crash sooner rather than later, at least on the first run. I *think* it should be okay afterwards.
 	- I've seen once (and only once) ESET being silly about the app. Tbh no idea as to why. While I'd say the source code is open for public viewing and building it is probably clearer to just say: the app isn't tracking or recording your data and isn't doing anything that's not strictly related to its function. If I ever were to include any tracking (no such plans for the forseeable future), it'd be entirely anonomymised anyway.
+
+### Collection Mode (Hooking up GTN with Jeffrey Frield's LightRoom Classic Plugin "Run Any Command"
+
+As of Build 8475 [20230316] onwards we now have a `CollectionMode`. Details of this are TODO for me but the initial logic/usage is as follows:
+
+ 1. Download (and install) the plugin from http://regex.info/blog/lightroom-goodies/run-any-command - there are installation notes in Jeffrey's website, if you are having issues with this part, please nudge him, not me.
+ 2. Within LRC under "File | Plug-in Extras | jf Run Any Command | Configure..." ->  Configure the plugin as such: 
+`"c:\Program Files\GeoTagNinja\GeoTagNinja.exe" --collection={MANIFEST}` (where {MANIFEST} is a literal string, ie just type that in with the curly brackets).
+ 3. Launch the Custom Command. This should trigger GTN in CollectionMode.
+ 4. Edit and interact with your files as usual. **Don't forget to save!** 
+ 5. When all's done, close GTN. At the moment it doesn't support being called twice with an updated file list. That may come later.
+
+Things to note:
+- If you specify a txt file that doesn't exists, or there are no viable files in it then the app will just run normally (in "normal mode" that is.)
+- Lines in the txt file shouldn't have trailing spaces.
+- When you're in Collection Mode it's generally possible to do anything the app otherwise does apart from changing folders. 
 
 ## Building & Testing
 

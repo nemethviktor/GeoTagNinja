@@ -2,12 +2,14 @@
 
 **Build 84XX [202303XX]**
 - NEW & UPDATED:
+  - Added a "Collections Mode", in particular to work with Jeffrey Frield's LightRoom Classic Plugin "Run Any Command". Details on how to use this are in the readme.
   - Added Country to Favourites
   - Bumped exifTool to v12.58
 - BUGS & FIXES:
   - Fixed a bug where the TZ dropdown in Import GPX could cause a crash if the user was in a TZ that wasn't on the dropdown.
   - Paste-values logic minor revamp
-  - Rewrote the Track Import logic not to overflow when too many files were involved. (see ticket 78)
+  - Rewrote the File Edit Form load process. The existing one took way too long because it parsed data for a number of Objects that were entirely irrelevant.
+  - Rewrote the Track Import logic not to overflow when too many files were involved. (see ticket 78).
 
 **Build 8469 [20230310]**
 - NEW & UPDATED:

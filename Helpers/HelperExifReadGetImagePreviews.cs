@@ -11,13 +11,13 @@ namespace GeoTagNinja.Helpers;
 internal static class HelperExifReadGetImagePreviews
 {
     /// <summary>
-    ///     This generates (technically, extracts) the image previews from listOfAsyncCompatibleFileNamesWithOutPath for the
+    ///     This generates (technically, extracts) the image previews from files for the
     ///     user when they click on a filename
     ///     ... in whichever listview.
     /// </summary>
-    /// <param name="fileNameWithoutPath">Path of file for which the preview needs creating</param>
+    /// <param name="fileNameWithPath">Path of file for which the preview needs creating</param>
     /// <returns>Realistically nothing but the process generates the bitmap if possible</returns>
-    internal static async Task ExifGetImagePreviews(string fileNameWithoutPath)
+    internal static async Task ExifGetImagePreviews(string fileNameWithPath)
     {
         FrmMainApp.Logger.Debug(message: "Starting");
 
@@ -27,7 +27,8 @@ internal static class HelperExifReadGetImagePreviews
 
         // want to give this a different name from the usual exifArgs.args just in case that's still being accessed (as much as it shouldn't be)
         Regex rgx = new(pattern: "[^a-zA-Z0-9]");
-        string fileNameReplaced = rgx.Replace(input: fileNameWithoutPath.Replace(oldValue: FrmMainApp.FolderName, newValue: ""), replacement: "_");
+        string folderName = Path.GetDirectoryName(fileNameWithPath);
+        string fileNameReplaced = rgx.Replace(input: fileNameWithPath.Replace(oldValue: folderName, newValue: ""), replacement: "_");
         string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exifArgs_getPreview_" + fileNameReplaced + ".args");
         string exiftoolCmd = " -charset utf8 -charset filename=utf8 -b -preview:GTNPreview -w! " + HelperVariables.SDoubleQuote + HelperVariables.UserDataFolderPath + @"\%F.jpg" + HelperVariables.SDoubleQuote + " -@ " + HelperVariables.SDoubleQuote + argsFile + HelperVariables.SDoubleQuote;
 
@@ -39,9 +40,9 @@ internal static class HelperExifReadGetImagePreviews
 
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
-        if (File.Exists(path: Path.Combine(path1: frmMainAppInstance.tbx_FolderName.Text, path2: fileNameWithoutPath)))
+        if (File.Exists(path: fileNameWithPath))
         {
-            File.AppendAllText(path: argsFile, contents: Path.Combine(path1: frmMainAppInstance.tbx_FolderName.Text, path2: fileNameWithoutPath) + Environment.NewLine, encoding: Encoding.UTF8);
+            File.AppendAllText(path: argsFile, contents: fileNameWithPath + Environment.NewLine, encoding: Encoding.UTF8);
             File.AppendAllText(path: argsFile, contents: "-execute" + Environment.NewLine);
         }
 
@@ -112,7 +113,7 @@ internal static class HelperExifReadGetImagePreviews
             // don't run the thing again if file has already been generated
             if (!File.Exists(path: generatedFileName))
             {
-                await ExifGetImagePreviews(fileNameWithoutPath: fileNameWithPath);
+                await ExifGetImagePreviews(fileNameWithPath: fileNameWithPath);
             }
 
             if (File.Exists(path: generatedFileName))

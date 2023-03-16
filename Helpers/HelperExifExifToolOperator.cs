@@ -54,7 +54,10 @@ internal static class HelperExifExifToolOperator
             switch (initiator)
             {
                 case "ExifWriteExifToFile":
+                    string fileNameWithPath = null;
                     string fileNameWithoutPath = null;
+                    DirectoryElement dirElemFileToDrop = null;
+
                     prcExifTool.OutputDataReceived += (_,
                                                        data) =>
                     {
@@ -62,18 +65,21 @@ internal static class HelperExifExifToolOperator
                         {
                             if (data.Data.Contains(value: "="))
                             {
-                                fileNameWithoutPath = data.Data.Replace(oldValue: "=", newValue: "")
+                                fileNameWithPath = data.Data.Replace(oldValue: "=", newValue: "")
+                                    .Replace(oldValue: "/", newValue: @"\")
                                     .Split('[')
                                     .FirstOrDefault()
-                                    .Trim()
-                                    .Split('/')
-                                    .Last();
-                                FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-                                FrmMainApp.Logger.Debug(message: "Writing " + fileNameWithoutPath + " [this is via OutputDataReceived]");
+                                    .Trim();
+
+                                dirElemFileToDrop = FrmMainApp.DirectoryElements.FindElementByFileNameWithPath(FileNameWithPath: fileNameWithPath);
                             }
 
-                            if (!string.IsNullOrEmpty(value: fileNameWithoutPath))
+                            if (dirElemFileToDrop != null)
                             {
+                                fileNameWithoutPath = dirElemFileToDrop.ItemNameWithoutPath;
+                                FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
+                                FrmMainApp.Logger.Debug(message: "Writing " + fileNameWithoutPath + " [this is via OutputDataReceived]");
+
                                 try
                                 {
                                     if (lviIndex % 10 == 0)
@@ -89,7 +95,7 @@ internal static class HelperExifExifToolOperator
                                         !data.Data.Trim()
                                             .StartsWith(value: "0"))
                                     {
-                                        removeFileFromDE3(fileNameWithoutPath: fileNameWithoutPath);
+                                        removeDirElementFromDE3(dirElemToDrop: dirElemFileToDrop);
                                     }
 
                                     if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
@@ -110,7 +116,7 @@ internal static class HelperExifExifToolOperator
                                             !data.Data.Trim()
                                                 .StartsWith(value: "0"))
                                         {
-                                            removeFileFromDE3(fileNameWithoutPath: fileNameWithoutPath);
+                                            removeDirElementFromDE3(dirElemToDrop: dirElemFileToDrop);
                                         }
                                     }
                                 }
@@ -210,18 +216,18 @@ internal static class HelperExifExifToolOperator
             }
         });
 
-        void removeFileFromDE3(string fileNameWithoutPath)
+        void removeDirElementFromDE3(DirectoryElement dirElemToDrop)
         {
-            if (!fileNameWithoutPath.EndsWith(value: ".xmp"))
+            string fileNameExtension = dirElemToDrop.Extension;
+            if (!fileNameExtension.EndsWith(value: ".xmp"))
             {
-                DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath));
                 foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
                 {
-                    dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                    dirElemToDrop.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
                 }
             }
 
-            frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Black);
+            frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: dirElemToDrop.ItemNameWithoutPath, color: Color.Black);
         }
     }
 }

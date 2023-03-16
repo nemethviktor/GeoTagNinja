@@ -85,9 +85,7 @@ public partial class FrmMainApp
                     objectName = cItem.Name;
                     objectText = HelperDataLanguageTZ.DataReadDTObjectText(
                         objectType: cItem.GetType()
-                                        .ToString()
-                                        .Split('.')
-                                        .Last() +
+                                        .Name +
                                     "_Normal",
                         objectName: objectName
                     );
@@ -106,9 +104,7 @@ public partial class FrmMainApp
                             objectName = tsb.Name;
                             objectText = HelperDataLanguageTZ.DataReadDTObjectText(
                                 objectType: tsb.GetType()
-                                    .ToString()
-                                    .Split('.')
-                                    .Last(),
+                                    .Name,
                                 objectName: tsb.Name
                             );
                             tsb.ToolTipText = objectText;
@@ -121,9 +117,7 @@ public partial class FrmMainApp
                     objectName = cItem.Name;
                     objectText = HelperDataLanguageTZ.DataReadDTObjectText(
                         objectType: cItem.GetType()
-                            .ToString()
-                            .Split('.')
-                            .Last(),
+                            .Name,
                         objectName: cItem.Name
                     );
                     cItem.Text = objectText;
@@ -162,9 +156,7 @@ public partial class FrmMainApp
                 objectName = cItem.Name;
                 objectText = HelperDataLanguageTZ.DataReadDTObjectText(
                     objectType: cItem.GetType()
-                        .ToString()
-                        .Split('.')
-                        .Last(),
+                        .Name,
                     objectName: cItem.Name
                 );
                 cItem.Text = objectText;

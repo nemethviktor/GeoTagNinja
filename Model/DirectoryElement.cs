@@ -44,6 +44,7 @@ public class DirectoryElement
     {
         ItemNameWithoutPath = itemNameWithoutPath;
         Type = type;
+        UniqueID = Guid.NewGuid();
         FileNameWithPath = fileNameWithPath;
         Extension = Path.GetExtension(path: FileNameWithPath)
             .Replace(oldValue: ".", newValue: "");
@@ -124,7 +125,7 @@ public class DirectoryElement
 
     #endregion
 
-    #region private variables
+    #region Private variables
 
     private string _DisplayName;
 
@@ -138,6 +139,11 @@ public class DirectoryElement
     ///     The element type (get only)
     /// </summary>
     public ElementType Type { get; }
+
+    /// <summary>
+    ///     The UniqueID (get only)
+    /// </summary>
+    public Guid UniqueID { get; }
 
     /// <summary>
     ///     The fully qualified path incl. its name (get only)

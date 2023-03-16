@@ -56,7 +56,7 @@ internal static class HelperExifDataPointInteractions
 
     /// <summary>
     ///     Queues up a command to remove existing geo-data. Depending on the sender this can be for one or many
-    ///     listOfAsyncCompatibleFileNamesWithOutPath.
+    ///     files.
     /// </summary>
     /// <param name="senderName">At this point this can either be the main listview or the one from Edit (file) data</param>
     internal static async Task ExifRemoveLocationData(string senderName)
@@ -88,10 +88,11 @@ internal static class HelperExifDataPointInteractions
             FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
             if (frmEditFileDataInstance != null)
             {
-                string fileNameWithoutPath = frmEditFileDataInstance.lvw_FileListEditImages.SelectedItems[index: 0]
-                    .Text;
+                ListViewItem lvi = frmEditFileDataInstance.lvw_FileListEditImages.SelectedItems[index: 0];
 
-                DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath));
+                DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(lvi.SubItems[index: frmEditFileDataInstance.lvw_FileListEditImages.Columns[key: "clh_GUID"]
+                                                                                                                               .Index]
+                                                                                                                  .Text);
 
                 HelperNonStatic helperNonstatic = new();
                 IEnumerable<Control> cGbx_GPSData = helperNonstatic.GetAllControls(control: frmEditFileDataInstance.gbx_GPSData);
@@ -158,12 +159,14 @@ internal static class HelperExifDataPointInteractions
                     HelperGenericFileLocking.FileListBeingUpdated = true;
                     foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
                     {
+                        DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                                       .Index]
+                                                                                                                          .Text);
                         // don't do folders...
-                        string fileNameWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: lvi.Text);
-                        string fileNameWithoutPath = lvi.Text;
-                        if (File.Exists(path: fileNameWithPath))
+                        if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                         {
-                            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemName(FileNameWithPath: Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath));
+                            string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
+                            string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
 
                             // check it's not in the read-queue.
                             while (HelperGenericFileLocking.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
