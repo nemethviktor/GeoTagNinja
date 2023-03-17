@@ -42,4 +42,4 @@ clh_TargetPointNameCustomCityLogic,Reads city from,
 clh_TargetPointOutcome,Becomes,
 clh_TargetPointOutcomeCustom,Custom Outcome,
 clh_BlankOutTargetPoint,Blank out?,
-clh_GUID,GUID,
+clh_GUID,GUID,GUID

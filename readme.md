@@ -43,9 +43,10 @@ As of Build 8475 [20230316] onwards we now have a `CollectionMode`. Details of t
  5. When all's done, close GTN. At the moment it doesn't support being called twice with an updated file list. That may come later.
 
 Things to note:
-- If you specify a txt file that doesn't exists, or there are no viable files in it then the app will just run normally (in "normal mode" that is.)
+- Technically this function also works if you provide a txt file path outside of LRC, such as `"c:\Program Files\GeoTagNinja\GeoTagNinja.exe" --collection=C:\tmp\filelist.txt` 
+- If you specify a txt file that doesn't exist, or there are no viable files in it then the app will just run normally (in "normal mode" that is.)
 - Lines in the txt file shouldn't have trailing spaces.
-- When you're in Collection Mode it's generally possible to do anything the app otherwise does apart from changing folders. 
+- When you're in `CollectionMode` it's generally possible to do anything the app otherwise does apart from changing folders. 
 
 ## Building & Testing
 

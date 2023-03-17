@@ -289,6 +289,8 @@ public class DirectoryElementCollection : List<DirectoryElement>
         // ******************************
         // Map side car files to image file
         IDictionary<string, string> image2sidecar = new Dictionary<string, string>();
+        HashSet<string> overlappingXmpFileList = new();
+
         foreach (string sidecarFile in sidecarFiles)
         {
             // Get (by comparing w/o extension) list of matching image files in lower case
@@ -299,25 +301,52 @@ public class DirectoryElementCollection : List<DirectoryElement>
                                                  .ToLower() ==
                                              scFilenameWithoutExtension)
                 .ToList();
-            if (matchingImageFiles.Count > 1)
-            {
-                Logger.Warn(message: $"Sidecar file '{sidecarFile}' matches multiple image files!");
-            }
 
+            bool sidecarFileAlreadyAdded = false;
             foreach (string imgFile in matchingImageFiles)
             {
-                image2sidecar[key: imgFile] = sidecarFile;
+                string imgFileExtension = Path.GetExtension(imgFile)
+                    .Substring(1);
+
+                // only add the sidecar file linkage if the particular extension is marked to use sidecars
+                bool writeXMPSideCar = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: imgFileExtension.ToLower() + "_" + "ckb_AddXMPSideCar"));
+                if (writeXMPSideCar)
+                {
+                    if (sidecarFileAlreadyAdded)
+                    {
+                        overlappingXmpFileList.Add(item: sidecarFile);
+                        Logger.Warn(message: $"Sidecar file '{sidecarFile}' matches multiple image files!");
+                    }
+
+                    image2sidecar[key: imgFile] = sidecarFile;
+                    sidecarFileAlreadyAdded = true;
+                }
             }
+        }
+
+        if (overlappingXmpFileList.Count > 0)
+        {
+            string overlappingXmpFileStr = "";
+            foreach (string s in overlappingXmpFileList)
+            {
+                overlappingXmpFileStr += s + NewLine;
+            }
+
+            MessageBox.Show(
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_WarningMultipleImageFilesForXMP") +
+                      NewLine +
+                      overlappingXmpFileStr,
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Warning);
         }
 
         // ******************************
         // Extract data for all files that are supported
         Logger.Trace(message: "Files: Extracting File Data");
         int fileCount = 0;
-        if (_ExifTool == null)
-        {
-            _ExifTool = new ExifTool();
-        }
+        _ExifTool ??= new ExifTool();
 
         foreach (string fileNameWithPath in imageFiles)
         {
