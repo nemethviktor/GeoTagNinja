@@ -123,6 +123,21 @@ public class DirectoryElement
         }
     }
 
+    internal class AttributeValuesDateTime : AttributeValueContainer
+    {
+        public AttributeValuesDateTime(DateTime? initialValue = null,
+                                       AttributeVersion initialVersion = AttributeVersion.Original,
+                                       bool isMarkedForDeletion = false)
+        {
+            _myValueType = typeof(DateTime);
+            _valueDict = new Dictionary<AttributeVersion, Tuple<DateTime, bool>>();
+            if (initialValue != null)
+            {
+                _valueDict[key: initialVersion] = new Tuple<DateTime, bool>(item1: (DateTime)initialValue, item2: isMarkedForDeletion);
+            }
+        }
+    }
+
     #endregion
 
     #region Private variables
@@ -293,6 +308,14 @@ public class DirectoryElement
                 .Item2;
         }
 
+        if (attributeType == typeof(DateTime))
+        {
+            IDictionary<AttributeVersion, Tuple<DateTime, bool>> DateTimeDict = (IDictionary<AttributeVersion, Tuple<DateTime, bool>>)avc.ValueDict;
+            Tuple<DateTime, bool> doubleValue = DateTimeDict[key: version];
+            return DateTimeDict[key: version]
+                .Item2;
+        }
+
         // else
         // Should not get to here
         throw new ArgumentException(message: $"Failed to retrieve attribute '{GetAttributeName(attribute: attribute)}" +
@@ -373,6 +396,19 @@ public class DirectoryElement
             return doubleValue.Item1.ToString(provider: CultureInfo.InvariantCulture);
         }
 
+        if (attributeType == typeof(DateTime))
+        {
+            IDictionary<AttributeVersion, Tuple<DateTime, bool>> dateTimeDict = (IDictionary<AttributeVersion, Tuple<DateTime, bool>>)avc.ValueDict;
+            Tuple<DateTime, bool> dateTimeValue = dateTimeDict[key: versionToReturn];
+            if (dateTimeDict[key: versionToReturn]
+                .Item2)
+            {
+                return FrmMainApp.NullStringEquivalentGeneric;
+            }
+
+            return dateTimeValue.Item1.ToString(provider: CultureInfo.CurrentUICulture);
+        }
+
         // else
         // Should not get to here
         throw new ArgumentException(message: $"Failed to retrieve attribute '{GetAttributeName(attribute: attribute)}" +
@@ -446,8 +482,17 @@ public class DirectoryElement
                 return (T)Convert.ChangeType(value: doubleValue, conversionType: typeof(T));
             }
         }
+        else if (attributeType == typeof(DateTime))
+        {
+            IDictionary<AttributeVersion, Tuple<DateTime, bool>> DateTimeDict = (IDictionary<AttributeVersion, Tuple<DateTime, bool>>)avc.ValueDict;
+            DateTime DateTimeValue = DateTimeDict[key: versionToReturn]
+                .Item1;
+            if (requestType == typeof(DateTime))
+            {
+                return (T)Convert.ChangeType(value: DateTimeValue, conversionType: typeof(T));
+            }
+        }
 
-        // else
         // Should not get to here
         throw new ArgumentException(message: $"Failed to retrieve attribute '{GetAttributeName(attribute: attribute)}" +
                                              $"' of type '{attributeType.Name}" +
@@ -467,6 +512,7 @@ public class DirectoryElement
                                          bool isMarkedForDeletion)
     {
         Type typeOfAttribute = GetAttributeType(attribute: attribute);
+        IConvertible writeValueConvertible = null;
 
         if (typeOfAttribute == typeof(string))
         {
@@ -477,17 +523,25 @@ public class DirectoryElement
         }
         else if (typeOfAttribute == typeof(double))
         {
-            double? writeValueDbl = HelperGenericTypeOperations.TryParseNullableDouble(val: value);
+            writeValueConvertible = HelperGenericTypeOperations.TryParseNullableDouble(val: value) ?? FrmMainApp.NullDoubleEquivalent;
             SetAttributeValue(attribute: attribute,
-                              value: writeValueDbl,
+                              value: writeValueConvertible,
                               version: version,
                               isMarkedForDeletion: isMarkedForDeletion);
         }
         else if (typeOfAttribute == typeof(int))
         {
-            int? writeValueInt = HelperGenericTypeOperations.TryParseNullableInt(val: value);
+            writeValueConvertible = HelperGenericTypeOperations.TryParseNullableInt(val: value) ?? FrmMainApp.NullIntEquivalent;
             SetAttributeValue(attribute: attribute,
-                              value: writeValueInt,
+                              value: writeValueConvertible,
+                              version: version,
+                              isMarkedForDeletion: isMarkedForDeletion);
+        }
+        else if (typeOfAttribute == typeof(DateTime))
+        {
+            writeValueConvertible = HelperGenericTypeOperations.TryParseNullableDateTime(val: value) ?? FrmMainApp.NullDateTimeEquivalent;
+            SetAttributeValue(attribute: attribute,
+                              value: writeValueConvertible,
                               version: version,
                               isMarkedForDeletion: isMarkedForDeletion);
         }
@@ -551,6 +605,19 @@ public class DirectoryElement
                         .ValueDict[key: version] = new Tuple<int, bool>(item1: (int)value, item2: isMarkedForDeletion);
                 }
             }
+            else if (attributeType == typeof(DateTime))
+            {
+                if (setMarkedForDeletion)
+                {
+                    _Attributes[key: attribute]
+                        .ValueDict[key: version] = new Tuple<DateTime, bool>(item1: FrmMainApp.NullDateTimeEquivalent, item2: isMarkedForDeletion);
+                }
+                else
+                {
+                    _Attributes[key: attribute]
+                        .ValueDict[key: version] = new Tuple<DateTime, bool>(item1: (DateTime)value, item2: isMarkedForDeletion);
+                }
+            }
             else if (attributeType == typeof(string))
             {
                 if (setMarkedForDeletion)
@@ -587,6 +654,11 @@ public class DirectoryElement
         {
             value ??= FrmMainApp.NullIntEquivalent;
             avc = new AttributeValuesInt(initialValue: (int)value, initialVersion: version, isMarkedForDeletion: isMarkedForDeletion);
+        }
+        else if (attributeType == typeof(DateTime))
+        {
+            value ??= FrmMainApp.NullDateTimeEquivalent;
+            avc = new AttributeValuesDateTime(initialValue: (DateTime)value, initialVersion: version, isMarkedForDeletion: isMarkedForDeletion);
         }
         else
         {
@@ -780,8 +852,11 @@ public class DirectoryElement
             case ElementAttribute.Fnumber:
             case ElementAttribute.FocalLength:
             case ElementAttribute.FocalLengthIn35mmFormat:
+                resTyped = TagsToModelValueTransformations.T2M_F_FocalLength(attribute: attribute, parseResult: parseResult);
+                break;
+
             case ElementAttribute.ISO:
-                resTyped = TagsToModelValueTransformations.T2M_F_FocalLength_ISO(attribute: attribute, parseResult: parseResult);
+                resTyped = TagsToModelValueTransformations.T2M_F_ISO(attribute: attribute, parseResult: parseResult);
                 break;
 
             case ElementAttribute.TakenDate:

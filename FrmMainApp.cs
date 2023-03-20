@@ -63,6 +63,7 @@ public partial class FrmMainApp : Form
     public const string NullStringEquivalentZero = "0"; // fml.
     public const int NullIntEquivalent = 0;
     public const double NullDoubleEquivalent = 0.0;
+    public static readonly DateTime NullDateTimeEquivalent = new DateTime(1, 1, 1, 0, 0, 0);
 
     internal static DataTable DtLanguageLabels;
     internal static DataTable DtFavourites;

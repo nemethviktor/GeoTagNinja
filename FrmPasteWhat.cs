@@ -294,130 +294,67 @@ public partial class FrmPasteWhat : Form
 
                     // there must be a better way around this
                     Type typeOfAttribute = GetAttributeType(attribute: attribute);
-                    string pasteValueStr = null;
-                    double? pasteValueDbl = null;
-                    int? pasteValueInt = null;
+                    IConvertible pasteConvertible = null;
 
                     // by this point we know that _there is_ something to paste.
                     btn_OK.Enabled = false;
                     btn_Cancel.Enabled = false;
 
-                    // check it's sitting somewhere already?
+                    // check it's sitting somewhere already? -- can't be null.
+                    DirectoryElement.AttributeVersion maxAttributeVersion = DirectoryElement.AttributeVersion.Original;
+                    bool dataExistsSomewhere = false;
 
-                    bool dataInStage1QueuedInEditForm = false;
-                    bool dataInStage3ReadyToWrite = false;
-                    bool dataInFile = false;
+                    List<DirectoryElement.AttributeVersion> relevantAttributeVersions = new()
+                    {
+                        // DO NOT reorder!
+                        DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                        DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                        DirectoryElement.AttributeVersion.Original
+                    };
 
                     if (dirElemFileToCopyFrom != null)
                     {
-                        dataInStage1QueuedInEditForm = dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(
-                            attribute: attribute,
-                            version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
-
-                        dataInStage3ReadyToWrite = dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(
-                            attribute: attribute,
-                            version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
-
-                        dataInFile = dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(attribute: attribute,
-                                                                                           version: DirectoryElement.AttributeVersion.Original);
-
-                        // see if data in temp-queue
-                        if (dataInStage1QueuedInEditForm)
+                        //
+                        foreach (DirectoryElement.AttributeVersion relevantAttributeVersion in relevantAttributeVersions)
                         {
-                            pasteValueStr = dirElemFileToCopyFrom.GetAttributeValueString(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
-
-                            if (typeOfAttribute == typeof(double))
-                            {
-                                pasteValueDbl = dirElemFileToCopyFrom.GetAttributeValue<double>(
+                            if (dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(
                                     attribute: attribute,
-                                    version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
+                                    version: relevantAttributeVersion))
+                            {
+                                maxAttributeVersion = relevantAttributeVersion;
+                                dataExistsSomewhere = true;
+                                break;
+                            }
+                        }
+
+                        if (dataExistsSomewhere)
+                        {
+                            if (typeOfAttribute == typeof(string))
+                            {
+                                dirElemFileToCopyFrom.GetAttributeValueString(attribute: attribute,
+                                                                              version: maxAttributeVersion);
                             }
                             else if (typeOfAttribute == typeof(int))
                             {
-                                pasteValueInt = dirElemFileToCopyFrom.GetAttributeValue<int>(
+                                pasteConvertible = dirElemFileToCopyFrom.GetAttributeValue<int>(
                                     attribute: attribute,
-                                    version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
+                                    version: maxAttributeVersion);
                             }
-                        }
-                        // see if data is ready to be written
-                        else if (dataInStage3ReadyToWrite)
-                        {
-                            pasteValueStr = dirElemFileToCopyFrom.GetAttributeValueString(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
-
-                            if (typeOfAttribute == typeof(double))
+                            else if (typeOfAttribute == typeof(double))
                             {
-                                pasteValueDbl = dirElemFileToCopyFrom.GetAttributeValue<double>(
+                                pasteConvertible = dirElemFileToCopyFrom.GetAttributeValue<double>(
                                     attribute: attribute,
-                                    version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                                    version: maxAttributeVersion);
                             }
-                            else if (typeOfAttribute == typeof(int))
+                            else if (typeOfAttribute == typeof(DateTime))
                             {
-                                pasteValueInt = dirElemFileToCopyFrom.GetAttributeValue<int>(
+                                pasteConvertible = dirElemFileToCopyFrom.GetAttributeValue<DateTime>(
                                     attribute: attribute,
-                                    version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                                    version: maxAttributeVersion);
                             }
-                        }
-                        // take it from the file then
-                        else if (dataInFile)
-                        {
-                            pasteValueStr = dirElemFileToCopyFrom.GetAttributeValueString(attribute: attribute, version: DirectoryElement.AttributeVersion.Original);
-                            if (typeOfAttribute == typeof(double))
-                            {
-                                pasteValueDbl = dirElemFileToCopyFrom.GetAttributeValue<double>(
-                                    attribute: attribute,
-                                    version: DirectoryElement.AttributeVersion.Original);
-                            }
-                            else if (typeOfAttribute == typeof(int))
-                            {
-                                pasteValueInt = dirElemFileToCopyFrom.GetAttributeValue<int>(
-                                    attribute: attribute,
-                                    version: DirectoryElement.AttributeVersion.Original);
-                            }
-                        }
 
-                        else
-                        {
-                            pasteValueStr = FrmMainApp.NullStringEquivalentGeneric;
+                            copyPasteDict.Add(key: attribute, value: pasteConvertible);
                         }
-                    }
-
-                    if (pasteValueStr == FrmMainApp.NullStringEquivalentGeneric || pasteValueStr is null)
-                    {
-                        if (typeOfAttribute == typeof(double))
-                        {
-                            pasteValueStr = FrmMainApp.NullStringEquivalentZero;
-                            pasteValueDbl = FrmMainApp.NullDoubleEquivalent;
-                        }
-                        else if (typeOfAttribute == typeof(int))
-                        {
-                            pasteValueStr = FrmMainApp.NullStringEquivalentZero;
-                            pasteValueInt = FrmMainApp.NullIntEquivalent;
-                        }
-                        else if (typeOfAttribute == typeof(string))
-                        {
-                            pasteValueStr = FrmMainApp.NullStringEquivalentBlank;
-                        }
-                        else
-                        {
-                            throw new ArgumentException(message: "Trying to get attribute type of unknown attribute with value " + attributeStr);
-                        }
-                    }
-
-                    if (typeOfAttribute == typeof(string))
-                    {
-                        copyPasteDict.Add(key: attribute, value: pasteValueStr);
-                    }
-                    else if (typeOfAttribute == typeof(int))
-                    {
-                        copyPasteDict.Add(key: attribute, value: pasteValueInt);
-                    }
-                    else if (typeOfAttribute == typeof(double))
-                    {
-                        copyPasteDict.Add(key: attribute, value: pasteValueDbl);
-                    }
-                    else
-                    {
-                        throw new ArgumentException(message: "Trying to get attribute type of unknown attribute with value " + attributeStr);
                     }
                 }
 

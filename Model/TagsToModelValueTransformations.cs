@@ -184,12 +184,12 @@ internal class TagsToModelValueTransformations
     ///     Extract a numeric value from the attribute by also removing
     ///     identified "clutter". Also calcs encountered quotient.
     /// </summary>
-    public static string T2M_F_FocalLength_ISO(ElementAttribute attribute,
-                                               string parseResult)
+    public static double T2M_F_FocalLength(ElementAttribute attribute,
+                                           string parseResult)
     {
         if (parseResult == null)
         {
-            return null; // not set
+            return 0; // not set
         }
 
         // Pre-work on focal length 35mm:
@@ -229,24 +229,51 @@ internal class TagsToModelValueTransformations
                 .ToString();
         }
 
-        return parseResult;
+        bool _ = double.TryParse(s: parseResult,
+                                 style: NumberStyles.Any,
+                                 provider: CultureInfo.InvariantCulture,
+                                 result: out double returnVal);
+        return _
+            ? returnVal
+            : FrmMainApp.NullDoubleEquivalent;
+    }
+
+    /// <summary>
+    ///     Identical to the above but ISO is an int, not a double
+    /// </summary>
+    /// <param name="attribute"></param>
+    /// <param name="parseResult"></param>
+    /// <returns></returns>
+    public static int T2M_F_ISO(ElementAttribute attribute,
+                                string parseResult)
+    {
+        if (parseResult == null)
+        {
+            return 0; // not set
+        }
+
+        parseResult = Regex.Replace(input: parseResult, pattern: @"[^\d:.]", replacement: "");
+
+        bool _ = int.TryParse(s: parseResult.ToString(provider: CultureInfo.InvariantCulture), result: out int returnVal);
+
+        return _
+            ? returnVal
+            : 0;
     }
 
     /// <summary>
     ///     Ensure the value is an actual date-time...
     /// </summary>
-    public static string T2M_TakenCreatedDate(string parseResult)
+    public static DateTime? T2M_TakenCreatedDate(string parseResult)
     {
         if (parseResult == null)
         {
             return null; // not set
         }
 
-        if (DateTime.TryParse(s: parseResult, result: out DateTime outDateTime))
-        {
-            return outDateTime.ToString(format: CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern);
-        }
-
-        return null;
+        //return outDateTime.ToString(format: CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern);
+        return DateTime.TryParse(s: parseResult, result: out DateTime outDateTime)
+            ? outDateTime
+            : null;
     }
 }

@@ -3,6 +3,7 @@
 **Build 84XX [202303XX]**
 - NEW & UPDATED:
   - Added a "Collections Mode", in particular to work with Jeffrey Frield's LightRoom Classic Plugin "Run Any Command". Details on how to use this are in the readme.
+  - Rewrote the sorting logic to account for the data type of the column being sorted (i.e. date, number, text etc)
   - Added Country to Favourites
   - Bumped exifTool to v12.58
 - BUGS & FIXES:

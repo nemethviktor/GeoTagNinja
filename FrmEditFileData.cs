@@ -54,7 +54,7 @@ public partial class FrmEditFileData : Form
         Logger.Trace(message: "Defaults Starting");
         _frmEditFileDataNowLoadingFileData = true;
 
-        Logger.Trace(message: "Emptying FrmMainApp.Stage1EditFormIntraTabTransferQueue + FrmMainApp.Stage2EditFormReadyToSaveAndMoveToWriteQueue");
+        Logger.Trace(message: "Emptying FrmMainApp.Stage1EditFormIntraTabTransferQueue + Stage2EditFormReadyToSaveAndMoveToWriteQueue");
         foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
         {
             {
@@ -71,7 +71,7 @@ public partial class FrmEditFileData : Form
             }
         }
 
-        Logger.Trace(message: "Emptying FrmMainApp.Stage1EditFormIntraTabTransferQueue + FrmMainApp.Stage2EditFormReadyToSaveAndMoveToWriteQueue - Done");
+        Logger.Trace(message: "Emptying FrmMainApp.Stage1EditFormIntraTabTransferQueue + Stage2EditFormReadyToSaveAndMoveToWriteQueue - Done");
 
         Logger.Trace(message: "Setting Dropdown defaults");
         // Ddeal with Dates
@@ -214,11 +214,8 @@ public partial class FrmEditFileData : Form
         {
             if (lstControlTypesNoDEValue.Contains(item: cItem.GetType()) || lstControlTypesWithDEValue.Contains(item: cItem.GetType()))
             {
-                string strDataInStage1 = null;
-                string strDataInStage3 = null;
-                string strDataInFileList = null;
                 string strExifTag = cItem.Name; // this is for debugging only (particularly here, that is.)
-                ElementAttribute exifTag;
+
                 try
                 {
                     Logger.Trace(message: "cItem: " +
@@ -238,100 +235,122 @@ public partial class FrmEditFileData : Form
                     else if (lstControlTypesWithDEValue.Contains(item: cItem.GetType()))
                     {
                         strExifTag = cItem.Name.Substring(startIndex: 4);
-                        exifTag = GetAttributeFromString(attributeToFind: strExifTag);
 
-                        string cItemValStr = NullStringEquivalentGeneric;
+                        //
+                        ElementAttribute attribute = GetAttributeFromString(attributeToFind: strExifTag);
 
-                        Logger.Trace(message: "cItem: " + cItem.Name + " - keyEqualsWhat: " + strExifTag + " - Pulling from DE1");
-                        strDataInStage1 = dirElemFileToModify.GetAttributeValueString(attribute: exifTag, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
-                        Logger.Trace(message: "cItem: " + cItem.Name + " - keyEqualsWhat: " + strExifTag + " - Pulling from DE3");
-                        strDataInStage3 = dirElemFileToModify.GetAttributeValueString(attribute: exifTag, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
-                        Logger.Trace(message: "cItem: " + cItem.Name + " - keyEqualsWhat: " + strExifTag + " - Pulling from DEx - Done");
+                        Type typeOfAttribute = GetAttributeType(attribute: attribute);
+                        DirectoryElement.AttributeVersion maxAttributeVersion = DirectoryElement.AttributeVersion.Original;
+                        bool dataExistsSomewhere = false;
+                        bool dataIsNull = false;
+                        List<DirectoryElement.AttributeVersion> relevantAttributeVersions = new()
+                        {
+                            // DO NOT reorder!
+                            DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                            DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                            DirectoryElement.AttributeVersion.Original
+                        };
 
-                        // Basically not all Tags exist as CLHs.
-                        List<string> lstObjectNamesIn = HelperVariables.DtObjectattributesIn.Rows.OfType<DataRow>()
-                            .Select(selector: dr => dr.Field<string>(columnName: "objectName"))
-                            .ToList();
-                        lstObjectNamesIn = lstObjectNamesIn.Distinct()
-                            .ToList();
-
-                        if (lstObjectNamesIn.Contains(item: strExifTag))
+                        foreach (DirectoryElement.AttributeVersion relevantAttributeVersion in relevantAttributeVersions)
                         {
-                            strDataInFileList = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
-                                .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_" + strExifTag]
-                                              .Index]
-                                .Text;
-                        }
-
-                        bool dataExistsAlready = false;
-                        if (strDataInStage1 != null)
-                        {
-                            cItemValStr = strDataInStage1;
-                            dataExistsAlready = true;
-                        }
-                        else if (strDataInStage3 != null)
-                        {
-                            cItemValStr = strDataInStage3;
-                            dataExistsAlready = true;
-                        }
-                        else if (strDataInFileList != null)
-                        {
-                            cItemValStr = strDataInFileList;
-                            dataExistsAlready = true;
-                        }
-                        // if not in DEs...
-                        else
-                        {
-                            if (cItem is NumericUpDown) // These are the Time-Shifts
+                            if (dirElemFileToModify.HasSpecificAttributeWithVersion(
+                                    attribute: attribute,
+                                    version: relevantAttributeVersion))
                             {
-                                Logger.Trace(message: "Not in DEs");
-                                cItemValStr = "0";
-                            }
-                            else if (strExifTag == "OffsetTimeList") // I hate you.
-                            {
-                                Logger.Trace(message: "Not in DEs");
-                                // blank on purpose
+                                maxAttributeVersion = relevantAttributeVersion;
+                                dataExistsSomewhere = true;
+                                break;
                             }
                         }
 
-                        if (dataExistsAlready)
+                        IConvertible dataInDE = null;
+                        string cItemValStr = FrmMainApp.NullStringEquivalentBlank;
+                        if (dataExistsSomewhere)
                         {
+                            if (typeOfAttribute == typeof(string))
+                            {
+                                dataInDE = dirElemFileToModify.GetAttributeValueString(attribute: attribute,
+                                                                                       version: maxAttributeVersion);
+
+                                if (string.IsNullOrEmpty(dataInDE.ToString()))
+                                    dataIsNull = true;
+                            }
+                            else if (typeOfAttribute == typeof(int))
+                            {
+                                dataInDE = dirElemFileToModify.GetAttributeValue<int>(
+                                    attribute: attribute,
+                                    version: maxAttributeVersion);
+                                if ((int)dataInDE == FrmMainApp.NullIntEquivalent)
+                                    dataIsNull = true;
+                            }
+                            else if (typeOfAttribute == typeof(double))
+                            {
+                                dataInDE = dirElemFileToModify.GetAttributeValue<double>(
+                                    attribute: attribute,
+                                    version: maxAttributeVersion);
+                                if ((double)dataInDE == FrmMainApp.NullDoubleEquivalent)
+                                    dataIsNull = true;
+                            }
+                            else if (typeOfAttribute == typeof(DateTime))
+                            {
+                                dataInDE = dirElemFileToModify.GetAttributeValue<DateTime>(
+                                    attribute: attribute,
+                                    version: maxAttributeVersion);
+                                if ((DateTime)dataInDE == FrmMainApp.NullDateTimeEquivalent)
+                                    dataIsNull = true;
+                            }
+
+                            if (!dataIsNull)
+                                cItemValStr = dataInDE.ToString();
+
                             // reset font to normal
                             cItem.Font = new Font(prototype: cItem.Font, newStyle: FontStyle.Regular);
                         }
+                        else
+                        {
+                            dataIsNull = true;
+                        }
 
-                        // if empty...
-                        if (cItemValStr == NullStringEquivalentGeneric || string.IsNullOrWhiteSpace(value: cItemValStr))
+                        // if dataIsNull...
+                        if (dataIsNull)
                         {
                             // okay for gbx_*Date && !NUD -> those are DateTimePickers. If they are NULL then there is either no TakenDate or no CreateDate so the actual controls will have to be disabled.
-                            if (cItem.Parent.Name.StartsWith(value: "gbx_") && cItem.Parent.Name.EndsWith(value: "Date") && cItem is not NumericUpDown)
+                            if (cItem.Parent.Name.StartsWith(value: "gbx_") && cItem.Parent.Name.EndsWith(value: "Date"))
                             {
-                                if (cItem.Parent.Name == "gbx_TakenDate")
+                                if (cItem is not NumericUpDown nud)
                                 {
-                                    IEnumerable<Control> cGbx_TakenDate = helperNonstatic.GetAllControls(control: gbx_TakenDate);
-                                    foreach (Control cItemGbx_TakenDate in cGbx_TakenDate)
+                                    if (cItem.Parent.Name == "gbx_TakenDate")
                                     {
-                                        if (cItemGbx_TakenDate != btn_InsertTakenDate)
+                                        IEnumerable<Control> cGbx_TakenDate = helperNonstatic.GetAllControls(control: gbx_TakenDate);
+                                        foreach (Control cItemGbx_TakenDate in cGbx_TakenDate)
                                         {
-                                            cItemGbx_TakenDate.Enabled = false;
-                                            btn_InsertTakenDate.Enabled = true;
-                                            btn_InsertFromTakenDate.Enabled = false;
+                                            if (cItemGbx_TakenDate != btn_InsertTakenDate)
+                                            {
+                                                cItemGbx_TakenDate.Enabled = false;
+                                                btn_InsertTakenDate.Enabled = true;
+                                                btn_InsertFromTakenDate.Enabled = false;
+                                            }
+                                        }
+                                    }
+
+                                    else if (cItem.Parent.Name == "gbx_CreateDate")
+                                    {
+                                        IEnumerable<Control> cGbx_CreateDate = helperNonstatic.GetAllControls(control: gbx_CreateDate);
+                                        foreach (Control cItemGbx_CrateDate in cGbx_CreateDate)
+                                        {
+                                            if (cItemGbx_CrateDate != btn_InsertCreateDate)
+                                            {
+                                                cItemGbx_CrateDate.Enabled = false;
+                                                btn_InsertCreateDate.Enabled = true;
+                                                btn_InsertFromTakenDate.Enabled = false;
+                                            }
                                         }
                                     }
                                 }
-
-                                else if (cItem.Parent.Name == "gbx_CreateDate")
+                                else // cItem is nud
                                 {
-                                    IEnumerable<Control> cGbx_CreateDate = helperNonstatic.GetAllControls(control: gbx_CreateDate);
-                                    foreach (Control cItemGbx_CrateDate in cGbx_CreateDate)
-                                    {
-                                        if (cItemGbx_CrateDate != btn_InsertCreateDate)
-                                        {
-                                            cItemGbx_CrateDate.Enabled = false;
-                                            btn_InsertCreateDate.Enabled = true;
-                                            btn_InsertFromTakenDate.Enabled = false;
-                                        }
-                                    }
+                                    nud.Value = FrmMainApp.NullIntEquivalent;
+                                    nud.Text = FrmMainApp.NullStringEquivalentZero;
                                 }
                             }
                             // if it's none of the above then make the cItem be just blank.
@@ -341,12 +360,13 @@ public partial class FrmEditFileData : Form
                             }
                             else
                             {
-                                cItem.Text = "";
+                                cItem.Text = FrmMainApp.NullStringEquivalentBlank;
                             }
                         }
                         // if has value...
                         else
                         {
+                            // if this is a TakenDate or CreateDate -related
                             if (cItem.Parent.Name.StartsWith(value: "gbx_") && cItem.Parent.Name.EndsWith(value: "Date") && cItem is not NumericUpDown)
                             {
                                 if (cItem.Parent.Name == "gbx_TakenDate")
@@ -378,7 +398,7 @@ public partial class FrmEditFileData : Form
                             }
 
                             // this is related to storing the default DateTimes for TakenDate and CreateDate
-                            // what we also need to do here is account for any copy-paste shifts. TODO
+                            // what we also need to do here is account for any copy-paste shifts.
                             if (cItem is DateTimePicker dtp)
                             {
                                 int shiftedDays = 0;
@@ -454,17 +474,17 @@ public partial class FrmEditFileData : Form
                                 }
 
                                 Logger.Trace(message: "cItem: " + cItem.Name + " - Updating DateTimePicker");
-                                if (strDataInStage1 != null || strDataInStage3 != null || totalShiftedSeconds != 0)
+                                if (maxAttributeVersion != DirectoryElement.AttributeVersion.Original || totalShiftedSeconds != 0)
                                 {
                                     dtp.Font = new Font(prototype: dtp.Font, newStyle: FontStyle.Bold);
                                 }
                             }
 
-                            Logger.Trace(message: "cItem: " + cItem.Name + " - Adding to FrmMainApp.DtFileDataToWriteStage2QueuePendingSave");
-                            // stick into sql ("pending save") - this is to see if the data has changed later.
+                            Logger.Trace(message: "cItem: " + cItem.Name + " - Adding to Stage2EditFormReadyToSaveAndMoveToWriteQueue");
+                            // stick into DE2 ("pending save") - this is to see if the data has changed later.
                             if (cItem is not NumericUpDown nud)
                             {
-                                ElementAttribute attribute = GetAttributeFromString(attributeToFind: cItem.Name.Substring(startIndex: 4));
+                                attribute = GetAttributeFromString(attributeToFind: cItem.Name.Substring(startIndex: 4));
 
                                 dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
                                                                              value: cItemValStr,
@@ -492,7 +512,7 @@ public partial class FrmEditFileData : Form
                                     }
                                 }
 
-                                ElementAttribute attribute = GetAttributeFromString(attributeToFind: nud.Name.Substring(startIndex: 4));
+                                attribute = GetAttributeFromString(attributeToFind: nud.Name.Substring(startIndex: 4));
 
                                 dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
                                                                              value: cItemValStr,
@@ -501,7 +521,7 @@ public partial class FrmEditFileData : Form
 
                                 nud.Text = nud.Value.ToString();
 
-                                if (strDataInStage1 != null || strDataInStage3 != null)
+                                if (maxAttributeVersion != DirectoryElement.AttributeVersion.Original)
                                 {
                                     nud.Font = new Font(prototype: nud.Font, newStyle: FontStyle.Bold);
                                 }
@@ -510,7 +530,7 @@ public partial class FrmEditFileData : Form
                             if (cItem is TextBox txt)
                             {
                                 Logger.Trace(message: "cItem: " + cItem.Name + " - Updating TextBox");
-                                if (strDataInStage1 != null || strDataInStage3 != null)
+                                if (maxAttributeVersion != DirectoryElement.AttributeVersion.Original)
                                 {
                                     txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Bold);
                                 }
@@ -518,7 +538,7 @@ public partial class FrmEditFileData : Form
                             else if (cItem is ComboBox cmb)
                             {
                                 Logger.Trace(message: "cItem: " + cItem.Name + " - Updating ComboBox");
-                                if (strDataInStage1 != null || strDataInStage3 != null)
+                                if (maxAttributeVersion != DirectoryElement.AttributeVersion.Original)
                                 {
                                     cmb.Font = new Font(prototype: cmb.Font, newStyle: FontStyle.Bold);
                                 }
@@ -561,6 +581,7 @@ public partial class FrmEditFileData : Form
                             }
                         }
                     }
+                    //
                 }
                 catch
                 {
@@ -664,7 +685,7 @@ public partial class FrmEditFileData : Form
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         double parsedLat;
         double parsedLng;
-        DateTime createDate = default; // can't leave it null because it's updated in various IFs and C# perceives it as uninitialised.
+        DateTime createDate = FrmMainApp.NullDateTimeEquivalent; // can't leave it null because it's updated in various IFs and C# perceives it as uninitialised.
 
         string strGpsLatitude = null;
         string strGpsLongitude = null;

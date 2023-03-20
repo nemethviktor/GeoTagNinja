@@ -20,6 +20,18 @@ internal static class HelperGenericTypeOperations
             : null;
     }
 
+    public static DateTime? TryParseNullableDateTime(string val)
+    {
+        DateTime.TryParse(
+            s: val,
+            provider: CultureInfo.CurrentCulture,
+            styles: DateTimeStyles.None,
+            result: out DateTime outValue
+        );
+
+        return outValue;
+    }
+
     /// <summary>
     ///     A "coalesce" function.
     /// </summary>

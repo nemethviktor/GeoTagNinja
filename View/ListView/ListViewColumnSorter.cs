@@ -98,6 +98,7 @@ internal class ListViewColumnSorter : IComparer
             .Name.Substring(startIndex: 4); // no "clh_"
 
         // If items not in same group, group rules
+        // This only applies to fileNames (as in the column FileName...Type in this sense/case is/are...Drive, Folder, File etc)
         if (lviElementTypeX != lviElementTypeY)
         {
             if (lviElementTypeX < lviElementTypeY)
@@ -141,17 +142,17 @@ internal class ListViewColumnSorter : IComparer
 
                 if (attributeType == typeof(string))
                 {
-                    string compareWhat = deX.GetAttributeValueString(attribute: attribute, version: deXHighestAttributeVersion);
-                    string compareToWhat = deY.GetAttributeValueString(attribute: attribute, version: deYHighestAttributeVersion);
+                    string? compareWhat = deX.GetAttributeValueString(attribute: attribute, version: deXHighestAttributeVersion);
+                    string? compareToWhat = deY.GetAttributeValueString(attribute: attribute, version: deYHighestAttributeVersion);
 
                     result = Comparer.Compare(a: compareWhat, b: compareToWhat);
                 }
                 else if (attributeType == typeof(double))
                 {
-                    double compareWhat = (double)deX.GetAttributeValue<double>(
+                    double? compareWhat = (double?)deX.GetAttributeValue<double>(
                         attribute: attribute,
                         version: deXHighestAttributeVersion);
-                    double compareToWhat = (double)deY.GetAttributeValue<double>(
+                    double? compareToWhat = (double?)deY.GetAttributeValue<double>(
                         attribute: attribute,
                         version: deYHighestAttributeVersion);
 
@@ -159,10 +160,10 @@ internal class ListViewColumnSorter : IComparer
                 }
                 else if (attributeType == typeof(int))
                 {
-                    int compareWhat = (int)deX.GetAttributeValue<int>(
+                    int? compareWhat = (int?)deX.GetAttributeValue<int>(
                         attribute: attribute,
                         version: deXHighestAttributeVersion);
-                    int compareToWhat = (int)deY.GetAttributeValue<int>(
+                    int? compareToWhat = (int?)deY.GetAttributeValue<int>(
                         attribute: attribute,
                         version: deYHighestAttributeVersion);
 
@@ -170,10 +171,10 @@ internal class ListViewColumnSorter : IComparer
                 }
                 else if (attributeType == typeof(DateTime))
                 {
-                    DateTime compareWhat = (DateTime)deX.GetAttributeValue<DateTime>(
+                    DateTime? compareWhat = (DateTime?)deX.GetAttributeValue<DateTime>(
                         attribute: attribute,
                         version: deXHighestAttributeVersion);
-                    DateTime compareToWhat = (DateTime)deY.GetAttributeValue<DateTime>(
+                    DateTime? compareToWhat = (DateTime?)deY.GetAttributeValue<DateTime>(
                         attribute: attribute,
                         version: deYHighestAttributeVersion);
 

@@ -535,19 +535,19 @@ public class SourcesAndAttributes
             case ElementAttribute.ExposureTime:
                 return typeof(string);
             case ElementAttribute.Fnumber:
-                return typeof(string);
+                return typeof(double);
             case ElementAttribute.FocalLength:
-                return typeof(string);
+                return typeof(double);
             case ElementAttribute.FocalLengthIn35mmFormat:
-                return typeof(string);
+                return typeof(double);
             case ElementAttribute.ISO:
-                return typeof(string);
+                return typeof(int);
             case ElementAttribute.LensSpec:
                 return typeof(string);
             case ElementAttribute.TakenDate:
-                return typeof(string);
+                return typeof(DateTime);
             case ElementAttribute.CreateDate:
-                return typeof(string);
+                return typeof(DateTime);
             case ElementAttribute.TakenDateDaysShift:
                 return typeof(int);
             case ElementAttribute.TakenDateHoursShift:
