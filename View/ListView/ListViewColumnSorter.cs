@@ -23,11 +23,11 @@ internal class ListViewColumnSorter : IComparer
     /// <summary>
     ///     Column to be sorted (inited to to 0, no validation on setting)
     /// </summary>
-    private int ColumnToSort;
+    private int ColumnToSortIdx;
 
     public ListViewColumnSorter()
     {
-        ColumnToSort = 0;
+        ColumnToSortIdx = 0;
         ColumnSortOrder = SortOrder.Ascending;
         Comparer = new CaseInsensitiveComparer();
     }
@@ -37,8 +37,8 @@ internal class ListViewColumnSorter : IComparer
     /// </summary>
     public int SortColumn
     {
-        set => ColumnToSort = value;
-        get => ColumnToSort;
+        set => ColumnToSortIdx = value;
+        get => ColumnToSortIdx;
     }
 
     /// <summary>
@@ -88,13 +88,19 @@ internal class ListViewColumnSorter : IComparer
         // below that all folders. This is not subject to sort order!
 
         // Assign type per group
-        int lviTypeX = GetSortGroup(de: deX);
-        int lviTypeY = GetSortGroup(de: deY);
+        int lviElementTypeX = GetSortGroup(de: deX);
+        int lviElementTypeY = GetSortGroup(de: deY);
+
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        ListView lvw_FileList = frmMainAppInstance.lvw_FileList;
+
+        string colName = lvw_FileList.Columns[index: ColumnToSortIdx]
+            .Name.Substring(startIndex: 4); // no "clh_"
 
         // If items not in same group, group rules
-        if (lviTypeX != lviTypeY)
+        if (lviElementTypeX != lviElementTypeY)
         {
-            if (lviTypeX < lviTypeY)
+            if (lviElementTypeX < lviElementTypeY)
             {
                 return -1;
             }
@@ -102,14 +108,82 @@ internal class ListViewColumnSorter : IComparer
             return 1;
         }
 
-        // Item of same group - compare their texts in clicked column...
+        // Item of same group - compare their values in clicked column...
         try
         {
-            string compareWhat = lviX.SubItems[index: ColumnToSort]
-                .Text;
-            string compareToWhat = lviY.SubItems[index: ColumnToSort]
-                .Text;
-            result = Comparer.Compare(a: compareWhat, b: compareToWhat);
+            // FileName is always string and has no versions
+            if (colName == "FileName")
+            {
+                string compareWhat = lviX.SubItems[index: ColumnToSortIdx]
+                    .Text;
+                string compareToWhat = lviY.SubItems[index: ColumnToSortIdx]
+                    .Text;
+
+                result = Comparer.Compare(a: compareWhat, b: compareToWhat);
+            }
+
+            // Otherwise we need to compare appropriate item types (like INTs etc.) rather than strings (if they aren't strings)
+            // ... this is to avoid having something like C# thinking the value of "2" is more than "12".
+            else
+            {
+                SourcesAndAttributes.ElementAttribute attribute = SourcesAndAttributes.GetAttributeFromString(attributeToFind: colName);
+                Type attributeType = SourcesAndAttributes.GetAttributeType(attribute: attribute);
+
+                // get the "highest" version available. In this case that will be either Stage3 or Orig
+                DirectoryElement.AttributeVersion deXHighestAttributeVersion;
+                DirectoryElement.AttributeVersion deYHighestAttributeVersion;
+                deXHighestAttributeVersion = deX.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite)
+                    ? DirectoryElement.AttributeVersion.Stage3ReadyToWrite
+                    : DirectoryElement.AttributeVersion.Original;
+                deYHighestAttributeVersion = deY.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite)
+                    ? DirectoryElement.AttributeVersion.Stage3ReadyToWrite
+                    : DirectoryElement.AttributeVersion.Original;
+
+                if (attributeType == typeof(string))
+                {
+                    string compareWhat = deX.GetAttributeValueString(attribute: attribute, version: deXHighestAttributeVersion);
+                    string compareToWhat = deY.GetAttributeValueString(attribute: attribute, version: deYHighestAttributeVersion);
+
+                    result = Comparer.Compare(a: compareWhat, b: compareToWhat);
+                }
+                else if (attributeType == typeof(double))
+                {
+                    double compareWhat = (double)deX.GetAttributeValue<double>(
+                        attribute: attribute,
+                        version: deXHighestAttributeVersion);
+                    double compareToWhat = (double)deY.GetAttributeValue<double>(
+                        attribute: attribute,
+                        version: deYHighestAttributeVersion);
+
+                    result = Comparer.Compare(a: compareWhat, b: compareToWhat);
+                }
+                else if (attributeType == typeof(int))
+                {
+                    int compareWhat = (int)deX.GetAttributeValue<int>(
+                        attribute: attribute,
+                        version: deXHighestAttributeVersion);
+                    int compareToWhat = (int)deY.GetAttributeValue<int>(
+                        attribute: attribute,
+                        version: deYHighestAttributeVersion);
+
+                    result = Comparer.Compare(a: compareWhat, b: compareToWhat);
+                }
+                else if (attributeType == typeof(DateTime))
+                {
+                    DateTime compareWhat = (DateTime)deX.GetAttributeValue<DateTime>(
+                        attribute: attribute,
+                        version: deXHighestAttributeVersion);
+                    DateTime compareToWhat = (DateTime)deY.GetAttributeValue<DateTime>(
+                        attribute: attribute,
+                        version: deYHighestAttributeVersion);
+
+                    result = Comparer.Compare(a: compareWhat, b: compareToWhat);
+                }
+                else
+                {
+                    throw new ArgumentException(message: "Trying to get attribute type of unknown attribute with value " + attribute);
+                }
+            }
         }
         catch
         {

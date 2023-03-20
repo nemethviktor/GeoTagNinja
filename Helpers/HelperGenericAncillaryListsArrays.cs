@@ -710,6 +710,11 @@ internal static class HelperGenericAncillaryListsArrays
     {
         List<string> retList = new();
         retList.Add(item: "");
+        if (HelperVariables.DtIsoCountryCodeMapping == null)
+        {
+            HelperDataLanguageTZ.DataReadCountryCodeDataFromCSV();
+        }
+
         foreach (DataRow dataRow in HelperVariables.DtIsoCountryCodeMapping.Rows)
         {
             retList.Add(item: dataRow[columnName: "ISO_3166_1A3"]
