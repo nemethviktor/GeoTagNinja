@@ -224,8 +224,8 @@ public class DirectoryElementCollection : List<DirectoryElement>
         // separate these into side car and image files
         statusMethod(obj: "Scanning folder: processing supported files ...");
         Logger.Trace(message: "Files: Listing Files");
-        List<string> imageFiles = new();
-        List<string> sidecarFiles = new();
+        HashSet<string> imageFiles = new();
+        HashSet<string> sidecarFiles = new();
 
         string[] filesInDir = { };
         int filesThatExistWithinCollection = 0;
