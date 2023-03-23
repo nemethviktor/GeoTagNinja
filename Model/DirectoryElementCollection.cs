@@ -216,7 +216,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
         Logger.Trace(message: "Loading allowedExtensions");
         string[] allowedImageExtensions = HelperGenericAncillaryListsArrays.AllCompatibleExtensionsExt();
-        string[] allowedSideCarExt = HelperGenericAncillaryListsArrays.GetSideCarExtensionsArray();
+        string[] allowedSideCarExtensions = HelperGenericAncillaryListsArrays.GetSideCarExtensionsArray();
         Logger.Trace(message: "Loading allowedExtensions - OK");
 
         // ******************************
@@ -268,9 +268,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
         {
             // Check, if it is a side car file. If so,
             // add it to the list to attach to image files later
-            if (allowedSideCarExt.Contains(value: Path.GetExtension(path: fileNameWithExtension)
-                                               .ToLower()
-                                               .Replace(oldValue: ".", newValue: "")))
+            if (allowedSideCarExtensions.Contains(value: Path.GetExtension(path: fileNameWithExtension)
+                                                      .ToLower()
+                                                      .Replace(oldValue: ".", newValue: "")))
             {
                 sidecarFiles.Add(item: fileNameWithExtension);
             }
@@ -281,6 +281,19 @@ public class DirectoryElementCollection : List<DirectoryElement>
                                                          .Replace(oldValue: ".", newValue: "")))
             {
                 imageFiles.Add(item: fileNameWithExtension);
+
+                // collection mode throws a slight problem with sidecar files: 
+                // if an xmp (or other, currently undefined) file is not explicitly on the collection-mode-list then it gets ignored.
+                // so we check if there is an xmp file with the same name as the image here.
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(path: fileNameWithExtension);
+                foreach (string sideCarExtension in allowedSideCarExtensions)
+                {
+                    string imaginaryFileNameWithPath = fileNameWithoutExtension + "." + sideCarExtension;
+                    if (File.Exists(path: Path.Combine(path1: Path.GetDirectoryName(path: fileNameWithExtension), path2: imaginaryFileNameWithPath)))
+                    {
+                        sidecarFiles.Add(item: Path.Combine(path1: Path.GetDirectoryName(path: fileNameWithExtension), path2: imaginaryFileNameWithPath));
+                    }
+                }
             }
         }
 
@@ -305,11 +318,16 @@ public class DirectoryElementCollection : List<DirectoryElement>
             bool sidecarFileAlreadyAdded = false;
             foreach (string imgFile in matchingImageFiles)
             {
-                string imgFileExtension = Path.GetExtension(imgFile)
-                    .Substring(1);
+                string imgFileExtension = Path.GetExtension(path: imgFile)
+                    .Substring(startIndex: 1);
 
                 // only add the sidecar file linkage if the particular extension is marked to use sidecars
-                bool writeXMPSideCar = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: imgFileExtension.ToLower() + "_" + "ckb_AddXMPSideCar"));
+                bool writeXMPSideCar = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
+                                                             tableName: "settings",
+                                                             settingTabPage: "tpg_FileOptions",
+                                                             settingId: imgFileExtension.ToLower() +
+                                                                        "_" +
+                                                                        "ckb_AddXMPSideCar"));
                 if (writeXMPSideCar)
                 {
                     if (sidecarFileAlreadyAdded)
