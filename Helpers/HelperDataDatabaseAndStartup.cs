@@ -167,7 +167,14 @@ internal static class HelperDataDatabaseAndStartup
                 }
                 else if (controlName == "ckb_ProcessOriginalFile")
                 {
-                    controlDefaultValue = "true";
+                    if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
+                    {
+                        controlDefaultValue = "false";
+                    }
+                    else
+                    {
+                        controlDefaultValue = "true";
+                    }
                 }
 
                 else if (controlName == "ckb_ResetFileDateToCreated")

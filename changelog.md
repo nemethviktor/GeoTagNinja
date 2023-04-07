@@ -1,6 +1,6 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 84XX [202303XX]**
+**Build 84XX [202304XX]**
 - NEW & UPDATED:
   - Added a "Collections Mode", in particular to work with Jeffrey Frield's LightRoom Classic Plugin "Run Any Command". Details on how to use this are in the readme.
   - Rewrote the sorting logic to account for the data type of the column being sorted (i.e. date, number, text etc)
@@ -9,6 +9,7 @@
 - BUGS & FIXES:
   - Fixed a bug where the TZ dropdown in Import GPX could cause a crash if the user was in a TZ that wasn't on the dropdown.
   - Paste-values logic minor revamp
+  - Changed settings to default-write-into-image-file to false
   - Rewrote the File Edit Form load process. The existing one took way too long because it parsed data for a number of Objects that were entirely irrelevant.
   - Rewrote the Track Import logic not to overflow when too many files were involved. (see ticket 78).
 
