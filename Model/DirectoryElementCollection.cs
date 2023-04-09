@@ -297,13 +297,14 @@ public class DirectoryElementCollection : List<DirectoryElement>
             }
         }
 
-        Logger.Trace(message: "Files: Listing Files - OK");
+        Logger.Trace(message: "Files: Listing Files - OK, image file count: " + imageFiles.Count.ToString());
 
         // ******************************
         // Map side car files to image file
         IDictionary<string, string> image2sidecar = new Dictionary<string, string>();
         HashSet<string> overlappingXmpFileList = new();
 
+        Logger.Trace(message: "Files: Checking sidecar files, count: " + sidecarFiles.Count.ToString());
         foreach (string sidecarFile in sidecarFiles)
         {
             // Get (by comparing w/o extension) list of matching image files in lower case

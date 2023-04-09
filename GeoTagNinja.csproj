@@ -183,6 +183,7 @@
     <Compile Include="FrmManageFavourites.designer.cs">
       <DependentUpon>FrmManageFavourites.cs</DependentUpon>
     </Compile>
+    <Compile Include="SingleInstance_PipeServer.cs" />
     <Compile Include="View\ListView\FileListViewMapNavigation.cs" />
     <Compile Include="View\ListView\FileListViewCopyPaste.cs" />
     <Compile Include="View\ListView\FileListViewReadWrite.cs" />
