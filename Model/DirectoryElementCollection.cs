@@ -7,6 +7,7 @@ using ExifToolWrapper;
 using GeoTagNinja.Helpers;
 using NLog;
 using static System.Environment;
+using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Model;
 
@@ -67,6 +68,27 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
         return null;
     }
+
+
+    /// <summary>
+    /// Searches through all the DEs in this collection for elements
+    /// with dirty (to be saved) attributes.
+    /// 
+    /// TODO: THIS IS VERY INEFFICIENT. With larger element sets, we parse the whole
+    /// collection and for every element every attribute... Need a cache...?
+    /// </summary>
+    /// <returns>A HashSet of UIDs of dirty elements. Empty if there are none.</returns>
+    public HashSet<string> FindDirtyElements()
+    {
+        HashSet<string> uids = new HashSet<string>();
+        foreach (DirectoryElement directoryElement in this)
+        {
+            if (directoryElement.HasDirtyAttributes())
+                uids.Add(directoryElement.UniqueID.ToString());
+        }
+        return uids;
+    }
+
 
     /// <summary>
     ///     Adds a DirectoryElement to this list. Hereby it is checked, whether
