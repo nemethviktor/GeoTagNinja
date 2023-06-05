@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -6,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using NLog;
 
@@ -21,17 +23,17 @@ namespace GeoTagNinja.View.ListView;
 public partial class FileListView : System.Windows.Forms.ListView
 {
     // Default values to set for entries
-    public static string UNKNOWN_VALUE_FILE = "-";
+    public const string UNKNOWN_VALUE_FILE = "-";
 
     // Note - if this is changed, all checks for unknown need to be udpated
     // because currently this works via item.replace and check versus ""
     // but replace did not take ""
-    public static string UNKNOWN_VALUE_DIR = "";
+    public const string UNKNOWN_VALUE_DIR = "";
 
     /// <summary>
     ///     Every column has this prefix for its name when it is created.
     /// </summary>
-    public static string COL_NAME_PREFIX = "clh_";
+    public const string COL_NAME_PREFIX = "clh_";
 
 
     /// <summary>
@@ -175,6 +177,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     public static class FileListColumns
     {
         public const string FILENAME = "FileName";
+        public const string UNIQUEID = "GUID";
         public const string GPS_ALTITUDE = "GPSAltitude";
         public const string GPS_ALTITUDE_REF = "GPSAltitudeRef";
         public const string GPS_DEST_LATITUDE = "GPSDestLatitude";
@@ -303,6 +306,8 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         switch (column.Name.Substring(startIndex: 4))
         {
+            case FileListColumns.UNIQUEID:
+                return item.UniqueID.ToString();
             case FileListColumns.GPS_ALTITUDE:
                 return defaultStrGetter(arg: SourcesAndAttributes.ElementAttribute.GPSAltitude);
             case FileListColumns.GPS_ALTITUDE_REF:
@@ -392,7 +397,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         if (item.Type != DirectoryElement.ElementType.MyComputer)
         {
-            himl = NativeMethods.SHGetFileInfo(pszPath: item.FullPathAndName,
+            himl = NativeMethods.SHGetFileInfo(pszPath: item.FileNameWithPath,
                                                dwFileAttributes: 0,
                                                psfi: ref shfi,
                                                cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
@@ -400,7 +405,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
         else
         {
-            himl = NativeMethods.SHGetFileInfo(pszPath: item.ItemName,
+            himl = NativeMethods.SHGetFileInfo(pszPath: item.ItemNameWithoutPath,
                                                dwFileAttributes: 0,
                                                psfi: ref shfi,
                                                cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
@@ -453,7 +458,7 @@ public partial class FileListView : System.Windows.Forms.ListView
                 item.Type == DirectoryElement.ElementType.MyComputer ||
                 item.Type == DirectoryElement.ElementType.ParentDirectory)
             {
-                lvi.Text = item.ItemName;
+                lvi.Text = item.ItemNameWithoutPath;
             }
             else
             {
@@ -477,13 +482,22 @@ public partial class FileListView : System.Windows.Forms.ListView
                     subItemList.Add(item: pickModelValueForColumn(item: item, column: columnHeader));
                 }
             }
+
             // For each non-file (i.e. dirs), create empty sub items (needed for sorting)
         }
         else
         {
             foreach (ColumnHeader columnHeader in Columns)
             {
-                if (columnHeader.Name != COL_NAME_PREFIX + FileListColumns.FILENAME)
+                if (columnHeader.Name == COL_NAME_PREFIX + FileListColumns.FILENAME)
+                {
+                    // nothing
+                }
+                else if (columnHeader.Name == COL_NAME_PREFIX + FileListColumns.UNIQUEID)
+                {
+                    subItemList.Add(item: pickModelValueForColumn(item: item, column: columnHeader));
+                }
+                else
                 {
                     subItemList.Add(item: UNKNOWN_VALUE_DIR);
                 }
@@ -536,7 +550,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             colOrderHeadername.Add(item: columnHeader.Name);
             int colOrderIndexInt = 0;
 
-            colOrderIndexInt = Convert.ToInt16(value: HelperStatic.DataReadSQLiteSettings(
+            colOrderIndexInt = Convert.ToInt16(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
                                                    tableName: "applayout",
                                                    settingTabPage: "lvw_FileList",
                                                    settingId: settingIdToSend));
@@ -560,7 +574,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
             // Read and process width
             settingIdToSend = Name + "_" + columnHeader.Name + "_width";
-            colWidth = HelperStatic.DataReadSQLiteSettings(
+            colWidth = HelperDataApplicationSettings.DataReadSQLiteSettings(
                 tableName: "applayout",
                 settingTabPage: "lvw_FileList",
                 settingId: settingIdToSend
@@ -613,7 +627,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         foreach (ColumnHeader columnHeader in Columns)
         {
             settingIdToSend = Name + "_" + columnHeader.Name + "_index";
-            HelperStatic.DataWriteSQLiteSettings(
+            HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "applayout",
                 settingTabPage: "lvw_FileList",
                 settingId: settingIdToSend,
@@ -621,7 +635,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             );
 
             settingIdToSend = Name + "_" + columnHeader.Name + "_width";
-            HelperStatic.DataWriteSQLiteSettings(
+            HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "applayout",
                 settingTabPage: "lvw_FileList",
                 settingId: settingIdToSend,
@@ -658,8 +672,10 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         foreach (string colName in _cfg_Col_Names)
         {
-            ColumnHeader clh = new();
-            clh.Name = COL_NAME_PREFIX + colName;
+            ColumnHeader clh = new()
+            {
+                Name = COL_NAME_PREFIX + colName
+            };
             Columns.Add(value: clh);
             Logger.Trace(message: "Added column: " + colName);
         }
@@ -670,7 +686,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             foreach (ColumnHeader clh in Columns)
             {
                 Logger.Trace(message: "Loading localization for: " + clh.Name);
-                clh.Text = HelperStatic.DataReadDTObjectText(
+                clh.Text = HelperDataLanguageTZ.DataReadDTObjectText(
                     objectType: "ColumnHeader",
                     objectName: clh.Name
                 );
@@ -681,10 +697,10 @@ public partial class FileListView : System.Windows.Forms.ListView
         {
             Logger.Fatal(message: "Error: " + ex.Message);
             MessageBox.Show(
-                text: HelperStatic.GenericGetMessageBoxText(
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                           messageBoxName: "mbx_FrmMainApp_ErrorLanguageFileColumnHeaders") +
                       ex.Message,
-                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
         }
@@ -837,7 +853,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     #region Updating
 
     /// <summary>
-    ///     Restaff the list view with the set of directory elements handed.
+    ///     Reloads the listview's items with data from the DirectoryElementCollection
     ///     Note that the DirectoryElementCollection is assumed to be
     ///     in scope of the FileListView. Calling FileListView.Clear will
     ///     also clear it.

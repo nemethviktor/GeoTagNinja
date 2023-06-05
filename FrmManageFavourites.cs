@@ -4,6 +4,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using GeoTagNinja.Helpers;
 using Microsoft.VisualBasic;
 
 namespace GeoTagNinja;
@@ -18,12 +19,7 @@ public partial class FrmManageFavourites : Form
     private void FrmManageFavourites_Load(object sender,
                                           EventArgs e)
     {
-        // this just pulls the form's name -- logged inside
-        HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
-
-        LoadFavouritesList();
-
-        cbx_Favourites.SelectedIndex = 0;
+        HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
 
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
@@ -39,14 +35,20 @@ public partial class FrmManageFavourites : Form
             )
             {
                 // gets logged inside.
-                cItem.Text = HelperStatic.DataReadDTObjectText(objectType: cItem.GetType()
-                                                                   .ToString()
-                                                                   .Split('.')
-                                                                   .Last(), objectName: cItem.Name);
+                cItem.Text = HelperDataLanguageTZ.DataReadDTObjectText(objectType: cItem.GetType()
+                                                                           .Name,
+                                                                       objectName: cItem.Name);
+            }
+            // there is only one dropdown atm.
+            else if (cItem.Name == "cbx_Country")
+            {
+                FillCountryDropDown();
             }
         }
-    }
 
+        LoadFavouritesList();
+        cbx_Favourites.SelectedIndex = 0;
+    }
 
     private void cbx_favouriteName_SelectedIndexChanged(object sender,
                                                         EventArgs e)
@@ -75,7 +77,32 @@ public partial class FrmManageFavourites : Form
                 cItem.Text = drFavouriteDataRow[columnName: exifTag]
                     .ToString();
 
-                lstOriginals.Add(item: new KeyValuePair<string, string>(key: cItem.Name, value: cItem.Text));
+                lstOriginals.Add(key: cItem.Name, value: cItem.Text);
+            }
+            // there is only one dropdown atm.
+            else if (cItem.Name == "cbx_Country")
+            {
+                string countryCode = cItem.Text = drFavouriteDataRow[columnName: "CountryCode"]
+                    .ToString();
+                string sqliteText = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
+                    queryWhat: "ISO_3166_1A3",
+                    inputVal: countryCode,
+                    returnWhat: "Country");
+
+                if (cbx_Country.Items.Count == 0)
+                {
+                    FillCountryDropDown();
+                }
+
+                try
+                {
+                    cbx_Country.SelectedIndex = cbx_Country.Items.IndexOf(value: sqliteText);
+                }
+                catch
+                {
+                    cbx_Country.SelectedIndex = 0; // blank
+                    break;
+                }
             }
         }
 
@@ -86,14 +113,20 @@ public partial class FrmManageFavourites : Form
                                 EventArgs e)
     {
         string oldName = cbx_Favourites.Text;
-        HelperStatic.DataWriteSQLiteUpdateFavourite(favouriteName: cbx_Favourites.Text,
-                                                    city: tbx_City.Text,
-                                                    state: tbx_State.Text,
-                                                    subLocation: tbx_Sub_location.Text);
+        string countryCode = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
+            queryWhat: "Country",
+            inputVal: cbx_Country.Text,
+            returnWhat: "ISO_3166_1A3");
+
+        HelperDataFavourites.DataWriteSQLiteUpdateFavourite(favouriteName: cbx_Favourites.Text,
+                                                            countryCode: countryCode,
+                                                            city: tbx_City.Text,
+                                                            state: tbx_State.Text,
+                                                            subLocation: tbx_Sub_location.Text);
 
         MessageBox.Show(
-            text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"),
-            caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"),
+            text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"),
+            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
             buttons: MessageBoxButtons.OK,
             icon: MessageBoxIcon.Information);
 
@@ -126,7 +159,7 @@ public partial class FrmManageFavourites : Form
         if (frmMainAppInstance != null)
         {
             frmMainAppInstance.cbx_Favourites.Items.Clear();
-            _dtFavourites = HelperStatic.DataReadSQLiteFavourites();
+            _dtFavourites = HelperDataFavourites.DataReadSQLiteFavourites();
             foreach (DataRow drRow in _dtFavourites.Rows)
             {
                 frmMainAppInstance.cbx_Favourites.Items.Add(item: drRow[columnName: "favouriteName"]
@@ -148,7 +181,7 @@ public partial class FrmManageFavourites : Form
             {
                 if (cItem is TextBox txt)
                 {
-                    string oldText = HelperStatic.DataGetFirstOrDefaultFromKVPList(lstIn: lstOriginals, keyEqualsWhat: cItem.Name);
+                    string oldText = HelperDataOtherDataRelated.DataGetFirstOrDefaultFromKVPList(lstIn: lstOriginals, keyEqualsWhat: cItem.Name);
                     if (oldText != txt.Text)
                     {
                         txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Bold);
@@ -169,8 +202,7 @@ public partial class FrmManageFavourites : Form
         string newName = Interaction.InputBox(Prompt: btn_Rename.Text, DefaultResponse: cbx_Favourites.Text);
         if (oldName != newName && newName.Length > 0)
         {
-            // update in sqlite
-            HelperStatic.DataRenameSQLiteFavourite(oldName: oldName, newName: newName);
+            HelperDataFavourites.DataRenameSQLiteFavourite(oldName: oldName, newName: newName);
 
             // update in dropdown
             LoadFavouritesList();
@@ -179,11 +211,10 @@ public partial class FrmManageFavourites : Form
         }
     }
 
-
     private void btn_Delete_Click(object sender,
                                   EventArgs e)
     {
-        HelperStatic.DataDeleteSQLiteFavourite(favouriteName: cbx_Favourites.Text);
+        HelperDataFavourites.DataDeleteSQLiteFavourite(favouriteName: cbx_Favourites.Text);
 
         LoadFavouritesList();
         try
@@ -202,7 +233,7 @@ public partial class FrmManageFavourites : Form
     private void LoadFavouritesList()
     {
         cbx_Favourites.Items.Clear();
-        _dtFavourites = HelperStatic.DataReadSQLiteFavourites();
+        _dtFavourites = HelperDataFavourites.DataReadSQLiteFavourites();
         foreach (DataRow drRow in _dtFavourites.Rows)
         {
             cbx_Favourites.Items.Add(item: drRow[columnName: "favouriteName"]
@@ -210,11 +241,20 @@ public partial class FrmManageFavourites : Form
         }
     }
 
+    private void FillCountryDropDown()
+    {
+        cbx_Country.Items.Clear();
+        foreach (string country in HelperGenericAncillaryListsArrays.GetCountries())
+        {
+            cbx_Country.Items.Add(item: country);
+        }
+    }
+
     #region Variables
 
     private static bool _frmNowLoadingFavouriteData;
     private DataTable _dtFavourites = new();
-    private readonly List<KeyValuePair<string, string>> lstOriginals = new();
+    private readonly Dictionary<string, string> lstOriginals = new();
 
     #endregion
 }

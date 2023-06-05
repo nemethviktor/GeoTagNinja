@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GeoTagNinja.Helpers;
 using TimeZoneConverter;
 
 namespace GeoTagNinja;
@@ -35,10 +36,12 @@ public partial class FrmImportGpx : Form
         lbl_importOneFile.Enabled = true;
         lbl_importFromAnotherFolder.Enabled = false;
 
-        HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
+        rbt_importFromCurrentFolder.Enabled = !Program.collectionModeEnabled;
+
+        HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
 
         // load TZ-CBX
-        foreach (string timezone in AncillaryListsArrays.GetTimeZones())
+        foreach (string timezone in HelperGenericAncillaryListsArrays.GetTimeZones())
         {
             cbx_UseTimeZone.Items.Add(item: timezone);
         }
@@ -53,13 +56,46 @@ public partial class FrmImportGpx : Form
         }
 
         // this is a little lame but works. -> try to default to local TZ
+        bool TZFound = false;
         for (int i = 0; i < cbx_UseTimeZone.Items.Count; i++)
         {
             if (cbx_UseTimeZone.GetItemText(item: cbx_UseTimeZone.Items[index: i])
                 .Contains(value: LocalIanatZname))
             {
                 cbx_UseTimeZone.SelectedIndex = i;
+                TZFound = true;
                 break;
+            }
+        }
+
+        // it's entirely possible that a TZ doesn't get found for whatever reason (largely that I'm a derp and somehow excluded it from the list. In this case we try to find something similar.)
+        if (!TZFound)
+        {
+            bool localTZBaseIsNegative = TimeZoneInfo.Local.BaseUtcOffset.Hours < 0;
+            char plusMinusChar;
+            plusMinusChar = localTZBaseIsNegative
+                ? '-'
+                : '+';
+
+            // loop again. duh.
+            for (int i = 0; i < cbx_UseTimeZone.Items.Count; i++)
+            {
+                if (cbx_UseTimeZone.GetItemText(item: cbx_UseTimeZone.Items[index: i])
+                    .StartsWith(value: "(" +
+                                       plusMinusChar +
+                                       TimeZoneInfo.Local.BaseUtcOffset.ToString()
+                                           .Substring(startIndex: 0, length: 5)))
+                {
+                    cbx_UseTimeZone.SelectedIndex = i;
+                    TZFound = true;
+                    break;
+                }
+            }
+
+            // if still fail then just pick the first and sod it.
+            if (!TZFound)
+            {
+                cbx_UseTimeZone.SelectedIndex = 0;
             }
         }
 
@@ -71,7 +107,7 @@ public partial class FrmImportGpx : Form
 
         // set filter for ofd
         string gpxExtensionsFilter = "Track Files|";
-        foreach (string gpxExtension in AncillaryListsArrays.GpxExtensions())
+        foreach (string gpxExtension in HelperGenericAncillaryListsArrays.GpxExtensions())
         {
             gpxExtensionsFilter += "*." + gpxExtension + ";";
         }
@@ -83,7 +119,7 @@ public partial class FrmImportGpx : Form
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
-            HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
+            HelperControlAndMessageBoxHandling.ReturnControlText(cItem: cItem, senderForm: this);
 
             if (cItem.Name == "cbx_ImportTimeAgainst")
             {
@@ -147,8 +183,8 @@ public partial class FrmImportGpx : Form
         if (_lastShiftSecond == 0 && _lastShiftMinute == 0 && _lastShiftHour == 0 && _lastShiftDay == 0)
         {
             MessageBox.Show(
-                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportNoStoredShiftValues"),
-                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportNoStoredShiftValues"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
         }
@@ -283,6 +319,7 @@ public partial class FrmImportGpx : Form
         else
         {
             trackFileLocationType = "folder";
+            // this wouldn't exist in collectionMode
             if (rbt_importFromCurrentFolder.Checked)
             {
                 trackFileLocationVal = _frmMainAppInstance.tbx_FolderName.Text;
@@ -306,19 +343,16 @@ public partial class FrmImportGpx : Form
         if ((trackFileLocationType == "file" && File.Exists(path: trackFileLocationVal)) || (trackFileLocationType == "folder" && Directory.Exists(path: trackFileLocationVal)))
         {
             // indicate that something is going on
-            btn_OK.Text = HelperStatic.DataReadDTObjectText(
+            btn_OK.Text = HelperDataLanguageTZ.DataReadDTObjectText(
                 objectType: sender.GetType()
-                    .ToString()
-                    .Split('.')
-                    .Last()
-                ,
+                    .Name,
                 objectName: "btn_OK_Working"
             );
             btn_OK.AutoSize = true;
             btn_OK.Enabled = false;
             btn_Cancel.Enabled = false;
 
-            await HelperStatic.ExifGetTrackSyncData(
+            await HelperExifReadTrackData.ExifGetTrackSyncData(
                 trackFileLocationType: trackFileLocationType,
                 trackFileLocationVal: trackFileLocationVal,
                 useTZAdjust: ckb_UseTimeZone.Checked,
@@ -335,8 +369,8 @@ public partial class FrmImportGpx : Form
         else
         {
             MessageBox.Show(
-                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportGpx_FileOrFolderDoesntExist"),
-                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportGpx_FileOrFolderDoesntExist"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
         }

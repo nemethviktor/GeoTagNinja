@@ -1,29 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GeoTagNinja.Helpers;
+using GeoTagNinja.Model;
+using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja;
 
 public partial class FrmPasteWhat : Form
 {
     private static string _initiatorName;
-    private static readonly List<string> _lastCheckedCheckBoxes = new();
+    private static readonly List<string> LastCheckedCheckBoxes = new();
+    internal static string FileDateCopySourceFileNameWithoutPath;
 
     /// <summary>
-    ///     This form controls what data to paste from a "current file" to "selected files".
+    ///     This Form controls what data to paste from a "current file" to "selected file(s)".
+    ///     The overall logic is different on whether the Paste takes place in the FrmMainApp or FrmEditFileData.
+    ///     - If the prior then stuff will come from FrmMainApp.CopyPoolDict - logic being that users can move around folders
+    ///     etc and we're pre-storing data in a "pool"
+    ///     - If the latter then things are a bit different because there is no "copy" so to say, only "paste" (ie there is no
+    ///     CTRL+C element taking place) and we take data directly from the file
     /// </summary>
-    /// <param name="initiator">This will be either the Edit File Form (FrmEditFileData) or the Main Form(FrmMainApp)</param>
+    /// <param name="initiator">This will be either the Edit File Form (FrmEditFileData) or the Main Form (FrmMainApp)</param>
     public FrmPasteWhat(string initiator)
     {
         _initiatorName = initiator;
         InitializeComponent();
 
         ListView lvw;
-        string fileNameSourceWithoutPath;
-        List<string> tagsToPasteList = null;
+        List<ElementAttribute> tagsToPasteAttributeList = new();
 
         // get the name of the file we're pasting FROM.
         // in this case this will be used to pre-fill/check the checkboxes
@@ -33,58 +42,54 @@ public partial class FrmPasteWhat : Form
             if (frmEditFileDataInstance != null)
             {
                 lvw = frmEditFileDataInstance.lvw_FileListEditImages;
+                ListViewItem lvi = lvw.SelectedItems[index: 0];
 
-                fileNameSourceWithoutPath = lvw.SelectedItems[index: 0]
-                    .Text;
+                DirectoryElement dirElemFileToCopyFrom = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                                 .Index]
+                                                                                                                    .Text);
 
-                // stuff will live in DT1
-                tagsToPasteList = GetTagsToPaste(dt: FrmMainApp.DtFileDataToWriteStage1PreQueue);
+                FileDateCopySourceFileNameWithoutPath = dirElemFileToCopyFrom.ItemNameWithoutPath;
+
+                // No need to check in Original as the assumption is that user wants to paste things that have changed.
+                // Stuff will live in Stage1EditFormIntraTabTransferQueue
+
+                foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+                {
+                    if (dirElemFileToCopyFrom != null &&
+                        dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(attribute: attribute,
+                                                                              version: DirectoryElement.AttributeVersion
+                                                                                  .Stage1EditFormIntraTabTransferQueue))
+                    {
+                        tagsToPasteAttributeList.Add(item: attribute);
+
+                        // https://stackoverflow.com/a/28352807/3968494
+                        if (Controls.Find(key: "ckb_" + GetAttributeName(attribute: attribute), searchAllChildren: true)
+                                .FirstOrDefault() is CheckBox cbx)
+                        {
+                            cbx.Checked = true;
+                        }
+                    }
+                }
             }
         }
         else if (_initiatorName == "FrmMainApp")
         {
-            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-            if (frmMainAppInstance != null)
+            foreach (KeyValuePair<ElementAttribute, Tuple<string, bool>> keyValuePair in FrmMainApp.CopyPoolDict)
             {
-                lvw = frmMainAppInstance.lvw_FileList;
+                ElementAttribute attribute = keyValuePair.Key;
+                tagsToPasteAttributeList.Add(item: attribute);
 
-                fileNameSourceWithoutPath = Path.GetFileName(path: FrmMainApp.FileDateCopySourceFileNameWithPath);
-
-                // stuff will live in DT3
-                tagsToPasteList = GetTagsToPaste(dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite);
-                // Basically there is no requirement per se that DT3 is in fact filled in for this option.
-                // It is entirely reasonable that user wants to copypaste not just edited bits.
-                // In that case however there won't be data in the list and so no defaults, which I think is sensible.
+                // https://stackoverflow.com/a/28352807/3968494
+                if (Controls.Find(key: "ckb_" + GetAttributeName(attribute: attribute), searchAllChildren: true)
+                        .FirstOrDefault() is CheckBox cbx)
+                {
+                    cbx.Checked = keyValuePair.Value.Item2;
+                }
             }
         }
         else
         {
             throw new NotImplementedException();
-        }
-
-        HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        foreach (Control cItem in c)
-        {
-            if (cItem is CheckBox)
-            {
-                string tagName;
-                if (cItem.Name.Substring(startIndex: 4) == "OffsetTime")
-
-                {
-                    tagName = "OffsetTimeList"; // fml. basically the actual tbx_OffsetTimeList is a TextBox so it would not be picked up as a change.
-                }
-                else
-                {
-                    tagName = cItem.Name.Substring(startIndex: 4);
-                }
-
-                if (tagsToPasteList.Contains(item: tagName))
-                {
-                    CheckBox sndr = (CheckBox)cItem;
-                    sndr.Checked = true;
-                }
-            }
         }
 
         rbt_PasteTakenDateActual.Enabled = ckb_TakenDate.Checked;
@@ -94,39 +99,23 @@ public partial class FrmPasteWhat : Form
         rbt_PasteCreateDateShift.Enabled = ckb_CreateDate.Checked;
 
         // enable the shift-radiobuttons if there's data
-        if (tagsToPasteList is
+        if (tagsToPasteAttributeList is
             {
                 Count: > 0
             })
         {
-            foreach (string tagName in tagsToPasteList)
+            foreach (ElementAttribute attribute in tagsToPasteAttributeList)
             {
-                if (tagName.StartsWith(value: "TakenDate") && tagName.EndsWith(value: "Shift"))
+                string attributeString = GetAttributeName(attribute: attribute);
+                if (attributeString.StartsWith(value: "TakenDate") && attributeString.EndsWith(value: "Shift"))
                 {
                     rbt_PasteTakenDateShift.Checked = true;
                 }
-                else if (tagName.StartsWith(value: "CreateDate") && tagName.EndsWith(value: "Shift"))
+                else if (attributeString.StartsWith(value: "CreateDate") && attributeString.EndsWith(value: "Shift"))
                 {
                     rbt_PasteCreateDateShift.Checked = true;
                 }
             }
-        }
-
-        List<string> GetTagsToPaste(DataTable dt)
-        {
-            List<string> tagsList = new();
-            EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in dt.AsEnumerable()
-                                                               where dataRow.Field<string>(columnName: "fileNameWithoutPath") == fileNameSourceWithoutPath
-                                                               select dataRow;
-
-            Parallel.ForEach(source: drDataTableData, body: dataRow =>
-                {
-                    string settingId = dataRow[columnName: "settingId"]
-                        .ToString();
-                    tagsList.Add(item: settingId);
-                })
-                ;
-            return tagsList;
         }
     }
 
@@ -139,7 +128,7 @@ public partial class FrmPasteWhat : Form
                                    EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        HelperStatic.GenericReturnControlText(cItem: this, senderForm: this);
+        HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
 
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
@@ -153,15 +142,17 @@ public partial class FrmPasteWhat : Form
                )
 
             {
-                HelperStatic.GenericReturnControlText(cItem: cItem, senderForm: this);
+                HelperControlAndMessageBoxHandling.ReturnControlText(cItem: cItem, senderForm: this);
             }
         }
 
-        btn_PullMostRecentPasteSettings.Enabled = _lastCheckedCheckBoxes.Count > 0;
+        btn_PullMostRecentPasteSettings.Enabled = LastCheckedCheckBoxes.Count > 0;
     }
 
     /// <summary>
-    ///     Updates the various relevant write-queues. For the Edit Form that's Q1, for the Main Form it's Q3.
+    ///     Updates the various relevant write-queues. For the Edit Form that's Stage1EditFormIntraTabTransferQueue, for the
+    ///     Main Form it's
+    ///     Stage3ReadyToWrite.
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
@@ -169,22 +160,25 @@ public partial class FrmPasteWhat : Form
     private async void btn_OK_Click(object sender,
                                     EventArgs e)
     {
-        FrmMainApp.DtFileDataPastePool.Clear();
+        // this can't be 'string' because some of the types aren't strings
+        Dictionary<ElementAttribute, object> copyPasteDict = new();
 
         // create a list of tags that also have a Ref version
         List<string> tagsWithRefList = new()
         {
-            "GPSAltitude", "GPSDestLatitude", "GPSDestLongitude", "GPSImgDirection", "GPSLatitude", "GPSLongitude", "GPSSpeed"
+            "GPSAltitude",
+            "GPSDestLatitude",
+            "GPSDestLongitude",
+            "GPSImgDirection",
+            "GPSLatitude",
+            "GPSLongitude",
+            "GPSSpeed"
         };
 
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
 
         ListView lvw;
-        string fileNameSourceWithoutPath = null;
-        string fileNameSourceWithPath = null;
-
-        string pasteValueStr = null;
 
         // get the name of the file we're pasting FROM.
         if (_initiatorName == "FrmEditFileData")
@@ -193,10 +187,6 @@ public partial class FrmPasteWhat : Form
             if (frmEditFileDataInstance != null)
             {
                 lvw = frmEditFileDataInstance.lvw_FileListEditImages;
-
-                fileNameSourceWithoutPath = lvw.SelectedItems[index: 0]
-                    .Text;
-                fileNameSourceWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameSourceWithoutPath);
             }
         }
         else if (_initiatorName == "FrmMainApp")
@@ -205,9 +195,6 @@ public partial class FrmPasteWhat : Form
             if (frmMainAppInstance != null)
             {
                 lvw = frmMainAppInstance.lvw_FileList;
-
-                fileNameSourceWithoutPath = Path.GetFileName(path: FrmMainApp.FileDateCopySourceFileNameWithPath);
-                fileNameSourceWithPath = FrmMainApp.FileDateCopySourceFileNameWithPath;
             }
         }
         else
@@ -215,9 +202,9 @@ public partial class FrmPasteWhat : Form
             throw new NotImplementedException();
         }
 
-        // get a list of tag names to paste
-        List<string> tagsToPaste = new();
-        _lastCheckedCheckBoxes.Clear();
+        // get a list of tag names to paste based on what is checked on the checkboxes in the Form
+        List<ElementAttribute> tagsToPaste = new();
+        LastCheckedCheckBoxes.Clear();
 
         foreach (Control cItem in c)
         {
@@ -226,27 +213,28 @@ public partial class FrmPasteWhat : Form
                 CheckBox thisCheckBox = (CheckBox)cItem;
                 if (thisCheckBox.Checked)
                 {
-                    string tagName = cItem.Name.Substring(startIndex: 4);
-                    _lastCheckedCheckBoxes.Add(item: cItem.Name);
+                    string attributeString = cItem.Name.Substring(startIndex: 4);
+                    ElementAttribute attribute = GetAttributeFromString(attributeToFind: attributeString);
+                    LastCheckedCheckBoxes.Add(item: cItem.Name);
 
                     // "EndsWith" doesn't work here because the CheckBox.Name never ends with "Shift".
-                    if (tagName == "TakenDate" || tagName == "CreateDate")
+                    if (attributeString == "TakenDate" || attributeString == "CreateDate")
                     {
-                        string pasteWhichDate = tagName.Replace(oldValue: "Date", newValue: "");
+                        string pasteWhichDate = attributeString.Replace(oldValue: "Date", newValue: "");
                         string[] timeUnitArr = { "Days", "Hours", "Minutes", "Seconds" };
                         switch (pasteWhichDate)
                         {
                             case "Taken":
                                 if (rbt_PasteTakenDateActual.Checked)
                                 {
-                                    tagsToPaste.Add(item: tagName);
+                                    tagsToPaste.Add(item: attribute);
                                 }
                                 else if (rbt_PasteTakenDateShift.Checked)
                                 {
-                                    // want: TakenDateDaysShift
+                                    // want: "TakenDateDaysShift"
                                     foreach (string timeUnit in timeUnitArr)
                                     {
-                                        tagsToPaste.Add(item: tagName + timeUnit + "Shift");
+                                        tagsToPaste.Add(item: GetAttributeFromString(attributeToFind: attributeString + timeUnit + "Shift"));
                                     }
                                 }
 
@@ -254,13 +242,13 @@ public partial class FrmPasteWhat : Form
                             case "Create":
                                 if (rbt_PasteCreateDateActual.Checked)
                                 {
-                                    tagsToPaste.Add(item: tagName);
+                                    tagsToPaste.Add(item: attribute);
                                 }
                                 else if (rbt_PasteCreateDateShift.Checked)
                                 {
                                     foreach (string timeUnit in timeUnitArr)
                                     {
-                                        tagsToPaste.Add(item: tagName + timeUnit + "Shift");
+                                        tagsToPaste.Add(item: GetAttributeFromString(attributeToFind: attributeString + timeUnit + "Shift"));
                                     }
                                 }
 
@@ -268,136 +256,176 @@ public partial class FrmPasteWhat : Form
                         }
                     }
                     // also do all the CountryCode 
-                    else if (tagName == "Country")
+                    else if (attributeString == "Country")
                     {
-                        tagsToPaste.Add(item: tagName);
-                        tagsToPaste.Add(item: "CountryCode");
+                        tagsToPaste.Add(item: attribute);
+                        tagsToPaste.Add(item: ElementAttribute.CountryCode);
                     }
                     else
                     {
-                        tagsToPaste.Add(item: tagName);
+                        tagsToPaste.Add(item: attribute);
                     }
 
                     // any in the Ref lot
-                    if (tagsWithRefList.Contains(item: tagName))
+                    if (tagsWithRefList.Contains(item: attributeString))
                     {
-                        tagsToPaste.Add(item: tagName + "Ref");
+                        tagsToPaste.Add(item: GetAttributeFromString(attributeToFind: attributeString + "Ref"));
                     }
                 }
             }
         }
 
-        // stick the tagNames + values into DtFileDataPastePool
-        // do paste into the tables + grid as req'd
         if (_initiatorName == "FrmEditFileData")
         {
-            foreach (string tagName in tagsToPaste)
-            {
-                // by this point we know there is something to paste.
-                btn_OK.Enabled = false;
-                btn_Cancel.Enabled = false;
-
-                // check it's sitting somewhere already?
-                DataTable dtSqlDataQ;
-                try
-                {
-                    dtSqlDataQ = FrmMainApp.DtFileDataToWriteStage1PreQueue.Select(filterExpression: "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId ='" + tagName + "'")
-                        .CopyToDataTable();
-                }
-                catch
-                {
-                    dtSqlDataQ = null;
-                }
-
-                DataTable dtSqlDataReadyToWrite;
-                try
-                {
-                    dtSqlDataReadyToWrite = FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Select(filterExpression: "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId ='" + tagName + "'")
-                        .CopyToDataTable();
-                }
-                catch
-                {
-                    dtSqlDataReadyToWrite = null;
-                }
-
-                DataTable dtSqlDataInFile;
-                try
-                {
-                    dtSqlDataInFile = FrmMainApp.DtFileDataSeenInThisSession.Select(filterExpression: "fileNameWithPath = '" + fileNameSourceWithPath + "' AND settingId ='" + tagName + "'")
-                        .CopyToDataTable();
-                }
-                catch
-                {
-                    dtSqlDataInFile = null;
-                }
-
-                // see if data in temp-queue
-                if (dtSqlDataQ != null && dtSqlDataQ.Rows.Count > 0)
-                {
-                    pasteValueStr = dtSqlDataQ.Rows[index: 0][columnName: "settingValue"]
-                        .ToString();
-                }
-                // see if data is ready to be written
-                else if (dtSqlDataReadyToWrite != null && dtSqlDataReadyToWrite.Rows.Count > 0)
-                {
-                    pasteValueStr = dtSqlDataReadyToWrite.Rows[index: 0][columnName: "settingValue"]
-                        .ToString();
-                }
-                // take it from the file then
-                else if (dtSqlDataInFile != null && dtSqlDataInFile.Rows.Count > 0)
-                {
-                    pasteValueStr = dtSqlDataInFile.Rows[index: 0][columnName: "settingValue"]
-                        .ToString();
-                }
-
-                else
-                {
-                    pasteValueStr = "-";
-                }
-
-                if (pasteValueStr == "-" || pasteValueStr is null)
-                {
-                    if (tagName.EndsWith(value: "Shift"))
-                    {
-                        pasteValueStr = "0";
-                    }
-                    else
-                    {
-                        pasteValueStr = "";
-                    }
-                }
-
-                DataRow newDr = FrmMainApp.DtFileDataPastePool.NewRow();
-                newDr[columnName: "settingId"] = tagName;
-                newDr[columnName: "settingValue"] = pasteValueStr;
-                FrmMainApp.DtFileDataPastePool.Rows.Add(row: newDr);
-                FrmMainApp.DtFileDataPastePool.AcceptChanges();
-            }
-
-            string fileNameWithoutPathToUpdate = null;
             FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
+
             if (frmEditFileDataInstance != null)
             {
                 lvw = frmEditFileDataInstance.lvw_FileListEditImages;
+                ListViewItem lviFE = lvw.SelectedItems[0];
+                // do paste into the tables + grid as req'd
+                DirectoryElement dirElemFileToCopyFrom = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(lviFE.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                                   .Index]
+                                                                                                                    .Text);
 
-                // for each file
-                foreach (ListViewItem lvi in lvw.Items)
+                foreach (ElementAttribute attribute in tagsToPaste)
                 {
-                    fileNameWithoutPathToUpdate = lvi.Text;
-                    // update each tag
-                    foreach (DataRow drPRow in FrmMainApp.DtFileDataPastePool.Rows)
-                    {
-                        string settingId = drPRow[columnIndex: 0]
-                            .ToString();
-                        string settingValue = drPRow[columnIndex: 1]
-                            .ToString();
+                    string attributeStr = GetAttributeName(attribute: attribute);
 
-                        // this is for FrmEditData -> no need to separate the "Shifts".
-                        HelperStatic.GenericUpdateAddToDataTable(
-                            dt: FrmMainApp.DtFileDataToWriteStage1PreQueue,
-                            fileNameWithoutPath: fileNameWithoutPathToUpdate,
-                            settingId: settingId,
-                            settingValue: settingValue);
+                    // there must be a better way around this
+                    Type typeOfAttribute = GetAttributeType(attribute: attribute);
+                    IConvertible pasteConvertible = null;
+
+                    // by this point we know that _there is_ something to paste.
+                    btn_OK.Enabled = false;
+                    btn_Cancel.Enabled = false;
+
+                    // check it's sitting somewhere already? -- can't be null.
+                    DirectoryElement.AttributeVersion maxAttributeVersion = DirectoryElement.AttributeVersion.Original;
+                    bool dataExistsSomewhere = false;
+
+                    List<DirectoryElement.AttributeVersion> relevantAttributeVersions = new()
+                    {
+                        // DO NOT reorder!
+                        DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                        DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                        DirectoryElement.AttributeVersion.Original
+                    };
+
+                    if (dirElemFileToCopyFrom != null)
+                    {
+                        //
+                        foreach (DirectoryElement.AttributeVersion relevantAttributeVersion in relevantAttributeVersions)
+                        {
+                            if (dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(
+                                    attribute: attribute,
+                                    version: relevantAttributeVersion))
+                            {
+                                maxAttributeVersion = relevantAttributeVersion;
+                                dataExistsSomewhere = true;
+                                break;
+                            }
+                        }
+
+                        if (dataExistsSomewhere)
+                        {
+                            if (typeOfAttribute == typeof(string))
+                            {
+                                dirElemFileToCopyFrom.GetAttributeValueString(attribute: attribute,
+                                                                              version: maxAttributeVersion);
+                            }
+                            else if (typeOfAttribute == typeof(int))
+                            {
+                                pasteConvertible = dirElemFileToCopyFrom.GetAttributeValue<int>(
+                                    attribute: attribute,
+                                    version: maxAttributeVersion);
+                            }
+                            else if (typeOfAttribute == typeof(double))
+                            {
+                                pasteConvertible = dirElemFileToCopyFrom.GetAttributeValue<double>(
+                                    attribute: attribute,
+                                    version: maxAttributeVersion);
+                            }
+                            else if (typeOfAttribute == typeof(DateTime))
+                            {
+                                pasteConvertible = dirElemFileToCopyFrom.GetAttributeValue<DateTime>(
+                                    attribute: attribute,
+                                    version: maxAttributeVersion);
+                            }
+
+                            copyPasteDict.Add(key: attribute, value: pasteConvertible);
+                        }
+                    }
+                }
+
+                if (frmEditFileDataInstance != null)
+                {
+                    lvw = frmEditFileDataInstance.lvw_FileListEditImages;
+
+                    // for each file
+                    foreach (ListViewItem lvi in lvw.Items)
+                    {
+                        DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                                       .Index]
+                                                                                                                          .Text);
+                        if (dirElemFileToModify != null)
+                        {
+                            bool takenShiftCopyPasteRequired = false;
+                            bool createShiftCopyPasteRequired = false;
+                            bool takenAlreadyShifted = false;
+                            bool createAlreadyShifted = false;
+
+                            // update each tag --> frmEditFileDataInstance
+                            foreach (KeyValuePair<ElementAttribute, object> keyValuePair in copyPasteDict)
+                            {
+                                Type typeofPaste = GetAttributeType(attribute: keyValuePair.Key);
+                                string attributeStr = GetAttributeName(attribute: keyValuePair.Key);
+
+                                if (attributeStr.Contains(value: "Taken") && attributeStr.Contains(value: "Shift"))
+                                {
+                                    takenShiftCopyPasteRequired = true;
+                                }
+
+                                if (attributeStr.Contains(value: "Create") && attributeStr.Contains(value: "Shift"))
+                                {
+                                    createShiftCopyPasteRequired = true;
+                                }
+
+                                if (typeofPaste == typeof(string))
+                                {
+                                    // remove value if blank
+                                    dirElemFileToModify.SetAttributeValueAnyType(attribute: keyValuePair.Key,
+                                                                                 value: Convert.ToString(value: keyValuePair.Value, provider: CultureInfo.InvariantCulture),
+                                                                                 version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                                                                                 isMarkedForDeletion: keyValuePair.Value.ToString() == "");
+                                }
+                                else
+                                {
+                                    dirElemFileToModify.SetAttributeValueAnyType(attribute: keyValuePair.Key,
+                                                                                 value: Convert.ToString(value: keyValuePair.Value, provider: CultureInfo.InvariantCulture),
+                                                                                 version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                                                                                 isMarkedForDeletion: false);
+                                }
+                            }
+
+                            // this little bit of cluster f.k is needed because when pasting data the "Shift" values get correctly pasted into wherever they need to go but the "Actual"
+                            // changes do not, which is technically correct. The problem is then that they don't get written to the file either.
+
+                            if (takenShiftCopyPasteRequired && !takenAlreadyShifted)
+                            {
+                                takenAlreadyShifted = CheckAdjustTakenTimeShiftActual(
+                                    dirElemFileToModify: dirElemFileToModify,
+                                    dirElemVersion: DirectoryElement.AttributeVersion
+                                        .Stage1EditFormIntraTabTransferQueue);
+                            }
+                            else if (createShiftCopyPasteRequired && !createAlreadyShifted)
+                            {
+                                createAlreadyShifted = CheckAdjustCreateTimeShiftActual(
+                                    dirElemFileToModify: dirElemFileToModify,
+                                    dirElemVersion: DirectoryElement.AttributeVersion
+                                        .Stage1EditFormIntraTabTransferQueue);
+                            }
+                        }
                     }
                 }
             }
@@ -407,54 +435,195 @@ public partial class FrmPasteWhat : Form
             FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
             if (frmMainAppInstance != null)
             {
+                // by this point we know that _there is_ something to paste.
+                btn_OK.Enabled = false;
+                btn_Cancel.Enabled = false;
+
+                foreach (ElementAttribute attribute in tagsToPaste)
+                {
+                    string pasteValueStr = null;
+
+                    bool dataInCopyDict = FrmMainApp.CopyPoolDict.Any(predicate: l => l.Key == attribute); // https://stackoverflow.com/a/57437756/3968494
+                    // get the dataaaaa
+                    if (dataInCopyDict)
+                    {
+                        pasteValueStr = FrmMainApp.CopyPoolDict.First(predicate: c => c.Key == attribute)
+                            .Value.Item1; // https://stackoverflow.com/a/25298643/3968494
+                        copyPasteDict.Add(key: attribute, value: pasteValueStr);
+                    }
+                    else // this will be marked as "remove" later
+                    {
+                        copyPasteDict.Add(key: attribute, value: FrmMainApp.NullStringEquivalentGeneric);
+                    }
+                }
+
                 // for each file
                 foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
                 {
-                    string fileNameWithoutPathToUpdate = lvi.Text;
-                    foreach (DataRow drCopyPoolRow in FrmMainApp.DtFileDataCopyPool.Rows)
-                    {
-                        string settingId = drCopyPoolRow[columnName: "settingId"]
-                            .ToString();
-                        string settingValue = drCopyPoolRow[columnName: "settingValue"]
-                            .ToString();
+                    DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(lvi.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GUID"]
+                                                                                                                                   .Index]
+                                                                                                                      .Text);
 
-                        if (settingValue == "-")
+                    if (dirElemFileToModify != null)
+                    {
+                        bool takenShiftCopyPasteRequired = false;
+                        bool createShiftCopyPasteRequired = false;
+                        bool takenAlreadyShifted = false;
+                        bool createAlreadyShifted = false;
+
+                        foreach (KeyValuePair<ElementAttribute, object> keyValuePair in copyPasteDict)
                         {
-                            settingValue = "";
+                            string attributeStr = GetAttributeName(attribute: keyValuePair.Key);
+
+                            if (attributeStr.Contains(value: "Taken") && attributeStr.Contains(value: "Shift"))
+                            {
+                                takenShiftCopyPasteRequired = true;
+                            }
+
+                            if (attributeStr.Contains(value: "Create") && attributeStr.Contains(value: "Shift"))
+                            {
+                                createShiftCopyPasteRequired = true;
+                            }
+
+                            // remove value if blank
+                            bool markForRemoval = keyValuePair.Value.ToString() == FrmMainApp.NullStringEquivalentGeneric || string.IsNullOrEmpty(value: keyValuePair.Value.ToString());
+                            dirElemFileToModify.SetAttributeValueAnyType(attribute: keyValuePair.Key,
+                                                                         value: keyValuePair.Value.ToString(),
+                                                                         version: DirectoryElement.AttributeVersion
+                                                                             .Stage3ReadyToWrite,
+                                                                         isMarkedForDeletion: markForRemoval);
                         }
 
-                        if (tagsToPaste.Contains(item: settingId))
+                        // this little bit of cluster f.k is needed because when pasting data the "Shift" values get correctly pasted into wherever they need to go but the "Actual"
+                        // changes do not, which is technically correct. The problem is then that they don't get written to the file either.
+
+                        if (takenShiftCopyPasteRequired && !takenAlreadyShifted)
                         {
-                            HelperStatic.GenericUpdateAddToDataTable(
-                                dt: FrmMainApp.DtFileDataToWriteStage3ReadyToWrite,
-                                fileNameWithoutPath: fileNameWithoutPathToUpdate,
-                                settingId: settingId,
-                                settingValue: settingValue);
+                            takenAlreadyShifted = CheckAdjustTakenTimeShiftActual(
+                                dirElemFileToModify: dirElemFileToModify,
+                                dirElemVersion: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                        }
+                        else if (createShiftCopyPasteRequired && !createAlreadyShifted)
+                        {
+                            createAlreadyShifted = CheckAdjustCreateTimeShiftActual(
+                                dirElemFileToModify: dirElemFileToModify,
+                                dirElemVersion: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
                         }
                     }
 
                     // update listview
-                    if (File.Exists(path: Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPathToUpdate)))
+                    if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
                         // check it's not in the read-queue.
-                        while (HelperStatic.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPathToUpdate))
+                        while (HelperGenericFileLocking.GenericLockCheckLockFile(fileNameWithoutPath: dirElemFileToModify.ItemNameWithoutPath))
                         {
                             await Task.Delay(millisecondsDelay: 10);
                         }
 
-                        HelperStatic.FileListBeingUpdated = true;
-                        await HelperStatic.LwvUpdateRowFromDTWriteStage3ReadyToWrite(lvi: lvi);
-                        FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPathToUpdate);
-                        HelperStatic.FileListBeingUpdated = false;
+                        HelperGenericFileLocking.FileListBeingUpdated = true;
+                        await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                        FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + dirElemFileToModify.ItemNameWithoutPath);
+                        HelperGenericFileLocking.FileListBeingUpdated = false;
                     }
                 }
 
-                // just for good measure
-                HelperStatic.FileListBeingUpdated = false;
+                HelperGenericFileLocking.FileListBeingUpdated = false;
             }
         }
 
         Hide();
+
+        bool CheckAdjustTakenTimeShiftActual(DirectoryElement dirElemFileToModify,
+                                             DirectoryElement.AttributeVersion dirElemVersion)
+        {
+            int shiftedDays = 0;
+            int shiftedHours = 0;
+            int shiftedMinutes = 0;
+            int shiftedSeconds = 0;
+
+            shiftedDays = (int)dirElemFileToModify.GetAttributeValue<int>(
+                attribute: ElementAttribute.TakenDateDaysShift,
+                version: dirElemVersion,
+                notFoundValue: 0);
+
+            shiftedHours = (int)dirElemFileToModify.GetAttributeValue<int>(
+                attribute: ElementAttribute.TakenDateHoursShift,
+                version: dirElemVersion,
+                notFoundValue: 0);
+
+            shiftedMinutes = (int)dirElemFileToModify.GetAttributeValue<int>(
+                attribute: ElementAttribute.TakenDateMinutesShift,
+                version: dirElemVersion,
+                notFoundValue: 0);
+
+            shiftedSeconds = (int)dirElemFileToModify.GetAttributeValue<int>(
+                attribute: ElementAttribute.TakenDateSecondsShift,
+                version: dirElemVersion,
+                notFoundValue: 0);
+
+            int totalShiftedSeconds = shiftedSeconds +
+                                      shiftedMinutes * 60 +
+                                      shiftedHours * 60 * 60 +
+                                      shiftedDays * 60 * 60 * 24;
+
+            DateTime originalTakenDateTime = DateTime.Parse(
+                s: FrmMainApp.OriginalTakenDateDict[key: dirElemFileToModify.ItemNameWithoutPath],
+                provider: CultureInfo.CurrentUICulture);
+
+            DateTime modifiedTakenDateTime = originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
+
+            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.TakenDate,
+                                                         value: Convert.ToString(value: modifiedTakenDateTime, provider: CultureInfo.CurrentUICulture),
+                                                         version: dirElemVersion,
+                                                         isMarkedForDeletion: false);
+            return true;
+        }
+
+        bool CheckAdjustCreateTimeShiftActual(DirectoryElement dirElemFileToModify,
+                                              DirectoryElement.AttributeVersion dirElemVersion)
+        {
+            int shiftedDays = 0;
+            int shiftedHours = 0;
+            int shiftedMinutes = 0;
+            int shiftedSeconds = 0;
+
+            shiftedDays = (int)dirElemFileToModify.GetAttributeValue<int>(
+                attribute: ElementAttribute.CreateDateDaysShift,
+                version: dirElemVersion,
+                notFoundValue: 0);
+
+            shiftedHours = (int)dirElemFileToModify.GetAttributeValue<int>(
+                attribute: ElementAttribute.CreateDateHoursShift,
+                version: dirElemVersion,
+                notFoundValue: 0);
+
+            shiftedMinutes = (int)dirElemFileToModify.GetAttributeValue<int>(
+                attribute: ElementAttribute.CreateDateMinutesShift,
+                version: dirElemVersion,
+                notFoundValue: 0);
+
+            shiftedSeconds = (int)dirElemFileToModify.GetAttributeValue<int>(
+                attribute: ElementAttribute.CreateDateSecondsShift,
+                version: dirElemVersion,
+                notFoundValue: 0);
+
+            int totalShiftedSeconds = shiftedSeconds +
+                                      shiftedMinutes * 60 +
+                                      shiftedHours * 60 * 60 +
+                                      shiftedDays * 60 * 60 * 24;
+
+            DateTime originalCreateDateTime = DateTime.Parse(
+                s: FrmMainApp.OriginalCreateDateDict[key: dirElemFileToModify.ItemNameWithoutPath],
+                provider: CultureInfo.CurrentUICulture);
+
+            DateTime modifiedCreateDateTime = originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
+
+            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.CreateDate,
+                                                         value: Convert.ToString(value: modifiedCreateDateTime, provider: CultureInfo.CurrentUICulture),
+                                                         version: dirElemVersion,
+                                                         isMarkedForDeletion: false);
+            return true;
+        }
     }
 
 
@@ -497,7 +666,7 @@ public partial class FrmPasteWhat : Form
         foreach (Control cItem in c)
         {
             CheckBox thisCheckBox = (CheckBox)cItem;
-            thisCheckBox.Checked = _lastCheckedCheckBoxes.Contains(item: cItem.Name);
+            thisCheckBox.Checked = LastCheckedCheckBoxes.Contains(item: cItem.Name);
         }
     }
 
@@ -653,28 +822,30 @@ public partial class FrmPasteWhat : Form
         {
             bool takenDateShiftDataExists = false;
 
+            List<ElementAttribute> listOfTagsToCopyTimeShifts = new()
+            {
+                ElementAttribute.TakenDateSecondsShift,
+                ElementAttribute.TakenDateMinutesShift,
+                ElementAttribute.TakenDateHoursShift,
+                ElementAttribute.TakenDateDaysShift
+            };
+
             if (_initiatorName == "FrmEditFileData")
             {
                 FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
+
                 if (frmEditFileDataInstance != null)
                 {
                     ListView lvw = frmEditFileDataInstance.lvw_FileListEditImages;
+                    ListViewItem lvi = lvw.SelectedItems[index: 0];
+                    DirectoryElement dirElemFileSource = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                                 .Index]
+                                                                                                                    .Text);
 
-                    string fileNameSourceWithoutPath = lvw.SelectedItems[index: 0]
-                        .Text;
-
-                    List<string> listOfTagsToCopyTimeShifts = new()
-                    {
-                        "TakenDateSecondsShift",
-                        "TakenDateMinutesShift",
-                        "TakenDateHoursShift ",
-                        "TakenDateDaysShift"
-                    };
                     // when USING EDIT we use the local data, therefore timeshifts can only possibly live in DtFileDataToWriteStage1PreQueue
-                    foreach (string settingId in listOfTagsToCopyTimeShifts)
+                    foreach (ElementAttribute attribute in listOfTagsToCopyTimeShifts)
                     {
-                        DataRow[] dtDateShifted = FrmMainApp.DtFileDataToWriteStage1PreQueue.Select(filterExpression: "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId = '" + settingId + "'");
-                        if (dtDateShifted.Length > 0)
+                        if (dirElemFileSource.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue))
                         {
                             takenDateShiftDataExists = true;
                             break;
@@ -685,13 +856,14 @@ public partial class FrmPasteWhat : Form
             else if (_initiatorName == "FrmMainApp")
             {
                 // see if there is actually any paste-able data for the SOURCE file
-                string sourceFileNameWithoutPath = FrmMainApp.DtFileDataCopyPool.Rows[index: 0][columnName: "fileNameWithoutPath"]
-                    .ToString();
-                DataRow[] dtDateShifted = FrmMainApp.DtFileDataCopyPool.Select(filterExpression: "fileNameWithoutPath = '" + sourceFileNameWithoutPath + "' AND settingId LIKE 'TakenDate%' AND settingId LIKE '%Shift'");
-
-                if (dtDateShifted.Length > 0)
+                foreach (ElementAttribute attribute in listOfTagsToCopyTimeShifts)
                 {
-                    takenDateShiftDataExists = true;
+                    bool dataInCopyKVP = FrmMainApp.CopyPoolDict.Any(predicate: l => l.Key == attribute); // https://stackoverflow.com/a/57437756/3968494
+                    if (dataInCopyKVP)
+                    {
+                        takenDateShiftDataExists = true;
+                        break;
+                    }
                 }
             }
 
@@ -699,8 +871,8 @@ public partial class FrmPasteWhat : Form
             {
                 rbt_PasteTakenDateActual.Checked = true;
                 MessageBox.Show(
-                    text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
-                    caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"));
+                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
+                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"));
             }
         }
     }
@@ -708,56 +880,56 @@ public partial class FrmPasteWhat : Form
     private void rbt_PasteCreateDateShift_CheckedChanged(object sender,
                                                          EventArgs e)
     {
-        bool CreateDateShiftDataExists = false;
+        bool createDateShiftDataExists = false;
 
-        if (_initiatorName == "FrmEditFileData")
+        List<ElementAttribute> listOfTagsToCopyTimeShifts = new()
         {
-            FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
-            if (frmEditFileDataInstance != null)
+            ElementAttribute.CreateDateSecondsShift,
+            ElementAttribute.CreateDateMinutesShift,
+            ElementAttribute.CreateDateHoursShift,
+            ElementAttribute.CreateDateDaysShift
+        };
+
+        FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
+
+        if (frmEditFileDataInstance != null)
+        {
+            ListView lvw = frmEditFileDataInstance.lvw_FileListEditImages;
+            ListViewItem lvi = lvw.SelectedItems[index: 0];
+            DirectoryElement dirElemFileSource = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                         .Index]
+                                                                                                            .Text);
+
+            // when USING EDIT we use the local data, therefore timeshifts can only possibly live in DtFileDataToWriteStage1PreQueue
+            foreach (ElementAttribute attribute in listOfTagsToCopyTimeShifts)
             {
-                ListView lvw = frmEditFileDataInstance.lvw_FileListEditImages;
-
-                string fileNameSourceWithoutPath = lvw.SelectedItems[index: 0]
-                    .Text;
-
-                List<string> listOfTagsToCopyTimeShifts = new()
+                if (dirElemFileSource.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue))
                 {
-                    "CreateDateSecondsShift",
-                    "CreateDateMinutesShift",
-                    "CreateDateHoursShift ",
-                    "CreateDateDaysShift"
-                };
-                // when USING EDIT we use the local data, therefore timeshifts can only possibly live in DtFileDataToWriteStage1PreQueue
-                foreach (string settingId in listOfTagsToCopyTimeShifts)
-                {
-                    DataRow[] dtDateShifted = FrmMainApp.DtFileDataToWriteStage1PreQueue.Select(filterExpression: "fileNameWithoutPath = '" + fileNameSourceWithoutPath + "' AND settingId = '" + settingId + "'");
-                    if (dtDateShifted.Length > 0)
-                    {
-                        CreateDateShiftDataExists = true;
-                        break;
-                    }
+                    createDateShiftDataExists = true;
+                    break;
                 }
             }
         }
         else if (_initiatorName == "FrmMainApp")
         {
             // see if there is actually any paste-able data for the SOURCE file
-            string sourceFileNameWithoutPath = FrmMainApp.DtFileDataCopyPool.Rows[index: 0][columnName: "fileNameWithoutPath"]
-                .ToString();
-            DataRow[] dtDateShifted = FrmMainApp.DtFileDataCopyPool.Select(filterExpression: "fileNameWithoutPath = '" + sourceFileNameWithoutPath + "' AND settingId LIKE 'CreateDate%' AND settingId LIKE '%Shift'");
-
-            if (dtDateShifted.Length > 0)
+            foreach (ElementAttribute attribute in listOfTagsToCopyTimeShifts)
             {
-                CreateDateShiftDataExists = true;
+                bool dataInCopyKVP = FrmMainApp.CopyPoolDict.Any(predicate: l => l.Key == attribute); // https://stackoverflow.com/a/57437756/3968494
+                if (dataInCopyKVP)
+                {
+                    createDateShiftDataExists = true;
+                    break;
+                }
             }
         }
 
-        if (!CreateDateShiftDataExists)
+        if (!createDateShiftDataExists)
         {
             rbt_PasteCreateDateActual.Checked = true;
             MessageBox.Show(
-                text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
-                caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Info"));
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"));
         }
     }
 

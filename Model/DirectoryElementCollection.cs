@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using ExifToolWrapper;
+using GeoTagNinja.Helpers;
 using NLog;
 using static System.Environment;
 
@@ -32,13 +33,33 @@ public class DirectoryElementCollection : List<DirectoryElement>
     /// <summary>
     ///     Searches through the list of directory elements for the element
     ///     with the given item name. If nothing is found, return null.
+    ///     Prepwork atm for allowing for multiple filenames across folders as these IDs are in fact unique.
     /// </summary>
-    /// <param name="itemName">The file name to search for</param>
-    public DirectoryElement FindElementByItemName(string itemName)
+    /// <param name="UniqueID"></param>
+    /// <returns></returns>
+    public DirectoryElement FindElementByItemUniqueID(string UniqueID)
     {
         foreach (DirectoryElement item in this)
         {
-            if (item.ItemName == itemName)
+            if (item.UniqueID.ToString() == UniqueID)
+            {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    ///     Searches through the list of directory elements for the element
+    ///     with the given item name. Uses FileNameWithPath. If nothing is found, return null.
+    /// </summary>
+    /// <param name="FileNameWithPath">The file name to search for (w/ path)</param>
+    public DirectoryElement FindElementByFileNameWithPath(string FileNameWithPath)
+    {
+        foreach (DirectoryElement item in this)
+        {
+            if (item.FileNameWithPath == FileNameWithPath)
             {
                 return item;
             }
@@ -61,7 +82,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
     public void Add(DirectoryElement item,
                     bool replaceIfExists)
     {
-        DirectoryElement exstgElement = FindElementByItemName(itemName: item.ItemName);
+        DirectoryElement exstgElement = FindElementByFileNameWithPath(FileNameWithPath: item.FileNameWithPath);
         if (exstgElement != null)
         {
             if (replaceIfExists)
@@ -72,7 +93,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
             {
                 throw new ArgumentException(
                     message: string.Format(format: "Error when adding element '{0}': the item must be unique but already exists in collection.",
-                                           arg0: item.ItemName));
+                                           arg0: item.FileNameWithPath));
             }
 
             base.Add(item: item);
@@ -80,116 +101,122 @@ public class DirectoryElementCollection : List<DirectoryElement>
     }
 
     /// <summary>
-    ///     Parses the given folder into DirectoryElements.
+    ///     Parses the given folder (or list of files if in CollectionMode) into DirectoryElements.
     ///     The previous collection of directory elements is cleared before.
     ///     The statusMethod to be passed optionally accepts a string
     ///     containing a short status text.
     /// </summary>
-    /// <param name="folder">The folder to parse</param>
+    /// <param name="folderOrCollectionFileName"></param>
     /// <param name="statusMethod">The method to call for status updates</param>
-    public void ParseFolderToDEs(string folder,
-                                 Action<string> statusMethod)
+    /// <param name="collectionModeEnabled"></param>
+    public void ParseFolderOrFileListToDEs(string folderOrCollectionFileName,
+                                           Action<string> statusMethod,
+                                           bool collectionModeEnabled)
     {
-        Logger.Trace(message: $"Start Parsing Folder '{folder}'");
+        Logger.Trace(message: $"Start Parsing Folder '{folderOrCollectionFileName}'");
         statusMethod(obj: "Scanning folder: Initializing ...");
 
         if (_ExifTool == null)
         {
-            throw new InvalidOperationException(message: $"Cannot scan a folder (currently '{folder}') when the EXIF Tool was not set for the DirectoryElementCollection.");
+            throw new InvalidOperationException(message: $"Cannot scan a folder (currently '{folderOrCollectionFileName}') when the EXIF Tool was not set for the DirectoryElementCollection.");
         }
 
-        // ******************************
-        // Special Case is "MyComputer"...
-        // Only list drives... then exit
-        if (folder == SpecialFolder.MyComputer.ToString())
+        if (!collectionModeEnabled)
         {
-            Logger.Trace(message: "Listing Drives");
-            foreach (DriveInfo drive in DriveInfo.GetDrives())
+            // ******************************
+            // Special Case is "MyComputer"...
+            // Only list drives... then exit
+            if (folderOrCollectionFileName == SpecialFolder.MyComputer.ToString())
             {
-                Logger.Trace(message: "Drive:" + drive.Name);
-                Add(item: new DirectoryElement(
-                        itemName: drive.Name,
-                        type: DirectoryElement.ElementType.Drive,
-                        fullPathAndName: drive.RootDirectory.FullName
-                    ));
-            }
-
-            Logger.Trace(message: "Listing Drives - OK");
-            return;
-        }
-
-        // ******************************
-        // first, add a parent folder. "dot dot"
-        try
-        {
-            Logger.Trace(message: "Files: Adding Parent Folder");
-            string tmpStrParent = HelperStatic.FsoGetParent(path: folder);
-            if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
-            {
-                Add(item: new DirectoryElement(
-                        itemName: FrmMainApp.ParentFolder,
-                        type: DirectoryElement.ElementType.ParentDirectory,
-                        fullPathAndName: tmpStrParent
-                    ));
-            }
-        }
-        catch (Exception ex)
-        {
-            Logger.Error(message: $"Could not add parent. Error: {ex.Message}");
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
-                            caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
-                            buttons: MessageBoxButtons.OK,
-                            icon: MessageBoxIcon.Error);
-        }
-
-        // ******************************
-        // list folders, ReparsePoint means these are links.
-        statusMethod(obj: "Scanning folder: processing directories ...");
-        Logger.Trace(message: "Listing Folders");
-        List<string> dirs = new();
-        try
-        {
-            DirectoryInfo di = new(path: folder);
-            foreach (DirectoryInfo directoryInfo in di.GetDirectories())
-            {
-                if (directoryInfo.FullName == SpecialFolder.MyComputer.ToString())
+                Logger.Trace(message: "Listing Drives");
+                foreach (DriveInfo drive in DriveInfo.GetDrives())
                 {
-                    // It's the MyComputer entry
-                    Logger.Trace(message: "MyComputer: " + directoryInfo.Name);
+                    Logger.Trace(message: "Drive:" + drive.Name);
                     Add(item: new DirectoryElement(
-                            itemName: directoryInfo.Name,
-                            type: DirectoryElement.ElementType.MyComputer,
-                            fullPathAndName: directoryInfo.FullName
+                            itemNameWithoutPath: drive.Name,
+                            type: DirectoryElement.ElementType.Drive,
+                            fileNameWithPath: drive.RootDirectory.FullName
                         ));
                 }
-                else if (directoryInfo.Attributes.ToString()
-                             .Contains(value: "Directory") &&
-                         !directoryInfo.Attributes.ToString()
-                             .Contains(value: "ReparsePoint"))
+
+                Logger.Trace(message: "Listing Drives - OK");
+                return;
+            }
+
+            // ******************************
+            // first, add a parent folder. "dot dot"
+
+            try
+            {
+                Logger.Trace(message: "Files: Adding Parent Folder");
+                string tmpStrParent = HelperFileSystemOperators.FsoGetParent(path: folderOrCollectionFileName);
+                if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
                 {
-                    Logger.Trace(message: "Folder: " + directoryInfo.Name);
                     Add(item: new DirectoryElement(
-                            itemName: directoryInfo.Name,
-                            type: DirectoryElement.ElementType.SubDirectory,
-                            fullPathAndName: directoryInfo.FullName
+                            itemNameWithoutPath: FrmMainApp.ParentFolder,
+                            type: DirectoryElement.ElementType.ParentDirectory,
+                            fileNameWithPath: tmpStrParent
                         ));
                 }
             }
-        }
-        catch (Exception ex)
-        {
-            Logger.Error(message: "Error: " + ex.Message);
-            MessageBox.Show(text: HelperStatic.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
-                            caption: HelperStatic.GenericGetMessageBoxCaption(captionType: "Error"),
-                            buttons: MessageBoxButtons.OK,
-                            icon: MessageBoxIcon.Error);
-        }
+            catch (Exception ex)
+            {
+                Logger.Error(message: $"Could not add parent. Error: {ex.Message}");
+                MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
+                                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                                buttons: MessageBoxButtons.OK,
+                                icon: MessageBoxIcon.Error);
+            }
 
-        Logger.Trace(message: "Listing Folders - OK");
+            // ******************************
+            // list folders, ReparsePoint means these are links.
+            statusMethod(obj: "Scanning folder: processing directories ...");
+            Logger.Trace(message: "Listing Folders");
+            List<string> dirs = new();
+            try
+            {
+                DirectoryInfo di = new(path: folderOrCollectionFileName);
+                foreach (DirectoryInfo directoryInfo in di.GetDirectories())
+                {
+                    if (directoryInfo.FullName == SpecialFolder.MyComputer.ToString())
+                    {
+                        // It's the MyComputer entry
+                        Logger.Trace(message: "MyComputer: " + directoryInfo.Name);
+                        Add(item: new DirectoryElement(
+                                itemNameWithoutPath: directoryInfo.Name,
+                                type: DirectoryElement.ElementType.MyComputer,
+                                fileNameWithPath: directoryInfo.FullName
+                            ));
+                    }
+                    else if (directoryInfo.Attributes.ToString()
+                                 .Contains(value: "Directory") &&
+                             !directoryInfo.Attributes.ToString()
+                                 .Contains(value: "ReparsePoint"))
+                    {
+                        Logger.Trace(message: "Folder: " + directoryInfo.Name);
+                        Add(item: new DirectoryElement(
+                                itemNameWithoutPath: directoryInfo.Name,
+                                type: DirectoryElement.ElementType.SubDirectory,
+                                fileNameWithPath: directoryInfo.FullName
+                            ));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(message: "Error: " + ex.Message);
+                MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
+                                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                                buttons: MessageBoxButtons.OK,
+                                icon: MessageBoxIcon.Error);
+            }
+
+            Logger.Trace(message: "Listing Folders - OK");
+        }
 
         Logger.Trace(message: "Loading allowedExtensions");
-        string[] allowedImageExtensions = AncillaryListsArrays.AllCompatibleExtensionsExt();
-        string[] allowedSideCarExt = AncillaryListsArrays.GetSideCarExtensionsArray();
+        string[] allowedImageExtensions = HelperGenericAncillaryListsArrays.AllCompatibleExtensionsExt();
+        string[] allowedSideCarExtensions = HelperGenericAncillaryListsArrays.GetSideCarExtensionsArray();
         Logger.Trace(message: "Loading allowedExtensions - OK");
 
         // ******************************
@@ -197,28 +224,53 @@ public class DirectoryElementCollection : List<DirectoryElement>
         // separate these into side car and image files
         statusMethod(obj: "Scanning folder: processing supported files ...");
         Logger.Trace(message: "Files: Listing Files");
-        List<string> imageFiles = new();
-        List<string> sidecarFiles = new();
+        HashSet<string> imageFiles = new();
+        HashSet<string> sidecarFiles = new();
 
-        string[] filesInDir;
-        try
+        string[] filesInDir = { };
+        int filesThatExistWithinCollection = 0;
+
+        // if we're in collection-mode...
+        if (collectionModeEnabled)
         {
-            filesInDir = Directory.GetFiles(path: folder);
+            List<string> filesInCollection = new();
+            foreach (string collectItemWithPath in File.ReadLines(path: Program.collectionFileLocation))
+            {
+                if (File.Exists(path: collectItemWithPath))
+                {
+                    filesInCollection.Add(item: collectItemWithPath);
+                    filesThatExistWithinCollection++;
+                }
+            }
+
+            if (filesThatExistWithinCollection > 0)
+            {
+                filesInDir = filesInCollection.ToArray();
+            }
         }
-        catch (Exception ex)
+
+        // if we're in normal mode or failed to gather any valid files...
+        if (!collectionModeEnabled || (collectionModeEnabled && filesThatExistWithinCollection == 0))
         {
-            Logger.Trace(message: "Files: Listing Files - Error: " + ex.Message);
-            MessageBox.Show(text: ex.Message);
-            return;
+            try
+            {
+                filesInDir = Directory.GetFiles(path: folderOrCollectionFileName);
+            }
+            catch (Exception ex)
+            {
+                Logger.Trace(message: "Files: Listing Files - Error: " + ex.Message);
+                MessageBox.Show(text: ex.Message);
+                return;
+            }
         }
 
         foreach (string fileNameWithExtension in filesInDir)
         {
             // Check, if it is a side car file. If so,
             // add it to the list to attach to image files later
-            if (allowedSideCarExt.Contains(value: Path.GetExtension(path: fileNameWithExtension)
-                                               .ToLower()
-                                               .Replace(oldValue: ".", newValue: "")))
+            if (allowedSideCarExtensions.Contains(value: Path.GetExtension(path: fileNameWithExtension)
+                                                      .ToLower()
+                                                      .Replace(oldValue: ".", newValue: "")))
             {
                 sidecarFiles.Add(item: fileNameWithExtension);
             }
@@ -229,14 +281,30 @@ public class DirectoryElementCollection : List<DirectoryElement>
                                                          .Replace(oldValue: ".", newValue: "")))
             {
                 imageFiles.Add(item: fileNameWithExtension);
+
+                // collection mode throws a slight problem with sidecar files: 
+                // if an xmp (or other, currently undefined) file is not explicitly on the collection-mode-list then it gets ignored.
+                // so we check if there is an xmp file with the same name as the image here.
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(path: fileNameWithExtension);
+                foreach (string sideCarExtension in allowedSideCarExtensions)
+                {
+                    string imaginaryFileNameWithPath = fileNameWithoutExtension + "." + sideCarExtension;
+                    if (File.Exists(path: Path.Combine(path1: Path.GetDirectoryName(path: fileNameWithExtension), path2: imaginaryFileNameWithPath)))
+                    {
+                        sidecarFiles.Add(item: Path.Combine(path1: Path.GetDirectoryName(path: fileNameWithExtension), path2: imaginaryFileNameWithPath));
+                    }
+                }
             }
         }
 
-        Logger.Trace(message: "Files: Listing Files - OK");
+        Logger.Trace(message: "Files: Listing Files - OK, image file count: " + imageFiles.Count.ToString());
 
         // ******************************
         // Map side car files to image file
         IDictionary<string, string> image2sidecar = new Dictionary<string, string>();
+        HashSet<string> overlappingXmpFileList = new();
+
+        Logger.Trace(message: "Files: Checking sidecar files, count: " + sidecarFiles.Count.ToString());
         foreach (string sidecarFile in sidecarFiles)
         {
             // Get (by comparing w/o extension) list of matching image files in lower case
@@ -247,61 +315,93 @@ public class DirectoryElementCollection : List<DirectoryElement>
                                                  .ToLower() ==
                                              scFilenameWithoutExtension)
                 .ToList();
-            if (matchingImageFiles.Count > 1)
-            {
-                Logger.Warn(message: $"Sidecar file '{sidecarFile}' matches multiple image files!");
-            }
 
+            bool sidecarFileAlreadyAdded = false;
             foreach (string imgFile in matchingImageFiles)
             {
-                image2sidecar[key: imgFile] = sidecarFile;
+                string imgFileExtension = Path.GetExtension(path: imgFile)
+                    .Substring(startIndex: 1);
+
+                // only add the sidecar file linkage if the particular extension is marked to use sidecars
+                bool writeXMPSideCar = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
+                                                             tableName: "settings",
+                                                             settingTabPage: "tpg_FileOptions",
+                                                             settingId: imgFileExtension.ToLower() +
+                                                                        "_" +
+                                                                        "ckb_AddXMPSideCar"));
+                if (writeXMPSideCar)
+                {
+                    if (sidecarFileAlreadyAdded)
+                    {
+                        overlappingXmpFileList.Add(item: sidecarFile);
+                        Logger.Warn(message: $"Sidecar file '{sidecarFile}' matches multiple image files!");
+                    }
+
+                    image2sidecar[key: imgFile] = sidecarFile;
+                    sidecarFileAlreadyAdded = true;
+                }
             }
+        }
+
+        if (overlappingXmpFileList.Count > 0)
+        {
+            string overlappingXmpFileStr = "";
+            foreach (string s in overlappingXmpFileList)
+            {
+                overlappingXmpFileStr += s + NewLine;
+            }
+
+            MessageBox.Show(
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_WarningMultipleImageFilesForXMP") +
+                      NewLine +
+                      overlappingXmpFileStr,
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Warning);
         }
 
         // ******************************
         // Extract data for all files that are supported
         Logger.Trace(message: "Files: Extracting File Data");
-        int count = 0;
-        if (_ExifTool == null)
-        {
-            _ExifTool = new ExifTool();
-        }
+        int fileCount = 0;
+        _ExifTool ??= new ExifTool();
 
         foreach (string fileNameWithPath in imageFiles)
         {
             Logger.Trace(message: $"File: {fileNameWithPath}");
             string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
-            if (count % 10 == 0)
+            if (fileCount % 10 == 0)
             {
-                statusMethod(obj: $"Scanning folder {100 * count / imageFiles.Count:0}%: processing file '{fileNameWithoutPath}'");
+                statusMethod(obj: $"Scanning folder {100 * fileCount / imageFiles.Count:0}%: processing file '{fileNameWithoutPath}'");
             }
 
             // Regular (image) files are added to the list of
             // Directory Elements...
-            DirectoryElement de = new(
-                itemName: Path.GetFileName(path: fileNameWithoutPath),
+            DirectoryElement fileToParseDictionaryElement = new(
+                itemNameWithoutPath: Path.GetFileName(path: fileNameWithoutPath),
                 type: DirectoryElement.ElementType.File,
-                fullPathAndName: fileNameWithPath
+                fileNameWithPath: fileNameWithPath
             );
 
-            // Parse EXIF Props
-            IDictionary<string, string> props = new Dictionary<string, string>();
-            InitiateEXIFParsing(fileToParse: fileNameWithPath, props: props);
+            // Parse EXIF properties
+            IDictionary<string, string> dictProperties = new Dictionary<string, string>();
+            InitiateEXIFParsing(fileNameWithPathToParse: fileNameWithPath, properties: dictProperties);
 
             // Add sidecar file and data if available
             if (image2sidecar.ContainsKey(key: fileNameWithPath))
             {
-                string scFile = image2sidecar[key: fileNameWithPath];
-                Logger.Trace(message: $"Files: Extracting File Data - adding side car file '{scFile}'");
-                de.SidecarFile = scFile;
-                InitiateEXIFParsing(fileToParse: scFile, props: props);
+                string sideCarFileNameWithPath = image2sidecar[key: fileNameWithPath];
+                Logger.Trace(message: $"Files: Extracting File Data - adding side car file '{sideCarFileNameWithPath}'");
+                fileToParseDictionaryElement.SidecarFile = sideCarFileNameWithPath;
+                InitiateEXIFParsing(fileNameWithPathToParse: sideCarFileNameWithPath, properties: dictProperties);
             }
 
             // Insert into model
-            de.ParseAttributesFromExifToolOutput(tags_in: props);
+            fileToParseDictionaryElement.ParseAttributesFromExifToolOutput(dictTagsIn: dictProperties);
 
-            Add(item: de);
-            count++;
+            Add(item: fileToParseDictionaryElement);
+            fileCount++;
         }
 
         Logger.Trace(message: "Files: Extracting File Data - OK");
@@ -311,18 +411,18 @@ public class DirectoryElementCollection : List<DirectoryElement>
     ///     Parses the given file using the given EXIF Tool object into the given
     ///     dictionary. Thereby, ignoring duplicate tags.
     /// </summary>
-    private void InitiateEXIFParsing(string fileToParse,
-                                     IDictionary<string, string> props)
+    private void InitiateEXIFParsing(string fileNameWithPathToParse,
+                                     IDictionary<string, string> properties)
     {
         // Gather EXIF data for the image file
-        ICollection<KeyValuePair<string, string>> propsRead = new List<KeyValuePair<string, string>>();
-        _ExifTool.GetProperties(filename: fileToParse, propsRead: propsRead);
+        ICollection<KeyValuePair<string, string>> propertiesRead = new Dictionary<string, string>();
+        _ExifTool.GetProperties(filename: fileNameWithPathToParse, propertiesRead: propertiesRead);
         // EXIF Tool can return duplicate properties - handle, but ignore these...
-        foreach (KeyValuePair<string, string> kvp in propsRead)
+        foreach (KeyValuePair<string, string> kvp in propertiesRead)
         {
-            if (!props.ContainsKey(key: kvp.Key))
+            if (!properties.ContainsKey(key: kvp.Key))
             {
-                props.Add(key: kvp.Key, value: kvp.Value);
+                properties.Add(key: kvp.Key, value: kvp.Value);
             }
         }
     }

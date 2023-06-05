@@ -83,3 +83,4 @@ mbx_DirectoryElementCollection_ErrorParsing,Error while parsing folder to Direct
 mbx_FrmMainApp_QuestionNoRowsFromAPI,The API query didn't return any valid information. Do you want to blank out the toponomy values?,
 mbx_FrmMainApp_WarningTooManyFilesSelected,Precisely 1 file must be selected.,
 mbx_GenericDone,Done.,
+mbx_FrmMainApp_WarningMultipleImageFilesForXMP,Warning: the following sidecar files share names with multiple image files - data may have been misread:,

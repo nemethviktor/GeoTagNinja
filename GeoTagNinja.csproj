@@ -58,6 +58,9 @@
     <ApplicationIcon>Resources\geoTagNinja_square.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommandLine, Version=2.9.1.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
+      <HintPath>packages\CommandLineParser.2.9.1\lib\net461\CommandLine.dll</HintPath>
+    </Reference>
     <Reference Include="CsvHelper, Version=30.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>packages\CsvHelper.30.0.1\lib\net47\CsvHelper.dll</HintPath>
     </Reference>
@@ -162,7 +165,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AncillaryListsArrays.cs" />
+    <Compile Include="FrmMainApp.Startup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Helpers\HelperExifWriteTrackDataToSideCar.cs" />
+    <Compile Include="Helpers\HelperGenericAppStartup.cs" />
+    <Compile Include="Helpers\HelperGenericAncillaryListsArrays.cs" />
     <Compile Include="FrmAboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -175,6 +183,32 @@
     <Compile Include="FrmManageFavourites.designer.cs">
       <DependentUpon>FrmManageFavourites.cs</DependentUpon>
     </Compile>
+    <Compile Include="SingleInstance_PipeServer.cs" />
+    <Compile Include="View\ListView\FileListViewMapNavigation.cs" />
+    <Compile Include="View\ListView\FileListViewCopyPaste.cs" />
+    <Compile Include="View\ListView\FileListViewReadWrite.cs" />
+    <Compile Include="View\EditFileForm\EditFileFormGeneric.cs" />
+    <Compile Include="Helpers\HelperAPIGeoNamesToponomyExtractor.cs" />
+    <Compile Include="Helpers\HelperAPIVersionCheckers.cs" />
+    <Compile Include="Helpers\HelperDataApplicationSettings.cs" />
+    <Compile Include="Helpers\HelperDataCSVFileOperations.cs" />
+    <Compile Include="Helpers\HelperDataCustomCityAllocationRules.cs" />
+    <Compile Include="Helpers\HelperDataCustomRules.cs" />
+    <Compile Include="Helpers\HelperDataDatabaseAndStartup.cs" />
+    <Compile Include="Helpers\HelperDataFavourites.cs" />
+    <Compile Include="Helpers\HelperDataLanguageTZ.cs" />
+    <Compile Include="Helpers\HelperDataObjectMapping.cs" />
+    <Compile Include="Helpers\HelperDataOtherDataRelated.cs" />
+    <Compile Include="Helpers\HelperExifDataPointInteractions.cs" />
+    <Compile Include="Helpers\HelperExifExifToolOperator.cs" />
+    <Compile Include="Helpers\HelperExifReadExifData.cs" />
+    <Compile Include="Helpers\HelperExifReadGetImagePreviews.cs" />
+    <Compile Include="Helpers\HelperExifReadTrackData.cs" />
+    <Compile Include="Helpers\HelperExifWriteSaveToFile.cs" />
+    <Compile Include="Helpers\HelperFileSystemOperators.cs" />
+    <Compile Include="Helpers\HelperGenericFileLocking.cs" />
+    <Compile Include="Helpers\HelperGenericTypeOperations.cs" />
+    <Compile Include="Helpers\HelperControlAndMessageBoxHandling.cs" />
     <Compile Include="Model\DirectoryElementCollection.cs" />
     <Compile Include="Model\DirectoryElement.cs" />
     <Compile Include="Model\ExifToolWrapper.cs" />
@@ -192,24 +226,16 @@
     <Compile Include="FrmImportGpx.Designer.cs">
       <DependentUpon>FrmImportGpx.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmMainAppStartup.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="FrmPasteWhat.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmPasteWhat.Designer.cs">
       <DependentUpon>FrmPasteWhat.cs</DependentUpon>
     </Compile>
-    <Compile Include="HelperNonStatic.cs" />
-    <Compile Include="HelperNonStatic.Generic.cs" />
-    <Compile Include="HelperStatic.Exif.cs" />
-    <Compile Include="HelperStatic.FSO.cs" />
-    <Compile Include="HelperStatic.Generic.cs" />
-    <Compile Include="HelperStatic.lvwFileList.cs" />
-    <Compile Include="HelperStatic.SQL.cs" />
-    <Compile Include="HelperStatic.variables.cs" />
-    <Compile Include="HelperGeoResponse.cs" />
+    <Compile Include="Helpers\HelperNonStatic.cs" />
+    <Compile Include="Helpers\HelperNonStatic.Generic.cs" />
+    <Compile Include="Helpers\HelperVariables.cs" />
+    <Compile Include="Helpers\HelperAPIGeoNamesToponomyJSONParser.cs" />
     <Compile Include="FrmEditFileData.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -228,11 +254,10 @@
     <Compile Include="FrmSettings.Designer.cs">
       <DependentUpon>FrmSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="HelperStatic.cs" />
-    <Compile Include="HelperGeoTagXMLParser.cs" />
-    <Compile Include="Helper.GitHubAPIResponse.cs" />
-    <Compile Include="Helper.MessageBoxManager.cs" />
-    <Compile Include="ListViewColumnSorter.cs" />
+    <Compile Include="Helpers\HelperAPIGeoNamesGeoTagXMLParser.cs" />
+    <Compile Include="Helpers\HelperAPIGitHub.cs" />
+    <Compile Include="Helpers\HelperControlAndMessageBoxManager.cs" />
+    <Compile Include="View\ListView\ListViewColumnSorter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\ImagePreview.cs">

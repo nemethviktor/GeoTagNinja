@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using GeoTagNinja.Helpers;
 
 namespace GeoTagNinja;
 
@@ -21,14 +22,14 @@ public partial class FrmColumnSelection : Form
         _colList = ColList;
         InitializeComponent();
 
-        btn_Cancel.Text = HelperStatic.DataReadDTObjectText(
-                                                                objectType: "Button", objectName: "btn_Cancel");
-        btn_Ok.Text = HelperStatic.DataReadDTObjectText(
-                                                            objectType: "Button", objectName: "btn_OK");
-        lbl_SelectColsTitle.Text = HelperStatic.DataReadDTObjectText(
-                                                                         objectType: "Label", objectName: "lbl_SelectColsTitle");
-        ckb_DeSelectAll.Text = HelperStatic.DataReadDTObjectText(
-                                                                     objectType: "CheckBox", objectName: "ckb_DeSelectAll");
+        btn_Cancel.Text = HelperDataLanguageTZ.DataReadDTObjectText(
+            objectType: "Button", objectName: "btn_Cancel");
+        btn_Ok.Text = HelperDataLanguageTZ.DataReadDTObjectText(
+            objectType: "Button", objectName: "btn_OK");
+        lbl_SelectColsTitle.Text = HelperDataLanguageTZ.DataReadDTObjectText(
+            objectType: "Label", objectName: "lbl_SelectColsTitle");
+        ckb_DeSelectAll.Text = HelperDataLanguageTZ.DataReadDTObjectText(
+            objectType: "CheckBox", objectName: "ckb_DeSelectAll");
 
         foreach (ColumnHeader col in _colList)
         {
