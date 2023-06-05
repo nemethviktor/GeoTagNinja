@@ -85,7 +85,7 @@ internal static class HelperFileSystemOperators
 
         foreach (FileInfo file in di.EnumerateFiles())
         {
-            if (file.Extension != ".sqlite" && file.Name != "logfile.txt")
+            if (file.Extension != ".sqlite" && !file.Name.StartsWith("logfile"))
             {
                 try
                 {

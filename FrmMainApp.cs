@@ -6,9 +6,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ExifToolWrapper;
@@ -52,6 +54,11 @@ public partial class FrmMainApp : Form
     ///     Returns the list of elements in the currently opened directory.
     /// </summary>
     public static DirectoryElementCollection DirectoryElements { get; } = new();
+
+    /// <summary>
+    /// The server that receives messages from clients via our named pipe.
+    /// </summary>
+    private SingleInstance_PipeServer NamedPipeServer = null;
 
     #region Variables
 
@@ -111,7 +118,7 @@ public partial class FrmMainApp : Form
     /// </summary>
     public FrmMainApp()
     {
-        #region Logging
+        #region Define Logging Config
 
         HelperVariables.UserDataFolderPath = Path.Combine(path1: GetFolderPath(folder: SpecialFolder.ApplicationData), path2: "GeoTagNinja");
         HelperVariables.ResourcesFolderPath = Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "Resources");
@@ -148,7 +155,12 @@ public partial class FrmMainApp : Form
 
         #endregion
 
-        Logger.Info(message: "Starting");
+        int procID = Process.GetCurrentProcess().Id;
+        Logger.Info(message: "Constructor: Starting GTN with process ID " + procID.ToString() );
+        Logger.Info(message: "Collection mode: " + Program.collectionModeEnabled.ToString());
+        if (Program.collectionModeEnabled) Logger.Info(message: "Collection source: " + Program.collectionFileLocation);
+
+        if (Program.singleInstance_Highlander) NamedPipeServer = new SingleInstance_PipeServer(PipeCmd_ShowMessage);
 
         DirectoryElements.ExifTool = _ExifTool;
         HelperDataOtherDataRelated.GenericCreateDataTables();
@@ -167,8 +179,9 @@ public partial class FrmMainApp : Form
 
         FormClosing += FrmMainApp_FormClosing;
 
-        Logger.Info(message: "Done");
+        Logger.Info(message: "Constructor: Done");
     }
+
 
     /// <summary>
     ///     Handles the initial loading - adds various elements and ensures the app functions.
@@ -178,7 +191,7 @@ public partial class FrmMainApp : Form
     private async void FrmMainApp_Load(object sender,
                                        EventArgs e)
     {
-        Logger.Info(message: "Starting");
+        Logger.Info(message: "OnLoad: Starting");
         // icon
 
         Logger.Trace(message: "Setting Icon");
@@ -287,7 +300,7 @@ public partial class FrmMainApp : Form
 
         await HelperAPIVersionCheckers.CheckForNewVersions();
 
-        Logger.Info(message: "Done.");
+        Logger.Info(message: "OnLoad: Done.");
     }
 
 
@@ -300,7 +313,10 @@ public partial class FrmMainApp : Form
     private async void FrmMainApp_FormClosing(object sender,
                                               FormClosingEventArgs e)
     {
-        Logger.Debug(message: "Starting");
+        Logger.Debug(message: "OnClose: Starting");
+
+        NamedPipeServer.stopServing();
+
         bool dataWriteQueueIsNotEmpty = true;
         foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
         {
@@ -372,8 +388,21 @@ public partial class FrmMainApp : Form
         pbx_imagePreview.Image = null; // unlocks files. theoretically.
 
         // Shutdown Exif Tool
+        Logger.Debug(message: "OnClose: Dispose EXIF-Tool");
         _ExifTool.Dispose();
         HelperFileSystemOperators.FsoCleanUpUserFolder();
+        Logger.Debug(message: "OnClose: Done.");
+    }
+
+
+
+    private void PipeCmd_ShowMessage(string text)
+    {
+        MessageBox.Show(
+            text: $"Pipe Server has this message:\n{text}",
+            caption: "Pipe Server",
+            buttons: MessageBoxButtons.OK,
+            icon: MessageBoxIcon.Information);
     }
 
     #endregion
