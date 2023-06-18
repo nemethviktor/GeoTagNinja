@@ -78,10 +78,14 @@ internal static class HelperExifWriteSaveToFile
                     string fileExtension = Path.GetExtension(path: fileNameWithoutPath)
                         .Substring(startIndex: 1);
 
+                    // check that either/or the orig file or the xmp needs overwriting
+                    processOriginalFile = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_ProcessOriginalFile"));
+                    writeXMPSideCar = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_AddXMPSideCar"));
+
                     // this is an issue in Adobe Bridge (unsure). Rating in the XMP needs to be parsed and re-saved.
                     int ratingInXmp = -1;
                     string xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath)) + ".xmp");
-                    if (File.Exists(path: xmpFileLocation))
+                    if (File.Exists(path: xmpFileLocation) && writeXMPSideCar) // don't bother if we don't need to (over)write the xmp
                     {
                         foreach (string line in File.ReadLines(path: xmpFileLocation))
                         {
@@ -104,9 +108,7 @@ internal static class HelperExifWriteSaveToFile
 
                     queueWasEmpty = false;
 
-                    processOriginalFile = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_ProcessOriginalFile"));
                     resetFileDateToCreated = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_ResetFileDateToCreated"));
-                    writeXMPSideCar = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_AddXMPSideCar"));
                     doNotCreateBackup = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_OverwriteOriginal"));
 
                     // it's a lot less complicated to just pretend we want both the Original File and the Sidecar updated and then not-include them later than to have a Yggdrasil of IFs scattered all over.
@@ -393,8 +395,6 @@ internal static class HelperExifWriteSaveToFile
             }
         }
 
-        //FrmMainApp.DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
-
         if (!failWriteNothingEnabled && !queueWasEmpty)
         {
             FrmMainApp.Logger.Info(message: "Starting ExifTool.");
@@ -403,7 +403,10 @@ internal static class HelperExifWriteSaveToFile
             ;
             await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
                                                          frmMainAppInstance: frmMainAppInstance,
-                                                         initiator: "ExifWriteExifToFile");
+                                                         initiator: "ExifWriteExifToFile",
+                                                         processOriginalFile = processOriginalFile,
+                                                         writeXMPSideCar = writeXMPSideCar
+            );
         }
         else if (!queueWasEmpty)
         {

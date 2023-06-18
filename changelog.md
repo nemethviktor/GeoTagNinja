@@ -1,11 +1,17 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 84XX [202304XX]**
+**Build 8xxx [20230xx]**
+- NEW & UPDATED:
+  - TBA
+- BUGS & FIXES:
+  - Fixed a bug where the original file is set not to be overwritten but XMP is and ultimately the DE didn't get cleread properly, resulting in what appeared to be an unresponsive non-save.
+
+**Build 8556 [20230605]**
 - NEW & UPDATED:
   - Added a "Collections Mode", in particular to work with Jeffrey Frield's LightRoom Classic Plugin "Run Any Command". Details on how to use this are in the readme.
   - Rewrote the sorting logic to account for the data type of the column being sorted (i.e. date, number, text etc)
   - Added Country to Favourites
-  - Bumped exifTool to v12.58
+  - Bumped exifTool to v12.62
 - BUGS & FIXES:
   - Fixed a bug where the TZ dropdown in Import GPX could cause a crash if the user was in a TZ that wasn't on the dropdown.
   - Paste-values logic minor revamp

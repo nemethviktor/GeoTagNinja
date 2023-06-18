@@ -69,6 +69,26 @@ public class DirectoryElementCollection : List<DirectoryElement>
     }
 
     /// <summary>
+    ///     Attempts to find the first DE that matches an XMP file's logic. (ie.
+    ///     20100504_Rome_01_Downtown_Colosseum__MG_2595.xmp --> 20100504_Rome_01_Downtown_Colosseum__MG_2595.CR2 assuming it
+    ///     exists)
+    /// </summary>
+    /// <param name="XMPFileNameWithPath"></param>
+    /// <returns></returns>
+    public DirectoryElement FindElementByBelongingToXmpWithPath(string XMPFileNameWithPath)
+    {
+        foreach (DirectoryElement item in this)
+        {
+            if (item.FileNameWithPath.StartsWith(XMPFileNameWithPath))
+            {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
     ///     Adds a DirectoryElement to this list. Hereby it is checked, whether
     ///     already an item with the same name exists. If this is the case,
     ///     either replace it with the one passed (replaceIfExists must be se to
@@ -297,14 +317,14 @@ public class DirectoryElementCollection : List<DirectoryElement>
             }
         }
 
-        Logger.Trace(message: "Files: Listing Files - OK, image file count: " + imageFiles.Count.ToString());
+        Logger.Trace(message: "Files: Listing Files - OK, image file count: " + imageFiles.Count);
 
         // ******************************
         // Map side car files to image file
         IDictionary<string, string> image2sidecar = new Dictionary<string, string>();
         HashSet<string> overlappingXmpFileList = new();
 
-        Logger.Trace(message: "Files: Checking sidecar files, count: " + sidecarFiles.Count.ToString());
+        Logger.Trace(message: "Files: Checking sidecar files, count: " + sidecarFiles.Count);
         foreach (string sidecarFile in sidecarFiles)
         {
             // Get (by comparing w/o extension) list of matching image files in lower case
