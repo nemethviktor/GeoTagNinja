@@ -5,6 +5,8 @@
   - TBA
 - BUGS & FIXES:
   - Fixed a bug where the original file is set not to be overwritten but XMP is and ultimately the DE didn't get cleread properly, resulting in what appeared to be an unresponsive non-save.
+  - Fixed a bug pasting string values across files causing a crash
+  - Updated the Kyiv TZ name (from Europe/Kiev to Europe/Kyiv) - this appears to have caused some problems before
 
 **Build 8556 [20230605]**
 - NEW & UPDATED:
