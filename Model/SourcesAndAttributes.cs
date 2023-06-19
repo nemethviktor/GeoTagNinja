@@ -471,8 +471,8 @@ public class SourcesAndAttributes
             case "CreateDateSecondsShift":
                 return ElementAttribute.CreateDateSecondsShift;
             case "OffsetTime":
-            case "OffsetTimeList":
                 return ElementAttribute.OffsetTime;
+            case "OffsetTimeList":
             case "gps*":
                 return ElementAttribute.RemoveAllGPS;
             default:
