@@ -2,12 +2,13 @@
 
 **Build 8xxx [20230xx]**
 - NEW & UPDATED:
-  - TBA
+  - Bumped exifTool to v12.63
 - BUGS & FIXES:
   - Fixed a bug where the original file is set not to be overwritten but XMP is and ultimately the DE didn't get cleread properly, resulting in what appeared to be an unresponsive non-save.
   - Fixed a bug pasting string values across files causing a crash
   - Updated the Kyiv TZ name (from Europe/Kiev to Europe/Kyiv) - this appears to have caused some problems before
-  - Fix bug where timezone was read incorrectly from the Edit Form
+  - Fixed a bug where timezone was read incorrectly from the Edit Form
+  - Fixed a bug where RAW and XMP files contradict each other for Lat/Long Ref values and the wrong one is taken
 
 **Build 8556 [20230605]**
 - NEW & UPDATED:

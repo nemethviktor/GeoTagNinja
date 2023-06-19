@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using ExifToolWrapper;
 using GeoTagNinja.Helpers;
 using NLog;
+using XmpCore.Impl;
 using static System.Environment;
 
 namespace GeoTagNinja.Model;
@@ -404,18 +405,19 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 fileNameWithPath: fileNameWithPath
             );
 
-            // Parse EXIF properties
-            IDictionary<string, string> dictProperties = new Dictionary<string, string>();
-            InitiateEXIFParsing(fileNameWithPathToParse: fileNameWithPath, properties: dictProperties);
-
             // Add sidecar file and data if available
+            IDictionary<string, string> dictProperties = new Dictionary<string, string>();
             if (image2sidecar.ContainsKey(key: fileNameWithPath))
             {
                 string sideCarFileNameWithPath = image2sidecar[key: fileNameWithPath];
                 Logger.Trace(message: $"Files: Extracting File Data - adding side car file '{sideCarFileNameWithPath}'");
                 fileToParseDictionaryElement.SidecarFile = sideCarFileNameWithPath;
+                // Logically XMP should take priority because RAW files are not meant to be edited.
                 InitiateEXIFParsing(fileNameWithPathToParse: sideCarFileNameWithPath, properties: dictProperties);
             }
+
+            // Parse EXIF properties
+            InitiateEXIFParsing(fileNameWithPathToParse: fileNameWithPath, properties: dictProperties);
 
             // Insert into model
             fileToParseDictionaryElement.ParseAttributesFromExifToolOutput(dictTagsIn: dictProperties);
@@ -437,12 +439,47 @@ public class DirectoryElementCollection : List<DirectoryElement>
         // Gather EXIF data for the image file
         ICollection<KeyValuePair<string, string>> propertiesRead = new Dictionary<string, string>();
         _ExifTool.GetProperties(filename: fileNameWithPathToParse, propertiesRead: propertiesRead);
+
         // EXIF Tool can return duplicate properties - handle, but ignore these...
         foreach (KeyValuePair<string, string> kvp in propertiesRead)
         {
             if (!properties.ContainsKey(key: kvp.Key))
             {
                 properties.Add(key: kvp.Key, value: kvp.Value);
+            }
+        }
+
+        // force-derive Refs here because they can disagree between RAW and XMP files.
+        if (fileNameWithPathToParse.EndsWith(".xmp"))
+        {
+            // "EXIF" takes prio over "Composite"
+            string tmpLatLongValStr;
+            string tmpLatLongRefValStr = "";
+            double tmpLonLongValDbl = 0.0;
+            if (properties.ContainsKey("XMP:GPSLongitude") && !properties.ContainsKey("EXIF:GPSLongitudeRef"))
+            {
+                tmpLatLongValStr = (from x in propertiesRead
+                                    where x.Key == "XMP:GPSLongitude"
+                                    select x.Value).FirstOrDefault();
+                tmpLonLongValDbl = HelperExifDataPointInteractions.AdjustLatLongNegative(tmpLatLongValStr);
+                tmpLatLongRefValStr = tmpLonLongValDbl < 0.0
+                    ? "West"
+                    : "East";
+
+                properties.Add(key: "EXIF:GPSLongitudeRef", value: tmpLatLongRefValStr);
+            }
+
+            if (properties.ContainsKey("XMP:GPSLatitude") && !properties.ContainsKey("EXIF:GPSLatitudeRef"))
+            {
+                tmpLatLongValStr = (from x in propertiesRead
+                                    where x.Key == "XMP:GPSLatitude"
+                                    select x.Value).FirstOrDefault();
+                tmpLonLongValDbl = HelperExifDataPointInteractions.AdjustLatLongNegative(tmpLatLongValStr);
+                tmpLatLongRefValStr = tmpLonLongValDbl < 0.0
+                    ? "South"
+                    : "North";
+
+                properties.Add(key: "EXIF:GPSLatitudeRef", value: tmpLatLongRefValStr);
             }
         }
     }

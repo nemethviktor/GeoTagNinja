@@ -1100,7 +1100,7 @@ internal static class HelperExifReadExifData
 
         switch (dataPoint)
         {
-            case "GPSLatitude" or "GPSLatitude" or "GPSLongitude" or "GPSLongitude":
+            case "GPSLatitude" or "GPSLongitude":
                 if (tryDataValue != FrmMainApp.NullStringEquivalentGeneric)
                 {
                     // we want N instead of North etc.

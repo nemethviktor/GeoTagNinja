@@ -34,13 +34,13 @@ internal class TagsToModelValueTransformations
                 refAttrib = ElementAttribute.GPSLatitudeRef;
                 break;
             case ElementAttribute.GPSDestLatitude:
-                refAttrib = ElementAttribute.GPSLatitudeRef;
+                refAttrib = ElementAttribute.GPSDestLatitudeRef;
                 break;
             case ElementAttribute.GPSLongitude:
                 refAttrib = ElementAttribute.GPSLongitudeRef;
                 break;
             case ElementAttribute.GPSDestLongitude:
-                refAttrib = ElementAttribute.GPSLongitudeRef;
+                refAttrib = ElementAttribute.GPSDestLongitudeRef;
                 break;
             default:
                 throw new ArgumentException(message: $"T2M_GPSLatLong does not support attribute '{GetAttributeName(attribute: attribute)}'");
