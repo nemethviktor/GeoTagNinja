@@ -129,6 +129,12 @@ internal static class HelperExifExifToolOperator
                                                 .StartsWith(value: "0"))
                                         {
                                             removeDirElementFromDE3(dirElemToDrop: dirElemFileToDrop);
+                                            if (!processOriginalFile && writeXmpSideCar)
+                                            {
+                                                string pathOfFile = fileNameWithPath.Substring(startIndex: 0, length: fileNameWithPath.Length - 4);
+                                                dirElemFileToDrop = FrmMainApp.DirectoryElements.FindElementByBelongingToXmpWithPath(XMPFileNameWithPath: pathOfFile);
+                                                removeDirElementFromDE3(dirElemToDrop: dirElemFileToDrop);
+                                            }
                                         }
                                     }
                                 }

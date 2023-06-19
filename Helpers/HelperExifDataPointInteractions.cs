@@ -47,7 +47,7 @@ internal static class HelperExifDataPointInteractions
         }
 
         pointVal = Math.Round(value: pointVal, digits: 6);
-        int multiplier = point.Contains(value: "S") || point.Contains(value: "W")
+        int multiplier = point.Contains(value: "S") || point.Contains(value: "W") || point.StartsWith("-")
             ? -1
             : 1; //handle south and west
 
