@@ -10,6 +10,7 @@
   - Updated the Kyiv TZ name (from Europe/Kiev to Europe/Kyiv) - this appears to have caused some problems before
   - Fixed a bug where timezone was read incorrectly from the Edit Form
   - Fixed a bug where RAW and XMP files contradict each other for Lat/Long Ref values and the wrong one is taken
+  - Fixed a bug where opening the Edit Form via the File menu would cause crash
 
 **Build 8556 [20230605]**
 - NEW & UPDATED:

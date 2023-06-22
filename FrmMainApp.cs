@@ -6,11 +6,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ExifToolWrapper;
@@ -39,6 +37,11 @@ public partial class FrmMainApp : Form
     private readonly ExifTool _ExifTool = new();
 
     /// <summary>
+    ///     The server that receives messages from clients via our named pipe.
+    /// </summary>
+    private readonly SingleInstance_PipeServer NamedPipeServer;
+
+    /// <summary>
     ///     These two make the elements of the main listview accessible to other classes.
     /// </summary>
     public ListView.ListViewItemCollection ListViewItems => lvw_FileList.Items;
@@ -55,11 +58,6 @@ public partial class FrmMainApp : Form
     /// </summary>
     public static DirectoryElementCollection DirectoryElements { get; } = new();
 
-    /// <summary>
-    /// The server that receives messages from clients via our named pipe.
-    /// </summary>
-    private SingleInstance_PipeServer NamedPipeServer = null;
-
     #region Variables
 
     internal const string DoubleQuote = "\"";
@@ -70,7 +68,7 @@ public partial class FrmMainApp : Form
     public const string NullStringEquivalentZero = "0"; // fml.
     public const int NullIntEquivalent = 0;
     public const double NullDoubleEquivalent = 0.0;
-    public static readonly DateTime NullDateTimeEquivalent = new DateTime(1, 1, 1, 0, 0, 0);
+    public static readonly DateTime NullDateTimeEquivalent = new(year: 1, month: 1, day: 1, hour: 0, minute: 0, second: 0);
 
     internal static DataTable DtLanguageLabels;
     internal static DataTable DtFavourites;
@@ -155,12 +153,19 @@ public partial class FrmMainApp : Form
 
         #endregion
 
-        int procID = Process.GetCurrentProcess().Id;
-        Logger.Info(message: "Constructor: Starting GTN with process ID " + procID.ToString() );
-        Logger.Info(message: "Collection mode: " + Program.collectionModeEnabled.ToString());
-        if (Program.collectionModeEnabled) Logger.Info(message: "Collection source: " + Program.collectionFileLocation);
+        int procID = Process.GetCurrentProcess()
+            .Id;
+        Logger.Info(message: "Constructor: Starting GTN with process ID " + procID);
+        Logger.Info(message: "Collection mode: " + Program.collectionModeEnabled);
+        if (Program.collectionModeEnabled)
+        {
+            Logger.Info(message: "Collection source: " + Program.collectionFileLocation);
+        }
 
-        if (Program.singleInstance_Highlander) NamedPipeServer = new SingleInstance_PipeServer(PipeCmd_ShowMessage);
+        if (Program.singleInstance_Highlander)
+        {
+            NamedPipeServer = new SingleInstance_PipeServer(messageCallback: PipeCmd_ShowMessage);
+        }
 
         DirectoryElements.ExifTool = _ExifTool;
         HelperDataOtherDataRelated.GenericCreateDataTables();
@@ -393,7 +398,6 @@ public partial class FrmMainApp : Form
         HelperFileSystemOperators.FsoCleanUpUserFolder();
         Logger.Debug(message: "OnClose: Done.");
     }
-
 
 
     private void PipeCmd_ShowMessage(string text)
@@ -923,57 +927,17 @@ public partial class FrmMainApp : Form
     private void tmi_File_EditFiles_Click(object sender,
                                           EventArgs e)
     {
-        if (lvw_FileList.SelectedItems.Count > 0)
+        filesToEditGUIDStringList.Clear();
+
+        ListView lvw = lvw_FileList;
+        foreach (ListViewItem lvi in lvw.SelectedItems)
         {
-            Logger.Debug(message: "Starting");
-
-            int fileCount = 0;
-
-            Logger.Trace(message: "Trigger FrmEditFileData");
-            FrmEditFileData = new FrmEditFileData();
-            FrmEditFileData.lvw_FileListEditImages.Items.Clear();
-
-            Logger.Trace(message: "Add Files To lvw_FileListEditImages");
-            ListView lvw = lvw_FileList;
-            foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
-            {
-                DirectoryElement fileDirectoryElement = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                                                                               .Index]
-                                                                                                        .Text);
-                if (fileDirectoryElement != null)
-                {
-                    if (File.Exists(path: fileDirectoryElement.FileNameWithPath))
-                    {
-                        ListViewItem lviFE = new()
-                        {
-                            Text = fileDirectoryElement.ItemNameWithoutPath
-                        };
-                        ListViewItem.ListViewSubItem lsu = new()
-                        {
-                            Name = "clh_GUID",
-                            Text = fileDirectoryElement.UniqueID.ToString()
-                        };
-                        lviFE.SubItems.Add(item: lsu);
-
-                        FrmEditFileData.lvw_FileListEditImages.Items.Add(value: lviFE);
-                        fileCount++;
-                        Logger.Trace(message: "Added " + lviFE.Text);
-                    }
-                }
-            }
-
-            if (fileCount > 0)
-            {
-                Logger.Trace(message: "FrmEditFileData Get objectTexts");
-                FrmEditFileData.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: "Form",
-                    objectName: "FrmEditFileData"
-                );
-
-                Logger.Trace(message: "FrmEditFileData ShowDialog");
-                FrmEditFileData.ShowDialog();
-            }
+            filesToEditGUIDStringList.Add(item: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                 .Index]
+                                              .Text);
         }
+
+        EditFileFormGeneric.ShowFrmEditFileData();
     }
 
     /// <summary>
@@ -2297,8 +2261,8 @@ public partial class FrmMainApp : Form
         if (lvw.SelectedItems.Count == 1)
         {
             ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
-            DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                                                                .Index]
+            DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                          .Index]
                                                                                                    .Text);
             if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {
