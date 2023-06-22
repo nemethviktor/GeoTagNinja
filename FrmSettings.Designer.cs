@@ -33,6 +33,7 @@
             this.tct_Settings = new System.Windows.Forms.TabControl();
             this.tpg_Application = new System.Windows.Forms.TabPage();
             this.gbx_GeoNamesSettings = new System.Windows.Forms.GroupBox();
+            this.lbl_Miles = new System.Windows.Forms.Label();
             this.ckb_PopulatedPlacesOnly = new System.Windows.Forms.CheckBox();
             this.gbx_GeoNamesLanguageSettings = new System.Windows.Forms.GroupBox();
             this.cbx_TryUseGeoNamesLanguage = new System.Windows.Forms.ComboBox();
@@ -67,10 +68,12 @@
             this.ckb_AddXMPSideCar = new System.Windows.Forms.CheckBox();
             this.lbx_fileExtensions = new System.Windows.Forms.ListBox();
             this.tpg_CustomCityLogic = new System.Windows.Forms.TabPage();
+            this.rbx_CustomCityLogicExplanationBold = new System.Windows.Forms.RichTextBox();
             this.btn_ResetToDefaults = new System.Windows.Forms.Button();
             this.rbx_CustomCityLogicExplanation = new System.Windows.Forms.RichTextBox();
             this.dgv_CustomCityLogic = new System.Windows.Forms.DataGridView();
             this.tpg_CustomRules = new System.Windows.Forms.TabPage();
+            this.rbx_CustomRulesExplanationBold = new System.Windows.Forms.RichTextBox();
             this.ckb_StopProcessingRules = new System.Windows.Forms.CheckBox();
             this.ckb_IncludePredeterminedCountries = new System.Windows.Forms.CheckBox();
             this.rbx_CustomRulesExplanation = new System.Windows.Forms.RichTextBox();
@@ -79,8 +82,9 @@
             this.btn_OK = new System.Windows.Forms.Button();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.fbd_StartupFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.rbx_CustomCityLogicExplanationBold = new System.Windows.Forms.RichTextBox();
-            this.rbx_CustomRulesExplanationBold = new System.Windows.Forms.RichTextBox();
+            this.ckb_UseImperialNotMetric = new System.Windows.Forms.CheckBox();
+            this.lbl_Feet_Abbr = new System.Windows.Forms.Label();
+            this.lbl_Metres_Abbr = new System.Windows.Forms.Label();
             this.tct_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             this.gbx_GeoNamesSettings.SuspendLayout();
@@ -130,6 +134,7 @@
             // 
             // gbx_GeoNamesSettings
             // 
+            this.gbx_GeoNamesSettings.Controls.Add(this.lbl_Miles);
             this.gbx_GeoNamesSettings.Controls.Add(this.ckb_PopulatedPlacesOnly);
             this.gbx_GeoNamesSettings.Controls.Add(this.gbx_GeoNamesLanguageSettings);
             this.gbx_GeoNamesSettings.Controls.Add(this.ckb_ReplaceBlankToponyms);
@@ -146,12 +151,22 @@
             this.gbx_GeoNamesSettings.Controls.Add(this.tbx_GeoNames_Pwd);
             this.gbx_GeoNamesSettings.Controls.Add(this.tbx_GeoNames_UserName);
             this.gbx_GeoNamesSettings.Controls.Add(this.tbx_ARCGIS_APIKey);
-            this.gbx_GeoNamesSettings.Location = new System.Drawing.Point(16, 163);
+            this.gbx_GeoNamesSettings.Location = new System.Drawing.Point(16, 197);
             this.gbx_GeoNamesSettings.Name = "gbx_GeoNamesSettings";
-            this.gbx_GeoNamesSettings.Size = new System.Drawing.Size(852, 455);
+            this.gbx_GeoNamesSettings.Size = new System.Drawing.Size(852, 428);
             this.gbx_GeoNamesSettings.TabIndex = 33;
             this.gbx_GeoNamesSettings.TabStop = false;
             this.gbx_GeoNamesSettings.Text = "gbx_GeoNamesSettings";
+            // 
+            // lbl_Miles
+            // 
+            this.lbl_Miles.AutoSize = true;
+            this.lbl_Miles.Location = new System.Drawing.Point(467, 342);
+            this.lbl_Miles.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_Miles.Name = "lbl_Miles";
+            this.lbl_Miles.Size = new System.Drawing.Size(47, 13);
+            this.lbl_Miles.TabIndex = 50;
+            this.lbl_Miles.Text = "lbl_Miles";
             // 
             // ckb_PopulatedPlacesOnly
             // 
@@ -233,7 +248,7 @@
             // lbl_ChoiceRadius
             // 
             this.lbl_ChoiceRadius.AutoSize = true;
-            this.lbl_ChoiceRadius.Location = new System.Drawing.Point(303, 340);
+            this.lbl_ChoiceRadius.Location = new System.Drawing.Point(277, 340);
             this.lbl_ChoiceRadius.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_ChoiceRadius.Name = "lbl_ChoiceRadius";
             this.lbl_ChoiceRadius.Size = new System.Drawing.Size(89, 13);
@@ -252,7 +267,7 @@
             // 
             // nud_ChoiceRadius
             // 
-            this.nud_ChoiceRadius.Location = new System.Drawing.Point(457, 340);
+            this.nud_ChoiceRadius.Location = new System.Drawing.Point(410, 340);
             this.nud_ChoiceRadius.Minimum = new decimal(new int[] {
             1,
             0,
@@ -272,7 +287,7 @@
             // 
             // nud_ChoiceOfferCount
             // 
-            this.nud_ChoiceOfferCount.Location = new System.Drawing.Point(233, 338);
+            this.nud_ChoiceOfferCount.Location = new System.Drawing.Point(207, 338);
             this.nud_ChoiceOfferCount.Maximum = new decimal(new int[] {
             10,
             0,
@@ -376,6 +391,9 @@
             // 
             // gbx_AppSettings
             // 
+            this.gbx_AppSettings.Controls.Add(this.lbl_Metres_Abbr);
+            this.gbx_AppSettings.Controls.Add(this.lbl_Feet_Abbr);
+            this.gbx_AppSettings.Controls.Add(this.ckb_UseImperialNotMetric);
             this.gbx_AppSettings.Controls.Add(this.ckb_RemoveGeoDataRemovesTimeOffset);
             this.gbx_AppSettings.Controls.Add(this.ckb_ResetMapToZero);
             this.gbx_AppSettings.Controls.Add(this.cbx_Language);
@@ -385,7 +403,7 @@
             this.gbx_AppSettings.Controls.Add(this.tbx_Startup_Folder);
             this.gbx_AppSettings.Location = new System.Drawing.Point(16, 20);
             this.gbx_AppSettings.Name = "gbx_AppSettings";
-            this.gbx_AppSettings.Size = new System.Drawing.Size(852, 136);
+            this.gbx_AppSettings.Size = new System.Drawing.Size(852, 171);
             this.gbx_AppSettings.TabIndex = 32;
             this.gbx_AppSettings.TabStop = false;
             this.gbx_AppSettings.Text = "gbx_AppSettings";
@@ -558,6 +576,17 @@
             this.tpg_CustomCityLogic.Text = "tpg_CustomCityLogic";
             this.tpg_CustomCityLogic.UseVisualStyleBackColor = true;
             // 
+            // rbx_CustomCityLogicExplanationBold
+            // 
+            this.rbx_CustomCityLogicExplanationBold.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rbx_CustomCityLogicExplanationBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbx_CustomCityLogicExplanationBold.Location = new System.Drawing.Point(6, 144);
+            this.rbx_CustomCityLogicExplanationBold.Name = "rbx_CustomCityLogicExplanationBold";
+            this.rbx_CustomCityLogicExplanationBold.ReadOnly = true;
+            this.rbx_CustomCityLogicExplanationBold.Size = new System.Drawing.Size(885, 40);
+            this.rbx_CustomCityLogicExplanationBold.TabIndex = 4;
+            this.rbx_CustomCityLogicExplanationBold.Text = "";
+            // 
             // btn_ResetToDefaults
             // 
             this.btn_ResetToDefaults.Location = new System.Drawing.Point(771, 613);
@@ -605,6 +634,17 @@
             this.tpg_CustomRules.TabIndex = 2;
             this.tpg_CustomRules.Text = "tpg_CustomRules";
             this.tpg_CustomRules.UseVisualStyleBackColor = true;
+            // 
+            // rbx_CustomRulesExplanationBold
+            // 
+            this.rbx_CustomRulesExplanationBold.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rbx_CustomRulesExplanationBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbx_CustomRulesExplanationBold.Location = new System.Drawing.Point(7, 144);
+            this.rbx_CustomRulesExplanationBold.Name = "rbx_CustomRulesExplanationBold";
+            this.rbx_CustomRulesExplanationBold.ReadOnly = true;
+            this.rbx_CustomRulesExplanationBold.Size = new System.Drawing.Size(885, 40);
+            this.rbx_CustomRulesExplanationBold.TabIndex = 18;
+            this.rbx_CustomRulesExplanationBold.Text = "";
             // 
             // ckb_StopProcessingRules
             // 
@@ -691,27 +731,38 @@
             this.fbd_StartupFolder.Description = "fbd_StartupFolder";
             this.fbd_StartupFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
-            // rbx_CustomCityLogicExplanationBold
+            // ckb_UseImperialNotMetric
             // 
-            this.rbx_CustomCityLogicExplanationBold.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.rbx_CustomCityLogicExplanationBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbx_CustomCityLogicExplanationBold.Location = new System.Drawing.Point(6, 144);
-            this.rbx_CustomCityLogicExplanationBold.Name = "rbx_CustomCityLogicExplanationBold";
-            this.rbx_CustomCityLogicExplanationBold.ReadOnly = true;
-            this.rbx_CustomCityLogicExplanationBold.Size = new System.Drawing.Size(885, 40);
-            this.rbx_CustomCityLogicExplanationBold.TabIndex = 4;
-            this.rbx_CustomCityLogicExplanationBold.Text = "";
+            this.ckb_UseImperialNotMetric.AutoSize = true;
+            this.ckb_UseImperialNotMetric.Location = new System.Drawing.Point(15, 126);
+            this.ckb_UseImperialNotMetric.Name = "ckb_UseImperialNotMetric";
+            this.ckb_UseImperialNotMetric.Size = new System.Drawing.Size(151, 17);
+            this.ckb_UseImperialNotMetric.TabIndex = 19;
+            this.ckb_UseImperialNotMetric.Text = "ckb_UseImperialNotMetric";
+            this.ckb_UseImperialNotMetric.UseVisualStyleBackColor = true;
+            this.ckb_UseImperialNotMetric.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
-            // rbx_CustomRulesExplanationBold
+            // lbl_Feet_Abbr
             // 
-            this.rbx_CustomRulesExplanationBold.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.rbx_CustomRulesExplanationBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbx_CustomRulesExplanationBold.Location = new System.Drawing.Point(7, 144);
-            this.rbx_CustomRulesExplanationBold.Name = "rbx_CustomRulesExplanationBold";
-            this.rbx_CustomRulesExplanationBold.ReadOnly = true;
-            this.rbx_CustomRulesExplanationBold.Size = new System.Drawing.Size(885, 40);
-            this.rbx_CustomRulesExplanationBold.TabIndex = 18;
-            this.rbx_CustomRulesExplanationBold.Text = "";
+            this.lbl_Feet_Abbr.AutoSize = true;
+            this.lbl_Feet_Abbr.Location = new System.Drawing.Point(204, 127);
+            this.lbl_Feet_Abbr.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_Feet_Abbr.Name = "lbl_Feet_Abbr";
+            this.lbl_Feet_Abbr.Size = new System.Drawing.Size(72, 13);
+            this.lbl_Feet_Abbr.TabIndex = 51;
+            this.lbl_Feet_Abbr.Text = "lbl_Feet_Abbr";
+            this.lbl_Feet_Abbr.Visible = false;
+            // 
+            // lbl_Metres_Abbr
+            // 
+            this.lbl_Metres_Abbr.AutoSize = true;
+            this.lbl_Metres_Abbr.Location = new System.Drawing.Point(331, 127);
+            this.lbl_Metres_Abbr.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_Metres_Abbr.Name = "lbl_Metres_Abbr";
+            this.lbl_Metres_Abbr.Size = new System.Drawing.Size(83, 13);
+            this.lbl_Metres_Abbr.TabIndex = 52;
+            this.lbl_Metres_Abbr.Text = "lbl_Metres_Abbr";
+            this.lbl_Metres_Abbr.Visible = false;
             // 
             // FrmSettings
             // 
@@ -781,9 +832,7 @@
         private System.Windows.Forms.RadioButton rbt_UseGeoNamesLocalLanguage;
         private System.Windows.Forms.CheckBox ckb_ReplaceBlankToponyms;
         public System.Windows.Forms.TextBox tbx_ReplaceBlankToponyms;
-        private System.Windows.Forms.Label lbl_ChoiceRadius;
         private System.Windows.Forms.Label lbl_ChoiceOfferCount;
-        private System.Windows.Forms.NumericUpDown nud_ChoiceRadius;
         private System.Windows.Forms.NumericUpDown nud_ChoiceOfferCount;
         private System.Windows.Forms.RichTextBox rbx_Register_ArcGIS;
         private System.Windows.Forms.RichTextBox rbx_Register_GeoNames;
@@ -808,5 +857,11 @@
         private System.Windows.Forms.Button btn_ResetToDefaults;
         private System.Windows.Forms.RichTextBox rbx_CustomCityLogicExplanationBold;
         private System.Windows.Forms.RichTextBox rbx_CustomRulesExplanationBold;
+        private System.Windows.Forms.Label lbl_ChoiceRadius;
+        internal System.Windows.Forms.NumericUpDown nud_ChoiceRadius;
+        private System.Windows.Forms.Label lbl_Miles;
+        private System.Windows.Forms.CheckBox ckb_UseImperialNotMetric;
+        private System.Windows.Forms.Label lbl_Metres_Abbr;
+        private System.Windows.Forms.Label lbl_Feet_Abbr;
     }
 }

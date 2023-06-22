@@ -117,7 +117,11 @@ internal class TagsToModelValueTransformations
                 {
                     bool parseBool = double.TryParse(s: parseResult.Split('/')[0], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double numerator);
                     parseBool = double.TryParse(s: parseResult.Split('/')[1], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double denominator);
-                    return Math.Round(value: numerator / denominator, digits: 2);
+                    double tmpAltitude = Math.Round(value: numerator / denominator, digits: 2);
+
+                    return HelperVariables.UseImperial
+                        ? Math.Round(value: tmpAltitude * HelperVariables.METRETOFEET, digits: 2)
+                        : tmpAltitude;
                 }
                 catch
                 {
@@ -129,10 +133,12 @@ internal class TagsToModelValueTransformations
         // Finally convert what we have...
         try
         {
-            bool parseBool = double.TryParse(s: parseResult, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dbl_result);
+            bool parseBool = double.TryParse(s: parseResult, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double tmpAltitude);
             if (parseBool)
             {
-                return dbl_result;
+                return HelperVariables.UseImperial
+                    ? Math.Round(value: tmpAltitude * HelperVariables.METRETOFEET, digits: 2)
+                    : tmpAltitude;
             }
 
             return null;

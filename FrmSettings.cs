@@ -469,20 +469,25 @@ public partial class FrmSettings : Form
         {
             foreach (Control cItem in c)
             {
-                if (cItem.Name == "cbx_Language" || cItem.Name == "cbx_TryUseGeoNamesLanguage")
+                if (cItem is CheckBox ckb)
                 {
-                    ComboBox cbx = (ComboBox)cItem;
+                    if ((ckb.Font.Style & FontStyle.Bold) != 0)
+                    {
+                        if (ckb.Name == "ckb_UseImperialNotMetric")
+                        {
+                            warnUserToRestartApp();
+                        }
+                    }
+                }
+
+                if (cItem is ComboBox cbx)
+                {
+                    // if modified
                     if ((cbx.Font.Style & FontStyle.Bold) != 0)
                     {
                         if (cbx.Name == "cbx_Language")
                         {
-                            // fire a warning if language has changed. 
-                            MessageBox.Show(
-                                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                                    messageBoxName: "mbx_FrmSettings_cbx_Language_TextChanged"),
-                                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
-                                buttons: MessageBoxButtons.OK,
-                                icon: MessageBoxIcon.Warning);
+                            warnUserToRestartApp();
                         }
                         else if (cbx.Name == "cbx_TryUseGeoNamesLanguage")
                         {
@@ -495,26 +500,28 @@ public partial class FrmSettings : Form
                     }
                 }
 
-                // this needs to be an IF rather than an ELSE IF
-                if (cItem.Name == "rbt_UseGeoNamesLocalLanguage" || cItem.Name == "rbt_TryUseGeoNamesLanguage")
+                if (cItem is RadioButton rbt)
                 {
-                    RadioButton rbt = (RadioButton)cItem;
-                    if ((rbt.Font.Style & FontStyle.Bold) != 0 && rbt.Checked)
+                    // this needs to be an IF rather than an ELSE IF
+                    if (rbt.Name == "rbt_UseGeoNamesLocalLanguage" || rbt.Name == "rbt_TryUseGeoNamesLanguage")
                     {
-                        ComboBox cbx = cbx_TryUseGeoNamesLanguage;
-                        if (rbt.Name == "rbt_UseGeoNamesLocalLanguage")
+                        if ((rbt.Font.Style & FontStyle.Bold) != 0 && rbt.Checked)
                         {
-                            HelperVariables.APILanguageToUse = "local";
-                            cbx.Enabled = false;
-                        }
-                        else if (rbt.Name == "rbt_TryUseGeoNamesLanguage")
-                        {
-                            cbx.Enabled = true;
-                            IEnumerable<KeyValuePair<string, string>> result = HelperGenericAncillaryListsArrays.GetISO_639_1_Languages()
-                                .Where(predicate: kvp => kvp.Value == cbx.SelectedItem.ToString());
+                            ComboBox cbxLng = cbx_TryUseGeoNamesLanguage;
+                            if (rbt.Name == "rbt_UseGeoNamesLocalLanguage")
+                            {
+                                HelperVariables.APILanguageToUse = "local";
+                                cbxLng.Enabled = false;
+                            }
+                            else if (rbt.Name == "rbt_TryUseGeoNamesLanguage")
+                            {
+                                cbxLng.Enabled = true;
+                                IEnumerable<KeyValuePair<string, string>> result = HelperGenericAncillaryListsArrays.GetISO_639_1_Languages()
+                                    .Where(predicate: kvp => kvp.Value == cbxLng.SelectedItem.ToString());
 
-                            HelperVariables.APILanguageToUse = result.FirstOrDefault()
-                                .Key;
+                                HelperVariables.APILanguageToUse = result.FirstOrDefault()
+                                    .Key;
+                            }
                         }
                     }
                 }
@@ -542,7 +549,6 @@ public partial class FrmSettings : Form
             settingTabPage: "tpg_Application",
             settingId: "ckb_ResetMapToZero"
         );
-
         HelperVariables.SOnlyShowFCodePPL = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
             tableName: "settings",
             settingTabPage: "tpg_Application",
@@ -559,6 +565,17 @@ public partial class FrmSettings : Form
         // in case it changed or something.
         HelperVariables.DtCustomRules = HelperDataCustomRules.DataReadSQLiteCustomRules();
         Hide();
+
+        void warnUserToRestartApp()
+        {
+            // fire a warning if something of importance has changed. 
+            MessageBox.Show(
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmSettings_PleaseRestartApp"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Warning);
+        }
     }
 
     /// <summary>
@@ -874,9 +891,9 @@ public partial class FrmSettings : Form
     private void Any_nud_ValueChanged(object sender,
                                       EventArgs e)
     {
+        NumericUpDown nud = (NumericUpDown)sender;
         if (!_nowLoadingSettingsData)
         {
-            NumericUpDown nud = (NumericUpDown)sender;
             nud.Font = new Font(prototype: nud.Font, newStyle: FontStyle.Bold);
 
             // stick it into settings-Q
@@ -888,6 +905,19 @@ public partial class FrmSettings : Form
                 settingId: nud.Name,
                 settingValue: nud.Value.ToString(provider: CultureInfo.InvariantCulture)
             );
+        }
+
+        if (nud.Name == "nud_ChoiceRadius")
+        {
+            string tmpLabelText = HelperControlAndMessageBoxHandling.ReturnControlTextAsString(cItem: lbl_Miles, senderForm: this);
+            lbl_Miles.Text =
+                "(" +
+                Math.Round(d: nud.Value / (decimal)1.60934, decimals: 2)
+                    .ToString(provider: CultureInfo.CurrentCulture) +
+                " " +
+                tmpLabelText +
+                ")"
+                ;
         }
     }
 

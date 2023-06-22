@@ -7,7 +7,7 @@ ckb_ResetMapToZero,Set Map to 0/0 if no GeoData,Pointer la carte sur 0/0 s'il n'
 ckb_QuestionAddToponomyDontAskAgain,Don't Ask again,Ne plus demander
 ckb_UseTimeZone,Use this Time Zone:,Utilisez ce fuseau horaire :
 ckb_UseDST,Use DST?,Utiliser l'heure d'été ?
-ckb_GPSAltitude,Altitude [m],Altitude [m]
+ckb_GPSAltitude,Altitude,Altitude
 ckb_GPSDestLatitude,Dest Latitude,Latitude de destination
 ckb_GPSDestLongitude,Dest Longitude,Longitude de destination
 ckb_GPSImgDirection,Img Direction,Direction de la photo
@@ -30,3 +30,4 @@ ckb_StopProcessingRules,Stop processing rules after first Country+Target match,
 ckb_DoNotQueryAPI,"Do NOT do reverse geocoding (only get the coordinates, but not the City/state/etc)",
 ckb_PopulatedPlacesOnly,"Only display API data filtered to ""Populated places"" (fcode=PPL) [not recommended]",
 ckb_QuestionStopProcessingRows,Stop Processing further rows?,
+ckb_UseImperialNotMetric,Use Imperial (Feet) for Altitude (rather than Metric [Metres]),

@@ -67,6 +67,9 @@ public partial class FrmMainApp
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         string objectName;
         string objectText;
+
+        GetUOMAbbreviated();
+
         foreach (Control cItem in c)
         {
             if (
@@ -200,6 +203,15 @@ public partial class FrmMainApp
                                             objectType: "ToolTip",
                                             objectName: "ttp_ManageFavourites"
                                         )
+        );
+    }
+
+    internal static string GetUOMAbbreviated()
+    {
+        return HelperVariables.UOMAbbreviated = HelperDataLanguageTZ.DataReadDTObjectText(
+            objectType: "Label", objectName: HelperVariables.UseImperial
+                ? "lbl_Feet_Abbr"
+                : "lbl_Metres_Abbr"
         );
     }
 

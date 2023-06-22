@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -258,6 +259,17 @@ internal static class HelperExifWriteSaveToFile
                                             exifArgsForOriginalFile += "-" + exifToolAttribute + "Ref" + "=" + "East" + Environment.NewLine;
                                             exifArgsForSidecar += "-" + exifToolAttribute + "Ref" + "=" + "East" + Environment.NewLine;
                                         }
+                                    }
+                                    else if (exifToolAttribute == "GPSAltitude")
+                                    {
+                                        double.TryParse(updateExifVal, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out double tmpAltitude);
+                                        updateExifVal = (HelperVariables.UseImperial
+                                            ? Math.Round(value: tmpAltitude / HelperVariables.METRETOFEET, digits: 2)
+                                            : tmpAltitude).ToString(CultureInfo.InvariantCulture);
+
+                                        // same as below/generic
+                                        exifArgsForOriginalFile += "-" + exifToolAttribute + "=" + updateExifVal + Environment.NewLine;
+                                        exifArgsForSidecar += "-" + exifToolAttribute + "=" + updateExifVal + Environment.NewLine;
                                     }
                                 }
                                 else //delete tag

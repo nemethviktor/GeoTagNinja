@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Globalization;
-using System.Reflection;
 using System.Windows.Forms;
 
 namespace GeoTagNinja.Helpers;
@@ -39,10 +38,27 @@ internal static class HelperControlAndMessageBoxHandling
     }
 
     /// <summary>
+    ///     Rather than setting the cItem's Text, it just returns the value as string. Useful where ad-hoc modifications need
+    ///     to be made on the fly, such as a metric/imperial conversion
+    /// </summary>
+    /// <param name="cItem">Name of the Item</param>
+    /// <param name="senderForm">Name of the Form on which the Item is</param>
+    /// <returns></returns>
+    internal static string ReturnControlTextAsString(Control cItem,
+                                                     Form senderForm)
+    {
+        return HelperDataLanguageTZ.DataReadDTObjectText(
+            objectType: cItem.GetType()
+                .Name,
+            objectName: cItem.Name
+        );
+    }
+
+    /// <summary>
     ///     This (mostly) sets the various texts for most Controls in various forms, especially labels and buttons/boxes.
     /// </summary>
     /// <param name="cItem">The Control whose details need adjusting</param>
-    /// <param name="senderForm"></param>
+    /// <param name="senderForm">Name of the Form on which the Control appears</param>
     /// <param name="parentNameToUse"></param>
     internal static void ReturnControlText(Control cItem,
                                            Form senderForm,

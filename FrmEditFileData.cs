@@ -74,7 +74,7 @@ public partial class FrmEditFileData : Form
         Logger.Trace(message: "Emptying FrmMainApp.Stage1EditFormIntraTabTransferQueue + Stage2EditFormReadyToSaveAndMoveToWriteQueue - Done");
 
         Logger.Trace(message: "Setting Dropdown defaults");
-        // Ddeal with Dates
+        // Deal with Dates
         // TakenDate
         dtp_TakenDate.Enabled = true;
         nud_TakenDateDaysShift.Enabled = false;

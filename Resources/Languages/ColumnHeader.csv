@@ -1,6 +1,6 @@
 ﻿objectName,English,French
 clh_FileName,File Name,Nom du fichier
-clh_GPSAltitude,Altitude [m],Altitude [m]
+clh_GPSAltitude,Altitude,Altitude
 clh_GPSAltitudeRef,Altitude Ref,Altitude Ref
 clh_GPSDestLatitude,Dest Latitude,Latitude de destination
 clh_GPSDestLatitudeRef,Dest Latitude Ref,Ref de latitude de destination

@@ -6,6 +6,8 @@ namespace GeoTagNinja.Helpers;
 internal static partial class HelperVariables
 {
     internal const int exifOrientationID = 0x112; //274
+    internal const double METRETOFEET = 3.28084;
+
     internal static string SArcGisApiKey;
     internal static string SGeoNamesUserName;
     internal static string SGeoNamesPwd;
@@ -47,4 +49,6 @@ internal static partial class HelperVariables
     internal static List<string> LstCityNameIsAdminName3 = new();
     internal static List<string> LstCityNameIsAdminName4 = new();
     internal static List<string> LstCityNameIsUndefined = new();
+    internal static bool UseImperial = false;
+    internal static string UOMAbbreviated = "";
 }

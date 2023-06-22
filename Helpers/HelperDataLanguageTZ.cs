@@ -45,9 +45,22 @@ internal static class HelperDataLanguageTZ
     internal static string DataReadDTObjectText(string objectType,
                                                 string objectName)
     {
-        return (from kvp in HelperGenericAncillaryListsArrays.LanguageStringsDict
-                where kvp.Key == objectType + "_" + objectName
-                select kvp.Value).FirstOrDefault();
+        string retStrVal = (from kvp in HelperGenericAncillaryListsArrays.LanguageStringsDict
+                            where kvp.Key == objectType + "_" + objectName
+                            select kvp.Value).FirstOrDefault();
+
+        // this is probably not the smartest way of going about this but alas
+        if (objectName.EndsWith(value: "Altitude"))
+        {
+            if (string.IsNullOrEmpty(HelperVariables.UOMAbbreviated))
+            {
+                FrmMainApp.GetUOMAbbreviated();
+            }
+
+            retStrVal = retStrVal + " [" + HelperVariables.UOMAbbreviated + "]";
+        }
+
+        return retStrVal;
     }
 
     /// <summary>

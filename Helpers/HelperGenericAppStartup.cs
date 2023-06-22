@@ -8,7 +8,7 @@ using Microsoft.Web.WebView2.Core;
 
 namespace GeoTagNinja.Helpers;
 
-static internal class HelperGenericAppStartup
+internal static class HelperGenericAppStartup
 {
     /// <summary>
     ///     Creates the database sqlite file
@@ -217,6 +217,11 @@ static internal class HelperGenericAppStartup
                 tableName: "settings",
                 settingTabPage: "tpg_Application",
                 settingId: "ckb_PopulatedPlacesOnly"
+            );
+            HelperVariables.UseImperial = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
+                tableName: "settings",
+                settingTabPage: "tpg_Application",
+                settingId: "ckb_UseImperialNotMetric"
             );
         }
         catch (Exception ex)

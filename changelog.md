@@ -2,6 +2,7 @@
 
 **Build 8xxx [20230xx]**
 - NEW & UPDATED:
+  - Added an option to use Imperial instead of Metric. In practice this still saves data in Metric but shows as Imperial. #82
   - Bumped exifTool to v12.63
 - BUGS & FIXES:
   - Fixed a bug where the original file is set not to be overwritten but XMP is and ultimately the DE didn't get cleread properly, resulting in what appeared to be an unresponsive non-save.
