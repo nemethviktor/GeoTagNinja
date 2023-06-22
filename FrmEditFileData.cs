@@ -956,7 +956,7 @@ public partial class FrmEditFileData : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private async void lvw_FileListEditImages_SelectedIndexChanged(object sender,
+    private void lvw_FileListEditImages_SelectedIndexChanged(object sender,
                                                                    EventArgs e)
     {
         Logger.Debug(message: "Starting");
@@ -965,7 +965,7 @@ public partial class FrmEditFileData : Form
             ListView lvw = lvw_FileListEditImages;
             ListViewItem lvi = lvw.SelectedItems[index: 0];
 
-            DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
                                                                                                                           .Index]
                                                                                                    .Text);
             string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
@@ -975,7 +975,7 @@ public partial class FrmEditFileData : Form
                 lvw_EditorFileListImagesGetData();
 
                 pbx_imagePreview.Image = null;
-                await HelperExifReadGetImagePreviews.GenericCreateImagePreview(fileNameWithPath: fileNameWithPath,
+                HelperExifReadGetImagePreviews.GenericCreateImagePreview(fileNameWithPath: fileNameWithPath,
                                                                                initiator: "FrmEditFileData");
             }
             else
@@ -1001,7 +1001,7 @@ public partial class FrmEditFileData : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private async void btn_OK_Click(object sender,
+    private void btn_OK_Click(object sender,
                                     EventArgs e)
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
@@ -1010,9 +1010,6 @@ public partial class FrmEditFileData : Form
             // move data from temp-queue to write-queue
             foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
             {
-                bool takenAlreadyShifted = false;
-                bool createAlreadyShifted = false;
-
                 foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
                 {
                     if (dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue))
@@ -1050,7 +1047,7 @@ public partial class FrmEditFileData : Form
                 if (lvi != null)
                 {
                     HelperGenericFileLocking.FileListBeingUpdated = true;
-                    await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                    FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
                     HelperGenericFileLocking.FileListBeingUpdated = false;
                 }
             }
@@ -1102,10 +1099,10 @@ public partial class FrmEditFileData : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private async void btn_RemoveGeoData_Click(object sender,
+    private void btn_RemoveGeoData_Click(object sender,
                                                EventArgs e)
     {
-        await HelperExifDataPointInteractions.ExifRemoveLocationData(senderName: "FrmEditFileData");
+        HelperExifDataPointInteractions.ExifRemoveLocationData(senderName: "FrmEditFileData");
     }
 
     #region object text change handlers

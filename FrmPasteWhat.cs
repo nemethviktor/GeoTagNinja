@@ -520,7 +520,7 @@ public partial class FrmPasteWhat : Form
                         }
 
                         HelperGenericFileLocking.FileListBeingUpdated = true;
-                        await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                        FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
                         FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + dirElemFileToModify.ItemNameWithoutPath);
                         HelperGenericFileLocking.FileListBeingUpdated = false;
                     }

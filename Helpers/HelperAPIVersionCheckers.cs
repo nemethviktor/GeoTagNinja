@@ -121,7 +121,7 @@ internal static class HelperAPIVersionCheckers
     /// <summary>
     ///     Checks for new versions of GTN and eT.
     /// </summary>
-    internal static async Task CheckForNewVersions()
+    internal static void CheckForNewVersions()
     {
         FrmMainApp.Logger.Debug(message: "Starting");
 
@@ -165,9 +165,9 @@ internal static class HelperAPIVersionCheckers
             ///////////////
 
             string exiftoolCmd = "-ver";
-            await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
+            HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
                                                          frmMainAppInstance: null,
-                                                         initiator: "GenericCheckForNewVersions");
+                                                         initiator: HelperExifExifToolOperator.INITIATOR.CHECK_4_NEW_VERSION);
             decimal newestExifToolVersionOnline = API_ExifGetExifToolVersionFromWeb();
 
             FrmMainApp.Logger.Trace(message: "currentExifToolVersionLocal: " + HelperVariables._currentExifToolVersionLocal + " / newestExifToolVersionOnline: " + newestExifToolVersionOnline);
@@ -285,7 +285,7 @@ internal static class HelperAPIVersionCheckers
         /// <summary>
         ///     Checks for new versions of GTN and eT.
         /// </summary>
-        internal static async Task CheckForNewVersions()
+        internal static void CheckForNewVersions()
         {
             FrmMainApp.Logger.Debug(message: "Starting");
 
@@ -330,9 +330,9 @@ internal static class HelperAPIVersionCheckers
                 ///////////////
 
                 string exiftoolCmd = "-ver";
-                await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
+                HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
                                                              frmMainAppInstance: null,
-                                                             initiator: "GenericCheckForNewVersions");
+                                                             initiator: HelperExifExifToolOperator.INITIATOR.CHECK_4_NEW_VERSION);
                 decimal newestExifToolVersionOnline = API_ExifGetExifToolVersionFromWeb();
 
                 FrmMainApp.Logger.Trace(message: "currentExifToolVersionLocal: " + HelperVariables._currentExifToolVersionLocal + " / newestExifToolVersionOnline: " + newestExifToolVersionOnline);

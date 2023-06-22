@@ -11,9 +11,14 @@ namespace GeoTagNinja;
 internal static class FileListViewMapNavigation
 {
     /// <summary>
-    ///     Extracted method for navigating to a set of coordinates on the map.
+    /// Iterates over all selected items in the FileListView and adds them
+    /// to the list of markers to show.
+    /// 
+    /// If HelperVariables.SResetMapToZero is set, clears the marker list and
+    /// adds 0|0 to it.
+    /// 
+    /// It's tested whether the file still exists - if not, do not add it.
     /// </summary>
-    /// <returns>Nothing in reality</returns>
     internal static void ListViewItemClickNavigate()
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];

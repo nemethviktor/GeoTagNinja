@@ -16,7 +16,7 @@ internal static class FileListViewReadWrite
     ///     dt_fileDataToWriteStage3ReadyToWrite for the file
     /// </summary>
     /// <param name="lvi"></param>
-    internal static Task ListViewUpdateRowFromDEStage3ReadyToWrite(ListViewItem lvi)
+    internal static void ListViewUpdateRowFromDEStage3ReadyToWrite(ListViewItem lvi)
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         string tmpCoordinates;
@@ -172,8 +172,6 @@ internal static class FileListViewReadWrite
                 }
             }
         }
-
-        return Task.CompletedTask;
     }
 
     /// <summary>

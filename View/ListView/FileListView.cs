@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
@@ -909,7 +910,9 @@ public partial class FileListView : System.Windows.Forms.ListView
             return;
         }
 
-        ListViewItem itemToModify = FindItemWithText(text: itemText);
+        // In case we have an .xmp ending or alike, we should not look for the ending...
+        ListViewItem itemToModify = FindItemWithText(
+            text: Path.GetFileNameWithoutExtension(itemText));
         if (itemToModify != null)
         {
             EnsureVisible(index: itemToModify.Index);

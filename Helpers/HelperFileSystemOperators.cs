@@ -14,7 +14,7 @@ internal static class HelperFileSystemOperators
     ///     If the Q is empty we do as the user requested, else ask user if they want to write the data in the Q or discard it.
     /// </summary>
     /// <returns>Realistically nothing but it sets s_changeFolderIsOkay according to the user input and circumstances</returns>
-    internal static async Task FsoCheckOutstandingFiledataOkayToChangeFolderAsync()
+    internal static void FsoCheckOutstandingFiledataOkayToChangeFolderAsync()
     {
         HelperVariables.SChangeFolderIsOkay = false;
 
@@ -46,10 +46,10 @@ internal static class HelperFileSystemOperators
             {
                 while (HelperGenericFileLocking.FileListBeingUpdated || HelperGenericFileLocking.FilesAreBeingSaved)
                 {
-                    await Task.Delay(millisecondsDelay: 10);
+                    Task.Delay(millisecondsDelay: 10);
                 }
 
-                await HelperExifWriteSaveToFile.ExifWriteExifToFile();
+                HelperExifWriteSaveToFile.ExifWriteExifToFile();
                 HelperVariables.SChangeFolderIsOkay = true;
             }
             else if (dialogResult == DialogResult.No)

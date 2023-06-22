@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
@@ -19,7 +20,7 @@ internal static class HelperExifWriteSaveToFile
     ///     Writes outstanding exif changes to files.
     /// </summary>
     /// <returns>Reastically nothing but writes the exif tags and updates the listview rows where necessary</returns>
-    internal static async Task ExifWriteExifToFile()
+    internal static void ExifWriteExifToFile()
     {
         FrmMainApp.Logger.Debug(message: "Starting");
 
@@ -402,13 +403,12 @@ internal static class HelperExifWriteSaveToFile
             FrmMainApp.Logger.Info(message: "Starting ExifTool.");
             ///////////////
 
-            ;
-            await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
-                                                         frmMainAppInstance: frmMainAppInstance,
-                                                         initiator: "ExifWriteExifToFile",
+            HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
+                                                             frmMainAppInstance: frmMainAppInstance,
+                                                         initiator: HelperExifExifToolOperator.INITIATOR.WRITE_2_FILE,
                                                          processOriginalFile = processOriginalFile,
                                                          writeXMPSideCar = writeXMPSideCar
-            );
+			);
         }
         else if (!queueWasEmpty)
         {

@@ -302,7 +302,7 @@ public partial class FrmImportGpx : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private async void btn_OK_Click(object sender,
+    private void btn_OK_Click(object sender,
                                     EventArgs e)
     {
         string trackFileLocationType = "";
@@ -352,7 +352,7 @@ public partial class FrmImportGpx : Form
             btn_OK.Enabled = false;
             btn_Cancel.Enabled = false;
 
-            await HelperExifReadTrackData.ExifGetTrackSyncData(
+            HelperExifReadTrackData.ExifGetTrackSyncData(
                 trackFileLocationType: trackFileLocationType,
                 trackFileLocationVal: trackFileLocationVal,
                 useTZAdjust: ckb_UseTimeZone.Checked,

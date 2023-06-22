@@ -32,7 +32,7 @@ internal static class HelperExifReadTrackData
     /// <param name="language"></param>
     /// <param name="timeShiftSeconds">Int value if GPS time should be shifted.</param>
     /// <returns></returns>
-    internal static async Task ExifGetTrackSyncData(string trackFileLocationType,
+    internal static void ExifGetTrackSyncData(string trackFileLocationType,
                                                     string trackFileLocationVal,
                                                     bool useTZAdjust,
                                                     string compareTZAgainst,
@@ -93,7 +93,7 @@ internal static class HelperExifReadTrackData
             }
 
             // this triggers ExifTool
-            await HelperExifWriteTrackDataToSideCar.ExifWriteTrackDataToSideCar(trackFileList: trackFileList,
+            HelperExifWriteTrackDataToSideCar.ExifWriteTrackDataToSideCar(trackFileList: trackFileList,
                                                                                 imageFileList: imageFileList,
                                                                                 compareTZAgainst: compareTZAgainst,
                                                                                 TZVal: TZVal,
@@ -282,7 +282,7 @@ internal static class HelperExifReadTrackData
                                         }
                                     }
 
-                                    await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                                    FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
                                 }
                             }
                         }

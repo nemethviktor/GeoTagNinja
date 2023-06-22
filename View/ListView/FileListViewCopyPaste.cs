@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
+using NLog;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja;
 
 internal static class FileListViewCopyPaste
 {
+    internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
     /// <summary>
     ///     This drives the logic for "copying" (as in copy-paste) the geodata from one file to others.
     /// </summary>
@@ -100,13 +103,16 @@ internal static class FileListViewCopyPaste
     ///     This drives the logic for "pasting" (as in copy-paste) the geodata from one file to others.
     ///     See further comments inside
     /// </summary>
-    internal static void ListViewPasteGeoData()
+    /// <param name="CopyPoolDict">The dictionary in which the values copied are</param>
+    /// <param name="initiator">Name of the initiator (must comply with list in FrmPasteWhat!)</param>
+    internal static void ListViewPasteGeoData(String initiator,
+        Dictionary<ElementAttribute, Tuple<string, bool>> CopyPoolDict
+        )
     {
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         // check there's anything in copy-pool
-        if (FrmMainApp.CopyPoolDict.Count > 0 && frmMainAppInstance != null)
+        if (CopyPoolDict.Count > 0 && initiator.Length>0)
         {
-            FrmPasteWhat frmPasteWhat = new(initiator: frmMainAppInstance.Name);
+            FrmPasteWhat frmPasteWhat = new(initiator: initiator);
             frmPasteWhat.StartPosition = FormStartPosition.CenterScreen;
             frmPasteWhat.ShowDialog();
         }

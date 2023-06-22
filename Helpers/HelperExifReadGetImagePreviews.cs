@@ -17,7 +17,7 @@ internal static class HelperExifReadGetImagePreviews
     /// </summary>
     /// <param name="fileNameWithPath">Path of file for which the preview needs creating</param>
     /// <returns>Realistically nothing but the process generates the bitmap if possible</returns>
-    internal static async Task ExifGetImagePreviews(string fileNameWithPath)
+    internal static void ExifGetImagePreviews(string fileNameWithPath)
     {
         FrmMainApp.Logger.Debug(message: "Starting");
 
@@ -48,9 +48,9 @@ internal static class HelperExifReadGetImagePreviews
 
         FrmMainApp.Logger.Trace(message: "Starting ExifTool");
         ///////////////
-        await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
+        HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
                                                      frmMainAppInstance: null,
-                                                     initiator: "ExifGetImagePreviews");
+                                                     initiator: HelperExifExifToolOperator.INITIATOR.GET_IMAGE_PREVIEWS);
         ///////////////
         FrmMainApp.Logger.Debug(message: "Done");
     }
@@ -61,7 +61,7 @@ internal static class HelperExifReadGetImagePreviews
     /// <param name="fileNameWithPath">Filename w/ path to check</param>
     /// <param name="initiator"></param>
     /// <returns></returns>
-    internal static async Task GenericCreateImagePreview(string fileNameWithPath,
+    internal static void GenericCreateImagePreview(string fileNameWithPath,
                                                          string initiator)
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
@@ -113,7 +113,7 @@ internal static class HelperExifReadGetImagePreviews
             // don't run the thing again if file has already been generated
             if (!File.Exists(path: generatedFileName))
             {
-                await ExifGetImagePreviews(fileNameWithPath: fileNameWithPath);
+                ExifGetImagePreviews(fileNameWithPath: fileNameWithPath);
             }
 
             if (File.Exists(path: generatedFileName))
