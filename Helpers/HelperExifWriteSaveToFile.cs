@@ -47,18 +47,8 @@ internal static class HelperExifWriteSaveToFile
                                                                                      row2) =>
                                                                                         row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "objectName"));
 
-        HashSet<string> DistinctGUIDs = new();
-        foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
-        {
-            foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
-            {
-                if (directoryElement.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
-                {
-                    DistinctGUIDs.Add(item: directoryElement.UniqueID.ToString());
-                    break;
-                }
-            }
-        }
+        // Get items that need saving...
+        HashSet<string> DistinctGUIDs = FrmMainApp.DirectoryElements.FindDirtyElements();
 
         // check there's anything to write.
         foreach (string GUID in DistinctGUIDs)

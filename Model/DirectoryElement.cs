@@ -203,6 +203,22 @@ public class DirectoryElement
 
     #region Members for attribute setting and retrieval
 
+
+    /// <summary>
+    /// Checks if this DE has changed attributes that should be saved.
+    /// </summary>
+    /// <returns>boolean</returns>
+    public bool HasDirtyAttributes()
+    {
+        foreach (AttributeValueContainer avc in this._Attributes.Values)
+        {
+            if (HasSpecificAttributeWithVersion(avc: avc, 
+                version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite)) return true;
+        }
+        return false;
+    }
+
+
     /// <summary>
     ///     Checks the given value container for which version to return
     ///     depending on the version requested.
@@ -235,21 +251,16 @@ public class DirectoryElement
         return null;
     }
 
+
     /// <summary>
-    ///     Checks if a value exists for a particular attrib & version combination
+    ///     Checks if a value exists for a particular AttributeValueContainer & version combination
     /// </summary>
-    /// <param name="attribute"></param>
-    /// <param name="version"></param>
+    /// <param name="avc">The AttributeValueContainer to check</param>
+    /// <param name="version">The version to look for</param>
     /// <returns></returns>
-    public bool HasSpecificAttributeWithVersion(ElementAttribute attribute,
+    private bool HasSpecificAttributeWithVersion(AttributeValueContainer avc,
                                                 AttributeVersion version)
     {
-        if (!_Attributes.ContainsKey(key: attribute))
-        {
-            return false;
-        }
-
-        AttributeValueContainer avc = _Attributes[key: attribute];
         Type attributeType = avc.MyValueType;
 
         AttributeVersion? versionCheck = CheckWhichVersion(avc: avc, versionRequested: version);
@@ -263,6 +274,25 @@ public class DirectoryElement
         // Retrieve and return value
 
         return true;
+    }
+
+
+    /// <summary>
+    ///     Checks if a value exists for a particular attrib & version combination
+    /// </summary>
+    /// <param name="attribute">The attribute to check</param>
+    /// <param name="version">The version to look for</param>
+    /// <returns></returns>
+    public bool HasSpecificAttributeWithVersion(ElementAttribute attribute,
+                                                AttributeVersion version)
+    {
+        if (!_Attributes.ContainsKey(key: attribute))
+        {
+            return false;
+        }
+
+        AttributeValueContainer avc = _Attributes[key: attribute];
+        return HasSpecificAttributeWithVersion(avc, version);
     }
 
     /// <summary>
