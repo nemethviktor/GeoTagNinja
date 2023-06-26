@@ -6,8 +6,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
 using static GeoTagNinja.Model.SourcesAndAttributes;
@@ -406,8 +404,8 @@ internal static class HelperExifWriteSaveToFile
             HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
                                                              frmMainAppInstance: frmMainAppInstance,
                                                          initiator: HelperExifExifToolOperator.INITIATOR.WRITE_2_FILE,
-                                                         processOriginalFile = processOriginalFile,
-                                                         writeXMPSideCar = writeXMPSideCar
+                                                         processOriginalFile: processOriginalFile,
+                                                         writeXmpSideCar: writeXMPSideCar
 			);
         }
         else if (!queueWasEmpty)

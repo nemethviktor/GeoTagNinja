@@ -264,15 +264,9 @@ public class DirectoryElement
         Type attributeType = avc.MyValueType;
 
         AttributeVersion? versionCheck = CheckWhichVersion(avc: avc, versionRequested: version);
+
         if (versionCheck == null)
-        {
             return false;
-        }
-
-        AttributeVersion versionToReturn = (AttributeVersion)versionCheck;
-
-        // Retrieve and return value
-
         return true;
     }
 
@@ -287,13 +281,12 @@ public class DirectoryElement
                                                 AttributeVersion version)
     {
         if (!_Attributes.ContainsKey(key: attribute))
-        {
             return false;
-        }
 
         AttributeValueContainer avc = _Attributes[key: attribute];
         return HasSpecificAttributeWithVersion(avc, version);
     }
+
 
     /// <summary>
     ///     Informs if the particular tag is marked for removal
@@ -729,7 +722,7 @@ public class DirectoryElement
     /// <param name="attribute">The attribute to find the value for</param>
     /// <param name="tags">The tag list to parse</param>
     /// <returns>A touple (name of tag chosen, value)</returns>
-    private (string, string) GetDataPointFromTags(ElementAttribute attribute,
+    private (string?, string?) GetDataPointFromTags(ElementAttribute attribute,
                                                   IDictionary<string, string> tags)
     {
         Logger.Trace(message: "Starting to parse dict for attribute: " + GetAttributeName(attribute: attribute));
@@ -809,7 +802,7 @@ public class DirectoryElement
         }
 
         callDepth++;
-        (string chosenTag, string parseResult) = GetDataPointFromTags(attribute: attribute, tags: tags);
+        (string? chosenTag, string? parseResult) = GetDataPointFromTags(attribute: attribute, tags: tags);
 
         #region Create a history
 
@@ -846,7 +839,7 @@ public class DirectoryElement
         #endregion
 
         // If needed, transform the attribute
-        IConvertible resTyped = null;
+        IConvertible? resTyped = null;
         switch (attribute)
         {
             case ElementAttribute.GPSAltitude:

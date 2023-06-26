@@ -6,11 +6,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using GeoTagNinja.Model;
-using Microsoft.VisualBasic;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers;

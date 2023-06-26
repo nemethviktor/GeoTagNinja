@@ -6,9 +6,7 @@ using System.Windows.Forms;
 using ExifToolWrapper;
 using GeoTagNinja.Helpers;
 using NLog;
-using XmpCore.Impl;
 using static System.Environment;
-using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Model;
 
