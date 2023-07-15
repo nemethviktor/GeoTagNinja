@@ -878,7 +878,7 @@ public partial class FrmMainApp : Form
         if (e.KeyCode == Keys.Enter)
         {
             // Request method handles check for unsaved changes, etc.
-            Request_RefreshFileListView();
+            Request_ChangeToFolder(tbx_FolderName.Text);
         }
     }
 
@@ -1269,38 +1269,32 @@ public partial class FrmMainApp : Form
 
 
     /// <summary>
-    /// Tries to navigate one folder up.
-    /// 
-    /// Calculates folder name (on error use c:\) and calls Request_ChangeToFolder.
+    /// Navigates to the folder defined as parent for the
+    /// central DE Collection.
     /// </summary>
     private void Request_OneFolderUp()
     {
-        string? tmpStrParent = null;
-        string? tmpStrRoot = null;
-        string targetFolder = tbx_FolderName.Text;
-        // this is a bit derp but alas
-        if (tbx_FolderName.Text.EndsWith(value: "\\"))
+        if (FrmMainApp.DirectoryElements == null)
         {
-            try
-            {
-                tmpStrParent = HelperFileSystemOperators.FsoGetParent(path: tbx_FolderName.Text);
-            }
-            catch
-            {
-                tmpStrParent = HelperGenericTypeOperations.Coalesce(
-                    Directory.GetDirectoryRoot(path: tbx_FolderName.Text)
-                    , "C:"
-                );
-            }
-
-            tmpStrRoot = HelperGenericTypeOperations.Coalesce(
-                Directory.GetDirectoryRoot(path: tbx_FolderName.Text),
-                "C:"
-            );
-            targetFolder = HelperGenericTypeOperations.Coalesce(tmpStrParent, tmpStrRoot);
+            Logger.Warn("Trying to change to parent, but no DE Collection set");
+            return;
         }
 
-        Request_ChangeToFolder(targetFolder);
+        if (FrmMainApp.DirectoryElements.ParentFolder== null)
+        {
+            // Can happen in collection mode
+            if (Program.collectionModeEnabled)
+            {
+                // ToDo: localize
+                HandlerUpdateLabelText(label: lbl_ParseProgress,
+                    text: "Cannot change to parent in Collection mode.");
+            } else
+                Logger.Warn("Trying to change to parent, but no parent in DE Collection " +
+                    "set although not in collection mode");
+            return;
+        }
+
+        Request_ChangeToFolder(FrmMainApp.DirectoryElements.ParentFolder.FileNameWithPath);
     }
 
 
@@ -1355,20 +1349,18 @@ public partial class FrmMainApp : Form
     {
         switch (item_de.Type)
         {
-            // if .. (parent) then do a folder-up
-            case DirectoryElement.ElementType.ParentDirectory:
-                Request_OneFolderUp();
-                break;
-
             // if this is a folder or drive, enter
+            case DirectoryElement.ElementType.ParentDirectory:
             case DirectoryElement.ElementType.SubDirectory:
             case DirectoryElement.ElementType.MyComputer:
             case DirectoryElement.ElementType.Drive:
                 string newFolder = item_de.FileNameWithPath;
-                if (!Directory.Exists(item_de.FileNameWithPath))
+                if ((item_de.Type!= DirectoryElement.ElementType.MyComputer) & 
+                    (!Directory.Exists(item_de.FileNameWithPath)))
                 {
                     // itemText.Text here will be something like "C_Windows_320GB_M2_nVME (C:\)"
                     // so just extract whatever is in the parentheses
+                    //... but not for special folders...
                     newFolder = item_de.FileNameWithPath.Split('(')
                                               .Last()
                                               .Split(')')

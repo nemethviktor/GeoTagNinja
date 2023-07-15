@@ -14,21 +14,31 @@ public class DirectoryElementCollection : List<DirectoryElement>
 {
     internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-    internal ExifTool _ExifTool;
+    private ExifTool exifTool;
 
+    private DirectoryElement parentFolder;
+
+    /// <summary>
+    /// The ExifTool used to parse items in the folder. Is kept running / open.
+    /// </summary>
     public ExifTool ExifTool
     {
-        get => _ExifTool;
+        get => exifTool;
         set
         {
-            if (_ExifTool != null)
+            if (exifTool != null)
             {
-                _ExifTool.Dispose();
+                exifTool.Dispose();
             }
 
-            _ExifTool = value;
+            exifTool = value;
         }
     }
+
+    /// <summary>
+    /// The folder with the semantic "parent" of the current selection.
+    /// </summary>
+    public DirectoryElement ParentFolder { get => parentFolder; set => parentFolder = value; }
 
     /// <summary>
     ///     Searches through the list of directory elements for the element
@@ -152,15 +162,18 @@ public class DirectoryElementCollection : List<DirectoryElement>
     /// <param name="collectionModeEnabled"></param>
     public void ParseFolderOrFileListToDEs(string folderOrCollectionFileName,
                                            Action<string> statusMethod,
-                                           bool collectionModeEnabled)
+                                           bool collectionModeEnabled,
+                                           bool setParentFolder = true)
     {
         Logger.Trace(message: $"Start Parsing Folder '{folderOrCollectionFileName}'");
         statusMethod(obj: "Scanning folder: Initializing ...");
 
-        if (_ExifTool == null)
+        if (exifTool == null)
         {
             throw new InvalidOperationException(message: $"Cannot scan a folder (currently '{folderOrCollectionFileName}') when the EXIF Tool was not set for the DirectoryElementCollection.");
         }
+
+        parentFolder = null;
 
         if (!collectionModeEnabled)
         {
@@ -191,13 +204,19 @@ public class DirectoryElementCollection : List<DirectoryElement>
             {
                 Logger.Trace(message: "Files: Adding Parent Folder");
                 string tmpStrParent = HelperFileSystemOperators.FsoGetParent(path: folderOrCollectionFileName);
-                if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
+                if (tmpStrParent != null)
                 {
-                    Add(item: new DirectoryElement(
-                            itemNameWithoutPath: FrmMainApp.ParentFolder,
-                            type: DirectoryElement.ElementType.ParentDirectory,
-                            fileNameWithPath: tmpStrParent
-                        ));
+                    DirectoryElement.ElementType et = DirectoryElement.ElementType.ParentDirectory;
+                    if (tmpStrParent == SpecialFolder.MyComputer.ToString())
+                        et = DirectoryElement.ElementType.MyComputer;
+                    DirectoryElement pf = new DirectoryElement(
+                        itemNameWithoutPath: FrmMainApp.ParentFolder,
+                        type: et,
+                        fileNameWithPath: tmpStrParent
+                    );
+                    Add(item: pf);
+                    if (setParentFolder)
+                            parentFolder = pf;
                 }
             }
             catch (Exception ex)
@@ -406,7 +425,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         // Extract data for all files that are supported
         Logger.Trace(message: "Files: Extracting File Data");
         int fileCount = 0;
-        _ExifTool ??= new ExifTool();
+        exifTool ??= new ExifTool();
 
         foreach (string fileNameWithPath in imageFiles)
         {
@@ -458,7 +477,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
     {
         // Gather EXIF data for the image file
         ICollection<KeyValuePair<string, string>> propertiesRead = new Dictionary<string, string>();
-        _ExifTool.GetProperties(filename: fileNameWithPathToParse, propertiesRead: propertiesRead);
+        exifTool.GetProperties(filename: fileNameWithPathToParse, propertiesRead: propertiesRead);
 
         // EXIF Tool can return duplicate properties - handle, but ignore these...
         foreach (KeyValuePair<string, string> kvp in propertiesRead)

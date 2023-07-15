@@ -60,9 +60,15 @@ public class DirectoryElement
     /// </summary>
     public enum AttributeVersion
     {
+        /// <summary>
+        /// The original version loaded from the image of xmp file.
+        /// </summary>
         Original,
         Stage1EditFormIntraTabTransferQueue,
         Stage2EditFormReadyToSaveAndMoveToWriteQueue,
+        /// <summary>
+        /// Flagged for saving / that is the write-queue: only attributeversion Stage3ReadyToWrite gets written upon saving.
+        /// </summary>
         Stage3ReadyToWrite
     }
 
