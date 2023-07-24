@@ -11,6 +11,7 @@
   - Fixed a bug where timezone was read incorrectly from the Edit Form
   - Fixed a bug where RAW and XMP files contradict each other for Lat/Long Ref values and the wrong one is taken
   - Fixed a bug where opening the Edit Form via the File menu would cause crash
+  - Fixed a logical flaw where, after pressing OK in the Edit File Form the code would parse the whole folder again for any outstanding data
 
 **Build 8556 [20230605]**
 - NEW & UPDATED:

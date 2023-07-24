@@ -84,7 +84,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         HashSet<string> uids = new HashSet<string>();
         foreach (DirectoryElement directoryElement in this)
         {
-            if (directoryElement.HasDirtyAttributes())
+            if (directoryElement.HasDirtyAttributes(DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
                 uids.Add(directoryElement.UniqueID.ToString());
         }
         return uids;

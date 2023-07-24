@@ -1010,48 +1010,52 @@ public partial class FrmEditFileData : Form
             // move data from temp-queue to write-queue
             foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
             {
-                bool takenAlreadyShifted = false;
-                bool createAlreadyShifted = false;
-
-                foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+                // this is to prevent code from looping through _all_ the files in a folder pointlessly.
+                if (dirElemFileToModify.HasDirtyAttributes(DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue))
                 {
-                    if (dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue))
-                    {
-                        dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
-                                                                     value: dirElemFileToModify.GetAttributeValueString(attribute: attribute,
-                                                                                                                        version: DirectoryElement.AttributeVersion
-                                                                                                                            .Stage1EditFormIntraTabTransferQueue
-                                                                     ),
-                                                                     version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                                                     isMarkedForDeletion: dirElemFileToModify
-                                                                         .IsMarkedForDeletion(attribute: attribute,
-                                                                                              version: DirectoryElement.AttributeVersion
-                                                                                                  .Stage1EditFormIntraTabTransferQueue));
+                    bool takenAlreadyShifted = false;
+                    bool createAlreadyShifted = false;
 
-                        // remove from Stage1EditFormIntraTabTransferQueue
-                        dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
+                    foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+                    {
+                        if (dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue))
+                        {
+                            dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
+                                                                         value: dirElemFileToModify.GetAttributeValueString(attribute: attribute,
+                                                                                                                            version: DirectoryElement.AttributeVersion
+                                                                                                                                .Stage1EditFormIntraTabTransferQueue
+                                                                         ),
+                                                                         version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                                                                         isMarkedForDeletion: dirElemFileToModify
+                                                                             .IsMarkedForDeletion(attribute: attribute,
+                                                                                                  version: DirectoryElement.AttributeVersion
+                                                                                                      .Stage1EditFormIntraTabTransferQueue));
+
+                            // remove from Stage1EditFormIntraTabTransferQueue
+                            dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
+                        }
+
+                        // remove from Stage2EditFormReadyToSaveAndMoveToWriteQueue
+
+                        dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue);
                     }
 
-                    // remove from Stage2EditFormReadyToSaveAndMoveToWriteQueue
+                    ListViewItem lvi = null;
+                    try
+                    {
+                        lvi = frmMainAppInstance.lvw_FileList.FindItemWithText(text: dirElemFileToModify.ItemNameWithoutPath);
+                    }
+                    catch
+                    {
+                        // shouldn't happen
+                    }
 
-                    dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue);
-                }
-
-                ListViewItem lvi = null;
-                try
-                {
-                    lvi = frmMainAppInstance.lvw_FileList.FindItemWithText(text: dirElemFileToModify.ItemNameWithoutPath);
-                }
-                catch
-                {
-                    // shouldn't happen
-                }
-
-                if (lvi != null)
-                {
-                    HelperGenericFileLocking.FileListBeingUpdated = true;
-                    await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
-                    HelperGenericFileLocking.FileListBeingUpdated = false;
+                    if (lvi != null)
+                    {
+                        HelperGenericFileLocking.FileListBeingUpdated = true;
+                        await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                        HelperGenericFileLocking.FileListBeingUpdated = false;
+                    }
                 }
             }
 

@@ -203,17 +203,18 @@ public class DirectoryElement
 
     #region Members for attribute setting and retrieval
 
-
     /// <summary>
     /// Checks if this DE has changed attributes that should be saved.
     /// </summary>
+    /// <param name="whichAttributeVersion"></param>
     /// <returns>boolean</returns>
-    public bool HasDirtyAttributes()
+    public bool HasDirtyAttributes(DirectoryElement.AttributeVersion whichAttributeVersion = AttributeVersion.Stage3ReadyToWrite)
     {
         foreach (AttributeValueContainer avc in this._Attributes.Values)
         {
-            if (HasSpecificAttributeWithVersion(avc: avc, 
-                version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite)) return true;
+            if (HasSpecificAttributeWithVersion(avc: avc,
+                                                version: whichAttributeVersion))
+                return true;
         }
         return false;
     }
