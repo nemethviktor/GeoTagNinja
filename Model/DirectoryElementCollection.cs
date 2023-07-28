@@ -406,13 +406,13 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
         // ******************************
         // Extract data for all files that are supported
-        Logger.Trace(message: "Files: Extracting File Data");
+        Logger.Info(message: "Files: Extracting File Data");
         int fileCount = 0;
         _ExifTool ??= new ExifTool();
 
         foreach (string fileNameWithPath in imageFiles)
         {
-            Logger.Trace(message: $"File: {fileNameWithPath}");
+            Logger.Info(message: $"File: {fileNameWithPath}");
             string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
             if (fileCount % 10 == 0)
             {
@@ -432,7 +432,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
             if (image2sidecar.ContainsKey(key: fileNameWithPath))
             {
                 string sideCarFileNameWithPath = image2sidecar[key: fileNameWithPath];
-                Logger.Trace(message: $"Files: Extracting File Data - adding side car file '{sideCarFileNameWithPath}'");
+                Logger.Info(message: $"Files: Extracting File Data - adding side car file '{sideCarFileNameWithPath}'");
                 fileToParseDictionaryElement.SidecarFile = sideCarFileNameWithPath;
                 // Logically XMP should take priority because RAW files are not meant to be edited.
                 InitiateEXIFParsing(fileNameWithPathToParse: sideCarFileNameWithPath, properties: dictProperties);
@@ -448,7 +448,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
             fileCount++;
         }
 
-        Logger.Trace(message: "Files: Extracting File Data - OK");
+        Logger.Info(message: "Files: Extracting File Data - OK");
     }
 
     /// <summary>
