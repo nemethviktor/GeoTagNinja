@@ -817,31 +817,49 @@ public class DirectoryElement
         // TakenDate & CreateDate have to be sent into their
         // respective tables for querying later if user chooses time-shift.
         // TODO: replace logic with AttributeVersion concept
-        if (parseResult != null)
+        try
         {
-            switch (attribute)
+            if (parseResult != null)
             {
-                case ElementAttribute.TakenDate:
-                    FrmMainApp.OriginalTakenDateDict[key: ItemNameWithoutPath] =
-                        DateTime.Parse(s: parseResult, provider: CultureInfo.CurrentUICulture)
-                            .ToString(provider: CultureInfo.CurrentUICulture);
-                    break;
+                switch (attribute)
+                {
+                    case ElementAttribute.TakenDate:
+                        if (parseResult.Contains("0000"))
+                        {
+                            return false;
+                        }
 
-                case ElementAttribute.CreateDate:
-                    FrmMainApp.OriginalCreateDateDict[key: ItemNameWithoutPath] =
-                        DateTime.Parse(s: parseResult, provider: CultureInfo.CurrentUICulture)
-                            .ToString(provider: CultureInfo.CurrentUICulture);
-                    break;
+                        FrmMainApp.OriginalTakenDateDict[key: ItemNameWithoutPath] =
+                            DateTime.Parse(s: parseResult, provider: CultureInfo.CurrentUICulture)
+                                .ToString(provider: CultureInfo.CurrentUICulture);
+                        break;
+
+                    case ElementAttribute.CreateDate:
+                        if (parseResult.Contains("0000"))
+                        {
+                            return false;
+                        }
+
+                        FrmMainApp.OriginalCreateDateDict[key: ItemNameWithoutPath] =
+                            DateTime.Parse(s: parseResult, provider: CultureInfo.CurrentUICulture)
+                                .ToString(provider: CultureInfo.CurrentUICulture);
+                        break;
+                }
+                // Not adding the xmp here because the current code logic would pull a "unified" data point.
+
+                // Add to list of file attributes seen
+                // TODO: Understand where this is used and check how the model can support this
+                DataRow dr = FrmMainApp.DtFileDataSeenInThisSession.NewRow();
+                dr[columnName: "fileNameWithPath"] = FileNameWithPath;
+                dr[columnName: "settingId"] = GetAttributeName(attribute: attribute);
+                dr[columnName: "settingValue"] = parseResult;
+                FrmMainApp.DtFileDataSeenInThisSession.Rows.Add(row: dr);
             }
-            // Not adding the xmp here because the current code logic would pull a "unified" data point.
-
-            // Add to list of file attributes seen
-            // TODO: Understand where this is used and check how the model can support this
-            DataRow dr = FrmMainApp.DtFileDataSeenInThisSession.NewRow();
-            dr[columnName: "fileNameWithPath"] = FileNameWithPath;
-            dr[columnName: "settingId"] = GetAttributeName(attribute: attribute);
-            dr[columnName: "settingValue"] = parseResult;
-            FrmMainApp.DtFileDataSeenInThisSession.Rows.Add(row: dr);
+        }
+        catch
+        {
+            Logger.Error(message: $"Parse attribute failed '{GetAttributeName(attribute: attribute)}' at depth {callDepth.ToString()}...");
+            return false; // be triple sure here.
         }
 
         #endregion

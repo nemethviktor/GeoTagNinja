@@ -277,6 +277,11 @@ internal class TagsToModelValueTransformations
             return null; // not set
         }
 
+        if (parseResult.Contains("0000"))
+        {
+            return null; // not set
+        }
+
         //return outDateTime.ToString(format: CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern);
         return DateTime.TryParse(s: parseResult, result: out DateTime outDateTime)
             ? outDateTime
