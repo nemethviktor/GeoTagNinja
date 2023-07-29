@@ -846,14 +846,6 @@ public class DirectoryElement
                         break;
                 }
                 // Not adding the xmp here because the current code logic would pull a "unified" data point.
-
-                // Add to list of file attributes seen
-                // TODO: Understand where this is used and check how the model can support this
-                DataRow dr = FrmMainApp.DtFileDataSeenInThisSession.NewRow();
-                dr[columnName: "fileNameWithPath"] = FileNameWithPath;
-                dr[columnName: "settingId"] = GetAttributeName(attribute: attribute);
-                dr[columnName: "settingValue"] = parseResult;
-                FrmMainApp.DtFileDataSeenInThisSession.Rows.Add(row: dr);
             }
         }
         catch

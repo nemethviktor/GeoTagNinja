@@ -94,7 +94,6 @@ public partial class FrmMainApp : Form
     internal static Dictionary<ElementAttribute, Tuple<string, bool>> CopyPoolDict = new();
 
     // this is for checking if files need to be re-parsed.
-    internal static DataTable DtFileDataSeenInThisSession;
     internal static DataTable DtToponomySessionData;
 
     // these are for storing the inital values of TakenDate and CreateDate. Needed for TimeShift.
@@ -1528,10 +1527,9 @@ public partial class FrmMainApp : Form
         #endregion
 
         // Clear Tables that keep track of the current folder...
-        Logger.Trace(message: "Clear OriginalTakenDateDict, OriginalCreateDateDict and DtFileDataSeenInThisSession");
+        Logger.Trace(message: "Clear OriginalTakenDateDict and OriginalCreateDateDict");
         OriginalTakenDateDict.Clear();
         OriginalCreateDateDict.Clear();
-        DtFileDataSeenInThisSession.Clear();
 
         tbx_FolderName.Enabled = !Program.collectionModeEnabled;
 
