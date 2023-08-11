@@ -3,6 +3,7 @@
 **Build 8xxx [20230xxx]** [dev branch release]
 - NEW & UPDATED:
  - Bumped exifTool to v12.65
+ - Added a TaskbarProgressBarState indicator
 - BUGS & FIXES:
   - Fixed a bug where in Finland (English) culture [possibly others too] the app would crash because decimals were being converted in the wrong way.
 

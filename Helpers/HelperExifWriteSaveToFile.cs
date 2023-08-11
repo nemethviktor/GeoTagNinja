@@ -51,6 +51,7 @@ internal static class HelperExifWriteSaveToFile
         // Get items that need saving...
         HashSet<string> DistinctGUIDs = FrmMainApp.DirectoryElements.FindDirtyElements();
 
+        FrmMainApp.TaskbarManagerInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.Indeterminate);
         // check there's anything to write.
         foreach (string GUID in DistinctGUIDs)
         {
@@ -397,6 +398,7 @@ internal static class HelperExifWriteSaveToFile
             }
         }
 
+        // this is the "optimal" scenario
         if (!failWriteNothingEnabled && !queueWasEmpty)
         {
             FrmMainApp.Logger.Info(message: "Starting ExifTool.");
@@ -428,6 +430,7 @@ internal static class HelperExifWriteSaveToFile
         }
 
         ///////////////
+        FrmMainApp.TaskbarManagerInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress);
         FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Ready.");
         HelperGenericFileLocking.FilesAreBeingSaved = false;
     }

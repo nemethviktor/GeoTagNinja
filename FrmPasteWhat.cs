@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
@@ -457,11 +458,13 @@ public partial class FrmPasteWhat : Form
                 }
 
                 // for each file
-                foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
+                int frmMainAppInstancelvwFileListSelectedItemsCount = frmMainAppInstance.lvw_FileList.SelectedItems.Count;
+                for (int fileCounter = 0; fileCounter < frmMainAppInstancelvwFileListSelectedItemsCount; fileCounter++)
                 {
+                    ListViewItem lvi = frmMainAppInstance.lvw_FileList.SelectedItems[fileCounter];
                     DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GUID"]
-                                                                                                                                             .Index]
-                                                                                                                      .Text);
+                                                                                                                                                                  .Index]
+                                                                                                                               .Text);
 
                     if (dirElemFileToModify != null)
                     {
@@ -489,7 +492,7 @@ public partial class FrmPasteWhat : Form
                             dirElemFileToModify.SetAttributeValueAnyType(attribute: keyValuePair.Key,
                                                                          value: keyValuePair.Value.ToString(),
                                                                          version: DirectoryElement.AttributeVersion
-                                                                             .Stage3ReadyToWrite,
+                                                                                                  .Stage3ReadyToWrite,
                                                                          isMarkedForDeletion: markForRemoval);
                         }
 
@@ -522,10 +525,13 @@ public partial class FrmPasteWhat : Form
                         HelperGenericFileLocking.FileListBeingUpdated = true;
                         await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
                         FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + dirElemFileToModify.ItemNameWithoutPath);
+                        FrmMainApp.TaskbarManagerInstance.SetProgressValue(fileCounter, frmMainAppInstancelvwFileListSelectedItemsCount);
+                        Thread.Sleep(1);
                         HelperGenericFileLocking.FileListBeingUpdated = false;
                     }
                 }
 
+                FrmMainApp.TaskbarManagerInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress);
                 HelperGenericFileLocking.FileListBeingUpdated = false;
             }
         }

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
@@ -1007,9 +1008,11 @@ public partial class FrmEditFileData : Form
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         if (frmMainAppInstance != null)
         {
+            int directoryElementsCount = DirectoryElements.Count;
             // move data from temp-queue to write-queue
-            foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
+            for (int fileCounter = 0; fileCounter < directoryElementsCount; fileCounter++)
             {
+                DirectoryElement dirElemFileToModify = DirectoryElements[fileCounter];
                 // this is to prevent code from looping through _all_ the files in a folder pointlessly.
                 if (dirElemFileToModify.HasDirtyAttributes(DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue))
                 {
@@ -1023,13 +1026,13 @@ public partial class FrmEditFileData : Form
                             dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
                                                                          value: dirElemFileToModify.GetAttributeValueString(attribute: attribute,
                                                                                                                             version: DirectoryElement.AttributeVersion
-                                                                                                                                .Stage1EditFormIntraTabTransferQueue
+                                                                                                                                                     .Stage1EditFormIntraTabTransferQueue
                                                                          ),
                                                                          version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
                                                                          isMarkedForDeletion: dirElemFileToModify
-                                                                             .IsMarkedForDeletion(attribute: attribute,
-                                                                                                  version: DirectoryElement.AttributeVersion
-                                                                                                      .Stage1EditFormIntraTabTransferQueue));
+                                                                            .IsMarkedForDeletion(attribute: attribute,
+                                                                                                 version: DirectoryElement.AttributeVersion
+                                                                                                                          .Stage1EditFormIntraTabTransferQueue));
 
                             // remove from Stage1EditFormIntraTabTransferQueue
                             dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
@@ -1054,11 +1057,14 @@ public partial class FrmEditFileData : Form
                     {
                         HelperGenericFileLocking.FileListBeingUpdated = true;
                         await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                        TaskbarManagerInstance.SetProgressValue(fileCounter + 1, directoryElementsCount);
+                        Thread.Sleep(1);
                         HelperGenericFileLocking.FileListBeingUpdated = false;
                     }
                 }
             }
 
+            TaskbarManagerInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress);
             // re-center map on new data.
             FileListViewMapNavigation.ListViewItemClickNavigate();
         }

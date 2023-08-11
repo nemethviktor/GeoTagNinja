@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using ExifToolWrapper;
 using GeoTagNinja.Helpers;
@@ -446,7 +447,11 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
             Add(item: fileToParseDictionaryElement);
             fileCount++;
+            FrmMainApp.TaskbarManagerInstance.SetProgressValue(fileCount, imageFiles.Count);
+            Thread.Sleep(1);
         }
+
+        FrmMainApp.TaskbarManagerInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress);
 
         Logger.Info(message: "Files: Extracting File Data - OK");
     }

@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ExifToolWrapper;
@@ -17,6 +18,7 @@ using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using GeoTagNinja.Properties;
 using Microsoft.Web.WebView2.Core;
+using Microsoft.WindowsAPICodePack.Taskbar;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -58,7 +60,7 @@ public partial class FrmMainApp : Form
     /// </summary>
     public static DirectoryElementCollection DirectoryElements { get; } = new();
 
-    #region Variables
+#region Variables
 
     internal const string DoubleQuote = "\"";
 
@@ -101,11 +103,12 @@ public partial class FrmMainApp : Form
     internal static Dictionary<string, string> OriginalCreateDateDict = new();
 
     internal static List<string> filesToEditGUIDStringList = new();
+    internal static readonly TaskbarManager TaskbarManagerInstance = Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.Instance;
 
-    #endregion
+#endregion
 
 
-    #region Form/App Related
+#region Form/App Related
 
     internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
@@ -115,7 +118,7 @@ public partial class FrmMainApp : Form
     /// </summary>
     public FrmMainApp()
     {
-        #region Define Logging Config
+    #region Define Logging Config
 
         HelperVariables.UserDataFolderPath = Path.Combine(path1: GetFolderPath(folder: SpecialFolder.ApplicationData), path2: "GeoTagNinja");
         HelperVariables.ResourcesFolderPath = Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "Resources");
@@ -150,10 +153,10 @@ public partial class FrmMainApp : Form
         // Apply config           
         LogManager.Configuration = config;
 
-        #endregion
+    #endregion
 
         int procID = Process.GetCurrentProcess()
-            .Id;
+                            .Id;
         Logger.Info(message: "Constructor: Starting GTN with process ID " + procID);
         Logger.Info(message: "Collection mode: " + Program.collectionModeEnabled);
         if (Program.collectionModeEnabled)
@@ -180,7 +183,6 @@ public partial class FrmMainApp : Form
         HelperGenericAppStartup.AppStartupCheckWebView2();
         AppStartupInitializeComponentFrmMainApp();
         AppStartupEnableDoubleBuffering();
-
         FormClosing += FrmMainApp_FormClosing;
 
         Logger.Info(message: "Constructor: Done");
@@ -408,10 +410,10 @@ public partial class FrmMainApp : Form
             icon: MessageBoxIcon.Information);
     }
 
-    #endregion
+#endregion
 
 
-    #region Map Stuff
+#region Map Stuff
 
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     public class MapGpsCoordinates
@@ -505,8 +507,8 @@ public partial class FrmMainApp : Form
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
                     DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GUID"]
-                                                                                                                                  .Index]
-                                                                                                           .Text);
+                                                                                                                                                 .Index]
+                                                                                                                    .Text);
                     // don't do folders...
                     if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
@@ -576,8 +578,8 @@ public partial class FrmMainApp : Form
                     foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                     {
                         DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GUID"]
-                                                                                                                                      .Index]
-                                                                                                               .Text);
+                                                                                                                                                     .Index]
+                                                                                                                        .Text);
                         // don't do folders...
                         if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                         {
@@ -766,17 +768,17 @@ public partial class FrmMainApp : Form
         Logger.Trace(message: "Added " + HelperVariables.HsMapMarkers.Count + " map markers.");
 
         htmlReplacements.Add(key: "replaceLat", value: HelperVariables.LastLat.ToString()
-                                 .Replace(oldChar: ',', newChar: '.'));
+                                                                      .Replace(oldChar: ',', newChar: '.'));
         htmlReplacements.Add(key: "replaceLng", value: HelperVariables.LastLng.ToString()
-                                 .Replace(oldChar: ',', newChar: '.'));
+                                                                      .Replace(oldChar: ',', newChar: '.'));
         htmlReplacements.Add(key: "replaceMinLat", value: HelperVariables.MinLat.ToString()
-                                 .Replace(oldChar: ',', newChar: '.'));
+                                                                         .Replace(oldChar: ',', newChar: '.'));
         htmlReplacements.Add(key: "replaceMinLng", value: HelperVariables.MinLng.ToString()
-                                 .Replace(oldChar: ',', newChar: '.'));
+                                                                         .Replace(oldChar: ',', newChar: '.'));
         htmlReplacements.Add(key: "replaceMaxLat", value: HelperVariables.MaxLat.ToString()
-                                 .Replace(oldChar: ',', newChar: '.'));
+                                                                         .Replace(oldChar: ',', newChar: '.'));
         htmlReplacements.Add(key: "replaceMaxLng", value: HelperVariables.MaxLng.ToString()
-                                 .Replace(oldChar: ',', newChar: '.'));
+                                                                         .Replace(oldChar: ',', newChar: '.'));
 
         updateWebView(replacements: htmlReplacements);
     }
@@ -891,10 +893,10 @@ public partial class FrmMainApp : Form
         }
     }
 
-    #endregion
+#endregion
 
 
-    #region File
+#region File
 
     /// <summary>
     ///     Handles the tmi_File_SaveAll_Click event -> triggers the file-save process
@@ -932,8 +934,8 @@ public partial class FrmMainApp : Form
         foreach (ListViewItem lvi in lvw.SelectedItems)
         {
             filesToEditGUIDStringList.Add(item: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                 .Index]
-                                              .Text);
+                                                                       .Index]
+                                                   .Text);
         }
 
         EditFileFormGeneric.ShowFrmEditFileData();
@@ -990,10 +992,10 @@ public partial class FrmMainApp : Form
         Application.Exit();
     }
 
-    #endregion
+#endregion
 
 
-    #region TaskBar Stuff
+#region FrmMainApp's TaskBar Stuff
 
     /// <summary>
     ///     Handles the tsb_Refresh_lvwFileList_Click event -> checks if there is anything in the write-Q
@@ -1078,8 +1080,8 @@ public partial class FrmMainApp : Form
                 foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
                 {
                     DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                                                                                  .Index]
-                                                                                                           .Text);
+                                                                                                                                        .Index]
+                                                                                                                    .Text);
                     // don't do folders...
                     if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
@@ -1093,11 +1095,11 @@ public partial class FrmMainApp : Form
                         }
 
                         string strGpsLatitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLatitude"]
-                                                                 .Index]
-                            .Text.ToString(provider: CultureInfo.InvariantCulture);
+                                                                       .Index]
+                                                   .Text.ToString(provider: CultureInfo.InvariantCulture);
                         string strGpsLongitude = lvi.SubItems[index: lvw.Columns[key: "clh_GPSLongitude"]
-                                                                  .Index]
-                            .Text.ToString(provider: CultureInfo.InvariantCulture);
+                                                                        .Index]
+                                                    .Text.ToString(provider: CultureInfo.InvariantCulture);
                         double parsedLat = 0.0;
                         double parsedLng = 0.0;
                         if (double.TryParse(s: strGpsLatitude,
@@ -1171,7 +1173,7 @@ public partial class FrmMainApp : Form
                 {
                     tmpStrParent = HelperGenericTypeOperations.Coalesce(
                         Directory.GetDirectoryRoot(path: tbx_FolderName.Text)
-                        , "C:"
+                      , "C:"
                     );
                 }
 
@@ -1205,8 +1207,8 @@ public partial class FrmMainApp : Form
         foreach (ListViewItem lvi in lvw.SelectedItems)
         {
             filesToEditGUIDStringList.Add(item: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                 .Index]
-                                              .Text);
+                                                                       .Index]
+                                                   .Text);
         }
 
         EditFileFormGeneric.ShowFrmEditFileData();
@@ -1243,8 +1245,8 @@ public partial class FrmMainApp : Form
         foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
         {
             DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GUID"]
-                                                                                                                          .Index]
-                                                                                                   .Text);
+                                                                                                                                         .Index]
+                                                                                                            .Text);
             if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {
                 validFilesToImport = true;
@@ -1321,9 +1323,9 @@ public partial class FrmMainApp : Form
         //DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
     }
 
-    #endregion
+#endregion
 
-    #region lvw_FileList Interaction
+#region lvw_FileList Interaction
 
     /// <summary>
     ///     Pulls data from the various APIs and fills up the listView
@@ -1338,15 +1340,15 @@ public partial class FrmMainApp : Form
         if (!_StopProcessingRows)
         {
             DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GUID"]
-                                                                                                                          .Index]
-                                                                                                   .Text);
+                                                                                                                                         .Index]
+                                                                                                            .Text);
             string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
 
             HelperVariables.CurrentAltitude = null;
             HelperVariables.CurrentAltitude = lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
-                .SubItems[index: lvw_FileList.Columns[key: "clh_GPSAltitude"]
-                              .Index]
-                .Text.ToString(provider: CultureInfo.InvariantCulture);
+                                                          .SubItems[index: lvw_FileList.Columns[key: "clh_GPSAltitude"]
+                                                                                       .Index]
+                                                          .Text.ToString(provider: CultureInfo.InvariantCulture);
 
             DataTable dtToponomy = HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude,
                                                                                                lng: strGpsLongitude,
@@ -1357,27 +1359,27 @@ public partial class FrmMainApp : Form
                 List<(ElementAttribute attribute, string toponomyOverwriteVal)> toponomyOverwrites = new()
                 {
                     (ElementAttribute.CountryCode, dtToponomy.Rows[index: 0][columnName: "CountryCode"]
-                         .ToString()),
+                                                             .ToString()),
                     (ElementAttribute.Country, dtToponomy.Rows[index: 0][columnName: "Country"]
-                         .ToString())
+                                                         .ToString())
                 };
 
                 foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays.ToponomyReplaces())
                 {
                     string colName = GetAttributeName(attribute: attribute);
                     string settingVal = HelperExifReadExifData.ReplaceBlankToponomy(settingId: attribute, settingValue: dtToponomy.Rows[index: 0][columnName: colName]
-                                                                                        .ToString());
+                                                                                                                                  .ToString());
                     toponomyOverwrites.Add(item: (attribute, settingVal));
                 }
 
                 // timeZone is a bit special but that's just how we all love it....not.
                 string TZ = dtToponomy.Rows[index: 0][columnName: "timeZoneId"]
-                    .ToString();
+                                      .ToString();
 
                 DateTime createDate;
                 bool _ = DateTime.TryParse(s: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_CreateDate"]
-                                                               .Index]
-                                               .Text.ToString(provider: CultureInfo.InvariantCulture), result: out createDate);
+                                                                              .Index]
+                                                 .Text.ToString(provider: CultureInfo.InvariantCulture), result: out createDate);
 
                 try
                 {
@@ -1386,11 +1388,11 @@ public partial class FrmMainApp : Form
                     TimeZoneInfo tst = TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
 
                     TZOffset = tst.GetUtcOffset(dateTime: createDate)
-                        .ToString()
-                        .Substring(startIndex: 0, length: tst.GetUtcOffset(dateTime: createDate)
-                                                              .ToString()
-                                                              .Length -
-                                                          3);
+                                  .ToString()
+                                  .Substring(startIndex: 0, length: tst.GetUtcOffset(dateTime: createDate)
+                                                                       .ToString()
+                                                                       .Length -
+                                                                    3);
                     if (!TZOffset.StartsWith(value: NullStringEquivalentGeneric))
                     {
                         toponomyOverwrites.Add(item: (ElementAttribute.OffsetTime, "+" + TZOffset));
@@ -1414,8 +1416,8 @@ public partial class FrmMainApp : Form
                     string colName = GetAttributeName(attribute: toponomyDetail.attribute);
 
                     lvi.SubItems[index: lvw_FileList.Columns[key: "clh_" + colName]
-                                     .Index]
-                        .Text = toponomyDetail.toponomyOverwriteVal;
+                                                    .Index]
+                       .Text = toponomyDetail.toponomyOverwriteVal;
                 }
 
                 if (lvi.Index % 10 == 0)
@@ -1470,8 +1472,8 @@ public partial class FrmMainApp : Form
 
                         string colName = GetAttributeName(attribute: toponomyDetail.attribute);
                         lvi.SubItems[index: lvw_FileList.Columns[key: "clh_" + colName]
-                                         .Index]
-                            .Text = toponomyDetail.toponomyOverwriteVal;
+                                                        .Index]
+                           .Text = toponomyDetail.toponomyOverwriteVal;
                     }
                 }
 
@@ -1502,7 +1504,7 @@ public partial class FrmMainApp : Form
         HelperGenericFileLocking.FilesBeingProcessed.Clear();
         RemoveGeoDataIsRunning = false;
 
-        #region FrmPleaseWaitBox
+    #region FrmPleaseWaitBox
 
         Logger.Trace(message: "Create FrmPleaseWaitBox");
 
@@ -1524,7 +1526,7 @@ public partial class FrmMainApp : Form
         Logger.Trace(message: "Disable FrmMainApp");
         Enabled = false;
 
-        #endregion
+    #endregion
 
         // Clear Tables that keep track of the current folder...
         Logger.Trace(message: "Clear OriginalTakenDateDict and OriginalCreateDateDict");
@@ -1665,8 +1667,8 @@ public partial class FrmMainApp : Form
                 ListView lvw = lvw_FileList;
                 ListViewItem lvi = lvw.SelectedItems[index: 0];
                 filesToEditGUIDStringList.Add(item: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                     .Index]
-                                                  .Text);
+                                                                           .Index]
+                                                       .Text);
 
                 Logger.Trace(message: "Add File To lvw_FileListEditImages");
                 EditFileFormGeneric.ShowFrmEditFileData();
@@ -1687,8 +1689,8 @@ public partial class FrmMainApp : Form
             {
                 ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
                 DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GUID"]
-                                                                                                                              .Index]
-                                                                                                       .Text);
+                                                                                                                                             .Index]
+                                                                                                                .Text);
                 string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
 
                 if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
@@ -1744,7 +1746,7 @@ public partial class FrmMainApp : Form
             for (int i = 0; i < lvw_FileList.Items.Count; i++)
             {
                 lvw_FileList.Items[index: i]
-                    .Selected = true;
+                            .Selected = true;
                 // so because there is no way to do a proper "select all" w/o looping i only want to run the "navigate" (which is triggered on select-state-change at the end)
                 if (i == lvw_FileList.Items.Count - 1)
                 {
@@ -1779,8 +1781,8 @@ public partial class FrmMainApp : Form
             foreach (ListViewItem lvi in lvw.SelectedItems)
             {
                 filesToEditGUIDStringList.Add(item: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                     .Index]
-                                                  .Text);
+                                                                           .Index]
+                                                       .Text);
             }
 
             EditFileFormGeneric.ShowFrmEditFileData();
@@ -1799,8 +1801,8 @@ public partial class FrmMainApp : Form
             {
                 ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
                 DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GUID"]
-                                                                                                                              .Index]
-                                                                                                       .Text);
+                                                                                                                                             .Index]
+                                                                                                                .Text);
 
                 // if .. (parent) then do a folder-up
                 if (dirElemFileToModify.Type == DirectoryElement.ElementType.ParentDirectory)
@@ -1990,8 +1992,8 @@ public partial class FrmMainApp : Form
                 {
                     string colName = GetAttributeName(attribute: attribute);
                     string addStr = lvi.SubItems[index: lvw.Columns[key: "clh_" + colName]
-                                                     .Index]
-                        .Text.ToString(provider: CultureInfo.InvariantCulture);
+                                                           .Index]
+                                       .Text.ToString(provider: CultureInfo.InvariantCulture);
 
                     if (addStr == NullStringEquivalentGeneric)
                     {
@@ -2055,8 +2057,8 @@ public partial class FrmMainApp : Form
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
                     DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GUID"]
-                                                                                                                                  .Index]
-                                                                                                           .Text);
+                                                                                                                                                 .Index]
+                                                                                                                    .Text);
                     if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
                         filesAreSelected = true;
@@ -2070,15 +2072,15 @@ public partial class FrmMainApp : Form
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
                     DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GUID"]
-                                                                                                                                  .Index]
-                                                                                                           .Text);
+                                                                                                                                                 .Index]
+                                                                                                                    .Text);
                     if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
                         foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays.GetFavouriteTags())
                         {
                             string colName = GetAttributeName(attribute: attribute);
                             string settingValue = drFavouriteData[columnName: colName]
-                                .ToString();
+                               .ToString();
 
                             dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
                                                                          value: settingValue,
@@ -2123,20 +2125,20 @@ public partial class FrmMainApp : Form
             try
             {
                 string lat = lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GPSLatitude"]
-                                              .Index]
-                    .Text;
+                                                             .Index]
+                                .Text;
                 string lng = lvi.SubItems[index: lvw_FileList.Columns[key: "clh_GPSLongitude"]
-                                              .Index]
-                    .Text;
+                                                             .Index]
+                                .Text;
 
                 for (int i = DtToponomySessionData.Rows.Count - 1; i >= 0; i--)
                 {
                     DataRow dr = DtToponomySessionData.Rows[index: i];
                     if (dr[columnName: "lat"]
-                            .ToString() ==
+                           .ToString() ==
                         lat &&
                         dr[columnName: "lng"]
-                            .ToString() ==
+                           .ToString() ==
                         lng)
                     {
                         dr.Delete();
@@ -2190,15 +2192,15 @@ public partial class FrmMainApp : Form
             if (drFavouriteData != null)
             {
                 double favLat = double.Parse(s: drFavouriteData[columnName: "GPSLatitude"]
-                                                 .ToString(), provider: CultureInfo.InvariantCulture);
+                                                .ToString(), provider: CultureInfo.InvariantCulture);
                 double favLng = double.Parse(s: drFavouriteData[columnName: "GPSLongitude"]
-                                                 .ToString(), provider: CultureInfo.InvariantCulture);
+                                                .ToString(), provider: CultureInfo.InvariantCulture);
 
                 // this may be redundant but lazy to check
                 char favLatRef = drFavouriteData[columnName: "GPSLatitudeRef"]
-                    .ToString()[index: 0];
+                   .ToString()[index: 0];
                 char favLngRef = drFavouriteData[columnName: "GPSLongitudeRef"]
-                    .ToString()[index: 0];
+                   .ToString()[index: 0];
 
                 if (favLatRef == 'S')
                 {
@@ -2260,16 +2262,16 @@ public partial class FrmMainApp : Form
         {
             ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
             DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                                                                          .Index]
-                                                                                                   .Text);
+                                                                                                                                .Index]
+                                                                                                            .Text);
             if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {
                 latParseSuccess = double.TryParse(s: lvi.SubItems[index: lvw.Columns[key: "clh_GPSLatitude"]
-                                                                      .Index]
-                                                      .Text, result: out dblLat);
+                                                                            .Index]
+                                                        .Text, result: out dblLat);
                 lngParseSuccess = double.TryParse(s: lvi.SubItems[index: lvw.Columns[key: "clh_GPSLongitude"]
-                                                                      .Index]
-                                                      .Text, result: out dblLng);
+                                                                            .Index]
+                                                        .Text, result: out dblLng);
                 if (latParseSuccess && lngParseSuccess)
                 {
                     selectionIsValid = true;
@@ -2328,7 +2330,7 @@ public static class ControlExtensions
                                       bool enable)
     {
         PropertyInfo doubleBufferPropertyInfo = control.GetType()
-            .GetProperty(name: "DoubleBuffered", bindingAttr: BindingFlags.Instance | BindingFlags.NonPublic);
+                                                       .GetProperty(name: "DoubleBuffered", bindingAttr: BindingFlags.Instance | BindingFlags.NonPublic);
         doubleBufferPropertyInfo.SetValue(obj: control, value: enable, index: null);
     }
 }
