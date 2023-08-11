@@ -1,6 +1,12 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 8xxx [20230xx]**
+**Build 8xxx [20230xxx]** [dev branch release]
+- NEW & UPDATED:
+ - Bumped exifTool to v12.65
+- BUGS & FIXES:
+  - Fixed a bug where in Finland (English) culture [possibly others too] the app would crash because decimals were being converted in the wrong way.
+
+**Build 8610 [20230729]** [dev branch release]
 - NEW & UPDATED:
   - Added an option to use Imperial instead of Metric. In practice this still saves data in Metric but shows as Imperial. #82
   - Bumped exifTool to v12.64

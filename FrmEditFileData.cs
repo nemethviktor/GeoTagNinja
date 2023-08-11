@@ -847,7 +847,7 @@ public partial class FrmEditFileData : Form
                             break;
                         case ElementAttribute.GPSAltitude:
                             nud_GPSAltitude.Text = toponomyDetail.toponomyOverwriteVal;
-                            nud_GPSAltitude.Value = Convert.ToDecimal(value: toponomyDetail.toponomyOverwriteVal);
+                            nud_GPSAltitude.Value = Convert.ToDecimal(value: toponomyDetail.toponomyOverwriteVal, provider: CultureInfo.InvariantCulture);
                             break;
                         case ElementAttribute.OffsetTime:
                             tbx_OffsetTime.Text = toponomyDetail.toponomyOverwriteVal;
