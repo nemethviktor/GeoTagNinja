@@ -6,6 +6,7 @@
  - Added a TaskbarProgressBarState indicator
 - BUGS & FIXES:
   - Fixed a bug where in Finland (English) culture [possibly others too] the app would crash because decimals were being converted in the wrong way.
+  - Fixed a bug where Paste would also attempt to affect folders
 
 **Build 8610 [20230729]** [dev branch release]
 - NEW & UPDATED:
