@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
@@ -84,7 +82,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <exception cref="ArgumentException">If the column was not found</exception>
     public int GetColumnIndex(string column)
     {
-        SourcesAndAttributes.TagsToColumnHeaderOrder.TryGetValue(key: SourcesAndAttributes.GetAttributeFromString(attributeToFind: column), value: out int colIndex);
+        int colIndex = SourcesAndAttributes.TagsToColumnHeaderOrder.IndexOf(item: SourcesAndAttributes.GetAttributeFromString(attributeToFind: column));
         return colIndex;
     }
 
@@ -225,7 +223,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <summary>
     ///     The default order of the columns to show (without prefix)
     /// </summary>
-    internal Dictionary<string, int> _cfg_Col_Order_Default = new();
+    internal static Dictionary<string, int> _cfg_Col_Order_Default = new();
 
     /// <summary>
     ///     The used sorter
@@ -665,18 +663,16 @@ public partial class FileListView : System.Windows.Forms.ListView
     {
         Logger.Debug(message: "Starting");
 
-        IOrderedEnumerable<KeyValuePair<SourcesAndAttributes.ElementAttribute, int>> sortedclhPlaceholderKeyValuePair = from entry in SourcesAndAttributes.TagsToColumnHeaderOrder
-                                                                                                                        orderby entry.Value
-                                                                                                                        select entry;
-
-        foreach (KeyValuePair<SourcesAndAttributes.ElementAttribute, int> clhPlaceholderKeyValuePair in sortedclhPlaceholderKeyValuePair)
+        foreach (SourcesAndAttributes.ElementAttribute attribute in SourcesAndAttributes.TagsToColumnHeaderOrder)
         {
+            string clhName = attribute.ToString();
+
             ColumnHeader clh = new()
             {
-                Name = COL_NAME_PREFIX + clhPlaceholderKeyValuePair.Key
+                Name = COL_NAME_PREFIX + clhName
             };
             Columns.Add(value: clh);
-            Logger.Trace(message: "Added column: " + clhPlaceholderKeyValuePair.Key);
+            Logger.Trace(message: "Added column: " + clhName);
         }
 
         // Encapsulate locatization - in case it fails above column setup still there...

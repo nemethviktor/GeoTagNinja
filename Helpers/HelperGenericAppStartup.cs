@@ -4,6 +4,8 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GeoTagNinja.Model;
+using GeoTagNinja.View.ListView;
 using Microsoft.Web.WebView2.Core;
 
 namespace GeoTagNinja.Helpers;
@@ -104,9 +106,9 @@ internal static class HelperGenericAppStartup
         foreach (DataRow drCountryCode in HelperVariables.DtCustomCityLogic.Rows)
         {
             string countryCode = drCountryCode[columnName: "CountryCode"]
-                .ToString();
+               .ToString();
             string targetPointName = drCountryCode[columnName: "TargetPointNameCustomCityLogic"]
-                .ToString();
+               .ToString();
             switch (targetPointName)
             {
                 case "AdminName1":
@@ -164,10 +166,10 @@ internal static class HelperGenericAppStartup
         if (TryUseGeoNamesLanguage != "true")
         {
             IEnumerable<KeyValuePair<string, string>> result = HelperGenericAncillaryListsArrays.GetISO_639_1_Languages()
-                .Where(predicate: kvp => kvp.Value == TryUseGeoNamesLanguage);
+                                                                                                .Where(predicate: kvp => kvp.Value == TryUseGeoNamesLanguage);
 
             HelperVariables.APILanguageToUse = result.FirstOrDefault()
-                .Key;
+                                                     .Key;
         }
     }
 
@@ -213,6 +215,10 @@ internal static class HelperGenericAppStartup
                 settingTabPage: "tpg_Application",
                 settingId: "ckb_UseImperialNotMetric"
             );
+            foreach (SourcesAndAttributes.ElementAttribute attribute in SourcesAndAttributes.TagsToColumnHeaderOrder)
+            {
+                FileListView._cfg_Col_Order_Default.Add(key: SourcesAndAttributes.GetAttributeName(attribute: attribute), value: SourcesAndAttributes.TagsToColumnHeaderOrder.IndexOf(item: attribute));
+            }
         }
         catch (Exception ex)
         {
@@ -321,7 +327,7 @@ internal static class HelperGenericAppStartup
             foreach (DataRow drFavourite in FrmMainApp.DtFavourites.Rows)
             {
                 string favouriteName = drFavourite[columnName: "favouriteName"]
-                    .ToString();
+                   .ToString();
                 FrmMainApp.LstFavourites.Add(item: favouriteName);
                 autoCompleteCustomSource.Add(value: favouriteName);
 
