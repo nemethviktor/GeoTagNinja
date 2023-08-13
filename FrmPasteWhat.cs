@@ -44,9 +44,9 @@ public partial class FrmPasteWhat : Form
                 lvw = frmEditFileDataInstance.lvw_FileListEditImages;
                 ListViewItem lvi = lvw.SelectedItems[index: 0];
 
-                DirectoryElement dirElemFileToCopyFrom = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                                                                                           .Index]
-                                                                                                                    .Text);
+                DirectoryElement dirElemFileToCopyFrom = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                                         .Index]
+                                                                                                                     .Text);
 
                 FileDateCopySourceFileNameWithoutPath = dirElemFileToCopyFrom.ItemNameWithoutPath;
 
@@ -58,13 +58,13 @@ public partial class FrmPasteWhat : Form
                     if (dirElemFileToCopyFrom != null &&
                         dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(attribute: attribute,
                                                                               version: DirectoryElement.AttributeVersion
-                                                                                  .Stage1EditFormIntraTabTransferQueue))
+                                                                                                       .Stage1EditFormIntraTabTransferQueue))
                     {
                         tagsToPasteAttributeList.Add(item: attribute);
 
                         // https://stackoverflow.com/a/28352807/3968494
                         if (Controls.Find(key: "ckb_" + GetAttributeName(attribute: attribute), searchAllChildren: true)
-                                .FirstOrDefault() is CheckBox cbx)
+                                    .FirstOrDefault() is CheckBox cbx)
                         {
                             cbx.Checked = true;
                         }
@@ -81,7 +81,7 @@ public partial class FrmPasteWhat : Form
 
                 // https://stackoverflow.com/a/28352807/3968494
                 if (Controls.Find(key: "ckb_" + GetAttributeName(attribute: attribute), searchAllChildren: true)
-                        .FirstOrDefault() is CheckBox cbx)
+                            .FirstOrDefault() is CheckBox cbx)
                 {
                     cbx.Checked = keyValuePair.Value.Item2;
                 }
@@ -284,9 +284,9 @@ public partial class FrmPasteWhat : Form
                 lvw = frmEditFileDataInstance.lvw_FileListEditImages;
                 ListViewItem lviFE = lvw.SelectedItems[index: 0];
                 // do paste into the tables + grid as req'd
-                DirectoryElement dirElemFileToCopyFrom = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(UniqueID: lviFE.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                                                                                             .Index]
-                                                                                                                    .Text);
+                DirectoryElement dirElemFileToCopyFrom = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lviFE.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                                           .Index]
+                                                                                                                       .Text);
 
                 foreach (ElementAttribute attribute in tagsToPaste)
                 {
@@ -365,9 +365,9 @@ public partial class FrmPasteWhat : Form
                     // for each file
                     foreach (ListViewItem lvi in lvw.Items)
                     {
-                        DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                                                                                                 .Index]
-                                                                                                                          .Text);
+                        DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                                               .Index]
+                                                                                                                           .Text);
                         if (dirElemFileToModify != null)
                         {
                             bool takenShiftCopyPasteRequired = false;
@@ -416,14 +416,14 @@ public partial class FrmPasteWhat : Form
                                 takenAlreadyShifted = CheckAdjustTakenTimeShiftActual(
                                     dirElemFileToModify: dirElemFileToModify,
                                     dirElemVersion: DirectoryElement.AttributeVersion
-                                        .Stage1EditFormIntraTabTransferQueue);
+                                                                    .Stage1EditFormIntraTabTransferQueue);
                             }
                             else if (createShiftCopyPasteRequired && !createAlreadyShifted)
                             {
                                 createAlreadyShifted = CheckAdjustCreateTimeShiftActual(
                                     dirElemFileToModify: dirElemFileToModify,
                                     dirElemVersion: DirectoryElement.AttributeVersion
-                                        .Stage1EditFormIntraTabTransferQueue);
+                                                                    .Stage1EditFormIntraTabTransferQueue);
                             }
                         }
                     }
@@ -448,7 +448,7 @@ public partial class FrmPasteWhat : Form
                     if (dataInCopyDict)
                     {
                         pasteValueStr = FrmMainApp.CopyPoolDict.First(predicate: c => c.Key == attribute)
-                            .Value.Item1; // https://stackoverflow.com/a/25298643/3968494
+                                                  .Value.Item1; // https://stackoverflow.com/a/25298643/3968494
                         copyPasteDict.Add(key: attribute, value: pasteValueStr);
                     }
                     else // this will be marked as "remove" later
@@ -462,9 +462,9 @@ public partial class FrmPasteWhat : Form
                 for (int fileCounter = 0; fileCounter < frmMainAppInstancelvwFileListSelectedItemsCount; fileCounter++)
                 {
                     ListViewItem lvi = frmMainAppInstance.lvw_FileList.SelectedItems[fileCounter];
-                    DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GUID"]
-                                                                                                                                                                  .Index]
-                                                                                                                               .Text);
+                    DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GUID"]
+                                                                                                                                                          .Index]
+                                                                                                                       .Text);
 
                     if (dirElemFileToModify != null)
                     {
@@ -675,7 +675,7 @@ public partial class FrmPasteWhat : Form
         }
     }
 
-    #region GPSData
+#region GPSData
 
     private void btn_GPSData_All_Click(object sender,
                                        EventArgs e)
@@ -713,9 +713,9 @@ public partial class FrmPasteWhat : Form
         }
     }
 
-    #endregion
+#endregion
 
-    #region LocationData
+#region LocationData
 
     private void btn_LocationData_All_Click(object sender,
                                             EventArgs e)
@@ -754,9 +754,9 @@ public partial class FrmPasteWhat : Form
         }
     }
 
-    #endregion
+#endregion
 
-    #region DateTimes
+#region DateTimes
 
     private void btn_Dates_All_Click(object sender,
                                      EventArgs e)
@@ -843,9 +843,9 @@ public partial class FrmPasteWhat : Form
                 {
                     ListView lvw = frmEditFileDataInstance.lvw_FileListEditImages;
                     ListViewItem lvi = lvw.SelectedItems[index: 0];
-                    DirectoryElement dirElemFileSource = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                                                                                           .Index]
-                                                                                                                    .Text);
+                    DirectoryElement dirElemFileSource = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                                         .Index]
+                                                                                                                     .Text);
 
                     // when USING EDIT we use the local data, therefore timeshifts can only possibly live in DtFileDataToWriteStage1PreQueue
                     foreach (ElementAttribute attribute in listOfTagsToCopyTimeShifts)
@@ -901,9 +901,9 @@ public partial class FrmPasteWhat : Form
         {
             ListView lvw = frmEditFileDataInstance.lvw_FileListEditImages;
             ListViewItem lvi = lvw.SelectedItems[index: 0];
-            DirectoryElement dirElemFileSource = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                                                                                   .Index]
-                                                                                                            .Text);
+            DirectoryElement dirElemFileSource = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                                 .Index]
+                                                                                                             .Text);
 
             // when USING EDIT we use the local data, therefore timeshifts can only possibly live in DtFileDataToWriteStage1PreQueue
             foreach (ElementAttribute attribute in listOfTagsToCopyTimeShifts)
@@ -938,5 +938,5 @@ public partial class FrmPasteWhat : Form
         }
     }
 
-    #endregion
+#endregion
 }

@@ -44,7 +44,7 @@ public class DirectoryElement
     {
         ItemNameWithoutPath = itemNameWithoutPath;
         Type = type;
-        UniqueID = Guid.NewGuid();
+
         FileNameWithPath = fileNameWithPath;
         Extension = Path.GetExtension(path: FileNameWithPath)
             .Replace(oldValue: ".", newValue: "");
@@ -155,14 +155,6 @@ public class DirectoryElement
     /// </summary>
     public ElementType Type { get; }
 
-    /// <summary>
-    ///     The UniqueID (get only)
-    /// </summary>
-    public Guid UniqueID { get; }
-
-    /// <summary>
-    ///     The fully qualified path incl. its name (get only)
-    /// </summary>
     public string FileNameWithPath { get; }
 
     /// <summary>
@@ -722,16 +714,16 @@ public class DirectoryElement
 
     #region Members for Parsing attribute values out of a tag list
 
-    /// <summary>
-    ///     Searches the given tag list to yield the value for the given attribute.
-    ///     Hereby the TagsToAttributesOrder list is used to determine which
-    ///     tags are taken in which priority for the attribute.
-    /// </summary>
-    /// <param name="attribute">The attribute to find the value for</param>
-    /// <param name="tags">The tag list to parse</param>
-    /// <returns>A touple (name of tag chosen, value)</returns>
-    private (string, string) GetDataPointFromTags(ElementAttribute attribute,
-                                                  IDictionary<string, string> tags)
+        /// <summary>
+        ///     Searches the given tag list to yield the value for the given attribute.
+        ///     Hereby the TagsToAttributesIn list is used to determine which
+        ///     tags are taken in which priority for the attribute.
+        /// </summary>
+        /// <param name="attribute">The attribute to find the value for</param>
+        /// <param name="tags">The tag list to parse</param>
+        /// <returns>A touple (name of tag chosen, value)</returns>
+        private (string, string) GetDataPointFromTags(ElementAttribute attribute,
+                                                      IDictionary<string, string> tags)
     {
         Logger.Trace(message: "Starting to parse dict for attribute: " + GetAttributeName(attribute: attribute));
         List<ElementAttribute> ignoreElementAttributes = new()
@@ -746,19 +738,20 @@ public class DirectoryElement
             ElementAttribute.CreateDateHoursShift,
             ElementAttribute.CreateDateMinutesShift,
             ElementAttribute.CreateDateSecondsShift,
-            ElementAttribute.RemoveAllGPS
+            ElementAttribute.RemoveAllGPS,
+            ElementAttribute.GUID
         };
 
         if (!ignoreElementAttributes.Contains(item: attribute))
         {
-            if (!TagsToAttributesOrder.ContainsKey(key: attribute))
+            if (!TagsToAttributesIn.ContainsKey(key: attribute))
             {
                 throw new ArgumentException(message: "Error, while trying to parse the dictionary of item '" +
                                                      $"{ItemNameWithoutPath}' for attribute '{GetAttributeName(attribute: attribute)}" +
-                                                     "': The TagsToAttributesOrder does not contain a definition of which tags to use for this attribute.");
+                                                     "': The TagsToAttributesIn does not contain a definition of which tags to use for this attribute.");
             }
 
-            List<string> orderedTags = TagsToAttributesOrder[key: attribute];
+            List<string> orderedTags = TagsToAttributesIn[key: attribute];
             for (int i = 0; i < orderedTags.Count; i++)
             {
                 if (tags.ContainsKey(key: orderedTags[index: i]

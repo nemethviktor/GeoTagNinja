@@ -203,7 +203,6 @@
     <Compile Include="Helpers\HelperDataDatabaseAndStartup.cs" />
     <Compile Include="Helpers\HelperDataFavourites.cs" />
     <Compile Include="Helpers\HelperDataLanguageTZ.cs" />
-    <Compile Include="Helpers\HelperDataObjectMapping.cs" />
     <Compile Include="Helpers\HelperDataOtherDataRelated.cs" />
     <Compile Include="Helpers\HelperExifDataPointInteractions.cs" />
     <Compile Include="Helpers\HelperExifExifToolOperator.cs" />
@@ -317,9 +316,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <AdditionalFiles Include="Resources\objectMapping.sqlite">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </AdditionalFiles>
     <EmbeddedResource Include="View\ImagePreview.resx">
       <DependentUpon>ImagePreview.cs</DependentUpon>
     </EmbeddedResource>

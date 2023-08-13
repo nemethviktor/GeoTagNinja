@@ -1,15 +1,14 @@
-﻿using System;
+﻿using ExifToolWrapper;
+using GeoTagNinja.Helpers;
+using NLog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using ExifToolWrapper;
-using GeoTagNinja.Helpers;
-using NLog;
-using XmpCore.Impl;
-using static System.Environment;
 using static GeoTagNinja.Model.SourcesAndAttributes;
+using static System.Environment;
 
 namespace GeoTagNinja.Model;
 
@@ -38,13 +37,13 @@ public class DirectoryElementCollection : List<DirectoryElement>
     ///     with the given item name. If nothing is found, return null.
     ///     Prepwork atm for allowing for multiple filenames across folders as these IDs are in fact unique.
     /// </summary>
-    /// <param name="UniqueID"></param>
+    /// <param name="GUID"></param>
     /// <returns></returns>
-    public DirectoryElement FindElementByItemUniqueID(string UniqueID)
+    public DirectoryElement FindElementByItemGUID(string GUID)
     {
         foreach (DirectoryElement item in this)
         {
-            if (item.UniqueID.ToString() == UniqueID)
+            if (item.GetAttributeValueString(ElementAttribute.GUID) == GUID)
             {
                 return item;
             }
@@ -86,8 +85,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
         foreach (DirectoryElement directoryElement in this)
         {
             if (directoryElement.HasDirtyAttributes(DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
-                uids.Add(directoryElement.UniqueID.ToString());
+                uids.Add(directoryElement.GetAttributeValueString(ElementAttribute.GUID));
         }
+
         return uids;
     }
 
@@ -233,9 +233,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
                             ));
                     }
                     else if (directoryInfo.Attributes.ToString()
-                                 .Contains(value: "Directory") &&
+                                          .Contains(value: "Directory") &&
                              !directoryInfo.Attributes.ToString()
-                                 .Contains(value: "ReparsePoint"))
+                                           .Contains(value: "ReparsePoint"))
                     {
                         Logger.Trace(message: "Folder: " + directoryInfo.Name);
                         Add(item: new DirectoryElement(
@@ -313,16 +313,16 @@ public class DirectoryElementCollection : List<DirectoryElement>
             // Check, if it is a side car file. If so,
             // add it to the list to attach to image files later
             if (allowedSideCarExtensions.Contains(value: Path.GetExtension(path: fileNameWithExtension)
-                                                      .ToLower()
-                                                      .Replace(oldValue: ".", newValue: "")))
+                                                             .ToLower()
+                                                             .Replace(oldValue: ".", newValue: "")))
             {
                 sidecarFiles.Add(item: fileNameWithExtension);
             }
 
             // Image file
             else if (allowedImageExtensions.Contains(value: Path.GetExtension(path: fileNameWithExtension)
-                                                         .ToLower()
-                                                         .Replace(oldValue: ".", newValue: "")))
+                                                                .ToLower()
+                                                                .Replace(oldValue: ".", newValue: "")))
             {
                 imageFiles.Add(item: fileNameWithExtension);
 
@@ -353,18 +353,18 @@ public class DirectoryElementCollection : List<DirectoryElement>
         {
             // Get (by comparing w/o extension) list of matching image files in lower case
             string scFilenameWithoutExtension = Path.GetFileNameWithoutExtension(path: sidecarFile)
-                .ToLower();
+                                                    .ToLower();
             List<string> matchingImageFiles = imageFiles
-                .Where(predicate: imgFile => Path.GetFileNameWithoutExtension(path: imgFile)
-                                                 .ToLower() ==
-                                             scFilenameWithoutExtension)
-                .ToList();
+                                             .Where(predicate: imgFile => Path.GetFileNameWithoutExtension(path: imgFile)
+                                                                              .ToLower() ==
+                                                                          scFilenameWithoutExtension)
+                                             .ToList();
 
             bool sidecarFileAlreadyAdded = false;
             foreach (string imgFile in matchingImageFiles)
             {
                 string imgFileExtension = Path.GetExtension(path: imgFile)
-                    .Substring(startIndex: 1);
+                                              .Substring(startIndex: 1);
 
                 // only add the sidecar file linkage if the particular extension is marked to use sidecars
                 bool writeXMPSideCar = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
@@ -449,6 +449,12 @@ public class DirectoryElementCollection : List<DirectoryElement>
             fileCount++;
             FrmMainApp.TaskbarManagerInstance.SetProgressValue(fileCount, imageFiles.Count);
             Thread.Sleep(1);
+        }
+
+        foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
+        {
+            directoryElement.SetAttributeValue(ElementAttribute.GUID, Guid.NewGuid()
+                                                                          .ToString(), DirectoryElement.AttributeVersion.Original, false);
         }
 
         FrmMainApp.TaskbarManagerInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress);

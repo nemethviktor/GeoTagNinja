@@ -26,9 +26,9 @@ internal static class FileListViewReadWrite
             ListView.ColumnHeaderCollection lvchs = frmMainAppInstance.ListViewColumnHeaders;
 
             int d = lvi.Index;
-            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                                                                                     .Index]
-                                                                                                              .Text);
+            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                                   .Index]
+                                                                                                               .Text);
             string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
             bool takenAlreadyShifted = false;
             bool createAlreadyShifted = false;
@@ -38,7 +38,7 @@ internal static class FileListViewReadWrite
                 if (dirElemFileToModify != null &&
                     dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute,
                                                                         version: DirectoryElement.AttributeVersion
-                                                                            .Stage3ReadyToWrite))
+                                                                                                 .Stage3ReadyToWrite))
                 {
                     try
                     {
@@ -55,8 +55,8 @@ internal static class FileListViewReadWrite
                             try
                             {
                                 lvi.SubItems[index: lvchs[key: settingId]
-                                                 .Index]
-                                    .Text = settingVal;
+                                                .Index]
+                                   .Text = settingVal;
                                 //break;
                             }
                             catch
@@ -72,7 +72,7 @@ internal static class FileListViewReadWrite
                             int shiftedSeconds = 0;
 
                             if (settingId.Substring(startIndex: 4)
-                                    .StartsWith(value: "Taken") &&
+                                         .StartsWith(value: "Taken") &&
                                 !takenAlreadyShifted)
                             {
                                 shiftedDays = (int)dirElemFileToModify.GetAttributeValue<int>(
@@ -104,12 +104,12 @@ internal static class FileListViewReadWrite
 
                                 DateTime modifiedTakenDateTime = originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
                                 lvi.SubItems[index: lvchs[key: "clh_TakenDate"]
-                                                 .Index]
-                                    .Text = modifiedTakenDateTime.ToString(provider: CultureInfo.CurrentUICulture);
+                                                .Index]
+                                   .Text = modifiedTakenDateTime.ToString(provider: CultureInfo.CurrentUICulture);
                                 takenAlreadyShifted = true;
                             }
                             else if (settingId.Substring(startIndex: 4)
-                                         .StartsWith(value: "Create") &&
+                                              .StartsWith(value: "Create") &&
                                      !createAlreadyShifted)
                             {
                                 shiftedDays = (int)dirElemFileToModify.GetAttributeValue<int>(
@@ -139,23 +139,23 @@ internal static class FileListViewReadWrite
 
                                 DateTime modifiedCreateDateTime = originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
                                 lvi.SubItems[index: lvchs[key: "clh_CreateDate"]
-                                                 .Index]
-                                    .Text = modifiedCreateDateTime.ToString(provider: CultureInfo.CurrentUICulture);
+                                                .Index]
+                                   .Text = modifiedCreateDateTime.ToString(provider: CultureInfo.CurrentUICulture);
                                 createAlreadyShifted = true;
                             }
                         }
 
                         tmpCoordinates = lvi.SubItems[index: lvchs[key: "clh_GPSLatitude"]
-                                                          .Index]
-                                             .Text +
+                                                         .Index]
+                                            .Text +
                                          ";" +
                                          lvi.SubItems[index: lvchs[key: "clh_GPSLongitude"]
-                                                          .Index]
-                                             .Text;
+                                                         .Index]
+                                            .Text;
 
                         lvi.SubItems[index: lvchs[key: "clh_Coordinates"]
-                                         .Index]
-                            .Text = tmpCoordinates != ";"
+                                        .Index]
+                           .Text = tmpCoordinates != ";"
                             ? tmpCoordinates
                             : "";
                     }

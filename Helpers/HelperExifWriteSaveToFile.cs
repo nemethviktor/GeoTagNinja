@@ -39,12 +39,6 @@ internal static class HelperExifWriteSaveToFile
         bool failWriteNothingEnabled = false;
         bool queueWasEmpty = true;
 
-        // get tag names
-        DataTable dtObjectattributesOut = HelperDataOtherDataRelated.JoinDataTables(t1: HelperVariables.DtObjectNames, t2: HelperVariables.DtObjectattributesOut,
-                                                                                    (row1,
-                                                                                     row2) =>
-                                                                                        row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "objectName"));
-
         // Get items that need saving...
         HashSet<string> DistinctGUIDs = FrmMainApp.DirectoryElements.FindDirtyElements();
 
@@ -54,7 +48,7 @@ internal static class HelperExifWriteSaveToFile
         // check there's anything to write.
         foreach (string GUID in DistinctGUIDs)
         {
-            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(UniqueID: GUID);
+            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: GUID);
             FrmMainApp.Logger.Trace(message: dirElemFileToModify.FileNameWithPath);
 
             if (dirElemFileToModify != null)
@@ -166,11 +160,6 @@ internal static class HelperExifWriteSaveToFile
                     {
                         // get tags for this file
 
-                        DataTable dtObjectattributesOutWithData = HelperDataOtherDataRelated.JoinDataTables(t1: dtObjectattributesOut, t2: dtFileWriteQueue,
-                                                                                                            (row1,
-                                                                                                             row2) =>
-                                                                                                                row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "settingId"));
-
                         string exifToolAttribute;
                         string updateExifVal;
 
@@ -180,12 +169,23 @@ internal static class HelperExifWriteSaveToFile
                         bool deleteTagAlreadyAdded = false;
 
                         // add tags to argsFile
-                        foreach (DataRow dataRow in dtObjectattributesOutWithData.Rows)
+                        foreach (DataRow dataRow in dtFileWriteQueue.Rows)
                         {
                             string settingId = dataRow[columnName: "settingId"]
                                .ToString();
                             string settingValue = dataRow[columnName: "settingValue"]
                                .ToString();
+
+                            ElementAttribute attribute = GetAttributeFromString(attributeToFind: settingId);
+                            List<string> orderedTags = new List<string>();
+                            try
+                            {
+                                orderedTags = TagsToAttributesOut[key: attribute];
+                            }
+                            catch
+                            {
+                                // ignore.
+                            }
 
                             FrmMainApp.Logger.Trace(message: fileNameWithPath + " - " + settingId + ": " + settingValue);
 
@@ -201,130 +201,129 @@ internal static class HelperExifWriteSaveToFile
                                 deleteTagAlreadyAdded = true;
                             }
 
-                            string objectTagNameOut = dataRow[columnName: "objectTagName_Out"]
-                               .ToString();
-                            exifToolAttribute = dataRow[columnName: "objectTagName_Out"]
-                               .ToString();
-                            updateExifVal = dataRow[columnName: "settingValue"]
-                               .ToString();
-
-                            if (updateExifVal != "")
+                            foreach (string objectTagNameOut in orderedTags)
                             {
-                                UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "=" + updateExifVal);
+                                exifToolAttribute = objectTagNameOut;
+                                updateExifVal = settingValue;
 
-                                //if lat/long/alt then add Ref. 
-                                if (exifToolAttribute.EndsWith(value: "GPSLatitude"))
+                                if (updateExifVal != "")
                                 {
-                                    if (updateExifVal.Substring(startIndex: 0, length: 1) == FrmMainApp.NullStringEquivalentGeneric)
-                                    {
-                                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=" + "South");
-                                    }
-                                    else
-                                    {
-                                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=" + "North");
-                                    }
-                                }
-                                else if (exifToolAttribute.EndsWith(value: "GPSLongitude"))
-                                {
-                                    if (updateExifVal.Substring(startIndex: 0, length: 1) == FrmMainApp.NullStringEquivalentGeneric)
-                                    {
-                                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=" + "West");
-                                    }
-                                    else
-                                    {
-                                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=" + "East");
-                                    }
-                                }
-                                else if (exifToolAttribute.EndsWith(value: "GPSAltitude"))
-                                {
-                                    double.TryParse(s: updateExifVal, style: NumberStyles.AllowDecimalPoint, provider: CultureInfo.InvariantCulture, result: out double tmpAltitude);
-                                    updateExifVal = (HelperVariables.UseImperial
-                                        ? Math.Round(value: tmpAltitude / HelperVariables.METRETOFEET, digits: 2)
-                                        : tmpAltitude).ToString(provider: CultureInfo.InvariantCulture);
-
-                                    // add ref -- "ExifTool will also accept number when writing this tag, with negative numbers indicating below sea level"
-                                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" +
-                                                                                                    exifToolAttribute +
-                                                                                                    "Ref" +
-                                                                                                    "=" +
-                                                                                                    (tmpAltitude > 0
-                                                                                                        ? "0"
-                                                                                                        : "-1"));
-
-                                    // same as below/generic
                                     UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "=" + updateExifVal);
+
+                                    //if lat/long/alt then add Ref. 
+                                    if (exifToolAttribute.EndsWith(value: "GPSLatitude"))
+                                    {
+                                        if (updateExifVal.Substring(startIndex: 0, length: 1) == FrmMainApp.NullStringEquivalentGeneric)
+                                        {
+                                            UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=" + "South");
+                                        }
+                                        else
+                                        {
+                                            UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=" + "North");
+                                        }
+                                    }
+                                    else if (exifToolAttribute.EndsWith(value: "GPSLongitude"))
+                                    {
+                                        if (updateExifVal.Substring(startIndex: 0, length: 1) == FrmMainApp.NullStringEquivalentGeneric)
+                                        {
+                                            UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=" + "West");
+                                        }
+                                        else
+                                        {
+                                            UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=" + "East");
+                                        }
+                                    }
+                                    else if (exifToolAttribute.EndsWith(value: "GPSAltitude"))
+                                    {
+                                        double.TryParse(s: updateExifVal, style: NumberStyles.AllowDecimalPoint, provider: CultureInfo.InvariantCulture, result: out double tmpAltitude);
+                                        updateExifVal = (HelperVariables.UseImperial
+                                            ? Math.Round(value: tmpAltitude / HelperVariables.METRETOFEET, digits: 2)
+                                            : tmpAltitude).ToString(provider: CultureInfo.InvariantCulture);
+
+                                        // add ref -- "ExifTool will also accept number when writing this tag, with negative numbers indicating below sea level"
+                                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" +
+                                                                                                        exifToolAttribute +
+                                                                                                        "Ref" +
+                                                                                                        "=" +
+                                                                                                        (tmpAltitude > 0
+                                                                                                            ? "0"
+                                                                                                            : "-1"));
+
+                                        // same as below/generic
+                                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "=" + updateExifVal);
+                                    }
                                 }
+                                else //delete tag
+                                {
+                                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "=");
+
+                                    //if lat/long then add Ref. 
+                                    if (
+                                        exifToolAttribute.EndsWith(value: "GPSLatitude") ||
+                                        exifToolAttribute.EndsWith(value: "GPSLongitude")
+                                    )
+                                    {
+                                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=");
+                                    }
+                                }
+
+                                if (objectTagNameOut.EndsWith(value: "DateTimeOriginal") || // TakenDate
+                                    objectTagNameOut.EndsWith(value: "CreateDate") // CreateDate
+                                   )
+                                {
+                                    bool isTakenDate = false;
+                                    bool isCreateDate = false;
+                                    if (objectTagNameOut.EndsWith(value: "DateTimeOriginal"))
+                                    {
+                                        isTakenDate = true;
+                                    }
+                                    else if (objectTagNameOut.EndsWith(value: "CreateDate"))
+                                    {
+                                        isCreateDate = true;
+                                    }
+
+                                    try
+                                    {
+                                        updateExifVal = DateTime.Parse(s: settingValue)
+                                                                .ToString(format: "yyyy-MM-dd HH:mm:ss");
+                                    }
+                                    catch
+                                    {
+                                        updateExifVal = "";
+                                    }
+
+                                    if (isCreateDate)
+                                    {
+                                        // update FrmMainApp.OriginalCreateDateDict -- there should be only 1 row
+                                        if (FrmMainApp.OriginalCreateDateDict.ContainsKey(key: fileNameWithoutPath))
+                                        {
+                                            FrmMainApp.OriginalCreateDateDict.Remove(key: fileNameWithoutPath);
+                                        }
+
+                                        if (updateExifVal != "")
+                                        {
+                                            FrmMainApp.OriginalCreateDateDict[key: fileNameWithoutPath] = updateExifVal;
+                                        }
+                                    }
+                                    else if (isTakenDate)
+                                    {
+                                        // update FrmMainApp.OriginalTakenDateDict -- there should be only 1 row
+                                        if (FrmMainApp.OriginalTakenDateDict.ContainsKey(key: fileNameWithoutPath))
+                                        {
+                                            FrmMainApp.OriginalTakenDateDict.Remove(key: fileNameWithoutPath);
+                                        }
+
+                                        if (updateExifVal != "")
+                                        {
+                                            FrmMainApp.OriginalTakenDateDict[key: fileNameWithoutPath] = updateExifVal;
+                                        }
+                                    }
+                                }
+
+                                FrmMainApp.Logger.Trace(message: fileNameWithPath + " - " + exifToolAttribute + ": " + updateExifVal);
+
+                                UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "=" + updateExifVal);
                             }
-                            else //delete tag
-                            {
-                                UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "=");
-
-                                //if lat/long then add Ref. 
-                                if (
-                                    exifToolAttribute.EndsWith(value: "GPSLatitude") ||
-                                    exifToolAttribute.EndsWith(value: "GPSLongitude")
-                                )
-                                {
-                                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=");
-                                }
-                            }
-
-                            if (objectTagNameOut.EndsWith(value: "DateTimeOriginal") || // TakenDate
-                                objectTagNameOut.EndsWith(value: "CreateDate") // CreateDate
-                               )
-                            {
-                                bool isTakenDate = false;
-                                bool isCreateDate = false;
-                                if (objectTagNameOut.EndsWith(value: "DateTimeOriginal"))
-                                {
-                                    isTakenDate = true;
-                                }
-                                else if (objectTagNameOut.EndsWith(value: "CreateDate"))
-                                {
-                                    isCreateDate = true;
-                                }
-
-                                try
-                                {
-                                    updateExifVal = DateTime.Parse(s: settingValue)
-                                                            .ToString(format: "yyyy-MM-dd HH:mm:ss");
-                                }
-                                catch
-                                {
-                                    updateExifVal = "";
-                                }
-
-                                if (isCreateDate)
-                                {
-                                    // update FrmMainApp.OriginalCreateDateDict -- there should be only 1 row
-                                    if (FrmMainApp.OriginalCreateDateDict.ContainsKey(key: fileNameWithoutPath))
-                                    {
-                                        FrmMainApp.OriginalCreateDateDict.Remove(key: fileNameWithoutPath);
-                                    }
-
-                                    if (updateExifVal != "")
-                                    {
-                                        FrmMainApp.OriginalCreateDateDict[key: fileNameWithoutPath] = updateExifVal;
-                                    }
-                                }
-                                else if (isTakenDate)
-                                {
-                                    // update FrmMainApp.OriginalTakenDateDict -- there should be only 1 row
-                                    if (FrmMainApp.OriginalTakenDateDict.ContainsKey(key: fileNameWithoutPath))
-                                    {
-                                        FrmMainApp.OriginalTakenDateDict.Remove(key: fileNameWithoutPath);
-                                    }
-
-                                    if (updateExifVal != "")
-                                    {
-                                        FrmMainApp.OriginalTakenDateDict[key: fileNameWithoutPath] = updateExifVal;
-                                    }
-                                }
-                            }
-
-                            FrmMainApp.Logger.Trace(message: fileNameWithPath + " - " + exifToolAttribute + ": " + updateExifVal);
-
-                            UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "=" + updateExifVal);
                         }
                     }
 

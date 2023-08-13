@@ -90,9 +90,9 @@ internal static class HelperExifDataPointInteractions
             {
                 ListViewItem lvi = frmEditFileDataInstance.lvw_FileListEditImages.SelectedItems[index: 0];
 
-                DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(lvi.SubItems[index: frmEditFileDataInstance.lvw_FileListEditImages.Columns[key: "clh_GUID"]
-                                                                                                                               .Index]
-                                                                                                                  .Text);
+                DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(lvi.SubItems[index: frmEditFileDataInstance.lvw_FileListEditImages.Columns[key: "clh_GUID"]
+                                                                                                                                                     .Index]
+                                                                                                             .Text);
 
                 HelperNonStatic helperNonstatic = new();
                 IEnumerable<Control> cGbx_GPSData = helperNonstatic.GetAllControls(control: frmEditFileDataInstance.gbx_GPSData);
@@ -159,9 +159,9 @@ internal static class HelperExifDataPointInteractions
                     HelperGenericFileLocking.FileListBeingUpdated = true;
                     foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
                     {
-                        DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                                                                                       .Index]
-                                                                                                                          .Text);
+                        DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                                         .Index]
+                                                                                                                     .Text);
                         // don't do folders...
                         if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                         {

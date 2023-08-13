@@ -78,16 +78,6 @@ internal static class HelperGenericAppStartup
             );
 
             FrmMainApp.Logger.Trace(message: "AppLanguage is" + FrmMainApp._AppLanguage);
-
-            FrmMainApp.Logger.Debug(message: "Reading dtObjectNames");
-            HelperVariables.DtObjectNames = HelperDataObjectMapping.DataReadSQLiteObjectMapping(
-                tableName: "objectNames",
-                orderBy: "sqlOrder"
-            );
-            HelperVariables.DtObjectattributesIn = HelperDataObjectMapping.DataReadSQLiteObjectMapping(tableName: "objectTagNames_In");
-            FrmMainApp.Logger.Trace(message: "objectTagNames_In OK");
-            HelperVariables.DtObjectattributesOut = HelperDataObjectMapping.DataReadSQLiteObjectMapping(tableName: "objectTagNames_Out");
-            FrmMainApp.Logger.Trace(message: "objectTagNames_Out OK");
         }
         catch (Exception ex)
         {
