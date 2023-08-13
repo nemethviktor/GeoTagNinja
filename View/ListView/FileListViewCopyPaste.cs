@@ -23,9 +23,9 @@ internal static class FileListViewCopyPaste
             ListViewItem lvi = frmMainAppInstance.lvw_FileList.SelectedItems[index: 0];
 
             // don't copy folders....
-            DirectoryElement dirElemFileToCopyFrom = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(UniqueID: lvi.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GUID"]
-                                                                                                                                       .Index]
-                                                                                                                .Text);
+            DirectoryElement dirElemFileToCopyFrom = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GUID"]
+                                                                                                                                                    .Index]
+                                                                                                                 .Text);
             if (dirElemFileToCopyFrom.Type == DirectoryElement.ElementType.File)
             {
                 // The reason why we're using a CopyPoolDict here rather than just read straight out of the DE is because if the user changes folder
@@ -77,7 +77,7 @@ internal static class FileListViewCopyPaste
                                                     value: new Tuple<string, bool>(item1: dirElemFileToCopyFrom.GetAttributeValueString(
                                                                                        attribute: attribute,
                                                                                        version: DirectoryElement.AttributeVersion
-                                                                                           .Stage3ReadyToWrite), item2: true));
+                                                                                                                .Stage3ReadyToWrite), item2: true));
                     }
                     else if (dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Original))
                     {
@@ -85,7 +85,7 @@ internal static class FileListViewCopyPaste
                                                     value: new Tuple<string, bool>(item1: dirElemFileToCopyFrom.GetAttributeValueString(
                                                                                        attribute: attribute,
                                                                                        version: DirectoryElement.AttributeVersion
-                                                                                           .Original), item2: false));
+                                                                                                                .Original), item2: false));
                     }
                 }
             }

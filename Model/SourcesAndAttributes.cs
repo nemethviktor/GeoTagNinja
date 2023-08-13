@@ -50,10 +50,53 @@ public class SourcesAndAttributes
         CreateDateMinutesShift,
         CreateDateSecondsShift,
         OffsetTime,
-        RemoveAllGPS
+        RemoveAllGPS,
+        GUID
     }
 
-    public static readonly IDictionary<ElementAttribute, List<string>> TagsToAttributesOrder =
+
+    public static readonly IDictionary<ElementAttribute, int> TagsToColumnHeaderOrder = new Dictionary<ElementAttribute, int>
+    {
+        { ElementAttribute.Coordinates, 1 },
+        { ElementAttribute.GPSLatitude, 2 },
+        { ElementAttribute.GPSLatitudeRef, 3 },
+        { ElementAttribute.GPSLongitude, 4 },
+        { ElementAttribute.GPSLongitudeRef, 5 },
+        { ElementAttribute.GPSSpeed, 6 },
+        { ElementAttribute.GPSSpeedRef, 7 },
+        { ElementAttribute.GPSAltitude, 8 },
+        { ElementAttribute.GPSAltitudeRef, 9 },
+        { ElementAttribute.Country, 10 },
+        { ElementAttribute.CountryCode, 11 },
+        { ElementAttribute.State, 12 },
+        { ElementAttribute.City, 13 },
+        { ElementAttribute.Sub_location, 14 },
+        { ElementAttribute.DestCoordinates, 15 },
+        { ElementAttribute.GPSDestLatitude, 16 },
+        { ElementAttribute.GPSDestLatitudeRef, 17 },
+        { ElementAttribute.GPSDestLongitude, 18 },
+        { ElementAttribute.GPSDestLongitudeRef, 19 },
+        { ElementAttribute.GPSImgDirection, 20 },
+        { ElementAttribute.GPSImgDirectionRef, 21 },
+        { ElementAttribute.Make, 22 },
+        { ElementAttribute.Model, 23 },
+        { ElementAttribute.Rating, 24 },
+        { ElementAttribute.ExposureTime, 25 },
+        { ElementAttribute.Fnumber, 26 },
+        { ElementAttribute.FocalLength, 27 },
+        { ElementAttribute.FocalLengthIn35mmFormat, 28 },
+        { ElementAttribute.ISO, 29 },
+        { ElementAttribute.LensSpec, 30 },
+        { ElementAttribute.TakenDate, 31 },
+        { ElementAttribute.CreateDate, 32 },
+        { ElementAttribute.OffsetTime, 33 },
+        { ElementAttribute.GUID, 34 }
+    };
+
+    /// <summary>
+    /// This defines the "tags-in" (as in exif tags) for each EA. The order does matter as it's basically sorted.
+    /// </summary>
+    public static readonly IDictionary<ElementAttribute, List<string>> TagsToAttributesIn =
         new Dictionary<ElementAttribute, List<string>>
         {
             {
@@ -118,42 +161,45 @@ public class SourcesAndAttributes
                 {
                     "XMP:GPSAltitude",
                     "EXIF:GPSAltitude",
-                    "Composite:GPSAltitude"
+                    "GPS:GPSAltitude"
                 }
             },
             {
                 ElementAttribute.GPSAltitudeRef, new List<string>
                 {
                     "XMP:GPSAltitudeRef",
-                    "EXIF:GPSAltitudeRef"
+                    "EXIF:GPSAltitudeRef",
+                    "GPS:GPSAltitudeRef"
                 }
             },
             {
                 ElementAttribute.GPSDestLatitude, new List<string>
                 {
                     "XMP:GPSDestLatitude",
-                    "EXIF:GPSDestLatitude"
+                    "EXIF:GPSDestLatitude",
+                    "GPS:GPSDestLatitude"
                 }
             },
             {
                 ElementAttribute.GPSDestLatitudeRef, new List<string>
                 {
                     "EXIF:GPSDestLatitudeRef",
-                    "Composite:GPSDestLatitudeRef"
+                    "GPS:GPSDestLatitudeRef"
                 }
             },
             {
                 ElementAttribute.GPSDestLongitude, new List<string>
                 {
                     "XMP:GPSDestLongitude",
-                    "EXIF:GPSDestLongitude"
+                    "EXIF:GPSDestLongitude",
+                    "GPS:GPSDestLongitude"
                 }
             },
             {
                 ElementAttribute.GPSDestLongitudeRef, new List<string>
                 {
                     "EXIF:GPSDestLongitudeRef",
-                    "Composite:GPSDestLongitudeRef"
+                    "GPS:GPSDestLongitudeRef"
                 }
             },
             {
@@ -175,14 +221,14 @@ public class SourcesAndAttributes
                 {
                     "XMP:GPSLatitude",
                     "EXIF:GPSLatitude",
-                    "Composite:GPSLatitude"
+                    "GPS:GPSLatitude"
                 }
             },
             {
                 ElementAttribute.GPSLatitudeRef, new List<string>
                 {
                     "EXIF:GPSLatitudeRef",
-                    "Composite:GPSLatitudeRef"
+                    "GPS:GPSLatitudeRef"
                 }
             },
             {
@@ -190,14 +236,14 @@ public class SourcesAndAttributes
                 {
                     "XMP:GPSLongitude",
                     "EXIF:GPSLongitude",
-                    "Composite:GPSLongitude"
+                    "GPS:GPSLongitude"
                 }
             },
             {
                 ElementAttribute.GPSLongitudeRef, new List<string>
                 {
                     "EXIF:GPSLongitudeRef",
-                    "Composite:GPSLongitudeRef"
+                    "GPS:GPSLongitudeRef"
                 }
             },
             {
@@ -282,7 +328,188 @@ public class SourcesAndAttributes
         };
 
     /// <summary>
-    /// Returns the (usually column-header) equivalent of an Attribute (e.g. ElementAttribute.RemoveAllGPS -> "gps*" or ElementAttribute.GPSAltitude -> "GPSAltitude")
+    /// This defines the "tags-out" (as in exif tags) for each EA. The order does matter as they all get written.
+    /// </summary>
+    public static readonly IDictionary<ElementAttribute, List<string>> TagsToAttributesOut =
+        new Dictionary<ElementAttribute, List<string>>
+        {
+            {
+                ElementAttribute.City, new List<string>
+                {
+                    "City",
+                    "XMP-photoshop:City"
+                }
+            },
+            {
+                ElementAttribute.Country, new List<string>
+                {
+                    "Country",
+                    "XMP-photoshop:Country",
+                    "IPTC:Country-PrimaryLocationName"
+                }
+            },
+            {
+                ElementAttribute.CountryCode, new List<string>
+                {
+                    "CountryCode",
+                    "XMP-iptcCore:CountryCode",
+                    "IPTC:Country-PrimaryLocationCode"
+                }
+            },
+            {
+                ElementAttribute.CreateDate, new List<string>
+                {
+                    "XMP:CreateDate",
+                    "EXIF:CreateDate"
+                }
+            },
+            {
+                ElementAttribute.ExposureTime, new List<string>
+                {
+                    "exif:ExposureTime"
+                }
+            },
+
+            {
+                ElementAttribute.GPSAltitude, new List<string>
+                {
+                    "GPS:GPSAltitude",
+                    "exif:GPSAltitude"
+                }
+            },
+            {
+                ElementAttribute.GPSAltitudeRef, new List<string>
+                {
+                    "GPS:GPSAltitudeRef",
+                    "exif:GPSAltitudeRef"
+                }
+            },
+            {
+                ElementAttribute.GPSDestLatitude, new List<string>
+                {
+                    "GPS:GPSDestLatitude",
+                    "exif:GPSDestLatitude"
+                }
+            },
+            {
+                ElementAttribute.GPSDestLatitudeRef, new List<string>
+                {
+                    "GPS:GPSDestLatitudeRef",
+                    "exif:GPSDestLatitudeRef"
+                }
+            },
+            {
+                ElementAttribute.GPSDestLongitude, new List<string>
+                {
+                    "GPS:GPSDestLongitude",
+                    "exif:GPSDestLongitude"
+                }
+            },
+            {
+                ElementAttribute.GPSDestLongitudeRef, new List<string>
+                {
+                    "GPS:GPSDestLongitudeRef",
+                    "exif:GPSDestLongitudeRef"
+                }
+            },
+            //{
+            //    ElementAttribute.GPSImgDirection, new List<string>
+            //    {
+            //        "XMP:GPSImgDirection",
+            //        "EXIF:GPSImgDirection"
+            //    }
+            //},
+            //{
+            //    ElementAttribute.GPSImgDirectionRef, new List<string>
+            //    {
+            //        "XMP:GPSImgDirectionRef",
+            //        "EXIF:GPSImgDirectionRef"
+            //    }
+            //},
+            {
+                ElementAttribute.GPSLatitude, new List<string>
+                {
+                    "GPS:GPSLatitude",
+                    "exif:GPSLatitude"
+                }
+            },
+            {
+                ElementAttribute.GPSLatitudeRef, new List<string>
+                {
+                    "GPS:GPSLatitudeRef",
+                    "exif:GPSLatitudeRef"
+                }
+            },
+            {
+                ElementAttribute.GPSLongitude, new List<string>
+                {
+                    "GPS:GPSLongitude",
+                    "exif:GPSLongitude"
+                }
+            },
+            {
+                ElementAttribute.GPSLongitudeRef, new List<string>
+                {
+                    "GPS:GPSLongitudeRef",
+                    "exif:GPSLongitudeRef"
+                }
+            },
+            {
+                ElementAttribute.GPSSpeed, new List<string>
+                {
+                    "GPS:GPSSpeed",
+                    "exif:GPSSpeed"
+                }
+            },
+            {
+                ElementAttribute.GPSSpeedRef, new List<string>
+                {
+                    "GPS:GPSSpeedRef",
+                    "exif:GPSSpeedRef"
+                }
+            },
+
+            {
+                ElementAttribute.OffsetTime, new List<string>
+                {
+                    "EXIF:OffsetTimeOriginal",
+                    "EXIF:OffsetTime"
+                }
+            },
+            {
+                ElementAttribute.Rating, new List<string>
+                {
+                    "XMP:Rating",
+                    "EXIF:Rating"
+                }
+            },
+            {
+                ElementAttribute.State, new List<string>
+                {
+                    "State",
+                    "XMP-photoshop:State",
+                    "IPTC:Province-State",
+                }
+            },
+            {
+                ElementAttribute.Sub_location, new List<string>
+                {
+                    "Sub-location",
+                    "XMP-iptcCore:Location"
+                }
+            },
+            {
+                ElementAttribute.TakenDate, new List<string>
+                {
+                    "XMP:DateTimeOriginal",
+                    "EXIF:DateTimeOriginal"
+                }
+            }
+        };
+
+    /// <summary>
+    ///     Returns the (usually column-header) equivalent of an Attribute (e.g. ElementAttribute.RemoveAllGPS -> "gps*" or
+    ///     ElementAttribute.GPSAltitude -> "GPSAltitude")
     /// </summary>
     /// <param name="attribute">ElementAttribute Name e.g. ElementAttribute.GPSAltitude</param>
     /// <returns>string, e.g. "GPSAltitude"</returns>
@@ -375,13 +602,16 @@ public class SourcesAndAttributes
                 return "OffsetTime";
             case ElementAttribute.RemoveAllGPS:
                 return "gps*";
+            case ElementAttribute.GUID:
+                return "GUID";
             default:
                 throw new ArgumentException(message: "Trying to get attribute name of unknown attribute with value " + attribute);
         }
     }
 
     /// <summary>
-    /// Finds and returns the ElementAttribute eqv of a string (e.g. "gps*" -> ElementAttribute.RemoveAllGPS  or "GPSAltitude" -> ElementAttribute.GPSAltitude )
+    ///     Finds and returns the ElementAttribute eqv of a string (e.g. "gps*" -> ElementAttribute.RemoveAllGPS  or
+    ///     "GPSAltitude" -> ElementAttribute.GPSAltitude )
     /// </summary>
     /// <param name="attributeToFind">ColumnHeader or other string (e.g. "gps*", "GPSAltitude")</param>
     /// <returns>ElementAttribute e.g. ElementAttribute.RemoveAllGPS </returns>
@@ -475,6 +705,8 @@ public class SourcesAndAttributes
             case "OffsetTimeList":
             case "gps*":
                 return ElementAttribute.RemoveAllGPS;
+            case "GUID":
+                return ElementAttribute.GUID;
             default:
                 throw new ArgumentException(message: "Trying to get attribute name of unknown attribute with value " + attributeToFind);
         }
@@ -567,6 +799,8 @@ public class SourcesAndAttributes
             case ElementAttribute.OffsetTime:
                 return typeof(string);
             case ElementAttribute.RemoveAllGPS:
+                return typeof(string);
+            case ElementAttribute.GUID:
                 return typeof(string);
             default:
                 throw new ArgumentException(message: "Trying to get attribute type of unknown attribute with value " + attribute);

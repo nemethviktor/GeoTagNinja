@@ -32,7 +32,7 @@ internal static class EditFileFormGeneric
 
         foreach (string fileToEditGUID in FrmMainApp.filesToEditGUIDStringList)
         {
-            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(UniqueID: fileToEditGUID);
+            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: fileToEditGUID);
 
             if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {

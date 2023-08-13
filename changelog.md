@@ -1,9 +1,19 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 8xxx [20230xx]**
+**Build 8xxx [20230xxx]** [dev branch release]
+- NEW & UPDATED:
+ - Bumped exifTool to v12.65
+ - Added a TaskbarProgressBarState indicator
+- BUGS & FIXES:
+  - Fixed a bug where in Finland (English) culture [possibly others too] the app would crash because decimals were being converted in the wrong way.
+  - Fixed some logic relating to certain Composite Tags not being written properly
+  - Also fixed a duplication issue in the outgoing args file while at it
+  - Fixed a bug where Paste would also attempt to affect folders
+
+**Build 8610 [20230729]** [dev branch release]
 - NEW & UPDATED:
   - Added an option to use Imperial instead of Metric. In practice this still saves data in Metric but shows as Imperial. #82
-  - Bumped exifTool to v12.63
+  - Bumped exifTool to v12.64
 - BUGS & FIXES:
   - Fixed a bug where the original file is set not to be overwritten but XMP is and ultimately the DE didn't get cleread properly, resulting in what appeared to be an unresponsive non-save.
   - Fixed a bug pasting string values across files causing a crash
@@ -11,6 +21,8 @@
   - Fixed a bug where timezone was read incorrectly from the Edit Form
   - Fixed a bug where RAW and XMP files contradict each other for Lat/Long Ref values and the wrong one is taken
   - Fixed a bug where opening the Edit Form via the File menu would cause crash
+  - Fixed a logical flaw where, after pressing OK in the Edit File Form the code would parse the whole folder again for any outstanding data
+  - Amended DE Parse logic for (lack of) dates values - re #86
 
 **Build 8556 [20230605]**
 - NEW & UPDATED:

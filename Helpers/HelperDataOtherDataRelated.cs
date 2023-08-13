@@ -24,13 +24,6 @@ internal static class HelperDataOtherDataRelated
         FrmMainApp.DtLanguageLabels.Columns.Add(columnName: "objectName");
         FrmMainApp.DtLanguageLabels.Columns.Add(columnName: "objectText");
 
-        // DtFileDataSeenInThisSession
-        FrmMainApp.DtFileDataSeenInThisSession = new DataTable();
-        FrmMainApp.DtFileDataSeenInThisSession.Clear();
-        FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "fileNameWithPath");
-        FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingId");
-        FrmMainApp.DtFileDataSeenInThisSession.Columns.Add(columnName: "settingValue");
-
         // DtToponomySessionData;
         FrmMainApp.DtToponomySessionData = new DataTable();
         FrmMainApp.DtToponomySessionData.Clear();

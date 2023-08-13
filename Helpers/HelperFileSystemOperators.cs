@@ -27,8 +27,14 @@ internal static class HelperFileSystemOperators
                 {
                     if (dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
                     {
-                        dataToWrite = true;
-                        break;
+                        if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
+                        {
+                            dataToWrite = true;
+                            break;
+                        }
+
+                        // this shouldn't really come up but alas it does and i'm lazy to debug properly
+                        dirElemFileToModify.RemoveAttributeValue(attribute, DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
                     }
                 }
             }

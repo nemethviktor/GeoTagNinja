@@ -89,6 +89,12 @@
     <Reference Include="Microsoft.Web.WebView2.Wpf, Version=1.0.1587.40, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Web.WebView2.1.0.1587.40\lib\net45\Microsoft.Web.WebView2.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.WindowsAPICodePack.Core.1.1.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.WindowsAPICodePack.Shell.1.1.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.13.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -198,7 +204,6 @@
     <Compile Include="Helpers\HelperDataDatabaseAndStartup.cs" />
     <Compile Include="Helpers\HelperDataFavourites.cs" />
     <Compile Include="Helpers\HelperDataLanguageTZ.cs" />
-    <Compile Include="Helpers\HelperDataObjectMapping.cs" />
     <Compile Include="Helpers\HelperDataOtherDataRelated.cs" />
     <Compile Include="Helpers\HelperExifDataPointInteractions.cs" />
     <Compile Include="Helpers\HelperExifExifToolOperator.cs" />
@@ -312,9 +317,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <AdditionalFiles Include="Resources\objectMapping.sqlite">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </AdditionalFiles>
     <EmbeddedResource Include="View\ImagePreview.resx">
       <DependentUpon>ImagePreview.cs</DependentUpon>
     </EmbeddedResource>

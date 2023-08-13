@@ -40,9 +40,6 @@ internal static partial class HelperVariables
     internal static string ResourcesFolderPath;
     internal static string UserDataFolderPath;
     internal static string SSettingsDataBasePath;
-    internal static DataTable DtObjectNames;
-    internal static DataTable DtObjectattributesIn;
-    internal static DataTable DtObjectattributesOut;
     internal static DataTable DtIsoCountryCodeMapping;
     internal static List<string> LstCityNameIsAdminName1 = new();
     internal static List<string> LstCityNameIsAdminName2 = new();
