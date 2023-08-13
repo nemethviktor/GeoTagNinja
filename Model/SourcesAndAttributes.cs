@@ -118,42 +118,45 @@ public class SourcesAndAttributes
                 {
                     "XMP:GPSAltitude",
                     "EXIF:GPSAltitude",
-                    "Composite:GPSAltitude"
+                    "GPS:GPSAltitude"
                 }
             },
             {
                 ElementAttribute.GPSAltitudeRef, new List<string>
                 {
                     "XMP:GPSAltitudeRef",
-                    "EXIF:GPSAltitudeRef"
+                    "EXIF:GPSAltitudeRef",
+                    "GPS:GPSAltitudeRef"
                 }
             },
             {
                 ElementAttribute.GPSDestLatitude, new List<string>
                 {
                     "XMP:GPSDestLatitude",
-                    "EXIF:GPSDestLatitude"
+                    "EXIF:GPSDestLatitude",
+                    "GPS:GPSDestLatitude"
                 }
             },
             {
                 ElementAttribute.GPSDestLatitudeRef, new List<string>
                 {
                     "EXIF:GPSDestLatitudeRef",
-                    "Composite:GPSDestLatitudeRef"
+                    "GPS:GPSDestLatitudeRef"
                 }
             },
             {
                 ElementAttribute.GPSDestLongitude, new List<string>
                 {
                     "XMP:GPSDestLongitude",
-                    "EXIF:GPSDestLongitude"
+                    "EXIF:GPSDestLongitude",
+                    "GPS:GPSDestLongitude"
                 }
             },
             {
                 ElementAttribute.GPSDestLongitudeRef, new List<string>
                 {
                     "EXIF:GPSDestLongitudeRef",
-                    "Composite:GPSDestLongitudeRef"
+                    "GPS:GPSDestLongitudeRef"
                 }
             },
             {
@@ -175,14 +178,14 @@ public class SourcesAndAttributes
                 {
                     "XMP:GPSLatitude",
                     "EXIF:GPSLatitude",
-                    "Composite:GPSLatitude"
+                    "GPS:GPSLatitude"
                 }
             },
             {
                 ElementAttribute.GPSLatitudeRef, new List<string>
                 {
                     "EXIF:GPSLatitudeRef",
-                    "Composite:GPSLatitudeRef"
+                    "GPS:GPSLatitudeRef"
                 }
             },
             {
@@ -190,14 +193,14 @@ public class SourcesAndAttributes
                 {
                     "XMP:GPSLongitude",
                     "EXIF:GPSLongitude",
-                    "Composite:GPSLongitude"
+                    "GPS:GPSLongitude"
                 }
             },
             {
                 ElementAttribute.GPSLongitudeRef, new List<string>
                 {
                     "EXIF:GPSLongitudeRef",
-                    "Composite:GPSLongitudeRef"
+                    "GPS:GPSLongitudeRef"
                 }
             },
             {
