@@ -82,7 +82,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <exception cref="ArgumentException">If the column was not found</exception>
     public int GetColumnIndex(string column)
     {
-        int colIndex = SourcesAndAttributes.TagsToColumnHeaderOrder.IndexOf(item: SourcesAndAttributes.GetAttributeFromString(attributeToFind: column));
+        int colIndex = SourcesAndAttributes.TagsToColumnHeaderOrder.IndexOf(item: SourcesAndAttributes.GetAttributeFromString(attributeToFind: column)) + 1; // filename is the first;
         return colIndex;
     }
 

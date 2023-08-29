@@ -9,6 +9,7 @@
   - Fixed some logic relating to certain Composite Tags not being written properly
   - Also fixed a duplication issue in the outgoing args file while at it
   - Fixed a bug where Paste would also attempt to affect folders
+  - Fixed a bug that was caused by a recent update where clicking on an item in the ListView wouldn't actually trigger a map change
 
 **Build 8610 [20230729]** [dev branch release]
 - NEW & UPDATED:

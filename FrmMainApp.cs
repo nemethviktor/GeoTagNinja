@@ -418,8 +418,10 @@ public partial class FrmMainApp : Form
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     public class MapGpsCoordinates
     {
+#pragma warning disable IDE1006 // Naming Styles
         public double lat { get; set; } // note to self: don't allow ReSharper to rename these.
         public double lng { get; set; } // note to self: don't allow ReSharper to rename these.
+#pragma warning restore IDE1006 // Naming Styles
     }
 
     /// <summary>
