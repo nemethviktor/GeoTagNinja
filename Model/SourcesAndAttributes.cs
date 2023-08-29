@@ -379,21 +379,24 @@ public class SourcesAndAttributes
                 ElementAttribute.GPSAltitude, new List<string>
                 {
                     "GPS:GPSAltitude",
-                    "exif:GPSAltitude"
+                    "exif:GPSAltitude",
+                    "XMP:GPSAltitude"
                 }
             },
             {
                 ElementAttribute.GPSAltitudeRef, new List<string>
                 {
                     "GPS:GPSAltitudeRef",
-                    "exif:GPSAltitudeRef"
+                    "exif:GPSAltitudeRef",
+                    "XMP:GPSAltitudeRef"
                 }
             },
             {
                 ElementAttribute.GPSDestLatitude, new List<string>
                 {
                     "GPS:GPSDestLatitude",
-                    "exif:GPSDestLatitude"
+                    "exif:GPSDestLatitude",
+                    "XMP:GPSDestLatitude"
                 }
             },
             {
@@ -407,7 +410,8 @@ public class SourcesAndAttributes
                 ElementAttribute.GPSDestLongitude, new List<string>
                 {
                     "GPS:GPSDestLongitude",
-                    "exif:GPSDestLongitude"
+                    "exif:GPSDestLongitude",
+                    "XMP:GPSDestLongitude"
                 }
             },
             {
@@ -435,7 +439,8 @@ public class SourcesAndAttributes
                 ElementAttribute.GPSLatitude, new List<string>
                 {
                     "GPS:GPSLatitude",
-                    "exif:GPSLatitude"
+                    "exif:GPSLatitude",
+                    "XMP:GPSLatitude"
                 }
             },
             {
@@ -449,7 +454,8 @@ public class SourcesAndAttributes
                 ElementAttribute.GPSLongitude, new List<string>
                 {
                     "GPS:GPSLongitude",
-                    "exif:GPSLongitude"
+                    "exif:GPSLongitude",
+                    "XMP:GPSLongitude"
                 }
             },
             {

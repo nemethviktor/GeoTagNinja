@@ -211,7 +211,7 @@ internal static class HelperExifWriteSaveToFile
                                     UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "=" + updateExifVal);
 
                                     //if lat/long/alt then add Ref. 
-                                    if (exifToolAttribute.EndsWith(value: "GPSLatitude"))
+                                    if (!exifToolAttribute.StartsWith("XMP") && exifToolAttribute.EndsWith(value: "GPSLatitude"))
                                     {
                                         if (updateExifVal.Substring(startIndex: 0, length: 1) == FrmMainApp.NullStringEquivalentGeneric)
                                         {
@@ -222,7 +222,7 @@ internal static class HelperExifWriteSaveToFile
                                             UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=" + "North");
                                         }
                                     }
-                                    else if (exifToolAttribute.EndsWith(value: "GPSLongitude"))
+                                    else if (!exifToolAttribute.StartsWith("XMP") && exifToolAttribute.EndsWith(value: "GPSLongitude"))
                                     {
                                         if (updateExifVal.Substring(startIndex: 0, length: 1) == FrmMainApp.NullStringEquivalentGeneric)
                                         {
