@@ -374,7 +374,6 @@ public class SourcesAndAttributes
                     "exif:ExposureTime"
                 }
             },
-
             {
                 ElementAttribute.GPSAltitude, new List<string>
                 {

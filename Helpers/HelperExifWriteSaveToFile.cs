@@ -177,7 +177,7 @@ internal static class HelperExifWriteSaveToFile
                                .ToString();
 
                             ElementAttribute attribute = GetAttributeFromString(attributeToFind: settingId);
-                            List<string> orderedTags = new List<string>();
+                            List<string> orderedTags = new();
                             try
                             {
                                 orderedTags = TagsToAttributesOut[key: attribute];
@@ -211,46 +211,49 @@ internal static class HelperExifWriteSaveToFile
                                     UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "=" + updateExifVal);
 
                                     //if lat/long/alt then add Ref. 
-                                    if (!exifToolAttribute.StartsWith("XMP") && exifToolAttribute.EndsWith(value: "GPSLatitude"))
+                                    if (!exifToolAttribute.StartsWith(value: "XMP"))
                                     {
-                                        if (updateExifVal.Substring(startIndex: 0, length: 1) == FrmMainApp.NullStringEquivalentGeneric)
+                                        if (exifToolAttribute.EndsWith(value: "GPSLatitude"))
                                         {
-                                            UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=" + "South");
+                                            if (updateExifVal.Substring(startIndex: 0, length: 1) == FrmMainApp.NullStringEquivalentGeneric)
+                                            {
+                                                UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=" + "South");
+                                            }
+                                            else
+                                            {
+                                                UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=" + "North");
+                                            }
                                         }
-                                        else
+                                        else if (exifToolAttribute.EndsWith(value: "GPSLongitude"))
                                         {
-                                            UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=" + "North");
+                                            if (updateExifVal.Substring(startIndex: 0, length: 1) == FrmMainApp.NullStringEquivalentGeneric)
+                                            {
+                                                UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=" + "West");
+                                            }
+                                            else
+                                            {
+                                                UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=" + "East");
+                                            }
                                         }
-                                    }
-                                    else if (!exifToolAttribute.StartsWith("XMP") && exifToolAttribute.EndsWith(value: "GPSLongitude"))
-                                    {
-                                        if (updateExifVal.Substring(startIndex: 0, length: 1) == FrmMainApp.NullStringEquivalentGeneric)
+                                        else if (exifToolAttribute.EndsWith(value: "GPSAltitude"))
                                         {
-                                            UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=" + "West");
-                                        }
-                                        else
-                                        {
-                                            UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=" + "East");
-                                        }
-                                    }
-                                    else if (exifToolAttribute.EndsWith(value: "GPSAltitude"))
-                                    {
-                                        double.TryParse(s: updateExifVal, style: NumberStyles.AllowDecimalPoint, provider: CultureInfo.InvariantCulture, result: out double tmpAltitude);
-                                        updateExifVal = (HelperVariables.UseImperial
-                                            ? Math.Round(value: tmpAltitude / HelperVariables.METRETOFEET, digits: 2)
-                                            : tmpAltitude).ToString(provider: CultureInfo.InvariantCulture);
+                                            double.TryParse(s: updateExifVal, style: NumberStyles.AllowDecimalPoint, provider: CultureInfo.InvariantCulture, result: out double tmpAltitude);
+                                            updateExifVal = (HelperVariables.UseImperial
+                                                ? Math.Round(value: tmpAltitude / HelperVariables.METRETOFEET, digits: 2)
+                                                : tmpAltitude).ToString(provider: CultureInfo.InvariantCulture);
 
-                                        // add ref -- "ExifTool will also accept number when writing this tag, with negative numbers indicating below sea level"
-                                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" +
-                                                                                                        exifToolAttribute +
-                                                                                                        "Ref" +
-                                                                                                        "=" +
-                                                                                                        (tmpAltitude > 0
-                                                                                                            ? "0"
-                                                                                                            : "-1"));
+                                            // add ref -- "ExifTool will also accept number when writing this tag, with negative numbers indicating below sea level"
+                                            UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" +
+                                                                                                            exifToolAttribute +
+                                                                                                            "Ref" +
+                                                                                                            "=" +
+                                                                                                            (tmpAltitude > 0
+                                                                                                                ? "0"
+                                                                                                                : "-1"));
 
-                                        // same as below/generic
-                                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "=" + updateExifVal);
+                                            // same as below/generic
+                                            UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "=" + updateExifVal);
+                                        }
                                     }
                                 }
                                 else //delete tag
@@ -258,12 +261,16 @@ internal static class HelperExifWriteSaveToFile
                                     UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "=");
 
                                     //if lat/long then add Ref. 
-                                    if (
-                                        exifToolAttribute.EndsWith(value: "GPSLatitude") ||
-                                        exifToolAttribute.EndsWith(value: "GPSLongitude")
-                                    )
+                                    if (!exifToolAttribute.StartsWith(value: "XMP"))
                                     {
-                                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=");
+                                        if (
+                                            exifToolAttribute.EndsWith(value: "GPSLatitude") ||
+                                            exifToolAttribute.EndsWith(value: "GPSLongitude") ||
+                                            exifToolAttribute.EndsWith(value: "GPSAltitude")
+                                        )
+                                        {
+                                            UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-" + exifToolAttribute + "Ref" + "=");
+                                        }
                                     }
                                 }
 
