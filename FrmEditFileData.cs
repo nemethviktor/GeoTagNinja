@@ -164,33 +164,6 @@ public partial class FrmEditFileData : Form
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         btn_InsertFromTakenDate.Enabled = false;
 
-        // via https://stackoverflow.com/a/47692754/3968494
-
-        Logger.Trace(message: "Copying Data From Stage1EditFormIntraTabTransferQueue");
-
-        Dictionary<ElementAttribute, string> datainStage1 = new();
-        foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
-        {
-            if (dirElemFileToModify != null && dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue))
-            {
-                string attributeValueString = dirElemFileToModify.GetAttributeValueString(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
-                datainStage1.Add(key: attribute, value: attributeValueString);
-            }
-        }
-
-        Logger.Trace(message: "Copying Data From Stage3ReadyToWrite");
-        Dictionary<ElementAttribute, string> dataInStage3 = new();
-        foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
-        {
-            if (dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
-            {
-                string attributeValueString = dirElemFileToModify.GetAttributeValueString(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
-                dataInStage3.Add(key: attribute, value: attributeValueString);
-            }
-        }
-
-        Logger.Trace(message: "Data Copy Done");
-
         Logger.Trace(message: "Assinging Labels Start");
         HelperNonStatic helperNonstatic = new();
         List<Type> lstControlTypesNoDEValue = new()
