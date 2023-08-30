@@ -4,13 +4,13 @@
 - NEW & UPDATED:
  - Bumped exifTool to v12.65
  - Added a TaskbarProgressBarState indicator
+ - Changed the internal logic as to how the ListView coordinates get put on the map. Trying to fully move away from reading data from the ListView rather than from the DirectoryElement
 - BUGS & FIXES:
   - Fixed a bug where in Finland (English) culture [possibly others too] the app would crash because decimals were being converted in the wrong way.
   - Fixed some logic relating to certain Composite Tags not being written properly
 	- Then fixed an issue caused by this where XMP tags weren't written out to XMP files properly. 
   - Also fixed a duplication issue in the outgoing args file while at it
   - Fixed a bug where Paste would also attempt to affect folders
-  - Fixed a bug that was caused by a recent update where clicking on an item in the ListView wouldn't actually trigger a map change
 
 **Build 8610 [20230729]** [dev branch release]
 - NEW & UPDATED:
