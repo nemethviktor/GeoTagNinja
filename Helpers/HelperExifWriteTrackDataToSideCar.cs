@@ -21,7 +21,7 @@ internal class HelperExifWriteTrackDataToSideCar
     /// <param name="GeoMaxIntSecs"></param>
     /// <param name="GeoMaxExtSecs"></param>
     /// <param name="timeShiftSeconds"></param>
-    internal static async Task ExifWriteTrackDataToSideCar(List<string> trackFileList,
+    internal static void ExifWriteTrackDataToSideCar(List<string> trackFileList,
                                                            List<string> imageFileList,
                                                            string compareTZAgainst,
                                                            string TZVal,
@@ -109,9 +109,9 @@ internal class HelperExifWriteTrackDataToSideCar
 
         File.WriteAllText(path: argsFile, contents: exifArgsForOriginalFile, encoding: Encoding.UTF8);
         ///////////////
-        await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
+        HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
                                                      frmMainAppInstance: null,
-                                                     initiator: "ExifGetTrackSyncData");
+                                                     initiator: HelperExifExifToolOperator.INITIATOR.GET_TRACK_SYNC_DATA);
 
         ///////////////
         //// try to collect the xmp/xml files and then read them back into the listview.

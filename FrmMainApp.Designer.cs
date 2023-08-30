@@ -1,5 +1,4 @@
 ﻿using GeoTagNinja.View.ListView;
-using System.Reflection;
 using System.Windows.Forms;
 using static GeoTagNinja.View.ListView.FileListView;
 
@@ -333,6 +332,7 @@ namespace GeoTagNinja
             // 
             this.tbx_FolderName.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.tbx_FolderName.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
+            this.tbx_FolderName.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.tbx_FolderName.Name = "tbx_FolderName";
             this.tbx_FolderName.Size = new System.Drawing.Size(400, 25);
             this.tbx_FolderName.Enter += new System.EventHandler(this.tbx_FolderName_Enter);
@@ -431,7 +431,7 @@ namespace GeoTagNinja
             this.tmi_removeCachedData,
             this.tmi_OpenCoordsInAPI});
             this.cms_FileListView.Name = "cms_FileListView";
-            this.cms_FileListView.Size = new System.Drawing.Size(202, 70);
+            this.cms_FileListView.Size = new System.Drawing.Size(202, 92);
             // 
             // tmi_ShowHideCols
             // 

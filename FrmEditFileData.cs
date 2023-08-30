@@ -934,8 +934,8 @@ public partial class FrmEditFileData : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private async void lvw_FileListEditImages_SelectedIndexChanged(object sender,
-                                                                   EventArgs e)
+    private void lvw_FileListEditImages_SelectedIndexChanged(object sender,
+                                                             EventArgs e)
     {
         Logger logger = FrmMainApp.Logger;
         logger.Debug(message: "Starting");
@@ -954,8 +954,8 @@ public partial class FrmEditFileData : Form
                 lvw_EditorFileListImagesGetData();
 
                 pbx_imagePreview.Image = null;
-                await HelperExifReadGetImagePreviews.GenericCreateImagePreview(fileNameWithPath: fileNameWithPath,
-                                                                               initiator: "FrmEditFileData");
+                HelperExifReadGetImagePreviews.GenericCreateImagePreview(fileNameWithPath: fileNameWithPath,
+                                                                         initiator: "FrmEditFileData");
             }
             else
             {
@@ -980,8 +980,8 @@ public partial class FrmEditFileData : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private async void btn_OK_Click(object sender,
-                                    EventArgs e)
+    private void btn_OK_Click(object sender,
+                              EventArgs e)
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         if (frmMainAppInstance != null)
@@ -1034,7 +1034,7 @@ public partial class FrmEditFileData : Form
                     if (lvi != null)
                     {
                         HelperGenericFileLocking.FileListBeingUpdated = true;
-                        await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                        FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
                         TaskbarManagerInstance.SetProgressValue(fileCounter + 1, directoryElementsCount);
                         Thread.Sleep(1);
                         HelperGenericFileLocking.FileListBeingUpdated = false;
@@ -1090,10 +1090,10 @@ public partial class FrmEditFileData : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private async void btn_RemoveGeoData_Click(object sender,
-                                               EventArgs e)
+    private void btn_RemoveGeoData_Click(object sender,
+                                         EventArgs e)
     {
-        await HelperExifDataPointInteractions.ExifRemoveLocationData(senderName: "FrmEditFileData");
+        HelperExifDataPointInteractions.ExifRemoveLocationData(senderName: "FrmEditFileData");
     }
 
 #region object text change handlers

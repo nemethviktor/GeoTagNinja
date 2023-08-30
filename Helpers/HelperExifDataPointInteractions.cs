@@ -59,7 +59,7 @@ internal static class HelperExifDataPointInteractions
     ///     files.
     /// </summary>
     /// <param name="senderName">At this point this can either be the main listview or the one from Edit (file) data</param>
-    internal static async Task ExifRemoveLocationData(string senderName)
+    internal static void ExifRemoveLocationData(string senderName)
     {
         // GeoDataAttributes is a readonly and I don't want to modify it for the rest of the code.
         List<ElementAttribute> toponomyOverwritesAttributes = GeoDataAttributes;
@@ -162,7 +162,7 @@ internal static class HelperExifDataPointInteractions
                             // check it's not in the read-queue.
                             while (HelperGenericFileLocking.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
                             {
-                                await Task.Delay(millisecondsDelay: 10);
+                                Task.Delay(millisecondsDelay: 10);
                             }
 
                             // then put a blocker on
@@ -182,7 +182,7 @@ internal static class HelperExifDataPointInteractions
 
                             // then remove lock
 
-                            await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                            FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
                             HelperGenericFileLocking.GenericLockUnLockFile(fileNameWithoutPath: fileNameWithoutPath);
                             // no need to remove the xmp here because it hasn't been added in the first place.
                         }
@@ -191,7 +191,6 @@ internal static class HelperExifDataPointInteractions
                     }
 
                     HelperGenericFileLocking.FileListBeingUpdated = false;
-                    FrmMainApp.RemoveGeoDataIsRunning = false;
                 }
             }
         }

@@ -60,9 +60,15 @@ public class DirectoryElement
     /// </summary>
     public enum AttributeVersion
     {
+        /// <summary>
+        /// The original version loaded from the image of xmp file.
+        /// </summary>
         Original,
         Stage1EditFormIntraTabTransferQueue,
         Stage2EditFormReadyToSaveAndMoveToWriteQueue,
+        /// <summary>
+        /// Flagged for saving / that is the write-queue: only attributeversion Stage3ReadyToWrite gets written upon saving.
+        /// </summary>
         Stage3ReadyToWrite
     }
 
@@ -257,15 +263,9 @@ public class DirectoryElement
         Type attributeType = avc.MyValueType;
 
         AttributeVersion? versionCheck = CheckWhichVersion(avc: avc, versionRequested: version);
+
         if (versionCheck == null)
-        {
             return false;
-        }
-
-        AttributeVersion versionToReturn = (AttributeVersion)versionCheck;
-
-        // Retrieve and return value
-
         return true;
     }
 
@@ -280,13 +280,12 @@ public class DirectoryElement
                                                 AttributeVersion version)
     {
         if (!_Attributes.ContainsKey(key: attribute))
-        {
             return false;
-        }
 
         AttributeValueContainer avc = _Attributes[key: attribute];
         return HasSpecificAttributeWithVersion(avc, version);
     }
+
 
     /// <summary>
     /// Checks if there is _any_ data for a particular ElementAttribute
@@ -859,7 +858,7 @@ public class DirectoryElement
         }
 
         callDepth++;
-        (string chosenTag, string parseResult) = GetDataPointFromTags(attribute: attribute, tags: tags);
+        (string? chosenTag, string? parseResult) = GetDataPointFromTags(attribute: attribute, tags: tags);
 
         #region Create a history
 
@@ -906,7 +905,7 @@ public class DirectoryElement
         #endregion
 
         // If needed, transform the attribute
-        IConvertible resTyped = null;
+        IConvertible? resTyped = null;
         switch (attribute)
         {
             case ElementAttribute.GPSAltitude:
