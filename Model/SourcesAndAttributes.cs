@@ -7,6 +7,9 @@ namespace GeoTagNinja.Model;
 
 public class SourcesAndAttributes
 {
+    /// <summary>
+    ///     ElementAttributes available
+    /// </summary>
     public enum ElementAttribute
     {
         GPSAltitude,
@@ -54,47 +57,64 @@ public class SourcesAndAttributes
         GUID
     }
 
-
-    public static readonly IDictionary<ElementAttribute, int> TagsToColumnHeaderOrder = new Dictionary<ElementAttribute, int>
+    /// <summary>
+    ///     List of ElementAttributes. Reorder to change default column layout.
+    /// </summary>
+    public static readonly List<ElementAttribute> TagsToColumnHeaderOrder = new()
     {
-        { ElementAttribute.Coordinates, 1 },
-        { ElementAttribute.GPSLatitude, 2 },
-        { ElementAttribute.GPSLatitudeRef, 3 },
-        { ElementAttribute.GPSLongitude, 4 },
-        { ElementAttribute.GPSLongitudeRef, 5 },
-        { ElementAttribute.GPSSpeed, 6 },
-        { ElementAttribute.GPSSpeedRef, 7 },
-        { ElementAttribute.GPSAltitude, 8 },
-        { ElementAttribute.GPSAltitudeRef, 9 },
-        { ElementAttribute.Country, 10 },
-        { ElementAttribute.CountryCode, 11 },
-        { ElementAttribute.State, 12 },
-        { ElementAttribute.City, 13 },
-        { ElementAttribute.Sub_location, 14 },
-        { ElementAttribute.DestCoordinates, 15 },
-        { ElementAttribute.GPSDestLatitude, 16 },
-        { ElementAttribute.GPSDestLatitudeRef, 17 },
-        { ElementAttribute.GPSDestLongitude, 18 },
-        { ElementAttribute.GPSDestLongitudeRef, 19 },
-        { ElementAttribute.GPSImgDirection, 20 },
-        { ElementAttribute.GPSImgDirectionRef, 21 },
-        { ElementAttribute.Make, 22 },
-        { ElementAttribute.Model, 23 },
-        { ElementAttribute.Rating, 24 },
-        { ElementAttribute.ExposureTime, 25 },
-        { ElementAttribute.Fnumber, 26 },
-        { ElementAttribute.FocalLength, 27 },
-        { ElementAttribute.FocalLengthIn35mmFormat, 28 },
-        { ElementAttribute.ISO, 29 },
-        { ElementAttribute.LensSpec, 30 },
-        { ElementAttribute.TakenDate, 31 },
-        { ElementAttribute.CreateDate, 32 },
-        { ElementAttribute.OffsetTime, 33 },
-        { ElementAttribute.GUID, 34 }
+        ElementAttribute.Coordinates,
+        ElementAttribute.GPSLatitude,
+        ElementAttribute.GPSLatitudeRef,
+        ElementAttribute.GPSLongitude,
+        ElementAttribute.GPSLongitudeRef,
+        ElementAttribute.GPSSpeed,
+        ElementAttribute.GPSSpeedRef,
+        ElementAttribute.GPSAltitude,
+        ElementAttribute.GPSAltitudeRef,
+        ElementAttribute.Country,
+        ElementAttribute.CountryCode,
+        ElementAttribute.State,
+        ElementAttribute.City,
+        ElementAttribute.Sub_location,
+        ElementAttribute.DestCoordinates,
+        ElementAttribute.GPSDestLatitude,
+        ElementAttribute.GPSDestLatitudeRef,
+        ElementAttribute.GPSDestLongitude,
+        ElementAttribute.GPSDestLongitudeRef,
+        ElementAttribute.GPSImgDirection,
+        ElementAttribute.GPSImgDirectionRef,
+        ElementAttribute.Make,
+        ElementAttribute.Model,
+        ElementAttribute.Rating,
+        ElementAttribute.ExposureTime,
+        ElementAttribute.Fnumber,
+        ElementAttribute.FocalLength,
+        ElementAttribute.FocalLengthIn35mmFormat,
+        ElementAttribute.ISO,
+        ElementAttribute.LensSpec,
+        ElementAttribute.TakenDate,
+        ElementAttribute.CreateDate,
+        ElementAttribute.OffsetTime,
+        ElementAttribute.GUID
     };
 
     /// <summary>
-    /// This defines the "tags-in" (as in exif tags) for each EA. The order does matter as it's basically sorted.
+    ///     This is the list of/for attribs that are considered "geodata"
+    /// </summary>
+    public static readonly List<ElementAttribute> GeoDataAttributes = new()
+    {
+        ElementAttribute.GPSLatitude,
+        ElementAttribute.GPSLongitude,
+        ElementAttribute.CountryCode,
+        ElementAttribute.Country,
+        ElementAttribute.City,
+        ElementAttribute.State,
+        ElementAttribute.Sub_location,
+        ElementAttribute.GPSAltitude
+    };
+
+    /// <summary>
+    ///     This defines the "tags-in" (as in exif tags) for each EA. The order does matter as it's basically sorted.
     /// </summary>
     public static readonly IDictionary<ElementAttribute, List<string>> TagsToAttributesIn =
         new Dictionary<ElementAttribute, List<string>>
@@ -328,7 +348,7 @@ public class SourcesAndAttributes
         };
 
     /// <summary>
-    /// This defines the "tags-out" (as in exif tags) for each EA. The order does matter as they all get written.
+    ///     This defines the "tags-out" (as in exif tags) for each EA. The order does not matter as they all get written.
     /// </summary>
     public static readonly IDictionary<ElementAttribute, List<string>> TagsToAttributesOut =
         new Dictionary<ElementAttribute, List<string>>
@@ -369,26 +389,28 @@ public class SourcesAndAttributes
                     "exif:ExposureTime"
                 }
             },
-
             {
                 ElementAttribute.GPSAltitude, new List<string>
                 {
                     "GPS:GPSAltitude",
-                    "exif:GPSAltitude"
+                    "exif:GPSAltitude",
+                    "XMP:GPSAltitude"
                 }
             },
             {
                 ElementAttribute.GPSAltitudeRef, new List<string>
                 {
                     "GPS:GPSAltitudeRef",
-                    "exif:GPSAltitudeRef"
+                    "exif:GPSAltitudeRef",
+                    "XMP:GPSAltitudeRef"
                 }
             },
             {
                 ElementAttribute.GPSDestLatitude, new List<string>
                 {
                     "GPS:GPSDestLatitude",
-                    "exif:GPSDestLatitude"
+                    "exif:GPSDestLatitude",
+                    "XMP:GPSDestLatitude"
                 }
             },
             {
@@ -402,7 +424,8 @@ public class SourcesAndAttributes
                 ElementAttribute.GPSDestLongitude, new List<string>
                 {
                     "GPS:GPSDestLongitude",
-                    "exif:GPSDestLongitude"
+                    "exif:GPSDestLongitude",
+                    "XMP:GPSDestLongitude"
                 }
             },
             {
@@ -430,7 +453,8 @@ public class SourcesAndAttributes
                 ElementAttribute.GPSLatitude, new List<string>
                 {
                     "GPS:GPSLatitude",
-                    "exif:GPSLatitude"
+                    "exif:GPSLatitude",
+                    "XMP:GPSLatitude"
                 }
             },
             {
@@ -444,7 +468,8 @@ public class SourcesAndAttributes
                 ElementAttribute.GPSLongitude, new List<string>
                 {
                     "GPS:GPSLongitude",
-                    "exif:GPSLongitude"
+                    "exif:GPSLongitude",
+                    "XMP:GPSLongitude"
                 }
             },
             {
@@ -488,7 +513,7 @@ public class SourcesAndAttributes
                 {
                     "State",
                     "XMP-photoshop:State",
-                    "IPTC:Province-State",
+                    "IPTC:Province-State"
                 }
             },
             {

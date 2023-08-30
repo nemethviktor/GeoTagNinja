@@ -288,6 +288,33 @@ public class DirectoryElement
 
 
     /// <summary>
+    /// Checks if there is _any_ data for a particular ElementAttribute
+    /// </summary>
+    /// <param name="attribute">The attribute to check</param>
+    /// <returns></returns>
+    public bool HasSpecificAttributeWithAnyVersion(ElementAttribute attribute)
+    {
+        if (!_Attributes.ContainsKey(key: attribute))
+        {
+            return false;
+        }
+
+        AttributeValueContainer avc = _Attributes[key: attribute];
+        foreach (AttributeVersion attributeVersion in (AttributeVersion[])Enum.GetValues(
+                     typeof(DirectoryElement.AttributeVersion)))
+        {
+            if (HasSpecificAttributeWithVersion(avc, attributeVersion))
+            {
+                return true;
+            }
+
+            ;
+        }
+
+        return false;
+    }
+
+    /// <summary>
     ///     Informs if the particular tag is marked for removal
     /// </summary>
     /// <param name="attribute"></param>
@@ -438,6 +465,35 @@ public class DirectoryElement
                                              "' by requesting its value with type 'string' due to conversion issues.");
     }
 
+    public AttributeVersion? GetMaxAttributeVersion(ElementAttribute attribute)
+
+    {
+        List<DirectoryElement.AttributeVersion> relevantAttributeVersions = new()
+        {
+            // DO NOT reorder!
+            DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+            DirectoryElement.AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue,
+            DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+            DirectoryElement.AttributeVersion.Original
+        };
+        foreach (AttributeVersion attributeVersion in relevantAttributeVersions)
+        {
+            if (HasSpecificAttributeWithVersion(attribute, attributeVersion))
+            {
+                if (!IsMarkedForDeletion(attribute, attributeVersion))
+                {
+                    return attributeVersion;
+                }
+                else
+                {
+                    // if it's marked for deletion then we don't want to return the Original because the assumption is that the value is being dropped.
+                    return null;
+                }
+            }
+        }
+
+        return null;
+    }
 
     /// <summary>
     ///     Returns the value of an attribute as the given generic.
@@ -453,7 +509,7 @@ public class DirectoryElement
     /// <param name="notFoundValue">The value to return if no suitable value was found</param>
     /// <returns></returns>
     public T? GetAttributeValue<T>(ElementAttribute attribute,
-                                   AttributeVersion version,
+                                   AttributeVersion? version,
                                    T? notFoundValue = null)
         where T : struct
     {

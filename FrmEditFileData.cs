@@ -1,17 +1,18 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Model;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using GeoTagNinja.Helpers;
-using GeoTagNinja.Model;
+using NLog;
 using TimeZoneConverter;
 using static GeoTagNinja.FrmMainApp;
 using static GeoTagNinja.Model.SourcesAndAttributes;
+using static GeoTagNinja.View.ListView.FileListView;
 
 namespace GeoTagNinja;
 
@@ -34,10 +35,11 @@ public partial class FrmEditFileData : Form
     /// </summary>
     public FrmEditFileData()
     {
-        Logger.Debug(message: "Starting");
+        Logger logger = FrmMainApp.Logger;
+        logger.Debug(message: "Starting");
 
         InitializeComponent();
-        Logger.Trace(message: "InitializeComponent OK");
+        logger.Trace(message: "InitializeComponent OK");
     }
 
     /// <summary>
@@ -51,11 +53,12 @@ public partial class FrmEditFileData : Form
     private void FrmEditFileData_Load(object sender,
                                       EventArgs e)
     {
-        Logger.Info(message: "Starting");
-        Logger.Trace(message: "Defaults Starting");
+        Logger logger = FrmMainApp.Logger;
+        logger.Info(message: "Starting");
+        logger.Trace(message: "Defaults Starting");
         _frmEditFileDataNowLoadingFileData = true;
 
-        Logger.Trace(message: "Emptying FrmMainApp.Stage1EditFormIntraTabTransferQueue + Stage2EditFormReadyToSaveAndMoveToWriteQueue");
+        logger.Trace(message: "Emptying FrmMainApp.Stage1EditFormIntraTabTransferQueue + Stage2EditFormReadyToSaveAndMoveToWriteQueue");
         foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
         {
             {
@@ -72,9 +75,9 @@ public partial class FrmEditFileData : Form
             }
         }
 
-        Logger.Trace(message: "Emptying FrmMainApp.Stage1EditFormIntraTabTransferQueue + Stage2EditFormReadyToSaveAndMoveToWriteQueue - Done");
+        logger.Trace(message: "Emptying FrmMainApp.Stage1EditFormIntraTabTransferQueue + Stage2EditFormReadyToSaveAndMoveToWriteQueue - Done");
 
-        Logger.Trace(message: "Setting Dropdown defaults");
+        logger.Trace(message: "Setting Dropdown defaults");
         // Deal with Dates
         // TakenDate
         dtp_TakenDate.Enabled = true;
@@ -117,13 +120,13 @@ public partial class FrmEditFileData : Form
             cbx_OffsetTimeList.Items.Add(item: timezone);
         }
 
-        Logger.Trace(message: "Setting Dropdown defaults - Done");
+        logger.Trace(message: "Setting Dropdown defaults - Done");
 
         // this updates the listview itself
 
         if (lvw_FileListEditImages.Items.Count > 0)
         {
-            Logger.Trace(message: "ListViewSelect Start");
+            logger.Trace(message: "ListViewSelect Start");
 
             lvw_FileListEditImages.Items[index: 0]
                                   .Selected = true;
@@ -134,11 +137,11 @@ public partial class FrmEditFileData : Form
                 lvw_FileListEditImages.Enabled = false;
             }
 
-            Logger.Trace(message: "ListViewSelect Done");
+            logger.Trace(message: "ListViewSelect Done");
         }
 
         _frmEditFileDataNowLoadingFileData = false; // techinically this is redundant here
-        Logger.Info(message: "Done");
+        logger.Info(message: "Done");
     }
 
     /// <summary>
@@ -148,7 +151,8 @@ public partial class FrmEditFileData : Form
     /// </summary>
     private void lvw_EditorFileListImagesGetData()
     {
-        Logger.Debug(message: "Starting");
+        Logger logger = FrmMainApp.Logger;
+        logger.Debug(message: "Starting");
 
         _frmEditFileDataNowLoadingFileData = true;
 
@@ -158,40 +162,13 @@ public partial class FrmEditFileData : Form
            .Width = lvw.Width;
 
         string fileNameWithoutPath = lvi.Text;
-        DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+        DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
                                                                                                                     .Index]
                                                                                                 .Text);
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         btn_InsertFromTakenDate.Enabled = false;
 
-        // via https://stackoverflow.com/a/47692754/3968494
-
-        Logger.Trace(message: "Copying Data From Stage1EditFormIntraTabTransferQueue");
-
-        Dictionary<ElementAttribute, string> datainStage1 = new();
-        foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
-        {
-            if (dirElemFileToModify != null && dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue))
-            {
-                string attributeValueString = dirElemFileToModify.GetAttributeValueString(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
-                datainStage1.Add(key: attribute, value: attributeValueString);
-            }
-        }
-
-        Logger.Trace(message: "Copying Data From Stage3ReadyToWrite");
-        Dictionary<ElementAttribute, string> dataInStage3 = new();
-        foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
-        {
-            if (dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
-            {
-                string attributeValueString = dirElemFileToModify.GetAttributeValueString(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
-                dataInStage3.Add(key: attribute, value: attributeValueString);
-            }
-        }
-
-        Logger.Trace(message: "Data Copy Done");
-
-        Logger.Trace(message: "Assinging Labels Start");
+        logger.Trace(message: "Assinging Labels Start");
         HelperNonStatic helperNonstatic = new();
         List<Type> lstControlTypesNoDEValue = new()
         {
@@ -219,7 +196,7 @@ public partial class FrmEditFileData : Form
 
                 try
                 {
-                    Logger.Trace(message: "cItem: " +
+                    logger.Trace(message: "cItem: " +
                                           cItem.Name +
                                           " (Type: " +
                                           cItem.GetType()
@@ -474,14 +451,14 @@ public partial class FrmEditFileData : Form
                                     cItemValStr = modifiedCreateDateTime.ToString(provider: CultureInfo.CurrentUICulture);
                                 }
 
-                                Logger.Trace(message: "cItem: " + cItem.Name + " - Updating DateTimePicker");
+                                logger.Trace(message: "cItem: " + cItem.Name + " - Updating DateTimePicker");
                                 if (maxAttributeVersion != DirectoryElement.AttributeVersion.Original || totalShiftedSeconds != 0)
                                 {
                                     dtp.Font = new Font(prototype: dtp.Font, newStyle: FontStyle.Bold);
                                 }
                             }
 
-                            Logger.Trace(message: "cItem: " + cItem.Name + " - Adding to Stage2EditFormReadyToSaveAndMoveToWriteQueue");
+                            logger.Trace(message: "cItem: " + cItem.Name + " - Adding to Stage2EditFormReadyToSaveAndMoveToWriteQueue");
                             // stick into DE2 ("pending save") - this is to see if the data has changed later.
                             if (cItem is not NumericUpDown nud)
                             {
@@ -530,7 +507,7 @@ public partial class FrmEditFileData : Form
 
                             if (cItem is TextBox txt)
                             {
-                                Logger.Trace(message: "cItem: " + cItem.Name + " - Updating TextBox");
+                                logger.Trace(message: "cItem: " + cItem.Name + " - Updating TextBox");
                                 if (maxAttributeVersion != DirectoryElement.AttributeVersion.Original)
                                 {
                                     txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Bold);
@@ -538,7 +515,7 @@ public partial class FrmEditFileData : Form
                             }
                             else if (cItem is ComboBox cmb)
                             {
-                                Logger.Trace(message: "cItem: " + cItem.Name + " - Updating ComboBox");
+                                logger.Trace(message: "cItem: " + cItem.Name + " - Updating ComboBox");
                                 if (maxAttributeVersion != DirectoryElement.AttributeVersion.Original)
                                 {
                                     cmb.Font = new Font(prototype: cmb.Font, newStyle: FontStyle.Bold);
@@ -589,7 +566,7 @@ public partial class FrmEditFileData : Form
                     // ignored
                 }
 
-                Logger.Trace(message: "cItem: " +
+                logger.Trace(message: "cItem: " +
                                       cItem.Name +
                                       " (Type: " +
                                       cItem.GetType()
@@ -598,10 +575,10 @@ public partial class FrmEditFileData : Form
             }
         }
 
-        Logger.Trace(message: "Assinging Labels Done");
+        logger.Trace(message: "Assinging Labels Done");
 
         // done load
-        Logger.Debug(message: "Done");
+        logger.Debug(message: "Done");
         _frmEditFileDataNowLoadingFileData = false;
     }
 
@@ -717,20 +694,20 @@ public partial class FrmEditFileData : Form
             {
                 HelperVariables.CurrentAltitude = null;
                 HelperVariables.CurrentAltitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
-                                                                    .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSAltitude"]
+                                                                    .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GPS_ALTITUDE]
                                                                                                        .Index]
                                                                     .Text.ToString(provider: CultureInfo.InvariantCulture);
 
                 strGpsLatitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
-                                                   .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLatitude"]
+                                                   .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GPS_LATITUDE]
                                                                                       .Index]
                                                    .Text.ToString(provider: CultureInfo.InvariantCulture);
                 strGpsLongitude = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
-                                                    .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GPSLongitude"]
+                                                    .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GPS_LONGITUDE]
                                                                                        .Index]
                                                     .Text.ToString(provider: CultureInfo.InvariantCulture);
                 string strCreateDate = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
-                                                         .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_CreateDate"]
+                                                         .SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.CREATE_DATE]
                                                                                             .Index]
                                                          .Text.ToString(provider: CultureInfo.InvariantCulture);
                 bool _ = DateTime.TryParse(s: strCreateDate.ToString(provider: CultureInfo.InvariantCulture), result: out createDate);
@@ -892,7 +869,7 @@ public partial class FrmEditFileData : Form
                 ListView lvw = lvw_FileListEditImages;
                 ListViewItem lvi = lvw.SelectedItems[index: 0];
 
-                DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
                                                                                                                             .Index]
                                                                                                         .Text);
                 foreach ((ElementAttribute attribute, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
@@ -933,7 +910,7 @@ public partial class FrmEditFileData : Form
                     ListView lvw = lvw_FileListEditImages;
                     ListViewItem lvi = lvw.SelectedItems[index: 0];
 
-                    DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                    DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
                                                                                                                                 .Index]
                                                                                                             .Text);
 
@@ -958,15 +935,16 @@ public partial class FrmEditFileData : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void lvw_FileListEditImages_SelectedIndexChanged(object sender,
-                                                                   EventArgs e)
+                                                             EventArgs e)
     {
-        Logger.Debug(message: "Starting");
+        Logger logger = FrmMainApp.Logger;
+        logger.Debug(message: "Starting");
         if (lvw_FileListEditImages.SelectedItems.Count > 0)
         {
             ListView lvw = lvw_FileListEditImages;
             ListViewItem lvi = lvw.SelectedItems[index: 0];
 
-            DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+            DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
                                                                                                                         .Index]
                                                                                                     .Text);
             string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
@@ -977,11 +955,11 @@ public partial class FrmEditFileData : Form
 
                 pbx_imagePreview.Image = null;
                 HelperExifReadGetImagePreviews.GenericCreateImagePreview(fileNameWithPath: fileNameWithPath,
-                                                                               initiator: "FrmEditFileData");
+                                                                         initiator: "FrmEditFileData");
             }
             else
             {
-                Logger.Debug(message: "File disappeared: " + fileNameWithPath);
+                logger.Debug(message: "File disappeared: " + fileNameWithPath);
                 MessageBox.Show(
                     text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                         messageBoxName: "mbx_FrmEditFileData_WarningFileDisappeared"),
@@ -991,7 +969,7 @@ public partial class FrmEditFileData : Form
             }
         }
 
-        Logger.Debug(message: "Done");
+        logger.Debug(message: "Done");
     }
 
     /// <summary>
@@ -1003,7 +981,7 @@ public partial class FrmEditFileData : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void btn_OK_Click(object sender,
-                                    EventArgs e)
+                              EventArgs e)
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         if (frmMainAppInstance != null)
@@ -1056,7 +1034,7 @@ public partial class FrmEditFileData : Form
                     if (lvi != null)
                     {
                         HelperGenericFileLocking.FileListBeingUpdated = true;
-                        await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                        FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
                         TaskbarManagerInstance.SetProgressValue(fileCounter + 1, directoryElementsCount);
                         Thread.Sleep(1);
                         HelperGenericFileLocking.FileListBeingUpdated = false;
@@ -1113,7 +1091,7 @@ public partial class FrmEditFileData : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void btn_RemoveGeoData_Click(object sender,
-                                               EventArgs e)
+                                         EventArgs e)
     {
         HelperExifDataPointInteractions.ExifRemoveLocationData(senderName: "FrmEditFileData");
     }
@@ -1146,7 +1124,7 @@ public partial class FrmEditFileData : Form
             ListView lvw = lvw_FileListEditImages;
             ListViewItem lvi = lvw.SelectedItems[index: 0];
 
-            DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+            DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
                                                                                                                         .Index]
                                                                                                     .Text);
             if (dirElemFileToModify != null && dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue))
@@ -1471,7 +1449,7 @@ public partial class FrmEditFileData : Form
         ListView lvw = lvw_FileListEditImages;
         ListViewItem lvi = lvw.SelectedItems[index: 0];
 
-        DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+        DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
                                                                                                                     .Index]
                                                                                                 .Text);
 

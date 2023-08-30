@@ -9,6 +9,8 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.ListView;
+using Microsoft.VisualBasic;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers;
@@ -70,7 +72,7 @@ internal static class HelperExifReadTrackData
             // imageFileList
             foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
             {
-                DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(lvi.SubItems[index: lvw.Columns[key: FileListView.COL_NAME_PREFIX + FileListView.FileListColumns.GUID]
                                                                                                                                  .Index]
                                                                                                              .Text);
                 string pathToTag = dirElemFileToModify.FileNameWithPath;
@@ -155,7 +157,7 @@ internal static class HelperExifReadTrackData
                                 };
 
                                 DirectoryElement dirElemFileToModify =
-                                    FrmMainApp.DirectoryElements.FindElementByItemGUID(lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                    FrmMainApp.DirectoryElements.FindElementByItemGUID(lvi.SubItems[index: lvw.Columns[key: FileListView.COL_NAME_PREFIX + FileListView.FileListColumns.GUID]
                                                                                                               .Index]
                                                                                           .Text);
                                 string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
