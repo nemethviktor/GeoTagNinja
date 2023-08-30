@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.ListView;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja;
@@ -20,7 +21,7 @@ internal static class FileListViewCopyPaste
             ListViewItem lvi = frmMainAppInstance.lvw_FileList.SelectedItems[index: 0];
 
             // don't copy folders....
-            DirectoryElement dirElemFileToCopyFrom = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: "clh_GUID"]
+            DirectoryElement dirElemFileToCopyFrom = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: FileListView.COL_NAME_PREFIX + FileListView.FileListColumns.GUID]
                                                                                                                                                     .Index]
                                                                                                                  .Text);
             if (dirElemFileToCopyFrom.Type == DirectoryElement.ElementType.File)

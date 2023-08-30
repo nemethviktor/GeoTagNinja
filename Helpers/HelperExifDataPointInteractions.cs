@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.ListView;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers;
@@ -80,7 +81,7 @@ internal static class HelperExifDataPointInteractions
             {
                 ListViewItem lvi = frmEditFileDataInstance.lvw_FileListEditImages.SelectedItems[index: 0];
 
-                DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: frmEditFileDataInstance.lvw_FileListEditImages.Columns[key: "clh_GUID"]
+                DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: frmEditFileDataInstance.lvw_FileListEditImages.Columns[key: FileListView.COL_NAME_PREFIX + FileListView.FileListColumns.GUID]
                                                                                                                                                            .Index]
                                                                                                                    .Text);
 
@@ -149,7 +150,7 @@ internal static class HelperExifDataPointInteractions
                     HelperGenericFileLocking.FileListBeingUpdated = true;
                     foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
                     {
-                        DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                        DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: FileListView.COL_NAME_PREFIX + FileListView.FileListColumns.GUID]
                                                                                                                                                .Index]
                                                                                                                            .Text);
                         // don't do folders...

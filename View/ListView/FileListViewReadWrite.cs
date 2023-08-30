@@ -5,9 +5,17 @@ using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.ListView;
 using static GeoTagNinja.Model.SourcesAndAttributes;
+using static GeoTagNinja.View.ListView.FileListView;
 
 namespace GeoTagNinja;
+
+internal enum TakenOrCreated
+{
+    Taken,
+    Created
+}
 
 internal static class FileListViewReadWrite
 {
@@ -19,161 +27,164 @@ internal static class FileListViewReadWrite
     internal static Task ListViewUpdateRowFromDEStage3ReadyToWrite(ListViewItem lvi)
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        string tmpCoordinates;
+
         if (frmMainAppInstance != null)
         {
             ListView lvw = frmMainAppInstance.lvw_FileList;
             ListView.ColumnHeaderCollection lvchs = frmMainAppInstance.ListViewColumnHeaders;
 
             int d = lvi.Index;
-            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                                                                                   .Index]
-                                                                                                               .Text);
-            string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
-            bool takenAlreadyShifted = false;
-            bool createAlreadyShifted = false;
-
-            foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+            if (lvi.Tag is DirectoryElement dirElemFileToModify && dirElemFileToModify.HasDirtyAttributes())
             {
-                if (dirElemFileToModify != null &&
-                    dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute,
-                                                                        version: DirectoryElement.AttributeVersion
-                                                                                                 .Stage3ReadyToWrite))
+                string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
+                frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
+                bool takenAlreadyShifted = false;
+                bool createAlreadyShifted = false;
+                lvw.BeginUpdate();
+                foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
                 {
-                    try
+                    if (dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute,
+                                                                            version: DirectoryElement.AttributeVersion
+                                                                                                     .Stage3ReadyToWrite))
                     {
-                        lvw.BeginUpdate();
-                        frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
-
-                        // theoretically we'd want to update the columns for each tag but for example when removing all data
-                        // this becomes tricky bcs we're also firing a "-gps*=" tag.
-                        string settingId = "clh_" + GetAttributeName(attribute: attribute);
-                        string settingVal = dirElemFileToModify.GetAttributeValueString(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
-
-                        if (lvchs[key: settingId] != null)
+                        try
                         {
-                            try
+                            // theoretically we'd want to update the columns for each tag but for example when removing all data
+                            // this becomes tricky bcs we're also firing a "-gps*=" tag.
+                            string settingId = ElementAttributeToColumnHeaderName(attribute);
+                            string settingVal = dirElemFileToModify.GetAttributeValueString(attribute: attribute,
+                                                                                            version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+
+                            if (lvchs[key: settingId] != null)
                             {
-                                lvi.SubItems[index: lvchs[key: settingId]
-                                                .Index]
-                                   .Text = settingVal;
-                                //break;
+                                try
+                                {
+                                    lvi.SubItems[index: lvchs[key: settingId]
+                                                    .Index]
+                                       .Text = settingVal;
+                                    //break;
+                                }
+                                catch
+                                {
+                                    // nothing - basically this could happen if user navigates out of the folder
+                                }
                             }
-                            catch
+                            else if (settingId.EndsWith(value: "Shift"))
                             {
-                                // nothing - basically this could happen if user navigates out of the folder
+                                if (settingId.Substring(startIndex: 4)
+                                             .StartsWith(value: "Taken") &&
+                                    !takenAlreadyShifted)
+                                {
+                                    int totalShiftedSeconds = GetTotalShiftedSeconds(
+                                        dirElemFileToModify: dirElemFileToModify,
+                                        takenOrCreated: TakenOrCreated.Taken);
+
+                                    DateTime originalTakenDateTime = DateTime.Parse(s: FrmMainApp.OriginalTakenDateDict[key: fileNameWithoutPath], provider: CultureInfo.CurrentUICulture);
+
+                                    DateTime modifiedTakenDateTime = originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
+                                    lvi.SubItems[index: lvchs[key: COL_NAME_PREFIX + FileListColumns.TAKEN_DATE]
+                                                    .Index]
+                                       .Text = modifiedTakenDateTime.ToString(provider: CultureInfo.CurrentUICulture);
+                                    takenAlreadyShifted = true;
+                                }
+                                else if (settingId.Substring(startIndex: 4)
+                                                  .StartsWith(value: "Create") &&
+                                         !createAlreadyShifted)
+                                {
+                                    int totalShiftedSeconds = GetTotalShiftedSeconds(
+                                        dirElemFileToModify: dirElemFileToModify,
+                                        takenOrCreated: TakenOrCreated.Created);
+
+                                    DateTime originalCreateDateTime = DateTime.Parse(s: FrmMainApp.OriginalCreateDateDict[key: fileNameWithoutPath], provider: CultureInfo.CurrentUICulture);
+
+                                    DateTime modifiedCreateDateTime = originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
+                                    lvi.SubItems[index: lvchs[key: COL_NAME_PREFIX + FileListColumns.CREATE_DATE]
+                                                    .Index]
+                                       .Text = modifiedCreateDateTime.ToString(provider: CultureInfo.CurrentUICulture);
+                                    createAlreadyShifted = true;
+                                }
+                            }
+
+                            if (attribute is ElementAttribute.GPSLatitude or ElementAttribute.GPSLongitude)
+                            {
+                                string tmpLat = dirElemFileToModify.GetAttributeValueString(
+                                    attribute: ElementAttribute.GPSLatitude,
+                                    version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSLatitude),
+                                    notFoundValue: "");
+                                string tmpLng = dirElemFileToModify.GetAttributeValueString(
+                                    attribute: ElementAttribute.GPSLongitude,
+                                    version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSLongitude),
+                                    notFoundValue: "");
+
+                                lvi.SubItems[index: lvchs[key: ElementAttributeToColumnHeaderName(ElementAttribute.Coordinates)]
+                                                .Index]
+                                   .Text = tmpLat + ";" + tmpLng != ";"
+                                    ? tmpLat + ";" + tmpLng
+                                    : "";
                             }
                         }
-                        else if (settingId.EndsWith(value: "Shift"))
+                        catch
                         {
-                            int shiftedDays = 0;
-                            int shiftedHours = 0;
-                            int shiftedMinutes = 0;
-                            int shiftedSeconds = 0;
-
-                            if (settingId.Substring(startIndex: 4)
-                                         .StartsWith(value: "Taken") &&
-                                !takenAlreadyShifted)
-                            {
-                                shiftedDays = (int)dirElemFileToModify.GetAttributeValue<int>(
-                                    attribute: ElementAttribute.TakenDateDaysShift,
-                                    version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                    notFoundValue: 0);
-
-                                shiftedHours = (int)dirElemFileToModify.GetAttributeValue<int>(
-                                    attribute: ElementAttribute.TakenDateHoursShift,
-                                    version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                    notFoundValue: 0);
-
-                                shiftedMinutes = (int)dirElemFileToModify.GetAttributeValue<int>(
-                                    attribute: ElementAttribute.TakenDateMinutesShift,
-                                    version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                    notFoundValue: 0);
-
-                                shiftedSeconds = (int)dirElemFileToModify.GetAttributeValue<int>(
-                                    attribute: ElementAttribute.TakenDateSecondsShift,
-                                    version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                    notFoundValue: 0);
-
-                                int totalShiftedSeconds = shiftedSeconds +
-                                                          shiftedMinutes * 60 +
-                                                          shiftedHours * 60 * 60 +
-                                                          shiftedDays * 60 * 60 * 24;
-
-                                DateTime originalTakenDateTime = DateTime.Parse(s: FrmMainApp.OriginalTakenDateDict[key: fileNameWithoutPath], provider: CultureInfo.CurrentUICulture);
-
-                                DateTime modifiedTakenDateTime = originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
-                                lvi.SubItems[index: lvchs[key: "clh_TakenDate"]
-                                                .Index]
-                                   .Text = modifiedTakenDateTime.ToString(provider: CultureInfo.CurrentUICulture);
-                                takenAlreadyShifted = true;
-                            }
-                            else if (settingId.Substring(startIndex: 4)
-                                              .StartsWith(value: "Create") &&
-                                     !createAlreadyShifted)
-                            {
-                                shiftedDays = (int)dirElemFileToModify.GetAttributeValue<int>(
-                                    attribute: ElementAttribute.CreateDateDaysShift,
-                                    version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                    notFoundValue: 0);
-                                shiftedHours = (int)dirElemFileToModify.GetAttributeValue<int>(
-                                    attribute: ElementAttribute.CreateDateHoursShift,
-                                    version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                    notFoundValue: 0);
-                                shiftedMinutes = (int)dirElemFileToModify.GetAttributeValue<int>(
-                                    attribute: ElementAttribute.CreateDateMinutesShift,
-                                    version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                    notFoundValue: 0);
-
-                                shiftedSeconds = (int)dirElemFileToModify.GetAttributeValue<int>(
-                                    attribute: ElementAttribute.CreateDateSecondsShift,
-                                    version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                    notFoundValue: 0);
-
-                                int totalShiftedSeconds = shiftedSeconds +
-                                                          shiftedMinutes * 60 +
-                                                          shiftedHours * 60 * 60 +
-                                                          shiftedDays * 60 * 60 * 24;
-
-                                DateTime originalCreateDateTime = DateTime.Parse(s: FrmMainApp.OriginalCreateDateDict[key: fileNameWithoutPath], provider: CultureInfo.CurrentUICulture);
-
-                                DateTime modifiedCreateDateTime = originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
-                                lvi.SubItems[index: lvchs[key: "clh_CreateDate"]
-                                                .Index]
-                                   .Text = modifiedCreateDateTime.ToString(provider: CultureInfo.CurrentUICulture);
-                                createAlreadyShifted = true;
-                            }
+                            // nothing. 
                         }
-
-                        tmpCoordinates = lvi.SubItems[index: lvchs[key: "clh_GPSLatitude"]
-                                                         .Index]
-                                            .Text +
-                                         ";" +
-                                         lvi.SubItems[index: lvchs[key: "clh_GPSLongitude"]
-                                                         .Index]
-                                            .Text;
-
-                        lvi.SubItems[index: lvchs[key: "clh_Coordinates"]
-                                        .Index]
-                           .Text = tmpCoordinates != ";"
-                            ? tmpCoordinates
-                            : "";
-                    }
-                    catch
-                    {
-                        // nothing. 
                     }
                 }
+            }
 
-                lvw.EndUpdate();
-                if (d % 10 == 0)
-                {
-                    Application.DoEvents();
-                }
+            lvw.EndUpdate();
+            if (d % 10 == 0)
+            {
+                Application.DoEvents();
             }
         }
 
         return Task.CompletedTask;
+
+        int GetTotalShiftedSeconds(DirectoryElement dirElemFileToModify,
+                                   TakenOrCreated takenOrCreated)
+        {
+            ElementAttribute attributeShiftedDays = takenOrCreated == TakenOrCreated.Taken
+                ? ElementAttribute.TakenDateDaysShift
+                : ElementAttribute.CreateDateDaysShift;
+
+            ElementAttribute attributeShiftedHours = takenOrCreated == TakenOrCreated.Taken
+                ? ElementAttribute.TakenDateHoursShift
+                : ElementAttribute.CreateDateHoursShift;
+
+            ElementAttribute attributeShiftedMinutes = takenOrCreated == TakenOrCreated.Taken
+                ? ElementAttribute.TakenDateMinutesShift
+                : ElementAttribute.CreateDateMinutesShift;
+
+            ElementAttribute attributeShiftedSeconds = takenOrCreated == TakenOrCreated.Taken
+                ? ElementAttribute.TakenDateSecondsShift
+                : ElementAttribute.CreateDateSecondsShift;
+
+            int shiftedDays = (int)dirElemFileToModify.GetAttributeValue<int>(
+                attribute: attributeShiftedDays,
+                version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                notFoundValue: 0);
+
+            int shiftedHours = (int)dirElemFileToModify.GetAttributeValue<int>(
+                attribute: attributeShiftedHours,
+                version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                notFoundValue: 0);
+
+            int shiftedMinutes = (int)dirElemFileToModify.GetAttributeValue<int>(
+                attribute: attributeShiftedMinutes,
+                version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                notFoundValue: 0);
+
+            int shiftedSeconds = (int)dirElemFileToModify.GetAttributeValue<int>(
+                attribute: attributeShiftedSeconds,
+                version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                notFoundValue: 0);
+
+            int totalShiftedSeconds = shiftedSeconds +
+                                      shiftedMinutes * 60 +
+                                      shiftedHours * 60 * 60 +
+                                      shiftedDays * 60 * 60 * 24;
+            return totalShiftedSeconds;
+        }
     }
 
     /// <summary>

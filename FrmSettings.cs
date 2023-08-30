@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using static System.String;
+using static GeoTagNinja.View.ListView.FileListView;
 
 namespace GeoTagNinja;
 
@@ -277,8 +278,8 @@ public partial class FrmSettings : Form
         DataGridViewComboBoxColumn clh_CountryCode = new()
         {
             DataPropertyName = "CountryCode",
-            Name = "clh_CountryCode",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_Country"),
+            Name = COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE,
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: COL_NAME_PREFIX + FileListColumns.COUNTRY),
             DataSource = clh_CountryCodeOptions.ToList(), // needs to be a list
             ValueMember = "Key",
             DisplayMember = "Value"
@@ -379,8 +380,8 @@ public partial class FrmSettings : Form
         DataGridViewComboBoxColumn clh_CountryCode = new()
         {
             DataPropertyName = "CountryCode",
-            Name = "clh_CountryCode",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_Country"),
+            Name = COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE,
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: COL_NAME_PREFIX + FileListColumns.COUNTRY),
             DataSource = clh_CountryCodeOptions.ToList(), // needs to be a list
             ValueMember = "Key",
             DisplayMember = "Value",

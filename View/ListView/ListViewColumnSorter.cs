@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.ListView;
 
 namespace GeoTagNinja;
 
@@ -95,7 +96,7 @@ internal class ListViewColumnSorter : IComparer
         ListView lvw_FileList = frmMainAppInstance.lvw_FileList;
 
         string colName = lvw_FileList.Columns[index: ColumnToSortIdx]
-            .Name.Substring(startIndex: 4); // no "clh_"
+                                     .Name.Substring(startIndex: FileListView.COL_NAME_PREFIX.Length); // no "clh_"
 
         // If items not in same group, group rules
         // This only applies to fileNames (as in the column FileName...Type in this sense/case is/are...Drive, Folder, File etc)

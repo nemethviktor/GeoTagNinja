@@ -163,7 +163,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         public const string OFFSET_TIME = "OffsetTime";
     }
 
-#region internal vars
+#region Internal Variables
 
     internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
@@ -224,37 +224,194 @@ public partial class FileListView : System.Windows.Forms.ListView
 
 #region Internal Update Logic
 
+    internal static string ElementAttributeToColumnHeaderName(SourcesAndAttributes.ElementAttribute elementAttribute)
+    {
+        switch (elementAttribute)
+        {
+            case SourcesAndAttributes.ElementAttribute.GUID:
+                return COL_NAME_PREFIX + FileListColumns.GUID;
+            case SourcesAndAttributes.ElementAttribute.GPSAltitude:
+                return COL_NAME_PREFIX + FileListColumns.GPS_ALTITUDE;
+            case SourcesAndAttributes.ElementAttribute.GPSAltitudeRef:
+                return COL_NAME_PREFIX + FileListColumns.GPS_ALTITUDE_REF;
+            case SourcesAndAttributes.ElementAttribute.GPSDestLatitude:
+                return COL_NAME_PREFIX + FileListColumns.GPS_DEST_LATITUDE;
+            case SourcesAndAttributes.ElementAttribute.GPSDestLatitudeRef:
+                return COL_NAME_PREFIX + FileListColumns.GPS_DEST_LATITUDE_REF;
+            case SourcesAndAttributes.ElementAttribute.GPSDestLongitude:
+                return COL_NAME_PREFIX + FileListColumns.GPS_DEST_LONGITUDE;
+            case SourcesAndAttributes.ElementAttribute.GPSDestLongitudeRef:
+                return COL_NAME_PREFIX + FileListColumns.GPS_DEST_LONGITUDE_REF;
+            case SourcesAndAttributes.ElementAttribute.GPSImgDirection:
+                return COL_NAME_PREFIX + FileListColumns.GPS_IMGDIRECTION;
+            case SourcesAndAttributes.ElementAttribute.GPSImgDirectionRef:
+                return COL_NAME_PREFIX + FileListColumns.GPS_IMGDIRECTION_REF;
+            case SourcesAndAttributes.ElementAttribute.GPSLatitude:
+                return COL_NAME_PREFIX + FileListColumns.GPS_LATITUDE;
+            case SourcesAndAttributes.ElementAttribute.GPSLatitudeRef:
+                return COL_NAME_PREFIX + FileListColumns.GPS_LATITUDE_REF;
+            case SourcesAndAttributes.ElementAttribute.GPSLongitude:
+                return COL_NAME_PREFIX + FileListColumns.GPS_LONGITUDE;
+            case SourcesAndAttributes.ElementAttribute.GPSLongitudeRef:
+                return COL_NAME_PREFIX + FileListColumns.GPS_LONGITUDE_REF;
+            case SourcesAndAttributes.ElementAttribute.GPSSpeed:
+                return COL_NAME_PREFIX + FileListColumns.GPS_SPEED;
+            case SourcesAndAttributes.ElementAttribute.GPSSpeedRef:
+                return COL_NAME_PREFIX + FileListColumns.GPS_SPEED_REF;
+            case SourcesAndAttributes.ElementAttribute.Coordinates:
+                return COL_NAME_PREFIX + FileListColumns.COORDINATES;
+            case SourcesAndAttributes.ElementAttribute.DestCoordinates:
+                return COL_NAME_PREFIX + FileListColumns.DEST_COORDINATES;
+            case SourcesAndAttributes.ElementAttribute.City:
+                return COL_NAME_PREFIX + FileListColumns.CITY;
+            case SourcesAndAttributes.ElementAttribute.CountryCode:
+                return COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE;
+            case SourcesAndAttributes.ElementAttribute.Country:
+                return COL_NAME_PREFIX + FileListColumns.COUNTRY;
+            case SourcesAndAttributes.ElementAttribute.State:
+                return COL_NAME_PREFIX + FileListColumns.STATE;
+            case SourcesAndAttributes.ElementAttribute.Sub_location:
+                return COL_NAME_PREFIX + FileListColumns.SUB_LOCATION;
+            case SourcesAndAttributes.ElementAttribute.Make:
+                return COL_NAME_PREFIX + FileListColumns.MAKE;
+            case SourcesAndAttributes.ElementAttribute.Model:
+                return COL_NAME_PREFIX + FileListColumns.MODEL;
+            case SourcesAndAttributes.ElementAttribute.Rating:
+                return COL_NAME_PREFIX + FileListColumns.RATING;
+            case SourcesAndAttributes.ElementAttribute.ExposureTime:
+                return COL_NAME_PREFIX + FileListColumns.EXPOSURETIME;
+            case SourcesAndAttributes.ElementAttribute.Fnumber:
+                return COL_NAME_PREFIX + FileListColumns.FNUMBER;
+            case SourcesAndAttributes.ElementAttribute.FocalLength:
+                return COL_NAME_PREFIX + FileListColumns.FOCAL_LENGTH;
+            case SourcesAndAttributes.ElementAttribute.FocalLengthIn35mmFormat:
+                return COL_NAME_PREFIX + FileListColumns.FOCAL_LENGTH_IN_35MM_FORMAT;
+            case SourcesAndAttributes.ElementAttribute.ISO:
+                return COL_NAME_PREFIX + FileListColumns.ISO;
+            case SourcesAndAttributes.ElementAttribute.LensSpec:
+                return COL_NAME_PREFIX + FileListColumns.LENS_SPEC;
+            case SourcesAndAttributes.ElementAttribute.TakenDate:
+                return COL_NAME_PREFIX + FileListColumns.TAKEN_DATE;
+            case SourcesAndAttributes.ElementAttribute.CreateDate:
+                return COL_NAME_PREFIX + FileListColumns.CREATE_DATE;
+            case SourcesAndAttributes.ElementAttribute.OffsetTime:
+                return COL_NAME_PREFIX + FileListColumns.OFFSET_TIME;
+
+            default:
+                throw new ArgumentException(message: "Unimplemented column name");
+                break;
+        }
+    }
+
+    internal static SourcesAndAttributes.ElementAttribute ColumnHeaderToElementAttribute(ColumnHeader columnHeader)
+    {
+        switch (columnHeader.Name.Substring(startIndex: COL_NAME_PREFIX.Length))
+        {
+            case FileListColumns.GUID:
+                return SourcesAndAttributes.ElementAttribute.GUID;
+            case FileListColumns.GPS_ALTITUDE:
+                return SourcesAndAttributes.ElementAttribute.GPSAltitude;
+            case FileListColumns.GPS_ALTITUDE_REF:
+                return SourcesAndAttributes.ElementAttribute.GPSAltitudeRef;
+            case FileListColumns.GPS_DEST_LATITUDE:
+                return SourcesAndAttributes.ElementAttribute.GPSDestLatitude;
+            case FileListColumns.GPS_DEST_LATITUDE_REF:
+                return SourcesAndAttributes.ElementAttribute.GPSDestLatitudeRef;
+            case FileListColumns.GPS_DEST_LONGITUDE:
+                return SourcesAndAttributes.ElementAttribute.GPSDestLongitude;
+            case FileListColumns.GPS_DEST_LONGITUDE_REF:
+                return SourcesAndAttributes.ElementAttribute.GPSDestLongitudeRef;
+            case FileListColumns.GPS_IMGDIRECTION:
+                return SourcesAndAttributes.ElementAttribute.GPSImgDirection;
+            case FileListColumns.GPS_IMGDIRECTION_REF:
+                return SourcesAndAttributes.ElementAttribute.GPSImgDirectionRef;
+            case FileListColumns.GPS_LATITUDE:
+                return SourcesAndAttributes.ElementAttribute.GPSLatitude;
+            case FileListColumns.GPS_LATITUDE_REF:
+                return SourcesAndAttributes.ElementAttribute.GPSLatitudeRef;
+            case FileListColumns.GPS_LONGITUDE:
+                return SourcesAndAttributes.ElementAttribute.GPSLongitude;
+            case FileListColumns.GPS_LONGITUDE_REF:
+                return SourcesAndAttributes.ElementAttribute.GPSLongitudeRef;
+            case FileListColumns.GPS_SPEED:
+                return SourcesAndAttributes.ElementAttribute.GPSSpeed;
+            case FileListColumns.GPS_SPEED_REF:
+                return SourcesAndAttributes.ElementAttribute.GPSSpeedRef;
+            case FileListColumns.COORDINATES:
+                return SourcesAndAttributes.ElementAttribute.Coordinates;
+            case FileListColumns.DEST_COORDINATES:
+                return SourcesAndAttributes.ElementAttribute.DestCoordinates;
+            case FileListColumns.CITY:
+                return SourcesAndAttributes.ElementAttribute.City;
+            case FileListColumns.COUNTRY_CODE:
+                return SourcesAndAttributes.ElementAttribute.CountryCode;
+            case FileListColumns.COUNTRY:
+                return SourcesAndAttributes.ElementAttribute.Country;
+            case FileListColumns.STATE:
+                return SourcesAndAttributes.ElementAttribute.State;
+            case FileListColumns.SUB_LOCATION:
+                return SourcesAndAttributes.ElementAttribute.Sub_location;
+            case FileListColumns.MAKE:
+                return SourcesAndAttributes.ElementAttribute.Make;
+            case FileListColumns.MODEL:
+                return SourcesAndAttributes.ElementAttribute.Model;
+            case FileListColumns.RATING:
+                return SourcesAndAttributes.ElementAttribute.Rating;
+            case FileListColumns.EXPOSURETIME:
+                return SourcesAndAttributes.ElementAttribute.ExposureTime;
+            case FileListColumns.FNUMBER:
+                return SourcesAndAttributes.ElementAttribute.Fnumber;
+            case FileListColumns.FOCAL_LENGTH:
+                return SourcesAndAttributes.ElementAttribute.FocalLength;
+            case FileListColumns.FOCAL_LENGTH_IN_35MM_FORMAT:
+                return SourcesAndAttributes.ElementAttribute.FocalLengthIn35mmFormat;
+            case FileListColumns.ISO:
+                return SourcesAndAttributes.ElementAttribute.ISO;
+            case FileListColumns.LENS_SPEC:
+                return SourcesAndAttributes.ElementAttribute.LensSpec;
+            case FileListColumns.TAKEN_DATE:
+                return SourcesAndAttributes.ElementAttribute.TakenDate;
+            case FileListColumns.CREATE_DATE:
+                return SourcesAndAttributes.ElementAttribute.CreateDate;
+            case FileListColumns.OFFSET_TIME:
+                return SourcesAndAttributes.ElementAttribute.OffsetTime;
+            default:
+                throw new ArgumentException(message: "Unimplemented column name");
+                break;
+        }
+    }
+
     /// <summary>
     ///     Retrieves the value for the given column from the given
     ///     Directory Element (also does transformations if necessary).
     ///     Transformations are kept in class ModelToColumnValueTransformations.
     /// </summary>
-    /// <param name="item">The Directory Element of which data is to be displayed</param>
-    /// <param name="column">The column in this list view to get data for</param>
+    /// <param name="directoryElement">The Directory Element of which data is to be displayed</param>
+    /// <param name="columnHeader">The column in this list view to get data for</param>
     /// <returns>The value for the column as a string</returns>
-    private string pickModelValueForColumn(DirectoryElement item,
-                                           ColumnHeader column)
+    private string PickModelValueForColumn(DirectoryElement directoryElement,
+                                           ColumnHeader columnHeader)
     {
         // The displayed file name has to be derived using shell32.dll,
         // which is done in the actual addListItem method.
-        if (column.Name == COL_NAME_PREFIX + FileListColumns.FILENAME)
+        if (columnHeader.Name == COL_NAME_PREFIX + FileListColumns.FILENAME)
         {
             throw new ArgumentException(message: "The contents of the filename column cannot be requested from the method 'pickModelValueForColumn'.");
         }
 
         // Set the value if no model value is found
         string nfVal = UNKNOWN_VALUE_DIR;
-        if (item.Type == DirectoryElement.ElementType.File)
+        if (directoryElement.Type == DirectoryElement.ElementType.File)
         {
             nfVal = UNKNOWN_VALUE_FILE;
         }
 
         string DefaultStrGetter(SourcesAndAttributes.ElementAttribute atrb)
         {
-            return item.GetAttributeValueString(attribute: atrb, notFoundValue: nfVal);
+            return directoryElement.GetAttributeValueString(attribute: atrb, notFoundValue: nfVal);
         }
 
-        switch (column.Name.Substring(startIndex: 4))
+        switch (columnHeader.Name.Substring(startIndex: 4))
         {
             case FileListColumns.GUID:
                 return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.GUID);
@@ -287,9 +444,9 @@ public partial class FileListView : System.Windows.Forms.ListView
             case FileListColumns.GPS_SPEED_REF:
                 return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.GPSSpeedRef);
             case FileListColumns.COORDINATES:
-                return ModelToColumnValueTransformations.M2C_CoordinatesInclDest(column: FileListColumns.COORDINATES, item: item, nfVal: nfVal);
+                return ModelToColumnValueTransformations.M2C_CoordinatesInclDest(column: FileListColumns.COORDINATES, item: directoryElement, nfVal: nfVal);
             case FileListColumns.DEST_COORDINATES:
-                return ModelToColumnValueTransformations.M2C_CoordinatesInclDest(column: FileListColumns.DEST_COORDINATES, item: item, nfVal: nfVal);
+                return ModelToColumnValueTransformations.M2C_CoordinatesInclDest(column: FileListColumns.DEST_COORDINATES, item: directoryElement, nfVal: nfVal);
             case FileListColumns.CITY:
                 return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.City);
             case FileListColumns.COUNTRY_CODE:
@@ -334,8 +491,8 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <summary>
     ///     Adds a new listitem to lvw_FileList listview
     /// </summary>
-    /// <param name="fileNameWithoutPath">Name of file to be added</param>
-    private void addListItem(DirectoryElement item)
+    /// <param name="directoryElement">New DE to add</param>
+    private void AddListItem(DirectoryElement directoryElement)
     {
     #region icon handlers
 
@@ -345,9 +502,9 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         IntPtr himl;
 
-        if (item.Type != DirectoryElement.ElementType.MyComputer)
+        if (directoryElement.Type != DirectoryElement.ElementType.MyComputer)
         {
-            himl = NativeMethods.SHGetFileInfo(pszPath: item.FileNameWithPath,
+            himl = NativeMethods.SHGetFileInfo(pszPath: directoryElement.FileNameWithPath,
                                                dwFileAttributes: 0,
                                                psfi: ref shfi,
                                                cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
@@ -355,7 +512,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
         else
         {
-            himl = NativeMethods.SHGetFileInfo(pszPath: item.ItemNameWithoutPath,
+            himl = NativeMethods.SHGetFileInfo(pszPath: directoryElement.ItemNameWithoutPath,
                                                dwFileAttributes: 0,
                                                psfi: ref shfi,
                                                cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
@@ -368,7 +525,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         ListViewItem lvi = new();
 
-        item.DisplayName = shfi.szDisplayName;
+        directoryElement.DisplayName = shfi.szDisplayName;
 
     #region Set LVI Text depending on whether displayname is usable for FS operations
 
@@ -383,16 +540,16 @@ public partial class FileListView : System.Windows.Forms.ListView
         // The repercussions of that is w/o an extension fileinfo.exists will return false and exiftool won't run/find it.
 
         // With that in mind if we're missing the extension then we'll force it back on.
-        if (!string.IsNullOrEmpty(value: item.Extension))
+        if (!string.IsNullOrEmpty(value: directoryElement.Extension))
         {
             if (shfi.szDisplayName.ToLower()
-                    .Contains(value: item.Extension.ToLower()))
+                    .Contains(value: directoryElement.Extension.ToLower()))
             {
                 lvi.Text = shfi.szDisplayName;
             }
             else
             {
-                lvi.Text = shfi.szDisplayName + "." + item.Extension;
+                lvi.Text = shfi.szDisplayName + "." + directoryElement.Extension;
             }
         }
         else
@@ -404,11 +561,11 @@ public partial class FileListView : System.Windows.Forms.ListView
             // same for non-English places. E.g. "Documents and Settings" in HU
             // would be displayed as "Felhasználók" but that folder is still
             // actually called Documents and Settings, but the label is "fake".
-            if (item.Type == DirectoryElement.ElementType.SubDirectory ||
-                item.Type == DirectoryElement.ElementType.MyComputer ||
-                item.Type == DirectoryElement.ElementType.ParentDirectory)
+            if (directoryElement.Type == DirectoryElement.ElementType.SubDirectory ||
+                directoryElement.Type == DirectoryElement.ElementType.MyComputer ||
+                directoryElement.Type == DirectoryElement.ElementType.ParentDirectory)
             {
-                lvi.Text = item.ItemNameWithoutPath;
+                lvi.Text = directoryElement.ItemNameWithoutPath;
             }
             else
             {
@@ -423,13 +580,13 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         // Set the values for the columns
         List<string> subItemList = new();
-        if (item.Type == DirectoryElement.ElementType.File)
+        if (directoryElement.Type == DirectoryElement.ElementType.File)
         {
             foreach (ColumnHeader columnHeader in Columns)
             {
                 if (columnHeader.Name != COL_NAME_PREFIX + FileListColumns.FILENAME)
                 {
-                    subItemList.Add(item: pickModelValueForColumn(item: item, column: columnHeader));
+                    subItemList.Add(item: PickModelValueForColumn(directoryElement: directoryElement, columnHeader: columnHeader));
                 }
             }
 
@@ -445,7 +602,7 @@ public partial class FileListView : System.Windows.Forms.ListView
                 }
                 else if (columnHeader.Name == COL_NAME_PREFIX + FileListColumns.GUID)
                 {
-                    subItemList.Add(item: pickModelValueForColumn(item: item, column: columnHeader));
+                    subItemList.Add(item: PickModelValueForColumn(directoryElement: directoryElement, columnHeader: columnHeader));
                 }
                 else
                 {
@@ -457,7 +614,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         // don't add twice. this could happen if user does F5 too fast/too many times/is derp. (mostly the last one.)
         if (FindItemWithText(text: lvi.Text) == null)
         {
-            lvi.Tag = item;
+            lvi.Tag = directoryElement;
             Items.Add(value: lvi)
                  .SubItems.AddRange(items: subItemList.ToArray());
         }
@@ -783,7 +940,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         foreach (DirectoryElement item in DirectoryElements)
         {
-            addListItem(item: item);
+            AddListItem(directoryElement: item);
             if (item.Type == DirectoryElement.ElementType.File)
             {
                 _fileCount++;
