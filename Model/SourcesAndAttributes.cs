@@ -99,6 +99,21 @@ public class SourcesAndAttributes
     };
 
     /// <summary>
+    ///     This is the list of/for attribs that are considered "geodata"
+    /// </summary>
+    public static readonly List<ElementAttribute> GeoDataAttributes = new()
+    {
+        ElementAttribute.GPSLatitude,
+        ElementAttribute.GPSLongitude,
+        ElementAttribute.CountryCode,
+        ElementAttribute.Country,
+        ElementAttribute.City,
+        ElementAttribute.State,
+        ElementAttribute.Sub_location,
+        ElementAttribute.GPSAltitude
+    };
+
+    /// <summary>
     ///     This defines the "tags-in" (as in exif tags) for each EA. The order does matter as it's basically sorted.
     /// </summary>
     public static readonly IDictionary<ElementAttribute, List<string>> TagsToAttributesIn =

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -23,7 +22,7 @@ internal static class HelperExifDataPointInteractions
     public static double AdjustLatLongNegative(string point)
     {
         string pointOrig = point.Replace(oldValue: " ", newValue: "")
-            .Replace(oldChar: ',', newChar: '.');
+                                .Replace(oldChar: ',', newChar: '.');
         // WGS84 DM --> logic here is, before I have to spend hours digging this crap again...
         // degree stays as-is, the totality of the rest gets divided by 60.
         // so 41,53.23922526N becomes 41 + (53.53.23922526)/60) = 41.88732
@@ -47,7 +46,7 @@ internal static class HelperExifDataPointInteractions
         }
 
         pointVal = Math.Round(value: pointVal, digits: 6);
-        int multiplier = point.Contains(value: "S") || point.Contains(value: "W") || point.StartsWith("-")
+        int multiplier = point.Contains(value: "S") || point.Contains(value: "W") || point.StartsWith(value: "-")
             ? -1
             : 1; //handle south and west
 
@@ -61,18 +60,9 @@ internal static class HelperExifDataPointInteractions
     /// <param name="senderName">At this point this can either be the main listview or the one from Edit (file) data</param>
     internal static async Task ExifRemoveLocationData(string senderName)
     {
-        List<ElementAttribute> toponomyOverwritesAttributes = new()
-        {
-            ElementAttribute.GPSLatitude,
-            ElementAttribute.GPSLongitude,
-            ElementAttribute.CountryCode,
-            ElementAttribute.Country,
-            ElementAttribute.City,
-            ElementAttribute.State,
-            ElementAttribute.Sub_location,
-            ElementAttribute.GPSAltitude,
-            ElementAttribute.RemoveAllGPS //"gps*"
-        };
+        // GeoDataAttributes is a readonly and I don't want to modify it for the rest of the code.
+        List<ElementAttribute> toponomyOverwritesAttributes = GeoDataAttributes;
+        toponomyOverwritesAttributes.Add(item: ElementAttribute.RemoveAllGPS); //"gps*"
 
         if (HelperDataApplicationSettings.DataReadSQLiteSettings(
                 tableName: "settings",
@@ -90,9 +80,9 @@ internal static class HelperExifDataPointInteractions
             {
                 ListViewItem lvi = frmEditFileDataInstance.lvw_FileListEditImages.SelectedItems[index: 0];
 
-                DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(lvi.SubItems[index: frmEditFileDataInstance.lvw_FileListEditImages.Columns[key: "clh_GUID"]
-                                                                                                                                                     .Index]
-                                                                                                             .Text);
+                DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: frmEditFileDataInstance.lvw_FileListEditImages.Columns[key: "clh_GUID"]
+                                                                                                                                                           .Index]
+                                                                                                                   .Text);
 
                 HelperNonStatic helperNonstatic = new();
                 IEnumerable<Control> cGbx_GPSData = helperNonstatic.GetAllControls(control: frmEditFileDataInstance.gbx_GPSData);
@@ -159,9 +149,9 @@ internal static class HelperExifDataPointInteractions
                     HelperGenericFileLocking.FileListBeingUpdated = true;
                     foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
                     {
-                        DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                                                                                         .Index]
-                                                                                                                     .Text);
+                        DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
+                                                                                                                                               .Index]
+                                                                                                                           .Text);
                         // don't do folders...
                         if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                         {

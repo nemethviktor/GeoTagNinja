@@ -43,49 +43,6 @@ public partial class FileListView : System.Windows.Forms.ListView
         InitializeComponent();
     }
 
-
-    /// <summary>
-    ///     Returns the number of items in the list view that actually
-    ///     have an entry in the given column.
-    /// </summary>
-    /// <param name="column">The column to check for values</param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException">If the column was not found</exception>
-    public int CountItemsWithData(string column)
-    {
-        int colIndex = GetColumnIndex(column: column);
-        int itemCount = 0;
-
-        foreach (ListViewItem lvi in Items)
-        {
-            if (lvi.SubItems.Count > 1)
-            {
-                if (lvi.SubItems[index: colIndex]
-                       .Text
-                       .Replace(oldValue: UNKNOWN_VALUE_FILE, newValue: "") !=
-                    "")
-                {
-                    itemCount++;
-                }
-            }
-        }
-
-        return itemCount;
-    }
-
-
-    /// <summary>
-    ///     Returns the (sub items) index of the column (not the visualized one).
-    /// </summary>
-    /// <param name="column">The column to look for w/o prefix</param>
-    /// <returns>The index</returns>
-    /// <exception cref="ArgumentException">If the column was not found</exception>
-    public int GetColumnIndex(string column)
-    {
-        int colIndex = SourcesAndAttributes.TagsToColumnHeaderOrder.IndexOf(item: SourcesAndAttributes.GetAttributeFromString(attributeToFind: column)) + 1; // filename is the first;
-        return colIndex;
-    }
-
     /// <summary>
     ///     Class containing native method (shell32, etc) definitions in order
     ///     to retrieve file and directory information.

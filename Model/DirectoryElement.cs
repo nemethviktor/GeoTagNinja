@@ -289,6 +289,33 @@ public class DirectoryElement
     }
 
     /// <summary>
+    /// Checks if there is _any_ data for a particular ElementAttribute
+    /// </summary>
+    /// <param name="attribute">The attribute to check</param>
+    /// <returns></returns>
+    public bool HasSpecificAttributeWithAnyVersion(ElementAttribute attribute)
+    {
+        if (!_Attributes.ContainsKey(key: attribute))
+        {
+            return false;
+        }
+
+        AttributeValueContainer avc = _Attributes[key: attribute];
+        foreach (AttributeVersion attributeVersion in (AttributeVersion[])Enum.GetValues(
+                     typeof(DirectoryElement.AttributeVersion)))
+        {
+            if (HasSpecificAttributeWithVersion(avc, attributeVersion))
+            {
+                return true;
+            }
+
+            ;
+        }
+
+        return false;
+    }
+
+    /// <summary>
     ///     Informs if the particular tag is marked for removal
     /// </summary>
     /// <param name="attribute"></param>

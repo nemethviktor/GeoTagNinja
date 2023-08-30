@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.ListView;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja;
@@ -179,18 +179,36 @@ internal static class FileListViewReadWrite
     /// <summary>
     ///     This updates the lbl_ParseProgress with count of items with geodata.
     /// </summary>
+    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     internal static void ListViewCountItemsWithGeoData()
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        int DEFileCount = 0;
+        int DEFilesWithGeoDataCount = 0;
+        foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
+        {
+            if (directoryElement.Type == DirectoryElement.ElementType.File)
+            {
+                DEFileCount++;
+                foreach (ElementAttribute geoDataAttribute in GeoDataAttributes)
+                {
+                    if (directoryElement.HasSpecificAttributeWithAnyVersion(attribute: geoDataAttribute))
+                    {
+                        DEFilesWithGeoDataCount++;
+                        break;
+                    }
+                }
+            }
+        }
 
         if (frmMainAppInstance != null)
         {
             FrmMainApp.HandlerUpdateLabelText(
                 label: frmMainAppInstance.lbl_ParseProgress,
                 text: "Ready. Files: Total: " +
-                      frmMainAppInstance.lvw_FileList.FileCount +
+                      DEFileCount +
                       " Geodata: " +
-                      frmMainAppInstance.lvw_FileList.CountItemsWithData(column: FileListView.FileListColumns.COORDINATES));
+                      DEFilesWithGeoDataCount);
         }
     }
 }
