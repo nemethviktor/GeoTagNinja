@@ -189,6 +189,7 @@
     <Compile Include="FrmManageFavourites.designer.cs">
       <DependentUpon>FrmManageFavourites.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\HelperGenericCalculations.cs" />
     <Compile Include="SingleInstance_PipeServer.cs" />
     <Compile Include="View\ListView\FileListViewMapNavigation.cs" />
     <Compile Include="View\ListView\FileListViewCopyPaste.cs" />
@@ -341,6 +342,7 @@
     <None Include="readme.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\gpl-3.0.rtf" />
     <None Include="Resources\isoCountryCodeMapping.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -414,6 +416,7 @@
     <Content Include="Resources\geoTagNinja_square.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\leaflet-canvas-markers.js" />
     <Content Include="Resources\map.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

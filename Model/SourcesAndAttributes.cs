@@ -754,7 +754,7 @@ public class SourcesAndAttributes
             case ElementAttribute.GPSDestLongitudeRef:
                 return typeof(string);
             case ElementAttribute.GPSImgDirection:
-                return typeof(string);
+                return typeof(double);
             case ElementAttribute.GPSImgDirectionRef:
                 return typeof(string);
             case ElementAttribute.GPSLatitude:

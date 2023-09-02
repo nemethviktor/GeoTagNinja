@@ -3,10 +3,10 @@ using System.Data;
 
 namespace GeoTagNinja.Helpers;
 
-internal static partial class HelperVariables
+internal static class HelperVariables
 {
     internal const int exifOrientationID = 0x112; //274
-    internal const double METRETOFEET = 3.28084;
+    internal const double METRETORFEET = 3.28084;
 
     internal static string SArcGisApiKey;
     internal static string SGeoNamesUserName;
@@ -17,6 +17,7 @@ internal static partial class HelperVariables
     internal static string _sOutputMsg = "";
     internal static readonly string SDoubleQuote = "\"";
     internal static string HtmlAddMarker;
+    internal static string HTMLCreatePoints;
     internal static HashSet<(string strLat, string strLng)> HsMapMarkers = new();
     internal static double? MinLat;
     internal static double? MinLng;
@@ -48,4 +49,6 @@ internal static partial class HelperVariables
     internal static List<string> LstCityNameIsUndefined = new();
     internal static bool UseImperial = false;
     internal static string UOMAbbreviated = "";
+    //internal static readonly (double, double) MapNorthCoordsGeographic = (90, 0);
+    //internal static (double, double) MapNorthCoordsMagnetic; // https://www.ngdc.noaa.gov/geomag/data/poles/WMM2020_NP.xy
 }

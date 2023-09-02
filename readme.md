@@ -30,6 +30,8 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 - See my comment above re: the app being unsigned and SmartScreen getting derpy once in a while. On top of that...
 	- If you have Avast running or some other nightmare that tries to capture iframes within apps the app will most likely crash sooner rather than later, at least on the first run. I *think* it should be okay afterwards.
 	- I've seen once (and only once) ESET being silly about the app. Tbh no idea as to why. While I'd say the source code is open for public viewing and building it is probably clearer to just say: the app isn't tracking or recording your data and isn't doing anything that's not strictly related to its function. If I ever were to include any tracking (no such plans for the forseeable future), it'd be entirely anonomymised anyway.
+- Build 8646 [20230903]+: I've finally gotten around to displaying the GPSImgDirection on the map. The logic is, as not to clutter the map the direction "line" will only show when only one image (with GPSImgDirection) is selected; if more than one such image is selected then the lines don't show.
+	- The way this is calculated requires a "distance" so that the target coordinate pair ("the image direction") can be calculated. This is defaulted to 10km for the line and 1km for the triangle and is unlikely to change at this point.
 
 ### A Particular Note on Working with Adobe Bridge (ACR) and RAW files > Saving as JPGs or Other Formats.
 
@@ -71,7 +73,8 @@ I'm generally happy for anyone competent to add pull requests but I don't always
 
 ## ToDos
 
-- [later] Destination stuff untested / not showing cones on map / generally likely not working.
+- [WIP] Destination stuff untested generally likely not working.
+- [Later] Rewrite the whole app in WPF.
 
 ## Known Issues
 

@@ -219,6 +219,21 @@ internal static class HelperGenericAppStartup
             {
                 FileListView._cfg_Col_Order_Default.Add(key: SourcesAndAttributes.GetAttributeName(attribute: attribute), value: SourcesAndAttributes.TagsToColumnHeaderOrder.IndexOf(item: attribute));
             }
+
+            // https://www.ngdc.noaa.gov/geomag/data/poles/WMM2020_NP.xy
+            // as of 20230831 -- If I haven't died of alcohol poisoning by 2025, someone remind me to update.
+            // switch (DateTime.Now.Year)
+            // {
+            //     case 2023:
+            //         HelperVariables.MapNorthCoordsMagnetic = (86.146, 146.826);
+            //         break;
+            //     case 2024:
+            //         HelperVariables.MapNorthCoordsMagnetic = (85.980, 142.293);
+            //         break;
+            //     default:
+            //         HelperVariables.MapNorthCoordsMagnetic = (85.801, 138.299);
+            //         break;
+            // }
         }
         catch (Exception ex)
         {

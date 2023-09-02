@@ -2,9 +2,12 @@
 
 **Build 8xxx [20230xxx]** [dev branch release]
 - NEW & UPDATED:
+ - Graduated the app to version 1.x [technically 1.10 because it's been edging up on the minor versions ever since initial release] - yayy. It now has all the features I initially wanted.
+   - Added some support for reading and displaying ImgDirection/Ref.
+   - Added a TaskbarProgressBarState indicator
  - Bumped exifTool to v12.65
- - Added a TaskbarProgressBarState indicator
  - Changed the internal logic as to how the ListView coordinates get put on the map. Trying to fully move away from reading data from the ListView rather than from the DirectoryElement
+ - Changed internal logic re: (not) defaulting values to strings in certain cases
 - BUGS & FIXES:
   - Fixed a bug where in Finland (English) culture [possibly others too] the app would crash because decimals were being converted in the wrong way.
   - Fixed some logic relating to certain Composite Tags not being written properly

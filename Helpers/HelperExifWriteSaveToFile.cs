@@ -239,7 +239,7 @@ internal static class HelperExifWriteSaveToFile
                                         {
                                             double.TryParse(s: updateExifVal, style: NumberStyles.AllowDecimalPoint, provider: CultureInfo.InvariantCulture, result: out double tmpAltitude);
                                             updateExifVal = (HelperVariables.UseImperial
-                                                ? Math.Round(value: tmpAltitude / HelperVariables.METRETOFEET, digits: 2)
+                                                ? Math.Round(value: tmpAltitude / HelperVariables.METRETORFEET, digits: 2)
                                                 : tmpAltitude).ToString(provider: CultureInfo.InvariantCulture);
 
                                             // add ref -- "ExifTool will also accept number when writing this tag, with negative numbers indicating below sea level"

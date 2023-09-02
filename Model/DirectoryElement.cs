@@ -54,17 +54,17 @@ public class DirectoryElement
 
     #region Attribute Values Support
 
-    /// <summary>
-    ///     Possible versions of an element. Initial loads receive the
-    ///     original version tag, updates the modified one.
-    /// </summary>
-    public enum AttributeVersion
-    {
-        Original,
-        Stage1EditFormIntraTabTransferQueue,
-        Stage2EditFormReadyToSaveAndMoveToWriteQueue,
-        Stage3ReadyToWrite
-    }
+        /// <summary>
+        ///     Possible versions of an element. Initial loads receive the
+        ///     original version tag, updates the modified one.
+        /// </summary>
+        public enum AttributeVersion
+        {
+            Original,
+            Stage1EditFormIntraTabTransferQueue,
+            Stage2EditFormReadyToSaveAndMoveToWriteQueue,
+            Stage3ReadyToWrite
+        }
 
     // We need a non generics super class that can be referenced
     // independent of the concrete values type (generic).
@@ -861,7 +861,7 @@ public class DirectoryElement
         callDepth++;
         (string chosenTag, string parseResult) = GetDataPointFromTags(attribute: attribute, tags: tags);
 
-        #region Create a history
+    #region Create a history
 
         // TakenDate & CreateDate have to be sent into their
         // respective tables for querying later if user chooses time-shift.
@@ -880,7 +880,7 @@ public class DirectoryElement
 
                         FrmMainApp.OriginalTakenDateDict[key: ItemNameWithoutPath] =
                             DateTime.Parse(s: parseResult, provider: CultureInfo.CurrentUICulture)
-                                .ToString(provider: CultureInfo.CurrentUICulture);
+                                    .ToString(provider: CultureInfo.CurrentUICulture);
                         break;
 
                     case ElementAttribute.CreateDate:
@@ -891,7 +891,7 @@ public class DirectoryElement
 
                         FrmMainApp.OriginalCreateDateDict[key: ItemNameWithoutPath] =
                             DateTime.Parse(s: parseResult, provider: CultureInfo.CurrentUICulture)
-                                .ToString(provider: CultureInfo.CurrentUICulture);
+                                    .ToString(provider: CultureInfo.CurrentUICulture);
                         break;
                 }
                 // Not adding the xmp here because the current code logic would pull a "unified" data point.
@@ -903,7 +903,7 @@ public class DirectoryElement
             return false; // be triple sure here.
         }
 
-        #endregion
+    #endregion
 
         // If needed, transform the attribute
         IConvertible resTyped = null;
@@ -935,6 +935,13 @@ public class DirectoryElement
                                                                           });
                 break;
 
+            case ElementAttribute.GPSImgDirection:
+                resTyped = TagsToModelValueTransformations.T2M_GPSImgDirection(parseResult: parseResult);
+                break;
+            case ElementAttribute.GPSImgDirectionRef:
+                resTyped = TagsToModelValueTransformations.T2M_GPSImgDirectionRef(parseResult: parseResult);
+                break;
+
             case ElementAttribute.ExposureTime:
                 resTyped = TagsToModelValueTransformations.T2M_ExposureTime(parseResult: parseResult);
                 break;
@@ -955,8 +962,33 @@ public class DirectoryElement
                 break;
 
             default:
-                // Just take the string
-                resTyped = parseResult;
+
+                Type typeOfAttribute = GetAttributeType(attribute: attribute);
+                if (typeOfAttribute == typeof(string))
+                {
+                    resTyped = parseResult;
+                }
+                else if (typeOfAttribute == typeof(double))
+                {
+                    resTyped = HelperGenericTypeOperations.TryParseNullableDouble(val: parseResult) ??
+                               FrmMainApp.NullDoubleEquivalent;
+                }
+                else if (typeOfAttribute == typeof(int))
+                {
+                    resTyped = HelperGenericTypeOperations.TryParseNullableInt(val: parseResult) ??
+                               FrmMainApp.NullIntEquivalent;
+                }
+                else if (typeOfAttribute == typeof(DateTime))
+                {
+                    resTyped = HelperGenericTypeOperations.TryParseNullableDateTime(val: parseResult) ??
+                               FrmMainApp.NullDateTimeEquivalent;
+                }
+                else
+                {
+                    throw new ArgumentException(
+                        message: "Trying to get attribute name of unknown attribute with value " + attribute);
+                }
+
                 break;
         }
 

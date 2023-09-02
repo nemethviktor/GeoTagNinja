@@ -85,8 +85,8 @@ internal class TagsToModelValueTransformations
 
 
     /// <summary>
-    ///     Extract hight from given string that also contains text
-    ///     Supports ###/### m bla
+    ///     Extract altitude from given string that also contains text
+    ///     Supports ###/### m 
     /// </summary>
     public static double? T2M_GPSAltitude(string parseResult)
     {
@@ -120,7 +120,7 @@ internal class TagsToModelValueTransformations
                     double tmpAltitude = Math.Round(value: numerator / denominator, digits: 2);
 
                     return HelperVariables.UseImperial
-                        ? Math.Round(value: tmpAltitude * HelperVariables.METRETOFEET, digits: 2)
+                        ? Math.Round(value: tmpAltitude * HelperVariables.METRETORFEET, digits: 2)
                         : tmpAltitude;
                 }
                 catch
@@ -137,7 +137,7 @@ internal class TagsToModelValueTransformations
             if (parseBool)
             {
                 return HelperVariables.UseImperial
-                    ? Math.Round(value: tmpAltitude * HelperVariables.METRETOFEET, digits: 2)
+                    ? Math.Round(value: tmpAltitude * HelperVariables.METRETORFEET, digits: 2)
                     : tmpAltitude;
             }
 
@@ -170,6 +170,76 @@ internal class TagsToModelValueTransformations
 
         return "Above Sea Level";
     }
+
+    /// <summary>
+    ///     Extract GPSImgDirection
+    /// </summary>
+    public static double? T2M_GPSImgDirection(string parseResult)
+    {
+        if (parseResult == null)
+        {
+            // not set
+            return null;
+        }
+
+        try
+        {
+            if (parseResult.Contains('/'))
+            {
+                bool parseBool = double.TryParse(s: parseResult.Split('/')[0],
+                                                 style: NumberStyles.Any,
+                                                 provider: CultureInfo.InvariantCulture,
+                                                 result: out double numerator);
+                parseBool = double.TryParse(s: parseResult.Split('/')[1],
+                                            style: NumberStyles.Any,
+                                            provider: CultureInfo.InvariantCulture,
+                                            result: out double denominator);
+                double gpsImgDirection = Math.Round(value: numerator / denominator, digits: 2);
+
+                return gpsImgDirection;
+            }
+            else
+            {
+                bool _ = double.TryParse(s: parseResult,
+                                         style: NumberStyles.Any,
+                                         provider: CultureInfo.InvariantCulture,
+                                         result: out double value);
+                double gpsImgDirection = Math.Round(value: value, digits: 2);
+
+                return gpsImgDirection;
+            }
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+
+    /// <summary>
+    ///     Standardize string to "Geographic North" or
+    ///     "Magnetic North" (default).
+    /// </summary>
+    public static string T2M_GPSImgDirectionRef(string parseResult)
+    {
+        if (parseResult == null)
+        {
+            return null; // not set
+        }
+
+        if (parseResult.ToLower()
+                       .Contains(value: "true") ||
+            parseResult.ToLower()
+                       .Contains(value: "geo") ||
+            parseResult.ToUpper()
+                       .StartsWith("T"))
+        {
+            return "Geographic North";
+        }
+
+        return "Magnetic North";
+    }
+
 
     /// <summary>
     ///     Standardize the exposure time value - removing "sec" and
