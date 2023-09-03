@@ -120,7 +120,7 @@ internal class TagsToModelValueTransformations
                     double tmpAltitude = Math.Round(value: numerator / denominator, digits: 2);
 
                     return HelperVariables.UseImperial
-                        ? Math.Round(value: tmpAltitude * HelperVariables.METRETORFEET, digits: 2)
+                        ? Math.Round(value: tmpAltitude * HelperVariables.MetreToFeet, digits: 2)
                         : tmpAltitude;
                 }
                 catch
@@ -137,7 +137,7 @@ internal class TagsToModelValueTransformations
             if (parseBool)
             {
                 return HelperVariables.UseImperial
-                    ? Math.Round(value: tmpAltitude * HelperVariables.METRETORFEET, digits: 2)
+                    ? Math.Round(value: tmpAltitude * HelperVariables.MetreToFeet, digits: 2)
                     : tmpAltitude;
             }
 

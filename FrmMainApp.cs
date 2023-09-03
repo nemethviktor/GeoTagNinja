@@ -725,7 +725,7 @@ public partial class FrmMainApp : Form
         // Set up replacements
         IDictionary<string, string> htmlReplacements = new Dictionary<string, string>();
 
-        HelperVariables.HtmlAddMarker = "";
+        HelperVariables.HTMLAddMarker = "";
         HelperVariables.HTMLCreatePoints = ""; // this is ok as-is, won't break the map if stays so.
         double dblMinLat = 180;
         double dblMinLng = 180;
@@ -741,7 +741,7 @@ public partial class FrmMainApp : Form
             foreach ((string strLat, string strLng) locationCoord in HelperVariables.HsMapMarkers)
             {
                 // Add marker location
-                HelperVariables.HtmlAddMarker += "var marker = L.marker([" + locationCoord.strLat + ", " + locationCoord.strLng + "]).addTo(map).openPopup();" + "\n";
+                HelperVariables.HTMLAddMarker += "var marker = L.marker([" + locationCoord.strLat + ", " + locationCoord.strLng + "]).addTo(map).openPopup();" + "\n";
 
                 // Update viewing rectangle if neede
                 dLat = double.Parse(s: locationCoord.strLat, provider: CultureInfo.InvariantCulture);
@@ -761,7 +761,7 @@ public partial class FrmMainApp : Form
             HelperVariables.MinLng = dblMinLng;
             HelperVariables.MaxLat = dblMaxLat;
             HelperVariables.MaxLng = dblMaxLng;
-            htmlReplacements.Add(key: "{ HTMLAddMarker }", value: HelperVariables.HtmlAddMarker);
+            htmlReplacements.Add(key: "{ HTMLAddMarker }", value: HelperVariables.HTMLAddMarker);
         }
         else
         {

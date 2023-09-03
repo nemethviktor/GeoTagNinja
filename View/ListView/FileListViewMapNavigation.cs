@@ -16,7 +16,7 @@ internal static class FileListViewMapNavigation
     internal static void ListViewItemClickNavigate()
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        HelperVariables.HtmlAddMarker = "";
+        HelperVariables.HTMLAddMarker = "";
         HelperVariables.HsMapMarkers.Clear();
 
         // ReSharper disable once InconsistentNaming
