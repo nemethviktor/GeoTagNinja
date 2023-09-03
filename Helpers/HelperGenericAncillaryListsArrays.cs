@@ -288,7 +288,7 @@ internal static class HelperGenericAncillaryListsArrays
             "(+03:00/+03:00) # Europe/Istanbul",
             "(+00:00/+01:00) # Europe/Jersey",
             "(+02:00/+02:00) # Europe/Kaliningrad",
-            "(+02:00/+03:00) # Europe/Kiev",
+            "(+02:00/+03:00) # Europe/Kyiv",
             "(+01:00/+02:00) # Europe/Ljubljana",
             "(+00:00/+01:00) # Europe/London",
             "(+01:00/+02:00) # Europe/Luxembourg",

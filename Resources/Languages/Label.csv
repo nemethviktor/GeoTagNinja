@@ -10,7 +10,7 @@ lbl_ParseProgress_Normal,Ready,Pret
 lbl_Startup_Folder,Startup Folder,Dossier de démarrage
 lbl_Language,Language,Langage
 lbl_Decimal,Decimal,Decimal
-lbl_GPSAltitude,Altitude [m],Altitude [m]
+lbl_GPSAltitude,Altitude,Altitude
 lbl_GPSAltitudeRef,Altitude Ref,Ref d'Altitude
 lbl_GPSDestLatitude,Dest Latitude,Latitude de destination
 lbl_GPSDestLatitudeRef,Dest Latitude Ref,Ref de latitude de destination
@@ -62,3 +62,8 @@ lbl_SelectColsTitle,Select Columns,Selectionner les colonnes
 lbl_ChoiceOfferCount,Show this many toponym options,Montrer toutes les options de toponymie
 lbl_ChoiceRadius,In the Radius [kms],Dans un rayon de [kms]
 lbl_Favourites,Favourites,Favoris
+lbl_Miles,Miles,Milles
+lbl_Metres,Metres,
+lbl_Feet,Feet,
+lbl_Metres_Abbr,m,
+lbl_Feet_Abbr,ft,

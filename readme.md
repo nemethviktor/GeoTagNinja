@@ -30,6 +30,17 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 - See my comment above re: the app being unsigned and SmartScreen getting derpy once in a while. On top of that...
 	- If you have Avast running or some other nightmare that tries to capture iframes within apps the app will most likely crash sooner rather than later, at least on the first run. I *think* it should be okay afterwards.
 	- I've seen once (and only once) ESET being silly about the app. Tbh no idea as to why. While I'd say the source code is open for public viewing and building it is probably clearer to just say: the app isn't tracking or recording your data and isn't doing anything that's not strictly related to its function. If I ever were to include any tracking (no such plans for the forseeable future), it'd be entirely anonomymised anyway.
+- Build 8646 [20230903]+: I've finally gotten around to displaying the GPSImgDirection on the map. The logic is, as not to clutter the map the direction "line" will only show when only one image (with GPSImgDirection) is selected; if more than one such image is selected then the lines don't show.
+	- The way this is calculated requires a "distance" so that the target coordinate pair ("the image direction") can be calculated. This is defaulted to 10km for the line and 1km for the triangle and is unlikely to change at this point.
+
+### A Particular Note on Working with Adobe Bridge (ACR) and RAW files > Saving as JPGs or Other Formats.
+
+Basically there appear to be two schools of thoughts, one propagating that RAW files themselves shouldn't ever be edited, whereas the other is less specific on this matter. 
+GTN allows to set a "Process the original image" on a per-extension basis. If set so then the updates will go into the RAW files as well as (subject to further settings) an XMP file. When not set then only the XMP file will be edited, leaving the RAW file intact. This latter (do-not-process-the-raw-file) can cause some issues:
+- Current versions of GTN are coded so that data in XMP files take precedence over RAW files when there is conflicting information. The logic is that discrepancies should only happen if the user does not overwrite the RAW file and therefore whatever is in the XMP is created (and has been modified) on purpose and thus is the will of the user.
+- When using Bridge (and/or ACR) as a workflow tool, it has its on quirks, one being that GPS coordinates are read from the RAW file, not the XMP file, even if there is a discrepancy. To make matters worse, any updates to the GPS coords within Bridge are saved in the XMP file but upon refresh (F5) the values revert to those in the RAW file. One can say that is a feature of sorts. 
+	- This becomes a particular problem because if a user has the following workflow: download RAW from Camera > process & change coords in GTN (only write XMP) > save as JPG in Bridge then the JPG files will likely contain the wrong coordinates (those from the RAW file). _There is nothing I can do about this_. FWIW I checked and GeoSetter has the same thing, which is sensible given that this is ultimately an external factor. Amusingly enough a quick googling shows that users have reported this issue as early as 2017 but, while acknowledged, it's been ignored by Adobe, certainly as late as Bridge v2022 (haven't tried newer ones).
+	- The only way to get around this is to process the RAW image (edit/overwrite as above) within GTN
 
 ### Collection Mode (Hooking up GTN with Jeffrey Frield's LightRoom Classic Plugin "Run Any Command"
 
@@ -62,7 +73,8 @@ I'm generally happy for anyone competent to add pull requests but I don't always
 
 ## ToDos
 
-- [later] Destination stuff untested / not showing cones on map / generally likely not working.
+- [WIP] Destination stuff untested generally likely not working.
+- [Later] Rewrite the whole app in WPF.
 
 ## Known Issues
 

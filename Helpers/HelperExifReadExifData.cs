@@ -995,8 +995,8 @@ internal static class HelperExifReadExifData
     ///     we're looking for Model ...
     ///     this will get both EXIF:Model and and XMP:Model - as it does a cartesian join on the objectNames table.
     /// </summary>
-    /// <param name="dtFileExif">Raw exiftool outout of all tags</param>
-    /// <param name="dataPoint">Plain English datapoint we're after</param>
+    /// <param name="dtFileExif">Raw exiftool outout of all tags (datatable with rows such as "exif:GPSLatitude" and their values</param>
+    /// <param name="dataPoint">Plain English datapoint we're after - e.g. "GPSLatitude"</param>
     /// <returns>Value of that datapoint if exists (e.g "Canon EOS 30D") - unwrangled, raw.</returns>
     private static string ExifGetRawDataPointFromExif(DataTable dtFileExif,
                                                       string dataPoint)
@@ -1004,71 +1004,35 @@ internal static class HelperExifReadExifData
         FrmMainApp.Logger.Trace(message: "Starting - dataPoint:" + dataPoint);
         string returnVal = FrmMainApp.NullStringEquivalentGeneric;
         string tryDataValue = FrmMainApp.NullStringEquivalentGeneric;
+        ElementAttribute attribute = GetAttributeFromString(dataPoint);
+        List<string> orderedTags = TagsToAttributesIn[key: attribute];
 
-        DataTable dtObjectattributesIn = HelperDataOtherDataRelated.JoinDataTables(t1: HelperVariables.DtObjectNames, t2: HelperVariables.DtObjectattributesIn,
-                                                                                   (row1,
-                                                                                    row2) =>
-                                                                                       row1.Field<string>(columnName: "objectName") == row2.Field<string>(columnName: "objectName"));
-
-        DataTable? dtObjectTagNameIn = null;
-        try
+        if (orderedTags.Any() && dtFileExif.Rows.Count > 0)
         {
-            dtObjectTagNameIn = dtObjectattributesIn.Select(filterExpression: "objectName = '" + dataPoint + "'")
-                .CopyToDataTable();
-            dtObjectTagNameIn.DefaultView.Sort = "valuePriorityOrder";
-            dtObjectTagNameIn = dtObjectTagNameIn.DefaultView.ToTable();
-        }
-        catch
-        {
-            // This will always fire for anything Coordinate-related
-            FrmMainApp.Logger.Info(message: "dataPoint:" + dataPoint + " - Not in dtObjectTagNameIn");
-            dtObjectTagNameIn = null;
-        }
-
-        if (dtObjectTagNameIn != null)
-        {
-            DataTable dtTagsWanted = dtObjectTagNameIn.DefaultView.ToTable(distinct: true, "objectTagName_In");
-
-            if (dtTagsWanted.Rows.Count > 0 && dtFileExif.Rows.Count > 0)
+            foreach (string tagWanted in orderedTags)
             {
-                foreach (DataRow drTagWanted in dtTagsWanted.Rows)
+                DataRow filteredRows = dtFileExif.Select(filterExpression: "attribute = '" + tagWanted + "'")
+                                                 .FirstOrDefault();
+                if (filteredRows != null)
                 {
-                    try
+                    tryDataValue = filteredRows[columnIndex: 1]
+                      ?.ToString();
+                    if (!string.IsNullOrEmpty(value: tryDataValue))
                     {
-                        string attributeToSelect = drTagWanted[columnIndex: 0]
-                            .ToString();
-                        DataRow filteredRows = dtFileExif.Select(filterExpression: "attribute = '" + attributeToSelect + "'")
-                            .FirstOrDefault();
-                        if (filteredRows != null)
-                        {
-                            tryDataValue = filteredRows[columnIndex: 1]
-                                ?.ToString();
-                            if (!string.IsNullOrEmpty(value: tryDataValue))
-                            {
-                                FrmMainApp.Logger.Trace(message: "dataPoint:" + dataPoint + " -> " + attributeToSelect + ": " + tryDataValue);
-                                break;
-                            }
-                        }
-                    }
-                    catch (ArgumentException)
-                    {
-                        tryDataValue = FrmMainApp.NullStringEquivalentGeneric;
+                        FrmMainApp.Logger.Trace(message: "dataPoint:" + dataPoint + " -> " + tagWanted + ": " + tryDataValue);
+                        break;
                     }
                 }
-            }
-            else
-            {
-                tryDataValue = FrmMainApp.NullStringEquivalentGeneric;
             }
         }
 
         FrmMainApp.Logger.Debug(message: "Done - dataPoint:" + dataPoint);
-        returnVal = tryDataValue;
-        return returnVal;
+        return tryDataValue;
     }
 
     /// <summary>
     ///     Wrangles data from raw exiftool output to presentable and standardised data.
+    /// This only gets called via the API calls.
     /// </summary>
     /// <param name="dtFileExif">Raw values tag from exiftool</param>
     /// <param name="dataPoint">Name of the exiftag we want the data for</param>
@@ -1100,7 +1064,7 @@ internal static class HelperExifReadExifData
 
         switch (dataPoint)
         {
-            case "GPSLatitude" or "GPSLatitude" or "GPSLongitude" or "GPSLongitude":
+            case "GPSLatitude" or "GPSLongitude":
                 if (tryDataValue != FrmMainApp.NullStringEquivalentGeneric)
                 {
                     // we want N instead of North etc.

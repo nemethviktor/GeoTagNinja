@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
+using static GeoTagNinja.View.ListView.FileListView;
 
 namespace GeoTagNinja;
 
@@ -21,18 +22,18 @@ internal static class EditFileFormGeneric
         lvw.Items.Clear();
 
         ColumnHeader clh_fileName = new();
-        clh_fileName.Name = "clh_fileName";
+        clh_fileName.Name = COL_NAME_PREFIX + FileListColumns.FILENAME;
         clh_fileName.Width = lvw.Width;
         lvw.Columns.Add(value: clh_fileName);
 
         ColumnHeader clh_GUID = new();
-        clh_GUID.Name = "clh_GUID";
+        clh_GUID.Name = COL_NAME_PREFIX + FileListColumns.GUID;
         clh_GUID.Width = 0;
         lvw.Columns.Add(value: clh_GUID);
 
         foreach (string fileToEditGUID in FrmMainApp.filesToEditGUIDStringList)
         {
-            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(UniqueID: fileToEditGUID);
+            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: fileToEditGUID);
 
             if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {

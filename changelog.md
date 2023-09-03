@@ -1,11 +1,41 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 84XX [202304XX]**
+**Build 8646 [20230903]** 
+- NEW & UPDATED:
+ - Graduated the app to version 1.x [technically 1.10 because it's been edging up on the minor versions ever since initial release] - yayy. It now has all the features I initially wanted.
+   - Added some support for reading and displaying ImgDirection/Ref.
+   - Added a TaskbarProgressBarState indicator
+   - Update the "update" logic -> there's now a Setting that enables the user to update to pre-release [dev] releases or master-only. Master releases will no longer be marked as pre-release on github.
+ - Bumped exifTool to v12.65
+ - Changed the internal logic as to how the ListView coordinates get put on the map. Trying to fully move away from reading data from the ListView rather than from the DirectoryElement
+ - Changed internal logic re: (not) defaulting values to strings in certain cases
+- BUGS & FIXES:
+  - Fixed a bug where in Finland (English) culture [possibly others too] the app would crash because decimals were being converted in the wrong way.
+  - Fixed some logic relating to certain Composite Tags not being written properly
+	- Then fixed an issue caused by this where XMP tags weren't written out to XMP files properly. 
+  - Also fixed a duplication issue in the outgoing args file while at it
+  - Fixed a bug where Paste would also attempt to affect folders
+
+**Build 8610 [20230729]** [dev branch release]
+- NEW & UPDATED:
+  - Added an option to use Imperial instead of Metric. In practice this still saves data in Metric but shows as Imperial. #82
+  - Bumped exifTool to v12.64
+- BUGS & FIXES:
+  - Fixed a bug where the original file is set not to be overwritten but XMP is and ultimately the DE didn't get cleread properly, resulting in what appeared to be an unresponsive non-save.
+  - Fixed a bug pasting string values across files causing a crash
+  - Updated the Kyiv TZ name (from Europe/Kiev to Europe/Kyiv) - this appears to have caused some problems before
+  - Fixed a bug where timezone was read incorrectly from the Edit Form
+  - Fixed a bug where RAW and XMP files contradict each other for Lat/Long Ref values and the wrong one is taken
+  - Fixed a bug where opening the Edit Form via the File menu would cause crash
+  - Fixed a logical flaw where, after pressing OK in the Edit File Form the code would parse the whole folder again for any outstanding data
+  - Amended DE Parse logic for (lack of) dates values - re #86
+
+**Build 8556 [20230605]**
 - NEW & UPDATED:
   - Added a "Collections Mode", in particular to work with Jeffrey Frield's LightRoom Classic Plugin "Run Any Command". Details on how to use this are in the readme.
   - Rewrote the sorting logic to account for the data type of the column being sorted (i.e. date, number, text etc)
   - Added Country to Favourites
-  - Bumped exifTool to v12.58
+  - Bumped exifTool to v12.62
 - BUGS & FIXES:
   - Fixed a bug where the TZ dropdown in Import GPX could cause a crash if the user was in a TZ that wasn't on the dropdown.
   - Paste-values logic minor revamp

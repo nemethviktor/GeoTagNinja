@@ -1,6 +1,7 @@
 ﻿using GeoTagNinja.View.ListView;
 using System.Reflection;
 using System.Windows.Forms;
+using static GeoTagNinja.View.ListView.FileListView;
 
 namespace GeoTagNinja
 {
@@ -419,8 +420,8 @@ namespace GeoTagNinja
             // 
             // clh_FileName
             // 
-            this.clh_FileName.Name = "clh_FileName";
-            this.clh_FileName.Text = "clh_FileName";
+            this.clh_FileName.Name = COL_NAME_PREFIX + FileListColumns.FILENAME;
+            this.clh_FileName.Text = COL_NAME_PREFIX + FileListColumns.FILENAME;
             // 
             // cms_FileListView
             // 

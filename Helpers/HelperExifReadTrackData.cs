@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.ListView;
 using Microsoft.VisualBasic;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
@@ -62,19 +63,19 @@ internal static class HelperExifReadTrackData
             else if (trackFileLocationType == "folder")
             {
                 trackFileList = Directory
-                    .GetFiles(path: trackFileLocationVal)
-                    .Where(predicate: file => HelperGenericAncillaryListsArrays.GpxExtensions()
-                               .Any(predicate: file.ToLower()
-                                        .EndsWith))
-                    .ToList();
+                               .GetFiles(path: trackFileLocationVal)
+                               .Where(predicate: file => HelperGenericAncillaryListsArrays.GpxExtensions()
+                                                                                          .Any(predicate: file.ToLower()
+                                                                                                              .EndsWith))
+                               .ToList();
             }
 
             // imageFileList
             foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
             {
-                DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemUniqueID(lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                                                                               .Index]
-                                                                                                                  .Text);
+                DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(lvi.SubItems[index: lvw.Columns[key: FileListView.COL_NAME_PREFIX + FileListView.FileListColumns.GUID]
+                                                                                                                                 .Index]
+                                                                                                             .Text);
                 string pathToTag = dirElemFileToModify.FileNameWithPath;
                 if (File.Exists(path: pathToTag))
                 {
@@ -157,9 +158,9 @@ internal static class HelperExifReadTrackData
                                 };
 
                                 DirectoryElement dirElemFileToModify =
-                                    FrmMainApp.DirectoryElements.FindElementByItemUniqueID(lvi.SubItems[index: lvw.Columns[key: "clh_GUID"]
-                                                                                                            .Index]
-                                                                                               .Text);
+                                    FrmMainApp.DirectoryElements.FindElementByItemGUID(lvi.SubItems[index: lvw.Columns[key: FileListView.COL_NAME_PREFIX + FileListView.FileListColumns.GUID]
+                                                                                                              .Index]
+                                                                                          .Text);
                                 string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
 
                                 // get the current stuff, either from DE3 or Orig or just blank if none.
@@ -261,15 +262,15 @@ internal static class HelperExifReadTrackData
                                             List<(ElementAttribute attribute, string toponomyOverwriteVal)> toponomyOverwrites = new()
                                             {
                                                 (ElementAttribute.CountryCode, dtToponomy.Rows[index: 0][columnName: "CountryCode"]
-                                                     .ToString()),
+                                                                                         .ToString()),
                                                 (ElementAttribute.Country, dtToponomy.Rows[index: 0][columnName: "Country"]
-                                                     .ToString()),
+                                                                                     .ToString()),
                                                 (ElementAttribute.City, dtToponomy.Rows[index: 0][columnName: "City"]
-                                                     .ToString()),
+                                                                                  .ToString()),
                                                 (ElementAttribute.State, dtToponomy.Rows[index: 0][columnName: "State"]
-                                                     .ToString()),
+                                                                                   .ToString()),
                                                 (ElementAttribute.Sub_location, dtToponomy.Rows[index: 0][columnName: "Sub_location"]
-                                                     .ToString())
+                                                                                          .ToString())
                                             };
 
                                             foreach ((ElementAttribute attribute, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)

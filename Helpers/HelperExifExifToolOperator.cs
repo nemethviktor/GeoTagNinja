@@ -26,10 +26,14 @@ internal static class HelperExifExifToolOperator
     ///     in the main listView
     /// </param>
     /// <param name="initiator">String value of "who called it". </param>
+    /// <param name="processOriginalFile1"></param>
+    /// <param name="writeXmpSideCar"></param>
     /// <returns>Empty Task</returns>
     internal static async Task RunExifTool(string exiftoolCmd,
                                            FrmMainApp frmMainAppInstance,
-                                           string initiator)
+                                           string initiator,
+                                           bool processOriginalFile = false,
+                                           bool writeXmpSideCar = false)
     {
         int lviIndex = 0;
         _exifInvokeCounter += 1;
@@ -71,7 +75,19 @@ internal static class HelperExifExifToolOperator
                                     .FirstOrDefault()
                                     .Trim();
 
-                                dirElemFileToDrop = FrmMainApp.DirectoryElements.FindElementByFileNameWithPath(FileNameWithPath: fileNameWithPath);
+                                // basically we need to check that the combination of what-to-save is _not_ xmp-only. 
+                                // if it _is_ xmp-only then this causes a problem because the xmp file isn't really a DE per se so it'd never get removed from the queue.
+                                // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
+
+                                if (!processOriginalFile && writeXmpSideCar && fileNameWithPath.EndsWith(value: ".xmp"))
+                                {
+                                    string pathOfFile = fileNameWithPath.Substring(startIndex: 0, length: fileNameWithPath.Length - 4);
+                                    dirElemFileToDrop = FrmMainApp.DirectoryElements.FindElementByBelongingToXmpWithPath(XMPFileNameWithPath: pathOfFile);
+                                }
+                                else
+                                {
+                                    dirElemFileToDrop = FrmMainApp.DirectoryElements.FindElementByFileNameWithPath(FileNameWithPath: fileNameWithPath);
+                                }
                             }
 
                             if (dirElemFileToDrop != null)
@@ -100,10 +116,6 @@ internal static class HelperExifExifToolOperator
 
                                     if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
                                     {
-                                        // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
-                                        // FindItemWithText -> https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.listview.finditemwithtext?view=netframework-4.8
-                                        // "Finds the first ListViewItem with __that begins with__ the given text value."
-
                                         if (lviIndex % 10 == 0)
                                         {
                                             Application.DoEvents();
@@ -117,6 +129,12 @@ internal static class HelperExifExifToolOperator
                                                 .StartsWith(value: "0"))
                                         {
                                             removeDirElementFromDE3(dirElemToDrop: dirElemFileToDrop);
+                                            if (!processOriginalFile && writeXmpSideCar)
+                                            {
+                                                string pathOfFile = fileNameWithPath.Substring(startIndex: 0, length: fileNameWithPath.Length - 4);
+                                                dirElemFileToDrop = FrmMainApp.DirectoryElements.FindElementByBelongingToXmpWithPath(XMPFileNameWithPath: pathOfFile);
+                                                removeDirElementFromDE3(dirElemToDrop: dirElemFileToDrop);
+                                            }
                                         }
                                     }
                                 }
@@ -127,7 +145,7 @@ internal static class HelperExifExifToolOperator
 
                                 lviIndex++;
 
-                                if (!data.Data.Contains(value: "files updated") && !data.Data.Contains(value: "files created") && !data.Data.Contains(value: fileNameWithoutPath))
+                                if (!data.Data.Contains(value: "files updated") && !data.Data.Contains(value: "files created") && !data.Data.Contains(value: fileNameWithoutPath.Substring(startIndex: 0, length: fileNameWithoutPath.LastIndexOf(value: '.'))))
                                 {
                                     MessageBox.Show(text: data.Data);
                                 }

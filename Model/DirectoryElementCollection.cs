@@ -1,11 +1,13 @@
-﻿using System;
+﻿using ExifToolWrapper;
+using GeoTagNinja.Helpers;
+using NLog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
-using ExifToolWrapper;
-using GeoTagNinja.Helpers;
-using NLog;
+using static GeoTagNinja.Model.SourcesAndAttributes;
 using static System.Environment;
 
 namespace GeoTagNinja.Model;
@@ -35,13 +37,13 @@ public class DirectoryElementCollection : List<DirectoryElement>
     ///     with the given item name. If nothing is found, return null.
     ///     Prepwork atm for allowing for multiple filenames across folders as these IDs are in fact unique.
     /// </summary>
-    /// <param name="UniqueID"></param>
+    /// <param name="GUID"></param>
     /// <returns></returns>
-    public DirectoryElement FindElementByItemUniqueID(string UniqueID)
+    public DirectoryElement FindElementByItemGUID(string GUID)
     {
         foreach (DirectoryElement item in this)
         {
-            if (item.UniqueID.ToString() == UniqueID)
+            if (item.GetAttributeValueString(ElementAttribute.GUID) == GUID)
             {
                 return item;
             }
@@ -60,6 +62,48 @@ public class DirectoryElementCollection : List<DirectoryElement>
         foreach (DirectoryElement item in this)
         {
             if (item.FileNameWithPath == FileNameWithPath)
+            {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+
+    /// <summary>
+    /// Searches through all the DEs in this collection for elements
+    /// with dirty (to be saved) attributes.
+    /// 
+    /// TODO: THIS IS VERY INEFFICIENT. With larger element sets, we parse the whole
+    /// collection and for every element every attribute... Need a cache...?
+    /// </summary>
+    /// <returns>A HashSet of UIDs of dirty elements. Empty if there are none.</returns>
+    public HashSet<string> FindDirtyElements()
+    {
+        HashSet<string> uids = new HashSet<string>();
+        foreach (DirectoryElement directoryElement in this)
+        {
+            if (directoryElement.HasDirtyAttributes(DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
+                uids.Add(directoryElement.GetAttributeValueString(ElementAttribute.GUID));
+        }
+
+        return uids;
+    }
+
+
+    /// <summary>
+    ///     Attempts to find the first DE that matches an XMP file's logic. (ie.
+    ///     20100504_Rome_01_Downtown_Colosseum__MG_2595.xmp --> 20100504_Rome_01_Downtown_Colosseum__MG_2595.CR2 assuming it
+    ///     exists)
+    /// </summary>
+    /// <param name="XMPFileNameWithPath"></param>
+    /// <returns></returns>
+    public DirectoryElement FindElementByBelongingToXmpWithPath(string XMPFileNameWithPath)
+    {
+        foreach (DirectoryElement item in this)
+        {
+            if (item.FileNameWithPath.StartsWith(XMPFileNameWithPath))
             {
                 return item;
             }
@@ -189,9 +233,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
                             ));
                     }
                     else if (directoryInfo.Attributes.ToString()
-                                 .Contains(value: "Directory") &&
+                                          .Contains(value: "Directory") &&
                              !directoryInfo.Attributes.ToString()
-                                 .Contains(value: "ReparsePoint"))
+                                           .Contains(value: "ReparsePoint"))
                     {
                         Logger.Trace(message: "Folder: " + directoryInfo.Name);
                         Add(item: new DirectoryElement(
@@ -269,16 +313,16 @@ public class DirectoryElementCollection : List<DirectoryElement>
             // Check, if it is a side car file. If so,
             // add it to the list to attach to image files later
             if (allowedSideCarExtensions.Contains(value: Path.GetExtension(path: fileNameWithExtension)
-                                                      .ToLower()
-                                                      .Replace(oldValue: ".", newValue: "")))
+                                                             .ToLower()
+                                                             .Replace(oldValue: ".", newValue: "")))
             {
                 sidecarFiles.Add(item: fileNameWithExtension);
             }
 
             // Image file
             else if (allowedImageExtensions.Contains(value: Path.GetExtension(path: fileNameWithExtension)
-                                                         .ToLower()
-                                                         .Replace(oldValue: ".", newValue: "")))
+                                                                .ToLower()
+                                                                .Replace(oldValue: ".", newValue: "")))
             {
                 imageFiles.Add(item: fileNameWithExtension);
 
@@ -297,30 +341,30 @@ public class DirectoryElementCollection : List<DirectoryElement>
             }
         }
 
-        Logger.Trace(message: "Files: Listing Files - OK, image file count: " + imageFiles.Count.ToString());
+        Logger.Trace(message: "Files: Listing Files - OK, image file count: " + imageFiles.Count);
 
         // ******************************
         // Map side car files to image file
         IDictionary<string, string> image2sidecar = new Dictionary<string, string>();
         HashSet<string> overlappingXmpFileList = new();
 
-        Logger.Trace(message: "Files: Checking sidecar files, count: " + sidecarFiles.Count.ToString());
+        Logger.Trace(message: "Files: Checking sidecar files, count: " + sidecarFiles.Count);
         foreach (string sidecarFile in sidecarFiles)
         {
             // Get (by comparing w/o extension) list of matching image files in lower case
             string scFilenameWithoutExtension = Path.GetFileNameWithoutExtension(path: sidecarFile)
-                .ToLower();
+                                                    .ToLower();
             List<string> matchingImageFiles = imageFiles
-                .Where(predicate: imgFile => Path.GetFileNameWithoutExtension(path: imgFile)
-                                                 .ToLower() ==
-                                             scFilenameWithoutExtension)
-                .ToList();
+                                             .Where(predicate: imgFile => Path.GetFileNameWithoutExtension(path: imgFile)
+                                                                              .ToLower() ==
+                                                                          scFilenameWithoutExtension)
+                                             .ToList();
 
             bool sidecarFileAlreadyAdded = false;
             foreach (string imgFile in matchingImageFiles)
             {
                 string imgFileExtension = Path.GetExtension(path: imgFile)
-                    .Substring(startIndex: 1);
+                                              .Substring(startIndex: 1);
 
                 // only add the sidecar file linkage if the particular extension is marked to use sidecars
                 bool writeXMPSideCar = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
@@ -363,13 +407,13 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
         // ******************************
         // Extract data for all files that are supported
-        Logger.Trace(message: "Files: Extracting File Data");
+        Logger.Info(message: "Files: Extracting File Data");
         int fileCount = 0;
         _ExifTool ??= new ExifTool();
 
         foreach (string fileNameWithPath in imageFiles)
         {
-            Logger.Trace(message: $"File: {fileNameWithPath}");
+            Logger.Info(message: $"File: {fileNameWithPath}");
             string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
             if (fileCount % 10 == 0)
             {
@@ -384,27 +428,38 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 fileNameWithPath: fileNameWithPath
             );
 
-            // Parse EXIF properties
-            IDictionary<string, string> dictProperties = new Dictionary<string, string>();
-            InitiateEXIFParsing(fileNameWithPathToParse: fileNameWithPath, properties: dictProperties);
-
             // Add sidecar file and data if available
+            IDictionary<string, string> dictProperties = new Dictionary<string, string>();
             if (image2sidecar.ContainsKey(key: fileNameWithPath))
             {
                 string sideCarFileNameWithPath = image2sidecar[key: fileNameWithPath];
-                Logger.Trace(message: $"Files: Extracting File Data - adding side car file '{sideCarFileNameWithPath}'");
+                Logger.Info(message: $"Files: Extracting File Data - adding side car file '{sideCarFileNameWithPath}'");
                 fileToParseDictionaryElement.SidecarFile = sideCarFileNameWithPath;
+                // Logically XMP should take priority because RAW files are not meant to be edited.
                 InitiateEXIFParsing(fileNameWithPathToParse: sideCarFileNameWithPath, properties: dictProperties);
             }
+
+            // Parse EXIF properties
+            InitiateEXIFParsing(fileNameWithPathToParse: fileNameWithPath, properties: dictProperties);
 
             // Insert into model
             fileToParseDictionaryElement.ParseAttributesFromExifToolOutput(dictTagsIn: dictProperties);
 
             Add(item: fileToParseDictionaryElement);
             fileCount++;
+            FrmMainApp.TaskbarManagerInstance.SetProgressValue(fileCount, imageFiles.Count);
+            Thread.Sleep(1);
         }
 
-        Logger.Trace(message: "Files: Extracting File Data - OK");
+        foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
+        {
+            directoryElement.SetAttributeValue(ElementAttribute.GUID, Guid.NewGuid()
+                                                                          .ToString(), DirectoryElement.AttributeVersion.Original, false);
+        }
+
+        FrmMainApp.TaskbarManagerInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress);
+
+        Logger.Info(message: "Files: Extracting File Data - OK");
     }
 
     /// <summary>
@@ -417,12 +472,47 @@ public class DirectoryElementCollection : List<DirectoryElement>
         // Gather EXIF data for the image file
         ICollection<KeyValuePair<string, string>> propertiesRead = new Dictionary<string, string>();
         _ExifTool.GetProperties(filename: fileNameWithPathToParse, propertiesRead: propertiesRead);
+
         // EXIF Tool can return duplicate properties - handle, but ignore these...
         foreach (KeyValuePair<string, string> kvp in propertiesRead)
         {
             if (!properties.ContainsKey(key: kvp.Key))
             {
                 properties.Add(key: kvp.Key, value: kvp.Value);
+            }
+        }
+
+        // force-derive Refs here because they can disagree between RAW and XMP files.
+        if (fileNameWithPathToParse.EndsWith(".xmp"))
+        {
+            // "EXIF" takes prio over "Composite"
+            string tmpLatLongValStr;
+            string tmpLatLongRefValStr = "";
+            double tmpLonLongValDbl = 0.0;
+            if (properties.ContainsKey("XMP:GPSLongitude") && !properties.ContainsKey("EXIF:GPSLongitudeRef"))
+            {
+                tmpLatLongValStr = (from x in propertiesRead
+                                    where x.Key == "XMP:GPSLongitude"
+                                    select x.Value).FirstOrDefault();
+                tmpLonLongValDbl = HelperExifDataPointInteractions.AdjustLatLongNegative(tmpLatLongValStr);
+                tmpLatLongRefValStr = tmpLonLongValDbl < 0.0
+                    ? "West"
+                    : "East";
+
+                properties.Add(key: "EXIF:GPSLongitudeRef", value: tmpLatLongRefValStr);
+            }
+
+            if (properties.ContainsKey("XMP:GPSLatitude") && !properties.ContainsKey("EXIF:GPSLatitudeRef"))
+            {
+                tmpLatLongValStr = (from x in propertiesRead
+                                    where x.Key == "XMP:GPSLatitude"
+                                    select x.Value).FirstOrDefault();
+                tmpLonLongValDbl = HelperExifDataPointInteractions.AdjustLatLongNegative(tmpLatLongValStr);
+                tmpLatLongRefValStr = tmpLonLongValDbl < 0.0
+                    ? "South"
+                    : "North";
+
+                properties.Add(key: "EXIF:GPSLatitudeRef", value: tmpLatLongRefValStr);
             }
         }
     }

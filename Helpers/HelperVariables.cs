@@ -3,9 +3,11 @@ using System.Data;
 
 namespace GeoTagNinja.Helpers;
 
-internal static partial class HelperVariables
+internal static class HelperVariables
 {
     internal const int exifOrientationID = 0x112; //274
+    internal const double MetreToFeet = 3.28084;
+
     internal static string SArcGisApiKey;
     internal static string SGeoNamesUserName;
     internal static string SGeoNamesPwd;
@@ -14,7 +16,8 @@ internal static partial class HelperVariables
     internal static string _sErrorMsg = "";
     internal static string _sOutputMsg = "";
     internal static readonly string SDoubleQuote = "\"";
-    internal static string HtmlAddMarker;
+    internal static string HTMLAddMarker;
+    internal static string HTMLCreatePoints;
     internal static HashSet<(string strLat, string strLng)> HsMapMarkers = new();
     internal static double? MinLat;
     internal static double? MinLng;
@@ -24,6 +27,7 @@ internal static partial class HelperVariables
     internal static double? LastLng;
     internal static bool SNowSelectingAllItems = false;
     internal static bool SResetMapToZero;
+    internal static bool SUpdatePreReleaseGTN;
     internal static bool SOnlyShowFCodePPL = false;
     internal static decimal _currentExifToolVersionLocal;
     internal static bool ToponomyReplace = false;
@@ -38,13 +42,14 @@ internal static partial class HelperVariables
     internal static string ResourcesFolderPath;
     internal static string UserDataFolderPath;
     internal static string SSettingsDataBasePath;
-    internal static DataTable DtObjectNames;
-    internal static DataTable DtObjectattributesIn;
-    internal static DataTable DtObjectattributesOut;
     internal static DataTable DtIsoCountryCodeMapping;
     internal static List<string> LstCityNameIsAdminName1 = new();
     internal static List<string> LstCityNameIsAdminName2 = new();
     internal static List<string> LstCityNameIsAdminName3 = new();
     internal static List<string> LstCityNameIsAdminName4 = new();
     internal static List<string> LstCityNameIsUndefined = new();
+    internal static bool UseImperial = false;
+    internal static string UOMAbbreviated = "";
+    //internal static readonly (double, double) MapNorthCoordsGeographic = (90, 0);
+    //internal static (double, double) MapNorthCoordsMagnetic; // https://www.ngdc.noaa.gov/geomag/data/poles/WMM2020_NP.xy
 }

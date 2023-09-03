@@ -44,7 +44,7 @@ public class DirectoryElement
     {
         ItemNameWithoutPath = itemNameWithoutPath;
         Type = type;
-        UniqueID = Guid.NewGuid();
+
         FileNameWithPath = fileNameWithPath;
         Extension = Path.GetExtension(path: FileNameWithPath)
             .Replace(oldValue: ".", newValue: "");
@@ -54,17 +54,17 @@ public class DirectoryElement
 
     #region Attribute Values Support
 
-    /// <summary>
-    ///     Possible versions of an element. Initial loads receive the
-    ///     original version tag, updates the modified one.
-    /// </summary>
-    public enum AttributeVersion
-    {
-        Original,
-        Stage1EditFormIntraTabTransferQueue,
-        Stage2EditFormReadyToSaveAndMoveToWriteQueue,
-        Stage3ReadyToWrite
-    }
+        /// <summary>
+        ///     Possible versions of an element. Initial loads receive the
+        ///     original version tag, updates the modified one.
+        /// </summary>
+        public enum AttributeVersion
+        {
+            Original,
+            Stage1EditFormIntraTabTransferQueue,
+            Stage2EditFormReadyToSaveAndMoveToWriteQueue,
+            Stage3ReadyToWrite
+        }
 
     // We need a non generics super class that can be referenced
     // independent of the concrete values type (generic).
@@ -155,14 +155,6 @@ public class DirectoryElement
     /// </summary>
     public ElementType Type { get; }
 
-    /// <summary>
-    ///     The UniqueID (get only)
-    /// </summary>
-    public Guid UniqueID { get; }
-
-    /// <summary>
-    ///     The fully qualified path incl. its name (get only)
-    /// </summary>
     public string FileNameWithPath { get; }
 
     /// <summary>
@@ -204,6 +196,23 @@ public class DirectoryElement
     #region Members for attribute setting and retrieval
 
     /// <summary>
+    /// Checks if this DE has changed attributes that should be saved.
+    /// </summary>
+    /// <param name="whichAttributeVersion"></param>
+    /// <returns>boolean</returns>
+    public bool HasDirtyAttributes(DirectoryElement.AttributeVersion whichAttributeVersion = AttributeVersion.Stage3ReadyToWrite)
+    {
+        foreach (AttributeValueContainer avc in this._Attributes.Values)
+        {
+            if (HasSpecificAttributeWithVersion(avc: avc,
+                                                version: whichAttributeVersion))
+                return true;
+        }
+        return false;
+    }
+
+
+    /// <summary>
     ///     Checks the given value container for which version to return
     ///     depending on the version requested.
     /// </summary>
@@ -235,21 +244,16 @@ public class DirectoryElement
         return null;
     }
 
+
     /// <summary>
-    ///     Checks if a value exists for a particular attrib & version combination
+    ///     Checks if a value exists for a particular AttributeValueContainer & version combination
     /// </summary>
-    /// <param name="attribute"></param>
-    /// <param name="version"></param>
+    /// <param name="avc">The AttributeValueContainer to check</param>
+    /// <param name="version">The version to look for</param>
     /// <returns></returns>
-    public bool HasSpecificAttributeWithVersion(ElementAttribute attribute,
+    private bool HasSpecificAttributeWithVersion(AttributeValueContainer avc,
                                                 AttributeVersion version)
     {
-        if (!_Attributes.ContainsKey(key: attribute))
-        {
-            return false;
-        }
-
-        AttributeValueContainer avc = _Attributes[key: attribute];
         Type attributeType = avc.MyValueType;
 
         AttributeVersion? versionCheck = CheckWhichVersion(avc: avc, versionRequested: version);
@@ -263,6 +267,52 @@ public class DirectoryElement
         // Retrieve and return value
 
         return true;
+    }
+
+
+    /// <summary>
+    ///     Checks if a value exists for a particular attrib & version combination
+    /// </summary>
+    /// <param name="attribute">The attribute to check</param>
+    /// <param name="version">The version to look for</param>
+    /// <returns></returns>
+    public bool HasSpecificAttributeWithVersion(ElementAttribute attribute,
+                                                AttributeVersion version)
+    {
+        if (!_Attributes.ContainsKey(key: attribute))
+        {
+            return false;
+        }
+
+        AttributeValueContainer avc = _Attributes[key: attribute];
+        return HasSpecificAttributeWithVersion(avc, version);
+    }
+
+    /// <summary>
+    /// Checks if there is _any_ data for a particular ElementAttribute
+    /// </summary>
+    /// <param name="attribute">The attribute to check</param>
+    /// <returns></returns>
+    public bool HasSpecificAttributeWithAnyVersion(ElementAttribute attribute)
+    {
+        if (!_Attributes.ContainsKey(key: attribute))
+        {
+            return false;
+        }
+
+        AttributeValueContainer avc = _Attributes[key: attribute];
+        foreach (AttributeVersion attributeVersion in (AttributeVersion[])Enum.GetValues(
+                     typeof(DirectoryElement.AttributeVersion)))
+        {
+            if (HasSpecificAttributeWithVersion(avc, attributeVersion))
+            {
+                return true;
+            }
+
+            ;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -416,6 +466,35 @@ public class DirectoryElement
                                              "' by requesting its value with type 'string' due to conversion issues.");
     }
 
+    public AttributeVersion? GetMaxAttributeVersion(ElementAttribute attribute)
+
+    {
+        List<DirectoryElement.AttributeVersion> relevantAttributeVersions = new()
+        {
+            // DO NOT reorder!
+            DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+            DirectoryElement.AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue,
+            DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+            DirectoryElement.AttributeVersion.Original
+        };
+        foreach (AttributeVersion attributeVersion in relevantAttributeVersions)
+        {
+            if (HasSpecificAttributeWithVersion(attribute, attributeVersion))
+            {
+                if (!IsMarkedForDeletion(attribute, attributeVersion))
+                {
+                    return attributeVersion;
+                }
+                else
+                {
+                    // if it's marked for deletion then we don't want to return the Original because the assumption is that the value is being dropped.
+                    return null;
+                }
+            }
+        }
+
+        return null;
+    }
 
     /// <summary>
     ///     Returns the value of an attribute as the given generic.
@@ -431,7 +510,7 @@ public class DirectoryElement
     /// <param name="notFoundValue">The value to return if no suitable value was found</param>
     /// <returns></returns>
     public T? GetAttributeValue<T>(ElementAttribute attribute,
-                                   AttributeVersion version,
+                                   AttributeVersion? version,
                                    T? notFoundValue = null)
         where T : struct
     {
@@ -691,16 +770,16 @@ public class DirectoryElement
 
     #region Members for Parsing attribute values out of a tag list
 
-    /// <summary>
-    ///     Searches the given tag list to yield the value for the given attribute.
-    ///     Hereby the TagsToAttributesOrder list is used to determine which
-    ///     tags are taken in which priority for the attribute.
-    /// </summary>
-    /// <param name="attribute">The attribute to find the value for</param>
-    /// <param name="tags">The tag list to parse</param>
-    /// <returns>A touple (name of tag chosen, value)</returns>
-    private (string, string) GetDataPointFromTags(ElementAttribute attribute,
-                                                  IDictionary<string, string> tags)
+        /// <summary>
+        ///     Searches the given tag list to yield the value for the given attribute.
+        ///     Hereby the TagsToAttributesIn list is used to determine which
+        ///     tags are taken in which priority for the attribute.
+        /// </summary>
+        /// <param name="attribute">The attribute to find the value for</param>
+        /// <param name="tags">The tag list to parse</param>
+        /// <returns>A touple (name of tag chosen, value)</returns>
+        private (string, string) GetDataPointFromTags(ElementAttribute attribute,
+                                                      IDictionary<string, string> tags)
     {
         Logger.Trace(message: "Starting to parse dict for attribute: " + GetAttributeName(attribute: attribute));
         List<ElementAttribute> ignoreElementAttributes = new()
@@ -715,19 +794,20 @@ public class DirectoryElement
             ElementAttribute.CreateDateHoursShift,
             ElementAttribute.CreateDateMinutesShift,
             ElementAttribute.CreateDateSecondsShift,
-            ElementAttribute.RemoveAllGPS
+            ElementAttribute.RemoveAllGPS,
+            ElementAttribute.GUID
         };
 
         if (!ignoreElementAttributes.Contains(item: attribute))
         {
-            if (!TagsToAttributesOrder.ContainsKey(key: attribute))
+            if (!TagsToAttributesIn.ContainsKey(key: attribute))
             {
                 throw new ArgumentException(message: "Error, while trying to parse the dictionary of item '" +
                                                      $"{ItemNameWithoutPath}' for attribute '{GetAttributeName(attribute: attribute)}" +
-                                                     "': The TagsToAttributesOrder does not contain a definition of which tags to use for this attribute.");
+                                                     "': The TagsToAttributesIn does not contain a definition of which tags to use for this attribute.");
             }
 
-            List<string> orderedTags = TagsToAttributesOrder[key: attribute];
+            List<string> orderedTags = TagsToAttributesIn[key: attribute];
             for (int i = 0; i < orderedTags.Count; i++)
             {
                 if (tags.ContainsKey(key: orderedTags[index: i]
@@ -781,39 +861,49 @@ public class DirectoryElement
         callDepth++;
         (string chosenTag, string parseResult) = GetDataPointFromTags(attribute: attribute, tags: tags);
 
-        #region Create a history
+    #region Create a history
 
         // TakenDate & CreateDate have to be sent into their
         // respective tables for querying later if user chooses time-shift.
         // TODO: replace logic with AttributeVersion concept
-        if (parseResult != null)
+        try
         {
-            switch (attribute)
+            if (parseResult != null)
             {
-                case ElementAttribute.TakenDate:
-                    FrmMainApp.OriginalTakenDateDict[key: ItemNameWithoutPath] =
-                        DateTime.Parse(s: parseResult, provider: CultureInfo.CurrentUICulture)
-                            .ToString(provider: CultureInfo.CurrentUICulture);
-                    break;
+                switch (attribute)
+                {
+                    case ElementAttribute.TakenDate:
+                        if (parseResult.Contains("0000"))
+                        {
+                            return false;
+                        }
 
-                case ElementAttribute.CreateDate:
-                    FrmMainApp.OriginalCreateDateDict[key: ItemNameWithoutPath] =
-                        DateTime.Parse(s: parseResult, provider: CultureInfo.CurrentUICulture)
-                            .ToString(provider: CultureInfo.CurrentUICulture);
-                    break;
+                        FrmMainApp.OriginalTakenDateDict[key: ItemNameWithoutPath] =
+                            DateTime.Parse(s: parseResult, provider: CultureInfo.CurrentUICulture)
+                                    .ToString(provider: CultureInfo.CurrentUICulture);
+                        break;
+
+                    case ElementAttribute.CreateDate:
+                        if (parseResult.Contains("0000"))
+                        {
+                            return false;
+                        }
+
+                        FrmMainApp.OriginalCreateDateDict[key: ItemNameWithoutPath] =
+                            DateTime.Parse(s: parseResult, provider: CultureInfo.CurrentUICulture)
+                                    .ToString(provider: CultureInfo.CurrentUICulture);
+                        break;
+                }
+                // Not adding the xmp here because the current code logic would pull a "unified" data point.
             }
-            // Not adding the xmp here because the current code logic would pull a "unified" data point.
-
-            // Add to list of file attributes seen
-            // TODO: Understand where this is used and check how the model can support this
-            DataRow dr = FrmMainApp.DtFileDataSeenInThisSession.NewRow();
-            dr[columnName: "fileNameWithPath"] = FileNameWithPath;
-            dr[columnName: "settingId"] = GetAttributeName(attribute: attribute);
-            dr[columnName: "settingValue"] = parseResult;
-            FrmMainApp.DtFileDataSeenInThisSession.Rows.Add(row: dr);
+        }
+        catch
+        {
+            Logger.Error(message: $"Parse attribute failed '{GetAttributeName(attribute: attribute)}' at depth {callDepth.ToString()}...");
+            return false; // be triple sure here.
         }
 
-        #endregion
+    #endregion
 
         // If needed, transform the attribute
         IConvertible resTyped = null;
@@ -845,6 +935,13 @@ public class DirectoryElement
                                                                           });
                 break;
 
+            case ElementAttribute.GPSImgDirection:
+                resTyped = TagsToModelValueTransformations.T2M_GPSImgDirection(parseResult: parseResult);
+                break;
+            case ElementAttribute.GPSImgDirectionRef:
+                resTyped = TagsToModelValueTransformations.T2M_GPSImgDirectionRef(parseResult: parseResult);
+                break;
+
             case ElementAttribute.ExposureTime:
                 resTyped = TagsToModelValueTransformations.T2M_ExposureTime(parseResult: parseResult);
                 break;
@@ -865,8 +962,33 @@ public class DirectoryElement
                 break;
 
             default:
-                // Just take the string
-                resTyped = parseResult;
+
+                Type typeOfAttribute = GetAttributeType(attribute: attribute);
+                if (typeOfAttribute == typeof(string))
+                {
+                    resTyped = parseResult;
+                }
+                else if (typeOfAttribute == typeof(double))
+                {
+                    resTyped = HelperGenericTypeOperations.TryParseNullableDouble(val: parseResult) ??
+                               FrmMainApp.NullDoubleEquivalent;
+                }
+                else if (typeOfAttribute == typeof(int))
+                {
+                    resTyped = HelperGenericTypeOperations.TryParseNullableInt(val: parseResult) ??
+                               FrmMainApp.NullIntEquivalent;
+                }
+                else if (typeOfAttribute == typeof(DateTime))
+                {
+                    resTyped = HelperGenericTypeOperations.TryParseNullableDateTime(val: parseResult) ??
+                               FrmMainApp.NullDateTimeEquivalent;
+                }
+                else
+                {
+                    throw new ArgumentException(
+                        message: "Trying to get attribute name of unknown attribute with value " + attribute);
+                }
+
                 break;
         }
 

@@ -4,11 +4,13 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GeoTagNinja.Model;
+using GeoTagNinja.View.ListView;
 using Microsoft.Web.WebView2.Core;
 
 namespace GeoTagNinja.Helpers;
 
-static internal class HelperGenericAppStartup
+internal static class HelperGenericAppStartup
 {
     /// <summary>
     ///     Creates the database sqlite file
@@ -78,16 +80,6 @@ static internal class HelperGenericAppStartup
             );
 
             FrmMainApp.Logger.Trace(message: "AppLanguage is" + FrmMainApp._AppLanguage);
-
-            FrmMainApp.Logger.Debug(message: "Reading dtObjectNames");
-            HelperVariables.DtObjectNames = HelperDataObjectMapping.DataReadSQLiteObjectMapping(
-                tableName: "objectNames",
-                orderBy: "sqlOrder"
-            );
-            HelperVariables.DtObjectattributesIn = HelperDataObjectMapping.DataReadSQLiteObjectMapping(tableName: "objectTagNames_In");
-            FrmMainApp.Logger.Trace(message: "objectTagNames_In OK");
-            HelperVariables.DtObjectattributesOut = HelperDataObjectMapping.DataReadSQLiteObjectMapping(tableName: "objectTagNames_Out");
-            FrmMainApp.Logger.Trace(message: "objectTagNames_Out OK");
         }
         catch (Exception ex)
         {
@@ -114,9 +106,9 @@ static internal class HelperGenericAppStartup
         foreach (DataRow drCountryCode in HelperVariables.DtCustomCityLogic.Rows)
         {
             string countryCode = drCountryCode[columnName: "CountryCode"]
-                .ToString();
+               .ToString();
             string targetPointName = drCountryCode[columnName: "TargetPointNameCustomCityLogic"]
-                .ToString();
+               .ToString();
             switch (targetPointName)
             {
                 case "AdminName1":
@@ -174,10 +166,10 @@ static internal class HelperGenericAppStartup
         if (TryUseGeoNamesLanguage != "true")
         {
             IEnumerable<KeyValuePair<string, string>> result = HelperGenericAncillaryListsArrays.GetISO_639_1_Languages()
-                .Where(predicate: kvp => kvp.Value == TryUseGeoNamesLanguage);
+                                                                                                .Where(predicate: kvp => kvp.Value == TryUseGeoNamesLanguage);
 
             HelperVariables.APILanguageToUse = result.FirstOrDefault()
-                .Key;
+                                                     .Key;
         }
     }
 
@@ -213,11 +205,41 @@ static internal class HelperGenericAppStartup
                 settingId: "ckb_ResetMapToZero"
             );
 
+            HelperVariables.SUpdatePreReleaseGTN = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
+                tableName: "settings",
+                settingTabPage: "tpg_Application",
+                settingId: "ckb_UpdateCheckPreRelease"
+            );
+
             HelperVariables.SOnlyShowFCodePPL = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
                 tableName: "settings",
                 settingTabPage: "tpg_Application",
                 settingId: "ckb_PopulatedPlacesOnly"
             );
+            HelperVariables.UseImperial = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
+                tableName: "settings",
+                settingTabPage: "tpg_Application",
+                settingId: "ckb_UseImperialNotMetric"
+            );
+            foreach (SourcesAndAttributes.ElementAttribute attribute in SourcesAndAttributes.TagsToColumnHeaderOrder)
+            {
+                FileListView._cfg_Col_Order_Default.Add(key: SourcesAndAttributes.GetAttributeName(attribute: attribute), value: SourcesAndAttributes.TagsToColumnHeaderOrder.IndexOf(item: attribute));
+            }
+
+            // https://www.ngdc.noaa.gov/geomag/data/poles/WMM2020_NP.xy
+            // as of 20230831 -- If I haven't died of alcohol poisoning by 2025, someone remind me to update.
+            // switch (DateTime.Now.Year)
+            // {
+            //     case 2023:
+            //         HelperVariables.MapNorthCoordsMagnetic = (86.146, 146.826);
+            //         break;
+            //     case 2024:
+            //         HelperVariables.MapNorthCoordsMagnetic = (85.980, 142.293);
+            //         break;
+            //     default:
+            //         HelperVariables.MapNorthCoordsMagnetic = (85.801, 138.299);
+            //         break;
+            // }
         }
         catch (Exception ex)
         {
@@ -326,7 +348,7 @@ static internal class HelperGenericAppStartup
             foreach (DataRow drFavourite in FrmMainApp.DtFavourites.Rows)
             {
                 string favouriteName = drFavourite[columnName: "favouriteName"]
-                    .ToString();
+                   .ToString();
                 FrmMainApp.LstFavourites.Add(item: favouriteName);
                 autoCompleteCustomSource.Add(value: favouriteName);
 

@@ -64,7 +64,7 @@ New version: ","Une nouvelle version de GeoTagNinja est disponible au téléchar
 Si vous cliquez Oui, vore browser par défaut ouvrira directement l'installeur dans Github, Vous pourrez ensuite installer cette version.
 Si vous cliquez Non, ce message se fermera (mais sera representé au prochain lancement)
 Nouvelle version:"
-mbx_FrmSettings_cbx_Language_TextChanged,Please restart the app for the language change to take place.,Veuillez redémarrer l'application pour que le changement de langue ait lieu.
+mbx_FrmSettings_PleaseRestartApp,Please restart the app for the change to take place.,Veuillez redémarrer l'application pour que le changement ait lieu.
 mbx_FrmImportGpx_FileOrFolderDoesntExist,The file or folder you picked is invalid.,Le fichier ou le dossier que vous avez sélectionné n'est pas valide.
 mbx_FrmImportGpx_AskUserWantsReport,Do you want to see the report on the import process?,Voulez-vous voir le rapport sur le processus d'importation ?
 mbx_FrmPasteWhat_NoDateShiftToPaste,No values specified in the Copy Pool for DateTime Shift,Pas de valeurs détectées dans le groupe de valeurs pour le décalage de temps

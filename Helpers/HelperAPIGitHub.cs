@@ -57,7 +57,7 @@ namespace geoTagNinja
         public DateTimeOffset? CreatedAt { get; set; }
 
         [JsonProperty("published_at", NullValueHandling = NullValueHandling.Ignore)]
-        public DateTimeOffset? PublishedAt { get; set; }
+        public DateTime PublishedAt { get; set; }
 
         [JsonProperty("assets", NullValueHandling = NullValueHandling.Ignore)]
         public Asset[] Assets { get; set; }
