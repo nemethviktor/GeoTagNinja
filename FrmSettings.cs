@@ -34,7 +34,7 @@ public partial class FrmSettings : Form
 
         // Gets the various controls' labels and values (eg "latitude" and "51.002")
         _lstTpgApplicationControls = helperNonstatic.GetAllControls(control: tpg_Application)
-            .ToList();
+                                                    .ToList();
 
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         if (c != null)
@@ -419,9 +419,9 @@ public partial class FrmSettings : Form
         foreach (DataRow dataRow in HelperVariables.DtIsoCountryCodeMapping.Rows)
         {
             clh_CountryCodeOptions.Add(key: dataRow[columnName: "ISO_3166_1A3"]
-                                           .ToString()
-                                       , value: dataRow[columnName: "Country"]
-                                           .ToString());
+                                          .ToString()
+                                     , value: dataRow[columnName: "Country"]
+                                          .ToString());
         }
 
         // if _do not_ IncludeNonPredeterminedCountries then remove those
@@ -430,11 +430,11 @@ public partial class FrmSettings : Form
             foreach (DataRow dataRow in HelperVariables.DtIsoCountryCodeMapping.Rows)
             {
                 string countryCode = dataRow[columnName: "ISO_3166_1A3"]
-                    .ToString();
+                   .ToString();
                 if (!HelperVariables.LstCityNameIsUndefined.Contains(item: countryCode))
                 {
                     clh_CountryCodeOptions.Remove(key: dataRow[columnName: "ISO_3166_1A3"]
-                                                      .ToString()
+                                                     .ToString()
                     );
                 }
             }
@@ -493,10 +493,10 @@ public partial class FrmSettings : Form
                         else if (cbx.Name == "cbx_TryUseGeoNamesLanguage")
                         {
                             IEnumerable<KeyValuePair<string, string>> result = HelperGenericAncillaryListsArrays.GetISO_639_1_Languages()
-                                .Where(predicate: kvp => kvp.Value == cbx.SelectedItem.ToString());
+                                                                                                                .Where(predicate: kvp => kvp.Value == cbx.SelectedItem.ToString());
 
                             HelperVariables.APILanguageToUse = result.FirstOrDefault()
-                                .Key;
+                                                                     .Key;
                         }
                     }
                 }
@@ -518,10 +518,10 @@ public partial class FrmSettings : Form
                             {
                                 cbxLng.Enabled = true;
                                 IEnumerable<KeyValuePair<string, string>> result = HelperGenericAncillaryListsArrays.GetISO_639_1_Languages()
-                                    .Where(predicate: kvp => kvp.Value == cbxLng.SelectedItem.ToString());
+                                                                                                                    .Where(predicate: kvp => kvp.Value == cbxLng.SelectedItem.ToString());
 
                                 HelperVariables.APILanguageToUse = result.FirstOrDefault()
-                                    .Key;
+                                                                         .Key;
                             }
                         }
                     }
@@ -554,6 +554,12 @@ public partial class FrmSettings : Form
             tableName: "settings",
             settingTabPage: "tpg_Application",
             settingId: "ckb_PopulatedPlacesOnly"
+        );
+
+        HelperVariables.SUpdatePreReleaseGTN = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
+            tableName: "settings",
+            settingTabPage: "tpg_Application",
+            settingId: "ckb_UpdateCheckPreRelease"
         );
 
         HelperGenericAppStartup.AppStartupPullOverWriteBlankToponomy();
@@ -611,8 +617,8 @@ public partial class FrmSettings : Form
             {
                 object lbi = lbx_fileExtensions.SelectedItem;
                 string tmpCtrlName = lbi.ToString()
-                                         .Split('\t')
-                                         .FirstOrDefault() +
+                                        .Split('\t')
+                                        .FirstOrDefault() +
                                      '_' +
                                      subctrl.Name;
 
@@ -652,13 +658,13 @@ public partial class FrmSettings : Form
                         else if (box.Name == "ckb_AddXMPSideCar")
                         {
                             string tmptmpCtrlName = lbi.ToString()
-                                                        .Split('\t')
-                                                        .FirstOrDefault() +
+                                                       .Split('\t')
+                                                       .FirstOrDefault() +
                                                     '_'; // 'tis ok as is
                             string tmpCtrlGroup = lbi.ToString()
-                                .Split('\t')
-                                .Last()
-                                .ToLower();
+                                                     .Split('\t')
+                                                     .Last()
+                                                     .ToLower();
 
                             if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff") || tmpCtrlGroup.Contains(value: "dng"))
                             {
@@ -675,7 +681,7 @@ public partial class FrmSettings : Form
                         }
 
                         tmpCtrlVal = box.Checked.ToString()
-                            .ToLower();
+                                        .ToLower();
                         HelperDataApplicationSettings.DataWriteSQLiteSettings(
                             tableName: "settings",
                             settingTabPage: ((Control)sender).Parent.Name,
@@ -753,7 +759,7 @@ public partial class FrmSettings : Form
                 settingTabPage: parentNameToUse,
                 settingId: rbt.Name,
                 settingValue: rbt.Checked.ToString()
-                    .ToLower()
+                                 .ToLower()
             );
         }
     }
@@ -784,8 +790,8 @@ public partial class FrmSettings : Form
             if (lbi != null)
             {
                 cItemName = lbi.ToString()
-                                .Split('\t')
-                                .FirstOrDefault() +
+                               .Split('\t')
+                               .FirstOrDefault() +
                             '_' +
                             ckb.Name;
             }
@@ -817,7 +823,7 @@ public partial class FrmSettings : Form
                 settingTabPage: parentNameToUse,
                 settingId: cItemName,
                 settingValue: ckb.Checked.ToString()
-                    .ToLower()
+                                 .ToLower()
             );
         }
     }
@@ -865,11 +871,11 @@ public partial class FrmSettings : Form
             {
                 // convert e.g. "Français [French]" to "French"
                 settingValue = settingValue.Split('[')
-                    .Last()
-                    .Substring(startIndex: 0, length: settingValue.Split('[')
-                                                          .Last()
-                                                          .Length -
-                                                      1);
+                                           .Last()
+                                           .Substring(startIndex: 0, length: settingValue.Split('[')
+                                                                                         .Last()
+                                                                                         .Length -
+                                                                             1);
             }
 
             // stick it into settings-Q
@@ -985,13 +991,13 @@ public partial class FrmSettings : Form
     {
         if (e.ColumnIndex ==
             dgv_CustomRules.Columns[columnName: "clh_TargetPointOutcome"]
-                .Index)
+                           .Index)
         {
             string clh_TargetPointOutcomeValue = Convert.ToString(value: (dgv_CustomRules.Rows[index: e.RowIndex]
-                                                                      .Cells[columnName: "clh_TargetPointOutcome"] as DataGridViewComboBoxCell)?.EditedFormattedValue);
+                                                                                         .Cells[columnName: "clh_TargetPointOutcome"] as DataGridViewComboBoxCell)?.EditedFormattedValue);
 
             string clh_TargetPointOutcomeCustomValue = Convert.ToString(value: (dgv_CustomRules.Rows[index: e.RowIndex]
-                                                                            .Cells[columnName: "clh_TargetPointOutcomeCustom"] as DataGridViewTextBoxCell)?.EditedFormattedValue);
+                                                                                               .Cells[columnName: "clh_TargetPointOutcomeCustom"] as DataGridViewTextBoxCell)?.EditedFormattedValue);
             if (clh_TargetPointOutcomeValue == "Custom" && IsNullOrEmpty(value: clh_TargetPointOutcomeCustomValue))
             {
                 e.Cancel = true;

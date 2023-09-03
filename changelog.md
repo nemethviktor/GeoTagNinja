@@ -1,10 +1,11 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 8xxx [20230xxx]** [dev branch release]
+**Build 8646 [20230903]** 
 - NEW & UPDATED:
  - Graduated the app to version 1.x [technically 1.10 because it's been edging up on the minor versions ever since initial release] - yayy. It now has all the features I initially wanted.
    - Added some support for reading and displaying ImgDirection/Ref.
    - Added a TaskbarProgressBarState indicator
+   - Update the "update" logic -> there's now a Setting that enables the user to update to pre-release [dev] releases or master-only. Master releases will no longer be marked as pre-release on github.
  - Bumped exifTool to v12.65
  - Changed the internal logic as to how the ListView coordinates get put on the map. Trying to fully move away from reading data from the ListView rather than from the DirectoryElement
  - Changed internal logic re: (not) defaulting values to strings in certain cases

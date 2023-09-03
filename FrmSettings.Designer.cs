@@ -54,6 +54,9 @@
             this.tbx_GeoNames_UserName = new System.Windows.Forms.TextBox();
             this.tbx_ARCGIS_APIKey = new System.Windows.Forms.TextBox();
             this.gbx_AppSettings = new System.Windows.Forms.GroupBox();
+            this.lbl_Metres_Abbr = new System.Windows.Forms.Label();
+            this.lbl_Feet_Abbr = new System.Windows.Forms.Label();
+            this.ckb_UseImperialNotMetric = new System.Windows.Forms.CheckBox();
             this.ckb_RemoveGeoDataRemovesTimeOffset = new System.Windows.Forms.CheckBox();
             this.ckb_ResetMapToZero = new System.Windows.Forms.CheckBox();
             this.cbx_Language = new System.Windows.Forms.ComboBox();
@@ -82,9 +85,7 @@
             this.btn_OK = new System.Windows.Forms.Button();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.fbd_StartupFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.ckb_UseImperialNotMetric = new System.Windows.Forms.CheckBox();
-            this.lbl_Feet_Abbr = new System.Windows.Forms.Label();
-            this.lbl_Metres_Abbr = new System.Windows.Forms.Label();
+            this.ckb_UpdateCheckPreRelease = new System.Windows.Forms.CheckBox();
             this.tct_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             this.gbx_GeoNamesSettings.SuspendLayout();
@@ -391,6 +392,7 @@
             // 
             // gbx_AppSettings
             // 
+            this.gbx_AppSettings.Controls.Add(this.ckb_UpdateCheckPreRelease);
             this.gbx_AppSettings.Controls.Add(this.lbl_Metres_Abbr);
             this.gbx_AppSettings.Controls.Add(this.lbl_Feet_Abbr);
             this.gbx_AppSettings.Controls.Add(this.ckb_UseImperialNotMetric);
@@ -408,10 +410,43 @@
             this.gbx_AppSettings.TabStop = false;
             this.gbx_AppSettings.Text = "gbx_AppSettings";
             // 
+            // lbl_Metres_Abbr
+            // 
+            this.lbl_Metres_Abbr.AutoSize = true;
+            this.lbl_Metres_Abbr.Location = new System.Drawing.Point(331, 126);
+            this.lbl_Metres_Abbr.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_Metres_Abbr.Name = "lbl_Metres_Abbr";
+            this.lbl_Metres_Abbr.Size = new System.Drawing.Size(83, 13);
+            this.lbl_Metres_Abbr.TabIndex = 52;
+            this.lbl_Metres_Abbr.Text = "lbl_Metres_Abbr";
+            this.lbl_Metres_Abbr.Visible = false;
+            // 
+            // lbl_Feet_Abbr
+            // 
+            this.lbl_Feet_Abbr.AutoSize = true;
+            this.lbl_Feet_Abbr.Location = new System.Drawing.Point(204, 126);
+            this.lbl_Feet_Abbr.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lbl_Feet_Abbr.Name = "lbl_Feet_Abbr";
+            this.lbl_Feet_Abbr.Size = new System.Drawing.Size(72, 13);
+            this.lbl_Feet_Abbr.TabIndex = 51;
+            this.lbl_Feet_Abbr.Text = "lbl_Feet_Abbr";
+            this.lbl_Feet_Abbr.Visible = false;
+            // 
+            // ckb_UseImperialNotMetric
+            // 
+            this.ckb_UseImperialNotMetric.AutoSize = true;
+            this.ckb_UseImperialNotMetric.Location = new System.Drawing.Point(15, 124);
+            this.ckb_UseImperialNotMetric.Name = "ckb_UseImperialNotMetric";
+            this.ckb_UseImperialNotMetric.Size = new System.Drawing.Size(151, 17);
+            this.ckb_UseImperialNotMetric.TabIndex = 19;
+            this.ckb_UseImperialNotMetric.Text = "ckb_UseImperialNotMetric";
+            this.ckb_UseImperialNotMetric.UseVisualStyleBackColor = true;
+            this.ckb_UseImperialNotMetric.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            // 
             // ckb_RemoveGeoDataRemovesTimeOffset
             // 
             this.ckb_RemoveGeoDataRemovesTimeOffset.AutoSize = true;
-            this.ckb_RemoveGeoDataRemovesTimeOffset.Location = new System.Drawing.Point(15, 103);
+            this.ckb_RemoveGeoDataRemovesTimeOffset.Location = new System.Drawing.Point(15, 102);
             this.ckb_RemoveGeoDataRemovesTimeOffset.Name = "ckb_RemoveGeoDataRemovesTimeOffset";
             this.ckb_RemoveGeoDataRemovesTimeOffset.Size = new System.Drawing.Size(229, 17);
             this.ckb_RemoveGeoDataRemovesTimeOffset.TabIndex = 18;
@@ -731,38 +766,16 @@
             this.fbd_StartupFolder.Description = "fbd_StartupFolder";
             this.fbd_StartupFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
-            // ckb_UseImperialNotMetric
+            // ckb_UpdateCheckPreRelease
             // 
-            this.ckb_UseImperialNotMetric.AutoSize = true;
-            this.ckb_UseImperialNotMetric.Location = new System.Drawing.Point(15, 126);
-            this.ckb_UseImperialNotMetric.Name = "ckb_UseImperialNotMetric";
-            this.ckb_UseImperialNotMetric.Size = new System.Drawing.Size(151, 17);
-            this.ckb_UseImperialNotMetric.TabIndex = 19;
-            this.ckb_UseImperialNotMetric.Text = "ckb_UseImperialNotMetric";
-            this.ckb_UseImperialNotMetric.UseVisualStyleBackColor = true;
-            this.ckb_UseImperialNotMetric.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
-            // 
-            // lbl_Feet_Abbr
-            // 
-            this.lbl_Feet_Abbr.AutoSize = true;
-            this.lbl_Feet_Abbr.Location = new System.Drawing.Point(204, 127);
-            this.lbl_Feet_Abbr.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lbl_Feet_Abbr.Name = "lbl_Feet_Abbr";
-            this.lbl_Feet_Abbr.Size = new System.Drawing.Size(72, 13);
-            this.lbl_Feet_Abbr.TabIndex = 51;
-            this.lbl_Feet_Abbr.Text = "lbl_Feet_Abbr";
-            this.lbl_Feet_Abbr.Visible = false;
-            // 
-            // lbl_Metres_Abbr
-            // 
-            this.lbl_Metres_Abbr.AutoSize = true;
-            this.lbl_Metres_Abbr.Location = new System.Drawing.Point(331, 127);
-            this.lbl_Metres_Abbr.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lbl_Metres_Abbr.Name = "lbl_Metres_Abbr";
-            this.lbl_Metres_Abbr.Size = new System.Drawing.Size(83, 13);
-            this.lbl_Metres_Abbr.TabIndex = 52;
-            this.lbl_Metres_Abbr.Text = "lbl_Metres_Abbr";
-            this.lbl_Metres_Abbr.Visible = false;
+            this.ckb_UpdateCheckPreRelease.AutoSize = true;
+            this.ckb_UpdateCheckPreRelease.Location = new System.Drawing.Point(15, 146);
+            this.ckb_UpdateCheckPreRelease.Name = "ckb_UpdateCheckPreRelease";
+            this.ckb_UpdateCheckPreRelease.Size = new System.Drawing.Size(171, 17);
+            this.ckb_UpdateCheckPreRelease.TabIndex = 53;
+            this.ckb_UpdateCheckPreRelease.Text = "ckb_UpdateCheckPreRelease";
+            this.ckb_UpdateCheckPreRelease.UseVisualStyleBackColor = true;
+            this.ckb_UpdateCheckPreRelease.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
             // FrmSettings
             // 
@@ -863,5 +876,6 @@
         private System.Windows.Forms.CheckBox ckb_UseImperialNotMetric;
         private System.Windows.Forms.Label lbl_Metres_Abbr;
         private System.Windows.Forms.Label lbl_Feet_Abbr;
+        private System.Windows.Forms.CheckBox ckb_UpdateCheckPreRelease;
     }
 }

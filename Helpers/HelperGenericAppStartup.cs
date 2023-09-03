@@ -205,6 +205,12 @@ internal static class HelperGenericAppStartup
                 settingId: "ckb_ResetMapToZero"
             );
 
+            HelperVariables.SUpdatePreReleaseGTN = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
+                tableName: "settings",
+                settingTabPage: "tpg_Application",
+                settingId: "ckb_UpdateCheckPreRelease"
+            );
+
             HelperVariables.SOnlyShowFCodePPL = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
                 tableName: "settings",
                 settingTabPage: "tpg_Application",

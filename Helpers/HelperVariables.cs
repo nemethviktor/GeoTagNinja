@@ -6,7 +6,7 @@ namespace GeoTagNinja.Helpers;
 internal static class HelperVariables
 {
     internal const int exifOrientationID = 0x112; //274
-    internal const double METRETORFEET = 3.28084;
+    internal const double MetreToFeet = 3.28084;
 
     internal static string SArcGisApiKey;
     internal static string SGeoNamesUserName;
@@ -16,7 +16,7 @@ internal static class HelperVariables
     internal static string _sErrorMsg = "";
     internal static string _sOutputMsg = "";
     internal static readonly string SDoubleQuote = "\"";
-    internal static string HtmlAddMarker;
+    internal static string HTMLAddMarker;
     internal static string HTMLCreatePoints;
     internal static HashSet<(string strLat, string strLng)> HsMapMarkers = new();
     internal static double? MinLat;
@@ -27,6 +27,7 @@ internal static class HelperVariables
     internal static double? LastLng;
     internal static bool SNowSelectingAllItems = false;
     internal static bool SResetMapToZero;
+    internal static bool SUpdatePreReleaseGTN;
     internal static bool SOnlyShowFCodePPL = false;
     internal static decimal _currentExifToolVersionLocal;
     internal static bool ToponomyReplace = false;
