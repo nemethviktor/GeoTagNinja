@@ -57,11 +57,16 @@ internal static class HelperAPIVersionCheckers
     private static int API_GenericGetGTNVersionFromWeb()
     {
         GTNReleaseAPIResponse returnVal = new();
-        RestClient client = new(baseUrl: "https://api.github.com/")
+        RestClientOptions options = new(baseUrl: "https://api.github.com")
         {
-            // admittedly no idea how to do this w/o any auth (as it's not needed) but this appears to work.
             Authenticator = new HttpBasicAuthenticator(username: "demo", password: "demo")
         };
+        RestClient client = new(options: options);
+
+        {
+            // admittedly no idea how to do this w/o any auth (as it's not needed) but this appears to work.
+        }
+        ;
         RestRequest request_GTNVersionQuery = new(resource: "repos/nemethviktor/GeoTagNinja/releases");
         RestResponse response_GTNVersionQuery = client.ExecuteGet(request: request_GTNVersionQuery);
 

@@ -39,10 +39,11 @@ internal static class HelperAPIGeoNamesToponomyExtractor
         }
 
         GeoResponseToponomy returnVal = new();
-        RestClient client = new(baseUrl: "http://api.geonames.org/")
+        RestClientOptions options = new(baseUrl: "http://api.geonames.org")
         {
             Authenticator = new HttpBasicAuthenticator(username: HelperVariables.SGeoNamesUserName, password: HelperVariables.SGeoNamesPwd)
         };
+        RestClient client = new(options: options);
 
         string SOnlyShowFCodePPL = HelperVariables.SOnlyShowFCodePPL
             ? "&fcode=PPL"
