@@ -32,6 +32,7 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 	- I've seen once (and only once) ESET being silly about the app. Tbh no idea as to why. While I'd say the source code is open for public viewing and building it is probably clearer to just say: the app isn't tracking or recording your data and isn't doing anything that's not strictly related to its function. If I ever were to include any tracking (no such plans for the forseeable future), it'd be entirely anonomymised anyway.
 - Build 8646 [20230903]+: I've finally gotten around to displaying the GPSImgDirection on the map. The logic is, as not to clutter the map the direction "line" will only show when only one image (with GPSImgDirection) is selected; if more than one such image is selected then the lines don't show.
 	- The way this is calculated requires a "distance" so that the target coordinate pair ("the image direction") can be calculated. This is defaulted to 10km for the line and 1km for the triangle and is unlikely to change at this point.
+- Build 8651 [20230908]+: The other thing I've gotten around to was adding some method of displaying the Destination in images. WebView2 seems to be buggy about this and see below for details - also suggestions on fix welcome.
 
 ### A Particular Note on Working with Adobe Bridge (ACR) and RAW files > Saving as JPGs or Other Formats.
 
@@ -73,8 +74,7 @@ I'm generally happy for anyone competent to add pull requests but I don't always
 
 ## ToDos
 
-- [WIP] Destination stuff untested generally likely not working.
-- [Later] Rewrite the whole app in WPF.
+- N/A
 
 ## Known Issues
 
@@ -88,6 +88,19 @@ I'm generally happy for anyone competent to add pull requests but I don't always
 - If user zooms "too far out" on Map they will get odd longitude values. The code handles this internally but map feedback is what it is.
 - I didn't really manage to test this but for Nikon D5 the camera outputs NEF files with a built-in "Rating=0" tag. This becomes an issue in Adobe Bridge if an XMP is created and then the NEF file is subsequently ownerwritten by GTN because Bridge would ignore the Rating value in the XMP file going forward. For this reason Rating is always sent back to the RAW files if they are saved. I don't think this would be a problem but more of a heads-up that there are some oddities like this. Btw this force-save-Rating isn't limited to Nikon camera saves in GTN.
 - If you change Time Offset (time zone) _and nothing else at all_ then you'll get a warning that "nothing has changed" in the xmp sidecar file. This is not a bug. There is no XMP tag for OffsetTime.
+- Destinations: See below.
+
+### Desinations/Possible Bug in WebView2
+
+TL;DR: the arrows are missing. 
+Longer: Hypothetically the idea with Destinations is that if there are groups of images that have GPSDestLat/Long defined then the app draws a path on the map for each of these. Assume the following:
+- You have N groups of images (N>0) where GPSDestLat/Long is defined and is the same within each group
+- Each group has C (-> C>1) count of images where the GPSLat/Long is different. Basically you have a bunch of photos from a path walked/driven/etc and you want to map them.
+- The script parses these N groups, separates them and puts them independently on the map _with a bunch of arrows_. 
+	- When viewing the HTML file out of GTN and open in Edge or Chrome there are the appropriate number of grouped paths and arrows show between the individual images, aka it works as expected.
+	- When viewing the same thing within GTN the arrows are missing. Upon inspection it is found that `Uncaught TypeError: Cannot read properties of undefined (reading 'arrowHead') ...` - so basically the arrowHead of the polylineDecorator breaks the WebView2 JS engine, something that isn't a problem in "real" Chrome or Edge. 
+
+- For those better versed in JS I've put a try/catch block around this but I still think there should be some way around the issue so any suggestions here pls shout.
 
 ## Possible Issues & Solutions
 

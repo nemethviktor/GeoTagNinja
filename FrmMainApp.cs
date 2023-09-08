@@ -302,7 +302,7 @@ public partial class FrmMainApp : Form
         AppStartupPullLastLatLngFromSettings();
         HelperGenericAppStartup.AppStartupPullOverWriteBlankToponomy();
         HelperGenericAppStartup.AppStartupPullToponomyRadiusAndMaxRows();
-        NavigateMapGo();
+        Request_Map_NavigateGo();
 
         await HelperAPIVersionCheckers.CheckForNewVersions();
 
@@ -476,7 +476,7 @@ public partial class FrmMainApp : Form
     {
         HelperVariables.HsMapMarkers.Clear();
         HelperVariables.HsMapMarkers.Add(item: parseLatLngTextBox());
-        NavigateMapGo();
+        Request_Map_NavigateGo();
     }
 
     /// <summary>
@@ -718,7 +718,7 @@ public partial class FrmMainApp : Form
     ///     ... and executes the navigation action.
     /// </summary>
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
-    private void NavigateMapGo()
+    private void Request_Map_NavigateGo()
     {
         Logger.Debug(message: "Starting");
 
@@ -775,6 +775,7 @@ public partial class FrmMainApp : Form
         string showLinesStr = "";
         string showPointsStr = "";
         string showFOVStr = "";
+        string showDestinationPolyLineStr = "";
 
         // check there is one and only one DE selected and add ImgDirection if there's any
         ListView lvw = lvw_FileList;
@@ -913,6 +914,98 @@ public partial class FrmMainApp : Form
             }
         }
 
+        // if we have more than one, check if there are any w/ Destination coords
+        else
+        {
+            Dictionary<string, HashSet<string>> dictDestinations = new(); // we use a HashSet here because i want to avoid unnecessary duplication
+            string multiCoordsDefaultStr = """
+                                           var #multiCoordsNum# = [
+                                               [#multiCoordsList#]
+                                           ];
+                                           var plArray = [];
+                                           for(var i=0; i<#multiCoordsNum#.length; i++) {
+                                               plArray.push(L.polyline(#multiCoordsNum#[i]).addTo(map));
+                                           }
+                                           try{
+                                           
+                                               L.polylineDecorator(#multiCoordsNum#, {
+                                                   patterns: [
+                                                       {offset: 25, repeat: 50, symbol: L.Symbol.arrowHead({pixelSize: 15, pathOptions: {fillOpacity: 1, weight: 0}})}
+                                                   ]
+                                               }).addTo(map);
+                                           }catch(e){
+                                            
+                                           }
+                                           """;
+
+            foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
+            {
+                DirectoryElement directoryElement = (DirectoryElement)lvi.Tag;
+                // probably needs checking but de.Coordinates and de.DestCoordinates don't return anything here so we're splitting it into four.
+                string GPSLatitudeStr = directoryElement.GetAttributeValueString(
+                    attribute: ElementAttribute.GPSLatitude,
+                    version: directoryElement.GetMaxAttributeVersion(attribute: ElementAttribute.GPSLatitude),
+                    notFoundValue: null);
+
+                string? GPSLongitudeStr = directoryElement.GetAttributeValueString(
+                    attribute: ElementAttribute.GPSLongitude,
+                    version: directoryElement.GetMaxAttributeVersion(attribute: ElementAttribute.GPSLongitude),
+                    notFoundValue: null);
+                string GPSDestLatitudeStr = directoryElement.GetAttributeValueString(
+                    attribute: ElementAttribute.GPSDestLatitude,
+                    version: directoryElement.GetMaxAttributeVersion(attribute: ElementAttribute.GPSDestLatitude),
+                    notFoundValue: null);
+
+                string? GPSDestLongitudeStr = directoryElement.GetAttributeValueString(
+                    attribute: ElementAttribute.GPSDestLongitude,
+                    version: directoryElement.GetMaxAttributeVersion(attribute: ElementAttribute.GPSDestLongitude),
+                    notFoundValue: null);
+
+                if (!(string.IsNullOrWhiteSpace(value: GPSLatitudeStr) ||
+                      string.IsNullOrWhiteSpace(value: GPSDestLatitudeStr) ||
+                      string.IsNullOrWhiteSpace(value: GPSLongitudeStr) ||
+                      string.IsNullOrWhiteSpace(value: GPSDestLongitudeStr)))
+                {
+                    string destCoords = "[" + GPSDestLatitudeStr + "," + GPSDestLongitudeStr + "]";
+                    string gpsCoords = "[" + GPSLatitudeStr + "," + GPSLongitudeStr + "]";
+                    if (!dictDestinations.ContainsKey(key: destCoords))
+                    {
+                        dictDestinations[key: destCoords] = new HashSet<string>();
+                    }
+
+                    dictDestinations[key: destCoords]
+                       .Add(item: gpsCoords);
+                }
+            }
+
+            if (dictDestinations.Count == 0)
+            {
+                showDestinationPolyLineStr = ""; // reset if false alarm
+            }
+            else
+            {
+                // build a line of lines
+                // for each (numbered) destination group...
+                for (int dictDestinationCounter = 0; dictDestinationCounter < dictDestinations.Count; dictDestinationCounter++)
+                {
+                    string multiCoordsListStr = "";
+                    string multiCoordsNum = dictDestinationCounter.ToString();
+                    string multiCoordsStr = multiCoordsDefaultStr.Replace(oldValue: "#multiCoordsNum#", newValue: "multiCoords" + multiCoordsNum);
+                    foreach (string gpsCoord in dictDestinations.ElementAt(index: dictDestinationCounter)
+                                                                .Value)
+                    {
+                        multiCoordsListStr += gpsCoord + ",";
+                    }
+
+                    multiCoordsListStr += dictDestinations.ElementAt(index: dictDestinationCounter)
+                                                          .Key;
+
+                    multiCoordsStr = multiCoordsStr.Replace(oldValue: "#multiCoordsList#", newValue: multiCoordsListStr);
+                    showDestinationPolyLineStr += multiCoordsStr;
+                }
+            }
+        }
+
         htmlReplacements.Add(key: "replaceLat", value: HelperVariables.LastLat.ToString()
                                                                       .Replace(oldChar: ',', newChar: '.'));
         htmlReplacements.Add(key: "replaceLng", value: HelperVariables.LastLng.ToString()
@@ -930,6 +1023,7 @@ public partial class FrmMainApp : Form
         htmlReplacements.Add(key: "{ HTMLShowLines }", value: showLinesStr);
         htmlReplacements.Add(key: "{ HTMLShowPoints }", value: showPointsStr);
         htmlReplacements.Add(key: "{ HTMLShowFOVPolygon }", value: showFOVStr);
+        htmlReplacements.Add(key: "{ HTMLShowPolyLine }", value: showDestinationPolyLineStr);
 
         updateWebView(replacements: htmlReplacements);
     }
@@ -1847,7 +1941,7 @@ public partial class FrmMainApp : Form
                 }
             }
 
-            NavigateMapGo();
+            Request_Map_NavigateGo();
             // pbx_imagePreview.Image = null;
         }
     }
@@ -1895,7 +1989,7 @@ public partial class FrmMainApp : Form
                 {
                     HelperVariables.SNowSelectingAllItems = false;
                     FileListViewMapNavigation.ListViewItemClickNavigate();
-                    NavigateMapGo();
+                    Request_Map_NavigateGo();
                 }
             }
 

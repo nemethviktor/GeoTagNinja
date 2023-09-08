@@ -417,9 +417,11 @@
     <Content Include="Resources\geoTagNinja_square.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\leaflet-canvas-markers.js" />
-    <Content Include="Resources\map.html">
+    <Content Include="Resources\leaflet.polylineDecorator.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\map.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\MicrosoftEdgeWebview2Setup.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
