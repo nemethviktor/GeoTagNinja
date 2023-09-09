@@ -183,6 +183,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                         ));
                 }
 
+                CreateGUIDsForDirectoryElements();
                 Logger.Trace(message: "Listing Drives - OK");
                 return;
             }
@@ -451,15 +452,21 @@ public class DirectoryElementCollection : List<DirectoryElement>
             Thread.Sleep(1);
         }
 
-        foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
-        {
-            directoryElement.SetAttributeValue(ElementAttribute.GUID, Guid.NewGuid()
-                                                                          .ToString(), DirectoryElement.AttributeVersion.Original, false);
-        }
+        CreateGUIDsForDirectoryElements();
 
         FrmMainApp.TaskbarManagerInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress);
 
         Logger.Info(message: "Files: Extracting File Data - OK");
+
+        // Assigns a GUID for the DEs in the DECollection
+        void CreateGUIDsForDirectoryElements()
+        {
+            foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
+            {
+                directoryElement.SetAttributeValue(ElementAttribute.GUID, Guid.NewGuid()
+                                                                              .ToString(), DirectoryElement.AttributeVersion.Original, false);
+            }
+        }
     }
 
     /// <summary>

@@ -1,5 +1,11 @@
 ﻿# GeoTagNinja Changelog
 
+**Build 86xx [2023xxxx]** 
+- NEW & UPDATED:
+  - GPSDestinationLat/Long is now being displayed in certain cases (when there is a series of images subject to a set of conditions. See the readme on how this works.)
+- BUGS & FIXES:
+  - Fixed an error when data in MyComputer wasn't properly recorded and this caused a crash
+
 **Build 8646 [20230903]** 
 - NEW & UPDATED:
  - Graduated the app to version 1.x [technically 1.10 because it's been edging up on the minor versions ever since initial release] - yayy. It now has all the features I initially wanted.
