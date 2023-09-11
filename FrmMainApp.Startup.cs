@@ -79,7 +79,8 @@ public partial class FrmMainApp
                 cItem.GetType() == typeof(Button) ||
                 cItem.GetType() == typeof(CheckBox) ||
                 cItem.GetType() == typeof(TabPage) ||
-                cItem.GetType() == typeof(ToolStripButton)
+                cItem.GetType() == typeof(ToolStripButton) ||
+                (cItem.GetType() == typeof(ListView) && cItem.Name != "lvw_FileView")
                 // cItem.GetType() == typeof(ToolTip) // tooltips are not controls.
             )
             {
@@ -88,17 +89,16 @@ public partial class FrmMainApp
                     objectName = cItem.Name;
                     objectText = HelperDataLanguageTZ.DataReadDTObjectText(
                         objectType: cItem.GetType()
-                                        .Name +
+                                         .Name +
                                     "_Normal",
                         objectName: objectName
                     );
                     cItem.Text = objectText;
                     Logger.Trace(message: "" + objectName + ": " + objectText);
                 }
-                else if (cItem is ToolStrip)
+                else if (cItem is ToolStrip ts)
                 {
                     // https://www.codeproject.com/Messages/3329190/How-to-convert-a-Control-into-a-ToolStripButton.aspx
-                    ToolStrip ts = cItem as ToolStrip;
                     foreach (ToolStripItem tsi in ts.Items)
                     {
                         ToolStripButton tsb = tsi as ToolStripButton;
@@ -107,7 +107,7 @@ public partial class FrmMainApp
                             objectName = tsb.Name;
                             objectText = HelperDataLanguageTZ.DataReadDTObjectText(
                                 objectType: tsb.GetType()
-                                    .Name,
+                                               .Name,
                                 objectName: tsb.Name
                             );
                             tsb.ToolTipText = objectText;
@@ -115,12 +115,29 @@ public partial class FrmMainApp
                         }
                     }
                 }
+                else if (cItem is ListView lvw)
+                {
+                    foreach (ColumnHeader columnHeader in lvw.Columns)
+                    {
+                        // this is entirely stupid but .Name in this case returns nothing of use even though it's hard-coded in the Designer.
+                        // alas .Text works -- fml.
+                        objectName = columnHeader.Text;
+                        objectText = HelperDataLanguageTZ.DataReadDTObjectText(
+                            objectType: columnHeader.GetType()
+                                                    .Name,
+                            objectName: objectName
+                        );
+                        columnHeader.Text = objectText;
+                        columnHeader.Width = 120; // arbitrary
+                        Logger.Trace(message: "" + objectName + ": " + objectText);
+                    }
+                }
                 else
                 {
                     objectName = cItem.Name;
                     objectText = HelperDataLanguageTZ.DataReadDTObjectText(
                         objectType: cItem.GetType()
-                            .Name,
+                                         .Name,
                         objectName: cItem.Name
                     );
                     cItem.Text = objectText;

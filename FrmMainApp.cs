@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -174,7 +175,7 @@ public partial class FrmMainApp : Form
 
         HelperGenericAppStartup.AppStartupCreateDataBaseFile();
         HelperGenericAppStartup.AppStartupWriteDefaultSettings();
-        HelperGenericAppStartup.AppStartupReadObjectNamesAndLanguage();
+        HelperGenericAppStartup.AppStartupReadAppLanguage();
         HelperGenericAppStartup.AppStartupReadCustomCityLogic();
         HelperGenericAppStartup.AppStartupReadAPILanguage();
         HelperGenericAppStartup.AppStartupApplyDefaults();
@@ -547,8 +548,8 @@ public partial class FrmMainApp : Form
                                 ? strGPSLatitudeOnTheMap + ";" + strGPSLongitudeOnTheMap
                                 : "";
 
-                            dirElemFileToModify.SetAttributeValueAnyType(ElementAttribute.Coordinates,
-                                                                         tmpCoords,
+                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.Coordinates,
+                                                                         value: tmpCoords,
                                                                          version: DirectoryElement.AttributeVersion
                                                                                                   .Stage3ReadyToWrite,
                                                                          isMarkedForDeletion: false);
@@ -585,8 +586,8 @@ public partial class FrmMainApp : Form
                                 ? strGPSLatitudeOnTheMap + ";" + strGPSLongitudeOnTheMap
                                 : "";
 
-                            dirElemFileToModify.SetAttributeValueAnyType(ElementAttribute.DestCoordinates,
-                                                                         tmpCoords,
+                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.DestCoordinates,
+                                                                         value: tmpCoords,
                                                                          version: DirectoryElement.AttributeVersion
                                                                                                   .Stage3ReadyToWrite,
                                                                          isMarkedForDeletion: false);
@@ -1939,13 +1940,20 @@ public partial class FrmMainApp : Form
         if (lvw_FileList.FocusedItem != null)
         {
             FileListViewMapNavigation.ListViewItemClickNavigate();
+
+            lvw_ExifData.Items.Clear();
+
             // it's easier to call the create-preview here than in the other one because focusedItems misbehave/I don't quite understand it/them
+            // also we'll push the DE/Exif data into lvw_ExifData here.
             if (lvw_FileList.SelectedItems.Count > 0)
             {
                 ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
-                DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                                                                                                                     .Index]
-                                                                                                        .Text);
+                DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(
+                    GUID: lvi.SubItems[index: lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
+                                                          .Index]
+                             .Text);
+
+                await UpdateLvwExifDataItems(directoryElement: dirElemFileToModify);
                 string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
 
                 if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
@@ -1961,6 +1969,39 @@ public partial class FrmMainApp : Form
 
             Request_Map_NavigateGo();
             // pbx_imagePreview.Image = null;
+        }
+    }
+
+    private async Task UpdateLvwExifDataItems(DirectoryElement directoryElement)
+    {
+        // fill lvw_ExifData
+        foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+
+        {
+            // this is a bit of a misuse of TagsToColumnHeaderOrder but does the job. 
+            // basically we have a bunch of EAs that the user is unlikely to care about
+            // and the ones that show as columns could be reasonably deemed as relevant.
+            if (TagsToColumnHeaderOrder.Contains(item: attribute))
+            {
+                ListViewItem lvi = new()
+                {
+                    Text = GetAttributeName(attribute: attribute)
+                };
+                lvi.SubItems.Add(text: directoryElement.GetAttributeValueString(
+                                     attribute: attribute,
+                                     version: DirectoryElement.AttributeVersion.Original,
+                                     notFoundValue: null));
+                lvi.SubItems.Add(text: directoryElement.GetAttributeValueString(
+                                     attribute: attribute,
+                                     version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                                     notFoundValue: null));
+                lvw_ExifData.Items.Add(value: lvi);
+            }
+        }
+
+        foreach (ColumnHeader columnHeader in lvw_ExifData.Columns)
+        {
+            columnHeader.Width = -1;
         }
     }
 
@@ -2565,6 +2606,35 @@ public partial class FrmMainApp : Form
                                  HelperVariables.SGeoNamesUserName +
                                  "&password=any";
             Process.Start(fileName: openAPILink);
+        }
+    }
+
+    private void lvw_ExifData_KeyUp(object sender,
+                                    KeyEventArgs e)
+    {
+        // unused
+    }
+
+    private void lvw_ExifData_KeyDown(object sender,
+                                      KeyEventArgs e)
+    {
+        if (e.Control && e.KeyCode == Keys.C)
+        {
+            CopySelectedValuesToClipboard();
+        }
+
+        void CopySelectedValuesToClipboard()
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (ListViewItem lvi in lvw_ExifData.SelectedItems)
+            {
+                for (int i = 0; i < lvi.SubItems.Count; i++)
+                {
+                    builder.AppendLine(lvi.SubItems[i].Text);
+                }
+            }
+
+            Clipboard.SetText(builder.ToString());
         }
     }
 }

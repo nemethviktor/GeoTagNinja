@@ -67,7 +67,7 @@ internal static class HelperGenericAppStartup
     /// <summary>
     ///     Reads object names from SQLite
     /// </summary>
-    public static void AppStartupReadObjectNamesAndLanguage()
+    public static void AppStartupReadAppLanguage()
     {
         FrmMainApp.Logger.Debug(message: "Starting");
 

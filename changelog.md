@@ -2,17 +2,19 @@
 
 **Build 86xx [2023xxxx]** 
 - NEW & UPDATED:
+  - App Version Bump: 1.12
   - GPSDestinationLat/Long ...
 	- is now being displayed in certain cases (when there is a series of images subject to a set of conditions. See the readme on how this works.),
 	- can be modified via a new button below the map,
-	- been added to the list/function of "remove all geodata"
-  - Moved around the area below the map a little
+	- has been added to the list/function of "remove all geodata"
+  - Added a new tab for the Exif info - this lists the values as they are held by GTN internally.
 - BUGS & FIXES:
   - Fixed an error when data in MyComputer wasn't properly recorded and this caused a crash
 
 **Build 8646 [20230903]** 
 - NEW & UPDATED:
- - Graduated the app to version 1.x [technically 1.10 because it's been edging up on the minor versions ever since initial release] - yayy. It now has all the features I initially wanted.
+ - App Version Bump: 1.10
+ - Graduated the app to version 1 [technically 1.10 because it's been edging up on the minor versions ever since initial release] - yayy. It now has all the features I initially wanted.
    - Added some support for reading and displaying ImgDirection/Ref.
    - Added a TaskbarProgressBarState indicator
    - Update the "update" logic -> there's now a Setting that enables the user to update to pre-release [dev] releases or master-only. Master releases will no longer be marked as pre-release on github.
@@ -42,6 +44,7 @@
 
 **Build 8556 [20230605]**
 - NEW & UPDATED:
+  - App Version Bump: 0.9 
   - Added a "Collections Mode", in particular to work with Jeffrey Frield's LightRoom Classic Plugin "Run Any Command". Details on how to use this are in the readme.
   - Rewrote the sorting logic to account for the data type of the column being sorted (i.e. date, number, text etc)
   - Added Country to Favourites
@@ -55,6 +58,7 @@
 
 **Build 8469 [20230310]**
 - NEW & UPDATED:
+  - App Version Bump: 0.8
   - Entirely rewrote the code to work off DirectoryElements rather than DataTables. This is techy so I won't get into it here, for anyone cares read the code or discussion #62
   - Added functionality to auto-navigate to a selected Favourite in the dropdown.
   - Added a "recall last Track Sync Shift" option.
@@ -97,6 +101,7 @@
 
 **Build 8391 [20221222]**
 - NEW & UPDATED:
+  - App Version Bump: 0.7
   - Added Column Sort (kudos to Urmel, thank you!)
   - Added Column Show/Hide (kudos to Urmel, thank you!)
   - Added a Setting to return X rows of data from the API within Y miles radius (I think it's miles anyway, maybe KM)
@@ -136,6 +141,7 @@
 
 **Build 8358 [20221119]**
 - NEW & UPDATED:
+  - App Version Bump: 0.6
   - Finally managed to get hold of ReSharper so the code has been refactored in totality. Famous last words but it shouldn't affect usage.
   - Added a ".." to the main grid (listView) where applicable (parent folder).
   - Added the capability to navigate to the top of the folder structure. (e.g. MyComputer and then list the drives.)
@@ -209,3 +215,4 @@
 **Build 8248 [20220801]**
 - NEW & UPDATED:
   - Initial release
+  - App Version Bump: 0.5
