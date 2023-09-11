@@ -6,6 +6,7 @@
 	- is now being displayed in certain cases (when there is a series of images subject to a set of conditions. See the readme on how this works.),
 	- can be modified via a new button below the map,
 	- been added to the list/function of "remove all geodata"
+  - Moved around the area below the map a little
 - BUGS & FIXES:
   - Fixed an error when data in MyComputer wasn't properly recorded and this caused a crash
 

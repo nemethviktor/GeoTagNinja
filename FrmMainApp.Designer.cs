@@ -75,6 +75,12 @@ namespace GeoTagNinja
             this.tpg_Map = new System.Windows.Forms.TabPage();
             this.wbv_MapArea = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.igl_RightHandSide = new System.Windows.Forms.ImageList(this.components);
+            this.ttp_NavigateMapGo = new System.Windows.Forms.ToolTip(this.components);
+            this.ttp_loctToFile = new System.Windows.Forms.ToolTip(this.components);
+            this.ttp_SaveFavourite = new System.Windows.Forms.ToolTip(this.components);
+            this.ttp_LoadFavourite = new System.Windows.Forms.ToolTip(this.components);
+            this.ttp_ManageFavourites = new System.Windows.Forms.ToolTip(this.components);
+            this.ttp_loctToFileDestination = new System.Windows.Forms.ToolTip(this.components);
             this.flp_GeoCoords = new System.Windows.Forms.FlowLayoutPanel();
             this.lbl_lat = new System.Windows.Forms.Label();
             this.nud_lat = new System.Windows.Forms.NumericUpDown();
@@ -88,12 +94,6 @@ namespace GeoTagNinja
             this.btn_SaveLocation = new System.Windows.Forms.Button();
             this.btn_LoadFavourite = new System.Windows.Forms.Button();
             this.btn_ManageFavourites = new System.Windows.Forms.Button();
-            this.ttp_NavigateMapGo = new System.Windows.Forms.ToolTip(this.components);
-            this.ttp_loctToFile = new System.Windows.Forms.ToolTip(this.components);
-            this.ttp_SaveFavourite = new System.Windows.Forms.ToolTip(this.components);
-            this.ttp_LoadFavourite = new System.Windows.Forms.ToolTip(this.components);
-            this.ttp_ManageFavourites = new System.Windows.Forms.ToolTip(this.components);
-            this.ttp_loctToFileDestination = new System.Windows.Forms.ToolTip(this.components);
             this.mns_MenuStrip.SuspendLayout();
             this.tsr_MainAppToolStrip.SuspendLayout();
             this.tsr_FolderControl.SuspendLayout();
@@ -368,7 +368,6 @@ namespace GeoTagNinja
             // splitContainerMain.Panel2
             // 
             this.splitContainerMain.Panel2.Controls.Add(this.tct_Main);
-            this.splitContainerMain.Panel2.Controls.Add(this.flp_GeoCoords);
             this.splitContainerMain.Panel2.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
             this.splitContainerMain.Size = new System.Drawing.Size(730, 411);
             this.splitContainerMain.SplitterDistance = 300;
@@ -504,18 +503,19 @@ namespace GeoTagNinja
             this.tct_Main.Name = "tct_Main";
             this.tct_Main.Padding = new System.Drawing.Point(0, 0);
             this.tct_Main.SelectedIndex = 0;
-            this.tct_Main.Size = new System.Drawing.Size(419, 365);
+            this.tct_Main.Size = new System.Drawing.Size(419, 411);
             this.tct_Main.TabIndex = 2;
             // 
             // tpg_Map
             // 
+            this.tpg_Map.Controls.Add(this.flp_GeoCoords);
             this.tpg_Map.Controls.Add(this.wbv_MapArea);
             this.tpg_Map.ImageKey = "PublishOnDemand.png";
             this.tpg_Map.Location = new System.Drawing.Point(4, 23);
             this.tpg_Map.Margin = new System.Windows.Forms.Padding(2);
             this.tpg_Map.Name = "tpg_Map";
             this.tpg_Map.Padding = new System.Windows.Forms.Padding(2);
-            this.tpg_Map.Size = new System.Drawing.Size(411, 338);
+            this.tpg_Map.Size = new System.Drawing.Size(411, 384);
             this.tpg_Map.TabIndex = 0;
             this.tpg_Map.Text = "tpg_Map";
             this.tpg_Map.UseVisualStyleBackColor = true;
@@ -529,7 +529,7 @@ namespace GeoTagNinja
             this.wbv_MapArea.Location = new System.Drawing.Point(2, 2);
             this.wbv_MapArea.Name = "wbv_MapArea";
             this.wbv_MapArea.Padding = new System.Windows.Forms.Padding(1);
-            this.wbv_MapArea.Size = new System.Drawing.Size(407, 334);
+            this.wbv_MapArea.Size = new System.Drawing.Size(407, 380);
             this.wbv_MapArea.TabIndex = 1;
             this.wbv_MapArea.ZoomFactor = 1D;
             this.wbv_MapArea.Click += new System.EventHandler(this.wbv_MapArea_Click);
@@ -555,11 +555,11 @@ namespace GeoTagNinja
             this.flp_GeoCoords.Controls.Add(this.btn_LoadFavourite);
             this.flp_GeoCoords.Controls.Add(this.btn_ManageFavourites);
             this.flp_GeoCoords.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.flp_GeoCoords.Location = new System.Drawing.Point(0, 365);
+            this.flp_GeoCoords.Location = new System.Drawing.Point(2, 336);
             this.flp_GeoCoords.MinimumSize = new System.Drawing.Size(0, 30);
             this.flp_GeoCoords.Name = "flp_GeoCoords";
-            this.flp_GeoCoords.Size = new System.Drawing.Size(419, 46);
-            this.flp_GeoCoords.TabIndex = 12;
+            this.flp_GeoCoords.Size = new System.Drawing.Size(407, 46);
+            this.flp_GeoCoords.TabIndex = 13;
             // 
             // lbl_lat
             // 
@@ -802,32 +802,32 @@ namespace GeoTagNinja
         private TabControl tct_Main;
         private TabPage tpg_Map;
         private Microsoft.Web.WebView2.WinForms.WebView2 wbv_MapArea;
-        private Button btn_loctToFile;
-        private Button btn_NavigateMapGo;
-        private Label lbl_lng;
-        private Label lbl_lat;
         private ToolTip ttp_NavigateMapGo;
         private ToolTip ttp_loctToFile;
         private ImageList igl_RightHandSide;
-        private FlowLayoutPanel flp_GeoCoords;
         private FlowLayoutPanel flp_ProcessingInfo;
         private ContextMenuStrip cms_FileListView;
         private ToolStripMenuItem tmi_ShowHideCols;
-        private Label lbl_Favourites;
-        internal ComboBox cbx_Favourites;
-        private Button btn_SaveLocation;
-        private Button btn_LoadFavourite;
         private ToolTip ttp_SaveFavourite;
         private ToolTip ttp_LoadFavourite;
         private ToolStripMenuItem tmi_removeCachedData;
         private ToolStripMenuItem tmi_Settings_Favourites;
-        private Button btn_ManageFavourites;
         private ToolTip ttp_ManageFavourites;
-        internal NumericUpDown nud_lat;
-        internal NumericUpDown nud_lng;
         private ToolStripMenuItem tmi_OpenCoordsInAPI;
-        private Button btn_loctToFileDestination;
         private ToolTip ttp_loctToFileDestination;
+        private FlowLayoutPanel flp_GeoCoords;
+        private Label lbl_lat;
+        internal NumericUpDown nud_lat;
+        private Label lbl_lng;
+        internal NumericUpDown nud_lng;
+        private Button btn_NavigateMapGo;
+        private Button btn_loctToFile;
+        private Button btn_loctToFileDestination;
+        private Label lbl_Favourites;
+        internal ComboBox cbx_Favourites;
+        private Button btn_SaveLocation;
+        private Button btn_LoadFavourite;
+        private Button btn_ManageFavourites;
     }
 }
 
