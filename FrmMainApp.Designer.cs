@@ -82,6 +82,7 @@ namespace GeoTagNinja
             this.nud_lng = new System.Windows.Forms.NumericUpDown();
             this.btn_NavigateMapGo = new System.Windows.Forms.Button();
             this.btn_loctToFile = new System.Windows.Forms.Button();
+            this.btn_loctToFileDestination = new System.Windows.Forms.Button();
             this.lbl_Favourites = new System.Windows.Forms.Label();
             this.cbx_Favourites = new System.Windows.Forms.ComboBox();
             this.btn_SaveLocation = new System.Windows.Forms.Button();
@@ -92,6 +93,7 @@ namespace GeoTagNinja
             this.ttp_SaveFavourite = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_LoadFavourite = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_ManageFavourites = new System.Windows.Forms.ToolTip(this.components);
+            this.ttp_loctToFileDestination = new System.Windows.Forms.ToolTip(this.components);
             this.mns_MenuStrip.SuspendLayout();
             this.tsr_MainAppToolStrip.SuspendLayout();
             this.tsr_FolderControl.SuspendLayout();
@@ -420,8 +422,8 @@ namespace GeoTagNinja
             // 
             // clh_FileName
             // 
-            this.clh_FileName.Name = COL_NAME_PREFIX + FileListColumns.FILENAME;
-            this.clh_FileName.Text = COL_NAME_PREFIX + FileListColumns.FILENAME;
+            this.clh_FileName.Name = "clh_FileName";
+            this.clh_FileName.Text = "clh_FileName";
             // 
             // cms_FileListView
             // 
@@ -546,6 +548,7 @@ namespace GeoTagNinja
             this.flp_GeoCoords.Controls.Add(this.nud_lng);
             this.flp_GeoCoords.Controls.Add(this.btn_NavigateMapGo);
             this.flp_GeoCoords.Controls.Add(this.btn_loctToFile);
+            this.flp_GeoCoords.Controls.Add(this.btn_loctToFileDestination);
             this.flp_GeoCoords.Controls.Add(this.lbl_Favourites);
             this.flp_GeoCoords.Controls.Add(this.cbx_Favourites);
             this.flp_GeoCoords.Controls.Add(this.btn_SaveLocation);
@@ -584,14 +587,14 @@ namespace GeoTagNinja
             0,
             -2147483648});
             this.nud_lat.Name = "nud_lat";
-            this.nud_lat.Size = new System.Drawing.Size(120, 20);
+            this.nud_lat.Size = new System.Drawing.Size(90, 20);
             this.nud_lat.TabIndex = 17;
             // 
             // lbl_lng
             // 
             this.lbl_lng.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lbl_lng.AutoSize = true;
-            this.lbl_lng.Location = new System.Drawing.Point(192, 7);
+            this.lbl_lng.Location = new System.Drawing.Point(162, 7);
             this.lbl_lng.Margin = new System.Windows.Forms.Padding(20, 0, 2, 0);
             this.lbl_lng.Name = "lbl_lng";
             this.lbl_lng.Size = new System.Drawing.Size(37, 13);
@@ -601,7 +604,7 @@ namespace GeoTagNinja
             // nud_lng
             // 
             this.nud_lng.DecimalPlaces = 6;
-            this.nud_lng.Location = new System.Drawing.Point(234, 3);
+            this.nud_lng.Location = new System.Drawing.Point(204, 3);
             this.nud_lng.Maximum = new decimal(new int[] {
             180,
             0,
@@ -613,7 +616,7 @@ namespace GeoTagNinja
             0,
             -2147483648});
             this.nud_lng.Name = "nud_lng";
-            this.nud_lng.Size = new System.Drawing.Size(120, 20);
+            this.nud_lng.Size = new System.Drawing.Size(90, 20);
             this.nud_lng.TabIndex = 18;
             // 
             // btn_NavigateMapGo
@@ -621,7 +624,7 @@ namespace GeoTagNinja
             this.btn_NavigateMapGo.BackColor = System.Drawing.SystemColors.Menu;
             this.btn_NavigateMapGo.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_NavigateMapGo.BackgroundImage")));
             this.btn_NavigateMapGo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btn_NavigateMapGo.Location = new System.Drawing.Point(377, 2);
+            this.btn_NavigateMapGo.Location = new System.Drawing.Point(317, 2);
             this.btn_NavigateMapGo.Margin = new System.Windows.Forms.Padding(20, 2, 2, 2);
             this.btn_NavigateMapGo.Name = "btn_NavigateMapGo";
             this.btn_NavigateMapGo.Size = new System.Drawing.Size(24, 24);
@@ -634,7 +637,7 @@ namespace GeoTagNinja
             // 
             this.btn_loctToFile.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_loctToFile.BackgroundImage")));
             this.btn_loctToFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btn_loctToFile.Location = new System.Drawing.Point(2, 30);
+            this.btn_loctToFile.Location = new System.Drawing.Point(345, 2);
             this.btn_loctToFile.Margin = new System.Windows.Forms.Padding(2);
             this.btn_loctToFile.Name = "btn_loctToFile";
             this.btn_loctToFile.Size = new System.Drawing.Size(24, 24);
@@ -643,11 +646,24 @@ namespace GeoTagNinja
             this.btn_loctToFile.UseVisualStyleBackColor = true;
             this.btn_loctToFile.Click += new System.EventHandler(this.btn_loctToFile_Click);
             // 
+            // btn_loctToFileDestination
+            // 
+            this.btn_loctToFileDestination.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_loctToFileDestination.BackgroundImage")));
+            this.btn_loctToFileDestination.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btn_loctToFileDestination.Location = new System.Drawing.Point(373, 2);
+            this.btn_loctToFileDestination.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_loctToFileDestination.Name = "btn_loctToFileDestination";
+            this.btn_loctToFileDestination.Size = new System.Drawing.Size(24, 24);
+            this.btn_loctToFileDestination.TabIndex = 19;
+            this.btn_loctToFileDestination.Text = "btn_loctToFileDestination";
+            this.btn_loctToFileDestination.UseVisualStyleBackColor = true;
+            this.btn_loctToFileDestination.Click += new System.EventHandler(this.btn_loctToFile_Click);
+            // 
             // lbl_Favourites
             // 
             this.lbl_Favourites.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lbl_Favourites.AutoSize = true;
-            this.lbl_Favourites.Location = new System.Drawing.Point(38, 35);
+            this.lbl_Favourites.Location = new System.Drawing.Point(10, 35);
             this.lbl_Favourites.Margin = new System.Windows.Forms.Padding(10, 0, 2, 0);
             this.lbl_Favourites.Name = "lbl_Favourites";
             this.lbl_Favourites.Size = new System.Drawing.Size(72, 13);
@@ -657,7 +673,7 @@ namespace GeoTagNinja
             // cbx_Favourites
             // 
             this.cbx_Favourites.FormattingEnabled = true;
-            this.cbx_Favourites.Location = new System.Drawing.Point(115, 31);
+            this.cbx_Favourites.Location = new System.Drawing.Point(87, 31);
             this.cbx_Favourites.Name = "cbx_Favourites";
             this.cbx_Favourites.Size = new System.Drawing.Size(148, 21);
             this.cbx_Favourites.TabIndex = 13;
@@ -667,7 +683,7 @@ namespace GeoTagNinja
             // 
             this.btn_SaveLocation.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_SaveLocation.BackgroundImage")));
             this.btn_SaveLocation.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btn_SaveLocation.Location = new System.Drawing.Point(268, 30);
+            this.btn_SaveLocation.Location = new System.Drawing.Point(240, 30);
             this.btn_SaveLocation.Margin = new System.Windows.Forms.Padding(2);
             this.btn_SaveLocation.Name = "btn_SaveLocation";
             this.btn_SaveLocation.Size = new System.Drawing.Size(24, 24);
@@ -680,7 +696,7 @@ namespace GeoTagNinja
             // 
             this.btn_LoadFavourite.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_LoadFavourite.BackgroundImage")));
             this.btn_LoadFavourite.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btn_LoadFavourite.Location = new System.Drawing.Point(296, 30);
+            this.btn_LoadFavourite.Location = new System.Drawing.Point(268, 30);
             this.btn_LoadFavourite.Margin = new System.Windows.Forms.Padding(2);
             this.btn_LoadFavourite.Name = "btn_LoadFavourite";
             this.btn_LoadFavourite.Size = new System.Drawing.Size(24, 24);
@@ -693,7 +709,7 @@ namespace GeoTagNinja
             // 
             this.btn_ManageFavourites.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btn_ManageFavourites.BackgroundImage")));
             this.btn_ManageFavourites.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btn_ManageFavourites.Location = new System.Drawing.Point(324, 30);
+            this.btn_ManageFavourites.Location = new System.Drawing.Point(296, 30);
             this.btn_ManageFavourites.Margin = new System.Windows.Forms.Padding(2);
             this.btn_ManageFavourites.Name = "btn_ManageFavourites";
             this.btn_ManageFavourites.Size = new System.Drawing.Size(24, 24);
@@ -810,6 +826,8 @@ namespace GeoTagNinja
         internal NumericUpDown nud_lat;
         internal NumericUpDown nud_lng;
         private ToolStripMenuItem tmi_OpenCoordsInAPI;
+        private Button btn_loctToFileDestination;
+        private ToolTip ttp_loctToFileDestination;
     }
 }
 

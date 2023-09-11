@@ -104,13 +104,20 @@ public class SourcesAndAttributes
     public static readonly List<ElementAttribute> GeoDataAttributes = new()
     {
         ElementAttribute.GPSLatitude,
+        ElementAttribute.GPSLatitudeRef,
         ElementAttribute.GPSLongitude,
+        ElementAttribute.GPSLongitudeRef,
+        ElementAttribute.GPSDestLatitude,
+        ElementAttribute.GPSDestLatitudeRef,
+        ElementAttribute.GPSDestLongitude,
+        ElementAttribute.GPSDestLongitudeRef,
         ElementAttribute.CountryCode,
         ElementAttribute.Country,
         ElementAttribute.City,
         ElementAttribute.State,
         ElementAttribute.Sub_location,
-        ElementAttribute.GPSAltitude
+        ElementAttribute.GPSAltitude,
+        ElementAttribute.GPSAltitudeRef
     };
 
     /// <summary>

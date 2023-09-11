@@ -53,7 +53,9 @@ internal static class FileListViewReadWrite
                             // this becomes tricky bcs we're also firing a "-gps*=" tag.
                             string settingId = ElementAttributeToColumnHeaderName(attribute);
                             string settingVal = dirElemFileToModify.GetAttributeValueString(attribute: attribute,
-                                                                                            version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                                                                                            version: DirectoryElement
+                                                                                                    .AttributeVersion
+                                                                                                    .Stage3ReadyToWrite);
 
                             if (lvchs[key: settingId] != null)
                             {
@@ -79,7 +81,9 @@ internal static class FileListViewReadWrite
                                         dirElemFileToModify: dirElemFileToModify,
                                         takenOrCreated: TakenOrCreated.Taken);
 
-                                    DateTime originalTakenDateTime = DateTime.Parse(s: FrmMainApp.OriginalTakenDateDict[key: fileNameWithoutPath], provider: CultureInfo.CurrentUICulture);
+                                    DateTime originalTakenDateTime = DateTime.Parse(
+                                        s: FrmMainApp.OriginalTakenDateDict[key: fileNameWithoutPath],
+                                        provider: CultureInfo.CurrentUICulture);
 
                                     DateTime modifiedTakenDateTime = originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
                                     lvi.SubItems[index: lvchs[key: COL_NAME_PREFIX + FileListColumns.TAKEN_DATE]
@@ -95,7 +99,9 @@ internal static class FileListViewReadWrite
                                         dirElemFileToModify: dirElemFileToModify,
                                         takenOrCreated: TakenOrCreated.Created);
 
-                                    DateTime originalCreateDateTime = DateTime.Parse(s: FrmMainApp.OriginalCreateDateDict[key: fileNameWithoutPath], provider: CultureInfo.CurrentUICulture);
+                                    DateTime originalCreateDateTime = DateTime.Parse(
+                                        s: FrmMainApp.OriginalCreateDateDict[key: fileNameWithoutPath],
+                                        provider: CultureInfo.CurrentUICulture);
 
                                     DateTime modifiedCreateDateTime = originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
                                     lvi.SubItems[index: lvchs[key: COL_NAME_PREFIX + FileListColumns.CREATE_DATE]
@@ -115,12 +121,31 @@ internal static class FileListViewReadWrite
                                     attribute: ElementAttribute.GPSLongitude,
                                     version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSLongitude),
                                     notFoundValue: "");
+                                string tmpCoords = tmpLat + ";" + tmpLng != ";"
+                                    ? tmpLat + ";" + tmpLng
+                                    : "";
 
                                 lvi.SubItems[index: lvchs[key: ElementAttributeToColumnHeaderName(ElementAttribute.Coordinates)]
                                                 .Index]
-                                   .Text = tmpLat + ";" + tmpLng != ";"
+                                   .Text = tmpCoords;
+                            }
+                            else if (attribute is ElementAttribute.GPSDestLatitude or ElementAttribute.GPSDestLongitude)
+                            {
+                                string tmpLat = dirElemFileToModify.GetAttributeValueString(
+                                    attribute: ElementAttribute.GPSDestLatitude,
+                                    version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSDestLatitude),
+                                    notFoundValue: "");
+                                string tmpLng = dirElemFileToModify.GetAttributeValueString(
+                                    attribute: ElementAttribute.GPSDestLongitude,
+                                    version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSDestLongitude),
+                                    notFoundValue: "");
+                                string tmpCoords = tmpLat + ";" + tmpLng != ";"
                                     ? tmpLat + ";" + tmpLng
                                     : "";
+
+                                lvi.SubItems[index: lvchs[key: ElementAttributeToColumnHeaderName(ElementAttribute.DestCoordinates)]
+                                                .Index]
+                                   .Text = tmpCoords;
                             }
                         }
                         catch

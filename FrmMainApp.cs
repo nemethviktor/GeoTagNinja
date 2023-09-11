@@ -481,36 +481,41 @@ public partial class FrmMainApp : Form
 
     /// <summary>
     ///     Handles the clicking on "ToFile" button. See comments above re: why we're using strings (culture-related issue)
+    ///     This now also handles "btn_loctToFileDestination" click as well.
     /// </summary>
-    /// <param name="sender">Unused</param>
+    /// <param name="sender">Name of the button that has been clicked</param>
     /// <param name="e">Unused</param>
     private async void btn_loctToFile_Click(object sender,
                                             EventArgs e)
     {
-        string strGPSLatitude = nud_lat.Text.Replace(oldChar: ',', newChar: '.');
-        string strGPSLongitude = nud_lng.Text.Replace(oldChar: ',', newChar: '.');
-        double parsedLat;
-        double parsedLng;
+        // convert selected lat/long to str
+        string strGPSLatitudeOnTheMap = nud_lat.Text.Replace(oldChar: ',', newChar: '.');
+        string strGPSLongitudeOnTheMap = nud_lng.Text.Replace(oldChar: ',', newChar: '.');
         _StopProcessingRows = false;
         GeoResponseToponomy readJsonToponomy = new();
 
+        Button btn = (Button)sender;
+        string senderName = btn.Name;
+
         // lat/long gets written regardless of update-toponomy-choice
-        if (double.TryParse(s: strGPSLatitude,
+        if (double.TryParse(s: strGPSLatitudeOnTheMap,
                             style: NumberStyles.Any,
                             provider: CultureInfo.InvariantCulture,
-                            result: out parsedLat) &&
-            double.TryParse(s: strGPSLongitude,
+                            result: out double _) &&
+            double.TryParse(s: strGPSLongitudeOnTheMap,
                             style: NumberStyles.Any,
                             provider: CultureInfo.InvariantCulture,
-                            result: out parsedLng))
+                            result: out double _))
         {
             if (lvw_FileList.SelectedItems.Count > 0)
             {
+                HelperGenericFileLocking.FileListBeingUpdated = true;
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
-                    DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                                                                                                                         .Index]
-                                                                                                            .Text);
+                    DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(
+                        GUID: lvi.SubItems[index: lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
+                                                              .Index]
+                                 .Text);
                     // don't do folders...
                     if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
@@ -522,95 +527,108 @@ public partial class FrmMainApp : Form
                             await Task.Delay(millisecondsDelay: 10);
                         }
 
-                        // Latitude
-                        dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSLatitude,
-                                                                     value: strGPSLatitude,
-                                                                     version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
-
-                        // Longitude
-                        dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSLongitude,
-                                                                     value: strGPSLongitude,
-                                                                     version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
-                    }
-                }
-            }
-        }
-
-        if (double.TryParse(s: strGPSLatitude,
-                            style: NumberStyles.Any,
-                            provider: CultureInfo.InvariantCulture,
-                            result: out parsedLat) &&
-            double.TryParse(s: strGPSLongitude,
-                            style: NumberStyles.Any,
-                            provider: CultureInfo.InvariantCulture,
-                            result: out parsedLng))
-        {
-            if (lvw_FileList.SelectedItems.Count > 0)
-            {
-                if (!ShowLocToMapDialogChoice.Contains(value: "_remember"))
-                {
-                    // via https://stackoverflow.com/a/17385937/3968494
-                    ShowLocToMapDialogChoice = HelperControlAndMessageBoxHandling.ShowDialogWithCheckBox(
-                        labelText: HelperDataLanguageTZ.DataReadDTObjectText(
-                            objectType: "Label",
-                            objectName: "lbl_QuestionAddToponomy"
-                        ),
-                        caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
-                        checkboxText: HelperDataLanguageTZ.DataReadDTObjectText(
-                            objectType: "CheckBox",
-                            objectName: "ckb_QuestionAddToponomyDontAskAgain"
-                        ),
-                        returnCheckboxText: "_remember",
-                        button1Text: HelperDataLanguageTZ.DataReadDTObjectText(
-                            objectType: "Button",
-                            objectName: "btn_Yes"
-                        ),
-                        returnButton1Text: "yes",
-                        button2Text: HelperDataLanguageTZ.DataReadDTObjectText(
-                            objectType: "Button",
-                            objectName: "btn_No"
-                        ),
-                        returnButton2Text: "no"
-                    );
-                }
-
-                if (ShowLocToMapDialogChoice != "default") // basically user can alt+f4 from the box, which is dumb but nonetheless would break the code.
-                {
-                    HelperGenericFileLocking.FileListBeingUpdated = true;
-                    foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
-                    {
-                        DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                                                                                                                             .Index]
-                                                                                                                .Text);
-                        // don't do folders...
-                        if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
+                        if (senderName == "btn_loctToFile")
                         {
-                            string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
-                            string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
+                            // Latitude
+                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSLatitude,
+                                                                         value: strGPSLatitudeOnTheMap,
+                                                                         version: DirectoryElement.AttributeVersion
+                                                                                                  .Stage3ReadyToWrite,
+                                                                         isMarkedForDeletion: false);
 
-                            while (HelperGenericFileLocking.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
+                            // Longitude
+                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSLongitude,
+                                                                         value: strGPSLongitudeOnTheMap,
+                                                                         version: DirectoryElement.AttributeVersion
+                                                                                                  .Stage3ReadyToWrite,
+                                                                         isMarkedForDeletion: false);
+
+                            string tmpCoords = strGPSLatitudeOnTheMap + ";" + strGPSLongitudeOnTheMap != ";"
+                                ? strGPSLatitudeOnTheMap + ";" + strGPSLongitudeOnTheMap
+                                : "";
+
+                            dirElemFileToModify.SetAttributeValueAnyType(ElementAttribute.Coordinates,
+                                                                         tmpCoords,
+                                                                         version: DirectoryElement.AttributeVersion
+                                                                                                  .Stage3ReadyToWrite,
+                                                                         isMarkedForDeletion: false);
+
+                            if (!ShowLocToMapDialogChoice.Contains(value: "_remember"))
                             {
-                                await Task.Delay(millisecondsDelay: 10);
+                                ShowLocToMapDialog();
                             }
 
                             DataTable dtToponomy = new();
                             DataTable dtAltitude = new();
                             if (ShowLocToMapDialogChoice.Contains(value: "yes"))
                             {
-                                lvw_FileList_UpdateTagsFromWeb(strGpsLatitude: strGPSLatitude, strGpsLongitude: strGPSLongitude, lvi: lvi);
+                                lvw_FileList_UpdateTagsFromWeb(strGpsLatitude: strGPSLatitudeOnTheMap, strGpsLongitude: strGPSLongitudeOnTheMap, lvi: lvi);
                             }
+                        }
+                        else if (senderName == "btn_loctToFileDestination")
+                        {
+                            // Latitude
+                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSDestLatitude,
+                                                                         value: strGPSLatitudeOnTheMap,
+                                                                         version: DirectoryElement.AttributeVersion
+                                                                                                  .Stage3ReadyToWrite,
+                                                                         isMarkedForDeletion: false);
+
+                            // Longitude
+                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSDestLongitude,
+                                                                         value: strGPSLongitudeOnTheMap,
+                                                                         version: DirectoryElement.AttributeVersion
+                                                                                                  .Stage3ReadyToWrite,
+                                                                         isMarkedForDeletion: false);
+
+                            string tmpCoords = strGPSLatitudeOnTheMap + ";" + strGPSLongitudeOnTheMap != ";"
+                                ? strGPSLatitudeOnTheMap + ";" + strGPSLongitudeOnTheMap
+                                : "";
+
+                            dirElemFileToModify.SetAttributeValueAnyType(ElementAttribute.DestCoordinates,
+                                                                         tmpCoords,
+                                                                         version: DirectoryElement.AttributeVersion
+                                                                                                  .Stage3ReadyToWrite,
+                                                                         isMarkedForDeletion: false);
                         }
 
                         await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
                     }
-
-                    HelperGenericFileLocking.FileListBeingUpdated = false;
                 }
+
+                HelperGenericFileLocking.FileListBeingUpdated = false;
             }
         }
 
         // Not logging this.
         FileListViewReadWrite.ListViewCountItemsWithGeoData();
+
+        void ShowLocToMapDialog()
+        {
+            // via https://stackoverflow.com/a/17385937/3968494
+            ShowLocToMapDialogChoice = HelperControlAndMessageBoxHandling.ShowDialogWithCheckBox(
+                labelText: HelperDataLanguageTZ.DataReadDTObjectText(
+                    objectType: "Label",
+                    objectName: "lbl_QuestionAddToponomy"
+                ),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+                checkboxText: HelperDataLanguageTZ.DataReadDTObjectText(
+                    objectType: "CheckBox",
+                    objectName: "ckb_QuestionAddToponomyDontAskAgain"
+                ),
+                returnCheckboxText: "_remember",
+                button1Text: HelperDataLanguageTZ.DataReadDTObjectText(
+                    objectType: "Button",
+                    objectName: "btn_Yes"
+                ),
+                returnButton1Text: "yes",
+                button2Text: HelperDataLanguageTZ.DataReadDTObjectText(
+                    objectType: "Button",
+                    objectName: "btn_No"
+                ),
+                returnButton2Text: "no"
+            );
+        }
     }
 
 

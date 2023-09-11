@@ -180,6 +180,12 @@ public partial class FrmMainApp
                                   )
         );
 
+        ttp_loctToFileDestination.SetToolTip(control: btn_loctToFileDestination,
+                                             caption: HelperDataLanguageTZ.DataReadDTObjectText(
+                                                 objectType: "ToolTip",
+                                                 objectName: "ttp_loctToFileDestination"
+                                             )
+        );
         ttp_NavigateMapGo.SetToolTip(control: btn_NavigateMapGo,
                                      caption: HelperDataLanguageTZ.DataReadDTObjectText(
                                          objectType: "ToolTip",
