@@ -190,43 +190,24 @@ public partial class FrmMainApp
         );
 
         Logger.Trace(message: "Setting Tooltips");
-        ttp_loctToFile.SetToolTip(control: btn_loctToFile,
-                                  caption: HelperDataLanguageTZ.DataReadDTObjectText(
-                                      objectType: "ToolTip",
-                                      objectName: "ttp_loctToFile"
-                                  )
-        );
-
-        ttp_loctToFileDestination.SetToolTip(control: btn_loctToFileDestination,
-                                             caption: HelperDataLanguageTZ.DataReadDTObjectText(
-                                                 objectType: "ToolTip",
-                                                 objectName: "ttp_loctToFileDestination"
-                                             )
-        );
-        ttp_NavigateMapGo.SetToolTip(control: btn_NavigateMapGo,
-                                     caption: HelperDataLanguageTZ.DataReadDTObjectText(
-                                         objectType: "ToolTip",
-                                         objectName: "ttp_NavigateMapGo"
-                                     )
-        );
-        ttp_SaveFavourite.SetToolTip(control: btn_SaveLocation,
-                                     caption: HelperDataLanguageTZ.DataReadDTObjectText(
-                                         objectType: "ToolTip",
-                                         objectName: "ttp_SaveFavourite"
-                                     )
-        );
-        ttp_LoadFavourite.SetToolTip(control: btn_LoadFavourite,
-                                     caption: HelperDataLanguageTZ.DataReadDTObjectText(
-                                         objectType: "ToolTip",
-                                         objectName: "ttp_LoadFavourite"
-                                     )
-        );
-        ttp_ManageFavourites.SetToolTip(control: btn_ManageFavourites,
-                                        caption: HelperDataLanguageTZ.DataReadDTObjectText(
-                                            objectType: "ToolTip",
-                                            objectName: "ttp_ManageFavourites"
-                                        )
-        );
+        List<(ToolTip, Control, string)> ttpLabelsList = new List<(ToolTip, Control, string)>()
+        {
+            (ttp_loctToFile, btn_loctToFile, "ttp_loctToFile"),
+            (ttp_loctToFileDestination, btn_loctToFileDestination, "ttp_loctToFileDestination"),
+            (ttp_NavigateMapGo, btn_NavigateMapGo, "ttp_NavigateMapGo"),
+            (ttp_SaveFavourite, btn_SaveFavourite, "ttp_SaveFavourite"),
+            (ttp_LoadFavourite, btn_LoadFavourite, "ttp_LoadFavourite"),
+            (ttp_ManageFavourites, btn_ManageFavourites, "ttp_ManageFavourites"),
+        };
+        foreach ((ToolTip, Control, string) valueTuple in ttpLabelsList)
+        {
+            ToolTip ttp = (ToolTip)valueTuple.Item1;
+            ttp.SetToolTip((Control)valueTuple.Item2,
+                           HelperDataLanguageTZ.DataReadDTObjectText(
+                               objectType: "ToolTip",
+                               objectName: valueTuple.Item3
+                           ));
+        }
     }
 
     internal static string GetUOMAbbreviated()

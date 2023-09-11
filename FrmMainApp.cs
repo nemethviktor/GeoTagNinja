@@ -2214,6 +2214,31 @@ public partial class FrmMainApp : Form
         frmAboutBox.ShowDialog();
     }
 
+    private void tmi_Help_FeedbackFeatureRequest_Click(object sender,
+                                                       EventArgs e)
+    {
+        System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/issues/new?template=feature_request.md");
+    }
+
+    private void tmi_Help_BugReport_Click(object sender,
+                                          EventArgs e)
+    {
+        System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/issues/new?template=bug_report.md");
+    }
+
+
+    private void tsb_FeedbackFeatureRequest_Click(object sender,
+                                                  EventArgs e)
+    {
+        System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/issues/new?template=feature_request.md");
+    }
+
+    private void tsb_BugReport_Click(object sender,
+                                     EventArgs e)
+    {
+        System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/issues/new?template=bug_report.md");
+    }
+
     /// <summary>
     ///     Updates the Text of any Label from outside the thread.
     /// </summary>

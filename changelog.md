@@ -8,6 +8,7 @@
 	- can be modified via a new button below the map,
 	- has been added to the list/function of "remove all geodata"
   - Added a new tab for the Exif info - this lists the values as they are held by GTN internally.
+  - Added 2 new buttons for filing feature requests and bugs (both require a GitHub acct.)
 - BUGS & FIXES:
   - Fixed an error when data in MyComputer wasn't properly recorded and this caused a crash
 

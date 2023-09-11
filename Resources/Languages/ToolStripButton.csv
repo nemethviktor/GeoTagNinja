@@ -6,3 +6,5 @@ tsb_RemoveGeoData,Remove All Location Data,Supprimer toutes les données de loca
 tsb_ImportGPX,Import GPX/JSON Track Files,Importer des fichiers de piste GPX/JSON
 tsb_OneFolderUp,Parent Folder,Dossier parent
 tsb_GetAllFromWeb,Get Toponomy & Altitude info for all of the selected files,Obtenez des informations sur la toponymie et l'altitude pour tous les fichiers sélectionnés
+tsb_FeedbackFeatureRequest,File a feature request (requires a GitHub account),
+tsb_BugReport,File a bug report (requires a GitHub account),
