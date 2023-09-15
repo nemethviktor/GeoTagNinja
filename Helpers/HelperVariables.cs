@@ -13,6 +13,12 @@ internal static class HelperVariables
     internal static string SGeoNamesPwd;
     internal static bool SChangeFolderIsOkay;
     internal static bool SApiOkay = true;
+    internal static bool SNowSelectingAllItems = false;
+    internal static bool SResetMapToZero;
+    internal static bool SUseDarkMode;
+    internal static bool SUpdatePreReleaseGTN;
+    internal static bool SOnlyShowFCodePPL = false;
+
     internal static string _sErrorMsg = "";
     internal static string _sOutputMsg = "";
     internal static readonly string SDoubleQuote = "\"";
@@ -25,10 +31,6 @@ internal static class HelperVariables
     internal static double? MaxLng;
     internal static double? LastLat;
     internal static double? LastLng;
-    internal static bool SNowSelectingAllItems = false;
-    internal static bool SResetMapToZero;
-    internal static bool SUpdatePreReleaseGTN;
-    internal static bool SOnlyShowFCodePPL = false;
     internal static decimal _currentExifToolVersionLocal;
     internal static bool ToponomyReplace = false;
     internal static string ToponomyReplaceWithWhat = null;

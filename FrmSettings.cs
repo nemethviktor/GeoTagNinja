@@ -26,6 +26,9 @@ public partial class FrmSettings : Form
     public FrmSettings()
     {
         InitializeComponent();
+        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.SUseDarkMode
+                                                     ? ThemeColour.Dark
+                                                     : ThemeColour.Light, parentControl: this);
 
         // this one is largely responsible for disabling the detection of "new" (changed) data. (ie when going from "noting" to "something")
         _nowLoadingSettingsData = true;
@@ -474,7 +477,8 @@ public partial class FrmSettings : Form
                 {
                     if ((ckb.Font.Style & FontStyle.Bold) != 0)
                     {
-                        if (ckb.Name == "ckb_UseImperialNotMetric")
+                        // strictly speaking for ckb_UseDarkMode we don't need to restart the app and the checker could be called here but it'd need another loop.
+                        if (ckb.Name == "ckb_UseImperialNotMetric" || ckb.Name == "ckb_UseDarkMode")
                         {
                             warnUserToRestartApp();
                         }
@@ -560,6 +564,12 @@ public partial class FrmSettings : Form
             tableName: "settings",
             settingTabPage: "tpg_Application",
             settingId: "ckb_UpdateCheckPreRelease"
+        );
+
+        HelperVariables.SUseDarkMode = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
+            tableName: "settings",
+            settingTabPage: "tpg_Application",
+            settingId: "ckb_UseDarkMode"
         );
 
         HelperGenericAppStartup.AppStartupPullOverWriteBlankToponomy();

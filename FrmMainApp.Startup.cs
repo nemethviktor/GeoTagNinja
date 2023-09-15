@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 
@@ -56,8 +55,12 @@ public partial class FrmMainApp
         }
     }
 
+
     /// <summary>
-    ///     Assigns the various labels to objects (such as buttons, labels etc.)
+    ///     Assigns labels to various objects in the application during startup. This includes buttons, labels, checkboxes, and
+    ///     other UI elements.
+    ///     It also sets up tooltips for specific controls. The labels and tooltips are fetched from a data source using the
+    ///     HelperDataLanguageTZ.DataReadDTObjectText method.
     /// </summary>
     private void AppStartupAssignLabelsToObjects()
     {
@@ -176,7 +179,7 @@ public partial class FrmMainApp
                 objectName = cItem.Name;
                 objectText = HelperDataLanguageTZ.DataReadDTObjectText(
                     objectType: cItem.GetType()
-                        .Name,
+                                     .Name,
                     objectName: cItem.Name
                 );
                 cItem.Text = objectText;
@@ -190,20 +193,20 @@ public partial class FrmMainApp
         );
 
         Logger.Trace(message: "Setting Tooltips");
-        List<(ToolTip, Control, string)> ttpLabelsList = new List<(ToolTip, Control, string)>()
+        List<(ToolTip, Control, string)> ttpLabelsList = new()
         {
             (ttp_loctToFile, btn_loctToFile, "ttp_loctToFile"),
             (ttp_loctToFileDestination, btn_loctToFileDestination, "ttp_loctToFileDestination"),
             (ttp_NavigateMapGo, btn_NavigateMapGo, "ttp_NavigateMapGo"),
             (ttp_SaveFavourite, btn_SaveFavourite, "ttp_SaveFavourite"),
             (ttp_LoadFavourite, btn_LoadFavourite, "ttp_LoadFavourite"),
-            (ttp_ManageFavourites, btn_ManageFavourites, "ttp_ManageFavourites"),
+            (ttp_ManageFavourites, btn_ManageFavourites, "ttp_ManageFavourites")
         };
         foreach ((ToolTip, Control, string) valueTuple in ttpLabelsList)
         {
-            ToolTip ttp = (ToolTip)valueTuple.Item1;
-            ttp.SetToolTip((Control)valueTuple.Item2,
-                           HelperDataLanguageTZ.DataReadDTObjectText(
+            ToolTip ttp = valueTuple.Item1;
+            ttp.SetToolTip(control: valueTuple.Item2,
+                           caption: HelperDataLanguageTZ.DataReadDTObjectText(
                                objectType: "ToolTip",
                                objectName: valueTuple.Item3
                            ));
@@ -261,8 +264,8 @@ public partial class FrmMainApp
             nud_lat.Text = defaultLat;
             nud_lng.Text = defaultLng;
 
-            nud_lat.Value = Convert.ToDecimal(value: defaultLat, CultureInfo.InvariantCulture);
-            nud_lng.Value = Convert.ToDecimal(value: defaultLng, CultureInfo.InvariantCulture);
+            nud_lat.Value = Convert.ToDecimal(value: defaultLat, provider: CultureInfo.InvariantCulture);
+            nud_lng.Value = Convert.ToDecimal(value: defaultLng, provider: CultureInfo.InvariantCulture);
         }
 
         HelperVariables.HsMapMarkers.Clear();

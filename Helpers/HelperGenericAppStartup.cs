@@ -216,10 +216,17 @@ internal static class HelperGenericAppStartup
                 settingTabPage: "tpg_Application",
                 settingId: "ckb_PopulatedPlacesOnly"
             );
+
             HelperVariables.UseImperial = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
                 tableName: "settings",
                 settingTabPage: "tpg_Application",
                 settingId: "ckb_UseImperialNotMetric"
+            );
+
+            HelperVariables.SUseDarkMode = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
+                tableName: "settings",
+                settingTabPage: "tpg_Application",
+                settingId: "ckb_UseDarkMode"
             );
             foreach (SourcesAndAttributes.ElementAttribute attribute in SourcesAndAttributes.TagsToColumnHeaderOrder)
             {

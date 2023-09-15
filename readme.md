@@ -1,7 +1,7 @@
+
 # Welcome to GeoTagNinja
 
-GeoTagNinja is an open-source geotagger for Windows. It's a lightweight an open-source (written from scratch) reminiscent of GeoSetter.
-GTN uses [exifTool](https://exifTool.org/) to read and write EXIF info. This also sets the limitations and capabilities. If exifTool can read/write a file, chances are so can GTN.
+GeoTagNinja is an open-source photo geotagger GUI for Windows. GTN uses [exifTool](https://exifTool.org/) to read and write EXIF info. This also sets the limitations and capabilities. If exifTool can read/write a file, chances are so can GTN.
 There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP1ZG7mH-I) if you feel like watching it. It's from the original (Aug 2022) release but it still covers the main feaures more or less. It's only gotten better since...
 
 ## Download & Install (Windows 7+ only)
@@ -26,13 +26,17 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 	- On this particular note above --> the script won't change existing country details in files unless you explicitly edit them. So it may happen that your existing file has the CountryCode GBR and the Country "United Kingdom", that won't be changed unless you do a "Get From Web" because the CountryCode-to-Country matching only runs in that case. That's a feature, not a bug.
 - Altitude: in some cases the API returns 32K or negative 32K as an altitude. Those are being blanked out.
 - Pressing Get From Web in Edit mode will always query the lat/long data for the file as in the main listview (the main page, in less geeky terms.). This is a feature. The assumption is that you aren't going to change coordinates manually by typing stuff in and _then_ query data. It's a lot more likely you'll change stuff using the map.
-- Time Zones (in the Edit File) are left as blank on open regardless of what the stored value is. There is no Exif Tag for TZ but only "Offset", which is something like "+01:00". As there is no indication for neither TZ nor DST per se I can't ascertain that  "+01:00" was in fact say BST rather than CET, one being DST the other not. Either adjust manually or pull from web - the combination of coordinates + createDate would decisively inform the program of the real TZ value.
+- **Time Zones** (in the Edit File) are left as blank on open regardless of what the stored value is. There is no Exif Tag for TZ but only "Offset", which is something like "+01:00". As there is no indication for neither TZ nor DST per se I can't ascertain that  "+01:00" was in fact say BST rather than CET, one being DST the other not. Either adjust manually or pull from web - the combination of coordinates + createDate would decisively inform the program of the real TZ value.
 - See my comment above re: the app being unsigned and SmartScreen getting derpy once in a while. On top of that...
 	- If you have Avast running or some other nightmare that tries to capture iframes within apps the app will most likely crash sooner rather than later, at least on the first run. I *think* it should be okay afterwards.
 	- I've seen once (and only once) ESET being silly about the app. Tbh no idea as to why. While I'd say the source code is open for public viewing and building it is probably clearer to just say: the app isn't tracking or recording your data and isn't doing anything that's not strictly related to its function. If I ever were to include any tracking (no such plans for the forseeable future), it'd be entirely anonomymised anyway.
-- Build 8646 [20230903]+: I've finally gotten around to displaying the GPSImgDirection on the map. The logic is, as not to clutter the map the direction "line" will only show when only one image (with GPSImgDirection) is selected; if more than one such image is selected then the lines don't show.
+- Build 8646 [20230903]+: I've finally gotten around to displaying the **GPSImgDirection** on the map. The logic is, as not to clutter the map the direction "line" will only show when only one image (with GPSImgDirection) is selected; if more than one such image is selected then the lines don't show.
 	- The way this is calculated requires a "distance" so that the target coordinate pair ("the image direction") can be calculated. This is defaulted to 10km for the line and 1km for the triangle and is unlikely to change at this point.
-- Build 8651 [20230908]+: The other thing I've gotten around to was adding some method of displaying the Destination in images. WebView2 seems to be buggy about this and see below for details - also suggestions on fix welcome.
+- Build 8651 [20230908]+: The other thing I've gotten around to was adding some method of displaying the **Destination** in images. WebView2 seems to be buggy about this and see below for details - also suggestions on fix welcome.
+- Build 8658 [20230915]+: There is now some support for **Dark Mode**. This is very rudimentary and undoubtedly is not beautiful, however there is no proper API support in .NET Framework 4.8.x for "real" (read: Windows 11 style) Dark Mode and at the moment this might or might not even make it into .NET Framework 5 (see [here](https://github.com/dotnet/winforms/issues/7641) for anyone wanting to dig into the techy parts.)
+    - Borders don't draw proper "dark" lines - so there's a discrepancy around the edges. From what I gather as an outcome of the above (lack of support) this is somewhere between a f...kload of work to manually code or just impossible.
+	- In particular the Manage Favourites Form in Dark Mode is an eyesore. If someone feels like rewriting the `ChangeTheme` in `HelperControlThemeManager`, please do.
+    - Point being Dark Mode is an option so that the app doesn't burn your eyes if you are the night owl type, rather than to be pretty, apologies (unlikely this will change unless Microsoft makes progress on the API or I rewrite the whole app in WPF, which isn't likely at the moment).
 
 ### A Particular Note on Working with Adobe Bridge (ACR) and RAW files > Saving as JPGs or Other Formats.
 

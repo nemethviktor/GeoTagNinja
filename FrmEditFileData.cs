@@ -40,6 +40,9 @@ public partial class FrmEditFileData : Form
 
         InitializeComponent();
         logger.Trace(message: "InitializeComponent OK");
+        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.SUseDarkMode
+                                                     ? ThemeColour.Dark
+                                                     : ThemeColour.Light, parentControl: this);
     }
 
     /// <summary>

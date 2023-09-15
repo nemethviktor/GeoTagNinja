@@ -2,13 +2,14 @@
 
 **Build 86xx [2023xxxx]** 
 - NEW & UPDATED:
-  - App Version Bump: 1.12
+  - App Version Bump: 1.13
   - GPSDestinationLat/Long ...
 	- is now being displayed in certain cases (when there is a series of images subject to a set of conditions. See the readme on how this works.),
 	- can be modified via a new button below the map,
 	- has been added to the list/function of "remove all geodata"
   - Added a new tab for the Exif info - this lists the values as they are held by GTN internally.
   - Added 2 new buttons for filing feature requests and bugs (both require a GitHub acct.)
+  - Added Dark Mode support. Refer to the readme but it's very ugly and there's little I can do about that as WinForms doesn't support the rich capabilities Windows 10/11 can offer for the time being.
 - BUGS & FIXES:
   - Fixed an error when data in MyComputer wasn't properly recorded and this caused a crash
 

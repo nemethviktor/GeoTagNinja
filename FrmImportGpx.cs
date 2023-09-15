@@ -30,6 +30,10 @@ public partial class FrmImportGpx : Form
     public FrmImportGpx()
     {
         InitializeComponent();
+        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.SUseDarkMode
+                                                     ? ThemeColour.Dark
+                                                     : ThemeColour.Light, parentControl: this);
+
         // set defaults
         rbt_importOneFile.Checked = true;
         pbx_importFromAnotherFolder.Enabled = false;

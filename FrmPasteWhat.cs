@@ -31,6 +31,9 @@ public partial class FrmPasteWhat : Form
     {
         _initiatorName = initiator;
         InitializeComponent();
+        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.SUseDarkMode
+                                                     ? ThemeColour.Dark
+                                                     : ThemeColour.Light, parentControl: this);
 
         ListView lvw;
         List<ElementAttribute> tagsToPasteAttributeList = new();

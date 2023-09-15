@@ -281,6 +281,11 @@ public partial class FrmMainApp : Form
         // initialise webView2
         await InitialiseWebView();
 
+        // adds colour/theme
+        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.SUseDarkMode
+                                                     ? ThemeColour.Dark
+                                                     : ThemeColour.Light, parentControl: this);
+
         // assign labels to objects
         AppStartupAssignLabelsToObjects();
 

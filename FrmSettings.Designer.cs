@@ -54,6 +54,7 @@
             this.tbx_GeoNames_UserName = new System.Windows.Forms.TextBox();
             this.tbx_ARCGIS_APIKey = new System.Windows.Forms.TextBox();
             this.gbx_AppSettings = new System.Windows.Forms.GroupBox();
+            this.ckb_UpdateCheckPreRelease = new System.Windows.Forms.CheckBox();
             this.lbl_Metres_Abbr = new System.Windows.Forms.Label();
             this.lbl_Feet_Abbr = new System.Windows.Forms.Label();
             this.ckb_UseImperialNotMetric = new System.Windows.Forms.CheckBox();
@@ -85,7 +86,7 @@
             this.btn_OK = new System.Windows.Forms.Button();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.fbd_StartupFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.ckb_UpdateCheckPreRelease = new System.Windows.Forms.CheckBox();
+            this.ckb_UseDarkMode = new System.Windows.Forms.CheckBox();
             this.tct_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             this.gbx_GeoNamesSettings.SuspendLayout();
@@ -115,7 +116,7 @@
             this.tct_Settings.Margin = new System.Windows.Forms.Padding(2);
             this.tct_Settings.Name = "tct_Settings";
             this.tct_Settings.SelectedIndex = 0;
-            this.tct_Settings.Size = new System.Drawing.Size(906, 671);
+            this.tct_Settings.Size = new System.Drawing.Size(906, 719);
             this.tct_Settings.TabIndex = 0;
             // 
             // tpg_Application
@@ -129,7 +130,7 @@
             this.tpg_Application.Margin = new System.Windows.Forms.Padding(2);
             this.tpg_Application.Name = "tpg_Application";
             this.tpg_Application.Padding = new System.Windows.Forms.Padding(2);
-            this.tpg_Application.Size = new System.Drawing.Size(898, 644);
+            this.tpg_Application.Size = new System.Drawing.Size(898, 692);
             this.tpg_Application.TabIndex = 0;
             this.tpg_Application.Text = "tpg_Application";
             // 
@@ -152,7 +153,7 @@
             this.gbx_GeoNamesSettings.Controls.Add(this.tbx_GeoNames_Pwd);
             this.gbx_GeoNamesSettings.Controls.Add(this.tbx_GeoNames_UserName);
             this.gbx_GeoNamesSettings.Controls.Add(this.tbx_ARCGIS_APIKey);
-            this.gbx_GeoNamesSettings.Location = new System.Drawing.Point(16, 197);
+            this.gbx_GeoNamesSettings.Location = new System.Drawing.Point(16, 245);
             this.gbx_GeoNamesSettings.Name = "gbx_GeoNamesSettings";
             this.gbx_GeoNamesSettings.Size = new System.Drawing.Size(852, 428);
             this.gbx_GeoNamesSettings.TabIndex = 33;
@@ -392,6 +393,7 @@
             // 
             // gbx_AppSettings
             // 
+            this.gbx_AppSettings.Controls.Add(this.ckb_UseDarkMode);
             this.gbx_AppSettings.Controls.Add(this.ckb_UpdateCheckPreRelease);
             this.gbx_AppSettings.Controls.Add(this.lbl_Metres_Abbr);
             this.gbx_AppSettings.Controls.Add(this.lbl_Feet_Abbr);
@@ -405,10 +407,21 @@
             this.gbx_AppSettings.Controls.Add(this.tbx_Startup_Folder);
             this.gbx_AppSettings.Location = new System.Drawing.Point(16, 20);
             this.gbx_AppSettings.Name = "gbx_AppSettings";
-            this.gbx_AppSettings.Size = new System.Drawing.Size(852, 171);
+            this.gbx_AppSettings.Size = new System.Drawing.Size(852, 219);
             this.gbx_AppSettings.TabIndex = 32;
             this.gbx_AppSettings.TabStop = false;
             this.gbx_AppSettings.Text = "gbx_AppSettings";
+            // 
+            // ckb_UpdateCheckPreRelease
+            // 
+            this.ckb_UpdateCheckPreRelease.AutoSize = true;
+            this.ckb_UpdateCheckPreRelease.Location = new System.Drawing.Point(15, 146);
+            this.ckb_UpdateCheckPreRelease.Name = "ckb_UpdateCheckPreRelease";
+            this.ckb_UpdateCheckPreRelease.Size = new System.Drawing.Size(171, 17);
+            this.ckb_UpdateCheckPreRelease.TabIndex = 53;
+            this.ckb_UpdateCheckPreRelease.Text = "ckb_UpdateCheckPreRelease";
+            this.ckb_UpdateCheckPreRelease.UseVisualStyleBackColor = true;
+            this.ckb_UpdateCheckPreRelease.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
             // lbl_Metres_Abbr
             // 
@@ -739,7 +752,7 @@
             // 
             this.btn_OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btn_OK.Location = new System.Drawing.Point(791, 697);
+            this.btn_OK.Location = new System.Drawing.Point(791, 745);
             this.btn_OK.Margin = new System.Windows.Forms.Padding(2);
             this.btn_OK.Name = "btn_OK";
             this.btn_OK.Size = new System.Drawing.Size(60, 19);
@@ -752,7 +765,7 @@
             // 
             this.btn_Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_Cancel.Location = new System.Drawing.Point(861, 697);
+            this.btn_Cancel.Location = new System.Drawing.Point(861, 745);
             this.btn_Cancel.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Cancel.Name = "btn_Cancel";
             this.btn_Cancel.Size = new System.Drawing.Size(60, 19);
@@ -766,16 +779,16 @@
             this.fbd_StartupFolder.Description = "fbd_StartupFolder";
             this.fbd_StartupFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
-            // ckb_UpdateCheckPreRelease
+            // ckb_UseDarkMode
             // 
-            this.ckb_UpdateCheckPreRelease.AutoSize = true;
-            this.ckb_UpdateCheckPreRelease.Location = new System.Drawing.Point(15, 146);
-            this.ckb_UpdateCheckPreRelease.Name = "ckb_UpdateCheckPreRelease";
-            this.ckb_UpdateCheckPreRelease.Size = new System.Drawing.Size(171, 17);
-            this.ckb_UpdateCheckPreRelease.TabIndex = 53;
-            this.ckb_UpdateCheckPreRelease.Text = "ckb_UpdateCheckPreRelease";
-            this.ckb_UpdateCheckPreRelease.UseVisualStyleBackColor = true;
-            this.ckb_UpdateCheckPreRelease.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            this.ckb_UseDarkMode.AutoSize = true;
+            this.ckb_UseDarkMode.Location = new System.Drawing.Point(15, 169);
+            this.ckb_UseDarkMode.Name = "ckb_UseDarkMode";
+            this.ckb_UseDarkMode.Size = new System.Drawing.Size(119, 17);
+            this.ckb_UseDarkMode.TabIndex = 54;
+            this.ckb_UseDarkMode.Text = "ckb_UseDarkMode";
+            this.ckb_UseDarkMode.UseVisualStyleBackColor = true;
+            this.ckb_UseDarkMode.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
             // FrmSettings
             // 
@@ -784,7 +797,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.CancelButton = this.btn_Cancel;
-            this.ClientSize = new System.Drawing.Size(937, 728);
+            this.ClientSize = new System.Drawing.Size(937, 776);
             this.Controls.Add(this.btn_Cancel);
             this.Controls.Add(this.btn_OK);
             this.Controls.Add(this.tct_Settings);
@@ -877,5 +890,6 @@
         private System.Windows.Forms.Label lbl_Metres_Abbr;
         private System.Windows.Forms.Label lbl_Feet_Abbr;
         private System.Windows.Forms.CheckBox ckb_UpdateCheckPreRelease;
+        private System.Windows.Forms.CheckBox ckb_UseDarkMode;
     }
 }

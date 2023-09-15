@@ -57,6 +57,9 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\geoTagNinja_square.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommandLine, Version=2.9.1.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
       <HintPath>packages\CommandLineParser.2.9.1\lib\net461\CommandLine.dll</HintPath>
@@ -175,6 +178,7 @@
     <Compile Include="FrmMainApp.Startup.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Helpers\HelperControlThemeManager.cs" />
     <Compile Include="Helpers\HelperExifWriteTrackDataToSideCar.cs" />
     <Compile Include="Helpers\HelperGenericAppStartup.cs" />
     <Compile Include="Helpers\HelperGenericAncillaryListsArrays.cs" />
@@ -324,6 +328,7 @@
     <EmbeddedResource Include="View\ListView\FileListView.resx">
       <DependentUpon>FileListView.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.manifest" />
     <None Include="changelog.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
