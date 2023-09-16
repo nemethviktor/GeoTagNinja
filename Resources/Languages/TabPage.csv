@@ -7,3 +7,4 @@ tpg_Location,Location,Localisation
 tpg_DateTime,Date & Time,Date et heure
 tpg_CustomRules,Custom Rules,
 tpg_CustomCityLogic,Custom City Assignment Logic,
+tpg_GeoNames,GeoNames Settings,

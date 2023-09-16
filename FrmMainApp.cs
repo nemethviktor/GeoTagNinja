@@ -33,6 +33,22 @@ namespace GeoTagNinja;
 
 public partial class FrmMainApp : Form
 {
+#region Constants / Fields / Variables
+
+#region Constants
+
+    internal const string DoubleQuote = "\"";
+
+    internal const string ParentFolder = "..";
+    internal const string NullStringEquivalentGeneric = "-";
+    internal const string NullStringEquivalentBlank = ""; // fml.
+    internal const string NullStringEquivalentZero = "0"; // fml.
+    internal const int NullIntEquivalent = 0;
+    internal const double NullDoubleEquivalent = 0.0;
+    internal static readonly DateTime NullDateTimeEquivalent = new(year: 1, month: 1, day: 1, hour: 0, minute: 0, second: 0);
+
+#endregion
+
     /// <summary>
     ///     The EXIFTool used in this application.
     ///     Note that it must be disposed of (done by Form_Closing)!
@@ -54,7 +70,7 @@ public partial class FrmMainApp : Form
     /// <summary>
     ///     Returns the currently set application language for localization.
     /// </summary>
-    public string AppLanguage => _AppLanguage;
+    private static string AppLanguage => _AppLanguage;
 
     /// <summary>
     ///     Returns the list of elements in the currently opened directory.
@@ -62,16 +78,6 @@ public partial class FrmMainApp : Form
     public static DirectoryElementCollection DirectoryElements { get; } = new();
 
 #region Variables
-
-    internal const string DoubleQuote = "\"";
-
-    public const string ParentFolder = "..";
-    public const string NullStringEquivalentGeneric = "-";
-    public const string NullStringEquivalentBlank = ""; // fml.
-    public const string NullStringEquivalentZero = "0"; // fml.
-    public const int NullIntEquivalent = 0;
-    public const double NullDoubleEquivalent = 0.0;
-    public static readonly DateTime NullDateTimeEquivalent = new(year: 1, month: 1, day: 1, hour: 0, minute: 0, second: 0);
 
     internal static DataTable DtLanguageLabels;
     internal static DataTable DtFavourites;
@@ -82,12 +88,18 @@ public partial class FrmMainApp : Form
     internal static string _AppLanguage = "English"; // default to english
     internal static List<string> LstFavourites = new();
 
-    internal static string ShowLocToMapDialogChoice = "default";
-    internal FrmSettings FrmSettings;
-    internal FrmEditFileData FrmEditFileData;
-    internal FrmImportGpx FrmImportGpx;
+    private static string _showLocToMapDialogChoice = "default";
 
-    internal string _mapHtmlTemplateCode = "";
+    // ReSharper disable once InconsistentNaming
+    private FrmSettings FrmSettings;
+
+    // ReSharper disable once InconsistentNaming
+    internal FrmEditFileData FrmEditFileData;
+
+    // ReSharper disable once InconsistentNaming
+    private FrmImportGpx FrmImportGpx;
+
+    private string _mapHtmlTemplateCode = "";
 
     internal static bool RemoveGeoDataIsRunning;
     private static bool _StopProcessingRows;
@@ -105,6 +117,8 @@ public partial class FrmMainApp : Form
 
     internal static List<string> filesToEditGUIDStringList = new();
     internal static readonly TaskbarManager TaskbarManagerInstance = TaskbarManager.Instance;
+
+#endregion
 
 #endregion
 
@@ -278,8 +292,10 @@ public partial class FrmMainApp : Form
             HelperGenericAppStartup.AppSetupInitialiseStartupFolder(toolStripTextBox: tbx_FolderName);
         }
 
-        // initialise webView2
-        await InitialiseWebView();
+        // initialise webView2 - MUST BE DONE in UI THREAD and ASYNC
+        // Any further init updates is done in WebView event Handler
+        // webView_CoreWebView2InitializationCompleted;
+        Invoke(method: InitialiseWebView);
 
         // adds colour/theme
         HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.SUseDarkMode
@@ -559,14 +575,14 @@ public partial class FrmMainApp : Form
                                                                                                   .Stage3ReadyToWrite,
                                                                          isMarkedForDeletion: false);
 
-                            if (!ShowLocToMapDialogChoice.Contains(value: "_remember"))
+                            if (!_showLocToMapDialogChoice.Contains(value: "_remember"))
                             {
                                 ShowLocToMapDialog();
                             }
 
                             DataTable dtToponomy = new();
                             DataTable dtAltitude = new();
-                            if (ShowLocToMapDialogChoice.Contains(value: "yes"))
+                            if (_showLocToMapDialogChoice.Contains(value: "yes"))
                             {
                                 lvw_FileList_UpdateTagsFromWeb(strGpsLatitude: strGPSLatitudeOnTheMap, strGpsLongitude: strGPSLongitudeOnTheMap, lvi: lvi);
                             }
@@ -612,7 +628,7 @@ public partial class FrmMainApp : Form
         void ShowLocToMapDialog()
         {
             // via https://stackoverflow.com/a/17385937/3968494
-            ShowLocToMapDialogChoice = HelperControlAndMessageBoxHandling.ShowDialogWithCheckBox(
+            _showLocToMapDialogChoice = HelperControlAndMessageBoxHandling.ShowDialogWithCheckBox(
                 labelText: HelperDataLanguageTZ.DataReadDTObjectText(
                     objectType: "Label",
                     objectName: "lbl_QuestionAddToponomy"
@@ -2222,26 +2238,26 @@ public partial class FrmMainApp : Form
     private void tmi_Help_FeedbackFeatureRequest_Click(object sender,
                                                        EventArgs e)
     {
-        System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/issues/new?template=feature_request.md");
+        Process.Start(fileName: "https://github.com/nemethviktor/GeoTagNinja/issues/new?template=feature_request.md");
     }
 
     private void tmi_Help_BugReport_Click(object sender,
                                           EventArgs e)
     {
-        System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/issues/new?template=bug_report.md");
+        Process.Start(fileName: "https://github.com/nemethviktor/GeoTagNinja/issues/new?template=bug_report.md");
     }
 
 
     private void tsb_FeedbackFeatureRequest_Click(object sender,
                                                   EventArgs e)
     {
-        System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/issues/new?template=feature_request.md");
+        Process.Start(fileName: "https://github.com/nemethviktor/GeoTagNinja/issues/new?template=feature_request.md");
     }
 
     private void tsb_BugReport_Click(object sender,
                                      EventArgs e)
     {
-        System.Diagnostics.Process.Start("https://github.com/nemethviktor/GeoTagNinja/issues/new?template=bug_report.md");
+        Process.Start(fileName: "https://github.com/nemethviktor/GeoTagNinja/issues/new?template=bug_report.md");
     }
 
     /// <summary>
@@ -2655,16 +2671,16 @@ public partial class FrmMainApp : Form
 
         void CopySelectedValuesToClipboard()
         {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
             foreach (ListViewItem lvi in lvw_ExifData.SelectedItems)
             {
                 for (int i = 0; i < lvi.SubItems.Count; i++)
                 {
-                    builder.AppendLine(lvi.SubItems[i].Text);
+                    builder.AppendLine(value: lvi.SubItems[index: i].Text);
                 }
             }
 
-            Clipboard.SetText(builder.ToString());
+            Clipboard.SetText(text: builder.ToString());
         }
     }
 }

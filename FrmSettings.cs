@@ -16,7 +16,8 @@ namespace GeoTagNinja;
 
 public partial class FrmSettings : Form
 {
-    private static List<Control> _lstTpgApplicationControls = new();
+    private static List<Control> _lstTpgApplicationControls = new(); // do not rename
+    private static List<Control> _lstTpgGeoNamesControls = new(); // do not rename
     private readonly string _languageSavedInSQL;
     private bool _nowLoadingSettingsData;
 
@@ -38,13 +39,15 @@ public partial class FrmSettings : Form
         // Gets the various controls' labels and values (eg "latitude" and "51.002")
         _lstTpgApplicationControls = helperNonstatic.GetAllControls(control: tpg_Application)
                                                     .ToList();
+        _lstTpgGeoNamesControls = helperNonstatic.GetAllControls(control: tpg_GeoNames)
+                                                 .ToList();
 
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         if (c != null)
         {
             foreach (Control cItem in c)
             {
-                string parentNameToUse = GetParentNameToUse(cItem: cItem, cTpgApplication: _lstTpgApplicationControls);
+                string parentNameToUse = GetParentNameToUse(cItem: cItem);
 
                 if (cItem.Name == "cbx_Language" || cItem.Name == "cbx_TryUseGeoNamesLanguage")
                 {
@@ -101,10 +104,8 @@ public partial class FrmSettings : Form
     ///     The groupboxes on tpg_Application interfere with the Parent Name logic so this corrects/fakes that.
     /// </summary>
     /// <param name="cItem">The Control to check if it sits in tpg_Application</param>
-    /// <param name="cTpgApplication">List of Controls that are children of tabpage tpg_Application</param>
     /// <returns>The actual Parent Name if tpg_Application isn't a parent or string literal "tpg_Application" if it is.</returns>
-    private static string GetParentNameToUse(Control cItem,
-                                             List<Control> cTpgApplication)
+    private static string GetParentNameToUse(Control cItem)
     {
         string parentNameToUse = null;
         try
@@ -116,9 +117,10 @@ public partial class FrmSettings : Form
             // nothing
         }
 
-        ;
-        if (cTpgApplication.Contains(item: cItem))
+        if (_lstTpgApplicationControls.Contains(item: cItem) || _lstTpgGeoNamesControls.Contains(item: cItem))
         {
+            // yeah this is parentNameToUse = "tpg_Application" on purpose.
+            // Bad planning to be fair but i split the tpg_Application into two tpgs at some point by which time users' sqlite databases would have tpg_Application as a value for these keys
             parentNameToUse = "tpg_Application";
         }
 
@@ -154,7 +156,7 @@ public partial class FrmSettings : Form
         {
             foreach (Control cItem in c)
             {
-                string parentNameToUse = GetParentNameToUse(cItem: cItem, cTpgApplication: _lstTpgApplicationControls);
+                string parentNameToUse = GetParentNameToUse(cItem: cItem);
 
                 {
                     if (cItem is TextBox tbx)
@@ -367,7 +369,11 @@ public partial class FrmSettings : Form
 
 
     /// <summary>
-    ///     TODO
+    ///     Loads the custom city logic data into the DataGridView (dgv_CustomCityLogic) from the SQLite database.
+    ///     The method first reads the data from the SQLite database into a DataTable (DtCustomCityLogic).
+    ///     It then sets up the DataGridView with two columns: 'CountryCode' and 'TargetPointNameCustomCityLogic'.
+    ///     The 'CountryCode' column is populated with a list of country codes and countries, and is read-only.
+    ///     The 'TargetPointNameCustomCityLogic' column is populated with a list of items from the CustomCityLogicDataSources.
     /// </summary>
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     private void LoadCustomCityLogicDGV()
@@ -763,7 +769,7 @@ public partial class FrmSettings : Form
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
 
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
             HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
                 settingTabPage: parentNameToUse,
@@ -827,7 +833,7 @@ public partial class FrmSettings : Form
 
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
             HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
                 settingTabPage: parentNameToUse,
@@ -853,7 +859,7 @@ public partial class FrmSettings : Form
 
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
             HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
                 settingTabPage: parentNameToUse,
@@ -890,7 +896,7 @@ public partial class FrmSettings : Form
 
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
             HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
                 settingTabPage: parentNameToUse,
@@ -915,7 +921,7 @@ public partial class FrmSettings : Form
 
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
             HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
                 settingTabPage: parentNameToUse,
