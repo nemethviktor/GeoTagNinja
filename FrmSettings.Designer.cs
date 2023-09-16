@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmSettings));
-            this.tct_Settings = new System.Windows.Forms.TabControl();
+            this.tcr_Settings = new System.Windows.Forms.TabControl();
             this.tpg_Application = new System.Windows.Forms.TabPage();
             this.gbx_AppSettings = new System.Windows.Forms.GroupBox();
             this.ckb_UseDarkMode = new System.Windows.Forms.CheckBox();
@@ -45,27 +45,6 @@
             this.pbx_Browse_Startup_Folder = new System.Windows.Forms.PictureBox();
             this.lbl_Startup_Folder = new System.Windows.Forms.Label();
             this.tbx_Startup_Folder = new System.Windows.Forms.TextBox();
-            this.tpg_FileOptions = new System.Windows.Forms.TabPage();
-            this.ckb_ResetFileDateToCreated = new System.Windows.Forms.CheckBox();
-            this.ckb_ProcessOriginalFile = new System.Windows.Forms.CheckBox();
-            this.ckb_OverwriteOriginal = new System.Windows.Forms.CheckBox();
-            this.ckb_AddXMPSideCar = new System.Windows.Forms.CheckBox();
-            this.lbx_fileExtensions = new System.Windows.Forms.ListBox();
-            this.tpg_CustomCityLogic = new System.Windows.Forms.TabPage();
-            this.rbx_CustomCityLogicExplanationBold = new System.Windows.Forms.RichTextBox();
-            this.btn_ResetToDefaults = new System.Windows.Forms.Button();
-            this.rbx_CustomCityLogicExplanation = new System.Windows.Forms.RichTextBox();
-            this.dgv_CustomCityLogic = new System.Windows.Forms.DataGridView();
-            this.tpg_CustomRules = new System.Windows.Forms.TabPage();
-            this.rbx_CustomRulesExplanationBold = new System.Windows.Forms.RichTextBox();
-            this.ckb_StopProcessingRules = new System.Windows.Forms.CheckBox();
-            this.ckb_IncludePredeterminedCountries = new System.Windows.Forms.CheckBox();
-            this.rbx_CustomRulesExplanation = new System.Windows.Forms.RichTextBox();
-            this.dgv_CustomRules = new System.Windows.Forms.DataGridView();
-            this.igl_Settings = new System.Windows.Forms.ImageList(this.components);
-            this.btn_OK = new System.Windows.Forms.Button();
-            this.btn_Cancel = new System.Windows.Forms.Button();
-            this.fbd_StartupFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.tpg_GeoNames = new System.Windows.Forms.TabPage();
             this.gbx_GeoNamesSettings = new System.Windows.Forms.GroupBox();
             this.lbl_Miles = new System.Windows.Forms.Label();
@@ -88,39 +67,62 @@
             this.tbx_GeoNames_Pwd = new System.Windows.Forms.TextBox();
             this.tbx_GeoNames_UserName = new System.Windows.Forms.TextBox();
             this.tbx_ARCGIS_APIKey = new System.Windows.Forms.TextBox();
-            this.tct_Settings.SuspendLayout();
+            this.tpg_FileOptions = new System.Windows.Forms.TabPage();
+            this.ckb_ResetFileDateToCreated = new System.Windows.Forms.CheckBox();
+            this.ckb_ProcessOriginalFile = new System.Windows.Forms.CheckBox();
+            this.ckb_OverwriteOriginal = new System.Windows.Forms.CheckBox();
+            this.ckb_AddXMPSideCar = new System.Windows.Forms.CheckBox();
+            this.lbx_fileExtensions = new System.Windows.Forms.ListBox();
+            this.tpg_CustomCityLogic = new System.Windows.Forms.TabPage();
+            this.rbx_CustomCityLogicExplanationBold = new System.Windows.Forms.RichTextBox();
+            this.btn_ResetToDefaults = new System.Windows.Forms.Button();
+            this.rbx_CustomCityLogicExplanation = new System.Windows.Forms.RichTextBox();
+            this.dgv_CustomCityLogic = new System.Windows.Forms.DataGridView();
+            this.tpg_CustomRules = new System.Windows.Forms.TabPage();
+            this.rbx_CustomRulesExplanationBold = new System.Windows.Forms.RichTextBox();
+            this.ckb_StopProcessingRules = new System.Windows.Forms.CheckBox();
+            this.ckb_IncludePredeterminedCountries = new System.Windows.Forms.CheckBox();
+            this.rbx_CustomRulesExplanation = new System.Windows.Forms.RichTextBox();
+            this.dgv_CustomRules = new System.Windows.Forms.DataGridView();
+            this.igl_Settings = new System.Windows.Forms.ImageList(this.components);
+            this.btn_OK = new System.Windows.Forms.Button();
+            this.btn_Cancel = new System.Windows.Forms.Button();
+            this.fbd_StartupFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.tcr_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             this.gbx_AppSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).BeginInit();
-            this.tpg_FileOptions.SuspendLayout();
-            this.tpg_CustomCityLogic.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgv_CustomCityLogic)).BeginInit();
-            this.tpg_CustomRules.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgv_CustomRules)).BeginInit();
             this.tpg_GeoNames.SuspendLayout();
             this.gbx_GeoNamesSettings.SuspendLayout();
             this.gbx_GeoNamesLanguageSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nud_ChoiceRadius)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_ChoiceOfferCount)).BeginInit();
+            this.tpg_FileOptions.SuspendLayout();
+            this.tpg_CustomCityLogic.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_CustomCityLogic)).BeginInit();
+            this.tpg_CustomRules.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_CustomRules)).BeginInit();
             this.SuspendLayout();
             // 
-            // tct_Settings
+            // tcr_Settings
             // 
-            this.tct_Settings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tcr_Settings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tct_Settings.Controls.Add(this.tpg_Application);
-            this.tct_Settings.Controls.Add(this.tpg_GeoNames);
-            this.tct_Settings.Controls.Add(this.tpg_FileOptions);
-            this.tct_Settings.Controls.Add(this.tpg_CustomCityLogic);
-            this.tct_Settings.Controls.Add(this.tpg_CustomRules);
-            this.tct_Settings.ImageList = this.igl_Settings;
-            this.tct_Settings.Location = new System.Drawing.Point(16, 12);
-            this.tct_Settings.Margin = new System.Windows.Forms.Padding(2);
-            this.tct_Settings.Name = "tct_Settings";
-            this.tct_Settings.SelectedIndex = 0;
-            this.tct_Settings.Size = new System.Drawing.Size(906, 511);
-            this.tct_Settings.TabIndex = 0;
+            this.tcr_Settings.Controls.Add(this.tpg_Application);
+            this.tcr_Settings.Controls.Add(this.tpg_GeoNames);
+            this.tcr_Settings.Controls.Add(this.tpg_FileOptions);
+            this.tcr_Settings.Controls.Add(this.tpg_CustomCityLogic);
+            this.tcr_Settings.Controls.Add(this.tpg_CustomRules);
+            this.tcr_Settings.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
+            this.tcr_Settings.ImageList = this.igl_Settings;
+            this.tcr_Settings.Location = new System.Drawing.Point(16, 12);
+            this.tcr_Settings.Margin = new System.Windows.Forms.Padding(2);
+            this.tcr_Settings.Name = "tcr_Settings";
+            this.tcr_Settings.SelectedIndex = 0;
+            this.tcr_Settings.Size = new System.Drawing.Size(906, 511);
+            this.tcr_Settings.TabIndex = 0;
+            this.tcr_Settings.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.TabControl_DrawItem);
             // 
             // tpg_Application
             // 
@@ -285,256 +287,6 @@
             this.tbx_Startup_Folder.Size = new System.Drawing.Size(372, 20);
             this.tbx_Startup_Folder.TabIndex = 12;
             this.tbx_Startup_Folder.TextChanged += new System.EventHandler(this.Any_tbx_TextChanged);
-            // 
-            // tpg_FileOptions
-            // 
-            this.tpg_FileOptions.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.tpg_FileOptions.Controls.Add(this.ckb_ResetFileDateToCreated);
-            this.tpg_FileOptions.Controls.Add(this.ckb_ProcessOriginalFile);
-            this.tpg_FileOptions.Controls.Add(this.ckb_OverwriteOriginal);
-            this.tpg_FileOptions.Controls.Add(this.ckb_AddXMPSideCar);
-            this.tpg_FileOptions.Controls.Add(this.lbx_fileExtensions);
-            this.tpg_FileOptions.ImageKey = "SettingsFile.png";
-            this.tpg_FileOptions.Location = new System.Drawing.Point(4, 23);
-            this.tpg_FileOptions.Margin = new System.Windows.Forms.Padding(2);
-            this.tpg_FileOptions.Name = "tpg_FileOptions";
-            this.tpg_FileOptions.Padding = new System.Windows.Forms.Padding(2);
-            this.tpg_FileOptions.Size = new System.Drawing.Size(898, 484);
-            this.tpg_FileOptions.TabIndex = 1;
-            this.tpg_FileOptions.Text = "tpg_FileOptions";
-            this.tpg_FileOptions.Enter += new System.EventHandler(this.tpg_FileOptions_Enter);
-            // 
-            // ckb_ResetFileDateToCreated
-            // 
-            this.ckb_ResetFileDateToCreated.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_ResetFileDateToCreated.Location = new System.Drawing.Point(567, 62);
-            this.ckb_ResetFileDateToCreated.MinimumSize = new System.Drawing.Size(100, 20);
-            this.ckb_ResetFileDateToCreated.Name = "ckb_ResetFileDateToCreated";
-            this.ckb_ResetFileDateToCreated.Size = new System.Drawing.Size(264, 62);
-            this.ckb_ResetFileDateToCreated.TabIndex = 4;
-            this.ckb_ResetFileDateToCreated.Text = "ckb_ResetFileDateToCreated";
-            this.ckb_ResetFileDateToCreated.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_ResetFileDateToCreated.UseVisualStyleBackColor = true;
-            this.ckb_ResetFileDateToCreated.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
-            // 
-            // ckb_ProcessOriginalFile
-            // 
-            this.ckb_ProcessOriginalFile.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_ProcessOriginalFile.Location = new System.Drawing.Point(545, 18);
-            this.ckb_ProcessOriginalFile.MinimumSize = new System.Drawing.Size(100, 20);
-            this.ckb_ProcessOriginalFile.Name = "ckb_ProcessOriginalFile";
-            this.ckb_ProcessOriginalFile.Size = new System.Drawing.Size(286, 38);
-            this.ckb_ProcessOriginalFile.TabIndex = 3;
-            this.ckb_ProcessOriginalFile.Text = "ckb_ProcessOriginalFile";
-            this.ckb_ProcessOriginalFile.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_ProcessOriginalFile.UseVisualStyleBackColor = true;
-            this.ckb_ProcessOriginalFile.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
-            // 
-            // ckb_OverwriteOriginal
-            // 
-            this.ckb_OverwriteOriginal.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_OverwriteOriginal.Location = new System.Drawing.Point(545, 190);
-            this.ckb_OverwriteOriginal.MinimumSize = new System.Drawing.Size(100, 20);
-            this.ckb_OverwriteOriginal.Name = "ckb_OverwriteOriginal";
-            this.ckb_OverwriteOriginal.Size = new System.Drawing.Size(286, 38);
-            this.ckb_OverwriteOriginal.TabIndex = 1;
-            this.ckb_OverwriteOriginal.Text = "ckb_OverwriteOriginal";
-            this.ckb_OverwriteOriginal.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_OverwriteOriginal.UseVisualStyleBackColor = true;
-            this.ckb_OverwriteOriginal.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
-            // 
-            // ckb_AddXMPSideCar
-            // 
-            this.ckb_AddXMPSideCar.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_AddXMPSideCar.Location = new System.Drawing.Point(545, 130);
-            this.ckb_AddXMPSideCar.MinimumSize = new System.Drawing.Size(100, 20);
-            this.ckb_AddXMPSideCar.Name = "ckb_AddXMPSideCar";
-            this.ckb_AddXMPSideCar.Size = new System.Drawing.Size(286, 38);
-            this.ckb_AddXMPSideCar.TabIndex = 1;
-            this.ckb_AddXMPSideCar.Text = "ckb_AddXMPSideCar";
-            this.ckb_AddXMPSideCar.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.ckb_AddXMPSideCar.UseVisualStyleBackColor = true;
-            this.ckb_AddXMPSideCar.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
-            // 
-            // lbx_fileExtensions
-            // 
-            this.lbx_fileExtensions.FormattingEnabled = true;
-            this.lbx_fileExtensions.Location = new System.Drawing.Point(6, 6);
-            this.lbx_fileExtensions.Name = "lbx_fileExtensions";
-            this.lbx_fileExtensions.Size = new System.Drawing.Size(512, 368);
-            this.lbx_fileExtensions.TabIndex = 0;
-            this.lbx_fileExtensions.SelectedIndexChanged += new System.EventHandler(this.Lbx_fileExtensions_SelectedIndexChanged);
-            // 
-            // tpg_CustomCityLogic
-            // 
-            this.tpg_CustomCityLogic.Controls.Add(this.rbx_CustomCityLogicExplanationBold);
-            this.tpg_CustomCityLogic.Controls.Add(this.btn_ResetToDefaults);
-            this.tpg_CustomCityLogic.Controls.Add(this.rbx_CustomCityLogicExplanation);
-            this.tpg_CustomCityLogic.Controls.Add(this.dgv_CustomCityLogic);
-            this.tpg_CustomCityLogic.ImageKey = "CustomAction.png";
-            this.tpg_CustomCityLogic.Location = new System.Drawing.Point(4, 23);
-            this.tpg_CustomCityLogic.Name = "tpg_CustomCityLogic";
-            this.tpg_CustomCityLogic.Padding = new System.Windows.Forms.Padding(3);
-            this.tpg_CustomCityLogic.Size = new System.Drawing.Size(898, 484);
-            this.tpg_CustomCityLogic.TabIndex = 3;
-            this.tpg_CustomCityLogic.Text = "tpg_CustomCityLogic";
-            this.tpg_CustomCityLogic.UseVisualStyleBackColor = true;
-            // 
-            // rbx_CustomCityLogicExplanationBold
-            // 
-            this.rbx_CustomCityLogicExplanationBold.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.rbx_CustomCityLogicExplanationBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbx_CustomCityLogicExplanationBold.Location = new System.Drawing.Point(6, 144);
-            this.rbx_CustomCityLogicExplanationBold.Name = "rbx_CustomCityLogicExplanationBold";
-            this.rbx_CustomCityLogicExplanationBold.ReadOnly = true;
-            this.rbx_CustomCityLogicExplanationBold.Size = new System.Drawing.Size(885, 40);
-            this.rbx_CustomCityLogicExplanationBold.TabIndex = 4;
-            this.rbx_CustomCityLogicExplanationBold.Text = "";
-            // 
-            // btn_ResetToDefaults
-            // 
-            this.btn_ResetToDefaults.Location = new System.Drawing.Point(771, 613);
-            this.btn_ResetToDefaults.Name = "btn_ResetToDefaults";
-            this.btn_ResetToDefaults.Size = new System.Drawing.Size(106, 23);
-            this.btn_ResetToDefaults.TabIndex = 3;
-            this.btn_ResetToDefaults.Text = "btn_ResetToDefaults";
-            this.btn_ResetToDefaults.UseVisualStyleBackColor = true;
-            this.btn_ResetToDefaults.Click += new System.EventHandler(this.btn_ResetToDefaults_Click);
-            // 
-            // rbx_CustomCityLogicExplanation
-            // 
-            this.rbx_CustomCityLogicExplanation.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.rbx_CustomCityLogicExplanation.Location = new System.Drawing.Point(7, 6);
-            this.rbx_CustomCityLogicExplanation.Name = "rbx_CustomCityLogicExplanation";
-            this.rbx_CustomCityLogicExplanation.ReadOnly = true;
-            this.rbx_CustomCityLogicExplanation.Size = new System.Drawing.Size(885, 132);
-            this.rbx_CustomCityLogicExplanation.TabIndex = 2;
-            this.rbx_CustomCityLogicExplanation.Text = "";
-            // 
-            // dgv_CustomCityLogic
-            // 
-            this.dgv_CustomCityLogic.AllowUserToAddRows = false;
-            this.dgv_CustomCityLogic.AllowUserToDeleteRows = false;
-            this.dgv_CustomCityLogic.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgv_CustomCityLogic.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
-            this.dgv_CustomCityLogic.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_CustomCityLogic.Location = new System.Drawing.Point(7, 190);
-            this.dgv_CustomCityLogic.Name = "dgv_CustomCityLogic";
-            this.dgv_CustomCityLogic.Size = new System.Drawing.Size(885, 405);
-            this.dgv_CustomCityLogic.TabIndex = 1;
-            // 
-            // tpg_CustomRules
-            // 
-            this.tpg_CustomRules.Controls.Add(this.rbx_CustomRulesExplanationBold);
-            this.tpg_CustomRules.Controls.Add(this.ckb_StopProcessingRules);
-            this.tpg_CustomRules.Controls.Add(this.ckb_IncludePredeterminedCountries);
-            this.tpg_CustomRules.Controls.Add(this.rbx_CustomRulesExplanation);
-            this.tpg_CustomRules.Controls.Add(this.dgv_CustomRules);
-            this.tpg_CustomRules.ImageKey = "CustomAction.png";
-            this.tpg_CustomRules.Location = new System.Drawing.Point(4, 23);
-            this.tpg_CustomRules.Name = "tpg_CustomRules";
-            this.tpg_CustomRules.Padding = new System.Windows.Forms.Padding(3);
-            this.tpg_CustomRules.Size = new System.Drawing.Size(898, 484);
-            this.tpg_CustomRules.TabIndex = 2;
-            this.tpg_CustomRules.Text = "tpg_CustomRules";
-            this.tpg_CustomRules.UseVisualStyleBackColor = true;
-            // 
-            // rbx_CustomRulesExplanationBold
-            // 
-            this.rbx_CustomRulesExplanationBold.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.rbx_CustomRulesExplanationBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbx_CustomRulesExplanationBold.Location = new System.Drawing.Point(7, 144);
-            this.rbx_CustomRulesExplanationBold.Name = "rbx_CustomRulesExplanationBold";
-            this.rbx_CustomRulesExplanationBold.ReadOnly = true;
-            this.rbx_CustomRulesExplanationBold.Size = new System.Drawing.Size(885, 40);
-            this.rbx_CustomRulesExplanationBold.TabIndex = 18;
-            this.rbx_CustomRulesExplanationBold.Text = "";
-            // 
-            // ckb_StopProcessingRules
-            // 
-            this.ckb_StopProcessingRules.AutoSize = true;
-            this.ckb_StopProcessingRules.Location = new System.Drawing.Point(535, 190);
-            this.ckb_StopProcessingRules.Name = "ckb_StopProcessingRules";
-            this.ckb_StopProcessingRules.Size = new System.Drawing.Size(151, 17);
-            this.ckb_StopProcessingRules.TabIndex = 17;
-            this.ckb_StopProcessingRules.Text = "ckb_StopProcessingRules";
-            this.ckb_StopProcessingRules.UseVisualStyleBackColor = true;
-            this.ckb_StopProcessingRules.CheckedChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
-            // 
-            // ckb_IncludePredeterminedCountries
-            // 
-            this.ckb_IncludePredeterminedCountries.AutoSize = true;
-            this.ckb_IncludePredeterminedCountries.Location = new System.Drawing.Point(7, 190);
-            this.ckb_IncludePredeterminedCountries.Name = "ckb_IncludePredeterminedCountries";
-            this.ckb_IncludePredeterminedCountries.Size = new System.Drawing.Size(197, 17);
-            this.ckb_IncludePredeterminedCountries.TabIndex = 16;
-            this.ckb_IncludePredeterminedCountries.Text = "ckb_IncludePredeterminedCountries";
-            this.ckb_IncludePredeterminedCountries.UseVisualStyleBackColor = true;
-            this.ckb_IncludePredeterminedCountries.CheckedChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
-            // 
-            // rbx_CustomRulesExplanation
-            // 
-            this.rbx_CustomRulesExplanation.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.rbx_CustomRulesExplanation.Location = new System.Drawing.Point(7, 6);
-            this.rbx_CustomRulesExplanation.Name = "rbx_CustomRulesExplanation";
-            this.rbx_CustomRulesExplanation.ReadOnly = true;
-            this.rbx_CustomRulesExplanation.Size = new System.Drawing.Size(885, 132);
-            this.rbx_CustomRulesExplanation.TabIndex = 1;
-            this.rbx_CustomRulesExplanation.Text = "";
-            this.rbx_CustomRulesExplanation.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.rbx_CustomRulesExplanation_LinkClicked);
-            // 
-            // dgv_CustomRules
-            // 
-            this.dgv_CustomRules.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgv_CustomRules.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
-            this.dgv_CustomRules.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_CustomRules.Location = new System.Drawing.Point(7, 220);
-            this.dgv_CustomRules.Name = "dgv_CustomRules";
-            this.dgv_CustomRules.Size = new System.Drawing.Size(885, 418);
-            this.dgv_CustomRules.TabIndex = 0;
-            this.dgv_CustomRules.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_CustomRules_DataError);
-            this.dgv_CustomRules.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dgv_CustomRules_RowValidating);
-            // 
-            // igl_Settings
-            // 
-            this.igl_Settings.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("igl_Settings.ImageStream")));
-            this.igl_Settings.TransparentColor = System.Drawing.Color.Transparent;
-            this.igl_Settings.Images.SetKeyName(0, "LibrarySettings.png");
-            this.igl_Settings.Images.SetKeyName(1, "Settings.png");
-            this.igl_Settings.Images.SetKeyName(2, "SettingsFile.png");
-            this.igl_Settings.Images.SetKeyName(3, "CustomAction.png");
-            this.igl_Settings.Images.SetKeyName(4, "PublishOnDemand.png");
-            // 
-            // btn_OK
-            // 
-            this.btn_OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btn_OK.Location = new System.Drawing.Point(791, 537);
-            this.btn_OK.Margin = new System.Windows.Forms.Padding(2);
-            this.btn_OK.Name = "btn_OK";
-            this.btn_OK.Size = new System.Drawing.Size(60, 19);
-            this.btn_OK.TabIndex = 5;
-            this.btn_OK.Text = "btn_OK";
-            this.btn_OK.UseVisualStyleBackColor = true;
-            this.btn_OK.Click += new System.EventHandler(this.Btn_OK_Click);
-            // 
-            // btn_Cancel
-            // 
-            this.btn_Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_Cancel.Location = new System.Drawing.Point(861, 537);
-            this.btn_Cancel.Margin = new System.Windows.Forms.Padding(2);
-            this.btn_Cancel.Name = "btn_Cancel";
-            this.btn_Cancel.Size = new System.Drawing.Size(60, 19);
-            this.btn_Cancel.TabIndex = 6;
-            this.btn_Cancel.Text = "btn_Cancel";
-            this.btn_Cancel.UseVisualStyleBackColor = true;
-            this.btn_Cancel.Click += new System.EventHandler(this.Btn_Cancel_Click);
-            // 
-            // fbd_StartupFolder
-            // 
-            this.fbd_StartupFolder.Description = "fbd_StartupFolder";
-            this.fbd_StartupFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
             // tpg_GeoNames
             // 
@@ -805,6 +557,256 @@
             this.tbx_ARCGIS_APIKey.TabIndex = 32;
             this.tbx_ARCGIS_APIKey.TextChanged += new System.EventHandler(this.Any_tbx_TextChanged);
             // 
+            // tpg_FileOptions
+            // 
+            this.tpg_FileOptions.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tpg_FileOptions.Controls.Add(this.ckb_ResetFileDateToCreated);
+            this.tpg_FileOptions.Controls.Add(this.ckb_ProcessOriginalFile);
+            this.tpg_FileOptions.Controls.Add(this.ckb_OverwriteOriginal);
+            this.tpg_FileOptions.Controls.Add(this.ckb_AddXMPSideCar);
+            this.tpg_FileOptions.Controls.Add(this.lbx_fileExtensions);
+            this.tpg_FileOptions.ImageKey = "SettingsFile.png";
+            this.tpg_FileOptions.Location = new System.Drawing.Point(4, 23);
+            this.tpg_FileOptions.Margin = new System.Windows.Forms.Padding(2);
+            this.tpg_FileOptions.Name = "tpg_FileOptions";
+            this.tpg_FileOptions.Padding = new System.Windows.Forms.Padding(2);
+            this.tpg_FileOptions.Size = new System.Drawing.Size(898, 484);
+            this.tpg_FileOptions.TabIndex = 1;
+            this.tpg_FileOptions.Text = "tpg_FileOptions";
+            this.tpg_FileOptions.Enter += new System.EventHandler(this.tpg_FileOptions_Enter);
+            // 
+            // ckb_ResetFileDateToCreated
+            // 
+            this.ckb_ResetFileDateToCreated.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ckb_ResetFileDateToCreated.Location = new System.Drawing.Point(567, 62);
+            this.ckb_ResetFileDateToCreated.MinimumSize = new System.Drawing.Size(100, 20);
+            this.ckb_ResetFileDateToCreated.Name = "ckb_ResetFileDateToCreated";
+            this.ckb_ResetFileDateToCreated.Size = new System.Drawing.Size(264, 62);
+            this.ckb_ResetFileDateToCreated.TabIndex = 4;
+            this.ckb_ResetFileDateToCreated.Text = "ckb_ResetFileDateToCreated";
+            this.ckb_ResetFileDateToCreated.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ckb_ResetFileDateToCreated.UseVisualStyleBackColor = true;
+            this.ckb_ResetFileDateToCreated.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            // 
+            // ckb_ProcessOriginalFile
+            // 
+            this.ckb_ProcessOriginalFile.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ckb_ProcessOriginalFile.Location = new System.Drawing.Point(545, 18);
+            this.ckb_ProcessOriginalFile.MinimumSize = new System.Drawing.Size(100, 20);
+            this.ckb_ProcessOriginalFile.Name = "ckb_ProcessOriginalFile";
+            this.ckb_ProcessOriginalFile.Size = new System.Drawing.Size(286, 38);
+            this.ckb_ProcessOriginalFile.TabIndex = 3;
+            this.ckb_ProcessOriginalFile.Text = "ckb_ProcessOriginalFile";
+            this.ckb_ProcessOriginalFile.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ckb_ProcessOriginalFile.UseVisualStyleBackColor = true;
+            this.ckb_ProcessOriginalFile.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            // 
+            // ckb_OverwriteOriginal
+            // 
+            this.ckb_OverwriteOriginal.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ckb_OverwriteOriginal.Location = new System.Drawing.Point(545, 190);
+            this.ckb_OverwriteOriginal.MinimumSize = new System.Drawing.Size(100, 20);
+            this.ckb_OverwriteOriginal.Name = "ckb_OverwriteOriginal";
+            this.ckb_OverwriteOriginal.Size = new System.Drawing.Size(286, 38);
+            this.ckb_OverwriteOriginal.TabIndex = 1;
+            this.ckb_OverwriteOriginal.Text = "ckb_OverwriteOriginal";
+            this.ckb_OverwriteOriginal.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ckb_OverwriteOriginal.UseVisualStyleBackColor = true;
+            this.ckb_OverwriteOriginal.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            // 
+            // ckb_AddXMPSideCar
+            // 
+            this.ckb_AddXMPSideCar.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ckb_AddXMPSideCar.Location = new System.Drawing.Point(545, 130);
+            this.ckb_AddXMPSideCar.MinimumSize = new System.Drawing.Size(100, 20);
+            this.ckb_AddXMPSideCar.Name = "ckb_AddXMPSideCar";
+            this.ckb_AddXMPSideCar.Size = new System.Drawing.Size(286, 38);
+            this.ckb_AddXMPSideCar.TabIndex = 1;
+            this.ckb_AddXMPSideCar.Text = "ckb_AddXMPSideCar";
+            this.ckb_AddXMPSideCar.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ckb_AddXMPSideCar.UseVisualStyleBackColor = true;
+            this.ckb_AddXMPSideCar.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            // 
+            // lbx_fileExtensions
+            // 
+            this.lbx_fileExtensions.FormattingEnabled = true;
+            this.lbx_fileExtensions.Location = new System.Drawing.Point(6, 6);
+            this.lbx_fileExtensions.Name = "lbx_fileExtensions";
+            this.lbx_fileExtensions.Size = new System.Drawing.Size(512, 368);
+            this.lbx_fileExtensions.TabIndex = 0;
+            this.lbx_fileExtensions.SelectedIndexChanged += new System.EventHandler(this.Lbx_fileExtensions_SelectedIndexChanged);
+            // 
+            // tpg_CustomCityLogic
+            // 
+            this.tpg_CustomCityLogic.Controls.Add(this.rbx_CustomCityLogicExplanationBold);
+            this.tpg_CustomCityLogic.Controls.Add(this.btn_ResetToDefaults);
+            this.tpg_CustomCityLogic.Controls.Add(this.rbx_CustomCityLogicExplanation);
+            this.tpg_CustomCityLogic.Controls.Add(this.dgv_CustomCityLogic);
+            this.tpg_CustomCityLogic.ImageKey = "CustomAction.png";
+            this.tpg_CustomCityLogic.Location = new System.Drawing.Point(4, 23);
+            this.tpg_CustomCityLogic.Name = "tpg_CustomCityLogic";
+            this.tpg_CustomCityLogic.Padding = new System.Windows.Forms.Padding(3);
+            this.tpg_CustomCityLogic.Size = new System.Drawing.Size(898, 484);
+            this.tpg_CustomCityLogic.TabIndex = 3;
+            this.tpg_CustomCityLogic.Text = "tpg_CustomCityLogic";
+            this.tpg_CustomCityLogic.UseVisualStyleBackColor = true;
+            // 
+            // rbx_CustomCityLogicExplanationBold
+            // 
+            this.rbx_CustomCityLogicExplanationBold.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rbx_CustomCityLogicExplanationBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbx_CustomCityLogicExplanationBold.Location = new System.Drawing.Point(6, 144);
+            this.rbx_CustomCityLogicExplanationBold.Name = "rbx_CustomCityLogicExplanationBold";
+            this.rbx_CustomCityLogicExplanationBold.ReadOnly = true;
+            this.rbx_CustomCityLogicExplanationBold.Size = new System.Drawing.Size(885, 40);
+            this.rbx_CustomCityLogicExplanationBold.TabIndex = 4;
+            this.rbx_CustomCityLogicExplanationBold.Text = "";
+            // 
+            // btn_ResetToDefaults
+            // 
+            this.btn_ResetToDefaults.Location = new System.Drawing.Point(771, 613);
+            this.btn_ResetToDefaults.Name = "btn_ResetToDefaults";
+            this.btn_ResetToDefaults.Size = new System.Drawing.Size(106, 23);
+            this.btn_ResetToDefaults.TabIndex = 3;
+            this.btn_ResetToDefaults.Text = "btn_ResetToDefaults";
+            this.btn_ResetToDefaults.UseVisualStyleBackColor = true;
+            this.btn_ResetToDefaults.Click += new System.EventHandler(this.btn_ResetToDefaults_Click);
+            // 
+            // rbx_CustomCityLogicExplanation
+            // 
+            this.rbx_CustomCityLogicExplanation.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rbx_CustomCityLogicExplanation.Location = new System.Drawing.Point(7, 6);
+            this.rbx_CustomCityLogicExplanation.Name = "rbx_CustomCityLogicExplanation";
+            this.rbx_CustomCityLogicExplanation.ReadOnly = true;
+            this.rbx_CustomCityLogicExplanation.Size = new System.Drawing.Size(885, 132);
+            this.rbx_CustomCityLogicExplanation.TabIndex = 2;
+            this.rbx_CustomCityLogicExplanation.Text = "";
+            // 
+            // dgv_CustomCityLogic
+            // 
+            this.dgv_CustomCityLogic.AllowUserToAddRows = false;
+            this.dgv_CustomCityLogic.AllowUserToDeleteRows = false;
+            this.dgv_CustomCityLogic.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgv_CustomCityLogic.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            this.dgv_CustomCityLogic.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_CustomCityLogic.Location = new System.Drawing.Point(7, 190);
+            this.dgv_CustomCityLogic.Name = "dgv_CustomCityLogic";
+            this.dgv_CustomCityLogic.Size = new System.Drawing.Size(885, 405);
+            this.dgv_CustomCityLogic.TabIndex = 1;
+            // 
+            // tpg_CustomRules
+            // 
+            this.tpg_CustomRules.Controls.Add(this.rbx_CustomRulesExplanationBold);
+            this.tpg_CustomRules.Controls.Add(this.ckb_StopProcessingRules);
+            this.tpg_CustomRules.Controls.Add(this.ckb_IncludePredeterminedCountries);
+            this.tpg_CustomRules.Controls.Add(this.rbx_CustomRulesExplanation);
+            this.tpg_CustomRules.Controls.Add(this.dgv_CustomRules);
+            this.tpg_CustomRules.ImageKey = "CustomAction.png";
+            this.tpg_CustomRules.Location = new System.Drawing.Point(4, 23);
+            this.tpg_CustomRules.Name = "tpg_CustomRules";
+            this.tpg_CustomRules.Padding = new System.Windows.Forms.Padding(3);
+            this.tpg_CustomRules.Size = new System.Drawing.Size(898, 484);
+            this.tpg_CustomRules.TabIndex = 2;
+            this.tpg_CustomRules.Text = "tpg_CustomRules";
+            this.tpg_CustomRules.UseVisualStyleBackColor = true;
+            // 
+            // rbx_CustomRulesExplanationBold
+            // 
+            this.rbx_CustomRulesExplanationBold.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rbx_CustomRulesExplanationBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbx_CustomRulesExplanationBold.Location = new System.Drawing.Point(7, 144);
+            this.rbx_CustomRulesExplanationBold.Name = "rbx_CustomRulesExplanationBold";
+            this.rbx_CustomRulesExplanationBold.ReadOnly = true;
+            this.rbx_CustomRulesExplanationBold.Size = new System.Drawing.Size(885, 40);
+            this.rbx_CustomRulesExplanationBold.TabIndex = 18;
+            this.rbx_CustomRulesExplanationBold.Text = "";
+            // 
+            // ckb_StopProcessingRules
+            // 
+            this.ckb_StopProcessingRules.AutoSize = true;
+            this.ckb_StopProcessingRules.Location = new System.Drawing.Point(535, 190);
+            this.ckb_StopProcessingRules.Name = "ckb_StopProcessingRules";
+            this.ckb_StopProcessingRules.Size = new System.Drawing.Size(151, 17);
+            this.ckb_StopProcessingRules.TabIndex = 17;
+            this.ckb_StopProcessingRules.Text = "ckb_StopProcessingRules";
+            this.ckb_StopProcessingRules.UseVisualStyleBackColor = true;
+            this.ckb_StopProcessingRules.CheckedChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            // 
+            // ckb_IncludePredeterminedCountries
+            // 
+            this.ckb_IncludePredeterminedCountries.AutoSize = true;
+            this.ckb_IncludePredeterminedCountries.Location = new System.Drawing.Point(7, 190);
+            this.ckb_IncludePredeterminedCountries.Name = "ckb_IncludePredeterminedCountries";
+            this.ckb_IncludePredeterminedCountries.Size = new System.Drawing.Size(197, 17);
+            this.ckb_IncludePredeterminedCountries.TabIndex = 16;
+            this.ckb_IncludePredeterminedCountries.Text = "ckb_IncludePredeterminedCountries";
+            this.ckb_IncludePredeterminedCountries.UseVisualStyleBackColor = true;
+            this.ckb_IncludePredeterminedCountries.CheckedChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            // 
+            // rbx_CustomRulesExplanation
+            // 
+            this.rbx_CustomRulesExplanation.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rbx_CustomRulesExplanation.Location = new System.Drawing.Point(7, 6);
+            this.rbx_CustomRulesExplanation.Name = "rbx_CustomRulesExplanation";
+            this.rbx_CustomRulesExplanation.ReadOnly = true;
+            this.rbx_CustomRulesExplanation.Size = new System.Drawing.Size(885, 132);
+            this.rbx_CustomRulesExplanation.TabIndex = 1;
+            this.rbx_CustomRulesExplanation.Text = "";
+            this.rbx_CustomRulesExplanation.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.rbx_CustomRulesExplanation_LinkClicked);
+            // 
+            // dgv_CustomRules
+            // 
+            this.dgv_CustomRules.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgv_CustomRules.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            this.dgv_CustomRules.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_CustomRules.Location = new System.Drawing.Point(7, 220);
+            this.dgv_CustomRules.Name = "dgv_CustomRules";
+            this.dgv_CustomRules.Size = new System.Drawing.Size(885, 418);
+            this.dgv_CustomRules.TabIndex = 0;
+            this.dgv_CustomRules.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_CustomRules_DataError);
+            this.dgv_CustomRules.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dgv_CustomRules_RowValidating);
+            // 
+            // igl_Settings
+            // 
+            this.igl_Settings.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("igl_Settings.ImageStream")));
+            this.igl_Settings.TransparentColor = System.Drawing.Color.Transparent;
+            this.igl_Settings.Images.SetKeyName(0, "LibrarySettings.png");
+            this.igl_Settings.Images.SetKeyName(1, "Settings.png");
+            this.igl_Settings.Images.SetKeyName(2, "SettingsFile.png");
+            this.igl_Settings.Images.SetKeyName(3, "CustomAction.png");
+            this.igl_Settings.Images.SetKeyName(4, "PublishOnDemand.png");
+            // 
+            // btn_OK
+            // 
+            this.btn_OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btn_OK.Location = new System.Drawing.Point(791, 537);
+            this.btn_OK.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_OK.Name = "btn_OK";
+            this.btn_OK.Size = new System.Drawing.Size(60, 19);
+            this.btn_OK.TabIndex = 5;
+            this.btn_OK.Text = "btn_OK";
+            this.btn_OK.UseVisualStyleBackColor = true;
+            this.btn_OK.Click += new System.EventHandler(this.Btn_OK_Click);
+            // 
+            // btn_Cancel
+            // 
+            this.btn_Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btn_Cancel.Location = new System.Drawing.Point(861, 537);
+            this.btn_Cancel.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_Cancel.Name = "btn_Cancel";
+            this.btn_Cancel.Size = new System.Drawing.Size(60, 19);
+            this.btn_Cancel.TabIndex = 6;
+            this.btn_Cancel.Text = "btn_Cancel";
+            this.btn_Cancel.UseVisualStyleBackColor = true;
+            this.btn_Cancel.Click += new System.EventHandler(this.Btn_Cancel_Click);
+            // 
+            // fbd_StartupFolder
+            // 
+            this.fbd_StartupFolder.Description = "fbd_StartupFolder";
+            this.fbd_StartupFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
+            // 
             // FrmSettings
             // 
             this.AcceptButton = this.btn_OK;
@@ -815,7 +817,7 @@
             this.ClientSize = new System.Drawing.Size(937, 568);
             this.Controls.Add(this.btn_Cancel);
             this.Controls.Add(this.btn_OK);
-            this.Controls.Add(this.tct_Settings);
+            this.Controls.Add(this.tcr_Settings);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Location = new System.Drawing.Point(350, 100);
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -826,17 +828,11 @@
             this.ShowInTaskbar = false;
             this.Text = "FrmSettings";
             this.Load += new System.EventHandler(this.FrmSettings_Load);
-            this.tct_Settings.ResumeLayout(false);
+            this.tcr_Settings.ResumeLayout(false);
             this.tpg_Application.ResumeLayout(false);
             this.gbx_AppSettings.ResumeLayout(false);
             this.gbx_AppSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).EndInit();
-            this.tpg_FileOptions.ResumeLayout(false);
-            this.tpg_CustomCityLogic.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgv_CustomCityLogic)).EndInit();
-            this.tpg_CustomRules.ResumeLayout(false);
-            this.tpg_CustomRules.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgv_CustomRules)).EndInit();
             this.tpg_GeoNames.ResumeLayout(false);
             this.gbx_GeoNamesSettings.ResumeLayout(false);
             this.gbx_GeoNamesSettings.PerformLayout();
@@ -844,6 +840,12 @@
             this.gbx_GeoNamesLanguageSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nud_ChoiceRadius)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_ChoiceOfferCount)).EndInit();
+            this.tpg_FileOptions.ResumeLayout(false);
+            this.tpg_CustomCityLogic.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_CustomCityLogic)).EndInit();
+            this.tpg_CustomRules.ResumeLayout(false);
+            this.tpg_CustomRules.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_CustomRules)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -854,7 +856,7 @@
         private System.Windows.Forms.TabPage tpg_FileOptions;
         private System.Windows.Forms.Button btn_OK;
         private System.Windows.Forms.Button btn_Cancel;
-        private System.Windows.Forms.TabControl tct_Settings;
+        private System.Windows.Forms.TabControl tcr_Settings;
         private System.Windows.Forms.FolderBrowserDialog fbd_StartupFolder;
         private System.Windows.Forms.CheckBox ckb_OverwriteOriginal;
         private System.Windows.Forms.CheckBox ckb_AddXMPSideCar;

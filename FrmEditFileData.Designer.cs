@@ -123,6 +123,7 @@
             // 
             // pbx_imagePreview
             // 
+            this.pbx_imagePreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pbx_imagePreview.Location = new System.Drawing.Point(12, 338);
             this.pbx_imagePreview.Name = "pbx_imagePreview";
             this.pbx_imagePreview.Size = new System.Drawing.Size(438, 219);
@@ -494,6 +495,7 @@
             // 
             this.tcr_EditData.Controls.Add(this.tpg_Location);
             this.tcr_EditData.Controls.Add(this.tpg_DateTime);
+            this.tcr_EditData.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
             this.tcr_EditData.ImageList = this.igl_TabPages;
             this.tcr_EditData.Location = new System.Drawing.Point(455, 11);
             this.tcr_EditData.Margin = new System.Windows.Forms.Padding(2);
@@ -501,6 +503,7 @@
             this.tcr_EditData.SelectedIndex = 0;
             this.tcr_EditData.Size = new System.Drawing.Size(565, 518);
             this.tcr_EditData.TabIndex = 0;
+            this.tcr_EditData.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.TabControl_DrawItem);
             // 
             // tpg_DateTime
             // 
@@ -961,11 +964,15 @@
             this.lvw_FileListEditImages.Location = new System.Drawing.Point(6, 22);
             this.lvw_FileListEditImages.MultiSelect = false;
             this.lvw_FileListEditImages.Name = "lvw_FileListEditImages";
+            this.lvw_FileListEditImages.OwnerDraw = true;
             this.lvw_FileListEditImages.Size = new System.Drawing.Size(426, 284);
             this.lvw_FileListEditImages.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvw_FileListEditImages.TabIndex = 1;
             this.lvw_FileListEditImages.UseCompatibleStateImageBehavior = false;
             this.lvw_FileListEditImages.View = System.Windows.Forms.View.Details;
+            this.lvw_FileListEditImages.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
+            this.lvw_FileListEditImages.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
+            this.lvw_FileListEditImages.DrawSubItem += new System.Windows.Forms.DrawListViewSubItemEventHandler(this.ListView_DrawSubItem);
             this.lvw_FileListEditImages.SelectedIndexChanged += new System.EventHandler(this.lvw_FileListEditImages_SelectedIndexChanged);
             // 
             // FrmEditFileData

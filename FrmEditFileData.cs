@@ -39,6 +39,13 @@ public partial class FrmEditFileData : Form
         logger.Debug(message: "Starting");
 
         InitializeComponent();
+        // the custom logic is ugly af so no need to be pushy about it in light mode.
+        if (!HelperVariables.SUseDarkMode)
+        {
+            tcr_EditData.DrawMode = TabDrawMode.Normal;
+            lvw_FileListEditImages.OwnerDraw = false;
+        }
+
         logger.Trace(message: "InitializeComponent OK");
         HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.SUseDarkMode
                                                      ? ThemeColour.Dark
@@ -584,6 +591,100 @@ public partial class FrmEditFileData : Form
         logger.Debug(message: "Done");
         _frmEditFileDataNowLoadingFileData = false;
     }
+
+#region Themeing
+
+    // this is entirely the same as in FrmMainApp.
+
+    // via https://stackoverflow.com/a/75716080/3968494
+    private void ListView_DrawColumnHeader(object sender,
+                                           DrawListViewColumnHeaderEventArgs e)
+    {
+        Color foreColor = HelperVariables.SUseDarkMode
+            ? Color.FromArgb(red: 241, green: 241, blue: 241)
+            : Color.Black;
+
+        Color backColor = HelperVariables.SUseDarkMode
+            ? Color.FromArgb(red: 101, green: 151, blue: 151)
+            : SystemColors.Control;
+
+        //Fills one solid background for each cell.
+        using (SolidBrush backColorkBrush = new(color: backColor))
+        {
+            e.Graphics.FillRectangle(brush: backColorkBrush, rect: e.Bounds);
+        }
+
+        //Draw the borders for the header around each cell.
+        using (Pen foreColorPen = new(color: foreColor))
+        {
+            e.Graphics.DrawRectangle(pen: foreColorPen, rect: e.Bounds);
+        }
+
+        using (SolidBrush foreColorBrush = new(color: foreColor))
+        {
+            StringFormat stringFormat = GetStringFormat();
+
+            //Do some padding, since these draws right up next to the border for Left/Near.  Will need to change this if you use Right/Far
+            Rectangle rect = e.Bounds;
+            rect.X += 2;
+            e.Graphics.DrawString(s: e.Header.Text, font: e.Font, brush: foreColorBrush, layoutRectangle: rect, format: stringFormat);
+        }
+    }
+
+    private StringFormat GetStringFormat()
+    {
+        return new StringFormat
+        {
+            Alignment = StringAlignment.Near,
+            LineAlignment = StringAlignment.Center
+        };
+    }
+
+    private void ListView_DrawItem(object sender,
+                                   DrawListViewItemEventArgs e)
+    {
+        e.DrawDefault = true;
+    }
+
+    private void ListView_DrawSubItem(object sender,
+                                      DrawListViewSubItemEventArgs e)
+    {
+        e.DrawDefault = true;
+    }
+
+    // via https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.tabcontrol.drawitem?view=netframework-4.8.1&redirectedfrom=MSDN
+    private void TabControl_DrawItem(object sender,
+                                     DrawItemEventArgs e)
+    {
+        Color foreColor = HelperVariables.SUseDarkMode
+            ? Color.FromArgb(red: 241, green: 241, blue: 241)
+            : Color.Black;
+
+        Color backColor = HelperVariables.SUseDarkMode
+            ? Color.FromArgb(red: 101, green: 151, blue: 151)
+            : SystemColors.Control;
+
+        Graphics graphics = e.Graphics;
+        Pen backColorPen = new(color: backColor);
+        SolidBrush foreColorBrush = new(color: foreColor);
+        SolidBrush backColorBrush = new(color: backColor);
+        TabControl tctControl = sender as TabControl;
+        StringFormat stringFormat = GetStringFormat();
+
+        for (int i = 0; i < tctControl.TabPages.Count; i++)
+        {
+            TabPage tbpTabPage = tctControl.TabPages[index: i];
+            Rectangle tabArea = tctControl.GetTabRect(index: i);
+            RectangleF tabTextArea = tabArea;
+            tabTextArea.X += 2; // add padding 
+
+            graphics.DrawRectangle(pen: backColorPen, rect: tabArea);
+            graphics.FillRectangle(brush: backColorBrush, rect: tabTextArea);
+            graphics.DrawString(s: tbpTabPage.Text, font: e.Font, brush: foreColorBrush, layoutRectangle: tabTextArea, format: stringFormat);
+        }
+    }
+
+#endregion
 
 #region object events
 

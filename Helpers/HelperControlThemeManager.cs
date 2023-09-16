@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -13,6 +14,14 @@ internal enum ThemeColour
     Dark
 }
 
+/// <summary>
+///     Provides methods for managing the theme of the application's controls.
+/// </summary>
+/// <remarks>
+///     This class includes methods for applying the immersive dark mode to a window,
+///     setting the theme color of the application during startup, and changing the theme of a specific control.
+/// </remarks>
+[SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
 internal static class HelperControlThemeManager
 {
     private const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
@@ -36,8 +45,8 @@ internal static class HelperControlThemeManager
     ///     function.
     ///     If the version of Windows 10 is less than 17763, the method returns false without making any changes.
     /// </remarks>
-    internal static bool UseImmersiveDarkMode(IntPtr handle,
-                                              bool enabled)
+    private static bool UseImmersiveDarkMode(IntPtr handle,
+                                             bool enabled)
     {
         if (IsWindows10OrGreater(build: 17763))
         {
@@ -69,17 +78,24 @@ internal static class HelperControlThemeManager
     internal static void SetThemeColour(ThemeColour themeColour,
                                         Control parentControl)
     {
+        // changed the logic here. basically if it's light mode then don't poke it because it just gets uglier even in that case.
+        // for Dark we set it to the job, for Light, ignore.
         if (themeColour == Dark)
         {
             UseImmersiveDarkMode(handle: parentControl.Handle, enabled: true);
-        }
 
-        HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: parentControl);
+            HelperNonStatic helperNonstatic = new();
+            if (parentControl is Form)
+            {
+                ChangeTheme(themeColour: themeColour, cItem: parentControl);
+            }
 
-        foreach (Control cItem in c)
-        {
-            ChangeTheme(themeColour: themeColour, cItem: cItem);
+            IEnumerable<Control> c = helperNonstatic.GetAllControls(control: parentControl);
+
+            foreach (Control cItem in c)
+            {
+                ChangeTheme(themeColour: themeColour, cItem: cItem);
+            }
         }
     }
 
@@ -88,18 +104,18 @@ internal static class HelperControlThemeManager
     /// </summary>
     /// <param name="themeColour">The theme color to be applied. Can be either Light or Dark.</param>
     /// <param name="cItem">The control to which the theme color will be applied.</param>
-    internal static void ChangeTheme(ThemeColour themeColour,
-                                     Control cItem)
+    private static void ChangeTheme(ThemeColour themeColour,
+                                    Control cItem)
     {
         if (themeColour == Dark)
         {
-            cItem.ForeColor = Color.Black;
-            cItem.BackColor = SystemColors.ControlDark;
+            cItem.ForeColor = Color.FromArgb(red: 241, green: 241, blue: 241);
+            cItem.BackColor = Color.FromArgb(red: 101, green: 101, blue: 101);
         }
-        else
-        {
-            cItem.ForeColor = Color.Black;
-            cItem.BackColor = SystemColors.Control;
-        }
+        //else
+        //{
+        //    cItem.ForeColor = Color.Black;
+        //    cItem.BackColor = SystemColors.Control;
+        //}
     }
 }

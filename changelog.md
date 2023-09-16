@@ -1,6 +1,6 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 86xx [2023xxxx]** 
+**Build 8659 [20230916]** 
 - NEW & UPDATED:
   - App Version Bump: 1.13
   - GPSDestinationLat/Long ...

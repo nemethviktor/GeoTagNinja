@@ -27,6 +27,13 @@ public partial class FrmSettings : Form
     public FrmSettings()
     {
         InitializeComponent();
+
+        // the custom logic is ugly af so no need to be pushy about it in light mode.
+        if (!HelperVariables.SUseDarkMode)
+        {
+            tcr_Settings.DrawMode = TabDrawMode.Normal;
+        }
+
         HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.SUseDarkMode
                                                      ? ThemeColour.Dark
                                                      : ThemeColour.Light, parentControl: this);
@@ -798,7 +805,7 @@ public partial class FrmSettings : Form
             string cItemName = "";
 
             object lbi = null;
-            if (frmSettingsInstance != null && frmSettingsInstance.tct_Settings.SelectedTab.Name == "tpg_FileOptions")
+            if (frmSettingsInstance != null && frmSettingsInstance.tcr_Settings.SelectedTab.Name == "tpg_FileOptions")
             {
                 lbi = lbx_fileExtensions.SelectedItem;
             }
@@ -1041,4 +1048,50 @@ public partial class FrmSettings : Form
             buttons: MessageBoxButtons.OK,
             icon: MessageBoxIcon.Information);
     }
+
+#region Themeing
+
+    // this is entirely the same as in FrmMainApp.
+    private StringFormat GetStringFormat()
+    {
+        return new StringFormat
+        {
+            Alignment = StringAlignment.Near,
+            LineAlignment = StringAlignment.Center
+        };
+    }
+
+    // via https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.tabcontrol.drawitem?view=netframework-4.8.1&redirectedfrom=MSDN
+    private void TabControl_DrawItem(object sender,
+                                     DrawItemEventArgs e)
+    {
+        Color foreColor = HelperVariables.SUseDarkMode
+            ? Color.FromArgb(red: 241, green: 241, blue: 241)
+            : Color.Black;
+
+        Color backColor = HelperVariables.SUseDarkMode
+            ? Color.FromArgb(red: 101, green: 151, blue: 151)
+            : SystemColors.Control;
+
+        Graphics graphics = e.Graphics;
+        Pen backColorPen = new(color: backColor);
+        SolidBrush foreColorBrush = new(color: foreColor);
+        SolidBrush backColorBrush = new(color: backColor);
+        TabControl tctControl = sender as TabControl;
+        StringFormat stringFormat = GetStringFormat();
+
+        for (int i = 0; i < tctControl.TabPages.Count; i++)
+        {
+            TabPage tbpTabPage = tctControl.TabPages[index: i];
+            Rectangle tabArea = tctControl.GetTabRect(index: i);
+            RectangleF tabTextArea = tabArea;
+            tabTextArea.X += 2; // add padding 
+
+            graphics.DrawRectangle(pen: backColorPen, rect: tabArea);
+            graphics.FillRectangle(brush: backColorBrush, rect: tabTextArea);
+            graphics.DrawString(s: tbpTabPage.Text, font: e.Font, brush: foreColorBrush, layoutRectangle: tabTextArea, format: stringFormat);
+        }
+    }
+
+#endregion
 }
