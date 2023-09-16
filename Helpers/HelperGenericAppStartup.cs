@@ -228,6 +228,27 @@ internal static class HelperGenericAppStartup
                 settingTabPage: "tpg_Application",
                 settingId: "ckb_UseDarkMode"
             );
+
+            // i'm open to better ideas....
+            List<string> MapColourModeRbts = new List<string>()
+            {
+                "rbt_MapColourModeNormal",
+                "rbt_MapColourModeDarkInverse",
+                "rbt_MapColourModeDarkPale"
+            };
+            foreach (string mapColourModeRbt in MapColourModeRbts)
+            {
+                if (HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
+                        tableName: "settings",
+                        settingTabPage: "tpg_Application",
+                        settingId: mapColourModeRbt
+                    ))
+                {
+                    HelperVariables.SMapColourMode = mapColourModeRbt.Replace("rbt_MapColourMode", "");
+                    break;
+                }
+            }
+
             foreach (SourcesAndAttributes.ElementAttribute attribute in SourcesAndAttributes.TagsToColumnHeaderOrder)
             {
                 FileListView._cfg_Col_Order_Default.Add(key: SourcesAndAttributes.GetAttributeName(attribute: attribute), value: SourcesAndAttributes.TagsToColumnHeaderOrder.IndexOf(item: attribute));

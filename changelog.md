@@ -1,5 +1,11 @@
 ﻿# GeoTagNinja Changelog
 
+**Build 86xx [202309xx]** 
+- NEW & UPDATED:
+  - Fine-tuning of Dark Mode UI
+  - Added various options for "Dark Mode Map".
+- BUGS & FIXES:
+
 **Build 8659 [20230916]** 
 - NEW & UPDATED:
   - App Version Bump: 1.13
