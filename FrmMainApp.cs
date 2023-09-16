@@ -205,6 +205,10 @@ public partial class FrmMainApp : Form
             lvw_FileList.OwnerDraw = false;
             lvw_ExifData.OwnerDraw = false;
         }
+        else
+        {
+            mns_MenuStrip.Renderer = new DarkMenuStripRenderer();
+        }
 
         AppStartupEnableDoubleBuffering();
         FormClosing += FrmMainApp_FormClosing;
@@ -1728,6 +1732,101 @@ public partial class FrmMainApp : Form
             graphics.DrawRectangle(pen: backColorPen, rect: tabArea);
             graphics.FillRectangle(brush: backColorBrush, rect: tabTextArea);
             graphics.DrawString(s: tbpTabPage.Text, font: e.Font, brush: foreColorBrush, layoutRectangle: tabTextArea, format: stringFormat);
+        }
+    }
+
+    // via https://stackoverflow.com/questions/9260303/how-to-change-menu-hover-color
+    private class DarkMenuStripRenderer : ToolStripProfessionalRenderer
+    {
+        public DarkMenuStripRenderer() : base(new DarkColours())
+        { }
+    }
+
+    private class DarkColours : ProfessionalColorTable
+    {
+        public override Color MenuItemBorder
+        {
+            get { return ColorTranslator.FromHtml("#BAB9B9"); }
+        }
+
+        public override Color MenuBorder //added for changing the menu border
+        {
+            get { return Color.Silver; }
+        }
+
+        public override Color MenuItemPressedGradientBegin
+        {
+            get { return ColorTranslator.FromHtml("#4C4A48"); }
+        }
+
+        public override Color MenuItemPressedGradientEnd
+        {
+            get { return ColorTranslator.FromHtml("#5F5D5B"); }
+        }
+
+        public override Color ToolStripBorder
+        {
+            get { return ColorTranslator.FromHtml("#4C4A48"); }
+        }
+
+        public override Color MenuItemSelectedGradientBegin
+        {
+            get { return ColorTranslator.FromHtml("#4C4A48"); }
+        }
+
+        public override Color MenuItemSelectedGradientEnd
+        {
+            get { return ColorTranslator.FromHtml("#5F5D5B"); }
+        }
+
+        public override Color ToolStripDropDownBackground
+        {
+            get { return ColorTranslator.FromHtml("#404040"); }
+        }
+
+        public override Color ToolStripGradientBegin
+        {
+            get { return ColorTranslator.FromHtml("#404040"); }
+        }
+
+        public override Color ToolStripGradientEnd
+        {
+            get { return ColorTranslator.FromHtml("#404040"); }
+        }
+
+        public override Color ToolStripGradientMiddle
+        {
+            get { return ColorTranslator.FromHtml("#404040"); }
+        }
+
+        public override Color ImageMarginGradientBegin
+        {
+            get { return ColorTranslator.FromHtml("#404040"); }
+        }
+
+        public override Color ImageMarginGradientEnd
+        {
+            get { return ColorTranslator.FromHtml("#404040"); }
+        }
+
+        public override Color ImageMarginGradientMiddle
+        {
+            get { return ColorTranslator.FromHtml("#404040"); }
+        }
+
+        public override Color ImageMarginRevealedGradientBegin
+        {
+            get { return ColorTranslator.FromHtml("#404040"); }
+        }
+
+        public override Color ImageMarginRevealedGradientEnd
+        {
+            get { return ColorTranslator.FromHtml("#404040"); }
+        }
+
+        public override Color ImageMarginRevealedGradientMiddle
+        {
+            get { return ColorTranslator.FromHtml("#404040"); }
         }
     }
 
