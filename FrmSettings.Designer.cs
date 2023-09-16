@@ -34,6 +34,10 @@
             this.tpg_Application = new System.Windows.Forms.TabPage();
             this.gbx_AppSettings = new System.Windows.Forms.GroupBox();
             this.ckb_UseDarkMode = new System.Windows.Forms.CheckBox();
+            this.gbx_MapColourMode = new System.Windows.Forms.GroupBox();
+            this.rbt_MapColourModeDarkPale = new System.Windows.Forms.RadioButton();
+            this.rbt_MapColourModeNormal = new System.Windows.Forms.RadioButton();
+            this.rbt_MapColourModeDarkInverse = new System.Windows.Forms.RadioButton();
             this.ckb_UpdateCheckPreRelease = new System.Windows.Forms.CheckBox();
             this.lbl_Metres_Abbr = new System.Windows.Forms.Label();
             this.lbl_Feet_Abbr = new System.Windows.Forms.Label();
@@ -91,6 +95,7 @@
             this.tcr_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             this.gbx_AppSettings.SuspendLayout();
+            this.gbx_MapColourMode.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).BeginInit();
             this.tpg_GeoNames.SuspendLayout();
             this.gbx_GeoNamesSettings.SuspendLayout();
@@ -141,6 +146,7 @@
             // gbx_AppSettings
             // 
             this.gbx_AppSettings.Controls.Add(this.ckb_UseDarkMode);
+            this.gbx_AppSettings.Controls.Add(this.gbx_MapColourMode);
             this.gbx_AppSettings.Controls.Add(this.ckb_UpdateCheckPreRelease);
             this.gbx_AppSettings.Controls.Add(this.lbl_Metres_Abbr);
             this.gbx_AppSettings.Controls.Add(this.lbl_Feet_Abbr);
@@ -154,7 +160,7 @@
             this.gbx_AppSettings.Controls.Add(this.tbx_Startup_Folder);
             this.gbx_AppSettings.Location = new System.Drawing.Point(16, 20);
             this.gbx_AppSettings.Name = "gbx_AppSettings";
-            this.gbx_AppSettings.Size = new System.Drawing.Size(852, 219);
+            this.gbx_AppSettings.Size = new System.Drawing.Size(852, 307);
             this.gbx_AppSettings.TabIndex = 32;
             this.gbx_AppSettings.TabStop = false;
             this.gbx_AppSettings.Text = "gbx_AppSettings";
@@ -165,10 +171,58 @@
             this.ckb_UseDarkMode.Location = new System.Drawing.Point(15, 169);
             this.ckb_UseDarkMode.Name = "ckb_UseDarkMode";
             this.ckb_UseDarkMode.Size = new System.Drawing.Size(119, 17);
-            this.ckb_UseDarkMode.TabIndex = 54;
+            this.ckb_UseDarkMode.TabIndex = 56;
             this.ckb_UseDarkMode.Text = "ckb_UseDarkMode";
             this.ckb_UseDarkMode.UseVisualStyleBackColor = true;
             this.ckb_UseDarkMode.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            // 
+            // gbx_MapColourMode
+            // 
+            this.gbx_MapColourMode.Controls.Add(this.rbt_MapColourModeDarkPale);
+            this.gbx_MapColourMode.Controls.Add(this.rbt_MapColourModeNormal);
+            this.gbx_MapColourMode.Controls.Add(this.rbt_MapColourModeDarkInverse);
+            this.gbx_MapColourMode.Location = new System.Drawing.Point(15, 201);
+            this.gbx_MapColourMode.Name = "gbx_MapColourMode";
+            this.gbx_MapColourMode.Size = new System.Drawing.Size(548, 55);
+            this.gbx_MapColourMode.TabIndex = 55;
+            this.gbx_MapColourMode.TabStop = false;
+            this.gbx_MapColourMode.Text = "gbx_MapColourMode";
+            // 
+            // rbt_MapColourModeDarkPale
+            // 
+            this.rbt_MapColourModeDarkPale.AutoSize = true;
+            this.rbt_MapColourModeDarkPale.Location = new System.Drawing.Point(355, 25);
+            this.rbt_MapColourModeDarkPale.Name = "rbt_MapColourModeDarkPale";
+            this.rbt_MapColourModeDarkPale.Size = new System.Drawing.Size(165, 17);
+            this.rbt_MapColourModeDarkPale.TabIndex = 2;
+            this.rbt_MapColourModeDarkPale.TabStop = true;
+            this.rbt_MapColourModeDarkPale.Text = "rbt_MapColourModeDarkPale";
+            this.rbt_MapColourModeDarkPale.UseVisualStyleBackColor = true;
+            this.rbt_MapColourModeDarkPale.CheckedChanged += new System.EventHandler(this.Any_rbt_CheckedChanged);
+            // 
+            // rbt_MapColourModeNormal
+            // 
+            this.rbt_MapColourModeNormal.AutoSize = true;
+            this.rbt_MapColourModeNormal.Location = new System.Drawing.Point(11, 25);
+            this.rbt_MapColourModeNormal.Name = "rbt_MapColourModeNormal";
+            this.rbt_MapColourModeNormal.Size = new System.Drawing.Size(154, 17);
+            this.rbt_MapColourModeNormal.TabIndex = 1;
+            this.rbt_MapColourModeNormal.TabStop = true;
+            this.rbt_MapColourModeNormal.Text = "rbt_MapColourModeNormal";
+            this.rbt_MapColourModeNormal.UseVisualStyleBackColor = true;
+            this.rbt_MapColourModeNormal.CheckedChanged += new System.EventHandler(this.Any_rbt_CheckedChanged);
+            // 
+            // rbt_MapColourModeDarkInverse
+            // 
+            this.rbt_MapColourModeDarkInverse.AutoSize = true;
+            this.rbt_MapColourModeDarkInverse.Location = new System.Drawing.Point(170, 25);
+            this.rbt_MapColourModeDarkInverse.Name = "rbt_MapColourModeDarkInverse";
+            this.rbt_MapColourModeDarkInverse.Size = new System.Drawing.Size(179, 17);
+            this.rbt_MapColourModeDarkInverse.TabIndex = 0;
+            this.rbt_MapColourModeDarkInverse.TabStop = true;
+            this.rbt_MapColourModeDarkInverse.Text = "rbt_MapColourModeDarkInverse";
+            this.rbt_MapColourModeDarkInverse.UseVisualStyleBackColor = true;
+            this.rbt_MapColourModeDarkInverse.CheckedChanged += new System.EventHandler(this.Any_rbt_CheckedChanged);
             // 
             // ckb_UpdateCheckPreRelease
             // 
@@ -832,6 +886,8 @@
             this.tpg_Application.ResumeLayout(false);
             this.gbx_AppSettings.ResumeLayout(false);
             this.gbx_AppSettings.PerformLayout();
+            this.gbx_MapColourMode.ResumeLayout(false);
+            this.gbx_MapColourMode.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).EndInit();
             this.tpg_GeoNames.ResumeLayout(false);
             this.gbx_GeoNamesSettings.ResumeLayout(false);
@@ -887,7 +943,6 @@
         private System.Windows.Forms.Label lbl_Metres_Abbr;
         private System.Windows.Forms.Label lbl_Feet_Abbr;
         private System.Windows.Forms.CheckBox ckb_UpdateCheckPreRelease;
-        private System.Windows.Forms.CheckBox ckb_UseDarkMode;
         private System.Windows.Forms.TabPage tpg_GeoNames;
         private System.Windows.Forms.GroupBox gbx_GeoNamesSettings;
         private System.Windows.Forms.Label lbl_Miles;
@@ -910,5 +965,10 @@
         public System.Windows.Forms.TextBox tbx_GeoNames_Pwd;
         public System.Windows.Forms.TextBox tbx_GeoNames_UserName;
         public System.Windows.Forms.TextBox tbx_ARCGIS_APIKey;
+        private System.Windows.Forms.GroupBox gbx_MapColourMode;
+        private System.Windows.Forms.RadioButton rbt_MapColourModeDarkPale;
+        private System.Windows.Forms.RadioButton rbt_MapColourModeNormal;
+        private System.Windows.Forms.RadioButton rbt_MapColourModeDarkInverse;
+        private System.Windows.Forms.CheckBox ckb_UseDarkMode;
     }
 }

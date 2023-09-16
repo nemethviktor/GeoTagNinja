@@ -825,6 +825,27 @@ public partial class FrmMainApp : Form
         string showPointsStr = "";
         string showFOVStr = "";
         string showDestinationPolyLineStr = "";
+        string mapStyleFiter = HelperVariables.SMapColourMode switch
+        {
+            "DarkInverse" => "filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);",
+            "DarkPale" => "filter: brightness(55%) contrast(90%);",
+            _ => ""
+        };
+
+        string mapStyleCSS = """
+                             #map {
+                             	border: 3px !important;
+                             	border-color: black;
+                             	bottom: 0;
+                             	height: 100% !important;
+                             	left: 0;
+                             	position: fixed;
+                             	right: 0;
+                             	top: 0;
+                             	width: 100% !important;
+                             	#replaceMe#
+                             }
+                             """.Replace(oldValue: "#replaceMe#", newValue: mapStyleFiter);
 
         // check there is one and only one DE selected and add ImgDirection if there's any
         ListView lvw = lvw_FileList;
@@ -1068,6 +1089,7 @@ public partial class FrmMainApp : Form
         htmlReplacements.Add(key: "replaceMaxLng", value: HelperVariables.MaxLng.ToString()
                                                                          .Replace(oldChar: ',', newChar: '.'));
 
+        htmlReplacements.Add(key: "{ HTMLMapStyleCSS }", value: mapStyleCSS);
         htmlReplacements.Add(key: "{ HTMLCreatePoints }", value: createPointsStr);
         htmlReplacements.Add(key: "{ HTMLShowLines }", value: showLinesStr);
         htmlReplacements.Add(key: "{ HTMLShowPoints }", value: showPointsStr);

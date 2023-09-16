@@ -261,6 +261,20 @@ public partial class FrmSettings : Form
             cbx_TryUseGeoNamesLanguage.Enabled = true;
         }
 
+        // (re)set the map colour mode
+        if (rbt_MapColourModeDarkPale.Checked)
+        {
+            HelperVariables.SMapColourMode = "DarkPale";
+        }
+        else if (rbt_MapColourModeDarkInverse.Checked)
+        {
+            HelperVariables.SMapColourMode = "DarkInverse";
+        }
+        else
+        {
+            HelperVariables.SMapColourMode = "Normal"; // technically we could just ignore this
+        }
+
         _nowLoadingSettingsData = false;
 
         LoadCustomRulesDGV();
@@ -480,6 +494,19 @@ public partial class FrmSettings : Form
     private void Btn_OK_Click(object sender,
                               EventArgs e)
     {
+        List<string> rbtGeoNamesLanguage = new()
+        {
+            "rbt_UseGeoNamesLocalLanguage",
+            "rbt_TryUseGeoNamesLanguage"
+        };
+
+        List<string> rbtMapColourOptions = new()
+        {
+            "rbt_MapColourModeNormal",
+            "rbt_MapColourModeDarkInverse",
+            "rbt_MapColourModeDarkPale"
+        };
+
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         if (c != null)
@@ -521,8 +548,9 @@ public partial class FrmSettings : Form
                 if (cItem is RadioButton rbt)
                 {
                     // this needs to be an IF rather than an ELSE IF
-                    if (rbt.Name == "rbt_UseGeoNamesLocalLanguage" || rbt.Name == "rbt_TryUseGeoNamesLanguage")
+                    if (rbtGeoNamesLanguage.Contains(item: rbt.Name))
                     {
+                        // (rbt.Font.Style & FontStyle.Bold) here means that there has been a change of state and it needs saving
                         if ((rbt.Font.Style & FontStyle.Bold) != 0 && rbt.Checked)
                         {
                             ComboBox cbxLng = cbx_TryUseGeoNamesLanguage;
@@ -534,12 +562,24 @@ public partial class FrmSettings : Form
                             else if (rbt.Name == "rbt_TryUseGeoNamesLanguage")
                             {
                                 cbxLng.Enabled = true;
-                                IEnumerable<KeyValuePair<string, string>> result = HelperGenericAncillaryListsArrays.GetISO_639_1_Languages()
-                                                                                                                    .Where(predicate: kvp => kvp.Value == cbxLng.SelectedItem.ToString());
+                                IEnumerable<KeyValuePair<string, string>> result = HelperGenericAncillaryListsArrays
+                                                                                  .GetISO_639_1_Languages()
+                                                                                  .Where(
+                                                                                       predicate: kvp =>
+                                                                                           kvp.Value ==
+                                                                                           cbxLng.SelectedItem
+                                                                                                 .ToString());
 
                                 HelperVariables.APILanguageToUse = result.FirstOrDefault()
                                                                          .Key;
                             }
+                        }
+                    }
+                    else if (rbtMapColourOptions.Contains(item: rbt.Name))
+                    {
+                        if ((rbt.Font.Style & FontStyle.Bold) != 0 && rbt.Checked)
+                        {
+                            HelperVariables.SMapColourMode = rbt.Name.Replace(oldValue: "rbt_MapColourMode", newValue: "");
                         }
                     }
                 }

@@ -12,3 +12,6 @@ rbt_PasteCreateDateActual,Actual (Fixed values),Réel (valeurs fixes)
 rbt_PasteCreateDateShift,Time Shift,Décalage dans le temps
 rbt_TryUseGeoNamesLanguage,Try to use this language when retrieving location names:,
 rbt_UseGeoNamesLocalLanguage,"Try to use the ""local language"" when retrieving location names",
+rbt_MapColourModeNormal,Normal,
+rbt_MapColourModeDarkInverse,Dark (Inverse),
+rbt_MapColourModeDarkPale,Dark (Pale),

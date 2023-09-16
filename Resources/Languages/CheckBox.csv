@@ -32,4 +32,4 @@ ckb_PopulatedPlacesOnly,"Only display API data filtered to ""Populated places"" 
 ckb_QuestionStopProcessingRows,Stop Processing further rows?,
 ckb_UseImperialNotMetric,Use Imperial (Feet) for Altitude (rather than Metric [Metres]),
 ckb_UpdateCheckPreRelease,Check for Pre-release [beta] updates as well?,
-ckb_UseDarkMode,Use Dark Mode?,
+ckb_UseDarkMode,Use Dark Mode in the App UI?,

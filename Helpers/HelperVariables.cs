@@ -18,6 +18,7 @@ internal static class HelperVariables
     internal static bool SUseDarkMode;
     internal static bool SUpdatePreReleaseGTN;
     internal static bool SOnlyShowFCodePPL = false;
+    internal static string SMapColourMode; // DarkInverse or DarkPale (could be Normal too but not relevant)
 
     internal static string _sErrorMsg = "";
     internal static string _sOutputMsg = "";
