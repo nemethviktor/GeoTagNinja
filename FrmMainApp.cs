@@ -1744,90 +1744,39 @@ public partial class FrmMainApp : Form
 
     private class DarkColours : ProfessionalColorTable
     {
-        public override Color MenuItemBorder
-        {
-            get { return ColorTranslator.FromHtml("#BAB9B9"); }
-        }
+        public override Color MenuItemBorder => ColorTranslator.FromHtml("#BAB9B9");
 
-        public override Color MenuBorder //added for changing the menu border
-        {
-            get { return Color.Silver; }
-        }
+        public override Color MenuBorder => Color.Silver; //added for changing the menu border
 
-        public override Color MenuItemPressedGradientBegin
-        {
-            get { return ColorTranslator.FromHtml("#4C4A48"); }
-        }
+        public override Color MenuItemPressedGradientBegin => ColorTranslator.FromHtml("#4C4A48");
 
-        public override Color MenuItemPressedGradientEnd
-        {
-            get { return ColorTranslator.FromHtml("#5F5D5B"); }
-        }
+        public override Color MenuItemPressedGradientEnd => ColorTranslator.FromHtml("#5F5D5B");
 
-        public override Color ToolStripBorder
-        {
-            get { return ColorTranslator.FromHtml("#4C4A48"); }
-        }
+        public override Color ToolStripBorder => ColorTranslator.FromHtml("#4C4A48");
 
-        public override Color MenuItemSelectedGradientBegin
-        {
-            get { return ColorTranslator.FromHtml("#4C4A48"); }
-        }
+        public override Color MenuItemSelectedGradientBegin => ColorTranslator.FromHtml("#4C4A48");
 
-        public override Color MenuItemSelectedGradientEnd
-        {
-            get { return ColorTranslator.FromHtml("#5F5D5B"); }
-        }
+        public override Color MenuItemSelectedGradientEnd => ColorTranslator.FromHtml("#5F5D5B");
 
-        public override Color ToolStripDropDownBackground
-        {
-            get { return ColorTranslator.FromHtml("#404040"); }
-        }
+        public override Color ToolStripDropDownBackground => ColorTranslator.FromHtml("#404040");
 
-        public override Color ToolStripGradientBegin
-        {
-            get { return ColorTranslator.FromHtml("#404040"); }
-        }
+        public override Color ToolStripGradientBegin => ColorTranslator.FromHtml("#404040");
 
-        public override Color ToolStripGradientEnd
-        {
-            get { return ColorTranslator.FromHtml("#404040"); }
-        }
+        public override Color ToolStripGradientEnd => ColorTranslator.FromHtml("#404040");
 
-        public override Color ToolStripGradientMiddle
-        {
-            get { return ColorTranslator.FromHtml("#404040"); }
-        }
+        public override Color ToolStripGradientMiddle => ColorTranslator.FromHtml("#404040");
 
-        public override Color ImageMarginGradientBegin
-        {
-            get { return ColorTranslator.FromHtml("#404040"); }
-        }
+        public override Color ImageMarginGradientBegin => ColorTranslator.FromHtml("#404040");
 
-        public override Color ImageMarginGradientEnd
-        {
-            get { return ColorTranslator.FromHtml("#404040"); }
-        }
+        public override Color ImageMarginGradientEnd => ColorTranslator.FromHtml("#404040");
 
-        public override Color ImageMarginGradientMiddle
-        {
-            get { return ColorTranslator.FromHtml("#404040"); }
-        }
+        public override Color ImageMarginGradientMiddle => ColorTranslator.FromHtml("#404040");
 
-        public override Color ImageMarginRevealedGradientBegin
-        {
-            get { return ColorTranslator.FromHtml("#404040"); }
-        }
+        public override Color ImageMarginRevealedGradientBegin => ColorTranslator.FromHtml("#404040");
 
-        public override Color ImageMarginRevealedGradientEnd
-        {
-            get { return ColorTranslator.FromHtml("#404040"); }
-        }
+        public override Color ImageMarginRevealedGradientEnd => ColorTranslator.FromHtml("#404040");
 
-        public override Color ImageMarginRevealedGradientMiddle
-        {
-            get { return ColorTranslator.FromHtml("#404040"); }
-        }
+        public override Color ImageMarginRevealedGradientMiddle => ColorTranslator.FromHtml("#404040");
     }
 
 #endregion
