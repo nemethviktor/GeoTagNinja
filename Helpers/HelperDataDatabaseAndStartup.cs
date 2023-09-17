@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace GeoTagNinja.Helpers;
@@ -130,10 +132,17 @@ internal static class HelperDataDatabaseAndStartup
             "ckb_ResetFileDateToCreated"
         };
 
-        string[] NotExtensionSpecificControlNamesToAdd =
+        Dictionary<string, List<string>> NotExtensionSpecificControlNamesToAdd = new Dictionary<string, List<string>>()
         {
-            "rbt_UseGeoNamesLocalLanguage"
+            {
+                "tpg_Application", new List<string>()
+                {
+                    "rbt_UseGeoNamesLocalLanguage",
+                    "rbt_MapColourModeNormal"
+                }
+            }
         };
+
         string existingSQLVal;
 
         // extension-specific
@@ -198,17 +207,14 @@ internal static class HelperDataDatabaseAndStartup
             }
         }
 
-        foreach (string controlName in NotExtensionSpecificControlNamesToAdd)
+        foreach (KeyValuePair<string, List<string>> keyValuePair in NotExtensionSpecificControlNamesToAdd)
         {
-            string controlDefaultValue = null;
-            string settingTabPage = null;
-            if (controlName == "rbt_UseGeoNamesLocalLanguage")
+            string settingTabPage = keyValuePair.Key;
+            NotExtensionSpecificControlNamesToAdd.TryGetValue(settingTabPage, out List<string> controlNameList);
+            foreach (string controlName in controlNameList)
             {
-                controlDefaultValue = "true";
-                settingTabPage = "tpg_Application";
+                UpdateSQLite(settingTabPage: settingTabPage, settingId: controlName, controlDefaultValue: "true");
             }
-
-            UpdateSQLite(settingTabPage: settingTabPage, settingId: controlName, controlDefaultValue: controlDefaultValue);
         }
 
         // language

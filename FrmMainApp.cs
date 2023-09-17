@@ -305,10 +305,8 @@ public partial class FrmMainApp : Form
             HelperGenericAppStartup.AppSetupInitialiseStartupFolder(toolStripTextBox: tbx_FolderName);
         }
 
-        // initialise webView2 - MUST BE DONE in UI THREAD and ASYNC
-        // Any further init updates is done in WebView event Handler
-        // webView_CoreWebView2InitializationCompleted;
-        Invoke(method: InitialiseWebView);
+        // initialise webView2
+        await InitialiseWebView();
 
         // adds colour/theme
         HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
