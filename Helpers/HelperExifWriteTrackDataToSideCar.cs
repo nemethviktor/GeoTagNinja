@@ -35,7 +35,7 @@ internal class HelperExifWriteTrackDataToSideCar
         string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exifArgsToWriteForTrackExport.args");
         File.Delete(path: argsFile);
 
-        string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8" + " -@ " + HelperVariables.SDoubleQuote + argsFile + HelperVariables.SDoubleQuote;
+        string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8" + " -@ " + HelperVariables.DoubleQuoteStr + argsFile + HelperVariables.DoubleQuoteStr;
 
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 

@@ -119,7 +119,7 @@ internal class TagsToModelValueTransformations
                     parseBool = double.TryParse(s: parseResult.Split('/')[1], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double denominator);
                     double tmpAltitude = Math.Round(value: numerator / denominator, digits: 2);
 
-                    return HelperVariables.UseImperial
+                    return HelperVariables.UserSettingUseImperial
                         ? Math.Round(value: tmpAltitude * HelperVariables.MetreToFeet, digits: 2)
                         : tmpAltitude;
                 }
@@ -136,7 +136,7 @@ internal class TagsToModelValueTransformations
             bool parseBool = double.TryParse(s: parseResult, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double tmpAltitude);
             if (parseBool)
             {
-                return HelperVariables.UseImperial
+                return HelperVariables.UserSettingUseImperial
                     ? Math.Round(value: tmpAltitude * HelperVariables.MetreToFeet, digits: 2)
                     : tmpAltitude;
             }

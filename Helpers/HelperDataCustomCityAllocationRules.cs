@@ -9,7 +9,7 @@ internal static class HelperDataCustomCityAllocationRules
 {
     internal static DataTable DataReadSQLiteCustomCityAllocationLogic()
     {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SSettingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -31,7 +31,7 @@ internal static class HelperDataCustomCityAllocationRules
     internal static void DataWriteSQLiteCustomCityAllocationLogic()
     {
         // write back
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SSettingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
         using SQLiteDataAdapter sqliteAdapter = new(commandText: @"select * from customCityAllocationLogic", connection: sqliteDB);
@@ -47,7 +47,7 @@ internal static class HelperDataCustomCityAllocationRules
         string[] defaultCityNameIsAdminName3Arr = { "AUT", "CHE", "CHL", "CZE", "EST", "ESP", "FIN", "GRC", "ITA", "PAN", "PER", "POL", "SRB", "SVK", "USA", "ZAF" };
         string[] defaultCityNameIsAdminName4Arr = { "BEL", "DEU", "FRA", "GUF", "GLP", "MTQ" };
 
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SSettingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
         string sqlCommandStr = null;
@@ -95,7 +95,7 @@ internal static class HelperDataCustomCityAllocationRules
                         countryCodeAllocation = "Undefined";
                     }
 
-                    defaultCiltyAllocationLogic += "(" + HelperVariables.SDoubleQuote + countryCode + HelperVariables.SDoubleQuote + "," + HelperVariables.SDoubleQuote + countryCodeAllocation + HelperVariables.SDoubleQuote + ")," + Environment.NewLine;
+                    defaultCiltyAllocationLogic += "(" + HelperVariables.DoubleQuoteStr + countryCode + HelperVariables.DoubleQuoteStr + "," + HelperVariables.DoubleQuoteStr + countryCodeAllocation + HelperVariables.DoubleQuoteStr + ")," + Environment.NewLine;
                 }
             }
 
@@ -123,7 +123,7 @@ internal static class HelperDataCustomCityAllocationRules
     {
         FrmMainApp.Logger.Debug(message: "Starting");
 
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SSettingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
         string sqlCommandStr = """

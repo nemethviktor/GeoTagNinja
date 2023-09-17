@@ -18,23 +18,23 @@ internal static class HelperDataDatabaseAndStartup
         try
         {
             // create folder in Appdata if doesn't exist
-            FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath is " + HelperVariables.SSettingsDataBasePath);
-            FileInfo userDataBaseFile = new(fileName: HelperVariables.SSettingsDataBasePath);
+            FrmMainApp.Logger.Trace(message: "SettingsDatabaseFilePath is " + HelperVariables.SettingsDatabaseFilePath);
+            FileInfo userDataBaseFile = new(fileName: HelperVariables.SettingsDatabaseFilePath);
 
             if (userDataBaseFile.Exists && userDataBaseFile.Length == 0)
             {
-                FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath exists");
+                FrmMainApp.Logger.Trace(message: "SettingsDatabaseFilePath exists");
                 userDataBaseFile.Delete();
-                FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath deleted");
+                FrmMainApp.Logger.Trace(message: "SettingsDatabaseFilePath deleted");
             }
 
             if (!userDataBaseFile.Exists)
             {
-                FrmMainApp.Logger.Trace(message: "Creating " + HelperVariables.SSettingsDataBasePath);
+                FrmMainApp.Logger.Trace(message: "Creating " + HelperVariables.SettingsDatabaseFilePath);
                 try
                 {
-                    SQLiteConnection.CreateFile(databaseFileName: Path.Combine(HelperVariables.SSettingsDataBasePath));
-                    SQLiteConnection sqliteDB = new(connectionString: @"Data Source=" + Path.Combine(HelperVariables.SSettingsDataBasePath) + "; Version=3");
+                    SQLiteConnection.CreateFile(databaseFileName: Path.Combine(HelperVariables.SettingsDatabaseFilePath));
+                    SQLiteConnection sqliteDB = new(connectionString: @"Data Source=" + Path.Combine(HelperVariables.SettingsDatabaseFilePath) + "; Version=3");
                     sqliteDB.Open();
 
                     string sql = """

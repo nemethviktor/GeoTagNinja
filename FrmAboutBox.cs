@@ -17,7 +17,7 @@ internal partial class FrmAboutBox : Form
     public FrmAboutBox()
     {
         InitializeComponent();
-        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.SUseDarkMode
+        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
                                                      ? ThemeColour.Dark
                                                      : ThemeColour.Light, parentControl: this);
         HelperNonStatic helperNonstatic = new();

@@ -44,7 +44,7 @@ internal static class HelperExifExifToolOperator
 
             prcExifTool.StartInfo = new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
             {
-                Arguments = @"/c " + HelperVariables.SDoubleQuote + HelperVariables.SDoubleQuote + Path.Combine(path1: HelperVariables.ResourcesFolderPath, path2: "exiftool.exe") + HelperVariables.SDoubleQuote + " " + exiftoolCmd + HelperVariables.SDoubleQuote,
+                Arguments = @"/c " + HelperVariables.DoubleQuoteStr + HelperVariables.DoubleQuoteStr + Path.Combine(path1: HelperVariables.ResourcesFolderPath, path2: "exiftool.exe") + HelperVariables.DoubleQuoteStr + " " + exiftoolCmd + HelperVariables.DoubleQuoteStr,
                 UseShellExecute = false,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,

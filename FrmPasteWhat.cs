@@ -31,7 +31,7 @@ public partial class FrmPasteWhat : Form
     {
         _initiatorName = initiator;
         InitializeComponent();
-        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.SUseDarkMode
+        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
                                                      ? ThemeColour.Dark
                                                      : ThemeColour.Light, parentControl: this);
 

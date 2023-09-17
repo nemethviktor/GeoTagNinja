@@ -29,12 +29,12 @@ public partial class FrmSettings : Form
         InitializeComponent();
 
         // the custom logic is ugly af so no need to be pushy about it in light mode.
-        if (!HelperVariables.SUseDarkMode)
+        if (!HelperVariables.UserSettingUseDarkMode)
         {
             tcr_Settings.DrawMode = TabDrawMode.Normal;
         }
 
-        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.SUseDarkMode
+        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
                                                      ? ThemeColour.Dark
                                                      : ThemeColour.Light, parentControl: this);
 
@@ -264,15 +264,15 @@ public partial class FrmSettings : Form
         // (re)set the map colour mode
         if (rbt_MapColourModeDarkPale.Checked)
         {
-            HelperVariables.SMapColourMode = "DarkPale";
+            HelperVariables.UserSettingMapColourMode = "DarkPale";
         }
         else if (rbt_MapColourModeDarkInverse.Checked)
         {
-            HelperVariables.SMapColourMode = "DarkInverse";
+            HelperVariables.UserSettingMapColourMode = "DarkInverse";
         }
         else
         {
-            HelperVariables.SMapColourMode = "Normal"; // technically we could just ignore this
+            HelperVariables.UserSettingMapColourMode = "Normal"; // technically we could just ignore this
         }
 
         _nowLoadingSettingsData = false;
@@ -579,7 +579,7 @@ public partial class FrmSettings : Form
                     {
                         if ((rbt.Font.Style & FontStyle.Bold) != 0 && rbt.Checked)
                         {
-                            HelperVariables.SMapColourMode = rbt.Name.Replace(oldValue: "rbt_MapColourMode", newValue: "");
+                            HelperVariables.UserSettingMapColourMode = rbt.Name.Replace(oldValue: "rbt_MapColourMode", newValue: "");
                         }
                     }
                 }
@@ -590,40 +590,7 @@ public partial class FrmSettings : Form
         HelperDataApplicationSettings.DataDeleteSQLitesettingsToWritePreQueue();
 
         // refresh user data
-        HelperVariables.SArcGisApiKey = HelperDataApplicationSettings.DataSelectTbxARCGIS_APIKey_FromSQLite();
-        HelperVariables.SGeoNamesUserName = HelperDataApplicationSettings.DataReadSQLiteSettings(
-            tableName: "settings",
-            settingTabPage: "tpg_Application",
-            settingId: "tbx_GeoNames_UserName"
-        );
-        HelperVariables.SGeoNamesPwd = HelperDataApplicationSettings.DataReadSQLiteSettings(
-            tableName: "settings",
-            settingTabPage: "tpg_Application",
-            settingId: "tbx_GeoNames_Pwd"
-        );
-
-        HelperVariables.SResetMapToZero = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-            tableName: "settings",
-            settingTabPage: "tpg_Application",
-            settingId: "ckb_ResetMapToZero"
-        );
-        HelperVariables.SOnlyShowFCodePPL = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-            tableName: "settings",
-            settingTabPage: "tpg_Application",
-            settingId: "ckb_PopulatedPlacesOnly"
-        );
-
-        HelperVariables.SUpdatePreReleaseGTN = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-            tableName: "settings",
-            settingTabPage: "tpg_Application",
-            settingId: "ckb_UpdateCheckPreRelease"
-        );
-
-        HelperVariables.SUseDarkMode = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-            tableName: "settings",
-            settingTabPage: "tpg_Application",
-            settingId: "ckb_UseDarkMode"
-        );
+        HelperGenericAppStartup.AppStartupApplyDefaults();
 
         HelperGenericAppStartup.AppStartupPullOverWriteBlankToponomy();
         HelperGenericAppStartup.AppStartupPullToponomyRadiusAndMaxRows();
@@ -1105,11 +1072,11 @@ public partial class FrmSettings : Form
     private void TabControl_DrawItem(object sender,
                                      DrawItemEventArgs e)
     {
-        Color foreColor = HelperVariables.SUseDarkMode
+        Color foreColor = HelperVariables.UserSettingUseDarkMode
             ? Color.FromArgb(red: 241, green: 241, blue: 241)
             : Color.Black;
 
-        Color backColor = HelperVariables.SUseDarkMode
+        Color backColor = HelperVariables.UserSettingUseDarkMode
             ? Color.FromArgb(red: 101, green: 151, blue: 151)
             : SystemColors.Control;
 

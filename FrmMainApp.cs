@@ -137,7 +137,7 @@ public partial class FrmMainApp : Form
 
         HelperVariables.UserDataFolderPath = Path.Combine(path1: GetFolderPath(folder: SpecialFolder.ApplicationData), path2: "GeoTagNinja");
         HelperVariables.ResourcesFolderPath = Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "Resources");
-        HelperVariables.SSettingsDataBasePath = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "database.sqlite");
+        HelperVariables.SettingsDatabaseFilePath = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "database.sqlite");
 
         if (!Directory.Exists(path: HelperVariables.UserDataFolderPath))
         {
@@ -199,7 +199,7 @@ public partial class FrmMainApp : Form
         AppStartupInitializeComponentFrmMainApp();
 
         // the custom logic is ugly af so no need to be pushy about it in light mode.
-        if (!HelperVariables.SUseDarkMode)
+        if (!HelperVariables.UserSettingUseDarkMode)
         {
             tcr_Main.DrawMode = TabDrawMode.Normal;
             lvw_FileList.OwnerDraw = false;
@@ -311,7 +311,7 @@ public partial class FrmMainApp : Form
         Invoke(method: InitialiseWebView);
 
         // adds colour/theme
-        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.SUseDarkMode
+        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
                                                      ? ThemeColour.Dark
                                                      : ThemeColour.Light, parentControl: this);
 
@@ -731,12 +731,12 @@ public partial class FrmMainApp : Form
         string htmlCode = _mapHtmlTemplateCode;
 
         // If set, replace arcgis key
-        if (HelperVariables.SArcGisApiKey != null)
+        if (HelperVariables.UserSettingArcGisApiKey != null)
         {
-            htmlCode = htmlCode.Replace(oldValue: "yourApiKey", newValue: HelperVariables.SArcGisApiKey);
+            htmlCode = htmlCode.Replace(oldValue: "yourApiKey", newValue: HelperVariables.UserSettingArcGisApiKey);
         }
 
-        Logger.Trace(message: "HelperStatic.SArcGisApiKey == null: " + (HelperVariables.SArcGisApiKey == null));
+        Logger.Trace(message: "HelperStatic.UserSettingArcGisApiKey == null: " + (HelperVariables.UserSettingArcGisApiKey == null));
 
         foreach (KeyValuePair<string, string> replacement in replacements)
         {
@@ -829,7 +829,7 @@ public partial class FrmMainApp : Form
         string showPointsStr = "";
         string showFOVStr = "";
         string showDestinationPolyLineStr = "";
-        string mapStyleFiter = HelperVariables.SMapColourMode switch
+        string mapStyleFiter = HelperVariables.UserSettingMapColourMode switch
         {
             "DarkInverse" => "filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);",
             "DarkPale" => "filter: brightness(55%) contrast(90%);",
@@ -1176,11 +1176,15 @@ public partial class FrmMainApp : Form
         }
 
         // Get the ArcGis API Key
-        if (HelperVariables.SArcGisApiKey == null)
+        if (string.IsNullOrEmpty(HelperVariables.UserSettingArcGisApiKey))
         {
-            Logger.Trace(message: "Replace hard-coded values in the html code - SArcGisApiKey is null");
-            HelperVariables.SArcGisApiKey = HelperDataApplicationSettings.DataSelectTbxARCGIS_APIKey_FromSQLite();
-            Logger.Trace(message: "Replace hard-coded values in the html code - SArcGisApiKey obtained from SQLite OK");
+            Logger.Trace(message: "Replace hard-coded values in the html code - UserSettingArcGisApiKey is null");
+            HelperVariables.UserSettingArcGisApiKey = HelperDataApplicationSettings.DataReadSQLiteSettings(
+                tableName: "settings",
+                settingTabPage: "tpg_Application",
+                settingId: "tbx_ARCGIS_APIKey",
+                returnBlankIfNull: true);
+            Logger.Trace(message: "Replace hard-coded values in the html code - UserSettingArcGisApiKey obtained from SQLite OK");
         }
 
         // Parse coords from lat/lng text box
@@ -1328,9 +1332,9 @@ public partial class FrmMainApp : Form
     {
         Logger.Debug(message: "Starting");
 
-        HelperVariables.SChangeFolderIsOkay = false;
+        HelperVariables.OperationChangeFolderIsOkay = false;
         await HelperFileSystemOperators.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-        if (HelperVariables.SChangeFolderIsOkay)
+        if (HelperVariables.OperationChangeFolderIsOkay)
         {
             if (!Program.collectionModeEnabled)
             {
@@ -1389,7 +1393,7 @@ public partial class FrmMainApp : Form
     private async void tsb_GetAllFromWeb_Click(object sender,
                                                EventArgs e)
     {
-        HelperVariables.SApiOkay = true;
+        HelperVariables.OperationAPIReturnedOKResponse = true;
         _StopProcessingRows = false;
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         if (frmMainAppInstance != null)
@@ -1453,11 +1457,11 @@ public partial class FrmMainApp : Form
     {
         Logger.Debug(message: "Starting");
 
-        HelperVariables.SChangeFolderIsOkay = false;
+        HelperVariables.OperationChangeFolderIsOkay = false;
         await HelperFileSystemOperators.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-        Logger.Trace(message: "SChangeFolderIsOkay: " + HelperVariables.SChangeFolderIsOkay);
+        Logger.Trace(message: "OperationChangeFolderIsOkay: " + HelperVariables.OperationChangeFolderIsOkay);
 
-        if (HelperVariables.SChangeFolderIsOkay)
+        if (HelperVariables.OperationChangeFolderIsOkay)
         {
             tsb_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
         }
@@ -1474,11 +1478,11 @@ public partial class FrmMainApp : Form
     {
         Logger.Debug(message: "Starting");
 
-        HelperVariables.SChangeFolderIsOkay = false;
+        HelperVariables.OperationChangeFolderIsOkay = false;
         await HelperFileSystemOperators.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-        Logger.Trace(message: "SChangeFolderIsOkay: " + HelperVariables.SChangeFolderIsOkay);
+        Logger.Trace(message: "OperationChangeFolderIsOkay: " + HelperVariables.OperationChangeFolderIsOkay);
 
-        if (HelperVariables.SChangeFolderIsOkay)
+        if (HelperVariables.OperationChangeFolderIsOkay)
         {
             string? tmpStrParent = null;
             string? tmpStrRoot = null;
@@ -1601,9 +1605,9 @@ public partial class FrmMainApp : Form
     {
         if (e.KeyCode == Keys.Enter)
         {
-            HelperVariables.SChangeFolderIsOkay = false;
+            HelperVariables.OperationChangeFolderIsOkay = false;
             await HelperFileSystemOperators.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-            if (HelperVariables.SChangeFolderIsOkay)
+            if (HelperVariables.OperationChangeFolderIsOkay)
             {
                 btn_ts_Refresh_lvwFileList_Click(sender: this, e: new EventArgs());
             }
@@ -1651,11 +1655,11 @@ public partial class FrmMainApp : Form
     private void ListView_DrawColumnHeader(object sender,
                                            DrawListViewColumnHeaderEventArgs e)
     {
-        Color foreColor = HelperVariables.SUseDarkMode
+        Color foreColor = HelperVariables.UserSettingUseDarkMode
             ? Color.FromArgb(red: 241, green: 241, blue: 241)
             : Color.Black;
 
-        Color backColor = HelperVariables.SUseDarkMode
+        Color backColor = HelperVariables.UserSettingUseDarkMode
             ? Color.FromArgb(red: 101, green: 151, blue: 151)
             : SystemColors.ControlDark;
 
@@ -1707,11 +1711,11 @@ public partial class FrmMainApp : Form
     private void TabControl_DrawItem(object sender,
                                      DrawItemEventArgs e)
     {
-        Color foreColor = HelperVariables.SUseDarkMode
+        Color foreColor = HelperVariables.UserSettingUseDarkMode
             ? Color.FromArgb(red: 241, green: 241, blue: 241)
             : Color.Black;
 
-        Color backColor = HelperVariables.SUseDarkMode
+        Color backColor = HelperVariables.UserSettingUseDarkMode
             ? Color.FromArgb(red: 101, green: 151, blue: 151)
             : SystemColors.Control;
 
@@ -2083,9 +2087,9 @@ public partial class FrmMainApp : Form
             case DirectoryElement.ElementType.MyComputer:
             case DirectoryElement.ElementType.Drive:
                 // check for outstanding files first and save if user wants
-                HelperVariables.SChangeFolderIsOkay = false;
+                HelperVariables.OperationChangeFolderIsOkay = false;
                 await HelperFileSystemOperators.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-                if (HelperVariables.SChangeFolderIsOkay)
+                if (HelperVariables.OperationChangeFolderIsOkay)
                 {
                     if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
                     {
@@ -2229,7 +2233,7 @@ public partial class FrmMainApp : Form
         // control A -> select all
         if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
         {
-            HelperVariables.SNowSelectingAllItems = true;
+            HelperVariables.OperationNowSelectingAllItems = true;
 
             for (int i = 0; i < lvw_FileList.Items.Count; i++)
             {
@@ -2238,14 +2242,14 @@ public partial class FrmMainApp : Form
                 // so because there is no way to do a proper "select all" w/o looping i only want to run the "navigate" (which is triggered on select-state-change at the end)
                 if (i == lvw_FileList.Items.Count - 1)
                 {
-                    HelperVariables.SNowSelectingAllItems = false;
+                    HelperVariables.OperationNowSelectingAllItems = false;
                     FileListViewMapNavigation.ListViewItemClickNavigate();
                     Request_Map_NavigateGo();
                 }
             }
 
             // just in case...
-            HelperVariables.SNowSelectingAllItems = false;
+            HelperVariables.OperationNowSelectingAllItems = false;
         }
 
         // Shift Ctrl C -> copy details
@@ -2301,9 +2305,9 @@ public partial class FrmMainApp : Form
                 else if (dirElemFileToModify.Type == DirectoryElement.ElementType.SubDirectory)
                 {
                     // check for outstanding files first and save if user wants
-                    HelperVariables.SChangeFolderIsOkay = false;
+                    HelperVariables.OperationChangeFolderIsOkay = false;
                     await HelperFileSystemOperators.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-                    if (HelperVariables.SChangeFolderIsOkay)
+                    if (HelperVariables.OperationChangeFolderIsOkay)
                     {
                         if (Directory.Exists(path: dirElemFileToModify.FileNameWithPath))
                         {
@@ -2804,7 +2808,7 @@ public partial class FrmMainApp : Form
         else
         {
             CultureInfo cIEnUS = new(name: "en-US");
-            string SOnlyShowFCodePPL = HelperVariables.SOnlyShowFCodePPL
+            string SOnlyShowFCodePPL = HelperVariables.UserSettingOnlyShowFCodePPL
                 ? "&fcode=PPL"
                 : "";
             string openAPILink = "http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&lat=" +
@@ -2820,7 +2824,7 @@ public partial class FrmMainApp : Form
                                  "&maxRows=" +
                                  HelperVariables.ToponomyMaxRows +
                                  "&username=" +
-                                 HelperVariables.SGeoNamesUserName +
+                                 HelperVariables.UserSettingGeoNamesUserName +
                                  "&password=any";
             Process.Start(fileName: openAPILink);
         }

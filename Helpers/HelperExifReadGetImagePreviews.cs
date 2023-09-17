@@ -30,7 +30,7 @@ internal static class HelperExifReadGetImagePreviews
         string folderName = Path.GetDirectoryName(fileNameWithPath);
         string fileNameReplaced = rgx.Replace(input: fileNameWithPath.Replace(oldValue: folderName, newValue: ""), replacement: "_");
         string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exifArgs_getPreview_" + fileNameReplaced + ".args");
-        string exiftoolCmd = " -charset utf8 -charset filename=utf8 -b -preview:GTNPreview -w! " + HelperVariables.SDoubleQuote + HelperVariables.UserDataFolderPath + @"\%F.jpg" + HelperVariables.SDoubleQuote + " -@ " + HelperVariables.SDoubleQuote + argsFile + HelperVariables.SDoubleQuote;
+        string exiftoolCmd = " -charset utf8 -charset filename=utf8 -b -preview:GTNPreview -w! " + HelperVariables.DoubleQuoteStr + HelperVariables.UserDataFolderPath + @"\%F.jpg" + HelperVariables.DoubleQuoteStr + " -@ " + HelperVariables.DoubleQuoteStr + argsFile + HelperVariables.DoubleQuoteStr;
 
         File.Delete(path: argsFile);
 

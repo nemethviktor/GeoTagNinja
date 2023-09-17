@@ -73,7 +73,7 @@ internal static class HelperAPIVersionCheckers
         int lastGTNBuildOnline = 0;
         if (response_GTNVersionQuery.StatusCode.ToString() == "OK")
         {
-            HelperVariables.SApiOkay = true;
+            HelperVariables.OperationAPIReturnedOKResponse = true;
             JArray data = (JArray)JsonConvert.DeserializeObject(value: response_GTNVersionQuery.Content);
             GTNReleaseAPIResponse[] gtnReleasesApiResponse = GTNReleaseAPIResponse.FromJson(json: data.ToString());
 
@@ -82,7 +82,7 @@ internal static class HelperAPIVersionCheckers
 
             DateTimeOffset lastGTNBuildDate = default;
 
-            if (HelperVariables.SUpdatePreReleaseGTN)
+            if (HelperVariables.UserSettingUpdatePreReleaseGTN)
             {
                 lastGTNBuildDate = new DateTimeOffset(dateTime: gtnReleasesApiResponse[0].PublishedAt);
             }
@@ -105,7 +105,7 @@ internal static class HelperAPIVersionCheckers
         }
         else
         {
-            HelperVariables.SApiOkay = false;
+            HelperVariables.OperationAPIReturnedOKResponse = false;
             MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGTNVerAPIResponse") +
                                   response_GTNVersionQuery.StatusCode,
                             caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
@@ -232,7 +232,7 @@ internal static class HelperAPIVersionCheckers
                                                  .GetName()
                                                  .Version.Build;
 
-            HelperVariables.SApiOkay = true;
+            HelperVariables.OperationAPIReturnedOKResponse = true;
             int newestOnlineGTNVersion = 0;
             try
             {

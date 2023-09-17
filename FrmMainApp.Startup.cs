@@ -216,7 +216,7 @@ public partial class FrmMainApp
     internal static string GetUOMAbbreviated()
     {
         return HelperVariables.UOMAbbreviated = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "Label", objectName: HelperVariables.UseImperial
+            objectType: "Label", objectName: HelperVariables.UserSettingUseImperial
                 ? "lbl_Feet_Abbr"
                 : "lbl_Metres_Abbr"
         );

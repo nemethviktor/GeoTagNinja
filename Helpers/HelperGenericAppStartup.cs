@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.ListView;
@@ -181,104 +182,98 @@ internal static class HelperGenericAppStartup
         // get some defaults
         FrmMainApp.Logger.Debug(message: "Starting");
 
-        try
+        Dictionary<string, string> settingsStringBoolPairsDictionary = new()
         {
-            FrmMainApp.Logger.Debug(message: "ARCGis Key");
-            HelperVariables.SArcGisApiKey = HelperDataApplicationSettings.DataSelectTbxARCGIS_APIKey_FromSQLite();
+            { "UserSettingArcGisApiKey", "tbx_ARCGIS_APIKey" },
+            { "UserSettingGeoNamesUserName", "tbx_GeoNames_UserName" },
+            { "UserSettingGeoNamesPwd", "tbx_GeoNames_Pwd" },
+            { "UserSettingResetMapToZeroOnMissingValue", "ckb_ResetMapToZero" },
+            { "UserSettingUseDarkMode", "ckb_UseDarkMode" },
+            { "UserSettingUpdatePreReleaseGTN", "ckb_UpdateCheckPreRelease" },
+            { "UserSettingOnlyShowFCodePPL", "ckb_PopulatedPlacesOnly" },
+            { "UserSettingUseImperial", "ckb_UseImperialNotMetric" }
+        };
 
-            FrmMainApp.Logger.Debug(message: "ARCGis GeoNamesUserName");
-            HelperVariables.SGeoNamesUserName = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "tpg_Application",
-                settingId: "tbx_GeoNames_UserName"
-            );
-            FrmMainApp.Logger.Debug(message: "ARCGis GeoNamesPassword");
-            HelperVariables.SGeoNamesPwd = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "tpg_Application",
-                settingId: "tbx_GeoNames_Pwd"
-            );
-
-            HelperVariables.SResetMapToZero = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-                tableName: "settings",
-                settingTabPage: "tpg_Application",
-                settingId: "ckb_ResetMapToZero"
-            );
-
-            HelperVariables.SUpdatePreReleaseGTN = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-                tableName: "settings",
-                settingTabPage: "tpg_Application",
-                settingId: "ckb_UpdateCheckPreRelease"
-            );
-
-            HelperVariables.SOnlyShowFCodePPL = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-                tableName: "settings",
-                settingTabPage: "tpg_Application",
-                settingId: "ckb_PopulatedPlacesOnly"
-            );
-
-            HelperVariables.UseImperial = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-                tableName: "settings",
-                settingTabPage: "tpg_Application",
-                settingId: "ckb_UseImperialNotMetric"
-            );
-
-            HelperVariables.SUseDarkMode = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-                tableName: "settings",
-                settingTabPage: "tpg_Application",
-                settingId: "ckb_UseDarkMode"
-            );
-
-            // i'm open to better ideas....
-            List<string> MapColourModeRbts = new List<string>()
+        Dictionary<string, List<string>> settingsRadioButtonPairsDictionary = new()
+        {
             {
-                "rbt_MapColourModeNormal",
-                "rbt_MapColourModeDarkInverse",
-                "rbt_MapColourModeDarkPale"
-            };
-            foreach (string mapColourModeRbt in MapColourModeRbts)
-            {
-                if (HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-                        tableName: "settings",
-                        settingTabPage: "tpg_Application",
-                        settingId: mapColourModeRbt
-                    ))
+                "UserSettingMapColourMode", new List<string>
                 {
-                    HelperVariables.SMapColourMode = mapColourModeRbt.Replace("rbt_MapColourMode", "");
-                    break;
+                    "rbt_MapColourModeNormal",
+                    "rbt_MapColourModeDarkInverse",
+                    "rbt_MapColourModeDarkPale"
                 }
             }
+        };
 
-            foreach (SourcesAndAttributes.ElementAttribute attribute in SourcesAndAttributes.TagsToColumnHeaderOrder)
-            {
-                FileListView._cfg_Col_Order_Default.Add(key: SourcesAndAttributes.GetAttributeName(attribute: attribute), value: SourcesAndAttributes.TagsToColumnHeaderOrder.IndexOf(item: attribute));
-            }
-
-            // https://www.ngdc.noaa.gov/geomag/data/poles/WMM2020_NP.xy
-            // as of 20230831 -- If I haven't died of alcohol poisoning by 2025, someone remind me to update.
-            // switch (DateTime.Now.Year)
-            // {
-            //     case 2023:
-            //         HelperVariables.MapNorthCoordsMagnetic = (86.146, 146.826);
-            //         break;
-            //     case 2024:
-            //         HelperVariables.MapNorthCoordsMagnetic = (85.980, 142.293);
-            //         break;
-            //     default:
-            //         HelperVariables.MapNorthCoordsMagnetic = (85.801, 138.299);
-            //         break;
-            // }
-        }
-        catch (Exception ex)
+        Dictionary<string, string> settingsRadioButtonReplaceWhatsDictionary = new()
         {
-            FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB") +
-                      ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Error);
+            { "UserSettingMapColourMode", "rbt_MapColourMode" }
+        };
+
+        Type helperVariablesTypes = typeof(HelperVariables);
+        foreach (FieldInfo fieldInfo in helperVariablesTypes.GetFields(bindingAttr: BindingFlags.Static | BindingFlags.NonPublic))
+        {
+            try
+            {
+                if (settingsStringBoolPairsDictionary.ContainsKey(key: fieldInfo.Name))
+                {
+                    FrmMainApp.Logger.Debug(message: "Now retrieving: " + fieldInfo.Name);
+                    settingsStringBoolPairsDictionary.TryGetValue(key: fieldInfo.Name, value: out string fieldInfoSettingID);
+                    if (fieldInfo.FieldType == typeof(bool))
+                    {
+                        // In this code, fieldInfo.SetValue(null, true); is used to set the value of the static field to True.
+                        // The first parameter is the object instance for instance fields, for static fields this should be null.
+                        // The second parameter is the value to set.
+                        fieldInfo.SetValue(obj: null, value: HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
+                                               tableName: "settings",
+                                               settingTabPage: "tpg_Application",
+                                               settingId: fieldInfoSettingID
+                                           ));
+                    }
+                    else if (fieldInfo.FieldType == typeof(string))
+                    {
+                        fieldInfo.SetValue(obj: null, value: HelperDataApplicationSettings.DataReadSQLiteSettings(
+                                               tableName: "settings",
+                                               settingTabPage: "tpg_Application",
+                                               settingId: fieldInfoSettingID,
+                                               returnBlankIfNull: true
+                                           ));
+                    }
+                }
+                else if (settingsRadioButtonPairsDictionary.ContainsKey(key: fieldInfo.Name))
+                {
+                    settingsRadioButtonPairsDictionary.TryGetValue(key: fieldInfo.Name, value: out List<string> optionList);
+                    settingsRadioButtonReplaceWhatsDictionary.TryGetValue(key: fieldInfo.Name, value: out string replaceWhat);
+                    fieldInfo.SetValue(obj: null, value: HelperDataApplicationSettings.DataReadRadioButtonSettingTrueOrFalse(
+                                                                                           tableName: "settings",
+                                                                                           settingTabPage: "tpg_Application",
+                                                                                           optionList: optionList
+                                                                                       )
+                                                                                      .Replace(oldValue: replaceWhat, newValue: ""));
+                }
+            }
+            catch (Exception ex)
+            {
+                FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
+                MessageBox.Show(
+                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                              messageBoxName: "mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB") +
+                          ex.Message,
+                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Error);
+            }
+        }
+
+        foreach (SourcesAndAttributes.ElementAttribute attribute in SourcesAndAttributes.TagsToColumnHeaderOrder.Where(
+                     predicate: attribute =>
+                         !FileListView._cfg_Col_Order_Default.ContainsKey(
+                             key: SourcesAndAttributes.GetAttributeName(attribute: attribute))))
+        {
+            FileListView._cfg_Col_Order_Default.Add(
+                key: SourcesAndAttributes.GetAttributeName(attribute: attribute),
+                value: SourcesAndAttributes.TagsToColumnHeaderOrder.IndexOf(item: attribute));
         }
     }
 
@@ -325,7 +320,7 @@ internal static class HelperGenericAppStartup
                 tableName: "settings",
                 settingTabPage: "tpg_Application",
                 settingId: "tbx_ReplaceBlankToponyms");
-            ;
+
             if (!string.IsNullOrEmpty(value: replaceEmpty))
             {
                 HelperVariables.ToponomyReplaceWithWhat = replaceEmpty;

@@ -77,7 +77,7 @@ internal static class HelperExifReadExifData
             bool isPredeterminedCountry = false;
 
             CountryCode = lstToponomySessionData[index: 0][columnName: "CountryCode"]
-                .ToString();
+               .ToString();
             Country = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
                     queryWhat: "ISO_3166_1A3",
                     inputVal: CountryCode,
@@ -85,21 +85,21 @@ internal static class HelperExifReadExifData
                 ;
 
             Altitude = lstToponomySessionData[index: 0][columnName: "GPSAltitude"]
-                .ToString();
+               .ToString();
 
             timezoneId = lstToponomySessionData[index: 0][columnName: "timezoneId"]
-                .ToString();
+               .ToString();
 
             string? AdminName1InSQL = lstToponomySessionData[index: 0][columnName: "AdminName1"]
-                .ToString();
+               .ToString();
             string? AdminName2InSQL = lstToponomySessionData[index: 0][columnName: "AdminName2"]
-                .ToString();
+               .ToString();
             string? AdminName3InSQL = lstToponomySessionData[index: 0][columnName: "AdminName3"]
-                .ToString();
+               .ToString();
             string? AdminName4InSQL = lstToponomySessionData[index: 0][columnName: "AdminName4"]
-                .ToString();
+               .ToString();
             string? ToponymNameInSQL = lstToponomySessionData[index: 0][columnName: "ToponymName"]
-                .ToString();
+               .ToString();
 
             // In a country where you know, which admin level the cities belong to (see arrays), use the adminNameX as city name.
             // If the toponymName doesn't match the adminNameX, use the toponymName as sublocation name. toponymNames ...
@@ -160,10 +160,10 @@ internal static class HelperExifReadExifData
                     foreach (DataRow dataRow in drCustomRulesData)
                     {
                         string DataPointName = dataRow[columnName: "DataPointName"]
-                            .ToString();
+                           .ToString();
 
                         string DataPointConditionType = dataRow[columnName: "DataPointConditionType"]
-                            .ToString();
+                           .ToString();
 
                         string DataPointValueInSQL = null;
 
@@ -190,7 +190,7 @@ internal static class HelperExifReadExifData
                         if (!string.IsNullOrEmpty(value: DataPointValueInSQL))
                         {
                             string? DataPointConditionValue = dataRow[columnName: "DataPointConditionValue"]
-                                .ToString();
+                               .ToString();
                             string? DataPointValueInSQLLC = DataPointValueInSQL.ToLower();
                             string? DataPointConditionValueLC = DataPointConditionValue.ToLower();
                             bool comparisonIsTrue = false;
@@ -229,11 +229,11 @@ internal static class HelperExifReadExifData
                             if (comparisonIsTrue && ((stopProcessingRules && !customRuleChangedSub_location) || !stopProcessingRules))
                             {
                                 string? TargetPointName = dataRow[columnName: "TargetPointName"]
-                                    .ToString();
+                                   .ToString();
                                 string? TargetPointOutcome = dataRow[columnName: "TargetPointOutcome"]
-                                    .ToString();
+                                   .ToString();
                                 string? TargetPointOutcomeCustom = dataRow[columnName: "TargetPointOutcomeCustom"]
-                                    .ToString();
+                                   .ToString();
 
                                 switch (TargetPointName)
                                 {
@@ -357,7 +357,7 @@ internal static class HelperExifReadExifData
             dtReturn.Rows.Add(row: drReturnRow);
         }
         // read from API
-        else if (HelperVariables.SApiOkay)
+        else if (HelperVariables.OperationAPIReturnedOKResponse)
         {
             bool isPredeterminedCountry = false;
 
@@ -422,7 +422,7 @@ internal static class HelperExifReadExifData
                         DataRow drWriteToSqLiteRow = dtWriteToSQLite.NewRow();
 
                         string APICountryCode = readJsonToponomy.Geonames[index]
-                            .CountryCode;
+                                                                .CountryCode;
                         if (APICountryCode.Length == 2)
                         {
                             CountryCode = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
@@ -438,7 +438,7 @@ internal static class HelperExifReadExifData
                         }
 
                         bool _ = double.TryParse(s: readJsonToponomy.Geonames[index]
-                                                     .Srtm3.ToString(), result: out double tmpAlt);
+                                                                    .Srtm3.ToString(), result: out double tmpAlt);
                         try
                         {
                             // can return 32768 or -32768 in some cases. this is the API's "fault" (not that of the code.)
@@ -463,21 +463,21 @@ internal static class HelperExifReadExifData
 
                         // this is already String.
                         timezoneId = readJsonToponomy.Geonames[index]
-                            .Timezone.TimeZoneId;
+                                                     .Timezone.TimeZoneId;
 
                         Distance = readJsonToponomy.Geonames[index]
-                            .Distance;
+                                                   .Distance;
 
                         string? AdminName1InAPI = readJsonToponomy.Geonames[index]
-                            .AdminName1;
+                                                                  .AdminName1;
                         string? AdminName2InAPI = readJsonToponomy.Geonames[index]
-                            .AdminName2;
+                                                                  .AdminName2;
                         string? AdminName3InAPI = readJsonToponomy.Geonames[index]
-                            .AdminName3;
+                                                                  .AdminName3;
                         string? AdminName4InAPI = readJsonToponomy.Geonames[index]
-                            .AdminName4;
+                                                                  .AdminName4;
                         string? ToponymNameInAPI = readJsonToponomy.Geonames[index]
-                            .ToponymName;
+                                                                   .ToponymName;
 
                         // Comments are copied from above.
                         // In a country where you know, which admin level the cities belong to (see arrays), use the adminNameX as city name.
@@ -494,7 +494,7 @@ internal static class HelperExifReadExifData
                             isPredeterminedCountry = true;
 
                             Sub_location = readJsonToponomy.Geonames[index]
-                                .ToponymName;
+                                                           .ToponymName;
                             if (HelperVariables.LstCityNameIsAdminName1.Contains(item: CountryCode))
                             {
                                 City = AdminName1InAPI;
@@ -539,10 +539,10 @@ internal static class HelperExifReadExifData
                                 foreach (DataRow dataRow in drCustomRulesData)
                                 {
                                     string? DataPointName = dataRow[columnName: "DataPointName"]
-                                        .ToString();
+                                       .ToString();
 
                                     string? DataPointConditionType = dataRow[columnName: "DataPointConditionType"]
-                                        .ToString();
+                                       .ToString();
 
                                     string? DataPointValueInAPI = null;
                                     switch (DataPointName)
@@ -568,7 +568,7 @@ internal static class HelperExifReadExifData
                                     if (!string.IsNullOrEmpty(value: DataPointValueInAPI))
                                     {
                                         string? DataPointConditionValue = dataRow[columnName: "DataPointConditionValue"]
-                                            .ToString();
+                                           .ToString();
                                         string? DataPointValueInAPILC = DataPointValueInAPI?.ToLower();
                                         string? DataPointConditionValueLC = DataPointConditionValue.ToLower();
                                         bool comparisonIsTrue = false;
@@ -607,11 +607,11 @@ internal static class HelperExifReadExifData
                                         if (comparisonIsTrue && ((stopProcessingRules && !customRuleChangedSub_location) || !stopProcessingRules))
                                         {
                                             string? TargetPointName = dataRow[columnName: "TargetPointName"]
-                                                .ToString();
+                                               .ToString();
                                             string? TargetPointOutcome = dataRow[columnName: "TargetPointOutcome"]
-                                                .ToString();
+                                               .ToString();
                                             string? TargetPointOutcomeCustom = dataRow[columnName: "TargetPointOutcomeCustom"]
-                                                .ToString();
+                                               .ToString();
 
                                             switch (TargetPointName)
                                             {
@@ -738,15 +738,15 @@ internal static class HelperExifReadExifData
                         drWriteToSqLiteRow[columnName: "lat"] = lat;
                         drWriteToSqLiteRow[columnName: "lng"] = lng;
                         drWriteToSqLiteRow[columnName: "AdminName1"] = readJsonToponomy.Geonames[index]
-                            .AdminName1;
+                                                                                       .AdminName1;
                         drWriteToSqLiteRow[columnName: "AdminName2"] = readJsonToponomy.Geonames[index]
-                            .AdminName2;
+                                                                                       .AdminName2;
                         drWriteToSqLiteRow[columnName: "AdminName3"] = readJsonToponomy.Geonames[index]
-                            .AdminName3;
+                                                                                       .AdminName3;
                         drWriteToSqLiteRow[columnName: "AdminName4"] = readJsonToponomy.Geonames[index]
-                            .AdminName4;
+                                                                                       .AdminName4;
                         drWriteToSqLiteRow[columnName: "ToponymName"] = readJsonToponomy.Geonames[index]
-                            .ToponymName;
+                                                                                        .ToponymName;
                         drWriteToSqLiteRow[columnName: "CountryCode"] = CountryCode;
                         drWriteToSqLiteRow[columnName: "GPSAltitude"] = Altitude;
                         drWriteToSqLiteRow[columnName: "timezoneId"] = timezoneId;
@@ -760,25 +760,25 @@ internal static class HelperExifReadExifData
 
                         HelperDataOtherDataRelated.UpdateAddToDataTableTopopnomy(
                             lat: dtWriteToSQLite.Rows[index: 0][columnName: "lat"]
-                                .ToString(),
+                                                .ToString(),
                             lng: dtWriteToSQLite.Rows[index: 0][columnName: "lng"]
-                                .ToString(),
+                                                .ToString(),
                             adminName1: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName1"]
-                                .ToString(),
+                                                       .ToString(),
                             adminName2: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName2"]
-                                .ToString(),
+                                                       .ToString(),
                             adminName3: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName3"]
-                                .ToString(),
+                                                       .ToString(),
                             adminName4: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName4"]
-                                .ToString(),
+                                                       .ToString(),
                             toponymName: dtWriteToSQLite.Rows[index: 0][columnName: "ToponymName"]
-                                .ToString(),
+                                                        .ToString(),
                             countryCode: dtWriteToSQLite.Rows[index: 0][columnName: "CountryCode"]
-                                .ToString(),
+                                                        .ToString(),
                             altitude: dtWriteToSQLite.Rows[index: 0][columnName: "GPSAltitude"]
-                                .ToString(),
+                                                     .ToString(),
                             timezoneId: dtWriteToSQLite.Rows[index: 0][columnName: "timezoneId"]
-                                .ToString()
+                                                       .ToString()
                         );
                     }
                     else
@@ -799,37 +799,37 @@ internal static class HelperExifReadExifData
 
                         int useDr = showDataFromAPIPicker(dtIn: dtReturn);
                         dtReturn = dtReturn.AsEnumerable()
-                            .Where(predicate: (row,
-                                               index) => index == useDr)
-                            .CopyToDataTable();
+                                           .Where(predicate: (row,
+                                                              index) => index == useDr)
+                                           .CopyToDataTable();
 
                         dtWriteToSQLite = dtWriteToSQLite.AsEnumerable()
-                            .Where(predicate: (row,
-                                               index) => index == useDr)
-                            .CopyToDataTable();
+                                                         .Where(predicate: (row,
+                                                                            index) => index == useDr)
+                                                         .CopyToDataTable();
 
                         // [0] because we just killed off the other rows above.
                         HelperDataOtherDataRelated.UpdateAddToDataTableTopopnomy(
                             lat: dtWriteToSQLite.Rows[index: 0][columnName: "lat"]
-                                .ToString(),
+                                                .ToString(),
                             lng: dtWriteToSQLite.Rows[index: 0][columnName: "lng"]
-                                .ToString(),
+                                                .ToString(),
                             adminName1: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName1"]
-                                .ToString(),
+                                                       .ToString(),
                             adminName2: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName2"]
-                                .ToString(),
+                                                       .ToString(),
                             adminName3: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName3"]
-                                .ToString(),
+                                                       .ToString(),
                             adminName4: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName4"]
-                                .ToString(),
+                                                       .ToString(),
                             toponymName: dtWriteToSQLite.Rows[index: 0][columnName: "ToponymName"]
-                                .ToString(),
+                                                        .ToString(),
                             countryCode: dtWriteToSQLite.Rows[index: 0][columnName: "CountryCode"]
-                                .ToString(),
+                                                        .ToString(),
                             altitude: dtWriteToSQLite.Rows[index: 0][columnName: "GPSAltitude"]
-                                .ToString(),
+                                                     .ToString(),
                             timezoneId: dtWriteToSQLite.Rows[index: 0][columnName: "timezoneId"]
-                                .ToString()
+                                                       .ToString()
                         );
 
                         int showDataFromAPIPicker(DataTable dtIn)
@@ -879,11 +879,11 @@ internal static class HelperExifReadExifData
                                 // make it not-zero based.
                                 ListViewItem lvi = new(text: (dtReturn.Rows.IndexOf(row: drItem) +
                                                               1)
-                                                       .ToString());
+                                                      .ToString());
                                 foreach (DataColumn dc in dtIn.Columns)
                                 {
                                     string dataToAdd = drItem[column: dc]
-                                        .ToString();
+                                       .ToString();
 
                                     lvi.SubItems.Add(text: dataToAdd);
                                 }
@@ -892,7 +892,7 @@ internal static class HelperExifReadExifData
                             }
 
                             lvwDataChoices.Items[index: 0]
-                                .Selected = true;
+                                          .Selected = true;
                             lvwDataChoices.Select();
 
                             lvwDataChoices.KeyUp += (sender,
@@ -935,7 +935,7 @@ internal static class HelperExifReadExifData
                             try
                             {
                                 return lvwDataChoices.SelectedItems[index: 0]
-                                    .Index;
+                                                     .Index;
                             }
                             catch
                             {
@@ -944,7 +944,7 @@ internal static class HelperExifReadExifData
                         }
                     }
                 }
-                else if (HelperVariables.SApiOkay)
+                else if (HelperVariables.OperationAPIReturnedOKResponse)
                 {
                     // write back empty
                     HelperDataOtherDataRelated.UpdateAddToDataTableTopopnomy(

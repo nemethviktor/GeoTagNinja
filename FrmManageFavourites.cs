@@ -14,7 +14,7 @@ public partial class FrmManageFavourites : Form
     public FrmManageFavourites()
     {
         InitializeComponent();
-        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.SUseDarkMode
+        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
                                                      ? ThemeColour.Dark
                                                      : ThemeColour.Light, parentControl: this);
     }

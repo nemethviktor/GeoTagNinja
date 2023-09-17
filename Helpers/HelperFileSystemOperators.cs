@@ -16,7 +16,7 @@ internal static class HelperFileSystemOperators
     /// <returns>Realistically nothing but it sets s_changeFolderIsOkay according to the user input and circumstances</returns>
     internal static async Task FsoCheckOutstandingFiledataOkayToChangeFolderAsync()
     {
-        HelperVariables.SChangeFolderIsOkay = false;
+        HelperVariables.OperationChangeFolderIsOkay = false;
 
         // check if there's anything in the write-Q
         bool dataToWrite = false;
@@ -56,7 +56,7 @@ internal static class HelperFileSystemOperators
                 }
 
                 await HelperExifWriteSaveToFile.ExifWriteExifToFile();
-                HelperVariables.SChangeFolderIsOkay = true;
+                HelperVariables.OperationChangeFolderIsOkay = true;
             }
             else if (dialogResult == DialogResult.No)
             {
@@ -70,12 +70,12 @@ internal static class HelperFileSystemOperators
                     }
                 }
 
-                HelperVariables.SChangeFolderIsOkay = true;
+                HelperVariables.OperationChangeFolderIsOkay = true;
             }
         }
         else
         {
-            HelperVariables.SChangeFolderIsOkay = true;
+            HelperVariables.OperationChangeFolderIsOkay = true;
         }
     }
 

@@ -40,14 +40,14 @@ public partial class FrmEditFileData : Form
 
         InitializeComponent();
         // the custom logic is ugly af so no need to be pushy about it in light mode.
-        if (!HelperVariables.SUseDarkMode)
+        if (!HelperVariables.UserSettingUseDarkMode)
         {
             tcr_EditData.DrawMode = TabDrawMode.Normal;
             lvw_FileListEditImages.OwnerDraw = false;
         }
 
         logger.Trace(message: "InitializeComponent OK");
-        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.SUseDarkMode
+        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
                                                      ? ThemeColour.Dark
                                                      : ThemeColour.Light, parentControl: this);
     }
@@ -600,11 +600,11 @@ public partial class FrmEditFileData : Form
     private void ListView_DrawColumnHeader(object sender,
                                            DrawListViewColumnHeaderEventArgs e)
     {
-        Color foreColor = HelperVariables.SUseDarkMode
+        Color foreColor = HelperVariables.UserSettingUseDarkMode
             ? Color.FromArgb(red: 241, green: 241, blue: 241)
             : Color.Black;
 
-        Color backColor = HelperVariables.SUseDarkMode
+        Color backColor = HelperVariables.UserSettingUseDarkMode
             ? Color.FromArgb(red: 101, green: 151, blue: 151)
             : SystemColors.Control;
 
@@ -656,11 +656,11 @@ public partial class FrmEditFileData : Form
     private void TabControl_DrawItem(object sender,
                                      DrawItemEventArgs e)
     {
-        Color foreColor = HelperVariables.SUseDarkMode
+        Color foreColor = HelperVariables.UserSettingUseDarkMode
             ? Color.FromArgb(red: 241, green: 241, blue: 241)
             : Color.Black;
 
-        Color backColor = HelperVariables.SUseDarkMode
+        Color backColor = HelperVariables.UserSettingUseDarkMode
             ? Color.FromArgb(red: 101, green: 151, blue: 151)
             : SystemColors.Control;
 
@@ -702,7 +702,7 @@ public partial class FrmEditFileData : Form
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         //reset this just in case.
-        HelperVariables.SApiOkay = true;
+        HelperVariables.OperationAPIReturnedOKResponse = true;
         switch (((Button)sender).Name)
         {
             case "btn_getFromWeb_Toponomy":
@@ -740,7 +740,7 @@ public partial class FrmEditFileData : Form
                 break;
         }
 
-        if (HelperVariables.SApiOkay)
+        if (HelperVariables.OperationAPIReturnedOKResponse)
         {
             MessageBox.Show(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_InfoDataUpdated"),

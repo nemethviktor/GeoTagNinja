@@ -250,14 +250,14 @@ internal static class HelperExifReadTrackData
                                     // pull from web
                                     if (!doNotReverseGeoCode)
                                     {
-                                        HelperVariables.SApiOkay = true;
+                                        HelperVariables.OperationAPIReturnedOKResponse = true;
                                         DataTable dtToponomy = HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(
                                             lat: strLatInAPI.ToString(provider: CultureInfo.InvariantCulture),
                                             lng: strLngInAPI.ToString(provider: CultureInfo.InvariantCulture),
                                             fileNameWithoutPath: fileNameWithoutPath
                                         );
 
-                                        if (HelperVariables.SApiOkay)
+                                        if (HelperVariables.OperationAPIReturnedOKResponse)
                                         {
                                             List<(ElementAttribute attribute, string toponomyOverwriteVal)> toponomyOverwrites = new()
                                             {

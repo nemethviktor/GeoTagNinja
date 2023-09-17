@@ -30,7 +30,7 @@ public partial class FrmImportGpx : Form
     public FrmImportGpx()
     {
         InitializeComponent();
-        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.SUseDarkMode
+        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
                                                      ? ThemeColour.Dark
                                                      : ThemeColour.Light, parentControl: this);
 

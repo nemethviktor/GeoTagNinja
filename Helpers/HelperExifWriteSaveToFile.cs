@@ -22,7 +22,7 @@ internal static class HelperExifWriteSaveToFile
 
         HelperGenericFileLocking.FilesAreBeingSaved = true;
         string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exifArgsToWrite.args");
-        string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8" + " -@ " + HelperVariables.SDoubleQuote + argsFile + HelperVariables.SDoubleQuote;
+        string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8" + " -@ " + HelperVariables.DoubleQuoteStr + argsFile + HelperVariables.DoubleQuoteStr;
 
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
@@ -238,7 +238,7 @@ internal static class HelperExifWriteSaveToFile
                                         else if (exifToolAttribute.EndsWith(value: "GPSAltitude"))
                                         {
                                             double.TryParse(s: updateExifVal, style: NumberStyles.AllowDecimalPoint, provider: CultureInfo.InvariantCulture, result: out double tmpAltitude);
-                                            updateExifVal = (HelperVariables.UseImperial
+                                            updateExifVal = (HelperVariables.UserSettingUseImperial
                                                 ? Math.Round(value: tmpAltitude / HelperVariables.MetreToFeet, digits: 2)
                                                 : tmpAltitude).ToString(provider: CultureInfo.InvariantCulture);
 
