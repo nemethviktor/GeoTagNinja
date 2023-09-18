@@ -1738,7 +1738,15 @@ public partial class FrmMainApp : Form
     {
         public DarkMenuStripRenderer() : base(professionalColorTable: new DarkColours())
         { }
+
+        protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
+        {
+            e.TextColor = Color.White;
+
+            base.OnRenderItemText(e: e);
+        }
     }
+
 
     private class DarkColours : ProfessionalColorTable
     {
@@ -1755,6 +1763,8 @@ public partial class FrmMainApp : Form
         public override Color MenuItemSelectedGradientBegin => ColorTranslator.FromHtml(htmlColor: "#4C4A48");
 
         public override Color MenuItemSelectedGradientEnd => ColorTranslator.FromHtml(htmlColor: "#5F5D5B");
+
+        public override Color MenuItemSelected => ColorTranslator.FromHtml(htmlColor: "#5F5D5B");
 
         public override Color ToolStripDropDownBackground => ColorTranslator.FromHtml(htmlColor: "#404040");
 
