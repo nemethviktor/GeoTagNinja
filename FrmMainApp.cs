@@ -409,18 +409,20 @@ public partial class FrmMainApp : Form
 
         // Write lat/long for future reference to db
         Logger.Trace(message: "Write lat/long for future reference to db [lat/lng]: " + nud_lat.Text + "/" + nud_lng.Text);
-        HelperDataApplicationSettings.DataWriteSQLiteSettings(
-            tableName: "settings",
-            settingTabPage: "generic",
-            settingId: "lastLat",
-            settingValue: nud_lat.Text
-        );
-        HelperDataApplicationSettings.DataWriteSQLiteSettings(
-            tableName: "settings",
-            settingTabPage: "generic",
-            settingId: "lastLng",
-            settingValue: nud_lng.Text
-        );
+        List<(string settingId, string settingValue)> settings = new()
+        {
+            ("lastLat", nud_lat.Text),
+            ("lastLng", nud_lng.Text)
+        };
+        foreach ((string settingId, string settingValue) setting in settings)
+        {
+            HelperDataApplicationSettings.DataWriteSQLiteSettings(
+                tableName: "settings",
+                settingTabPage: "generic",
+                settingId: setting.settingId,
+                settingValue: setting.settingValue
+            );
+        }
 
         // clean up
         Logger.Trace(message: "Set pbx_imagePreview.Image = null");
@@ -562,29 +564,23 @@ public partial class FrmMainApp : Form
 
                         if (senderName == "btn_loctToFile")
                         {
-                            // Latitude
-                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSLatitude,
-                                                                         value: strGPSLatitudeOnTheMap,
-                                                                         version: DirectoryElement.AttributeVersion
-                                                                                                  .Stage3ReadyToWrite,
-                                                                         isMarkedForDeletion: false);
-
-                            // Longitude
-                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSLongitude,
-                                                                         value: strGPSLongitudeOnTheMap,
-                                                                         version: DirectoryElement.AttributeVersion
-                                                                                                  .Stage3ReadyToWrite,
-                                                                         isMarkedForDeletion: false);
-
                             string tmpCoords = strGPSLatitudeOnTheMap + ";" + strGPSLongitudeOnTheMap != ";"
                                 ? strGPSLatitudeOnTheMap + ";" + strGPSLongitudeOnTheMap
                                 : "";
 
-                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.Coordinates,
-                                                                         value: tmpCoords,
-                                                                         version: DirectoryElement.AttributeVersion
-                                                                                                  .Stage3ReadyToWrite,
-                                                                         isMarkedForDeletion: false);
+                            List<(ElementAttribute attribute, string value)> attributes = new()
+                            {
+                                (ElementAttribute.GPSLatitude, strGPSLatitudeOnTheMap),
+                                (ElementAttribute.GPSLongitude, strGPSLongitudeOnTheMap),
+                                (ElementAttribute.Coordinates, tmpCoords)
+                            };
+                            foreach ((ElementAttribute attribute, string value) in attributes)
+                            {
+                                dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
+                                                                             value: value,
+                                                                             version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                                                                             isMarkedForDeletion: false);
+                            }
 
                             if (!_showLocToMapDialogChoice.Contains(value: "_remember"))
                             {
@@ -600,29 +596,23 @@ public partial class FrmMainApp : Form
                         }
                         else if (senderName == "btn_loctToFileDestination")
                         {
-                            // Latitude
-                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSDestLatitude,
-                                                                         value: strGPSLatitudeOnTheMap,
-                                                                         version: DirectoryElement.AttributeVersion
-                                                                                                  .Stage3ReadyToWrite,
-                                                                         isMarkedForDeletion: false);
-
-                            // Longitude
-                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSDestLongitude,
-                                                                         value: strGPSLongitudeOnTheMap,
-                                                                         version: DirectoryElement.AttributeVersion
-                                                                                                  .Stage3ReadyToWrite,
-                                                                         isMarkedForDeletion: false);
-
                             string tmpCoords = strGPSLatitudeOnTheMap + ";" + strGPSLongitudeOnTheMap != ";"
                                 ? strGPSLatitudeOnTheMap + ";" + strGPSLongitudeOnTheMap
                                 : "";
 
-                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.DestCoordinates,
-                                                                         value: tmpCoords,
-                                                                         version: DirectoryElement.AttributeVersion
-                                                                                                  .Stage3ReadyToWrite,
-                                                                         isMarkedForDeletion: false);
+                            List<(ElementAttribute attribute, string value)> attributesAndValues = new()
+                            {
+                                (ElementAttribute.GPSDestLatitude, strGPSLatitudeOnTheMap),
+                                (ElementAttribute.GPSDestLongitude, strGPSLongitudeOnTheMap),
+                                (ElementAttribute.DestCoordinates, tmpCoords)
+                            };
+                            foreach ((ElementAttribute attribute, string value) in attributesAndValues)
+                            {
+                                dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
+                                                                             value: value,
+                                                                             version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                                                                             isMarkedForDeletion: false);
+                            }
                         }
 
                         await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
@@ -1078,25 +1068,31 @@ public partial class FrmMainApp : Form
             }
         }
 
-        htmlReplacements.Add(key: "replaceLat", value: HelperVariables.LastLat.ToString()
-                                                                      .Replace(oldChar: ',', newChar: '.'));
-        htmlReplacements.Add(key: "replaceLng", value: HelperVariables.LastLng.ToString()
-                                                                      .Replace(oldChar: ',', newChar: '.'));
-        htmlReplacements.Add(key: "replaceMinLat", value: HelperVariables.MinLat.ToString()
-                                                                         .Replace(oldChar: ',', newChar: '.'));
-        htmlReplacements.Add(key: "replaceMinLng", value: HelperVariables.MinLng.ToString()
-                                                                         .Replace(oldChar: ',', newChar: '.'));
-        htmlReplacements.Add(key: "replaceMaxLat", value: HelperVariables.MaxLat.ToString()
-                                                                         .Replace(oldChar: ',', newChar: '.'));
-        htmlReplacements.Add(key: "replaceMaxLng", value: HelperVariables.MaxLng.ToString()
-                                                                         .Replace(oldChar: ',', newChar: '.'));
-
-        htmlReplacements.Add(key: "{ HTMLMapStyleCSS }", value: mapStyleCSS);
-        htmlReplacements.Add(key: "{ HTMLCreatePoints }", value: createPointsStr);
-        htmlReplacements.Add(key: "{ HTMLShowLines }", value: showLinesStr);
-        htmlReplacements.Add(key: "{ HTMLShowPoints }", value: showPointsStr);
-        htmlReplacements.Add(key: "{ HTMLShowFOVPolygon }", value: showFOVStr);
-        htmlReplacements.Add(key: "{ HTMLShowPolyLine }", value: showDestinationPolyLineStr);
+        List<(string key, string value)> replacements = new()
+        {
+            ("replaceLat", HelperVariables.LastLat.ToString()
+                                          .Replace(oldChar: ',', newChar: '.')),
+            ("replaceLng", HelperVariables.LastLng.ToString()
+                                          .Replace(oldChar: ',', newChar: '.')),
+            ("replaceMinLat", HelperVariables.MinLat.ToString()
+                                             .Replace(oldChar: ',', newChar: '.')),
+            ("replaceMinLng", HelperVariables.MinLng.ToString()
+                                             .Replace(oldChar: ',', newChar: '.')),
+            ("replaceMaxLat", HelperVariables.MaxLat.ToString()
+                                             .Replace(oldChar: ',', newChar: '.')),
+            ("replaceMaxLng", HelperVariables.MaxLng.ToString()
+                                             .Replace(oldChar: ',', newChar: '.')),
+            ("{ HTMLMapStyleCSS }", mapStyleCSS),
+            ("{ HTMLCreatePoints }", createPointsStr),
+            ("{ HTMLShowLines }", showLinesStr),
+            ("{ HTMLShowPoints }", showPointsStr),
+            ("{ HTMLShowFOVPolygon }", showFOVStr),
+            ("{ HTMLShowPolyLine }", showDestinationPolyLineStr)
+        };
+        foreach ((string key, string value) in replacements)
+        {
+            htmlReplacements.Add(key: key, value: value);
+        }
 
         updateWebView(replacements: htmlReplacements);
     }
@@ -1174,7 +1170,7 @@ public partial class FrmMainApp : Form
         }
 
         // Get the ArcGis API Key
-        if (string.IsNullOrEmpty(HelperVariables.UserSettingArcGisApiKey))
+        if (string.IsNullOrEmpty(value: HelperVariables.UserSettingArcGisApiKey))
         {
             Logger.Trace(message: "Replace hard-coded values in the html code - UserSettingArcGisApiKey is null");
             HelperVariables.UserSettingArcGisApiKey = HelperDataApplicationSettings.DataReadSQLiteSettings(
@@ -1740,45 +1736,45 @@ public partial class FrmMainApp : Form
     // via https://stackoverflow.com/questions/9260303/how-to-change-menu-hover-color
     private class DarkMenuStripRenderer : ToolStripProfessionalRenderer
     {
-        public DarkMenuStripRenderer() : base(new DarkColours())
+        public DarkMenuStripRenderer() : base(professionalColorTable: new DarkColours())
         { }
     }
 
     private class DarkColours : ProfessionalColorTable
     {
-        public override Color MenuItemBorder => ColorTranslator.FromHtml("#BAB9B9");
+        public override Color MenuItemBorder => ColorTranslator.FromHtml(htmlColor: "#BAB9B9");
 
         public override Color MenuBorder => Color.Silver; //added for changing the menu border
 
-        public override Color MenuItemPressedGradientBegin => ColorTranslator.FromHtml("#4C4A48");
+        public override Color MenuItemPressedGradientBegin => ColorTranslator.FromHtml(htmlColor: "#4C4A48");
 
-        public override Color MenuItemPressedGradientEnd => ColorTranslator.FromHtml("#5F5D5B");
+        public override Color MenuItemPressedGradientEnd => ColorTranslator.FromHtml(htmlColor: "#5F5D5B");
 
-        public override Color ToolStripBorder => ColorTranslator.FromHtml("#4C4A48");
+        public override Color ToolStripBorder => ColorTranslator.FromHtml(htmlColor: "#4C4A48");
 
-        public override Color MenuItemSelectedGradientBegin => ColorTranslator.FromHtml("#4C4A48");
+        public override Color MenuItemSelectedGradientBegin => ColorTranslator.FromHtml(htmlColor: "#4C4A48");
 
-        public override Color MenuItemSelectedGradientEnd => ColorTranslator.FromHtml("#5F5D5B");
+        public override Color MenuItemSelectedGradientEnd => ColorTranslator.FromHtml(htmlColor: "#5F5D5B");
 
-        public override Color ToolStripDropDownBackground => ColorTranslator.FromHtml("#404040");
+        public override Color ToolStripDropDownBackground => ColorTranslator.FromHtml(htmlColor: "#404040");
 
-        public override Color ToolStripGradientBegin => ColorTranslator.FromHtml("#404040");
+        public override Color ToolStripGradientBegin => ColorTranslator.FromHtml(htmlColor: "#404040");
 
-        public override Color ToolStripGradientEnd => ColorTranslator.FromHtml("#404040");
+        public override Color ToolStripGradientEnd => ColorTranslator.FromHtml(htmlColor: "#404040");
 
-        public override Color ToolStripGradientMiddle => ColorTranslator.FromHtml("#404040");
+        public override Color ToolStripGradientMiddle => ColorTranslator.FromHtml(htmlColor: "#404040");
 
-        public override Color ImageMarginGradientBegin => ColorTranslator.FromHtml("#404040");
+        public override Color ImageMarginGradientBegin => ColorTranslator.FromHtml(htmlColor: "#404040");
 
-        public override Color ImageMarginGradientEnd => ColorTranslator.FromHtml("#404040");
+        public override Color ImageMarginGradientEnd => ColorTranslator.FromHtml(htmlColor: "#404040");
 
-        public override Color ImageMarginGradientMiddle => ColorTranslator.FromHtml("#404040");
+        public override Color ImageMarginGradientMiddle => ColorTranslator.FromHtml(htmlColor: "#404040");
 
-        public override Color ImageMarginRevealedGradientBegin => ColorTranslator.FromHtml("#404040");
+        public override Color ImageMarginRevealedGradientBegin => ColorTranslator.FromHtml(htmlColor: "#404040");
 
-        public override Color ImageMarginRevealedGradientEnd => ColorTranslator.FromHtml("#404040");
+        public override Color ImageMarginRevealedGradientEnd => ColorTranslator.FromHtml(htmlColor: "#404040");
 
-        public override Color ImageMarginRevealedGradientMiddle => ColorTranslator.FromHtml("#404040");
+        public override Color ImageMarginRevealedGradientMiddle => ColorTranslator.FromHtml(htmlColor: "#404040");
     }
 
 #endregion
@@ -2070,10 +2066,10 @@ public partial class FrmMainApp : Form
             return;
         }
 
-        DirectoryElement item_de = (DirectoryElement)item.Tag;
+        DirectoryElement directoryElement = (DirectoryElement)item.Tag;
         Logger.Trace(message: "item: " + item.Text);
 
-        switch (item_de.Type)
+        switch (directoryElement.Type)
         {
             // if .. (parent) then do a folder-up
             case DirectoryElement.ElementType.ParentDirectory:

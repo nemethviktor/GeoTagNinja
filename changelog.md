@@ -1,12 +1,6 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 86xx [202309xx]** 
-- NEW & UPDATED:
-  - Fine-tuning of Dark Mode UI
-  - Added various options for "Dark Mode Map".
-- BUGS & FIXES:
-
-**Build 8659 [20230916]** 
+**Build 8661 [20230918]** 
 - NEW & UPDATED:
   - App Version Bump: 1.13
   - GPSDestinationLat/Long ...
@@ -16,8 +10,10 @@
   - Added a new tab for the Exif info - this lists the values as they are held by GTN internally.
   - Added 2 new buttons for filing feature requests and bugs (both require a GitHub acct.)
   - Added Dark Mode support. Refer to the readme but it's very ugly and there's little I can do about that as WinForms doesn't support the rich capabilities Windows 10/11 can offer for the time being.
+  - Added various options for "Dark Mode Map"
 - BUGS & FIXES:
   - Fixed an error when data in MyComputer wasn't properly recorded and this caused a crash
+  - Reverted a change introduced earlier re: webView2 initialisation after it randomly failed on one of my VMs
 
 **Build 8646 [20230903]** 
 - NEW & UPDATED:
