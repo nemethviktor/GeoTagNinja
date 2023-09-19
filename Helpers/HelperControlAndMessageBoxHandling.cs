@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace GeoTagNinja.Helpers;
@@ -49,7 +51,7 @@ internal static class HelperControlAndMessageBoxHandling
     {
         return HelperDataLanguageTZ.DataReadDTObjectText(
             objectType: cItem.GetType()
-                .Name,
+                             .Name,
             objectName: cItem.Name
         );
     }
@@ -86,7 +88,7 @@ internal static class HelperControlAndMessageBoxHandling
             // for some reason there is no .Last() being offered here
             cItem.Text = HelperDataLanguageTZ.DataReadDTObjectText(
                 objectType: cItem.GetType()
-                    .Name,
+                                 .Name,
                 objectName: cItem.Name
             );
         }
@@ -107,16 +109,15 @@ internal static class HelperControlAndMessageBoxHandling
                 );
             }
         }
-        else if (cItem is NumericUpDown)
+        else if (cItem is NumericUpDown nud)
         {
             if (senderForm.Name == "FrmSettings")
             {
-                NumericUpDown nud = (NumericUpDown)cItem;
                 FrmMainApp.Logger.Trace(message: "Starting - cItem: " + nud.Name);
                 _ = decimal.TryParse(s: HelperDataApplicationSettings.DataReadSQLiteSettings(
                                          tableName: "settings",
                                          settingTabPage: parentNameToUse,
-                                         settingId: cItem.Name
+                                         settingId: nud.Name
                                      ), result: out decimal outVal);
 
                 // if this doesn't exist, it'd return 0, which is illegal because the min-values can be higher than that
@@ -127,96 +128,171 @@ internal static class HelperControlAndMessageBoxHandling
     }
 
     /// <summary>
-    ///     A custom dialogbox-like form that includes a checkbox too.
-    ///     TODO: make it more reusable. Atm it's a bit fixed as there's only 1 place that calls it. Basically a "source"
-    ///     parameter needs to be added in at some stage.
+    ///     Displays a dialog box with a set of checkboxes and buttons.
     /// </summary>
-    /// <param name="labelText">String of the "main" message.</param>
-    /// <param name="caption">Caption of the box - the one that appears on the top.</param>
-    /// <param name="checkboxText">Text of the checkbox.</param>
-    /// <param name="returnCheckboxText">A yes-no style logic that gets returned/amended to the return string if checked.</param>
-    /// <param name="button1Text">Label of the button</param>
-    /// <param name="returnButton1Text">String val of what's sent further if the btn is pressed</param>
-    /// <param name="button2Text">Same as above</param>
-    /// <param name="returnButton2Text">Same as above</param>
-    /// <returns>A string that can be reused. Needs fine-tuning in the future as it's single-purpose atm. Lazy. </returns>
-    internal static string ShowDialogWithCheckBox(string labelText,
-                                                  string caption,
-                                                  string checkboxText,
-                                                  string returnCheckboxText,
-                                                  string button1Text,
-                                                  string returnButton1Text,
-                                                  string button2Text,
-                                                  string returnButton2Text)
+    /// <param name="labelText">The text to be displayed at the top of the dialog box.</param>
+    /// <param name="caption">The text to be displayed in the title bar of the dialog box.</param>
+    /// <param name="checkboxesDictionary">
+    ///     A dictionary where each key-value pair represents a checkbox in the dialog. The key
+    ///     is the text to be displayed next to the checkbox, and the value is the return value when the checkbox is selected.
+    /// </param>
+    /// <param name="buttonsDictionary">
+    ///     A dictionary where each key-value pair represents a button in the dialog. The key is
+    ///     the text to be displayed on the button, and the value is the return value when the button is clicked.
+    /// </param>
+    /// <param name="orientation">
+    ///     The layout orientation of the checkboxes and buttons in the dialog. Can be either "Vertical"
+    ///     or "Horizontal".
+    /// </param>
+    /// <returns>A list of strings representing the return values of the selected checkboxes and clicked button.</returns>
+    internal static List<string> ShowDialogWithCheckBox(string labelText,
+                                                        string caption,
+                                                        Dictionary<string, string> checkboxesDictionary,
+                                                        Dictionary<string, string> buttonsDictionary,
+                                                        string orientation)
     {
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        string returnString = "";
-        Form promptBox = new();
-        promptBox.Text = caption;
-        promptBox.ControlBox = false;
-        FlowLayoutPanel panel = new();
+        List<string> returnChoicesList = new();
+        Form promptBoxForm = new()
+        {
+            Text = caption,
+            ControlBox = false,
+            FormBorderStyle = FormBorderStyle.Fixed3D
+        };
+
+        // Create the FlowLayoutPanel
+        FlowLayoutPanel flowLayoutPanel = new();
+        // Set the flow direction to top-to-bottom if the orientation is "Vertical"
+        if (orientation == "Vertical")
+        {
+            flowLayoutPanel.FlowDirection = FlowDirection.TopDown;
+        }
+
+        // apply theme
+        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
+                                                     ? ThemeColour.Dark
+                                                     : ThemeColour.Light, parentControl: promptBoxForm);
 
         Label lblText = new();
         lblText.Text = labelText;
+        lblText.MaximumSize = new Size(width: 300, height: 0);
         lblText.AutoSize = true;
-        panel.SetFlowBreak(control: lblText, value: true);
-        panel.Controls.Add(value: lblText);
+        flowLayoutPanel.SetFlowBreak(control: lblText, value: true);
+        flowLayoutPanel.Controls.Add(value: lblText);
 
-        Button btnYes = new()
-            { Text = button1Text };
-        btnYes.Click += (sender,
-                         e) =>
+        // these are to make my life easier -- gets overwritten further down
+        string acceptButtonReturnText = "##yes##";
+        string cancelButtonReturnText = "##no##";
+
+        if (orientation == "Horizontal")
         {
-            returnString = returnButton1Text;
-            promptBox.Close();
-        };
-        btnYes.Location = new Point(x: 10, y: lblText.Bottom + 5);
-        btnYes.AutoSize = true;
-
-        panel.Controls.Add(value: btnYes);
-
-        Button btnNo = new()
-            { Text = button2Text };
-        btnNo.Click += (sender,
-                        e) =>
-        {
-            returnString = returnButton2Text;
-            promptBox.Close();
-        };
-
-        btnNo.Location = new Point(x: btnYes.Width + 20, y: lblText.Bottom + 5);
-        btnNo.AutoSize = true;
-        panel.SetFlowBreak(control: btnNo, value: true);
-        panel.Controls.Add(value: btnNo);
-
-        CheckBox chk = new();
-        chk.Text = checkboxText;
-        chk.AutoSize = true;
-        chk.Location = new Point(x: 10, y: btnYes.Bottom + 5);
-
-        panel.Controls.Add(value: chk);
-        panel.Padding = new Padding(all: 5);
-        panel.AutoSize = true;
-
-        promptBox.Controls.Add(value: panel);
-        promptBox.Size = new Size(width: lblText.Width + 40, height: chk.Bottom + 50);
-        promptBox.ShowInTaskbar = false;
-        promptBox.AcceptButton = btnYes;
-        promptBox.CancelButton = btnNo;
-        promptBox.StartPosition = FormStartPosition.CenterScreen;
-        promptBox.ShowDialog();
-
-        if (chk.Checked)
-        {
-            returnString += returnCheckboxText;
+            AddButtons();
+            AddCheckBoxes();
         }
+        else
+        {
+            AddCheckBoxes();
+            AddButtons();
+        }
+
+        flowLayoutPanel.Padding = new Padding(all: 5);
+        flowLayoutPanel.AutoSize = true;
+
+        promptBoxForm.Controls.Add(value: flowLayoutPanel);
+        promptBoxForm.AutoSize = true;
+        promptBoxForm.ShowInTaskbar = false;
+
+        promptBoxForm.StartPosition = FormStartPosition.CenterScreen;
+        promptBoxForm.ShowDialog();
 
         // in case of idiots break glass -- basically if someone ALT+F4s then we reset stuff to "no".
-        if (!returnString.Contains(value: returnButton1Text) && !returnString.Contains(value: returnButton2Text))
+        if (!returnChoicesList.Contains(value: acceptButtonReturnText) &&
+            !returnChoicesList.Contains(value: cancelButtonReturnText))
         {
-            returnString = returnButton2Text;
+            returnChoicesList.Add(item: cancelButtonReturnText);
         }
 
-        return returnString;
+        return returnChoicesList;
+
+        void AddButtons()
+        {
+            // add buttons
+            for (int i = 0; i < buttonsDictionary.Count; i++)
+            {
+                KeyValuePair<string, string> keyValuePair = buttonsDictionary.ElementAt(index: i);
+                Button btn = new();
+                btn.Text = keyValuePair.Key;
+                switch (keyValuePair.Value.ToLower())
+                {
+                    case "yes":
+                    case "ok":
+                        promptBoxForm.AcceptButton = btn;
+                        acceptButtonReturnText = keyValuePair.Value;
+                        break;
+                    case "no":
+                    case "cancel":
+                        promptBoxForm.CancelButton = btn;
+                        cancelButtonReturnText = keyValuePair.Value;
+                        break;
+                }
+
+                btn.Click += (s,
+                              e) =>
+                {
+                    returnChoicesList = ProcessCheckBoxes();
+                    if (promptBoxForm.AcceptButton == btn)
+                    {
+                        returnChoicesList.Add(item: acceptButtonReturnText);
+                    }
+                    else if (promptBoxForm.CancelButton == btn)
+                    {
+                        returnChoicesList.Add(item: cancelButtonReturnText);
+                    }
+
+                    promptBoxForm.Close();
+                };
+                btn.AutoSize = true;
+                flowLayoutPanel.Controls.Add(value: btn);
+                // add flowbreak to the last btn
+                if (i == buttonsDictionary.Count && orientation == "Horizontal")
+                {
+                    flowLayoutPanel.SetFlowBreak(control: btn, value: true);
+                }
+            }
+        }
+
+        void AddCheckBoxes()
+        {
+            // add checkboxes 
+            for (int i = 0; i < checkboxesDictionary.Count; i++)
+            {
+                KeyValuePair<string, string> keyValuePair = checkboxesDictionary.ElementAt(index: i);
+                CheckBox chk = new();
+                chk.Text = keyValuePair.Key;
+                chk.AutoSize = true;
+
+                flowLayoutPanel.Controls.Add(value: chk);
+
+                if (i == checkboxesDictionary.Count && orientation == "Vertical")
+                {
+                    flowLayoutPanel.SetFlowBreak(control: chk, value: true);
+                }
+            }
+        }
+
+        List<string> ProcessCheckBoxes()
+        {
+            List<string> s = new();
+            // see if user added any checkbox choices
+            foreach (CheckBox chk in flowLayoutPanel.Controls.OfType<CheckBox>())
+            {
+                if (chk.Checked)
+                {
+                    checkboxesDictionary.TryGetValue(key: chk.Text, value: out string chkstr);
+                    s.Add(item: chkstr);
+                }
+            }
+
+            return s;
+        }
     }
 }

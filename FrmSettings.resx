@@ -117,18 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="pbx_Browse_Startup_Folder.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAABFklE
-        QVQ4T2MgGcTsKmGI3u0A5ZEBYnfbMMTueskQs9MJKkIECF3FBtTUCcTPgPg/BO+8CpUlAsTu7ADiLQxx
-        e6TBzo/Z9QrFGzPyGB7MzGf4j4Q/Ts9nQCiI3fmUIXqbDJiNLQzAmgoYJGF4Wh5D8PQ8hq8gcbACkJNB
-        6vIY7oP56ADdAJwYZiA6oIoBs0oYDID0B7BhxOA8hp1Q7RADgAHZBqRXggIPF56Wz1AAooGuWQg0YApU
-        O9QLeQyPZuUzJKBrQsYgA6YUMTgD1b6cVcCgDdUONSCf4Rw2TcgY7IJchupZeQwnoFohAOyFAoY2bJqQ
-        McgAoFePAl0QD9UKATPyGe5BXUEQA9U+7i1k4IRqHXDAwAAANSDaAOvc+eMAAAAASUVORK5CYII=
-</value>
-  </data>
   <metadata name="igl_Settings.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>184, 20</value>
   </metadata>
@@ -137,7 +125,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAABI
-        DQAAAk1TRnQBSQFMAgEBBQEAAZABAQGQAQEBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        DQAAAk1TRnQBSQFMAgEBBQEAAZgBAQGYAQEBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABQAMAASADAAEBAQABCAYAAQgYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
         AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
         AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA
@@ -194,6 +182,18 @@
         AQMB/wEDAQAB4QHAAQMBAAEDAf8BgQGoAcEBgAEBAagBAwH/AcABiAHDAoEB4AEDAf8B4AGIAcMCgQHg
         AQMBsQHgAYgBgwGAAQEB4AEDAbAB6AGIAYcBwAEDAeABAwGwAS8BiAGHAcABAwHgAQMBsAEvAYgBhwHA
         AQMB4AEDAbABLwGIAYcB4AEHAeABBwGwAe8B/wHvAfwBPwHgAQ8BsQHvCP8L
+</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="pbx_Browse_Startup_Folder.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAABFklE
+        QVQ4T2MgGcTsKmGI3u0A5ZEBYnfbMMTueskQs9MJKkIECF3FBtTUCcTPgPg/BO+8CpUlAsTu7ADiLQxx
+        e6TBzo/Z9QrFGzPyGB7MzGf4j4Q/Ts9nQCiI3fmUIXqbDJiNLQzAmgoYJGF4Wh5D8PQ8hq8gcbACkJNB
+        6vIY7oP56ADdAJwYZiA6oIoBs0oYDID0B7BhxOA8hp1Q7RADgAHZBqRXggIPF56Wz1AAooGuWQg0YApU
+        O9QLeQyPZuUzJKBrQsYgA6YUMTgD1b6cVcCgDdUONSCf4Rw2TcgY7IJchupZeQwnoFohAOyFAoY2bJqQ
+        McgAoFePAl0QD9UKATPyGe5BXUEQA9U+7i1k4IRqHXDAwAAANSDaAOvc+eMAAAAASUVORK5CYII=
 </value>
   </data>
   <metadata name="fbd_StartupFolder.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">

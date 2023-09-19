@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace GeoTagNinja.Helpers;
 
@@ -65,6 +63,7 @@ internal static class HelperDataOtherDataRelated
     /// <param name="toponymName">Value to write</param>
     /// <param name="countryCode">Value to write</param>
     /// <param name="altitude">Value to write</param>
+    /// <param name="timezoneId">Value to write</param>
     internal static void UpdateAddToDataTableTopopnomy(
         string lat,
         string lng,

@@ -11,7 +11,7 @@ internal static class HelperGenericAncillaryListsArrays
     // this stores the kvp for language tags and values (ie the label and whatnots + their human-readable counterparts).
     internal static Dictionary<string, string> LanguageStringsDict = new();
 
-    #region Time zones
+#region Time zones
 
     internal static string[] GetTimeZones()
     {
@@ -374,9 +374,9 @@ internal static class HelperGenericAncillaryListsArrays
         return result;
     }
 
-    #endregion
+#endregion
 
-    #region Languages
+#region Languages
 
     internal static Dictionary<string, string> GetISO_639_1_Languages()
     {
@@ -568,9 +568,9 @@ internal static class HelperGenericAncillaryListsArrays
         return result;
     }
 
-    #endregion
+#endregion
 
-    #region Columns
+#region Columns
 
     internal static ElementAttribute[] GpxTagsToOverwrite()
     {
@@ -688,9 +688,9 @@ internal static class HelperGenericAncillaryListsArrays
         return result;
     }
 
-    #endregion
+#endregion
 
-    #region Countries & Country Codes
+#region Countries & Country Codes
 
     internal static string[] GetCountries()
     {
@@ -700,7 +700,7 @@ internal static class HelperGenericAncillaryListsArrays
         foreach (DataRow dataRow in HelperVariables.DtIsoCountryCodeMapping.Rows)
         {
             retList.Add(item: dataRow[columnName: "Country"]
-                            .ToString());
+                           .ToString());
         }
 
         return retList.ToArray();
@@ -718,15 +718,15 @@ internal static class HelperGenericAncillaryListsArrays
         foreach (DataRow dataRow in HelperVariables.DtIsoCountryCodeMapping.Rows)
         {
             retList.Add(item: dataRow[columnName: "ISO_3166_1A3"]
-                            .ToString());
+                           .ToString());
         }
 
         return retList.ToArray();
     }
 
-    #endregion
+#endregion
 
-    #region Extensions
+#region Extensions
 
     /// <summary>
     ///     this one basically handles what extensions we work with.
@@ -796,12 +796,12 @@ internal static class HelperGenericAncillaryListsArrays
         foreach (string extension in AllCompatibleExtensions())
         {
             if (extension.ToLower()
-                    .Contains(value: "raw") ||
+                         .Contains(value: "raw") ||
                 extension.ToLower()
-                    .Contains(value: "tiff"))
+                         .Contains(value: "tiff"))
             {
                 retList.Add(item: extension.Split('\t')
-                                .FirstOrDefault());
+                                           .FirstOrDefault());
             }
         }
 
@@ -825,8 +825,8 @@ internal static class HelperGenericAncillaryListsArrays
         for (int i = 0; i < allowedExtensions.Length; i++)
         {
             allowedExtensions[i] = allowedExtensions[i]
-                .Split('\t')
-                .FirstOrDefault();
+                                  .Split('\t')
+                                  .FirstOrDefault();
         }
 
         return allowedExtensions;
@@ -855,7 +855,7 @@ internal static class HelperGenericAncillaryListsArrays
     internal static string[] GetSideCarExtensionsArray()
     {
         return SideCarExtensions()
-            .Keys.ToArray();
+              .Keys.ToArray();
     }
 
     internal static string[] GpxExtensions()
@@ -876,5 +876,31 @@ internal static class HelperGenericAncillaryListsArrays
         return result;
     }
 
-    #endregion
+#endregion
+
+#region Settings Import/Export
+
+    /// <summary>
+    ///     Retrieves the table name associated with a given setting name for import/export operations.
+    /// </summary>
+    /// <param name="settingName">The name of the setting whose table name is to be retrieved.</param>
+    /// <returns>
+    ///     The table name associated with the given setting name. If the setting name does not exist in the dictionary,
+    ///     it returns null.
+    /// </returns>
+    public static string GetSettingsImportExportTableName(string settingName)
+    {
+        Dictionary<string, string> SettingsImportExportTableNames = new()
+        {
+            { "ApplicationSettings", "settings" },
+            { "CityRulesSettings", "customCityAllocationLogic" },
+            { "CustomRulesSettings", "customRules" }
+        };
+
+        return SettingsImportExportTableNames.TryGetValue(key: settingName, value: out string tableName)
+            ? tableName
+            : null;
+    }
+
+#endregion
 }

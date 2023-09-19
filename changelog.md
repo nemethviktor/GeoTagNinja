@@ -1,5 +1,15 @@
 ﻿# GeoTagNinja Changelog
 
+**Build 86xx [2023xx]** 
+- NEW & UPDATED:
+  - App Version Bump: 1.14
+  - Implemented an Export/Import functionality for Settings and Custom Rules
+  - Bumped exifTool to v12.67
+  - Streamlined some code relating to the reusability of on-the-fly Form generation
+  - Various further Dark Mode changes/improvements
+- BUGS & FIXES:
+  - NA
+
 **Build 8661 [20230918]** 
 - NEW & UPDATED:
   - App Version Bump: 1.13

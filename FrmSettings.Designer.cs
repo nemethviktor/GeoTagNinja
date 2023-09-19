@@ -92,6 +92,8 @@
             this.btn_OK = new System.Windows.Forms.Button();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.fbd_StartupFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.btn_ExportSettings = new System.Windows.Forms.Button();
+            this.btn_ImportSettings = new System.Windows.Forms.Button();
             this.tcr_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             this.gbx_AppSettings.SuspendLayout();
@@ -743,9 +745,9 @@
             this.dgv_CustomCityLogic.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv_CustomCityLogic.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
             this.dgv_CustomCityLogic.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_CustomCityLogic.Location = new System.Drawing.Point(7, 190);
+            this.dgv_CustomCityLogic.Location = new System.Drawing.Point(6, 190);
             this.dgv_CustomCityLogic.Name = "dgv_CustomCityLogic";
-            this.dgv_CustomCityLogic.Size = new System.Drawing.Size(885, 405);
+            this.dgv_CustomCityLogic.Size = new System.Drawing.Size(885, 288);
             this.dgv_CustomCityLogic.TabIndex = 1;
             // 
             // tpg_CustomRules
@@ -815,7 +817,7 @@
             this.dgv_CustomRules.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_CustomRules.Location = new System.Drawing.Point(7, 220);
             this.dgv_CustomRules.Name = "dgv_CustomRules";
-            this.dgv_CustomRules.Size = new System.Drawing.Size(885, 418);
+            this.dgv_CustomRules.Size = new System.Drawing.Size(885, 258);
             this.dgv_CustomRules.TabIndex = 0;
             this.dgv_CustomRules.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_CustomRules_DataError);
             this.dgv_CustomRules.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dgv_CustomRules_RowValidating);
@@ -861,6 +863,26 @@
             this.fbd_StartupFolder.Description = "fbd_StartupFolder";
             this.fbd_StartupFolder.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
+            // btn_ExportSettings
+            // 
+            this.btn_ExportSettings.Location = new System.Drawing.Point(124, 537);
+            this.btn_ExportSettings.Name = "btn_ExportSettings";
+            this.btn_ExportSettings.Size = new System.Drawing.Size(75, 23);
+            this.btn_ExportSettings.TabIndex = 22;
+            this.btn_ExportSettings.Text = "btn_ExportSettings";
+            this.btn_ExportSettings.UseVisualStyleBackColor = true;
+            this.btn_ExportSettings.Click += new System.EventHandler(this.btn_ExportSettings_Click);
+            // 
+            // btn_ImportSettings
+            // 
+            this.btn_ImportSettings.Location = new System.Drawing.Point(35, 537);
+            this.btn_ImportSettings.Name = "btn_ImportSettings";
+            this.btn_ImportSettings.Size = new System.Drawing.Size(75, 23);
+            this.btn_ImportSettings.TabIndex = 21;
+            this.btn_ImportSettings.Text = "btn_ImportSettings";
+            this.btn_ImportSettings.UseVisualStyleBackColor = true;
+            this.btn_ImportSettings.Click += new System.EventHandler(this.btn_ImportSettings_Click);
+            // 
             // FrmSettings
             // 
             this.AcceptButton = this.btn_OK;
@@ -869,6 +891,8 @@
             this.AutoSize = true;
             this.CancelButton = this.btn_Cancel;
             this.ClientSize = new System.Drawing.Size(937, 568);
+            this.Controls.Add(this.btn_ExportSettings);
+            this.Controls.Add(this.btn_ImportSettings);
             this.Controls.Add(this.btn_Cancel);
             this.Controls.Add(this.btn_OK);
             this.Controls.Add(this.tcr_Settings);
@@ -970,5 +994,7 @@
         private System.Windows.Forms.RadioButton rbt_MapColourModeNormal;
         private System.Windows.Forms.RadioButton rbt_MapColourModeDarkInverse;
         private System.Windows.Forms.CheckBox ckb_UseDarkMode;
+        private System.Windows.Forms.Button btn_ExportSettings;
+        private System.Windows.Forms.Button btn_ImportSettings;
     }
 }

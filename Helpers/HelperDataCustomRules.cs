@@ -3,8 +3,22 @@ using System.Data.SQLite;
 
 namespace GeoTagNinja.Helpers;
 
+/// <summary>
+///     Provides static methods for managing custom rules in a SQLite database.
+/// </summary>
+/// <remarks>
+///     This class contains methods for reading, writing, and creating custom rules in a SQLite database.
+///     The custom rules are stored in a table named 'CustomRules' in the database.
+///     Each custom rule is represented as a row in the 'CustomRules' table.
+/// </remarks>
 internal static class HelperDataCustomRules
 {
+    /// <summary>
+    ///     Retrieves the custom rules from the SQLite database.
+    /// </summary>
+    /// <returns>
+    ///     A DataTable containing the custom rules from the SQLite database.
+    /// </returns>
     internal static DataTable DataReadSQLiteCustomRules()
     {
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
@@ -26,6 +40,16 @@ internal static class HelperDataCustomRules
         return dataTable;
     }
 
+    /// <summary>
+    ///     Writes the custom rules back to the SQLite database.
+    /// </summary>
+    /// <remarks>
+    ///     This method updates the 'customRules' table in the SQLite database with the current state of the 'DtCustomRules'
+    ///     DataTable.
+    ///     It also performs cleanup operations to ensure data integrity, such as removing rows where 'TargetPointOutcome' is
+    ///     'Custom' but 'TargetPointOutcomeCustom' is null,
+    ///     and nullifying 'TargetPointOutcomeCustom' where 'TargetPointOutcome' is not 'Custom'.
+    /// </remarks>
     internal static void DataWriteSQLiteCustomRules()
     {
         // write back
@@ -56,7 +80,14 @@ internal static class HelperDataCustomRules
         sqlToRun.ExecuteNonQuery();
     }
 
-
+    /// <summary>
+    ///     Creates a table for custom rules in the SQLite database if it doesn't exist.
+    /// </summary>
+    /// <remarks>
+    ///     The table 'customRules' is created with the following columns:
+    ///     'ruleId', 'CountryCode', 'DataPointName', 'DataPointConditionType', 'DataPointConditionValue',
+    ///     'TargetPointName', 'TargetPointOutcome', 'TargetPointOutcomeCustom'.
+    /// </remarks>
     internal static void DataCreateSQLiteCustomRules()
     {
         FrmMainApp.Logger.Debug(message: "Starting");

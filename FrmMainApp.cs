@@ -88,7 +88,8 @@ public partial class FrmMainApp : Form
     internal static string _AppLanguage = "English"; // default to english
     internal static List<string> LstFavourites = new();
 
-    private static string _showLocToMapDialogChoice = "default";
+    private static bool _showLocToMapDialogChoice = true;
+    private static bool _rememberLocToMapDialogChoice;
 
     // ReSharper disable once InconsistentNaming
     private FrmSettings FrmSettings;
@@ -510,7 +511,7 @@ public partial class FrmMainApp : Form
                                          EventArgs e)
     {
         HelperVariables.HsMapMarkers.Clear();
-        HelperVariables.HsMapMarkers.Add(item: parseLatLngTextBox());
+        HelperVariables.HsMapMarkers.Add(item: ParseLatLngTextBox());
         Request_Map_NavigateGo();
     }
 
@@ -582,14 +583,14 @@ public partial class FrmMainApp : Form
                                                                              isMarkedForDeletion: false);
                             }
 
-                            if (!_showLocToMapDialogChoice.Contains(value: "_remember"))
+                            if (!_rememberLocToMapDialogChoice)
                             {
                                 ShowLocToMapDialog();
                             }
 
                             DataTable dtToponomy = new();
                             DataTable dtAltitude = new();
-                            if (_showLocToMapDialogChoice.Contains(value: "yes"))
+                            if (_showLocToMapDialogChoice)
                             {
                                 lvw_FileList_UpdateTagsFromWeb(strGpsLatitude: strGPSLatitudeOnTheMap, strGpsLongitude: strGPSLongitudeOnTheMap, lvi: lvi);
                             }
@@ -628,29 +629,44 @@ public partial class FrmMainApp : Form
 
         void ShowLocToMapDialog()
         {
+            Dictionary<string, string> checkboxDictionary = new()
+            {
+                {
+                    HelperDataLanguageTZ.DataReadDTObjectText(
+                        objectType: "CheckBox",
+                        objectName: "ckb_QuestionAddToponomyDontAskAgain"
+                    ),
+                    "_remember"
+                }
+            };
+            Dictionary<string, string> buttonsDictionary = new()
+            {
+                {
+                    HelperDataLanguageTZ.DataReadDTObjectText(
+                        objectType: "Button",
+                        objectName: "btn_Yes"
+                    ),
+                    "yes"
+                },
+                {
+                    HelperDataLanguageTZ.DataReadDTObjectText(
+                        objectType: "Button",
+                        objectName: "btn_No"
+                    ),
+                    "no"
+                }
+            };
+
             // via https://stackoverflow.com/a/17385937/3968494
-            _showLocToMapDialogChoice = HelperControlAndMessageBoxHandling.ShowDialogWithCheckBox(
+            List<string> getLocToMapDialogChoice = HelperControlAndMessageBoxHandling.ShowDialogWithCheckBox(
                 labelText: HelperDataLanguageTZ.DataReadDTObjectText(
                     objectType: "Label",
                     objectName: "lbl_QuestionAddToponomy"
                 ),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
-                checkboxText: HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: "CheckBox",
-                    objectName: "ckb_QuestionAddToponomyDontAskAgain"
-                ),
-                returnCheckboxText: "_remember",
-                button1Text: HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: "Button",
-                    objectName: "btn_Yes"
-                ),
-                returnButton1Text: "yes",
-                button2Text: HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: "Button",
-                    objectName: "btn_No"
-                ),
-                returnButton2Text: "no"
-            );
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"), checkboxesDictionary: checkboxDictionary, buttonsDictionary: buttonsDictionary, orientation: "Horizontal");
+
+            _showLocToMapDialogChoice = getLocToMapDialogChoice.Contains(item: "yes");
+            _rememberLocToMapDialogChoice = getLocToMapDialogChoice.Contains(item: "_remember");
         }
     }
 
@@ -661,7 +677,7 @@ public partial class FrmMainApp : Form
     ///     with values as string and dec separator ".".
     ///     Otherwise default "0" is returned for both.
     /// </summary>
-    private (string, string) parseLatLngTextBox()
+    private (string, string) ParseLatLngTextBox()
     {
         Logger.Trace(message: "Starting parseLatLngTextBox ...");
 
@@ -714,7 +730,7 @@ public partial class FrmMainApp : Form
     }
 
 
-    private void updateWebView(IDictionary<string, string> replacements)
+    private void UpdateWebView(IDictionary<string, string> replacements)
     {
         string htmlCode = _mapHtmlTemplateCode;
 
@@ -1094,7 +1110,7 @@ public partial class FrmMainApp : Form
             htmlReplacements.Add(key: key, value: value);
         }
 
-        updateWebView(replacements: htmlReplacements);
+        UpdateWebView(replacements: htmlReplacements);
     }
 
 
@@ -1182,7 +1198,7 @@ public partial class FrmMainApp : Form
         }
 
         // Parse coords from lat/lng text box
-        (string LatCoordinate, string LngCoordinate) = parseLatLngTextBox();
+        (string LatCoordinate, string LngCoordinate) = ParseLatLngTextBox();
 
         // Set up replacements
         IDictionary<string, string> htmlReplacements = new Dictionary<string, string>();
@@ -1190,7 +1206,7 @@ public partial class FrmMainApp : Form
         htmlReplacements.Add(key: "replaceLng", value: LngCoordinate);
 
         // Show on Map
-        updateWebView(replacements: htmlReplacements);
+        UpdateWebView(replacements: htmlReplacements);
 
         // Set up event handler for clicks in map
         try
@@ -1890,25 +1906,43 @@ public partial class FrmMainApp : Form
             }
             else
             {
-                string APIHandlingChoice = HelperControlAndMessageBoxHandling.ShowDialogWithCheckBox(
-                    labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_QuestionNoRowsFromAPI"),
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Question"),
-                    checkboxText: HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: "CheckBox",
-                        objectName: "ckb_QuestionStopProcessingRows"
-                    ),
-                    returnCheckboxText: "_stopprocessing",
-                    button1Text: HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: "Button",
-                        objectName: "btn_Yes"
-                    ),
-                    returnButton1Text: "yes",
-                    button2Text: HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: "Button",
-                        objectName: "btn_No"
-                    ),
-                    returnButton2Text: "no"
-                );
+                Dictionary<string, string> checkboxDictionary = new()
+                {
+                    {
+                        HelperDataLanguageTZ.DataReadDTObjectText(
+                            objectType: "CheckBox",
+                            objectName: "ckb_QuestionStopProcessingRows"
+                        ),
+                        "_stopprocessing"
+                    }
+                };
+                Dictionary<string, string> buttonsDictionary = new()
+                {
+                    {
+                        HelperDataLanguageTZ.DataReadDTObjectText(
+                            objectType: "Button",
+                            objectName: "btn_Yes"
+                        ),
+                        "yes"
+                    },
+                    {
+                        HelperDataLanguageTZ.DataReadDTObjectText(
+                            objectType: "Button",
+                            objectName: "btn_No"
+                        ),
+                        "no"
+                    }
+                };
+
+                // ReSharper disable once InconsistentNaming
+                List<string> APIHandlingChoice = HelperControlAndMessageBoxHandling.ShowDialogWithCheckBox(
+                    labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                        messageBoxName: "mbx_FrmMainApp_QuestionNoRowsFromAPI"),
+                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                        captionType: "Question"),
+                    checkboxesDictionary: checkboxDictionary,
+                    buttonsDictionary: buttonsDictionary,
+                    orientation: "Horizontal");
 
                 if (APIHandlingChoice.Contains(value: "yes"))
                 {

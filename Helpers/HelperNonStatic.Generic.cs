@@ -34,31 +34,31 @@ internal partial class HelperNonStatic
 
     internal IEnumerable<ToolStripItem> GetMenuItems(ToolStripItem item)
     {
-        if (item is ToolStripMenuItem)
+        if (item is ToolStripMenuItem menuItem)
         {
-            foreach (ToolStripItem tsi in (item as ToolStripMenuItem).DropDownItems)
+            foreach (ToolStripItem tsi in menuItem.DropDownItems)
             {
-                if (tsi is ToolStripMenuItem)
+                if (tsi is ToolStripMenuItem stripMenuItem)
                 {
-                    if ((tsi as ToolStripMenuItem).HasDropDownItems)
+                    if (stripMenuItem.HasDropDownItems)
                     {
-                        foreach (ToolStripItem subItem in GetMenuItems(item: tsi as ToolStripMenuItem))
+                        foreach (ToolStripItem subItem in GetMenuItems(item: stripMenuItem))
                         {
                             yield return subItem;
                         }
                     }
 
-                    yield return tsi as ToolStripMenuItem;
+                    yield return stripMenuItem;
                 }
-                else if (tsi is ToolStripSeparator)
+                else if (tsi is ToolStripSeparator separator)
                 {
-                    yield return tsi as ToolStripSeparator;
+                    yield return separator;
                 }
             }
         }
-        else if (item is ToolStripSeparator)
+        else if (item is ToolStripSeparator separator)
         {
-            yield return item as ToolStripSeparator;
+            yield return separator;
         }
     }
 
