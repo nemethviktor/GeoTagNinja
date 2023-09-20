@@ -2667,7 +2667,7 @@ public partial class FrmMainApp : Form
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void tmi_removeCachedData_Click(object sender,
+    private void cmi_removeCachedData_Click(object sender,
                                             EventArgs e)
     {
         bool dataHasBeenRemoved = false;
@@ -2802,7 +2802,7 @@ public partial class FrmMainApp : Form
     }
 
 
-    private void tmi_OpenCoordsInAPI_Click(object sender,
+    private void cmi_OpenCoordsInAPI_Click(object sender,
                                            EventArgs e)
     {
         bool selectionIsValid = false;

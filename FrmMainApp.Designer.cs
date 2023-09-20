@@ -71,9 +71,9 @@ namespace GeoTagNinja
             this.lvw_FileList = new GeoTagNinja.View.ListView.FileListView();
             this.clh_FileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cms_FileListView = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tmi_ShowHideCols = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_removeCachedData = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_OpenCoordsInAPI = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmi_ShowHideCols = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmi_removeCachedData = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmi_OpenCoordsInAPI = new System.Windows.Forms.ToolStripMenuItem();
             this.pbx_imagePreview = new GeoTagNinja.ImagePreview();
             this.flp_ProcessingInfo = new System.Windows.Forms.FlowLayoutPanel();
             this.lbl_ParseProgress = new System.Windows.Forms.Label();
@@ -496,34 +496,34 @@ namespace GeoTagNinja
             // 
             this.cms_FileListView.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cms_FileListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tmi_ShowHideCols,
-            this.tmi_removeCachedData,
-            this.tmi_OpenCoordsInAPI});
+            this.cmi_ShowHideCols,
+            this.cmi_removeCachedData,
+            this.cmi_OpenCoordsInAPI});
             this.cms_FileListView.Name = "cms_FileListView";
-            this.cms_FileListView.Size = new System.Drawing.Size(202, 70);
+            this.cms_FileListView.Size = new System.Drawing.Size(202, 92);
             // 
-            // tmi_ShowHideCols
+            // cmi_ShowHideCols
             // 
-            this.tmi_ShowHideCols.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.tmi_ShowHideCols.Name = "tmi_ShowHideCols";
-            this.tmi_ShowHideCols.Size = new System.Drawing.Size(201, 22);
-            this.tmi_ShowHideCols.Text = "tmi_ShowHideCols";
-            this.tmi_ShowHideCols.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.tmi_ShowHideCols.Click += new System.EventHandler(this.selectColumnsToolStripMenuItem_Click);
+            this.cmi_ShowHideCols.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.cmi_ShowHideCols.Name = "cmi_ShowHideCols";
+            this.cmi_ShowHideCols.Size = new System.Drawing.Size(201, 22);
+            this.cmi_ShowHideCols.Text = "cmi_ShowHideCols";
+            this.cmi_ShowHideCols.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.cmi_ShowHideCols.Click += new System.EventHandler(this.selectColumnsToolStripMenuItem_Click);
             // 
-            // tmi_removeCachedData
+            // cmi_removeCachedData
             // 
-            this.tmi_removeCachedData.Name = "tmi_removeCachedData";
-            this.tmi_removeCachedData.Size = new System.Drawing.Size(201, 22);
-            this.tmi_removeCachedData.Text = "tmi_removeCachedData";
-            this.tmi_removeCachedData.Click += new System.EventHandler(this.tmi_removeCachedData_Click);
+            this.cmi_removeCachedData.Name = "cmi_removeCachedData";
+            this.cmi_removeCachedData.Size = new System.Drawing.Size(201, 22);
+            this.cmi_removeCachedData.Text = "cmi_removeCachedData";
+            this.cmi_removeCachedData.Click += new System.EventHandler(this.cmi_removeCachedData_Click);
             // 
-            // tmi_OpenCoordsInAPI
+            // cmi_OpenCoordsInAPI
             // 
-            this.tmi_OpenCoordsInAPI.Name = "tmi_OpenCoordsInAPI";
-            this.tmi_OpenCoordsInAPI.Size = new System.Drawing.Size(201, 22);
-            this.tmi_OpenCoordsInAPI.Text = "tmi_OpenCoordsInAPI";
-            this.tmi_OpenCoordsInAPI.Click += new System.EventHandler(this.tmi_OpenCoordsInAPI_Click);
+            this.cmi_OpenCoordsInAPI.Name = "cmi_OpenCoordsInAPI";
+            this.cmi_OpenCoordsInAPI.Size = new System.Drawing.Size(201, 22);
+            this.cmi_OpenCoordsInAPI.Text = "cmi_OpenCoordsInAPI";
+            this.cmi_OpenCoordsInAPI.Click += new System.EventHandler(this.cmi_OpenCoordsInAPI_Click);
             // 
             // pbx_imagePreview
             // 
@@ -575,7 +575,6 @@ namespace GeoTagNinja
             this.tcr_Main.SelectedIndex = 0;
             this.tcr_Main.Size = new System.Drawing.Size(419, 411);
             this.tcr_Main.TabIndex = 2;
-            this.tcr_Main.DrawItem += new System.Windows.Forms.DrawItemEventHandler(HelperControlThemeManager.TabControl_DrawItem);
             // 
             // tpg_Map
             // 
@@ -929,13 +928,13 @@ namespace GeoTagNinja
         private ImageList igl_RightHandSide;
         private FlowLayoutPanel flp_ProcessingInfo;
         private ContextMenuStrip cms_FileListView;
-        private ToolStripMenuItem tmi_ShowHideCols;
+        private ToolStripMenuItem cmi_ShowHideCols;
         private ToolTip ttp_SaveFavourite;
         private ToolTip ttp_LoadFavourite;
-        private ToolStripMenuItem tmi_removeCachedData;
+        private ToolStripMenuItem cmi_removeCachedData;
         private ToolStripMenuItem tmi_Settings_Favourites;
         private ToolTip ttp_ManageFavourites;
-        private ToolStripMenuItem tmi_OpenCoordsInAPI;
+        private ToolStripMenuItem cmi_OpenCoordsInAPI;
         private ToolTip ttp_loctToFileDestination;
         private FlowLayoutPanel flp_GeoCoords;
         private Label lbl_lat;
