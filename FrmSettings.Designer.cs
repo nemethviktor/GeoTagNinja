@@ -1,4 +1,6 @@
-﻿namespace GeoTagNinja
+﻿using GeoTagNinja.Helpers;
+
+namespace GeoTagNinja
 {
     partial class FrmSettings
     {
@@ -129,7 +131,7 @@
             this.tcr_Settings.SelectedIndex = 0;
             this.tcr_Settings.Size = new System.Drawing.Size(906, 511);
             this.tcr_Settings.TabIndex = 0;
-            this.tcr_Settings.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.TabControl_DrawItem);
+            this.tcr_Settings.DrawItem += new System.Windows.Forms.DrawItemEventHandler(HelperControlThemeManager.TabControl_DrawItem);
             // 
             // tpg_Application
             // 
@@ -836,10 +838,10 @@
             // 
             this.btn_OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btn_OK.Location = new System.Drawing.Point(791, 537);
+            this.btn_OK.Location = new System.Drawing.Point(759, 537);
             this.btn_OK.Margin = new System.Windows.Forms.Padding(2);
             this.btn_OK.Name = "btn_OK";
-            this.btn_OK.Size = new System.Drawing.Size(60, 19);
+            this.btn_OK.Size = new System.Drawing.Size(75, 23);
             this.btn_OK.TabIndex = 5;
             this.btn_OK.Text = "btn_OK";
             this.btn_OK.UseVisualStyleBackColor = true;
@@ -849,10 +851,10 @@
             // 
             this.btn_Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_Cancel.Location = new System.Drawing.Point(861, 537);
+            this.btn_Cancel.Location = new System.Drawing.Point(847, 537);
             this.btn_Cancel.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Cancel.Name = "btn_Cancel";
-            this.btn_Cancel.Size = new System.Drawing.Size(60, 19);
+            this.btn_Cancel.Size = new System.Drawing.Size(75, 23);
             this.btn_Cancel.TabIndex = 6;
             this.btn_Cancel.Text = "btn_Cancel";
             this.btn_Cancel.UseVisualStyleBackColor = true;

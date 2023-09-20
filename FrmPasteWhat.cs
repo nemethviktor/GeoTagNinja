@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.CustomMessageBox;
 using GeoTagNinja.View.ListView;
+using Microsoft.WindowsAPICodePack.Taskbar;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja;
@@ -535,7 +537,7 @@ public partial class FrmPasteWhat : Form
                     }
                 }
 
-                FrmMainApp.TaskbarManagerInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress);
+                FrmMainApp.TaskbarManagerInstance.SetProgressState(TaskbarProgressBarState.NoProgress);
                 HelperGenericFileLocking.FileListBeingUpdated = false;
             }
         }
@@ -879,9 +881,14 @@ public partial class FrmPasteWhat : Form
             if (!takenDateShiftDataExists)
             {
                 rbt_PasteTakenDateActual.Checked = true;
-                MessageBox.Show(
-                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"));
+                CustomMessageBox customMessageBox = new(
+                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                        messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
+                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                        captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Information);
+                customMessageBox.ShowDialog();
             }
         }
     }
@@ -936,9 +943,13 @@ public partial class FrmPasteWhat : Form
         if (!createDateShiftDataExists)
         {
             rbt_PasteCreateDateActual.Checked = true;
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"));
+            CustomMessageBox customMessageBox = new(
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Information);
+            customMessageBox.ShowDialog();
         }
     }
 

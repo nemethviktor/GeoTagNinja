@@ -24,6 +24,10 @@ internal enum ThemeColour
 [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
 internal static class HelperControlThemeManager
 {
+    private static readonly Color darkColor = ColorTranslator.FromHtml(htmlColor: "#404040");
+    private static readonly Color lessDarkColor = ColorTranslator.FromHtml(htmlColor: "#5F5D5B");
+
+
     private const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
     private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
 
@@ -100,6 +104,64 @@ internal static class HelperControlThemeManager
     }
 
     /// <summary>
+    ///     Creates a new StringFormat object with specific alignment settings.
+    /// </summary>
+    /// <returns>
+    ///     A StringFormat object with Near alignment for horizontal layout (left-aligned for left-to-right text)
+    ///     and Center alignment for vertical layout (centered vertically).
+    /// </returns>
+    private static StringFormat GetStringFormat()
+    {
+        return new StringFormat
+        {
+            Alignment = StringAlignment.Near,
+            LineAlignment = StringAlignment.Center
+        };
+    }
+
+    /// <summary>
+    ///     Handles the DrawItem event of a TabControl.
+    /// </summary>
+    /// <param name="sender">The source of the event, expected to be a TabControl.</param>
+    /// <param name="e">A DrawItemEventArgs that contains the event data.</param>
+    /// <remarks>
+    ///     This method is responsible for custom drawing of the TabControl's tabs. It adjusts the foreground and background
+    ///     colors based on the user's theme settings.
+    ///     It iterates through all the TabPages in the TabControl, drawing each tab and its text with the appropriate colors.
+    ///     via https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.tabcontrol.drawitem?view=netframework-4.8.1
+    /// </remarks>
+    internal static void TabControl_DrawItem(object sender,
+                                             DrawItemEventArgs e)
+    {
+        Color foreColor = HelperVariables.UserSettingUseDarkMode
+            ? Color.White
+            : Color.Black;
+
+        Color backColor = HelperVariables.UserSettingUseDarkMode
+            ? darkColor
+            : SystemColors.Control;
+
+        Graphics graphics = e.Graphics;
+        Pen backColorPen = new(color: backColor);
+        SolidBrush foreColorBrush = new(color: foreColor);
+        SolidBrush backColorBrush = new(color: backColor);
+        TabControl tctControl = sender as TabControl;
+        StringFormat stringFormat = GetStringFormat();
+
+        for (int i = 0; i < tctControl.TabPages.Count; i++)
+        {
+            TabPage tbpTabPage = tctControl.TabPages[index: i];
+            Rectangle tabArea = tctControl.GetTabRect(index: i);
+            RectangleF tabTextArea = tabArea;
+            tabTextArea.X += 2; // add padding 
+
+            graphics.DrawRectangle(pen: backColorPen, rect: tabArea);
+            graphics.FillRectangle(brush: backColorBrush, rect: tabTextArea);
+            graphics.DrawString(s: tbpTabPage.Text, font: e.Font, brush: foreColorBrush, layoutRectangle: tabTextArea, format: stringFormat);
+        }
+    }
+
+    /// <summary>
     ///     Changes the theme of a specific control based on the provided theme color.
     /// </summary>
     /// <param name="themeColour">The theme color to be applied. Can be either Light or Dark.</param>
@@ -109,13 +171,43 @@ internal static class HelperControlThemeManager
     {
         if (themeColour == Dark)
         {
-            cItem.ForeColor = Color.FromArgb(red: 241, green: 241, blue: 241);
-            cItem.BackColor = Color.FromArgb(red: 101, green: 101, blue: 101);
+            cItem.BackColor = darkColor;
+            cItem.ForeColor = Color.White;
+
+            if (cItem is Button button)
+            {
+                button.BackColor = lessDarkColor;
+                button.ForeColor = Color.White;
+                button.FlatStyle = FlatStyle.Flat;
+                button.FlatAppearance.BorderColor = ColorTranslator.FromHtml(htmlColor: "#BAB9B9");
+            }
+            else if (cItem is CheckBox checkBox)
+            {
+                checkBox.BackColor = darkColor;
+                checkBox.ForeColor = Color.White;
+                checkBox.FlatStyle = FlatStyle.Flat;
+            }
+            else if (cItem is TextBox textBox)
+            {
+                textBox.BackColor = darkColor;
+                textBox.ForeColor = Color.White;
+                textBox.BorderStyle = BorderStyle.FixedSingle;
+            }
+            else if (cItem is Label label)
+            {
+                label.BackColor = darkColor;
+                label.ForeColor = Color.White;
+            }
+            else if (cItem is ListView listView)
+            {
+                listView.BackColor = lessDarkColor;
+                listView.ForeColor = Color.White;
+                listView.BorderStyle = BorderStyle.None;
+            }
+            else if (cItem is LinkLabel linkLabel)
+            {
+                linkLabel.LinkColor = Color.White;
+            }
         }
-        //else
-        //{
-        //    cItem.ForeColor = Color.Black;
-        //    cItem.BackColor = SystemColors.Control;
-        //}
     }
 }

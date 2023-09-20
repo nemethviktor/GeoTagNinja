@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.CustomMessageBox;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
@@ -372,11 +373,14 @@ internal static class HelperExifWriteSaveToFile
                     {
                         failWriteNothingEnabled = true;
                         FrmMainApp.Logger.Info(message: "Both file-writes disabled. Nothing Written.");
-                        MessageBox.Show(
-                            text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"),
-                            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
+                        CustomMessageBox customMessageBox = new(
+                            text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                                messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"),
+                            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
                             buttons: MessageBoxButtons.OK,
                             icon: MessageBoxIcon.Warning);
+                        customMessageBox.ShowDialog();
                     }
                 }
             }
@@ -429,18 +433,26 @@ internal static class HelperExifWriteSaveToFile
         else if (!queueWasEmpty)
         {
             FrmMainApp.Logger.Info(message: "Both file-writes disabled. Nothing Written.");
-            MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"),
-                            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
-                            buttons: MessageBoxButtons.OK,
-                            icon: MessageBoxIcon.Warning);
+            CustomMessageBox customMessageBox = new(
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                    messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Warning);
+            customMessageBox.ShowDialog();
         }
         else
         {
             FrmMainApp.Logger.Info(message: "Queue was empty. Nothing Written.");
-            MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningNothingInWriteQueue"),
-                            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
-                            buttons: MessageBoxButtons.OK,
-                            icon: MessageBoxIcon.Warning);
+            CustomMessageBox customMessageBox = new(
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                    messageBoxName: "mbx_Helper_WarningNothingInWriteQueue"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Warning);
+            customMessageBox.ShowDialog();
         }
 
         ///////////////

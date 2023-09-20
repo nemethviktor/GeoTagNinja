@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.CustomMessageBox;
 using GeoTagNinja.View.ListView;
-using Microsoft.VisualBasic;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers;
@@ -300,11 +300,12 @@ internal static class HelperExifReadTrackData
             }
         }
 
-        DialogResult dialogResult = MessageBox.Show(
+        CustomMessageBox customMessageBox = new(
             text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportGpx_AskUserWantsReport"),
             caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Question"),
             buttons: MessageBoxButtons.YesNo,
             icon: MessageBoxIcon.Question);
+        DialogResult dialogResult = customMessageBox.ShowDialog();
         if (dialogResult == DialogResult.Yes)
         {
             Form reportBox = new();

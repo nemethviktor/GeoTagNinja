@@ -1,4 +1,6 @@
-﻿namespace GeoTagNinja
+﻿using GeoTagNinja.Helpers;
+
+namespace GeoTagNinja
 {
     partial class FrmEditFileData
     {
@@ -503,7 +505,7 @@
             this.tcr_EditData.SelectedIndex = 0;
             this.tcr_EditData.Size = new System.Drawing.Size(565, 518);
             this.tcr_EditData.TabIndex = 0;
-            this.tcr_EditData.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.TabControl_DrawItem);
+            this.tcr_EditData.DrawItem += new System.Windows.Forms.DrawItemEventHandler(HelperControlThemeManager.TabControl_DrawItem);
             // 
             // tpg_DateTime
             // 

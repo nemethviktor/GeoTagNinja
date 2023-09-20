@@ -32,10 +32,10 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 - Build 8646 [20230903]+: I've finally gotten around to displaying the **GPSImgDirection** on the map. The logic is, as not to clutter the map the direction "line" will only show when only one image (with GPSImgDirection) is selected; if more than one such image is selected then the lines don't show.
 	- The way this is calculated requires a "distance" so that the target coordinate pair ("the image direction") can be calculated. This is defaulted to 10km for the line and 1km for the triangle and is unlikely to change at this point.
 - Build 8651 [20230908]+: The other thing I've gotten around to was adding some method of displaying the **Destination** in images. WebView2 seems to be buggy about this and see below for details - also suggestions on fix welcome.
-- Build 8658 [20230915]+: There is now some support for **Dark Mode**. This is very rudimentary and undoubtedly is not beautiful, however there is no proper API support in .NET Framework 4.8.x for "real" (read: Windows 11 style) Dark Mode and at the moment this might or might not even make it into .NET Framework 5 (see [here](https://github.com/dotnet/winforms/issues/7641) for anyone wanting to dig into the techy parts.)
-    - Borders don't draw proper "dark" lines - so there's a discrepancy around the edges. From what I gather as an outcome of the above (lack of support) this is somewhere between a f...kload of work to manually code or just impossible.
-	- In particular the Manage Favourites Form in Dark Mode is an eyesore. If someone feels like rewriting the `ChangeTheme` in `HelperControlThemeManager`, please do.
-    - Point being Dark Mode is an option so that the app doesn't burn your eyes if you are the night owl type, rather than to be pretty, apologies (unlikely this will change unless Microsoft makes progress on the API or I rewrite the whole app in WPF, which isn't likely at the moment).
+- Build 8658 [20230915]+: There is now some support for **Dark Mode**. This is a little "unbeautiful", however there is no proper API support in .NET Framework 4.8.x for "real" (read: Windows 11 style) Dark Mode and at the moment this might or might not even make it into .NET Framework 5 (see [here](https://github.com/dotnet/winforms/issues/7641) for anyone wanting to dig into the techy parts.)
+    - Some Borders and Scrollbars don't draw proper "dark" lines/brushes - so there's a discrepancy around the edges. From what I gather as an outcome of the above (lack of support).
+	- Point being Dark Mode is an option so that the app doesn't burn your eyes if you are the night owl type, rather than to be pretty, apologies.
+	- In newer builds there has been considerable improvements wrt Dark Mode as I now have a slave to do some of the dirty work (Resharper AI FTW).
 
 ### A Particular Note on Working with Adobe Bridge (ACR) and RAW files > Saving as JPGs or Other Formats.
 

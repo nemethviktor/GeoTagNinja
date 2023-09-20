@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using geoTagNinja;
+using GeoTagNinja.View.CustomMessageBox;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers;
@@ -383,18 +384,26 @@ internal static class HelperExifReadExifData
                 }
                 else
                 {
-                    MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_HelperStaticExifNoAPI"),
-                                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
-                                    buttons: MessageBoxButtons.OK,
-                                    icon: MessageBoxIcon.Error);
+                    CustomMessageBox customMessageBox = new(
+                        text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                            messageBoxName: "mbx_HelperStaticExifNoAPI"),
+                        caption: HelperControlAndMessageBoxHandling
+                           .GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                        buttons: MessageBoxButtons.OK,
+                        icon: MessageBoxIcon.Error);
+                    customMessageBox.ShowDialog();
                 }
             }
             catch
             {
-                MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_HelperStaticExifNoAPI"),
-                                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
-                                buttons: MessageBoxButtons.OK,
-                                icon: MessageBoxIcon.Error);
+                CustomMessageBox customMessageBox = new(
+                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                        messageBoxName: "mbx_HelperStaticExifNoAPI"),
+                    caption: HelperControlAndMessageBoxHandling
+                       .GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Error);
+                customMessageBox.ShowDialog();
             }
 
             // ignore if unauthorised or some such

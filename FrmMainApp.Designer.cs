@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.View.ListView;
+﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.View.ListView;
 using System.Reflection;
 using System.Windows.Forms;
 using static GeoTagNinja.View.ListView.FileListView;
@@ -574,7 +575,7 @@ namespace GeoTagNinja
             this.tcr_Main.SelectedIndex = 0;
             this.tcr_Main.Size = new System.Drawing.Size(419, 411);
             this.tcr_Main.TabIndex = 2;
-            this.tcr_Main.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.TabControl_DrawItem);
+            this.tcr_Main.DrawItem += new System.Windows.Forms.DrawItemEventHandler(HelperControlThemeManager.TabControl_DrawItem);
             // 
             // tpg_Map
             // 

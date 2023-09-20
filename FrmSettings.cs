@@ -10,6 +10,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.CustomMessageBox;
 using static System.String;
 using static GeoTagNinja.View.ListView.FileListView;
 
@@ -26,9 +27,9 @@ public partial class FrmSettings : Form
 {
     private static List<Control> _lstTpgApplicationControls = new(); // do not rename
     private static List<Control> _lstTpgGeoNamesControls = new(); // do not rename
+    private static bool _importHasBeenProcessed;
     private readonly string _languageSavedInSQL;
     private bool _nowLoadingSettingsData;
-    private static bool _importHasBeenProcessed;
 
     /// <summary>
     ///     This Form provides an interface for the user to edit various app and file-specific settings.
@@ -624,12 +625,14 @@ public partial class FrmSettings : Form
         void warnUserToRestartApp()
         {
             // fire a warning if something of importance has changed. 
-            MessageBox.Show(
+            CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                     messageBoxName: "mbx_FrmSettings_PleaseRestartApp"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
+            customMessageBox.ShowDialog();
         }
     }
 
@@ -1020,12 +1023,14 @@ public partial class FrmSettings : Form
         if (e.Exception != null &&
             e.Context == DataGridViewDataErrorContexts.Commit)
         {
-            MessageBox.Show(
+            CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                     messageBoxName: "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
+            customMessageBox.ShowDialog();
         }
     }
 
@@ -1056,12 +1061,13 @@ public partial class FrmSettings : Form
             if (clh_TargetPointOutcomeValue == "Custom" && IsNullOrEmpty(value: clh_TargetPointOutcomeCustomValue))
             {
                 e.Cancel = true;
-                MessageBox.Show(
+                CustomMessageBox customMessageBox = new(
                     text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                         messageBoxName: "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty"),
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Warning);
+                customMessageBox.ShowDialog();
             }
         }
     }
@@ -1082,59 +1088,15 @@ public partial class FrmSettings : Form
         // reload
         dgv_CustomCityLogic.Columns.Clear();
         LoadCustomCityLogicDGV();
-        MessageBox.Show(
+        CustomMessageBox customMessageBox = new(
             text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                 messageBoxName: "mbx_GenericDone"),
-            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
             buttons: MessageBoxButtons.OK,
             icon: MessageBoxIcon.Information);
+        customMessageBox.ShowDialog();
     }
 
-#region Themeing
-
-    // this is entirely the same as in FrmMainApp.
-    private StringFormat GetStringFormat()
-    {
-        return new StringFormat
-        {
-            Alignment = StringAlignment.Near,
-            LineAlignment = StringAlignment.Center
-        };
-    }
-
-    // via https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.tabcontrol.drawitem?view=netframework-4.8.1&redirectedfrom=MSDN
-    private void TabControl_DrawItem(object sender,
-                                     DrawItemEventArgs e)
-    {
-        Color foreColor = HelperVariables.UserSettingUseDarkMode
-            ? Color.FromArgb(red: 241, green: 241, blue: 241)
-            : Color.Black;
-
-        Color backColor = HelperVariables.UserSettingUseDarkMode
-            ? Color.FromArgb(red: 101, green: 151, blue: 151)
-            : SystemColors.Control;
-
-        Graphics graphics = e.Graphics;
-        Pen backColorPen = new(color: backColor);
-        SolidBrush foreColorBrush = new(color: foreColor);
-        SolidBrush backColorBrush = new(color: backColor);
-        TabControl tctControl = sender as TabControl;
-        StringFormat stringFormat = GetStringFormat();
-
-        for (int i = 0; i < tctControl.TabPages.Count; i++)
-        {
-            TabPage tbpTabPage = tctControl.TabPages[index: i];
-            Rectangle tabArea = tctControl.GetTabRect(index: i);
-            RectangleF tabTextArea = tabArea;
-            tabTextArea.X += 2; // add padding 
-
-            graphics.DrawRectangle(pen: backColorPen, rect: tabArea);
-            graphics.FillRectangle(brush: backColorBrush, rect: tabTextArea);
-            graphics.DrawString(s: tbpTabPage.Text, font: e.Font, brush: foreColorBrush, layoutRectangle: tabTextArea, format: stringFormat);
-        }
-    }
-
-#endregion
 
 #region Import-export
 
@@ -1191,13 +1153,15 @@ public partial class FrmSettings : Form
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(
+                        CustomMessageBox customMessageBox = new(
                             text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                                       messageBoxName: "mbx_FrmSettings_ErrorExportFailed") +
                                   ex.Message,
-                            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
                             buttons: MessageBoxButtons.OK,
                             icon: MessageBoxIcon.Error);
+                        customMessageBox.ShowDialog();
                     }
                 }
             }
@@ -1246,12 +1210,13 @@ public partial class FrmSettings : Form
                 // Cancel clears the write queue but since the database would have been overwritten that's a reasonable logical path to take.
                 if (_importHasBeenProcessed)
                 {
-                    MessageBox.Show(
+                    CustomMessageBox customMessageBox = new(
                         text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                             messageBoxName: "mbx_GenericDoneRestartApp"),
-                        caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+                        caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
                         buttons: MessageBoxButtons.OK,
                         icon: MessageBoxIcon.Information);
+                    customMessageBox.ShowDialog();
                     btn_Cancel.PerformClick();
                 }
             }

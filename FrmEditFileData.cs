@@ -1,6 +1,4 @@
-﻿using GeoTagNinja.Helpers;
-using GeoTagNinja.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -8,6 +6,10 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using GeoTagNinja.Helpers;
+using GeoTagNinja.Model;
+using GeoTagNinja.View.CustomMessageBox;
+using Microsoft.WindowsAPICodePack.Taskbar;
 using NLog;
 using TimeZoneConverter;
 using static GeoTagNinja.FrmMainApp;
@@ -252,7 +254,7 @@ public partial class FrmEditFileData : Form
                         }
 
                         IConvertible dataInDE = null;
-                        string cItemValStr = FrmMainApp.NullStringEquivalentBlank;
+                        string cItemValStr = NullStringEquivalentBlank;
                         if (dataExistsSomewhere)
                         {
                             if (typeOfAttribute == typeof(string))
@@ -260,36 +262,46 @@ public partial class FrmEditFileData : Form
                                 dataInDE = dirElemFileToModify.GetAttributeValueString(attribute: attribute,
                                                                                        version: maxAttributeVersion);
 
-                                if (string.IsNullOrEmpty(dataInDE.ToString()))
+                                if (string.IsNullOrEmpty(value: dataInDE.ToString()))
+                                {
                                     dataIsNull = true;
+                                }
                             }
                             else if (typeOfAttribute == typeof(int))
                             {
                                 dataInDE = dirElemFileToModify.GetAttributeValue<int>(
                                     attribute: attribute,
                                     version: maxAttributeVersion);
-                                if ((int)dataInDE == FrmMainApp.NullIntEquivalent)
+                                if ((int)dataInDE == NullIntEquivalent)
+                                {
                                     dataIsNull = true;
+                                }
                             }
                             else if (typeOfAttribute == typeof(double))
                             {
                                 dataInDE = dirElemFileToModify.GetAttributeValue<double>(
                                     attribute: attribute,
                                     version: maxAttributeVersion);
-                                if ((double)dataInDE == FrmMainApp.NullDoubleEquivalent)
+                                if ((double)dataInDE == NullDoubleEquivalent)
+                                {
                                     dataIsNull = true;
+                                }
                             }
                             else if (typeOfAttribute == typeof(DateTime))
                             {
                                 dataInDE = dirElemFileToModify.GetAttributeValue<DateTime>(
                                     attribute: attribute,
                                     version: maxAttributeVersion);
-                                if ((DateTime)dataInDE == FrmMainApp.NullDateTimeEquivalent)
+                                if ((DateTime)dataInDE == NullDateTimeEquivalent)
+                                {
                                     dataIsNull = true;
+                                }
                             }
 
                             if (!dataIsNull)
+                            {
                                 cItemValStr = dataInDE.ToString();
+                            }
 
                             // reset font to normal
                             cItem.Font = new Font(prototype: cItem.Font, newStyle: FontStyle.Regular);
@@ -337,8 +349,8 @@ public partial class FrmEditFileData : Form
                                 }
                                 else // cItem is nud
                                 {
-                                    nud.Value = FrmMainApp.NullIntEquivalent;
-                                    nud.Text = FrmMainApp.NullStringEquivalentZero;
+                                    nud.Value = NullIntEquivalent;
+                                    nud.Text = NullStringEquivalentZero;
                                 }
                             }
                             // if it's none of the above then make the cItem be just blank.
@@ -348,7 +360,7 @@ public partial class FrmEditFileData : Form
                             }
                             else
                             {
-                                cItem.Text = FrmMainApp.NullStringEquivalentBlank;
+                                cItem.Text = NullStringEquivalentBlank;
                             }
                         }
                         // if has value...
@@ -652,38 +664,6 @@ public partial class FrmEditFileData : Form
         e.DrawDefault = true;
     }
 
-    // via https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.tabcontrol.drawitem?view=netframework-4.8.1&redirectedfrom=MSDN
-    private void TabControl_DrawItem(object sender,
-                                     DrawItemEventArgs e)
-    {
-        Color foreColor = HelperVariables.UserSettingUseDarkMode
-            ? Color.FromArgb(red: 241, green: 241, blue: 241)
-            : Color.Black;
-
-        Color backColor = HelperVariables.UserSettingUseDarkMode
-            ? Color.FromArgb(red: 101, green: 151, blue: 151)
-            : SystemColors.Control;
-
-        Graphics graphics = e.Graphics;
-        Pen backColorPen = new(color: backColor);
-        SolidBrush foreColorBrush = new(color: foreColor);
-        SolidBrush backColorBrush = new(color: backColor);
-        TabControl tctControl = sender as TabControl;
-        StringFormat stringFormat = GetStringFormat();
-
-        for (int i = 0; i < tctControl.TabPages.Count; i++)
-        {
-            TabPage tbpTabPage = tctControl.TabPages[index: i];
-            Rectangle tabArea = tctControl.GetTabRect(index: i);
-            RectangleF tabTextArea = tabArea;
-            tabTextArea.X += 2; // add padding 
-
-            graphics.DrawRectangle(pen: backColorPen, rect: tabArea);
-            graphics.FillRectangle(brush: backColorBrush, rect: tabTextArea);
-            graphics.DrawString(s: tbpTabPage.Text, font: e.Font, brush: foreColorBrush, layoutRectangle: tabTextArea, format: stringFormat);
-        }
-    }
-
 #endregion
 
 #region object events
@@ -730,31 +710,36 @@ public partial class FrmEditFileData : Form
 
                 break;
             default:
-                MessageBox.Show(
+                CustomMessageBox customMessageBox = new(
                     text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                               messageBoxName: "mbx_FrmEditFileData_ErrorInvalidSender") +
                           ((Button)sender).Name,
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                        captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Error);
+                customMessageBox.ShowDialog();
                 break;
         }
 
         if (HelperVariables.OperationAPIReturnedOKResponse)
         {
-            MessageBox.Show(
+            CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_InfoDataUpdated"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Information);
+            customMessageBox.ShowDialog();
         }
         else
         {
-            MessageBox.Show(
+            CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmEditFileData_ErrorAPIError"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
+            customMessageBox.ShowDialog();
         }
     }
 
@@ -767,7 +752,7 @@ public partial class FrmEditFileData : Form
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         double parsedLat;
         double parsedLng;
-        DateTime createDate = FrmMainApp.NullDateTimeEquivalent; // can't leave it null because it's updated in various IFs and C# perceives it as uninitialised.
+        DateTime createDate = NullDateTimeEquivalent; // can't leave it null because it's updated in various IFs and C# perceives it as uninitialised.
 
         string strGpsLatitude = null;
         string strGpsLongitude = null;
@@ -1064,12 +1049,13 @@ public partial class FrmEditFileData : Form
             else
             {
                 logger.Debug(message: "File disappeared: " + fileNameWithPath);
-                MessageBox.Show(
+                CustomMessageBox customMessageBox = new(
                     text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                         messageBoxName: "mbx_FrmEditFileData_WarningFileDisappeared"),
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Warning);
+                customMessageBox.ShowDialog();
             }
         }
 
@@ -1094,9 +1080,9 @@ public partial class FrmEditFileData : Form
             // move data from temp-queue to write-queue
             for (int fileCounter = 0; fileCounter < directoryElementsCount; fileCounter++)
             {
-                DirectoryElement dirElemFileToModify = DirectoryElements[fileCounter];
+                DirectoryElement dirElemFileToModify = DirectoryElements[index: fileCounter];
                 // this is to prevent code from looping through _all_ the files in a folder pointlessly.
-                if (dirElemFileToModify.HasDirtyAttributes(DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue))
+                if (dirElemFileToModify.HasDirtyAttributes(whichAttributeVersion: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue))
                 {
                     bool takenAlreadyShifted = false;
                     bool createAlreadyShifted = false;
@@ -1139,14 +1125,14 @@ public partial class FrmEditFileData : Form
                     {
                         HelperGenericFileLocking.FileListBeingUpdated = true;
                         await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
-                        TaskbarManagerInstance.SetProgressValue(fileCounter + 1, directoryElementsCount);
-                        Thread.Sleep(1);
+                        TaskbarManagerInstance.SetProgressValue(currentValue: fileCounter + 1, maximumValue: directoryElementsCount);
+                        Thread.Sleep(millisecondsTimeout: 1);
                         HelperGenericFileLocking.FileListBeingUpdated = false;
                     }
                 }
             }
 
-            TaskbarManagerInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress);
+            TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.NoProgress);
             // re-center map on new data.
             FileListViewMapNavigation.ListViewItemClickNavigate();
         }

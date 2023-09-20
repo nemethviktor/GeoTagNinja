@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.CustomMessageBox;
 using static System.Environment;
 
 namespace GeoTagNinja.Helpers;
@@ -43,11 +44,12 @@ internal static class HelperFileSystemOperators
         if (dataToWrite)
         {
             // ask: do you want to write/save?
-            DialogResult dialogResult = MessageBox.Show(
+            CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_Helper_QuestionFileQIsNotEmpty"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Question"),
                 buttons: MessageBoxButtons.YesNoCancel,
                 icon: MessageBoxIcon.Question);
+            DialogResult dialogResult = customMessageBox.ShowDialog();
             if (dialogResult == DialogResult.Yes)
             {
                 while (HelperGenericFileLocking.FileListBeingUpdated || HelperGenericFileLocking.FilesAreBeingSaved)

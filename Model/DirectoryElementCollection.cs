@@ -1,12 +1,14 @@
-﻿using ExifToolWrapper;
-using GeoTagNinja.Helpers;
-using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using ExifToolWrapper;
+using GeoTagNinja.Helpers;
+using GeoTagNinja.View.CustomMessageBox;
+using Microsoft.WindowsAPICodePack.Taskbar;
+using NLog;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using static System.Environment;
 
@@ -207,10 +209,14 @@ public class DirectoryElementCollection : List<DirectoryElement>
             catch (Exception ex)
             {
                 Logger.Error(message: $"Could not add parent. Error: {ex.Message}");
-                MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
-                                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
-                                buttons: MessageBoxButtons.OK,
-                                icon: MessageBoxIcon.Error);
+                CustomMessageBox customMessageBox = new(
+                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                        messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
+                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                        captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Error);
+                customMessageBox.ShowDialog();
             }
 
             // ******************************
@@ -250,10 +256,14 @@ public class DirectoryElementCollection : List<DirectoryElement>
             catch (Exception ex)
             {
                 Logger.Error(message: "Error: " + ex.Message);
-                MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
-                                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
-                                buttons: MessageBoxButtons.OK,
-                                icon: MessageBoxIcon.Error);
+                CustomMessageBox customMessageBox = new(
+                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                        messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
+                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                        captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Error);
+                customMessageBox.ShowDialog();
             }
 
             Logger.Trace(message: "Listing Folders - OK");
@@ -396,14 +406,16 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 overlappingXmpFileStr += s + NewLine;
             }
 
-            MessageBox.Show(
+            CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                           messageBoxName: "mbx_FrmMainApp_WarningMultipleImageFilesForXMP") +
                       NewLine +
                       overlappingXmpFileStr,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
+            customMessageBox.ShowDialog();
         }
 
         // ******************************
@@ -454,7 +466,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
         CreateGUIDsForDirectoryElements();
 
-        FrmMainApp.TaskbarManagerInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress);
+        FrmMainApp.TaskbarManagerInstance.SetProgressState(TaskbarProgressBarState.NoProgress);
 
         Logger.Info(message: "Files: Extracting File Data - OK");
 

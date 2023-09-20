@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using geoTagNinja;
+using GeoTagNinja.View.CustomMessageBox;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -106,11 +107,15 @@ internal static class HelperAPIVersionCheckers
         else
         {
             HelperVariables.OperationAPIReturnedOKResponse = false;
-            MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningGTNVerAPIResponse") +
-                                  response_GTNVersionQuery.StatusCode,
-                            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
-                            buttons: MessageBoxButtons.OK,
-                            icon: MessageBoxIcon.Warning);
+            CustomMessageBox customMessageBox = new(
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_Helper_WarningGTNVerAPIResponse") +
+                      response_GTNVersionQuery.StatusCode,
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Warning);
+            customMessageBox.ShowDialog();
         }
 
         return lastGTNBuildOnline;
@@ -209,13 +214,15 @@ internal static class HelperAPIVersionCheckers
                     settingValue: newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture)
                 );
 
-                if (MessageBox.Show(
-                        text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewExifToolVersionExists") +
-                              newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture),
-                        caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
-                        buttons: MessageBoxButtons.YesNo,
-                        icon: MessageBoxIcon.Asterisk) ==
-                    DialogResult.Yes)
+                CustomMessageBox customMessageBox = new(
+                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                              messageBoxName: "mbx_FrmMainApp_InfoNewExifToolVersionExists") +
+                          newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture),
+                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                    buttons: MessageBoxButtons.YesNo,
+                    icon: MessageBoxIcon.Asterisk);
+                DialogResult dialogResult = customMessageBox.ShowDialog();
+                if (dialogResult == DialogResult.Yes)
                 {
                     Process.Start(fileName: "https://exiftool.org/exiftool-" + newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture) + ".zip");
                     FrmMainApp.Logger.Trace(message: "User Launched Browser to Download");
@@ -228,11 +235,13 @@ internal static class HelperAPIVersionCheckers
 
             // current version may be something like "0.5.8251.40825"
             // Assembly.GetExecutingAssembly().GetName().Version.Build is just "8251"
+            // ReSharper disable once InconsistentNaming
             int currentGTNVersionBuild = Assembly.GetExecutingAssembly()
                                                  .GetName()
                                                  .Version.Build;
 
             HelperVariables.OperationAPIReturnedOKResponse = true;
+            // ReSharper disable once InconsistentNaming
             int newestOnlineGTNVersion = 0;
             try
             {
@@ -245,13 +254,15 @@ internal static class HelperAPIVersionCheckers
 
             if (newestOnlineGTNVersion > currentGTNVersionBuild)
             {
-                if (MessageBox.Show(
+                CustomMessageBox customMessageBox = new(
                         text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewGTNVersionExists") +
                               newestOnlineGTNVersion,
-                        caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
+                        caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
                         buttons: MessageBoxButtons.YesNo,
-                        icon: MessageBoxIcon.Asterisk) ==
-                    DialogResult.Yes)
+                        icon: MessageBoxIcon.Asterisk)
+                    ;
+                DialogResult dialogResult = customMessageBox.ShowDialog();
+                if (dialogResult == DialogResult.Yes)
                 {
                     Process.Start(fileName: "https://github.com/nemethviktor/GeoTagNinja/releases/download/b" + newestOnlineGTNVersion.ToString(provider: CultureInfo.InvariantCulture) + "/GeoTagNinja_Setup.msi");
                 }

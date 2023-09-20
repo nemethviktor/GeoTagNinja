@@ -9,6 +9,19 @@ namespace GeoTagNinja.Helpers;
 
 internal static class HelperControlAndMessageBoxHandling
 {
+    public enum MessageBoxCaption
+    {
+        None,
+        Information,
+        Error,
+        Exclamation,
+        Question,
+        Warning,
+        Stop,
+        Hand,
+        Asterisk
+    }
+
     /// <summary>
     ///     Bit of out sync with the rest but this returns the localised captions for messageboxes (e.g. "info" or "error")
     /// </summary>
