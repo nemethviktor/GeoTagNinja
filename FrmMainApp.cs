@@ -1835,7 +1835,7 @@ public partial class FrmMainApp : Form
 
                 foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays.ToponomyReplaces())
                 {
-                    string colName = GetAttributeName(attribute: attribute);
+                    string colName = GetElementAttributesName(attributeToFind: attribute);
                     string settingVal = HelperExifReadExifData.ReplaceBlankToponomy(settingId: attribute, settingValue: dtToponomy.Rows[index: 0][columnName: colName]
                                                                                                                                   .ToString());
                     toponomyOverwrites.Add(item: (attribute, settingVal));
@@ -2202,14 +2202,21 @@ public partial class FrmMainApp : Form
         foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
 
         {
-            // this is a bit of a misuse of TagsToColumnHeaderOrder but does the job. 
-            // basically we have a bunch of EAs that the user is unlikely to care about
-            // and the ones that show as columns could be reasonably deemed as relevant.
-            if (TagsToColumnHeaderOrder.Contains(item: attribute))
+            List<ElementAttribute> attributesWithValidOrderIDs =
+                Enum.GetValues(enumType: typeof(ElementAttribute))
+                    .Cast<ElementAttribute>()
+                    .Where(predicate: attribute =>
+                               GetElementAttributesOrderID(
+                                   attributeToFind
+                                   : attribute) >
+                               0)
+                    .ToList();
+
+            if (attributesWithValidOrderIDs.Contains(item: attribute))
             {
                 ListViewItem lvi = new()
                 {
-                    Text = GetAttributeName(attribute: attribute)
+                    Text = GetElementAttributesName(attributeToFind: attribute)
                 };
                 lvi.SubItems.Add(text: directoryElement.GetAttributeValueString(
                                      attribute: attribute,
@@ -2536,7 +2543,7 @@ public partial class FrmMainApp : Form
 
                 foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays.GetFavouriteTags())
                 {
-                    string colName = GetAttributeName(attribute: attribute);
+                    string colName = GetElementAttributesName(attributeToFind: attribute);
                     string addStr = lvi.SubItems[index: lvw.Columns[key: ElementAttributeToColumnHeaderName(elementAttribute: attribute)]
                                                            .Index]
                                        .Text.ToString(provider: CultureInfo.InvariantCulture);
@@ -2627,7 +2634,7 @@ public partial class FrmMainApp : Form
                     {
                         foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays.GetFavouriteTags())
                         {
-                            string colName = GetAttributeName(attribute: attribute);
+                            string colName = GetElementAttributesName(attributeToFind: attribute);
                             string settingValue = drFavouriteData[columnName: colName]
                                .ToString();
 

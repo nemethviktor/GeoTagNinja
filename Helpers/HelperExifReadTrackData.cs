@@ -189,7 +189,7 @@ internal static class HelperExifReadTrackData
                                 string strLatInAPI = FrmMainApp.NullStringEquivalentGeneric;
                                 try
                                 {
-                                    strLatInAPI = HelperExifReadExifData.ExifGetStandardisedDataPointFromExif(dtFileExif: dtDistinctFileExifTable, dataPoint: GetAttributeName(attribute: ElementAttribute.GPSLatitude));
+                                    strLatInAPI = HelperExifReadExifData.ExifGetStandardisedDataPointFromExif(dtFileExif: dtDistinctFileExifTable, dataPoint: GetElementAttributesName(attributeToFind: ElementAttribute.GPSLatitude));
                                 }
                                 catch
                                 {
@@ -199,7 +199,7 @@ internal static class HelperExifReadTrackData
                                 string strLngInAPI = FrmMainApp.NullStringEquivalentGeneric;
                                 try
                                 {
-                                    strLngInAPI = HelperExifReadExifData.ExifGetStandardisedDataPointFromExif(dtFileExif: dtDistinctFileExifTable, dataPoint: GetAttributeName(attribute: ElementAttribute.GPSLongitude));
+                                    strLngInAPI = HelperExifReadExifData.ExifGetStandardisedDataPointFromExif(dtFileExif: dtDistinctFileExifTable, dataPoint: GetElementAttributesName(attributeToFind: ElementAttribute.GPSLongitude));
                                 }
                                 catch
                                 {
@@ -209,7 +209,7 @@ internal static class HelperExifReadTrackData
                                 string altitudeInAPI = FrmMainApp.NullStringEquivalentGeneric;
                                 try
                                 {
-                                    altitudeInAPI = HelperExifReadExifData.ExifGetStandardisedDataPointFromExif(dtFileExif: dtDistinctFileExifTable, dataPoint: GetAttributeName(attribute: ElementAttribute.GPSAltitude));
+                                    altitudeInAPI = HelperExifReadExifData.ExifGetStandardisedDataPointFromExif(dtFileExif: dtDistinctFileExifTable, dataPoint: GetElementAttributesName(attributeToFind: ElementAttribute.GPSAltitude));
                                     if (int.TryParse(s: altitudeInAPI, result: out int altitudeInAPIInt))
                                     {
                                         if (Math.Abs(value: altitudeInAPIInt) > 20000) // API is stupid

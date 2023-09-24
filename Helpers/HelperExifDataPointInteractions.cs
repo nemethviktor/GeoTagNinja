@@ -62,8 +62,16 @@ internal static class HelperExifDataPointInteractions
     internal static async Task ExifRemoveLocationData(string senderName)
     {
         // GeoDataAttributes is a readonly and I don't want to modify it for the rest of the code.
-        List<ElementAttribute> toponomyOverwritesAttributes = GeoDataAttributes;
-        toponomyOverwritesAttributes.Add(item: ElementAttribute.RemoveAllGPS); //"gps*"
+        List<ElementAttribute> geoDataAttributes = Enum
+                                                  .GetValues(
+                                                       enumType: typeof(ElementAttribute))
+                                                  .Cast<ElementAttribute>()
+                                                  .Where(predicate: attr =>
+                                                             GetElementAttributesIsGeoData(
+                                                                 attributeToFind: attr))
+                                                  .ToList();
+
+        geoDataAttributes.Add(item: ElementAttribute.RemoveAllGPS); //"gps*"
 
         if (HelperDataApplicationSettings.DataReadSQLiteSettings(
                 tableName: "settings",
@@ -71,7 +79,7 @@ internal static class HelperExifDataPointInteractions
                 settingId: "ckb_RemoveGeoDataRemovesTimeOffset") ==
             "true")
         {
-            toponomyOverwritesAttributes.Add(item: ElementAttribute.OffsetTime);
+            geoDataAttributes.Add(item: ElementAttribute.OffsetTime);
         }
 
         if (senderName == "FrmEditFileData")
@@ -124,12 +132,14 @@ internal static class HelperExifDataPointInteractions
 
                 if (dirElemFileToModify != null)
                 {
-                    foreach (ElementAttribute toponomyDetail in toponomyOverwritesAttributes)
+                    foreach (ElementAttribute toponomyDetail in geoDataAttributes)
                     {
-                        dirElemFileToModify.SetAttributeValueAnyType(attribute: toponomyDetail,
-                                                                     value: "",
-                                                                     version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
-                                                                     isMarkedForDeletion: true);
+                        dirElemFileToModify.SetAttributeValueAnyType(
+                            attribute: toponomyDetail,
+                            value: "",
+                            version: DirectoryElement.AttributeVersion
+                                                     .Stage1EditFormIntraTabTransferQueue,
+                            isMarkedForDeletion: true);
                     }
 
                     dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.RemoveAllGPS,
@@ -167,12 +177,14 @@ internal static class HelperExifDataPointInteractions
 
                             // then put a blocker on
                             HelperGenericFileLocking.GenericLockLockFile(fileNameWithoutPath: fileNameWithoutPath);
-                            foreach (ElementAttribute toponomyDetail in toponomyOverwritesAttributes)
+                            foreach (ElementAttribute toponomyDetail in geoDataAttributes)
                             {
-                                dirElemFileToModify.SetAttributeValueAnyType(attribute: toponomyDetail,
-                                                                             value: "",
-                                                                             version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                                                             isMarkedForDeletion: true);
+                                dirElemFileToModify.SetAttributeValueAnyType(
+                                    attribute: toponomyDetail,
+                                    value: "",
+                                    version: DirectoryElement.AttributeVersion
+                                       .Stage3ReadyToWrite,
+                                    isMarkedForDeletion: true);
                             }
 
                             dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.RemoveAllGPS,

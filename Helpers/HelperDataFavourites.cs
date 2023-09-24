@@ -122,7 +122,7 @@ internal static class HelperDataFavourites
                                              .ToString());
         foreach (SourcesAndAttributes.ElementAttribute attribute in HelperGenericAncillaryListsArrays.GetFavouriteTags())
         {
-            string attributeStr = SourcesAndAttributes.GetAttributeName(attribute: attribute);
+            string attributeStr = SourcesAndAttributes.GetElementAttributesName(attributeToFind: attribute);
             sqlToRun.Parameters.AddWithValue(parameterName: "@" + attribute, value: drFavourite[columnName: attributeStr]
                                                  .ToString());
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
@@ -776,8 +777,16 @@ public partial class FileListView : System.Windows.Forms.ListView
     private void SetupColumns()
     {
         Logger.Debug(message: "Starting");
-
-        foreach (SourcesAndAttributes.ElementAttribute attribute in SourcesAndAttributes.TagsToColumnHeaderOrder)
+        List<SourcesAndAttributes.ElementAttribute> attributesWithValidOrderIDs = Enum
+           .GetValues(enumType: typeof(SourcesAndAttributes.ElementAttribute))
+           .Cast<SourcesAndAttributes.ElementAttribute>()
+           .Where(predicate: attribute =>
+                      SourcesAndAttributes.GetElementAttributesOrderID(
+                          attributeToFind: attribute) >
+                      0)
+           .ToList();
+        foreach (SourcesAndAttributes.ElementAttribute attribute in
+                 attributesWithValidOrderIDs)
         {
             string clhName = attribute.ToString();
 

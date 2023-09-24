@@ -69,7 +69,7 @@ public partial class FrmPasteWhat : Form
                         tagsToPasteAttributeList.Add(item: attribute);
 
                         // https://stackoverflow.com/a/28352807/3968494
-                        if (Controls.Find(key: "ckb_" + GetAttributeName(attribute: attribute), searchAllChildren: true)
+                        if (Controls.Find(key: "ckb_" + GetElementAttributesName(attributeToFind: attribute), searchAllChildren: true)
                                     .FirstOrDefault() is CheckBox cbx)
                         {
                             cbx.Checked = true;
@@ -86,7 +86,7 @@ public partial class FrmPasteWhat : Form
                 tagsToPasteAttributeList.Add(item: attribute);
 
                 // https://stackoverflow.com/a/28352807/3968494
-                if (Controls.Find(key: "ckb_" + GetAttributeName(attribute: attribute), searchAllChildren: true)
+                if (Controls.Find(key: "ckb_" + GetElementAttributesName(attributeToFind: attribute), searchAllChildren: true)
                             .FirstOrDefault() is CheckBox cbx)
                 {
                     cbx.Checked = keyValuePair.Value.Item2;
@@ -112,7 +112,7 @@ public partial class FrmPasteWhat : Form
         {
             foreach (ElementAttribute attribute in tagsToPasteAttributeList)
             {
-                string attributeString = GetAttributeName(attribute: attribute);
+                string attributeString = GetElementAttributesName(attributeToFind: attribute);
                 if (attributeString.StartsWith(value: "TakenDate") && attributeString.EndsWith(value: "Shift"))
                 {
                     rbt_PasteTakenDateShift.Checked = true;
@@ -220,7 +220,7 @@ public partial class FrmPasteWhat : Form
                 if (thisCheckBox.Checked)
                 {
                     string attributeString = cItem.Name.Substring(startIndex: 4);
-                    ElementAttribute attribute = GetAttributeFromString(attributeToFind: attributeString);
+                    ElementAttribute attribute = GetElementAttributesElementAttribute(attributeToFind: attributeString);
                     LastCheckedCheckBoxes.Add(item: cItem.Name);
 
                     // "EndsWith" doesn't work here because the CheckBox.Name never ends with "Shift".
@@ -240,7 +240,7 @@ public partial class FrmPasteWhat : Form
                                     // want: "TakenDateDaysShift"
                                     foreach (string timeUnit in timeUnitArr)
                                     {
-                                        tagsToPaste.Add(item: GetAttributeFromString(attributeToFind: attributeString + timeUnit + "Shift"));
+                                        tagsToPaste.Add(item: GetElementAttributesElementAttribute(attributeToFind: attributeString + timeUnit + "Shift"));
                                     }
                                 }
 
@@ -254,7 +254,7 @@ public partial class FrmPasteWhat : Form
                                 {
                                     foreach (string timeUnit in timeUnitArr)
                                     {
-                                        tagsToPaste.Add(item: GetAttributeFromString(attributeToFind: attributeString + timeUnit + "Shift"));
+                                        tagsToPaste.Add(item: GetElementAttributesElementAttribute(attributeToFind: attributeString + timeUnit + "Shift"));
                                     }
                                 }
 
@@ -275,7 +275,7 @@ public partial class FrmPasteWhat : Form
                     // any in the Ref lot
                     if (tagsWithRefList.Contains(item: attributeString))
                     {
-                        tagsToPaste.Add(item: GetAttributeFromString(attributeToFind: attributeString + "Ref"));
+                        tagsToPaste.Add(item: GetElementAttributesElementAttribute(attributeToFind: attributeString + "Ref"));
                     }
                 }
             }
@@ -296,10 +296,10 @@ public partial class FrmPasteWhat : Form
 
                 foreach (ElementAttribute attribute in tagsToPaste)
                 {
-                    string attributeStr = GetAttributeName(attribute: attribute);
+                    string attributeStr = GetElementAttributesName(attributeToFind: attribute);
 
                     // there must be a better way around this
-                    Type typeOfAttribute = GetAttributeType(attribute: attribute);
+                    Type typeOfAttribute = GetElementAttributesType(attributeToFind: attribute);
                     IConvertible pasteConvertible = null;
 
                     // by this point we know that _there is_ something to paste.
@@ -384,8 +384,8 @@ public partial class FrmPasteWhat : Form
                             // update each tag --> frmEditFileDataInstance
                             foreach (KeyValuePair<ElementAttribute, object> keyValuePair in copyPasteDict)
                             {
-                                Type typeofPaste = GetAttributeType(attribute: keyValuePair.Key);
-                                string attributeStr = GetAttributeName(attribute: keyValuePair.Key);
+                                Type typeofPaste = GetElementAttributesType(attributeToFind: keyValuePair.Key);
+                                string attributeStr = GetElementAttributesName(attributeToFind: keyValuePair.Key);
 
                                 if (attributeStr.Contains(value: "Taken") && attributeStr.Contains(value: "Shift"))
                                 {
@@ -481,7 +481,7 @@ public partial class FrmPasteWhat : Form
 
                         foreach (KeyValuePair<ElementAttribute, object> keyValuePair in copyPasteDict)
                         {
-                            string attributeStr = GetAttributeName(attribute: keyValuePair.Key);
+                            string attributeStr = GetElementAttributesName(attributeToFind: keyValuePair.Key);
 
                             if (attributeStr.Contains(value: "Taken") && attributeStr.Contains(value: "Shift"))
                             {

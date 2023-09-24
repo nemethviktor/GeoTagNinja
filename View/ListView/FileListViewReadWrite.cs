@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.ListView;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using static GeoTagNinja.View.ListView.FileListView;
 
@@ -53,8 +54,7 @@ internal static class FileListViewReadWrite
                             // this becomes tricky bcs we're also firing a "-gps*=" tag.
                             string settingId = ElementAttributeToColumnHeaderName(attribute);
                             string settingVal = dirElemFileToModify.GetAttributeValueString(attribute: attribute,
-                                                                                            version: DirectoryElement
-                                                                                                    .AttributeVersion
+                                                                                            version: DirectoryElement.AttributeVersion
                                                                                                     .Stage3ReadyToWrite);
 
                             if (lvchs[key: settingId] != null)
@@ -226,6 +226,16 @@ internal static class FileListViewReadWrite
             if (directoryElement.Type == DirectoryElement.ElementType.File)
             {
                 DEFileCount++;
+                List<ElementAttribute> GeoDataAttributes = Enum
+                                                          .GetValues(
+                                                               enumType:
+                                                               typeof(ElementAttribute))
+                                                          .Cast<ElementAttribute>()
+                                                          .Where(
+                                                               predicate:
+                                                               GetElementAttributesIsGeoData)
+                                                          .ToList();
+
                 foreach (ElementAttribute geoDataAttribute in GeoDataAttributes)
                 {
                     if (directoryElement.HasSpecificAttributeWithAnyVersion(attribute: geoDataAttribute))

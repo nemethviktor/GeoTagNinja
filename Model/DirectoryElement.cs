@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.Globalization;
 using System.IO;
 using GeoTagNinja.Helpers;
@@ -200,7 +199,7 @@ public class DirectoryElement
     /// </summary>
     /// <param name="whichAttributeVersion"></param>
     /// <returns>boolean</returns>
-    public bool HasDirtyAttributes(DirectoryElement.AttributeVersion whichAttributeVersion = AttributeVersion.Stage3ReadyToWrite)
+    public bool HasDirtyAttributes(AttributeVersion whichAttributeVersion = AttributeVersion.Stage3ReadyToWrite)
     {
         foreach (AttributeValueContainer avc in this._Attributes.Values)
         {
@@ -302,7 +301,7 @@ public class DirectoryElement
 
         AttributeValueContainer avc = _Attributes[key: attribute];
         foreach (AttributeVersion attributeVersion in (AttributeVersion[])Enum.GetValues(
-                     typeof(DirectoryElement.AttributeVersion)))
+                     typeof(AttributeVersion)))
         {
             if (HasSpecificAttributeWithVersion(avc, attributeVersion))
             {
@@ -368,7 +367,7 @@ public class DirectoryElement
 
         // else
         // Should not get to here
-        throw new ArgumentException(message: $"Failed to retrieve attribute '{GetAttributeName(attribute: attribute)}" +
+        throw new ArgumentException(message: $"Failed to retrieve attribute '{GetElementAttributesName(attributeToFind: attribute)}" +
                                              $"' of type '{attributeType.Name}");
     }
 
@@ -461,7 +460,7 @@ public class DirectoryElement
 
         // else
         // Should not get to here
-        throw new ArgumentException(message: $"Failed to retrieve attribute '{GetAttributeName(attribute: attribute)}" +
+        throw new ArgumentException(message: $"Failed to retrieve attribute '{GetElementAttributesName(attributeToFind: attribute)}" +
                                              $"' of type '{attributeType.Name}" +
                                              "' by requesting its value with type 'string' due to conversion issues.");
     }
@@ -469,13 +468,13 @@ public class DirectoryElement
     public AttributeVersion? GetMaxAttributeVersion(ElementAttribute attribute)
 
     {
-        List<DirectoryElement.AttributeVersion> relevantAttributeVersions = new()
+        List<AttributeVersion> relevantAttributeVersions = new()
         {
             // DO NOT reorder!
-            DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-            DirectoryElement.AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue,
-            DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
-            DirectoryElement.AttributeVersion.Original
+            AttributeVersion.Stage3ReadyToWrite,
+            AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue,
+            AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+            AttributeVersion.Original
         };
         foreach (AttributeVersion attributeVersion in relevantAttributeVersions)
         {
@@ -527,7 +526,7 @@ public class DirectoryElement
         Type attributeType = avc.MyValueType;
         if ((requestType != attributeType) & (requestType != typeof(string)))
         {
-            throw new ArgumentException(message: $"Failed to retrieve attribute '{GetAttributeName(attribute: attribute)}" +
+            throw new ArgumentException(message: $"Failed to retrieve attribute '{GetElementAttributesName(attributeToFind: attribute)}" +
                                                  $"' of type '{attributeType.Name}" +
                                                  $"' due to requesting with incompatible return type '{requestType.Name}'.");
         }
@@ -573,7 +572,7 @@ public class DirectoryElement
         }
 
         // Should not get to here
-        throw new ArgumentException(message: $"Failed to retrieve attribute '{GetAttributeName(attribute: attribute)}" +
+        throw new ArgumentException(message: $"Failed to retrieve attribute '{GetElementAttributesName(attributeToFind: attribute)}" +
                                              $"' of type '{attributeType.Name}" +
                                              $"' by requesting its value with type '{requestType.Name}' due to conversion issues.");
     }
@@ -590,7 +589,7 @@ public class DirectoryElement
                                          AttributeVersion version,
                                          bool isMarkedForDeletion)
     {
-        Type typeOfAttribute = GetAttributeType(attribute: attribute);
+        Type typeOfAttribute = GetElementAttributesType(attributeToFind: attribute);
         IConvertible writeValueConvertible = null;
 
         if (typeOfAttribute == typeof(string))
@@ -642,12 +641,12 @@ public class DirectoryElement
                                   AttributeVersion version,
                                   bool isMarkedForDeletion)
     {
-        Type attributeType = GetAttributeType(attribute: attribute);
+        Type attributeType = GetElementAttributesType(attributeToFind: attribute);
         if (!isMarkedForDeletion && value != null)
         {
             if (attributeType != value.GetType())
             {
-                throw new ArgumentException(message: $"Error, while trying to set the attribute {GetAttributeName(attribute: attribute)}" +
+                throw new ArgumentException(message: $"Error, while trying to set the attribute {GetElementAttributesName(attributeToFind: attribute)}" +
                                                      $" of item '{ItemNameWithoutPath}'. The type '{value.GetType().Name}' of the value to set  does not contain " +
                                                      $"match the expected type '{attributeType.Name}'.");
             }
@@ -781,7 +780,7 @@ public class DirectoryElement
         private (string, string) GetDataPointFromTags(ElementAttribute attribute,
                                                       IDictionary<string, string> tags)
     {
-        Logger.Trace(message: "Starting to parse dict for attribute: " + GetAttributeName(attribute: attribute));
+        Logger.Trace(message: "Starting to parse dict for attribute: " + GetElementAttributesName(attributeToFind: attribute));
         List<ElementAttribute> ignoreElementAttributes = new()
         {
             ElementAttribute.Coordinates,
@@ -800,28 +799,21 @@ public class DirectoryElement
 
         if (!ignoreElementAttributes.Contains(item: attribute))
         {
-            if (!TagsToAttributesIn.ContainsKey(key: attribute))
+            List<string> tagsWithAttributesIn = GetElementAttributesIn(attributeToFind: attribute);
+            for (int i = 0; i < tagsWithAttributesIn.Count; i++)
             {
-                throw new ArgumentException(message: "Error, while trying to parse the dictionary of item '" +
-                                                     $"{ItemNameWithoutPath}' for attribute '{GetAttributeName(attribute: attribute)}" +
-                                                     "': The TagsToAttributesIn does not contain a definition of which tags to use for this attribute.");
-            }
-
-            List<string> orderedTags = TagsToAttributesIn[key: attribute];
-            for (int i = 0; i < orderedTags.Count; i++)
-            {
-                if (tags.ContainsKey(key: orderedTags[index: i]
-                                         .ToUpper()))
+                if (tags.ContainsKey(key: tagsWithAttributesIn[index: i]
+                                        .ToUpper()))
                 {
-                    Logger.Trace(message: $"Parse dict for attribute: '{GetAttributeName(attribute: attribute)}" +
-                                          $"' yielded value '{tags[key: orderedTags[index: i].ToUpper()]}'");
-                    return (orderedTags[index: i], tags[key: orderedTags[index: i]
-                                                            .ToUpper()]);
+                    Logger.Trace(message: $"Parse dict for attribute: '{GetElementAttributesName(attributeToFind: attribute)}" +
+                                          $"' yielded value '{tags[key: tagsWithAttributesIn[index: i].ToUpper()]}'");
+                    return (tagsWithAttributesIn[index: i], tags[key: tagsWithAttributesIn[index: i]
+                                                                    .ToUpper()]);
                 }
             }
         }
 
-        Logger.Trace(message: $"Parse dict for attribute: '{GetAttributeName(attribute: attribute)}" +
+        Logger.Trace(message: $"Parse dict for attribute: '{GetElementAttributesName(attributeToFind: attribute)}" +
                               "' yielded no value.");
         return (null, null);
     }
@@ -846,7 +838,7 @@ public class DirectoryElement
                                 IDictionary<string, string> tags,
                                 int callDepth)
     {
-        Logger.Trace(message: $"Parse attribute '{GetAttributeName(attribute: attribute)}' at depth {callDepth.ToString()}...");
+        Logger.Trace(message: $"Parse attribute '{GetElementAttributesName(attributeToFind: attribute)}' at depth {callDepth.ToString()}...");
         if (parsedFails.Contains(item: attribute))
         {
             return false;
@@ -855,7 +847,7 @@ public class DirectoryElement
         if (callDepth > 10)
         {
             throw new InvalidOperationException(message: $"Reached max call depth of '{callDepth.ToString()}" +
-                                                         $"' while parsing attribute '{GetAttributeName(attribute: attribute)}'.");
+                                                         $"' while parsing attribute '{GetElementAttributesName(attributeToFind: attribute)}'.");
         }
 
         callDepth++;
@@ -899,7 +891,7 @@ public class DirectoryElement
         }
         catch
         {
-            Logger.Error(message: $"Parse attribute failed '{GetAttributeName(attribute: attribute)}' at depth {callDepth.ToString()}...");
+            Logger.Error(message: $"Parse attribute failed '{GetElementAttributesName(attributeToFind: attribute)}' at depth {callDepth.ToString()}...");
             return false; // be triple sure here.
         }
 
@@ -963,7 +955,7 @@ public class DirectoryElement
 
             default:
 
-                Type typeOfAttribute = GetAttributeType(attribute: attribute);
+                Type typeOfAttribute = GetElementAttributesType(attributeToFind: attribute);
                 if (typeOfAttribute == typeof(string))
                 {
                     resTyped = parseResult;

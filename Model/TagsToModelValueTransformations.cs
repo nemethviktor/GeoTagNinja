@@ -43,7 +43,7 @@ internal class TagsToModelValueTransformations
                 refAttrib = ElementAttribute.GPSDestLongitudeRef;
                 break;
             default:
-                throw new ArgumentException(message: $"T2M_GPSLatLong does not support attribute '{GetAttributeName(attribute: attribute)}'");
+                throw new ArgumentException(message: $"T2M_GPSLatLong does not support attribute '{GetElementAttributesName(attributeToFind: attribute)}'");
         }
 
         // If reference is set, concat if needed

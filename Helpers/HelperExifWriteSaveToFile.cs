@@ -143,7 +143,7 @@ internal static class HelperExifWriteSaveToFile
                         {
                             DataRow drFileDataRow = dtFileWriteQueue.NewRow();
                             drFileDataRow[columnName: "ItemNameWithoutPath"] = dirElemFileToModify.ItemNameWithoutPath;
-                            drFileDataRow[columnName: "settingId"] = GetAttributeName(attribute: attribute);
+                            drFileDataRow[columnName: "settingId"] = GetElementAttributesName(attributeToFind: attribute);
                             if (!dirElemFileToModify.IsMarkedForDeletion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
                             {
                                 drFileDataRow[columnName: "settingValue"] = dirElemFileToModify.GetAttributeValueString(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
@@ -177,11 +177,12 @@ internal static class HelperExifWriteSaveToFile
                             string settingValue = dataRow[columnName: "settingValue"]
                                .ToString();
 
-                            ElementAttribute attribute = GetAttributeFromString(attributeToFind: settingId);
+                            ElementAttribute attribute = GetElementAttributesElementAttribute(attributeToFind: settingId);
                             List<string> orderedTags = new();
                             try
                             {
-                                orderedTags = TagsToAttributesOut[key: attribute];
+                                orderedTags =
+                                    GetElementAttributesOut(attributeToFind: attribute);
                             }
                             catch
                             {

@@ -5,7 +5,16 @@ using System.Collections.Generic;
 
 namespace GeoTagNinja.Model;
 
-public class SourcesAndAttributes
+/// <summary>
+///     Provides a set of static methods for retrieving and manipulating attributes associated with the ElementAttribute
+///     type.
+/// </summary>
+/// <remarks>
+///     This class is used throughout the GeoTagNinja application to handle operations related to ElementAttribute objects,
+///     such as retrieving associated attributes, output attributes, order ID, name, type, and determining if an attribute
+///     is related to geographic data.
+/// </remarks>
+public static class SourcesAndAttributes
 {
     /// <summary>
     ///     ElementAttributes available
@@ -58,784 +67,929 @@ public class SourcesAndAttributes
     }
 
     /// <summary>
-    ///     List of ElementAttributes. Reorder to change default column layout.
+    ///     A dictionary that maps ElementAttribute values to their corresponding ElementAttributeMapping objects.
     /// </summary>
-    public static readonly List<ElementAttribute> TagsToColumnHeaderOrder = new()
-    {
-        ElementAttribute.Coordinates,
-        ElementAttribute.GPSLatitude,
-        ElementAttribute.GPSLatitudeRef,
-        ElementAttribute.GPSLongitude,
-        ElementAttribute.GPSLongitudeRef,
-        ElementAttribute.GPSSpeed,
-        ElementAttribute.GPSSpeedRef,
-        ElementAttribute.GPSAltitude,
-        ElementAttribute.GPSAltitudeRef,
-        ElementAttribute.Country,
-        ElementAttribute.CountryCode,
-        ElementAttribute.State,
-        ElementAttribute.City,
-        ElementAttribute.Sub_location,
-        ElementAttribute.DestCoordinates,
-        ElementAttribute.GPSDestLatitude,
-        ElementAttribute.GPSDestLatitudeRef,
-        ElementAttribute.GPSDestLongitude,
-        ElementAttribute.GPSDestLongitudeRef,
-        ElementAttribute.GPSImgDirection,
-        ElementAttribute.GPSImgDirectionRef,
-        ElementAttribute.Make,
-        ElementAttribute.Model,
-        ElementAttribute.Rating,
-        ElementAttribute.ExposureTime,
-        ElementAttribute.Fnumber,
-        ElementAttribute.FocalLength,
-        ElementAttribute.FocalLengthIn35mmFormat,
-        ElementAttribute.ISO,
-        ElementAttribute.LensSpec,
-        ElementAttribute.TakenDate,
-        ElementAttribute.CreateDate,
-        ElementAttribute.OffsetTime,
-        ElementAttribute.GUID
-    };
-
-    /// <summary>
-    ///     This is the list of/for attribs that are considered "geodata"
-    /// </summary>
-    public static readonly List<ElementAttribute> GeoDataAttributes = new()
-    {
-        ElementAttribute.GPSLatitude,
-        ElementAttribute.GPSLatitudeRef,
-        ElementAttribute.GPSLongitude,
-        ElementAttribute.GPSLongitudeRef,
-        ElementAttribute.GPSDestLatitude,
-        ElementAttribute.GPSDestLatitudeRef,
-        ElementAttribute.GPSDestLongitude,
-        ElementAttribute.GPSDestLongitudeRef,
-        ElementAttribute.CountryCode,
-        ElementAttribute.Country,
-        ElementAttribute.City,
-        ElementAttribute.State,
-        ElementAttribute.Sub_location,
-        ElementAttribute.GPSAltitude,
-        ElementAttribute.GPSAltitudeRef
-    };
-
-    /// <summary>
-    ///     This defines the "tags-in" (as in exif tags) for each EA. The order does matter as it's basically sorted.
-    /// </summary>
-    public static readonly IDictionary<ElementAttribute, List<string>> TagsToAttributesIn =
-        new Dictionary<ElementAttribute, List<string>>
+    /// <remarks>
+    ///     This dictionary is used to define the mapping between different types of attributes (e.g., GPS, EXIF, XMP) and
+    ///     their corresponding metadata.
+    ///     Each ElementAttributeMapping object contains information about the attribute's name, type, input/output attributes,
+    ///     and other properties.
+    /// </remarks>
+    private static readonly IDictionary<ElementAttribute, ElementAttributeMapping> TagsToAttributes =
+        new Dictionary<ElementAttribute, ElementAttributeMapping>
         {
             {
-                ElementAttribute.City, new List<string>
+                ElementAttribute.GPSAltitude, new ElementAttributeMapping
                 {
-                    "XMP:City",
-                    "IPTC:City"
+                    Name = "GPSAltitude",
+                    TypeOfElement = typeof(double),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:GPSAltitude",
+                        "EXIF:GPSAltitude",
+                        "GPS:GPSAltitude"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "GPS:GPSAltitude",
+                        "exif:GPSAltitude",
+                        "XMP:GPSAltitude"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 8,
+                    isGeoData = true
                 }
             },
             {
-                ElementAttribute.Country, new List<string>
+                ElementAttribute.GPSAltitudeRef, new ElementAttributeMapping
                 {
-                    "XMP:Country",
-                    "IPTC:Country-PrimaryLocationName"
+                    Name = "GPSAltitudeRef",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:GPSAltitudeRef",
+                        "EXIF:GPSAltitudeRef",
+                        "GPS:GPSAltitudeRef"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "GPS:GPSAltitudeRef",
+                        "exif:GPSAltitudeRef",
+                        "XMP:GPSAltitudeRef"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 9,
+                    isGeoData = true
                 }
             },
             {
-                ElementAttribute.CountryCode, new List<string>
+                ElementAttribute.GPSDestLatitude, new ElementAttributeMapping
                 {
-                    "XMP:CountryCode",
-                    "IPTC:Country-PrimaryLocationCode"
+                    Name = "GPSDestLatitude",
+                    TypeOfElement = typeof(double),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:GPSDestLatitude",
+                        "EXIF:GPSDestLatitude",
+                        "GPS:GPSDestLatitude"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "GPS:GPSDestLatitude",
+                        "exif:GPSDestLatitude",
+                        "XMP:GPSDestLatitude"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 16,
+                    isGeoData = true
                 }
             },
             {
-                ElementAttribute.CreateDate, new List<string>
+                ElementAttribute.GPSDestLatitudeRef, new ElementAttributeMapping
                 {
-                    "XMP:CreateDate",
-                    "EXIF:CreateDate"
+                    Name = "GPSDestLatitudeRef",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>
+                    {
+                        "EXIF:GPSDestLatitudeRef",
+                        "GPS:GPSDestLatitudeRef"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "GPS:GPSDestLatitudeRef",
+                        "exif:GPSDestLatitudeRef"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 17,
+                    isGeoData = true
                 }
             },
             {
-                ElementAttribute.ExposureTime, new List<string>
+                ElementAttribute.GPSDestLongitude, new ElementAttributeMapping
                 {
-                    "XMP:ExposureTime",
-                    "EXIF:ExposureTime"
+                    Name = "GPSDestLongitude",
+                    TypeOfElement = typeof(double),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:GPSDestLongitude",
+                        "EXIF:GPSDestLongitude",
+                        "GPS:GPSDestLongitude"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "GPS:GPSDestLongitude",
+                        "exif:GPSDestLongitude",
+                        "XMP:GPSDestLongitude"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 18,
+                    isGeoData = true
                 }
             },
             {
-                ElementAttribute.Fnumber, new List<string>
+                ElementAttribute.GPSDestLongitudeRef, new ElementAttributeMapping
                 {
-                    "XMP:FNumber",
-                    "EXIF:FNumber"
+                    Name = "GPSDestLongitudeRef",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>
+                    {
+                        "EXIF:GPSDestLongitudeRef",
+                        "GPS:GPSDestLongitudeRef"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "GPS:GPSDestLongitudeRef",
+                        "exif:GPSDestLongitudeRef"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 19,
+                    isGeoData = true
                 }
             },
             {
-                ElementAttribute.FocalLength, new List<string>
+                ElementAttribute.GPSImgDirection, new ElementAttributeMapping
                 {
-                    "XMP:FocalLength",
-                    "EXIF:FocalLength"
+                    Name = "GPSImgDirection",
+                    TypeOfElement = typeof(double),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:GPSImgDirection",
+                        "EXIF:GPSImgDirection"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        //        "XMP:GPSImgDirection",
+                        //        "EXIF:GPSImgDirection"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 20
                 }
             },
             {
-                ElementAttribute.FocalLengthIn35mmFormat, new List<string>
+                ElementAttribute.GPSImgDirectionRef, new ElementAttributeMapping
                 {
-                    "XMP:FocalLengthIn35mmFormat",
-                    "EXIF:FocalLengthIn35mmFormat",
-                    "Composite:FocalLength35efl"
+                    Name = "GPSImgDirectionRef",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:GPSImgDirectionRef",
+                        "EXIF:GPSImgDirectionRef"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        //        "XMP:GPSImgDirectionRef",
+                        //        "EXIF:GPSImgDirectionRef"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 21
                 }
             },
             {
-                ElementAttribute.GPSAltitude, new List<string>
+                ElementAttribute.GPSLatitude, new ElementAttributeMapping
                 {
-                    "XMP:GPSAltitude",
-                    "EXIF:GPSAltitude",
-                    "GPS:GPSAltitude"
+                    Name = "GPSLatitude",
+                    TypeOfElement = typeof(double),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:GPSLatitude",
+                        "EXIF:GPSLatitude",
+                        "GPS:GPSLatitude"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "GPS:GPSLatitude",
+                        "exif:GPSLatitude",
+                        "XMP:GPSLatitude"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 2,
+                    isGeoData = true
                 }
             },
             {
-                ElementAttribute.GPSAltitudeRef, new List<string>
+                ElementAttribute.GPSLatitudeRef, new ElementAttributeMapping
                 {
-                    "XMP:GPSAltitudeRef",
-                    "EXIF:GPSAltitudeRef",
-                    "GPS:GPSAltitudeRef"
+                    Name = "GPSLatitudeRef",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>
+                    {
+                        "EXIF:GPSLatitudeRef",
+                        "GPS:GPSLatitudeRef"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "GPS:GPSLatitudeRef",
+                        "exif:GPSLatitudeRef"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 3,
+                    isGeoData = true
                 }
             },
             {
-                ElementAttribute.GPSDestLatitude, new List<string>
+                ElementAttribute.GPSLongitude, new ElementAttributeMapping
                 {
-                    "XMP:GPSDestLatitude",
-                    "EXIF:GPSDestLatitude",
-                    "GPS:GPSDestLatitude"
+                    Name = "GPSLongitude",
+                    TypeOfElement = typeof(double),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:GPSLongitude",
+                        "EXIF:GPSLongitude",
+                        "GPS:GPSLongitude"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "GPS:GPSLongitude",
+                        "exif:GPSLongitude",
+                        "XMP:GPSLongitude"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 4,
+                    isGeoData = true
                 }
             },
             {
-                ElementAttribute.GPSDestLatitudeRef, new List<string>
+                ElementAttribute.GPSLongitudeRef, new ElementAttributeMapping
                 {
-                    "EXIF:GPSDestLatitudeRef",
-                    "GPS:GPSDestLatitudeRef"
+                    Name = "GPSLongitudeRef",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>
+                    {
+                        "EXIF:GPSLongitudeRef",
+                        "GPS:GPSLongitudeRef"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "GPS:GPSLongitudeRef",
+                        "exif:GPSLongitudeRef"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 5,
+                    isGeoData = true
                 }
             },
             {
-                ElementAttribute.GPSDestLongitude, new List<string>
+                ElementAttribute.GPSSpeed, new ElementAttributeMapping
                 {
-                    "XMP:GPSDestLongitude",
-                    "EXIF:GPSDestLongitude",
-                    "GPS:GPSDestLongitude"
+                    Name = "GPSSpeed",
+                    TypeOfElement = typeof(double),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:GPSSpeed",
+                        "EXIF:GPSSpeed"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "GPS:GPSSpeed",
+                        "exif:GPSSpeed"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 6
                 }
             },
             {
-                ElementAttribute.GPSDestLongitudeRef, new List<string>
+                ElementAttribute.GPSSpeedRef, new ElementAttributeMapping
                 {
-                    "EXIF:GPSDestLongitudeRef",
-                    "GPS:GPSDestLongitudeRef"
+                    Name = "GPSSpeedRef",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:GPSSpeedRef",
+                        "EXIF:GPSSpeedRef"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "GPS:GPSSpeedRef",
+                        "exif:GPSSpeedRef"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 7
                 }
             },
             {
-                ElementAttribute.GPSImgDirection, new List<string>
+                ElementAttribute.Coordinates, new ElementAttributeMapping
                 {
-                    "XMP:GPSImgDirection",
-                    "EXIF:GPSImgDirection"
+                    Name = "Coordinates",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>(),
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 1
                 }
             },
             {
-                ElementAttribute.GPSImgDirectionRef, new List<string>
+                ElementAttribute.DestCoordinates, new ElementAttributeMapping
                 {
-                    "XMP:GPSImgDirectionRef",
-                    "EXIF:GPSImgDirectionRef"
+                    Name = "DestCoordinates",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>(),
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 15
                 }
             },
             {
-                ElementAttribute.GPSLatitude, new List<string>
+                ElementAttribute.City, new ElementAttributeMapping
                 {
-                    "XMP:GPSLatitude",
-                    "EXIF:GPSLatitude",
-                    "GPS:GPSLatitude"
+                    Name = "City",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:City",
+                        "IPTC:City"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "City",
+                        "XMP-photoshop:City"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 13,
+                    isGeoData = true
                 }
             },
             {
-                ElementAttribute.GPSLatitudeRef, new List<string>
+                ElementAttribute.CountryCode, new ElementAttributeMapping
                 {
-                    "EXIF:GPSLatitudeRef",
-                    "GPS:GPSLatitudeRef"
+                    Name = "CountryCode",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:CountryCode",
+                        "IPTC:Country-PrimaryLocationCode"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "CountryCode",
+                        "XMP-iptcCore:CountryCode",
+                        "IPTC:Country-PrimaryLocationCode"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 11,
+                    isGeoData = true
                 }
             },
             {
-                ElementAttribute.GPSLongitude, new List<string>
+                ElementAttribute.Country, new ElementAttributeMapping
                 {
-                    "XMP:GPSLongitude",
-                    "EXIF:GPSLongitude",
-                    "GPS:GPSLongitude"
+                    Name = "Country",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:Country",
+                        "IPTC:Country-PrimaryLocationName"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "Country",
+                        "XMP-photoshop:Country",
+                        "IPTC:Country-PrimaryLocationName"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 10,
+                    isGeoData = true
                 }
             },
             {
-                ElementAttribute.GPSLongitudeRef, new List<string>
+                ElementAttribute.State, new ElementAttributeMapping
                 {
-                    "EXIF:GPSLongitudeRef",
-                    "GPS:GPSLongitudeRef"
+                    Name = "State",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:State",
+                        "IPTC:Province-State"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "State",
+                        "XMP-photoshop:State",
+                        "IPTC:Province-State"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 12,
+                    isGeoData = true
                 }
             },
             {
-                ElementAttribute.GPSSpeed, new List<string>
+                ElementAttribute.Sub_location, new ElementAttributeMapping
                 {
-                    "XMP:GPSSpeed",
-                    "EXIF:GPSSpeed"
+                    Name = "Sub_location",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:Location",
+                        "IPTC:Sub-location"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "Sub-location",
+                        "XMP-iptcCore:Location"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 14,
+                    isGeoData = true
                 }
             },
             {
-                ElementAttribute.GPSSpeedRef, new List<string>
+                ElementAttribute.Make, new ElementAttributeMapping
                 {
-                    "XMP:GPSSpeedRef",
-                    "EXIF:GPSSpeedRef"
+                    Name = "Make",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:Make",
+                        "EXIF:Make"
+                    },
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 22
                 }
             },
             {
-                ElementAttribute.ISO, new List<string>
+                ElementAttribute.Model, new ElementAttributeMapping
                 {
-                    "XMP:ISO",
-                    "EXIF:ISO",
-                    "Composite:ISO"
+                    Name = "Model",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:Model",
+                        "EXIF:Model"
+                    },
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 23
                 }
             },
             {
-                ElementAttribute.LensSpec, new List<string>
+                ElementAttribute.Rating, new ElementAttributeMapping
                 {
-                    "XMP:LensInfo",
-                    "EXIF:LensModel",
-                    "Composite:Lens"
+                    Name = "Rating",
+                    TypeOfElement = typeof(int),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:Rating",
+                        "EXIF:Rating"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "XMP:Rating",
+                        "EXIF:Rating"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 24
                 }
             },
             {
-                ElementAttribute.Make, new List<string>
+                ElementAttribute.ExposureTime, new ElementAttributeMapping
                 {
-                    "XMP:Make",
-                    "EXIF:Make"
+                    Name = "ExposureTime",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:ExposureTime",
+                        "EXIF:ExposureTime"
+                    },
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 25
                 }
             },
             {
-                ElementAttribute.Model, new List<string>
+                ElementAttribute.Fnumber, new ElementAttributeMapping
                 {
-                    "XMP:Model",
-                    "EXIF:Model"
+                    Name = "Fnumber",
+                    TypeOfElement = typeof(double),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:FNumber",
+                        "EXIF:FNumber"
+                    },
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 26
                 }
             },
             {
-                ElementAttribute.OffsetTime, new List<string>
+                ElementAttribute.FocalLength, new ElementAttributeMapping
                 {
-                    "EXIF:OffsetTimeOriginal",
-                    "EXIF:OffsetTime"
+                    Name = "FocalLength",
+                    TypeOfElement = typeof(double),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:FocalLength",
+                        "EXIF:FocalLength"
+                    },
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 27
                 }
             },
             {
-                ElementAttribute.Rating, new List<string>
+                ElementAttribute.FocalLengthIn35mmFormat, new ElementAttributeMapping
                 {
-                    "XMP:Rating",
-                    "EXIF:Rating"
+                    Name = "FocalLengthIn35mmFormat",
+                    TypeOfElement = typeof(double),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:FocalLengthIn35mmFormat",
+                        "EXIF:FocalLengthIn35mmFormat",
+                        "Composite:FocalLength35efl"
+                    },
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 28
                 }
             },
             {
-                ElementAttribute.State, new List<string>
+                ElementAttribute.ISO, new ElementAttributeMapping
                 {
-                    "XMP:State",
-                    "IPTC:Province-State"
+                    Name = "ISO",
+                    TypeOfElement = typeof(int),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:ISO",
+                        "EXIF:ISO",
+                        "Composite:ISO"
+                    },
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 29
                 }
             },
             {
-                ElementAttribute.Sub_location, new List<string>
+                ElementAttribute.LensSpec, new ElementAttributeMapping
                 {
-                    "XMP:Location",
-                    "IPTC:Sub-location"
+                    Name = "LensSpec",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:LensInfo",
+                        "EXIF:LensModel",
+                        "Composite:Lens"
+                    },
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 30
                 }
             },
             {
-                ElementAttribute.TakenDate, new List<string>
+                ElementAttribute.TakenDate, new ElementAttributeMapping
                 {
-                    "XMP:DateTimeOriginal",
-                    "EXIF:DateTimeOriginal"
+                    Name = "TakenDate",
+                    TypeOfElement = typeof(DateTime),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:DateTimeOriginal",
+                        "EXIF:DateTimeOriginal"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "XMP:DateTimeOriginal",
+                        "EXIF:DateTimeOriginal"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 31
+                }
+            },
+            {
+                ElementAttribute.CreateDate, new ElementAttributeMapping
+                {
+                    Name = "CreateDate",
+                    TypeOfElement = typeof(DateTime),
+                    InAttributes = new List<string>
+                    {
+                        "XMP:CreateDate",
+                        "EXIF:CreateDate"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "XMP:CreateDate",
+                        "EXIF:CreateDate"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 32
+                }
+            },
+            {
+                ElementAttribute.TakenDateDaysShift, new ElementAttributeMapping
+                {
+                    Name = "TakenDateDaysShift",
+                    TypeOfElement = typeof(int),
+                    InAttributes = new List<string>(),
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>()
+                }
+            },
+            {
+                ElementAttribute.TakenDateHoursShift, new ElementAttributeMapping
+                {
+                    Name = "TakenDateHoursShift",
+                    TypeOfElement = typeof(int),
+                    InAttributes = new List<string>(),
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>()
+                }
+            },
+            {
+                ElementAttribute.TakenDateMinutesShift, new ElementAttributeMapping
+                {
+                    Name = "TakenDateMinutesShift",
+                    TypeOfElement = typeof(int),
+                    InAttributes = new List<string>(),
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>()
+                }
+            },
+            {
+                ElementAttribute.TakenDateSecondsShift, new ElementAttributeMapping
+                {
+                    Name = "TakenDateSecondsShift",
+                    TypeOfElement = typeof(int),
+                    InAttributes = new List<string>(),
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>()
+                }
+            },
+            {
+                ElementAttribute.CreateDateDaysShift, new ElementAttributeMapping
+                {
+                    Name = "CreateDateDaysShift",
+                    TypeOfElement = typeof(int),
+                    InAttributes = new List<string>(),
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>()
+                }
+            },
+            {
+                ElementAttribute.CreateDateHoursShift, new ElementAttributeMapping
+                {
+                    Name = "CreateDateHoursShift",
+                    TypeOfElement = typeof(int),
+                    InAttributes = new List<string>(),
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>()
+                }
+            },
+            {
+                ElementAttribute.CreateDateMinutesShift, new ElementAttributeMapping
+                {
+                    Name = "CreateDateMinutesShift",
+                    TypeOfElement = typeof(int),
+                    InAttributes = new List<string>(),
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>()
+                }
+            },
+            {
+                ElementAttribute.CreateDateSecondsShift, new ElementAttributeMapping
+                {
+                    Name = "CreateDateSecondsShift",
+                    TypeOfElement = typeof(int),
+                    InAttributes = new List<string>(),
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>()
+                }
+            },
+            {
+                ElementAttribute.OffsetTime, new ElementAttributeMapping
+                {
+                    Name = "OffsetTime",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>
+                    {
+                        "EXIF:OffsetTimeOriginal",
+                        "EXIF:OffsetTime"
+                    },
+                    OutAttributes = new List<string>
+                    {
+                        "EXIF:OffsetTimeOriginal",
+                        "EXIF:OffsetTime"
+                    },
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 33
+                }
+            },
+            {
+                ElementAttribute.RemoveAllGPS, new ElementAttributeMapping
+                {
+                    Name = "gps*",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>(),
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>()
+                }
+            },
+            {
+                ElementAttribute.GUID, new ElementAttributeMapping
+                {
+                    Name = "GUID",
+                    TypeOfElement = typeof(string),
+                    InAttributes = new List<string>(),
+                    OutAttributes = new List<string>(),
+                    IPTCKeywords = new List<string>(),
+                    XMPSubjects = new List<string>(),
+                    OrderID = 34
                 }
             }
         };
 
-    /// <summary>
-    ///     This defines the "tags-out" (as in exif tags) for each EA. The order does not matter as they all get written.
-    /// </summary>
-    public static readonly IDictionary<ElementAttribute, List<string>> TagsToAttributesOut =
-        new Dictionary<ElementAttribute, List<string>>
-        {
-            {
-                ElementAttribute.City, new List<string>
-                {
-                    "City",
-                    "XMP-photoshop:City"
-                }
-            },
-            {
-                ElementAttribute.Country, new List<string>
-                {
-                    "Country",
-                    "XMP-photoshop:Country",
-                    "IPTC:Country-PrimaryLocationName"
-                }
-            },
-            {
-                ElementAttribute.CountryCode, new List<string>
-                {
-                    "CountryCode",
-                    "XMP-iptcCore:CountryCode",
-                    "IPTC:Country-PrimaryLocationCode"
-                }
-            },
-            {
-                ElementAttribute.CreateDate, new List<string>
-                {
-                    "XMP:CreateDate",
-                    "EXIF:CreateDate"
-                }
-            },
-            {
-                ElementAttribute.ExposureTime, new List<string>
-                {
-                    "exif:ExposureTime"
-                }
-            },
-            {
-                ElementAttribute.GPSAltitude, new List<string>
-                {
-                    "GPS:GPSAltitude",
-                    "exif:GPSAltitude",
-                    "XMP:GPSAltitude"
-                }
-            },
-            {
-                ElementAttribute.GPSAltitudeRef, new List<string>
-                {
-                    "GPS:GPSAltitudeRef",
-                    "exif:GPSAltitudeRef",
-                    "XMP:GPSAltitudeRef"
-                }
-            },
-            {
-                ElementAttribute.GPSDestLatitude, new List<string>
-                {
-                    "GPS:GPSDestLatitude",
-                    "exif:GPSDestLatitude",
-                    "XMP:GPSDestLatitude"
-                }
-            },
-            {
-                ElementAttribute.GPSDestLatitudeRef, new List<string>
-                {
-                    "GPS:GPSDestLatitudeRef",
-                    "exif:GPSDestLatitudeRef"
-                }
-            },
-            {
-                ElementAttribute.GPSDestLongitude, new List<string>
-                {
-                    "GPS:GPSDestLongitude",
-                    "exif:GPSDestLongitude",
-                    "XMP:GPSDestLongitude"
-                }
-            },
-            {
-                ElementAttribute.GPSDestLongitudeRef, new List<string>
-                {
-                    "GPS:GPSDestLongitudeRef",
-                    "exif:GPSDestLongitudeRef"
-                }
-            },
-            //{
-            //    ElementAttribute.GPSImgDirection, new List<string>
-            //    {
-            //        "XMP:GPSImgDirection",
-            //        "EXIF:GPSImgDirection"
-            //    }
-            //},
-            //{
-            //    ElementAttribute.GPSImgDirectionRef, new List<string>
-            //    {
-            //        "XMP:GPSImgDirectionRef",
-            //        "EXIF:GPSImgDirectionRef"
-            //    }
-            //},
-            {
-                ElementAttribute.GPSLatitude, new List<string>
-                {
-                    "GPS:GPSLatitude",
-                    "exif:GPSLatitude",
-                    "XMP:GPSLatitude"
-                }
-            },
-            {
-                ElementAttribute.GPSLatitudeRef, new List<string>
-                {
-                    "GPS:GPSLatitudeRef",
-                    "exif:GPSLatitudeRef"
-                }
-            },
-            {
-                ElementAttribute.GPSLongitude, new List<string>
-                {
-                    "GPS:GPSLongitude",
-                    "exif:GPSLongitude",
-                    "XMP:GPSLongitude"
-                }
-            },
-            {
-                ElementAttribute.GPSLongitudeRef, new List<string>
-                {
-                    "GPS:GPSLongitudeRef",
-                    "exif:GPSLongitudeRef"
-                }
-            },
-            {
-                ElementAttribute.GPSSpeed, new List<string>
-                {
-                    "GPS:GPSSpeed",
-                    "exif:GPSSpeed"
-                }
-            },
-            {
-                ElementAttribute.GPSSpeedRef, new List<string>
-                {
-                    "GPS:GPSSpeedRef",
-                    "exif:GPSSpeedRef"
-                }
-            },
 
+    /// <summary>
+    ///     Retrieves the list of attributes associated with a given attributeToFind.
+    /// </summary>
+    /// <param name="attributeToFind">
+    ///     The attributeToFind of type ElementAttribute for which the associated attributes are to be
+    ///     retrieved.
+    /// </param>
+    /// <returns>
+    ///     A list of attributes associated with the given attributeToFind. If the attributeToFind does not have any associated
+    ///     attributes, returns null.
+    /// </returns>
+    public static List<string> GetElementAttributesIn(ElementAttribute attributeToFind)
+
+    {
+        if (TagsToAttributes.TryGetValue(key: attributeToFind, value: out ElementAttributeMapping mapping))
+        {
+            if (mapping.InAttributes.Count > 0)
             {
-                ElementAttribute.OffsetTime, new List<string>
-                {
-                    "EXIF:OffsetTimeOriginal",
-                    "EXIF:OffsetTime"
-                }
-            },
-            {
-                ElementAttribute.Rating, new List<string>
-                {
-                    "XMP:Rating",
-                    "EXIF:Rating"
-                }
-            },
-            {
-                ElementAttribute.State, new List<string>
-                {
-                    "State",
-                    "XMP-photoshop:State",
-                    "IPTC:Province-State"
-                }
-            },
-            {
-                ElementAttribute.Sub_location, new List<string>
-                {
-                    "Sub-location",
-                    "XMP-iptcCore:Location"
-                }
-            },
-            {
-                ElementAttribute.TakenDate, new List<string>
-                {
-                    "XMP:DateTimeOriginal",
-                    "EXIF:DateTimeOriginal"
-                }
+                return mapping.InAttributes;
             }
-        };
-
-    /// <summary>
-    ///     Returns the (usually column-header) equivalent of an Attribute (e.g. ElementAttribute.RemoveAllGPS -> "gps*" or
-    ///     ElementAttribute.GPSAltitude -> "GPSAltitude")
-    /// </summary>
-    /// <param name="attribute">ElementAttribute Name e.g. ElementAttribute.GPSAltitude</param>
-    /// <returns>string, e.g. "GPSAltitude"</returns>
-    /// <exception cref="ArgumentException"></exception>
-    public static string GetAttributeName(ElementAttribute attribute)
-    {
-        switch (attribute)
-        {
-            case ElementAttribute.GPSAltitude:
-                return "GPSAltitude";
-            case ElementAttribute.GPSAltitudeRef:
-                return "GPSAltitudeRef";
-            case ElementAttribute.GPSDestLatitude:
-                return "GPSDestLatitude";
-            case ElementAttribute.GPSDestLatitudeRef:
-                return "GPSDestLatitudeRef";
-            case ElementAttribute.GPSDestLongitude:
-                return "GPSDestLongitude";
-            case ElementAttribute.GPSDestLongitudeRef:
-                return "GPSDestLongitudeRef";
-            case ElementAttribute.GPSImgDirection:
-                return "GPSImgDirection";
-            case ElementAttribute.GPSImgDirectionRef:
-                return "GPSImgDirectionRef";
-            case ElementAttribute.GPSLatitude:
-                return "GPSLatitude";
-            case ElementAttribute.GPSLatitudeRef:
-                return "GPSLatitudeRef";
-            case ElementAttribute.GPSLongitude:
-                return "GPSLongitude";
-            case ElementAttribute.GPSLongitudeRef:
-                return "GPSLongitudeRef";
-            case ElementAttribute.GPSSpeed:
-                return "GPSSpeed";
-            case ElementAttribute.GPSSpeedRef:
-                return "GPSSpeedRef";
-            case ElementAttribute.Coordinates:
-                return "Coordinates";
-            case ElementAttribute.DestCoordinates:
-                return "DestCoordinates";
-            case ElementAttribute.City:
-                return "City";
-            case ElementAttribute.CountryCode:
-                return "CountryCode";
-            case ElementAttribute.Country:
-                return "Country";
-            case ElementAttribute.State:
-                return "State";
-            case ElementAttribute.Sub_location:
-                return "Sub_location";
-            case ElementAttribute.Make:
-                return "Make";
-            case ElementAttribute.Model:
-                return "Model";
-            case ElementAttribute.Rating:
-                return "Rating";
-            case ElementAttribute.ExposureTime:
-                return "ExposureTime";
-            case ElementAttribute.Fnumber:
-                return "Fnumber";
-            case ElementAttribute.FocalLength:
-                return "FocalLength";
-            case ElementAttribute.FocalLengthIn35mmFormat:
-                return "FocalLengthIn35mmFormat";
-            case ElementAttribute.ISO:
-                return "ISO";
-            case ElementAttribute.LensSpec:
-                return "LensSpec";
-            case ElementAttribute.TakenDate:
-                return "TakenDate";
-            case ElementAttribute.CreateDate:
-                return "CreateDate";
-            case ElementAttribute.TakenDateDaysShift:
-                return "TakenDateDaysShift";
-            case ElementAttribute.TakenDateHoursShift:
-                return "TakenDateHoursShift";
-            case ElementAttribute.TakenDateMinutesShift:
-                return "TakenDateMinutesShift";
-            case ElementAttribute.TakenDateSecondsShift:
-                return "TakenDateSecondsShift";
-            case ElementAttribute.CreateDateDaysShift:
-                return "CreateDateDaysShift";
-            case ElementAttribute.CreateDateHoursShift:
-                return "CreateDateHoursShift";
-            case ElementAttribute.CreateDateMinutesShift:
-                return "CreateDateMinutesShift";
-            case ElementAttribute.CreateDateSecondsShift:
-                return "CreateDateSecondsShift";
-            case ElementAttribute.OffsetTime:
-                return "OffsetTime";
-            case ElementAttribute.RemoveAllGPS:
-                return "gps*";
-            case ElementAttribute.GUID:
-                return "GUID";
-            default:
-                throw new ArgumentException(message: "Trying to get attribute name of unknown attribute with value " + attribute);
         }
+
+        return null;
     }
 
     /// <summary>
-    ///     Finds and returns the ElementAttribute eqv of a string (e.g. "gps*" -> ElementAttribute.RemoveAllGPS  or
-    ///     "GPSAltitude" -> ElementAttribute.GPSAltitude )
+    ///     Retrieves the output attributes associated with a given attributeToFind.
     /// </summary>
-    /// <param name="attributeToFind">ColumnHeader or other string (e.g. "gps*", "GPSAltitude")</param>
-    /// <returns>ElementAttribute e.g. ElementAttribute.RemoveAllGPS </returns>
-    /// <exception cref="ArgumentException"></exception>
-    public static ElementAttribute GetAttributeFromString(string attributeToFind)
+    /// <param name="attributeToFind">The attributeToFind of type ElementAttribute for which to retrieve the output attributes.</param>
+    /// <returns>
+    ///     A list of output attributes associated with the specified attributeToFind. Returns null if no attributes are
+    ///     found.
+    /// </returns>
+    public static List<string> GetElementAttributesOut(ElementAttribute attributeToFind)
+
     {
-        switch (attributeToFind)
+        if (TagsToAttributes.TryGetValue(key: attributeToFind, value: out ElementAttributeMapping mapping))
         {
-            case "GPSAltitude":
-                return ElementAttribute.GPSAltitude;
-            case "GPSAltitudeRef":
-                return ElementAttribute.GPSAltitudeRef;
-            case "GPSDestLatitude":
-                return ElementAttribute.GPSDestLatitude;
-            case "GPSDestLatitudeRef":
-                return ElementAttribute.GPSDestLatitudeRef;
-            case "GPSDestLongitude":
-                return ElementAttribute.GPSDestLongitude;
-            case "GPSDestLongitudeRef":
-                return ElementAttribute.GPSDestLongitudeRef;
-            case "Coordinates":
-                return ElementAttribute.Coordinates;
-            case "DestCoordinates":
-                return ElementAttribute.DestCoordinates;
-            case "GPSImgDirection":
-                return ElementAttribute.GPSImgDirection;
-            case "GPSImgDirectionRef":
-                return ElementAttribute.GPSImgDirectionRef;
-            case "GPSLatitude":
-                return ElementAttribute.GPSLatitude;
-            case "GPSLatitudeRef":
-                return ElementAttribute.GPSLatitudeRef;
-            case "GPSLongitude":
-                return ElementAttribute.GPSLongitude;
-            case "GPSLongitudeRef":
-                return ElementAttribute.GPSLongitudeRef;
-            case "GPSSpeed":
-                return ElementAttribute.GPSSpeed;
-            case "GPSSpeedRef":
-                return ElementAttribute.GPSSpeedRef;
-            case "City":
-                return ElementAttribute.City;
-            case "CountryCode":
-                return ElementAttribute.CountryCode;
-            case "Country":
-                return ElementAttribute.Country;
-            case "State":
-                return ElementAttribute.State;
-            case "Sub_location":
-                return ElementAttribute.Sub_location;
-            case "Make":
-                return ElementAttribute.Make;
-            case "Model":
-                return ElementAttribute.Model;
-            case "Rating":
-                return ElementAttribute.Rating;
-            case "ExposureTime":
-                return ElementAttribute.ExposureTime;
-            case "Fnumber":
-                return ElementAttribute.Fnumber;
-            case "FocalLength":
-                return ElementAttribute.FocalLength;
-            case "FocalLengthIn35mmFormat":
-                return ElementAttribute.FocalLengthIn35mmFormat;
-            case "ISO":
-                return ElementAttribute.ISO;
-            case "LensSpec":
-                return ElementAttribute.LensSpec;
-            case "TakenDate":
-                return ElementAttribute.TakenDate;
-            case "CreateDate":
-                return ElementAttribute.CreateDate;
-            case "TakenDateDaysShift":
-                return ElementAttribute.TakenDateDaysShift;
-            case "TakenDateHoursShift":
-                return ElementAttribute.TakenDateHoursShift;
-            case "TakenDateMinutesShift":
-                return ElementAttribute.TakenDateMinutesShift;
-            case "TakenDateSecondsShift":
-                return ElementAttribute.TakenDateSecondsShift;
-            case "CreateDateDaysShift":
-                return ElementAttribute.CreateDateDaysShift;
-            case "CreateDateHoursShift":
-                return ElementAttribute.CreateDateHoursShift;
-            case "CreateDateMinutesShift":
-                return ElementAttribute.CreateDateMinutesShift;
-            case "CreateDateSecondsShift":
-                return ElementAttribute.CreateDateSecondsShift;
-            case "OffsetTime":
-                return ElementAttribute.OffsetTime;
-            case "OffsetTimeList":
-            case "gps*":
-                return ElementAttribute.RemoveAllGPS;
-            case "GUID":
-                return ElementAttribute.GUID;
-            default:
-                throw new ArgumentException(message: "Trying to get attribute name of unknown attribute with value " + attributeToFind);
+            if (mapping.OutAttributes.Count > 0)
+            {
+                return mapping.OutAttributes;
+            }
         }
+
+        return null;
     }
 
-    public static Type GetAttributeType(ElementAttribute attribute)
+    /// <summary>
+    ///     Gets the order ID of the specified attributeToFind attribute.
+    /// </summary>
+    /// <param name="attributeToFind">The attributeToFind attribute for which to get the order ID.</param>
+    /// <returns>The order ID of the specified attributeToFind attribute if found; otherwise, null.</returns>
+    public static int GetElementAttributesOrderID(ElementAttribute attributeToFind)
     {
-        switch (attribute)
+        if (TagsToAttributes.TryGetValue(key: attributeToFind, value: out ElementAttributeMapping mapping))
         {
-            case ElementAttribute.GPSAltitude:
-                return typeof(double);
-            case ElementAttribute.GPSAltitudeRef:
-                return typeof(string);
-            case ElementAttribute.GPSDestLatitude:
-                return typeof(double);
-            case ElementAttribute.GPSDestLatitudeRef:
-                return typeof(string);
-            case ElementAttribute.GPSDestLongitude:
-                return typeof(double);
-            case ElementAttribute.GPSDestLongitudeRef:
-                return typeof(string);
-            case ElementAttribute.GPSImgDirection:
-                return typeof(double);
-            case ElementAttribute.GPSImgDirectionRef:
-                return typeof(string);
-            case ElementAttribute.GPSLatitude:
-                return typeof(double);
-            case ElementAttribute.GPSLatitudeRef:
-                return typeof(string);
-            case ElementAttribute.GPSLongitude:
-                return typeof(double);
-            case ElementAttribute.GPSLongitudeRef:
-                return typeof(string);
-            case ElementAttribute.GPSSpeed:
-                return typeof(string);
-            case ElementAttribute.GPSSpeedRef:
-                return typeof(string);
-            case ElementAttribute.Coordinates:
-                return typeof(string);
-            case ElementAttribute.DestCoordinates:
-                return typeof(string);
-            case ElementAttribute.City:
-                return typeof(string);
-            case ElementAttribute.CountryCode:
-                return typeof(string);
-            case ElementAttribute.Country:
-                return typeof(string);
-            case ElementAttribute.State:
-                return typeof(string);
-            case ElementAttribute.Sub_location:
-                return typeof(string);
-            case ElementAttribute.Make:
-                return typeof(string);
-            case ElementAttribute.Model:
-                return typeof(string);
-            case ElementAttribute.Rating:
-                return typeof(string);
-            case ElementAttribute.ExposureTime:
-                return typeof(string);
-            case ElementAttribute.Fnumber:
-                return typeof(double);
-            case ElementAttribute.FocalLength:
-                return typeof(double);
-            case ElementAttribute.FocalLengthIn35mmFormat:
-                return typeof(double);
-            case ElementAttribute.ISO:
-                return typeof(int);
-            case ElementAttribute.LensSpec:
-                return typeof(string);
-            case ElementAttribute.TakenDate:
-                return typeof(DateTime);
-            case ElementAttribute.CreateDate:
-                return typeof(DateTime);
-            case ElementAttribute.TakenDateDaysShift:
-                return typeof(int);
-            case ElementAttribute.TakenDateHoursShift:
-                return typeof(int);
-            case ElementAttribute.TakenDateMinutesShift:
-                return typeof(int);
-            case ElementAttribute.TakenDateSecondsShift:
-                return typeof(int);
-            case ElementAttribute.CreateDateDaysShift:
-                return typeof(int);
-            case ElementAttribute.CreateDateHoursShift:
-                return typeof(int);
-            case ElementAttribute.CreateDateMinutesShift:
-                return typeof(int);
-            case ElementAttribute.CreateDateSecondsShift:
-                return typeof(int);
-            case ElementAttribute.OffsetTime:
-                return typeof(string);
-            case ElementAttribute.RemoveAllGPS:
-                return typeof(string);
-            case ElementAttribute.GUID:
-                return typeof(string);
-            default:
-                throw new ArgumentException(message: "Trying to get attribute type of unknown attribute with value " + attribute);
+            return mapping.OrderID;
         }
+
+        return -1;
+    }
+
+    /// <summary>
+    ///     Retrieves the name of the specified attributeToFind attribute.
+    /// </summary>
+    /// <param name="attributeToFind">The attributeToFind attribute to get the name for.</param>
+    /// <returns>
+    ///     The name of the specified attributeToFind attribute. If the attributeToFind attribute does not exist, it returns a
+    ///     null
+    ///     string
+    ///     equivalent.
+    /// </returns>
+    public static string GetElementAttributesName(ElementAttribute attributeToFind)
+    {
+        if (TagsToAttributes.TryGetValue(key: attributeToFind, value: out ElementAttributeMapping mapping))
+        {
+            if (!string.IsNullOrWhiteSpace(value: mapping.Name))
+            {
+                return mapping.Name;
+            }
+        }
+
+        return FrmMainApp.NullStringEquivalentBlank;
+    }
+
+    /// <summary>
+    ///     Retrieves the ElementAttribute corresponding to the provided name.
+    /// </summary>
+    /// <param name="attributeToFind">The name of the ElementAttribute to retrieve</param>
+    /// <returns>The ElementAttribute corresponding to the provided name.</returns>
+    /// <exception cref="ArgumentException">Thrown when an ElementAttribute with the provided name does not exist.</exception>
+    public static ElementAttribute GetElementAttributesElementAttribute(string attributeToFind)
+    {
+        foreach (KeyValuePair<ElementAttribute, ElementAttributeMapping> keyValuePair in TagsToAttributes)
+        {
+            if (keyValuePair.Value.Name == attributeToFind)
+            {
+                return keyValuePair.Key;
+            }
+        }
+
+        throw new ArgumentException(message: $"Element attribute '{attributeToFind}' does not exist.");
+    }
+
+    /// <summary>
+    ///     Gets the type of the specified ElementAttribute.
+    /// </summary>
+    /// <param name="attributeToFind">The ElementAttribute to find the type of.</param>
+    /// <returns>The type of the specified ElementAttribute.</returns>
+    /// <exception cref="ArgumentException">Thrown when the specified ElementAttribute does not exist.</exception>
+    public static Type GetElementAttributesType(ElementAttribute attributeToFind)
+    {
+        if (TagsToAttributes.TryGetValue(key: attributeToFind, value: out ElementAttributeMapping mapping))
+        {
+            return mapping.TypeOfElement;
+        }
+
+        throw new ArgumentException(message: $"Element attribute '{attributeToFind}' does not exist.");
+    }
+
+    /// <summary>
+    ///     Determines whether the specified attributeToFind attribute is related to geographic data.
+    /// </summary>
+    /// <param name="attributeToFind">The attributeToFind attribute to check.</param>
+    /// <returns>Returns true if the specified attributeToFind attribute is related to geographic data, otherwise false.</returns>
+    public static bool GetElementAttributesIsGeoData(ElementAttribute attributeToFind)
+    {
+        if (TagsToAttributes.TryGetValue(key: attributeToFind,
+                                         value: out ElementAttributeMapping mapping))
+        {
+            return mapping.isGeoData;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    ///     Represents a mapping between an element and its attributes in the GeoTagNinja application.
+    /// </summary>
+    /// <remarks>
+    ///     This struct is used to map an element to its attributes, including input and output attributes, IPTC keywords, XMP
+    ///     subjects, and geodata information.
+    ///     It also contains the order ID for the element and a flag indicating whether the element contains geodata.
+    /// </remarks>
+    private struct ElementAttributeMapping
+    {
+        public string Name;
+        public Type TypeOfElement;
+        public List<string> InAttributes;
+        public List<string> OutAttributes;
+        public List<string> IPTCKeywords;
+        public List<string> XMPSubjects;
+        public int OrderID;
+        public bool isGeoData;
     }
 }

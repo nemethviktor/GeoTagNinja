@@ -231,7 +231,7 @@ public partial class FrmEditFileData : Form
                     {
                         itemName = cItem.Name.Substring(startIndex: 4);
 
-                        ElementAttribute attribute = GetAttributeFromString(attributeToFind: itemName);
+                        ElementAttribute attribute = GetElementAttributesElementAttribute(attributeToFind: itemName);
                         string stringValueOfCItem = NullStringEquivalentBlank;
                         DirectoryElement.AttributeVersion maxAttributeVersion = GetDEAttributeMaxAttributeVersion(
                             directoryElement: dirElemFileToModify,
@@ -371,7 +371,7 @@ public partial class FrmEditFileData : Form
                             // stick into DE2 ("pending save") - this is to see if the data has changed later.
                             if (cItem is not NumericUpDown nud)
                             {
-                                attribute = GetAttributeFromString(attributeToFind: cItem.Name.Substring(startIndex: 4));
+                                attribute = GetElementAttributesElementAttribute(attributeToFind: cItem.Name.Substring(startIndex: 4));
 
                                 dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
                                                                              value: stringValueOfCItem,
@@ -399,7 +399,7 @@ public partial class FrmEditFileData : Form
                                     }
                                 }
 
-                                attribute = GetAttributeFromString(attributeToFind: nud.Name.Substring(startIndex: 4));
+                                attribute = GetElementAttributesElementAttribute(attributeToFind: nud.Name.Substring(startIndex: 4));
 
                                 dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
                                                                              value: stringValueOfCItem,
@@ -498,7 +498,7 @@ public partial class FrmEditFileData : Form
     {
         IConvertible returnDataInDirectoryElement = null;
 
-        Type typeOfAttribute = GetAttributeType(attribute: attribute);
+        Type typeOfAttribute = GetElementAttributesType(attributeToFind: attribute);
         if (typeOfAttribute == typeof(string))
         {
             returnDataInDirectoryElement = directoryElement.GetAttributeValueString(attribute: attribute,
@@ -1068,7 +1068,7 @@ public partial class FrmEditFileData : Form
                                                                                                                                 .Index]
                                                                                                             .Text);
 
-                    ElementAttribute attribute = GetAttributeFromString(attributeToFind: dtp.Name.Substring(startIndex: 4));
+                    ElementAttribute attribute = GetElementAttributesElementAttribute(attributeToFind: dtp.Name.Substring(startIndex: 4));
 
                     if (dirElemFileToModify != null)
                     {
@@ -1275,7 +1275,7 @@ public partial class FrmEditFileData : Form
                                                                .Text;
 
             string exifTagStr = sndr.Name.Substring(startIndex: 4);
-            ElementAttribute attribute = GetAttributeFromString(attributeToFind: exifTagStr);
+            ElementAttribute attribute = GetElementAttributesElementAttribute(attributeToFind: exifTagStr);
             ListView lvw = lvw_FileListEditImages;
             ListViewItem lvi = lvw.SelectedItems[index: 0];
 
@@ -1621,7 +1621,7 @@ public partial class FrmEditFileData : Form
                     dtp.Font = new Font(prototype: dtp.Font, newStyle: FontStyle.Bold);
                     if (dirElemFileToModify != null)
                     {
-                        ElementAttribute attribute = GetAttributeFromString(attributeToFind: dtp.Name.Substring(startIndex: 4));
+                        ElementAttribute attribute = GetElementAttributesElementAttribute(attributeToFind: dtp.Name.Substring(startIndex: 4));
                         dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
                                                                      value: dtp.Text,
                                                                      version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,

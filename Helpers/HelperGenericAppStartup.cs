@@ -272,14 +272,27 @@ internal static class HelperGenericAppStartup
             }
         }
 
-        foreach (SourcesAndAttributes.ElementAttribute attribute in SourcesAndAttributes.TagsToColumnHeaderOrder.Where(
+        List<SourcesAndAttributes.ElementAttribute> attributesWithValidOrderIDs = Enum
+           .GetValues(enumType: typeof(SourcesAndAttributes.ElementAttribute))
+           .Cast<SourcesAndAttributes.ElementAttribute>()
+           .Where(predicate: attribute =>
+                      SourcesAndAttributes.GetElementAttributesOrderID(
+                          attributeToFind: attribute) >
+                      0)
+           .ToList();
+
+        foreach (SourcesAndAttributes.ElementAttribute attribute in
+                 attributesWithValidOrderIDs.Where(
                      predicate: attribute =>
                          !FileListView._cfg_Col_Order_Default.ContainsKey(
-                             key: SourcesAndAttributes.GetAttributeName(attribute: attribute))))
+                             key: SourcesAndAttributes.GetElementAttributesName(
+                                 attributeToFind: attribute))))
         {
             FileListView._cfg_Col_Order_Default.Add(
-                key: SourcesAndAttributes.GetAttributeName(attribute: attribute),
-                value: SourcesAndAttributes.TagsToColumnHeaderOrder.IndexOf(item: attribute));
+                key: SourcesAndAttributes.GetElementAttributesName(
+                    attributeToFind: attribute),
+                value: SourcesAndAttributes.GetElementAttributesOrderID(
+                    attributeToFind: attribute));
         }
     }
 

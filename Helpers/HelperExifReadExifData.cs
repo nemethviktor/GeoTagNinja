@@ -1013,8 +1013,8 @@ internal static class HelperExifReadExifData
         FrmMainApp.Logger.Trace(message: "Starting - dataPoint:" + dataPoint);
         string returnVal = FrmMainApp.NullStringEquivalentGeneric;
         string tryDataValue = FrmMainApp.NullStringEquivalentGeneric;
-        ElementAttribute attribute = GetAttributeFromString(dataPoint);
-        List<string> orderedTags = TagsToAttributesIn[key: attribute];
+        ElementAttribute attribute = GetElementAttributesElementAttribute(dataPoint);
+        List<string> orderedTags = GetElementAttributesIn(attribute);
 
         if (orderedTags.Any() && dtFileExif.Rows.Count > 0)
         {
