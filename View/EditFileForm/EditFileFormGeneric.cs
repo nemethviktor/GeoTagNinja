@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.CustomMessageBox;
@@ -57,7 +58,14 @@ internal static class EditFileFormGeneric
         if (fileCount > 0)
         {
             FrmEditFileData.StartPosition = FormStartPosition.CenterScreen;
-            FrmEditFileData.ShowDialog();
+            try
+            {
+                FrmEditFileData.ShowDialog();
+            }
+            catch (AccessViolationException)
+            {
+                // Ignore the exception
+            }
         }
         // basically if the user only selected folders, do nothing
         else if (overallCount == folderCount + fileCount)

@@ -8,7 +8,7 @@
   - Streamlined some code relating to the reusability of on-the-fly Form generation
   - Various further Dark Mode changes/improvements
 - BUGS & FIXES:
-  - NA
+  - Fixed Country DropDown not displaying anything if the existing data wasn't on the predefined list. It now takes value from CountryCode
 
 **Build 8661 [20230918]** 
 - NEW & UPDATED:
