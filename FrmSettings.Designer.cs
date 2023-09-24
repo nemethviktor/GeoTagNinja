@@ -131,7 +131,6 @@ namespace GeoTagNinja
             this.tcr_Settings.SelectedIndex = 0;
             this.tcr_Settings.Size = new System.Drawing.Size(906, 511);
             this.tcr_Settings.TabIndex = 0;
-            this.tcr_Settings.DrawItem += new System.Windows.Forms.DrawItemEventHandler(HelperControlThemeManager.TabControl_DrawItem);
             // 
             // tpg_Application
             // 

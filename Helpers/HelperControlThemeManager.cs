@@ -24,8 +24,11 @@ internal enum ThemeColour
 [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
 internal static class HelperControlThemeManager
 {
-    private static readonly Color darkColor = ColorTranslator.FromHtml(htmlColor: "#404040");
-    private static readonly Color lessDarkColor = ColorTranslator.FromHtml(htmlColor: "#5F5D5B");
+    private static readonly Color darkColor =
+        ColorTranslator.FromHtml(htmlColor: "#404040");
+
+    private static readonly Color lessDarkColor =
+        ColorTranslator.FromHtml(htmlColor: "#5F5D5B");
 
 
     private const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
@@ -63,7 +66,10 @@ internal static class HelperControlThemeManager
             int useImmersiveDarkMode = enabled
                 ? 1
                 : 0;
-            return DwmSetWindowAttribute(hwnd: handle, attr: attribute, attrValue: ref useImmersiveDarkMode, attrSize: sizeof(int)) == 0;
+            return DwmSetWindowAttribute(hwnd: handle, attr: attribute,
+                                         attrValue: ref useImmersiveDarkMode,
+                                         attrSize: sizeof(int)) ==
+                   0;
         }
 
         return false;
@@ -71,7 +77,8 @@ internal static class HelperControlThemeManager
 
     private static bool IsWindows10OrGreater(int build = -1)
     {
-        return Environment.OSVersion.Version.Major >= 10 && Environment.OSVersion.Version.Build >= build;
+        return Environment.OSVersion.Version.Major >= 10 &&
+               Environment.OSVersion.Version.Build >= build;
     }
 
     /// <summary>
@@ -94,7 +101,8 @@ internal static class HelperControlThemeManager
                 ChangeTheme(themeColour: themeColour, cItem: parentControl);
             }
 
-            IEnumerable<Control> c = helperNonstatic.GetAllControls(control: parentControl);
+            IEnumerable<Control> c =
+                helperNonstatic.GetAllControls(control: parentControl);
 
             foreach (Control cItem in c)
             {
@@ -157,7 +165,8 @@ internal static class HelperControlThemeManager
 
             graphics.DrawRectangle(pen: backColorPen, rect: tabArea);
             graphics.FillRectangle(brush: backColorBrush, rect: tabTextArea);
-            graphics.DrawString(s: tbpTabPage.Text, font: e.Font, brush: foreColorBrush, layoutRectangle: tabTextArea, format: stringFormat);
+            graphics.DrawString(s: tbpTabPage.Text, font: e.Font, brush: foreColorBrush,
+                                layoutRectangle: tabTextArea, format: stringFormat);
         }
     }
 
@@ -179,7 +188,8 @@ internal static class HelperControlThemeManager
                 button.BackColor = lessDarkColor;
                 button.ForeColor = Color.White;
                 button.FlatStyle = FlatStyle.Flat;
-                button.FlatAppearance.BorderColor = ColorTranslator.FromHtml(htmlColor: "#BAB9B9");
+                button.FlatAppearance.BorderColor =
+                    ColorTranslator.FromHtml(htmlColor: "#BAB9B9");
             }
             else if (cItem is CheckBox checkBox)
             {
@@ -204,9 +214,23 @@ internal static class HelperControlThemeManager
                 listView.ForeColor = Color.White;
                 listView.BorderStyle = BorderStyle.None;
             }
+            else if (cItem is TabControl tcr)
+            {
+                tcr.DrawItem += TabControl_DrawItem;
+            }
+            else if (cItem is TabPage tp)
+            {
+                tp.BackColor = darkColor;
+            }
             else if (cItem is LinkLabel linkLabel)
             {
                 linkLabel.LinkColor = Color.White;
+            }
+
+            else
+            {
+                cItem.BackColor = darkColor;
+                cItem.ForeColor = Color.White;
             }
         }
     }
