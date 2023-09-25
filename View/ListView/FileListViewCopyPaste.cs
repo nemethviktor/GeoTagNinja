@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.CustomMessageBox;
-using GeoTagNinja.View.ListView;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja;
@@ -16,15 +15,15 @@ internal static class FileListViewCopyPaste
     /// </summary>
     internal static void ListViewCopyGeoData()
     {
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmMainApp frmMainAppInstance =
+            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         if (frmMainAppInstance.lvw_FileList.SelectedItems.Count == 1)
         {
             ListViewItem lvi = frmMainAppInstance.lvw_FileList.SelectedItems[index: 0];
 
             // don't copy folders....
-            DirectoryElement dirElemFileToCopyFrom = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: FileListView.COL_NAME_PREFIX + FileListView.FileListColumns.GUID]
-                                                                                                                                                    .Index]
-                                                                                                                 .Text);
+            DirectoryElement dirElemFileToCopyFrom =
+                lvi.Tag as DirectoryElement;
             if (dirElemFileToCopyFrom.Type == DirectoryElement.ElementType.File)
             {
                 // The reason why we're using a CopyPoolDict here rather than just read straight out of the DE is because if the user changes folder
@@ -70,21 +69,32 @@ internal static class FileListViewCopyPaste
                 foreach (ElementAttribute attribute in listOfTagsToCopy)
                 {
                     // this would sit in Stage3ReadyToWrite if exists
-                    if (dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
+                    if (dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(
+                            attribute: attribute,
+                            version: DirectoryElement.AttributeVersion
+                                                     .Stage3ReadyToWrite))
                     {
                         FrmMainApp.CopyPoolDict.Add(key: attribute,
-                                                    value: new Tuple<string, bool>(item1: dirElemFileToCopyFrom.GetAttributeValueString(
-                                                                                       attribute: attribute,
-                                                                                       version: DirectoryElement.AttributeVersion
-                                                                                                                .Stage3ReadyToWrite), item2: true));
+                                                    value: new Tuple<string, bool>(
+                                                        item1: dirElemFileToCopyFrom
+                                                           .GetAttributeValueString(
+                                                                attribute: attribute,
+                                                                version: DirectoryElement.AttributeVersion
+                                                                   .Stage3ReadyToWrite),
+                                                        item2: true));
                     }
-                    else if (dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Original))
+                    else if (dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(
+                                 attribute: attribute,
+                                 version: DirectoryElement.AttributeVersion.Original))
                     {
                         FrmMainApp.CopyPoolDict.Add(key: attribute,
-                                                    value: new Tuple<string, bool>(item1: dirElemFileToCopyFrom.GetAttributeValueString(
-                                                                                       attribute: attribute,
-                                                                                       version: DirectoryElement.AttributeVersion
-                                                                                                                .Original), item2: false));
+                                                    value: new Tuple<string, bool>(
+                                                        item1: dirElemFileToCopyFrom
+                                                           .GetAttributeValueString(
+                                                                attribute: attribute,
+                                                                version: DirectoryElement.AttributeVersion
+                                                                   .Original),
+                                                        item2: false));
                     }
                 }
             }
@@ -95,7 +105,8 @@ internal static class FileListViewCopyPaste
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                     messageBoxName: "mbx_Helper_WarningTooManyFilesSelected"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
@@ -108,9 +119,11 @@ internal static class FileListViewCopyPaste
     /// </summary>
     internal static void ListViewPasteGeoData()
     {
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmMainApp frmMainAppInstance =
+            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         // check there's anything in copy-pool
-        if (FrmMainApp.CopyPoolDict.Count > 0 && frmMainAppInstance != null)
+        if (FrmMainApp.CopyPoolDict.Count > 0 &&
+            frmMainAppInstance != null)
         {
             FrmPasteWhat frmPasteWhat = new(initiator: frmMainAppInstance.Name);
             frmPasteWhat.StartPosition = FormStartPosition.CenterScreen;
@@ -121,7 +134,9 @@ internal static class FileListViewCopyPaste
             CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                     messageBoxName: "mbx_Helper_WarningNothingToPaste"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();

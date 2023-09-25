@@ -28,27 +28,30 @@ internal static class EditFileFormGeneric
         clh_fileName.Width = lvw.Width;
         lvw.Columns.Add(value: clh_fileName);
 
-        ColumnHeader clh_GUID = new();
-        clh_GUID.Name = COL_NAME_PREFIX + FileListColumns.GUID;
-        clh_GUID.Width = 0;
-        lvw.Columns.Add(value: clh_GUID);
+        //ColumnHeader clh_GUID = new();
+        //clh_GUID.Name = COL_NAME_PREFIX + FileListColumns.GUID;
+        //clh_GUID.Width = 0;
+        //lvw.Columns.Add(value: clh_GUID);
 
         foreach (string fileToEditGUID in FrmMainApp.filesToEditGUIDStringList)
         {
-            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: fileToEditGUID);
+            DirectoryElement dirElemFileToModify =
+                FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: fileToEditGUID);
 
             if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {
                 overallCount++;
                 ListViewItem lvi = new()
                 {
-                    Text = dirElemFileToModify.ItemNameWithoutPath
+                    Text = dirElemFileToModify.ItemNameWithoutPath,
+                    Tag = dirElemFileToModify
                 };
-                lvi.SubItems.Add(text: fileToEditGUID);
+                //lvi.SubItems.Add(text: fileToEditGUID);
                 FrmEditFileData.lvw_FileListEditImages.Items.Add(value: lvi);
                 fileCount++;
             }
-            else if (dirElemFileToModify.Type == DirectoryElement.ElementType.SubDirectory)
+            else if (dirElemFileToModify.Type ==
+                     DirectoryElement.ElementType.SubDirectory)
             {
                 overallCount++;
                 folderCount++;
@@ -79,7 +82,8 @@ internal static class EditFileFormGeneric
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                     messageBoxName: "mbx_Helper_WarningFileDisappeared"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();

@@ -52,7 +52,7 @@ internal static class FileListViewReadWrite
                         {
                             // theoretically we'd want to update the columns for each tag but for example when removing all data
                             // this becomes tricky bcs we're also firing a "-gps*=" tag.
-                            string settingId = ElementAttributeToColumnHeaderName(attribute);
+                            string settingId = GetElementAttributesColumnHeader(attribute);
                             string settingVal = dirElemFileToModify.GetAttributeValueString(attribute: attribute,
                                                                                             version: DirectoryElement.AttributeVersion
                                                                                                     .Stage3ReadyToWrite);
@@ -125,7 +125,7 @@ internal static class FileListViewReadWrite
                                     ? tmpLat + ";" + tmpLng
                                     : "";
 
-                                lvi.SubItems[index: lvchs[key: ElementAttributeToColumnHeaderName(ElementAttribute.Coordinates)]
+                                lvi.SubItems[index: lvchs[key: GetElementAttributesColumnHeader(ElementAttribute.Coordinates)]
                                                 .Index]
                                    .Text = tmpCoords;
                             }
@@ -143,7 +143,7 @@ internal static class FileListViewReadWrite
                                     ? tmpLat + ";" + tmpLng
                                     : "";
 
-                                lvi.SubItems[index: lvchs[key: ElementAttributeToColumnHeaderName(ElementAttribute.DestCoordinates)]
+                                lvi.SubItems[index: lvchs[key: GetElementAttributesColumnHeader(ElementAttribute.DestCoordinates)]
                                                 .Index]
                                    .Text = tmpCoords;
                             }

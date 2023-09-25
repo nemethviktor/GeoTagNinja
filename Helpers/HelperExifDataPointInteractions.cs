@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.ListView;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers;
@@ -30,9 +29,14 @@ internal static class HelperExifDataPointInteractions
         double pointVal = 0.0;
         if (pointOrig.Count(predicate: f => f == '.') == 2)
         {
-            bool degreeParse = int.TryParse(s: pointOrig.Split('.')[0], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out int degree);
+            bool degreeParse = int.TryParse(s: pointOrig.Split('.')[0],
+                                            style: NumberStyles.Any,
+                                            provider: CultureInfo.InvariantCulture,
+                                            result: out int degree);
             bool minuteParse = double.TryParse(s: Regex.Replace(
-                                                   input: pointOrig.Split('.')[1] + "." + pointOrig.Split('.')[2],
+                                                   input: pointOrig.Split('.')[1] +
+                                                          "." +
+                                                          pointOrig.Split('.')[2],
                                                    pattern: "[SWNE\"-]",
                                                    replacement: ""),
                                                style: NumberStyles.Any,
@@ -43,11 +47,17 @@ internal static class HelperExifDataPointInteractions
         }
         else
         {
-            pointVal = double.Parse(s: Regex.Replace(input: pointOrig, pattern: "[SWNE\"-]", replacement: ""), style: NumberStyles.Any, provider: CultureInfo.InvariantCulture);
+            pointVal =
+                double.Parse(
+                    s: Regex.Replace(input: pointOrig, pattern: "[SWNE\"-]",
+                                     replacement: ""), style: NumberStyles.Any,
+                    provider: CultureInfo.InvariantCulture);
         }
 
         pointVal = Math.Round(value: pointVal, digits: 6);
-        int multiplier = point.Contains(value: "S") || point.Contains(value: "W") || point.StartsWith(value: "-")
+        int multiplier = point.Contains(value: "S") ||
+                         point.Contains(value: "W") ||
+                         point.StartsWith(value: "-")
             ? -1
             : 1; //handle south and west
 
@@ -84,17 +94,21 @@ internal static class HelperExifDataPointInteractions
 
         if (senderName == "FrmEditFileData")
         {
-            FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
+            FrmEditFileData frmEditFileDataInstance =
+                (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
             if (frmEditFileDataInstance != null)
             {
-                ListViewItem lvi = frmEditFileDataInstance.lvw_FileListEditImages.SelectedItems[index: 0];
+                ListViewItem lvi =
+                    frmEditFileDataInstance.lvw_FileListEditImages
+                                           .SelectedItems[index: 0];
 
-                DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: frmEditFileDataInstance.lvw_FileListEditImages.Columns[key: FileListView.COL_NAME_PREFIX + FileListView.FileListColumns.GUID]
-                                                                                                                                                           .Index]
-                                                                                                                   .Text);
+                DirectoryElement dirElemFileToModify =
+                    lvi.Tag as DirectoryElement;
 
                 HelperNonStatic helperNonstatic = new();
-                IEnumerable<Control> cGbx_GPSData = helperNonstatic.GetAllControls(control: frmEditFileDataInstance.gbx_GPSData);
+                IEnumerable<Control> cGbx_GPSData =
+                    helperNonstatic.GetAllControls(
+                        control: frmEditFileDataInstance.gbx_GPSData);
                 foreach (Control cItem_cGbx_GPSData in cGbx_GPSData)
                 {
                     if (cItem_cGbx_GPSData is NumericUpDown nud)
@@ -110,7 +124,9 @@ internal static class HelperExifDataPointInteractions
                     }
                 }
 
-                IEnumerable<Control> cGbx_LocationData = helperNonstatic.GetAllControls(control: frmEditFileDataInstance.gbx_LocationData);
+                IEnumerable<Control> cGbx_LocationData =
+                    helperNonstatic.GetAllControls(
+                        control: frmEditFileDataInstance.gbx_LocationData);
                 foreach (Control cItem_cGbx_LocationData in cGbx_LocationData)
                 {
                     // no nuds here but just in case
@@ -142,41 +158,48 @@ internal static class HelperExifDataPointInteractions
                             isMarkedForDeletion: true);
                     }
 
-                    dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.RemoveAllGPS,
-                                                                 value: "",
-                                                                 version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
-                                                                 isMarkedForDeletion: true);
+                    dirElemFileToModify.SetAttributeValueAnyType(
+                        attribute: ElementAttribute.RemoveAllGPS,
+                        value: "",
+                        version: DirectoryElement.AttributeVersion
+                                                 .Stage1EditFormIntraTabTransferQueue,
+                        isMarkedForDeletion: true);
                 }
             }
         }
         else if (senderName == "FrmMainApp")
         {
-            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+            FrmMainApp frmMainAppInstance =
+                (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
             if (frmMainAppInstance != null)
             {
                 ListView lvw = frmMainAppInstance.lvw_FileList;
                 if (lvw.SelectedItems.Count > 0)
                 {
                     HelperGenericFileLocking.FileListBeingUpdated = true;
-                    foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
+                    foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList
+                                .SelectedItems)
                     {
-                        DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: FileListView.COL_NAME_PREFIX + FileListView.FileListColumns.GUID]
-                                                                                                                                               .Index]
-                                                                                                                           .Text);
+                        DirectoryElement dirElemFileToModify =
+                            lvi.Tag as DirectoryElement;
                         // don't do folders...
                         if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                         {
-                            string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
-                            string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
+                            string fileNameWithPath =
+                                dirElemFileToModify.FileNameWithPath;
+                            string fileNameWithoutPath =
+                                dirElemFileToModify.ItemNameWithoutPath;
 
                             // check it's not in the read-queue.
-                            while (HelperGenericFileLocking.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
+                            while (HelperGenericFileLocking.GenericLockCheckLockFile(
+                                       fileNameWithoutPath: fileNameWithoutPath))
                             {
                                 await Task.Delay(millisecondsDelay: 10);
                             }
 
                             // then put a blocker on
-                            HelperGenericFileLocking.GenericLockLockFile(fileNameWithoutPath: fileNameWithoutPath);
+                            HelperGenericFileLocking.GenericLockLockFile(
+                                fileNameWithoutPath: fileNameWithoutPath);
                             foreach (ElementAttribute toponomyDetail in geoDataAttributes)
                             {
                                 dirElemFileToModify.SetAttributeValueAnyType(
@@ -187,15 +210,19 @@ internal static class HelperExifDataPointInteractions
                                     isMarkedForDeletion: true);
                             }
 
-                            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.RemoveAllGPS,
-                                                                         value: "",
-                                                                         version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                                                         isMarkedForDeletion: true);
+                            dirElemFileToModify.SetAttributeValueAnyType(
+                                attribute: ElementAttribute.RemoveAllGPS,
+                                value: "",
+                                version: DirectoryElement.AttributeVersion
+                                                         .Stage3ReadyToWrite,
+                                isMarkedForDeletion: true);
 
                             // then remove lock
 
-                            await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
-                            HelperGenericFileLocking.GenericLockUnLockFile(fileNameWithoutPath: fileNameWithoutPath);
+                            await FileListViewReadWrite
+                               .ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                            HelperGenericFileLocking.GenericLockUnLockFile(
+                                fileNameWithoutPath: fileNameWithoutPath);
                             // no need to remove the xmp here because it hasn't been added in the first place.
                         }
 
@@ -218,24 +245,31 @@ internal static class HelperExifDataPointInteractions
             return;
         }
 
-        PropertyItem prop = img.GetPropertyItem(propid: HelperVariables.exifOrientationID);
+        PropertyItem prop =
+            img.GetPropertyItem(propid: HelperVariables.exifOrientationID);
         int val = BitConverter.ToUInt16(value: prop.Value, startIndex: 0);
         RotateFlipType rot = RotateFlipType.RotateNoneFlipNone;
 
-        if (val == 3 || val == 4)
+        if (val == 3 ||
+            val == 4)
         {
             rot = RotateFlipType.Rotate180FlipNone;
         }
-        else if (val == 5 || val == 6)
+        else if (val == 5 ||
+                 val == 6)
         {
             rot = RotateFlipType.Rotate90FlipNone;
         }
-        else if (val == 7 || val == 8)
+        else if (val == 7 ||
+                 val == 8)
         {
             rot = RotateFlipType.Rotate270FlipNone;
         }
 
-        if (val == 2 || val == 4 || val == 5 || val == 7)
+        if (val == 2 ||
+            val == 4 ||
+            val == 5 ||
+            val == 7)
         {
             rot |= RotateFlipType.RotateNoneFlipX;
         }

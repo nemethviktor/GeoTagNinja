@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.CustomMessageBox;
-using GeoTagNinja.View.ListView;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
@@ -33,9 +32,10 @@ public partial class FrmPasteWhat : Form
     {
         _initiatorName = initiator;
         InitializeComponent();
-        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
-                                                     ? ThemeColour.Dark
-                                                     : ThemeColour.Light, parentControl: this);
+        HelperControlThemeManager.SetThemeColour(
+            themeColour: HelperVariables.UserSettingUseDarkMode
+                ? ThemeColour.Dark
+                : ThemeColour.Light, parentControl: this);
 
         ListView lvw;
         List<ElementAttribute> tagsToPasteAttributeList = new();
@@ -44,33 +44,40 @@ public partial class FrmPasteWhat : Form
         // in this case this will be used to pre-fill/check the checkboxes
         if (_initiatorName == "FrmEditFileData")
         {
-            FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
+            FrmEditFileData frmEditFileDataInstance =
+                (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
             if (frmEditFileDataInstance != null)
             {
                 lvw = frmEditFileDataInstance.lvw_FileListEditImages;
                 ListViewItem lvi = lvw.SelectedItems[index: 0];
 
-                DirectoryElement dirElemFileToCopyFrom = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: FileListView.COL_NAME_PREFIX + FileListView.FileListColumns.GUID]
-                                                                                                                                         .Index]
-                                                                                                                     .Text);
+                DirectoryElement dirElemFileToCopyFrom =
+                    lvi.Tag as DirectoryElement;
 
-                FileDateCopySourceFileNameWithoutPath = dirElemFileToCopyFrom.ItemNameWithoutPath;
+                FileDateCopySourceFileNameWithoutPath =
+                    dirElemFileToCopyFrom.ItemNameWithoutPath;
 
                 // No need to check in Original as the assumption is that user wants to paste things that have changed.
                 // Stuff will live in Stage1EditFormIntraTabTransferQueue
 
-                foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+                foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(
+                             enumType: typeof(ElementAttribute)))
                 {
                     if (dirElemFileToCopyFrom != null &&
-                        dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(attribute: attribute,
-                                                                              version: DirectoryElement.AttributeVersion
-                                                                                                       .Stage1EditFormIntraTabTransferQueue))
+                        dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(
+                            attribute: attribute,
+                            version: DirectoryElement.AttributeVersion
+                                                     .Stage1EditFormIntraTabTransferQueue))
                     {
                         tagsToPasteAttributeList.Add(item: attribute);
 
                         // https://stackoverflow.com/a/28352807/3968494
-                        if (Controls.Find(key: "ckb_" + GetElementAttributesName(attributeToFind: attribute), searchAllChildren: true)
-                                    .FirstOrDefault() is CheckBox cbx)
+                        if (Controls
+                           .Find(
+                                key: "ckb_" +
+                                     GetElementAttributesName(attributeToFind: attribute),
+                                searchAllChildren: true)
+                           .FirstOrDefault() is CheckBox cbx)
                         {
                             cbx.Checked = true;
                         }
@@ -80,14 +87,19 @@ public partial class FrmPasteWhat : Form
         }
         else if (_initiatorName == "FrmMainApp")
         {
-            foreach (KeyValuePair<ElementAttribute, Tuple<string, bool>> keyValuePair in FrmMainApp.CopyPoolDict)
+            foreach (KeyValuePair<ElementAttribute, Tuple<string, bool>> keyValuePair in
+                     FrmMainApp.CopyPoolDict)
             {
                 ElementAttribute attribute = keyValuePair.Key;
                 tagsToPasteAttributeList.Add(item: attribute);
 
                 // https://stackoverflow.com/a/28352807/3968494
-                if (Controls.Find(key: "ckb_" + GetElementAttributesName(attributeToFind: attribute), searchAllChildren: true)
-                            .FirstOrDefault() is CheckBox cbx)
+                if (Controls
+                   .Find(
+                        key: "ckb_" +
+                             GetElementAttributesName(attributeToFind: attribute),
+                        searchAllChildren: true)
+                   .FirstOrDefault() is CheckBox cbx)
                 {
                     cbx.Checked = keyValuePair.Value.Item2;
                 }
@@ -112,12 +124,15 @@ public partial class FrmPasteWhat : Form
         {
             foreach (ElementAttribute attribute in tagsToPasteAttributeList)
             {
-                string attributeString = GetElementAttributesName(attributeToFind: attribute);
-                if (attributeString.StartsWith(value: "TakenDate") && attributeString.EndsWith(value: "Shift"))
+                string attributeString =
+                    GetElementAttributesName(attributeToFind: attribute);
+                if (attributeString.StartsWith(value: "TakenDate") &&
+                    attributeString.EndsWith(value: "Shift"))
                 {
                     rbt_PasteTakenDateShift.Checked = true;
                 }
-                else if (attributeString.StartsWith(value: "CreateDate") && attributeString.EndsWith(value: "Shift"))
+                else if (attributeString.StartsWith(value: "CreateDate") &&
+                         attributeString.EndsWith(value: "Shift"))
                 {
                     rbt_PasteCreateDateShift.Checked = true;
                 }
@@ -134,7 +149,8 @@ public partial class FrmPasteWhat : Form
                                    EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
+        HelperControlAndMessageBoxHandling.ReturnControlText(
+            cItem: this, senderForm: this);
 
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
@@ -148,7 +164,8 @@ public partial class FrmPasteWhat : Form
                )
 
             {
-                HelperControlAndMessageBoxHandling.ReturnControlText(cItem: cItem, senderForm: this);
+                HelperControlAndMessageBoxHandling.ReturnControlText(
+                    cItem: cItem, senderForm: this);
             }
         }
 
@@ -189,7 +206,8 @@ public partial class FrmPasteWhat : Form
         // get the name of the file we're pasting FROM.
         if (_initiatorName == "FrmEditFileData")
         {
-            FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
+            FrmEditFileData frmEditFileDataInstance =
+                (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
             if (frmEditFileDataInstance != null)
             {
                 lvw = frmEditFileDataInstance.lvw_FileListEditImages;
@@ -197,7 +215,8 @@ public partial class FrmPasteWhat : Form
         }
         else if (_initiatorName == "FrmMainApp")
         {
-            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+            FrmMainApp frmMainAppInstance =
+                (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
             if (frmMainAppInstance != null)
             {
                 lvw = frmMainAppInstance.lvw_FileList;
@@ -220,13 +239,17 @@ public partial class FrmPasteWhat : Form
                 if (thisCheckBox.Checked)
                 {
                     string attributeString = cItem.Name.Substring(startIndex: 4);
-                    ElementAttribute attribute = GetElementAttributesElementAttribute(attributeToFind: attributeString);
+                    ElementAttribute attribute =
+                        GetElementAttributesElementAttribute(
+                            attributeToFind: attributeString);
                     LastCheckedCheckBoxes.Add(item: cItem.Name);
 
                     // "EndsWith" doesn't work here because the CheckBox.Name never ends with "Shift".
-                    if (attributeString == "TakenDate" || attributeString == "CreateDate")
+                    if (attributeString == "TakenDate" ||
+                        attributeString == "CreateDate")
                     {
-                        string pasteWhichDate = attributeString.Replace(oldValue: "Date", newValue: "");
+                        string pasteWhichDate =
+                            attributeString.Replace(oldValue: "Date", newValue: "");
                         string[] timeUnitArr = { "Days", "Hours", "Minutes", "Seconds" };
                         switch (pasteWhichDate)
                         {
@@ -240,7 +263,11 @@ public partial class FrmPasteWhat : Form
                                     // want: "TakenDateDaysShift"
                                     foreach (string timeUnit in timeUnitArr)
                                     {
-                                        tagsToPaste.Add(item: GetElementAttributesElementAttribute(attributeToFind: attributeString + timeUnit + "Shift"));
+                                        tagsToPaste.Add(
+                                            item: GetElementAttributesElementAttribute(
+                                                attributeToFind: attributeString +
+                                                timeUnit +
+                                                "Shift"));
                                     }
                                 }
 
@@ -254,7 +281,11 @@ public partial class FrmPasteWhat : Form
                                 {
                                     foreach (string timeUnit in timeUnitArr)
                                     {
-                                        tagsToPaste.Add(item: GetElementAttributesElementAttribute(attributeToFind: attributeString + timeUnit + "Shift"));
+                                        tagsToPaste.Add(
+                                            item: GetElementAttributesElementAttribute(
+                                                attributeToFind: attributeString +
+                                                timeUnit +
+                                                "Shift"));
                                     }
                                 }
 
@@ -275,7 +306,9 @@ public partial class FrmPasteWhat : Form
                     // any in the Ref lot
                     if (tagsWithRefList.Contains(item: attributeString))
                     {
-                        tagsToPaste.Add(item: GetElementAttributesElementAttribute(attributeToFind: attributeString + "Ref"));
+                        tagsToPaste.Add(
+                            item: GetElementAttributesElementAttribute(
+                                attributeToFind: attributeString + "Ref"));
                     }
                 }
             }
@@ -283,23 +316,25 @@ public partial class FrmPasteWhat : Form
 
         if (_initiatorName == "FrmEditFileData")
         {
-            FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
+            FrmEditFileData frmEditFileDataInstance =
+                (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
 
             if (frmEditFileDataInstance != null)
             {
                 lvw = frmEditFileDataInstance.lvw_FileListEditImages;
                 ListViewItem lviFE = lvw.SelectedItems[index: 0];
                 // do paste into the tables + grid as req'd
-                DirectoryElement dirElemFileToCopyFrom = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lviFE.SubItems[index: lvw.Columns[key: FileListView.COL_NAME_PREFIX + FileListView.FileListColumns.GUID]
-                                                                                                                                           .Index]
-                                                                                                                       .Text);
+                DirectoryElement dirElemFileToCopyFrom =
+                    lviFE.Tag as DirectoryElement;
 
                 foreach (ElementAttribute attribute in tagsToPaste)
                 {
-                    string attributeStr = GetElementAttributesName(attributeToFind: attribute);
+                    string attributeStr =
+                        GetElementAttributesName(attributeToFind: attribute);
 
                     // there must be a better way around this
-                    Type typeOfAttribute = GetElementAttributesType(attributeToFind: attribute);
+                    Type typeOfAttribute =
+                        GetElementAttributesType(attributeToFind: attribute);
                     IConvertible pasteConvertible = null;
 
                     // by this point we know that _there is_ something to paste.
@@ -307,21 +342,26 @@ public partial class FrmPasteWhat : Form
                     btn_Cancel.Enabled = false;
 
                     // check it's sitting somewhere already? -- can't be null.
-                    DirectoryElement.AttributeVersion maxAttributeVersion = DirectoryElement.AttributeVersion.Original;
+                    DirectoryElement.AttributeVersion maxAttributeVersion =
+                        DirectoryElement.AttributeVersion.Original;
                     bool dataExistsSomewhere = false;
 
-                    List<DirectoryElement.AttributeVersion> relevantAttributeVersions = new()
-                    {
-                        // DO NOT reorder!
-                        DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
-                        DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                        DirectoryElement.AttributeVersion.Original
-                    };
+                    List<DirectoryElement.AttributeVersion> relevantAttributeVersions =
+                        new()
+                        {
+                            // DO NOT reorder!
+                            DirectoryElement.AttributeVersion
+                                            .Stage1EditFormIntraTabTransferQueue,
+                            DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                            DirectoryElement.AttributeVersion.Original
+                        };
 
                     if (dirElemFileToCopyFrom != null)
                     {
                         //
-                        foreach (DirectoryElement.AttributeVersion relevantAttributeVersion in relevantAttributeVersions)
+                        foreach (DirectoryElement.AttributeVersion
+                                     relevantAttributeVersion in
+                                 relevantAttributeVersions)
                         {
                             if (dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(
                                     attribute: attribute,
@@ -337,26 +377,31 @@ public partial class FrmPasteWhat : Form
                         {
                             if (typeOfAttribute == typeof(string))
                             {
-                                pasteConvertible = dirElemFileToCopyFrom.GetAttributeValueString(attribute: attribute,
-                                                                                                 version: maxAttributeVersion);
+                                pasteConvertible =
+                                    dirElemFileToCopyFrom.GetAttributeValueString(
+                                        attribute: attribute,
+                                        version: maxAttributeVersion);
                             }
                             else if (typeOfAttribute == typeof(int))
                             {
-                                pasteConvertible = dirElemFileToCopyFrom.GetAttributeValue<int>(
-                                    attribute: attribute,
-                                    version: maxAttributeVersion);
+                                pasteConvertible =
+                                    dirElemFileToCopyFrom.GetAttributeValue<int>(
+                                        attribute: attribute,
+                                        version: maxAttributeVersion);
                             }
                             else if (typeOfAttribute == typeof(double))
                             {
-                                pasteConvertible = dirElemFileToCopyFrom.GetAttributeValue<double>(
-                                    attribute: attribute,
-                                    version: maxAttributeVersion);
+                                pasteConvertible = dirElemFileToCopyFrom
+                                   .GetAttributeValue<double>(
+                                        attribute: attribute,
+                                        version: maxAttributeVersion);
                             }
                             else if (typeOfAttribute == typeof(DateTime))
                             {
-                                pasteConvertible = dirElemFileToCopyFrom.GetAttributeValue<DateTime>(
-                                    attribute: attribute,
-                                    version: maxAttributeVersion);
+                                pasteConvertible = dirElemFileToCopyFrom
+                                   .GetAttributeValue<DateTime>(
+                                        attribute: attribute,
+                                        version: maxAttributeVersion);
                             }
 
                             copyPasteDict.Add(key: attribute, value: pasteConvertible);
@@ -371,9 +416,8 @@ public partial class FrmPasteWhat : Form
                     // for each file
                     foreach (ListViewItem lvi in lvw.Items)
                     {
-                        DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: FileListView.COL_NAME_PREFIX + FileListView.FileListColumns.GUID]
-                                                                                                                                               .Index]
-                                                                                                                           .Text);
+                        DirectoryElement dirElemFileToModify =
+                            lvi.Tag as DirectoryElement;
                         if (dirElemFileToModify != null)
                         {
                             bool takenShiftCopyPasteRequired = false;
@@ -382,17 +426,24 @@ public partial class FrmPasteWhat : Form
                             bool createAlreadyShifted = false;
 
                             // update each tag --> frmEditFileDataInstance
-                            foreach (KeyValuePair<ElementAttribute, object> keyValuePair in copyPasteDict)
+                            foreach (KeyValuePair<ElementAttribute, object> keyValuePair
+                                     in copyPasteDict)
                             {
-                                Type typeofPaste = GetElementAttributesType(attributeToFind: keyValuePair.Key);
-                                string attributeStr = GetElementAttributesName(attributeToFind: keyValuePair.Key);
+                                Type typeofPaste =
+                                    GetElementAttributesType(
+                                        attributeToFind: keyValuePair.Key);
+                                string attributeStr =
+                                    GetElementAttributesName(
+                                        attributeToFind: keyValuePair.Key);
 
-                                if (attributeStr.Contains(value: "Taken") && attributeStr.Contains(value: "Shift"))
+                                if (attributeStr.Contains(value: "Taken") &&
+                                    attributeStr.Contains(value: "Shift"))
                                 {
                                     takenShiftCopyPasteRequired = true;
                                 }
 
-                                if (attributeStr.Contains(value: "Create") && attributeStr.Contains(value: "Shift"))
+                                if (attributeStr.Contains(value: "Create") &&
+                                    attributeStr.Contains(value: "Shift"))
                                 {
                                     createShiftCopyPasteRequired = true;
                                 }
@@ -400,17 +451,28 @@ public partial class FrmPasteWhat : Form
                                 if (typeofPaste == typeof(string))
                                 {
                                     // remove value if blank
-                                    dirElemFileToModify.SetAttributeValueAnyType(attribute: keyValuePair.Key,
-                                                                                 value: Convert.ToString(value: keyValuePair.Value, provider: CultureInfo.InvariantCulture) ?? string.Empty,
-                                                                                 version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
-                                                                                 isMarkedForDeletion: keyValuePair.Value.ToString() == "");
+                                    dirElemFileToModify.SetAttributeValueAnyType(
+                                        attribute: keyValuePair.Key,
+                                        value: Convert.ToString(
+                                                   value: keyValuePair.Value,
+                                                   provider: CultureInfo
+                                                      .InvariantCulture) ??
+                                               string.Empty,
+                                        version: DirectoryElement.AttributeVersion
+                                           .Stage1EditFormIntraTabTransferQueue,
+                                        isMarkedForDeletion:
+                                        keyValuePair.Value.ToString() == "");
                                 }
                                 else
                                 {
-                                    dirElemFileToModify.SetAttributeValueAnyType(attribute: keyValuePair.Key,
-                                                                                 value: Convert.ToString(value: keyValuePair.Value, provider: CultureInfo.InvariantCulture),
-                                                                                 version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
-                                                                                 isMarkedForDeletion: false);
+                                    dirElemFileToModify.SetAttributeValueAnyType(
+                                        attribute: keyValuePair.Key,
+                                        value: Convert.ToString(
+                                            value: keyValuePair.Value,
+                                            provider: CultureInfo.InvariantCulture),
+                                        version: DirectoryElement.AttributeVersion
+                                           .Stage1EditFormIntraTabTransferQueue,
+                                        isMarkedForDeletion: false);
                                 }
                             }
 
@@ -422,14 +484,15 @@ public partial class FrmPasteWhat : Form
                                 takenAlreadyShifted = CheckAdjustTakenTimeShiftActual(
                                     dirElemFileToModify: dirElemFileToModify,
                                     dirElemVersion: DirectoryElement.AttributeVersion
-                                                                    .Stage1EditFormIntraTabTransferQueue);
+                                       .Stage1EditFormIntraTabTransferQueue);
                             }
-                            else if (createShiftCopyPasteRequired && !createAlreadyShifted)
+                            else if (createShiftCopyPasteRequired &&
+                                     !createAlreadyShifted)
                             {
                                 createAlreadyShifted = CheckAdjustCreateTimeShiftActual(
                                     dirElemFileToModify: dirElemFileToModify,
                                     dirElemVersion: DirectoryElement.AttributeVersion
-                                                                    .Stage1EditFormIntraTabTransferQueue);
+                                       .Stage1EditFormIntraTabTransferQueue);
                             }
                         }
                     }
@@ -438,7 +501,8 @@ public partial class FrmPasteWhat : Form
         }
         else if (_initiatorName == "FrmMainApp")
         {
-            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+            FrmMainApp frmMainAppInstance =
+                (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
             if (frmMainAppInstance != null)
             {
                 // by this point we know that _there is_ something to paste.
@@ -449,28 +513,39 @@ public partial class FrmPasteWhat : Form
                 {
                     string pasteValueStr = null;
 
-                    bool dataInCopyDict = FrmMainApp.CopyPoolDict.Any(predicate: l => l.Key == attribute); // https://stackoverflow.com/a/57437756/3968494
+                    bool dataInCopyDict =
+                        FrmMainApp.CopyPoolDict.Any(
+                            predicate: l =>
+                                l.Key ==
+                                attribute); // https://stackoverflow.com/a/57437756/3968494
                     // get the dataaaaa
                     if (dataInCopyDict)
                     {
-                        pasteValueStr = FrmMainApp.CopyPoolDict.First(predicate: c => c.Key == attribute)
-                                                  .Value.Item1; // https://stackoverflow.com/a/25298643/3968494
+                        pasteValueStr = FrmMainApp
+                                       .CopyPoolDict
+                                       .First(predicate: c => c.Key == attribute)
+                                       .Value
+                                       .Item1; // https://stackoverflow.com/a/25298643/3968494
                         copyPasteDict.Add(key: attribute, value: pasteValueStr);
                     }
                     else // this will be marked as "remove" later
                     {
-                        copyPasteDict.Add(key: attribute, value: FrmMainApp.NullStringEquivalentGeneric);
+                        copyPasteDict.Add(key: attribute,
+                                          value: FrmMainApp.NullStringEquivalentGeneric);
                     }
                 }
 
                 // for each file
-                int frmMainAppInstancelvwFileListSelectedItemsCount = frmMainAppInstance.lvw_FileList.SelectedItems.Count;
-                for (int fileCounter = 0; fileCounter < frmMainAppInstancelvwFileListSelectedItemsCount; fileCounter++)
+                int frmMainAppInstancelvwFileListSelectedItemsCount =
+                    frmMainAppInstance.lvw_FileList.SelectedItems.Count;
+                for (int fileCounter = 0;
+                     fileCounter < frmMainAppInstancelvwFileListSelectedItemsCount;
+                     fileCounter++)
                 {
-                    ListViewItem lvi = frmMainAppInstance.lvw_FileList.SelectedItems[fileCounter];
-                    DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: frmMainAppInstance.lvw_FileList.Columns[key: FileListView.COL_NAME_PREFIX + FileListView.FileListColumns.GUID]
-                                                                                                                                                          .Index]
-                                                                                                                       .Text);
+                    ListViewItem lvi =
+                        frmMainAppInstance.lvw_FileList.SelectedItems[index: fileCounter];
+                    DirectoryElement dirElemFileToModify =
+                        lvi.Tag as DirectoryElement;
 
                     if (dirElemFileToModify != null)
                     {
@@ -479,27 +554,37 @@ public partial class FrmPasteWhat : Form
                         bool takenAlreadyShifted = false;
                         bool createAlreadyShifted = false;
 
-                        foreach (KeyValuePair<ElementAttribute, object> keyValuePair in copyPasteDict)
+                        foreach (KeyValuePair<ElementAttribute, object> keyValuePair in
+                                 copyPasteDict)
                         {
-                            string attributeStr = GetElementAttributesName(attributeToFind: keyValuePair.Key);
+                            string attributeStr =
+                                GetElementAttributesName(
+                                    attributeToFind: keyValuePair.Key);
 
-                            if (attributeStr.Contains(value: "Taken") && attributeStr.Contains(value: "Shift"))
+                            if (attributeStr.Contains(value: "Taken") &&
+                                attributeStr.Contains(value: "Shift"))
                             {
                                 takenShiftCopyPasteRequired = true;
                             }
 
-                            if (attributeStr.Contains(value: "Create") && attributeStr.Contains(value: "Shift"))
+                            if (attributeStr.Contains(value: "Create") &&
+                                attributeStr.Contains(value: "Shift"))
                             {
                                 createShiftCopyPasteRequired = true;
                             }
 
                             // remove value if blank
-                            bool markForRemoval = keyValuePair.Value.ToString() == FrmMainApp.NullStringEquivalentGeneric || string.IsNullOrEmpty(value: keyValuePair.Value.ToString());
-                            dirElemFileToModify.SetAttributeValueAnyType(attribute: keyValuePair.Key,
-                                                                         value: keyValuePair.Value.ToString(),
-                                                                         version: DirectoryElement.AttributeVersion
-                                                                                                  .Stage3ReadyToWrite,
-                                                                         isMarkedForDeletion: markForRemoval);
+                            bool markForRemoval =
+                                keyValuePair.Value.ToString() ==
+                                FrmMainApp.NullStringEquivalentGeneric ||
+                                string.IsNullOrEmpty(
+                                    value: keyValuePair.Value.ToString());
+                            dirElemFileToModify.SetAttributeValueAnyType(
+                                attribute: keyValuePair.Key,
+                                value: keyValuePair.Value.ToString(),
+                                version: DirectoryElement.AttributeVersion
+                                                         .Stage3ReadyToWrite,
+                                isMarkedForDeletion: markForRemoval);
                         }
 
                         // this little bit of cluster f.k is needed because when pasting data the "Shift" values get correctly pasted into wherever they need to go but the "Actual"
@@ -509,13 +594,15 @@ public partial class FrmPasteWhat : Form
                         {
                             takenAlreadyShifted = CheckAdjustTakenTimeShiftActual(
                                 dirElemFileToModify: dirElemFileToModify,
-                                dirElemVersion: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                                dirElemVersion: DirectoryElement.AttributeVersion
+                                   .Stage3ReadyToWrite);
                         }
                         else if (createShiftCopyPasteRequired && !createAlreadyShifted)
                         {
                             createAlreadyShifted = CheckAdjustCreateTimeShiftActual(
                                 dirElemFileToModify: dirElemFileToModify,
-                                dirElemVersion: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                                dirElemVersion: DirectoryElement.AttributeVersion
+                                   .Stage3ReadyToWrite);
                         }
                     }
 
@@ -523,21 +610,31 @@ public partial class FrmPasteWhat : Form
                     if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
                         // check it's not in the read-queue.
-                        while (HelperGenericFileLocking.GenericLockCheckLockFile(fileNameWithoutPath: dirElemFileToModify.ItemNameWithoutPath))
+                        while (HelperGenericFileLocking.GenericLockCheckLockFile(
+                                   fileNameWithoutPath: dirElemFileToModify
+                                      .ItemNameWithoutPath))
                         {
                             await Task.Delay(millisecondsDelay: 10);
                         }
 
                         HelperGenericFileLocking.FileListBeingUpdated = true;
-                        await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
-                        FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + dirElemFileToModify.ItemNameWithoutPath);
-                        FrmMainApp.TaskbarManagerInstance.SetProgressValue(fileCounter, frmMainAppInstancelvwFileListSelectedItemsCount);
-                        Thread.Sleep(1);
+                        await FileListViewReadWrite
+                           .ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                        FrmMainApp.HandlerUpdateLabelText(
+                            label: frmMainAppInstance.lbl_ParseProgress,
+                            text: "Processing: " +
+                                  dirElemFileToModify.ItemNameWithoutPath);
+                        FrmMainApp.TaskbarManagerInstance.SetProgressValue(
+                            currentValue: fileCounter,
+                            maximumValue:
+                            frmMainAppInstancelvwFileListSelectedItemsCount);
+                        Thread.Sleep(millisecondsTimeout: 1);
                         HelperGenericFileLocking.FileListBeingUpdated = false;
                     }
                 }
 
-                FrmMainApp.TaskbarManagerInstance.SetProgressState(TaskbarProgressBarState.NoProgress);
+                FrmMainApp.TaskbarManagerInstance.SetProgressState(
+                    state: TaskbarProgressBarState.NoProgress);
                 HelperGenericFileLocking.FileListBeingUpdated = false;
             }
         }
@@ -545,7 +642,8 @@ public partial class FrmPasteWhat : Form
         Hide();
 
         bool CheckAdjustTakenTimeShiftActual(DirectoryElement dirElemFileToModify,
-                                             DirectoryElement.AttributeVersion dirElemVersion)
+                                             DirectoryElement.AttributeVersion
+                                                 dirElemVersion)
         {
             int shiftedDays = 0;
             int shiftedHours = 0;
@@ -578,20 +676,25 @@ public partial class FrmPasteWhat : Form
                                       shiftedDays * 60 * 60 * 24;
 
             DateTime originalTakenDateTime = DateTime.Parse(
-                s: FrmMainApp.OriginalTakenDateDict[key: dirElemFileToModify.ItemNameWithoutPath],
+                s: FrmMainApp.OriginalTakenDateDict[
+                    key: dirElemFileToModify.ItemNameWithoutPath],
                 provider: CultureInfo.CurrentUICulture);
 
-            DateTime modifiedTakenDateTime = originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
+            DateTime modifiedTakenDateTime =
+                originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
 
-            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.TakenDate,
-                                                         value: Convert.ToString(value: modifiedTakenDateTime, provider: CultureInfo.CurrentUICulture),
-                                                         version: dirElemVersion,
-                                                         isMarkedForDeletion: false);
+            dirElemFileToModify.SetAttributeValueAnyType(
+                attribute: ElementAttribute.TakenDate,
+                value: Convert.ToString(value: modifiedTakenDateTime,
+                                        provider: CultureInfo.CurrentUICulture),
+                version: dirElemVersion,
+                isMarkedForDeletion: false);
             return true;
         }
 
         bool CheckAdjustCreateTimeShiftActual(DirectoryElement dirElemFileToModify,
-                                              DirectoryElement.AttributeVersion dirElemVersion)
+                                              DirectoryElement.AttributeVersion
+                                                  dirElemVersion)
         {
             int shiftedDays = 0;
             int shiftedHours = 0;
@@ -624,15 +727,19 @@ public partial class FrmPasteWhat : Form
                                       shiftedDays * 60 * 60 * 24;
 
             DateTime originalCreateDateTime = DateTime.Parse(
-                s: FrmMainApp.OriginalCreateDateDict[key: dirElemFileToModify.ItemNameWithoutPath],
+                s: FrmMainApp.OriginalCreateDateDict[
+                    key: dirElemFileToModify.ItemNameWithoutPath],
                 provider: CultureInfo.CurrentUICulture);
 
-            DateTime modifiedCreateDateTime = originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
+            DateTime modifiedCreateDateTime =
+                originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
 
-            dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.CreateDate,
-                                                         value: Convert.ToString(value: modifiedCreateDateTime, provider: CultureInfo.CurrentUICulture),
-                                                         version: dirElemVersion,
-                                                         isMarkedForDeletion: false);
+            dirElemFileToModify.SetAttributeValueAnyType(
+                attribute: ElementAttribute.CreateDate,
+                value: Convert.ToString(value: modifiedCreateDateTime,
+                                        provider: CultureInfo.CurrentUICulture),
+                version: dirElemVersion,
+                isMarkedForDeletion: false);
             return true;
         }
     }
@@ -648,7 +755,8 @@ public partial class FrmPasteWhat : Form
                                        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
+        IEnumerable<Control> c =
+            helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
         foreach (Control cItem in c)
         {
             CheckBox thisCheckBox = (CheckBox)cItem;
@@ -660,7 +768,8 @@ public partial class FrmPasteWhat : Form
                                         EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
+        IEnumerable<Control> c =
+            helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
         foreach (Control cItem in c)
         {
             CheckBox thisCheckBox = (CheckBox)cItem;
@@ -673,7 +782,8 @@ public partial class FrmPasteWhat : Form
                                                        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
+        IEnumerable<Control> c =
+            helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
         foreach (Control cItem in c)
         {
             CheckBox thisCheckBox = (CheckBox)cItem;
@@ -690,9 +800,11 @@ public partial class FrmPasteWhat : Form
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
-            if (cItem.GetType() == typeof(GroupBox) || cItem.GetType() == typeof(CheckBox))
+            if (cItem.GetType() == typeof(GroupBox) ||
+                cItem.GetType() == typeof(CheckBox))
             {
-                if (cItem.Parent.Name == "gbx_GPSData" && cItem.GetType() == typeof(CheckBox))
+                if (cItem.Parent.Name == "gbx_GPSData" &&
+                    cItem.GetType() == typeof(CheckBox))
                 {
                     CheckBox thisCheckBox = (CheckBox)cItem;
                     thisCheckBox.Checked = true;
@@ -708,9 +820,11 @@ public partial class FrmPasteWhat : Form
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
-            if (cItem.GetType() == typeof(GroupBox) || cItem.GetType() == typeof(CheckBox))
+            if (cItem.GetType() == typeof(GroupBox) ||
+                cItem.GetType() == typeof(CheckBox))
             {
-                if (cItem.Parent.Name == "gbx_GPSData" && cItem.GetType() == typeof(CheckBox))
+                if (cItem.Parent.Name == "gbx_GPSData" &&
+                    cItem.GetType() == typeof(CheckBox))
                 {
                     CheckBox thisCheckBox = (CheckBox)cItem;
                     thisCheckBox.Checked = false;
@@ -730,9 +844,11 @@ public partial class FrmPasteWhat : Form
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
-            if (cItem.GetType() == typeof(GroupBox) || cItem.GetType() == typeof(CheckBox))
+            if (cItem.GetType() == typeof(GroupBox) ||
+                cItem.GetType() == typeof(CheckBox))
             {
-                if (cItem.Parent.Name == "gbx_LocationData" && cItem.GetType() == typeof(CheckBox))
+                if (cItem.Parent.Name == "gbx_LocationData" &&
+                    cItem.GetType() == typeof(CheckBox))
                 {
                     CheckBox thisCheckBox = (CheckBox)cItem;
                     thisCheckBox.Checked = true;
@@ -749,9 +865,11 @@ public partial class FrmPasteWhat : Form
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
-            if (cItem.GetType() == typeof(GroupBox) || cItem.GetType() == typeof(CheckBox))
+            if (cItem.GetType() == typeof(GroupBox) ||
+                cItem.GetType() == typeof(CheckBox))
             {
-                if (cItem.Parent.Name == "gbx_LocationData" && cItem.GetType() == typeof(CheckBox))
+                if (cItem.Parent.Name == "gbx_LocationData" &&
+                    cItem.GetType() == typeof(CheckBox))
                 {
                     CheckBox thisCheckBox = (CheckBox)cItem;
                     thisCheckBox.Checked = false;
@@ -771,9 +889,11 @@ public partial class FrmPasteWhat : Form
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
-            if (cItem.GetType() == typeof(GroupBox) || cItem.GetType() == typeof(CheckBox))
+            if (cItem.GetType() == typeof(GroupBox) ||
+                cItem.GetType() == typeof(CheckBox))
             {
-                if (cItem.Parent.Name.Contains(value: "Date") && cItem.GetType() == typeof(CheckBox))
+                if (cItem.Parent.Name.Contains(value: "Date") &&
+                    cItem.GetType() == typeof(CheckBox))
                 {
                     CheckBox thisCheckBox = (CheckBox)cItem;
                     thisCheckBox.Checked = true;
@@ -789,9 +909,11 @@ public partial class FrmPasteWhat : Form
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
-            if (cItem.GetType() == typeof(GroupBox) || cItem.GetType() == typeof(CheckBox))
+            if (cItem.GetType() == typeof(GroupBox) ||
+                cItem.GetType() == typeof(CheckBox))
             {
-                if (cItem.Parent.Name.Contains(value: "Date") && cItem.GetType() == typeof(CheckBox))
+                if (cItem.Parent.Name.Contains(value: "Date") &&
+                    cItem.GetType() == typeof(CheckBox))
                 {
                     CheckBox thisCheckBox = (CheckBox)cItem;
                     thisCheckBox.Checked = false;
@@ -843,20 +965,23 @@ public partial class FrmPasteWhat : Form
 
             if (_initiatorName == "FrmEditFileData")
             {
-                FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
+                FrmEditFileData frmEditFileDataInstance =
+                    (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
 
                 if (frmEditFileDataInstance != null)
                 {
                     ListView lvw = frmEditFileDataInstance.lvw_FileListEditImages;
                     ListViewItem lvi = lvw.SelectedItems[index: 0];
-                    DirectoryElement dirElemFileSource = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: FileListView.COL_NAME_PREFIX + FileListView.FileListColumns.GUID]
-                                                                                                                                         .Index]
-                                                                                                                     .Text);
+                    DirectoryElement dirElemFileSource =
+                        lvi.Tag as DirectoryElement;
 
                     // when USING EDIT we use the local data, therefore timeshifts can only possibly live in DtFileDataToWriteStage1PreQueue
                     foreach (ElementAttribute attribute in listOfTagsToCopyTimeShifts)
                     {
-                        if (dirElemFileSource.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue))
+                        if (dirElemFileSource.HasSpecificAttributeWithVersion(
+                                attribute: attribute,
+                                version: DirectoryElement.AttributeVersion
+                                                         .Stage1EditFormIntraTabTransferQueue))
                         {
                             takenDateShiftDataExists = true;
                             break;
@@ -869,7 +994,11 @@ public partial class FrmPasteWhat : Form
                 // see if there is actually any paste-able data for the SOURCE file
                 foreach (ElementAttribute attribute in listOfTagsToCopyTimeShifts)
                 {
-                    bool dataInCopyKVP = FrmMainApp.CopyPoolDict.Any(predicate: l => l.Key == attribute); // https://stackoverflow.com/a/57437756/3968494
+                    bool dataInCopyKVP =
+                        FrmMainApp.CopyPoolDict.Any(
+                            predicate: l =>
+                                l.Key ==
+                                attribute); // https://stackoverflow.com/a/57437756/3968494
                     if (dataInCopyKVP)
                     {
                         takenDateShiftDataExists = true;
@@ -884,8 +1013,9 @@ public partial class FrmPasteWhat : Form
                 CustomMessageBox customMessageBox = new(
                     text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                         messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                        captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
+                    caption: HelperControlAndMessageBoxHandling
+                       .GenericGetMessageBoxCaption(
+                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Information);
                 customMessageBox.ShowDialog();
@@ -906,20 +1036,23 @@ public partial class FrmPasteWhat : Form
             ElementAttribute.CreateDateDaysShift
         };
 
-        FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
+        FrmEditFileData frmEditFileDataInstance =
+            (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
 
         if (frmEditFileDataInstance != null)
         {
             ListView lvw = frmEditFileDataInstance.lvw_FileListEditImages;
             ListViewItem lvi = lvw.SelectedItems[index: 0];
-            DirectoryElement dirElemFileSource = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: FileListView.COL_NAME_PREFIX + FileListView.FileListColumns.GUID]
-                                                                                                                                 .Index]
-                                                                                                             .Text);
+            DirectoryElement dirElemFileSource =
+                lvi.Tag as DirectoryElement;
 
             // when USING EDIT we use the local data, therefore timeshifts can only possibly live in DtFileDataToWriteStage1PreQueue
             foreach (ElementAttribute attribute in listOfTagsToCopyTimeShifts)
             {
-                if (dirElemFileSource.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue))
+                if (dirElemFileSource.HasSpecificAttributeWithVersion(
+                        attribute: attribute,
+                        version: DirectoryElement.AttributeVersion
+                                                 .Stage1EditFormIntraTabTransferQueue))
                 {
                     createDateShiftDataExists = true;
                     break;
@@ -931,7 +1064,11 @@ public partial class FrmPasteWhat : Form
             // see if there is actually any paste-able data for the SOURCE file
             foreach (ElementAttribute attribute in listOfTagsToCopyTimeShifts)
             {
-                bool dataInCopyKVP = FrmMainApp.CopyPoolDict.Any(predicate: l => l.Key == attribute); // https://stackoverflow.com/a/57437756/3968494
+                bool dataInCopyKVP =
+                    FrmMainApp.CopyPoolDict.Any(
+                        predicate: l =>
+                            l.Key ==
+                            attribute); // https://stackoverflow.com/a/57437756/3968494
                 if (dataInCopyKVP)
                 {
                     createDateShiftDataExists = true;
@@ -946,7 +1083,9 @@ public partial class FrmPasteWhat : Form
             CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                     messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Information.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Information);
             customMessageBox.ShowDialog();

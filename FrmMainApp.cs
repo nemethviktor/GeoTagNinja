@@ -614,13 +614,7 @@ public partial class FrmMainApp : Form
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
                     DirectoryElement dirElemFileToModify =
-                        DirectoryElements.FindElementByItemGUID(
-                            GUID: lvi.SubItems[index: lvw_FileList
-                                                     .Columns[
-                                                          key: COL_NAME_PREFIX +
-                                                          FileListColumns.GUID]
-                                                     .Index]
-                                     .Text);
+                        lvi.Tag as DirectoryElement;
                     // don't do folders...
                     if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
@@ -1461,14 +1455,15 @@ public partial class FrmMainApp : Form
         ListView lvw = lvw_FileList;
         foreach (ListViewItem lvi in lvw.SelectedItems)
         {
-            filesToEditGUIDStringList.Add(item: lvi
-                                               .SubItems[
-                                                    index: lvw
-                                                          .Columns[
-                                                               key: COL_NAME_PREFIX +
-                                                               FileListColumns.GUID]
-                                                          .Index]
-                                               .Text);
+            DirectoryElement directoryElement =
+                lvi.Tag as DirectoryElement;
+
+            filesToEditGUIDStringList.Add(
+                item: directoryElement.GetAttributeValueString(
+                    attribute: ElementAttribute.GUID,
+                    version: DirectoryElement.AttributeVersion
+                                             .Original, // GUIDs don't change
+                    notFoundValue: null));
         }
 
         EditFileFormGeneric.ShowFrmEditFileData();
@@ -1622,14 +1617,7 @@ public partial class FrmMainApp : Form
                          frmMainAppInstance.lvw_FileList.SelectedItems)
                 {
                     DirectoryElement dirElemFileToModify =
-                        DirectoryElements.FindElementByItemGUID(
-                            GUID: lvi.SubItems[
-                                          index: lvw
-                                                .Columns[
-                                                     key: COL_NAME_PREFIX +
-                                                          FileListColumns.GUID]
-                                                .Index]
-                                     .Text);
+                        lvi.Tag as DirectoryElement;
                     // don't do folders...
                     if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
@@ -1778,14 +1766,15 @@ public partial class FrmMainApp : Form
         ListView lvw = lvw_FileList;
         foreach (ListViewItem lvi in lvw.SelectedItems)
         {
-            filesToEditGUIDStringList.Add(item: lvi
-                                               .SubItems[
-                                                    index: lvw
-                                                          .Columns[
-                                                               key: COL_NAME_PREFIX +
-                                                               FileListColumns.GUID]
-                                                          .Index]
-                                               .Text);
+            DirectoryElement directoryElement =
+                lvi.Tag as DirectoryElement;
+
+            filesToEditGUIDStringList.Add(
+                item: directoryElement.GetAttributeValueString(
+                    attribute: ElementAttribute.GUID,
+                    version: DirectoryElement.AttributeVersion
+                                             .Original, // GUIDs don't change
+                    notFoundValue: null));
         }
 
         EditFileFormGeneric.ShowFrmEditFileData();
@@ -1823,13 +1812,7 @@ public partial class FrmMainApp : Form
         foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
         {
             DirectoryElement dirElemFileToModify =
-                DirectoryElements.FindElementByItemGUID(
-                    GUID: lvi.SubItems[index: lvw_FileList
-                                             .Columns[
-                                                  key: COL_NAME_PREFIX +
-                                                       FileListColumns.GUID]
-                                             .Index]
-                             .Text);
+                lvi.Tag as DirectoryElement;
             if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {
                 validFilesToImport = true;
@@ -2062,13 +2045,7 @@ public partial class FrmMainApp : Form
         if (!_StopProcessingRows)
         {
             DirectoryElement dirElemFileToModify =
-                DirectoryElements.FindElementByItemGUID(
-                    GUID: lvi.SubItems[index: lvw_FileList
-                                             .Columns[
-                                                  key: COL_NAME_PREFIX +
-                                                       FileListColumns.GUID]
-                                             .Index]
-                             .Text);
+                lvi.Tag as DirectoryElement;
             string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
 
             HelperVariables.CurrentAltitude = null;
@@ -2163,8 +2140,8 @@ public partial class FrmMainApp : Form
 
                     lvi.SubItems[index: lvw_FileList
                                        .Columns[
-                                            key: ElementAttributeToColumnHeaderName(
-                                                elementAttribute:
+                                            key: GetElementAttributesColumnHeader(
+                                                attributeToFind:
                                                 toponomyDetail.attribute)]
                                        .Index]
                        .Text = toponomyDetail.toponomyOverwriteVal;
@@ -2247,8 +2224,8 @@ public partial class FrmMainApp : Form
 
                         lvi.SubItems[index: lvw_FileList
                                            .Columns[
-                                                key: ElementAttributeToColumnHeaderName(
-                                                    elementAttribute: toponomyDetail
+                                                key: GetElementAttributesColumnHeader(
+                                                    attributeToFind: toponomyDetail
                                                        .attribute)]
                                            .Index]
                            .Text = toponomyDetail.toponomyOverwriteVal;
@@ -2453,16 +2430,12 @@ public partial class FrmMainApp : Form
                 Logger.Trace(message: "Trigger FrmEditFileData");
                 filesToEditGUIDStringList.Clear();
 
-                ListView lvw = lvw_FileList;
-                ListViewItem lvi = lvw.SelectedItems[index: 0];
-                filesToEditGUIDStringList.Add(item: lvi
-                                                   .SubItems[
-                                                        index: lvw
-                                                           .Columns[
-                                                                key: COL_NAME_PREFIX +
-                                                                FileListColumns.GUID]
-                                                           .Index]
-                                                   .Text);
+                filesToEditGUIDStringList.Add(
+                    item: directoryElement.GetAttributeValueString(
+                        attribute: ElementAttribute.GUID,
+                        version: DirectoryElement.AttributeVersion
+                                                 .Original, // GUIDs don't change
+                        notFoundValue: null));
 
                 Logger.Trace(message: "Add File To lvw_FileListEditImages");
                 EditFileFormGeneric.ShowFrmEditFileData();
@@ -2487,13 +2460,7 @@ public partial class FrmMainApp : Form
             {
                 ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
                 DirectoryElement dirElemFileToModify =
-                    DirectoryElements.FindElementByItemGUID(
-                        GUID: lvi.SubItems[index: lvw_FileList
-                                                 .Columns[
-                                                      key: COL_NAME_PREFIX +
-                                                           FileListColumns.GUID]
-                                                 .Index]
-                                 .Text);
+                    lvw_FileList.SelectedItems[index: 0].Tag as DirectoryElement;
 
                 await UpdateLvwExifDataItems(directoryElement: dirElemFileToModify);
                 string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
@@ -2633,14 +2600,15 @@ public partial class FrmMainApp : Form
             ListView lvw = lvw_FileList;
             foreach (ListViewItem lvi in lvw.SelectedItems)
             {
-                filesToEditGUIDStringList.Add(item: lvi
-                                                   .SubItems[
-                                                        index: lvw
-                                                           .Columns[
-                                                                key: COL_NAME_PREFIX +
-                                                                FileListColumns.GUID]
-                                                           .Index]
-                                                   .Text);
+                DirectoryElement directoryElement =
+                    lvi.Tag as DirectoryElement;
+
+                filesToEditGUIDStringList.Add(
+                    item: directoryElement.GetAttributeValueString(
+                        attribute: ElementAttribute.GUID,
+                        version: DirectoryElement.AttributeVersion
+                                                 .Original, // GUIDs don't change
+                        notFoundValue: null));
             }
 
             EditFileFormGeneric.ShowFrmEditFileData();
@@ -2659,13 +2627,7 @@ public partial class FrmMainApp : Form
             {
                 ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
                 DirectoryElement dirElemFileToModify =
-                    DirectoryElements.FindElementByItemGUID(
-                        GUID: lvi.SubItems[index: lvw_FileList
-                                                 .Columns[
-                                                      key: COL_NAME_PREFIX +
-                                                           FileListColumns.GUID]
-                                                 .Index]
-                                 .Text);
+                    lvi.Tag as DirectoryElement;
 
                 // if .. (parent) then do a folder-up
                 if (dirElemFileToModify.Type ==
@@ -2903,8 +2865,8 @@ public partial class FrmMainApp : Form
                                             index: lvw
                                                   .Columns[
                                                        key:
-                                                       ElementAttributeToColumnHeaderName(
-                                                           elementAttribute: attribute)]
+                                                       GetElementAttributesColumnHeader(
+                                                           attributeToFind: attribute)]
                                                   .Index]
                                        .Text.ToString(
                                             provider: CultureInfo.InvariantCulture);
@@ -2983,13 +2945,7 @@ public partial class FrmMainApp : Form
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
                     DirectoryElement dirElemFileToModify =
-                        DirectoryElements.FindElementByItemGUID(
-                            GUID: lvi.SubItems[index: lvw_FileList
-                                                     .Columns[
-                                                          key: COL_NAME_PREFIX +
-                                                          FileListColumns.GUID]
-                                                     .Index]
-                                     .Text);
+                        lvi.Tag as DirectoryElement;
                     if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
                         filesAreSelected = true;
@@ -3003,13 +2959,7 @@ public partial class FrmMainApp : Form
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
                     DirectoryElement dirElemFileToModify =
-                        DirectoryElements.FindElementByItemGUID(
-                            GUID: lvi.SubItems[index: lvw_FileList
-                                                     .Columns[
-                                                          key: COL_NAME_PREFIX +
-                                                          FileListColumns.GUID]
-                                                     .Index]
-                                     .Text);
+                        lvi.Tag as DirectoryElement;
                     if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
                         foreach (ElementAttribute attribute in
@@ -3234,13 +3184,7 @@ public partial class FrmMainApp : Form
         {
             ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
             DirectoryElement dirElemFileToModify =
-                DirectoryElements.FindElementByItemGUID(
-                    GUID: lvi.SubItems[index: lvw
-                                             .Columns[
-                                                  key: COL_NAME_PREFIX +
-                                                       FileListColumns.GUID]
-                                             .Index]
-                             .Text);
+                lvi.Tag as DirectoryElement;
             if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {
                 latParseSuccess = double.TryParse(

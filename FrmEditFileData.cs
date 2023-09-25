@@ -193,11 +193,8 @@ public partial class FrmEditFileData : Form
            .Width = lvw.Width;
 
         string fileNameWithoutPath = lvi.Text;
-        DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(
-            GUID: lvi.SubItems[index: lvw
-                                     .Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                     .Index]
-                     .Text);
+        DirectoryElement dirElemFileToModify =
+            lvi.Tag as DirectoryElement;
         FrmMainApp frmMainAppInstance =
             (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         btn_InsertFromTakenDate.Enabled = false;
@@ -637,7 +634,8 @@ public partial class FrmEditFileData : Form
 
             try
             {
-                if ((double)returnDataInDirectoryElement == NullDoubleEquivalent)
+                if (returnDataInDirectoryElement != null &&
+                    (double)returnDataInDirectoryElement == NullDoubleEquivalent)
                 {
                     returnDataInDirectoryElement = null;
                 }
@@ -655,7 +653,8 @@ public partial class FrmEditFileData : Form
 
             try
             {
-                if ((DateTime)returnDataInDirectoryElement == NullDateTimeEquivalent)
+                if (returnDataInDirectoryElement != null &&
+                    (DateTime)returnDataInDirectoryElement == NullDateTimeEquivalent)
                 {
                     returnDataInDirectoryElement = null;
                 }
@@ -1207,13 +1206,7 @@ public partial class FrmEditFileData : Form
                 ListViewItem lvi = lvw.SelectedItems[index: 0];
 
                 DirectoryElement dirElemFileToModify =
-                    DirectoryElements.FindElementByItemGUID(
-                        GUID: lvi.SubItems[index: lvw
-                                                 .Columns[
-                                                      key: COL_NAME_PREFIX +
-                                                           FileListColumns.GUID]
-                                                 .Index]
-                                 .Text);
+                    lvi.Tag as DirectoryElement;
                 foreach ((ElementAttribute attribute, string toponomyOverwriteVal)
                          toponomyDetail in toponomyOverwrites)
                 {
@@ -1258,14 +1251,7 @@ public partial class FrmEditFileData : Form
                     ListViewItem lvi = lvw.SelectedItems[index: 0];
 
                     DirectoryElement dirElemFileToModify =
-                        DirectoryElements.FindElementByItemGUID(
-                            GUID: lvi.SubItems[
-                                          index: lvw
-                                                .Columns[
-                                                     key: COL_NAME_PREFIX +
-                                                          FileListColumns.GUID]
-                                                .Index]
-                                     .Text);
+                        lvi.Tag as DirectoryElement;
 
                     ElementAttribute attribute =
                         GetElementAttributesElementAttribute(
@@ -1298,17 +1284,11 @@ public partial class FrmEditFileData : Form
         logger.Debug(message: "Starting");
         if (lvw_FileListEditImages.SelectedItems.Count > 0)
         {
-            ListView lvw = lvw_FileListEditImages;
-            ListViewItem lvi = lvw.SelectedItems[index: 0];
+            ListView lvwEditImages = lvw_FileListEditImages;
+            ListViewItem lvi = lvwEditImages.SelectedItems[index: 0];
 
             DirectoryElement dirElemFileToModify =
-                DirectoryElements.FindElementByItemGUID(
-                    GUID: lvi.SubItems[index: lvw
-                                             .Columns[
-                                                  key: COL_NAME_PREFIX +
-                                                       FileListColumns.GUID]
-                                             .Index]
-                             .Text);
+                lvi.Tag as DirectoryElement;
             string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
 
             if (File.Exists(path: fileNameWithPath))
@@ -1522,13 +1502,7 @@ public partial class FrmEditFileData : Form
             ListViewItem lvi = lvw.SelectedItems[index: 0];
 
             DirectoryElement dirElemFileToModify =
-                DirectoryElements.FindElementByItemGUID(
-                    GUID: lvi.SubItems[index: lvw
-                                             .Columns[
-                                                  key: COL_NAME_PREFIX +
-                                                       FileListColumns.GUID]
-                                             .Index]
-                             .Text);
+                lvi.Tag as DirectoryElement;
             if (dirElemFileToModify != null &&
                 dirElemFileToModify.HasSpecificAttributeWithVersion(
                     attribute: attribute,
@@ -1867,11 +1841,8 @@ public partial class FrmEditFileData : Form
         ListView lvw = lvw_FileListEditImages;
         ListViewItem lvi = lvw.SelectedItems[index: 0];
 
-        DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(
-            GUID: lvi.SubItems[index: lvw
-                                     .Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                     .Index]
-                     .Text);
+        DirectoryElement dirElemFileToModify =
+            lvi.Tag as DirectoryElement;
 
         IEnumerable<Control> cGbx_CreateDate =
             helperNonstatic.GetAllControls(control: gbx_CreateDate);
