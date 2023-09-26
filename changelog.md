@@ -5,8 +5,10 @@
   - App Version Bump: 1.14
   - Implemented an Export/Import functionality for Settings and Custom Rules
   - Bumped exifTool to v12.67
-  - Streamlined some code relating to the reusability of on-the-fly Form generation
+  - Streamlined a lot of code relating to the reusability of on-the-fly Form generation
+	- Same goes for generic reusability, messageboxes, enums, buttons, whatnots
   - Various further Dark Mode changes/improvements
+  - Added the capability to Restart the app immediately if the user wants so in the Settings
 - BUGS & FIXES:
   - Fixed Country DropDown not displaying anything if the existing data wasn't on the predefined list. It now takes value from CountryCode
 

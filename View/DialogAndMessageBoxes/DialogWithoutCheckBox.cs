@@ -96,6 +96,7 @@ internal class DialogWithoutCheckBox
                     buttonsDictionary.ElementAt(index: i);
                 Button btn = new();
                 btn.Text = keyValuePair.Key;
+                btn.Tag = keyValuePair.Value;
                 switch (keyValuePair.Value.ToLower())
                 {
                     case "yes":
@@ -120,6 +121,10 @@ internal class DialogWithoutCheckBox
                     else if (promptBoxForm.CancelButton == btn)
                     {
                         returnChoicesList.Add(item: cancelButtonReturnText);
+                    }
+                    else
+                    {
+                        returnChoicesList.Add(item: btn.Tag.ToString());
                     }
 
                     promptBoxForm.Close();

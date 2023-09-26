@@ -1265,19 +1265,21 @@ public partial class FrmSettings : Form
         Dictionary<string, string> buttonsDictionary = new()
         {
             {
-                "RestartNow", HelperDataLanguageTZ.DataReadDTObjectText(
+                HelperDataLanguageTZ.DataReadDTObjectText(
                     objectType: ControlType.Button,
-                    objectName: "btn_RestartNow")
+                    objectName: "btn_RestartNow"),
+                "RestartNow"
             },
             {
-                "RestartLater", HelperDataLanguageTZ.DataReadDTObjectText(
+                HelperDataLanguageTZ.DataReadDTObjectText(
                     objectType: ControlType.Button,
-                    objectName: "btn_RestartLater")
+                    objectName: "btn_RestartLater"),
+                "RestartLater"
             }
         };
 
         // ReSharper disable once InconsistentNaming
-        List<string> ItemsToExport = DialogWithoutCheckBox.DisplayAndReturnList(
+        List<string> displayAndReturnList = DialogWithoutCheckBox.DisplayAndReturnList(
             labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                 messageBoxName: "mbx_FrmSettings_PleaseRestartApp"),
             caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
@@ -1285,11 +1287,15 @@ public partial class FrmSettings : Form
                                               .ToString()),
             buttonsDictionary: buttonsDictionary,
             orientation: "Horizontal");
-        if (ItemsToExport.Contains(item: "RestartNow"))
+
+        // basically this triggers an error in debug mode but works ok in prod.
+        #if !DEBUG
+        if (displayAndReturnList.Contains(item: "RestartNow"))
         {
             Process.Start(fileName: Application.ExecutablePath);
             Application.Exit();
         }
+        #endif
     }
 
     /// <summary>

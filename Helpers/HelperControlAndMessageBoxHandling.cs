@@ -43,8 +43,6 @@ internal static class HelperControlAndMessageBoxHandling
     /// <returns>MessageBox text contents</returns>
     internal static string GenericGetMessageBoxText(string messageBoxName)
     {
-        FrmMainApp frmMainAppInstance =
-            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         return HelperDataLanguageTZ.DataReadDTObjectText(
             objectType: ControlType.MessageBox,
             objectName: messageBoxName
