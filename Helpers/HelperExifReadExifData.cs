@@ -1085,44 +1085,44 @@ internal static class HelperExifReadExifData
                     // Finally ensure that dec sep. is "."
                     try
                     {
-                        tmpLatLongRefVal = ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: dataPoint + "Ref")
-                            .Substring(startIndex: 0, length: 1);
+                        tmpLatLongRefVal =
+                            ExifGetRawDataPointFromExif(
+                                    dtFileExif: dtFileExif, dataPoint: dataPoint + "Ref")
+                               .Substring(startIndex: 0, length: 1);
                     }
                     catch
                     {
                         tmpLatLongRefVal = FrmMainApp.NullStringEquivalentGeneric;
                     }
 
-                    if (!tryDataValue.Contains(value: tmpLatLongRefVal) && tmpLatLongRefVal != FrmMainApp.NullStringEquivalentGeneric)
+                    if (!tryDataValue.Contains(value: tmpLatLongRefVal) &&
+                        tmpLatLongRefVal != FrmMainApp.NullStringEquivalentGeneric)
                     {
                         tryDataValue = tmpLatLongRefVal + tryDataValue;
                     }
 
-                    tmpOutLatLongVal = HelperExifDataPointInteractions.AdjustLatLongNegative(point: tryDataValue)
-                        .ToString()
-                        .Replace(oldChar: ',', newChar: '.');
+                    tmpOutLatLongVal = HelperExifDataPointInteractions
+                                      .AdjustLatLongNegative(point: tryDataValue)
+                                      .ToString()
+                                      .Replace(oldChar: ',', newChar: '.');
                     tryDataValue = tmpOutLatLongVal;
                 }
 
                 tryDataValue = tmpOutLatLongVal;
                 break;
             case "Coordinates" or "DestCoordinates":
-                string isDest;
-                if (dataPoint.Contains(value: "Dest"))
-                {
-                    isDest = "Dest";
-                }
-                else
-                {
-                    isDest = "";
-                }
+                string isDest = dataPoint.Contains(value: "Dest")
+                    ? "Dest"
+                    : "";
                 // this is entirely the duplicate of the above
-
                 // check there is lat/long
-                string tmpLatVal = ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: "GPS" + isDest + "Latitude")
-                    .Replace(oldChar: ',', newChar: '.');
-                tmpLongVal = ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: "GPS" + isDest + "Longitude")
-                    .Replace(oldChar: ',', newChar: '.');
+                string tmpLatVal =
+                    ExifGetRawDataPointFromExif(dtFileExif: dtFileExif,
+                                                dataPoint: "GPS" + isDest + "Latitude")
+                       .Replace(oldChar: ',', newChar: '.');
+                tmpLongVal = ExifGetRawDataPointFromExif(
+                        dtFileExif: dtFileExif, dataPoint: "GPS" + isDest + "Longitude")
+                   .Replace(oldChar: ',', newChar: '.');
                 if (tmpLatVal == "")
                 {
                     tmpLatVal = FrmMainApp.NullStringEquivalentGeneric;
@@ -1133,41 +1133,42 @@ internal static class HelperExifReadExifData
                     tmpLongVal = FrmMainApp.NullStringEquivalentGeneric;
                 }
 
-                if (ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: "GPS" + isDest + "LatitudeRef")
-                        .Length >
+                if (ExifGetRawDataPointFromExif(dtFileExif: dtFileExif,
+                                                dataPoint: "GPS" + isDest + "LatitudeRef")
+                       .Length >
                     0 &&
-                    ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: "GPS" + isDest + "LongitudeRef")
-                        .Length >
+                    ExifGetRawDataPointFromExif(dtFileExif: dtFileExif,
+                                                dataPoint: "GPS" +
+                                                           isDest +
+                                                           "LongitudeRef")
+                       .Length >
                     0)
                 {
-                    tmpLatRefVal = ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: "GPS" + isDest + "LatitudeRef")
-                        .Substring(startIndex: 0, length: 1)
-                        .Replace(oldChar: ',', newChar: '.');
-                    tmpLongRefVal = ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: "GPS" + isDest + "LongitudeRef")
-                        .Substring(startIndex: 0, length: 1)
-                        .Replace(oldChar: ',', newChar: '.');
+                    tmpLatRefVal = ExifGetRawDataPointFromExif(
+                                       dtFileExif: dtFileExif,
+                                       dataPoint: "GPS" + isDest + "LatitudeRef")
+                                  .Substring(startIndex: 0, length: 1)
+                                  .Replace(oldChar: ',', newChar: '.');
+                    tmpLongRefVal = ExifGetRawDataPointFromExif(
+                                        dtFileExif: dtFileExif,
+                                        dataPoint: "GPS" + isDest + "LongitudeRef")
+                                   .Substring(startIndex: 0, length: 1)
+                                   .Replace(oldChar: ',', newChar: '.');
                 }
 
                 // this shouldn't really happen but ET v12.49 extracts trackfile data in the wrong format so...
-                else if ((tmpLatVal.Contains(value: 'N') || tmpLatVal.Contains(value: 'S')) && (tmpLongVal.Contains(value: 'E') || tmpLongVal.Contains(value: 'W')))
+                else if ((tmpLatVal.Contains(value: 'N') ||
+                          tmpLatVal.Contains(value: 'S')) &&
+                         (tmpLongVal.Contains(value: 'E') ||
+                          tmpLongVal.Contains(value: 'W')))
                 {
-                    if (tmpLatVal.Contains(value: 'N'))
-                    {
-                        tmpLatRefVal = "N";
-                    }
-                    else
-                    {
-                        tmpLatRefVal = "S";
-                    }
+                    tmpLatRefVal = tmpLatVal.Contains(value: 'N')
+                        ? "N"
+                        : "S";
 
-                    if (tmpLongVal.Contains(value: 'E'))
-                    {
-                        tmpLongRefVal = "E";
-                    }
-                    else
-                    {
-                        tmpLongRefVal = "W";
-                    }
+                    tmpLongRefVal = tmpLongVal.Contains(value: 'E')
+                        ? "E"
+                        : "W";
                 }
                 else
                 {
@@ -1176,7 +1177,8 @@ internal static class HelperExifReadExifData
                 }
 
                 // check there is one bit of data for both components
-                if (tmpLatVal != FrmMainApp.NullStringEquivalentGeneric && tmpLongVal != FrmMainApp.NullStringEquivalentGeneric)
+                if (tmpLatVal != FrmMainApp.NullStringEquivalentGeneric &&
+                    tmpLongVal != FrmMainApp.NullStringEquivalentGeneric)
                 {
                     // stick Ref at the end of LatLong
                     if (!tmpLatVal.Contains(value: tmpLatRefVal))
@@ -1189,12 +1191,14 @@ internal static class HelperExifReadExifData
                         tmpLongVal += tmpLongRefVal;
                     }
 
-                    tmpLatVal = HelperExifDataPointInteractions.AdjustLatLongNegative(point: tmpLatVal)
-                        .ToString()
-                        .Replace(oldChar: ',', newChar: '.');
-                    tmpLongVal = HelperExifDataPointInteractions.AdjustLatLongNegative(point: tmpLongVal)
-                        .ToString()
-                        .Replace(oldChar: ',', newChar: '.');
+                    tmpLatVal = HelperExifDataPointInteractions
+                               .AdjustLatLongNegative(point: tmpLatVal)
+                               .ToString()
+                               .Replace(oldChar: ',', newChar: '.');
+                    tmpLongVal = HelperExifDataPointInteractions
+                                .AdjustLatLongNegative(point: tmpLongVal)
+                                .ToString()
+                                .Replace(oldChar: ',', newChar: '.');
                     tryDataValue = tmpLatVal + ";" + tmpLongVal;
                 }
                 else
@@ -1207,26 +1211,36 @@ internal static class HelperExifReadExifData
                 if (tryDataValue.Contains(value: "m"))
                 {
                     tryDataValue = tryDataValue.Split('m')[0]
-                        .Trim()
-                        .Replace(oldChar: ',', newChar: '.');
+                                               .Trim()
+                                               .Replace(oldChar: ',', newChar: '.');
                 }
 
                 if (tryDataValue.Contains(value: "/"))
                 {
-                    if (tryDataValue.Contains(value: ",") || tryDataValue.Contains(value: "."))
+                    if (tryDataValue.Contains(value: ",") ||
+                        tryDataValue.Contains(value: "."))
                     {
                         tryDataValue = tryDataValue.Split('/')[0]
-                            .Trim()
-                            .Replace(oldChar: ',', newChar: '.');
+                                                   .Trim()
+                                                   .Replace(oldChar: ',', newChar: '.');
                     }
                     else // attempt to convert it to decimal
                     {
                         try
                         {
-                            bool parseBool = double.TryParse(s: tryDataValue.Split('/')[0], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double numerator);
-                            parseBool = double.TryParse(s: tryDataValue.Split('/')[1], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double denominator);
-                            tryDataValue = Math.Round(value: numerator / denominator, digits: 2)
-                                .ToString(provider: CultureInfo.InvariantCulture);
+                            bool parseBool = double.TryParse(
+                                s: tryDataValue.Split('/')[0], style: NumberStyles.Any,
+                                provider: CultureInfo.InvariantCulture,
+                                result: out double numerator);
+                            parseBool = double.TryParse(
+                                s: tryDataValue.Split('/')[1], style: NumberStyles.Any,
+                                provider: CultureInfo.InvariantCulture,
+                                result: out double denominator);
+                            tryDataValue = Math
+                                          .Round(value: numerator / denominator,
+                                                 digits: 2)
+                                          .ToString(
+                                               provider: CultureInfo.InvariantCulture);
                         }
                         catch
                         {
@@ -1238,7 +1252,7 @@ internal static class HelperExifReadExifData
                 break;
             case "GPSAltitudeRef":
                 if (tryDataValue.ToLower()
-                        .Contains(value: "below") ||
+                                .Contains(value: "below") ||
                     tryDataValue.Contains(value: "1"))
                 {
                     tryDataValue = "Below Sea Level";
@@ -1251,7 +1265,7 @@ internal static class HelperExifReadExifData
                 break;
             case "ExposureTime":
                 tryDataValue = tryDataValue.Replace(oldValue: "sec", newValue: "")
-                    .Trim();
+                                           .Trim();
                 break;
             case "Fnumber" or "FocalLength" or "FocalLengthIn35mmFormat" or "ISO":
                 if (tryDataValue != FrmMainApp.NullStringEquivalentGeneric)
@@ -1262,44 +1276,57 @@ internal static class HelperExifReadExifData
                         // this might need a bit of debugging and community feeback. or someone with decent regex knowledge
                         if (tryDataValue.Contains(value: ':'))
                         {
-                            tryDataValue = Regex.Replace(input: tryDataValue, pattern: @"[^\d:.]", replacement: "")
-                                .Split(':')
-                                .Last();
+                            tryDataValue = Regex
+                                          .Replace(input: tryDataValue,
+                                                   pattern: @"[^\d:.]", replacement: "")
+                                          .Split(':')
+                                          .Last();
                         }
                         else
                         {
                             // this is untested. soz. feedback welcome.
-                            tryDataValue = Regex.Replace(input: tryDataValue, pattern: @"[^\d:.]", replacement: "");
+                            tryDataValue = Regex.Replace(
+                                input: tryDataValue, pattern: @"[^\d:.]",
+                                replacement: "");
                         }
                     }
                     else
                     {
                         tryDataValue = tryDataValue.Replace(oldValue: "mm", newValue: "")
-                            .Replace(oldValue: "f/", newValue: "")
-                            .Replace(oldValue: "f", newValue: "")
-                            .Replace(oldValue: "[", newValue: "")
-                            .Replace(oldValue: "]", newValue: "")
-                            .Trim();
+                                                   .Replace(oldValue: "f/", newValue: "")
+                                                   .Replace(oldValue: "f", newValue: "")
+                                                   .Replace(oldValue: "[", newValue: "")
+                                                   .Replace(oldValue: "]", newValue: "")
+                                                   .Trim();
                     }
 
                     if (tryDataValue.Contains(value: "/"))
                     {
-                        tryDataValue = Math.Round(value: double.Parse(s: tryDataValue.Split('/')[0], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture) / double.Parse(s: tryDataValue.Split('/')[1], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture), digits: 1)
-                            .ToString();
+                        tryDataValue = Math
+                                      .Round(
+                                           value: double.Parse(
+                                                      s: tryDataValue.Split('/')[0],
+                                                      style: NumberStyles.Any,
+                                                      provider: CultureInfo
+                                                         .InvariantCulture) /
+                                                  double.Parse(
+                                                      s: tryDataValue.Split('/')[1],
+                                                      style: NumberStyles.Any,
+                                                      provider: CultureInfo
+                                                         .InvariantCulture),
+                                           digits: 1)
+                                      .ToString();
                     }
                 }
 
                 break;
             case /*"FileModifyDate" or */"TakenDate" or "CreateDate":
             {
-                if (DateTime.TryParse(s: tryDataValue, result: out DateTime outDateTime))
-                {
-                    tryDataValue = HelperGenericTypeOperations.ConvertStringToDateTimeBackToString(dateTimeToConvert: tryDataValue);
-                }
-                else
-                {
-                    tryDataValue = FrmMainApp.NullStringEquivalentGeneric;
-                }
+                tryDataValue =
+                    DateTime.TryParse(s: tryDataValue, result: out DateTime outDateTime)
+                        ? HelperGenericTypeOperations.ConvertStringToDateTimeBackToString(
+                            dateTimeToConvert: tryDataValue)
+                        : FrmMainApp.NullStringEquivalentGeneric;
 
                 break;
             }

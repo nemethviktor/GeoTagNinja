@@ -191,14 +191,9 @@ public partial class FrmManageFavourites : Form
                 if (cItem is TextBox txt)
                 {
                     string oldText = HelperDataOtherDataRelated.DataGetFirstOrDefaultFromKVPList(lstIn: lstOriginals, keyEqualsWhat: cItem.Name);
-                    if (oldText != txt.Text)
-                    {
-                        txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Bold);
-                    }
-                    else
-                    {
-                        txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Regular);
-                    }
+                    txt.Font = oldText != txt.Text
+                        ? new Font(prototype: txt.Font, newStyle: FontStyle.Bold)
+                        : new Font(prototype: txt.Font, newStyle: FontStyle.Regular);
                 }
             }
         }

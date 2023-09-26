@@ -1011,14 +1011,9 @@ public partial class FileListView : System.Windows.Forms.ListView
         if (e.Column == LvwColumnSorter.SortColumn)
         {
             // Column clicked is current sort column --> Reverse order
-            if (LvwColumnSorter.SortOrder == SortOrder.Ascending)
-            {
-                LvwColumnSorter.SortOrder = SortOrder.Descending;
-            }
-            else
-            {
-                LvwColumnSorter.SortOrder = SortOrder.Ascending;
-            }
+            LvwColumnSorter.SortOrder = LvwColumnSorter.SortOrder == SortOrder.Ascending
+                ? SortOrder.Descending
+                : SortOrder.Ascending;
         }
         else
         {

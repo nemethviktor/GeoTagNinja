@@ -752,14 +752,7 @@ public partial class FrmSettings : Form
 
                 if (tmpCtrlName.Contains(value: "ckb_ProcessOriginalFile"))
                 {
-                    if (box.Checked)
-                    {
-                        ckb_ResetFileDateToCreated.Enabled = true;
-                    }
-                    else
-                    {
-                        ckb_ResetFileDateToCreated.Enabled = false;
-                    }
+                    ckb_ResetFileDateToCreated.Enabled = box.Checked;
                 }
             }
         }

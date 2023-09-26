@@ -1184,16 +1184,10 @@ public partial class FrmEditFileData : Form
                                                     .ToString()
                                                     .Length -
                                                  3);
-                        if (!TZOffset.StartsWith(value: NullStringEquivalentGeneric))
-                        {
-                            toponomyOverwrites.Add(
-                                item: (ElementAttribute.OffsetTime, "+" + TZOffset));
-                        }
-                        else
-                        {
-                            toponomyOverwrites.Add(
-                                item: (ElementAttribute.OffsetTime, TZOffset));
-                        }
+                        toponomyOverwrites.Add(
+                            item: !TZOffset.StartsWith(value: NullStringEquivalentGeneric)
+                                ? (ElementAttribute.OffsetTime, "+" + TZOffset)
+                                : (ElementAttribute.OffsetTime, TZOffset));
                     }
                 }
                 catch
@@ -1658,19 +1652,13 @@ public partial class FrmEditFileData : Form
     private void GetTimeZoneOffset()
     {
         string strOffsetTime = "";
+        // ReSharper disable once InconsistentNaming
         bool useDST = ckb_UseDST.Checked;
         try
         {
-            if (!useDST)
-            {
-                strOffsetTime =
-                    cbx_OffsetTimeList.Text.Substring(startIndex: 1, length: 6);
-            }
-            else
-            {
-                strOffsetTime =
-                    cbx_OffsetTimeList.Text.Substring(startIndex: 8, length: 6);
-            }
+            strOffsetTime = cbx_OffsetTimeList.Text.Substring(startIndex: !useDST
+                    ? 1
+                    : 8, length: 6);
         }
         catch
         {

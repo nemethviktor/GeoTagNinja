@@ -158,20 +158,13 @@ public partial class FrmImportGpx : Form
 
     private string updatelbl_TZValue()
     {
-        if (ckb_UseDST.Checked == false)
-        {
-            SelectedTzAdjustment = cbx_UseTimeZone.Text.Split('#')[0]
-                .TrimStart(' ')
-                .TrimEnd(' ')
-                .Substring(startIndex: 1, length: 6);
-        }
-        else
-        {
-            SelectedTzAdjustment = cbx_UseTimeZone.Text.Split('#')[0]
-                .TrimStart(' ')
-                .TrimEnd(' ')
-                .Substring(startIndex: 8, length: 6);
-        }
+        SelectedTzAdjustment = cbx_UseTimeZone.Text.Split('#')[0]
+                                              .TrimStart(' ')
+                                              .TrimEnd(' ')
+                                              .Substring(
+                                                   startIndex: ckb_UseDST.Checked == false
+                                                       ? 1
+                                                       : 8, length: 6);
 
         return SelectedTzAdjustment;
     }
@@ -258,14 +251,7 @@ public partial class FrmImportGpx : Form
     {
         pbx_importOneFile.Enabled = rbt_importOneFile.Checked;
         lbl_importOneFile.Enabled = rbt_importOneFile.Checked;
-        if (rbt_importOneFile.Checked)
-        {
-            lbl_importFromAnotherFolder.Enabled = false;
-        }
-        else
-        {
-            lbl_importFromAnotherFolder.Enabled = true;
-        }
+        lbl_importFromAnotherFolder.Enabled = !rbt_importOneFile.Checked;
     }
 
     private void rbt_importFromCurrentFolder_CheckedChanged(object sender,
@@ -328,14 +314,9 @@ public partial class FrmImportGpx : Form
         {
             trackFileLocationType = "folder";
             // this wouldn't exist in collectionMode
-            if (rbt_importFromCurrentFolder.Checked)
-            {
-                trackFileLocationVal = _frmMainAppInstance.tbx_FolderName.Text;
-            }
-            else
-            {
-                trackFileLocationVal = lbl_importFromAnotherFolder.Text;
-            }
+            trackFileLocationVal = rbt_importFromCurrentFolder.Checked
+                ? _frmMainAppInstance.tbx_FolderName.Text
+                : lbl_importFromAnotherFolder.Text;
         }
 
         int timeShiftSeconds = 0;

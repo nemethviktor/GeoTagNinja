@@ -31,14 +31,9 @@ internal static class HelperAPIVersionCheckers
         {
             onlineExifToolVer = new WebClient().DownloadString(address: "http://exiftool.org/ver.txt");
             parsedResult = decimal.TryParse(s: onlineExifToolVer, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out parsedDecimal);
-            if (parsedResult)
-            {
-                returnVal = parsedDecimal;
-            }
-            else
-            {
-                returnVal = 0.0m;
-            }
+            returnVal = parsedResult
+                ? parsedDecimal
+                : 0.0m;
         }
         catch
         {

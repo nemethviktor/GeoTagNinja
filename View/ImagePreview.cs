@@ -32,14 +32,9 @@ public partial class ImagePreview : PictureBox
         set
         {
             base.Image = value;
-            if (value == null)
-            {
-                _textToShow = EmptyText;
-            }
-            else
-            {
-                _textToShow = null;
-            }
+            _textToShow = value == null
+                ? EmptyText
+                : null;
         }
     }
 

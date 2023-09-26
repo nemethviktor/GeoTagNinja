@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 
 namespace GeoTagNinja.Helpers;
@@ -164,19 +163,16 @@ internal static class HelperDataDatabaseAndStartup
 
                 if (controlName == "ckb_AddXMPSideCar")
                 {
-                    if (HelperGenericAncillaryListsArrays.FileExtensionsThatUseXMP()
-                        .Contains(value: fileExtension))
-                    {
-                        controlDefaultValue = "true";
-                    }
-                    else
-                    {
-                        controlDefaultValue = "false";
-                    }
+                    controlDefaultValue = HelperGenericAncillaryListsArrays
+                                         .FileExtensionsThatUseXMP()
+                                         .Contains(value: fileExtension)
+                        ? "true"
+                        : "false";
                 }
                 else if (controlName == "ckb_ProcessOriginalFile")
                 {
-                    if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
+                    if (tmpCtrlGroup.Contains(value: "raw") ||
+                        tmpCtrlGroup.Contains(value: "tiff"))
                     {
                         controlDefaultValue = "false";
                     }
@@ -188,7 +184,8 @@ internal static class HelperDataDatabaseAndStartup
 
                 else if (controlName == "ckb_ResetFileDateToCreated")
                 {
-                    if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
+                    if (tmpCtrlGroup.Contains(value: "raw") ||
+                        tmpCtrlGroup.Contains(value: "tiff"))
                     {
                         controlDefaultValue = "true";
                     }
