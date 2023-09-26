@@ -212,8 +212,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 CustomMessageBox customMessageBox = new(
                     text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                         messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                        captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                    caption: HelperControlAndMessageBoxHandling
+                       .GenericGetMessageBoxCaption(
+                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Error);
                 customMessageBox.ShowDialog();
@@ -259,8 +260,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 CustomMessageBox customMessageBox = new(
                     text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                         messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                        captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                    caption: HelperControlAndMessageBoxHandling
+                       .GenericGetMessageBoxCaption(
+                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Error);
                 customMessageBox.ShowDialog();
@@ -408,11 +410,13 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
             CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_WarningMultipleImageFilesForXMP") +
+                          messageBoxName:
+                          "mbx_FrmMainApp_WarningMultipleImageFilesForXMP") +
                       NewLine +
                       overlappingXmpFileStr,
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();

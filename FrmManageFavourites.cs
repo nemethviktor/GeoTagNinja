@@ -39,9 +39,10 @@ public partial class FrmManageFavourites : Form
             )
             {
                 // gets logged inside.
-                cItem.Text = HelperDataLanguageTZ.DataReadDTObjectText(objectType: cItem.GetType()
-                                                                           .Name,
-                                                                       objectName: cItem.Name);
+                cItem.Text = HelperDataLanguageTZ.DataReadDTObjectText(
+                    objectType: HelperDataLanguageTZ.GetControlType(
+                        controlType: cItem.GetType()),
+                    objectName: cItem.Name);
             }
             // there is only one dropdown atm.
             else if (cItem.Name == "cbx_Country")
@@ -132,7 +133,8 @@ public partial class FrmManageFavourites : Form
             text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                 messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"),
             caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                   .Information.ToString()),
             buttons: MessageBoxButtons.OK,
             icon: MessageBoxIcon.Information);
         customMessageBox.ShowDialog();

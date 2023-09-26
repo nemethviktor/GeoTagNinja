@@ -764,7 +764,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             {
                 Logger.Trace(message: "Loading localization for: " + clh.Name);
                 clh.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: "ColumnHeader",
+                    objectType: ControlType.ColumnHeader,
                     objectName: clh.Name
                 );
                 Logger.Trace(message: "Loaded localization: " +

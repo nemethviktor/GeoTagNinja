@@ -112,7 +112,8 @@ internal static class HelperAPIVersionCheckers
                           messageBoxName: "mbx_Helper_WarningGTNVerAPIResponse") +
                       response_GTNVersionQuery.StatusCode,
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
@@ -216,9 +217,13 @@ internal static class HelperAPIVersionCheckers
 
                 CustomMessageBox customMessageBox = new(
                     text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                              messageBoxName: "mbx_FrmMainApp_InfoNewExifToolVersionExists") +
-                          newestExifToolVersionOnline.ToString(provider: CultureInfo.InvariantCulture),
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                              messageBoxName:
+                              "mbx_FrmMainApp_InfoNewExifToolVersionExists") +
+                          newestExifToolVersionOnline.ToString(
+                              provider: CultureInfo.InvariantCulture),
+                    caption: HelperControlAndMessageBoxHandling
+                       .GenericGetMessageBoxCaption(
+                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
                     buttons: MessageBoxButtons.YesNo,
                     icon: MessageBoxIcon.Asterisk);
                 DialogResult dialogResult = customMessageBox.ShowDialog();
@@ -255,9 +260,13 @@ internal static class HelperAPIVersionCheckers
             if (newestOnlineGTNVersion > currentGTNVersionBuild)
             {
                 CustomMessageBox customMessageBox = new(
-                        text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoNewGTNVersionExists") +
+                        text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                                  messageBoxName:
+                                  "mbx_FrmMainApp_InfoNewGTNVersionExists") +
                               newestOnlineGTNVersion,
-                        caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                        caption: HelperControlAndMessageBoxHandling
+                           .GenericGetMessageBoxCaption(
+                                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
                         buttons: MessageBoxButtons.YesNo,
                         icon: MessageBoxIcon.Asterisk)
                     ;

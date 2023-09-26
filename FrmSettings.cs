@@ -315,7 +315,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "CountryCode",
             Name = COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE,
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: COL_NAME_PREFIX + FileListColumns.COUNTRY),
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader,
+                objectName: COL_NAME_PREFIX + FileListColumns.COUNTRY),
             DataSource = clh_CountryCodeOptions.ToList(), // needs to be a list
             ValueMember = "Key",
             DisplayMember = "Value"
@@ -325,7 +327,8 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "DataPointName",
             Name = "clh_DataPointName",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_DataPointName")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader, objectName: "clh_DataPointName")
         };
 
         // e.g.: "AdminName1","AdminName2"...
@@ -338,7 +341,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "DataPointConditionType",
             Name = "clh_DataPointConditionType",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_DataPointConditionType")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader,
+                objectName: "clh_DataPointConditionType")
         };
 
         // e.g.: "Is","Contains"...
@@ -351,14 +356,17 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "DataPointConditionValue",
             Name = "clh_DataPointConditionValue",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_DataPointConditionValue")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader,
+                objectName: "clh_DataPointConditionValue")
         };
 
         DataGridViewComboBoxColumn clh_TargetPointName = new()
         {
             DataPropertyName = "TargetPointName",
             Name = "clh_TargetPointName",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointName")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader, objectName: "clh_TargetPointName")
         };
 
         // e.g.:  "State","City"...
@@ -371,7 +379,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "TargetPointOutcome",
             Name = "clh_TargetPointOutcome",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointOutcome")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader,
+                objectName: "clh_TargetPointOutcome")
         };
 
         // e.g.: "AdminName1","AdminName2"... +Null (empty)" + Custom
@@ -384,7 +394,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "TargetPointOutcomeCustom",
             Name = "clh_TargetPointOutcomeCustom",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointOutcomeCustom")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader,
+                objectName: "clh_TargetPointOutcomeCustom")
         };
 
         dgv_CustomRules.Columns.AddRange(
@@ -421,7 +433,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "CountryCode",
             Name = COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE,
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: COL_NAME_PREFIX + FileListColumns.COUNTRY),
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader,
+                objectName: COL_NAME_PREFIX + FileListColumns.COUNTRY),
             DataSource = clh_CountryCodeOptions.ToList(), // needs to be a list
             ValueMember = "Key",
             DisplayMember = "Value",
@@ -432,7 +446,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "TargetPointNameCustomCityLogic",
             Name = "clh_TargetPointNameCustomCityLogic",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointNameCustomCityLogic")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader,
+                objectName: "clh_TargetPointNameCustomCityLogic")
         };
 
         // e.g.: "AdminName1","AdminName2"... 
@@ -538,7 +554,7 @@ public partial class FrmSettings : Form
                             if (ckb.Name == "ckb_UseImperialNotMetric" ||
                                 ckb.Name == "ckb_UseDarkMode")
                             {
-                                WarnUserToRestartApp();
+                                PromptUserToRestartApp();
                             }
                         }
                     }
@@ -550,7 +566,7 @@ public partial class FrmSettings : Form
                         {
                             if (cbx.Name == "cbx_Language")
                             {
-                                WarnUserToRestartApp();
+                                PromptUserToRestartApp();
                             }
                             else if (cbx.Name == "cbx_TryUseGeoNamesLanguage")
                             {
@@ -626,20 +642,6 @@ public partial class FrmSettings : Form
         // in case it changed or something.
         HelperVariables.DtCustomRules = HelperDataCustomRules.DataReadSQLiteCustomRules();
         Hide();
-
-        void WarnUserToRestartApp()
-        {
-            // fire a warning if something of importance has changed. 
-            CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmSettings_PleaseRestartApp"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Warning.ToString()),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Warning);
-            customMessageBox.ShowDialog();
-        }
     }
 
     /// <summary>
@@ -1031,9 +1033,11 @@ public partial class FrmSettings : Form
         {
             CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty"),
+                    messageBoxName:
+                    "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Information.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
@@ -1069,8 +1073,11 @@ public partial class FrmSettings : Form
                 e.Cancel = true;
                 CustomMessageBox customMessageBox = new(
                     text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                        messageBoxName: "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty"),
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
+                        messageBoxName:
+                        "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty"),
+                    caption: HelperControlAndMessageBoxHandling
+                       .GenericGetMessageBoxCaption(
+                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Warning);
                 customMessageBox.ShowDialog();
@@ -1097,7 +1104,9 @@ public partial class FrmSettings : Form
         CustomMessageBox customMessageBox = new(
             text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                 messageBoxName: "mbx_GenericDone"),
-            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
+            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                   .Information.ToString()),
             buttons: MessageBoxButtons.OK,
             icon: MessageBoxIcon.Information);
         customMessageBox.ShowDialog();
@@ -1131,7 +1140,8 @@ public partial class FrmSettings : Form
             labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                 messageBoxName: "mbx_FrmSettings_QuestionWhatToExport"),
             caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                captionType: "Question"),
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question
+                                              .ToString()),
             checkboxesDictionary: checkboxDictionary,
             buttonsDictionary: buttonsDictionary,
             orientation: "Vertical");
@@ -1160,11 +1170,14 @@ public partial class FrmSettings : Form
                     catch (Exception ex)
                     {
                         CustomMessageBox customMessageBox = new(
-                            text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                                      messageBoxName: "mbx_FrmSettings_ErrorExportFailed") +
+                            text: HelperControlAndMessageBoxHandling
+                                     .GenericGetMessageBoxText(
+                                          messageBoxName:
+                                          "mbx_FrmSettings_ErrorExportFailed") +
                                   ex.Message,
-                            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                            caption: HelperControlAndMessageBoxHandling
+                               .GenericGetMessageBoxCaption(
+                                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
                             buttons: MessageBoxButtons.OK,
                             icon: MessageBoxIcon.Error);
                         customMessageBox.ShowDialog();
@@ -1200,7 +1213,8 @@ public partial class FrmSettings : Form
                 labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                     messageBoxName: "mbx_FrmSettings_QuestionWhatToImport"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: "Question"),
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Question.ToString()),
                 checkboxesDictionary: checkboxDictionary,
                 buttonsDictionary: buttonsDictionary,
                 orientation: "Vertical");
@@ -1216,13 +1230,7 @@ public partial class FrmSettings : Form
                 // Cancel clears the write queue but since the database would have been overwritten that's a reasonable logical path to take.
                 if (_importHasBeenProcessed)
                 {
-                    CustomMessageBox customMessageBox = new(
-                        text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                            messageBoxName: "mbx_GenericDoneRestartApp"),
-                        caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
-                        buttons: MessageBoxButtons.OK,
-                        icon: MessageBoxIcon.Information);
-                    customMessageBox.ShowDialog();
+                    PromptUserToRestartApp();
                     btn_Cancel.PerformClick();
                 }
             }
@@ -1245,6 +1253,46 @@ public partial class FrmSettings : Form
     }
 
     /// <summary>
+    ///     Prompts the user to restart the application.
+    /// </summary>
+    /// <remarks>
+    ///     This method displays a dialog box with options to restart the application now or later.
+    ///     If the user chooses to restart now, the application is restarted immediately.
+    ///     If the user chooses to restart later, a warning message box is displayed.
+    /// </remarks>
+    private void PromptUserToRestartApp()
+    {
+        Dictionary<string, string> buttonsDictionary = new()
+        {
+            {
+                "RestartNow", HelperDataLanguageTZ.DataReadDTObjectText(
+                    objectType: ControlType.Button,
+                    objectName: "btn_RestartNow")
+            },
+            {
+                "RestartLater", HelperDataLanguageTZ.DataReadDTObjectText(
+                    objectType: ControlType.Button,
+                    objectName: "btn_RestartLater")
+            }
+        };
+
+        // ReSharper disable once InconsistentNaming
+        List<string> ItemsToExport = DialogWithoutCheckBox.DisplayAndReturnList(
+            labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                messageBoxName: "mbx_FrmSettings_PleaseRestartApp"),
+            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question
+                                              .ToString()),
+            buttonsDictionary: buttonsDictionary,
+            orientation: "Horizontal");
+        if (ItemsToExport.Contains(item: "RestartNow"))
+        {
+            Process.Start(fileName: Application.ExecutablePath);
+            Application.Exit();
+        }
+    }
+
+    /// <summary>
     ///     Creates and returns a dictionary representing buttons in the dialog.
     ///     Each key-value pair in the dictionary represents a button, where the key is the text displayed on the button,
     ///     and the value is the return value when the button is clicked.
@@ -1256,14 +1304,14 @@ public partial class FrmSettings : Form
         {
             {
                 HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: "Button",
+                    objectType: ControlType.Button,
                     objectName: "btn_OK"
                 ),
                 "yes" // that's ok
             },
             {
                 HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: "Button",
+                    objectType: ControlType.Button,
                     objectName: "btn_Cancel"
                 ),
                 "no" // that's ok
@@ -1282,11 +1330,13 @@ public partial class FrmSettings : Form
     private static Dictionary<string, string> GetCheckboxDictionary()
     {
         Dictionary<string, string> checkboxDictionary = new();
-        foreach (string name in Enum.GetNames(enumType: typeof(SettingsImportExportOptions)))
+        foreach (string name in Enum.GetNames(
+                     enumType: typeof(SettingsImportExportOptions)))
         {
-            checkboxDictionary.Add(key: HelperDataLanguageTZ.DataReadDTObjectText(objectType: "CheckBox",
-                                                                                  objectName: "ckb_ImportExport_" +
-                                                                                              name), value: name);
+            checkboxDictionary.Add(key: HelperDataLanguageTZ.DataReadDTObjectText(
+                                       objectType: ControlType.CheckBox,
+                                       objectName: "ckb_ImportExport_" +
+                                                   name), value: name);
         }
 
         return checkboxDictionary;

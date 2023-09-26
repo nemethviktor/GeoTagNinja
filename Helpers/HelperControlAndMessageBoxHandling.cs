@@ -20,7 +20,7 @@ internal static class HelperControlAndMessageBoxHandling
     }
 
     /// <summary>
-    ///     Bit of out sync with the rest but this returns the localised captions for messageboxes (e.g. "info" or "error")
+    ///     Bit of out sync with the rest but this returns the localised captions for MessageBoxes (e.g. "info" or "error")
     /// </summary>
     /// <param name="captionType">E.g. "info", "error"....</param>
     /// <returns>Localised version of the above.</returns>
@@ -29,24 +29,24 @@ internal static class HelperControlAndMessageBoxHandling
         FrmMainApp frmMainAppInstance =
             (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         return HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "messageBoxCaption",
+            objectType: ControlType.MessageBoxCaption,
             objectName: captionType
         );
     }
 
     /// <summary>
     ///     This is a special member of the objectMapping/Language and really should sit there not here.
-    ///     Messageboxes are a bit more complicate to work with than "simple" objects and this takes their language-value and
+    ///     MessageBoxes are a bit more complicate to work with than "simple" objects and this takes their language-value and
     ///     returns it efficiently
     /// </summary>
-    /// <param name="messageBoxName">A pseudonym for the messagebox whose value is requested.</param>
-    /// <returns>Messagebox text contents</returns>
+    /// <param name="messageBoxName">A pseudonym for the MessageBox whose value is requested.</param>
+    /// <returns>MessageBox text contents</returns>
     internal static string GenericGetMessageBoxText(string messageBoxName)
     {
         FrmMainApp frmMainAppInstance =
             (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         return HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "messageBox",
+            objectType: ControlType.MessageBox,
             objectName: messageBoxName
         );
     }
@@ -62,8 +62,8 @@ internal static class HelperControlAndMessageBoxHandling
                                                      Form senderForm)
     {
         return HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: cItem.GetType()
-                             .Name,
+            objectType: HelperDataLanguageTZ.GetControlType(
+                controlType: cItem.GetType()),
             objectName: cItem.Name
         );
     }
@@ -101,15 +101,15 @@ internal static class HelperControlAndMessageBoxHandling
             FrmMainApp.Logger.Trace(message: "Starting - cItem: " + cItem.Name);
             // for some reason there is no .Last() being offered here
             cItem.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: cItem.GetType()
-                                 .Name,
+                objectType: HelperDataLanguageTZ.GetControlType(
+                    controlType: cItem.GetType()),
                 objectName: cItem.Name
             );
         }
         else if (cItem is Form)
         {
             cItem.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: "Form",
+                objectType: ControlType.Form,
                 objectName: cItem.Name);
         }
         else if (cItem is TextBox ||

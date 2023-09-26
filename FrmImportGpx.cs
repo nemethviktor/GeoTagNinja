@@ -187,9 +187,11 @@ public partial class FrmImportGpx : Form
         if (_lastShiftSecond == 0 && _lastShiftMinute == 0 && _lastShiftHour == 0 && _lastShiftDay == 0)
         {
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportNoStoredShiftValues"),
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmImportNoStoredShiftValues"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -350,8 +352,8 @@ public partial class FrmImportGpx : Form
         {
             // indicate that something is going on
             btn_OK.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: sender.GetType()
-                    .Name,
+                objectType: HelperDataLanguageTZ.GetControlType(
+                    controlType: sender.GetType()),
                 objectName: "btn_OK_Working"
             );
             btn_OK.AutoSize = true;
@@ -375,8 +377,11 @@ public partial class FrmImportGpx : Form
         else
         {
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportGpx_FileOrFolderDoesntExist"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmImportGpx_FileOrFolderDoesntExist"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();

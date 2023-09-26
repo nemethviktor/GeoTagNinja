@@ -40,9 +40,11 @@ internal static class HelperDataSettingsExport
 
         // finally
         CustomMessageBox customMessageBox = new(
-            text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_GenericDone"),
+            text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                messageBoxName: "mbx_GenericDone"),
             caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                   .Information.ToString()),
             buttons: MessageBoxButtons.OK,
             icon: MessageBoxIcon.Information);
         customMessageBox.ShowDialog();

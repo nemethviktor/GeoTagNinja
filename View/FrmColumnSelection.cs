@@ -23,13 +23,13 @@ public partial class FrmColumnSelection : Form
         InitializeComponent();
 
         btn_Cancel.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "Button", objectName: "btn_Cancel");
+            ControlType.Button, objectName: "btn_Cancel");
         btn_Ok.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "Button", objectName: "btn_OK");
+            ControlType.Button, objectName: "btn_OK");
         lbl_SelectColsTitle.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "Label", objectName: "lbl_SelectColsTitle");
+            ControlType.Label, objectName: "lbl_SelectColsTitle");
         ckb_DeSelectAll.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "CheckBox", objectName: "ckb_DeSelectAll");
+            ControlType.CheckBox, objectName: "ckb_DeSelectAll");
 
         foreach (ColumnHeader col in _colList)
         {

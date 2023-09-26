@@ -32,9 +32,12 @@ internal static class HelperGenericAppStartup
         {
             FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorCantCreateSQLiteDB") +
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_ErrorCantCreateSQLiteDB") +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -58,9 +61,12 @@ internal static class HelperGenericAppStartup
         {
             FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorCantWriteSQLiteDB") +
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_ErrorCantWriteSQLiteDB") +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -92,7 +98,9 @@ internal static class HelperGenericAppStartup
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                           messageBoxName: "mbx_FrmMainApp_ErrorCantLoadSQLiteDB") +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -263,9 +271,12 @@ internal static class HelperGenericAppStartup
                 FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
                 CustomMessageBox customMessageBox = new(
                     text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                              messageBoxName: "mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB") +
+                              messageBoxName:
+                              "mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB") +
                           ex.Message,
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                    caption: HelperControlAndMessageBoxHandling
+                       .GenericGetMessageBoxCaption(
+                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Error);
                 customMessageBox.ShowDialog();
@@ -317,7 +328,9 @@ internal static class HelperGenericAppStartup
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                           messageBoxName: "mbx_FrmMainApp_ErrorCantLoadWebView2") +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -440,7 +453,9 @@ internal static class HelperGenericAppStartup
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                           messageBoxName: "mbx_FrmMainApp_ErrorSettingStartupFolder") +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();

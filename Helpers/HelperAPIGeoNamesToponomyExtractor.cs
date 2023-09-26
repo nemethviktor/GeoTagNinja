@@ -31,10 +31,12 @@ internal static class HelperAPIGeoNamesToponomyExtractor
             catch (Exception ex)
             {
                 CustomMessageBox customMessageBox = new(
-                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB") +
+                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                              messageBoxName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB") +
                           ex.Message,
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                        captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                    caption: HelperControlAndMessageBoxHandling
+                       .GenericGetMessageBoxCaption(
+                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Error);
                 customMessageBox.ShowDialog();
@@ -74,7 +76,8 @@ internal static class HelperAPIGeoNamesToponomyExtractor
                           messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") +
                       responseToponomy.Content,
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
@@ -94,7 +97,8 @@ internal static class HelperAPIGeoNamesToponomyExtractor
                           messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") +
                       responseToponomy.StatusCode,
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();

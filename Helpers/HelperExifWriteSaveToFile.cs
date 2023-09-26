@@ -375,10 +375,13 @@ internal static class HelperExifWriteSaveToFile
                         failWriteNothingEnabled = true;
                         FrmMainApp.Logger.Info(message: "Both file-writes disabled. Nothing Written.");
                         CustomMessageBox customMessageBox = new(
-                            text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                                messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"),
-                            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                            text: HelperControlAndMessageBoxHandling
+                               .GenericGetMessageBoxText(
+                                    messageBoxName:
+                                    "mbx_Helper_WarningNoWriteSettingEnabled"),
+                            caption: HelperControlAndMessageBoxHandling
+                               .GenericGetMessageBoxCaption(
+                                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
                             buttons: MessageBoxButtons.OK,
                             icon: MessageBoxIcon.Warning);
                         customMessageBox.ShowDialog();
@@ -438,7 +441,8 @@ internal static class HelperExifWriteSaveToFile
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                     messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
@@ -450,7 +454,8 @@ internal static class HelperExifWriteSaveToFile
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                     messageBoxName: "mbx_Helper_WarningNothingInWriteQueue"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();

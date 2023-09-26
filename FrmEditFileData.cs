@@ -242,8 +242,8 @@ public partial class FrmEditFileData : Form
                     {
                         // gets logged inside.
                         cItem.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                            objectType: cItem.GetType()
-                                             .Name,
+                            objectType: HelperDataLanguageTZ.GetControlType(
+                                controlType: cItem.GetType()),
                             objectName: cItem.Name);
                     }
 
@@ -905,7 +905,7 @@ public partial class FrmEditFileData : Form
                 break;
         }
 
-        string messageBoxName = HelperVariables.OperationAPIReturnedOKResponse
+        string MessageBoxName = HelperVariables.OperationAPIReturnedOKResponse
             ? "mbx_FrmEditFileData_InfoDataUpdated"
             : "mbx_FrmEditFileData_ErrorAPIError";
         string captionType = HelperVariables.OperationAPIReturnedOKResponse
@@ -916,7 +916,7 @@ public partial class FrmEditFileData : Form
             : MessageBoxIcon.Error;
         customMessageBox = new CustomMessageBox(
             text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                messageBoxName: messageBoxName),
+                messageBoxName: MessageBoxName),
             caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                 captionType: captionType),
             buttons: MessageBoxButtons.OK,
@@ -1901,7 +1901,7 @@ public partial class FrmEditFileData : Form
             (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         ttp.SetToolTip(control: pbx_OffsetTimeInfo,
                        caption: HelperDataLanguageTZ.DataReadDTObjectText(
-                           objectType: "ToolTip",
+                           objectType: ControlType.ToolTip,
                            objectName: "ttp_OffsetTime"
                        ));
     }

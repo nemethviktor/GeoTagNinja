@@ -388,7 +388,8 @@ internal static class HelperExifReadExifData
                         text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                             messageBoxName: "mbx_HelperStaticExifNoAPI"),
                         caption: HelperControlAndMessageBoxHandling
-                           .GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                           .GenericGetMessageBoxCaption(
+                                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
                         buttons: MessageBoxButtons.OK,
                         icon: MessageBoxIcon.Error);
                     customMessageBox.ShowDialog();
@@ -400,7 +401,8 @@ internal static class HelperExifReadExifData
                     text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                         messageBoxName: "mbx_HelperStaticExifNoAPI"),
                     caption: HelperControlAndMessageBoxHandling
-                       .GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                       .GenericGetMessageBoxCaption(
+                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Error);
                 customMessageBox.ShowDialog();
@@ -846,7 +848,7 @@ internal static class HelperExifReadExifData
                             Form FrmPickDataFromAPIBox = new()
                             {
                                 Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                                    objectType: "Form", objectName: "FrmPickDataFromAPIBox"),
+                                    ControlType.Form, objectName: "FrmPickDataFromAPIBox"),
                                 MinimizeBox = false,
                                 MaximizeBox = false,
                                 ShowIcon = false,
@@ -922,7 +924,7 @@ internal static class HelperExifReadExifData
                             Button btn_OK = new()
                             {
                                 Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                                    objectType: "Button", objectName: "btn_OK")
+                                    ControlType.Button, objectName: "btn_OK")
                             };
                             btn_OK.Click += (sender,
                                              e) =>

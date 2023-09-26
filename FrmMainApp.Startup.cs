@@ -95,10 +95,10 @@ public partial class FrmMainApp
                 {
                     objectName = cItem.Name;
                     objectText = HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: cItem.GetType()
-                                         .Name +
-                                    "_Normal",
-                        objectName: objectName
+                        objectType: HelperDataLanguageTZ.GetControlType(
+                            controlType: cItem.GetType())
+                       ,
+                        objectName: objectName + "_Normal"
                     );
                     cItem.Text = objectText;
                     Logger.Trace(message: "" + objectName + ": " + objectText);
@@ -113,8 +113,8 @@ public partial class FrmMainApp
                         {
                             objectName = tsb.Name;
                             objectText = HelperDataLanguageTZ.DataReadDTObjectText(
-                                objectType: tsb.GetType()
-                                               .Name,
+                                objectType: HelperDataLanguageTZ.GetControlType(
+                                    controlType: tsb.GetType()),
                                 objectName: tsb.Name
                             );
                             tsb.ToolTipText = objectText;
@@ -130,8 +130,8 @@ public partial class FrmMainApp
                         // alas .Text works -- fml.
                         objectName = columnHeader.Text;
                         objectText = HelperDataLanguageTZ.DataReadDTObjectText(
-                            objectType: columnHeader.GetType()
-                                                    .Name,
+                            objectType: HelperDataLanguageTZ.GetControlType(
+                                controlType: columnHeader.GetType()),
                             objectName: objectName
                         );
                         columnHeader.Text = objectText;
@@ -143,8 +143,8 @@ public partial class FrmMainApp
                 {
                     objectName = cItem.Name;
                     objectText = HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: cItem.GetType()
-                                         .Name,
+                        objectType: HelperDataLanguageTZ.GetControlType(
+                            controlType: cItem.GetType()),
                         objectName: cItem.Name
                     );
                     cItem.Text = objectText;
@@ -155,7 +155,7 @@ public partial class FrmMainApp
 
         // Text for ImagePreview
         pbx_imagePreview.EmptyText = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "PictureBox",
+            objectType: ControlType.PictureBox,
             objectName: "pbx_imagePreviewEmptyText"
         );
 
@@ -182,8 +182,8 @@ public partial class FrmMainApp
             {
                 objectName = cItem.Name;
                 objectText = HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: cItem.GetType()
-                                     .Name,
+                    objectType: HelperDataLanguageTZ.GetControlType(
+                        controlType: cItem.GetType()),
                     objectName: cItem.Name
                 );
                 cItem.Text = objectText;
@@ -192,7 +192,7 @@ public partial class FrmMainApp
         }
 
         pbx_imagePreview.EmptyText = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "PictureBox",
+            objectType: ControlType.PictureBox,
             objectName: "pbx_imagePreviewEmptyText"
         );
 
@@ -211,7 +211,7 @@ public partial class FrmMainApp
             ToolTip ttp = valueTuple.Item1;
             ttp.SetToolTip(control: valueTuple.Item2,
                            caption: HelperDataLanguageTZ.DataReadDTObjectText(
-                               objectType: "ToolTip",
+                               objectType: ControlType.ToolTip,
                                objectName: valueTuple.Item3
                            ));
         }
@@ -220,7 +220,8 @@ public partial class FrmMainApp
     internal static string GetUOMAbbreviated()
     {
         return HelperVariables.UOMAbbreviated = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "Label", objectName: HelperVariables.UserSettingUseImperial
+            objectType: ControlType.Label,
+            objectName: HelperVariables.UserSettingUseImperial
                 ? "lbl_Feet_Abbr"
                 : "lbl_Metres_Abbr"
         );

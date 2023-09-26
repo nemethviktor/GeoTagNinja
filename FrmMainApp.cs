@@ -413,7 +413,8 @@ public partial class FrmMainApp : Form
             CustomMessageBox customMessageBox = new(
                 text: GenericGetMessageBoxText(
                     messageBoxName: "mbx_FrmMainApp_QuestionFileQIsNotEmpty"),
-                caption: GenericGetMessageBoxCaption(captionType: "Question"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Question.ToString()),
                 buttons: MessageBoxButtons.YesNo,
                 icon: MessageBoxIcon.Question);
             DialogResult dialogResult = customMessageBox.ShowDialog();
@@ -721,7 +722,7 @@ public partial class FrmMainApp : Form
             {
                 {
                     HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: "CheckBox",
+                        objectType: ControlType.CheckBox,
                         objectName: "ckb_QuestionAddToponomyDontAskAgain"
                     ),
                     "_remember"
@@ -731,14 +732,14 @@ public partial class FrmMainApp : Form
             {
                 {
                     HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: "Button",
+                        ControlType.Button,
                         objectName: "btn_Yes"
                     ),
                     "yes"
                 },
                 {
                     HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: "Button",
+                        ControlType.Button,
                         objectName: "btn_No"
                     ),
                     "no"
@@ -749,7 +750,7 @@ public partial class FrmMainApp : Form
             List<string> getLocToMapDialogChoice =
                 DialogWithCheckBox.DisplayAndReturnList(
                     labelText: HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: "Label",
+                        objectType: ControlType.Label,
                         objectName: "lbl_QuestionAddToponomy"
                     ),
                     caption: GenericGetMessageBoxCaption(
@@ -1503,7 +1504,7 @@ public partial class FrmMainApp : Form
     {
         FrmImportGpx = new FrmImportGpx();
         FrmImportGpx.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "Form",
+            objectType: ControlType.Form,
             objectName: "FrmImportGpx"
         );
         FrmImportGpx.ShowDialog();
@@ -2167,7 +2168,7 @@ public partial class FrmMainApp : Form
                 {
                     {
                         HelperDataLanguageTZ.DataReadDTObjectText(
-                            objectType: "CheckBox",
+                            objectType: ControlType.CheckBox,
                             objectName: "ckb_QuestionStopProcessingRows"
                         ),
                         "_stopprocessing"
@@ -2177,14 +2178,14 @@ public partial class FrmMainApp : Form
                 {
                     {
                         HelperDataLanguageTZ.DataReadDTObjectText(
-                            objectType: "Button",
+                            ControlType.Button,
                             objectName: "btn_Yes"
                         ),
                         "yes"
                     },
                     {
                         HelperDataLanguageTZ.DataReadDTObjectText(
-                            objectType: "Button",
+                            ControlType.Button,
                             objectName: "btn_No"
                         ),
                         "no"
@@ -2197,7 +2198,7 @@ public partial class FrmMainApp : Form
                         labelText: GenericGetMessageBoxText(
                             messageBoxName: "mbx_FrmMainApp_QuestionNoRowsFromAPI"),
                         caption: GenericGetMessageBoxCaption(
-                            captionType: "Question"),
+                            captionType: MessageBoxCaption.Question.ToString()),
                         checkboxesDictionary: checkboxDictionary,
                         buttonsDictionary: buttonsDictionary,
                         orientation: "Horizontal");
@@ -2272,7 +2273,7 @@ public partial class FrmMainApp : Form
             Size = new Size(width: 300, height: 40),
             Padding = new Padding(left: 4, top: 2, right: 2, bottom: 4),
             Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: "Form",
+                objectType: ControlType.Form,
                 objectName: "FrmPleaseWaitBox"
             ),
             StartPosition = FormStartPosition.CenterScreen
@@ -2709,7 +2710,7 @@ public partial class FrmMainApp : Form
     {
         FrmSettings = new FrmSettings();
         FrmSettings.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "Form",
+            objectType: ControlType.Form,
             objectName: "FrmSettings"
         );
         FrmSettings.ShowDialog();

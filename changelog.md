@@ -87,7 +87,7 @@
   - Fixed a bug where NumericUpDown changes didn't trigger setting fonts to Bold
   - Fixed the map zooming way too far out when negative lat/long values are present
   - Changed the pick-from-API-choices Form to be 1-based-index rather than 0-based
-  - Fixed messageBox captions always saying "Error" as output
+  - Fixed MessageBox captions always saying "Error" as output
   - Fixed a bug where one or two Settings were ignored on load
   - Fixed a variety of random bugs relating to time-shift copypastes not entirely behaving
   - Further fixed a variety of bugs that yet again I don't entirely remember
@@ -224,7 +224,7 @@
   - Added "Remove GeoData" to main form as well as Edit form
   - Added this changelog.md file
   - Added a readme to the ExtraFiles folder
-  - Added handling to messageBox texts being read from SQLite
+  - Added handling to MessageBox texts being read from SQLite
  
 **Build 8248 [20220801]**
 - NEW & UPDATED:

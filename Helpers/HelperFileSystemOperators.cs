@@ -45,8 +45,11 @@ internal static class HelperFileSystemOperators
         {
             // ask: do you want to write/save?
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_Helper_QuestionFileQIsNotEmpty"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Question"),
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                    messageBoxName: "mbx_Helper_QuestionFileQIsNotEmpty"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Question.ToString()),
                 buttons: MessageBoxButtons.YesNoCancel,
                 icon: MessageBoxIcon.Question);
             DialogResult dialogResult = customMessageBox.ShowDialog();

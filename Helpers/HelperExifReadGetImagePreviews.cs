@@ -93,7 +93,7 @@ internal static class HelperExifReadGetImagePreviews
 
         //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
         string pbxErrorMsg = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "PictureBox",
+            objectType: ControlType.PictureBox,
             objectName: "pbx_imagePreviewCouldNotRetrieve"
         );
 

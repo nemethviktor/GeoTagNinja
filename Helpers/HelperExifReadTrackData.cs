@@ -407,7 +407,8 @@ internal static class HelperExifReadTrackData
             text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                 messageBoxName: "mbx_FrmImportGpx_AskUserWantsReport"),
             caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                captionType: "Question"),
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question
+                                              .ToString()),
             buttons: MessageBoxButtons.YesNo,
             icon: MessageBoxIcon.Question);
         DialogResult dialogResult = customMessageBox.ShowDialog();
