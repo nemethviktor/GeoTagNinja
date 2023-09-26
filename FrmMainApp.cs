@@ -17,7 +17,7 @@ using geoTagNinja;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using GeoTagNinja.Properties;
-using GeoTagNinja.View.CustomMessageBox;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using NLog;
@@ -746,16 +746,17 @@ public partial class FrmMainApp : Form
             };
 
             // via https://stackoverflow.com/a/17385937/3968494
-            List<string> getLocToMapDialogChoice = ShowDialogWithCheckBox(
-                labelText: HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: "Label",
-                    objectName: "lbl_QuestionAddToponomy"
-                ),
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Question.ToString()),
-                checkboxesDictionary: checkboxDictionary,
-                buttonsDictionary: buttonsDictionary,
-                orientation: "Horizontal");
+            List<string> getLocToMapDialogChoice =
+                DialogWithCheckBox.DisplayAndReturnList(
+                    labelText: HelperDataLanguageTZ.DataReadDTObjectText(
+                        objectType: "Label",
+                        objectName: "lbl_QuestionAddToponomy"
+                    ),
+                    caption: GenericGetMessageBoxCaption(
+                        captionType: MessageBoxCaption.Question.ToString()),
+                    checkboxesDictionary: checkboxDictionary,
+                    buttonsDictionary: buttonsDictionary,
+                    orientation: "Horizontal");
 
             _showLocToMapDialogChoice = getLocToMapDialogChoice.Contains(item: "yes");
             _rememberLocToMapDialogChoice =
@@ -2191,14 +2192,15 @@ public partial class FrmMainApp : Form
                 };
 
                 // ReSharper disable once InconsistentNaming
-                List<string> APIHandlingChoice = ShowDialogWithCheckBox(
-                    labelText: GenericGetMessageBoxText(
-                        messageBoxName: "mbx_FrmMainApp_QuestionNoRowsFromAPI"),
-                    caption: GenericGetMessageBoxCaption(
-                        captionType: "Question"),
-                    checkboxesDictionary: checkboxDictionary,
-                    buttonsDictionary: buttonsDictionary,
-                    orientation: "Horizontal");
+                List<string> APIHandlingChoice =
+                    DialogWithCheckBox.DisplayAndReturnList(
+                        labelText: GenericGetMessageBoxText(
+                            messageBoxName: "mbx_FrmMainApp_QuestionNoRowsFromAPI"),
+                        caption: GenericGetMessageBoxCaption(
+                            captionType: "Question"),
+                        checkboxesDictionary: checkboxDictionary,
+                        buttonsDictionary: buttonsDictionary,
+                        orientation: "Horizontal");
 
                 if (APIHandlingChoice.Contains(value: "yes"))
                 {

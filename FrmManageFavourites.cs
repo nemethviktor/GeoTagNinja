@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
-using GeoTagNinja.View.CustomMessageBox;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using Microsoft.VisualBasic;
 
 namespace GeoTagNinja;

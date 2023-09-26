@@ -10,7 +10,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.CustomMessageBox;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using static System.String;
 using static GeoTagNinja.View.ListView.FileListView;
 
@@ -535,9 +535,10 @@ public partial class FrmSettings : Form
                         if ((ckb.Font.Style & FontStyle.Bold) != 0)
                         {
                             // strictly speaking for ckb_UseDarkMode we don't need to restart the app and the checker could be called here but it'd need another loop.
-                            if (ckb.Name == "ckb_UseImperialNotMetric" || ckb.Name == "ckb_UseDarkMode")
+                            if (ckb.Name == "ckb_UseImperialNotMetric" ||
+                                ckb.Name == "ckb_UseDarkMode")
                             {
-                                warnUserToRestartApp();
+                                WarnUserToRestartApp();
                             }
                         }
                     }
@@ -549,15 +550,19 @@ public partial class FrmSettings : Form
                         {
                             if (cbx.Name == "cbx_Language")
                             {
-                                warnUserToRestartApp();
+                                WarnUserToRestartApp();
                             }
                             else if (cbx.Name == "cbx_TryUseGeoNamesLanguage")
                             {
-                                IEnumerable<KeyValuePair<string, string>> result = HelperGenericAncillaryListsArrays.GetISO_639_1_Languages()
-                                                                                                                    .Where(predicate: kvp => kvp.Value == cbx.SelectedItem.ToString());
+                                IEnumerable<KeyValuePair<string, string>> result =
+                                    HelperGenericAncillaryListsArrays
+                                       .GetISO_639_1_Languages()
+                                       .Where(predicate: kvp =>
+                                                  kvp.Value ==
+                                                  cbx.SelectedItem.ToString());
 
                                 HelperVariables.APILanguageToUse = result.FirstOrDefault()
-                                                                         .Key;
+                                   .Key;
                             }
                         }
                     }
@@ -622,14 +627,15 @@ public partial class FrmSettings : Form
         HelperVariables.DtCustomRules = HelperDataCustomRules.DataReadSQLiteCustomRules();
         Hide();
 
-        void warnUserToRestartApp()
+        void WarnUserToRestartApp()
         {
             // fire a warning if something of importance has changed. 
             CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                     messageBoxName: "mbx_FrmSettings_PleaseRestartApp"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
@@ -1121,7 +1127,7 @@ public partial class FrmSettings : Form
         Dictionary<string, string> buttonsDictionary = GetButtonsDictionary();
 
         // ReSharper disable once InconsistentNaming
-        List<string> ItemsToExport = HelperControlAndMessageBoxHandling.ShowDialogWithCheckBox(
+        List<string> ItemsToExport = DialogWithCheckBox.DisplayAndReturnList(
             labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                 messageBoxName: "mbx_FrmSettings_QuestionWhatToExport"),
             caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
@@ -1190,7 +1196,7 @@ public partial class FrmSettings : Form
             Dictionary<string, string> buttonsDictionary = GetButtonsDictionary();
 
             // ReSharper disable once InconsistentNaming
-            List<string> ItemsToImport = HelperControlAndMessageBoxHandling.ShowDialogWithCheckBox(
+            List<string> ItemsToImport = DialogWithCheckBox.DisplayAndReturnList(
                 labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                     messageBoxName: "mbx_FrmSettings_QuestionWhatToImport"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(

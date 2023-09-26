@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.CustomMessageBox;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using GeoTagNinja.View.ListView;
 using Microsoft.Web.WebView2.Core;
 

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.CustomMessageBox;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers;

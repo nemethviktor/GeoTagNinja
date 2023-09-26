@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
-using GeoTagNinja.View.CustomMessageBox;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using TimeZoneConverter;
 
 namespace GeoTagNinja;

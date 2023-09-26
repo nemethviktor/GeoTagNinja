@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using geoTagNinja;
-using GeoTagNinja.View.CustomMessageBox;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;

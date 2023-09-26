@@ -10,7 +10,7 @@ using System.Threading;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.CustomMessageBox;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using NLog;
 using TimeZoneConverter;

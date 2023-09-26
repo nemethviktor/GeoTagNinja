@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.CustomMessageBox;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using static GeoTagNinja.View.ListView.FileListView;
 
 namespace GeoTagNinja;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Windows.Forms;
-using GeoTagNinja.View.CustomMessageBox;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 
 namespace GeoTagNinja.Helpers;
 

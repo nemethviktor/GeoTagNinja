@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 
-namespace GeoTagNinja.View.CustomMessageBox;
+namespace GeoTagNinja.View.DialogAndMessageBoxes;
 
 public class CustomMessageBox : Form
 {

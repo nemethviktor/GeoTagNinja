@@ -1023,7 +1023,7 @@ public static class SourcesAndAttributes
         {
             if (!string.IsNullOrWhiteSpace(value: mapping.ColumnHeader))
             {
-                return mapping.Name;
+                return COL_NAME_PREFIX + mapping.Name;
             }
         }
 

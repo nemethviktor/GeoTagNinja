@@ -6,7 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using ExifToolWrapper;
 using GeoTagNinja.Helpers;
-using GeoTagNinja.View.CustomMessageBox;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using NLog;
 using static GeoTagNinja.Model.SourcesAndAttributes;
