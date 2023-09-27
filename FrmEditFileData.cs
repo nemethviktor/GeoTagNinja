@@ -31,8 +31,6 @@ public partial class FrmEditFileData : Form
 
 #endregion
 
-    private DateTime _origDateValCreateDate = DateTime.Now;
-    private DateTime _origDateValTakenDate = DateTime.Now;
 
     /// <summary>
     ///     This Form provides an interface for the user to edit various bits of Exif data in images.
@@ -1568,6 +1566,11 @@ public partial class FrmEditFileData : Form
 
                     if (senderName.Contains(value: "TakenDate"))
                     {
+                        DateTime origDateValTakenDate = OriginalTakenDateDict.TryGetValue(
+                            key: fileNameWithoutPath, value: out string value)
+                            ? Convert.ToDateTime(value: value)
+                            : DateTime.Now;
+
                         double shiftTakenDateSeconds =
                             (double)nud_TakenDateSecondsShift.Value +
                             (double)(nud_TakenDateMinutesShift.Value * 60) +
@@ -1575,12 +1578,18 @@ public partial class FrmEditFileData : Form
                             (double)(nud_TakenDateDaysShift.Value * 60 * 60 * 24);
 
                         dtp_TakenDate.Value =
-                            _origDateValTakenDate.AddSeconds(
+                            origDateValTakenDate.AddSeconds(
                                 value: shiftTakenDateSeconds);
                         rbt_TakenDateTimeShift.Checked = shiftTakenDateSeconds != 0;
                     }
                     else if (senderName.Contains(value: "CreateDate"))
                     {
+                        DateTime origDateValCreateDate =
+                            OriginalCreateDateDict.TryGetValue(
+                                key: fileNameWithoutPath, value: out string value)
+                                ? Convert.ToDateTime(value: value)
+                                : DateTime.Now;
+
                         double shiftCreateDateSeconds =
                             (double)nud_CreateDateSecondsShift.Value +
                             (double)(nud_CreateDateMinutesShift.Value * 60) +
@@ -1588,7 +1597,7 @@ public partial class FrmEditFileData : Form
                             (double)(nud_CreateDateDaysShift.Value * 60 * 60 * 24);
 
                         dtp_CreateDate.Value =
-                            _origDateValCreateDate.AddSeconds(
+                            origDateValCreateDate.AddSeconds(
                                 value: shiftCreateDateSeconds);
                         rbt_CreateDateTimeShift.Checked = shiftCreateDateSeconds != 0;
                     }

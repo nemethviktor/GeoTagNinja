@@ -11,6 +11,7 @@
   - Added the capability to Restart the app immediately if the user wants so in the Settings
 - BUGS & FIXES:
   - Fixed Country DropDown not displaying anything if the existing data wasn't on the predefined list. It now takes value from CountryCode
+  - Fixed Date Shift misbehaving 
 
 **Build 8661 [20230918]** 
 - NEW & UPDATED:
