@@ -147,7 +147,7 @@ public partial class FrmEditFileData : Form
         // load TZ-CBX
         foreach (string timezone in HelperGenericAncillaryListsArrays.GetTimeZones())
         {
-            cbx_OffsetTimeList.Items.Add(item: timezone);
+            cbx_OffsetTime.Items.Add(item: timezone);
         }
 
         logger.Trace(message: "Setting Dropdown defaults - Done");
@@ -1070,11 +1070,11 @@ public partial class FrmEditFileData : Form
                     s: tbx_CreateDate.Text.ToString(
                         provider: CultureInfo.InvariantCulture), result: out createDate);
 
-                // cbx_OffsetTimeList.FindString(TZ, 18) doesn't seem to work so....
-                for (int i = 0; i <= cbx_OffsetTimeList.Items.Count; i++)
+                // cbx_OffsetTime.FindString(TZ, 18) doesn't seem to work so....
+                for (int i = 0; i <= cbx_OffsetTime.Items.Count; i++)
                 {
-                    string cbxText = cbx_OffsetTimeList.Items[index: i]
-                                                       .ToString();
+                    string cbxText = cbx_OffsetTime.Items[index: i]
+                                                   .ToString();
                     if (cbxText.Length >= tzStartInt)
                     {
                         if (cbxText
@@ -1083,7 +1083,7 @@ public partial class FrmEditFileData : Form
                         {
                             // this controls the logic that the ckb_UseDST should not be re-parsed again manually on the Change event that would otherwise fire.
                             _tzChangedByApi = true;
-                            cbx_OffsetTimeList.SelectedIndex = i;
+                            cbx_OffsetTime.SelectedIndex = i;
                             try
                             {
                                 if (TZ != null)
@@ -1481,7 +1481,6 @@ public partial class FrmEditFileData : Form
         {
             Control sndr = (Control)sender;
             string senderName = sndr.Name;
-            string parentName = sndr.Parent.Name;
 
             string previousText = "herp-derp";
             string newText = "";
@@ -1526,8 +1525,8 @@ public partial class FrmEditFileData : Form
             // As there is no indication for neither TZ nor DST per se I can't ascertain that  "+01:00" was in fact say BST rather than CET, one being DST the other not.
             // Either adjust manually or pull from web - the combination of coordinates + createDate would decisively inform the program of the real TZ value.
             // The value in the read-only textbox will be saved in the file.
-            // ...That also means that cbx_OffsetTimeList is a "bit special" (aren't we all...) so it needs to be derailed rather than sent back to the various datatables
-            if (senderName == "cbx_OffsetTimeList" &&
+            // ...That also means that cbx_OffsetTime is a "bit special" (aren't we all...) so it needs to be derailed rather than sent back to the various datatables
+            if (senderName == "cbx_OffsetTime" &&
                 !_tzChangedByApi)
             {
                 GetTimeZoneOffset();
@@ -1656,9 +1655,9 @@ public partial class FrmEditFileData : Form
         bool useDST = ckb_UseDST.Checked;
         try
         {
-            strOffsetTime = cbx_OffsetTimeList.Text.Substring(startIndex: !useDST
-                    ? 1
-                    : 8, length: 6);
+            strOffsetTime = cbx_OffsetTime.Text.Substring(startIndex: !useDST
+                                                              ? 1
+                                                              : 8, length: 6);
         }
         catch
         {

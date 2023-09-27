@@ -42,7 +42,7 @@ namespace GeoTagNinja
             this.pbx_OffsetTimeInfo = new System.Windows.Forms.PictureBox();
             this.ckb_UseDST = new System.Windows.Forms.CheckBox();
             this.tbx_OffsetTime = new System.Windows.Forms.TextBox();
-            this.cbx_OffsetTimeList = new System.Windows.Forms.ComboBox();
+            this.cbx_OffsetTime = new System.Windows.Forms.ComboBox();
             this.lbl_OffsetTime = new System.Windows.Forms.Label();
             this.tbx_Sub_location = new System.Windows.Forms.TextBox();
             this.tbx_City = new System.Windows.Forms.TextBox();
@@ -155,7 +155,7 @@ namespace GeoTagNinja
             this.gbx_LocationData.Controls.Add(this.pbx_OffsetTimeInfo);
             this.gbx_LocationData.Controls.Add(this.ckb_UseDST);
             this.gbx_LocationData.Controls.Add(this.tbx_OffsetTime);
-            this.gbx_LocationData.Controls.Add(this.cbx_OffsetTimeList);
+            this.gbx_LocationData.Controls.Add(this.cbx_OffsetTime);
             this.gbx_LocationData.Controls.Add(this.lbl_OffsetTime);
             this.gbx_LocationData.Controls.Add(this.tbx_Sub_location);
             this.gbx_LocationData.Controls.Add(this.tbx_City);
@@ -247,18 +247,18 @@ namespace GeoTagNinja
             this.tbx_OffsetTime.TabIndex = 16;
             this.tbx_OffsetTime.TextChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             // 
-            // cbx_OffsetTimeList
+            // cbx_OffsetTime
             // 
-            this.cbx_OffsetTimeList.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.cbx_OffsetTimeList.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cbx_OffsetTimeList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbx_OffsetTimeList.FormattingEnabled = true;
-            this.cbx_OffsetTimeList.Location = new System.Drawing.Point(163, 177);
-            this.cbx_OffsetTimeList.Name = "cbx_OffsetTimeList";
-            this.cbx_OffsetTimeList.Size = new System.Drawing.Size(342, 21);
-            this.cbx_OffsetTimeList.Sorted = true;
-            this.cbx_OffsetTimeList.TabIndex = 15;
-            this.cbx_OffsetTimeList.SelectedIndexChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
+            this.cbx_OffsetTime.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbx_OffsetTime.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbx_OffsetTime.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbx_OffsetTime.FormattingEnabled = true;
+            this.cbx_OffsetTime.Location = new System.Drawing.Point(163, 177);
+            this.cbx_OffsetTime.Name = "cbx_OffsetTime";
+            this.cbx_OffsetTime.Size = new System.Drawing.Size(342, 21);
+            this.cbx_OffsetTime.Sorted = true;
+            this.cbx_OffsetTime.TabIndex = 15;
+            this.cbx_OffsetTime.SelectedIndexChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             // 
             // lbl_OffsetTime
             // 
@@ -505,7 +505,6 @@ namespace GeoTagNinja
             this.tcr_EditData.SelectedIndex = 0;
             this.tcr_EditData.Size = new System.Drawing.Size(565, 518);
             this.tcr_EditData.TabIndex = 0;
-            
             // 
             // tpg_DateTime
             // 
@@ -1085,7 +1084,7 @@ namespace GeoTagNinja
         private System.Windows.Forms.RadioButton rbt_CreateDateSetToFixedDate;
         private System.Windows.Forms.Button btn_InsertCreateDate;
         private System.Windows.Forms.Button btn_InsertFromTakenDate;
-        internal System.Windows.Forms.ComboBox cbx_OffsetTimeList;
+        internal System.Windows.Forms.ComboBox cbx_OffsetTime;
         private System.Windows.Forms.Label lbl_OffsetTime;
         private System.Windows.Forms.TextBox tbx_OffsetTime;
         private System.Windows.Forms.PictureBox pbx_OffsetTimeInfo;
