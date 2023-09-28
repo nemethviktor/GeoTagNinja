@@ -11,6 +11,13 @@ internal static class HelperGenericAncillaryListsArrays
     // this stores the kvp for language tags and values (ie the label and whatnots + their human-readable counterparts).
     internal static Dictionary<string, string> LanguageStringsDict = new();
 
+
+    internal enum TimeShiftTypes
+    {
+        TakenDate,
+        CreateDate
+    }
+
 #region Time zones
 
     internal static string[] GetTimeZones()

@@ -971,10 +971,6 @@ public class DirectoryElement
                             return false;
                         }
 
-                        FrmMainApp.OriginalTakenDateDict[key: ItemNameWithoutPath] =
-                            DateTime.Parse(s: parseResult,
-                                           provider: CultureInfo.CurrentUICulture)
-                                    .ToString(provider: CultureInfo.CurrentUICulture);
                         break;
 
                     case ElementAttribute.CreateDate:
@@ -983,10 +979,6 @@ public class DirectoryElement
                             return false;
                         }
 
-                        FrmMainApp.OriginalCreateDateDict[key: ItemNameWithoutPath] =
-                            DateTime.Parse(s: parseResult,
-                                           provider: CultureInfo.CurrentUICulture)
-                                    .ToString(provider: CultureInfo.CurrentUICulture);
                         break;
                 }
                 // Not adding the xmp here because the current code logic would pull a "unified" data point.

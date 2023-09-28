@@ -117,10 +117,6 @@ public partial class FrmMainApp : Form
     // this is for checking if files need to be re-parsed.
     internal static DataTable DtToponomySessionData;
 
-    // these are for storing the inital values of TakenDate and CreateDate. Needed for TimeShift.
-    internal static Dictionary<string, string> OriginalTakenDateDict = new();
-    internal static Dictionary<string, string> OriginalCreateDateDict = new();
-
     internal static List<string> filesToEditGUIDStringList = new();
 
     internal static readonly TaskbarManager TaskbarManagerInstance =
@@ -2288,8 +2284,6 @@ public partial class FrmMainApp : Form
 
         // Clear Tables that keep track of the current folder...
         Logger.Trace(message: "Clear OriginalTakenDateDict and OriginalCreateDateDict");
-        OriginalTakenDateDict.Clear();
-        OriginalCreateDateDict.Clear();
 
         tbx_FolderName.Enabled = !Program.collectionModeEnabled;
 

@@ -15,6 +15,7 @@ using Microsoft.WindowsAPICodePack.Taskbar;
 using NLog;
 using TimeZoneConverter;
 using static GeoTagNinja.FrmMainApp;
+using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using static GeoTagNinja.View.ListView.FileListView;
 
@@ -130,20 +131,20 @@ public partial class FrmEditFileData : Form
 
         // fills the countries box
 
-        foreach (string country in HelperGenericAncillaryListsArrays.GetCountries())
+        foreach (string country in GetCountries())
         {
             cbx_Country.Items.Add(item: country);
         }
 
         // fills the country codes box
         foreach (string countryCode in
-                 HelperGenericAncillaryListsArrays.GetCountryCodes())
+                 GetCountryCodes())
         {
             cbx_CountryCode.Items.Add(item: countryCode);
         }
 
         // load TZ-CBX
-        foreach (string timezone in HelperGenericAncillaryListsArrays.GetTimeZones())
+        foreach (string timezone in GetTimeZones())
         {
             cbx_OffsetTime.Items.Add(item: timezone);
         }
@@ -334,6 +335,7 @@ public partial class FrmEditFileData : Form
                                 cItem.Parent.Name.EndsWith(value: "Date") &&
                                 cItem is not NumericUpDown)
                             {
+                                // this code block deals with enabling and disabling the Controls on whether there is data behind.
                                 if (cItem.Parent.Name == "gbx_TakenDate")
                                 {
                                     IEnumerable<Control> cGbx_TakenDate =
@@ -383,41 +385,38 @@ public partial class FrmEditFileData : Form
 
                             // this is related to storing the default DateTimes for TakenDate and CreateDate
                             // what we also need to do here is account for any copy-paste shifts.
-
                             if (cItem is DateTimePicker dtp)
                             {
                                 int totalShiftedSeconds = 0;
                                 if (dtp == dtp_TakenDate &&
-                                    OriginalTakenDateDict.ContainsKey(
-                                        key: fileNameWithoutPath))
+                                    dirElemFileToModify.GetAttributeValue<DateTime>(
+                                        attribute: ElementAttribute.TakenDate,
+                                        version: DirectoryElement.AttributeVersion
+                                           .Original,
+                                        notFoundValue: null) !=
+                                    null)
                                 {
-                                    stringValueOfCItem = HandleDateTimePicker(
-                                        fileNameWithoutPath: fileNameWithoutPath,
-                                        originalDateDict: OriginalTakenDateDict,
-                                        dirElemFileToModify: dirElemFileToModify,
-                                        daysShift: ElementAttribute.TakenDateDaysShift,
-                                        hoursShift: ElementAttribute.TakenDateHoursShift,
-                                        minutesShift: ElementAttribute
-                                           .TakenDateMinutesShift,
-                                        secondsShift: ElementAttribute
-                                           .TakenDateSecondsShift);
+                                    totalShiftedSeconds =
+                                        ShiftTimeForDateTimePicker(
+                                            whatToShift: TimeShiftTypes.TakenDate,
+                                            dirElemFileToModify: dirElemFileToModify);
                                 }
                                 else if (dtp == dtp_CreateDate &&
-                                         OriginalCreateDateDict.ContainsKey(
-                                             key: fileNameWithoutPath))
+                                         dirElemFileToModify.GetAttributeValue<DateTime>(
+                                             attribute: ElementAttribute.CreateDate,
+                                             version: DirectoryElement.AttributeVersion
+                                                .Original,
+                                             notFoundValue: null) !=
+                                         null)
                                 {
-                                    stringValueOfCItem = HandleDateTimePicker(
-                                        fileNameWithoutPath: fileNameWithoutPath,
-                                        originalDateDict: OriginalCreateDateDict,
-                                        dirElemFileToModify: dirElemFileToModify,
-                                        daysShift: ElementAttribute.CreateDateDaysShift,
-                                        hoursShift: ElementAttribute.CreateDateHoursShift,
-                                        minutesShift: ElementAttribute
-                                           .CreateDateMinutesShift,
-                                        secondsShift: ElementAttribute
-                                           .CreateDateSecondsShift);
+                                    totalShiftedSeconds =
+                                        ShiftTimeForDateTimePicker(
+                                            whatToShift: TimeShiftTypes.TakenDate,
+                                            dirElemFileToModify: dirElemFileToModify);
                                 }
 
+                                dtp.Value =
+                                    dtp.Value.AddSeconds(value: totalShiftedSeconds);
                                 logger.Trace(message: "cItem: " +
                                                       cItem.Name +
                                                       " - Updating DateTimePicker");
@@ -699,56 +698,48 @@ public partial class FrmEditFileData : Form
     }
 
     /// <summary>
-    ///     Handles the date and time shifting for a specific file.
+    ///     Calculates the total time shift in seconds for a DateTimePicker control.
     /// </summary>
-    /// <param name="fileNameWithoutPath">The name of the file without the path.</param>
-    /// <param name="originalDateDict">The dictionary containing the original date values.</param>
-    /// <param name="dirElemFileToModify">The directory element to be modified.</param>
-    /// <param name="daysShift">The number of days to shift.</param>
-    /// <param name="hoursShift">The number of hours to shift.</param>
-    /// <param name="minutesShift">The number of minutes to shift.</param>
-    /// <param name="secondsShift">The number of seconds to shift.</param>
-    /// <returns>A string representation of the modified date and time, formatted according to the current UI culture.</returns>
+    /// <param name="whatToShift">Specifies whether the CreateDate or TakenDate should be shifted.</param>
+    /// <param name="dirElemFileToModify">The DirectoryElement object that contains the attribute values for the time shift.</param>
+    /// <returns>Returns the total time shift in seconds.</returns>
     [SuppressMessage(category: "ReSharper", checkId: "PossibleInvalidOperationException")]
-    private string HandleDateTimePicker(
-        string fileNameWithoutPath,
-        Dictionary<string, string> originalDateDict,
-        DirectoryElement dirElemFileToModify,
-        ElementAttribute daysShift,
-        ElementAttribute hoursShift,
-        ElementAttribute minutesShift,
-        ElementAttribute secondsShift)
+    private static int ShiftTimeForDateTimePicker(TimeShiftTypes whatToShift,
+                                                  DirectoryElement dirElemFileToModify)
     {
-        DateTime originalDateVal =
-            Convert.ToDateTime(value: originalDateDict[key: fileNameWithoutPath]);
+        DirectoryElement.AttributeVersion attributeVersion = DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue;
+
         int shiftedDays = (int)dirElemFileToModify.GetAttributeValue<int>(
-            attribute: daysShift,
-            version: DirectoryElement.AttributeVersion
-                                     .Stage1EditFormIntraTabTransferQueue,
+            attribute: whatToShift == TimeShiftTypes.CreateDate
+                ? ElementAttribute.CreateDateDaysShift
+                : ElementAttribute.TakenDateDaysShift,
+            version: attributeVersion,
             notFoundValue: 0);
         int shiftedHours = (int)dirElemFileToModify.GetAttributeValue<int>(
-            attribute: hoursShift,
-            version: DirectoryElement.AttributeVersion
-                                     .Stage1EditFormIntraTabTransferQueue,
+            attribute: whatToShift == TimeShiftTypes.CreateDate
+                ? ElementAttribute.CreateDateHoursShift
+                : ElementAttribute.TakenDateHoursShift,
+            version: attributeVersion,
             notFoundValue: 0);
         int shiftedMinutes = (int)dirElemFileToModify.GetAttributeValue<int>(
-            attribute: minutesShift,
-            version: DirectoryElement.AttributeVersion
-                                     .Stage1EditFormIntraTabTransferQueue,
+            attribute: whatToShift == TimeShiftTypes.CreateDate
+                ? ElementAttribute.CreateDateMinutesShift
+                : ElementAttribute.TakenDateMinutesShift,
+            version: attributeVersion,
             notFoundValue: 0);
         int shiftedSeconds = (int)dirElemFileToModify.GetAttributeValue<int>(
-            attribute: secondsShift,
-            version: DirectoryElement.AttributeVersion
-                                     .Stage1EditFormIntraTabTransferQueue,
+            attribute: whatToShift == TimeShiftTypes.CreateDate
+                ? ElementAttribute.CreateDateSecondsShift
+                : ElementAttribute.TakenDateSecondsShift,
+            version: attributeVersion,
             notFoundValue: 0);
         int totalShiftedSeconds = shiftedSeconds +
                                   shiftedMinutes * 60 +
                                   shiftedHours * 60 * 60 +
                                   shiftedDays * 60 * 60 * 24;
-        DateTime modifiedDateTime =
-            originalDateVal.AddSeconds(value: totalShiftedSeconds);
-        return modifiedDateTime.ToString(provider: CultureInfo.CurrentUICulture);
+        return totalShiftedSeconds;
     }
+
 
     /// <summary>
     ///     Retrieves the highest version of a specific attribute in a given directory element.
@@ -1566,10 +1557,12 @@ public partial class FrmEditFileData : Form
 
                     if (senderName.Contains(value: "TakenDate"))
                     {
-                        DateTime origDateValTakenDate = OriginalTakenDateDict.TryGetValue(
-                            key: fileNameWithoutPath, value: out string value)
-                            ? Convert.ToDateTime(value: value)
-                            : DateTime.Now;
+                        DateTime origDateValTakenDate =
+                            (DateTime)dirElemFileToModify.GetAttributeValue<DateTime>(
+                                attribute: ElementAttribute.TakenDate,
+                                version: DirectoryElement.AttributeVersion
+                                                         .Original,
+                                notFoundValue: DateTime.Now);
 
                         double shiftTakenDateSeconds =
                             (double)nud_TakenDateSecondsShift.Value +
@@ -1585,10 +1578,11 @@ public partial class FrmEditFileData : Form
                     else if (senderName.Contains(value: "CreateDate"))
                     {
                         DateTime origDateValCreateDate =
-                            OriginalCreateDateDict.TryGetValue(
-                                key: fileNameWithoutPath, value: out string value)
-                                ? Convert.ToDateTime(value: value)
-                                : DateTime.Now;
+                            (DateTime)dirElemFileToModify.GetAttributeValue<DateTime>(
+                                attribute: ElementAttribute.CreateDate,
+                                version: DirectoryElement.AttributeVersion
+                                                         .Original,
+                                notFoundValue: DateTime.Now);
 
                         double shiftCreateDateSeconds =
                             (double)nud_CreateDateSecondsShift.Value +

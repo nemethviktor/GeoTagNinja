@@ -81,14 +81,31 @@ internal static class FileListViewReadWrite
                                         dirElemFileToModify: dirElemFileToModify,
                                         takenOrCreated: TakenOrCreated.Taken);
 
-                                    DateTime originalTakenDateTime = DateTime.Parse(
-                                        s: FrmMainApp.OriginalTakenDateDict[key: fileNameWithoutPath],
-                                        provider: CultureInfo.CurrentUICulture);
+                                    DateTime originalTakenDateTime =
+                                        (DateTime)dirElemFileToModify
+                                           .GetAttributeValue<DateTime>(
+                                                attribute: ElementAttribute.TakenDate,
+                                                version: DirectoryElement.AttributeVersion
+                                                   .Stage3ReadyToWrite);
 
                                     DateTime modifiedTakenDateTime = originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
-                                    lvi.SubItems[index: lvchs[key: COL_NAME_PREFIX + FileListColumns.TAKEN_DATE]
-                                                    .Index]
-                                       .Text = modifiedTakenDateTime.ToString(provider: CultureInfo.CurrentUICulture);
+
+                                    // column might be hidden.
+                                    try
+                                    {
+                                        lvi.SubItems[
+                                                index: lvchs[
+                                                        key: COL_NAME_PREFIX +
+                                                        FileListColumns.TAKEN_DATE]
+                                                   .Index]
+                                           .Text = modifiedTakenDateTime.ToString(
+                                            provider: CultureInfo.CurrentUICulture);
+                                    }
+                                    catch
+                                    {
+                                        // nothing
+                                    }
+
                                     takenAlreadyShifted = true;
                                 }
                                 else if (settingId.Substring(startIndex: 4)
@@ -99,14 +116,31 @@ internal static class FileListViewReadWrite
                                         dirElemFileToModify: dirElemFileToModify,
                                         takenOrCreated: TakenOrCreated.Created);
 
-                                    DateTime originalCreateDateTime = DateTime.Parse(
-                                        s: FrmMainApp.OriginalCreateDateDict[key: fileNameWithoutPath],
-                                        provider: CultureInfo.CurrentUICulture);
+                                    DateTime originalCreateDateTime =
+                                        (DateTime)dirElemFileToModify
+                                           .GetAttributeValue<DateTime>(
+                                                attribute: ElementAttribute.CreateDate,
+                                                version: DirectoryElement.AttributeVersion
+                                                   .Stage3ReadyToWrite);
 
                                     DateTime modifiedCreateDateTime = originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
-                                    lvi.SubItems[index: lvchs[key: COL_NAME_PREFIX + FileListColumns.CREATE_DATE]
-                                                    .Index]
-                                       .Text = modifiedCreateDateTime.ToString(provider: CultureInfo.CurrentUICulture);
+
+                                    // column might be hidden
+                                    try
+                                    {
+                                        lvi.SubItems[
+                                                index: lvchs[
+                                                        key: COL_NAME_PREFIX +
+                                                        FileListColumns.CREATE_DATE]
+                                                   .Index]
+                                           .Text = modifiedCreateDateTime.ToString(
+                                            provider: CultureInfo.CurrentUICulture);
+                                    }
+                                    catch
+                                    {
+                                        // nothing
+                                    }
+
                                     createAlreadyShifted = true;
                                 }
                             }

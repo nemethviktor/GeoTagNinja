@@ -378,43 +378,6 @@ internal static class HelperExifWriteSaveToFile
                                         {
                                             updateExifVal = "";
                                         }
-
-                                        if (isCreateDate)
-                                        {
-                                            // update FrmMainApp.OriginalCreateDateDict -- there should be only 1 row
-                                            if (FrmMainApp.OriginalCreateDateDict
-                                                          .ContainsKey(
-                                                               key: fileNameWithoutPath))
-                                            {
-                                                FrmMainApp.OriginalCreateDateDict.Remove(
-                                                    key: fileNameWithoutPath);
-                                            }
-
-                                            if (updateExifVal != "")
-                                            {
-                                                FrmMainApp.OriginalCreateDateDict[
-                                                        key: fileNameWithoutPath] =
-                                                    updateExifVal;
-                                            }
-                                        }
-                                        else if (isTakenDate)
-                                        {
-                                            // update FrmMainApp.OriginalTakenDateDict -- there should be only 1 row
-                                            if (FrmMainApp.OriginalTakenDateDict
-                                                          .ContainsKey(
-                                                               key: fileNameWithoutPath))
-                                            {
-                                                FrmMainApp.OriginalTakenDateDict.Remove(
-                                                    key: fileNameWithoutPath);
-                                            }
-
-                                            if (updateExifVal != "")
-                                            {
-                                                FrmMainApp.OriginalTakenDateDict[
-                                                        key: fileNameWithoutPath] =
-                                                    updateExifVal;
-                                            }
-                                        }
                                     }
 
                                     FrmMainApp.Logger.Trace(

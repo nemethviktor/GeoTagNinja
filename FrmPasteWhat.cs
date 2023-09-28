@@ -675,10 +675,11 @@ public partial class FrmPasteWhat : Form
                                       shiftedHours * 60 * 60 +
                                       shiftedDays * 60 * 60 * 24;
 
-            DateTime originalTakenDateTime = DateTime.Parse(
-                s: FrmMainApp.OriginalTakenDateDict[
-                    key: dirElemFileToModify.ItemNameWithoutPath],
-                provider: CultureInfo.CurrentUICulture);
+            DateTime originalTakenDateTime =
+                (DateTime)dirElemFileToModify.GetAttributeValue<DateTime>(
+                    attribute: ElementAttribute.TakenDate,
+                    version: DirectoryElement.AttributeVersion.Original,
+                    notFoundValue: DateTime.Now);
 
             DateTime modifiedTakenDateTime =
                 originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
@@ -726,10 +727,11 @@ public partial class FrmPasteWhat : Form
                                       shiftedHours * 60 * 60 +
                                       shiftedDays * 60 * 60 * 24;
 
-            DateTime originalCreateDateTime = DateTime.Parse(
-                s: FrmMainApp.OriginalCreateDateDict[
-                    key: dirElemFileToModify.ItemNameWithoutPath],
-                provider: CultureInfo.CurrentUICulture);
+            DateTime originalCreateDateTime =
+                (DateTime)dirElemFileToModify.GetAttributeValue<DateTime>(
+                    attribute: ElementAttribute.CreateDate,
+                    version: DirectoryElement.AttributeVersion.Original,
+                    notFoundValue: DateTime.Now);
 
             DateTime modifiedCreateDateTime =
                 originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
