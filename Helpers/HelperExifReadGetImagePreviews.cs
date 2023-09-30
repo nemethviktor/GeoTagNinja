@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FileOnQ.Imaging.Heif;
 
 namespace GeoTagNinja.Helpers;
 
@@ -99,9 +100,20 @@ internal static class HelperExifReadGetImagePreviews
 
         try
         {
-            // via https://stackoverflow.com/a/6576645/3968494
-            using FileStream stream = new(path: fileNameWithPath, mode: FileMode.Open, access: FileAccess.Read);
-            img = Image.FromStream(stream: stream);
+            if (fi.Extension == ".heic" ||
+                fi.Extension == ".heif")
+            {
+                using HeifImage image = new(file: fileNameWithPath);
+                using IImage primary = image.PrimaryImage();
+                primary.Write(filename: generatedFileName);
+            }
+            else
+            {
+                // via https://stackoverflow.com/a/6576645/3968494
+                using FileStream stream = new(path: fileNameWithPath, mode: FileMode.Open,
+                                              access: FileAccess.Read);
+                img = Image.FromStream(stream: stream);
+            }
         }
         catch
         {

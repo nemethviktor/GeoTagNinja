@@ -9,6 +9,7 @@
 	- Same goes for generic reusability, messageboxes, enums, buttons, whatnots
   - Various further Dark Mode changes/improvements
   - Added the capability to Restart the app immediately if the user wants so in the Settings
+  - Added support for previewing HEIC images
 - BUGS & FIXES:
   - Fixed Country DropDown not displaying anything if the existing data wasn't on the predefined list. It now takes value from CountryCode
   - Fixed Date Shift misbehaving 
