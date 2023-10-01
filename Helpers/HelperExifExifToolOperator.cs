@@ -241,6 +241,16 @@ internal static class HelperExifExifToolOperator
             {
                 foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
                 {
+                    dirElemToDrop.SetAttributeValueAnyType(
+                        attribute: attribute,
+                        value:
+                        dirElemToDrop.GetAttributeValueString(
+                            attribute,
+                            DirectoryElement.AttributeVersion.Stage3ReadyToWrite),
+                        version: DirectoryElement.AttributeVersion.Original,
+                        isMarkedForDeletion: dirElemToDrop.IsMarkedForDeletion(
+                            attribute,
+                            DirectoryElement.AttributeVersion.Stage3ReadyToWrite));
                     dirElemToDrop.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
                 }
             }

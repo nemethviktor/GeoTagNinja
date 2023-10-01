@@ -41,12 +41,14 @@ internal static class HelperExifWriteSaveToFile
         bool queueWasEmpty = true;
 
         // Get items that need saving...
+        // ReSharper disable once InconsistentNaming
         HashSet<string> DistinctGUIDs = FrmMainApp.DirectoryElements.FindDirtyElements();
 
         FrmMainApp.TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.Indeterminate);
         string exifArgsForOriginalFile = "";
         string exifArgsForSidecar = "";
         // check there's anything to write.
+        // ReSharper disable once InconsistentNaming
         foreach (string GUID in DistinctGUIDs)
         {
             DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: GUID);
@@ -489,10 +491,12 @@ internal static class HelperExifWriteSaveToFile
 
             ;
             await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
-                                                         frmMainAppInstance: frmMainAppInstance,
+                                                         frmMainAppInstance:
+                                                         frmMainAppInstance,
                                                          initiator: "ExifWriteExifToFile",
-                                                         processOriginalFile: processOriginalFile = processOriginalFile,
-                                                         writeXmpSideCar: writeXMPSideCar = writeXMPSideCar
+                                                         processOriginalFile:
+                                                         processOriginalFile,
+                                                         writeXmpSideCar: writeXMPSideCar
             );
         }
         else if (!queueWasEmpty)
