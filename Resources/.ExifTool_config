@@ -7,20 +7,21 @@
     'Image::ExifTool::Composite' => {
         GTNPreview => {
             Groups => { 2 => 'Preview' },
-			Desire => {
+            Desire => {
                 0 => 'PreviewImage',
 				1 => 'JpgFromRaw',
 				2 => 'MPImage3',
 				3 => 'OtherImage',
 				4 => 'ThumbnailImage',
+                5 => 'Orientation',
             },
-			Require => {
+            Require => {
                 1 => 'Orientation',
             },
             ValueConv => q{
-                if (defined $val[1]) {
+                if (defined $val[5]) {
                     my $et = new Image::ExifTool;
-                    $et->SetNewValue('Orientation#', $val[1]);
+                    $et->SetNewValue('Orientation#', $val[5]);
                     my $rotatedImage;
                     my $success = $et->WriteInfo($val[0], \$rotatedImage);
                     return \$rotatedImage if $success == 1;
@@ -30,4 +31,4 @@
         },
     },
 );
-1;  #end
+1; #end
