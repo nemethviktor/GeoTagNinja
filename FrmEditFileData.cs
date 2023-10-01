@@ -355,7 +355,8 @@ public partial class FrmEditFileData : Form
 
                                 dirElemFileToModify.SetAttributeValueAnyType(
                                     attribute: attribute,
-                                    value: nud.Value.ToString(),
+                                    value: nud.Value.ToString(
+                                        provider: CultureInfo.InvariantCulture),
                                     version: DirectoryElement.AttributeVersion
                                        .Stage2EditFormReadyToSaveAndMoveToWriteQueue,
                                     isMarkedForDeletion: false);
@@ -723,7 +724,8 @@ public partial class FrmEditFileData : Form
     private static int ShiftTimeForDateTimePicker(TimeShiftTypes whatToShift,
                                                   DirectoryElement dirElemFileToModify)
     {
-        DirectoryElement.AttributeVersion attributeVersion = DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue;
+        DirectoryElement.AttributeVersion attributeVersion = DirectoryElement
+           .AttributeVersion.Stage1EditFormIntraTabTransferQueue;
 
         int shiftedDays = (int)dirElemFileToModify.GetAttributeValue<int>(
             attribute: whatToShift == TimeShiftTypes.CreateDate
@@ -903,7 +905,8 @@ public partial class FrmEditFileData : Form
                           ((Button)sender).Name,
                     caption: HelperControlAndMessageBoxHandling
                        .GenericGetMessageBoxCaption(
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                            captionType: HelperControlAndMessageBoxHandling
+                                        .MessageBoxCaption.Error.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Error);
                 customMessageBox.ShowDialog();
@@ -1307,7 +1310,8 @@ public partial class FrmEditFileData : Form
                         messageBoxName: "mbx_FrmEditFileData_WarningFileDisappeared"),
                     caption: HelperControlAndMessageBoxHandling
                        .GenericGetMessageBoxCaption(
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                            captionType: HelperControlAndMessageBoxHandling
+                                        .MessageBoxCaption.Error.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Warning);
                 customMessageBox.ShowDialog();
@@ -1343,9 +1347,6 @@ public partial class FrmEditFileData : Form
                         whichAttributeVersion: DirectoryElement.AttributeVersion
                            .Stage1EditFormIntraTabTransferQueue))
                 {
-                    bool takenAlreadyShifted = false;
-                    bool createAlreadyShifted = false;
-
                     foreach (ElementAttribute attribute in (ElementAttribute[])
                              Enum.GetValues(enumType: typeof(ElementAttribute)))
                     {
@@ -1365,7 +1366,8 @@ public partial class FrmEditFileData : Form
                                                          .Stage3ReadyToWrite,
                                 isMarkedForDeletion: dirElemFileToModify
                                    .IsMarkedForDeletion(attribute: attribute,
-                                                        version: DirectoryElement.AttributeVersion
+                                                        version: DirectoryElement
+                                                           .AttributeVersion
                                                            .Stage1EditFormIntraTabTransferQueue));
 
                             // remove from Stage1EditFormIntraTabTransferQueue
@@ -1557,7 +1559,8 @@ public partial class FrmEditFileData : Form
                                                      .Stage1EditFormIntraTabTransferQueue,
                             isMarkedForDeletion: dirElemFileToModify
                                .IsMarkedForDeletion(attribute: attribute,
-                                                    version: DirectoryElement.AttributeVersion
+                                                    version: DirectoryElement
+                                                       .AttributeVersion
                                                        .Stage1EditFormIntraTabTransferQueue));
                         dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
                             value: nudTextStr,
@@ -1565,7 +1568,8 @@ public partial class FrmEditFileData : Form
                                                      .Stage2EditFormReadyToSaveAndMoveToWriteQueue,
                             isMarkedForDeletion: dirElemFileToModify
                                .IsMarkedForDeletion(attribute: attribute,
-                                                    version: DirectoryElement.AttributeVersion
+                                                    version: DirectoryElement
+                                                       .AttributeVersion
                                                        .Stage2EditFormReadyToSaveAndMoveToWriteQueue));
                     }
 
@@ -1649,7 +1653,8 @@ public partial class FrmEditFileData : Form
                                                      .Stage1EditFormIntraTabTransferQueue,
                             isMarkedForDeletion: dirElemFileToModify
                                .IsMarkedForDeletion(attribute: attribute,
-                                                    version: DirectoryElement.AttributeVersion
+                                                    version: DirectoryElement
+                                                       .AttributeVersion
                                                        .Stage1EditFormIntraTabTransferQueue));
                         dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
                             value: sndr.Text,
@@ -1657,7 +1662,8 @@ public partial class FrmEditFileData : Form
                                                      .Stage2EditFormReadyToSaveAndMoveToWriteQueue,
                             isMarkedForDeletion: dirElemFileToModify
                                .IsMarkedForDeletion(attribute: attribute,
-                                                    version: DirectoryElement.AttributeVersion
+                                                    version: DirectoryElement
+                                                       .AttributeVersion
                                                        .Stage2EditFormReadyToSaveAndMoveToWriteQueue));
                     }
                 }
@@ -1873,7 +1879,8 @@ public partial class FrmEditFileData : Form
                                                      .Stage1EditFormIntraTabTransferQueue,
                             isMarkedForDeletion: dirElemFileToModify
                                .IsMarkedForDeletion(attribute: attribute,
-                                                    version: DirectoryElement.AttributeVersion
+                                                    version: DirectoryElement
+                                                       .AttributeVersion
                                                        .Stage1EditFormIntraTabTransferQueue));
                     }
                 }
