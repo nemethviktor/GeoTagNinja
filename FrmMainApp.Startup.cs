@@ -278,4 +278,36 @@ public partial class FrmMainApp
         HelperVariables.LastLat = double.Parse(s: nud_lat.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
         HelperVariables.LastLng = double.Parse(s: nud_lng.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
     }
+
+
+    /// <summary>
+    ///     Sets the application theme at startup based on the user's settings.
+    /// </summary>
+    /// <remarks>
+    ///     If the user has chosen to use dark mode, the method sets the theme color to dark and applies a custom renderer to
+    ///     the menu strip.
+    ///     If the user has not chosen to use dark mode, the method sets the theme color to light and uses the default
+    ///     rendering for the controls.
+    /// </remarks>
+    private void AppStartupSetAppTheme()
+    {
+        // the custom logic is ugly af so no need to be pushy about it in light mode.
+        if (!HelperVariables.UserSettingUseDarkMode)
+        {
+            tcr_Main.DrawMode = TabDrawMode.Normal;
+            lvw_FileList.OwnerDraw = false;
+            lvw_ExifData.OwnerDraw = false;
+        }
+        else
+        {
+            mns_MenuStrip.Renderer = new DarkMenuStripRenderer();
+        }
+
+        // adds colour/theme
+
+        HelperControlThemeManager.SetThemeColour(
+            themeColour: HelperVariables.UserSettingUseDarkMode
+                ? ThemeColour.Dark
+                : ThemeColour.Light, parentControl: this);
+    }
 }

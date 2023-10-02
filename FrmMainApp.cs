@@ -211,18 +211,7 @@ public partial class FrmMainApp : Form
         HelperDataLanguageTZ.DataReadCountryCodeDataFromCSV();
         HelperGenericAppStartup.AppStartupCheckWebView2();
         AppStartupInitializeComponentFrmMainApp();
-
-        // the custom logic is ugly af so no need to be pushy about it in light mode.
-        if (!HelperVariables.UserSettingUseDarkMode)
-        {
-            tcr_Main.DrawMode = TabDrawMode.Normal;
-            lvw_FileList.OwnerDraw = false;
-            lvw_ExifData.OwnerDraw = false;
-        }
-        else
-        {
-            mns_MenuStrip.Renderer = new DarkMenuStripRenderer();
-        }
+        AppStartupSetAppTheme();
 
         AppStartupEnableDoubleBuffering();
         FormClosing += FrmMainApp_FormClosing;
@@ -336,13 +325,6 @@ public partial class FrmMainApp : Form
 
         // initialise webView2
         await InitialiseWebView();
-
-        // adds colour/theme
-
-        HelperControlThemeManager.SetThemeColour(
-            themeColour: HelperVariables.UserSettingUseDarkMode
-                ? ThemeColour.Dark
-                : ThemeColour.Light, parentControl: this);
 
         // assign labels to objects
         AppStartupAssignLabelsToObjects();
