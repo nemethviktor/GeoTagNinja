@@ -70,14 +70,21 @@ namespace GeoTagNinja.Helpers
                                 }
 
                                 // Copy the table from the import database to the settings database
-                                using (SQLiteCommand copyCmd = new(
-                                           commandText:
-                                           $"ATTACH DATABASE '{HelperVariables.SettingsDatabaseFilePath}' AS toDb; CREATE TABLE toDb.{tableName} AS SELECT * FROM main.{tableName};",
-                                           connection: importConnection))
+                                lock (importConnection)
                                 {
+                                    using SQLiteCommand copyCmd = new(
+                                        commandText:
+                                        $"ATTACH DATABASE '{HelperVariables.SettingsDatabaseFilePath}' AS toDb; CREATE TABLE toDb.{tableName} AS SELECT * FROM main.{tableName};",
+                                        connection: importConnection);
                                     copyCmd.ExecuteNonQuery();
                                 }
                             }
+
+                            using SQLiteCommand detachCmd = new(
+                                commandText:
+                                $"DETACH DATABASE 'toDb';",
+                                connection: importConnection);
+                            detachCmd.ExecuteNonQuery();
                         }
                     }
 
