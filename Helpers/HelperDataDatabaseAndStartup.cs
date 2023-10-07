@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
@@ -18,23 +19,23 @@ internal static class HelperDataDatabaseAndStartup
         try
         {
             // create folder in Appdata if doesn't exist
-            FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath is " + HelperVariables.SSettingsDataBasePath);
-            FileInfo userDataBaseFile = new(fileName: HelperVariables.SSettingsDataBasePath);
+            FrmMainApp.Logger.Trace(message: "SettingsDatabaseFilePath is " + HelperVariables.SettingsDatabaseFilePath);
+            FileInfo userDataBaseFile = new(fileName: HelperVariables.SettingsDatabaseFilePath);
 
             if (userDataBaseFile.Exists && userDataBaseFile.Length == 0)
             {
-                FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath exists");
+                FrmMainApp.Logger.Trace(message: "SettingsDatabaseFilePath exists");
                 userDataBaseFile.Delete();
-                FrmMainApp.Logger.Trace(message: "SSettingsDataBasePath deleted");
+                FrmMainApp.Logger.Trace(message: "SettingsDatabaseFilePath deleted");
             }
 
             if (!userDataBaseFile.Exists)
             {
-                FrmMainApp.Logger.Trace(message: "Creating " + HelperVariables.SSettingsDataBasePath);
+                FrmMainApp.Logger.Trace(message: "Creating " + HelperVariables.SettingsDatabaseFilePath);
                 try
                 {
-                    SQLiteConnection.CreateFile(databaseFileName: Path.Combine(HelperVariables.SSettingsDataBasePath));
-                    SQLiteConnection sqliteDB = new(connectionString: @"Data Source=" + Path.Combine(HelperVariables.SSettingsDataBasePath) + "; Version=3");
+                    SQLiteConnection.CreateFile(databaseFileName: Path.Combine(HelperVariables.SettingsDatabaseFilePath));
+                    SQLiteConnection sqliteDB = new(connectionString: @"Data Source=" + Path.Combine(HelperVariables.SettingsDatabaseFilePath) + "; Version=3");
                     sqliteDB.Open();
 
                     string sql = """
@@ -130,10 +131,17 @@ internal static class HelperDataDatabaseAndStartup
             "ckb_ResetFileDateToCreated"
         };
 
-        string[] NotExtensionSpecificControlNamesToAdd =
+        Dictionary<string, List<string>> NotExtensionSpecificControlNamesToAdd = new Dictionary<string, List<string>>()
         {
-            "rbt_UseGeoNamesLocalLanguage"
+            {
+                "tpg_Application", new List<string>()
+                {
+                    "rbt_UseGeoNamesLocalLanguage",
+                    "rbt_MapColourModeNormal"
+                }
+            }
         };
+
         string existingSQLVal;
 
         // extension-specific
@@ -155,19 +163,16 @@ internal static class HelperDataDatabaseAndStartup
 
                 if (controlName == "ckb_AddXMPSideCar")
                 {
-                    if (HelperGenericAncillaryListsArrays.FileExtensionsThatUseXMP()
-                        .Contains(value: fileExtension))
-                    {
-                        controlDefaultValue = "true";
-                    }
-                    else
-                    {
-                        controlDefaultValue = "false";
-                    }
+                    controlDefaultValue = HelperGenericAncillaryListsArrays
+                                         .FileExtensionsThatUseXMP()
+                                         .Contains(value: fileExtension)
+                        ? "true"
+                        : "false";
                 }
                 else if (controlName == "ckb_ProcessOriginalFile")
                 {
-                    if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
+                    if (tmpCtrlGroup.Contains(value: "raw") ||
+                        tmpCtrlGroup.Contains(value: "tiff"))
                     {
                         controlDefaultValue = "false";
                     }
@@ -179,7 +184,8 @@ internal static class HelperDataDatabaseAndStartup
 
                 else if (controlName == "ckb_ResetFileDateToCreated")
                 {
-                    if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff"))
+                    if (tmpCtrlGroup.Contains(value: "raw") ||
+                        tmpCtrlGroup.Contains(value: "tiff"))
                     {
                         controlDefaultValue = "true";
                     }
@@ -198,17 +204,14 @@ internal static class HelperDataDatabaseAndStartup
             }
         }
 
-        foreach (string controlName in NotExtensionSpecificControlNamesToAdd)
+        foreach (KeyValuePair<string, List<string>> keyValuePair in NotExtensionSpecificControlNamesToAdd)
         {
-            string controlDefaultValue = null;
-            string settingTabPage = null;
-            if (controlName == "rbt_UseGeoNamesLocalLanguage")
+            string settingTabPage = keyValuePair.Key;
+            NotExtensionSpecificControlNamesToAdd.TryGetValue(settingTabPage, out List<string> controlNameList);
+            foreach (string controlName in controlNameList)
             {
-                controlDefaultValue = "true";
-                settingTabPage = "tpg_Application";
+                UpdateSQLite(settingTabPage: settingTabPage, settingId: controlName, controlDefaultValue: "true");
             }
-
-            UpdateSQLite(settingTabPage: settingTabPage, settingId: controlName, controlDefaultValue: controlDefaultValue);
         }
 
         // language

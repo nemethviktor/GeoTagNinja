@@ -128,8 +128,9 @@ internal class ListViewColumnSorter : IComparer
             // ... this is to avoid having something like C# thinking the value of "2" is more than "12".
             else
             {
-                SourcesAndAttributes.ElementAttribute attribute = SourcesAndAttributes.GetAttributeFromString(attributeToFind: colName);
-                Type attributeType = SourcesAndAttributes.GetAttributeType(attribute: attribute);
+                SourcesAndAttributes.ElementAttribute attribute =
+                    SourcesAndAttributes.GetElementAttributesElementAttribute(attributeToFind: colName);
+                Type attributeType = SourcesAndAttributes.GetElementAttributesType(attributeToFind: attribute);
 
                 // get the "highest" version available. In this case that will be either Stage3 or Orig
                 DirectoryElement.AttributeVersion deXHighestAttributeVersion;
@@ -143,8 +144,12 @@ internal class ListViewColumnSorter : IComparer
 
                 if (attributeType == typeof(string))
                 {
-                    string? compareWhat = deX.GetAttributeValueString(attribute: attribute, version: deXHighestAttributeVersion);
-                    string? compareToWhat = deY.GetAttributeValueString(attribute: attribute, version: deYHighestAttributeVersion);
+                    string? compareWhat = deX.GetAttributeValueString(
+                        attribute: attribute, version: deXHighestAttributeVersion,
+                        nowSavingExif: false);
+                    string? compareToWhat = deY.GetAttributeValueString(
+                        attribute: attribute, version: deYHighestAttributeVersion,
+                        nowSavingExif: false);
 
                     result = Comparer.Compare(a: compareWhat, b: compareToWhat);
                 }

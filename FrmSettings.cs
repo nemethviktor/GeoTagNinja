@@ -5,18 +5,29 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using static System.String;
 using static GeoTagNinja.View.ListView.FileListView;
 
 namespace GeoTagNinja;
 
+internal enum SettingsImportExportOptions
+{
+    ApplicationSettings,
+    CityRulesSettings,
+    CustomRulesSettings
+}
+
 public partial class FrmSettings : Form
 {
-    private static List<Control> _lstTpgApplicationControls = new();
+    private static List<Control> _lstTpgApplicationControls = new(); // do not rename
+    private static List<Control> _lstTpgGeoNamesControls = new(); // do not rename
+    private static bool _importHasBeenProcessed;
     private readonly string _languageSavedInSQL;
     private bool _nowLoadingSettingsData;
 
@@ -27,6 +38,16 @@ public partial class FrmSettings : Form
     {
         InitializeComponent();
 
+        // the custom logic is ugly af so no need to be pushy about it in light mode.
+        if (!HelperVariables.UserSettingUseDarkMode)
+        {
+            tcr_Settings.DrawMode = TabDrawMode.Normal;
+        }
+
+        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
+                                                     ? ThemeColour.Dark
+                                                     : ThemeColour.Light, parentControl: this);
+
         // this one is largely responsible for disabling the detection of "new" (changed) data. (ie when going from "noting" to "something")
         _nowLoadingSettingsData = true;
         HelperNonStatic helperNonstatic = new();
@@ -35,13 +56,15 @@ public partial class FrmSettings : Form
         // Gets the various controls' labels and values (eg "latitude" and "51.002")
         _lstTpgApplicationControls = helperNonstatic.GetAllControls(control: tpg_Application)
                                                     .ToList();
+        _lstTpgGeoNamesControls = helperNonstatic.GetAllControls(control: tpg_GeoNames)
+                                                 .ToList();
 
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         if (c != null)
         {
             foreach (Control cItem in c)
             {
-                string parentNameToUse = GetParentNameToUse(cItem: cItem, cTpgApplication: _lstTpgApplicationControls);
+                string parentNameToUse = GetParentNameToUse(cItem: cItem);
 
                 if (cItem.Name == "cbx_Language" || cItem.Name == "cbx_TryUseGeoNamesLanguage")
                 {
@@ -98,10 +121,8 @@ public partial class FrmSettings : Form
     ///     The groupboxes on tpg_Application interfere with the Parent Name logic so this corrects/fakes that.
     /// </summary>
     /// <param name="cItem">The Control to check if it sits in tpg_Application</param>
-    /// <param name="cTpgApplication">List of Controls that are children of tabpage tpg_Application</param>
     /// <returns>The actual Parent Name if tpg_Application isn't a parent or string literal "tpg_Application" if it is.</returns>
-    private static string GetParentNameToUse(Control cItem,
-                                             List<Control> cTpgApplication)
+    private static string GetParentNameToUse(Control cItem)
     {
         string parentNameToUse = null;
         try
@@ -113,9 +134,10 @@ public partial class FrmSettings : Form
             // nothing
         }
 
-        ;
-        if (cTpgApplication.Contains(item: cItem))
+        if (_lstTpgApplicationControls.Contains(item: cItem) || _lstTpgGeoNamesControls.Contains(item: cItem))
         {
+            // yeah this is parentNameToUse = "tpg_Application" on purpose.
+            // Bad planning to be fair but i split the tpg_Application into two tpgs at some point by which time users' sqlite databases would have tpg_Application as a value for these keys
             parentNameToUse = "tpg_Application";
         }
 
@@ -151,7 +173,7 @@ public partial class FrmSettings : Form
         {
             foreach (Control cItem in c)
             {
-                string parentNameToUse = GetParentNameToUse(cItem: cItem, cTpgApplication: _lstTpgApplicationControls);
+                string parentNameToUse = GetParentNameToUse(cItem: cItem);
 
                 {
                     if (cItem is TextBox tbx)
@@ -249,6 +271,20 @@ public partial class FrmSettings : Form
             cbx_TryUseGeoNamesLanguage.Enabled = true;
         }
 
+        // (re)set the map colour mode
+        if (rbt_MapColourModeDarkPale.Checked)
+        {
+            HelperVariables.UserSettingMapColourMode = "DarkPale";
+        }
+        else if (rbt_MapColourModeDarkInverse.Checked)
+        {
+            HelperVariables.UserSettingMapColourMode = "DarkInverse";
+        }
+        else
+        {
+            HelperVariables.UserSettingMapColourMode = "Normal"; // technically we could just ignore this
+        }
+
         _nowLoadingSettingsData = false;
 
         LoadCustomRulesDGV();
@@ -279,7 +315,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "CountryCode",
             Name = COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE,
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: COL_NAME_PREFIX + FileListColumns.COUNTRY),
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader,
+                objectName: COL_NAME_PREFIX + FileListColumns.COUNTRY),
             DataSource = clh_CountryCodeOptions.ToList(), // needs to be a list
             ValueMember = "Key",
             DisplayMember = "Value"
@@ -289,7 +327,8 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "DataPointName",
             Name = "clh_DataPointName",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_DataPointName")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader, objectName: "clh_DataPointName")
         };
 
         // e.g.: "AdminName1","AdminName2"...
@@ -302,7 +341,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "DataPointConditionType",
             Name = "clh_DataPointConditionType",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_DataPointConditionType")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader,
+                objectName: "clh_DataPointConditionType")
         };
 
         // e.g.: "Is","Contains"...
@@ -315,14 +356,17 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "DataPointConditionValue",
             Name = "clh_DataPointConditionValue",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_DataPointConditionValue")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader,
+                objectName: "clh_DataPointConditionValue")
         };
 
         DataGridViewComboBoxColumn clh_TargetPointName = new()
         {
             DataPropertyName = "TargetPointName",
             Name = "clh_TargetPointName",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointName")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader, objectName: "clh_TargetPointName")
         };
 
         // e.g.:  "State","City"...
@@ -335,7 +379,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "TargetPointOutcome",
             Name = "clh_TargetPointOutcome",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointOutcome")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader,
+                objectName: "clh_TargetPointOutcome")
         };
 
         // e.g.: "AdminName1","AdminName2"... +Null (empty)" + Custom
@@ -348,7 +394,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "TargetPointOutcomeCustom",
             Name = "clh_TargetPointOutcomeCustom",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointOutcomeCustom")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader,
+                objectName: "clh_TargetPointOutcomeCustom")
         };
 
         dgv_CustomRules.Columns.AddRange(
@@ -364,7 +412,11 @@ public partial class FrmSettings : Form
 
 
     /// <summary>
-    ///     TODO
+    ///     Loads the custom city logic data into the DataGridView (dgv_CustomCityLogic) from the SQLite database.
+    ///     The method first reads the data from the SQLite database into a DataTable (DtCustomCityLogic).
+    ///     It then sets up the DataGridView with two columns: 'CountryCode' and 'TargetPointNameCustomCityLogic'.
+    ///     The 'CountryCode' column is populated with a list of country codes and countries, and is read-only.
+    ///     The 'TargetPointNameCustomCityLogic' column is populated with a list of items from the CustomCityLogicDataSources.
     /// </summary>
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     private void LoadCustomCityLogicDGV()
@@ -381,7 +433,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "CountryCode",
             Name = COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE,
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: COL_NAME_PREFIX + FileListColumns.COUNTRY),
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader,
+                objectName: COL_NAME_PREFIX + FileListColumns.COUNTRY),
             DataSource = clh_CountryCodeOptions.ToList(), // needs to be a list
             ValueMember = "Key",
             DisplayMember = "Value",
@@ -392,7 +446,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "TargetPointNameCustomCityLogic",
             Name = "clh_TargetPointNameCustomCityLogic",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(objectType: "ColumnHeader", objectName: "clh_TargetPointNameCustomCityLogic")
+            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
+                objectType: ControlType.ColumnHeader,
+                objectName: "clh_TargetPointNameCustomCityLogic")
         };
 
         // e.g.: "AdminName1","AdminName2"... 
@@ -461,106 +517,120 @@ public partial class FrmSettings : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
+    /// <remarks>
+    ///     The main body of this only fires if _importHasBeenProcessed = false; the reason for this is that OK writes to the
+    ///     SQLite file based on what's _in_ the Form whereas the Import logic doesn't change the Form per se.
+    ///     While I could probably import into the settings' write-queue rather than the database file itself, at the moment
+    ///     it's too much hassle to code and would need a pretty major rewrite.
+    /// </remarks>
     private void Btn_OK_Click(object sender,
                               EventArgs e)
     {
-        HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        if (c != null)
+        List<string> rbtGeoNamesLanguage = new()
         {
-            foreach (Control cItem in c)
+            "rbt_UseGeoNamesLocalLanguage",
+            "rbt_TryUseGeoNamesLanguage"
+        };
+
+        List<string> rbtMapColourOptions = new()
+        {
+            "rbt_MapColourModeNormal",
+            "rbt_MapColourModeDarkInverse",
+            "rbt_MapColourModeDarkPale"
+        };
+        if (!_importHasBeenProcessed)
+        {
+            HelperNonStatic helperNonstatic = new();
+            IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
+            if (c != null)
             {
-                if (cItem is CheckBox ckb)
+                foreach (Control cItem in c)
                 {
-                    if ((ckb.Font.Style & FontStyle.Bold) != 0)
+                    if (cItem is CheckBox ckb)
                     {
-                        if (ckb.Name == "ckb_UseImperialNotMetric")
+                        if ((ckb.Font.Style & FontStyle.Bold) != 0)
                         {
-                            warnUserToRestartApp();
-                        }
-                    }
-                }
-
-                if (cItem is ComboBox cbx)
-                {
-                    // if modified
-                    if ((cbx.Font.Style & FontStyle.Bold) != 0)
-                    {
-                        if (cbx.Name == "cbx_Language")
-                        {
-                            warnUserToRestartApp();
-                        }
-                        else if (cbx.Name == "cbx_TryUseGeoNamesLanguage")
-                        {
-                            IEnumerable<KeyValuePair<string, string>> result = HelperGenericAncillaryListsArrays.GetISO_639_1_Languages()
-                                                                                                                .Where(predicate: kvp => kvp.Value == cbx.SelectedItem.ToString());
-
-                            HelperVariables.APILanguageToUse = result.FirstOrDefault()
-                                                                     .Key;
-                        }
-                    }
-                }
-
-                if (cItem is RadioButton rbt)
-                {
-                    // this needs to be an IF rather than an ELSE IF
-                    if (rbt.Name == "rbt_UseGeoNamesLocalLanguage" || rbt.Name == "rbt_TryUseGeoNamesLanguage")
-                    {
-                        if ((rbt.Font.Style & FontStyle.Bold) != 0 && rbt.Checked)
-                        {
-                            ComboBox cbxLng = cbx_TryUseGeoNamesLanguage;
-                            if (rbt.Name == "rbt_UseGeoNamesLocalLanguage")
+                            // strictly speaking for ckb_UseDarkMode we don't need to restart the app and the checker could be called here but it'd need another loop.
+                            if (ckb.Name == "ckb_UseImperialNotMetric" ||
+                                ckb.Name == "ckb_UseDarkMode")
                             {
-                                HelperVariables.APILanguageToUse = "local";
-                                cbxLng.Enabled = false;
+                                PromptUserToRestartApp();
                             }
-                            else if (rbt.Name == "rbt_TryUseGeoNamesLanguage")
+                        }
+                    }
+
+                    if (cItem is ComboBox cbx)
+                    {
+                        // if modified
+                        if ((cbx.Font.Style & FontStyle.Bold) != 0)
+                        {
+                            if (cbx.Name == "cbx_Language")
                             {
-                                cbxLng.Enabled = true;
-                                IEnumerable<KeyValuePair<string, string>> result = HelperGenericAncillaryListsArrays.GetISO_639_1_Languages()
-                                                                                                                    .Where(predicate: kvp => kvp.Value == cbxLng.SelectedItem.ToString());
+                                PromptUserToRestartApp();
+                            }
+                            else if (cbx.Name == "cbx_TryUseGeoNamesLanguage")
+                            {
+                                IEnumerable<KeyValuePair<string, string>> result =
+                                    HelperGenericAncillaryListsArrays
+                                       .GetISO_639_1_Languages()
+                                       .Where(predicate: kvp =>
+                                                  kvp.Value ==
+                                                  cbx.SelectedItem.ToString());
 
                                 HelperVariables.APILanguageToUse = result.FirstOrDefault()
-                                                                         .Key;
+                                   .Key;
+                            }
+                        }
+                    }
+
+                    if (cItem is RadioButton rbt)
+                    {
+                        // this needs to be an IF rather than an ELSE IF
+                        if (rbtGeoNamesLanguage.Contains(item: rbt.Name))
+                        {
+                            // (rbt.Font.Style & FontStyle.Bold) here means that there has been a change of state and it needs saving
+                            if ((rbt.Font.Style & FontStyle.Bold) != 0 && rbt.Checked)
+                            {
+                                ComboBox cbxLng = cbx_TryUseGeoNamesLanguage;
+                                if (rbt.Name == "rbt_UseGeoNamesLocalLanguage")
+                                {
+                                    HelperVariables.APILanguageToUse = "local";
+                                    cbxLng.Enabled = false;
+                                }
+                                else if (rbt.Name == "rbt_TryUseGeoNamesLanguage")
+                                {
+                                    cbxLng.Enabled = true;
+                                    IEnumerable<KeyValuePair<string, string>> result = HelperGenericAncillaryListsArrays
+                                                                                      .GetISO_639_1_Languages()
+                                                                                      .Where(
+                                                                                           predicate: kvp =>
+                                                                                               kvp.Value ==
+                                                                                               cbxLng.SelectedItem
+                                                                                                     .ToString());
+
+                                    HelperVariables.APILanguageToUse = result.FirstOrDefault()
+                                                                             .Key;
+                                }
+                            }
+                        }
+                        else if (rbtMapColourOptions.Contains(item: rbt.Name))
+                        {
+                            if ((rbt.Font.Style & FontStyle.Bold) != 0 && rbt.Checked)
+                            {
+                                HelperVariables.UserSettingMapColourMode = rbt.Name.Replace(oldValue: "rbt_MapColourMode", newValue: "");
                             }
                         }
                     }
                 }
             }
+
+            HelperDataApplicationSettings.DataTransferSQLiteSettings();
         }
 
-        HelperDataApplicationSettings.DataTransferSQLiteSettings();
         HelperDataApplicationSettings.DataDeleteSQLitesettingsToWritePreQueue();
 
         // refresh user data
-        HelperVariables.SArcGisApiKey = HelperDataApplicationSettings.DataSelectTbxARCGIS_APIKey_FromSQLite();
-        HelperVariables.SGeoNamesUserName = HelperDataApplicationSettings.DataReadSQLiteSettings(
-            tableName: "settings",
-            settingTabPage: "tpg_Application",
-            settingId: "tbx_GeoNames_UserName"
-        );
-        HelperVariables.SGeoNamesPwd = HelperDataApplicationSettings.DataReadSQLiteSettings(
-            tableName: "settings",
-            settingTabPage: "tpg_Application",
-            settingId: "tbx_GeoNames_Pwd"
-        );
-
-        HelperVariables.SResetMapToZero = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-            tableName: "settings",
-            settingTabPage: "tpg_Application",
-            settingId: "ckb_ResetMapToZero"
-        );
-        HelperVariables.SOnlyShowFCodePPL = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-            tableName: "settings",
-            settingTabPage: "tpg_Application",
-            settingId: "ckb_PopulatedPlacesOnly"
-        );
-
-        HelperVariables.SUpdatePreReleaseGTN = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-            tableName: "settings",
-            settingTabPage: "tpg_Application",
-            settingId: "ckb_UpdateCheckPreRelease"
-        );
+        HelperGenericAppStartup.AppStartupApplyDefaults();
 
         HelperGenericAppStartup.AppStartupPullOverWriteBlankToponomy();
         HelperGenericAppStartup.AppStartupPullToponomyRadiusAndMaxRows();
@@ -572,17 +642,6 @@ public partial class FrmSettings : Form
         // in case it changed or something.
         HelperVariables.DtCustomRules = HelperDataCustomRules.DataReadSQLiteCustomRules();
         Hide();
-
-        void warnUserToRestartApp()
-        {
-            // fire a warning if something of importance has changed. 
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmSettings_PleaseRestartApp"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Warning);
-        }
     }
 
     /// <summary>
@@ -693,14 +752,7 @@ public partial class FrmSettings : Form
 
                 if (tmpCtrlName.Contains(value: "ckb_ProcessOriginalFile"))
                 {
-                    if (box.Checked)
-                    {
-                        ckb_ResetFileDateToCreated.Enabled = true;
-                    }
-                    else
-                    {
-                        ckb_ResetFileDateToCreated.Enabled = false;
-                    }
+                    ckb_ResetFileDateToCreated.Enabled = box.Checked;
                 }
             }
         }
@@ -753,7 +805,7 @@ public partial class FrmSettings : Form
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
 
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
             HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
                 settingTabPage: parentNameToUse,
@@ -782,7 +834,7 @@ public partial class FrmSettings : Form
             string cItemName = "";
 
             object lbi = null;
-            if (frmSettingsInstance != null && frmSettingsInstance.tct_Settings.SelectedTab.Name == "tpg_FileOptions")
+            if (frmSettingsInstance != null && frmSettingsInstance.tcr_Settings.SelectedTab.Name == "tpg_FileOptions")
             {
                 lbi = lbx_fileExtensions.SelectedItem;
             }
@@ -817,7 +869,7 @@ public partial class FrmSettings : Form
 
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
             HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
                 settingTabPage: parentNameToUse,
@@ -843,7 +895,7 @@ public partial class FrmSettings : Form
 
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
             HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
                 settingTabPage: parentNameToUse,
@@ -880,7 +932,7 @@ public partial class FrmSettings : Form
 
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
             HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
                 settingTabPage: parentNameToUse,
@@ -905,7 +957,7 @@ public partial class FrmSettings : Form
 
             // stick it into settings-Q
             HelperNonStatic helperNonstatic = new();
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender, cTpgApplication: _lstTpgApplicationControls);
+            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
             HelperDataApplicationSettings.DataWriteSQLiteSettings(
                 tableName: "settingsToWritePreQueue",
                 settingTabPage: parentNameToUse,
@@ -972,20 +1024,31 @@ public partial class FrmSettings : Form
         if (e.Exception != null &&
             e.Context == DataGridViewDataErrorContexts.Commit)
         {
-            MessageBox.Show(
+            CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+                    messageBoxName:
+                    "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Information.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
+            customMessageBox.ShowDialog();
         }
     }
 
     /// <summary>
-    ///     Responsible for the DGV validation
+    ///     Handles the RowValidating event of the dgv_CustomRules DataGridView.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The DataGridViewCellCancelEventArgs instance containing the event data.</param>
+    /// <remarks>
+    ///     This method validates the data in the "clh_TargetPointOutcome" column of the DataGridView.
+    ///     If the value of the "clh_TargetPointOutcome" cell is "Custom" and the corresponding "clh_TargetPointOutcomeCustom"
+    ///     cell is empty,
+    ///     it cancels the event, preventing the user from leaving the cell until a valid value is entered, and displays a
+    ///     warning message.
+    /// </remarks>
     private void dgv_CustomRules_RowValidating(object sender,
                                                DataGridViewCellCancelEventArgs e)
     {
@@ -1001,16 +1064,29 @@ public partial class FrmSettings : Form
             if (clh_TargetPointOutcomeValue == "Custom" && IsNullOrEmpty(value: clh_TargetPointOutcomeCustomValue))
             {
                 e.Cancel = true;
-                MessageBox.Show(
+                CustomMessageBox customMessageBox = new(
                     text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                        messageBoxName: "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty"),
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+                        messageBoxName:
+                        "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty"),
+                    caption: HelperControlAndMessageBoxHandling
+                       .GenericGetMessageBoxCaption(
+                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Warning);
+                customMessageBox.ShowDialog();
             }
         }
     }
 
+    /// <summary>
+    ///     Handles the Click event of the btn_ResetToDefaults control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    /// <remarks>
+    ///     This method resets the custom city allocation rules to their default values, clears the data grid view columns,
+    ///     reloads the custom city logic data grid view, and displays a message box with information about the operation.
+    /// </remarks>
     private void btn_ResetToDefaults_Click(object sender,
                                            EventArgs e)
     {
@@ -1018,11 +1094,252 @@ public partial class FrmSettings : Form
         // reload
         dgv_CustomCityLogic.Columns.Clear();
         LoadCustomCityLogicDGV();
-        MessageBox.Show(
+        CustomMessageBox customMessageBox = new(
             text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                 messageBoxName: "mbx_GenericDone"),
-            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                   .Information.ToString()),
             buttons: MessageBoxButtons.OK,
             icon: MessageBoxIcon.Information);
+        customMessageBox.ShowDialog();
     }
+
+
+#region Import-export
+
+    /// <summary>
+    ///     Handles the Click event of the ExportSettings button.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+    /// <remarks>
+    ///     This method initiates the process of exporting the settings. It first gathers the settings to be exported by
+    ///     showing a dialog with checkboxes.
+    ///     If the user chooses to proceed with the export (by not selecting "no"), a SaveFileDialog is shown where the user
+    ///     can choose the location and name of the exported SQLite database file.
+    ///     The settings are then exported to the chosen file. If an error occurs during the export, a MessageBox is shown with
+    ///     the error message.
+    /// </remarks>
+    private void btn_ExportSettings_Click(object sender,
+                                          EventArgs e)
+    {
+        Dictionary<string, string> checkboxDictionary = GetCheckboxDictionary();
+
+        Dictionary<string, string> buttonsDictionary = GetButtonsDictionary();
+
+        // ReSharper disable once InconsistentNaming
+        List<string> ItemsToExport = DialogWithCheckBox.DisplayAndReturnList(
+            labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                messageBoxName: "mbx_FrmSettings_QuestionWhatToExport"),
+            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question
+                                              .ToString()),
+            checkboxesDictionary: checkboxDictionary,
+            buttonsDictionary: buttonsDictionary,
+            orientation: "Vertical");
+
+        // ignore the whole thing if "no" is part of the output
+        // probably impossible that _neither_ of them are in the list but in case i missed something...
+        if (!ItemsToExport.Contains(item: "no") && ItemsToExport.Contains(item: "yes"))
+        {
+            using (SaveFileDialog exportFileDialog = new())
+            {
+                exportFileDialog.Filter = "SQLite Databasee|*.db";
+                exportFileDialog.Title = "Save a SQLite File";
+                exportFileDialog.FileName = "GeoTagNinja_Settings_Export_" + DateTime.Now.ToString(format: "yyyyMMdd_HHmm");
+                exportFileDialog.ShowDialog();
+
+                // If the file name is not an empty string open it for saving.
+                if (exportFileDialog.FileName != "")
+                {
+                    try
+                    {
+                        File.Copy(sourceFileName: HelperVariables.SettingsDatabaseFilePath,
+                                  destFileName: Path.Combine(exportFileDialog.FileName),
+                                  overwrite: true);
+                        HelperDataSettingsExport.DataExportSettings(settingsToExportList: ItemsToExport, exportFilePath: Path.Combine(exportFileDialog.FileName));
+                    }
+                    catch (Exception ex)
+                    {
+                        CustomMessageBox customMessageBox = new(
+                            text: HelperControlAndMessageBoxHandling
+                                     .GenericGetMessageBoxText(
+                                          messageBoxName:
+                                          "mbx_FrmSettings_ErrorExportFailed") +
+                                  ex.Message,
+                            caption: HelperControlAndMessageBoxHandling
+                               .GenericGetMessageBoxCaption(
+                                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                            buttons: MessageBoxButtons.OK,
+                            icon: MessageBoxIcon.Error);
+                        customMessageBox.ShowDialog();
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    ///     Handles the Click event of the Import Settings button.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">An EventArgs that contains the event data.</param>
+    /// <remarks>
+    ///     This method opens a dialog for the user to select a database file to import.
+    ///     If a file is selected, it displays another dialog with checkboxes for the user to select specific items to import.
+    ///     If the user confirms the selection, the method calls the DataImportSettings method to import the selected items
+    ///     from the chosen database file.
+    /// </remarks>
+    private void btn_ImportSettings_Click(object sender,
+                                          EventArgs e)
+    {
+        string? databaseFileToImport = GetDatabaseFileToImport();
+        if (databaseFileToImport is not null)
+        {
+            Dictionary<string, string> checkboxDictionary = GetCheckboxDictionary();
+
+            Dictionary<string, string> buttonsDictionary = GetButtonsDictionary();
+
+            // ReSharper disable once InconsistentNaming
+            List<string> ItemsToImport = DialogWithCheckBox.DisplayAndReturnList(
+                labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmSettings_QuestionWhatToImport"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Question.ToString()),
+                checkboxesDictionary: checkboxDictionary,
+                buttonsDictionary: buttonsDictionary,
+                orientation: "Vertical");
+
+            // ignore the whole thing if "no" is part of the output
+            // probably impossible that _neither_ of them are in the list but in case i missed something...
+            if (!ItemsToImport.Contains(item: "no") && ItemsToImport.Contains(item: "yes"))
+            {
+                _importHasBeenProcessed = HelperDataSettingsImport.DataImportSettings(settingsToImportList: ItemsToImport,
+                                                                                      importFilePath: databaseFileToImport);
+
+                // this is done so that the user doesn't end up clicking OK and then triggering a re-save of what they may have queued up against warnings.
+                // Cancel clears the write queue but since the database would have been overwritten that's a reasonable logical path to take.
+                if (_importHasBeenProcessed)
+                {
+                    PromptUserToRestartApp();
+                    btn_Cancel.PerformClick();
+                }
+            }
+        }
+
+        string GetDatabaseFileToImport()
+        {
+            OpenFileDialog openFileDialog = new()
+            {
+                Filter = "SQLite Database files (*.db)|*.db",
+                Title = "Select a database file"
+            };
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                return openFileDialog.FileName;
+            }
+
+            return null;
+        }
+    }
+
+    /// <summary>
+    ///     Prompts the user to restart the application.
+    /// </summary>
+    /// <remarks>
+    ///     This method displays a dialog box with options to restart the application now or later.
+    ///     If the user chooses to restart now, the application is restarted immediately.
+    ///     If the user chooses to restart later, a warning message box is displayed.
+    /// </remarks>
+    private void PromptUserToRestartApp()
+    {
+        Dictionary<string, string> buttonsDictionary = new()
+        {
+            {
+                HelperDataLanguageTZ.DataReadDTObjectText(
+                    objectType: ControlType.Button,
+                    objectName: "btn_RestartNow"),
+                "RestartNow"
+            },
+            {
+                HelperDataLanguageTZ.DataReadDTObjectText(
+                    objectType: ControlType.Button,
+                    objectName: "btn_RestartLater"),
+                "RestartLater"
+            }
+        };
+
+        // ReSharper disable once InconsistentNaming
+        List<string> displayAndReturnList = DialogWithoutCheckBox.DisplayAndReturnList(
+            labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                messageBoxName: "mbx_FrmSettings_PleaseRestartApp"),
+            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question
+                                              .ToString()),
+            buttonsDictionary: buttonsDictionary,
+            orientation: "Horizontal");
+
+        // basically this triggers an error in debug mode but works ok in prod.
+        #if !DEBUG
+        if (displayAndReturnList.Contains(item: "RestartNow"))
+        {
+            Process.Start(fileName: Application.ExecutablePath);
+            Application.Exit();
+        }
+        #endif
+    }
+
+    /// <summary>
+    ///     Creates and returns a dictionary representing buttons in the dialog.
+    ///     Each key-value pair in the dictionary represents a button, where the key is the text displayed on the button,
+    ///     and the value is the return value when the button is clicked.
+    /// </summary>
+    /// <returns>A dictionary of string pairs representing the buttons in the dialog.</returns>
+    private static Dictionary<string, string> GetButtonsDictionary()
+    {
+        Dictionary<string, string> buttonsDictionary = new()
+        {
+            {
+                HelperDataLanguageTZ.DataReadDTObjectText(
+                    objectType: ControlType.Button,
+                    objectName: "btn_OK"
+                ),
+                "yes" // that's ok
+            },
+            {
+                HelperDataLanguageTZ.DataReadDTObjectText(
+                    objectType: ControlType.Button,
+                    objectName: "btn_Cancel"
+                ),
+                "no" // that's ok
+            }
+        };
+        return buttonsDictionary;
+    }
+
+    /// <summary>
+    ///     Creates and returns a dictionary representing checkboxes for the settings import/export dialog.
+    ///     Each key-value pair in the dictionary represents a checkbox, where the key is the text displayed next to the
+    ///     checkbox,
+    ///     and the value is the name of the corresponding `SettingsImportExportOptions` enum value.
+    /// </summary>
+    /// <returns>A dictionary of string pairs representing the checkboxes in the settings import/export dialog.</returns>
+    private static Dictionary<string, string> GetCheckboxDictionary()
+    {
+        Dictionary<string, string> checkboxDictionary = new();
+        foreach (string name in Enum.GetNames(
+                     enumType: typeof(SettingsImportExportOptions)))
+        {
+            checkboxDictionary.Add(key: HelperDataLanguageTZ.DataReadDTObjectText(
+                                       objectType: ControlType.CheckBox,
+                                       objectName: "ckb_ImportExport_" +
+                                                   name), value: name);
+        }
+
+        return checkboxDictionary;
+    }
+
+#endregion
 }

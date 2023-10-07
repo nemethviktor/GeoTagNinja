@@ -1,4 +1,5 @@
-﻿using System.Data.SQLite;
+﻿using System.Collections.Generic;
+using System.Data.SQLite;
 
 namespace GeoTagNinja.Helpers;
 
@@ -10,7 +11,7 @@ internal static class HelperDataApplicationSettings
     /// </summary>
     internal static void DataDeleteSQLitesettingsToWritePreQueue()
     {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SSettingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -42,14 +43,36 @@ internal static class HelperDataApplicationSettings
             settingTabPage: settingTabPage,
             settingId: settingId
         );
-        if (valueInSQL == "true")
-        {
-            return true;
-        }
-
-        return false;
+        return valueInSQL == "true";
     }
 
+    /// <summary>
+    ///     Checks the SQLite database for radio button settings and returns the selected option.
+    /// </summary>
+    /// <param name="tableName">The table name where the particular radio button setting is stored.</param>
+    /// <param name="settingTabPage">The tab page of the setting.</param>
+    /// <param name="optionList">The list of options for the radio button.</param>
+    /// <returns>The selected option from the radio button setting.</returns>
+    internal static string DataReadRadioButtonSettingTrueOrFalse(string tableName,
+                                                                 string settingTabPage,
+                                                                 List<string> optionList)
+    {
+        string whichValueIsTrue = "";
+        foreach (string optionValue in optionList)
+        {
+            if (HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
+                    tableName: "settings",
+                    settingTabPage: "tpg_Application",
+                    settingId: optionValue
+                ))
+            {
+                whichValueIsTrue = optionValue.Replace(oldValue: "rbt_MapColourMode", newValue: "");
+                break;
+            }
+        }
+
+        return whichValueIsTrue;
+    }
 
     /// <summary>
     ///     Reads the user-settings and returns them to the app (such as say default starting folder.)
@@ -60,14 +83,16 @@ internal static class HelperDataApplicationSettings
     /// </param>
     /// <param name="settingTabPage">This lines up with the tab name on the Settings form</param>
     /// <param name="settingId">Name of the SettingID for which data is requested</param>
+    /// <param name="returnBlankIfNull"></param>
     /// <returns>String - the value of the given SettingID</returns>
     internal static string DataReadSQLiteSettings(string tableName,
                                                   string settingTabPage,
-                                                  string settingId)
+                                                  string settingId,
+                                                  bool returnBlankIfNull = false)
     {
         string returnString = null;
 
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SSettingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -90,27 +115,14 @@ internal static class HelperDataApplicationSettings
             returnString = reader.GetString(i: 0);
         }
 
+        if (returnBlankIfNull && string.IsNullOrWhiteSpace(returnString))
+        {
+            returnString = "";
+        }
+
         return returnString;
     }
 
-    /// <summary>
-    ///     Reads a single value (the ARCGIS key) from Settings. Admittedly redundant. Remnant of the early design. Should be
-    ///     changed into something more efficient.
-    /// </summary>
-    /// <returns>The ARCGIS API key value from Settings</returns>
-    internal static string DataSelectTbxARCGIS_APIKey_FromSQLite()
-    {
-        try
-        {
-            HelperVariables.SArcGisApiKey = DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_ARCGIS_APIKey");
-        }
-        catch
-        {
-            HelperVariables.SArcGisApiKey = "";
-        }
-
-        return HelperVariables.SArcGisApiKey;
-    }
 
     /// <summary>
     ///     Transfers data from the "write queue" to the actual table. This is executed when the user presses the OK button in
@@ -122,7 +134,7 @@ internal static class HelperDataApplicationSettings
     /// </summary>
     internal static void DataTransferSQLiteSettings()
     {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SSettingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -149,7 +161,7 @@ internal static class HelperDataApplicationSettings
                                                  string settingId,
                                                  string settingValue)
     {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SSettingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
         string sqlCommandStrand = @"

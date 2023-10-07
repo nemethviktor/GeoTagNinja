@@ -14,7 +14,7 @@ internal static class HelperDataFavourites
     {
         FrmMainApp.Logger.Debug(message: "Starting");
 
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SSettingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -35,7 +35,7 @@ internal static class HelperDataFavourites
     /// <returns></returns>
     internal static DataTable DataReadSQLiteFavourites(bool structureOnly = false)
     {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SSettingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -72,7 +72,7 @@ internal static class HelperDataFavourites
     {
         FrmMainApp.Logger.Debug(message: "Starting");
 
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SSettingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -95,7 +95,7 @@ internal static class HelperDataFavourites
     internal static void DataWriteSQLiteAddNewFavourite(DataRow drFavourite)
     {
         FrmMainApp.Logger.Trace(message: "Starting");
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SSettingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -122,7 +122,7 @@ internal static class HelperDataFavourites
                                              .ToString());
         foreach (SourcesAndAttributes.ElementAttribute attribute in HelperGenericAncillaryListsArrays.GetFavouriteTags())
         {
-            string attributeStr = SourcesAndAttributes.GetAttributeName(attribute: attribute);
+            string attributeStr = SourcesAndAttributes.GetElementAttributesName(attributeToFind: attribute);
             sqlToRun.Parameters.AddWithValue(parameterName: "@" + attribute, value: drFavourite[columnName: attributeStr]
                                                  .ToString());
         }
@@ -145,7 +145,7 @@ internal static class HelperDataFavourites
                                                         string subLocation)
     {
         FrmMainApp.Logger.Trace(message: "Starting");
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SSettingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -179,7 +179,7 @@ internal static class HelperDataFavourites
     {
         FrmMainApp.Logger.Debug(message: "Starting");
 
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SSettingsDataBasePath);
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -217,7 +217,7 @@ internal static class HelperDataFavourites
     {
         try
         {
-            using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SSettingsDataBasePath);
+            using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
             sqliteDB.Open();
 
             // Get the schema for the columns in the database.

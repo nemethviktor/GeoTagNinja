@@ -1,6 +1,8 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using static GeoTagNinja.View.ListView.FileListView;
 
 namespace GeoTagNinja;
@@ -26,27 +28,30 @@ internal static class EditFileFormGeneric
         clh_fileName.Width = lvw.Width;
         lvw.Columns.Add(value: clh_fileName);
 
-        ColumnHeader clh_GUID = new();
-        clh_GUID.Name = COL_NAME_PREFIX + FileListColumns.GUID;
-        clh_GUID.Width = 0;
-        lvw.Columns.Add(value: clh_GUID);
+        //ColumnHeader clh_GUID = new();
+        //clh_GUID.Name = COL_NAME_PREFIX + FileListColumns.GUID;
+        //clh_GUID.Width = 0;
+        //lvw.Columns.Add(value: clh_GUID);
 
         foreach (string fileToEditGUID in FrmMainApp.filesToEditGUIDStringList)
         {
-            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: fileToEditGUID);
+            DirectoryElement dirElemFileToModify =
+                FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: fileToEditGUID);
 
             if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {
                 overallCount++;
                 ListViewItem lvi = new()
                 {
-                    Text = dirElemFileToModify.ItemNameWithoutPath
+                    Text = dirElemFileToModify.ItemNameWithoutPath,
+                    Tag = dirElemFileToModify
                 };
-                lvi.SubItems.Add(text: fileToEditGUID);
+                //lvi.SubItems.Add(text: fileToEditGUID);
                 FrmEditFileData.lvw_FileListEditImages.Items.Add(value: lvi);
                 fileCount++;
             }
-            else if (dirElemFileToModify.Type == DirectoryElement.ElementType.SubDirectory)
+            else if (dirElemFileToModify.Type ==
+                     DirectoryElement.ElementType.SubDirectory)
             {
                 overallCount++;
                 folderCount++;
@@ -56,7 +61,14 @@ internal static class EditFileFormGeneric
         if (fileCount > 0)
         {
             FrmEditFileData.StartPosition = FormStartPosition.CenterScreen;
-            FrmEditFileData.ShowDialog();
+            try
+            {
+                FrmEditFileData.ShowDialog();
+            }
+            catch (AccessViolationException)
+            {
+                // Ignore the exception
+            }
         }
         // basically if the user only selected folders, do nothing
         else if (overallCount == folderCount + fileCount)
@@ -66,10 +78,15 @@ internal static class EditFileFormGeneric
         // we appear to have lost a file or two.
         else
         {
-            MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_Helper_WarningFileDisappeared"),
-                            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
-                            buttons: MessageBoxButtons.OK,
-                            icon: MessageBoxIcon.Warning);
+            CustomMessageBox customMessageBox = new(
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                    messageBoxName: "mbx_Helper_WarningFileDisappeared"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Warning.ToString()),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Warning);
+            customMessageBox.ShowDialog();
         }
     }
 }

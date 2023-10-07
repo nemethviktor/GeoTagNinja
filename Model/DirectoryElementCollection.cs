@@ -1,12 +1,14 @@
-﻿using ExifToolWrapper;
-using GeoTagNinja.Helpers;
-using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using ExifToolWrapper;
+using GeoTagNinja.Helpers;
+using GeoTagNinja.View.DialogAndMessageBoxes;
+using Microsoft.WindowsAPICodePack.Taskbar;
+using NLog;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using static System.Environment;
 
@@ -43,7 +45,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
     {
         foreach (DirectoryElement item in this)
         {
-            if (item.GetAttributeValueString(ElementAttribute.GUID) == GUID)
+            if (item.GetAttributeValueString(ElementAttribute.GUID,
+                                             nowSavingExif: false) ==
+                GUID)
             {
                 return item;
             }
@@ -84,8 +88,11 @@ public class DirectoryElementCollection : List<DirectoryElement>
         HashSet<string> uids = new HashSet<string>();
         foreach (DirectoryElement directoryElement in this)
         {
-            if (directoryElement.HasDirtyAttributes(DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
-                uids.Add(directoryElement.GetAttributeValueString(ElementAttribute.GUID));
+            if (directoryElement.HasDirtyAttributes(
+                    DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
+                uids.Add(
+                    directoryElement.GetAttributeValueString(
+                        ElementAttribute.GUID, nowSavingExif: false));
         }
 
         return uids;
@@ -183,6 +190,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                         ));
                 }
 
+                CreateGUIDsForDirectoryElements();
                 Logger.Trace(message: "Listing Drives - OK");
                 return;
             }
@@ -206,10 +214,15 @@ public class DirectoryElementCollection : List<DirectoryElement>
             catch (Exception ex)
             {
                 Logger.Error(message: $"Could not add parent. Error: {ex.Message}");
-                MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
-                                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
-                                buttons: MessageBoxButtons.OK,
-                                icon: MessageBoxIcon.Error);
+                CustomMessageBox customMessageBox = new(
+                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                        messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
+                    caption: HelperControlAndMessageBoxHandling
+                       .GenericGetMessageBoxCaption(
+                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Error);
+                customMessageBox.ShowDialog();
             }
 
             // ******************************
@@ -249,10 +262,15 @@ public class DirectoryElementCollection : List<DirectoryElement>
             catch (Exception ex)
             {
                 Logger.Error(message: "Error: " + ex.Message);
-                MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
-                                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
-                                buttons: MessageBoxButtons.OK,
-                                icon: MessageBoxIcon.Error);
+                CustomMessageBox customMessageBox = new(
+                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                        messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
+                    caption: HelperControlAndMessageBoxHandling
+                       .GenericGetMessageBoxCaption(
+                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Error);
+                customMessageBox.ShowDialog();
             }
 
             Logger.Trace(message: "Listing Folders - OK");
@@ -395,14 +413,18 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 overlappingXmpFileStr += s + NewLine;
             }
 
-            MessageBox.Show(
+            CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_WarningMultipleImageFilesForXMP") +
+                          messageBoxName:
+                          "mbx_FrmMainApp_WarningMultipleImageFilesForXMP") +
                       NewLine +
                       overlappingXmpFileStr,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
+            customMessageBox.ShowDialog();
         }
 
         // ******************************
@@ -451,15 +473,21 @@ public class DirectoryElementCollection : List<DirectoryElement>
             Thread.Sleep(1);
         }
 
-        foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
-        {
-            directoryElement.SetAttributeValue(ElementAttribute.GUID, Guid.NewGuid()
-                                                                          .ToString(), DirectoryElement.AttributeVersion.Original, false);
-        }
+        CreateGUIDsForDirectoryElements();
 
-        FrmMainApp.TaskbarManagerInstance.SetProgressState(Microsoft.WindowsAPICodePack.Taskbar.TaskbarProgressBarState.NoProgress);
+        FrmMainApp.TaskbarManagerInstance.SetProgressState(TaskbarProgressBarState.NoProgress);
 
         Logger.Info(message: "Files: Extracting File Data - OK");
+
+        // Assigns a GUID for the DEs in the DECollection
+        void CreateGUIDsForDirectoryElements()
+        {
+            foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
+            {
+                directoryElement.SetAttributeValue(ElementAttribute.GUID, Guid.NewGuid()
+                                                                              .ToString(), DirectoryElement.AttributeVersion.Original, false);
+            }
+        }
     }
 
     /// <summary>

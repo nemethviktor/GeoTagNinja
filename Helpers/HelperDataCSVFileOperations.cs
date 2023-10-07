@@ -20,14 +20,9 @@ internal static class HelperDataCSVFileOperations
     {
         DataTable dt = new();
         StreamReader reader;
-        if (isUTF)
-        {
-            reader = new StreamReader(path: fileNameWithPath, encoding: Encoding.UTF8);
-        }
-        else
-        {
-            reader = new StreamReader(path: fileNameWithPath);
-        }
+        reader = isUTF
+            ? new StreamReader(path: fileNameWithPath, encoding: Encoding.UTF8)
+            : new StreamReader(path: fileNameWithPath);
 
         using CsvReader csv = new(reader: reader, culture: CultureInfo.InvariantCulture);
         // Do any configuration to `CsvReader` before creating CsvDataReader.

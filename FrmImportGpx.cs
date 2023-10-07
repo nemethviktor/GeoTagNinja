@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using TimeZoneConverter;
 
 namespace GeoTagNinja;
@@ -30,6 +30,10 @@ public partial class FrmImportGpx : Form
     public FrmImportGpx()
     {
         InitializeComponent();
+        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
+                                                     ? ThemeColour.Dark
+                                                     : ThemeColour.Light, parentControl: this);
+
         // set defaults
         rbt_importOneFile.Checked = true;
         pbx_importFromAnotherFolder.Enabled = false;
@@ -154,20 +158,13 @@ public partial class FrmImportGpx : Form
 
     private string updatelbl_TZValue()
     {
-        if (ckb_UseDST.Checked == false)
-        {
-            SelectedTzAdjustment = cbx_UseTimeZone.Text.Split('#')[0]
-                .TrimStart(' ')
-                .TrimEnd(' ')
-                .Substring(startIndex: 1, length: 6);
-        }
-        else
-        {
-            SelectedTzAdjustment = cbx_UseTimeZone.Text.Split('#')[0]
-                .TrimStart(' ')
-                .TrimEnd(' ')
-                .Substring(startIndex: 8, length: 6);
-        }
+        SelectedTzAdjustment = cbx_UseTimeZone.Text.Split('#')[0]
+                                              .TrimStart(' ')
+                                              .TrimEnd(' ')
+                                              .Substring(
+                                                   startIndex: ckb_UseDST.Checked == false
+                                                       ? 1
+                                                       : 8, length: 6);
 
         return SelectedTzAdjustment;
     }
@@ -182,11 +179,15 @@ public partial class FrmImportGpx : Form
     {
         if (_lastShiftSecond == 0 && _lastShiftMinute == 0 && _lastShiftHour == 0 && _lastShiftDay == 0)
         {
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportNoStoredShiftValues"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+            CustomMessageBox customMessageBox = new(
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmImportNoStoredShiftValues"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
+            customMessageBox.ShowDialog();
         }
 
         if (_lastShiftSecond != 0)
@@ -250,14 +251,7 @@ public partial class FrmImportGpx : Form
     {
         pbx_importOneFile.Enabled = rbt_importOneFile.Checked;
         lbl_importOneFile.Enabled = rbt_importOneFile.Checked;
-        if (rbt_importOneFile.Checked)
-        {
-            lbl_importFromAnotherFolder.Enabled = false;
-        }
-        else
-        {
-            lbl_importFromAnotherFolder.Enabled = true;
-        }
+        lbl_importFromAnotherFolder.Enabled = !rbt_importOneFile.Checked;
     }
 
     private void rbt_importFromCurrentFolder_CheckedChanged(object sender,
@@ -320,14 +314,9 @@ public partial class FrmImportGpx : Form
         {
             trackFileLocationType = "folder";
             // this wouldn't exist in collectionMode
-            if (rbt_importFromCurrentFolder.Checked)
-            {
-                trackFileLocationVal = _frmMainAppInstance.tbx_FolderName.Text;
-            }
-            else
-            {
-                trackFileLocationVal = lbl_importFromAnotherFolder.Text;
-            }
+            trackFileLocationVal = rbt_importFromCurrentFolder.Checked
+                ? _frmMainAppInstance.tbx_FolderName.Text
+                : lbl_importFromAnotherFolder.Text;
         }
 
         int timeShiftSeconds = 0;
@@ -344,8 +333,8 @@ public partial class FrmImportGpx : Form
         {
             // indicate that something is going on
             btn_OK.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: sender.GetType()
-                    .Name,
+                objectType: HelperDataLanguageTZ.GetControlType(
+                    controlType: sender.GetType()),
                 objectName: "btn_OK_Working"
             );
             btn_OK.AutoSize = true;
@@ -368,11 +357,15 @@ public partial class FrmImportGpx : Form
         }
         else
         {
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportGpx_FileOrFolderDoesntExist"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+            CustomMessageBox customMessageBox = new(
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmImportGpx_FileOrFolderDoesntExist"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
+            customMessageBox.ShowDialog();
         }
 
         _lastShiftSecond = decimal.ToInt16(value: nud_Seconds.Value);

@@ -19,6 +19,10 @@ internal static class FileListViewMapNavigation
         HelperVariables.HTMLAddMarker = "";
         HelperVariables.HsMapMarkers.Clear();
 
+        // reset the Favourites dropdown. this is needed bcs if there's an item in the dropdown and user clicks on an image in listview the coords change on the map
+        // and it becomes impossible to select that fav's original coords again, which is illogical.
+        frmMainAppInstance.cbx_Favourites.SelectedItem = null;
+
         // ReSharper disable once InconsistentNaming
         foreach (ListViewItem lvw_FileListItem in frmMainAppInstance.lvw_FileList.SelectedItems)
         {

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using NLog;
 
 namespace GeoTagNinja.View.ListView;
@@ -49,7 +51,12 @@ public partial class FileListView : System.Windows.Forms.ListView
     ///     This is to deal with the icons in listview
     ///     from https://stackoverflow.com/a/37806517/3968494
     /// </summary>
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming"), SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local"), SuppressMessage(category: "ReSharper", checkId: "IdentifierTypo"), SuppressMessage(category: "ReSharper", checkId: "StringLiteralTypo"), SuppressMessage(category: "ReSharper", checkId: "MemberCanBePrivate.Local"), SuppressMessage(category: "ReSharper", checkId: "FieldCanBeMadeReadOnly.Local")]
+    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming"),
+     SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local"),
+     SuppressMessage(category: "ReSharper", checkId: "IdentifierTypo"),
+     SuppressMessage(category: "ReSharper", checkId: "StringLiteralTypo"),
+     SuppressMessage(category: "ReSharper", checkId: "MemberCanBePrivate.Local"),
+     SuppressMessage(category: "ReSharper", checkId: "FieldCanBeMadeReadOnly.Local")]
     private static class NativeMethods
     {
         public const uint LVM_FIRST = 0x1000;
@@ -161,6 +168,8 @@ public partial class FileListView : System.Windows.Forms.ListView
         public const string TAKEN_DATE = "TakenDate";
         public const string CREATE_DATE = "CreateDate";
         public const string OFFSET_TIME = "OffsetTime";
+        public const string IPTC_KEYWORDS = "IPTCKeywords";
+        public const string XML_SUBJECTS = "XMLSubjects";
     }
 
 #region Internal Variables
@@ -203,6 +212,148 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     private NativeMethods.SHFILEINFOW shfi;
 
+    private static readonly Dictionary<string, SourcesAndAttributes.ElementAttribute>
+        columnToAttributeMap = new()
+        {
+            {
+                FileListColumns.GUID,
+                SourcesAndAttributes.ElementAttribute.GUID
+            },
+            {
+                FileListColumns.GPS_ALTITUDE,
+                SourcesAndAttributes.ElementAttribute.GPSAltitude
+            },
+            {
+                FileListColumns.GPS_ALTITUDE_REF,
+                SourcesAndAttributes.ElementAttribute.GPSAltitudeRef
+            },
+            {
+                FileListColumns.GPS_DEST_LATITUDE,
+                SourcesAndAttributes.ElementAttribute.GPSDestLatitude
+            },
+            {
+                FileListColumns.GPS_DEST_LATITUDE_REF,
+                SourcesAndAttributes.ElementAttribute.GPSDestLatitudeRef
+            },
+            {
+                FileListColumns.GPS_DEST_LONGITUDE,
+                SourcesAndAttributes.ElementAttribute.GPSDestLongitude
+            },
+            {
+                FileListColumns.GPS_DEST_LONGITUDE_REF,
+                SourcesAndAttributes.ElementAttribute.GPSDestLongitudeRef
+            },
+            {
+                FileListColumns.GPS_IMGDIRECTION,
+                SourcesAndAttributes.ElementAttribute.GPSImgDirection
+            },
+            {
+                FileListColumns.GPS_IMGDIRECTION_REF,
+                SourcesAndAttributes.ElementAttribute.GPSImgDirectionRef
+            },
+            {
+                FileListColumns.GPS_LATITUDE,
+                SourcesAndAttributes.ElementAttribute.GPSLatitude
+            },
+            {
+                FileListColumns.GPS_LATITUDE_REF,
+                SourcesAndAttributes.ElementAttribute.GPSLatitudeRef
+            },
+            {
+                FileListColumns.GPS_LONGITUDE,
+                SourcesAndAttributes.ElementAttribute.GPSLongitude
+            },
+            {
+                FileListColumns.GPS_LONGITUDE_REF,
+                SourcesAndAttributes.ElementAttribute.GPSLongitudeRef
+            },
+            {
+                FileListColumns.GPS_SPEED,
+                SourcesAndAttributes.ElementAttribute.GPSSpeed
+            },
+            {
+                FileListColumns.GPS_SPEED_REF,
+                SourcesAndAttributes.ElementAttribute.GPSSpeedRef
+            },
+
+            {
+                FileListColumns.CITY,
+                SourcesAndAttributes.ElementAttribute.City
+            },
+            {
+                FileListColumns.COUNTRY_CODE,
+                SourcesAndAttributes.ElementAttribute.CountryCode
+            },
+            {
+                FileListColumns.COUNTRY,
+                SourcesAndAttributes.ElementAttribute.Country
+            },
+            {
+                FileListColumns.STATE,
+                SourcesAndAttributes.ElementAttribute.State
+            },
+            {
+                FileListColumns.SUB_LOCATION,
+                SourcesAndAttributes.ElementAttribute.Sub_location
+            },
+            {
+                FileListColumns.MAKE,
+                SourcesAndAttributes.ElementAttribute.Make
+            },
+            {
+                FileListColumns.MODEL,
+                SourcesAndAttributes.ElementAttribute.Model
+            },
+            {
+                FileListColumns.RATING,
+                SourcesAndAttributes.ElementAttribute.Rating
+            },
+            {
+                FileListColumns.EXPOSURETIME,
+                SourcesAndAttributes.ElementAttribute.ExposureTime
+            },
+            {
+                FileListColumns.FNUMBER,
+                SourcesAndAttributes.ElementAttribute.Fnumber
+            },
+            {
+                FileListColumns.FOCAL_LENGTH,
+                SourcesAndAttributes.ElementAttribute.FocalLength
+            },
+            {
+                FileListColumns.FOCAL_LENGTH_IN_35MM_FORMAT,
+                SourcesAndAttributes.ElementAttribute.FocalLengthIn35mmFormat
+            },
+            {
+                FileListColumns.ISO,
+                SourcesAndAttributes.ElementAttribute.ISO
+            },
+            {
+                FileListColumns.LENS_SPEC,
+                SourcesAndAttributes.ElementAttribute.LensSpec
+            },
+            {
+                FileListColumns.TAKEN_DATE,
+                SourcesAndAttributes.ElementAttribute.TakenDate
+            },
+            {
+                FileListColumns.CREATE_DATE,
+                SourcesAndAttributes.ElementAttribute.CreateDate
+            },
+            {
+                FileListColumns.OFFSET_TIME,
+                SourcesAndAttributes.ElementAttribute.OffsetTime
+            },
+            {
+                FileListColumns.IPTC_KEYWORDS,
+                SourcesAndAttributes.ElementAttribute.IPTCKeywords
+            },
+            {
+                FileListColumns.XML_SUBJECTS,
+                SourcesAndAttributes.ElementAttribute.XMLSubjects
+            }
+        };
+
 #endregion
 
 
@@ -224,163 +375,6 @@ public partial class FileListView : System.Windows.Forms.ListView
 
 #region Internal Update Logic
 
-    internal static string ElementAttributeToColumnHeaderName(SourcesAndAttributes.ElementAttribute elementAttribute)
-    {
-        switch (elementAttribute)
-        {
-            case SourcesAndAttributes.ElementAttribute.GUID:
-                return COL_NAME_PREFIX + FileListColumns.GUID;
-            case SourcesAndAttributes.ElementAttribute.GPSAltitude:
-                return COL_NAME_PREFIX + FileListColumns.GPS_ALTITUDE;
-            case SourcesAndAttributes.ElementAttribute.GPSAltitudeRef:
-                return COL_NAME_PREFIX + FileListColumns.GPS_ALTITUDE_REF;
-            case SourcesAndAttributes.ElementAttribute.GPSDestLatitude:
-                return COL_NAME_PREFIX + FileListColumns.GPS_DEST_LATITUDE;
-            case SourcesAndAttributes.ElementAttribute.GPSDestLatitudeRef:
-                return COL_NAME_PREFIX + FileListColumns.GPS_DEST_LATITUDE_REF;
-            case SourcesAndAttributes.ElementAttribute.GPSDestLongitude:
-                return COL_NAME_PREFIX + FileListColumns.GPS_DEST_LONGITUDE;
-            case SourcesAndAttributes.ElementAttribute.GPSDestLongitudeRef:
-                return COL_NAME_PREFIX + FileListColumns.GPS_DEST_LONGITUDE_REF;
-            case SourcesAndAttributes.ElementAttribute.GPSImgDirection:
-                return COL_NAME_PREFIX + FileListColumns.GPS_IMGDIRECTION;
-            case SourcesAndAttributes.ElementAttribute.GPSImgDirectionRef:
-                return COL_NAME_PREFIX + FileListColumns.GPS_IMGDIRECTION_REF;
-            case SourcesAndAttributes.ElementAttribute.GPSLatitude:
-                return COL_NAME_PREFIX + FileListColumns.GPS_LATITUDE;
-            case SourcesAndAttributes.ElementAttribute.GPSLatitudeRef:
-                return COL_NAME_PREFIX + FileListColumns.GPS_LATITUDE_REF;
-            case SourcesAndAttributes.ElementAttribute.GPSLongitude:
-                return COL_NAME_PREFIX + FileListColumns.GPS_LONGITUDE;
-            case SourcesAndAttributes.ElementAttribute.GPSLongitudeRef:
-                return COL_NAME_PREFIX + FileListColumns.GPS_LONGITUDE_REF;
-            case SourcesAndAttributes.ElementAttribute.GPSSpeed:
-                return COL_NAME_PREFIX + FileListColumns.GPS_SPEED;
-            case SourcesAndAttributes.ElementAttribute.GPSSpeedRef:
-                return COL_NAME_PREFIX + FileListColumns.GPS_SPEED_REF;
-            case SourcesAndAttributes.ElementAttribute.Coordinates:
-                return COL_NAME_PREFIX + FileListColumns.COORDINATES;
-            case SourcesAndAttributes.ElementAttribute.DestCoordinates:
-                return COL_NAME_PREFIX + FileListColumns.DEST_COORDINATES;
-            case SourcesAndAttributes.ElementAttribute.City:
-                return COL_NAME_PREFIX + FileListColumns.CITY;
-            case SourcesAndAttributes.ElementAttribute.CountryCode:
-                return COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE;
-            case SourcesAndAttributes.ElementAttribute.Country:
-                return COL_NAME_PREFIX + FileListColumns.COUNTRY;
-            case SourcesAndAttributes.ElementAttribute.State:
-                return COL_NAME_PREFIX + FileListColumns.STATE;
-            case SourcesAndAttributes.ElementAttribute.Sub_location:
-                return COL_NAME_PREFIX + FileListColumns.SUB_LOCATION;
-            case SourcesAndAttributes.ElementAttribute.Make:
-                return COL_NAME_PREFIX + FileListColumns.MAKE;
-            case SourcesAndAttributes.ElementAttribute.Model:
-                return COL_NAME_PREFIX + FileListColumns.MODEL;
-            case SourcesAndAttributes.ElementAttribute.Rating:
-                return COL_NAME_PREFIX + FileListColumns.RATING;
-            case SourcesAndAttributes.ElementAttribute.ExposureTime:
-                return COL_NAME_PREFIX + FileListColumns.EXPOSURETIME;
-            case SourcesAndAttributes.ElementAttribute.Fnumber:
-                return COL_NAME_PREFIX + FileListColumns.FNUMBER;
-            case SourcesAndAttributes.ElementAttribute.FocalLength:
-                return COL_NAME_PREFIX + FileListColumns.FOCAL_LENGTH;
-            case SourcesAndAttributes.ElementAttribute.FocalLengthIn35mmFormat:
-                return COL_NAME_PREFIX + FileListColumns.FOCAL_LENGTH_IN_35MM_FORMAT;
-            case SourcesAndAttributes.ElementAttribute.ISO:
-                return COL_NAME_PREFIX + FileListColumns.ISO;
-            case SourcesAndAttributes.ElementAttribute.LensSpec:
-                return COL_NAME_PREFIX + FileListColumns.LENS_SPEC;
-            case SourcesAndAttributes.ElementAttribute.TakenDate:
-                return COL_NAME_PREFIX + FileListColumns.TAKEN_DATE;
-            case SourcesAndAttributes.ElementAttribute.CreateDate:
-                return COL_NAME_PREFIX + FileListColumns.CREATE_DATE;
-            case SourcesAndAttributes.ElementAttribute.OffsetTime:
-                return COL_NAME_PREFIX + FileListColumns.OFFSET_TIME;
-
-            default:
-                throw new ArgumentException(message: "Unimplemented column name");
-                break;
-        }
-    }
-
-    internal static SourcesAndAttributes.ElementAttribute ColumnHeaderToElementAttribute(ColumnHeader columnHeader)
-    {
-        switch (columnHeader.Name.Substring(startIndex: COL_NAME_PREFIX.Length))
-        {
-            case FileListColumns.GUID:
-                return SourcesAndAttributes.ElementAttribute.GUID;
-            case FileListColumns.GPS_ALTITUDE:
-                return SourcesAndAttributes.ElementAttribute.GPSAltitude;
-            case FileListColumns.GPS_ALTITUDE_REF:
-                return SourcesAndAttributes.ElementAttribute.GPSAltitudeRef;
-            case FileListColumns.GPS_DEST_LATITUDE:
-                return SourcesAndAttributes.ElementAttribute.GPSDestLatitude;
-            case FileListColumns.GPS_DEST_LATITUDE_REF:
-                return SourcesAndAttributes.ElementAttribute.GPSDestLatitudeRef;
-            case FileListColumns.GPS_DEST_LONGITUDE:
-                return SourcesAndAttributes.ElementAttribute.GPSDestLongitude;
-            case FileListColumns.GPS_DEST_LONGITUDE_REF:
-                return SourcesAndAttributes.ElementAttribute.GPSDestLongitudeRef;
-            case FileListColumns.GPS_IMGDIRECTION:
-                return SourcesAndAttributes.ElementAttribute.GPSImgDirection;
-            case FileListColumns.GPS_IMGDIRECTION_REF:
-                return SourcesAndAttributes.ElementAttribute.GPSImgDirectionRef;
-            case FileListColumns.GPS_LATITUDE:
-                return SourcesAndAttributes.ElementAttribute.GPSLatitude;
-            case FileListColumns.GPS_LATITUDE_REF:
-                return SourcesAndAttributes.ElementAttribute.GPSLatitudeRef;
-            case FileListColumns.GPS_LONGITUDE:
-                return SourcesAndAttributes.ElementAttribute.GPSLongitude;
-            case FileListColumns.GPS_LONGITUDE_REF:
-                return SourcesAndAttributes.ElementAttribute.GPSLongitudeRef;
-            case FileListColumns.GPS_SPEED:
-                return SourcesAndAttributes.ElementAttribute.GPSSpeed;
-            case FileListColumns.GPS_SPEED_REF:
-                return SourcesAndAttributes.ElementAttribute.GPSSpeedRef;
-            case FileListColumns.COORDINATES:
-                return SourcesAndAttributes.ElementAttribute.Coordinates;
-            case FileListColumns.DEST_COORDINATES:
-                return SourcesAndAttributes.ElementAttribute.DestCoordinates;
-            case FileListColumns.CITY:
-                return SourcesAndAttributes.ElementAttribute.City;
-            case FileListColumns.COUNTRY_CODE:
-                return SourcesAndAttributes.ElementAttribute.CountryCode;
-            case FileListColumns.COUNTRY:
-                return SourcesAndAttributes.ElementAttribute.Country;
-            case FileListColumns.STATE:
-                return SourcesAndAttributes.ElementAttribute.State;
-            case FileListColumns.SUB_LOCATION:
-                return SourcesAndAttributes.ElementAttribute.Sub_location;
-            case FileListColumns.MAKE:
-                return SourcesAndAttributes.ElementAttribute.Make;
-            case FileListColumns.MODEL:
-                return SourcesAndAttributes.ElementAttribute.Model;
-            case FileListColumns.RATING:
-                return SourcesAndAttributes.ElementAttribute.Rating;
-            case FileListColumns.EXPOSURETIME:
-                return SourcesAndAttributes.ElementAttribute.ExposureTime;
-            case FileListColumns.FNUMBER:
-                return SourcesAndAttributes.ElementAttribute.Fnumber;
-            case FileListColumns.FOCAL_LENGTH:
-                return SourcesAndAttributes.ElementAttribute.FocalLength;
-            case FileListColumns.FOCAL_LENGTH_IN_35MM_FORMAT:
-                return SourcesAndAttributes.ElementAttribute.FocalLengthIn35mmFormat;
-            case FileListColumns.ISO:
-                return SourcesAndAttributes.ElementAttribute.ISO;
-            case FileListColumns.LENS_SPEC:
-                return SourcesAndAttributes.ElementAttribute.LensSpec;
-            case FileListColumns.TAKEN_DATE:
-                return SourcesAndAttributes.ElementAttribute.TakenDate;
-            case FileListColumns.CREATE_DATE:
-                return SourcesAndAttributes.ElementAttribute.CreateDate;
-            case FileListColumns.OFFSET_TIME:
-                return SourcesAndAttributes.ElementAttribute.OffsetTime;
-            default:
-                throw new ArgumentException(message: "Unimplemented column name");
-                break;
-        }
-    }
-
     /// <summary>
     ///     Retrieves the value for the given column from the given
     ///     Directory Element (also does transformations if necessary).
@@ -396,7 +390,9 @@ public partial class FileListView : System.Windows.Forms.ListView
         // which is done in the actual addListItem method.
         if (columnHeader.Name == COL_NAME_PREFIX + FileListColumns.FILENAME)
         {
-            throw new ArgumentException(message: "The contents of the filename column cannot be requested from the method 'pickModelValueForColumn'.");
+            throw new ArgumentException(
+                message:
+                "The contents of the filename column cannot be requested from the method 'pickModelValueForColumn'.");
         }
 
         // Set the value if no model value is found
@@ -408,80 +404,28 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         string DefaultStrGetter(SourcesAndAttributes.ElementAttribute atrb)
         {
-            return directoryElement.GetAttributeValueString(attribute: atrb, notFoundValue: nfVal);
+            return directoryElement.GetAttributeValueString(
+                attribute: atrb, notFoundValue: nfVal, nowSavingExif: false);
         }
 
+        if (columnToAttributeMap.TryGetValue(
+                key: columnHeader.Name.Substring(startIndex: 4),
+                value: out SourcesAndAttributes.ElementAttribute attribute))
+        {
+            return DefaultStrGetter(atrb: attribute);
+        }
+
+        // Handle special cases.
         switch (columnHeader.Name.Substring(startIndex: 4))
         {
-            case FileListColumns.GUID:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.GUID);
-            case FileListColumns.GPS_ALTITUDE:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.GPSAltitude);
-            case FileListColumns.GPS_ALTITUDE_REF:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.GPSAltitudeRef);
-            case FileListColumns.GPS_DEST_LATITUDE:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.GPSDestLatitude);
-            case FileListColumns.GPS_DEST_LATITUDE_REF:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.GPSDestLatitudeRef);
-            case FileListColumns.GPS_DEST_LONGITUDE:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.GPSDestLongitude);
-            case FileListColumns.GPS_DEST_LONGITUDE_REF:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.GPSDestLongitudeRef);
-            case FileListColumns.GPS_IMGDIRECTION:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.GPSImgDirection);
-            case FileListColumns.GPS_IMGDIRECTION_REF:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.GPSImgDirectionRef);
-            case FileListColumns.GPS_LATITUDE:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.GPSLatitude);
-            case FileListColumns.GPS_LATITUDE_REF:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.GPSLatitudeRef);
-            case FileListColumns.GPS_LONGITUDE:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.GPSLongitude);
-            case FileListColumns.GPS_LONGITUDE_REF:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.GPSLongitudeRef);
-            case FileListColumns.GPS_SPEED:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.GPSSpeed);
-            case FileListColumns.GPS_SPEED_REF:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.GPSSpeedRef);
             case FileListColumns.COORDINATES:
-                return ModelToColumnValueTransformations.M2C_CoordinatesInclDest(column: FileListColumns.COORDINATES, item: directoryElement, nfVal: nfVal);
+                return ModelToColumnValueTransformations.M2C_CoordinatesInclDest(
+                    column: FileListColumns.COORDINATES, item: directoryElement,
+                    nfVal: nfVal);
             case FileListColumns.DEST_COORDINATES:
-                return ModelToColumnValueTransformations.M2C_CoordinatesInclDest(column: FileListColumns.DEST_COORDINATES, item: directoryElement, nfVal: nfVal);
-            case FileListColumns.CITY:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.City);
-            case FileListColumns.COUNTRY_CODE:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.CountryCode);
-            case FileListColumns.COUNTRY:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.Country);
-            case FileListColumns.STATE:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.State);
-            case FileListColumns.SUB_LOCATION:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.Sub_location);
-            case FileListColumns.MAKE:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.Make);
-            case FileListColumns.MODEL:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.Model);
-            case FileListColumns.RATING:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.Rating);
-            case FileListColumns.EXPOSURETIME:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.ExposureTime);
-            case FileListColumns.FNUMBER:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.Fnumber);
-            case FileListColumns.FOCAL_LENGTH:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.FocalLength);
-            case FileListColumns.FOCAL_LENGTH_IN_35MM_FORMAT:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.FocalLengthIn35mmFormat);
-            case FileListColumns.ISO:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.ISO);
-            case FileListColumns.LENS_SPEC:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.LensSpec);
-            case FileListColumns.TAKEN_DATE:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.TakenDate);
-            case FileListColumns.CREATE_DATE:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.CreateDate);
-            case FileListColumns.OFFSET_TIME:
-                return DefaultStrGetter(atrb: SourcesAndAttributes.ElementAttribute.OffsetTime);
-
+                return ModelToColumnValueTransformations.M2C_CoordinatesInclDest(
+                    column: FileListColumns.DEST_COORDINATES, item: directoryElement,
+                    nfVal: nfVal);
             default:
                 return nfVal;
         }
@@ -507,16 +451,22 @@ public partial class FileListView : System.Windows.Forms.ListView
             himl = NativeMethods.SHGetFileInfo(pszPath: directoryElement.FileNameWithPath,
                                                dwFileAttributes: 0,
                                                psfi: ref shfi,
-                                               cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
-                                               uFlags: NativeMethods.SHGFI_DISPLAYNAME | NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
+                                               cbSizeFileInfo: (uint)Marshal.SizeOf(
+                                                   structure: shfi),
+                                               uFlags: NativeMethods.SHGFI_DISPLAYNAME |
+                                                       NativeMethods.SHGFI_SYSICONINDEX |
+                                                       NativeMethods.SHGFI_SMALLICON);
         }
         else
         {
-            himl = NativeMethods.SHGetFileInfo(pszPath: directoryElement.ItemNameWithoutPath,
-                                               dwFileAttributes: 0,
-                                               psfi: ref shfi,
-                                               cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
-                                               uFlags: NativeMethods.SHGFI_DISPLAYNAME | NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
+            himl = NativeMethods.SHGetFileInfo(
+                pszPath: directoryElement.ItemNameWithoutPath,
+                dwFileAttributes: 0,
+                psfi: ref shfi,
+                cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
+                uFlags: NativeMethods.SHGFI_DISPLAYNAME |
+                        NativeMethods.SHGFI_SYSICONINDEX |
+                        NativeMethods.SHGFI_SMALLICON);
         }
 
         //Debug.Assert(himl == hSysImgList); // should be the same imagelist as the one we set
@@ -586,7 +536,9 @@ public partial class FileListView : System.Windows.Forms.ListView
             {
                 if (columnHeader.Name != COL_NAME_PREFIX + FileListColumns.FILENAME)
                 {
-                    subItemList.Add(item: PickModelValueForColumn(directoryElement: directoryElement, columnHeader: columnHeader));
+                    subItemList.Add(item: PickModelValueForColumn(
+                                        directoryElement: directoryElement,
+                                        columnHeader: columnHeader));
                 }
             }
 
@@ -602,7 +554,9 @@ public partial class FileListView : System.Windows.Forms.ListView
                 }
                 else if (columnHeader.Name == COL_NAME_PREFIX + FileListColumns.GUID)
                 {
-                    subItemList.Add(item: PickModelValueForColumn(directoryElement: directoryElement, columnHeader: columnHeader));
+                    subItemList.Add(item: PickModelValueForColumn(
+                                        directoryElement: directoryElement,
+                                        columnHeader: columnHeader));
                 }
                 else
                 {
@@ -657,18 +611,22 @@ public partial class FileListView : System.Windows.Forms.ListView
             colOrderHeadername.Add(item: columnHeader.Name);
             int colOrderIndexInt = 0;
 
-            colOrderIndexInt = Convert.ToInt16(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
-                                                   tableName: "applayout",
-                                                   settingTabPage: "lvw_FileList",
-                                                   settingId: settingIdToSend));
+            colOrderIndexInt = Convert.ToInt16(
+                value: HelperDataApplicationSettings.DataReadSQLiteSettings(
+                    tableName: "applayout",
+                    settingTabPage: "lvw_FileList",
+                    settingId: settingIdToSend));
 
             // If no user preset is found, retrieve the default
             // col order value
             if (colOrderIndexInt == 0)
             {
-                if (_cfg_Col_Order_Default.ContainsKey(key: columnHeader.Name.Substring(startIndex: 4)))
+                if (_cfg_Col_Order_Default.ContainsKey(
+                        key: columnHeader.Name.Substring(startIndex: 4)))
                 {
-                    colOrderIndexInt = _cfg_Col_Order_Default[key: columnHeader.Name.Substring(startIndex: 4)];
+                    colOrderIndexInt =
+                        _cfg_Col_Order_Default[
+                            key: columnHeader.Name.Substring(startIndex: 4)];
                 }
             }
 
@@ -689,7 +647,8 @@ public partial class FileListView : System.Windows.Forms.ListView
 
             // We only set col width if there actually is a setting for it.
             // New columns thus will have a default size
-            if (colWidth != null && colWidth.Length > 0)
+            if (colWidth != null &&
+                colWidth.Length > 0)
             {
                 columnHeader.Width = Convert.ToInt16(value: colWidth);
             }
@@ -709,7 +668,8 @@ public partial class FileListView : System.Windows.Forms.ListView
             foreach (ColumnHeader columnHeader in Columns)
             {
                 // We go for case-insensitive!
-                if (string.Equals(a: columnHeader.Name, b: arrColOrderHeadername[idx], comparisonType: StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(a: columnHeader.Name, b: arrColOrderHeadername[idx],
+                                  comparisonType: StringComparison.OrdinalIgnoreCase))
                 {
                     columnHeader.DisplayIndex = idx;
                     Logger.Trace(message: "columnHeader: " +
@@ -776,8 +736,16 @@ public partial class FileListView : System.Windows.Forms.ListView
     private void SetupColumns()
     {
         Logger.Debug(message: "Starting");
-
-        foreach (SourcesAndAttributes.ElementAttribute attribute in SourcesAndAttributes.TagsToColumnHeaderOrder)
+        List<SourcesAndAttributes.ElementAttribute> attributesWithValidOrderIDs = Enum
+           .GetValues(enumType: typeof(SourcesAndAttributes.ElementAttribute))
+           .Cast<SourcesAndAttributes.ElementAttribute>()
+           .Where(predicate: attribute =>
+                      SourcesAndAttributes.GetElementAttributesOrderID(
+                          attributeToFind: attribute) >
+                      0)
+           .ToList();
+        foreach (SourcesAndAttributes.ElementAttribute attribute in
+                 attributesWithValidOrderIDs)
         {
             string clhName = attribute.ToString();
 
@@ -796,22 +764,29 @@ public partial class FileListView : System.Windows.Forms.ListView
             {
                 Logger.Trace(message: "Loading localization for: " + clh.Name);
                 clh.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: "ColumnHeader",
+                    objectType: ControlType.ColumnHeader,
                     objectName: clh.Name
                 );
-                Logger.Trace(message: "Loaded localization: " + clh.Name + " --> " + clh.Text);
+                Logger.Trace(message: "Loaded localization: " +
+                                      clh.Name +
+                                      " --> " +
+                                      clh.Text);
             }
         }
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(
+            CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_ErrorLanguageFileColumnHeaders") +
+                          messageBoxName:
+                          "mbx_FrmMainApp_ErrorLanguageFileColumnHeaders") +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
+            customMessageBox.ShowDialog();
         }
     }
 
@@ -820,7 +795,8 @@ public partial class FileListView : System.Windows.Forms.ListView
     {
         // Set up the ListView control's basic properties.
         // Set its theme so it will look like the one used by Explorer.
-        NativeMethods.SetWindowTheme(hWnd: Handle, pszSubAppName: "Explorer", pszSubIdList: null);
+        NativeMethods.SetWindowTheme(hWnd: Handle, pszSubAppName: "Explorer",
+                                     pszSubIdList: null);
     }
 
     private void InitializeImageList()
@@ -830,13 +806,18 @@ public partial class FileListView : System.Windows.Forms.ListView
         IntPtr hSysImgList = NativeMethods.SHGetFileInfo(pszPath: "",
                                                          dwFileAttributes: 0,
                                                          psfi: ref shfi,
-                                                         cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
-                                                         uFlags: NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON);
-        Debug.Assert(condition: hSysImgList != IntPtr.Zero); // cross our fingers and hope to succeed!
+                                                         cbSizeFileInfo: (uint)Marshal
+                                                            .SizeOf(structure: shfi),
+                                                         uFlags: NativeMethods
+                                                            .SHGFI_SYSICONINDEX |
+                                                         NativeMethods.SHGFI_SMALLICON);
+        Debug.Assert(condition: hSysImgList !=
+                                IntPtr.Zero); // cross our fingers and hope to succeed!
 
         // Set the ListView control to use that image list.
         IntPtr hOldImgList = NativeMethods.SendMessage(hWnd: Handle,
-                                                       msg: NativeMethods.LVM_SETIMAGELIST,
+                                                       msg: NativeMethods
+                                                          .LVM_SETIMAGELIST,
                                                        wParam: NativeMethods.LVSIL_SMALL,
                                                        lParam: hSysImgList);
 
@@ -866,7 +847,8 @@ public partial class FileListView : System.Windows.Forms.ListView
     {
         if (_isInitialized)
         {
-            throw new InvalidOperationException(message: "Trying to initialize the FileListView more than once.");
+            throw new InvalidOperationException(
+                message: "Trying to initialize the FileListView more than once.");
         }
 
         Logger.Debug(message: "Starting");
@@ -1001,7 +983,8 @@ public partial class FileListView : System.Windows.Forms.ListView
         // If the current thread is not the UI thread, InvokeRequired will be true
         if (InvokeRequired)
         {
-            Invoke(method: (Action)(() => UpdateItemColour(itemText: itemText, color: color)));
+            Invoke(method: (Action)(() =>
+                       UpdateItemColour(itemText: itemText, color: color)));
             return;
         }
 
@@ -1028,14 +1011,9 @@ public partial class FileListView : System.Windows.Forms.ListView
         if (e.Column == LvwColumnSorter.SortColumn)
         {
             // Column clicked is current sort column --> Reverse order
-            if (LvwColumnSorter.SortOrder == SortOrder.Ascending)
-            {
-                LvwColumnSorter.SortOrder = SortOrder.Descending;
-            }
-            else
-            {
-                LvwColumnSorter.SortOrder = SortOrder.Ascending;
-            }
+            LvwColumnSorter.SortOrder = LvwColumnSorter.SortOrder == SortOrder.Ascending
+                ? SortOrder.Descending
+                : SortOrder.Ascending;
         }
         else
         {

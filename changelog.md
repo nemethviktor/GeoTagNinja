@@ -1,8 +1,39 @@
 ﻿# GeoTagNinja Changelog
 
+**Build 8680 [20231007]** 
+- NEW & UPDATED:
+  - App Version Bump: 1.14
+  - Implemented an Export/Import functionality for Settings and Custom Rules
+  - Bumped exifTool to v12.67
+  - Streamlined a lot of code relating to the reusability of on-the-fly Form generation
+	- Same goes for generic reusability, messageboxes, enums, buttons, whatnots
+  - Various further Dark Mode changes/improvements
+  - Added the capability to Restart the app immediately if the user wants so in the Settings
+  - Added support for previewing HEIC images
+- BUGS & FIXES:
+  - Fixed Country DropDown not displaying anything if the existing data wasn't on the predefined list. It now takes value from CountryCode
+  - Fixed Date Shift misbehaving 
+  - Fixed newly-saved data not being written back into the DE-logic
+
+**Build 8661 [20230918]** 
+- NEW & UPDATED:
+  - App Version Bump: 1.13
+  - GPSDestinationLat/Long ...
+	- is now being displayed in certain cases (when there is a series of images subject to a set of conditions. See the readme on how this works.),
+	- can be modified via a new button below the map,
+	- has been added to the list/function of "remove all geodata"
+  - Added a new tab for the Exif info - this lists the values as they are held by GTN internally.
+  - Added 2 new buttons for filing feature requests and bugs (both require a GitHub acct.)
+  - Added Dark Mode support. Refer to the readme but it's very ugly and there's little I can do about that as WinForms doesn't support the rich capabilities Windows 10/11 can offer for the time being.
+  - Added various options for "Dark Mode Map"
+- BUGS & FIXES:
+  - Fixed an error when data in MyComputer wasn't properly recorded and this caused a crash
+  - Reverted a change introduced earlier re: webView2 initialisation after it randomly failed on one of my VMs
+
 **Build 8646 [20230903]** 
 - NEW & UPDATED:
- - Graduated the app to version 1.x [technically 1.10 because it's been edging up on the minor versions ever since initial release] - yayy. It now has all the features I initially wanted.
+ - App Version Bump: 1.10
+ - Graduated the app to version 1 [technically 1.10 because it's been edging up on the minor versions ever since initial release] - yayy. It now has all the features I initially wanted.
    - Added some support for reading and displaying ImgDirection/Ref.
    - Added a TaskbarProgressBarState indicator
    - Update the "update" logic -> there's now a Setting that enables the user to update to pre-release [dev] releases or master-only. Master releases will no longer be marked as pre-release on github.
@@ -32,6 +63,7 @@
 
 **Build 8556 [20230605]**
 - NEW & UPDATED:
+  - App Version Bump: 0.9 
   - Added a "Collections Mode", in particular to work with Jeffrey Frield's LightRoom Classic Plugin "Run Any Command". Details on how to use this are in the readme.
   - Rewrote the sorting logic to account for the data type of the column being sorted (i.e. date, number, text etc)
   - Added Country to Favourites
@@ -45,6 +77,7 @@
 
 **Build 8469 [20230310]**
 - NEW & UPDATED:
+  - App Version Bump: 0.8
   - Entirely rewrote the code to work off DirectoryElements rather than DataTables. This is techy so I won't get into it here, for anyone cares read the code or discussion #62
   - Added functionality to auto-navigate to a selected Favourite in the dropdown.
   - Added a "recall last Track Sync Shift" option.
@@ -59,7 +92,7 @@
   - Fixed a bug where NumericUpDown changes didn't trigger setting fonts to Bold
   - Fixed the map zooming way too far out when negative lat/long values are present
   - Changed the pick-from-API-choices Form to be 1-based-index rather than 0-based
-  - Fixed messageBox captions always saying "Error" as output
+  - Fixed MessageBox captions always saying "Error" as output
   - Fixed a bug where one or two Settings were ignored on load
   - Fixed a variety of random bugs relating to time-shift copypastes not entirely behaving
   - Further fixed a variety of bugs that yet again I don't entirely remember
@@ -87,6 +120,7 @@
 
 **Build 8391 [20221222]**
 - NEW & UPDATED:
+  - App Version Bump: 0.7
   - Added Column Sort (kudos to Urmel, thank you!)
   - Added Column Show/Hide (kudos to Urmel, thank you!)
   - Added a Setting to return X rows of data from the API within Y miles radius (I think it's miles anyway, maybe KM)
@@ -126,6 +160,7 @@
 
 **Build 8358 [20221119]**
 - NEW & UPDATED:
+  - App Version Bump: 0.6
   - Finally managed to get hold of ReSharper so the code has been refactored in totality. Famous last words but it shouldn't affect usage.
   - Added a ".." to the main grid (listView) where applicable (parent folder).
   - Added the capability to navigate to the top of the folder structure. (e.g. MyComputer and then list the drives.)
@@ -194,8 +229,9 @@
   - Added "Remove GeoData" to main form as well as Edit form
   - Added this changelog.md file
   - Added a readme to the ExtraFiles folder
-  - Added handling to messageBox texts being read from SQLite
+  - Added handling to MessageBox texts being read from SQLite
  
 **Build 8248 [20220801]**
 - NEW & UPDATED:
   - Initial release
+  - App Version Bump: 0.5

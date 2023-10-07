@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using static System.Environment;
 
 namespace GeoTagNinja.Helpers;
@@ -16,7 +17,7 @@ internal static class HelperFileSystemOperators
     /// <returns>Realistically nothing but it sets s_changeFolderIsOkay according to the user input and circumstances</returns>
     internal static async Task FsoCheckOutstandingFiledataOkayToChangeFolderAsync()
     {
-        HelperVariables.SChangeFolderIsOkay = false;
+        HelperVariables.OperationChangeFolderIsOkay = false;
 
         // check if there's anything in the write-Q
         bool dataToWrite = false;
@@ -43,11 +44,15 @@ internal static class HelperFileSystemOperators
         if (dataToWrite)
         {
             // ask: do you want to write/save?
-            DialogResult dialogResult = MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_Helper_QuestionFileQIsNotEmpty"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Question"),
+            CustomMessageBox customMessageBox = new(
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                    messageBoxName: "mbx_Helper_QuestionFileQIsNotEmpty"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Question.ToString()),
                 buttons: MessageBoxButtons.YesNoCancel,
                 icon: MessageBoxIcon.Question);
+            DialogResult dialogResult = customMessageBox.ShowDialog();
             if (dialogResult == DialogResult.Yes)
             {
                 while (HelperGenericFileLocking.FileListBeingUpdated || HelperGenericFileLocking.FilesAreBeingSaved)
@@ -56,7 +61,7 @@ internal static class HelperFileSystemOperators
                 }
 
                 await HelperExifWriteSaveToFile.ExifWriteExifToFile();
-                HelperVariables.SChangeFolderIsOkay = true;
+                HelperVariables.OperationChangeFolderIsOkay = true;
             }
             else if (dialogResult == DialogResult.No)
             {
@@ -70,12 +75,12 @@ internal static class HelperFileSystemOperators
                     }
                 }
 
-                HelperVariables.SChangeFolderIsOkay = true;
+                HelperVariables.OperationChangeFolderIsOkay = true;
             }
         }
         else
         {
-            HelperVariables.SChangeFolderIsOkay = true;
+            HelperVariables.OperationChangeFolderIsOkay = true;
         }
     }
 

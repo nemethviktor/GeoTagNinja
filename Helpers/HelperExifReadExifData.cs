@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using geoTagNinja;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers;
@@ -77,7 +78,7 @@ internal static class HelperExifReadExifData
             bool isPredeterminedCountry = false;
 
             CountryCode = lstToponomySessionData[index: 0][columnName: "CountryCode"]
-                .ToString();
+               .ToString();
             Country = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
                     queryWhat: "ISO_3166_1A3",
                     inputVal: CountryCode,
@@ -85,21 +86,21 @@ internal static class HelperExifReadExifData
                 ;
 
             Altitude = lstToponomySessionData[index: 0][columnName: "GPSAltitude"]
-                .ToString();
+               .ToString();
 
             timezoneId = lstToponomySessionData[index: 0][columnName: "timezoneId"]
-                .ToString();
+               .ToString();
 
             string? AdminName1InSQL = lstToponomySessionData[index: 0][columnName: "AdminName1"]
-                .ToString();
+               .ToString();
             string? AdminName2InSQL = lstToponomySessionData[index: 0][columnName: "AdminName2"]
-                .ToString();
+               .ToString();
             string? AdminName3InSQL = lstToponomySessionData[index: 0][columnName: "AdminName3"]
-                .ToString();
+               .ToString();
             string? AdminName4InSQL = lstToponomySessionData[index: 0][columnName: "AdminName4"]
-                .ToString();
+               .ToString();
             string? ToponymNameInSQL = lstToponomySessionData[index: 0][columnName: "ToponymName"]
-                .ToString();
+               .ToString();
 
             // In a country where you know, which admin level the cities belong to (see arrays), use the adminNameX as city name.
             // If the toponymName doesn't match the adminNameX, use the toponymName as sublocation name. toponymNames ...
@@ -160,10 +161,10 @@ internal static class HelperExifReadExifData
                     foreach (DataRow dataRow in drCustomRulesData)
                     {
                         string DataPointName = dataRow[columnName: "DataPointName"]
-                            .ToString();
+                           .ToString();
 
                         string DataPointConditionType = dataRow[columnName: "DataPointConditionType"]
-                            .ToString();
+                           .ToString();
 
                         string DataPointValueInSQL = null;
 
@@ -190,7 +191,7 @@ internal static class HelperExifReadExifData
                         if (!string.IsNullOrEmpty(value: DataPointValueInSQL))
                         {
                             string? DataPointConditionValue = dataRow[columnName: "DataPointConditionValue"]
-                                .ToString();
+                               .ToString();
                             string? DataPointValueInSQLLC = DataPointValueInSQL.ToLower();
                             string? DataPointConditionValueLC = DataPointConditionValue.ToLower();
                             bool comparisonIsTrue = false;
@@ -229,11 +230,11 @@ internal static class HelperExifReadExifData
                             if (comparisonIsTrue && ((stopProcessingRules && !customRuleChangedSub_location) || !stopProcessingRules))
                             {
                                 string? TargetPointName = dataRow[columnName: "TargetPointName"]
-                                    .ToString();
+                                   .ToString();
                                 string? TargetPointOutcome = dataRow[columnName: "TargetPointOutcome"]
-                                    .ToString();
+                                   .ToString();
                                 string? TargetPointOutcomeCustom = dataRow[columnName: "TargetPointOutcomeCustom"]
-                                    .ToString();
+                                   .ToString();
 
                                 switch (TargetPointName)
                                 {
@@ -357,7 +358,7 @@ internal static class HelperExifReadExifData
             dtReturn.Rows.Add(row: drReturnRow);
         }
         // read from API
-        else if (HelperVariables.SApiOkay)
+        else if (HelperVariables.OperationAPIReturnedOKResponse)
         {
             bool isPredeterminedCountry = false;
 
@@ -383,18 +384,28 @@ internal static class HelperExifReadExifData
                 }
                 else
                 {
-                    MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_HelperStaticExifNoAPI"),
-                                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
-                                    buttons: MessageBoxButtons.OK,
-                                    icon: MessageBoxIcon.Error);
+                    CustomMessageBox customMessageBox = new(
+                        text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                            messageBoxName: "mbx_HelperStaticExifNoAPI"),
+                        caption: HelperControlAndMessageBoxHandling
+                           .GenericGetMessageBoxCaption(
+                                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                        buttons: MessageBoxButtons.OK,
+                        icon: MessageBoxIcon.Error);
+                    customMessageBox.ShowDialog();
                 }
             }
             catch
             {
-                MessageBox.Show(text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_HelperStaticExifNoAPI"),
-                                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
-                                buttons: MessageBoxButtons.OK,
-                                icon: MessageBoxIcon.Error);
+                CustomMessageBox customMessageBox = new(
+                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                        messageBoxName: "mbx_HelperStaticExifNoAPI"),
+                    caption: HelperControlAndMessageBoxHandling
+                       .GenericGetMessageBoxCaption(
+                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Error);
+                customMessageBox.ShowDialog();
             }
 
             // ignore if unauthorised or some such
@@ -422,7 +433,7 @@ internal static class HelperExifReadExifData
                         DataRow drWriteToSqLiteRow = dtWriteToSQLite.NewRow();
 
                         string APICountryCode = readJsonToponomy.Geonames[index]
-                            .CountryCode;
+                                                                .CountryCode;
                         if (APICountryCode.Length == 2)
                         {
                             CountryCode = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
@@ -438,7 +449,7 @@ internal static class HelperExifReadExifData
                         }
 
                         bool _ = double.TryParse(s: readJsonToponomy.Geonames[index]
-                                                     .Srtm3.ToString(), result: out double tmpAlt);
+                                                                    .Srtm3.ToString(), result: out double tmpAlt);
                         try
                         {
                             // can return 32768 or -32768 in some cases. this is the API's "fault" (not that of the code.)
@@ -463,21 +474,21 @@ internal static class HelperExifReadExifData
 
                         // this is already String.
                         timezoneId = readJsonToponomy.Geonames[index]
-                            .Timezone.TimeZoneId;
+                                                     .Timezone.TimeZoneId;
 
                         Distance = readJsonToponomy.Geonames[index]
-                            .Distance;
+                                                   .Distance;
 
                         string? AdminName1InAPI = readJsonToponomy.Geonames[index]
-                            .AdminName1;
+                                                                  .AdminName1;
                         string? AdminName2InAPI = readJsonToponomy.Geonames[index]
-                            .AdminName2;
+                                                                  .AdminName2;
                         string? AdminName3InAPI = readJsonToponomy.Geonames[index]
-                            .AdminName3;
+                                                                  .AdminName3;
                         string? AdminName4InAPI = readJsonToponomy.Geonames[index]
-                            .AdminName4;
+                                                                  .AdminName4;
                         string? ToponymNameInAPI = readJsonToponomy.Geonames[index]
-                            .ToponymName;
+                                                                   .ToponymName;
 
                         // Comments are copied from above.
                         // In a country where you know, which admin level the cities belong to (see arrays), use the adminNameX as city name.
@@ -494,7 +505,7 @@ internal static class HelperExifReadExifData
                             isPredeterminedCountry = true;
 
                             Sub_location = readJsonToponomy.Geonames[index]
-                                .ToponymName;
+                                                           .ToponymName;
                             if (HelperVariables.LstCityNameIsAdminName1.Contains(item: CountryCode))
                             {
                                 City = AdminName1InAPI;
@@ -539,10 +550,10 @@ internal static class HelperExifReadExifData
                                 foreach (DataRow dataRow in drCustomRulesData)
                                 {
                                     string? DataPointName = dataRow[columnName: "DataPointName"]
-                                        .ToString();
+                                       .ToString();
 
                                     string? DataPointConditionType = dataRow[columnName: "DataPointConditionType"]
-                                        .ToString();
+                                       .ToString();
 
                                     string? DataPointValueInAPI = null;
                                     switch (DataPointName)
@@ -568,7 +579,7 @@ internal static class HelperExifReadExifData
                                     if (!string.IsNullOrEmpty(value: DataPointValueInAPI))
                                     {
                                         string? DataPointConditionValue = dataRow[columnName: "DataPointConditionValue"]
-                                            .ToString();
+                                           .ToString();
                                         string? DataPointValueInAPILC = DataPointValueInAPI?.ToLower();
                                         string? DataPointConditionValueLC = DataPointConditionValue.ToLower();
                                         bool comparisonIsTrue = false;
@@ -607,11 +618,11 @@ internal static class HelperExifReadExifData
                                         if (comparisonIsTrue && ((stopProcessingRules && !customRuleChangedSub_location) || !stopProcessingRules))
                                         {
                                             string? TargetPointName = dataRow[columnName: "TargetPointName"]
-                                                .ToString();
+                                               .ToString();
                                             string? TargetPointOutcome = dataRow[columnName: "TargetPointOutcome"]
-                                                .ToString();
+                                               .ToString();
                                             string? TargetPointOutcomeCustom = dataRow[columnName: "TargetPointOutcomeCustom"]
-                                                .ToString();
+                                               .ToString();
 
                                             switch (TargetPointName)
                                             {
@@ -738,15 +749,15 @@ internal static class HelperExifReadExifData
                         drWriteToSqLiteRow[columnName: "lat"] = lat;
                         drWriteToSqLiteRow[columnName: "lng"] = lng;
                         drWriteToSqLiteRow[columnName: "AdminName1"] = readJsonToponomy.Geonames[index]
-                            .AdminName1;
+                                                                                       .AdminName1;
                         drWriteToSqLiteRow[columnName: "AdminName2"] = readJsonToponomy.Geonames[index]
-                            .AdminName2;
+                                                                                       .AdminName2;
                         drWriteToSqLiteRow[columnName: "AdminName3"] = readJsonToponomy.Geonames[index]
-                            .AdminName3;
+                                                                                       .AdminName3;
                         drWriteToSqLiteRow[columnName: "AdminName4"] = readJsonToponomy.Geonames[index]
-                            .AdminName4;
+                                                                                       .AdminName4;
                         drWriteToSqLiteRow[columnName: "ToponymName"] = readJsonToponomy.Geonames[index]
-                            .ToponymName;
+                                                                                        .ToponymName;
                         drWriteToSqLiteRow[columnName: "CountryCode"] = CountryCode;
                         drWriteToSqLiteRow[columnName: "GPSAltitude"] = Altitude;
                         drWriteToSqLiteRow[columnName: "timezoneId"] = timezoneId;
@@ -760,25 +771,25 @@ internal static class HelperExifReadExifData
 
                         HelperDataOtherDataRelated.UpdateAddToDataTableTopopnomy(
                             lat: dtWriteToSQLite.Rows[index: 0][columnName: "lat"]
-                                .ToString(),
+                                                .ToString(),
                             lng: dtWriteToSQLite.Rows[index: 0][columnName: "lng"]
-                                .ToString(),
+                                                .ToString(),
                             adminName1: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName1"]
-                                .ToString(),
+                                                       .ToString(),
                             adminName2: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName2"]
-                                .ToString(),
+                                                       .ToString(),
                             adminName3: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName3"]
-                                .ToString(),
+                                                       .ToString(),
                             adminName4: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName4"]
-                                .ToString(),
+                                                       .ToString(),
                             toponymName: dtWriteToSQLite.Rows[index: 0][columnName: "ToponymName"]
-                                .ToString(),
+                                                        .ToString(),
                             countryCode: dtWriteToSQLite.Rows[index: 0][columnName: "CountryCode"]
-                                .ToString(),
+                                                        .ToString(),
                             altitude: dtWriteToSQLite.Rows[index: 0][columnName: "GPSAltitude"]
-                                .ToString(),
+                                                     .ToString(),
                             timezoneId: dtWriteToSQLite.Rows[index: 0][columnName: "timezoneId"]
-                                .ToString()
+                                                       .ToString()
                         );
                     }
                     else
@@ -799,37 +810,37 @@ internal static class HelperExifReadExifData
 
                         int useDr = showDataFromAPIPicker(dtIn: dtReturn);
                         dtReturn = dtReturn.AsEnumerable()
-                            .Where(predicate: (row,
-                                               index) => index == useDr)
-                            .CopyToDataTable();
+                                           .Where(predicate: (row,
+                                                              index) => index == useDr)
+                                           .CopyToDataTable();
 
                         dtWriteToSQLite = dtWriteToSQLite.AsEnumerable()
-                            .Where(predicate: (row,
-                                               index) => index == useDr)
-                            .CopyToDataTable();
+                                                         .Where(predicate: (row,
+                                                                            index) => index == useDr)
+                                                         .CopyToDataTable();
 
                         // [0] because we just killed off the other rows above.
                         HelperDataOtherDataRelated.UpdateAddToDataTableTopopnomy(
                             lat: dtWriteToSQLite.Rows[index: 0][columnName: "lat"]
-                                .ToString(),
+                                                .ToString(),
                             lng: dtWriteToSQLite.Rows[index: 0][columnName: "lng"]
-                                .ToString(),
+                                                .ToString(),
                             adminName1: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName1"]
-                                .ToString(),
+                                                       .ToString(),
                             adminName2: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName2"]
-                                .ToString(),
+                                                       .ToString(),
                             adminName3: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName3"]
-                                .ToString(),
+                                                       .ToString(),
                             adminName4: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName4"]
-                                .ToString(),
+                                                       .ToString(),
                             toponymName: dtWriteToSQLite.Rows[index: 0][columnName: "ToponymName"]
-                                .ToString(),
+                                                        .ToString(),
                             countryCode: dtWriteToSQLite.Rows[index: 0][columnName: "CountryCode"]
-                                .ToString(),
+                                                        .ToString(),
                             altitude: dtWriteToSQLite.Rows[index: 0][columnName: "GPSAltitude"]
-                                .ToString(),
+                                                     .ToString(),
                             timezoneId: dtWriteToSQLite.Rows[index: 0][columnName: "timezoneId"]
-                                .ToString()
+                                                       .ToString()
                         );
 
                         int showDataFromAPIPicker(DataTable dtIn)
@@ -837,7 +848,7 @@ internal static class HelperExifReadExifData
                             Form FrmPickDataFromAPIBox = new()
                             {
                                 Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                                    objectType: "Form", objectName: "FrmPickDataFromAPIBox"),
+                                    ControlType.Form, objectName: "FrmPickDataFromAPIBox"),
                                 MinimizeBox = false,
                                 MaximizeBox = false,
                                 ShowIcon = false,
@@ -879,11 +890,11 @@ internal static class HelperExifReadExifData
                                 // make it not-zero based.
                                 ListViewItem lvi = new(text: (dtReturn.Rows.IndexOf(row: drItem) +
                                                               1)
-                                                       .ToString());
+                                                      .ToString());
                                 foreach (DataColumn dc in dtIn.Columns)
                                 {
                                     string dataToAdd = drItem[column: dc]
-                                        .ToString();
+                                       .ToString();
 
                                     lvi.SubItems.Add(text: dataToAdd);
                                 }
@@ -892,7 +903,7 @@ internal static class HelperExifReadExifData
                             }
 
                             lvwDataChoices.Items[index: 0]
-                                .Selected = true;
+                                          .Selected = true;
                             lvwDataChoices.Select();
 
                             lvwDataChoices.KeyUp += (sender,
@@ -913,7 +924,7 @@ internal static class HelperExifReadExifData
                             Button btn_OK = new()
                             {
                                 Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                                    objectType: "Button", objectName: "btn_OK")
+                                    ControlType.Button, objectName: "btn_OK")
                             };
                             btn_OK.Click += (sender,
                                              e) =>
@@ -935,7 +946,7 @@ internal static class HelperExifReadExifData
                             try
                             {
                                 return lvwDataChoices.SelectedItems[index: 0]
-                                    .Index;
+                                                     .Index;
                             }
                             catch
                             {
@@ -944,7 +955,7 @@ internal static class HelperExifReadExifData
                         }
                     }
                 }
-                else if (HelperVariables.SApiOkay)
+                else if (HelperVariables.OperationAPIReturnedOKResponse)
                 {
                     // write back empty
                     HelperDataOtherDataRelated.UpdateAddToDataTableTopopnomy(
@@ -1004,8 +1015,8 @@ internal static class HelperExifReadExifData
         FrmMainApp.Logger.Trace(message: "Starting - dataPoint:" + dataPoint);
         string returnVal = FrmMainApp.NullStringEquivalentGeneric;
         string tryDataValue = FrmMainApp.NullStringEquivalentGeneric;
-        ElementAttribute attribute = GetAttributeFromString(dataPoint);
-        List<string> orderedTags = TagsToAttributesIn[key: attribute];
+        ElementAttribute attribute = GetElementAttributesElementAttribute(dataPoint);
+        List<string> orderedTags = GetElementAttributesIn(attribute);
 
         if (orderedTags.Any() && dtFileExif.Rows.Count > 0)
         {
@@ -1074,44 +1085,44 @@ internal static class HelperExifReadExifData
                     // Finally ensure that dec sep. is "."
                     try
                     {
-                        tmpLatLongRefVal = ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: dataPoint + "Ref")
-                            .Substring(startIndex: 0, length: 1);
+                        tmpLatLongRefVal =
+                            ExifGetRawDataPointFromExif(
+                                    dtFileExif: dtFileExif, dataPoint: dataPoint + "Ref")
+                               .Substring(startIndex: 0, length: 1);
                     }
                     catch
                     {
                         tmpLatLongRefVal = FrmMainApp.NullStringEquivalentGeneric;
                     }
 
-                    if (!tryDataValue.Contains(value: tmpLatLongRefVal) && tmpLatLongRefVal != FrmMainApp.NullStringEquivalentGeneric)
+                    if (!tryDataValue.Contains(value: tmpLatLongRefVal) &&
+                        tmpLatLongRefVal != FrmMainApp.NullStringEquivalentGeneric)
                     {
                         tryDataValue = tmpLatLongRefVal + tryDataValue;
                     }
 
-                    tmpOutLatLongVal = HelperExifDataPointInteractions.AdjustLatLongNegative(point: tryDataValue)
-                        .ToString()
-                        .Replace(oldChar: ',', newChar: '.');
+                    tmpOutLatLongVal = HelperExifDataPointInteractions
+                                      .AdjustLatLongNegative(point: tryDataValue)
+                                      .ToString()
+                                      .Replace(oldChar: ',', newChar: '.');
                     tryDataValue = tmpOutLatLongVal;
                 }
 
                 tryDataValue = tmpOutLatLongVal;
                 break;
             case "Coordinates" or "DestCoordinates":
-                string isDest;
-                if (dataPoint.Contains(value: "Dest"))
-                {
-                    isDest = "Dest";
-                }
-                else
-                {
-                    isDest = "";
-                }
+                string isDest = dataPoint.Contains(value: "Dest")
+                    ? "Dest"
+                    : "";
                 // this is entirely the duplicate of the above
-
                 // check there is lat/long
-                string tmpLatVal = ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: "GPS" + isDest + "Latitude")
-                    .Replace(oldChar: ',', newChar: '.');
-                tmpLongVal = ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: "GPS" + isDest + "Longitude")
-                    .Replace(oldChar: ',', newChar: '.');
+                string tmpLatVal =
+                    ExifGetRawDataPointFromExif(dtFileExif: dtFileExif,
+                                                dataPoint: "GPS" + isDest + "Latitude")
+                       .Replace(oldChar: ',', newChar: '.');
+                tmpLongVal = ExifGetRawDataPointFromExif(
+                        dtFileExif: dtFileExif, dataPoint: "GPS" + isDest + "Longitude")
+                   .Replace(oldChar: ',', newChar: '.');
                 if (tmpLatVal == "")
                 {
                     tmpLatVal = FrmMainApp.NullStringEquivalentGeneric;
@@ -1122,41 +1133,42 @@ internal static class HelperExifReadExifData
                     tmpLongVal = FrmMainApp.NullStringEquivalentGeneric;
                 }
 
-                if (ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: "GPS" + isDest + "LatitudeRef")
-                        .Length >
+                if (ExifGetRawDataPointFromExif(dtFileExif: dtFileExif,
+                                                dataPoint: "GPS" + isDest + "LatitudeRef")
+                       .Length >
                     0 &&
-                    ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: "GPS" + isDest + "LongitudeRef")
-                        .Length >
+                    ExifGetRawDataPointFromExif(dtFileExif: dtFileExif,
+                                                dataPoint: "GPS" +
+                                                           isDest +
+                                                           "LongitudeRef")
+                       .Length >
                     0)
                 {
-                    tmpLatRefVal = ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: "GPS" + isDest + "LatitudeRef")
-                        .Substring(startIndex: 0, length: 1)
-                        .Replace(oldChar: ',', newChar: '.');
-                    tmpLongRefVal = ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: "GPS" + isDest + "LongitudeRef")
-                        .Substring(startIndex: 0, length: 1)
-                        .Replace(oldChar: ',', newChar: '.');
+                    tmpLatRefVal = ExifGetRawDataPointFromExif(
+                                       dtFileExif: dtFileExif,
+                                       dataPoint: "GPS" + isDest + "LatitudeRef")
+                                  .Substring(startIndex: 0, length: 1)
+                                  .Replace(oldChar: ',', newChar: '.');
+                    tmpLongRefVal = ExifGetRawDataPointFromExif(
+                                        dtFileExif: dtFileExif,
+                                        dataPoint: "GPS" + isDest + "LongitudeRef")
+                                   .Substring(startIndex: 0, length: 1)
+                                   .Replace(oldChar: ',', newChar: '.');
                 }
 
                 // this shouldn't really happen but ET v12.49 extracts trackfile data in the wrong format so...
-                else if ((tmpLatVal.Contains(value: 'N') || tmpLatVal.Contains(value: 'S')) && (tmpLongVal.Contains(value: 'E') || tmpLongVal.Contains(value: 'W')))
+                else if ((tmpLatVal.Contains(value: 'N') ||
+                          tmpLatVal.Contains(value: 'S')) &&
+                         (tmpLongVal.Contains(value: 'E') ||
+                          tmpLongVal.Contains(value: 'W')))
                 {
-                    if (tmpLatVal.Contains(value: 'N'))
-                    {
-                        tmpLatRefVal = "N";
-                    }
-                    else
-                    {
-                        tmpLatRefVal = "S";
-                    }
+                    tmpLatRefVal = tmpLatVal.Contains(value: 'N')
+                        ? "N"
+                        : "S";
 
-                    if (tmpLongVal.Contains(value: 'E'))
-                    {
-                        tmpLongRefVal = "E";
-                    }
-                    else
-                    {
-                        tmpLongRefVal = "W";
-                    }
+                    tmpLongRefVal = tmpLongVal.Contains(value: 'E')
+                        ? "E"
+                        : "W";
                 }
                 else
                 {
@@ -1165,7 +1177,8 @@ internal static class HelperExifReadExifData
                 }
 
                 // check there is one bit of data for both components
-                if (tmpLatVal != FrmMainApp.NullStringEquivalentGeneric && tmpLongVal != FrmMainApp.NullStringEquivalentGeneric)
+                if (tmpLatVal != FrmMainApp.NullStringEquivalentGeneric &&
+                    tmpLongVal != FrmMainApp.NullStringEquivalentGeneric)
                 {
                     // stick Ref at the end of LatLong
                     if (!tmpLatVal.Contains(value: tmpLatRefVal))
@@ -1178,12 +1191,14 @@ internal static class HelperExifReadExifData
                         tmpLongVal += tmpLongRefVal;
                     }
 
-                    tmpLatVal = HelperExifDataPointInteractions.AdjustLatLongNegative(point: tmpLatVal)
-                        .ToString()
-                        .Replace(oldChar: ',', newChar: '.');
-                    tmpLongVal = HelperExifDataPointInteractions.AdjustLatLongNegative(point: tmpLongVal)
-                        .ToString()
-                        .Replace(oldChar: ',', newChar: '.');
+                    tmpLatVal = HelperExifDataPointInteractions
+                               .AdjustLatLongNegative(point: tmpLatVal)
+                               .ToString()
+                               .Replace(oldChar: ',', newChar: '.');
+                    tmpLongVal = HelperExifDataPointInteractions
+                                .AdjustLatLongNegative(point: tmpLongVal)
+                                .ToString()
+                                .Replace(oldChar: ',', newChar: '.');
                     tryDataValue = tmpLatVal + ";" + tmpLongVal;
                 }
                 else
@@ -1196,26 +1211,36 @@ internal static class HelperExifReadExifData
                 if (tryDataValue.Contains(value: "m"))
                 {
                     tryDataValue = tryDataValue.Split('m')[0]
-                        .Trim()
-                        .Replace(oldChar: ',', newChar: '.');
+                                               .Trim()
+                                               .Replace(oldChar: ',', newChar: '.');
                 }
 
                 if (tryDataValue.Contains(value: "/"))
                 {
-                    if (tryDataValue.Contains(value: ",") || tryDataValue.Contains(value: "."))
+                    if (tryDataValue.Contains(value: ",") ||
+                        tryDataValue.Contains(value: "."))
                     {
                         tryDataValue = tryDataValue.Split('/')[0]
-                            .Trim()
-                            .Replace(oldChar: ',', newChar: '.');
+                                                   .Trim()
+                                                   .Replace(oldChar: ',', newChar: '.');
                     }
                     else // attempt to convert it to decimal
                     {
                         try
                         {
-                            bool parseBool = double.TryParse(s: tryDataValue.Split('/')[0], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double numerator);
-                            parseBool = double.TryParse(s: tryDataValue.Split('/')[1], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double denominator);
-                            tryDataValue = Math.Round(value: numerator / denominator, digits: 2)
-                                .ToString(provider: CultureInfo.InvariantCulture);
+                            bool parseBool = double.TryParse(
+                                s: tryDataValue.Split('/')[0], style: NumberStyles.Any,
+                                provider: CultureInfo.InvariantCulture,
+                                result: out double numerator);
+                            parseBool = double.TryParse(
+                                s: tryDataValue.Split('/')[1], style: NumberStyles.Any,
+                                provider: CultureInfo.InvariantCulture,
+                                result: out double denominator);
+                            tryDataValue = Math
+                                          .Round(value: numerator / denominator,
+                                                 digits: 2)
+                                          .ToString(
+                                               provider: CultureInfo.InvariantCulture);
                         }
                         catch
                         {
@@ -1227,7 +1252,7 @@ internal static class HelperExifReadExifData
                 break;
             case "GPSAltitudeRef":
                 if (tryDataValue.ToLower()
-                        .Contains(value: "below") ||
+                                .Contains(value: "below") ||
                     tryDataValue.Contains(value: "1"))
                 {
                     tryDataValue = "Below Sea Level";
@@ -1240,7 +1265,7 @@ internal static class HelperExifReadExifData
                 break;
             case "ExposureTime":
                 tryDataValue = tryDataValue.Replace(oldValue: "sec", newValue: "")
-                    .Trim();
+                                           .Trim();
                 break;
             case "Fnumber" or "FocalLength" or "FocalLengthIn35mmFormat" or "ISO":
                 if (tryDataValue != FrmMainApp.NullStringEquivalentGeneric)
@@ -1251,44 +1276,57 @@ internal static class HelperExifReadExifData
                         // this might need a bit of debugging and community feeback. or someone with decent regex knowledge
                         if (tryDataValue.Contains(value: ':'))
                         {
-                            tryDataValue = Regex.Replace(input: tryDataValue, pattern: @"[^\d:.]", replacement: "")
-                                .Split(':')
-                                .Last();
+                            tryDataValue = Regex
+                                          .Replace(input: tryDataValue,
+                                                   pattern: @"[^\d:.]", replacement: "")
+                                          .Split(':')
+                                          .Last();
                         }
                         else
                         {
                             // this is untested. soz. feedback welcome.
-                            tryDataValue = Regex.Replace(input: tryDataValue, pattern: @"[^\d:.]", replacement: "");
+                            tryDataValue = Regex.Replace(
+                                input: tryDataValue, pattern: @"[^\d:.]",
+                                replacement: "");
                         }
                     }
                     else
                     {
                         tryDataValue = tryDataValue.Replace(oldValue: "mm", newValue: "")
-                            .Replace(oldValue: "f/", newValue: "")
-                            .Replace(oldValue: "f", newValue: "")
-                            .Replace(oldValue: "[", newValue: "")
-                            .Replace(oldValue: "]", newValue: "")
-                            .Trim();
+                                                   .Replace(oldValue: "f/", newValue: "")
+                                                   .Replace(oldValue: "f", newValue: "")
+                                                   .Replace(oldValue: "[", newValue: "")
+                                                   .Replace(oldValue: "]", newValue: "")
+                                                   .Trim();
                     }
 
                     if (tryDataValue.Contains(value: "/"))
                     {
-                        tryDataValue = Math.Round(value: double.Parse(s: tryDataValue.Split('/')[0], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture) / double.Parse(s: tryDataValue.Split('/')[1], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture), digits: 1)
-                            .ToString();
+                        tryDataValue = Math
+                                      .Round(
+                                           value: double.Parse(
+                                                      s: tryDataValue.Split('/')[0],
+                                                      style: NumberStyles.Any,
+                                                      provider: CultureInfo
+                                                         .InvariantCulture) /
+                                                  double.Parse(
+                                                      s: tryDataValue.Split('/')[1],
+                                                      style: NumberStyles.Any,
+                                                      provider: CultureInfo
+                                                         .InvariantCulture),
+                                           digits: 1)
+                                      .ToString();
                     }
                 }
 
                 break;
             case /*"FileModifyDate" or */"TakenDate" or "CreateDate":
             {
-                if (DateTime.TryParse(s: tryDataValue, result: out DateTime outDateTime))
-                {
-                    tryDataValue = HelperGenericTypeOperations.ConvertStringToDateTimeBackToString(dateTimeToConvert: tryDataValue);
-                }
-                else
-                {
-                    tryDataValue = FrmMainApp.NullStringEquivalentGeneric;
-                }
+                tryDataValue =
+                    DateTime.TryParse(s: tryDataValue, result: out DateTime outDateTime)
+                        ? HelperGenericTypeOperations.ConvertStringToDateTimeBackToString(
+                            dateTimeToConvert: tryDataValue)
+                        : FrmMainApp.NullStringEquivalentGeneric;
 
                 break;
             }

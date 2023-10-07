@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.ListView;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using static GeoTagNinja.View.ListView.FileListView;
 
@@ -51,9 +52,10 @@ internal static class FileListViewReadWrite
                         {
                             // theoretically we'd want to update the columns for each tag but for example when removing all data
                             // this becomes tricky bcs we're also firing a "-gps*=" tag.
-                            string settingId = ElementAttributeToColumnHeaderName(attribute);
+                            string settingId = GetElementAttributesColumnHeader(attribute);
                             string settingVal = dirElemFileToModify.GetAttributeValueString(attribute: attribute,
-                                                                                            version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                                                                                            version: DirectoryElement.AttributeVersion
+                                                                                               .Stage3ReadyToWrite, nowSavingExif: false);
 
                             if (lvchs[key: settingId] != null)
                             {
@@ -79,12 +81,31 @@ internal static class FileListViewReadWrite
                                         dirElemFileToModify: dirElemFileToModify,
                                         takenOrCreated: TakenOrCreated.Taken);
 
-                                    DateTime originalTakenDateTime = DateTime.Parse(s: FrmMainApp.OriginalTakenDateDict[key: fileNameWithoutPath], provider: CultureInfo.CurrentUICulture);
+                                    DateTime originalTakenDateTime =
+                                        (DateTime)dirElemFileToModify
+                                           .GetAttributeValue<DateTime>(
+                                                attribute: ElementAttribute.TakenDate,
+                                                version: DirectoryElement.AttributeVersion
+                                                   .Stage3ReadyToWrite);
 
                                     DateTime modifiedTakenDateTime = originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
-                                    lvi.SubItems[index: lvchs[key: COL_NAME_PREFIX + FileListColumns.TAKEN_DATE]
-                                                    .Index]
-                                       .Text = modifiedTakenDateTime.ToString(provider: CultureInfo.CurrentUICulture);
+
+                                    // column might be hidden.
+                                    try
+                                    {
+                                        lvi.SubItems[
+                                                index: lvchs[
+                                                        key: COL_NAME_PREFIX +
+                                                        FileListColumns.TAKEN_DATE]
+                                                   .Index]
+                                           .Text = modifiedTakenDateTime.ToString(
+                                            provider: CultureInfo.CurrentUICulture);
+                                    }
+                                    catch
+                                    {
+                                        // nothing
+                                    }
+
                                     takenAlreadyShifted = true;
                                 }
                                 else if (settingId.Substring(startIndex: 4)
@@ -95,12 +116,31 @@ internal static class FileListViewReadWrite
                                         dirElemFileToModify: dirElemFileToModify,
                                         takenOrCreated: TakenOrCreated.Created);
 
-                                    DateTime originalCreateDateTime = DateTime.Parse(s: FrmMainApp.OriginalCreateDateDict[key: fileNameWithoutPath], provider: CultureInfo.CurrentUICulture);
+                                    DateTime originalCreateDateTime =
+                                        (DateTime)dirElemFileToModify
+                                           .GetAttributeValue<DateTime>(
+                                                attribute: ElementAttribute.CreateDate,
+                                                version: DirectoryElement.AttributeVersion
+                                                   .Stage3ReadyToWrite);
 
                                     DateTime modifiedCreateDateTime = originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
-                                    lvi.SubItems[index: lvchs[key: COL_NAME_PREFIX + FileListColumns.CREATE_DATE]
-                                                    .Index]
-                                       .Text = modifiedCreateDateTime.ToString(provider: CultureInfo.CurrentUICulture);
+
+                                    // column might be hidden
+                                    try
+                                    {
+                                        lvi.SubItems[
+                                                index: lvchs[
+                                                        key: COL_NAME_PREFIX +
+                                                        FileListColumns.CREATE_DATE]
+                                                   .Index]
+                                           .Text = modifiedCreateDateTime.ToString(
+                                            provider: CultureInfo.CurrentUICulture);
+                                    }
+                                    catch
+                                    {
+                                        // nothing
+                                    }
+
                                     createAlreadyShifted = true;
                                 }
                             }
@@ -110,17 +150,36 @@ internal static class FileListViewReadWrite
                                 string tmpLat = dirElemFileToModify.GetAttributeValueString(
                                     attribute: ElementAttribute.GPSLatitude,
                                     version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSLatitude),
-                                    notFoundValue: "");
+                                    notFoundValue: "", nowSavingExif: false);
                                 string tmpLng = dirElemFileToModify.GetAttributeValueString(
                                     attribute: ElementAttribute.GPSLongitude,
                                     version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSLongitude),
-                                    notFoundValue: "");
-
-                                lvi.SubItems[index: lvchs[key: ElementAttributeToColumnHeaderName(ElementAttribute.Coordinates)]
-                                                .Index]
-                                   .Text = tmpLat + ";" + tmpLng != ";"
+                                    notFoundValue: "", nowSavingExif: false);
+                                string tmpCoords = tmpLat + ";" + tmpLng != ";"
                                     ? tmpLat + ";" + tmpLng
                                     : "";
+
+                                lvi.SubItems[index: lvchs[key: GetElementAttributesColumnHeader(ElementAttribute.Coordinates)]
+                                                .Index]
+                                   .Text = tmpCoords;
+                            }
+                            else if (attribute is ElementAttribute.GPSDestLatitude or ElementAttribute.GPSDestLongitude)
+                            {
+                                string tmpLat = dirElemFileToModify.GetAttributeValueString(
+                                    attribute: ElementAttribute.GPSDestLatitude,
+                                    version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSDestLatitude),
+                                    notFoundValue: "", nowSavingExif: false);
+                                string tmpLng = dirElemFileToModify.GetAttributeValueString(
+                                    attribute: ElementAttribute.GPSDestLongitude,
+                                    version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSDestLongitude),
+                                    notFoundValue: "", nowSavingExif: false);
+                                string tmpCoords = tmpLat + ";" + tmpLng != ";"
+                                    ? tmpLat + ";" + tmpLng
+                                    : "";
+
+                                lvi.SubItems[index: lvchs[key: GetElementAttributesColumnHeader(ElementAttribute.DestCoordinates)]
+                                                .Index]
+                                   .Text = tmpCoords;
                             }
                         }
                         catch
@@ -201,6 +260,16 @@ internal static class FileListViewReadWrite
             if (directoryElement.Type == DirectoryElement.ElementType.File)
             {
                 DEFileCount++;
+                List<ElementAttribute> GeoDataAttributes = Enum
+                                                          .GetValues(
+                                                               enumType:
+                                                               typeof(ElementAttribute))
+                                                          .Cast<ElementAttribute>()
+                                                          .Where(
+                                                               predicate:
+                                                               GetElementAttributesIsGeoData)
+                                                          .ToList();
+
                 foreach (ElementAttribute geoDataAttribute in GeoDataAttributes)
                 {
                     if (directoryElement.HasSpecificAttributeWithAnyVersion(attribute: geoDataAttribute))

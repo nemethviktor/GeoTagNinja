@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 
 namespace GeoTagNinja;
 
@@ -24,12 +24,14 @@ public partial class FrmMainApp
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(
+            CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeComponent") +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
+            customMessageBox.ShowDialog();
         }
     }
 
@@ -47,17 +49,22 @@ public partial class FrmMainApp
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(
+            CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorDoubleBuffer") +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
+            customMessageBox.ShowDialog();
         }
     }
 
+
     /// <summary>
-    ///     Assigns the various labels to objects (such as buttons, labels etc.)
+    ///     Assigns labels to various objects in the application during startup. This includes buttons, labels, checkboxes, and
+    ///     other UI elements.
+    ///     It also sets up tooltips for specific controls. The labels and tooltips are fetched from a data source using the
+    ///     HelperDataLanguageTZ.DataReadDTObjectText method.
     /// </summary>
     private void AppStartupAssignLabelsToObjects()
     {
@@ -79,7 +86,8 @@ public partial class FrmMainApp
                 cItem.GetType() == typeof(Button) ||
                 cItem.GetType() == typeof(CheckBox) ||
                 cItem.GetType() == typeof(TabPage) ||
-                cItem.GetType() == typeof(ToolStripButton)
+                cItem.GetType() == typeof(ToolStripButton) ||
+                (cItem.GetType() == typeof(ListView) && cItem.Name != "lvw_FileView")
                 // cItem.GetType() == typeof(ToolTip) // tooltips are not controls.
             )
             {
@@ -87,18 +95,17 @@ public partial class FrmMainApp
                 {
                     objectName = cItem.Name;
                     objectText = HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: cItem.GetType()
-                                        .Name +
-                                    "_Normal",
-                        objectName: objectName
+                        objectType: HelperDataLanguageTZ.GetControlType(
+                            controlType: cItem.GetType())
+                       ,
+                        objectName: objectName + "_Normal"
                     );
                     cItem.Text = objectText;
                     Logger.Trace(message: "" + objectName + ": " + objectText);
                 }
-                else if (cItem is ToolStrip)
+                else if (cItem is ToolStrip ts)
                 {
                     // https://www.codeproject.com/Messages/3329190/How-to-convert-a-Control-into-a-ToolStripButton.aspx
-                    ToolStrip ts = cItem as ToolStrip;
                     foreach (ToolStripItem tsi in ts.Items)
                     {
                         ToolStripButton tsb = tsi as ToolStripButton;
@@ -106,8 +113,8 @@ public partial class FrmMainApp
                         {
                             objectName = tsb.Name;
                             objectText = HelperDataLanguageTZ.DataReadDTObjectText(
-                                objectType: tsb.GetType()
-                                    .Name,
+                                objectType: HelperDataLanguageTZ.GetControlType(
+                                    controlType: tsb.GetType()),
                                 objectName: tsb.Name
                             );
                             tsb.ToolTipText = objectText;
@@ -115,12 +122,29 @@ public partial class FrmMainApp
                         }
                     }
                 }
+                else if (cItem is ListView lvw)
+                {
+                    foreach (ColumnHeader columnHeader in lvw.Columns)
+                    {
+                        // this is entirely stupid but .Name in this case returns nothing of use even though it's hard-coded in the Designer.
+                        // alas .Text works -- fml.
+                        objectName = columnHeader.Text;
+                        objectText = HelperDataLanguageTZ.DataReadDTObjectText(
+                            objectType: HelperDataLanguageTZ.GetControlType(
+                                controlType: columnHeader.GetType()),
+                            objectName: objectName
+                        );
+                        columnHeader.Text = objectText;
+                        columnHeader.Width = 120; // arbitrary
+                        Logger.Trace(message: "" + objectName + ": " + objectText);
+                    }
+                }
                 else
                 {
                     objectName = cItem.Name;
                     objectText = HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: cItem.GetType()
-                            .Name,
+                        objectType: HelperDataLanguageTZ.GetControlType(
+                            controlType: cItem.GetType()),
                         objectName: cItem.Name
                     );
                     cItem.Text = objectText;
@@ -131,7 +155,7 @@ public partial class FrmMainApp
 
         // Text for ImagePreview
         pbx_imagePreview.EmptyText = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "PictureBox",
+            objectType: ControlType.PictureBox,
             objectName: "pbx_imagePreviewEmptyText"
         );
 
@@ -158,8 +182,8 @@ public partial class FrmMainApp
             {
                 objectName = cItem.Name;
                 objectText = HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: cItem.GetType()
-                        .Name,
+                    objectType: HelperDataLanguageTZ.GetControlType(
+                        controlType: cItem.GetType()),
                     objectName: cItem.Name
                 );
                 cItem.Text = objectText;
@@ -168,48 +192,36 @@ public partial class FrmMainApp
         }
 
         pbx_imagePreview.EmptyText = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "PictureBox",
+            objectType: ControlType.PictureBox,
             objectName: "pbx_imagePreviewEmptyText"
         );
 
         Logger.Trace(message: "Setting Tooltips");
-        ttp_loctToFile.SetToolTip(control: btn_loctToFile,
-                                  caption: HelperDataLanguageTZ.DataReadDTObjectText(
-                                      objectType: "ToolTip",
-                                      objectName: "ttp_loctToFile"
-                                  )
-        );
-
-        ttp_NavigateMapGo.SetToolTip(control: btn_NavigateMapGo,
-                                     caption: HelperDataLanguageTZ.DataReadDTObjectText(
-                                         objectType: "ToolTip",
-                                         objectName: "ttp_NavigateMapGo"
-                                     )
-        );
-        ttp_SaveFavourite.SetToolTip(control: btn_SaveLocation,
-                                     caption: HelperDataLanguageTZ.DataReadDTObjectText(
-                                         objectType: "ToolTip",
-                                         objectName: "ttp_SaveFavourite"
-                                     )
-        );
-        ttp_LoadFavourite.SetToolTip(control: btn_LoadFavourite,
-                                     caption: HelperDataLanguageTZ.DataReadDTObjectText(
-                                         objectType: "ToolTip",
-                                         objectName: "ttp_LoadFavourite"
-                                     )
-        );
-        ttp_ManageFavourites.SetToolTip(control: btn_ManageFavourites,
-                                        caption: HelperDataLanguageTZ.DataReadDTObjectText(
-                                            objectType: "ToolTip",
-                                            objectName: "ttp_ManageFavourites"
-                                        )
-        );
+        List<(ToolTip, Control, string)> ttpLabelsList = new()
+        {
+            (ttp_loctToFile, btn_loctToFile, "ttp_loctToFile"),
+            (ttp_loctToFileDestination, btn_loctToFileDestination, "ttp_loctToFileDestination"),
+            (ttp_NavigateMapGo, btn_NavigateMapGo, "ttp_NavigateMapGo"),
+            (ttp_SaveFavourite, btn_SaveFavourite, "ttp_SaveFavourite"),
+            (ttp_LoadFavourite, btn_LoadFavourite, "ttp_LoadFavourite"),
+            (ttp_ManageFavourites, btn_ManageFavourites, "ttp_ManageFavourites")
+        };
+        foreach ((ToolTip, Control, string) valueTuple in ttpLabelsList)
+        {
+            ToolTip ttp = valueTuple.Item1;
+            ttp.SetToolTip(control: valueTuple.Item2,
+                           caption: HelperDataLanguageTZ.DataReadDTObjectText(
+                               objectType: ControlType.ToolTip,
+                               objectName: valueTuple.Item3
+                           ));
+        }
     }
 
     internal static string GetUOMAbbreviated()
     {
         return HelperVariables.UOMAbbreviated = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "Label", objectName: HelperVariables.UseImperial
+            objectType: ControlType.Label,
+            objectName: HelperVariables.UserSettingUseImperial
                 ? "lbl_Feet_Abbr"
                 : "lbl_Metres_Abbr"
         );
@@ -257,13 +269,45 @@ public partial class FrmMainApp
             nud_lat.Text = defaultLat;
             nud_lng.Text = defaultLng;
 
-            nud_lat.Value = Convert.ToDecimal(value: defaultLat, CultureInfo.InvariantCulture);
-            nud_lng.Value = Convert.ToDecimal(value: defaultLng, CultureInfo.InvariantCulture);
+            nud_lat.Value = Convert.ToDecimal(value: defaultLat, provider: CultureInfo.InvariantCulture);
+            nud_lng.Value = Convert.ToDecimal(value: defaultLng, provider: CultureInfo.InvariantCulture);
         }
 
         HelperVariables.HsMapMarkers.Clear();
         HelperVariables.HsMapMarkers.Add(item: (nud_lat.Text.Replace(oldChar: ',', newChar: '.'), nud_lng.Text.Replace(oldChar: ',', newChar: '.')));
         HelperVariables.LastLat = double.Parse(s: nud_lat.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
         HelperVariables.LastLng = double.Parse(s: nud_lng.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
+    }
+
+
+    /// <summary>
+    ///     Sets the application theme at startup based on the user's settings.
+    /// </summary>
+    /// <remarks>
+    ///     If the user has chosen to use dark mode, the method sets the theme color to dark and applies a custom renderer to
+    ///     the menu strip.
+    ///     If the user has not chosen to use dark mode, the method sets the theme color to light and uses the default
+    ///     rendering for the controls.
+    /// </remarks>
+    private void AppStartupSetAppTheme()
+    {
+        // the custom logic is ugly af so no need to be pushy about it in light mode.
+        if (!HelperVariables.UserSettingUseDarkMode)
+        {
+            tcr_Main.DrawMode = TabDrawMode.Normal;
+            lvw_FileList.OwnerDraw = false;
+            lvw_ExifData.OwnerDraw = false;
+        }
+        else
+        {
+            mns_MenuStrip.Renderer = new DarkMenuStripRenderer();
+        }
+
+        // adds colour/theme
+
+        HelperControlThemeManager.SetThemeColour(
+            themeColour: HelperVariables.UserSettingUseDarkMode
+                ? ThemeColour.Dark
+                : ThemeColour.Light, parentControl: this);
     }
 }

@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,6 +17,7 @@ using geoTagNinja;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using GeoTagNinja.Properties;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using NLog;
@@ -23,6 +25,7 @@ using NLog.Config;
 using NLog.Targets;
 using TimeZoneConverter;
 using static System.Environment;
+using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using static GeoTagNinja.View.ListView.FileListView;
 
@@ -32,6 +35,24 @@ namespace GeoTagNinja;
 
 public partial class FrmMainApp : Form
 {
+#region Constants / Fields / Variables
+
+#region Constants
+
+    internal const string DoubleQuote = "\"";
+
+    internal const string ParentFolder = "..";
+    internal const string NullStringEquivalentGeneric = "-";
+    internal const string NullStringEquivalentBlank = ""; // fml.
+    internal const string NullStringEquivalentZero = "0"; // fml.
+    internal const int NullIntEquivalent = 0;
+    internal const double NullDoubleEquivalent = 0.0;
+
+    internal static readonly DateTime NullDateTimeEquivalent =
+        new(year: 1, month: 1, day: 1, hour: 0, minute: 0, second: 0);
+
+#endregion
+
     /// <summary>
     ///     The EXIFTool used in this application.
     ///     Note that it must be disposed of (done by Form_Closing)!
@@ -53,7 +74,7 @@ public partial class FrmMainApp : Form
     /// <summary>
     ///     Returns the currently set application language for localization.
     /// </summary>
-    public string AppLanguage => _AppLanguage;
+    private static string AppLanguage => _AppLanguage;
 
     /// <summary>
     ///     Returns the list of elements in the currently opened directory.
@@ -61,16 +82,6 @@ public partial class FrmMainApp : Form
     public static DirectoryElementCollection DirectoryElements { get; } = new();
 
 #region Variables
-
-    internal const string DoubleQuote = "\"";
-
-    public const string ParentFolder = "..";
-    public const string NullStringEquivalentGeneric = "-";
-    public const string NullStringEquivalentBlank = ""; // fml.
-    public const string NullStringEquivalentZero = "0"; // fml.
-    public const int NullIntEquivalent = 0;
-    public const double NullDoubleEquivalent = 0.0;
-    public static readonly DateTime NullDateTimeEquivalent = new(year: 1, month: 1, day: 1, hour: 0, minute: 0, second: 0);
 
     internal static DataTable DtLanguageLabels;
     internal static DataTable DtFavourites;
@@ -81,29 +92,37 @@ public partial class FrmMainApp : Form
     internal static string _AppLanguage = "English"; // default to english
     internal static List<string> LstFavourites = new();
 
-    internal static string ShowLocToMapDialogChoice = "default";
-    internal FrmSettings FrmSettings;
-    internal FrmEditFileData FrmEditFileData;
-    internal FrmImportGpx FrmImportGpx;
+    private static bool _showLocToMapDialogChoice = true;
+    private static bool _rememberLocToMapDialogChoice;
 
-    internal string _mapHtmlTemplateCode = "";
+    // ReSharper disable once InconsistentNaming
+    private FrmSettings FrmSettings;
+
+    // ReSharper disable once InconsistentNaming
+    internal FrmEditFileData FrmEditFileData;
+
+    // ReSharper disable once InconsistentNaming
+    private FrmImportGpx FrmImportGpx;
+
+    private string _mapHtmlTemplateCode = "";
 
     internal static bool RemoveGeoDataIsRunning;
     private static bool _StopProcessingRows;
 
     // this is for copy-paste
     // the elements are: EA, Value, Changed?
-    internal static Dictionary<ElementAttribute, Tuple<string, bool>> CopyPoolDict = new();
+    internal static Dictionary<ElementAttribute, Tuple<string, bool>>
+        CopyPoolDict = new();
 
     // this is for checking if files need to be re-parsed.
     internal static DataTable DtToponomySessionData;
 
-    // these are for storing the inital values of TakenDate and CreateDate. Needed for TimeShift.
-    internal static Dictionary<string, string> OriginalTakenDateDict = new();
-    internal static Dictionary<string, string> OriginalCreateDateDict = new();
-
     internal static List<string> filesToEditGUIDStringList = new();
-    internal static readonly TaskbarManager TaskbarManagerInstance = TaskbarManager.Instance;
+
+    internal static readonly TaskbarManager TaskbarManagerInstance =
+        TaskbarManager.Instance;
+
+#endregion
 
 #endregion
 
@@ -120,9 +139,14 @@ public partial class FrmMainApp : Form
     {
     #region Define Logging Config
 
-        HelperVariables.UserDataFolderPath = Path.Combine(path1: GetFolderPath(folder: SpecialFolder.ApplicationData), path2: "GeoTagNinja");
-        HelperVariables.ResourcesFolderPath = Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "Resources");
-        HelperVariables.SSettingsDataBasePath = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "database.sqlite");
+        HelperVariables.UserDataFolderPath = Path.Combine(
+            path1: GetFolderPath(folder: SpecialFolder.ApplicationData),
+            path2: "GeoTagNinja");
+        HelperVariables.ResourcesFolderPath =
+            Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory,
+                         path2: "Resources");
+        HelperVariables.SettingsDatabaseFilePath = Path.Combine(
+            path1: HelperVariables.UserDataFolderPath, path2: "database.sqlite");
 
         if (!Directory.Exists(path: HelperVariables.UserDataFolderPath))
         {
@@ -132,7 +156,8 @@ public partial class FrmMainApp : Form
         // Set up logging
         LoggingConfiguration config = new();
 
-        string logFileLocation = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "logfile.txt");
+        string logFileLocation =
+            Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "logfile.txt");
         if (File.Exists(path: logFileLocation))
         {
             File.Delete(path: logFileLocation);
@@ -140,15 +165,18 @@ public partial class FrmMainApp : Form
 
         FileTarget logfile = new(name: "logfile") { FileName = logFileLocation };
         #if (DEBUG)
-        config.AddRule(minLevel: LogLevel.Trace, maxLevel: LogLevel.Fatal, target: logfile);
+        config.AddRule(minLevel: LogLevel.Trace, maxLevel: LogLevel.Fatal,
+                       target: logfile);
         #else
         config.AddRule(minLevel: LogLevel.Info, maxLevel: LogLevel.Fatal, target: logfile);
         #endif
 
-        logfile.Layout = @"${longdate}|${level:uppercase=true}|${callsite:includeNamespace=false:includeSourcePath=false:methodName=true}|${message:withexception=true}";
+        logfile.Layout =
+            @"${longdate}|${level:uppercase=true}|${callsite:includeNamespace=false:includeSourcePath=false:methodName=true}|${message:withexception=true}";
         ConsoleTarget logconsole = new(name: "logconsole");
 
-        config.AddRule(minLevel: LogLevel.Info, maxLevel: LogLevel.Fatal, target: logconsole);
+        config.AddRule(minLevel: LogLevel.Info, maxLevel: LogLevel.Fatal,
+                       target: logconsole);
 
         // Apply config           
         LogManager.Configuration = config;
@@ -166,7 +194,8 @@ public partial class FrmMainApp : Form
 
         if (Program.singleInstance_Highlander)
         {
-            NamedPipeServer = new SingleInstance_PipeServer(messageCallback: PipeCmd_ShowMessage);
+            NamedPipeServer =
+                new SingleInstance_PipeServer(messageCallback: PipeCmd_ShowMessage);
         }
 
         DirectoryElements.ExifTool = _ExifTool;
@@ -174,7 +203,7 @@ public partial class FrmMainApp : Form
 
         HelperGenericAppStartup.AppStartupCreateDataBaseFile();
         HelperGenericAppStartup.AppStartupWriteDefaultSettings();
-        HelperGenericAppStartup.AppStartupReadObjectNamesAndLanguage();
+        HelperGenericAppStartup.AppStartupReadAppLanguage();
         HelperGenericAppStartup.AppStartupReadCustomCityLogic();
         HelperGenericAppStartup.AppStartupReadAPILanguage();
         HelperGenericAppStartup.AppStartupApplyDefaults();
@@ -182,6 +211,8 @@ public partial class FrmMainApp : Form
         HelperDataLanguageTZ.DataReadCountryCodeDataFromCSV();
         HelperGenericAppStartup.AppStartupCheckWebView2();
         AppStartupInitializeComponentFrmMainApp();
+        AppStartupSetAppTheme();
+
         AppStartupEnableDoubleBuffering();
         FormClosing += FrmMainApp_FormClosing;
 
@@ -211,9 +242,13 @@ public partial class FrmMainApp : Form
             foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
             {
                 {
-                    foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+                    foreach (ElementAttribute attribute in (ElementAttribute[])
+                             Enum.GetValues(enumType: typeof(ElementAttribute)))
                     {
-                        dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
+                        dirElemFileToModify.RemoveAttributeValue(
+                            attribute: attribute,
+                            version: DirectoryElement.AttributeVersion
+                                                     .Stage1EditFormIntraTabTransferQueue);
                     }
                 }
             }
@@ -222,9 +257,13 @@ public partial class FrmMainApp : Form
             foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
             {
                 {
-                    foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+                    foreach (ElementAttribute attribute in (ElementAttribute[])
+                             Enum.GetValues(enumType: typeof(ElementAttribute)))
                     {
-                        dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                        dirElemFileToModify.RemoveAttributeValue(
+                            attribute: attribute,
+                            version: DirectoryElement.AttributeVersion
+                                                     .Stage3ReadyToWrite);
                     }
                 }
             }
@@ -232,13 +271,15 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
                           messageBoxName: "mbx_FrmMainApp_ErrorClearingFileDataQTables") +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
+            customMessageBox.ShowDialog();
         }
 
         try
@@ -259,22 +300,27 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Logger.Error(message: "Error: " + ex.Message);
-            MessageBox.Show(
-                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorResizingColumns") +
+            CustomMessageBox customMessageBox = new(
+                    text: GenericGetMessageBoxText(
+                              messageBoxName: "mbx_FrmMainApp_ErrorResizingColumns") +
                           ex.Message,
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                    caption: GenericGetMessageBoxCaption(
+                        captionType: MessageBoxCaption.Error.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Error)
                 ;
+            customMessageBox.ShowDialog();
         }
 
         // can't log inside.
         Logger.Debug(message: "Run CoreWebView2InitializationCompleted");
-        wbv_MapArea.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
+        wbv_MapArea.CoreWebView2InitializationCompleted +=
+            webView_CoreWebView2InitializationCompleted;
 
         if (!Program.collectionModeEnabled)
         {
-            HelperGenericAppStartup.AppSetupInitialiseStartupFolder(toolStripTextBox: tbx_FolderName);
+            HelperGenericAppStartup.AppSetupInitialiseStartupFolder(
+                toolStripTextBox: tbx_FolderName);
         }
 
         // initialise webView2
@@ -302,7 +348,7 @@ public partial class FrmMainApp : Form
         AppStartupPullLastLatLngFromSettings();
         HelperGenericAppStartup.AppStartupPullOverWriteBlankToponomy();
         HelperGenericAppStartup.AppStartupPullToponomyRadiusAndMaxRows();
-        NavigateMapGo();
+        Request_Map_NavigateGo();
 
         await HelperAPIVersionCheckers.CheckForNewVersions();
 
@@ -326,9 +372,12 @@ public partial class FrmMainApp : Form
         bool dataWriteQueueIsNotEmpty = true;
         foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
         {
-            foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+            foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(
+                         enumType: typeof(ElementAttribute)))
             {
-                if (dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
+                if (dirElemFileToModify.HasSpecificAttributeWithVersion(
+                        attribute: attribute,
+                        version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
                 {
                     dataWriteQueueIsNotEmpty = false;
                     break;
@@ -339,14 +388,18 @@ public partial class FrmMainApp : Form
         // check if there is any data in the write-Q
         if (!dataWriteQueueIsNotEmpty)
         {
-            DialogResult dialogResult = MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_QuestionFileQIsNotEmpty"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Question"),
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmMainApp_QuestionFileQIsNotEmpty"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Question.ToString()),
                 buttons: MessageBoxButtons.YesNo,
                 icon: MessageBoxIcon.Question);
+            DialogResult dialogResult = customMessageBox.ShowDialog();
             if (dialogResult == DialogResult.Yes)
             {
-                while (HelperGenericFileLocking.FileListBeingUpdated || HelperGenericFileLocking.FilesAreBeingSaved)
+                while (HelperGenericFileLocking.FileListBeingUpdated ||
+                       HelperGenericFileLocking.FilesAreBeingSaved)
                 {
                     await Task.Delay(millisecondsDelay: 10);
                 }
@@ -362,9 +415,13 @@ public partial class FrmMainApp : Form
                 Logger.Debug(message: "User Chose not to Save.");
                 foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
                 {
-                    foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+                    foreach (ElementAttribute attribute in (ElementAttribute[])
+                             Enum.GetValues(enumType: typeof(ElementAttribute)))
                     {
-                        dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                        dirElemFileToModify.RemoveAttributeValue(
+                            attribute: attribute,
+                            version: DirectoryElement.AttributeVersion
+                                                     .Stage3ReadyToWrite);
                     }
                 }
             }
@@ -375,19 +432,24 @@ public partial class FrmMainApp : Form
         lvw_FileList.PersistSettings();
 
         // Write lat/long for future reference to db
-        Logger.Trace(message: "Write lat/long for future reference to db [lat/lng]: " + nud_lat.Text + "/" + nud_lng.Text);
-        HelperDataApplicationSettings.DataWriteSQLiteSettings(
-            tableName: "settings",
-            settingTabPage: "generic",
-            settingId: "lastLat",
-            settingValue: nud_lat.Text
-        );
-        HelperDataApplicationSettings.DataWriteSQLiteSettings(
-            tableName: "settings",
-            settingTabPage: "generic",
-            settingId: "lastLng",
-            settingValue: nud_lng.Text
-        );
+        Logger.Trace(message: "Write lat/long for future reference to db [lat/lng]: " +
+                              nud_lat.Text +
+                              "/" +
+                              nud_lng.Text);
+        List<(string settingId, string settingValue)> settings = new()
+        {
+            ("lastLat", nud_lat.Text),
+            ("lastLng", nud_lng.Text)
+        };
+        foreach ((string settingId, string settingValue) setting in settings)
+        {
+            HelperDataApplicationSettings.DataWriteSQLiteSettings(
+                tableName: "settings",
+                settingTabPage: "generic",
+                settingId: setting.settingId,
+                settingValue: setting.settingValue
+            );
+        }
 
         // clean up
         Logger.Trace(message: "Set pbx_imagePreview.Image = null");
@@ -403,11 +465,12 @@ public partial class FrmMainApp : Form
 
     private void PipeCmd_ShowMessage(string text)
     {
-        MessageBox.Show(
+        CustomMessageBox customMessageBox = new(
             text: $"Pipe Server has this message:\n{text}",
             caption: "Pipe Server",
             buttons: MessageBoxButtons.OK,
             icon: MessageBoxIcon.Information);
+        customMessageBox.ShowDialog();
     }
 
 #endregion
@@ -419,8 +482,11 @@ public partial class FrmMainApp : Form
     public class MapGpsCoordinates
     {
 #pragma warning disable IDE1006 // Naming Styles
-        public double lat { get; set; } // note to self: don't allow ReSharper to rename these.
-        public double lng { get; set; } // note to self: don't allow ReSharper to rename these.
+        public double
+            lat { get; set; } // note to self: don't allow ReSharper to rename these.
+
+        public double
+            lng { get; set; } // note to self: don't allow ReSharper to rename these.
 #pragma warning restore IDE1006 // Naming Styles
     }
 
@@ -442,19 +508,33 @@ public partial class FrmMainApp : Form
 
         MapGpsCoordinates mapGpsCoordinates =
             JsonSerializer.Deserialize<MapGpsCoordinates>(json: jsonString);
-        string strLat = mapGpsCoordinates?.lat.ToString(provider: CultureInfo.InvariantCulture);
-        string strLng = mapGpsCoordinates?.lng.ToString(provider: CultureInfo.InvariantCulture);
-        double.TryParse(s: strLat, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dblLat); // trust me i hate this f...king culture thing as much as possible...
-        double.TryParse(s: strLng, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dblLng); // trust me i hate this f...king culture thing as much as possible...
+        string strLat =
+            mapGpsCoordinates?.lat.ToString(provider: CultureInfo.InvariantCulture);
+        string strLng =
+            mapGpsCoordinates?.lng.ToString(provider: CultureInfo.InvariantCulture);
+        double.TryParse(s: strLat, style: NumberStyles.Any,
+                        provider: CultureInfo.InvariantCulture,
+                        result: out
+                        double dblLat); // trust me i hate this f...king culture thing as much as possible...
+        double.TryParse(s: strLng, style: NumberStyles.Any,
+                        provider: CultureInfo.InvariantCulture,
+                        result: out
+                        double dblLng); // trust me i hate this f...king culture thing as much as possible...
         // if the user zooms out too much they can encounter an "unreal" coordinate.
 
-        double correctedDblLat = HelperExifDataPointInteractions.GenericCorrectInvalidCoordinate(coordHalfPair: dblLat);
-        double correctedDblLng = HelperExifDataPointInteractions.GenericCorrectInvalidCoordinate(coordHalfPair: dblLng);
+        double correctedDblLat =
+            HelperExifDataPointInteractions.GenericCorrectInvalidCoordinate(
+                coordHalfPair: dblLat);
+        double correctedDblLng =
+            HelperExifDataPointInteractions.GenericCorrectInvalidCoordinate(
+                coordHalfPair: dblLng);
         nud_lat.Text = correctedDblLat.ToString(provider: CultureInfo.InvariantCulture);
         nud_lng.Text = correctedDblLng.ToString(provider: CultureInfo.InvariantCulture);
 
-        nud_lat.Value = Convert.ToDecimal(value: correctedDblLat, provider: CultureInfo.InvariantCulture);
-        nud_lng.Value = Convert.ToDecimal(value: correctedDblLng, provider: CultureInfo.InvariantCulture);
+        nud_lat.Value = Convert.ToDecimal(value: correctedDblLat,
+                                          provider: CultureInfo.InvariantCulture);
+        nud_lng.Value = Convert.ToDecimal(value: correctedDblLng,
+                                          provider: CultureInfo.InvariantCulture);
     }
 
     /// <summary>
@@ -463,7 +543,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void webView_CoreWebView2InitializationCompleted(object sender,
-                                                             CoreWebView2InitializationCompletedEventArgs e)
+        CoreWebView2InitializationCompletedEventArgs e)
     { }
 
     /// <summary>
@@ -475,142 +555,192 @@ public partial class FrmMainApp : Form
                                          EventArgs e)
     {
         HelperVariables.HsMapMarkers.Clear();
-        HelperVariables.HsMapMarkers.Add(item: parseLatLngTextBox());
-        NavigateMapGo();
+        HelperVariables.HsMapMarkers.Add(item: ParseLatLngTextBox());
+        Request_Map_NavigateGo();
     }
 
     /// <summary>
     ///     Handles the clicking on "ToFile" button. See comments above re: why we're using strings (culture-related issue)
+    ///     This now also handles "btn_loctToFileDestination" click as well.
     /// </summary>
-    /// <param name="sender">Unused</param>
+    /// <param name="sender">Name of the button that has been clicked</param>
     /// <param name="e">Unused</param>
     private async void btn_loctToFile_Click(object sender,
                                             EventArgs e)
     {
-        string strGPSLatitude = nud_lat.Text.Replace(oldChar: ',', newChar: '.');
-        string strGPSLongitude = nud_lng.Text.Replace(oldChar: ',', newChar: '.');
-        double parsedLat;
-        double parsedLng;
+        // convert selected lat/long to str
+        string strGPSLatitudeOnTheMap = nud_lat.Text.Replace(oldChar: ',', newChar: '.');
+        string strGPSLongitudeOnTheMap = nud_lng.Text.Replace(oldChar: ',', newChar: '.');
         _StopProcessingRows = false;
         GeoResponseToponomy readJsonToponomy = new();
 
+        Button btn = (Button)sender;
+        string senderName = btn.Name;
+
         // lat/long gets written regardless of update-toponomy-choice
-        if (double.TryParse(s: strGPSLatitude,
+        if (double.TryParse(s: strGPSLatitudeOnTheMap,
                             style: NumberStyles.Any,
                             provider: CultureInfo.InvariantCulture,
-                            result: out parsedLat) &&
-            double.TryParse(s: strGPSLongitude,
+                            result: out double _) &&
+            double.TryParse(s: strGPSLongitudeOnTheMap,
                             style: NumberStyles.Any,
                             provider: CultureInfo.InvariantCulture,
-                            result: out parsedLng))
+                            result: out double _))
         {
             if (lvw_FileList.SelectedItems.Count > 0)
             {
+                HelperGenericFileLocking.FileListBeingUpdated = true;
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
-                    DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                                                                                                                         .Index]
-                                                                                                            .Text);
+                    DirectoryElement dirElemFileToModify =
+                        lvi.Tag as DirectoryElement;
                     // don't do folders...
                     if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
-                        string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
+                        string fileNameWithoutPath =
+                            dirElemFileToModify.ItemNameWithoutPath;
 
                         // check it's not in the read-queue.
-                        while (HelperGenericFileLocking.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
+                        while (HelperGenericFileLocking.GenericLockCheckLockFile(
+                                   fileNameWithoutPath: fileNameWithoutPath))
                         {
                             await Task.Delay(millisecondsDelay: 10);
                         }
 
-                        // Latitude
-                        dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSLatitude,
-                                                                     value: strGPSLatitude,
-                                                                     version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
-
-                        // Longitude
-                        dirElemFileToModify.SetAttributeValueAnyType(attribute: ElementAttribute.GPSLongitude,
-                                                                     value: strGPSLongitude,
-                                                                     version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
-                    }
-                }
-            }
-        }
-
-        if (double.TryParse(s: strGPSLatitude,
-                            style: NumberStyles.Any,
-                            provider: CultureInfo.InvariantCulture,
-                            result: out parsedLat) &&
-            double.TryParse(s: strGPSLongitude,
-                            style: NumberStyles.Any,
-                            provider: CultureInfo.InvariantCulture,
-                            result: out parsedLng))
-        {
-            if (lvw_FileList.SelectedItems.Count > 0)
-            {
-                if (!ShowLocToMapDialogChoice.Contains(value: "_remember"))
-                {
-                    // via https://stackoverflow.com/a/17385937/3968494
-                    ShowLocToMapDialogChoice = HelperControlAndMessageBoxHandling.ShowDialogWithCheckBox(
-                        labelText: HelperDataLanguageTZ.DataReadDTObjectText(
-                            objectType: "Label",
-                            objectName: "lbl_QuestionAddToponomy"
-                        ),
-                        caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
-                        checkboxText: HelperDataLanguageTZ.DataReadDTObjectText(
-                            objectType: "CheckBox",
-                            objectName: "ckb_QuestionAddToponomyDontAskAgain"
-                        ),
-                        returnCheckboxText: "_remember",
-                        button1Text: HelperDataLanguageTZ.DataReadDTObjectText(
-                            objectType: "Button",
-                            objectName: "btn_Yes"
-                        ),
-                        returnButton1Text: "yes",
-                        button2Text: HelperDataLanguageTZ.DataReadDTObjectText(
-                            objectType: "Button",
-                            objectName: "btn_No"
-                        ),
-                        returnButton2Text: "no"
-                    );
-                }
-
-                if (ShowLocToMapDialogChoice != "default") // basically user can alt+f4 from the box, which is dumb but nonetheless would break the code.
-                {
-                    HelperGenericFileLocking.FileListBeingUpdated = true;
-                    foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
-                    {
-                        DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                                                                                                                             .Index]
-                                                                                                                .Text);
-                        // don't do folders...
-                        if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
+                        if (senderName == "btn_loctToFile")
                         {
-                            string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
-                            string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
+                            string tmpCoords =
+                                strGPSLatitudeOnTheMap + ";" + strGPSLongitudeOnTheMap !=
+                                ";"
+                                    ? strGPSLatitudeOnTheMap +
+                                      ";" +
+                                      strGPSLongitudeOnTheMap
+                                    : "";
 
-                            while (HelperGenericFileLocking.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
+                            List<(ElementAttribute attribute, string value)> attributes =
+                                new()
+                                {
+                                    (ElementAttribute.GPSLatitude,
+                                     strGPSLatitudeOnTheMap),
+                                    (ElementAttribute.GPSLongitude,
+                                     strGPSLongitudeOnTheMap),
+                                    (ElementAttribute.Coordinates, tmpCoords)
+                                };
+                            foreach ((ElementAttribute attribute, string value) in
+                                     attributes)
                             {
-                                await Task.Delay(millisecondsDelay: 10);
+                                dirElemFileToModify.SetAttributeValueAnyType(
+                                    attribute: attribute,
+                                    value: value,
+                                    version: DirectoryElement.AttributeVersion
+                                       .Stage3ReadyToWrite,
+                                    isMarkedForDeletion: false);
+                            }
+
+                            if (!_rememberLocToMapDialogChoice)
+                            {
+                                ShowLocToMapDialog();
                             }
 
                             DataTable dtToponomy = new();
                             DataTable dtAltitude = new();
-                            if (ShowLocToMapDialogChoice.Contains(value: "yes"))
+                            if (_showLocToMapDialogChoice)
                             {
-                                lvw_FileList_UpdateTagsFromWeb(strGpsLatitude: strGPSLatitude, strGpsLongitude: strGPSLongitude, lvi: lvi);
+                                lvw_FileList_UpdateTagsFromWeb(
+                                    strGpsLatitude: strGPSLatitudeOnTheMap,
+                                    strGpsLongitude: strGPSLongitudeOnTheMap, lvi: lvi);
+                            }
+                        }
+                        else if (senderName == "btn_loctToFileDestination")
+                        {
+                            string tmpCoords =
+                                strGPSLatitudeOnTheMap + ";" + strGPSLongitudeOnTheMap !=
+                                ";"
+                                    ? strGPSLatitudeOnTheMap +
+                                      ";" +
+                                      strGPSLongitudeOnTheMap
+                                    : "";
+
+                            List<(ElementAttribute attribute, string value)>
+                                attributesAndValues = new()
+                                {
+                                    (ElementAttribute.GPSDestLatitude,
+                                     strGPSLatitudeOnTheMap),
+                                    (ElementAttribute.GPSDestLongitude,
+                                     strGPSLongitudeOnTheMap),
+                                    (ElementAttribute.DestCoordinates, tmpCoords)
+                                };
+                            foreach ((ElementAttribute attribute, string value) in
+                                     attributesAndValues)
+                            {
+                                dirElemFileToModify.SetAttributeValueAnyType(
+                                    attribute: attribute,
+                                    value: value,
+                                    version: DirectoryElement.AttributeVersion
+                                       .Stage3ReadyToWrite,
+                                    isMarkedForDeletion: false);
                             }
                         }
 
-                        await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                        await FileListViewReadWrite
+                           .ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
                     }
-
-                    HelperGenericFileLocking.FileListBeingUpdated = false;
                 }
+
+                HelperGenericFileLocking.FileListBeingUpdated = false;
             }
         }
 
         // Not logging this.
         FileListViewReadWrite.ListViewCountItemsWithGeoData();
+
+        void ShowLocToMapDialog()
+        {
+            Dictionary<string, string> checkboxDictionary = new()
+            {
+                {
+                    HelperDataLanguageTZ.DataReadDTObjectText(
+                        objectType: ControlType.CheckBox,
+                        objectName: "ckb_QuestionAddToponomyDontAskAgain"
+                    ),
+                    "_remember"
+                }
+            };
+            Dictionary<string, string> buttonsDictionary = new()
+            {
+                {
+                    HelperDataLanguageTZ.DataReadDTObjectText(
+                        ControlType.Button,
+                        objectName: "btn_Yes"
+                    ),
+                    "yes"
+                },
+                {
+                    HelperDataLanguageTZ.DataReadDTObjectText(
+                        ControlType.Button,
+                        objectName: "btn_No"
+                    ),
+                    "no"
+                }
+            };
+
+            // via https://stackoverflow.com/a/17385937/3968494
+            List<string> getLocToMapDialogChoice =
+                DialogWithCheckBox.DisplayAndReturnList(
+                    labelText: HelperDataLanguageTZ.DataReadDTObjectText(
+                        objectType: ControlType.Label,
+                        objectName: "lbl_QuestionAddToponomy"
+                    ),
+                    caption: GenericGetMessageBoxCaption(
+                        captionType: MessageBoxCaption.Question.ToString()),
+                    checkboxesDictionary: checkboxDictionary,
+                    buttonsDictionary: buttonsDictionary,
+                    orientation: "Horizontal");
+
+            _showLocToMapDialogChoice = getLocToMapDialogChoice.Contains(item: "yes");
+            _rememberLocToMapDialogChoice =
+                getLocToMapDialogChoice.Contains(item: "_remember");
+        }
     }
 
 
@@ -620,7 +750,7 @@ public partial class FrmMainApp : Form
     ///     with values as string and dec separator ".".
     ///     Otherwise default "0" is returned for both.
     /// </summary>
-    private (string, string) parseLatLngTextBox()
+    private (string, string) ParseLatLngTextBox()
     {
         Logger.Trace(message: "Starting parseLatLngTextBox ...");
 
@@ -648,48 +778,60 @@ public partial class FrmMainApp : Form
             double parsedLat;
             double parsedLng;
             if (double.TryParse(s: strLatCoordinate, style: NumberStyles.Any,
-                                provider: CultureInfo.InvariantCulture, result: out parsedLat) &&
+                                provider: CultureInfo.InvariantCulture,
+                                result: out parsedLat) &&
                 double.TryParse(s: strLngCoordinate, style: NumberStyles.Any,
-                                provider: CultureInfo.InvariantCulture, result: out parsedLng))
+                                provider: CultureInfo.InvariantCulture,
+                                result: out parsedLng))
             {
                 LatCoordinate = strLatCoordinate;
                 LngCoordinate = strLngCoordinate;
-                Logger.Trace(message: "parseLatLngTextBox OK - LatCoordinate: " + strLatCoordinate + " - LngCoordinate: " + strLngCoordinate);
+                Logger.Trace(message: "parseLatLngTextBox OK - LatCoordinate: " +
+                                      strLatCoordinate +
+                                      " - LngCoordinate: " +
+                                      strLngCoordinate);
             }
         }
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
                           messageBoxName: "mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode") +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
+            customMessageBox.ShowDialog();
         }
 
         return (LatCoordinate, LngCoordinate);
     }
 
 
-    private void updateWebView(IDictionary<string, string> replacements)
+    private void UpdateWebView(IDictionary<string, string> replacements)
     {
         string htmlCode = _mapHtmlTemplateCode;
 
         // If set, replace arcgis key
-        if (HelperVariables.SArcGisApiKey != null)
+        if (HelperVariables.UserSettingArcGisApiKey != null)
         {
-            htmlCode = htmlCode.Replace(oldValue: "yourApiKey", newValue: HelperVariables.SArcGisApiKey);
+            htmlCode = htmlCode.Replace(oldValue: "yourApiKey",
+                                        newValue: HelperVariables
+                                           .UserSettingArcGisApiKey);
         }
 
-        Logger.Trace(message: "HelperStatic.SArcGisApiKey == null: " + (HelperVariables.SArcGisApiKey == null));
+        Logger.Trace(message: "HelperStatic.UserSettingArcGisApiKey == null: " +
+                              (HelperVariables.UserSettingArcGisApiKey == null));
 
         foreach (KeyValuePair<string, string> replacement in replacements)
         {
             Logger.Trace(message: string.Format(format: "Replace: {0} -> {1}",
-                                                arg0: replacement.Key, arg1: replacement.Value));
-            htmlCode = htmlCode.Replace(oldValue: replacement.Key, newValue: replacement.Value);
+                                                arg0: replacement.Key,
+                                                arg1: replacement.Value));
+            htmlCode =
+                htmlCode.Replace(oldValue: replacement.Key, newValue: replacement.Value);
         }
 
         // show the decoded location on the map
@@ -702,13 +844,16 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile") +
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
+                          messageBoxName:
+                          "mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile") +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
+            customMessageBox.ShowDialog();
         }
     }
 
@@ -718,7 +863,7 @@ public partial class FrmMainApp : Form
     ///     ... and executes the navigation action.
     /// </summary>
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
-    private void NavigateMapGo()
+    private void Request_Map_NavigateGo()
     {
         Logger.Debug(message: "Starting");
 
@@ -726,7 +871,8 @@ public partial class FrmMainApp : Form
         IDictionary<string, string> htmlReplacements = new Dictionary<string, string>();
 
         HelperVariables.HTMLAddMarker = "";
-        HelperVariables.HTMLCreatePoints = ""; // this is ok as-is, won't break the map if stays so.
+        HelperVariables.HTMLCreatePoints =
+            ""; // this is ok as-is, won't break the map if stays so.
         double dblMinLat = 180;
         double dblMinLng = 180;
         double dblMaxLat = -180;
@@ -738,20 +884,31 @@ public partial class FrmMainApp : Form
         {
             double dLat = 0;
             double dLng = 0;
-            foreach ((string strLat, string strLng) locationCoord in HelperVariables.HsMapMarkers)
+            foreach ((string strLat, string strLng) locationCoord in HelperVariables
+                        .HsMapMarkers)
             {
                 // Add marker location
-                HelperVariables.HTMLAddMarker += "var marker = L.marker([" + locationCoord.strLat + ", " + locationCoord.strLng + "]).addTo(map).openPopup();" + "\n";
+                HelperVariables.HTMLAddMarker += "var marker = L.marker([" +
+                                                 locationCoord.strLat +
+                                                 ", " +
+                                                 locationCoord.strLng +
+                                                 "]).addTo(map).openPopup();" +
+                                                 "\n";
 
                 // Update viewing rectangle if neede
-                dLat = double.Parse(s: locationCoord.strLat, provider: CultureInfo.InvariantCulture);
-                dLng = double.Parse(s: locationCoord.strLng, provider: CultureInfo.InvariantCulture);
+                dLat = double.Parse(s: locationCoord.strLat,
+                                    provider: CultureInfo.InvariantCulture);
+                dLng = double.Parse(s: locationCoord.strLng,
+                                    provider: CultureInfo.InvariantCulture);
                 dblMinLat = Math.Min(val1: dblMinLat, val2: dLat);
                 dblMaxLat = Math.Max(val1: dblMaxLat, val2: dLat);
                 dblMinLng = Math.Min(val1: dblMinLng, val2: dLng);
                 dblMaxLng = Math.Max(val1: dblMaxLng, val2: dLng);
 
-                Logger.Trace(message: "Added marker: strLatCoordinate: " + locationCoord.strLat + " / strLngCoordinate:" + locationCoord.strLng);
+                Logger.Trace(message: "Added marker: strLatCoordinate: " +
+                                      locationCoord.strLat +
+                                      " / strLngCoordinate:" +
+                                      locationCoord.strLng);
             }
 
             HelperVariables.LastLat = dLat;
@@ -761,7 +918,8 @@ public partial class FrmMainApp : Form
             HelperVariables.MinLng = dblMinLng;
             HelperVariables.MaxLat = dblMaxLat;
             HelperVariables.MaxLng = dblMaxLng;
-            htmlReplacements.Add(key: "{ HTMLAddMarker }", value: HelperVariables.HTMLAddMarker);
+            htmlReplacements.Add(key: "{ HTMLAddMarker }",
+                                 value: HelperVariables.HTMLAddMarker);
         }
         else
         {
@@ -769,21 +927,49 @@ public partial class FrmMainApp : Form
             htmlReplacements.Add(key: "{ HTMLAddMarker }", value: "");
         }
 
-        Logger.Trace(message: "Added " + HelperVariables.HsMapMarkers.Count + " map markers.");
+        Logger.Trace(message: "Added " +
+                              HelperVariables.HsMapMarkers.Count +
+                              " map markers.");
 
         string createPointsStr = "";
         string showLinesStr = "";
         string showPointsStr = "";
         string showFOVStr = "";
+        string showDestinationPolyLineStr = "";
+        string mapStyleFiter = HelperVariables.UserSettingMapColourMode switch
+        {
+            "DarkInverse" =>
+                "filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);",
+            "DarkPale" => "filter: brightness(55%) contrast(90%);",
+            _ => ""
+        };
+
+        string mapStyleCSS = """
+                             #map {
+                             	border: 3px !important;
+                             	border-color: black;
+                             	bottom: 0;
+                             	height: 100% !important;
+                             	left: 0;
+                             	position: fixed;
+                             	right: 0;
+                             	top: 0;
+                             	width: 100% !important;
+                             	#replaceMe#
+                             }
+                             """.Replace(oldValue: "#replaceMe#",
+                                         newValue: mapStyleFiter);
 
         // check there is one and only one DE selected and add ImgDirection if there's any
         ListView lvw = lvw_FileList;
         if (lvw.SelectedItems.Count == 1)
         {
-            DirectoryElement directoryElement = lvw.SelectedItems[index: 0].Tag as DirectoryElement;
+            DirectoryElement directoryElement =
+                lvw.SelectedItems[index: 0].Tag as DirectoryElement;
             double? imgDirection = directoryElement.GetAttributeValue<double>(
                 attribute: ElementAttribute.GPSImgDirection,
-                version: directoryElement.GetMaxAttributeVersion(attribute: ElementAttribute.GPSImgDirection),
+                version: directoryElement.GetMaxAttributeVersion(
+                    attribute: ElementAttribute.GPSImgDirection),
                 notFoundValue: null);
 
             //string imgDirectionRef = directoryElement.GetAttributeValueString(
@@ -793,35 +979,43 @@ public partial class FrmMainApp : Form
 
             double? GPSLatitude = directoryElement.GetAttributeValue<double>(
                 attribute: ElementAttribute.GPSLatitude,
-                version: directoryElement.GetMaxAttributeVersion(attribute: ElementAttribute.GPSLatitude),
+                version: directoryElement.GetMaxAttributeVersion(
+                    attribute: ElementAttribute.GPSLatitude),
                 notFoundValue: null);
 
             double? GPSLongitude = directoryElement.GetAttributeValue<double>(
                 attribute: ElementAttribute.GPSLongitude,
-                version: directoryElement.GetMaxAttributeVersion(attribute: ElementAttribute.GPSLongitude),
+                version: directoryElement.GetMaxAttributeVersion(
+                    attribute: ElementAttribute.GPSLongitude),
                 notFoundValue: null);
 
             string GPSLatitudeStr = directoryElement.GetAttributeValueString(
                 attribute: ElementAttribute.GPSLatitude,
-                version: directoryElement.GetMaxAttributeVersion(attribute: ElementAttribute.GPSLatitude),
-                notFoundValue: null);
+                version: directoryElement.GetMaxAttributeVersion(
+                    attribute: ElementAttribute.GPSLatitude),
+                notFoundValue: null, nowSavingExif: false);
 
             string? GPSLongitudeStr = directoryElement.GetAttributeValueString(
                 attribute: ElementAttribute.GPSLongitude,
-                version: directoryElement.GetMaxAttributeVersion(attribute: ElementAttribute.GPSLongitude),
-                notFoundValue: null);
+                version: directoryElement.GetMaxAttributeVersion(
+                    attribute: ElementAttribute.GPSLongitude),
+                notFoundValue: null, nowSavingExif: false);
 
             double? FocalLength = directoryElement.GetAttributeValue<double>(
                 attribute: ElementAttribute.FocalLength,
-                version: directoryElement.GetMaxAttributeVersion(attribute: ElementAttribute.FocalLength),
+                version: directoryElement.GetMaxAttributeVersion(
+                    attribute: ElementAttribute.FocalLength),
                 notFoundValue: 50);
 
             double? FocalLengthIn35mmFormat = directoryElement.GetAttributeValue<double>(
                 attribute: ElementAttribute.FocalLengthIn35mmFormat,
-                version: directoryElement.GetMaxAttributeVersion(attribute: ElementAttribute.FocalLengthIn35mmFormat),
+                version: directoryElement.GetMaxAttributeVersion(
+                    attribute: ElementAttribute.FocalLengthIn35mmFormat),
                 notFoundValue: 50);
 
-            if (imgDirection != null && HelperVariables.LastLat != null && HelperVariables.LastLng != null)
+            if (imgDirection != null &&
+                HelperVariables.LastLat != null &&
+                HelperVariables.LastLng != null)
             {
                 // this is actually unused
                 //(double, double) northCoords = imgDirectionRef == "Magnetic North"
@@ -829,11 +1023,12 @@ public partial class FrmMainApp : Form
                 //    : HelperVariables.MapNorthCoordsGeographic;
 
                 // this is for the line
-                (double, double) targetCoordinates = HelperGenericCalculations.CalculateTargetCoordinates(
-                        startLatitude: (double)HelperVariables.LastLat,
-                        startLongitude: (double)HelperVariables.LastLng,
-                        gpsImgDirection: (double)imgDirection,
-                        distance: 10)
+                (double, double) targetCoordinates =
+                        HelperGenericCalculations.CalculateTargetCoordinates(
+                            startLatitude: (double)HelperVariables.LastLat,
+                            startLongitude: (double)HelperVariables.LastLng,
+                            gpsImgDirection: (double)imgDirection,
+                            distance: 10)
                     ;
 
                 createPointsStr = string.Format(format: """
@@ -856,11 +1051,21 @@ public partial class FrmMainApp : Form
                                                 arg0: GPSLatitudeStr +
                                                       "," +
                                                       GPSLongitudeStr,
-                                                arg1: targetCoordinates.Item1.ToString(provider: CultureInfo.InvariantCulture)
-                                                                       .Replace(oldChar: ',', newChar: '.') +
+                                                arg1: targetCoordinates.Item1
+                                                         .ToString(
+                                                              provider: CultureInfo
+                                                                 .InvariantCulture)
+                                                         .Replace(
+                                                              oldChar: ',',
+                                                              newChar: '.') +
                                                       "," +
-                                                      targetCoordinates.Item2.ToString(provider: CultureInfo.InvariantCulture)
-                                                                       .Replace(oldChar: ',', newChar: '.'));
+                                                      targetCoordinates.Item2
+                                                         .ToString(
+                                                              provider: CultureInfo
+                                                                 .InvariantCulture)
+                                                         .Replace(
+                                                              oldChar: ',',
+                                                              newChar: '.'));
 
                 showLinesStr = """
                                /* Show lines */
@@ -889,13 +1094,15 @@ public partial class FrmMainApp : Form
                                 """;
 
                 (List<(double, double)>, List<(double, double)>) FOVCoordinates =
-                        HelperGenericCalculations.CalculateFovCoordinatesFromSensorSize(startLatitude: (double)GPSLatitude,
-                                                                                        startLongitude: (double)GPSLongitude,
-                                                                                        gpsImgDirection: (double)imgDirection,
-                                                                                        sensorSize: HelperGenericCalculations.EstimateSensorSize(focalLength: (double)FocalLength,
-                                                                                                                                                 focalLengthIn35mmFilm: (double)FocalLengthIn35mmFormat),
-                                                                                        focalLength: (double)FocalLength,
-                                                                                        distance: 1)
+                        HelperGenericCalculations.CalculateFovCoordinatesFromSensorSize(
+                            startLatitude: (double)GPSLatitude,
+                            startLongitude: (double)GPSLongitude,
+                            gpsImgDirection: (double)imgDirection,
+                            sensorSize: HelperGenericCalculations.EstimateSensorSize(
+                                focalLength: (double)FocalLength,
+                                focalLengthIn35mmFilm: (double)FocalLengthIn35mmFormat),
+                            focalLength: (double)FocalLength,
+                            distance: 1)
                     ;
                 showFOVStr = string.Format(format: """
                                                    /* Show polygon/triangle */
@@ -908,30 +1115,148 @@ public partial class FrmMainApp : Form
                                            arg0: GPSLatitudeStr +
                                                  "," +
                                                  GPSLongitudeStr,
-                                           arg1: HelperGenericCalculations.ConvertFOVCoordListsToString(sourceList: FOVCoordinates.Item1),
-                                           arg2: HelperGenericCalculations.ConvertFOVCoordListsToString(sourceList: FOVCoordinates.Item2));
+                                           arg1: HelperGenericCalculations
+                                              .ConvertFOVCoordListsToString(
+                                                   sourceList: FOVCoordinates.Item1),
+                                           arg2: HelperGenericCalculations
+                                              .ConvertFOVCoordListsToString(
+                                                   sourceList: FOVCoordinates.Item2));
             }
         }
 
-        htmlReplacements.Add(key: "replaceLat", value: HelperVariables.LastLat.ToString()
-                                                                      .Replace(oldChar: ',', newChar: '.'));
-        htmlReplacements.Add(key: "replaceLng", value: HelperVariables.LastLng.ToString()
-                                                                      .Replace(oldChar: ',', newChar: '.'));
-        htmlReplacements.Add(key: "replaceMinLat", value: HelperVariables.MinLat.ToString()
-                                                                         .Replace(oldChar: ',', newChar: '.'));
-        htmlReplacements.Add(key: "replaceMinLng", value: HelperVariables.MinLng.ToString()
-                                                                         .Replace(oldChar: ',', newChar: '.'));
-        htmlReplacements.Add(key: "replaceMaxLat", value: HelperVariables.MaxLat.ToString()
-                                                                         .Replace(oldChar: ',', newChar: '.'));
-        htmlReplacements.Add(key: "replaceMaxLng", value: HelperVariables.MaxLng.ToString()
-                                                                         .Replace(oldChar: ',', newChar: '.'));
+        // if we have more than one, check if there are any w/ Destination coords
+        else
+        {
+            Dictionary<string, HashSet<string>>
+                dictDestinations =
+                    new(); // we use a HashSet here because i want to avoid unnecessary duplication
+            string multiCoordsDefaultStr = """
+                                           var #multiCoordsNum# = [
+                                               [#multiCoordsList#]
+                                           ];
+                                           var plArray = [];
+                                           for(var i=0; i<#multiCoordsNum#.length; i++) {
+                                               plArray.push(L.polyline(#multiCoordsNum#[i]).addTo(map));
+                                           }
+                                           try{
+                                           
+                                               L.polylineDecorator(#multiCoordsNum#, {
+                                                   patterns: [
+                                                       {offset: 25, repeat: 50, symbol: L.Symbol.arrowHead({pixelSize: 15, pathOptions: {fillOpacity: 1, weight: 0}})}
+                                                   ]
+                                               }).addTo(map);
+                                           }catch(e){
+                                            
+                                           }
+                                           """;
 
-        htmlReplacements.Add(key: "{ HTMLCreatePoints }", value: createPointsStr);
-        htmlReplacements.Add(key: "{ HTMLShowLines }", value: showLinesStr);
-        htmlReplacements.Add(key: "{ HTMLShowPoints }", value: showPointsStr);
-        htmlReplacements.Add(key: "{ HTMLShowFOVPolygon }", value: showFOVStr);
+            foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
+            {
+                DirectoryElement directoryElement = (DirectoryElement)lvi.Tag;
+                // probably needs checking but de.Coordinates and de.DestCoordinates don't return anything here so we're splitting it into four.
+                string GPSLatitudeStr = directoryElement.GetAttributeValueString(
+                    attribute: ElementAttribute.GPSLatitude,
+                    version: directoryElement.GetMaxAttributeVersion(
+                        attribute: ElementAttribute.GPSLatitude),
+                    notFoundValue: null, nowSavingExif: false);
 
-        updateWebView(replacements: htmlReplacements);
+                string? GPSLongitudeStr = directoryElement.GetAttributeValueString(
+                    attribute: ElementAttribute.GPSLongitude,
+                    version: directoryElement.GetMaxAttributeVersion(
+                        attribute: ElementAttribute.GPSLongitude),
+                    notFoundValue: null, nowSavingExif: false);
+                string GPSDestLatitudeStr = directoryElement.GetAttributeValueString(
+                    attribute: ElementAttribute.GPSDestLatitude,
+                    version: directoryElement.GetMaxAttributeVersion(
+                        attribute: ElementAttribute.GPSDestLatitude),
+                    notFoundValue: null, nowSavingExif: false);
+
+                string? GPSDestLongitudeStr = directoryElement.GetAttributeValueString(
+                    attribute: ElementAttribute.GPSDestLongitude,
+                    version: directoryElement.GetMaxAttributeVersion(
+                        attribute: ElementAttribute.GPSDestLongitude),
+                    notFoundValue: null, nowSavingExif: false);
+
+                if (!(string.IsNullOrWhiteSpace(value: GPSLatitudeStr) ||
+                      string.IsNullOrWhiteSpace(value: GPSDestLatitudeStr) ||
+                      string.IsNullOrWhiteSpace(value: GPSLongitudeStr) ||
+                      string.IsNullOrWhiteSpace(value: GPSDestLongitudeStr)))
+                {
+                    string destCoords =
+                        "[" + GPSDestLatitudeStr + "," + GPSDestLongitudeStr + "]";
+                    string gpsCoords = "[" + GPSLatitudeStr + "," + GPSLongitudeStr + "]";
+                    if (!dictDestinations.ContainsKey(key: destCoords))
+                    {
+                        dictDestinations[key: destCoords] = new HashSet<string>();
+                    }
+
+                    dictDestinations[key: destCoords]
+                       .Add(item: gpsCoords);
+                }
+            }
+
+            if (dictDestinations.Count == 0)
+            {
+                showDestinationPolyLineStr = ""; // reset if false alarm
+            }
+            else
+            {
+                // build a line of lines
+                // for each (numbered) destination group...
+                for (int dictDestinationCounter = 0;
+                     dictDestinationCounter < dictDestinations.Count;
+                     dictDestinationCounter++)
+                {
+                    string multiCoordsListStr = "";
+                    string multiCoordsNum = dictDestinationCounter.ToString();
+                    string multiCoordsStr = multiCoordsDefaultStr.Replace(
+                        oldValue: "#multiCoordsNum#",
+                        newValue: "multiCoords" + multiCoordsNum);
+                    foreach (string gpsCoord in dictDestinations
+                                               .ElementAt(index: dictDestinationCounter)
+                                               .Value)
+                    {
+                        multiCoordsListStr += gpsCoord + ",";
+                    }
+
+                    multiCoordsListStr += dictDestinations
+                                         .ElementAt(index: dictDestinationCounter)
+                                         .Key;
+
+                    multiCoordsStr = multiCoordsStr.Replace(
+                        oldValue: "#multiCoordsList#", newValue: multiCoordsListStr);
+                    showDestinationPolyLineStr += multiCoordsStr;
+                }
+            }
+        }
+
+        List<(string key, string value)> replacements = new()
+        {
+            ("replaceLat", HelperVariables.LastLat.ToString()
+                                          .Replace(oldChar: ',', newChar: '.')),
+            ("replaceLng", HelperVariables.LastLng.ToString()
+                                          .Replace(oldChar: ',', newChar: '.')),
+            ("replaceMinLat", HelperVariables.MinLat.ToString()
+                                             .Replace(oldChar: ',', newChar: '.')),
+            ("replaceMinLng", HelperVariables.MinLng.ToString()
+                                             .Replace(oldChar: ',', newChar: '.')),
+            ("replaceMaxLat", HelperVariables.MaxLat.ToString()
+                                             .Replace(oldChar: ',', newChar: '.')),
+            ("replaceMaxLng", HelperVariables.MaxLng.ToString()
+                                             .Replace(oldChar: ',', newChar: '.')),
+            ("{ HTMLMapStyleCSS }", mapStyleCSS),
+            ("{ HTMLCreatePoints }", createPointsStr),
+            ("{ HTMLShowLines }", showLinesStr),
+            ("{ HTMLShowPoints }", showPointsStr),
+            ("{ HTMLShowFOVPolygon }", showFOVStr),
+            ("{ HTMLShowPolyLine }", showDestinationPolyLineStr)
+        };
+        foreach ((string key, string value) in replacements)
+        {
+            htmlReplacements.Add(key: key, value: value);
+        }
+
+        UpdateWebView(replacements: htmlReplacements);
     }
 
 
@@ -949,21 +1274,26 @@ public partial class FrmMainApp : Form
             // silly thing dumps the folder by default right into Program Files where it can't write further due to permission issues
             // need to move it elsewhere.
             Logger.Trace(message: "await CoreWebView2Environment");
-            CoreWebView2Environment c2Wv = await CoreWebView2Environment.CreateAsync(browserExecutableFolder: null,
-                                                                                     userDataFolder: Path.GetTempPath(),
-                                                                                     options: new CoreWebView2EnvironmentOptions(additionalBrowserArguments: null, language: "en"));
+            CoreWebView2Environment c2Wv = await CoreWebView2Environment.CreateAsync(
+                browserExecutableFolder: null,
+                userDataFolder: Path.GetTempPath(),
+                options: new CoreWebView2EnvironmentOptions(
+                    additionalBrowserArguments: null, language: "en"));
             await wbv_MapArea.EnsureCoreWebView2Async(environment: c2Wv);
         }
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async") +
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
+                          messageBoxName:
+                          "mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async") +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
+            customMessageBox.ShowDialog();
         }
 
         // Initialize WebView
@@ -978,44 +1308,61 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error: " + ex.Message);
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled") +
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
+                          messageBoxName:
+                          "mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled") +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
+            customMessageBox.ShowDialog();
         }
 
         // read the "map.html" file.
         try
         {
             Logger.Trace(message: "Read map.html file");
-            _mapHtmlTemplateCode = File.ReadAllText(path: Path.Combine(path1: HelperVariables.ResourcesFolderPath, path2: "map.html"));
+            _mapHtmlTemplateCode = File.ReadAllText(
+                path: Path.Combine(path1: HelperVariables.ResourcesFolderPath,
+                                   path2: "map.html"));
             Logger.Trace(message: "Read map.html file OK");
         }
         catch (Exception ex)
         {
             Logger.Fatal(message: "Read map.html file - Error: " + ex.Message);
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile") +
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
+                          messageBoxName:
+                          "mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile") +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
+            customMessageBox.ShowDialog();
         }
 
         // Get the ArcGis API Key
-        if (HelperVariables.SArcGisApiKey == null)
+        if (string.IsNullOrEmpty(value: HelperVariables.UserSettingArcGisApiKey))
         {
-            Logger.Trace(message: "Replace hard-coded values in the html code - SArcGisApiKey is null");
-            HelperVariables.SArcGisApiKey = HelperDataApplicationSettings.DataSelectTbxARCGIS_APIKey_FromSQLite();
-            Logger.Trace(message: "Replace hard-coded values in the html code - SArcGisApiKey obtained from SQLite OK");
+            Logger.Trace(
+                message:
+                "Replace hard-coded values in the html code - UserSettingArcGisApiKey is null");
+            HelperVariables.UserSettingArcGisApiKey =
+                HelperDataApplicationSettings.DataReadSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: "tpg_Application",
+                    settingId: "tbx_ARCGIS_APIKey",
+                    returnBlankIfNull: true);
+            Logger.Trace(
+                message:
+                "Replace hard-coded values in the html code - UserSettingArcGisApiKey obtained from SQLite OK");
         }
 
         // Parse coords from lat/lng text box
-        (string LatCoordinate, string LngCoordinate) = parseLatLngTextBox();
+        (string LatCoordinate, string LngCoordinate) = ParseLatLngTextBox();
 
         // Set up replacements
         IDictionary<string, string> htmlReplacements = new Dictionary<string, string>();
@@ -1023,7 +1370,7 @@ public partial class FrmMainApp : Form
         htmlReplacements.Add(key: "replaceLng", value: LngCoordinate);
 
         // Show on Map
-        updateWebView(replacements: htmlReplacements);
+        UpdateWebView(replacements: htmlReplacements);
 
         // Set up event handler for clicks in map
         try
@@ -1034,13 +1381,16 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Logger.Fatal(message: "Error:" + ex.Message);
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived") +
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
+                          messageBoxName:
+                          "mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived") +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
+            customMessageBox.ShowDialog();
         }
     }
 
@@ -1058,7 +1408,8 @@ public partial class FrmMainApp : Form
                                               EventArgs e)
     {
         // i think having an Item active can cause a lock on it
-        while (HelperGenericFileLocking.FileListBeingUpdated || HelperGenericFileLocking.FilesAreBeingSaved)
+        while (HelperGenericFileLocking.FileListBeingUpdated ||
+               HelperGenericFileLocking.FilesAreBeingSaved)
         {
             await Task.Delay(millisecondsDelay: 10);
         }
@@ -1084,9 +1435,15 @@ public partial class FrmMainApp : Form
         ListView lvw = lvw_FileList;
         foreach (ListViewItem lvi in lvw.SelectedItems)
         {
-            filesToEditGUIDStringList.Add(item: lvi.SubItems[index: lvw.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                                                       .Index]
-                                                   .Text);
+            DirectoryElement directoryElement =
+                lvi.Tag as DirectoryElement;
+
+            filesToEditGUIDStringList.Add(
+                item: directoryElement.GetAttributeValueString(
+                    attribute: ElementAttribute.GUID,
+                    version: DirectoryElement.AttributeVersion
+                                             .Original, // GUIDs don't change
+                    notFoundValue: null, nowSavingExif: false));
         }
 
         EditFileFormGeneric.ShowFrmEditFileData();
@@ -1125,7 +1482,7 @@ public partial class FrmMainApp : Form
     {
         FrmImportGpx = new FrmImportGpx();
         FrmImportGpx.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "Form",
+            objectType: ControlType.Form,
             objectName: "FrmImportGpx"
         );
         FrmImportGpx.ShowDialog();
@@ -1159,9 +1516,10 @@ public partial class FrmMainApp : Form
     {
         Logger.Debug(message: "Starting");
 
-        HelperVariables.SChangeFolderIsOkay = false;
-        await HelperFileSystemOperators.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-        if (HelperVariables.SChangeFolderIsOkay)
+        HelperVariables.OperationChangeFolderIsOkay = false;
+        await HelperFileSystemOperators
+           .FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
+        if (HelperVariables.OperationChangeFolderIsOkay)
         {
             if (!Program.collectionModeEnabled)
             {
@@ -1182,13 +1540,16 @@ public partial class FrmMainApp : Form
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(
-                            text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                                      messageBoxName: "mbx_FrmMainApp_ErrorInvalidFolder") +
+                        CustomMessageBox customMessageBox = new(
+                            text: GenericGetMessageBoxText(
+                                      messageBoxName:
+                                      "mbx_FrmMainApp_ErrorInvalidFolder") +
                                   ex.Message,
-                            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                            caption: GenericGetMessageBoxCaption(
+                                captionType: MessageBoxCaption.Error.ToString()),
                             buttons: MessageBoxButtons.OK,
                             icon: MessageBoxIcon.Error);
+                        customMessageBox.ShowDialog();
                     }
                 }
                 else if (tbx_FolderName.Text == SpecialFolder.MyComputer.ToString())
@@ -1198,11 +1559,14 @@ public partial class FrmMainApp : Form
 
                 else
                 {
-                    MessageBox.Show(
-                        text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInvalidFolder"),
-                        caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Error"),
+                    CustomMessageBox customMessageBox = new(
+                        text: GenericGetMessageBoxText(
+                            messageBoxName: "mbx_FrmMainApp_ErrorInvalidFolder"),
+                        caption: GenericGetMessageBoxCaption(
+                            captionType: MessageBoxCaption.Error.ToString()),
                         buttons: MessageBoxButtons.OK,
                         icon: MessageBoxIcon.Error);
+                    customMessageBox.ShowDialog();
                 }
             }
             else
@@ -1220,37 +1584,54 @@ public partial class FrmMainApp : Form
     private async void tsb_GetAllFromWeb_Click(object sender,
                                                EventArgs e)
     {
-        HelperVariables.SApiOkay = true;
+        HelperVariables.OperationAPIReturnedOKResponse = true;
         _StopProcessingRows = false;
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmMainApp frmMainAppInstance =
+            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         if (frmMainAppInstance != null)
         {
             ListView lvw = frmMainAppInstance.lvw_FileList;
             if (lvw.SelectedItems.Count > 0)
             {
-                foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
+                foreach (ListViewItem lvi in
+                         frmMainAppInstance.lvw_FileList.SelectedItems)
                 {
-                    DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                                                                                                                .Index]
-                                                                                                            .Text);
+                    DirectoryElement dirElemFileToModify =
+                        lvi.Tag as DirectoryElement;
                     // don't do folders...
                     if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
                         string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
-                        string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
+                        string fileNameWithoutPath =
+                            dirElemFileToModify.ItemNameWithoutPath;
 
                         // check it's not in the read-queue.
-                        while (HelperGenericFileLocking.GenericLockCheckLockFile(fileNameWithoutPath: fileNameWithoutPath))
+                        while (HelperGenericFileLocking.GenericLockCheckLockFile(
+                                   fileNameWithoutPath: fileNameWithoutPath))
                         {
                             await Task.Delay(millisecondsDelay: 10);
                         }
 
-                        string strGpsLatitude = lvi.SubItems[index: lvw.Columns[key: COL_NAME_PREFIX + FileListColumns.GPS_LATITUDE]
-                                                                       .Index]
-                                                   .Text.ToString(provider: CultureInfo.InvariantCulture);
-                        string strGpsLongitude = lvi.SubItems[index: lvw.Columns[key: COL_NAME_PREFIX + FileListColumns.GPS_LONGITUDE]
-                                                                        .Index]
-                                                    .Text.ToString(provider: CultureInfo.InvariantCulture);
+                        string strGpsLatitude = lvi.SubItems[
+                                                        index: lvw
+                                                           .Columns[
+                                                                key: COL_NAME_PREFIX +
+                                                                FileListColumns
+                                                                   .GPS_LATITUDE]
+                                                           .Index]
+                                                   .Text.ToString(
+                                                        provider: CultureInfo
+                                                           .InvariantCulture);
+                        string strGpsLongitude = lvi.SubItems[
+                                                         index: lvw
+                                                            .Columns[
+                                                                 key: COL_NAME_PREFIX +
+                                                                 FileListColumns
+                                                                    .GPS_LONGITUDE]
+                                                            .Index]
+                                                    .Text.ToString(
+                                                         provider: CultureInfo
+                                                            .InvariantCulture);
                         double parsedLat = 0.0;
                         double parsedLng = 0.0;
                         if (double.TryParse(s: strGpsLatitude,
@@ -1262,7 +1643,9 @@ public partial class FrmMainApp : Form
                                             provider: CultureInfo.InvariantCulture,
                                             result: out parsedLng))
                         {
-                            lvw_FileList_UpdateTagsFromWeb(strGpsLatitude: strGpsLatitude, strGpsLongitude: strGpsLongitude, lvi: lvi);
+                            lvw_FileList_UpdateTagsFromWeb(
+                                strGpsLatitude: strGpsLatitude,
+                                strGpsLongitude: strGpsLongitude, lvi: lvi);
                         }
                     }
                 }
@@ -1284,11 +1667,13 @@ public partial class FrmMainApp : Form
     {
         Logger.Debug(message: "Starting");
 
-        HelperVariables.SChangeFolderIsOkay = false;
-        await HelperFileSystemOperators.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-        Logger.Trace(message: "SChangeFolderIsOkay: " + HelperVariables.SChangeFolderIsOkay);
+        HelperVariables.OperationChangeFolderIsOkay = false;
+        await HelperFileSystemOperators
+           .FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
+        Logger.Trace(message: "OperationChangeFolderIsOkay: " +
+                              HelperVariables.OperationChangeFolderIsOkay);
 
-        if (HelperVariables.SChangeFolderIsOkay)
+        if (HelperVariables.OperationChangeFolderIsOkay)
         {
             tsb_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
         }
@@ -1305,11 +1690,13 @@ public partial class FrmMainApp : Form
     {
         Logger.Debug(message: "Starting");
 
-        HelperVariables.SChangeFolderIsOkay = false;
-        await HelperFileSystemOperators.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-        Logger.Trace(message: "SChangeFolderIsOkay: " + HelperVariables.SChangeFolderIsOkay);
+        HelperVariables.OperationChangeFolderIsOkay = false;
+        await HelperFileSystemOperators
+           .FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
+        Logger.Trace(message: "OperationChangeFolderIsOkay: " +
+                              HelperVariables.OperationChangeFolderIsOkay);
 
-        if (HelperVariables.SChangeFolderIsOkay)
+        if (HelperVariables.OperationChangeFolderIsOkay)
         {
             string? tmpStrParent = null;
             string? tmpStrRoot = null;
@@ -1318,7 +1705,8 @@ public partial class FrmMainApp : Form
             {
                 try
                 {
-                    tmpStrParent = HelperFileSystemOperators.FsoGetParent(path: tbx_FolderName.Text);
+                    tmpStrParent =
+                        HelperFileSystemOperators.FsoGetParent(path: tbx_FolderName.Text);
                 }
                 catch
                 {
@@ -1332,7 +1720,8 @@ public partial class FrmMainApp : Form
                     Directory.GetDirectoryRoot(path: tbx_FolderName.Text),
                     "C:"
                 );
-                tbx_FolderName.Text = HelperGenericTypeOperations.Coalesce(tmpStrParent, tmpStrRoot);
+                tbx_FolderName.Text =
+                    HelperGenericTypeOperations.Coalesce(tmpStrParent, tmpStrRoot);
             }
 
             Application.DoEvents();
@@ -1357,9 +1746,15 @@ public partial class FrmMainApp : Form
         ListView lvw = lvw_FileList;
         foreach (ListViewItem lvi in lvw.SelectedItems)
         {
-            filesToEditGUIDStringList.Add(item: lvi.SubItems[index: lvw.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                                                       .Index]
-                                                   .Text);
+            DirectoryElement directoryElement =
+                lvi.Tag as DirectoryElement;
+
+            filesToEditGUIDStringList.Add(
+                item: directoryElement.GetAttributeValueString(
+                    attribute: ElementAttribute.GUID,
+                    version: DirectoryElement.AttributeVersion
+                                             .Original, // GUIDs don't change
+                    notFoundValue: null, nowSavingExif: false));
         }
 
         EditFileFormGeneric.ShowFrmEditFileData();
@@ -1378,7 +1773,8 @@ public partial class FrmMainApp : Form
         if (!RemoveGeoDataIsRunning)
         {
             RemoveGeoDataIsRunning = true;
-            await HelperExifDataPointInteractions.ExifRemoveLocationData(senderName: "FrmMainApp");
+            await HelperExifDataPointInteractions.ExifRemoveLocationData(
+                senderName: "FrmMainApp");
             RemoveGeoDataIsRunning = false;
             FileListViewReadWrite.ListViewCountItemsWithGeoData();
         }
@@ -1395,9 +1791,8 @@ public partial class FrmMainApp : Form
         bool validFilesToImport = false;
         foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
         {
-            DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                                                                                                                 .Index]
-                                                                                                    .Text);
+            DirectoryElement dirElemFileToModify =
+                lvi.Tag as DirectoryElement;
             if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {
                 validFilesToImport = true;
@@ -1413,11 +1808,14 @@ public partial class FrmMainApp : Form
         }
         else
         {
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmImportGpx_NoFileSelected"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmImportGpx_NoFileSelected"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
+            customMessageBox.ShowDialog();
         }
     }
 
@@ -1432,9 +1830,10 @@ public partial class FrmMainApp : Form
     {
         if (e.KeyCode == Keys.Enter)
         {
-            HelperVariables.SChangeFolderIsOkay = false;
-            await HelperFileSystemOperators.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-            if (HelperVariables.SChangeFolderIsOkay)
+            HelperVariables.OperationChangeFolderIsOkay = false;
+            await HelperFileSystemOperators
+               .FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
+            if (HelperVariables.OperationChangeFolderIsOkay)
             {
                 btn_ts_Refresh_lvwFileList_Click(sender: this, e: new EventArgs());
             }
@@ -1460,7 +1859,8 @@ public partial class FrmMainApp : Form
     private async void tsb_SaveFiles_Click(object sender,
                                            EventArgs e)
     {
-        while (HelperGenericFileLocking.FileListBeingUpdated || HelperGenericFileLocking.FilesAreBeingSaved)
+        while (HelperGenericFileLocking.FileListBeingUpdated ||
+               HelperGenericFileLocking.FilesAreBeingSaved)
         {
             await Task.Delay(millisecondsDelay: 10);
         }
@@ -1472,6 +1872,140 @@ public partial class FrmMainApp : Form
         await HelperExifWriteSaveToFile.ExifWriteExifToFile();
         HelperGenericFileLocking.FilesAreBeingSaved = false;
         //DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
+    }
+
+#endregion
+
+#region Themeing
+
+    // via https://stackoverflow.com/a/75716080/3968494
+    private void ListView_DrawColumnHeader(object sender,
+                                           DrawListViewColumnHeaderEventArgs e)
+    {
+        Color foreColor = HelperVariables.UserSettingUseDarkMode
+            ? Color.White
+            : Color.Black;
+
+        Color backColor = HelperVariables.UserSettingUseDarkMode
+            ? ColorTranslator.FromHtml(htmlColor: "#404040")
+            : SystemColors.ControlDark;
+
+        //Fills one solid background for each cell.
+        using (SolidBrush backColorkBrush = new(color: backColor))
+        {
+            e.Graphics.FillRectangle(brush: backColorkBrush, rect: e.Bounds);
+        }
+
+        //Draw the borders for the header around each cell.
+        using (Pen foreColorPen = new(color: foreColor))
+        {
+            e.Graphics.DrawRectangle(pen: foreColorPen, rect: e.Bounds);
+        }
+
+        using (SolidBrush foreColorBrush = new(color: foreColor))
+        {
+            StringFormat stringFormat = GetStringFormat();
+
+            //Do some padding, since these draws right up next to the border for Left/Near.  Will need to change this if you use Right/Far
+            Rectangle rect = e.Bounds;
+            rect.X += 2;
+            e.Graphics.DrawString(s: e.Header.Text, font: e.Font, brush: foreColorBrush,
+                                  layoutRectangle: rect, format: stringFormat);
+        }
+    }
+
+    private StringFormat GetStringFormat()
+    {
+        return new StringFormat
+        {
+            Alignment = StringAlignment.Near,
+            LineAlignment = StringAlignment.Center
+        };
+    }
+
+    private void ListView_DrawItem(object sender,
+                                   DrawListViewItemEventArgs e)
+    {
+        e.DrawDefault = true;
+    }
+
+    private void ListView_DrawSubItem(object sender,
+                                      DrawListViewSubItemEventArgs e)
+    {
+        e.DrawDefault = true;
+    }
+
+
+    // via https://stackoverflow.com/questions/9260303/how-to-change-menu-hover-color
+    private class DarkMenuStripRenderer : ToolStripProfessionalRenderer
+    {
+        public DarkMenuStripRenderer() : base(professionalColorTable: new DarkColours())
+        { }
+
+        protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
+        {
+            e.TextColor = Color.White;
+
+            base.OnRenderItemText(e: e);
+        }
+    }
+
+
+    private class DarkColours : ProfessionalColorTable
+    {
+        public override Color MenuItemBorder =>
+            ColorTranslator.FromHtml(htmlColor: "#BAB9B9");
+
+        public override Color MenuBorder =>
+            Color.Silver; //added for changing the menu border
+
+        public override Color MenuItemPressedGradientBegin =>
+            ColorTranslator.FromHtml(htmlColor: "#4C4A48");
+
+        public override Color MenuItemPressedGradientEnd =>
+            ColorTranslator.FromHtml(htmlColor: "#5F5D5B");
+
+        public override Color ToolStripBorder =>
+            ColorTranslator.FromHtml(htmlColor: "#4C4A48");
+
+        public override Color MenuItemSelectedGradientBegin =>
+            ColorTranslator.FromHtml(htmlColor: "#4C4A48");
+
+        public override Color MenuItemSelectedGradientEnd =>
+            ColorTranslator.FromHtml(htmlColor: "#5F5D5B");
+
+        public override Color MenuItemSelected =>
+            ColorTranslator.FromHtml(htmlColor: "#5F5D5B");
+
+        public override Color ToolStripDropDownBackground =>
+            ColorTranslator.FromHtml(htmlColor: "#404040");
+
+        public override Color ToolStripGradientBegin =>
+            ColorTranslator.FromHtml(htmlColor: "#404040");
+
+        public override Color ToolStripGradientEnd =>
+            ColorTranslator.FromHtml(htmlColor: "#404040");
+
+        public override Color ToolStripGradientMiddle =>
+            ColorTranslator.FromHtml(htmlColor: "#404040");
+
+        public override Color ImageMarginGradientBegin =>
+            ColorTranslator.FromHtml(htmlColor: "#404040");
+
+        public override Color ImageMarginGradientEnd =>
+            ColorTranslator.FromHtml(htmlColor: "#404040");
+
+        public override Color ImageMarginGradientMiddle =>
+            ColorTranslator.FromHtml(htmlColor: "#404040");
+
+        public override Color ImageMarginRevealedGradientBegin =>
+            ColorTranslator.FromHtml(htmlColor: "#404040");
+
+        public override Color ImageMarginRevealedGradientEnd =>
+            ColorTranslator.FromHtml(htmlColor: "#404040");
+
+        public override Color ImageMarginRevealedGradientMiddle =>
+            ColorTranslator.FromHtml(htmlColor: "#404040");
     }
 
 #endregion
@@ -1490,36 +2024,49 @@ public partial class FrmMainApp : Form
     {
         if (!_StopProcessingRows)
         {
-            DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                                                                                                                 .Index]
-                                                                                                    .Text);
+            DirectoryElement dirElemFileToModify =
+                lvi.Tag as DirectoryElement;
             string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
 
             HelperVariables.CurrentAltitude = null;
-            HelperVariables.CurrentAltitude = lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
-                                                          .SubItems[index: lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GPS_ALTITUDE]
-                                                                                       .Index]
-                                                          .Text.ToString(provider: CultureInfo.InvariantCulture);
+            HelperVariables.CurrentAltitude = lvw_FileList
+                                             .FindItemWithText(text: fileNameWithoutPath)
+                                             .SubItems[
+                                                  index: lvw_FileList
+                                                        .Columns[
+                                                             key: COL_NAME_PREFIX +
+                                                             FileListColumns.GPS_ALTITUDE]
+                                                        .Index]
+                                             .Text.ToString(
+                                                  provider: CultureInfo.InvariantCulture);
 
-            DataTable dtToponomy = HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(lat: strGpsLatitude,
-                                                                                               lng: strGpsLongitude,
-                                                                                               fileNameWithoutPath: fileNameWithoutPath);
+            DataTable dtToponomy =
+                HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(
+                    lat: strGpsLatitude,
+                    lng: strGpsLongitude,
+                    fileNameWithoutPath: fileNameWithoutPath);
             if (dtToponomy.Rows.Count > 0)
             {
                 // Send off to SQL
-                List<(ElementAttribute attribute, string toponomyOverwriteVal)> toponomyOverwrites = new()
-                {
-                    (ElementAttribute.CountryCode, dtToponomy.Rows[index: 0][columnName: "CountryCode"]
-                                                             .ToString()),
-                    (ElementAttribute.Country, dtToponomy.Rows[index: 0][columnName: "Country"]
-                                                         .ToString())
-                };
+                List<(ElementAttribute attribute, string toponomyOverwriteVal)>
+                    toponomyOverwrites = new()
+                    {
+                        (ElementAttribute.CountryCode,
+                         dtToponomy.Rows[index: 0][columnName: "CountryCode"]
+                                   .ToString()),
+                        (ElementAttribute.Country,
+                         dtToponomy.Rows[index: 0][columnName: "Country"]
+                                   .ToString())
+                    };
 
-                foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays.ToponomyReplaces())
+                foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays
+                            .ToponomyReplaces())
                 {
-                    string colName = GetAttributeName(attribute: attribute);
-                    string settingVal = HelperExifReadExifData.ReplaceBlankToponomy(settingId: attribute, settingValue: dtToponomy.Rows[index: 0][columnName: colName]
-                                                                                                                                  .ToString());
+                    string colName = GetElementAttributesName(attributeToFind: attribute);
+                    string settingVal = HelperExifReadExifData.ReplaceBlankToponomy(
+                        settingId: attribute,
+                        settingValue: dtToponomy.Rows[index: 0][columnName: colName]
+                                                .ToString());
                     toponomyOverwrites.Add(item: (attribute, settingVal));
                 }
 
@@ -1528,9 +2075,16 @@ public partial class FrmMainApp : Form
                                       .ToString();
 
                 DateTime createDate;
-                bool _ = DateTime.TryParse(s: lvi.SubItems[index: lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.CREATE_DATE]
-                                                                              .Index]
-                                                 .Text.ToString(provider: CultureInfo.InvariantCulture), result: out createDate);
+                bool _ = DateTime.TryParse(s: lvi.SubItems[index: lvw_FileList
+                                                              .Columns[
+                                                                   key: COL_NAME_PREFIX +
+                                                                   FileListColumns
+                                                                      .CREATE_DATE]
+                                                              .Index]
+                                                 .Text.ToString(
+                                                      provider: CultureInfo
+                                                         .InvariantCulture),
+                                           result: out createDate);
 
                 try
                 {
@@ -1540,27 +2094,36 @@ public partial class FrmMainApp : Form
 
                     TZOffset = tst.GetUtcOffset(dateTime: createDate)
                                   .ToString()
-                                  .Substring(startIndex: 0, length: tst.GetUtcOffset(dateTime: createDate)
-                                                                       .ToString()
-                                                                       .Length -
-                                                                    3);
-                    toponomyOverwrites.Add(item: !TZOffset.StartsWith(value: NullStringEquivalentGeneric)
-                                               ? (ElementAttribute.OffsetTime, "+" + TZOffset)
-                                               : (ElementAttribute.OffsetTime, TZOffset));
+                                  .Substring(startIndex: 0, length: tst
+                                                .GetUtcOffset(dateTime: createDate)
+                                                .ToString()
+                                                .Length -
+                                             3);
+                    toponomyOverwrites.Add(
+                        item: !TZOffset.StartsWith(value: NullStringEquivalentGeneric)
+                            ? (ElementAttribute.OffsetTime, "+" + TZOffset)
+                            : (ElementAttribute.OffsetTime, TZOffset));
                 }
                 catch
                 {
                     // don't do anything.
                 }
 
-                foreach ((ElementAttribute attribute, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+                foreach ((ElementAttribute attribute, string toponomyOverwriteVal)
+                         toponomyDetail in toponomyOverwrites)
                 {
-                    dirElemFileToModify.SetAttributeValueAnyType(attribute: toponomyDetail.attribute,
-                                                                 value: toponomyDetail.toponomyOverwriteVal,
-                                                                 version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
+                    dirElemFileToModify.SetAttributeValueAnyType(
+                        attribute: toponomyDetail.attribute,
+                        value: toponomyDetail.toponomyOverwriteVal,
+                        version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                        isMarkedForDeletion: false);
 
-                    lvi.SubItems[index: lvw_FileList.Columns[key: ElementAttributeToColumnHeaderName(elementAttribute: toponomyDetail.attribute)]
-                                                    .Index]
+                    lvi.SubItems[index: lvw_FileList
+                                       .Columns[
+                                            key: GetElementAttributesColumnHeader(
+                                                attributeToFind:
+                                                toponomyDetail.attribute)]
+                                       .Index]
                        .Text = toponomyDetail.toponomyOverwriteVal;
                 }
 
@@ -1572,50 +2135,80 @@ public partial class FrmMainApp : Form
                     lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
                 }
 
-                HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-                lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
+                HandlerUpdateLabelText(label: lbl_ParseProgress,
+                                       text: "Processing: " + fileNameWithoutPath);
+                lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath,
+                                              color: Color.Red);
             }
             else
             {
-                string APIHandlingChoice = HelperControlAndMessageBoxHandling.ShowDialogWithCheckBox(
-                    labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_QuestionNoRowsFromAPI"),
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Question"),
-                    checkboxText: HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: "CheckBox",
-                        objectName: "ckb_QuestionStopProcessingRows"
-                    ),
-                    returnCheckboxText: "_stopprocessing",
-                    button1Text: HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: "Button",
-                        objectName: "btn_Yes"
-                    ),
-                    returnButton1Text: "yes",
-                    button2Text: HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: "Button",
-                        objectName: "btn_No"
-                    ),
-                    returnButton2Text: "no"
-                );
+                Dictionary<string, string> checkboxDictionary = new()
+                {
+                    {
+                        HelperDataLanguageTZ.DataReadDTObjectText(
+                            objectType: ControlType.CheckBox,
+                            objectName: "ckb_QuestionStopProcessingRows"
+                        ),
+                        "_stopprocessing"
+                    }
+                };
+                Dictionary<string, string> buttonsDictionary = new()
+                {
+                    {
+                        HelperDataLanguageTZ.DataReadDTObjectText(
+                            ControlType.Button,
+                            objectName: "btn_Yes"
+                        ),
+                        "yes"
+                    },
+                    {
+                        HelperDataLanguageTZ.DataReadDTObjectText(
+                            ControlType.Button,
+                            objectName: "btn_No"
+                        ),
+                        "no"
+                    }
+                };
+
+                // ReSharper disable once InconsistentNaming
+                List<string> APIHandlingChoice =
+                    DialogWithCheckBox.DisplayAndReturnList(
+                        labelText: GenericGetMessageBoxText(
+                            messageBoxName: "mbx_FrmMainApp_QuestionNoRowsFromAPI"),
+                        caption: GenericGetMessageBoxCaption(
+                            captionType: MessageBoxCaption.Question.ToString()),
+                        checkboxesDictionary: checkboxDictionary,
+                        buttonsDictionary: buttonsDictionary,
+                        orientation: "Horizontal");
 
                 if (APIHandlingChoice.Contains(value: "yes"))
                 {
-                    List<(ElementAttribute attribute, string toponomyOverwriteVal)> toponomyOverwrites = new();
+                    List<(ElementAttribute attribute, string toponomyOverwriteVal)>
+                        toponomyOverwrites = new();
                     toponomyOverwrites.Add(item: (ElementAttribute.CountryCode, null));
                     toponomyOverwrites.Add(item: (ElementAttribute.Country, null));
 
-                    foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays.ToponomyReplaces())
+                    foreach (ElementAttribute attribute in
+                             HelperGenericAncillaryListsArrays.ToponomyReplaces())
                     {
                         toponomyOverwrites.Add(item: (attribute, null));
                     }
 
-                    foreach ((ElementAttribute attribute, string toponomyOverwriteVal) toponomyDetail in toponomyOverwrites)
+                    foreach ((ElementAttribute attribute, string toponomyOverwriteVal)
+                             toponomyDetail in toponomyOverwrites)
                     {
-                        dirElemFileToModify.SetAttributeValueAnyType(attribute: toponomyDetail.attribute,
-                                                                     value: toponomyDetail.toponomyOverwriteVal,
-                                                                     version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
+                        dirElemFileToModify.SetAttributeValueAnyType(
+                            attribute: toponomyDetail.attribute,
+                            value: toponomyDetail.toponomyOverwriteVal,
+                            version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                            isMarkedForDeletion: false);
 
-                        lvi.SubItems[index: lvw_FileList.Columns[key: ElementAttributeToColumnHeaderName(elementAttribute: toponomyDetail.attribute)]
-                                                        .Index]
+                        lvi.SubItems[index: lvw_FileList
+                                           .Columns[
+                                                key: GetElementAttributesColumnHeader(
+                                                    attributeToFind: toponomyDetail
+                                                       .attribute)]
+                                           .Index]
                            .Text = toponomyDetail.toponomyOverwriteVal;
                     }
                 }
@@ -1658,7 +2251,7 @@ public partial class FrmMainApp : Form
             Size = new Size(width: 300, height: 40),
             Padding = new Padding(left: 4, top: 2, right: 2, bottom: 4),
             Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: "Form",
+                objectType: ControlType.Form,
                 objectName: "FrmPleaseWaitBox"
             ),
             StartPosition = FormStartPosition.CenterScreen
@@ -1673,24 +2266,24 @@ public partial class FrmMainApp : Form
 
         // Clear Tables that keep track of the current folder...
         Logger.Trace(message: "Clear OriginalTakenDateDict and OriginalCreateDateDict");
-        OriginalTakenDateDict.Clear();
-        OriginalCreateDateDict.Clear();
 
         tbx_FolderName.Enabled = !Program.collectionModeEnabled;
 
         if (Program.collectionModeEnabled)
         {
             Logger.Trace(message: "FolderName: disabled - using collectionModeEnabled");
-            tbx_FolderName.Text = @"** collectionMode enabled **"; // point here is that this doesn't exist and as such will block certain operations (like "go up one level"), which is what we want.
+            tbx_FolderName.Text =
+                @"** collectionMode enabled **"; // point here is that this doesn't exist and as such will block certain operations (like "go up one level"), which is what we want.
 
             // Load data (and add to DEs)
-            DirectoryElements.ParseFolderOrFileListToDEs(folderOrCollectionFileName: Program.collectionFileLocation,
-                                                         statusMethod: delegate(string statusText)
-                                                         {
-                                                             HandlerUpdateLabelText(label: lbl_ParseProgress,
-                                                                                    text: statusText);
-                                                         },
-                                                         collectionModeEnabled: Program.collectionModeEnabled);
+            DirectoryElements.ParseFolderOrFileListToDEs(
+                folderOrCollectionFileName: Program.collectionFileLocation,
+                statusMethod: delegate(string statusText)
+                {
+                    HandlerUpdateLabelText(label: lbl_ParseProgress,
+                                           text: statusText);
+                },
+                collectionModeEnabled: Program.collectionModeEnabled);
         }
         // not collectionModeEnabled
         else
@@ -1710,17 +2303,19 @@ public partial class FrmMainApp : Form
                     }
 
                     FolderName = tbx_FolderName.Text;
-                    Logger.Trace(message: "FolderName [was null, now updated]: " + FolderName);
+                    Logger.Trace(message: "FolderName [was null, now updated]: " +
+                                          FolderName);
                 }
 
                 // Load data (and add to DEs)
-                DirectoryElements.ParseFolderOrFileListToDEs(folderOrCollectionFileName: FolderName,
-                                                             statusMethod: delegate(string statusText)
-                                                             {
-                                                                 HandlerUpdateLabelText(label: lbl_ParseProgress,
-                                                                                        text: statusText);
-                                                             },
-                                                             collectionModeEnabled: Program.collectionModeEnabled);
+                DirectoryElements.ParseFolderOrFileListToDEs(
+                    folderOrCollectionFileName: FolderName,
+                    statusMethod: delegate(string statusText)
+                    {
+                        HandlerUpdateLabelText(label: lbl_ParseProgress,
+                                               text: statusText);
+                    },
+                    collectionModeEnabled: Program.collectionModeEnabled);
             }
         }
 
@@ -1755,18 +2350,21 @@ public partial class FrmMainApp : Form
         if (item == null)
         {
             lvw_FileList.SelectedItems.Clear();
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Information.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
+            customMessageBox.ShowDialog();
             return;
         }
 
-        DirectoryElement item_de = (DirectoryElement)item.Tag;
+        DirectoryElement directoryElement = (DirectoryElement)item.Tag;
         Logger.Trace(message: "item: " + item.Text);
 
-        switch (item_de.Type)
+        switch (directoryElement.Type)
         {
             // if .. (parent) then do a folder-up
             case DirectoryElement.ElementType.ParentDirectory:
@@ -1778,13 +2376,17 @@ public partial class FrmMainApp : Form
             case DirectoryElement.ElementType.MyComputer:
             case DirectoryElement.ElementType.Drive:
                 // check for outstanding files first and save if user wants
-                HelperVariables.SChangeFolderIsOkay = false;
-                await HelperFileSystemOperators.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-                if (HelperVariables.SChangeFolderIsOkay)
+                HelperVariables.OperationChangeFolderIsOkay = false;
+                await HelperFileSystemOperators
+                   .FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
+                if (HelperVariables.OperationChangeFolderIsOkay)
                 {
-                    if (Directory.Exists(path: Path.Combine(path1: tbx_FolderName.Text, path2: item.Text)))
+                    if (Directory.Exists(
+                            path: Path.Combine(path1: tbx_FolderName.Text,
+                                               path2: item.Text)))
                     {
-                        tbx_FolderName.Text = Path.Combine(path1: tbx_FolderName.Text, path2: item.Text);
+                        tbx_FolderName.Text =
+                            Path.Combine(path1: tbx_FolderName.Text, path2: item.Text);
                     }
                     else
                     {
@@ -1807,11 +2409,12 @@ public partial class FrmMainApp : Form
                 Logger.Trace(message: "Trigger FrmEditFileData");
                 filesToEditGUIDStringList.Clear();
 
-                ListView lvw = lvw_FileList;
-                ListViewItem lvi = lvw.SelectedItems[index: 0];
-                filesToEditGUIDStringList.Add(item: lvi.SubItems[index: lvw.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                                                           .Index]
-                                                       .Text);
+                filesToEditGUIDStringList.Add(
+                    item: directoryElement.GetAttributeValueString(
+                        attribute: ElementAttribute.GUID,
+                        version: DirectoryElement.AttributeVersion
+                                                 .Original, // GUIDs don't change
+                        notFoundValue: null, nowSavingExif: false));
 
                 Logger.Trace(message: "Add File To lvw_FileListEditImages");
                 EditFileFormGeneric.ShowFrmEditFileData();
@@ -1827,13 +2430,18 @@ public partial class FrmMainApp : Form
         if (lvw_FileList.FocusedItem != null)
         {
             FileListViewMapNavigation.ListViewItemClickNavigate();
+
+            lvw_ExifData.Items.Clear();
+
             // it's easier to call the create-preview here than in the other one because focusedItems misbehave/I don't quite understand it/them
+            // also we'll push the DE/Exif data into lvw_ExifData here.
             if (lvw_FileList.SelectedItems.Count > 0)
             {
                 ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
-                DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                                                                                                                     .Index]
-                                                                                                        .Text);
+                DirectoryElement dirElemFileToModify =
+                    lvw_FileList.SelectedItems[index: 0].Tag as DirectoryElement;
+
+                await UpdateLvwExifDataItems(directoryElement: dirElemFileToModify);
                 string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
 
                 if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
@@ -1847,8 +2455,50 @@ public partial class FrmMainApp : Form
                 }
             }
 
-            NavigateMapGo();
+            Request_Map_NavigateGo();
             // pbx_imagePreview.Image = null;
+        }
+    }
+
+    private async Task UpdateLvwExifDataItems(DirectoryElement directoryElement)
+    {
+        // fill lvw_ExifData
+        foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(
+                     enumType: typeof(ElementAttribute)))
+
+        {
+            List<ElementAttribute> attributesWithValidOrderIDs =
+                Enum.GetValues(enumType: typeof(ElementAttribute))
+                    .Cast<ElementAttribute>()
+                    .Where(predicate: attribute =>
+                               GetElementAttributesOrderID(
+                                   attributeToFind
+                                   : attribute) >
+                               0)
+                    .ToList();
+
+            if (attributesWithValidOrderIDs.Contains(item: attribute))
+            {
+                ListViewItem lvi = new()
+                {
+                    Text = GetElementAttributesName(attributeToFind: attribute)
+                };
+                lvi.SubItems.Add(text: directoryElement.GetAttributeValueString(
+                                     attribute: attribute,
+                                     version: DirectoryElement.AttributeVersion.Original,
+                                     notFoundValue: null, nowSavingExif: false));
+                lvi.SubItems.Add(text: directoryElement.GetAttributeValueString(
+                                     attribute: attribute,
+                                     version: DirectoryElement.AttributeVersion
+                                        .Stage3ReadyToWrite,
+                                     notFoundValue: null, nowSavingExif: false));
+                lvw_ExifData.Items.Add(value: lvi);
+            }
+        }
+
+        foreach (ColumnHeader columnHeader in lvw_ExifData.Columns)
+        {
+            columnHeader.Width = -2;
         }
     }
 
@@ -1882,9 +2532,10 @@ public partial class FrmMainApp : Form
                                             KeyEventArgs e)
     {
         // control A -> select all
-        if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
+        if (e.Modifiers == Keys.Control &&
+            e.KeyCode == Keys.A)
         {
-            HelperVariables.SNowSelectingAllItems = true;
+            HelperVariables.OperationNowSelectingAllItems = true;
 
             for (int i = 0; i < lvw_FileList.Items.Count; i++)
             {
@@ -1893,39 +2544,50 @@ public partial class FrmMainApp : Form
                 // so because there is no way to do a proper "select all" w/o looping i only want to run the "navigate" (which is triggered on select-state-change at the end)
                 if (i == lvw_FileList.Items.Count - 1)
                 {
-                    HelperVariables.SNowSelectingAllItems = false;
+                    HelperVariables.OperationNowSelectingAllItems = false;
                     FileListViewMapNavigation.ListViewItemClickNavigate();
-                    NavigateMapGo();
+                    Request_Map_NavigateGo();
                 }
             }
 
             // just in case...
-            HelperVariables.SNowSelectingAllItems = false;
+            HelperVariables.OperationNowSelectingAllItems = false;
         }
 
         // Shift Ctrl C -> copy details
-        else if (e.Control && e.Shift && e.KeyCode == Keys.C)
+        else if (e.Control &&
+                 e.Shift &&
+                 e.KeyCode == Keys.C)
         {
             FileListViewCopyPaste.ListViewCopyGeoData();
         }
 
         // Shift Ctrl V -> paste details
-        else if (e.Control && e.Shift && e.KeyCode == Keys.V)
+        else if (e.Control &&
+                 e.Shift &&
+                 e.KeyCode == Keys.V)
         {
             FileListViewCopyPaste.ListViewPasteGeoData();
         }
 
         // Ctrl Enter -> Edit File
-        else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Enter)
+        else if (e.Modifiers == Keys.Control &&
+                 e.KeyCode == Keys.Enter)
         {
             filesToEditGUIDStringList.Clear();
 
             ListView lvw = lvw_FileList;
             foreach (ListViewItem lvi in lvw.SelectedItems)
             {
-                filesToEditGUIDStringList.Add(item: lvi.SubItems[index: lvw.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                                                           .Index]
-                                                       .Text);
+                DirectoryElement directoryElement =
+                    lvi.Tag as DirectoryElement;
+
+                filesToEditGUIDStringList.Add(
+                    item: directoryElement.GetAttributeValueString(
+                        attribute: ElementAttribute.GUID,
+                        version: DirectoryElement.AttributeVersion
+                                                 .Original, // GUIDs don't change
+                        notFoundValue: null, nowSavingExif: false));
             }
 
             EditFileFormGeneric.ShowFrmEditFileData();
@@ -1943,29 +2605,32 @@ public partial class FrmMainApp : Form
             if (lvw_FileList.SelectedItems.Count == 1)
             {
                 ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
-                DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                                                                                                                     .Index]
-                                                                                                        .Text);
+                DirectoryElement dirElemFileToModify =
+                    lvi.Tag as DirectoryElement;
 
                 // if .. (parent) then do a folder-up
-                if (dirElemFileToModify.Type == DirectoryElement.ElementType.ParentDirectory)
+                if (dirElemFileToModify.Type ==
+                    DirectoryElement.ElementType.ParentDirectory)
                 {
                     btn_OneFolderUp_Click(sender: sender, e: EventArgs.Empty);
                 }
                 // if this is a folder or drive, enter
-                else if (dirElemFileToModify.Type == DirectoryElement.ElementType.SubDirectory)
+                else if (dirElemFileToModify.Type ==
+                         DirectoryElement.ElementType.SubDirectory)
                 {
                     // check for outstanding files first and save if user wants
-                    HelperVariables.SChangeFolderIsOkay = false;
-                    await HelperFileSystemOperators.FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
-                    if (HelperVariables.SChangeFolderIsOkay)
+                    HelperVariables.OperationChangeFolderIsOkay = false;
+                    await HelperFileSystemOperators
+                       .FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
+                    if (HelperVariables.OperationChangeFolderIsOkay)
                     {
                         if (Directory.Exists(path: dirElemFileToModify.FileNameWithPath))
                         {
                             tbx_FolderName.Text = dirElemFileToModify.FileNameWithPath;
                         }
 
-                        btn_ts_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
+                        btn_ts_Refresh_lvwFileList_Click(
+                            sender: this, e: EventArgs.Empty);
                     }
                 }
             }
@@ -1979,9 +2644,11 @@ public partial class FrmMainApp : Form
         }
 
         // Control S -> Save files
-        else if (e.Control && e.KeyCode == Keys.S)
+        else if (e.Control &&
+                 e.KeyCode == Keys.S)
         {
-            while (HelperGenericFileLocking.FileListBeingUpdated || HelperGenericFileLocking.FilesAreBeingSaved)
+            while (HelperGenericFileLocking.FileListBeingUpdated ||
+                   HelperGenericFileLocking.FilesAreBeingSaved)
             {
                 await Task.Delay(millisecondsDelay: 10);
             }
@@ -2019,7 +2686,7 @@ public partial class FrmMainApp : Form
     {
         FrmSettings = new FrmSettings();
         FrmSettings.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "Form",
+            objectType: ControlType.Form,
             objectName: "FrmSettings"
         );
         FrmSettings.ShowDialog();
@@ -2041,11 +2708,14 @@ public partial class FrmMainApp : Form
         }
         else
         {
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_NoFavouritesDefined"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmMainApp_NoFavouritesDefined"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Information.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Information);
+            customMessageBox.ShowDialog();
         }
     }
 
@@ -2061,6 +2731,39 @@ public partial class FrmMainApp : Form
         frmAboutBox.ShowDialog();
     }
 
+    private void tmi_Help_FeedbackFeatureRequest_Click(object sender,
+                                                       EventArgs e)
+    {
+        Process.Start(
+            fileName:
+            "https://github.com/nemethviktor/GeoTagNinja/issues/new?template=feature_request.md");
+    }
+
+    private void tmi_Help_BugReport_Click(object sender,
+                                          EventArgs e)
+    {
+        Process.Start(
+            fileName:
+            "https://github.com/nemethviktor/GeoTagNinja/issues/new?template=bug_report.md");
+    }
+
+
+    private void tsb_FeedbackFeatureRequest_Click(object sender,
+                                                  EventArgs e)
+    {
+        Process.Start(
+            fileName:
+            "https://github.com/nemethviktor/GeoTagNinja/issues/new?template=feature_request.md");
+    }
+
+    private void tsb_BugReport_Click(object sender,
+                                     EventArgs e)
+    {
+        Process.Start(
+            fileName:
+            "https://github.com/nemethviktor/GeoTagNinja/issues/new?template=bug_report.md");
+    }
+
     /// <summary>
     ///     Updates the Text of any Label from outside the thread.
     /// </summary>
@@ -2074,7 +2777,8 @@ public partial class FrmMainApp : Form
         {
             // If so, call Invoke, passing it a lambda expression which calls
             // UpdateText with the same label and text, but on the UI thread instead.
-            label.Invoke(method: (Action)(() => HandlerUpdateLabelText(label: label, text: text)));
+            label.Invoke(method: (Action)(() =>
+                             HandlerUpdateLabelText(label: label, text: text)));
             return;
         }
 
@@ -2126,17 +2830,25 @@ public partial class FrmMainApp : Form
 
                 string favouriteName = cbx_Favourites.Text;
 
-                DataTable dtFavourite = HelperDataFavourites.DataReadSQLiteFavourites(structureOnly: true);
+                DataTable dtFavourite =
+                    HelperDataFavourites.DataReadSQLiteFavourites(structureOnly: true);
                 dtFavourite.Clear();
                 DataRow drFavourite = dtFavourite.NewRow();
                 drFavourite[columnName: "favouriteName"] = favouriteName;
 
-                foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays.GetFavouriteTags())
+                foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays
+                            .GetFavouriteTags())
                 {
-                    string colName = GetAttributeName(attribute: attribute);
-                    string addStr = lvi.SubItems[index: lvw.Columns[key: ElementAttributeToColumnHeaderName(elementAttribute: attribute)]
-                                                           .Index]
-                                       .Text.ToString(provider: CultureInfo.InvariantCulture);
+                    string colName = GetElementAttributesName(attributeToFind: attribute);
+                    string addStr = lvi.SubItems[
+                                            index: lvw
+                                                  .Columns[
+                                                       key:
+                                                       GetElementAttributesColumnHeader(
+                                                           attributeToFind: attribute)]
+                                                  .Index]
+                                       .Text.ToString(
+                                            provider: CultureInfo.InvariantCulture);
 
                     if (addStr == NullStringEquivalentGeneric)
                     {
@@ -2146,34 +2858,44 @@ public partial class FrmMainApp : Form
                     drFavourite[columnName: colName] = addStr;
                 }
 
-                HelperDataFavourites.DataDeleteSQLiteFavourite(favouriteName: favouriteName);
-                HelperDataFavourites.DataWriteSQLiteAddNewFavourite(drFavourite: drFavourite);
+                HelperDataFavourites.DataDeleteSQLiteFavourite(
+                    favouriteName: favouriteName);
+                HelperDataFavourites.DataWriteSQLiteAddNewFavourite(
+                    drFavourite: drFavourite);
 
                 DtFavourites = HelperGenericAppStartup.AppStartupLoadFavourites();
-                MessageBox.Show(
-                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"),
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+                CustomMessageBox customMessageBox = new(
+                    text: GenericGetMessageBoxText(
+                        messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"),
+                    caption: GenericGetMessageBoxCaption(
+                        captionType: MessageBoxCaption.Information.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Information);
+                customMessageBox.ShowDialog();
             }
 
             else
             {
-                MessageBox.Show(
-                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"),
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+                CustomMessageBox customMessageBox = new(
+                    text: GenericGetMessageBoxText(
+                        messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"),
+                    caption: GenericGetMessageBoxCaption(
+                        captionType: MessageBoxCaption.Information.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Warning);
+                customMessageBox.ShowDialog();
             }
         }
         else
         {
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
                     messageBoxName: "mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Information.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
+            customMessageBox.ShowDialog();
         }
     }
 
@@ -2188,9 +2910,11 @@ public partial class FrmMainApp : Form
 
         if (LstFavourites.Contains(item: favouriteToLoad))
         {
-            EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in DtFavourites.AsEnumerable()
-                                                               where dataRow.Field<string>(columnName: "favouriteName") == favouriteToLoad
-                                                               select dataRow;
+            EnumerableRowCollection<DataRow> drDataTableData =
+                from DataRow dataRow in DtFavourites.AsEnumerable()
+                where dataRow.Field<string>(columnName: "favouriteName") ==
+                      favouriteToLoad
+                select dataRow;
 
             DataRow drFavouriteData = drDataTableData.FirstOrDefault();
 
@@ -2199,9 +2923,8 @@ public partial class FrmMainApp : Form
             {
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
-                    DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                                                                                                                         .Index]
-                                                                                                            .Text);
+                    DirectoryElement dirElemFileToModify =
+                        lvi.Tag as DirectoryElement;
                     if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
                         filesAreSelected = true;
@@ -2214,43 +2937,54 @@ public partial class FrmMainApp : Form
             {
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
-                    DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                                                                                                                         .Index]
-                                                                                                            .Text);
+                    DirectoryElement dirElemFileToModify =
+                        lvi.Tag as DirectoryElement;
                     if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
-                        foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays.GetFavouriteTags())
+                        foreach (ElementAttribute attribute in
+                                 HelperGenericAncillaryListsArrays.GetFavouriteTags())
                         {
-                            string colName = GetAttributeName(attribute: attribute);
+                            string colName =
+                                GetElementAttributesName(attributeToFind: attribute);
                             string settingValue = drFavouriteData[columnName: colName]
                                .ToString();
 
-                            dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
-                                                                         value: settingValue,
-                                                                         version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite, isMarkedForDeletion: false);
+                            dirElemFileToModify.SetAttributeValueAnyType(
+                                attribute: attribute,
+                                value: settingValue,
+                                version: DirectoryElement.AttributeVersion
+                                                         .Stage3ReadyToWrite,
+                                isMarkedForDeletion: false);
                         }
 
-                        await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                        await FileListViewReadWrite
+                           .ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
                     }
                 }
             }
 
             else
             {
-                MessageBox.Show(
-                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"),
-                    caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+                CustomMessageBox customMessageBox = new(
+                    text: GenericGetMessageBoxText(
+                        messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"),
+                    caption: GenericGetMessageBoxCaption(
+                        captionType: MessageBoxCaption.Information.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Warning);
+                customMessageBox.ShowDialog();
             }
         }
         else
         {
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteNotValid"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmMainApp_InfoFavouriteNotValid"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Information.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Information);
+            customMessageBox.ShowDialog();
         }
     }
 
@@ -2259,7 +2993,7 @@ public partial class FrmMainApp : Form
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void tmi_removeCachedData_Click(object sender,
+    private void cmi_removeCachedData_Click(object sender,
                                             EventArgs e)
     {
         bool dataHasBeenRemoved = false;
@@ -2267,11 +3001,17 @@ public partial class FrmMainApp : Form
         {
             try
             {
-                string lat = lvi.SubItems[index: lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GPS_LATITUDE]
-                                                             .Index]
+                string lat = lvi.SubItems[index: lvw_FileList
+                                                .Columns[
+                                                     key: COL_NAME_PREFIX +
+                                                          FileListColumns.GPS_LATITUDE]
+                                                .Index]
                                 .Text;
-                string lng = lvi.SubItems[index: lvw_FileList.Columns[key: COL_NAME_PREFIX + FileListColumns.GPS_LONGITUDE]
-                                                             .Index]
+                string lng = lvi.SubItems[index: lvw_FileList
+                                                .Columns[
+                                                     key: COL_NAME_PREFIX +
+                                                          FileListColumns.GPS_LONGITUDE]
+                                                .Index]
                                 .Text;
 
                 for (int i = DtToponomySessionData.Rows.Count - 1; i >= 0; i--)
@@ -2300,19 +3040,25 @@ public partial class FrmMainApp : Form
 
         if (dataHasBeenRemoved)
         {
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoCahcedDataRemoved"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmMainApp_InfoCahcedDataRemoved"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Information.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Information);
+            customMessageBox.ShowDialog();
         }
         else
         {
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoCahcedDataNotRemoved"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmMainApp_InfoCahcedDataNotRemoved"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Information.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Information);
+            customMessageBox.ShowDialog();
         }
     }
 
@@ -2322,22 +3068,27 @@ public partial class FrmMainApp : Form
         string favouriteToLoad = cbx_Favourites.Text;
 
         // pull favs (this needs doing each time as user may have changed it)
-        DtFavourites = HelperGenericAppStartup.AppStartupLoadFavourites(clearDropDown: false);
+        DtFavourites =
+            HelperGenericAppStartup.AppStartupLoadFavourites(clearDropDown: false);
         cbx_Favourites.Text = favouriteToLoad;
         if (LstFavourites.Contains(item: favouriteToLoad))
         {
-            EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in DtFavourites.AsEnumerable()
-                                                               where dataRow.Field<string>(columnName: "favouriteName") == favouriteToLoad
-                                                               select dataRow;
+            EnumerableRowCollection<DataRow> drDataTableData =
+                from DataRow dataRow in DtFavourites.AsEnumerable()
+                where dataRow.Field<string>(columnName: "favouriteName") ==
+                      favouriteToLoad
+                select dataRow;
 
             DataRow drFavouriteData = drDataTableData.FirstOrDefault();
 
             if (drFavouriteData != null)
             {
                 double favLat = double.Parse(s: drFavouriteData[columnName: "GPSLatitude"]
-                                                .ToString(), provider: CultureInfo.InvariantCulture);
-                double favLng = double.Parse(s: drFavouriteData[columnName: "GPSLongitude"]
-                                                .ToString(), provider: CultureInfo.InvariantCulture);
+                                                .ToString(),
+                                             provider: CultureInfo.InvariantCulture);
+                double favLng = double.Parse(
+                    s: drFavouriteData[columnName: "GPSLongitude"]
+                       .ToString(), provider: CultureInfo.InvariantCulture);
 
                 // this may be redundant but lazy to check
                 char favLatRef = drFavouriteData[columnName: "GPSLatitudeRef"]
@@ -2358,8 +3109,12 @@ public partial class FrmMainApp : Form
                 nud_lat.Text = favLat.ToString(provider: CultureInfo.InvariantCulture);
                 nud_lng.Text = favLng.ToString(provider: CultureInfo.InvariantCulture);
 
-                nud_lat.Value = Convert.ToDecimal(value: favLat, provider: CultureInfo.InvariantCulture);
-                nud_lng.Value = Convert.ToDecimal(value: favLng, provider: CultureInfo.InvariantCulture);
+                nud_lat.Value =
+                    Convert.ToDecimal(value: favLat,
+                                      provider: CultureInfo.InvariantCulture);
+                nud_lng.Value =
+                    Convert.ToDecimal(value: favLng,
+                                      provider: CultureInfo.InvariantCulture);
 
                 btn_NavigateMapGo_Click(sender: null, e: null);
             }
@@ -2382,16 +3137,19 @@ public partial class FrmMainApp : Form
         }
         else
         {
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_NoFavouritesDefined"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmMainApp_NoFavouritesDefined"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Information.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Information);
+            customMessageBox.ShowDialog();
         }
     }
 
 
-    private void tmi_OpenCoordsInAPI_Click(object sender,
+    private void cmi_OpenCoordsInAPI_Click(object sender,
                                            EventArgs e)
     {
         bool selectionIsValid = false;
@@ -2404,17 +3162,24 @@ public partial class FrmMainApp : Form
         if (lvw.SelectedItems.Count == 1)
         {
             ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
-            DirectoryElement dirElemFileToModify = DirectoryElements.FindElementByItemGUID(GUID: lvi.SubItems[index: lvw.Columns[key: COL_NAME_PREFIX + FileListColumns.GUID]
-                                                                                                                        .Index]
-                                                                                                    .Text);
+            DirectoryElement dirElemFileToModify =
+                lvi.Tag as DirectoryElement;
             if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {
-                latParseSuccess = double.TryParse(s: lvi.SubItems[index: lvw.Columns[key: COL_NAME_PREFIX + FileListColumns.GPS_LATITUDE]
-                                                                            .Index]
-                                                        .Text, result: out dblLat);
-                lngParseSuccess = double.TryParse(s: lvi.SubItems[index: lvw.Columns[key: COL_NAME_PREFIX + FileListColumns.GPS_LONGITUDE]
-                                                                            .Index]
-                                                        .Text, result: out dblLng);
+                latParseSuccess = double.TryParse(
+                    s: lvi.SubItems[index: lvw
+                                          .Columns[
+                                               key: COL_NAME_PREFIX +
+                                                    FileListColumns.GPS_LATITUDE]
+                                          .Index]
+                          .Text, result: out dblLat);
+                lngParseSuccess = double.TryParse(
+                    s: lvi.SubItems[index: lvw
+                                          .Columns[
+                                               key: COL_NAME_PREFIX +
+                                                    FileListColumns.GPS_LONGITUDE]
+                                          .Index]
+                          .Text, result: out dblLng);
                 if (latParseSuccess && lngParseSuccess)
                 {
                     selectionIsValid = true;
@@ -2424,35 +3189,68 @@ public partial class FrmMainApp : Form
 
         if (!selectionIsValid)
         {
-            MessageBox.Show(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
                     messageBoxName: "mbx_FrmMainApp_WarningTooManyFilesSelected"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Warning"),
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
+            customMessageBox.ShowDialog();
         }
         else
         {
             CultureInfo cIEnUS = new(name: "en-US");
-            string SOnlyShowFCodePPL = HelperVariables.SOnlyShowFCodePPL
+            string SOnlyShowFCodePPL = HelperVariables.UserSettingOnlyShowFCodePPL
                 ? "&fcode=PPL"
                 : "";
-            string openAPILink = "http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&lat=" +
-                                 dblLat.ToString(provider: cIEnUS) +
-                                 "&lng=" +
-                                 dblLng.ToString(provider: cIEnUS) +
-                                 "&lang=" +
-                                 HelperVariables.APILanguageToUse +
-                                 SOnlyShowFCodePPL +
-                                 "&style=FULL" +
-                                 "&radius=" +
-                                 HelperVariables.ToponomyRadiusValue +
-                                 "&maxRows=" +
-                                 HelperVariables.ToponomyMaxRows +
-                                 "&username=" +
-                                 HelperVariables.SGeoNamesUserName +
-                                 "&password=any";
+            string openAPILink =
+                "http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&lat=" +
+                dblLat.ToString(provider: cIEnUS) +
+                "&lng=" +
+                dblLng.ToString(provider: cIEnUS) +
+                "&lang=" +
+                HelperVariables.APILanguageToUse +
+                SOnlyShowFCodePPL +
+                "&style=FULL" +
+                "&radius=" +
+                HelperVariables.ToponomyRadiusValue +
+                "&maxRows=" +
+                HelperVariables.ToponomyMaxRows +
+                "&username=" +
+                HelperVariables.UserSettingGeoNamesUserName +
+                "&password=any";
             Process.Start(fileName: openAPILink);
+        }
+    }
+
+    private void lvw_ExifData_KeyUp(object sender,
+                                    KeyEventArgs e)
+    {
+        // unused
+    }
+
+    private void lvw_ExifData_KeyDown(object sender,
+                                      KeyEventArgs e)
+    {
+        if (e.Control &&
+            e.KeyCode == Keys.C)
+        {
+            CopySelectedValuesToClipboard();
+        }
+
+        void CopySelectedValuesToClipboard()
+        {
+            StringBuilder builder = new();
+            foreach (ListViewItem lvi in lvw_ExifData.SelectedItems)
+            {
+                for (int i = 0; i < lvi.SubItems.Count; i++)
+                {
+                    builder.AppendLine(value: lvi.SubItems[index: i].Text);
+                }
+            }
+
+            Clipboard.SetText(text: builder.ToString());
         }
     }
 }
@@ -2473,7 +3271,11 @@ public static class ControlExtensions
                                       bool enable)
     {
         PropertyInfo doubleBufferPropertyInfo = control.GetType()
-                                                       .GetProperty(name: "DoubleBuffered", bindingAttr: BindingFlags.Instance | BindingFlags.NonPublic);
+                                                       .GetProperty(
+                                                            name: "DoubleBuffered",
+                                                            bindingAttr: BindingFlags
+                                                               .Instance |
+                                                            BindingFlags.NonPublic);
         doubleBufferPropertyInfo.SetValue(obj: control, value: enable, index: null);
     }
 }

@@ -1,13 +1,12 @@
+
 # Welcome to GeoTagNinja
 
-GeoTagNinja is an open-source geotagger for Windows. It's a lightweight an open-source (written from scratch) reminiscent of GeoSetter.
-GTN uses [exifTool](https://exifTool.org/) to read and write EXIF info. This also sets the limitations and capabilities. If exifTool can read/write a file, chances are so can GTN.
+GeoTagNinja is an open-source photo geotagger GUI for Windows. GTN uses [exifTool](https://exifTool.org/) to read and write EXIF info. This also sets the limitations and capabilities. If exifTool can read/write a file, chances are so can GTN.
 There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP1ZG7mH-I) if you feel like watching it. It's from the original (Aug 2022) release but it still covers the main feaures more or less. It's only gotten better since...
 
 ## Download & Install (Windows 7+ only)
 
 - Download the .msi file from [Releases](https://github.com/nemethviktor/GeoTagNinja/releases) - Find the newest release (topmost, easy) then click on Assets if they are not showing. 
-	- There "tends to be" a dev(elopment) version stored [on my public Google Drive](https://drive.google.com/file/d/18iI77SIdrIv-joOtyT0-MzqOVtB5OgM0/view?usp=share_link). This is not really a maintained location and by definition the version is likely to be messier than the published ones. It may even happen that this version is actually older than the published one (I don't always upload here but only when someone opens a ticket and I'd like them to test a change)
 - As of 20221202 I've removed the built-in webView2 installer because it was more of a pain in the backside than benefit. If the app breaks complaining about the lack of webView2, it's available [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703)
 - The app is unsigned. This is because a certificate costs in the vicinity of £250 per year but the app is free and I don't particularly feel like splurging out on this at the moment. 
 	- Due to the lack of a signed certificate, when installing SmartScreen will complain that the app is unsafe. SmartScreen is meant to be called StupidScreen but MS made a typo there. 
@@ -26,12 +25,17 @@ There is a "short" (15 mins) capabilities demo on [Youtube](https://youtu.be/ulP
 	- On this particular note above --> the script won't change existing country details in files unless you explicitly edit them. So it may happen that your existing file has the CountryCode GBR and the Country "United Kingdom", that won't be changed unless you do a "Get From Web" because the CountryCode-to-Country matching only runs in that case. That's a feature, not a bug.
 - Altitude: in some cases the API returns 32K or negative 32K as an altitude. Those are being blanked out.
 - Pressing Get From Web in Edit mode will always query the lat/long data for the file as in the main listview (the main page, in less geeky terms.). This is a feature. The assumption is that you aren't going to change coordinates manually by typing stuff in and _then_ query data. It's a lot more likely you'll change stuff using the map.
-- Time Zones (in the Edit File) are left as blank on open regardless of what the stored value is. There is no Exif Tag for TZ but only "Offset", which is something like "+01:00". As there is no indication for neither TZ nor DST per se I can't ascertain that  "+01:00" was in fact say BST rather than CET, one being DST the other not. Either adjust manually or pull from web - the combination of coordinates + createDate would decisively inform the program of the real TZ value.
+- **Time Zones** (in the Edit File) are left as blank on open regardless of what the stored value is. There is no Exif Tag for TZ but only "Offset", which is something like "+01:00". As there is no indication for neither TZ nor DST per se I can't ascertain that  "+01:00" was in fact say BST rather than CET, one being DST the other not. Either adjust manually or pull from web - the combination of coordinates + createDate would decisively inform the program of the real TZ value.
 - See my comment above re: the app being unsigned and SmartScreen getting derpy once in a while. On top of that...
 	- If you have Avast running or some other nightmare that tries to capture iframes within apps the app will most likely crash sooner rather than later, at least on the first run. I *think* it should be okay afterwards.
 	- I've seen once (and only once) ESET being silly about the app. Tbh no idea as to why. While I'd say the source code is open for public viewing and building it is probably clearer to just say: the app isn't tracking or recording your data and isn't doing anything that's not strictly related to its function. If I ever were to include any tracking (no such plans for the forseeable future), it'd be entirely anonomymised anyway.
-- Build 8646 [20230903]+: I've finally gotten around to displaying the GPSImgDirection on the map. The logic is, as not to clutter the map the direction "line" will only show when only one image (with GPSImgDirection) is selected; if more than one such image is selected then the lines don't show.
+- Build 8646 [20230903]+: I've finally gotten around to displaying the **GPSImgDirection** on the map. The logic is, as not to clutter the map the direction "line" will only show when only one image (with GPSImgDirection) is selected; if more than one such image is selected then the lines don't show.
 	- The way this is calculated requires a "distance" so that the target coordinate pair ("the image direction") can be calculated. This is defaulted to 10km for the line and 1km for the triangle and is unlikely to change at this point.
+- Build 8651 [20230908]+: The other thing I've gotten around to was adding some method of displaying the **Destination** in images. WebView2 seems to be buggy about this and see below for details - also suggestions on fix welcome.
+- Build 8658 [20230915]+: There is now some support for **Dark Mode**. This is a little "unbeautiful", however there is no proper API support in .NET Framework 4.8.x for "real" (read: Windows 11 style) Dark Mode and at the moment this might or might not even make it into .NET Framework 5 (see [here](https://github.com/dotnet/winforms/issues/7641) for anyone wanting to dig into the techy parts.)
+    - Some Borders and Scrollbars don't draw proper "dark" lines/brushes - so there's a discrepancy around the edges. From what I gather as an outcome of the above (lack of support).
+	- Point being Dark Mode is an option so that the app doesn't burn your eyes if you are the night owl type, rather than to be pretty, apologies.
+	- In newer builds there has been considerable improvements wrt Dark Mode as I now have a slave to do some of the dirty work (Resharper AI FTW).
 
 ### A Particular Note on Working with Adobe Bridge (ACR) and RAW files > Saving as JPGs or Other Formats.
 
@@ -73,8 +77,7 @@ I'm generally happy for anyone competent to add pull requests but I don't always
 
 ## ToDos
 
-- [WIP] Destination stuff untested generally likely not working.
-- [Later] Rewrite the whole app in WPF.
+- N/A
 
 ## Known Issues
 
@@ -88,6 +91,23 @@ I'm generally happy for anyone competent to add pull requests but I don't always
 - If user zooms "too far out" on Map they will get odd longitude values. The code handles this internally but map feedback is what it is.
 - I didn't really manage to test this but for Nikon D5 the camera outputs NEF files with a built-in "Rating=0" tag. This becomes an issue in Adobe Bridge if an XMP is created and then the NEF file is subsequently ownerwritten by GTN because Bridge would ignore the Rating value in the XMP file going forward. For this reason Rating is always sent back to the RAW files if they are saved. I don't think this would be a problem but more of a heads-up that there are some oddities like this. Btw this force-save-Rating isn't limited to Nikon camera saves in GTN.
 - If you change Time Offset (time zone) _and nothing else at all_ then you'll get a warning that "nothing has changed" in the xmp sidecar file. This is not a bug. There is no XMP tag for OffsetTime.
+- Destinations: See below.
+- IPTC Keywords & XMP Subjects: when using Adobe Bridge or certain other tools, keywords get added by that software. This can be anything whatsoever (e.g. `mum` or `i love you` or `Stratford`) either defined by the user or the software. The problem is that there most often is no indicator as to what a keyword is, e.g. no `City=` or some such -> this makes it extremely difficult (read: impossible) to sync data with keywords. See: `[XMP] Subject: England, GBR, geo:lat=51.54131500, geo:lon=-0.01036167, geotagged, Stratford, Stratford and New Town Ward, United Kingdom`
+	- At the moment there's some groundwork-code in the codebase to enable some future interaction with keywords but I haven't quite worked out an efficient way around this. You'll notice that the two `geo:` are easy to capture and edit but the rest are just undefined character strings. A `remove all geodata` command therefore woudn't be able to identfy whether say `Fxxking` is a verb or a [town in Austria](https://en.wikipedia.org/wiki/Fugging,_Upper_Austria) or perhapse `Bugyi` is a character string that refers to the Hungarian town called Bugyi, or the otherwise equivalent noun that translates as `panties`. If you think I'm entirely crazy then read the [wikipedia article](https://en.wikipedia.org/wiki/Bugyi) regarding that settlement.
+	- This means that if your file has Keywords/Subjects and you edit the geo-data the keywords will become out of sync with the changes.
+	- What's therefore likely to happen is that I'll attempt to replace existing `geo:` keywords with up-to-date values as required and ignore the rest.
+
+### Desinations/Possible Bug in WebView2
+
+TL;DR: the arrows are missing. 
+Longer: Hypothetically the idea with Destinations is that if there are groups of images that have GPSDestLat/Long defined then the app draws a path on the map for each of these. Assume the following:
+- You have N groups of images (N>0) where GPSDestLat/Long is defined and is the same within each group
+- Each group has C (-> C>1) count of images where the GPSLat/Long is different. Basically you have a bunch of photos from a path walked/driven/etc and you want to map them.
+- The script parses these N groups, separates them and puts them independently on the map _with a bunch of arrows_. 
+	- When viewing the HTML file out of GTN and open in Edge or Chrome there are the appropriate number of grouped paths and arrows show between the individual images, aka it works as expected.
+	- When viewing the same thing within GTN the arrows are missing. Upon inspection it is found that `Uncaught TypeError: Cannot read properties of undefined (reading 'arrowHead') ...` - so basically the arrowHead of the polylineDecorator breaks the WebView2 JS engine, something that isn't a problem in "real" Chrome or Edge. 
+
+- For those better versed in JS I've put a try/catch block around this but I still think there should be some way around the issue so any suggestions here pls shout.
 
 ## Possible Issues & Solutions
 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ImageMagick;
 
 namespace GeoTagNinja.Helpers;
 
@@ -21,29 +22,49 @@ internal static class HelperExifReadGetImagePreviews
     {
         FrmMainApp.Logger.Debug(message: "Starting");
 
-        #region ExifToolConfiguration
+    #region ExifToolConfiguration
 
-        string exifToolExe = Path.Combine(path1: HelperVariables.ResourcesFolderPath, path2: "exiftool.exe");
+        string exifToolExe = Path.Combine(path1: HelperVariables.ResourcesFolderPath,
+                                          path2: "exiftool.exe");
 
         // want to give this a different name from the usual exifArgs.args just in case that's still being accessed (as much as it shouldn't be)
         Regex rgx = new(pattern: "[^a-zA-Z0-9]");
-        string folderName = Path.GetDirectoryName(fileNameWithPath);
-        string fileNameReplaced = rgx.Replace(input: fileNameWithPath.Replace(oldValue: folderName, newValue: ""), replacement: "_");
-        string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exifArgs_getPreview_" + fileNameReplaced + ".args");
-        string exiftoolCmd = " -charset utf8 -charset filename=utf8 -b -preview:GTNPreview -w! " + HelperVariables.SDoubleQuote + HelperVariables.UserDataFolderPath + @"\%F.jpg" + HelperVariables.SDoubleQuote + " -@ " + HelperVariables.SDoubleQuote + argsFile + HelperVariables.SDoubleQuote;
+        string folderName = Path.GetDirectoryName(path: fileNameWithPath);
+        string fileNameReplaced =
+            rgx.Replace(
+                input: fileNameWithPath.Replace(oldValue: folderName, newValue: ""),
+                replacement: "_");
+        string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                                       path2: "exifArgs_getPreview_" +
+                                              fileNameReplaced +
+                                              ".args");
+        string exiftoolCmd =
+            " -charset utf8 -charset filename=utf8 -b -preview:GTNPreview -w! " +
+            HelperVariables.DoubleQuoteStr +
+            HelperVariables.UserDataFolderPath +
+            @"\%F.jpg" +
+            HelperVariables.DoubleQuoteStr +
+            " -@ " +
+            HelperVariables.DoubleQuoteStr +
+            argsFile +
+            HelperVariables.DoubleQuoteStr;
 
         File.Delete(path: argsFile);
 
-        #endregion
+    #endregion
 
         // add required tags
 
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmMainApp frmMainAppInstance =
+            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         if (File.Exists(path: fileNameWithPath))
         {
-            File.AppendAllText(path: argsFile, contents: fileNameWithPath + Environment.NewLine, encoding: Encoding.UTF8);
-            File.AppendAllText(path: argsFile, contents: "-execute" + Environment.NewLine);
+            File.AppendAllText(path: argsFile,
+                               contents: fileNameWithPath + Environment.NewLine,
+                               encoding: Encoding.UTF8);
+            File.AppendAllText(path: argsFile,
+                               contents: "-execute" + Environment.NewLine);
         }
 
         FrmMainApp.Logger.Trace(message: "Starting ExifTool");
@@ -64,8 +85,10 @@ internal static class HelperExifReadGetImagePreviews
     internal static async Task GenericCreateImagePreview(string fileNameWithPath,
                                                          string initiator)
     {
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
+        FrmMainApp frmMainAppInstance =
+            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmEditFileData frmEditFileDataInstance =
+            (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
         Image img = null;
         FileInfo fi = new(fileName: fileNameWithPath);
         string generatedFileName = null;
@@ -73,35 +96,53 @@ internal static class HelperExifReadGetImagePreviews
         if (initiator == "FrmMainApp" && frmMainAppInstance != null)
         {
             frmMainAppInstance.pbx_imagePreview.Image = null;
-            generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: frmMainAppInstance.lvw_FileList.SelectedItems[index: 0]
-                                                                                                   .Text +
-                                                                                               ".jpg");
+            generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                                             path2: frmMainAppInstance.lvw_FileList
+                                                       .SelectedItems[index: 0]
+                                                       .Text +
+                                                    ".jpg");
         }
         else if (initiator == "FrmMainAppAPIDataSelection" && frmMainAppInstance != null)
         {
             frmMainAppInstance.pbx_imagePreview.Image = null;
             string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
-            generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: fileNameWithoutPath + ".jpg");
+            generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                                             path2: fileNameWithoutPath + ".jpg");
         }
         else if (initiator == "FrmEditFileData" && frmEditFileDataInstance != null)
         {
             frmEditFileDataInstance.pbx_imagePreview.Image = null;
-            generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: frmEditFileDataInstance.lvw_FileListEditImages.SelectedItems[index: 0]
-                                                                                                   .Text +
-                                                                                               ".jpg");
+            generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                                             path2: frmEditFileDataInstance
+                                                   .lvw_FileListEditImages
+                                                   .SelectedItems[index: 0]
+                                                   .Text +
+                                                    ".jpg");
         }
 
         //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
         string pbxErrorMsg = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: "PictureBox",
+            objectType: ControlType.PictureBox,
             objectName: "pbx_imagePreviewCouldNotRetrieve"
         );
 
         try
         {
-            // via https://stackoverflow.com/a/6576645/3968494
-            using FileStream stream = new(path: fileNameWithPath, mode: FileMode.Open, access: FileAccess.Read);
-            img = Image.FromStream(stream: stream);
+            if (fi.Extension.ToLower() == ".heic" ||
+                fi.Extension.ToLower() == ".heif")
+            {
+                // actually the reason i'm not using this for _every_ file is that it's just f...ing slow with NEF files(which is what I have plenty of), so it's prohibitive to run on RAW files. 
+                //  since i don't have a better way to deal with HEIC files atm this is as good as it gets.
+                ConvertHeicToJpeg(heicPath: fileNameWithPath,
+                                  jpegPath: generatedFileName);
+            }
+            else
+            {
+                // via https://stackoverflow.com/a/6576645/3968494
+                using FileStream stream = new(path: fileNameWithPath, mode: FileMode.Open,
+                                              access: FileAccess.Read);
+                img = Image.FromStream(stream: stream);
+            }
         }
         catch
         {
@@ -120,7 +161,9 @@ internal static class HelperExifReadGetImagePreviews
             {
                 try
                 {
-                    using FileStream stream = new(path: generatedFileName, mode: FileMode.Open, access: FileAccess.Read);
+                    using FileStream stream = new(path: generatedFileName,
+                                                  mode: FileMode.Open,
+                                                  access: FileAccess.Read);
                     img = Image.FromStream(stream: stream);
 
                     img.ExifRotate();
@@ -134,7 +177,9 @@ internal static class HelperExifReadGetImagePreviews
 
         if (img != null)
         {
-            if ((initiator == "FrmMainApp" || initiator == "FrmMainAppAPIDataSelection") && frmMainAppInstance != null)
+            if ((initiator == "FrmMainApp" ||
+                 initiator == "FrmMainAppAPIDataSelection") &&
+                frmMainAppInstance != null)
             {
                 frmMainAppInstance.pbx_imagePreview.Image = img;
             }
@@ -154,6 +199,24 @@ internal static class HelperExifReadGetImagePreviews
             {
                 // frmEditFileDataInstance.pbx_imagePreview.SetErrorMessage(message: pbxErrorMsg); // <- nonesuch.
             }
+        }
+    }
+
+    /// <summary>
+    ///     Takes a HEIC file and dumps a JPG. Uses MagickImage. See comment above as to why this isn't being used for all RAW
+    ///     files. (Too slow).
+    /// </summary>
+    /// <param name="heicPath"></param>
+    /// <param name="jpegPath"></param>
+    public static void ConvertHeicToJpeg(string heicPath,
+                                         string jpegPath)
+    {
+        using (MagickImage image = new(fileName: heicPath))
+        {
+            // The AutoOrient() method adjusts the image to respect its orientation.
+            image.AutoOrient();
+            // Save the image as a JPEG.
+            image.Write(fileName: jpegPath);
         }
     }
 }

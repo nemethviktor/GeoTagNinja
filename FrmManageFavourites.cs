@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
+using GeoTagNinja.View.DialogAndMessageBoxes;
 using Microsoft.VisualBasic;
 
 namespace GeoTagNinja;
@@ -14,6 +15,9 @@ public partial class FrmManageFavourites : Form
     public FrmManageFavourites()
     {
         InitializeComponent();
+        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
+                                                     ? ThemeColour.Dark
+                                                     : ThemeColour.Light, parentControl: this);
     }
 
     private void FrmManageFavourites_Load(object sender,
@@ -35,9 +39,10 @@ public partial class FrmManageFavourites : Form
             )
             {
                 // gets logged inside.
-                cItem.Text = HelperDataLanguageTZ.DataReadDTObjectText(objectType: cItem.GetType()
-                                                                           .Name,
-                                                                       objectName: cItem.Name);
+                cItem.Text = HelperDataLanguageTZ.DataReadDTObjectText(
+                    objectType: HelperDataLanguageTZ.GetControlType(
+                        controlType: cItem.GetType()),
+                    objectName: cItem.Name);
             }
             // there is only one dropdown atm.
             else if (cItem.Name == "cbx_Country")
@@ -124,11 +129,15 @@ public partial class FrmManageFavourites : Form
                                                             state: tbx_State.Text,
                                                             subLocation: tbx_Sub_location.Text);
 
-        MessageBox.Show(
-            text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"),
-            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: "Info"),
+        CustomMessageBox customMessageBox = new(
+            text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"),
+            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                   .Information.ToString()),
             buttons: MessageBoxButtons.OK,
             icon: MessageBoxIcon.Information);
+        customMessageBox.ShowDialog();
 
         _frmNowLoadingFavouriteData = true;
 
@@ -182,14 +191,9 @@ public partial class FrmManageFavourites : Form
                 if (cItem is TextBox txt)
                 {
                     string oldText = HelperDataOtherDataRelated.DataGetFirstOrDefaultFromKVPList(lstIn: lstOriginals, keyEqualsWhat: cItem.Name);
-                    if (oldText != txt.Text)
-                    {
-                        txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Bold);
-                    }
-                    else
-                    {
-                        txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Regular);
-                    }
+                    txt.Font = oldText != txt.Text
+                        ? new Font(prototype: txt.Font, newStyle: FontStyle.Bold)
+                        : new Font(prototype: txt.Font, newStyle: FontStyle.Regular);
                 }
             }
         }

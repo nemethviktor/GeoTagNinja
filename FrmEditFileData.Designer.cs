@@ -1,4 +1,6 @@
-﻿namespace GeoTagNinja
+﻿using GeoTagNinja.Helpers;
+
+namespace GeoTagNinja
 {
     partial class FrmEditFileData
     {
@@ -40,7 +42,7 @@
             this.pbx_OffsetTimeInfo = new System.Windows.Forms.PictureBox();
             this.ckb_UseDST = new System.Windows.Forms.CheckBox();
             this.tbx_OffsetTime = new System.Windows.Forms.TextBox();
-            this.cbx_OffsetTimeList = new System.Windows.Forms.ComboBox();
+            this.cbx_OffsetTime = new System.Windows.Forms.ComboBox();
             this.lbl_OffsetTime = new System.Windows.Forms.Label();
             this.tbx_Sub_location = new System.Windows.Forms.TextBox();
             this.tbx_City = new System.Windows.Forms.TextBox();
@@ -123,6 +125,7 @@
             // 
             // pbx_imagePreview
             // 
+            this.pbx_imagePreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pbx_imagePreview.Location = new System.Drawing.Point(12, 338);
             this.pbx_imagePreview.Name = "pbx_imagePreview";
             this.pbx_imagePreview.Size = new System.Drawing.Size(438, 219);
@@ -152,7 +155,7 @@
             this.gbx_LocationData.Controls.Add(this.pbx_OffsetTimeInfo);
             this.gbx_LocationData.Controls.Add(this.ckb_UseDST);
             this.gbx_LocationData.Controls.Add(this.tbx_OffsetTime);
-            this.gbx_LocationData.Controls.Add(this.cbx_OffsetTimeList);
+            this.gbx_LocationData.Controls.Add(this.cbx_OffsetTime);
             this.gbx_LocationData.Controls.Add(this.lbl_OffsetTime);
             this.gbx_LocationData.Controls.Add(this.tbx_Sub_location);
             this.gbx_LocationData.Controls.Add(this.tbx_City);
@@ -244,18 +247,18 @@
             this.tbx_OffsetTime.TabIndex = 16;
             this.tbx_OffsetTime.TextChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             // 
-            // cbx_OffsetTimeList
+            // cbx_OffsetTime
             // 
-            this.cbx_OffsetTimeList.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.cbx_OffsetTimeList.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cbx_OffsetTimeList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbx_OffsetTimeList.FormattingEnabled = true;
-            this.cbx_OffsetTimeList.Location = new System.Drawing.Point(163, 177);
-            this.cbx_OffsetTimeList.Name = "cbx_OffsetTimeList";
-            this.cbx_OffsetTimeList.Size = new System.Drawing.Size(342, 21);
-            this.cbx_OffsetTimeList.Sorted = true;
-            this.cbx_OffsetTimeList.TabIndex = 15;
-            this.cbx_OffsetTimeList.SelectedIndexChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
+            this.cbx_OffsetTime.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbx_OffsetTime.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbx_OffsetTime.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbx_OffsetTime.FormattingEnabled = true;
+            this.cbx_OffsetTime.Location = new System.Drawing.Point(163, 177);
+            this.cbx_OffsetTime.Name = "cbx_OffsetTime";
+            this.cbx_OffsetTime.Size = new System.Drawing.Size(342, 21);
+            this.cbx_OffsetTime.Sorted = true;
+            this.cbx_OffsetTime.TabIndex = 15;
+            this.cbx_OffsetTime.SelectedIndexChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             // 
             // lbl_OffsetTime
             // 
@@ -494,6 +497,7 @@
             // 
             this.tcr_EditData.Controls.Add(this.tpg_Location);
             this.tcr_EditData.Controls.Add(this.tpg_DateTime);
+            this.tcr_EditData.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
             this.tcr_EditData.ImageList = this.igl_TabPages;
             this.tcr_EditData.Location = new System.Drawing.Point(455, 11);
             this.tcr_EditData.Margin = new System.Windows.Forms.Padding(2);
@@ -961,11 +965,15 @@
             this.lvw_FileListEditImages.Location = new System.Drawing.Point(6, 22);
             this.lvw_FileListEditImages.MultiSelect = false;
             this.lvw_FileListEditImages.Name = "lvw_FileListEditImages";
+            this.lvw_FileListEditImages.OwnerDraw = true;
             this.lvw_FileListEditImages.Size = new System.Drawing.Size(426, 284);
             this.lvw_FileListEditImages.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvw_FileListEditImages.TabIndex = 1;
             this.lvw_FileListEditImages.UseCompatibleStateImageBehavior = false;
             this.lvw_FileListEditImages.View = System.Windows.Forms.View.Details;
+            this.lvw_FileListEditImages.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
+            this.lvw_FileListEditImages.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
+            this.lvw_FileListEditImages.DrawSubItem += new System.Windows.Forms.DrawListViewSubItemEventHandler(this.ListView_DrawSubItem);
             this.lvw_FileListEditImages.SelectedIndexChanged += new System.EventHandler(this.lvw_FileListEditImages_SelectedIndexChanged);
             // 
             // FrmEditFileData
@@ -1076,7 +1084,7 @@
         private System.Windows.Forms.RadioButton rbt_CreateDateSetToFixedDate;
         private System.Windows.Forms.Button btn_InsertCreateDate;
         private System.Windows.Forms.Button btn_InsertFromTakenDate;
-        internal System.Windows.Forms.ComboBox cbx_OffsetTimeList;
+        internal System.Windows.Forms.ComboBox cbx_OffsetTime;
         private System.Windows.Forms.Label lbl_OffsetTime;
         private System.Windows.Forms.TextBox tbx_OffsetTime;
         private System.Windows.Forms.PictureBox pbx_OffsetTimeInfo;

@@ -5,3 +5,4 @@ ttp_OffsetTime,"Time Zones are left as blank on open regardless of what the stor
 ttp_SaveFavourite,Save (or overwrite) the currently selected file's metadata to your Favourites,Sauver ou modifier les metadata des fichiers selectionnés dans vos favoris
 ttp_LoadFavourite,Load metadata for the selected file(s) from your Favourites,Recharger les metadata des fichiers selectionnés depuis vos favoris
 ttp_ManageFavourites,Manage Favourites,
+ttp_loctToFileDestination,Save the Current Coordinate to the Selected Files' Destination,
