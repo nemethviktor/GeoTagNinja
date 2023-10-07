@@ -37,21 +37,35 @@ internal static class HelperExifExifToolOperator
     {
         int lviIndex = 0;
         _exifInvokeCounter += 1;
-        FrmMainApp.Logger.Trace(message: "Start EXIF Tool number " + _exifInvokeCounter + " for " + initiator + " with cmdLine: " + exiftoolCmd);
+        FrmMainApp.Logger.Trace(message: "Start EXIF Tool number " +
+                                         _exifInvokeCounter +
+                                         " for " +
+                                         initiator +
+                                         " with cmdLine: " +
+                                         exiftoolCmd);
         await Task.Run(action: () =>
         {
             using Process prcExifTool = new();
 
-            prcExifTool.StartInfo = new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
-            {
-                Arguments = @"/c " + HelperVariables.DoubleQuoteStr + HelperVariables.DoubleQuoteStr + Path.Combine(path1: HelperVariables.ResourcesFolderPath, path2: "exiftool.exe") + HelperVariables.DoubleQuoteStr + " " + exiftoolCmd + HelperVariables.DoubleQuoteStr,
-                UseShellExecute = false,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true,
-                StandardOutputEncoding = Encoding.UTF8,
-                StandardErrorEncoding = Encoding.UTF8
-            };
+            prcExifTool.StartInfo =
+                new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
+                {
+                    Arguments = @"/c " +
+                                HelperVariables.DoubleQuoteStr +
+                                HelperVariables.DoubleQuoteStr +
+                                Path.Combine(path1: HelperVariables.ResourcesFolderPath,
+                                             path2: "exiftool.exe") +
+                                HelperVariables.DoubleQuoteStr +
+                                " " +
+                                exiftoolCmd +
+                                HelperVariables.DoubleQuoteStr,
+                    UseShellExecute = false,
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true,
+                    StandardOutputEncoding = Encoding.UTF8,
+                    StandardErrorEncoding = Encoding.UTF8
+                };
 
             prcExifTool.EnableRaisingEvents = true;
 
@@ -69,32 +83,52 @@ internal static class HelperExifExifToolOperator
                         {
                             if (data.Data.Contains(value: "="))
                             {
-                                fileNameWithPath = data.Data.Replace(oldValue: "=", newValue: "")
-                                    .Replace(oldValue: "/", newValue: @"\")
-                                    .Split('[')
-                                    .FirstOrDefault()
-                                    .Trim();
+                                fileNameWithPath = data
+                                                  .Data.Replace(
+                                                       oldValue: "=", newValue: "")
+                                                  .Replace(oldValue: "/", newValue: @"\")
+                                                  .Split('[')
+                                                  .FirstOrDefault()
+                                                  .Trim();
 
                                 // basically we need to check that the combination of what-to-save is _not_ xmp-only. 
                                 // if it _is_ xmp-only then this causes a problem because the xmp file isn't really a DE per se so it'd never get removed from the queue.
                                 // problem is that if only the xmp file gets overwritten then there is no indication of the original file here. 
 
-                                if (!processOriginalFile && writeXmpSideCar && fileNameWithPath.EndsWith(value: ".xmp"))
+                                if (!processOriginalFile &&
+                                    writeXmpSideCar &&
+                                    fileNameWithPath.EndsWith(value: ".xmp"))
                                 {
-                                    string pathOfFile = fileNameWithPath.Substring(startIndex: 0, length: fileNameWithPath.Length - 4);
-                                    dirElemFileToDrop = FrmMainApp.DirectoryElements.FindElementByBelongingToXmpWithPath(XMPFileNameWithPath: pathOfFile);
+                                    string pathOfFile =
+                                        fileNameWithPath.Substring(
+                                            startIndex: 0,
+                                            length: fileNameWithPath.Length - 4);
+                                    dirElemFileToDrop =
+                                        FrmMainApp.DirectoryElements
+                                                  .FindElementByBelongingToXmpWithPath(
+                                                       XMPFileNameWithPath: pathOfFile);
                                 }
                                 else
                                 {
-                                    dirElemFileToDrop = FrmMainApp.DirectoryElements.FindElementByFileNameWithPath(FileNameWithPath: fileNameWithPath);
+                                    dirElemFileToDrop =
+                                        FrmMainApp.DirectoryElements
+                                                  .FindElementByFileNameWithPath(
+                                                       FileNameWithPath:
+                                                       fileNameWithPath);
                                 }
                             }
 
                             if (dirElemFileToDrop != null)
                             {
-                                fileNameWithoutPath = dirElemFileToDrop.ItemNameWithoutPath;
-                                FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Processing: " + fileNameWithoutPath);
-                                FrmMainApp.Logger.Debug(message: "Writing " + fileNameWithoutPath + " [this is via OutputDataReceived]");
+                                fileNameWithoutPath =
+                                    dirElemFileToDrop.ItemNameWithoutPath;
+                                FrmMainApp.HandlerUpdateLabelText(
+                                    label: frmMainAppInstance.lbl_ParseProgress,
+                                    text: "Processing: " + fileNameWithoutPath);
+                                FrmMainApp.Logger.Debug(
+                                    message: "Writing " +
+                                             fileNameWithoutPath +
+                                             " [this is via OutputDataReceived]");
 
                                 try
                                 {
@@ -104,36 +138,58 @@ internal static class HelperExifExifToolOperator
 
                                         // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
-                                        frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath);
+                                        frmMainAppInstance.lvw_FileList.ScrollToDataPoint(
+                                            itemText: fileNameWithoutPath);
                                     }
 
-                                    if ((data.Data.Contains(value: "files updated") || data.Data.Contains(value: "files created")) &&
+                                    if ((data.Data.Contains(value: "files updated") ||
+                                         data.Data.Contains(value: "files created")) &&
                                         !data.Data.Trim()
-                                            .StartsWith(value: "0"))
+                                             .StartsWith(value: "0"))
                                     {
-                                        removeDirElementFromDE3(dirElemToDrop: dirElemFileToDrop);
+                                        RemoveDirElementFromDe3AndCopyDataToOriginal(
+                                            dirElemToDrop: dirElemFileToDrop,
+                                            frmMainAppInstance);
                                     }
 
-                                    if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
+                                    if (Path.GetExtension(path: fileNameWithoutPath) ==
+                                        ".xmp")
                                     {
                                         if (lviIndex % 10 == 0)
                                         {
                                             Application.DoEvents();
                                             // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
-                                            frmMainAppInstance.lvw_FileList.ScrollToDataPoint(itemText: fileNameWithoutPath); // this is redundant here.
+                                            frmMainAppInstance.lvw_FileList
+                                               .ScrollToDataPoint(
+                                                    itemText:
+                                                    fileNameWithoutPath); // this is redundant here.
                                         }
 
-                                        if ((data.Data.Contains(value: "files updated") || data.Data.Contains(value: "files created")) &&
+                                        if ((data.Data.Contains(value: "files updated") ||
+                                             data.Data.Contains(
+                                                 value: "files created")) &&
                                             !data.Data.Trim()
-                                                .StartsWith(value: "0"))
+                                                 .StartsWith(value: "0"))
                                         {
-                                            removeDirElementFromDE3(dirElemToDrop: dirElemFileToDrop);
+                                            RemoveDirElementFromDe3AndCopyDataToOriginal(
+                                                dirElemToDrop: dirElemFileToDrop,
+                                                frmMainAppInstance);
                                             if (!processOriginalFile && writeXmpSideCar)
                                             {
-                                                string pathOfFile = fileNameWithPath.Substring(startIndex: 0, length: fileNameWithPath.Length - 4);
-                                                dirElemFileToDrop = FrmMainApp.DirectoryElements.FindElementByBelongingToXmpWithPath(XMPFileNameWithPath: pathOfFile);
-                                                removeDirElementFromDE3(dirElemToDrop: dirElemFileToDrop);
+                                                string pathOfFile =
+                                                    fileNameWithPath.Substring(
+                                                        startIndex: 0,
+                                                        length: fileNameWithPath.Length -
+                                                        4);
+                                                dirElemFileToDrop =
+                                                    FrmMainApp.DirectoryElements
+                                                       .FindElementByBelongingToXmpWithPath(
+                                                            XMPFileNameWithPath:
+                                                            pathOfFile);
+                                                RemoveDirElementFromDe3AndCopyDataToOriginal(
+                                                    dirElemToDrop: dirElemFileToDrop,
+                                                    frmMainAppInstance);
                                             }
                                         }
                                     }
@@ -145,7 +201,13 @@ internal static class HelperExifExifToolOperator
 
                                 lviIndex++;
 
-                                if (!data.Data.Contains(value: "files updated") && !data.Data.Contains(value: "files created") && !data.Data.Contains(value: fileNameWithoutPath.Substring(startIndex: 0, length: fileNameWithoutPath.LastIndexOf(value: '.'))))
+                                if (!data.Data.Contains(value: "files updated") &&
+                                    !data.Data.Contains(value: "files created") &&
+                                    !data.Data.Contains(
+                                        value: fileNameWithoutPath.Substring(
+                                            startIndex: 0,
+                                            length: fileNameWithoutPath.LastIndexOf(
+                                                value: '.'))))
                                 {
                                     MessageBox.Show(text: data.Data);
                                 }
@@ -168,14 +230,17 @@ internal static class HelperExifExifToolOperator
                     {
                         if (data.Data != null && data.Data.Length > 0)
                         {
-                            HelperVariables._sOutputMsg += data.Data.ToString() + Environment.NewLine;
+                            HelperVariables._sOutputMsg +=
+                                data.Data.ToString() + Environment.NewLine;
                         }
 
-                        decimal.TryParse(s: HelperVariables._sOutputMsg.Replace(oldValue: "\r", newValue: "")
-                                             .Replace(oldValue: "\n", newValue: ""),
+                        decimal.TryParse(s: HelperVariables._sOutputMsg
+                                            .Replace(oldValue: "\r", newValue: "")
+                                            .Replace(oldValue: "\n", newValue: ""),
                                          provider: CultureInfo.InvariantCulture,
                                          style: NumberStyles.Any,
-                                         result: out HelperVariables._currentExifToolVersionLocal
+                                         result: out HelperVariables
+                                            ._currentExifToolVersionLocal
                         );
                     };
 
@@ -186,7 +251,8 @@ internal static class HelperExifExifToolOperator
                     {
                         if (data.Data != null && data.Data.Length > 0)
                         {
-                            HelperVariables._sOutputMsg += data.Data.ToString() + Environment.NewLine;
+                            HelperVariables._sOutputMsg +=
+                                data.Data.ToString() + Environment.NewLine;
                         }
                     };
                     break;
@@ -196,7 +262,8 @@ internal static class HelperExifExifToolOperator
                     {
                         if (data.Data != null && data.Data.Length > 0)
                         {
-                            HelperVariables._sOutputMsg += data.Data.ToString() + Environment.NewLine;
+                            HelperVariables._sOutputMsg +=
+                                data.Data.ToString() + Environment.NewLine;
                         }
                     };
 
@@ -205,19 +272,27 @@ internal static class HelperExifExifToolOperator
                     {
                         if (data.Data != null && data.Data.Length > 0)
                         {
-                            HelperVariables._sOutputMsg += "ERROR: " + data.Data.ToString() + Environment.NewLine;
+                            HelperVariables._sOutputMsg += "ERROR: " +
+                                                           data.Data.ToString() +
+                                                           Environment.NewLine;
                         }
                     };
                     break;
             }
 
-            FrmMainApp.Logger.Trace(message: "EXIF number " + _exifInvokeCounter + ": Start");
+            FrmMainApp.Logger.Trace(message: "EXIF number " +
+                                             _exifInvokeCounter +
+                                             ": Start");
             prcExifTool.Start();
             prcExifTool.BeginOutputReadLine();
             prcExifTool.BeginErrorReadLine();
-            FrmMainApp.Logger.Trace(message: "EXIF number " + _exifInvokeCounter + ": Wait for Exit");
+            FrmMainApp.Logger.Trace(message: "EXIF number " +
+                                             _exifInvokeCounter +
+                                             ": Wait for Exit");
             prcExifTool.WaitForExit();
-            FrmMainApp.Logger.Trace(message: "EXIF number " + _exifInvokeCounter + ": Close");
+            FrmMainApp.Logger.Trace(message: "EXIF number " +
+                                             _exifInvokeCounter +
+                                             ": Close");
             prcExifTool.Close();
             FrmMainApp.Logger.Trace(message: "Closing exifTool");
 
@@ -233,30 +308,58 @@ internal static class HelperExifExifToolOperator
                 FrmMainApp.Logger.Error(message: "Killing exifTool failed");
             }
         });
+    }
 
-        void removeDirElementFromDE3(DirectoryElement dirElemToDrop)
+    /// <summary>
+    /// Copies the Stage3ReadyToWrite value to Original assuming that 1) it exists and 2) it isn't an item that's pending deletion...
+    /// Then it deletes the original DE3 (Stage3ReadyToWrite) value.
+    /// </summary>
+    /// <param name="dirElemToDrop">The DirectoryElement to be removed from the DE3 collection.</param>
+    /// <param name="frmMainAppInstance">An instance of the FrmMainApp form.</param>
+    // ReSharper disable once InconsistentNaming
+    private static void RemoveDirElementFromDe3AndCopyDataToOriginal(
+        DirectoryElement dirElemToDrop,
+        FrmMainApp frmMainAppInstance)
+    {
+        string fileNameExtension = dirElemToDrop.Extension;
+        if (!fileNameExtension.EndsWith(value: ".xmp"))
         {
-            string fileNameExtension = dirElemToDrop.Extension;
-            if (!fileNameExtension.EndsWith(value: ".xmp"))
+            foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(
+                         enumType: typeof(ElementAttribute)))
             {
-                foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
-                {
-                    dirElemToDrop.SetAttributeValueAnyType(
+                if (dirElemToDrop.HasSpecificAttributeWithVersion(
                         attribute: attribute,
-                        value:
-                        dirElemToDrop.GetAttributeValueString(
-                            attribute,
-                            DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                            nowSavingExif: false),
-                        version: DirectoryElement.AttributeVersion.Original,
-                        isMarkedForDeletion: dirElemToDrop.IsMarkedForDeletion(
-                            attribute,
-                            DirectoryElement.AttributeVersion.Stage3ReadyToWrite));
-                    dirElemToDrop.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                        version: DirectoryElement.AttributeVersion
+                                                 .Stage3ReadyToWrite))
+                {
+                    if (!dirElemToDrop.IsMarkedForDeletion(
+                            attribute: attribute,
+                            version: DirectoryElement.AttributeVersion
+                                                     .Stage3ReadyToWrite))
+                    {
+                        dirElemToDrop.SetAttributeValueAnyType(
+                            attribute: attribute,
+                            value:
+                            dirElemToDrop.GetAttributeValueString(
+                                attribute: attribute,
+                                version: DirectoryElement.AttributeVersion
+                                                         .Stage3ReadyToWrite,
+                                nowSavingExif: false),
+                            version: DirectoryElement.AttributeVersion.Original,
+                            isMarkedForDeletion: dirElemToDrop.IsMarkedForDeletion(
+                                attribute: attribute,
+                                version: DirectoryElement.AttributeVersion
+                                                         .Stage3ReadyToWrite));
+                    }
                 }
-            }
 
-            frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: dirElemToDrop.ItemNameWithoutPath, color: Color.Black);
+                dirElemToDrop.RemoveAttributeValue(
+                    attribute: attribute,
+                    version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+            }
         }
+
+        frmMainAppInstance.lvw_FileList.UpdateItemColour(
+            itemText: dirElemToDrop.ItemNameWithoutPath, color: Color.Black);
     }
 }

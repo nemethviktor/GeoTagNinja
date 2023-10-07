@@ -1,6 +1,6 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 86xx [2023xx]** 
+**Build 8680 [20231007]** 
 - NEW & UPDATED:
   - App Version Bump: 1.14
   - Implemented an Export/Import functionality for Settings and Custom Rules
