@@ -146,9 +146,17 @@ internal static class HelperExifWriteSaveToFile
                             DataRow drFileDataRow = dtFileWriteQueue.NewRow();
                             drFileDataRow[columnName: "ItemNameWithoutPath"] = dirElemFileToModify.ItemNameWithoutPath;
                             drFileDataRow[columnName: "settingId"] = GetElementAttributesName(attributeToFind: attribute);
-                            if (!dirElemFileToModify.IsMarkedForDeletion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
+                            if (!dirElemFileToModify.IsMarkedForDeletion(
+                                    attribute: attribute,
+                                    version: DirectoryElement.AttributeVersion
+                                       .Stage3ReadyToWrite))
                             {
-                                drFileDataRow[columnName: "settingValue"] = dirElemFileToModify.GetAttributeValueString(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                                drFileDataRow[columnName: "settingValue"] =
+                                    dirElemFileToModify.GetAttributeValueString(
+                                        attribute: attribute,
+                                        version: DirectoryElement.AttributeVersion
+                                           .Stage3ReadyToWrite,
+                                        nowSavingExif: true);
                             }
                             else
                             {

@@ -413,11 +413,14 @@ public class DirectoryElement
     /// <param name="attribute">The attribute to return the value for</param>
     /// <param name="version">The version to return or null if latest version</param>
     /// <param name="notFoundValue">The value to return if no suitable value was found</param>
+    /// <param name="nowSavingExif">Indicates whether this is when the file is being saved.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
     public string GetAttributeValueString(ElementAttribute attribute,
                                           AttributeVersion? version = null,
-                                          string? notFoundValue = null)
+                                          string? notFoundValue = null,
+                                          bool nowSavingExif = false
+    )
     {
         if (!_Attributes.ContainsKey(key: attribute))
         {
@@ -495,7 +498,12 @@ public class DirectoryElement
                 return FrmMainApp.NullStringEquivalentGeneric;
             }
 
-            return dateTimeValue.Item1.ToString(provider: CultureInfo.CurrentUICulture);
+            string formattedDateTime =
+                dateTimeValue.Item1.ToString("yyyy:MM:dd HH:mm:ss");
+
+            return !nowSavingExif
+                ? dateTimeValue.Item1.ToString(CultureInfo.CurrentUICulture)
+                : formattedDateTime;
         }
 
         // else

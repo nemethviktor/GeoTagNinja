@@ -993,13 +993,13 @@ public partial class FrmMainApp : Form
                 attribute: ElementAttribute.GPSLatitude,
                 version: directoryElement.GetMaxAttributeVersion(
                     attribute: ElementAttribute.GPSLatitude),
-                notFoundValue: null);
+                notFoundValue: null, nowSavingExif: false);
 
             string? GPSLongitudeStr = directoryElement.GetAttributeValueString(
                 attribute: ElementAttribute.GPSLongitude,
                 version: directoryElement.GetMaxAttributeVersion(
                     attribute: ElementAttribute.GPSLongitude),
-                notFoundValue: null);
+                notFoundValue: null, nowSavingExif: false);
 
             double? FocalLength = directoryElement.GetAttributeValue<double>(
                 attribute: ElementAttribute.FocalLength,
@@ -1158,24 +1158,24 @@ public partial class FrmMainApp : Form
                     attribute: ElementAttribute.GPSLatitude,
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSLatitude),
-                    notFoundValue: null);
+                    notFoundValue: null, nowSavingExif: false);
 
                 string? GPSLongitudeStr = directoryElement.GetAttributeValueString(
                     attribute: ElementAttribute.GPSLongitude,
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSLongitude),
-                    notFoundValue: null);
+                    notFoundValue: null, nowSavingExif: false);
                 string GPSDestLatitudeStr = directoryElement.GetAttributeValueString(
                     attribute: ElementAttribute.GPSDestLatitude,
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSDestLatitude),
-                    notFoundValue: null);
+                    notFoundValue: null, nowSavingExif: false);
 
                 string? GPSDestLongitudeStr = directoryElement.GetAttributeValueString(
                     attribute: ElementAttribute.GPSDestLongitude,
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSDestLongitude),
-                    notFoundValue: null);
+                    notFoundValue: null, nowSavingExif: false);
 
                 if (!(string.IsNullOrWhiteSpace(value: GPSLatitudeStr) ||
                       string.IsNullOrWhiteSpace(value: GPSDestLatitudeStr) ||
@@ -1443,7 +1443,7 @@ public partial class FrmMainApp : Form
                     attribute: ElementAttribute.GUID,
                     version: DirectoryElement.AttributeVersion
                                              .Original, // GUIDs don't change
-                    notFoundValue: null));
+                    notFoundValue: null, nowSavingExif: false));
         }
 
         EditFileFormGeneric.ShowFrmEditFileData();
@@ -1754,7 +1754,7 @@ public partial class FrmMainApp : Form
                     attribute: ElementAttribute.GUID,
                     version: DirectoryElement.AttributeVersion
                                              .Original, // GUIDs don't change
-                    notFoundValue: null));
+                    notFoundValue: null, nowSavingExif: false));
         }
 
         EditFileFormGeneric.ShowFrmEditFileData();
@@ -2414,7 +2414,7 @@ public partial class FrmMainApp : Form
                         attribute: ElementAttribute.GUID,
                         version: DirectoryElement.AttributeVersion
                                                  .Original, // GUIDs don't change
-                        notFoundValue: null));
+                        notFoundValue: null, nowSavingExif: false));
 
                 Logger.Trace(message: "Add File To lvw_FileListEditImages");
                 EditFileFormGeneric.ShowFrmEditFileData();
@@ -2486,12 +2486,12 @@ public partial class FrmMainApp : Form
                 lvi.SubItems.Add(text: directoryElement.GetAttributeValueString(
                                      attribute: attribute,
                                      version: DirectoryElement.AttributeVersion.Original,
-                                     notFoundValue: null));
+                                     notFoundValue: null, nowSavingExif: false));
                 lvi.SubItems.Add(text: directoryElement.GetAttributeValueString(
                                      attribute: attribute,
                                      version: DirectoryElement.AttributeVersion
                                         .Stage3ReadyToWrite,
-                                     notFoundValue: null));
+                                     notFoundValue: null, nowSavingExif: false));
                 lvw_ExifData.Items.Add(value: lvi);
             }
         }
@@ -2587,7 +2587,7 @@ public partial class FrmMainApp : Form
                         attribute: ElementAttribute.GUID,
                         version: DirectoryElement.AttributeVersion
                                                  .Original, // GUIDs don't change
-                        notFoundValue: null));
+                        notFoundValue: null, nowSavingExif: false));
             }
 
             EditFileFormGeneric.ShowFrmEditFileData();

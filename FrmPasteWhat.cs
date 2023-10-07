@@ -380,7 +380,8 @@ public partial class FrmPasteWhat : Form
                                 pasteConvertible =
                                     dirElemFileToCopyFrom.GetAttributeValueString(
                                         attribute: attribute,
-                                        version: maxAttributeVersion);
+                                        version: maxAttributeVersion,
+                                        nowSavingExif: false);
                             }
                             else if (typeOfAttribute == typeof(int))
                             {

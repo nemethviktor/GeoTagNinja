@@ -246,7 +246,8 @@ internal static class HelperExifExifToolOperator
                         value:
                         dirElemToDrop.GetAttributeValueString(
                             attribute,
-                            DirectoryElement.AttributeVersion.Stage3ReadyToWrite),
+                            DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                            nowSavingExif: false),
                         version: DirectoryElement.AttributeVersion.Original,
                         isMarkedForDeletion: dirElemToDrop.IsMarkedForDeletion(
                             attribute,

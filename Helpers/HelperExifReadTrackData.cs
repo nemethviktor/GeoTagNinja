@@ -190,7 +190,9 @@ internal static class HelperExifReadTrackData
                                                 version: DirectoryElement.AttributeVersion
                                                    .Original,
                                                 notFoundValue: FrmMainApp
-                                                   .NullStringEquivalentGeneric));
+                                                   .NullStringEquivalentGeneric,
+                                                nowSavingExif: false),
+                                        nowSavingExif: false);
                                 string currentLng =
                                     dirElemFileToModify.GetAttributeValueString(
                                         attribute: ElementAttribute.GPSLongitude,
@@ -202,7 +204,9 @@ internal static class HelperExifReadTrackData
                                                 version: DirectoryElement.AttributeVersion
                                                    .Original,
                                                 notFoundValue: FrmMainApp
-                                                   .NullStringEquivalentGeneric));
+                                                   .NullStringEquivalentGeneric,
+                                                nowSavingExif: false),
+                                        nowSavingExif: false);
                                 string currentAltitude =
                                     dirElemFileToModify.GetAttributeValueString(
                                         attribute: ElementAttribute.GPSAltitude,
@@ -214,7 +218,9 @@ internal static class HelperExifReadTrackData
                                                 version: DirectoryElement.AttributeVersion
                                                    .Original,
                                                 notFoundValue: FrmMainApp
-                                                   .NullStringEquivalentGeneric));
+                                                   .NullStringEquivalentGeneric,
+                                                nowSavingExif: false),
+                                        nowSavingExif: false);
 
                                 string strLatInAPI =
                                     FrmMainApp.NullStringEquivalentGeneric;

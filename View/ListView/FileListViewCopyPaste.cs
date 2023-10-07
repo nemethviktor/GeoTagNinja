@@ -79,8 +79,10 @@ internal static class FileListViewCopyPaste
                                                         item1: dirElemFileToCopyFrom
                                                            .GetAttributeValueString(
                                                                 attribute: attribute,
-                                                                version: DirectoryElement.AttributeVersion
-                                                                   .Stage3ReadyToWrite),
+                                                                version: DirectoryElement
+                                                                   .AttributeVersion
+                                                                   .Stage3ReadyToWrite,
+                                                                nowSavingExif: false),
                                                         item2: true));
                     }
                     else if (dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(
@@ -92,8 +94,10 @@ internal static class FileListViewCopyPaste
                                                         item1: dirElemFileToCopyFrom
                                                            .GetAttributeValueString(
                                                                 attribute: attribute,
-                                                                version: DirectoryElement.AttributeVersion
-                                                                   .Original),
+                                                                version: DirectoryElement
+                                                                   .AttributeVersion
+                                                                   .Original,
+                                                                nowSavingExif: false),
                                                         item2: false));
                     }
                 }

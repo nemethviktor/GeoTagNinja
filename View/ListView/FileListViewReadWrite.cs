@@ -55,7 +55,7 @@ internal static class FileListViewReadWrite
                             string settingId = GetElementAttributesColumnHeader(attribute);
                             string settingVal = dirElemFileToModify.GetAttributeValueString(attribute: attribute,
                                                                                             version: DirectoryElement.AttributeVersion
-                                                                                                    .Stage3ReadyToWrite);
+                                                                                               .Stage3ReadyToWrite, nowSavingExif: false);
 
                             if (lvchs[key: settingId] != null)
                             {
@@ -150,11 +150,11 @@ internal static class FileListViewReadWrite
                                 string tmpLat = dirElemFileToModify.GetAttributeValueString(
                                     attribute: ElementAttribute.GPSLatitude,
                                     version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSLatitude),
-                                    notFoundValue: "");
+                                    notFoundValue: "", nowSavingExif: false);
                                 string tmpLng = dirElemFileToModify.GetAttributeValueString(
                                     attribute: ElementAttribute.GPSLongitude,
                                     version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSLongitude),
-                                    notFoundValue: "");
+                                    notFoundValue: "", nowSavingExif: false);
                                 string tmpCoords = tmpLat + ";" + tmpLng != ";"
                                     ? tmpLat + ";" + tmpLng
                                     : "";
@@ -168,11 +168,11 @@ internal static class FileListViewReadWrite
                                 string tmpLat = dirElemFileToModify.GetAttributeValueString(
                                     attribute: ElementAttribute.GPSDestLatitude,
                                     version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSDestLatitude),
-                                    notFoundValue: "");
+                                    notFoundValue: "", nowSavingExif: false);
                                 string tmpLng = dirElemFileToModify.GetAttributeValueString(
                                     attribute: ElementAttribute.GPSDestLongitude,
                                     version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSDestLongitude),
-                                    notFoundValue: "");
+                                    notFoundValue: "", nowSavingExif: false);
                                 string tmpCoords = tmpLat + ";" + tmpLng != ";"
                                     ? tmpLat + ";" + tmpLng
                                     : "";

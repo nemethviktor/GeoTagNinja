@@ -545,6 +545,8 @@ public partial class FrmEditFileData : Form
                                            DirectoryElement.AttributeVersion
                                                maxAttributeVersion)
         {
+            DateTime DECreateDate = default;
+            DateTime DETakenDate  = default;
             int totalShiftedSeconds = 0;
             if (dtp == dtp_TakenDate &&
                 directoryElement.GetAttributeValue<DateTime>(
@@ -554,10 +556,19 @@ public partial class FrmEditFileData : Form
                     notFoundValue: null) !=
                 null)
             {
+                DETakenDate = (DateTime)directoryElement.GetAttributeValue<DateTime>(
+                    attribute: ElementAttribute.TakenDate,
+                    version: DirectoryElement.AttributeVersion
+                                             .Original,
+                    notFoundValue: null);
                 totalShiftedSeconds =
                     ShiftTimeForDateTimePicker(
                         whatToShift: TimeShiftTypes.TakenDate,
                         dirElemFileToModify: directoryElement);
+
+
+                dtp.Value =
+                    DETakenDate.AddSeconds(value: totalShiftedSeconds);
             }
             else if (dtp == dtp_CreateDate &&
                      directoryElement.GetAttributeValue<DateTime>(
@@ -567,14 +578,20 @@ public partial class FrmEditFileData : Form
                          notFoundValue: null) !=
                      null)
             {
+                DECreateDate = (DateTime)directoryElement.GetAttributeValue<DateTime>(
+                         attribute: ElementAttribute.CreateDate,
+                         version: DirectoryElement.AttributeVersion
+                                                  .Original,
+                         notFoundValue: null);
                 totalShiftedSeconds =
                     ShiftTimeForDateTimePicker(
                         whatToShift: TimeShiftTypes.CreateDate,
                         dirElemFileToModify: directoryElement);
+
+                dtp.Value =
+                    DECreateDate.AddSeconds(value: totalShiftedSeconds);
             }
 
-            dtp.Value =
-                dtp.Value.AddSeconds(value: totalShiftedSeconds);
             logger.Trace(message: "cItem: " +
                                   cItem.Name +
                                   " - Updating DateTimePicker");
@@ -614,7 +631,7 @@ public partial class FrmEditFileData : Form
         {
             returnDataInDirectoryElement = directoryElement.GetAttributeValueString(
                 attribute: attribute,
-                version: maxAttributeVersion);
+                version: maxAttributeVersion, nowSavingExif: false);
 
             if (returnDataInDirectoryElement != null &&
                 string.IsNullOrEmpty(value: returnDataInDirectoryElement.ToString()))
@@ -1360,8 +1377,8 @@ public partial class FrmEditFileData : Form
                                 value: dirElemFileToModify.GetAttributeValueString(
                                     attribute: attribute,
                                     version: DirectoryElement.AttributeVersion
-                                       .Stage1EditFormIntraTabTransferQueue
-                                ),
+                                       .Stage1EditFormIntraTabTransferQueue,
+                                    nowSavingExif: false),
                                 version: DirectoryElement.AttributeVersion
                                                          .Stage3ReadyToWrite,
                                 isMarkedForDeletion: dirElemFileToModify
@@ -1512,7 +1529,8 @@ public partial class FrmEditFileData : Form
                 previousText = dirElemFileToModify.GetAttributeValueString(
                     attribute: attribute,
                     version: DirectoryElement.AttributeVersion
-                                             .Stage2EditFormReadyToSaveAndMoveToWriteQueue);
+                                             .Stage2EditFormReadyToSaveAndMoveToWriteQueue,
+                    nowSavingExif: false);
             }
 
             if (sndr is NumericUpDown nudTextControl)

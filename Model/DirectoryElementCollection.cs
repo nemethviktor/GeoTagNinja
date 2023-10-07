@@ -45,7 +45,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
     {
         foreach (DirectoryElement item in this)
         {
-            if (item.GetAttributeValueString(ElementAttribute.GUID) == GUID)
+            if (item.GetAttributeValueString(ElementAttribute.GUID,
+                                             nowSavingExif: false) ==
+                GUID)
             {
                 return item;
             }
@@ -86,8 +88,11 @@ public class DirectoryElementCollection : List<DirectoryElement>
         HashSet<string> uids = new HashSet<string>();
         foreach (DirectoryElement directoryElement in this)
         {
-            if (directoryElement.HasDirtyAttributes(DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
-                uids.Add(directoryElement.GetAttributeValueString(ElementAttribute.GUID));
+            if (directoryElement.HasDirtyAttributes(
+                    DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
+                uids.Add(
+                    directoryElement.GetAttributeValueString(
+                        ElementAttribute.GUID, nowSavingExif: false));
         }
 
         return uids;

@@ -23,10 +23,10 @@ internal class ModelToColumnValueTransformations
 
         string latValue = item.GetAttributeValueString(
             attribute: latAttrib,
-            notFoundValue: nfVal);
+            notFoundValue: nfVal, nowSavingExif: false);
         string longValue = item.GetAttributeValueString(
             attribute: longAttrib,
-            notFoundValue: nfVal);
+            notFoundValue: nfVal, nowSavingExif: false);
 
         return latValue + ";" + longValue;
     }

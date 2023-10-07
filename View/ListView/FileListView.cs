@@ -405,7 +405,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         string DefaultStrGetter(SourcesAndAttributes.ElementAttribute atrb)
         {
             return directoryElement.GetAttributeValueString(
-                attribute: atrb, notFoundValue: nfVal);
+                attribute: atrb, notFoundValue: nfVal, nowSavingExif: false);
         }
 
         if (columnToAttributeMap.TryGetValue(
