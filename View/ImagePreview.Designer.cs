@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace GeoTagNinja
+namespace GeoTagNinja.View
 {
      partial class ImagePreview : PictureBox
     {

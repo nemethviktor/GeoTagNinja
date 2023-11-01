@@ -2,6 +2,7 @@
 using GeoTagNinja.View.ListView;
 using System.Reflection;
 using System.Windows.Forms;
+using GeoTagNinja.View;
 using static GeoTagNinja.View.ListView.FileListView;
 
 namespace GeoTagNinja
@@ -74,7 +75,7 @@ namespace GeoTagNinja
             this.cmi_ShowHideCols = new System.Windows.Forms.ToolStripMenuItem();
             this.cmi_removeCachedData = new System.Windows.Forms.ToolStripMenuItem();
             this.cmi_OpenCoordsInAPI = new System.Windows.Forms.ToolStripMenuItem();
-            this.pbx_imagePreview = new GeoTagNinja.ImagePreview();
+            this.pbx_imagePreview = new ImagePreview();
             this.flp_ProcessingInfo = new System.Windows.Forms.FlowLayoutPanel();
             this.lbl_ParseProgress = new System.Windows.Forms.Label();
             this.tcr_Main = new System.Windows.Forms.TabControl();

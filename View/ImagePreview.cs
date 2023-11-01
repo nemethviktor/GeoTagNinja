@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace GeoTagNinja;
+namespace GeoTagNinja.View;
 
 /// <summary>
 ///     PictureBox that can also show an informative text when there is no image (Image = null).

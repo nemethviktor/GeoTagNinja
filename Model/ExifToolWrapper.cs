@@ -46,9 +46,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using GeoTagNinja;
 
-namespace ExifToolWrapper;
+namespace GeoTagNinja.Model;
 
 public class ExifTool : IDisposable
 {

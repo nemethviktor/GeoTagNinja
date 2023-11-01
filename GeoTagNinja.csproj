@@ -203,6 +203,7 @@
       <DependentUpon>FrmManageFavourites.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\HelperGenericCalculations.cs" />
+    <Compile Include="Model\MapWebMessage.cs" />
     <Compile Include="SingleInstance_PipeServer.cs" />
     <Compile Include="View\DialogAndMessageBoxes\CustomMessageBox.cs">
       <SubType>Form</SubType>

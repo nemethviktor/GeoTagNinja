@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 
-namespace GeoTagNinja;
+namespace GeoTagNinja.View;
 
 /// <summary>
 ///     Form supporting the selection of columns to show hide in a ListView.
@@ -10,14 +10,15 @@ namespace GeoTagNinja;
 public partial class FrmColumnSelection : Form
 {
     // By Ref!!
-    private readonly ListView.ColumnHeaderCollection _colList;
+    private readonly System.Windows.Forms.ListView.ColumnHeaderCollection _colList;
 
     /// <summary>
     ///     Creates the form
     /// </summary>
     /// <param name="ColList">The ColumnHeaderCollection of the ListView</param>
-    public FrmColumnSelection(ListView.ColumnHeaderCollection ColList,
-                              string AppLanguage)
+    public FrmColumnSelection(
+        System.Windows.Forms.ListView.ColumnHeaderCollection ColList,
+        string AppLanguage)
     {
         _colList = ColList;
         InitializeComponent();

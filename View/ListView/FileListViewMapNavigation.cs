@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 
-namespace GeoTagNinja;
+namespace GeoTagNinja.View.ListView;
 
 internal static class FileListViewMapNavigation
 {
