@@ -154,7 +154,7 @@ internal static class HelperAPIVersionCheckers
         FrmMainApp.Logger.Trace(message: "nowUnixTime > lastCheckUnixTime:" + (nowUnixTime - lastCheckUnixTime));
         int checkUpdateVal = 604800; //604800 is a week's worth of seconds
         #if DEBUG
-        checkUpdateVal = 1;
+        checkUpdateVal = 86400;
         #endif
 
         if (nowUnixTime > lastCheckUnixTime + checkUpdateVal)
