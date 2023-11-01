@@ -1,5 +1,10 @@
 ﻿# GeoTagNinja Changelog
 
+**Build 8xxx [20231xxx]** 
+- NEW & UPDATED:
+  - Added functionality as per #92 to drag the map marker and allow the user to add the new value to the selected image(s).
+
+
 **Build 8680 [20231007]** 
 - NEW & UPDATED:
   - App Version Bump: 1.14
