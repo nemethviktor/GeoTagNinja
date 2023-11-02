@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -860,10 +861,17 @@ public partial class FrmSettings : Form
             if (cItemName == "ckb_IncludePredeterminedCountries")
             {
                 Dictionary<string, string> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: ckb_IncludePredeterminedCountries.Checked);
-                DataGridViewComboBoxColumn clh_CountryCode = (DataGridViewComboBoxColumn)dgv_CustomRules.Columns[columnName: "clh_CountryCode"];
+                DataGridViewComboBoxColumn clh_CountryCode =
+                    (DataGridViewComboBoxColumn)dgv_CustomRules.Columns[
+                        columnName: "clh_CountryCode"];
                 if (clh_CountryCode != null) // shouldn't really be null but just in case.
                 {
-                    clh_CountryCode.DataSource = clh_CountryCodeOptions;
+                    BindingList<KeyValuePair<string, string>> bindingList =
+                        new BindingList<KeyValuePair<string, string>>(
+                            clh_CountryCodeOptions.ToList());
+                    clh_CountryCode.DataSource = bindingList;
+                    clh_CountryCode.DisplayMember = "Value";
+                    clh_CountryCode.ValueMember = "Key";
                 }
             }
 
