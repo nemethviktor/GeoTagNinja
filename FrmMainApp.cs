@@ -3171,10 +3171,8 @@ public partial class FrmMainApp : Form
                                            EventArgs e)
     {
         bool selectionIsValid = false;
-        bool latParseSuccess = false;
-        double dblLat = 0;
-        bool lngParseSuccess = false;
-        double dblLng = 0;
+        string GPSLatStr = FrmMainApp.NullStringEquivalentGeneric;
+        string GPSLngStr = FrmMainApp.NullStringEquivalentGeneric;
         ListView lvw = lvw_FileList;
 
         if (lvw.SelectedItems.Count == 1)
@@ -3184,23 +3182,19 @@ public partial class FrmMainApp : Form
                 lvi.Tag as DirectoryElement;
             if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {
-                latParseSuccess = double.TryParse(
-                    s: lvi.SubItems[index: lvw
-                                          .Columns[
-                                               key: COL_NAME_PREFIX +
-                                                    FileListColumns.GPS_LATITUDE]
-                                          .Index]
-                          .Text, result: out dblLat);
-                lngParseSuccess = double.TryParse(
-                    s: lvi.SubItems[index: lvw
-                                          .Columns[
-                                               key: COL_NAME_PREFIX +
-                                                    FileListColumns.GPS_LONGITUDE]
-                                          .Index]
-                          .Text, result: out dblLng);
-                if (latParseSuccess && lngParseSuccess)
+                try
                 {
+                    GPSLatStr =
+                        dirElemFileToModify.GetAttributeValueString(
+                            ElementAttribute.GPSLatitude);
+                    GPSLngStr =
+                        dirElemFileToModify.GetAttributeValueString(
+                            ElementAttribute.GPSLongitude);
                     selectionIsValid = true;
+                }
+                catch
+                {
+                    // nothing
                 }
             }
         }
@@ -3224,9 +3218,9 @@ public partial class FrmMainApp : Form
                 : "";
             string openAPILink =
                 "http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&lat=" +
-                dblLat.ToString(provider: cIEnUS) +
+                GPSLatStr +
                 "&lng=" +
-                dblLng.ToString(provider: cIEnUS) +
+                GPSLngStr +
                 "&lang=" +
                 HelperVariables.APILanguageToUse +
                 SOnlyShowFCodePPL +
