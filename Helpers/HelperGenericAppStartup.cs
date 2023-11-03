@@ -375,7 +375,7 @@ internal static class HelperGenericAppStartup
                                   ) ??
                                   "1";
 
-        HelperVariables.ToponomyMaxRows = choiceCountValue;
+        HelperVariables.ToponymaxRows = choiceCountValue;
 
         string radiusValue = HelperDataApplicationSettings.DataReadSQLiteSettings(
                                  tableName: "settings",

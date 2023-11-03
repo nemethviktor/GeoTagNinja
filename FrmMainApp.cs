@@ -3228,7 +3228,7 @@ public partial class FrmMainApp : Form
                 "&radius=" +
                 HelperVariables.ToponomyRadiusValue +
                 "&maxRows=" +
-                HelperVariables.ToponomyMaxRows +
+                HelperVariables.ToponymaxRows +
                 "&username=" +
                 HelperVariables.UserSettingGeoNamesUserName +
                 "&password=any";

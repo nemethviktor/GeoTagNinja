@@ -999,7 +999,7 @@ internal static class HelperGenericAncillaryListsArrays
             "AdminName2",
             "AdminName3",
             "AdminName4",
-            "ToponomymName",
+            "ToponymName",
             "Undefined"
         };
 
