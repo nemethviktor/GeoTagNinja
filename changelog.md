@@ -2,8 +2,14 @@
 
 **Build 8xxx [20231xxx]** 
 - NEW & UPDATED:
+  - Long-pressing a point on the map will now offer the user to save the map location to the image so that there's no need for extra click #91
   - Added functionality as per #92 to drag the map marker and allow the user to add the new value to the selected image(s).
-
+  - Added toponomymName to the options within Custom City Allocation Rules
+  - Bumped exifTool to v12.69
+- BUGS & FIXES:
+  - Fixed an issue re #93 Open Coords in API misbehaving. 
+  - Fixed Custom Rules panel breaking because the object type was wrong due to an earlier logic-consolidation.
+  - Run a spell checker on the readme....
 
 **Build 8680 [20231007]** 
 - NEW & UPDATED:
