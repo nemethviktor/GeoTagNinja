@@ -913,7 +913,7 @@ public partial class FrmMainApp : Form
                                                  "}).addTo(map).openPopup();" +
                                                  "\n";
 
-                // Update viewing rectangle if neede
+                // Update viewing rectangle if needed
                 dLat = double.Parse(s: locationCoord.strLat,
                                     provider: CultureInfo.InvariantCulture);
                 dLng = double.Parse(s: locationCoord.strLng,
@@ -954,7 +954,7 @@ public partial class FrmMainApp : Form
         string showPointsStr = "";
         string showFOVStr = "";
         string showDestinationPolyLineStr = "";
-        string mapStyleFiter = HelperVariables.UserSettingMapColourMode switch
+        string mapStyleFilter = HelperVariables.UserSettingMapColourMode switch
         {
             "DarkInverse" =>
                 "filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);",
@@ -976,7 +976,7 @@ public partial class FrmMainApp : Form
                              	#replaceMe#
                              }
                              """.Replace(oldValue: "#replaceMe#",
-                                         newValue: mapStyleFiter);
+                                         newValue: mapStyleFilter);
 
         // check there is one and only one DE selected and add ImgDirection if there's any
         ListView lvw = lvw_FileList;
@@ -1181,7 +1181,7 @@ public partial class FrmMainApp : Form
             foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
             {
                 DirectoryElement directoryElement = (DirectoryElement)lvi.Tag;
-                // probably needs checking but de.Coordinates and de.DestCoordinates don't return anything here so we're splitting it into four.
+                // probably needs checking but de.Coordinates and de.DestCoordinates don't return anything here, so we're splitting it into four.
                 string GPSLatitudeStr = directoryElement.GetAttributeValueString(
                     attribute: ElementAttribute.GPSLatitude,
                     version: directoryElement.GetMaxAttributeVersion(
@@ -1193,17 +1193,38 @@ public partial class FrmMainApp : Form
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSLongitude),
                     notFoundValue: null, nowSavingExif: false);
+
                 string GPSDestLatitudeStr = directoryElement.GetAttributeValueString(
                     attribute: ElementAttribute.GPSDestLatitude,
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSDestLatitude),
                     notFoundValue: null, nowSavingExif: false);
 
+                // If the data is copy-pasted then the value itself could be 0 with a mark-for-delete
+                // GetMaxAttributeVersion returns null if IsMarkedForDeletion
+                if (directoryElement
+                       .GetMaxAttributeVersion(
+                            attribute: ElementAttribute.GPSDestLatitude) ==
+                    null)
+                {
+                    GPSDestLatitudeStr = null;
+                }
+
                 string? GPSDestLongitudeStr = directoryElement.GetAttributeValueString(
                     attribute: ElementAttribute.GPSDestLongitude,
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSDestLongitude),
                     notFoundValue: null, nowSavingExif: false);
+
+                // If the data is copy-pasted then the value itself could be 0 with a mark-for-delete
+                // GetMaxAttributeVersion returns null if IsMarkedForDeletion
+                if (directoryElement
+                       .GetMaxAttributeVersion(
+                            attribute: ElementAttribute.GPSDestLongitude) ==
+                    null)
+                {
+                    GPSDestLongitudeStr = null;
+                }
 
                 if (!(string.IsNullOrWhiteSpace(value: GPSLatitudeStr) ||
                       string.IsNullOrWhiteSpace(value: GPSDestLatitudeStr) ||

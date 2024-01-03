@@ -9,7 +9,8 @@
 - BUGS & FIXES:
   - Fixed an issue re #93 Open Coords in API misbehaving. 
   - Fixed Custom Rules panel breaking because the object type was wrong due to an earlier logic-consolidation.
-  - Fixed Copy-Paste empty Destination value showing as 0 on the map
+  - Fixed Copy-Paste empty Direction value showing as 0 on the map.
+  - Fixed Copy-Paste empty Destination value breaking the the map when selecting multiple files.
   - Run a spell checker on the readme....
 
 **Build 8680 [20231007]** 
