@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration(configuration: "")]
 [assembly: AssemblyCompany(company: "Viktor Nemeth & Contributors")]
 [assembly: AssemblyProduct(product: "GeoTagNinja")]
-[assembly: AssemblyCopyright(copyright: "Viktor Nemeth - GPLv3 - 2022-2023")]
+[assembly: AssemblyCopyright(copyright: "Viktor Nemeth - GPLv3 - 2022-2024")]
 [assembly: AssemblyTrademark(trademark: "")]
 [assembly: AssemblyCulture(culture: "")]
 
