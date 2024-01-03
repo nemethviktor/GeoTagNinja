@@ -990,6 +990,16 @@ public partial class FrmMainApp : Form
                     attribute: ElementAttribute.GPSImgDirection),
                 notFoundValue: null);
 
+            // If the data is copy-pasted then the value itself could be 0 with a mark-for-delete
+            // GetMaxAttributeVersion returns null if IsMarkedForDeletion
+            if (directoryElement
+                   .GetMaxAttributeVersion(
+                        attribute: ElementAttribute.GPSImgDirection) ==
+                null)
+            {
+                imgDirection = null;
+            }
+
             //string imgDirectionRef = directoryElement.GetAttributeValueString(
             //    attribute: ElementAttribute.GPSImgDirectionRef,
             //    version: directoryElement.GetMaxAttributeVersion(attribute: ElementAttribute.GPSImgDirectionRef),
@@ -1050,7 +1060,7 @@ public partial class FrmMainApp : Form
                     ;
 
                 createPointsStr = string.Format(format: """
-                                                        /* Create poits */
+                                                        /* Create points */
                                                         let points = [
                                                             {{
                                                                 type: 'point',
@@ -3171,8 +3181,8 @@ public partial class FrmMainApp : Form
                                            EventArgs e)
     {
         bool selectionIsValid = false;
-        string GPSLatStr = FrmMainApp.NullStringEquivalentGeneric;
-        string GPSLngStr = FrmMainApp.NullStringEquivalentGeneric;
+        string GPSLatStr = NullStringEquivalentGeneric;
+        string GPSLngStr = NullStringEquivalentGeneric;
         ListView lvw = lvw_FileList;
 
         if (lvw.SelectedItems.Count == 1)
