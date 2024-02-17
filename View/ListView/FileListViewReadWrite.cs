@@ -10,7 +10,7 @@ using GeoTagNinja.Model;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using static GeoTagNinja.View.ListView.FileListView;
 
-namespace GeoTagNinja;
+namespace GeoTagNinja.View.ListView;
 
 internal enum TakenOrCreated
 {
@@ -31,8 +31,9 @@ internal static class FileListViewReadWrite
 
         if (frmMainAppInstance != null)
         {
-            ListView lvw = frmMainAppInstance.lvw_FileList;
-            ListView.ColumnHeaderCollection lvchs = frmMainAppInstance.ListViewColumnHeaders;
+            System.Windows.Forms.ListView lvw = frmMainAppInstance.lvw_FileList;
+            System.Windows.Forms.ListView.ColumnHeaderCollection lvchs =
+                frmMainAppInstance.ListViewColumnHeaders;
 
             int d = lvi.Index;
             if (lvi.Tag is DirectoryElement dirElemFileToModify && dirElemFileToModify.HasDirtyAttributes())

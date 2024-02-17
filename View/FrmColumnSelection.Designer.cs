@@ -1,4 +1,4 @@
-﻿namespace GeoTagNinja
+﻿namespace GeoTagNinja.View
 {
     partial class FrmColumnSelection
     {

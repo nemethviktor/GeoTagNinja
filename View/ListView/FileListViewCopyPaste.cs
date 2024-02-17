@@ -6,7 +6,7 @@ using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
-namespace GeoTagNinja;
+namespace GeoTagNinja.View.ListView;
 
 internal static class FileListViewCopyPaste
 {
@@ -79,8 +79,7 @@ internal static class FileListViewCopyPaste
                                                         item1: dirElemFileToCopyFrom
                                                            .GetAttributeValueString(
                                                                 attribute: attribute,
-                                                                version: DirectoryElement
-                                                                   .AttributeVersion
+                                                                version: DirectoryElement.AttributeVersion
                                                                    .Stage3ReadyToWrite,
                                                                 nowSavingExif: false),
                                                         item2: true));
@@ -94,8 +93,7 @@ internal static class FileListViewCopyPaste
                                                         item1: dirElemFileToCopyFrom
                                                            .GetAttributeValueString(
                                                                 attribute: attribute,
-                                                                version: DirectoryElement
-                                                                   .AttributeVersion
+                                                                version: DirectoryElement.AttributeVersion
                                                                    .Original,
                                                                 nowSavingExif: false),
                                                         item2: false));

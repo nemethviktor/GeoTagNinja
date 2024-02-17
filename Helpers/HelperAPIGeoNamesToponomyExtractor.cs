@@ -65,7 +65,7 @@ internal static class HelperAPIGeoNamesToponomyExtractor
                                                     "&radius=" +
                                                     radius +
                                                     "&maxRows=" +
-                                                    HelperVariables.ToponomyMaxRows);
+                                                    HelperVariables.ToponymaxRows);
         RestResponse responseToponomy = client.ExecuteGet(request: requestToponomy);
         // check API reponse is OK
         if (responseToponomy.Content != null && responseToponomy.Content.Contains(value: "the hourly limit of "))

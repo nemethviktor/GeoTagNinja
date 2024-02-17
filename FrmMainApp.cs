@@ -12,12 +12,13 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ExifToolWrapper;
 using geoTagNinja;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using GeoTagNinja.Properties;
 using GeoTagNinja.View.DialogAndMessageBoxes;
+using GeoTagNinja.View.EditFileForm;
+using GeoTagNinja.View.ListView;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using NLog;
@@ -478,18 +479,6 @@ public partial class FrmMainApp : Form
 
 #region Map Stuff
 
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
-    public class MapGpsCoordinates
-    {
-#pragma warning disable IDE1006 // Naming Styles
-        public double
-            lat { get; set; } // note to self: don't allow ReSharper to rename these.
-
-        public double
-            lng { get; set; } // note to self: don't allow ReSharper to rename these.
-#pragma warning restore IDE1006 // Naming Styles
-    }
-
     /// <summary>
     ///     Provides an interaction layer between the map and the app. The reason why we're using string instead of proper
     ///     numbers
@@ -506,12 +495,16 @@ public partial class FrmMainApp : Form
     {
         string jsonString = e.WebMessageAsJson;
 
-        MapGpsCoordinates mapGpsCoordinates =
-            JsonSerializer.Deserialize<MapGpsCoordinates>(json: jsonString);
+        MapWebMessage mapWebMessage =
+            JsonSerializer.Deserialize<MapWebMessage>(json: jsonString);
         string strLat =
-            mapGpsCoordinates?.lat.ToString(provider: CultureInfo.InvariantCulture);
+            mapWebMessage?.lat.ToString(provider: CultureInfo.InvariantCulture);
         string strLng =
-            mapGpsCoordinates?.lng.ToString(provider: CultureInfo.InvariantCulture);
+            mapWebMessage?.lng.ToString(provider: CultureInfo.InvariantCulture);
+        bool isDragged = mapWebMessage is
+        {
+            isDragged: true
+        };
         double.TryParse(s: strLat, style: NumberStyles.Any,
                         provider: CultureInfo.InvariantCulture,
                         result: out
@@ -535,6 +528,11 @@ public partial class FrmMainApp : Form
                                           provider: CultureInfo.InvariantCulture);
         nud_lng.Value = Convert.ToDecimal(value: correctedDblLng,
                                           provider: CultureInfo.InvariantCulture);
+
+        if (isDragged && askIfUserWantsToSaveDraggedMapData())
+        {
+            btn_loctToFile.PerformClick();
+        }
     }
 
     /// <summary>
@@ -545,6 +543,23 @@ public partial class FrmMainApp : Form
     private void webView_CoreWebView2InitializationCompleted(object sender,
         CoreWebView2InitializationCompletedEventArgs e)
     { }
+
+    /// <summary>
+    ///     Checks if the user wants to have a "dragged datapoint" actioned to be sent onto selected files.
+    /// </summary>
+    /// <returns></returns>
+    private bool askIfUserWantsToSaveDraggedMapData()
+    {
+        CustomMessageBox customMessageBox = new(
+            text: GenericGetMessageBoxText(
+                messageBoxName: "mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles"),
+            caption: GenericGetMessageBoxCaption(
+                captionType: MessageBoxCaption.Question.ToString()),
+            buttons: MessageBoxButtons.YesNo,
+            icon: MessageBoxIcon.Question);
+        DialogResult dialogResult = customMessageBox.ShowDialog();
+        return dialogResult == DialogResult.Yes;
+    }
 
     /// <summary>
     ///     Handles the clicking on Go button
@@ -892,10 +907,13 @@ public partial class FrmMainApp : Form
                                                  locationCoord.strLat +
                                                  ", " +
                                                  locationCoord.strLng +
-                                                 "]).addTo(map).openPopup();" +
+                                                 "],{\n" +
+                                                 "draggable: true,\n" +
+                                                 "autoPan: true\n" +
+                                                 "}).addTo(map).openPopup();" +
                                                  "\n";
 
-                // Update viewing rectangle if neede
+                // Update viewing rectangle if needed
                 dLat = double.Parse(s: locationCoord.strLat,
                                     provider: CultureInfo.InvariantCulture);
                 dLng = double.Parse(s: locationCoord.strLng,
@@ -936,7 +954,7 @@ public partial class FrmMainApp : Form
         string showPointsStr = "";
         string showFOVStr = "";
         string showDestinationPolyLineStr = "";
-        string mapStyleFiter = HelperVariables.UserSettingMapColourMode switch
+        string mapStyleFilter = HelperVariables.UserSettingMapColourMode switch
         {
             "DarkInverse" =>
                 "filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);",
@@ -958,7 +976,7 @@ public partial class FrmMainApp : Form
                              	#replaceMe#
                              }
                              """.Replace(oldValue: "#replaceMe#",
-                                         newValue: mapStyleFiter);
+                                         newValue: mapStyleFilter);
 
         // check there is one and only one DE selected and add ImgDirection if there's any
         ListView lvw = lvw_FileList;
@@ -971,6 +989,16 @@ public partial class FrmMainApp : Form
                 version: directoryElement.GetMaxAttributeVersion(
                     attribute: ElementAttribute.GPSImgDirection),
                 notFoundValue: null);
+
+            // If the data is copy-pasted then the value itself could be 0 with a mark-for-delete
+            // GetMaxAttributeVersion returns null if IsMarkedForDeletion
+            if (directoryElement
+                   .GetMaxAttributeVersion(
+                        attribute: ElementAttribute.GPSImgDirection) ==
+                null)
+            {
+                imgDirection = null;
+            }
 
             //string imgDirectionRef = directoryElement.GetAttributeValueString(
             //    attribute: ElementAttribute.GPSImgDirectionRef,
@@ -1032,7 +1060,7 @@ public partial class FrmMainApp : Form
                     ;
 
                 createPointsStr = string.Format(format: """
-                                                        /* Create poits */
+                                                        /* Create points */
                                                         let points = [
                                                             {{
                                                                 type: 'point',
@@ -1153,7 +1181,7 @@ public partial class FrmMainApp : Form
             foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
             {
                 DirectoryElement directoryElement = (DirectoryElement)lvi.Tag;
-                // probably needs checking but de.Coordinates and de.DestCoordinates don't return anything here so we're splitting it into four.
+                // probably needs checking but de.Coordinates and de.DestCoordinates don't return anything here, so we're splitting it into four.
                 string GPSLatitudeStr = directoryElement.GetAttributeValueString(
                     attribute: ElementAttribute.GPSLatitude,
                     version: directoryElement.GetMaxAttributeVersion(
@@ -1165,17 +1193,38 @@ public partial class FrmMainApp : Form
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSLongitude),
                     notFoundValue: null, nowSavingExif: false);
+
                 string GPSDestLatitudeStr = directoryElement.GetAttributeValueString(
                     attribute: ElementAttribute.GPSDestLatitude,
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSDestLatitude),
                     notFoundValue: null, nowSavingExif: false);
 
+                // If the data is copy-pasted then the value itself could be 0 with a mark-for-delete
+                // GetMaxAttributeVersion returns null if IsMarkedForDeletion
+                if (directoryElement
+                       .GetMaxAttributeVersion(
+                            attribute: ElementAttribute.GPSDestLatitude) ==
+                    null)
+                {
+                    GPSDestLatitudeStr = null;
+                }
+
                 string? GPSDestLongitudeStr = directoryElement.GetAttributeValueString(
                     attribute: ElementAttribute.GPSDestLongitude,
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSDestLongitude),
                     notFoundValue: null, nowSavingExif: false);
+
+                // If the data is copy-pasted then the value itself could be 0 with a mark-for-delete
+                // GetMaxAttributeVersion returns null if IsMarkedForDeletion
+                if (directoryElement
+                       .GetMaxAttributeVersion(
+                            attribute: ElementAttribute.GPSDestLongitude) ==
+                    null)
+                {
+                    GPSDestLongitudeStr = null;
+                }
 
                 if (!(string.IsNullOrWhiteSpace(value: GPSLatitudeStr) ||
                       string.IsNullOrWhiteSpace(value: GPSDestLatitudeStr) ||
@@ -3153,10 +3202,8 @@ public partial class FrmMainApp : Form
                                            EventArgs e)
     {
         bool selectionIsValid = false;
-        bool latParseSuccess = false;
-        double dblLat = 0;
-        bool lngParseSuccess = false;
-        double dblLng = 0;
+        string GPSLatStr = NullStringEquivalentGeneric;
+        string GPSLngStr = NullStringEquivalentGeneric;
         ListView lvw = lvw_FileList;
 
         if (lvw.SelectedItems.Count == 1)
@@ -3166,23 +3213,19 @@ public partial class FrmMainApp : Form
                 lvi.Tag as DirectoryElement;
             if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {
-                latParseSuccess = double.TryParse(
-                    s: lvi.SubItems[index: lvw
-                                          .Columns[
-                                               key: COL_NAME_PREFIX +
-                                                    FileListColumns.GPS_LATITUDE]
-                                          .Index]
-                          .Text, result: out dblLat);
-                lngParseSuccess = double.TryParse(
-                    s: lvi.SubItems[index: lvw
-                                          .Columns[
-                                               key: COL_NAME_PREFIX +
-                                                    FileListColumns.GPS_LONGITUDE]
-                                          .Index]
-                          .Text, result: out dblLng);
-                if (latParseSuccess && lngParseSuccess)
+                try
                 {
+                    GPSLatStr =
+                        dirElemFileToModify.GetAttributeValueString(
+                            ElementAttribute.GPSLatitude);
+                    GPSLngStr =
+                        dirElemFileToModify.GetAttributeValueString(
+                            ElementAttribute.GPSLongitude);
                     selectionIsValid = true;
+                }
+                catch
+                {
+                    // nothing
                 }
             }
         }
@@ -3206,9 +3249,9 @@ public partial class FrmMainApp : Form
                 : "";
             string openAPILink =
                 "http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&lat=" +
-                dblLat.ToString(provider: cIEnUS) +
+                GPSLatStr +
                 "&lng=" +
-                dblLng.ToString(provider: cIEnUS) +
+                GPSLngStr +
                 "&lang=" +
                 HelperVariables.APILanguageToUse +
                 SOnlyShowFCodePPL +
@@ -3216,7 +3259,7 @@ public partial class FrmMainApp : Form
                 "&radius=" +
                 HelperVariables.ToponomyRadiusValue +
                 "&maxRows=" +
-                HelperVariables.ToponomyMaxRows +
+                HelperVariables.ToponymaxRows +
                 "&username=" +
                 HelperVariables.UserSettingGeoNamesUserName +
                 "&password=any";

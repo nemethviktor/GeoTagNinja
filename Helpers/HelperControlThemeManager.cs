@@ -226,7 +226,25 @@ internal static class HelperControlThemeManager
             {
                 linkLabel.LinkColor = Color.White;
             }
-
+            else if (cItem is DataGridView dgv)
+            {
+                dgv.BackgroundColor = darkColor;
+                dgv.ForeColor = Color.White;
+                dgv.DefaultCellStyle.BackColor = darkColor;
+                dgv.DefaultCellStyle.ForeColor = Color.White;
+                dgv.ColumnHeadersDefaultCellStyle.BackColor = darkColor;
+                dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+                dgv.EnableHeadersVisualStyles = false;
+                foreach (DataGridViewColumn column in dgv.Columns)
+                {
+                    if (column is DataGridViewComboBoxColumn comboBoxColumn)
+                    {
+                        comboBoxColumn.DisplayStyleForCurrentCellOnly = true;
+                        comboBoxColumn.DefaultCellStyle.BackColor = darkColor;
+                        comboBoxColumn.DefaultCellStyle.ForeColor = Color.White;
+                    }
+                }
+            }
             else
             {
                 cItem.BackColor = darkColor;

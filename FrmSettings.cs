@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -44,18 +45,21 @@ public partial class FrmSettings : Form
             tcr_Settings.DrawMode = TabDrawMode.Normal;
         }
 
-        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
-                                                     ? ThemeColour.Dark
-                                                     : ThemeColour.Light, parentControl: this);
+        HelperControlThemeManager.SetThemeColour(
+            themeColour: HelperVariables.UserSettingUseDarkMode
+                ? ThemeColour.Dark
+                : ThemeColour.Light, parentControl: this);
 
         // this one is largely responsible for disabling the detection of "new" (changed) data. (ie when going from "noting" to "something")
         _nowLoadingSettingsData = true;
         HelperNonStatic helperNonstatic = new();
-        HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
+        HelperControlAndMessageBoxHandling.ReturnControlText(
+            cItem: this, senderForm: this);
 
         // Gets the various controls' labels and values (eg "latitude" and "51.002")
-        _lstTpgApplicationControls = helperNonstatic.GetAllControls(control: tpg_Application)
-                                                    .ToList();
+        _lstTpgApplicationControls = helperNonstatic
+                                    .GetAllControls(control: tpg_Application)
+                                    .ToList();
         _lstTpgGeoNamesControls = helperNonstatic.GetAllControls(control: tpg_GeoNames)
                                                  .ToList();
 
@@ -66,20 +70,25 @@ public partial class FrmSettings : Form
             {
                 string parentNameToUse = GetParentNameToUse(cItem: cItem);
 
-                if (cItem.Name == "cbx_Language" || cItem.Name == "cbx_TryUseGeoNamesLanguage")
+                if (cItem.Name == "cbx_Language" ||
+                    cItem.Name == "cbx_TryUseGeoNamesLanguage")
                 {
                     ComboBox cbx = (ComboBox)cItem;
 
                     string[] alreadyTranslatedLanguages = { "en", "fr" };
-                    _languageSavedInSQL = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                        tableName: "settings",
-                        settingTabPage: parentNameToUse,
-                        settingId: cbx.Name
-                    );
+                    _languageSavedInSQL =
+                        HelperDataApplicationSettings.DataReadSQLiteSettings(
+                            tableName: "settings",
+                            settingTabPage: parentNameToUse,
+                            settingId: cbx.Name
+                        );
 
-                    foreach (KeyValuePair<string, string> languagePair in HelperGenericAncillaryListsArrays.GetISO_639_1_Languages())
+                    foreach (KeyValuePair<string, string> languagePair in
+                             HelperGenericAncillaryListsArrays.GetISO_639_1_Languages())
                     {
-                        if ((cItem.Name == "cbx_Language" && alreadyTranslatedLanguages.Contains(value: languagePair.Key)) ||
+                        if ((cItem.Name == "cbx_Language" &&
+                             alreadyTranslatedLanguages.Contains(
+                                 value: languagePair.Key)) ||
                             cItem.Name == "cbx_TryUseGeoNamesLanguage")
 
                         {
@@ -89,7 +98,8 @@ public partial class FrmSettings : Form
 
                     if (_languageSavedInSQL == null)
                     {
-                        cbx.SelectedIndex = cbx.FindStringExact(s: HelperVariables.DefaultEnglishString);
+                        cbx.SelectedIndex =
+                            cbx.FindStringExact(s: HelperVariables.DefaultEnglishString);
                     }
                     else
                     {
@@ -108,8 +118,8 @@ public partial class FrmSettings : Form
                 else
                 {
                     HelperControlAndMessageBoxHandling.ReturnControlText(cItem: cItem,
-                                                                         senderForm: this,
-                                                                         parentNameToUse: parentNameToUse);
+                        senderForm: this,
+                        parentNameToUse: parentNameToUse);
                 }
             }
         }
@@ -134,7 +144,8 @@ public partial class FrmSettings : Form
             // nothing
         }
 
-        if (_lstTpgApplicationControls.Contains(item: cItem) || _lstTpgGeoNamesControls.Contains(item: cItem))
+        if (_lstTpgApplicationControls.Contains(item: cItem) ||
+            _lstTpgGeoNamesControls.Contains(item: cItem))
         {
             // yeah this is parentNameToUse = "tpg_Application" on purpose.
             // Bad planning to be fair but i split the tpg_Application into two tpgs at some point by which time users' sqlite databases would have tpg_Application as a value for these keys
@@ -161,7 +172,8 @@ public partial class FrmSettings : Form
 
         // load file extensions
         lbx_fileExtensions.Items.Clear();
-        foreach (string ext in HelperGenericAncillaryListsArrays.AllCompatibleExtensions())
+        foreach (string ext in
+                 HelperGenericAncillaryListsArrays.AllCompatibleExtensions())
         {
             lbx_fileExtensions.Items.Add(item: ext);
         }
@@ -180,11 +192,12 @@ public partial class FrmSettings : Form
                     {
                         try
                         {
-                            tbx.Text = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                                tableName: "settings",
-                                settingTabPage: parentNameToUse,
-                                settingId: cItem.Name
-                            );
+                            tbx.Text = HelperDataApplicationSettings
+                               .DataReadSQLiteSettings(
+                                    tableName: "settings",
+                                    settingTabPage: parentNameToUse,
+                                    settingId: cItem.Name
+                                );
                         }
                         catch (InvalidOperationException) // nonesuch
                         {
@@ -195,11 +208,12 @@ public partial class FrmSettings : Form
                     {
                         try
                         {
-                            ckb.CheckState = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-                                tableName: "settings",
-                                settingTabPage: parentNameToUse,
-                                settingId: ckb.Name
-                            )
+                            ckb.CheckState = HelperDataApplicationSettings
+                               .DataReadCheckBoxSettingTrueOrFalse(
+                                    tableName: "settings",
+                                    settingTabPage: parentNameToUse,
+                                    settingId: ckb.Name
+                                )
                                 ? CheckState.Checked
                                 : CheckState.Unchecked;
                         }
@@ -210,11 +224,12 @@ public partial class FrmSettings : Form
                     }
                     else if (cItem is NumericUpDown nud)
                     {
-                        string nudTempValue = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                            tableName: "settings",
-                            settingTabPage: parentNameToUse,
-                            settingId: cItem.Name
-                        );
+                        string nudTempValue =
+                            HelperDataApplicationSettings.DataReadSQLiteSettings(
+                                tableName: "settings",
+                                settingTabPage: parentNameToUse,
+                                settingId: cItem.Name
+                            );
 
                         if (nudTempValue != null)
                         {
@@ -243,11 +258,12 @@ public partial class FrmSettings : Form
                     {
                         try
                         {
-                            rbt.Checked = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-                                tableName: "settings",
-                                settingTabPage: parentNameToUse,
-                                settingId: rbt.Name
-                            )
+                            rbt.Checked = HelperDataApplicationSettings
+                               .DataReadCheckBoxSettingTrueOrFalse(
+                                    tableName: "settings",
+                                    settingTabPage: parentNameToUse,
+                                    settingId: rbt.Name
+                                )
                                 ? true
                                 : false;
                         }
@@ -282,7 +298,8 @@ public partial class FrmSettings : Form
         }
         else
         {
-            HelperVariables.UserSettingMapColourMode = "Normal"; // technically we could just ignore this
+            HelperVariables.UserSettingMapColourMode =
+                "Normal"; // technically we could just ignore this
         }
 
         _nowLoadingSettingsData = false;
@@ -306,11 +323,13 @@ public partial class FrmSettings : Form
         source.DataSource = HelperVariables.DtCustomRules;
         dgv_CustomRules.DataSource = source;
 
-        Dictionary<string, string> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-                                                                                              tableName: "settings",
-                                                                                              settingTabPage: "tpg_CustomRules",
-                                                                                              settingId: "ckb_IncludePredeterminedCountries"
-                                                                                          ));
+        Dictionary<string, string> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(
+            ckb_IncludePredeterminedCountries: HelperDataApplicationSettings
+               .DataReadCheckBoxSettingTrueOrFalse(
+                    tableName: "settings",
+                    settingTabPage: "tpg_CustomRules",
+                    settingId: "ckb_IncludePredeterminedCountries"
+                ));
         DataGridViewComboBoxColumn clh_CountryCode = new()
         {
             DataPropertyName = "CountryCode",
@@ -332,7 +351,8 @@ public partial class FrmSettings : Form
         };
 
         // e.g.: "AdminName1","AdminName2"...
-        foreach (string itemName in HelperGenericAncillaryListsArrays.CustomRulesDataSources())
+        foreach (string itemName in HelperGenericAncillaryListsArrays
+                    .CustomRulesDataSources())
         {
             clh_DataPointName.Items.Add(item: itemName);
         }
@@ -347,7 +367,8 @@ public partial class FrmSettings : Form
         };
 
         // e.g.: "Is","Contains"...
-        foreach (string itemName in HelperGenericAncillaryListsArrays.CustomRulesDataConditions())
+        foreach (string itemName in HelperGenericAncillaryListsArrays
+                    .CustomRulesDataConditions())
         {
             clh_DataPointConditionType.Items.Add(item: itemName);
         }
@@ -370,7 +391,8 @@ public partial class FrmSettings : Form
         };
 
         // e.g.:  "State","City"...
-        foreach (SourcesAndAttributes.ElementAttribute itemName in HelperGenericAncillaryListsArrays.CustomRulesDataTargets())
+        foreach (SourcesAndAttributes.ElementAttribute itemName in
+                 HelperGenericAncillaryListsArrays.CustomRulesDataTargets())
         {
             clh_TargetPointName.Items.Add(item: itemName);
         }
@@ -385,7 +407,8 @@ public partial class FrmSettings : Form
         };
 
         // e.g.: "AdminName1","AdminName2"... +Null (empty)" + Custom
-        foreach (string itemName in HelperGenericAncillaryListsArrays.CustomRulesDataSources(isOutcome: true))
+        foreach (string itemName in HelperGenericAncillaryListsArrays
+                    .CustomRulesDataSources(isOutcome: true))
         {
             clh_TargetPointOutcome.Items.Add(item: itemName);
         }
@@ -421,14 +444,16 @@ public partial class FrmSettings : Form
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     private void LoadCustomCityLogicDGV()
     {
-        HelperVariables.DtCustomCityLogic = HelperDataCustomCityAllocationRules.DataReadSQLiteCustomCityAllocationLogic();
+        HelperVariables.DtCustomCityLogic = HelperDataCustomCityAllocationRules
+           .DataReadSQLiteCustomCityAllocationLogic();
         dgv_CustomCityLogic.AutoGenerateColumns = false;
 
         BindingSource source = new();
         source.DataSource = HelperVariables.DtCustomCityLogic;
         dgv_CustomCityLogic.DataSource = source;
 
-        Dictionary<string, string> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: true);
+        Dictionary<string, string> clh_CountryCodeOptions =
+            refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: true);
         DataGridViewComboBoxColumn clh_CountryCode = new()
         {
             DataPropertyName = "CountryCode",
@@ -452,7 +477,8 @@ public partial class FrmSettings : Form
         };
 
         // e.g.: "AdminName1","AdminName2"... 
-        foreach (string itemName in HelperGenericAncillaryListsArrays.CustomCityLogicDataSources())
+        foreach (string itemName in HelperGenericAncillaryListsArrays
+                    .CustomCityLogicDataSources())
         {
             clh_TargetPointNameCustomCityLogic.Items.Add(item: itemName);
         }
@@ -468,7 +494,8 @@ public partial class FrmSettings : Form
     ///     checkbox changes.
     /// </summary>
     /// <returns>KVP list of country codes and countries</returns>
-    private static Dictionary<string, string> refreshClh_CountryCodeOptions(bool ckb_IncludePredeterminedCountries)
+    private static Dictionary<string, string> refreshClh_CountryCodeOptions(
+        bool ckb_IncludePredeterminedCountries)
     {
         Dictionary<string, string> clh_CountryCodeOptions = new();
         // e.g. "GBR//United Kingdom of...."
@@ -589,7 +616,8 @@ public partial class FrmSettings : Form
                         if (rbtGeoNamesLanguage.Contains(item: rbt.Name))
                         {
                             // (rbt.Font.Style & FontStyle.Bold) here means that there has been a change of state and it needs saving
-                            if ((rbt.Font.Style & FontStyle.Bold) != 0 && rbt.Checked)
+                            if ((rbt.Font.Style & FontStyle.Bold) != 0 &&
+                                rbt.Checked)
                             {
                                 ComboBox cbxLng = cbx_TryUseGeoNamesLanguage;
                                 if (rbt.Name == "rbt_UseGeoNamesLocalLanguage")
@@ -600,24 +628,29 @@ public partial class FrmSettings : Form
                                 else if (rbt.Name == "rbt_TryUseGeoNamesLanguage")
                                 {
                                     cbxLng.Enabled = true;
-                                    IEnumerable<KeyValuePair<string, string>> result = HelperGenericAncillaryListsArrays
-                                                                                      .GetISO_639_1_Languages()
-                                                                                      .Where(
-                                                                                           predicate: kvp =>
-                                                                                               kvp.Value ==
-                                                                                               cbxLng.SelectedItem
-                                                                                                     .ToString());
+                                    IEnumerable<KeyValuePair<string, string>> result =
+                                        HelperGenericAncillaryListsArrays
+                                           .GetISO_639_1_Languages()
+                                           .Where(
+                                                predicate: kvp =>
+                                                    kvp.Value ==
+                                                    cbxLng.SelectedItem
+                                                          .ToString());
 
-                                    HelperVariables.APILanguageToUse = result.FirstOrDefault()
-                                                                             .Key;
+                                    HelperVariables.APILanguageToUse = result
+                                       .FirstOrDefault()
+                                       .Key;
                                 }
                             }
                         }
                         else if (rbtMapColourOptions.Contains(item: rbt.Name))
                         {
-                            if ((rbt.Font.Style & FontStyle.Bold) != 0 && rbt.Checked)
+                            if ((rbt.Font.Style & FontStyle.Bold) != 0 &&
+                                rbt.Checked)
                             {
-                                HelperVariables.UserSettingMapColourMode = rbt.Name.Replace(oldValue: "rbt_MapColourMode", newValue: "");
+                                HelperVariables.UserSettingMapColourMode =
+                                    rbt.Name.Replace(oldValue: "rbt_MapColourMode",
+                                                     newValue: "");
                             }
                         }
                     }
@@ -725,7 +758,9 @@ public partial class FrmSettings : Form
                                                      .Last()
                                                      .ToLower();
 
-                            if (tmpCtrlGroup.Contains(value: "raw") || tmpCtrlGroup.Contains(value: "tiff") || tmpCtrlGroup.Contains(value: "dng"))
+                            if (tmpCtrlGroup.Contains(value: "raw") ||
+                                tmpCtrlGroup.Contains(value: "tiff") ||
+                                tmpCtrlGroup.Contains(value: "dng"))
                             {
                                 box.Checked = true;
                             }
@@ -827,14 +862,16 @@ public partial class FrmSettings : Form
     {
         if (!_nowLoadingSettingsData)
         {
-            FrmSettings frmSettingsInstance = (FrmSettings)Application.OpenForms[name: "FrmSettings"];
+            FrmSettings frmSettingsInstance =
+                (FrmSettings)Application.OpenForms[name: "FrmSettings"];
 
             CheckBox ckb = (CheckBox)sender;
             ckb.Font = new Font(prototype: ckb.Font, newStyle: FontStyle.Bold);
             string cItemName = "";
 
             object lbi = null;
-            if (frmSettingsInstance != null && frmSettingsInstance.tcr_Settings.SelectedTab.Name == "tpg_FileOptions")
+            if (frmSettingsInstance != null &&
+                frmSettingsInstance.tcr_Settings.SelectedTab.Name == "tpg_FileOptions")
             {
                 lbi = lbx_fileExtensions.SelectedItem;
             }
@@ -859,11 +896,21 @@ public partial class FrmSettings : Form
 
             if (cItemName == "ckb_IncludePredeterminedCountries")
             {
-                Dictionary<string, string> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(ckb_IncludePredeterminedCountries: ckb_IncludePredeterminedCountries.Checked);
-                DataGridViewComboBoxColumn clh_CountryCode = (DataGridViewComboBoxColumn)dgv_CustomRules.Columns[columnName: "clh_CountryCode"];
+                Dictionary<string, string> clh_CountryCodeOptions =
+                    refreshClh_CountryCodeOptions(
+                        ckb_IncludePredeterminedCountries:
+                        ckb_IncludePredeterminedCountries.Checked);
+                DataGridViewComboBoxColumn clh_CountryCode =
+                    (DataGridViewComboBoxColumn)dgv_CustomRules.Columns[
+                        columnName: "clh_CountryCode"];
                 if (clh_CountryCode != null) // shouldn't really be null but just in case.
                 {
-                    clh_CountryCode.DataSource = clh_CountryCodeOptions;
+                    BindingList<KeyValuePair<string, string>> bindingList =
+                        new(
+                            list: clh_CountryCodeOptions.ToList());
+                    clh_CountryCode.DataSource = bindingList;
+                    clh_CountryCode.DisplayMember = "Value";
+                    clh_CountryCode.ValueMember = "Key";
                 }
             }
 
@@ -919,15 +966,17 @@ public partial class FrmSettings : Form
             cbx.Font = new Font(prototype: cbx.Font, newStyle: FontStyle.Bold);
             string settingValue = cbx.Text;
 
-            if (cbx.Name == "cbx_Language" || cbx.Name == "cbx_TryUseGeoNamesLanguage")
+            if (cbx.Name == "cbx_Language" ||
+                cbx.Name == "cbx_TryUseGeoNamesLanguage")
             {
                 // convert e.g. "Français [French]" to "French"
                 settingValue = settingValue.Split('[')
                                            .Last()
-                                           .Substring(startIndex: 0, length: settingValue.Split('[')
-                                                                                         .Last()
-                                                                                         .Length -
-                                                                             1);
+                                           .Substring(startIndex: 0, length: settingValue
+                                                         .Split('[')
+                                                         .Last()
+                                                         .Length -
+                                                      1);
             }
 
             // stick it into settings-Q
@@ -968,7 +1017,9 @@ public partial class FrmSettings : Form
 
         if (nud.Name == "nud_ChoiceRadius")
         {
-            string tmpLabelText = HelperControlAndMessageBoxHandling.ReturnControlTextAsString(cItem: lbl_Miles, senderForm: this);
+            string tmpLabelText =
+                HelperControlAndMessageBoxHandling.ReturnControlTextAsString(
+                    cItem: lbl_Miles, senderForm: this);
             lbl_Miles.Text =
                 "(" +
                 Math.Round(d: nud.Value / (decimal)1.60934, decimals: 2)
@@ -1056,12 +1107,17 @@ public partial class FrmSettings : Form
             dgv_CustomRules.Columns[columnName: "clh_TargetPointOutcome"]
                            .Index)
         {
-            string clh_TargetPointOutcomeValue = Convert.ToString(value: (dgv_CustomRules.Rows[index: e.RowIndex]
-                                                                                         .Cells[columnName: "clh_TargetPointOutcome"] as DataGridViewComboBoxCell)?.EditedFormattedValue);
+            string clh_TargetPointOutcomeValue = Convert.ToString(
+                value: (dgv_CustomRules.Rows[index: e.RowIndex]
+                                       .Cells[columnName: "clh_TargetPointOutcome"] as
+                    DataGridViewComboBoxCell)?.EditedFormattedValue);
 
-            string clh_TargetPointOutcomeCustomValue = Convert.ToString(value: (dgv_CustomRules.Rows[index: e.RowIndex]
-                                                                                               .Cells[columnName: "clh_TargetPointOutcomeCustom"] as DataGridViewTextBoxCell)?.EditedFormattedValue);
-            if (clh_TargetPointOutcomeValue == "Custom" && IsNullOrEmpty(value: clh_TargetPointOutcomeCustomValue))
+            string clh_TargetPointOutcomeCustomValue = Convert.ToString(
+                value: (dgv_CustomRules.Rows[index: e.RowIndex]
+                                       .Cells[columnName: "clh_TargetPointOutcomeCustom"]
+                    as DataGridViewTextBoxCell)?.EditedFormattedValue);
+            if (clh_TargetPointOutcomeValue == "Custom" &&
+                IsNullOrEmpty(value: clh_TargetPointOutcomeCustomValue))
             {
                 e.Cancel = true;
                 CustomMessageBox customMessageBox = new(
@@ -1070,7 +1126,8 @@ public partial class FrmSettings : Form
                         "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty"),
                     caption: HelperControlAndMessageBoxHandling
                        .GenericGetMessageBoxCaption(
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
+                            captionType: HelperControlAndMessageBoxHandling
+                                        .MessageBoxCaption.Information.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Warning);
                 customMessageBox.ShowDialog();
@@ -1090,7 +1147,8 @@ public partial class FrmSettings : Form
     private void btn_ResetToDefaults_Click(object sender,
                                            EventArgs e)
     {
-        HelperDataCustomCityAllocationRules.DataWriteSQLiteCustomCityAllocationLogicDefaults(resetToDefaults: true);
+        HelperDataCustomCityAllocationRules
+           .DataWriteSQLiteCustomCityAllocationLogicDefaults(resetToDefaults: true);
         // reload
         dgv_CustomCityLogic.Columns.Clear();
         LoadCustomCityLogicDGV();
@@ -1134,20 +1192,23 @@ public partial class FrmSettings : Form
                 messageBoxName: "mbx_FrmSettings_QuestionWhatToExport"),
             caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                 captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question
-                                              .ToString()),
+                   .ToString()),
             checkboxesDictionary: checkboxDictionary,
             buttonsDictionary: buttonsDictionary,
             orientation: "Vertical");
 
         // ignore the whole thing if "no" is part of the output
         // probably impossible that _neither_ of them are in the list but in case i missed something...
-        if (!ItemsToExport.Contains(item: "no") && ItemsToExport.Contains(item: "yes"))
+        if (!ItemsToExport.Contains(item: "no") &&
+            ItemsToExport.Contains(item: "yes"))
         {
             using (SaveFileDialog exportFileDialog = new())
             {
                 exportFileDialog.Filter = "SQLite Databasee|*.db";
                 exportFileDialog.Title = "Save a SQLite File";
-                exportFileDialog.FileName = "GeoTagNinja_Settings_Export_" + DateTime.Now.ToString(format: "yyyyMMdd_HHmm");
+                exportFileDialog.FileName = "GeoTagNinja_Settings_Export_" +
+                                            DateTime.Now.ToString(
+                                                format: "yyyyMMdd_HHmm");
                 exportFileDialog.ShowDialog();
 
                 // If the file name is not an empty string open it for saving.
@@ -1155,10 +1216,13 @@ public partial class FrmSettings : Form
                 {
                     try
                     {
-                        File.Copy(sourceFileName: HelperVariables.SettingsDatabaseFilePath,
-                                  destFileName: Path.Combine(exportFileDialog.FileName),
-                                  overwrite: true);
-                        HelperDataSettingsExport.DataExportSettings(settingsToExportList: ItemsToExport, exportFilePath: Path.Combine(exportFileDialog.FileName));
+                        File.Copy(
+                            sourceFileName: HelperVariables.SettingsDatabaseFilePath,
+                            destFileName: Path.Combine(exportFileDialog.FileName),
+                            overwrite: true);
+                        HelperDataSettingsExport.DataExportSettings(
+                            settingsToExportList: ItemsToExport,
+                            exportFilePath: Path.Combine(exportFileDialog.FileName));
                     }
                     catch (Exception ex)
                     {
@@ -1170,7 +1234,8 @@ public partial class FrmSettings : Form
                                   ex.Message,
                             caption: HelperControlAndMessageBoxHandling
                                .GenericGetMessageBoxCaption(
-                                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                                    captionType: HelperControlAndMessageBoxHandling
+                                                .MessageBoxCaption.Error.ToString()),
                             buttons: MessageBoxButtons.OK,
                             icon: MessageBoxIcon.Error);
                         customMessageBox.ShowDialog();
@@ -1214,10 +1279,12 @@ public partial class FrmSettings : Form
 
             // ignore the whole thing if "no" is part of the output
             // probably impossible that _neither_ of them are in the list but in case i missed something...
-            if (!ItemsToImport.Contains(item: "no") && ItemsToImport.Contains(item: "yes"))
+            if (!ItemsToImport.Contains(item: "no") &&
+                ItemsToImport.Contains(item: "yes"))
             {
-                _importHasBeenProcessed = HelperDataSettingsImport.DataImportSettings(settingsToImportList: ItemsToImport,
-                                                                                      importFilePath: databaseFileToImport);
+                _importHasBeenProcessed = HelperDataSettingsImport.DataImportSettings(
+                    settingsToImportList: ItemsToImport,
+                    importFilePath: databaseFileToImport);
 
                 // this is done so that the user doesn't end up clicking OK and then triggering a re-save of what they may have queued up against warnings.
                 // Cancel clears the write queue but since the database would have been overwritten that's a reasonable logical path to take.
@@ -1277,7 +1344,7 @@ public partial class FrmSettings : Form
                 messageBoxName: "mbx_FrmSettings_PleaseRestartApp"),
             caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                 captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question
-                                              .ToString()),
+                   .ToString()),
             buttonsDictionary: buttonsDictionary,
             orientation: "Horizontal");
 

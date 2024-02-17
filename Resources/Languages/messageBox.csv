@@ -89,3 +89,4 @@ mbx_FrmSettings_QuestionWhatToExport,"Choose what to Export. Please note that th
 mbx_FrmSettings_QuestionWhatToImport,Choose what to Import. Please note that upon successful completion of the Import process the relevant bits of the database will be overwritten. If something fails there will be a backup file of your db in your AppData folder.,
 mbx_FrmSettings_ErrorExportFailed,Exporting Failed: ,
 mbx_FrmSettings_ErrorImportFailed,Importing Failed: ,
+mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles,Do you want to assign the coordinates to the selected file(s)?,

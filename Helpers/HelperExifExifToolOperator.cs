@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -26,7 +25,7 @@ internal static class HelperExifExifToolOperator
     ///     in the main listView
     /// </param>
     /// <param name="initiator">String value of "who called it". </param>
-    /// <param name="processOriginalFile1"></param>
+    /// <param name="processOriginalFile"></param>
     /// <param name="writeXmpSideCar"></param>
     /// <returns>Empty Task</returns>
     internal static async Task RunExifTool(string exiftoolCmd,
@@ -83,12 +82,14 @@ internal static class HelperExifExifToolOperator
                         {
                             if (data.Data.Contains(value: "="))
                             {
-                                fileNameWithPath = data
-                                                  .Data.Replace(
-                                                       oldValue: "=", newValue: "")
-                                                  .Replace(oldValue: "/", newValue: @"\")
-                                                  .Split('[')
-                                                  .FirstOrDefault()
+                                string exifToolLineWithoutEqualSigns =
+                                    data.Data.Replace(oldValue: "=", newValue: "");
+                                fileNameWithPath = exifToolLineWithoutEqualSigns
+                                                  .Replace(oldChar: '/', newChar: '\\')
+                                                  .Remove(
+                                                       startIndex:
+                                                       exifToolLineWithoutEqualSigns
+                                                          .LastIndexOf(value: '['))
                                                   .Trim();
 
                                 // basically we need to check that the combination of what-to-save is _not_ xmp-only. 

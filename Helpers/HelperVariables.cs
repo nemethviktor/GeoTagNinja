@@ -38,7 +38,7 @@ internal static class HelperVariables
     internal static decimal _currentExifToolVersionLocal;
     internal static bool ToponomyReplace = false;
     internal static string ToponomyReplaceWithWhat = null;
-    internal static string ToponomyMaxRows = "1";
+    internal static string ToponymaxRows = "1";
     internal static string ToponomyRadiusValue = "10";
     internal static string? CurrentAltitude; // this is needed bcs it can happen that a file has altitude, the api returns -32k and then we'd end up with something worse than what it was originally.
     internal static readonly string DefaultEnglishString = "English [English]";

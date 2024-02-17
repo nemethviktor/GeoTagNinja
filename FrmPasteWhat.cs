@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
+using GeoTagNinja.View.ListView;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 

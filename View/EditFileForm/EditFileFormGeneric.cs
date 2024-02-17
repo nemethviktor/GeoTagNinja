@@ -5,7 +5,7 @@ using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
 using static GeoTagNinja.View.ListView.FileListView;
 
-namespace GeoTagNinja;
+namespace GeoTagNinja.View.EditFileForm;
 
 internal static class EditFileFormGeneric
 {
@@ -19,7 +19,7 @@ internal static class EditFileFormGeneric
         int folderCount = 0;
         FrmEditFileData FrmEditFileData = new();
 
-        ListView lvw = FrmEditFileData.lvw_FileListEditImages;
+        System.Windows.Forms.ListView lvw = FrmEditFileData.lvw_FileListEditImages;
         lvw.Columns.Clear();
         lvw.Items.Clear();
 

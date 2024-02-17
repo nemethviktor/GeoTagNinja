@@ -82,7 +82,7 @@
         });
 
 
-        function onMapClick(e) {
+        map.on('click', function onMapClick(e) {
             //marker
             //    .setLatLng(e.latlng);
 
@@ -91,14 +91,23 @@
                 .setContent(e.latlng.toString())
                 .openOn(map);
 
-            window.chrome.webview.postMessage({ "lat": e.latlng.lat, "lng": e.latlng.lng });
+            window.chrome.webview.postMessage({ "lat": e.latlng.lat, "lng": e.latlng.lng, "isDragged": false });
 
-        }
-        map.on('click', onMapClick);
+        });
         		
+		marker.on("drag", function(e) {
+			var marker = e.target;
+			var position = marker.getLatLng();
+			window.chrome.webview.postMessage({ "lat": e.latlng.lat, "lng": e.latlng.lng, "isDragged": false });
+			//map.panTo(new L.LatLng(position.lat, position.lng));
+		});
 		
-		
-		
+        marker.on("dragend", function (e) {
+            var marker = e.target;
+            var position = marker.getLatLng();
+            window.chrome.webview.postMessage({ "lat": position.lat, "lng": position.lng, "isDragged": true });
+        });
+
     </script>
 
 

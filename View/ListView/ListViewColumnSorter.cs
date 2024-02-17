@@ -2,9 +2,8 @@
 using System.Collections;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.ListView;
 
-namespace GeoTagNinja;
+namespace GeoTagNinja.View.ListView;
 
 /// <summary>
 ///     Comparer for columns. Currently supports only case insensitive string comparison.
@@ -93,7 +92,7 @@ internal class ListViewColumnSorter : IComparer
         int lviElementTypeY = GetSortGroup(de: deY);
 
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        ListView lvw_FileList = frmMainAppInstance.lvw_FileList;
+        System.Windows.Forms.ListView lvw_FileList = frmMainAppInstance.lvw_FileList;
 
         string colName = lvw_FileList.Columns[index: ColumnToSortIdx]
                                      .Name.Substring(startIndex: FileListView.COL_NAME_PREFIX.Length); // no "clh_"

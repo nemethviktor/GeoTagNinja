@@ -1,5 +1,19 @@
 ﻿# GeoTagNinja Changelog
 
+**Build 8xxx [202401xx]** 
+- NEW & UPDATED:
+  - Long-pressing a point on the map will now offer the user to save the map location to the image so that there's no need for extra click #91
+  - Added functionality as per #92 to drag the map marker and allow the user to add the new value to the selected image(s).
+  - Added toponomymName to the options within Custom City Allocation Rules
+  - Changed how file names with "[]" chars are handled for saving.
+  - Bumped exifTool to v12.72
+- BUGS & FIXES:
+  - Fixed an issue re #93 Open Coords in API misbehaving. 
+  - Fixed Custom Rules panel breaking because the object type was wrong due to an earlier logic-consolidation.
+  - Fixed Copy-Paste empty Direction value showing as 0 on the map.
+  - Fixed Copy-Paste empty Destination value breaking the the map when selecting multiple files.
+  - Run a spell checker on the readme....
+
 **Build 8680 [20231007]** 
 - NEW & UPDATED:
   - App Version Bump: 1.14
