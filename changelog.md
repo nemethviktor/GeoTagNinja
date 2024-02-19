@@ -1,6 +1,14 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 8xxx [202401xx]** 
+**Build 8xxx [20240xxx]** 
+- NEW & UPDATED:
+  - 
+
+- BUGS & FIXES:
+  - Added an extra warning if the file-save fails for what's likely a UTF path error #98
+
+
+**Build 8768 [20240103] (released 20240216)**
 - NEW & UPDATED:
   - Long-pressing a point on the map will now offer the user to save the map location to the image so that there's no need for extra click #91
   - Added functionality as per #92 to drag the map marker and allow the user to add the new value to the selected image(s).

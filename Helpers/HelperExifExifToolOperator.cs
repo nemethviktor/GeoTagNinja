@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -210,7 +211,16 @@ internal static class HelperExifExifToolOperator
                                             length: fileNameWithoutPath.LastIndexOf(
                                                 value: '.'))))
                                 {
-                                    MessageBox.Show(text: data.Data);
+                                    bool pathIsLikelyUTF = fileNameWithPath.Any(c => c > 127);
+                                    MessageBox.Show(text: data.Data +
+                                                          (pathIsLikelyUTF
+                                                              ? Environment.NewLine +
+                                                              Environment.NewLine +
+                                                              HelperControlAndMessageBoxHandling
+                                                                 .GenericGetMessageBoxText(
+                                                                      messageBoxName:
+                                                                      "mbx_GenericPathLikelyUTF")
+                                                              : ""));
                                 }
                             }
                         }
