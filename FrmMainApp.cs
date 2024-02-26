@@ -1042,8 +1042,8 @@ public partial class FrmMainApp : Form
                 notFoundValue: 50);
 
             if (imgDirection != null &&
-                HelperVariables.LastLat != null &&
-                HelperVariables.LastLng != null)
+                GPSLatitude != null &&
+                GPSLongitude != null)
             {
                 // this is actually unused
                 //(double, double) northCoords = imgDirectionRef == "Magnetic North"
@@ -1053,8 +1053,8 @@ public partial class FrmMainApp : Form
                 // this is for the line
                 (double, double) targetCoordinates =
                         HelperGenericCalculations.CalculateTargetCoordinates(
-                            startLatitude: (double)HelperVariables.LastLat,
-                            startLongitude: (double)HelperVariables.LastLng,
+                            startLatitude: (double)GPSLatitude,
+                            startLongitude: (double)GPSLongitude,
                             gpsImgDirection: (double)imgDirection,
                             distance: 10)
                     ;
@@ -1121,34 +1121,41 @@ public partial class FrmMainApp : Form
                                 });
                                 """;
 
-                (List<(double, double)>, List<(double, double)>) FOVCoordinates =
-                        HelperGenericCalculations.CalculateFovCoordinatesFromSensorSize(
-                            startLatitude: (double)GPSLatitude,
-                            startLongitude: (double)GPSLongitude,
-                            gpsImgDirection: (double)imgDirection,
-                            sensorSize: HelperGenericCalculations.EstimateSensorSize(
-                                focalLength: (double)FocalLength,
-                                focalLengthIn35mmFilm: (double)FocalLengthIn35mmFormat),
-                            focalLength: (double)FocalLength,
-                            distance: 1)
-                    ;
-                showFOVStr = string.Format(format: """
-                                                   /* Show polygon/triangle */
-                                                   var polygon = L.polygon([
-                                                       [{0}],
-                                                       [{1}],
-                                                       [{2}]
-                                                   ]).addTo(map);
-                                                   """,
-                                           arg0: GPSLatitudeStr +
-                                                 "," +
-                                                 GPSLongitudeStr,
-                                           arg1: HelperGenericCalculations
-                                              .ConvertFOVCoordListsToString(
-                                                   sourceList: FOVCoordinates.Item1),
-                                           arg2: HelperGenericCalculations
-                                              .ConvertFOVCoordListsToString(
-                                                   sourceList: FOVCoordinates.Item2));
+                if (FocalLength != null &&
+                    FocalLengthIn35mmFormat != null)
+                {
+                    (List<(double, double)>, List<(double, double)>) FOVCoordinates =
+                            HelperGenericCalculations
+                               .CalculateFovCoordinatesFromSensorSize(
+                                    startLatitude: (double)GPSLatitude,
+                                    startLongitude: (double)GPSLongitude,
+                                    gpsImgDirection: (double)imgDirection,
+                                    sensorSize: HelperGenericCalculations
+                                       .EstimateSensorSize(
+                                            focalLength: (double)FocalLength,
+                                            focalLengthIn35mmFilm:
+                                            (double)FocalLengthIn35mmFormat),
+                                    focalLength: (double)FocalLength,
+                                    distance: 1)
+                        ;
+                    showFOVStr = string.Format(format: """
+                                                       /* Show polygon/triangle */
+                                                       var polygon = L.polygon([
+                                                           [{0}],
+                                                           [{1}],
+                                                           [{2}]
+                                                       ]).addTo(map);
+                                                       """,
+                                               arg0: GPSLatitudeStr +
+                                                     "," +
+                                                     GPSLongitudeStr,
+                                               arg1: HelperGenericCalculations
+                                                  .ConvertFOVCoordListsToString(
+                                                       sourceList: FOVCoordinates.Item1),
+                                               arg2: HelperGenericCalculations
+                                                  .ConvertFOVCoordListsToString(
+                                                       sourceList: FOVCoordinates.Item2));
+                }
             }
         }
 

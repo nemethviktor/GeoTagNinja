@@ -6,9 +6,10 @@
 
 - BUGS & FIXES:
   - Added an extra warning if the file-save fails for what's likely a UTF path error #98
+  - Added a check to ensure that files have the necessary data before attempting to create FOV re #99
 
 
-**Build 8768 [20240103] (released 20240216)**
+**Build 8768/8822 [20240103] (released 20240216)**
 - NEW & UPDATED:
   - Long-pressing a point on the map will now offer the user to save the map location to the image so that there's no need for extra click #91
   - Added functionality as per #92 to drag the map marker and allow the user to add the new value to the selected image(s).
