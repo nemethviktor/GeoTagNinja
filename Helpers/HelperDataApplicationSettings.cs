@@ -161,20 +161,41 @@ internal static class HelperDataApplicationSettings
                                                  string settingId,
                                                  string settingValue)
     {
+        DataDeleteSQLiteSettings(tableName, settingTabPage, settingId);
+
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
-        string sqlCommandStrand = @"
-                                REPLACE INTO " +
-                                  tableName +
+        string sqlCommandStrCMD = @"
+                                INSERT INTO " +
+                                  tableName + " " +
                                   " (settingTabPage, settingId, settingValue) " +
                                   "VALUES (@settingTabPage, @settingId, @settingValue);"
             ;
 
-        SQLiteCommand sqlCommandStr = new(commandText: sqlCommandStrand, connection: sqliteDB);
+        SQLiteCommand sqlCommandStr = new(commandText: sqlCommandStrCMD, connection: sqliteDB);
         sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingTabPage", value: settingTabPage);
         sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingId", value: settingId);
         sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingValue", value: settingValue);
+        sqlCommandStr.ExecuteNonQuery();
+    }
+
+    internal static void DataDeleteSQLiteSettings(string tableName,
+                                                 string settingTabPage,
+                                                 string settingId)
+    {   
+        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
+        sqliteDB.Open();
+
+        string sqlCommandStrCMD = @"
+                                DELETE FROM " +
+                                  tableName + " "+ 
+                                  "WHERE settingTabPage = @settingTabPage AND settingId = @settingId;"
+            ;
+
+        SQLiteCommand sqlCommandStr = new(commandText: sqlCommandStrCMD, connection: sqliteDB);
+        sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingTabPage", value: settingTabPage);
+        sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingId", value: settingId);
         sqlCommandStr.ExecuteNonQuery();
     }
 }
