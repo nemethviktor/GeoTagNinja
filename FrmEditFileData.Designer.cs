@@ -99,6 +99,8 @@ namespace GeoTagNinja
             this.ttp_OffsetTime = new System.Windows.Forms.ToolTip(this.components);
             this.gbx_EditImageList = new System.Windows.Forms.GroupBox();
             this.lvw_FileListEditImages = new System.Windows.Forms.ListView();
+            this.pbx_GPSDataPaste = new System.Windows.Forms.PictureBox();
+            this.ttp_GPSDataPaste = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pbx_imagePreview)).BeginInit();
             this.tpg_Location.SuspendLayout();
             this.gbx_LocationData.SuspendLayout();
@@ -121,6 +123,7 @@ namespace GeoTagNinja
             ((System.ComponentModel.ISupportInitialize)(this.nud_TakenDateHoursShift)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_TakenDateDaysShift)).BeginInit();
             this.gbx_EditImageList.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbx_GPSDataPaste)).BeginInit();
             this.SuspendLayout();
             // 
             // pbx_imagePreview
@@ -372,6 +375,7 @@ namespace GeoTagNinja
             // 
             // gbx_GPSData
             // 
+            this.gbx_GPSData.Controls.Add(this.pbx_GPSDataPaste);
             this.gbx_GPSData.Controls.Add(this.nud_GPSAltitude);
             this.gbx_GPSData.Controls.Add(this.nud_GPSLongitude);
             this.gbx_GPSData.Controls.Add(this.nud_GPSLatitude);
@@ -976,6 +980,20 @@ namespace GeoTagNinja
             this.lvw_FileListEditImages.DrawSubItem += new System.Windows.Forms.DrawListViewSubItemEventHandler(this.ListView_DrawSubItem);
             this.lvw_FileListEditImages.SelectedIndexChanged += new System.EventHandler(this.lvw_FileListEditImages_SelectedIndexChanged);
             // 
+            // pbx_GPSDataPaste
+            // 
+            this.pbx_GPSDataPaste.Image = ((System.Drawing.Image)(resources.GetObject("pbx_GPSDataPaste.Image")));
+            this.pbx_GPSDataPaste.Location = new System.Drawing.Point(196, 13);
+            this.pbx_GPSDataPaste.Name = "pbx_GPSDataPaste";
+            this.pbx_GPSDataPaste.Size = new System.Drawing.Size(16, 16);
+            this.pbx_GPSDataPaste.TabIndex = 19;
+            this.pbx_GPSDataPaste.TabStop = false;
+            this.pbx_GPSDataPaste.MouseHover += new System.EventHandler(this.pbx_GPSDataPaste_MouseHover);
+            // 
+            // ttp_GPSDataPaste
+            // 
+            this.ttp_GPSDataPaste.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            // 
             // FrmEditFileData
             // 
             this.AcceptButton = this.btn_OK;
@@ -1000,6 +1018,7 @@ namespace GeoTagNinja
             this.ShowInTaskbar = false;
             this.Text = "FrmEditFileData";
             this.Load += new System.EventHandler(this.FrmEditFileData_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmEditFileData_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pbx_imagePreview)).EndInit();
             this.tpg_Location.ResumeLayout(false);
             this.gbx_LocationData.ResumeLayout(false);
@@ -1026,6 +1045,7 @@ namespace GeoTagNinja
             ((System.ComponentModel.ISupportInitialize)(this.nud_TakenDateHoursShift)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_TakenDateDaysShift)).EndInit();
             this.gbx_EditImageList.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbx_GPSDataPaste)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1099,5 +1119,7 @@ namespace GeoTagNinja
         internal System.Windows.Forms.NumericUpDown nud_GPSLatitude;
         internal System.Windows.Forms.GroupBox gbx_LocationData;
         internal System.Windows.Forms.GroupBox gbx_GPSData;
+        private System.Windows.Forms.PictureBox pbx_GPSDataPaste;
+        private System.Windows.Forms.ToolTip ttp_GPSDataPaste;
     }
 }

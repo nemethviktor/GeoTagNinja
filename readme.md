@@ -19,8 +19,7 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 - This is mentioned in Known Issues briefly but just to reiterate: if you have issues with file data not showing please try renaming/moving your files to a "simple" folder like "C:\temp" and make sure your file names don't contain umlauts, special characters and anything "odd". This is a limitation of exifTool.
 - Without being too technical, there are two main ways of handling RAW images via C# (the language GTN is written in)
 	- There are native libraries such as DCRAW/libRAW. The advantage of that is there are native libraries, and they are very fast but come with limited file support, e.g. at least as of the time of the initial GTN version's date (summer 2022) CR3s aren't/weren't supported, and neither are some others.
-	- Alternatively, there is exifTool, which is what GTN uses for everything. ExifTool supports a lot more extensions, but it has to be called externally in certain cases. In the more recent version, there is a keep-alive exifTool running in the background, so this should be less of an issue.
-
+	- Alternatively, there is exifTool, which is what GTN uses for everything. ExifTool supports a lot more extensions, but it has to be called externally in certain cases. In the more recent version, there is a keep-alive exifTool running in the background, so this should be less of an issue
 - I have tried to test reasonably thoroughly but bugs probably remain. Do make backups of your files if you feel that's the right thing to do.
 - As per usual I don't accept any liability for damage and/or any other inconvenience you may suffer while/from using this app, no warranties and/or guarantees. The script is open source, and everyone is welcome to read it.
 - I'm kind of hoping this won't come up a problem but don't bash me about country names please. I'm thinking disputed country names and areas here. They are ISO standards, the API returns those values, that's it. Being from the UK I do think that the long name of "United Kingdom of Great Britain and Northern Ireland (the)" is a bit lengthy but it is what it is (and it's relatively rarely disputed but for example Crimea does return Ukraine as a value, regardless of what's been going on there since 2014; again, this isn't a statement either way, it's the API reply).
@@ -38,6 +37,9 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 	- Some Borders and Scrollbars don't draw proper "dark" lines/brushes - so there's a discrepancy around the edges. From what I gather as an outcome of the above (lack of support).
 	- Point being Dark Mode is an option so that the app doesn't burn your eyes if you are the night owl type, rather than to be pretty, apologies.
 	- In newer builds there has been considerable improvements wrt Dark Mode as I now have a slave to do some of the dirty work (ReSharper AI FTW).
+- Build 8829 [20240304]+: Added a feature to Paste coordinate pairs into the GPSData (Lat/Long) of the Edit File. 
+	- The logic is that a Clipboard of _only_ a pair of coordinates separated by (preferably) the Culture-invariant [aka comma] ListSeparator would be pasted into the Edit Form when pressing CTRL+V (e.g.: 56.1234, 12.5678) <-- and nothing else. 
+	- I coded this in a relatively foolproof way but try not to outsmart it.
 
 ### A Particular Note on Working with Adobe Bridge (ACR) and RAW files > Saving as JPGs or Other Formats.
 

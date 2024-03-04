@@ -19,13 +19,13 @@ using static GeoTagNinja.FrmMainApp;
 using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using static GeoTagNinja.View.ListView.FileListView;
+using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
 
 namespace GeoTagNinja;
 
 public partial class FrmEditFileData : Form
 {
     private static bool _tzChangedByApi;
-
 
 #region Variables
 
@@ -41,6 +41,7 @@ public partial class FrmEditFileData : Form
     {
         Logger logger = FrmMainApp.Logger;
         logger.Debug(message: "Starting");
+        KeyPreview = true; // send keypress to the Form first
 
         InitializeComponent();
         // the custom logic is ugly af so no need to be pushy about it in light mode.
@@ -547,7 +548,7 @@ public partial class FrmEditFileData : Form
                                                maxAttributeVersion)
         {
             DateTime DECreateDate = default;
-            DateTime DETakenDate  = default;
+            DateTime DETakenDate = default;
             int totalShiftedSeconds = 0;
             if (dtp == dtp_TakenDate &&
                 directoryElement.GetAttributeValue<DateTime>(
@@ -567,7 +568,6 @@ public partial class FrmEditFileData : Form
                         whatToShift: TimeShiftTypes.TakenDate,
                         dirElemFileToModify: directoryElement);
 
-
                 dtp.Value =
                     DETakenDate.AddSeconds(value: totalShiftedSeconds);
             }
@@ -580,10 +580,10 @@ public partial class FrmEditFileData : Form
                      null)
             {
                 DECreateDate = (DateTime)directoryElement.GetAttributeValue<DateTime>(
-                         attribute: ElementAttribute.CreateDate,
-                         version: DirectoryElement.AttributeVersion
-                                                  .Original,
-                         notFoundValue: null);
+                    attribute: ElementAttribute.CreateDate,
+                    version: DirectoryElement.AttributeVersion
+                                             .Original,
+                    notFoundValue: null);
                 totalShiftedSeconds =
                     ShiftTimeForDateTimePicker(
                         whatToShift: TimeShiftTypes.CreateDate,
@@ -1920,12 +1920,26 @@ public partial class FrmEditFileData : Form
                                                EventArgs e)
     {
         ToolTip ttp = new();
-        FrmMainApp frmMainAppInstance =
-            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         ttp.SetToolTip(control: pbx_OffsetTimeInfo,
                        caption: HelperDataLanguageTZ.DataReadDTObjectText(
                            objectType: ControlType.ToolTip,
                            objectName: "ttp_OffsetTime"
+                       ));
+    }
+
+    /// <summary>
+    ///     Sets the tooltip for the pbx_GPSDataPaste
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void pbx_GPSDataPaste_MouseHover(object sender,
+                                             EventArgs e)
+    {
+        ToolTip ttp = new();
+        ttp.SetToolTip(control: pbx_GPSDataPaste,
+                       caption: HelperDataLanguageTZ.DataReadDTObjectText(
+                           objectType: ControlType.ToolTip,
+                           objectName: "ttp_GPSDataPaste"
                        ));
     }
 
@@ -1938,6 +1952,88 @@ public partial class FrmEditFileData : Form
                                            EventArgs e)
     {
         GetTimeZoneOffset();
+    }
+
+    /// <summary>
+    ///     Handles the keyDown events for the Form
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void FrmEditFileData_KeyDown(object sender,
+                                         KeyEventArgs e)
+    {
+        if (e.Control &&
+            e.KeyCode == Keys.V)
+        {
+            // This attempts to paste a valid pair of number-looking items into the two GPS Data NUDs
+            // The logic is that if there's a string that's separated by the listSeparator as per Windows Culture...OR English/Invariant
+            // and the two halves can be transformed into a number then we paste them in...
+            // but only if they are in the range of -180 to +180
+            try
+            {
+                string clipboardText = Clipboard.GetText();
+
+                List<string> listSeparators = new()
+                {
+                    CultureInfo.CurrentCulture.TextInfo.ListSeparator,
+                    CultureInfo.InvariantCulture.TextInfo.ListSeparator
+                };
+
+                List<CultureInfo> cultureInfos = new List<CultureInfo>
+                {
+                    CultureInfo.CurrentCulture,
+                    CultureInfo.InvariantCulture
+                };
+
+                decimal parsedLat = 0;
+                decimal parsedLng = 0;
+                bool parseSuccess = false;
+
+                foreach (string listSeparator in listSeparators)
+                {
+                    foreach (CultureInfo cultureInfo in cultureInfos)
+                    {
+                        if (clipboardText.Contains(value: listSeparator) &&
+                            !parseSuccess)
+                        {
+                            bool parseSuccessLat = decimal.TryParse(
+                                s: clipboardText.Split(listSeparator[index: 0])[0],
+                                style: NumberStyles.Any,
+                                provider: cultureInfo,
+                                result: out parsedLat);
+                            bool parseSuccessLng = decimal.TryParse(
+                                s: clipboardText.Split(listSeparator[index: 0])[1],
+                                style: NumberStyles.Any,
+                                provider: cultureInfo,
+                                result: out parsedLng);
+
+                            parseSuccess = parseSuccessLat && parseSuccessLng;
+                        }
+                    }
+                }
+
+                if (parseSuccess)
+                {
+                    if (
+                        parsedLat >= -180 &&
+                        parsedLat <= 180 &&
+                        parsedLng >= -180 &&
+                        parsedLng <= 180)
+                    {
+                        nud_GPSLatitude.Text =
+                            parsedLat.ToString(provider: CultureInfo.CurrentCulture);
+                        nud_GPSLongitude.Text =
+                            parsedLng.ToString(provider: CultureInfo.CurrentCulture);
+                        nud_GPSLatitude.Value = parsedLat;
+                        nud_GPSLongitude.Value = parsedLng;
+                    }
+                }
+            }
+            catch
+            {
+                // nothing
+            }
+        }
     }
 
 #endregion
