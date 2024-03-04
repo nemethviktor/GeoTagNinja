@@ -163,9 +163,11 @@ public partial class FrmEditFileData : Form
                                   .Selected = true;
 
             // actually if it's just one file i don't want this to be actively selectable
+            // also don't enable the "next" button.
             if (lvw_FileListEditImages.Items.Count == 1)
             {
                 lvw_FileListEditImages.Enabled = false;
+                btn_ApplyAndNext.Enabled = false;
             }
 
             logger.Trace(message: "ListViewSelect Done");
@@ -742,7 +744,8 @@ public partial class FrmEditFileData : Form
     private static int ShiftTimeForDateTimePicker(TimeShiftTypes whatToShift,
                                                   DirectoryElement dirElemFileToModify)
     {
-        DirectoryElement.AttributeVersion attributeVersion = DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue;
+        DirectoryElement.AttributeVersion attributeVersion = DirectoryElement
+           .AttributeVersion.Stage1EditFormIntraTabTransferQueue;
 
         int shiftedDays = (int)dirElemFileToModify.GetAttributeValue<int>(
             attribute: whatToShift == TimeShiftTypes.CreateDate
@@ -922,7 +925,8 @@ public partial class FrmEditFileData : Form
                           ((Button)sender).Name,
                     caption: HelperControlAndMessageBoxHandling
                        .GenericGetMessageBoxCaption(
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                            captionType: HelperControlAndMessageBoxHandling
+                                        .MessageBoxCaption.Error.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Error);
                 customMessageBox.ShowDialog();
@@ -1326,7 +1330,8 @@ public partial class FrmEditFileData : Form
                         messageBoxName: "mbx_FrmEditFileData_WarningFileDisappeared"),
                     caption: HelperControlAndMessageBoxHandling
                        .GenericGetMessageBoxCaption(
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                            captionType: HelperControlAndMessageBoxHandling
+                                        .MessageBoxCaption.Error.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Warning);
                 customMessageBox.ShowDialog();
@@ -1334,6 +1339,39 @@ public partial class FrmEditFileData : Form
         }
 
         logger.Debug(message: "Done");
+    }
+
+    /// <summary>
+    ///     This one basically executes a "step to next" image on the listview.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void btn_ApplyAndNext_Click(object sender,
+                                        EventArgs e)
+    {
+        int index = 0;
+        if (lvw_FileListEditImages.SelectedItems.Count == 1)
+        {
+            index = lvw_FileListEditImages.SelectedItems[index: 0].Index;
+        }
+
+        try
+        {
+            ListView lvwEditImages = lvw_FileListEditImages;
+            lvwEditImages.Focus();
+
+            if (index < lvwEditImages.Items.Count)
+            {
+                ListViewItem lvi = lvwEditImages.Items[index: index + 1];
+
+                lvi.Focused = true;
+                lvi.Selected = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            // nothing
+        }
     }
 
     /// <summary>
@@ -1381,7 +1419,8 @@ public partial class FrmEditFileData : Form
                                                          .Stage3ReadyToWrite,
                                 isMarkedForDeletion: dirElemFileToModify
                                    .IsMarkedForDeletion(attribute: attribute,
-                                                        version: DirectoryElement.AttributeVersion
+                                                        version: DirectoryElement
+                                                           .AttributeVersion
                                                            .Stage1EditFormIntraTabTransferQueue));
 
                             // remove from Stage1EditFormIntraTabTransferQueue
@@ -1574,7 +1613,8 @@ public partial class FrmEditFileData : Form
                                                      .Stage1EditFormIntraTabTransferQueue,
                             isMarkedForDeletion: dirElemFileToModify
                                .IsMarkedForDeletion(attribute: attribute,
-                                                    version: DirectoryElement.AttributeVersion
+                                                    version: DirectoryElement
+                                                       .AttributeVersion
                                                        .Stage1EditFormIntraTabTransferQueue));
                         dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
                             value: nudTextStr,
@@ -1582,7 +1622,8 @@ public partial class FrmEditFileData : Form
                                                      .Stage2EditFormReadyToSaveAndMoveToWriteQueue,
                             isMarkedForDeletion: dirElemFileToModify
                                .IsMarkedForDeletion(attribute: attribute,
-                                                    version: DirectoryElement.AttributeVersion
+                                                    version: DirectoryElement
+                                                       .AttributeVersion
                                                        .Stage2EditFormReadyToSaveAndMoveToWriteQueue));
                     }
 
@@ -1666,7 +1707,8 @@ public partial class FrmEditFileData : Form
                                                      .Stage1EditFormIntraTabTransferQueue,
                             isMarkedForDeletion: dirElemFileToModify
                                .IsMarkedForDeletion(attribute: attribute,
-                                                    version: DirectoryElement.AttributeVersion
+                                                    version: DirectoryElement
+                                                       .AttributeVersion
                                                        .Stage1EditFormIntraTabTransferQueue));
                         dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
                             value: sndr.Text,
@@ -1674,7 +1716,8 @@ public partial class FrmEditFileData : Form
                                                      .Stage2EditFormReadyToSaveAndMoveToWriteQueue,
                             isMarkedForDeletion: dirElemFileToModify
                                .IsMarkedForDeletion(attribute: attribute,
-                                                    version: DirectoryElement.AttributeVersion
+                                                    version: DirectoryElement
+                                                       .AttributeVersion
                                                        .Stage2EditFormReadyToSaveAndMoveToWriteQueue));
                     }
                 }
@@ -1890,7 +1933,8 @@ public partial class FrmEditFileData : Form
                                                      .Stage1EditFormIntraTabTransferQueue,
                             isMarkedForDeletion: dirElemFileToModify
                                .IsMarkedForDeletion(attribute: attribute,
-                                                    version: DirectoryElement.AttributeVersion
+                                                    version: DirectoryElement
+                                                       .AttributeVersion
                                                        .Stage1EditFormIntraTabTransferQueue));
                     }
                 }
@@ -1979,7 +2023,7 @@ public partial class FrmEditFileData : Form
                     CultureInfo.InvariantCulture.TextInfo.ListSeparator
                 };
 
-                List<CultureInfo> cultureInfos = new List<CultureInfo>
+                List<CultureInfo> cultureInfos = new()
                 {
                     CultureInfo.CurrentCulture,
                     CultureInfo.InvariantCulture
