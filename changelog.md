@@ -10,6 +10,7 @@
   - Added an extra warning if the file-save fails for what's likely a UTF path error #98
   - Added a check to ensure that files have the necessary data before attempting to create FOV re #99
   - Patched two vaguely related issues regarding SQLITE REPLACE and LastLat/Lng read on startup when not using EN-xx culture.
+	- While at it also patched a cleanup issue with the SQLite database.
 
 **Build 8768/8822 [20240103] (released 20240216)**
 - NEW & UPDATED:

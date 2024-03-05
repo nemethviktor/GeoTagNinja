@@ -455,6 +455,8 @@ public partial class FrmMainApp : Form
         // clean up
         Logger.Trace(message: "Set pbx_imagePreview.Image = null");
         pbx_imagePreview.Image = null; // unlocks files. theoretically.
+        HelperDataApplicationSettings.DataDeleteSQLitesettingsCleanup();
+        HelperDataApplicationSettings.DataVacuumDatabase();
 
         // Shutdown Exif Tool
         Logger.Debug(message: "OnClose: Dispose EXIF-Tool");

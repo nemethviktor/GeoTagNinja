@@ -60,7 +60,7 @@ internal static class HelperDataApplicationSettings
         string whichValueIsTrue = "";
         foreach (string optionValue in optionList)
         {
-            if (HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
+            if (DataReadCheckBoxSettingTrueOrFalse(
                     tableName: "settings",
                     settingTabPage: "tpg_Application",
                     settingId: optionValue
@@ -197,5 +197,49 @@ internal static class HelperDataApplicationSettings
         sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingTabPage", value: settingTabPage);
         sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingId", value: settingId);
         sqlCommandStr.ExecuteNonQuery();
+    }
+
+    /// <summary>
+    ///     This is largely me being a derp and doing a manual cleanup. My original SQL script was a bit buggy and so we have a
+    ///     potential plethora of unused and possibly errouneous setting tokens.
+    /// </summary>
+    internal static void DataDeleteSQLitesettingsCleanup()
+    {
+        using SQLiteConnection sqliteDB =
+            new(connectionString: "Data Source=" +
+                                  HelperVariables.SettingsDatabaseFilePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = @"
+                                DELETE 
+                                FROM   [settings]
+                                WHERE  [rowid] NOT IN (SELECT MAX ([rowid])
+                                       FROM   [settings]
+                                       GROUP  BY
+                                                 [settingTabPage], 
+                                                 [settingId]);
+                                "
+            ;
+        sqlCommandStr += ";";
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        sqlToRun.ExecuteNonQuery();
+    }
+
+    /// <summary>
+    ///     This just compresses the database. Though I don't expect it'd be a large file in the first place but unlikely to
+    ///     hurt.
+    /// </summary>
+    internal static void DataVacuumDatabase()
+    {
+        using SQLiteConnection sqliteDB =
+            new(connectionString: "Data Source=" +
+                                  HelperVariables.SettingsDatabaseFilePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = @"VACUUM;"
+            ;
+        sqlCommandStr += ";";
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        sqlToRun.ExecuteNonQuery();
     }
 }
