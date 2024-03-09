@@ -53,8 +53,7 @@ internal static class HelperExifExifToolOperator
                     Arguments = @"/c " +
                                 HelperVariables.DoubleQuoteStr +
                                 HelperVariables.DoubleQuoteStr +
-                                Path.Combine(path1: HelperVariables.ResourcesFolderPath,
-                                             path2: "exiftool.exe") +
+                                HelperVariables.ExifToolExePathToUse +
                                 HelperVariables.DoubleQuoteStr +
                                 " " +
                                 exiftoolCmd +
@@ -251,7 +250,7 @@ internal static class HelperExifExifToolOperator
                                          provider: CultureInfo.InvariantCulture,
                                          style: NumberStyles.Any,
                                          result: out HelperVariables
-                                            ._currentExifToolVersionLocal
+                                            .CurrentExifToolVersionLocal
                         );
                     };
 

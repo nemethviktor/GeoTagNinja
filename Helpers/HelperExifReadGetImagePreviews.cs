@@ -24,9 +24,6 @@ internal static class HelperExifReadGetImagePreviews
 
     #region ExifToolConfiguration
 
-        string exifToolExe = Path.Combine(path1: HelperVariables.ResourcesFolderPath,
-                                          path2: "exiftool.exe");
-
         // want to give this a different name from the usual exifArgs.args just in case that's still being accessed (as much as it shouldn't be)
         Regex rgx = new(pattern: "[^a-zA-Z0-9]");
         string folderName = Path.GetDirectoryName(path: fileNameWithPath);

@@ -54,6 +54,8 @@ public partial class FrmMainApp : Form
 
 #endregion
 
+#region Fields
+
     /// <summary>
     ///     The EXIFTool used in this application.
     ///     Note that it must be disposed of (done by Form_Closing)!
@@ -81,6 +83,8 @@ public partial class FrmMainApp : Form
     ///     Returns the list of elements in the currently opened directory.
     /// </summary>
     public static DirectoryElementCollection DirectoryElements { get; } = new();
+
+#endregion
 
 #region Variables
 
@@ -139,20 +143,6 @@ public partial class FrmMainApp : Form
     public FrmMainApp()
     {
     #region Define Logging Config
-
-        HelperVariables.UserDataFolderPath = Path.Combine(
-            path1: GetFolderPath(folder: SpecialFolder.ApplicationData),
-            path2: "GeoTagNinja");
-        HelperVariables.ResourcesFolderPath =
-            Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory,
-                         path2: "Resources");
-        HelperVariables.SettingsDatabaseFilePath = Path.Combine(
-            path1: HelperVariables.UserDataFolderPath, path2: "database.sqlite");
-
-        if (!Directory.Exists(path: HelperVariables.UserDataFolderPath))
-        {
-            Directory.CreateDirectory(path: HelperVariables.UserDataFolderPath);
-        }
 
         // Set up logging
         LoggingConfiguration config = new();
@@ -452,15 +442,33 @@ public partial class FrmMainApp : Form
             );
         }
 
-        // clean up
+        // Clean up
         Logger.Trace(message: "Set pbx_imagePreview.Image = null");
         pbx_imagePreview.Image = null; // unlocks files. theoretically.
         HelperDataApplicationSettings.DataDeleteSQLitesettingsCleanup();
         HelperDataApplicationSettings.DataVacuumDatabase();
 
-        // Shutdown Exif Tool
-        Logger.Debug(message: "OnClose: Dispose EXIF-Tool");
+        // Shut down ExifTool
+        Logger.Debug(message: "OnClose: Dispose ExifTool");
         _ExifTool.Dispose();
+
+        // Copy/rename exiftool(-k).exe if exists and replace the current real one
+        if (File.Exists(path: HelperVariables.ExifToolExePathRoamingTemp))
+        {
+            try
+            {
+                File.Delete(path: HelperVariables.ExifToolExePathRoamingPerm);
+
+                File.Move(sourceFileName: HelperVariables.ExifToolExePathRoamingTemp,
+                          destFileName: HelperVariables.ExifToolExePathRoamingPerm);
+            }
+            catch
+            {
+                // nothing. basically if there's no exiftool.exe in this folder the app will temporarily revert to the prepackaged one.
+            }
+        }
+
+        // Clean up Roaming folder
         HelperFileSystemOperators.FsoCleanUpUserFolder();
         Logger.Debug(message: "OnClose: Done.");
     }
@@ -727,14 +735,14 @@ public partial class FrmMainApp : Form
             {
                 {
                     HelperDataLanguageTZ.DataReadDTObjectText(
-                        ControlType.Button,
+                        objectType: ControlType.Button,
                         objectName: "btn_Yes"
                     ),
                     "yes"
                 },
                 {
                     HelperDataLanguageTZ.DataReadDTObjectText(
-                        ControlType.Button,
+                        objectType: ControlType.Button,
                         objectName: "btn_No"
                     ),
                     "no"
@@ -2214,14 +2222,14 @@ public partial class FrmMainApp : Form
                 {
                     {
                         HelperDataLanguageTZ.DataReadDTObjectText(
-                            ControlType.Button,
+                            objectType: ControlType.Button,
                             objectName: "btn_Yes"
                         ),
                         "yes"
                     },
                     {
                         HelperDataLanguageTZ.DataReadDTObjectText(
-                            ControlType.Button,
+                            objectType: ControlType.Button,
                             objectName: "btn_No"
                         ),
                         "no"
@@ -3226,10 +3234,10 @@ public partial class FrmMainApp : Form
                 {
                     GPSLatStr =
                         dirElemFileToModify.GetAttributeValueString(
-                            ElementAttribute.GPSLatitude);
+                            attribute: ElementAttribute.GPSLatitude);
                     GPSLngStr =
                         dirElemFileToModify.GetAttributeValueString(
-                            ElementAttribute.GPSLongitude);
+                            attribute: ElementAttribute.GPSLongitude);
                     selectionIsValid = true;
                 }
                 catch

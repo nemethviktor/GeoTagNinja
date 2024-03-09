@@ -5,6 +5,7 @@
   - Paste coordinate-pair string from clipboard into Edit Form (see readme about this or the tooltip in the Edit Form) #100
   - Added a button to the Edit Form to move to the next image when there's a multi-selection (Apply & Move to Next) [also #100]
   - Bumped exifTool to v12.77
+  - Rewrote the logic of updating for exifTool, from now onwards, it should be automatic.
 
 - BUGS & FIXES:
   - Added an extra warning if the file-save fails for what's likely a UTF path error #98

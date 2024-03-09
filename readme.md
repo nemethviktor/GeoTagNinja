@@ -17,9 +17,6 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 
 - Build 8361 [20221122]+: There is now a hold when the user enters a folder - it is kept on until the folder completes load. This is a bit annoying perhaps but is needed because otherwise people can start issuing write-commands before the read-process finishes and that can result in files being written the wrong info.
 - This is mentioned in Known Issues briefly but just to reiterate: if you have issues with file data not showing please try renaming/moving your files to a "simple" folder like "C:\temp" and make sure your file names don't contain umlauts, special characters and anything "odd". This is a limitation of exifTool.
-- Without being too technical, there are two main ways of handling RAW images via C# (the language GTN is written in)
-	- There are native libraries such as DCRAW/libRAW. The advantage of that is there are native libraries, and they are very fast but come with limited file support, e.g. at least as of the time of the initial GTN version's date (summer 2022) CR3s aren't/weren't supported, and neither are some others.
-	- Alternatively, there is exifTool, which is what GTN uses for everything. ExifTool supports a lot more extensions, but it has to be called externally in certain cases. In the more recent version, there is a keep-alive exifTool running in the background, so this should be less of an issue
 - I have tried to test reasonably thoroughly but bugs probably remain. Do make backups of your files if you feel that's the right thing to do.
 - As per usual I don't accept any liability for damage and/or any other inconvenience you may suffer while/from using this app, no warranties and/or guarantees. The script is open source, and everyone is welcome to read it.
 - I'm kind of hoping this won't come up a problem but don't bash me about country names please. I'm thinking disputed country names and areas here. They are ISO standards, the API returns those values, that's it. Being from the UK I do think that the long name of "United Kingdom of Great Britain and Northern Ireland (the)" is a bit lengthy but it is what it is (and it's relatively rarely disputed but for example Crimea does return Ukraine as a value, regardless of what's been going on there since 2014; again, this isn't a statement either way, it's the API reply).
@@ -40,6 +37,7 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 - Build 8829 [20240304]+: Added a feature to Paste coordinate pairs into the GPSData (Lat/Long) of the Edit File. 
 	- The logic is that a Clipboard of _only_ a pair of coordinates separated by (preferably) the Culture-invariant [aka comma] ListSeparator would be pasted into the Edit Form when pressing CTRL+V (e.g.: 56.1234, 12.5678) <-- and nothing else. 
 	- I coded this in a relatively foolproof way but try not to outsmart it.
+- Build 8831 [20240306]+: ExifTool should now auto-update into the Roaming folder upon app shutdown. (that's c:\Users\username\AppData\Roaming\GeoTagNinja\)
 
 ### A Particular Note on Working with Adobe Bridge (ACR) and RAW files > Saving as JPGs or Other Formats.
 
@@ -85,10 +83,9 @@ I'm generally happy for anyone competent to add pull requests but I don't always
 
 ## Known Issues
 
-- There is a likelihood that the app will struggle to read file data if your files are kept in folders with accent marks (umlauts, non-standard English characters) in the path and/or filename. This is a limitation of exifTool + cmd. If you encounter a problem, move your files to something like "C:\temp" and see if it works better.
+- There is a likelihood that the app will struggle to read file data if your files are kept in folders with accent marks (umlauts, non-standard English, Asian, Russian, Unicode, etc. characters) in the path and/or filename. This is a limitation of exifTool + cmd. If you encounter a problem, move your files to something like "C:\temp" and see if it works better.
 	- On top of that above exifTool has a hard limit of 260 characters for file names including paths. Anything beyond that will fail. Again, rename your files or temporarily move them to C:\temp if this is an issue. Unicode (e.g. most Chinese and other Asian) characters have an up to 4-byte size per character. This is to say you'll run into errors with these files more often than not.
 	- Alternatively, you can enable [this](https://stackoverflow.com/questions/56419639/what-does-beta-use-unicode-utf-8-for-worldwide-language-support-actually-do) feature if you're running v1903 Windows 10 or later but it may have some unwanted effects so keep an eye out for changes caused by it.
-
 - The API has its rather odd ways of dealing with the "City" tag [not the least because there isn't such a tag in the API].
 	- For a detailed rundown on the above see the code if interested + an overall discussion [here](https://github.com/nemethviktor/GeoTagNinja/issues/38)
 	- As of 20230105 there is now a "Custom Rules" section in `Settings` where users can amend their own rules and [there is](https://github.com/nemethviktor/GeoTagNinja/wiki/Settings-&-Custom-Rules) a wiki on the overall workings of this.
@@ -116,6 +113,10 @@ Longer: Hypothetically the idea with Destinations is that if there are groups of
 
 ## Possible Issues & Solutions
 
+- Read/Save file process fails semi-randomly: (yes this is a copy-paste from above but it seems not everyone's reading the _known issues_ section)
+	- If your files are kept in folders with accent marks (umlauts, non-standard English, Asian, Russian, Unicode, etc. characters) in the path and/or filename. This is a limitation of exifTool + cmd. If you encounter a problem, move your files to something like "C:\temp" and see if it works better.
+	- On top of that above exifTool has a hard limit of 260 characters for file names including paths. Anything beyond that will fail. Again, rename your files or temporarily move them to C:\temp if this is an issue. Unicode (e.g. most Chinese and other Asian) characters have an up to 4-byte size per character. This is to say you'll run into errors with these files more often than not.
+	- Alternatively, you can enable [this](https://stackoverflow.com/questions/56419639/what-does-beta-use-unicode-utf-8-for-worldwide-language-support-actually-do) feature if you're running v1903 Windows 10 or later but it may have some unwanted effects so keep an eye out for changes caused by it.
 - You get an "unauthorized" error when pulling data from the GeoNames API:
 	- I've been told that by default the API usage is disabled for (some?) new accounts. In that case you have to activate the free web service ---> After registering and clicking the link in the activation email, you still need to activate your account for using web services. To do so, go to your "Manage Account" page [ [http://www.geonames.org/manageaccount](http://www.geonames.org/manageaccount) ] make sure your email shows up correctly. From here, click the "Free Webservice" activation link.
 	- Make sure you have provided a valid username and password for GeoNames in the `Settings`. For username _do not_ use your email address but just the username itself. If you think you've done everything correctly, do the following:

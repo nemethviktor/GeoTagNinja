@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.IO;
+using static System.Environment;
 
 namespace GeoTagNinja.Helpers;
 
@@ -35,7 +38,8 @@ internal static class HelperVariables
     internal static double? MaxLng;
     internal static double? LastLat;
     internal static double? LastLng;
-    internal static decimal _currentExifToolVersionLocal;
+    internal static decimal CurrentExifToolVersionLocal;
+    internal static decimal CurrentExifToolVersionCloud;
     internal static bool ToponomyReplace = false;
     internal static string ToponomyReplaceWithWhat = null;
     internal static string ToponymaxRows = "1";
@@ -45,9 +49,13 @@ internal static class HelperVariables
     internal static string APILanguageToUse;
     internal static DataTable DtCustomRules = new();
     internal static DataTable DtCustomCityLogic = new();
-    internal static string ResourcesFolderPath;
-    internal static string UserDataFolderPath;
-    internal static string SettingsDatabaseFilePath;
+
+    internal static readonly string ResourcesFolderPath = GetResourcesFolderString();
+    internal static readonly string UserDataFolderPath = GetRoamingFolderString();
+
+    internal static readonly string SettingsDatabaseFilePath =
+        GetSettingsDatabaseFilePath();
+
     internal static DataTable DtIsoCountryCodeMapping;
     internal static List<string> LstCityNameIsAdminName1 = new();
     internal static List<string> LstCityNameIsAdminName2 = new();
@@ -55,5 +63,128 @@ internal static class HelperVariables
     internal static List<string> LstCityNameIsAdminName4 = new();
     internal static List<string> LstCityNameIsUndefined = new();
 
+    internal static readonly string ExifToolExePathRoamingTemp =
+        GetExifToolExePathRoamingTemp();
+
+    internal static readonly string ExifToolExePathRoamingPerm =
+        GetExifToolExePathRoamingPerm();
+
+    private static readonly string ExifToolExePathSupplied = Path.Combine(
+        path1: ResourcesFolderPath,
+        path2: "exiftool.exe");
+
+    internal static readonly string ExifToolExePathToUse = GetExifToolExePathToUse();
+
     internal static string UOMAbbreviated = "";
+
+    /// <summary>
+    ///     Pulls (and creates if necessary) the Roaming/Users subfolder for the app.
+    /// </summary>
+    /// <returns>Path name of the Roaming/Users subfolder</returns>
+    private static string GetRoamingFolderString()
+    {
+        string userDataFolderPath = Path.Combine(
+            path1: GetFolderPath(folder: SpecialFolder.ApplicationData),
+            path2: "GeoTagNinja");
+
+        if (!Directory.Exists(path: userDataFolderPath))
+        {
+            Directory.CreateDirectory(path: userDataFolderPath);
+        }
+
+        return userDataFolderPath;
+    }
+
+    /// <summary>
+    ///     Gets the app's resources folder location.
+    /// </summary>
+    /// <returns>The app's resources folder location.</returns>
+    private static string GetResourcesFolderString()
+    {
+        return
+            Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory,
+                         path2: "Resources");
+    }
+
+    /// <summary>
+    ///     Gets the sqlite file location containing the database info.
+    /// </summary>
+    /// <returns>The sqlite file location containing the database info</returns>
+    private static string GetSettingsDatabaseFilePath()
+    {
+        return Path.Combine(
+            path1: UserDataFolderPath, path2: "database.sqlite");
+    }
+
+    /// <summary>
+    ///     Path name of the "(-k)" exiftool - file doesn't have to exist as such.
+    /// </summary>
+    /// <returns>Path name of the (-k) exiftool</returns>
+    private static string GetExifToolExePathRoamingTemp()
+    {
+        // Assign various exiftool location variables
+        return Path.Combine(
+            path1: UserDataFolderPath,
+            path2:
+            "exiftool(-k).exe");
+    }
+
+    /// <summary>
+    ///     Path name of the "normal" exiftool - file doesn't have to exist as such.
+    /// </summary>
+    /// <returns>Path name of the normal exiftool</returns>
+    private static string GetExifToolExePathRoamingPerm()
+    {
+        return Path.Combine(
+            path1: UserDataFolderPath,
+            path2:
+            "exiftool.exe");
+    }
+
+
+    /// <summary>
+    ///     Establish what exiftool to use.
+    /// </summary>
+    /// <returns></returns>
+    private static string GetExifToolExePathToUse()
+    {
+        if (File.Exists(
+                path: ExifToolExePathRoamingPerm))
+        {
+            EnsureExifToolConfigFileHasBeenCopied();
+            return ExifToolExePathRoamingPerm;
+        }
+
+        return ExifToolExePathSupplied;
+    }
+
+    /// <summary>
+    ///     Copies the supplied exiftool config file to Roaming if 1) it doesn't exist or 2) exists but there's been an update
+    ///     to the supplied one.
+    /// </summary>
+    private static void EnsureExifToolConfigFileHasBeenCopied()
+    {
+        string configFileName = ".ExifTool_config";
+
+        FileInfo sourceConfigFileFi =
+            new(fileName: Path.Combine(path1: ResourcesFolderPath,
+                                       path2: configFileName));
+
+        FileInfo destConfigFileFi =
+            new(fileName: Path.Combine(path1: UserDataFolderPath,
+                                       path2: sourceConfigFileFi.Name));
+        if (destConfigFileFi.Exists)
+        {
+            if (sourceConfigFileFi.LastWriteTime > destConfigFileFi.LastWriteTime)
+            {
+                sourceConfigFileFi.CopyTo(destFileName: destConfigFileFi.FullName,
+                                          overwrite: true);
+            }
+        }
+        else
+        {
+            sourceConfigFileFi.CopyTo(destFileName: destConfigFileFi.FullName,
+                                      overwrite: true);
+        }
+    }
 }
