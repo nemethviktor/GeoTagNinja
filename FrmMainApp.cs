@@ -54,6 +54,8 @@ public partial class FrmMainApp : Form
 
 #endregion
 
+#region Fields
+
     /// <summary>
     ///     The EXIFTool used in this application.
     ///     Note that it must be disposed of (done by Form_Closing)!
@@ -81,6 +83,8 @@ public partial class FrmMainApp : Form
     ///     Returns the list of elements in the currently opened directory.
     /// </summary>
     public static DirectoryElementCollection DirectoryElements { get; } = new();
+
+#endregion
 
 #region Variables
 
@@ -139,20 +143,6 @@ public partial class FrmMainApp : Form
     public FrmMainApp()
     {
     #region Define Logging Config
-
-        HelperVariables.UserDataFolderPath = Path.Combine(
-            path1: GetFolderPath(folder: SpecialFolder.ApplicationData),
-            path2: "GeoTagNinja");
-        HelperVariables.ResourcesFolderPath =
-            Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory,
-                         path2: "Resources");
-        HelperVariables.SettingsDatabaseFilePath = Path.Combine(
-            path1: HelperVariables.UserDataFolderPath, path2: "database.sqlite");
-
-        if (!Directory.Exists(path: HelperVariables.UserDataFolderPath))
-        {
-            Directory.CreateDirectory(path: HelperVariables.UserDataFolderPath);
-        }
 
         // Set up logging
         LoggingConfiguration config = new();
@@ -452,13 +442,33 @@ public partial class FrmMainApp : Form
             );
         }
 
-        // clean up
+        // Clean up
         Logger.Trace(message: "Set pbx_imagePreview.Image = null");
         pbx_imagePreview.Image = null; // unlocks files. theoretically.
+        HelperDataApplicationSettings.DataDeleteSQLitesettingsCleanup();
+        HelperDataApplicationSettings.DataVacuumDatabase();
 
-        // Shutdown Exif Tool
-        Logger.Debug(message: "OnClose: Dispose EXIF-Tool");
+        // Shut down ExifTool
+        Logger.Debug(message: "OnClose: Dispose ExifTool");
         _ExifTool.Dispose();
+
+        // Copy/rename exiftool(-k).exe if exists and replace the current real one
+        if (File.Exists(path: HelperVariables.ExifToolExePathRoamingTemp))
+        {
+            try
+            {
+                File.Delete(path: HelperVariables.ExifToolExePathRoamingPerm);
+
+                File.Move(sourceFileName: HelperVariables.ExifToolExePathRoamingTemp,
+                          destFileName: HelperVariables.ExifToolExePathRoamingPerm);
+            }
+            catch
+            {
+                // nothing. basically if there's no exiftool.exe in this folder the app will temporarily revert to the prepackaged one.
+            }
+        }
+
+        // Clean up Roaming folder
         HelperFileSystemOperators.FsoCleanUpUserFolder();
         Logger.Debug(message: "OnClose: Done.");
     }
@@ -725,14 +735,14 @@ public partial class FrmMainApp : Form
             {
                 {
                     HelperDataLanguageTZ.DataReadDTObjectText(
-                        ControlType.Button,
+                        objectType: ControlType.Button,
                         objectName: "btn_Yes"
                     ),
                     "yes"
                 },
                 {
                     HelperDataLanguageTZ.DataReadDTObjectText(
-                        ControlType.Button,
+                        objectType: ControlType.Button,
                         objectName: "btn_No"
                     ),
                     "no"
@@ -1042,8 +1052,8 @@ public partial class FrmMainApp : Form
                 notFoundValue: 50);
 
             if (imgDirection != null &&
-                HelperVariables.LastLat != null &&
-                HelperVariables.LastLng != null)
+                GPSLatitude != null &&
+                GPSLongitude != null)
             {
                 // this is actually unused
                 //(double, double) northCoords = imgDirectionRef == "Magnetic North"
@@ -1053,8 +1063,8 @@ public partial class FrmMainApp : Form
                 // this is for the line
                 (double, double) targetCoordinates =
                         HelperGenericCalculations.CalculateTargetCoordinates(
-                            startLatitude: (double)HelperVariables.LastLat,
-                            startLongitude: (double)HelperVariables.LastLng,
+                            startLatitude: (double)GPSLatitude,
+                            startLongitude: (double)GPSLongitude,
                             gpsImgDirection: (double)imgDirection,
                             distance: 10)
                     ;
@@ -1121,34 +1131,41 @@ public partial class FrmMainApp : Form
                                 });
                                 """;
 
-                (List<(double, double)>, List<(double, double)>) FOVCoordinates =
-                        HelperGenericCalculations.CalculateFovCoordinatesFromSensorSize(
-                            startLatitude: (double)GPSLatitude,
-                            startLongitude: (double)GPSLongitude,
-                            gpsImgDirection: (double)imgDirection,
-                            sensorSize: HelperGenericCalculations.EstimateSensorSize(
-                                focalLength: (double)FocalLength,
-                                focalLengthIn35mmFilm: (double)FocalLengthIn35mmFormat),
-                            focalLength: (double)FocalLength,
-                            distance: 1)
-                    ;
-                showFOVStr = string.Format(format: """
-                                                   /* Show polygon/triangle */
-                                                   var polygon = L.polygon([
-                                                       [{0}],
-                                                       [{1}],
-                                                       [{2}]
-                                                   ]).addTo(map);
-                                                   """,
-                                           arg0: GPSLatitudeStr +
-                                                 "," +
-                                                 GPSLongitudeStr,
-                                           arg1: HelperGenericCalculations
-                                              .ConvertFOVCoordListsToString(
-                                                   sourceList: FOVCoordinates.Item1),
-                                           arg2: HelperGenericCalculations
-                                              .ConvertFOVCoordListsToString(
-                                                   sourceList: FOVCoordinates.Item2));
+                if (FocalLength != null &&
+                    FocalLengthIn35mmFormat != null)
+                {
+                    (List<(double, double)>, List<(double, double)>) FOVCoordinates =
+                            HelperGenericCalculations
+                               .CalculateFovCoordinatesFromSensorSize(
+                                    startLatitude: (double)GPSLatitude,
+                                    startLongitude: (double)GPSLongitude,
+                                    gpsImgDirection: (double)imgDirection,
+                                    sensorSize: HelperGenericCalculations
+                                       .EstimateSensorSize(
+                                            focalLength: (double)FocalLength,
+                                            focalLengthIn35mmFilm:
+                                            (double)FocalLengthIn35mmFormat),
+                                    focalLength: (double)FocalLength,
+                                    distance: 1)
+                        ;
+                    showFOVStr = string.Format(format: """
+                                                       /* Show polygon/triangle */
+                                                       var polygon = L.polygon([
+                                                           [{0}],
+                                                           [{1}],
+                                                           [{2}]
+                                                       ]).addTo(map);
+                                                       """,
+                                               arg0: GPSLatitudeStr +
+                                                     "," +
+                                                     GPSLongitudeStr,
+                                               arg1: HelperGenericCalculations
+                                                  .ConvertFOVCoordListsToString(
+                                                       sourceList: FOVCoordinates.Item1),
+                                               arg2: HelperGenericCalculations
+                                                  .ConvertFOVCoordListsToString(
+                                                       sourceList: FOVCoordinates.Item2));
+                }
             }
         }
 
@@ -2205,14 +2222,14 @@ public partial class FrmMainApp : Form
                 {
                     {
                         HelperDataLanguageTZ.DataReadDTObjectText(
-                            ControlType.Button,
+                            objectType: ControlType.Button,
                             objectName: "btn_Yes"
                         ),
                         "yes"
                     },
                     {
                         HelperDataLanguageTZ.DataReadDTObjectText(
-                            ControlType.Button,
+                            objectType: ControlType.Button,
                             objectName: "btn_No"
                         ),
                         "no"
@@ -3217,10 +3234,10 @@ public partial class FrmMainApp : Form
                 {
                     GPSLatStr =
                         dirElemFileToModify.GetAttributeValueString(
-                            ElementAttribute.GPSLatitude);
+                            attribute: ElementAttribute.GPSLatitude);
                     GPSLngStr =
                         dirElemFileToModify.GetAttributeValueString(
-                            ElementAttribute.GPSLongitude);
+                            attribute: ElementAttribute.GPSLongitude);
                     selectionIsValid = true;
                 }
                 catch

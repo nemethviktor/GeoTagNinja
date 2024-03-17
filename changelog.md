@@ -1,6 +1,19 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 8xxx [202401xx]** 
+**Build 8xxx [20240xxx]** 
+- NEW & UPDATED:
+  - Paste coordinate-pair string from clipboard into Edit Form (see readme about this or the tooltip in the Edit Form) #100
+  - Added a button to the Edit Form to move to the next image when there's a multi-selection (Apply & Move to Next) [also #100]
+  - Bumped exifTool to v12.77
+  - Rewrote the logic of updating for exifTool, from now onwards, it should be automatic.
+
+- BUGS & FIXES:
+  - Added an extra warning if the file-save fails for what's likely a UTF path error #98
+  - Added a check to ensure that files have the necessary data before attempting to create FOV re #99
+  - Patched two vaguely related issues regarding SQLITE REPLACE and LastLat/Lng read on startup when not using EN-xx culture.
+	- While at it also patched a cleanup issue with the SQLite database.
+
+**Build 8768/8822 [20240103] (released 20240216)**
 - NEW & UPDATED:
   - Long-pressing a point on the map will now offer the user to save the map location to the image so that there's no need for extra click #91
   - Added functionality as per #92 to drag the map marker and allow the user to add the new value to the selected image(s).

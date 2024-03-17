@@ -19,13 +19,13 @@ using static GeoTagNinja.FrmMainApp;
 using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using static GeoTagNinja.View.ListView.FileListView;
+using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
 
 namespace GeoTagNinja;
 
 public partial class FrmEditFileData : Form
 {
     private static bool _tzChangedByApi;
-
 
 #region Variables
 
@@ -41,6 +41,7 @@ public partial class FrmEditFileData : Form
     {
         Logger logger = FrmMainApp.Logger;
         logger.Debug(message: "Starting");
+        KeyPreview = true; // send keypress to the Form first
 
         InitializeComponent();
         // the custom logic is ugly af so no need to be pushy about it in light mode.
@@ -162,9 +163,11 @@ public partial class FrmEditFileData : Form
                                   .Selected = true;
 
             // actually if it's just one file i don't want this to be actively selectable
+            // also don't enable the "next" button.
             if (lvw_FileListEditImages.Items.Count == 1)
             {
                 lvw_FileListEditImages.Enabled = false;
+                btn_ApplyAndNext.Enabled = false;
             }
 
             logger.Trace(message: "ListViewSelect Done");
@@ -547,7 +550,7 @@ public partial class FrmEditFileData : Form
                                                maxAttributeVersion)
         {
             DateTime DECreateDate = default;
-            DateTime DETakenDate  = default;
+            DateTime DETakenDate = default;
             int totalShiftedSeconds = 0;
             if (dtp == dtp_TakenDate &&
                 directoryElement.GetAttributeValue<DateTime>(
@@ -567,7 +570,6 @@ public partial class FrmEditFileData : Form
                         whatToShift: TimeShiftTypes.TakenDate,
                         dirElemFileToModify: directoryElement);
 
-
                 dtp.Value =
                     DETakenDate.AddSeconds(value: totalShiftedSeconds);
             }
@@ -580,10 +582,10 @@ public partial class FrmEditFileData : Form
                      null)
             {
                 DECreateDate = (DateTime)directoryElement.GetAttributeValue<DateTime>(
-                         attribute: ElementAttribute.CreateDate,
-                         version: DirectoryElement.AttributeVersion
-                                                  .Original,
-                         notFoundValue: null);
+                    attribute: ElementAttribute.CreateDate,
+                    version: DirectoryElement.AttributeVersion
+                                             .Original,
+                    notFoundValue: null);
                 totalShiftedSeconds =
                     ShiftTimeForDateTimePicker(
                         whatToShift: TimeShiftTypes.CreateDate,
@@ -742,7 +744,8 @@ public partial class FrmEditFileData : Form
     private static int ShiftTimeForDateTimePicker(TimeShiftTypes whatToShift,
                                                   DirectoryElement dirElemFileToModify)
     {
-        DirectoryElement.AttributeVersion attributeVersion = DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue;
+        DirectoryElement.AttributeVersion attributeVersion = DirectoryElement
+           .AttributeVersion.Stage1EditFormIntraTabTransferQueue;
 
         int shiftedDays = (int)dirElemFileToModify.GetAttributeValue<int>(
             attribute: whatToShift == TimeShiftTypes.CreateDate
@@ -922,7 +925,8 @@ public partial class FrmEditFileData : Form
                           ((Button)sender).Name,
                     caption: HelperControlAndMessageBoxHandling
                        .GenericGetMessageBoxCaption(
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                            captionType: HelperControlAndMessageBoxHandling
+                                        .MessageBoxCaption.Error.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Error);
                 customMessageBox.ShowDialog();
@@ -1326,7 +1330,8 @@ public partial class FrmEditFileData : Form
                         messageBoxName: "mbx_FrmEditFileData_WarningFileDisappeared"),
                     caption: HelperControlAndMessageBoxHandling
                        .GenericGetMessageBoxCaption(
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                            captionType: HelperControlAndMessageBoxHandling
+                                        .MessageBoxCaption.Error.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Warning);
                 customMessageBox.ShowDialog();
@@ -1334,6 +1339,39 @@ public partial class FrmEditFileData : Form
         }
 
         logger.Debug(message: "Done");
+    }
+
+    /// <summary>
+    ///     This one basically executes a "step to next" image on the listview.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void btn_ApplyAndNext_Click(object sender,
+                                        EventArgs e)
+    {
+        int index = 0;
+        if (lvw_FileListEditImages.SelectedItems.Count == 1)
+        {
+            index = lvw_FileListEditImages.SelectedItems[index: 0].Index;
+        }
+
+        try
+        {
+            ListView lvwEditImages = lvw_FileListEditImages;
+            lvwEditImages.Focus();
+
+            if (index < lvwEditImages.Items.Count)
+            {
+                ListViewItem lvi = lvwEditImages.Items[index: index + 1];
+
+                lvi.Focused = true;
+                lvi.Selected = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            // nothing
+        }
     }
 
     /// <summary>
@@ -1381,7 +1419,8 @@ public partial class FrmEditFileData : Form
                                                          .Stage3ReadyToWrite,
                                 isMarkedForDeletion: dirElemFileToModify
                                    .IsMarkedForDeletion(attribute: attribute,
-                                                        version: DirectoryElement.AttributeVersion
+                                                        version: DirectoryElement
+                                                           .AttributeVersion
                                                            .Stage1EditFormIntraTabTransferQueue));
 
                             // remove from Stage1EditFormIntraTabTransferQueue
@@ -1574,7 +1613,8 @@ public partial class FrmEditFileData : Form
                                                      .Stage1EditFormIntraTabTransferQueue,
                             isMarkedForDeletion: dirElemFileToModify
                                .IsMarkedForDeletion(attribute: attribute,
-                                                    version: DirectoryElement.AttributeVersion
+                                                    version: DirectoryElement
+                                                       .AttributeVersion
                                                        .Stage1EditFormIntraTabTransferQueue));
                         dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
                             value: nudTextStr,
@@ -1582,7 +1622,8 @@ public partial class FrmEditFileData : Form
                                                      .Stage2EditFormReadyToSaveAndMoveToWriteQueue,
                             isMarkedForDeletion: dirElemFileToModify
                                .IsMarkedForDeletion(attribute: attribute,
-                                                    version: DirectoryElement.AttributeVersion
+                                                    version: DirectoryElement
+                                                       .AttributeVersion
                                                        .Stage2EditFormReadyToSaveAndMoveToWriteQueue));
                     }
 
@@ -1666,7 +1707,8 @@ public partial class FrmEditFileData : Form
                                                      .Stage1EditFormIntraTabTransferQueue,
                             isMarkedForDeletion: dirElemFileToModify
                                .IsMarkedForDeletion(attribute: attribute,
-                                                    version: DirectoryElement.AttributeVersion
+                                                    version: DirectoryElement
+                                                       .AttributeVersion
                                                        .Stage1EditFormIntraTabTransferQueue));
                         dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
                             value: sndr.Text,
@@ -1674,7 +1716,8 @@ public partial class FrmEditFileData : Form
                                                      .Stage2EditFormReadyToSaveAndMoveToWriteQueue,
                             isMarkedForDeletion: dirElemFileToModify
                                .IsMarkedForDeletion(attribute: attribute,
-                                                    version: DirectoryElement.AttributeVersion
+                                                    version: DirectoryElement
+                                                       .AttributeVersion
                                                        .Stage2EditFormReadyToSaveAndMoveToWriteQueue));
                     }
                 }
@@ -1890,7 +1933,8 @@ public partial class FrmEditFileData : Form
                                                      .Stage1EditFormIntraTabTransferQueue,
                             isMarkedForDeletion: dirElemFileToModify
                                .IsMarkedForDeletion(attribute: attribute,
-                                                    version: DirectoryElement.AttributeVersion
+                                                    version: DirectoryElement
+                                                       .AttributeVersion
                                                        .Stage1EditFormIntraTabTransferQueue));
                     }
                 }
@@ -1920,12 +1964,26 @@ public partial class FrmEditFileData : Form
                                                EventArgs e)
     {
         ToolTip ttp = new();
-        FrmMainApp frmMainAppInstance =
-            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         ttp.SetToolTip(control: pbx_OffsetTimeInfo,
                        caption: HelperDataLanguageTZ.DataReadDTObjectText(
                            objectType: ControlType.ToolTip,
                            objectName: "ttp_OffsetTime"
+                       ));
+    }
+
+    /// <summary>
+    ///     Sets the tooltip for the pbx_GPSDataPaste
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void pbx_GPSDataPaste_MouseHover(object sender,
+                                             EventArgs e)
+    {
+        ToolTip ttp = new();
+        ttp.SetToolTip(control: pbx_GPSDataPaste,
+                       caption: HelperDataLanguageTZ.DataReadDTObjectText(
+                           objectType: ControlType.ToolTip,
+                           objectName: "ttp_GPSDataPaste"
                        ));
     }
 
@@ -1938,6 +1996,88 @@ public partial class FrmEditFileData : Form
                                            EventArgs e)
     {
         GetTimeZoneOffset();
+    }
+
+    /// <summary>
+    ///     Handles the keyDown events for the Form
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void FrmEditFileData_KeyDown(object sender,
+                                         KeyEventArgs e)
+    {
+        if (e.Control &&
+            e.KeyCode == Keys.V)
+        {
+            // This attempts to paste a valid pair of number-looking items into the two GPS Data NUDs
+            // The logic is that if there's a string that's separated by the listSeparator as per Windows Culture...OR English/Invariant
+            // and the two halves can be transformed into a number then we paste them in...
+            // but only if they are in the range of -180 to +180
+            try
+            {
+                string clipboardText = Clipboard.GetText();
+
+                List<string> listSeparators = new()
+                {
+                    CultureInfo.CurrentCulture.TextInfo.ListSeparator,
+                    CultureInfo.InvariantCulture.TextInfo.ListSeparator
+                };
+
+                List<CultureInfo> cultureInfos = new()
+                {
+                    CultureInfo.CurrentCulture,
+                    CultureInfo.InvariantCulture
+                };
+
+                decimal parsedLat = 0;
+                decimal parsedLng = 0;
+                bool parseSuccess = false;
+
+                foreach (string listSeparator in listSeparators)
+                {
+                    foreach (CultureInfo cultureInfo in cultureInfos)
+                    {
+                        if (clipboardText.Contains(value: listSeparator) &&
+                            !parseSuccess)
+                        {
+                            bool parseSuccessLat = decimal.TryParse(
+                                s: clipboardText.Split(listSeparator[index: 0])[0],
+                                style: NumberStyles.Any,
+                                provider: cultureInfo,
+                                result: out parsedLat);
+                            bool parseSuccessLng = decimal.TryParse(
+                                s: clipboardText.Split(listSeparator[index: 0])[1],
+                                style: NumberStyles.Any,
+                                provider: cultureInfo,
+                                result: out parsedLng);
+
+                            parseSuccess = parseSuccessLat && parseSuccessLng;
+                        }
+                    }
+                }
+
+                if (parseSuccess)
+                {
+                    if (
+                        parsedLat >= -180 &&
+                        parsedLat <= 180 &&
+                        parsedLng >= -180 &&
+                        parsedLng <= 180)
+                    {
+                        nud_GPSLatitude.Text =
+                            parsedLat.ToString(provider: CultureInfo.CurrentCulture);
+                        nud_GPSLongitude.Text =
+                            parsedLng.ToString(provider: CultureInfo.CurrentCulture);
+                        nud_GPSLatitude.Value = parsedLat;
+                        nud_GPSLongitude.Value = parsedLng;
+                    }
+                }
+            }
+            catch
+            {
+                // nothing
+            }
+        }
     }
 
 #endregion

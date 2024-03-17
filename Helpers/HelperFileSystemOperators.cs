@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -93,10 +94,12 @@ internal static class HelperFileSystemOperators
         FrmMainApp.Logger.Debug(message: "Starting");
 
         DirectoryInfo di = new(path: HelperVariables.UserDataFolderPath);
-
+        List<string> filesToKeep = ["exiftool.exe", ".ExifTool_config"];
         foreach (FileInfo file in di.EnumerateFiles())
         {
-            if (file.Extension != ".sqlite" && !file.Name.StartsWith("logfile"))
+            if (file.Extension != ".sqlite" &&
+                !file.Name.StartsWith(value: "logfile") &&
+                !filesToKeep.Contains(item: file.Name))
             {
                 try
                 {

@@ -9,7 +9,7 @@ Folder where language CSV files are kept
 Config file for ExifTool - don't modify.
 
 **exiftool.exe**
-ExifTool itself. Feel free to update.
+ExifTool itself. Feel free to update although since 2024/03 the process should be automatic.
 
 **MicrosoftEdgeWebview2Setup.exe**
 Webview2 setup - included as the installer needs it and in case you need it too.

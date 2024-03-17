@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -52,8 +53,7 @@ internal static class HelperExifExifToolOperator
                     Arguments = @"/c " +
                                 HelperVariables.DoubleQuoteStr +
                                 HelperVariables.DoubleQuoteStr +
-                                Path.Combine(path1: HelperVariables.ResourcesFolderPath,
-                                             path2: "exiftool.exe") +
+                                HelperVariables.ExifToolExePathToUse +
                                 HelperVariables.DoubleQuoteStr +
                                 " " +
                                 exiftoolCmd +
@@ -210,7 +210,16 @@ internal static class HelperExifExifToolOperator
                                             length: fileNameWithoutPath.LastIndexOf(
                                                 value: '.'))))
                                 {
-                                    MessageBox.Show(text: data.Data);
+                                    bool pathIsLikelyUTF = fileNameWithPath.Any(c => c > 127);
+                                    MessageBox.Show(text: data.Data +
+                                                          (pathIsLikelyUTF
+                                                              ? Environment.NewLine +
+                                                              Environment.NewLine +
+                                                              HelperControlAndMessageBoxHandling
+                                                                 .GenericGetMessageBoxText(
+                                                                      messageBoxName:
+                                                                      "mbx_GenericPathLikelyUTF")
+                                                              : ""));
                                 }
                             }
                         }
@@ -241,7 +250,7 @@ internal static class HelperExifExifToolOperator
                                          provider: CultureInfo.InvariantCulture,
                                          style: NumberStyles.Any,
                                          result: out HelperVariables
-                                            ._currentExifToolVersionLocal
+                                            .CurrentExifToolVersionLocal
                         );
                     };
 

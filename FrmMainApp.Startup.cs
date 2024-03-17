@@ -243,7 +243,7 @@ public partial class FrmMainApp
             );
             if (nud_lat.Text != null)
             {
-                nud_lat.Value = Convert.ToDecimal(value: nud_lat.Text, provider: CultureInfo.InvariantCulture);
+                nud_lat.Value = Convert.ToDecimal(value: nud_lat.Text, provider: CultureInfo.CurrentCulture);
             }
 
             nud_lng.Text = HelperDataApplicationSettings.DataReadSQLiteSettings(
@@ -253,7 +253,7 @@ public partial class FrmMainApp
             );
             if (nud_lng.Text != null)
             {
-                nud_lng.Value = Convert.ToDecimal(value: nud_lng.Text, provider: CultureInfo.InvariantCulture);
+                nud_lng.Value = Convert.ToDecimal(value: nud_lng.Text, provider: CultureInfo.CurrentCulture);
             }
         }
         catch

@@ -46,6 +46,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using GeoTagNinja.Helpers;
 
 namespace GeoTagNinja.Model;
 
@@ -63,7 +64,7 @@ public class ExifTool : IDisposable
 
     private static readonly Encoding s_Utf8NoBOM = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
-    private readonly string c_exeName = Path.Combine(path1: Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "Resources"), path2: "exiftool.exe"); // "exiftool.exe";
+    //private readonly string c_exeName = Path.Combine(path1: Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory, path2: "Resources"), path2: "exiftool.exe"); // "exiftool.exe";
 
     private Process m_exifTool;
     private StreamWriter m_in;
@@ -72,12 +73,15 @@ public class ExifTool : IDisposable
     public ExifTool()
     {
         // Prepare process start
-        ProcessStartInfo psi = new(fileName: c_exeName, arguments: c_arguments);
-        psi.UseShellExecute = false;
-        psi.CreateNoWindow = true;
-        psi.RedirectStandardInput = true;
-        psi.RedirectStandardOutput = true;
-        psi.StandardOutputEncoding = s_Utf8NoBOM;
+        ProcessStartInfo psi = new(fileName: HelperVariables.ExifToolExePathToUse,
+                                   arguments: c_arguments)
+        {
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardInput = true,
+            RedirectStandardOutput = true,
+            StandardOutputEncoding = s_Utf8NoBOM
+        };
 
         try
         {

@@ -6,3 +6,6 @@ ttp_SaveFavourite,Save (or overwrite) the currently selected file's metadata to 
 ttp_LoadFavourite,Load metadata for the selected file(s) from your Favourites,Recharger les metadata des fichiers selectionnés depuis vos favoris
 ttp_ManageFavourites,Manage Favourites,
 ttp_loctToFileDestination,Save the Current Coordinate to the Selected Files' Destination,
+ttp_GPSDataPaste,"Press CTRL+V to paste a valid pair of decimals to the lat/long placeholders. 
+The clipboard should contain only a pair of decimals, preferably in ""invariant"" (English) setup, which is integer-dot-decimal-comma-integer-dot-decimal, such as 12.345, 56.897
+That said the code _should_ be able to comprehend other layouts. Note if the clipboard has anything apart from the above the operation will fail (nothing will happen.)",
