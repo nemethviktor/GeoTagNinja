@@ -44,7 +44,7 @@ internal static class HelperExifReadTrackData
                                                     string language,
                                                     int timeShiftSeconds = 0)
     {
-        HelperVariables._sErrorMsg = "";
+        //HelperVariables._sErrorMsg = "";
         HelperVariables._sOutputMsg = "";
         FrmMainApp frmMainAppInstance =
             (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
