@@ -434,6 +434,8 @@ internal static class HelperExifReadTrackData
             tbxText.Multiline = true;
             tbxText.WordWrap = true;
             tbxText.ReadOnly = true;
+            tbxText.SelectionStart = 1;
+            tbxText.SelectionLength = 0;
 
             panel.SetFlowBreak(control: tbxText, value: true);
             panel.Controls.Add(value: tbxText);
@@ -458,6 +460,11 @@ internal static class HelperExifReadTrackData
             reportBox.ShowInTaskbar = false;
 
             reportBox.StartPosition = FormStartPosition.CenterScreen;
+            HelperControlThemeManager.SetThemeColour(
+                themeColour: HelperVariables.UserSettingUseDarkMode
+                    ? ThemeColour.Dark
+                    : ThemeColour.Light,
+                parentControl: reportBox);
             reportBox.ShowDialog();
         }
     }
