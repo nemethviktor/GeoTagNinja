@@ -751,16 +751,15 @@ public partial class FrmMainApp : Form
 
             // via https://stackoverflow.com/a/17385937/3968494
             List<string> getLocToMapDialogChoice =
-                DialogWithCheckBox.DisplayAndReturnList(
+                DialogWithOrWithoutCheckBox.DisplayAndReturnList(
                     labelText: HelperDataLanguageTZ.DataReadDTObjectText(
                         objectType: ControlType.Label,
                         objectName: "lbl_QuestionAddToponomy"
                     ),
                     caption: GenericGetMessageBoxCaption(
                         captionType: MessageBoxCaption.Question.ToString()),
-                    checkboxesDictionary: checkboxDictionary,
                     buttonsDictionary: buttonsDictionary,
-                    orientation: "Horizontal");
+                    orientation: "Horizontal", checkboxesDictionary: checkboxDictionary);
 
             _showLocToMapDialogChoice = getLocToMapDialogChoice.Contains(item: "yes");
             _rememberLocToMapDialogChoice =
@@ -2238,14 +2237,14 @@ public partial class FrmMainApp : Form
 
                 // ReSharper disable once InconsistentNaming
                 List<string> APIHandlingChoice =
-                    DialogWithCheckBox.DisplayAndReturnList(
+                    DialogWithOrWithoutCheckBox.DisplayAndReturnList(
                         labelText: GenericGetMessageBoxText(
                             messageBoxName: "mbx_FrmMainApp_QuestionNoRowsFromAPI"),
                         caption: GenericGetMessageBoxCaption(
                             captionType: MessageBoxCaption.Question.ToString()),
-                        checkboxesDictionary: checkboxDictionary,
                         buttonsDictionary: buttonsDictionary,
-                        orientation: "Horizontal");
+                        orientation: "Horizontal",
+                        checkboxesDictionary: checkboxDictionary);
 
                 if (APIHandlingChoice.Contains(value: "yes"))
                 {

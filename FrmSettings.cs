@@ -1126,8 +1126,7 @@ public partial class FrmSettings : Form
                         "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty"),
                     caption: HelperControlAndMessageBoxHandling
                        .GenericGetMessageBoxCaption(
-                            captionType: HelperControlAndMessageBoxHandling
-                                        .MessageBoxCaption.Information.ToString()),
+                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Warning);
                 customMessageBox.ShowDialog();
@@ -1187,15 +1186,15 @@ public partial class FrmSettings : Form
         Dictionary<string, string> buttonsDictionary = GetButtonsDictionary();
 
         // ReSharper disable once InconsistentNaming
-        List<string> ItemsToExport = DialogWithCheckBox.DisplayAndReturnList(
+        List<string> ItemsToExport = DialogWithOrWithoutCheckBox.DisplayAndReturnList(
             labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                 messageBoxName: "mbx_FrmSettings_QuestionWhatToExport"),
             caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                 captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question
-                   .ToString()),
-            checkboxesDictionary: checkboxDictionary,
+                                              .ToString()),
             buttonsDictionary: buttonsDictionary,
-            orientation: "Vertical");
+            orientation: "Vertical",
+            checkboxesDictionary: checkboxDictionary);
 
         // ignore the whole thing if "no" is part of the output
         // probably impossible that _neither_ of them are in the list but in case i missed something...
@@ -1234,8 +1233,7 @@ public partial class FrmSettings : Form
                                   ex.Message,
                             caption: HelperControlAndMessageBoxHandling
                                .GenericGetMessageBoxCaption(
-                                    captionType: HelperControlAndMessageBoxHandling
-                                                .MessageBoxCaption.Error.ToString()),
+                                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
                             buttons: MessageBoxButtons.OK,
                             icon: MessageBoxIcon.Error);
                         customMessageBox.ShowDialog();
@@ -1267,15 +1265,15 @@ public partial class FrmSettings : Form
             Dictionary<string, string> buttonsDictionary = GetButtonsDictionary();
 
             // ReSharper disable once InconsistentNaming
-            List<string> ItemsToImport = DialogWithCheckBox.DisplayAndReturnList(
+            List<string> ItemsToImport = DialogWithOrWithoutCheckBox.DisplayAndReturnList(
                 labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                     messageBoxName: "mbx_FrmSettings_QuestionWhatToImport"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
                        .Question.ToString()),
-                checkboxesDictionary: checkboxDictionary,
                 buttonsDictionary: buttonsDictionary,
-                orientation: "Vertical");
+                orientation: "Vertical",
+                checkboxesDictionary: checkboxDictionary);
 
             // ignore the whole thing if "no" is part of the output
             // probably impossible that _neither_ of them are in the list but in case i missed something...
@@ -1339,14 +1337,17 @@ public partial class FrmSettings : Form
         };
 
         // ReSharper disable once InconsistentNaming
-        List<string> displayAndReturnList = DialogWithoutCheckBox.DisplayAndReturnList(
-            labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                messageBoxName: "mbx_FrmSettings_PleaseRestartApp"),
-            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question
-                   .ToString()),
-            buttonsDictionary: buttonsDictionary,
-            orientation: "Horizontal");
+        List<string> displayAndReturnList =
+            DialogWithOrWithoutCheckBox.DisplayAndReturnList(
+                labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                    messageBoxName: "mbx_FrmSettings_PleaseRestartApp"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                       .Question
+                       .ToString()),
+                buttonsDictionary: buttonsDictionary,
+                orientation: "Horizontal",
+                checkboxesDictionary: new Dictionary<string, string>());
 
         // basically this triggers an error in debug mode but works ok in prod.
         #if !DEBUG

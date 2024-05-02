@@ -6,17 +6,13 @@ using GeoTagNinja.Helpers;
 
 namespace GeoTagNinja.View.DialogAndMessageBoxes;
 
-internal class DialogWithCheckBox
+internal class DialogWithOrWithoutCheckBox
 {
     /// <summary>
     ///     Displays a dialog box with a set of checkboxes and buttons.
     /// </summary>
     /// <param name="labelText">The text to be displayed at the top of the dialog box.</param>
     /// <param name="caption">The text to be displayed in the title bar of the dialog box.</param>
-    /// <param name="checkboxesDictionary">
-    ///     A dictionary where each key-value pair represents a checkbox in the dialog. The key
-    ///     is the text to be displayed next to the checkbox, and the value is the return value when the checkbox is selected.
-    /// </param>
     /// <param name="buttonsDictionary">
     ///     A dictionary where each key-value pair represents a button in the dialog. The key is
     ///     the text to be displayed on the button, and the value is the return value when the button is clicked.
@@ -25,14 +21,18 @@ internal class DialogWithCheckBox
     ///     The layout orientation of the checkboxes and buttons in the dialog. Can be either "Vertical"
     ///     or "Horizontal".
     /// </param>
+    /// <param name="checkboxesDictionary">
+    ///     A dictionary where each key-value pair represents a checkbox in the dialog. The key
+    ///     is the text to be displayed next to the checkbox, and the value is the return value when the checkbox is selected.
+    /// </param>
     /// <returns>A list of strings representing the return values of the selected checkboxes and clicked button.</returns>
     internal static List<string> DisplayAndReturnList(string labelText,
                                                       string caption,
                                                       Dictionary<string, string>
-                                                          checkboxesDictionary,
-                                                      Dictionary<string, string>
                                                           buttonsDictionary,
-                                                      string orientation)
+                                                      string orientation,
+                                                      Dictionary<string, string>
+                                                          checkboxesDictionary)
     {
         List<string> returnChoicesList = new();
         Form promptBoxForm = new()
@@ -104,20 +104,29 @@ internal class DialogWithCheckBox
             {
                 KeyValuePair<string, string> keyValuePair =
                     buttonsDictionary.ElementAt(index: i);
-                Button btn = new();
-                btn.Text = keyValuePair.Key;
-                switch (keyValuePair.Value.ToLower())
+                string btnText = keyValuePair.Key;
+                Button btn = new()
                 {
-                    case "yes":
-                    case "ok":
-                        promptBoxForm.AcceptButton = btn;
-                        acceptButtonReturnText = keyValuePair.Value;
-                        break;
-                    case "no":
-                    case "cancel":
-                        promptBoxForm.CancelButton = btn;
-                        cancelButtonReturnText = keyValuePair.Value;
-                        break;
+                    UseMnemonic = true,
+                    Text = btnText is "Yes" or "No"
+                        ? "&" + btnText
+                        : btnText
+                };
+                if (btnText.ToLower()
+                           .Contains(value: "yes") ||
+                    btnText.ToLower()
+                           .Contains(value: "ok"))
+                {
+                    promptBoxForm.AcceptButton = btn;
+                    acceptButtonReturnText = keyValuePair.Value;
+                }
+                else if (btnText.ToLower()
+                                .Contains(value: "no") ||
+                         btnText.ToLower()
+                                .Contains(value: "cancel"))
+                {
+                    promptBoxForm.CancelButton = btn;
+                    cancelButtonReturnText = keyValuePair.Value;
                 }
 
                 btn.Click += (s,
@@ -148,21 +157,24 @@ internal class DialogWithCheckBox
 
         void AddCheckBoxes()
         {
-            // add checkboxes 
-            for (int i = 0; i < checkboxesDictionary.Count; i++)
+            if (checkboxesDictionary.Count > 0)
             {
-                KeyValuePair<string, string> keyValuePair =
-                    checkboxesDictionary.ElementAt(index: i);
-                CheckBox chk = new();
-                chk.Text = keyValuePair.Key;
-                chk.AutoSize = true;
-
-                flowLayoutPanel.Controls.Add(value: chk);
-
-                if (i == checkboxesDictionary.Count &&
-                    orientation == "Vertical")
+                // add checkboxes 
+                for (int i = 0; i < checkboxesDictionary.Count; i++)
                 {
-                    flowLayoutPanel.SetFlowBreak(control: chk, value: true);
+                    KeyValuePair<string, string> keyValuePair =
+                        checkboxesDictionary.ElementAt(index: i);
+                    CheckBox chk = new();
+                    chk.Text = keyValuePair.Key;
+                    chk.AutoSize = true;
+
+                    flowLayoutPanel.Controls.Add(value: chk);
+
+                    if (i == checkboxesDictionary.Count &&
+                        orientation == "Vertical")
+                    {
+                        flowLayoutPanel.SetFlowBreak(control: chk, value: true);
+                    }
                 }
             }
         }

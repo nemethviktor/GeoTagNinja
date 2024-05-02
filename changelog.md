@@ -2,6 +2,14 @@
 
 **Build 8xxx [20240xxx]** 
 - NEW & UPDATED:
+  - Dark Mode should now apply to GPX Import Report
+  - Custom MessageBoxes should now respect hotkeys in certain cases
+
+- BUGS & FIXES:
+  - Patched GPX Import Report re #105
+
+**Build 8834 [20240309]**
+- NEW & UPDATED:
   - Paste coordinate-pair string from clipboard into Edit Form (see readme about this or the tooltip in the Edit Form) #100
   - Added a button to the Edit Form to move to the next image when there's a multi-selection (Apply & Move to Next) [also #100]
   - Bumped exifTool to v12.77

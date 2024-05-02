@@ -210,7 +210,6 @@
     <Compile Include="View\DialogAndMessageBoxes\CustomMessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\DialogAndMessageBoxes\DialogWithoutCheckBox.cs" />
     <Compile Include="View\ListView\FileListViewMapNavigation.cs" />
     <Compile Include="View\ListView\FileListViewCopyPaste.cs" />
     <Compile Include="View\ListView\FileListViewReadWrite.cs" />
@@ -299,7 +298,7 @@
       <DependentUpon>FileListView.cs</DependentUpon>
     </Compile>
     <Compile Include="View\ListView\ModelToColumnValueTransformations.cs" />
-    <Compile Include="View\DialogAndMessageBoxes\DialogWithCheckBox.cs" />
+    <Compile Include="View\DialogAndMessageBoxes\DialogWithOrWithoutCheckBox.cs" />
     <EmbeddedResource Include="FrmAboutBox.resx">
       <DependentUpon>FrmAboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
