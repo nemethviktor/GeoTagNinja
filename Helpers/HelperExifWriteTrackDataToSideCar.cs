@@ -43,7 +43,7 @@ internal class HelperExifWriteTrackDataToSideCar
         Debug.Assert(condition: frmMainAppInstance != null, message: nameof(frmMainAppInstance) + " != null");
         string exifArgsForOriginalFile = "";
 
-        // as per https://exiftool.org/forum/index.php?msg=78652 the logic needs to be
+        // as per https://exiftool.org/forum/index.php?msg=78652 + https://exiftool.org/forum/index.php?topic=16011.new#new the logic needs to be
         /*
             -geotag=D:\temp3\2023-02-27.gpx
             -geotag=D:\temp3\2023-02-28.gpx
@@ -54,7 +54,7 @@ internal class HelperExifWriteTrackDataToSideCar
             GeoMaxExtSecs=1800
             D:\temp3\_2280104.ORF
             D:\temp3\_2280105.ORF
-            -v2
+            -v3
             -srcfile
             C:\Users\nemet\AppData\Roaming\GeoTagNinja\tmpLocFiles\%F.xmp
 
@@ -97,8 +97,8 @@ internal class HelperExifWriteTrackDataToSideCar
             exifArgsForOriginalFile += imageFilePath + Environment.NewLine;
         }
 
-        // -v2
-        exifArgsForOriginalFile += "-v2" + Environment.NewLine;
+        // -v3
+        exifArgsForOriginalFile += "-v3" + Environment.NewLine;
         // -srcfile
         exifArgsForOriginalFile += "-srcfile" + Environment.NewLine;
         // C:\Users\nemet\AppData\Roaming\GeoTagNinja\tmpLocFiles\%F.xmp

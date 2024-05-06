@@ -243,11 +243,11 @@ internal static class HelperExifExifToolOperator
                         if (data.Data != null &&
                             data.Data.Length > 0)
                         {
-                            HelperVariables._sOutputMsg +=
+                            HelperVariables._sOutputAndErrorMsg +=
                                 data.Data.ToString() + Environment.NewLine;
                         }
 
-                        decimal.TryParse(s: HelperVariables._sOutputMsg
+                        decimal.TryParse(s: HelperVariables._sOutputAndErrorMsg
                                             .Replace(oldValue: "\r", newValue: "")
                                             .Replace(oldValue: "\n", newValue: ""),
                                          provider: CultureInfo.InvariantCulture,
@@ -262,15 +262,23 @@ internal static class HelperExifExifToolOperator
                     prcExifTool.OutputDataReceived += (_,
                                                        data) =>
                     {
-                        if (data.Data != null &&
-                            data.Data.Length > 0 &&
-                            // this is a minor bug in ET that we're hiding. basically the piece of info is irrelevant and confusing to the user
+                        if (data.Data is
+                            {
+                                Length: > 0
+                            } &&
+                            // this piece of info is irrelevant and confusing to the user
                             !data.Data.ToString()
                                  .EndsWith(
                                       value:
-                                      ".xmp does not exist"))
+                                      ".xmp does not exist") &&
+                            // this piece of info is irrelevant and confusing to the user
+                            !data.Data.ToString()
+                                 .EndsWith(
+                                      value:
+                                      "is not defined")
+                           )
                         {
-                            HelperVariables._sOutputMsg +=
+                            HelperVariables._sOutputAndErrorMsg +=
                                 data.Data.ToString() + Environment.NewLine;
                         }
                     };
@@ -280,9 +288,9 @@ internal static class HelperExifExifToolOperator
                         if (data.Data != null &&
                             data.Data.Length > 0)
                         {
-                            HelperVariables._sOutputMsg += "ERROR: " +
-                                                           data.Data.ToString() +
-                                                           Environment.NewLine;
+                            HelperVariables._sOutputAndErrorMsg += "ERROR: " +
+                                data.Data.ToString() +
+                                Environment.NewLine;
                         }
                     };
                     break;
@@ -293,7 +301,7 @@ internal static class HelperExifExifToolOperator
                         if (data.Data != null &&
                             data.Data.Length > 0)
                         {
-                            HelperVariables._sOutputMsg +=
+                            HelperVariables._sOutputAndErrorMsg +=
                                 data.Data.ToString() + Environment.NewLine;
                         }
                     };
@@ -304,9 +312,9 @@ internal static class HelperExifExifToolOperator
                         if (data.Data != null &&
                             data.Data.Length > 0)
                         {
-                            HelperVariables._sOutputMsg += "ERROR: " +
-                                                           data.Data.ToString() +
-                                                           Environment.NewLine;
+                            HelperVariables._sOutputAndErrorMsg += "ERROR: " +
+                                data.Data.ToString() +
+                                Environment.NewLine;
                         }
                     };
                     break;
