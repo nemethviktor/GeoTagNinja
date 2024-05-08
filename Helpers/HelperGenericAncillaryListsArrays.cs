@@ -638,51 +638,11 @@ internal static class HelperGenericAncillaryListsArrays
                         CA	Canada/Pacific	−08:00	−07:00
                         CA	Canada/Saskatchewan	−06:00	−06:00
                         CA	Canada/Yukon	−07:00	−07:00
-                        	CET	+01:00	+02:00
                         CL	Chile/Continental	−04:00	−03:00
                         CL	Chile/EasterIsland	−06:00	−05:00
-                        	CST6CDT	−06:00	−05:00
                         CU	Cuba	−05:00	−04:00
-                        	EET	+02:00	+03:00
                         EG	Egypt	+02:00	+03:00
                         IE	Eire	+01:00	+00:00
-                        	EST	−05:00	−05:00
-                        	EST5EDT	−05:00	−04:00
-                        	Etc/GMT	+00:00	+00:00
-                        	Etc/GMT+0	+00:00	+00:00
-                        	Etc/GMT+1	−01:00	−01:00
-                        	Etc/GMT+10	−10:00	−10:00
-                        	Etc/GMT+11	−11:00	−11:00
-                        	Etc/GMT+12	−12:00	−12:00
-                        	Etc/GMT+2	−02:00	−02:00
-                        	Etc/GMT+3	−03:00	−03:00
-                        	Etc/GMT+4	−04:00	−04:00
-                        	Etc/GMT+5	−05:00	−05:00
-                        	Etc/GMT+6	−06:00	−06:00
-                        	Etc/GMT+7	−07:00	−07:00
-                        	Etc/GMT+8	−08:00	−08:00
-                        	Etc/GMT+9	−09:00	−09:00
-                        	Etc/GMT-0	+00:00	+00:00
-                        	Etc/GMT-1	+01:00	+01:00
-                        	Etc/GMT-10	+10:00	+10:00
-                        	Etc/GMT-11	+11:00	+11:00
-                        	Etc/GMT-12	+12:00	+12:00
-                        	Etc/GMT-13	+13:00	+13:00
-                        	Etc/GMT-14	+14:00	+14:00
-                        	Etc/GMT-2	+02:00	+02:00
-                        	Etc/GMT-3	+03:00	+03:00
-                        	Etc/GMT-4	+04:00	+04:00
-                        	Etc/GMT-5	+05:00	+05:00
-                        	Etc/GMT-6	+06:00	+06:00
-                        	Etc/GMT-7	+07:00	+07:00
-                        	Etc/GMT-8	+08:00	+08:00
-                        	Etc/GMT-9	+09:00	+09:00
-                        	Etc/GMT0	+00:00	+00:00
-                        	Etc/Greenwich	+00:00	+00:00
-                        	Etc/UCT	+00:00	+00:00
-                        	Etc/Universal	+00:00	+00:00
-                        	Etc/UTC	+00:00	+00:00
-                        	Etc/Zulu	+00:00	+00:00
                         NL	Europe/Amsterdam	+01:00	+02:00
                         AD	Europe/Andorra	+01:00	+02:00
                         RU	Europe/Astrakhan	+04:00	+04:00
@@ -747,16 +707,9 @@ internal static class HelperGenericAncillaryListsArrays
                         HR	Europe/Zagreb	+01:00	+02:00
                         UA	Europe/Zaporozhye	+02:00	+03:00
                         CH, DE, LI	Europe/Zurich	+01:00	+02:00
-                        	Factory	+00:00	+00:00
                         GB	GB	+00:00	+01:00
                         GB	GB-Eire	+00:00	+01:00
-                        	GMT	+00:00	+00:00
-                        	GMT+0	+00:00	+00:00
-                        	GMT-0	+00:00	+00:00
-                        	GMT0	+00:00	+00:00
-                        	Greenwich	+00:00	+00:00
                         HK	Hongkong	+08:00	+08:00
-                        	HST	−10:00	−10:00
                         IS	Iceland	+00:00	+00:00
                         MG	Indian/Antananarivo	+03:00	+03:00
                         IO	Indian/Chagos	+06:00	+06:00
@@ -775,12 +728,9 @@ internal static class HelperGenericAncillaryListsArrays
                         JP	Japan	+09:00	+09:00
                         MH	Kwajalein	+12:00	+12:00
                         LY	Libya	+02:00	+02:00
-                        	MET	+01:00	+02:00
                         MX	Mexico/BajaNorte	−08:00	−07:00
                         MX	Mexico/BajaSur	−07:00	−07:00
                         MX	Mexico/General	−06:00	−06:00
-                        	MST	−07:00	−07:00
-                        	MST7MDT	−07:00	−06:00
                         US	Navajo	−07:00	−06:00
                         NZ	NZ	+12:00	+13:00
                         NZ	NZ-CHAT	+12:45	+13:45
@@ -828,16 +778,6 @@ internal static class HelperGenericAncillaryListsArrays
                         UM	Pacific/Wake	+12:00	+12:00
                         WF	Pacific/Wallis	+12:00	+12:00
                         FM	Pacific/Yap	+10:00	+10:00
-                        PL	Poland	+01:00	+02:00
-                        PT	Portugal	+00:00	+01:00
-                        CN	PRC	+08:00	+08:00
-                        	PST8PDT	−08:00	−07:00
-                        TW	ROC	+08:00	+08:00
-                        KR	ROK	+09:00	+09:00
-                        SG	Singapore	+08:00	+08:00
-                        TR	Turkey	+03:00	+03:00
-                        	UCT	+00:00	+00:00
-                        	Universal	+00:00	+00:00
                         US	US/Alaska	−09:00	−08:00
                         US	US/Aleutian	−10:00	−09:00
                         US	US/Arizona	−07:00	−07:00
@@ -850,10 +790,6 @@ internal static class HelperGenericAncillaryListsArrays
                         US	US/Mountain	−07:00	−06:00
                         US	US/Pacific	−08:00	−07:00
                         AS	US/Samoa	−11:00	−11:00
-                        	UTC	+00:00	+00:00
-                        RU	W-SU	+03:00	+03:00
-                        	WET	+00:00	+01:00
-                        	Zulu	+00:00	+00:00
 
                         """;
 
@@ -1124,6 +1060,7 @@ internal static class HelperGenericAncillaryListsArrays
             "orf	Olympus RAW Format (TIFF-based)",
             "ori	Olympus RAW Format (TIFF-based)",
             "pef	Pentax (RAW) Electronic Format (TIFF-based)",
+            "png	Portable Network Graphics",
             "raf	FujiFilm RAW Format",
             "raw	Kyocera Contax N Digital RAW",
             "rw2	Panasonic RAW 2 (TIFF-based)",
@@ -1133,7 +1070,8 @@ internal static class HelperGenericAncillaryListsArrays
             "thm	Thumbnail image (JPEG)",
             "tif	QuickTime Image File",
             "tiff	Tagged Image File Format",
-            "wdp 	Windows HD Photo / Media Photo / JPEG XR (TIFF-based)",
+            "wdp	Windows HD Photo / Media Photo / JPEG XR (TIFF-based)",
+            "webp	WebP Image File",
             "x3f	Sigma/Foveon RAW"
         };
         return result;
@@ -1153,7 +1091,8 @@ internal static class HelperGenericAncillaryListsArrays
                          .Contains(value: "tiff"))
             {
                 retList.Add(item: extension.Split('\t')
-                                           .FirstOrDefault());
+                                           .FirstOrDefault()
+                                          ?.Trim());
             }
         }
 
@@ -1178,7 +1117,8 @@ internal static class HelperGenericAncillaryListsArrays
         {
             allowedExtensions[i] = allowedExtensions[i]
                                   .Split('\t')
-                                  .FirstOrDefault();
+                                  .FirstOrDefault()
+                                 ?.Trim();
         }
 
         return allowedExtensions;

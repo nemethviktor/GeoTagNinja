@@ -4,6 +4,7 @@
 - NEW & UPDATED:
   - Dark Mode should now apply to GPX Import Report
   - Custom MessageBoxes should now respect hotkeys in certain cases
+  - Added PNG and WEBP file support
 
 - BUGS & FIXES:
   - Patched GPX Import Report re #105

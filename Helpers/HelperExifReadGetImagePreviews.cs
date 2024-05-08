@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -125,13 +126,19 @@ internal static class HelperExifReadGetImagePreviews
 
         try
         {
-            if (fi.Extension.ToLower() == ".heic" ||
-                fi.Extension.ToLower() == ".heif")
+            List<string> magickExtensionList =
+            [
+                ".heic",
+                ".heif",
+                ".webp"
+            ];
+
+            if (magickExtensionList.Contains(item: fi.Extension.ToLower()))
             {
                 // actually the reason i'm not using this for _every_ file is that it's just f...ing slow with NEF files(which is what I have plenty of), so it's prohibitive to run on RAW files. 
-                //  since i don't have a better way to deal with HEIC files atm this is as good as it gets.
-                ConvertHeicToJpeg(heicPath: fileNameWithPath,
-                                  jpegPath: generatedFileName);
+                //  since i don't have a better way to deal with HEIC/WEBP files atm this is as good as it gets.
+                UseMagickImageToGeneratePreview(originalImagePath: fileNameWithPath,
+                                                jpegPath: generatedFileName);
             }
             else
             {
@@ -200,20 +207,19 @@ internal static class HelperExifReadGetImagePreviews
     }
 
     /// <summary>
-    ///     Takes a HEIC file and dumps a JPG. Uses MagickImage. See comment above as to why this isn't being used for all RAW
+    ///     Takes a HEIC/WebP/etc file and dumps a JPG. Uses MagickImage. See comment above as to why this isn't being used for
+    ///     all RAW
     ///     files. (Too slow).
     /// </summary>
-    /// <param name="heicPath"></param>
+    /// <param name="originalImagePath"></param>
     /// <param name="jpegPath"></param>
-    public static void ConvertHeicToJpeg(string heicPath,
-                                         string jpegPath)
+    private static void UseMagickImageToGeneratePreview(string originalImagePath,
+                                                        string jpegPath)
     {
-        using (MagickImage image = new(fileName: heicPath))
-        {
-            // The AutoOrient() method adjusts the image to respect its orientation.
-            image.AutoOrient();
-            // Save the image as a JPEG.
-            image.Write(fileName: jpegPath);
-        }
+        using MagickImage image = new(fileName: originalImagePath);
+        // The AutoOrient() method adjusts the image to respect its orientation.
+        image.AutoOrient();
+        // Save the image as a JPEG.
+        image.Write(fileName: jpegPath);
     }
 }
