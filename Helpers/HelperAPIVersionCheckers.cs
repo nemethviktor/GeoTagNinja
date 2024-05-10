@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -138,6 +138,7 @@ internal static class HelperAPIVersionCheckers
     /// <summary>
     ///     Checks for new versions of GTN and ExifTool.
     /// </summary>
+    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     internal static async Task CheckForNewVersions()
     {
         FrmMainApp.Logger.Debug(message: "Starting");
@@ -174,6 +175,7 @@ internal static class HelperAPIVersionCheckers
         int checkUpdateVal = 604800; //604800 is a week's worth of seconds
         #if DEBUG
         checkUpdateVal = 86400; // 86400 is a day's worth of seconds
+        //checkUpdateVal = 1; 
         #endif
 
         if (nowUnixTime > lastCheckUnixTime + checkUpdateVal ||
@@ -220,13 +222,25 @@ internal static class HelperAPIVersionCheckers
             // Done w ExifTool and move on to checking GTN stuff
             // current version may be something like "0.5.8251.40825"
             // Assembly.GetExecutingAssembly().GetName().Version.Build is just "8251"
-            // ReSharper disable once InconsistentNaming
+            string currentGTNVersionBuildMajor = Assembly.GetExecutingAssembly()
+                                                         .GetName()
+                                                         .Version.Major
+                                                         .ToString(
+                                                              provider: CultureInfo
+                                                                 .InvariantCulture);
+
+            string currentGTNVersionBuildMinor = Assembly.GetExecutingAssembly()
+                                                         .GetName()
+                                                         .Version.Minor
+                                                         .ToString(
+                                                              provider: CultureInfo
+                                                                 .InvariantCulture);
+
             int currentGTNVersionBuild = Assembly.GetExecutingAssembly()
                                                  .GetName()
                                                  .Version.Build;
 
             HelperVariables.OperationAPIReturnedOKResponse = true;
-            // ReSharper disable once InconsistentNaming
             int newestOnlineGTNVersion = 0;
             try
             {
@@ -237,30 +251,10 @@ internal static class HelperAPIVersionCheckers
                 // ignore
             }
 
-            if (newestOnlineGTNVersion > currentGTNVersionBuild)
-            {
-                CustomMessageBox customMessageBox = new(
-                        text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                                  messageBoxName:
-                                  "mbx_FrmMainApp_InfoNewGTNVersionExists") +
-                              newestOnlineGTNVersion,
-                        caption: HelperControlAndMessageBoxHandling
-                           .GenericGetMessageBoxCaption(
-                                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
-                        buttons: MessageBoxButtons.YesNo,
-                        icon: MessageBoxIcon.Asterisk)
-                    ;
-                DialogResult dialogResult = customMessageBox.ShowDialog();
-                if (dialogResult == DialogResult.Yes)
-                {
-                    Process.Start(
-                        fileName:
-                        "https://github.com/nemethviktor/GeoTagNinja/releases/download/b" +
-                        newestOnlineGTNVersion.ToString(
-                            provider: CultureInfo.InvariantCulture) +
-                        "/GeoTagNinja_Setup.msi");
-                }
-            }
+            CreateJsonForUpdate(localMajor: currentGTNVersionBuildMajor,
+                                localMinor: currentGTNVersionBuildMinor,
+                                remoteBuild: newestOnlineGTNVersion.ToString(
+                                    provider: CultureInfo.InvariantCulture));
 
             // write back to SQL
             HelperDataApplicationSettings.DataWriteSQLiteSettings(
@@ -302,5 +296,36 @@ internal static class HelperAPIVersionCheckers
         {
             // ignore
         }
+    }
+
+    private static void CreateJsonForUpdate(string localMajor,
+                                            string localMinor,
+                                            string remoteBuild)
+    {
+        // Create JSON object
+        var jsonObject = new
+        {
+            // don't care/can't query remote major and minor
+            version = $"{localMajor}.{localMinor}.{remoteBuild}.0",
+            url =
+                $"https://github.com/nemethviktor/GeoTagNinja/releases/download/b{remoteBuild}/GeoTagNinja_Setup.msi",
+            changelog =
+                $"https://github.com/nemethviktor/GeoTagNinja/blob/b{remoteBuild}/changelog.md"
+        };
+
+        string jsonContent =
+            JsonConvert.SerializeObject(value: jsonObject,
+                                        formatting: Formatting.Indented);
+
+        string updateJsonPath =
+            Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                         path2: "updateJsonData.json");
+
+        if (File.Exists(path: updateJsonPath))
+        {
+            File.Delete(path: updateJsonPath);
+        }
+
+        File.WriteAllText(path: updateJsonPath, contents: jsonContent);
     }
 }

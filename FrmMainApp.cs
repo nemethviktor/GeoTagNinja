@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AutoUpdaterDotNET;
 using geoTagNinja;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
@@ -342,8 +343,29 @@ public partial class FrmMainApp : Form
         Request_Map_NavigateGo();
 
         await HelperAPIVersionCheckers.CheckForNewVersions();
+        LaunchAutoUpdater();
 
         Logger.Info(message: "OnLoad: Done.");
+    }
+
+    /// <summary>
+    ///     This fires up the autoupdater
+    /// </summary>
+    private static void LaunchAutoUpdater()
+    {
+        HelperNonStatic updateHelper = new();
+        // AutoUpdater.InstalledVersion = new Version(version: "1.2"); // here for testing only.
+
+        AutoUpdater.Synchronous =
+            true; // needs to be true otherwise the single pipe instance crashes. (well, I think _that_ crashes, something does.)
+        AutoUpdater.ParseUpdateInfoEvent +=
+            updateHelper.AutoUpdaterOnParseUpdateInfoEvent;
+        AutoUpdater.CheckForUpdateEvent += updateHelper.AutoUpdaterOnCheckForUpdateEvent;
+
+        string updateJsonPath =
+            Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                         path2: "updateJsonData.json");
+        AutoUpdater.Start(appCast: Path.Combine(updateJsonPath));
     }
 
 
@@ -1461,7 +1483,6 @@ public partial class FrmMainApp : Form
 
 #endregion
 
-
 #region File
 
     /// <summary>
@@ -1566,7 +1587,6 @@ public partial class FrmMainApp : Form
     }
 
 #endregion
-
 
 #region FrmMainApp's TaskBar Stuff
 
