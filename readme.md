@@ -5,7 +5,7 @@ GeoTagNinja is an open-source photo geotagger GUI for Windows. GTN uses [exifToo
 
 There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if you feel like watching it. It's from the original (Aug 2022) release but it still covers the main features more or less. It's only gotten better since...
 
-## Download & Install (Windows 7+ only)
+## Download & Install (Windows 7+ x64 only)
 
 - Download the .msi file from [Releases](https://github.com/nemethviktor/GeoTagNinja/releases) - Find the newest release (topmost, easy) then click on Assets if they are not showing. [There are now Development and Prod releases, both should be stable but if you'd like to be on the safer side, pick the prod updates.]
 - As of 20221202 I've removed the built-in webView2 installer because it was more of a pain in the backside than benefit. If the app breaks complaining about the lack of webView2, it's available [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703)
@@ -141,8 +141,7 @@ Longer: Hypothetically the idea with Destinations is that if there are groups of
 
 ## System Requirements
 
-- Windows 7+ is needed.
-- SQLite is running x86 but fwiw the app isn't really memory-hungry so it will do. Chances are if you're still on a 1st-gen Intel Core you're not on Windows 7. Hopefully.
+- Windows 7+ x64 is needed.
 - You'll need an ArcGIS API key to use the map search functionality. Register for free [here](https://developers.arcgis.com/)
 - You'll need a geoNames username and password to use toponomy search. Register for free [here](https://www.geonames.org/)
 - WebView2 is required but should come with your OS most likely. If not, get it from [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703)

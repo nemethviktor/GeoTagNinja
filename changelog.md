@@ -6,6 +6,7 @@
   - Custom MessageBoxes should now respect hotkeys in certain cases
   - Added PNG and WEBP file support
   - Added an auto-updater. It's a bit tricky to test but I think it works. Report bugs pls.
+  - Updated some of the underlying packages; removed x86 references to SQLite 
 
 - BUGS & FIXES:
   - Patched GPX Import Report re #105
