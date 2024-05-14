@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AutoUpdaterDotNET;
 using geoTagNinja;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
@@ -342,8 +343,29 @@ public partial class FrmMainApp : Form
         Request_Map_NavigateGo();
 
         await HelperAPIVersionCheckers.CheckForNewVersions();
+        LaunchAutoUpdater();
 
         Logger.Info(message: "OnLoad: Done.");
+    }
+
+    /// <summary>
+    ///     This fires up the autoupdater
+    /// </summary>
+    private static void LaunchAutoUpdater()
+    {
+        HelperNonStatic updateHelper = new();
+        // AutoUpdater.InstalledVersion = new Version(version: "1.2"); // here for testing only.
+
+        AutoUpdater.Synchronous =
+            true; // needs to be true otherwise the single pipe instance crashes. (well, I think _that_ crashes, something does.)
+        AutoUpdater.ParseUpdateInfoEvent +=
+            updateHelper.AutoUpdaterOnParseUpdateInfoEvent;
+        AutoUpdater.CheckForUpdateEvent += updateHelper.AutoUpdaterOnCheckForUpdateEvent;
+
+        string updateJsonPath =
+            Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                         path2: "updateJsonData.json");
+        AutoUpdater.Start(appCast: Path.Combine(updateJsonPath));
     }
 
 
@@ -751,16 +773,15 @@ public partial class FrmMainApp : Form
 
             // via https://stackoverflow.com/a/17385937/3968494
             List<string> getLocToMapDialogChoice =
-                DialogWithCheckBox.DisplayAndReturnList(
+                DialogWithOrWithoutCheckBox.DisplayAndReturnList(
                     labelText: HelperDataLanguageTZ.DataReadDTObjectText(
                         objectType: ControlType.Label,
                         objectName: "lbl_QuestionAddToponomy"
                     ),
                     caption: GenericGetMessageBoxCaption(
                         captionType: MessageBoxCaption.Question.ToString()),
-                    checkboxesDictionary: checkboxDictionary,
                     buttonsDictionary: buttonsDictionary,
-                    orientation: "Horizontal");
+                    orientation: "Horizontal", checkboxesDictionary: checkboxDictionary);
 
             _showLocToMapDialogChoice = getLocToMapDialogChoice.Contains(item: "yes");
             _rememberLocToMapDialogChoice =
@@ -1462,7 +1483,6 @@ public partial class FrmMainApp : Form
 
 #endregion
 
-
 #region File
 
     /// <summary>
@@ -1567,7 +1587,6 @@ public partial class FrmMainApp : Form
     }
 
 #endregion
-
 
 #region FrmMainApp's TaskBar Stuff
 
@@ -2238,14 +2257,14 @@ public partial class FrmMainApp : Form
 
                 // ReSharper disable once InconsistentNaming
                 List<string> APIHandlingChoice =
-                    DialogWithCheckBox.DisplayAndReturnList(
+                    DialogWithOrWithoutCheckBox.DisplayAndReturnList(
                         labelText: GenericGetMessageBoxText(
                             messageBoxName: "mbx_FrmMainApp_QuestionNoRowsFromAPI"),
                         caption: GenericGetMessageBoxCaption(
                             captionType: MessageBoxCaption.Question.ToString()),
-                        checkboxesDictionary: checkboxDictionary,
                         buttonsDictionary: buttonsDictionary,
-                        orientation: "Horizontal");
+                        orientation: "Horizontal",
+                        checkboxesDictionary: checkboxDictionary);
 
                 if (APIHandlingChoice.Contains(value: "yes"))
                 {

@@ -44,8 +44,8 @@ internal static class HelperExifReadTrackData
                                                     string language,
                                                     int timeShiftSeconds = 0)
     {
-        HelperVariables._sErrorMsg = "";
-        HelperVariables._sOutputMsg = "";
+        //HelperVariables._sErrorMsg = "";
+        HelperVariables._sOutputAndErrorMsg = "";
         FrmMainApp frmMainAppInstance =
             (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
@@ -429,11 +429,13 @@ internal static class HelperExifReadTrackData
             TextBox tbxText = new();
             tbxText.Size = new Size(width: 700, height: 400);
 
-            tbxText.Text = HelperVariables._sOutputMsg;
+            tbxText.Text = HelperVariables._sOutputAndErrorMsg;
             tbxText.ScrollBars = ScrollBars.Vertical;
             tbxText.Multiline = true;
             tbxText.WordWrap = true;
             tbxText.ReadOnly = true;
+            tbxText.SelectionStart = 1;
+            tbxText.SelectionLength = 0;
 
             panel.SetFlowBreak(control: tbxText, value: true);
             panel.Controls.Add(value: tbxText);
@@ -458,6 +460,11 @@ internal static class HelperExifReadTrackData
             reportBox.ShowInTaskbar = false;
 
             reportBox.StartPosition = FormStartPosition.CenterScreen;
+            HelperControlThemeManager.SetThemeColour(
+                themeColour: HelperVariables.UserSettingUseDarkMode
+                    ? ThemeColour.Dark
+                    : ThemeColour.Light,
+                parentControl: reportBox);
             reportBox.ShowDialog();
         }
     }

@@ -318,7 +318,9 @@ internal static class HelperGenericAppStartup
         try
         {
             string webView2Version = "";
-            webView2Version = CoreWebView2Environment.GetAvailableBrowserVersionString();
+            webView2Version =
+                CoreWebView2Environment.GetAvailableBrowserVersionString(
+                    browserExecutableFolder: null);
             FrmMainApp.Logger.Trace(message: "Check webView2 version is: " + webView2Version);
         }
         catch (Exception ex)

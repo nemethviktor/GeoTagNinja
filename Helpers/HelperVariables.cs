@@ -27,8 +27,8 @@ internal static class HelperVariables
     internal static bool OperationAPIReturnedOKResponse = true;
     internal static bool OperationNowSelectingAllItems = false;
 
-    internal static string _sErrorMsg = "";
-    internal static string _sOutputMsg = "";
+    //internal static string _sErrorMsg = "";
+    internal static string _sOutputAndErrorMsg = "";
     internal static string HTMLAddMarker;
     internal static string HTMLCreatePoints;
     internal static HashSet<(string strLat, string strLng)> HsMapMarkers = new();

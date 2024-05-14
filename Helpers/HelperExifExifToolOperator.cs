@@ -150,7 +150,7 @@ internal static class HelperExifExifToolOperator
                                     {
                                         RemoveDirElementFromDe3AndCopyDataToOriginal(
                                             dirElemToDrop: dirElemFileToDrop,
-                                            frmMainAppInstance);
+                                            frmMainAppInstance: frmMainAppInstance);
                                     }
 
                                     if (Path.GetExtension(path: fileNameWithoutPath) ==
@@ -175,7 +175,7 @@ internal static class HelperExifExifToolOperator
                                         {
                                             RemoveDirElementFromDe3AndCopyDataToOriginal(
                                                 dirElemToDrop: dirElemFileToDrop,
-                                                frmMainAppInstance);
+                                                frmMainAppInstance: frmMainAppInstance);
                                             if (!processOriginalFile && writeXmpSideCar)
                                             {
                                                 string pathOfFile =
@@ -190,6 +190,7 @@ internal static class HelperExifExifToolOperator
                                                             pathOfFile);
                                                 RemoveDirElementFromDe3AndCopyDataToOriginal(
                                                     dirElemToDrop: dirElemFileToDrop,
+                                                    frmMainAppInstance:
                                                     frmMainAppInstance);
                                             }
                                         }
@@ -210,7 +211,8 @@ internal static class HelperExifExifToolOperator
                                             length: fileNameWithoutPath.LastIndexOf(
                                                 value: '.'))))
                                 {
-                                    bool pathIsLikelyUTF = fileNameWithPath.Any(c => c > 127);
+                                    bool pathIsLikelyUTF =
+                                        fileNameWithPath.Any(predicate: c => c > 127);
                                     MessageBox.Show(text: data.Data +
                                                           (pathIsLikelyUTF
                                                               ? Environment.NewLine +
@@ -238,13 +240,14 @@ internal static class HelperExifExifToolOperator
                     prcExifTool.OutputDataReceived += (_,
                                                        data) =>
                     {
-                        if (data.Data != null && data.Data.Length > 0)
+                        if (data.Data != null &&
+                            data.Data.Length > 0)
                         {
-                            HelperVariables._sOutputMsg +=
+                            HelperVariables._sOutputAndErrorMsg +=
                                 data.Data.ToString() + Environment.NewLine;
                         }
 
-                        decimal.TryParse(s: HelperVariables._sOutputMsg
+                        decimal.TryParse(s: HelperVariables._sOutputAndErrorMsg
                                             .Replace(oldValue: "\r", newValue: "")
                                             .Replace(oldValue: "\n", newValue: ""),
                                          provider: CultureInfo.InvariantCulture,
@@ -259,10 +262,35 @@ internal static class HelperExifExifToolOperator
                     prcExifTool.OutputDataReceived += (_,
                                                        data) =>
                     {
-                        if (data.Data != null && data.Data.Length > 0)
+                        if (data.Data is
+                            {
+                                Length: > 0
+                            } &&
+                            // this piece of info is irrelevant and confusing to the user
+                            !data.Data.ToString()
+                                 .EndsWith(
+                                      value:
+                                      ".xmp does not exist") &&
+                            // this piece of info is irrelevant and confusing to the user
+                            !data.Data.ToString()
+                                 .EndsWith(
+                                      value:
+                                      "is not defined")
+                           )
                         {
-                            HelperVariables._sOutputMsg +=
+                            HelperVariables._sOutputAndErrorMsg +=
                                 data.Data.ToString() + Environment.NewLine;
+                        }
+                    };
+                    prcExifTool.ErrorDataReceived += (_,
+                                                      data) =>
+                    {
+                        if (data.Data != null &&
+                            data.Data.Length > 0)
+                        {
+                            HelperVariables._sOutputAndErrorMsg += "ERROR: " +
+                                data.Data.ToString() +
+                                Environment.NewLine;
                         }
                     };
                     break;
@@ -270,9 +298,10 @@ internal static class HelperExifExifToolOperator
                     prcExifTool.OutputDataReceived += (_,
                                                        data) =>
                     {
-                        if (data.Data != null && data.Data.Length > 0)
+                        if (data.Data != null &&
+                            data.Data.Length > 0)
                         {
-                            HelperVariables._sOutputMsg +=
+                            HelperVariables._sOutputAndErrorMsg +=
                                 data.Data.ToString() + Environment.NewLine;
                         }
                     };
@@ -280,11 +309,12 @@ internal static class HelperExifExifToolOperator
                     prcExifTool.ErrorDataReceived += (_,
                                                       data) =>
                     {
-                        if (data.Data != null && data.Data.Length > 0)
+                        if (data.Data != null &&
+                            data.Data.Length > 0)
                         {
-                            HelperVariables._sOutputMsg += "ERROR: " +
-                                                           data.Data.ToString() +
-                                                           Environment.NewLine;
+                            HelperVariables._sOutputAndErrorMsg += "ERROR: " +
+                                data.Data.ToString() +
+                                Environment.NewLine;
                         }
                     };
                     break;

@@ -10,6 +10,7 @@ public class CustomMessageBox : Form
 {
     private Label _lblMessage;
     private PictureBox _pictureBox;
+    private const string NAMEANDTEXT = "CustomMessageBox";
 
     /// <summary>
     ///     Initializes a new instance of the CustomMessageBox class.
@@ -48,29 +49,48 @@ public class CustomMessageBox : Form
                 CreateButton(text: "Cancel", result: DialogResult.Cancel);
                 break;
             case MessageBoxButtons.YesNo:
-                CreateButton(text: "Yes", result: DialogResult.Yes);
-                CreateButton(text: "No", result: DialogResult.No);
+                CreateButton(text: "&Yes", result: DialogResult.Yes);
+                CreateButton(text: "&No", result: DialogResult.No);
                 break;
             case MessageBoxButtons.YesNoCancel:
-                CreateButton(text: "Yes", result: DialogResult.Yes);
-                CreateButton(text: "No", result: DialogResult.No);
+                CreateButton(text: "&Yes", result: DialogResult.Yes);
+                CreateButton(text: "&No", result: DialogResult.No);
                 CreateButton(text: "Cancel", result: DialogResult.Cancel);
                 break;
             case MessageBoxButtons.RetryCancel:
-                CreateButton(text: "Retry", result: DialogResult.Retry);
+                CreateButton(text: "&Retry", result: DialogResult.Retry);
                 CreateButton(text: "Cancel", result: DialogResult.Cancel);
                 break;
             case MessageBoxButtons.AbortRetryIgnore:
-                CreateButton(text: "Abort", result: DialogResult.Abort);
-                CreateButton(text: "Retry", result: DialogResult.Retry);
-                CreateButton(text: "Ignore", result: DialogResult.Ignore);
+                CreateButton(text: "&Abort", result: DialogResult.Abort);
+                CreateButton(text: "&Retry", result: DialogResult.Retry);
+                CreateButton(text: "&Ignore", result: DialogResult.Ignore);
                 break;
             default:
-                throw new ArgumentOutOfRangeException(paramName: nameof(buttons), actualValue: buttons, message: null);
+                throw new ArgumentOutOfRangeException(paramName: nameof(buttons),
+                                                      actualValue: buttons,
+                                                      message: null);
         }
 
         PositionButtons();
         // Set icon in PictureBox based on MessageBoxIcon value
+        SetPictureBox(icon: icon);
+    }
+
+    public sealed override string Text
+    {
+        get => base.Text;
+        set => base.Text = value;
+    }
+
+
+    /// <summary>
+    ///     Sets the picture box (icon) for the Form
+    /// </summary>
+    /// <param name="icon"></param>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    private void SetPictureBox(MessageBoxIcon icon)
+    {
         if (icon == MessageBoxIcon.None)
         {
             _pictureBox.Image = null;
@@ -109,7 +129,8 @@ public class CustomMessageBox : Form
         }
         else
         {
-            throw new ArgumentOutOfRangeException(paramName: nameof(icon), actualValue: icon, message: null);
+            throw new ArgumentOutOfRangeException(paramName: nameof(icon),
+                                                  actualValue: icon, message: null);
         }
     }
 
@@ -145,8 +166,8 @@ public class CustomMessageBox : Form
         AutoScaleDimensions = new SizeF(width: 6F, height: 13F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(width: 284, height: 261);
-        Name = "CustomMessageBox";
-        Text = "CustomMessageBox";
+        Name = NAMEANDTEXT;
+        Text = NAMEANDTEXT;
         // Set additional properties
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
@@ -173,6 +194,17 @@ public class CustomMessageBox : Form
         button.Click += (sender,
                          e) => DialogResult = result;
         button.Size = new Size(width: ButtonWidth, height: ButtonHeight);
+        button.UseMnemonic = true;
+        if (result == DialogResult.OK)
+        {
+            AcceptButton = button;
+        }
+
+        else if (result == DialogResult.Cancel)
+        {
+            CancelButton = button;
+        }
+
         _buttons.Add(item: button);
         _buttonCount++;
     }
@@ -183,7 +215,9 @@ public class CustomMessageBox : Form
         int startX = (Width - totalWidth) / 2;
         for (int i = 0; i < _buttonCount; i++)
         {
-            _buttons[index: i].Location = new Point(x: startX + i * (ButtonWidth + ButtonSpacing), y: Math.Max(val1: _lblMessage.Bottom, val2: _pictureBox.Bottom) + 10);
+            _buttons[index: i].Location = new Point(
+                x: startX + i * (ButtonWidth + ButtonSpacing),
+                y: Math.Max(val1: _lblMessage.Bottom, val2: _pictureBox.Bottom) + 10);
             Controls.Add(value: _buttons[index: i]);
         }
     }
