@@ -31,8 +31,8 @@ public partial class FrmImportGpx : Form
     {
         InitializeComponent();
         HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
-                                                     ? ThemeColour.Dark
-                                                     : ThemeColour.Light, parentControl: this);
+            ? ThemeColour.Dark
+            : ThemeColour.Light, parentControl: this);
 
         // set defaults
         rbt_importOneFile.Checked = true;
@@ -64,7 +64,7 @@ public partial class FrmImportGpx : Form
         for (int i = 0; i < cbx_UseTimeZone.Items.Count; i++)
         {
             if (cbx_UseTimeZone.GetItemText(item: cbx_UseTimeZone.Items[index: i])
-                .Contains(value: LocalIanatZname))
+                               .Contains(value: LocalIanatZname))
             {
                 cbx_UseTimeZone.SelectedIndex = i;
                 TZFound = true;
@@ -85,10 +85,10 @@ public partial class FrmImportGpx : Form
             for (int i = 0; i < cbx_UseTimeZone.Items.Count; i++)
             {
                 if (cbx_UseTimeZone.GetItemText(item: cbx_UseTimeZone.Items[index: i])
-                    .StartsWith(value: "(" +
-                                       plusMinusChar +
-                                       TimeZoneInfo.Local.BaseUtcOffset.ToString()
-                                           .Substring(startIndex: 0, length: 5)))
+                                   .StartsWith(value: "(" +
+                                                      plusMinusChar +
+                                                      TimeZoneInfo.Local.BaseUtcOffset.ToString()
+                                                                  .Substring(startIndex: 0, length: 5)))
                 {
                     cbx_UseTimeZone.SelectedIndex = i;
                     TZFound = true;
@@ -147,13 +147,13 @@ public partial class FrmImportGpx : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void TimerEventProcessor(object sender,
-                                     EventArgs e)
+        EventArgs e)
     {
         lbl_CameraTimeData.Text = DateTime.Now.AddDays(value: (int)nud_Days.Value)
-            .AddHours(value: (int)nud_Hours.Value)
-            .AddMinutes(value: (int)nud_Minutes.Value)
-            .AddSeconds(value: (int)nud_Seconds.Value)
-            .ToString(format: "yyyy MMMM dd HH:mm:ss");
+                                          .AddHours(value: (int)nud_Hours.Value)
+                                          .AddMinutes(value: (int)nud_Minutes.Value)
+                                          .AddSeconds(value: (int)nud_Seconds.Value)
+                                          .ToString(format: "yyyy MMMM dd HH:mm:ss");
     }
 
     private string updatelbl_TZValue()
@@ -175,16 +175,19 @@ public partial class FrmImportGpx : Form
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void btn_PullMostRecentTrackSyncShift_Click(object sender,
-                                                        EventArgs e)
+        EventArgs e)
     {
-        if (_lastShiftSecond == 0 && _lastShiftMinute == 0 && _lastShiftHour == 0 && _lastShiftDay == 0)
+        if (_lastShiftSecond == 0 &&
+            _lastShiftMinute == 0 &&
+            _lastShiftHour == 0 &&
+            _lastShiftDay == 0)
         {
             CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                     messageBoxName: "mbx_FrmImportNoStoredShiftValues"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Error.ToString()),
+                                                                   .Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -216,7 +219,7 @@ public partial class FrmImportGpx : Form
     }
 
 
-    #region Events
+#region Events
 
     /// <summary>
     ///     Opens a file browser for track files
@@ -224,7 +227,7 @@ public partial class FrmImportGpx : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void pbx_importOneFile_Click(object sender,
-                                         EventArgs e)
+        EventArgs e)
     {
         if (ofd_importOneFile.ShowDialog() == DialogResult.OK)
         {
@@ -238,7 +241,7 @@ public partial class FrmImportGpx : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void pbx_importFromAnotherFolder_Click(object sender,
-                                                   EventArgs e)
+        EventArgs e)
     {
         if (fbd_importFromAnotherFolder.ShowDialog() == DialogResult.OK)
         {
@@ -247,7 +250,7 @@ public partial class FrmImportGpx : Form
     }
 
     private void rbt_importOneFile_CheckedChanged(object sender,
-                                                  EventArgs e)
+        EventArgs e)
     {
         pbx_importOneFile.Enabled = rbt_importOneFile.Checked;
         lbl_importOneFile.Enabled = rbt_importOneFile.Checked;
@@ -255,7 +258,7 @@ public partial class FrmImportGpx : Form
     }
 
     private void rbt_importFromCurrentFolder_CheckedChanged(object sender,
-                                                            EventArgs e)
+        EventArgs e)
     {
         pbx_importOneFile.Enabled = false;
         pbx_importFromAnotherFolder.Enabled = false;
@@ -264,7 +267,7 @@ public partial class FrmImportGpx : Form
     }
 
     private void rbt_importFromAnotherFolder_CheckedChanged(object sender,
-                                                            EventArgs e)
+        EventArgs e)
     {
         pbx_importFromAnotherFolder.Enabled = rbt_importFromAnotherFolder.Checked;
         lbl_importFromAnotherFolder.Enabled = rbt_importFromAnotherFolder.Checked;
@@ -286,7 +289,7 @@ public partial class FrmImportGpx : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void btn_Cancel_Click(object sender,
-                                  EventArgs e)
+        EventArgs e)
     {
         Hide();
     }
@@ -297,7 +300,7 @@ public partial class FrmImportGpx : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void btn_OK_Click(object sender,
-                                    EventArgs e)
+        EventArgs e)
     {
         string trackFileLocationType = "";
         string trackFileLocationVal = "";
@@ -321,7 +324,10 @@ public partial class FrmImportGpx : Form
 
         int timeShiftSeconds = 0;
         // adjust time as needed
-        if (nud_Days.Value != 0 || nud_Hours.Value != 0 || nud_Minutes.Value != 0 || nud_Seconds.Value != 0)
+        if (nud_Days.Value != 0 ||
+            nud_Hours.Value != 0 ||
+            nud_Minutes.Value != 0 ||
+            nud_Seconds.Value != 0)
         {
             timeShiftSeconds += (int)nud_Days.Value * 60 * 60 * 24;
             timeShiftSeconds += (int)nud_Hours.Value * 60 * 60;
@@ -329,7 +335,8 @@ public partial class FrmImportGpx : Form
             timeShiftSeconds += (int)nud_Seconds.Value;
         }
 
-        if ((trackFileLocationType == "file" && File.Exists(path: trackFileLocationVal)) || (trackFileLocationType == "folder" && Directory.Exists(path: trackFileLocationVal)))
+        if ((trackFileLocationType == "file" && File.Exists(path: trackFileLocationVal)) ||
+            (trackFileLocationType == "folder" && Directory.Exists(path: trackFileLocationVal)))
         {
             // indicate that something is going on
             btn_OK.Text = HelperDataLanguageTZ.DataReadDTObjectText(
@@ -362,7 +369,7 @@ public partial class FrmImportGpx : Form
                     messageBoxName: "mbx_FrmImportGpx_FileOrFolderDoesntExist"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Error.ToString()),
+                                                                   .Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -375,7 +382,7 @@ public partial class FrmImportGpx : Form
     }
 
     private void ckb_UseTimeZone_CheckedChanged(object sender,
-                                                EventArgs e)
+        EventArgs e)
     {
         ckb_UseDST.Enabled = ckb_UseTimeZone.Checked;
         cbx_UseTimeZone.Enabled = ckb_UseTimeZone.Checked;
@@ -383,19 +390,19 @@ public partial class FrmImportGpx : Form
     }
 
     private void ckb_UseDST_CheckedChanged(object sender,
-                                           EventArgs e)
+        EventArgs e)
     {
         lbl_TZValue.Text = updatelbl_TZValue();
     }
 
     private void cbx_UseTimeZone_SelectedIndexChanged(object sender,
-                                                      EventArgs e)
+        EventArgs e)
     {
         SelectedIanatzName = cbx_UseTimeZone.Text.Split('#')[1]
-            .TrimStart(' ')
-            .TrimEnd(' ');
+                                            .TrimStart(' ')
+                                            .TrimEnd(' ');
         lbl_TZValue.Text = updatelbl_TZValue();
     }
 
-    #endregion
+#endregion
 }
