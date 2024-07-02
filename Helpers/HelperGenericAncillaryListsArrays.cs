@@ -238,6 +238,19 @@ internal static class HelperGenericAncillaryListsArrays
 
 #endregion
 
+#region ExifTool Initiators
+
+    internal enum ExifToolInititators
+    {
+        ExifWriteExifToFile,
+        ExifGetTrackSyncDataSyncPhotos,
+        ExifGetTrackSyncDataLoadTrackPath,
+        ExifGetImagePreviews,
+        GenericCheckForNewVersions,
+        Unspecified
+    }
+
+#endregion
 
 #region Time zones
 

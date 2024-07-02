@@ -501,7 +501,9 @@ internal static class HelperExifWriteSaveToFile
             await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
                                                          frmMainAppInstance:
                                                          frmMainAppInstance,
-                                                         initiator: "ExifWriteExifToFile",
+                                                         initiator:
+                                                         HelperGenericAncillaryListsArrays.ExifToolInititators
+                                                            .ExifWriteExifToFile,
                                                          processOriginalFile:
                                                          processOriginalFile,
                                                          writeXmpSideCar: writeXMPSideCar

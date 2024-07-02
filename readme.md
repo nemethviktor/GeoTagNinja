@@ -13,7 +13,7 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 	- Due to the lack of a signed certificate, when installing SmartScreen will complain that the app is unsafe. SmartScreen is meant to be called StupidScreen but MS made a typo there.
 	- Just run the installer. As the code is public and people may compile on their own, everyone is welcome to ascertain the app is safe should they feel like.
 
-## Things to Note, Usage
+## Quirks and Things to Note
 
 - Build 8361 [20221122]+: There is now a hold when the user enters a folder - it is kept on until the folder completes load. This is a bit annoying perhaps but is needed because otherwise people can start issuing write-commands before the read-process finishes and that can result in files being written the wrong info.
 - This is mentioned in Known Issues briefly but just to reiterate: if you have issues with file data not showing please try renaming/moving your files to a "simple" folder like "C:\temp" and make sure your file names don't contain umlauts, special characters and anything "odd". This is a limitation of exifTool.
@@ -77,10 +77,6 @@ There is currently no preset release cycle. I don't expect one to happen in a sy
 
 I'm generally happy for anyone competent to add pull requests but I don't always sync the commits as they come with GitHub until there is an actual release - it's therefore possible that my local commits are lightyears away from the public ones. If you'd like to do a pull request, drop a message/open a ticket first please and we can sync the details.
 
-## ToDos
-
-- IPTC Keywords & XMP Subjects alignment (see further below)
-
 ## Known Issues
 
 - There is a likelihood that the app will struggle to read file data if your files are kept in folders with accent marks (umlauts, non-standard English, Asian, Russian, Unicode, etc. characters) in the path and/or filename. This is a limitation of exifTool + cmd. If you encounter a problem, move your files to something like "C:\temp" and see if it works better.
@@ -132,6 +128,15 @@ Longer: Hypothetically the idea with Destinations is that if there are groups of
 		- You should get a JSON formatted API reply back that visibly looks like a description of a place (likely called Churzegg or some such). If you don't know what that is then have a look [here](https://github.com/nemethviktor/GeoTagNinja/issues/13#issuecomment-1305859987)
 		- If you instead get a reply that it's an invalid user or user account not enabled to use the free webservice then do as instructed/logical.
 
+## ToDos
+
+- IPTC Keywords & XMP Subjects alignment
+
+## Roadmap
+
+I'm hoping to eventually move away from WinForms to something visually more pleasing. Currently there's no Visual Designer for WinUI3 and I don't want to build a WPF app that is almost similarly outdated (as WinForms) just more complicated to code due to XAML. I don't want to do a "Microsoft Store" -style package either so no UWP (plus that's deprecated now).
+At the same time the current .NET Framework 4.8 is a little obsolete. I haven't switched to 4.8.1 because that doesn't work on Win 7 and also offers nothing that's relevant for this app, however it's likely that eventually the codebase will move to some more current version of .NET (8+ that is, somewhat subject to WinUI designer updates or if .NET9 would include Dark Mode proper for WinForms or not [afaik it's more like .NET10 for that at the moment]) so support for older OSs will eventually be dropped. I don't have a timeframe for this but I'd hazard sometime late 2025.
+
 ## When reporting bugs please specify
 
 - The OS's version,
@@ -141,7 +146,7 @@ Longer: Hypothetically the idea with Destinations is that if there are groups of
 
 ## System Requirements
 
-- Windows 7+ x64 is needed.
+- Windows 7+ x64 is needed. As I mentioned in the Roadmap it's likely that support for pre-Win10 OSs will remain till some point 2025 but possibly not beyond that.
 - You'll need an ArcGIS API key to use the map search functionality. Register for free [here](https://developers.arcgis.com/)
 - You'll need a geoNames username and password to use toponomy search. Register for free [here](https://www.geonames.org/)
 - WebView2 is required but should come with your OS most likely. If not, get it from [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703)

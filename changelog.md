@@ -2,6 +2,13 @@
 
 **Build 8xxx [20240xxx]** 
 - NEW & UPDATED:
+  - TBA
+
+- BUGS & FIXES:
+  - TBA
+
+**Build 8897 [20240511]** 
+- NEW & UPDATED:
   - Dark Mode should now apply to GPX Import Report
   - Custom MessageBoxes should now respect hotkeys in certain cases
   - Added PNG and WEBP file support
