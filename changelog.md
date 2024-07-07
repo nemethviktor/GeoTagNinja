@@ -2,6 +2,13 @@
 
 **Build 8xxx [20240xxx]** 
 - NEW & UPDATED:
+  - Added an option to Overlay GPX Coordinate Tracks onto the map. This can be found within the Import GPX Tracks Form, at the bottom. Experimental.
+
+- BUGS & FIXES:
+  - TBA
+
+**Build 8897 [20240511]** 
+- NEW & UPDATED:
   - Dark Mode should now apply to GPX Import Report
   - Custom MessageBoxes should now respect hotkeys in certain cases
   - Added PNG and WEBP file support

@@ -238,6 +238,19 @@ internal static class HelperGenericAncillaryListsArrays
 
 #endregion
 
+#region ExifTool Initiators
+
+    internal enum ExifToolInititators
+    {
+        ExifWriteExifToFile,
+        ExifGetTrackSyncDataSyncPhotos,
+        ExifGetTrackSyncDataLoadTrackPath,
+        ExifGetImagePreviews,
+        GenericCheckForNewVersions,
+        Unspecified
+    }
+
+#endregion
 
 #region Time zones
 
@@ -830,8 +843,8 @@ internal static class HelperGenericAncillaryListsArrays
 
         List<string> sortedData = data
                                  .Where(predicate: d =>
-                                            d[stdCol].Length > 1 &&
-                                            char.IsDigit(c: d[stdCol][index: 1]))
+                                      d[stdCol].Length > 1 &&
+                                      char.IsDigit(c: d[stdCol][index: 1]))
                                   //.GroupBy(keySelector: d =>
                                   //             new
                                   //             {
@@ -840,7 +853,7 @@ internal static class HelperGenericAncillaryListsArrays
                                   //.Select(selector: g => g.First())
                                  .OrderBy(keySelector: d => d[timeZoneCol])
                                  .Select(selector: d =>
-                                             $"({d[stdCol]}/{d[dstCol]}) # {d[timeZoneCol]}")
+                                      $"({d[stdCol]}/{d[dstCol]}) # {d[timeZoneCol]}")
                                  .ToList();
         return sortedData;
     }
@@ -988,7 +1001,7 @@ internal static class HelperGenericAncillaryListsArrays
         foreach (DataRow dataRow in HelperVariables.DtIsoCountryCodeMapping.Rows)
         {
             retList.Add(item: dataRow[columnName: "Country"]
-                           .ToString());
+               .ToString());
         }
 
         return retList.ToArray();
@@ -1006,7 +1019,7 @@ internal static class HelperGenericAncillaryListsArrays
         foreach (DataRow dataRow in HelperVariables.DtIsoCountryCodeMapping.Rows)
         {
             retList.Add(item: dataRow[columnName: "ISO_3166_1A3"]
-                           .ToString());
+               .ToString());
         }
 
         return retList.ToArray();
@@ -1166,6 +1179,17 @@ internal static class HelperGenericAncillaryListsArrays
         };
 
         return result;
+    }
+
+#endregion
+
+#region GPX Import
+
+    internal enum TrackOverlaySetting
+    {
+        DoNotOverlay,
+        OverlayForAllDates,
+        OverlayForOverlappingDates
     }
 
 #endregion

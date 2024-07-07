@@ -190,7 +190,8 @@ internal static class HelperAPIVersionCheckers
             await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
                                                          frmMainAppInstance: null,
                                                          initiator:
-                                                         "GenericCheckForNewVersions");
+                                                         HelperGenericAncillaryListsArrays.ExifToolInititators
+                                                            .GenericCheckForNewVersions);
             HelperVariables.CurrentExifToolVersionCloud =
                 API_ExifGetExifToolVersionFromWeb();
 

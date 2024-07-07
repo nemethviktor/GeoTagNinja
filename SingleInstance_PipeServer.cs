@@ -53,7 +53,7 @@ internal class SingleInstance_PipeServer
         msgCallback = messageCallback;
         myUserName = WindowsIdentity.GetCurrent().Name;
 
-        serverThread = new Thread(PipeServer_ServingThread);
+        serverThread = new Thread(start: PipeServer_ServingThread);
         serverThread.Start();
     }
 
@@ -91,33 +91,41 @@ internal class SingleInstance_PipeServer
         PipeSecurity npSec = new PipeSecurity();
         // Deny all
         npSec.AddAccessRule(
-            new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.NetworkSid, null),
-                               PipeAccessRights.FullControl, AccessControlType.Deny));
+            rule: new PipeAccessRule(
+                identity: new SecurityIdentifier(sidType: WellKnownSidType.NetworkSid,
+                                                 domainSid: null),
+                rights: PipeAccessRights.FullControl, type: AccessControlType.Deny));
         // Allow .... me :)
         npSec.AddAccessRule(
-            new PipeAccessRule(myUserName, PipeAccessRights.FullControl,
-                               AccessControlType.Allow));
+            rule: new PipeAccessRule(identity: myUserName,
+                                     rights: PipeAccessRights.FullControl,
+                                     type: AccessControlType.Allow));
 
         while (true)
         {
             // Note: has to be set to async, as otherwise cancelation token
             // is ignored, cf. https://stackoverflow.com/questions/53695427/cancellationtoken-not-working-with-waitforconnectionasync
             NamedPipeServerStream npServer = new NamedPipeServerStream(
-                Program.singleInstance_PipeName, PipeDirection.In,
-                1, PipeTransmissionMode.Byte,
-                PipeOptions.Asynchronous, 0, 0, npSec);
+                pipeName: Program.singleInstance_PipeName, direction: PipeDirection.In,
+                maxNumberOfServerInstances: 1,
+                transmissionMode: PipeTransmissionMode.Byte,
+                options: PipeOptions.Asynchronous, inBufferSize: 0, outBufferSize: 0,
+                pipeSecurity: npSec);
 
             int threadID = Thread.CurrentThread.ManagedThreadId;
             Logger.Info(message: $"Server: started with Thread ID {threadID.ToString()}");
 
             // Async wait for connection that can be canceled
-            IAsyncResult npConnectionResult = npServer.WaitForConnectionAsync(cTokenSource.Token);
+            IAsyncResult npConnectionResult =
+                npServer.WaitForConnectionAsync(cancellationToken: cTokenSource.Token);
 
             // Wait for either connection or cancelation
-            int res = WaitHandle.WaitAny(new[] { npConnectionResult.AsyncWaitHandle });
+            int res =
+                WaitHandle.WaitAny(waitHandles: new[]
+                                       { npConnectionResult.AsyncWaitHandle });
             if (npServer.IsConnected)
             {
-                PipeServer_HandleConnection(npServer, threadID);
+                PipeServer_HandleConnection(npServer: npServer, threadID: threadID);
                 npServer.Close();
             }
 
@@ -129,6 +137,74 @@ internal class SingleInstance_PipeServer
         }
     }
 
+    /*
+     // this is for future reference because i don't want to go searching for it again
+     // in .NET 6+ the below will work.
+
+     private void PipeServer_ServingThread()
+       {
+           Logger.Info(message: $"Starting pipe serving under user '{myUserName}' ...");
+
+           // Create a cancelation token to abort the task
+           cTokenSource = new CancellationTokenSource();
+
+           // Security:
+           PipeSecurity npSec = new PipeSecurity();
+           // Deny all
+           npSec.AddAccessRule(
+               rule: new PipeAccessRule(
+                   identity: new SecurityIdentifier(sidType: WellKnownSidType.NetworkSid,
+                                                    domainSid: null),
+                   rights: PipeAccessRights.FullControl, type: AccessControlType.Deny));
+           // Allow .... me :)
+           npSec.AddAccessRule(
+               rule: new PipeAccessRule(identity: myUserName,
+                                        rights: PipeAccessRights.FullControl,
+                                        type: AccessControlType.Allow));
+
+           while (true)
+           {
+               // Note: has to be set to async, as otherwise cancelation token
+               // is ignored, cf. https://stackoverflow.com/questions/53695427/cancellationtoken-not-working-with-waitforconnectionasync
+
+               // also re: update to .NET --> https://stackoverflow.com/questions/59969943/how-to-set-pipesecurity-of-namedpipeserverstream-in-net-core
+               NamedPipeServerStream npServer = NamedPipeServerStreamAcl.Create(
+                   pipeName: Program.singleInstance_PipeName,
+                   direction: PipeDirection.In,
+                   maxNumberOfServerInstances: 1,
+                   transmissionMode: PipeTransmissionMode.Byte,
+                   options: PipeOptions.Asynchronous,
+                   inBufferSize: 0,
+                   outBufferSize: 0,
+                   pipeSecurity: npSec
+               );
+
+               int threadID = Thread.CurrentThread.ManagedThreadId;
+               Logger.Info(message: $"Server: started with Thread ID {threadID.ToString()}");
+
+               // Async wait for connection that can be canceled
+               IAsyncResult npConnectionResult =
+                   npServer.WaitForConnectionAsync(cancellationToken: cTokenSource.Token);
+
+               // Wait for either connection or cancelation
+               int res =
+                   WaitHandle.WaitAny(waitHandles: new[]
+                                          { npConnectionResult.AsyncWaitHandle });
+               if (npServer.IsConnected)
+               {
+                   PipeServer_HandleConnection(npServer: npServer, threadID: threadID);
+                   npServer.Close();
+               }
+
+               if ((cTokenSource == null) || (cTokenSource.IsCancellationRequested))
+               {
+                   Logger.Info(message: $"Server ({threadID.ToString()}): cancellation requested.");
+                   return;
+               }
+           }
+       }
+
+     */
 
     /// <summary>
     /// Method to handle the information transmission upon
@@ -141,7 +217,7 @@ internal class SingleInstance_PipeServer
     {
         try
         {
-            StreamReader streamer = new StreamReader(npServer);
+            StreamReader streamer = new StreamReader(stream: npServer);
             // We only read one line...
             string inputLine = streamer.ReadLine();
 
@@ -150,8 +226,8 @@ internal class SingleInstance_PipeServer
             string sendingUser = npServer.GetImpersonationUserName();
             Logger.Info(message: $"Server ({threadID.ToString()}): connected to user {sendingUser}");
 
-            msgCallback.Invoke($"Message from user '{sendingUser}': {inputLine}");
-            Console.WriteLine(inputLine);
+            msgCallback.Invoke(obj: $"Message from user '{sendingUser}': {inputLine}");
+            Console.WriteLine(value: inputLine);
         }
         catch (IOException e)
         {
