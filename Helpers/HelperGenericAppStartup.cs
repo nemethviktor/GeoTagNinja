@@ -37,7 +37,7 @@ internal static class HelperGenericAppStartup
                       ex.Message,
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Error.ToString()),
+                                                                   .Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -66,7 +66,7 @@ internal static class HelperGenericAppStartup
                       ex.Message,
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Error.ToString()),
+                                                                   .Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -100,7 +100,7 @@ internal static class HelperGenericAppStartup
                       ex.Message,
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Error.ToString()),
+                                                                   .Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -284,13 +284,13 @@ internal static class HelperGenericAppStartup
         }
 
         List<SourcesAndAttributes.ElementAttribute> attributesWithValidOrderIDs = Enum
-           .GetValues(enumType: typeof(SourcesAndAttributes.ElementAttribute))
-           .Cast<SourcesAndAttributes.ElementAttribute>()
-           .Where(predicate: attribute =>
-                      SourcesAndAttributes.GetElementAttributesOrderID(
-                          attributeToFind: attribute) >
-                      0)
-           .ToList();
+                                                            .GetValues(enumType: typeof(SourcesAndAttributes.ElementAttribute))
+                                                            .Cast<SourcesAndAttributes.ElementAttribute>()
+                                                            .Where(predicate: attribute =>
+                                                                 SourcesAndAttributes.GetElementAttributesOrderID(
+                                                                     attributeToFind: attribute) >
+                                                                 0)
+                                                            .ToList();
 
         foreach (SourcesAndAttributes.ElementAttribute attribute in
                  attributesWithValidOrderIDs.Where(
@@ -332,7 +332,7 @@ internal static class HelperGenericAppStartup
                       ex.Message,
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Error.ToString()),
+                                                                   .Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -457,7 +457,7 @@ internal static class HelperGenericAppStartup
                       ex.Message,
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Error.ToString()),
+                                                                   .Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();

@@ -160,8 +160,8 @@ public partial class FrmMainApp : Form
         config.AddRule(minLevel: LogLevel.Trace, maxLevel: LogLevel.Fatal,
                        target: logfile);
         #else
-        config.AddRule(minLevel: LogLevel.Info, maxLevel: LogLevel.Fatal, target: logfile);
-        #endif
+        config.AddRule(minLevel: LogLevel.Debug, maxLevel: LogLevel.Fatal, target: logfile);
+    #endif
 
         logfile.Layout =
             @"${longdate}|${level:uppercase=true}|${callsite:includeNamespace=false:includeSourcePath=false:methodName=true}|${message:withexception=true}";
@@ -204,6 +204,7 @@ public partial class FrmMainApp : Form
         HelperGenericAppStartup.AppStartupCheckWebView2();
         AppStartupInitializeComponentFrmMainApp();
         AppStartupSetAppTheme();
+        AppStartupApplyVisualStyleDefaults();
 
         AppStartupEnableDoubleBuffering();
         FormClosing += FrmMainApp_FormClosing;
@@ -445,25 +446,7 @@ public partial class FrmMainApp : Form
         Logger.Trace(message: "Write column widths to db");
         lvw_FileList.PersistSettings();
 
-        // Write lat/long for future reference to db
-        Logger.Trace(message: "Write lat/long for future reference to db [lat/lng]: " +
-                              nud_lat.Text +
-                              "/" +
-                              nud_lng.Text);
-        List<(string settingId, string settingValue)> settings = new()
-        {
-            ("lastLat", nud_lat.Text),
-            ("lastLng", nud_lng.Text)
-        };
-        foreach ((string settingId, string settingValue) setting in settings)
-        {
-            HelperDataApplicationSettings.DataWriteSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "generic",
-                settingId: setting.settingId,
-                settingValue: setting.settingValue
-            );
-        }
+        AppClosingPersistData();
 
         // Clean up
         Logger.Trace(message: "Set pbx_imagePreview.Image = null");
@@ -494,6 +477,66 @@ public partial class FrmMainApp : Form
         // Clean up Roaming folder
         HelperFileSystemOperators.FsoCleanUpUserFolder();
         Logger.Debug(message: "OnClose: Done.");
+
+        void AppClosingPersistData()
+        {
+            // Write lat/long + visual settings for future reference to db
+            Logger.Debug(message: "Write lat/long + visual settings for future reference to db");
+
+
+            List<(string settingId, string settingValue)> settings =
+            [
+                ("lastLat", nud_lat.Text),
+                ("lastLng", nud_lng.Text),
+
+                ("splitContainerMainSizeWidth",
+                 splitContainerMain.Width.ToString(provider: CultureInfo.InvariantCulture)),
+                ("splitContainerMainSizeHeight",
+                 splitContainerMain.Height.ToString(provider: CultureInfo.InvariantCulture)),
+
+                ("splitContainerMainSplitterDistance",
+                 splitContainerMain.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture)),
+
+                ("splitContainerMainSplitterWidth",
+                 splitContainerMain.SplitterWidth.ToString(provider: CultureInfo.InvariantCulture)),
+
+                ("splitContainerLeftTopSizeWidth",
+                 splitContainerLeftTop.Width.ToString(provider: CultureInfo.InvariantCulture)),
+
+                ("splitContainerLeftTopSizeHeight",
+                 splitContainerLeftTop.Height.ToString(provider: CultureInfo.InvariantCulture)),
+
+                ("splitContainerLeftTopSplitterDistance",
+                 splitContainerLeftTop.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture)),
+
+                ("splitContainerLeftTopSplitterWidth",
+                 splitContainerLeftTop.SplitterWidth.ToString(provider: CultureInfo.InvariantCulture)),
+
+                ("lvw_FileListSizeWidth", lvw_FileList.Width.ToString(provider: CultureInfo.InvariantCulture)),
+                ("lvw_FileListSizeHeight", lvw_FileList.Height.ToString(provider: CultureInfo.InvariantCulture)),
+                ("pbx_imagePreviewSizeWidth", pbx_imagePreview.Width.ToString(provider: CultureInfo.InvariantCulture)),
+                ("pbx_imagePreviewSizeHeight",
+                 pbx_imagePreview.Height.ToString(provider: CultureInfo.InvariantCulture)),
+                ("tcr_MainSizeWidth", tcr_Main.Width.ToString(provider: CultureInfo.InvariantCulture)),
+                ("tcr_MainSizeHeight", tcr_Main.Height.ToString(provider: CultureInfo.InvariantCulture)),
+                ("tpg_MapSizeWidth", tpg_Map.Width.ToString(provider: CultureInfo.InvariantCulture)),
+                ("tpg_MapSizeHeight", tpg_Map.Height.ToString(provider: CultureInfo.InvariantCulture)),
+                ("wbv_MapAreaSizeWidth", wbv_MapArea.Width.ToString(provider: CultureInfo.InvariantCulture)),
+                ("wbv_MapAreaSizeHeight", wbv_MapArea.Height.ToString(provider: CultureInfo.InvariantCulture))
+            ];
+            foreach ((string settingId, string settingValue) in settings)
+            {
+                Logger.Debug(
+                    message:
+                    $"Writing setting.settingId {settingId}, setting.settingValue {settingValue}.");
+                HelperDataApplicationSettings.DataWriteSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: "generic",
+                    settingId: settingId,
+                    settingValue: settingValue
+                );
+            }
+        }
     }
 
 

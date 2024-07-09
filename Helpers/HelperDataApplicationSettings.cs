@@ -1,31 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Data.SQLite;
 
+// ReSharper disable InconsistentNaming
+
 namespace GeoTagNinja.Helpers;
 
 internal static class HelperDataApplicationSettings
 {
-    /// <summary>
-    ///     Deletes the data in the "write queue" table. Gets executed if the user presses ok/cancel on the settings form.
-    ///     Obvs if they press OK then DataTransferSQLiteSettings fires first.
-    /// </summary>
-    internal static void DataDeleteSQLitesettingsToWritePreQueue()
-    {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
-        sqliteDB.Open();
-
-        string sqlCommandStr = @"
-                                DELETE
-                                FROM settingsToWritePreQueue
-                                WHERE 1=1
-                                    
-                                
-                                "
-            ;
-        sqlCommandStr += ";";
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.ExecuteNonQuery();
-    }
+#region Read
 
     /// <summary>
     ///     Checks the SQLite database for checkbox-settings and returns true/false accordingly
@@ -35,8 +17,8 @@ internal static class HelperDataApplicationSettings
     /// <param name="settingId">The Checkbox's name itself</param>
     /// <returns>true or false</returns>
     internal static bool DataReadCheckBoxSettingTrueOrFalse(string tableName,
-                                                            string settingTabPage,
-                                                            string settingId)
+        string settingTabPage,
+        string settingId)
     {
         string valueInSQL = DataReadSQLiteSettings(
             tableName: tableName,
@@ -54,8 +36,8 @@ internal static class HelperDataApplicationSettings
     /// <param name="optionList">The list of options for the radio button.</param>
     /// <returns>The selected option from the radio button setting.</returns>
     internal static string DataReadRadioButtonSettingTrueOrFalse(string tableName,
-                                                                 string settingTabPage,
-                                                                 List<string> optionList)
+        string settingTabPage,
+        List<string> optionList)
     {
         string whichValueIsTrue = "";
         foreach (string optionValue in optionList)
@@ -86,13 +68,14 @@ internal static class HelperDataApplicationSettings
     /// <param name="returnBlankIfNull"></param>
     /// <returns>String - the value of the given SettingID</returns>
     internal static string DataReadSQLiteSettings(string tableName,
-                                                  string settingTabPage,
-                                                  string settingId,
-                                                  bool returnBlankIfNull = false)
+        string settingTabPage,
+        string settingId,
+        bool returnBlankIfNull = false)
     {
         string returnString = null;
 
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
+        using SQLiteConnection sqliteDB =
+            new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -115,7 +98,7 @@ internal static class HelperDataApplicationSettings
             returnString = reader.GetString(i: 0);
         }
 
-        if (returnBlankIfNull && string.IsNullOrWhiteSpace(returnString))
+        if (returnBlankIfNull && string.IsNullOrWhiteSpace(value: returnString))
         {
             returnString = "";
         }
@@ -123,28 +106,9 @@ internal static class HelperDataApplicationSettings
         return returnString;
     }
 
+#endregion
 
-    /// <summary>
-    ///     Transfers data from the "write queue" to the actual table. This is executed when the user presses the OK button in
-    ///     settings...
-    ///     ... until then the data is kept in the pre-queue table. ...
-    ///     The "main" table (file data table) used to have the same logic but that was converted to in-memory DataTables as
-    ///     writing up to thousands of tags...
-    ///     ... was very inefficient. Since settings only write a few tags I didn't bother doing the same. Boo me.
-    /// </summary>
-    internal static void DataTransferSQLiteSettings()
-    {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
-        sqliteDB.Open();
-
-        string sqlCommandStr = @"
-                                REPLACE INTO settings (settingTabPage, settingId, settingValue) " +
-                               "SELECT settingTabPage, settingId, settingValue FROM settingsToWritePreQueue;"
-            ;
-
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.ExecuteNonQuery();
-    }
+#region Write
 
     /// <summary>
     ///     Similar to the one above (which reads the data) - this one writes it.
@@ -157,13 +121,14 @@ internal static class HelperDataApplicationSettings
     /// <param name="settingId">Name of the SettingID for which data is requested</param>
     /// <param name="settingValue">The value to be stored.</param>
     internal static void DataWriteSQLiteSettings(string tableName,
-                                                 string settingTabPage,
-                                                 string settingId,
-                                                 string settingValue)
+        string settingTabPage,
+        string settingId,
+        string settingValue)
     {
-        DataDeleteSQLiteSettings(tableName, settingTabPage, settingId);
+        DataDeleteSQLiteSettings(tableName: tableName, settingTabPage: settingTabPage, settingId: settingId);
 
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
+        using SQLiteConnection sqliteDB =
+            new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
         string sqlCommandStrCMD = @"
@@ -180,16 +145,17 @@ internal static class HelperDataApplicationSettings
         sqlCommandStr.ExecuteNonQuery();
     }
 
-    internal static void DataDeleteSQLiteSettings(string tableName,
-                                                 string settingTabPage,
-                                                 string settingId)
-    {   
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
+    private static void DataDeleteSQLiteSettings(string tableName,
+        string settingTabPage,
+        string settingId)
+    {
+        using SQLiteConnection sqliteDB =
+            new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
         string sqlCommandStrCMD = @"
                                 DELETE FROM " +
-                                  tableName + " "+ 
+                                  tableName + " " +
                                   "WHERE settingTabPage = @settingTabPage AND settingId = @settingId;"
             ;
 
@@ -197,6 +163,60 @@ internal static class HelperDataApplicationSettings
         sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingTabPage", value: settingTabPage);
         sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingId", value: settingId);
         sqlCommandStr.ExecuteNonQuery();
+    }
+
+#endregion
+
+#region Transfer
+
+    /// <summary>
+    ///     Transfers data from the "write queue" to the actual table. This is executed when the user presses the OK button in
+    ///     settings...
+    ///     ... until then the data is kept in the pre-queue table. ...
+    ///     The "main" table (file data table) used to have the same logic but that was converted to in-memory DataTables as
+    ///     writing up to thousands of tags...
+    ///     ... was very inefficient. Since settings only write a few tags I didn't bother doing the same. Boo me.
+    /// </summary>
+    internal static void DataTransferSQLiteSettings()
+    {
+        using SQLiteConnection sqliteDB =
+            new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = @"
+                                REPLACE INTO settings (settingTabPage, settingId, settingValue) " +
+                               "SELECT settingTabPage, settingId, settingValue FROM settingsToWritePreQueue;"
+            ;
+
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        sqlToRun.ExecuteNonQuery();
+    }
+
+#endregion
+
+#region Delete & Cleanup
+
+    /// <summary>
+    ///     Deletes the data in the "write queue" table. Gets executed if the user presses ok/cancel on the settings form.
+    ///     Obvs if they press OK then DataTransferSQLiteSettings fires first.
+    /// </summary>
+    internal static void DataDeleteSQLitesettingsToWritePreQueue()
+    {
+        using SQLiteConnection sqliteDB =
+            new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = @"
+                                DELETE
+                                FROM settingsToWritePreQueue
+                                WHERE 1=1
+                                    
+                                
+                                "
+            ;
+        sqlCommandStr += ";";
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        sqlToRun.ExecuteNonQuery();
     }
 
     /// <summary>
@@ -242,4 +262,6 @@ internal static class HelperDataApplicationSettings
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
         sqlToRun.ExecuteNonQuery();
     }
+
+#endregion
 }
