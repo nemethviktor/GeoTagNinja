@@ -31,7 +31,7 @@ internal static class HelperExifExifToolOperator
     /// <returns>Empty Task</returns>
     internal static async Task RunExifTool(string exiftoolCmd,
                                            FrmMainApp frmMainAppInstance,
-                                           string initiator,
+                                           HelperGenericAncillaryListsArrays.ExifToolInititators initiator,
                                            bool processOriginalFile = false,
                                            bool writeXmpSideCar = false)
     {
@@ -70,7 +70,8 @@ internal static class HelperExifExifToolOperator
 
             switch (initiator)
             {
-                case "ExifWriteExifToFile":
+                case HelperGenericAncillaryListsArrays.ExifToolInititators
+                                                      .ExifWriteExifToFile:
                     string fileNameWithPath = null;
                     string fileNameWithoutPath = null;
                     DirectoryElement dirElemFileToDrop = null;
@@ -236,7 +237,8 @@ internal static class HelperExifExifToolOperator
                         }
                     };
                     break;
-                case "GenericCheckForNewVersions":
+                case HelperGenericAncillaryListsArrays.ExifToolInititators
+                                                      .GenericCheckForNewVersions:
                     prcExifTool.OutputDataReceived += (_,
                                                        data) =>
                     {
@@ -258,7 +260,8 @@ internal static class HelperExifExifToolOperator
                     };
 
                     break;
-                case "ExifGetTrackSyncData":
+                case HelperGenericAncillaryListsArrays.ExifToolInititators
+                                                      .ExifGetTrackSyncDataSyncPhotos:
                     prcExifTool.OutputDataReceived += (_,
                                                        data) =>
                     {

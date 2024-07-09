@@ -69,7 +69,9 @@ internal static class HelperExifReadGetImagePreviews
         ///////////////
         await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
                                                      frmMainAppInstance: null,
-                                                     initiator: "ExifGetImagePreviews");
+                                                     initiator:
+                                                     HelperGenericAncillaryListsArrays.ExifToolInititators
+                                                        .ExifGetImagePreviews);
         ///////////////
         FrmMainApp.Logger.Debug(message: "Done");
     }

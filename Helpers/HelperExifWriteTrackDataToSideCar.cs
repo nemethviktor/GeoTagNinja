@@ -111,7 +111,9 @@ internal class HelperExifWriteTrackDataToSideCar
         ///////////////
         await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
                                                      frmMainAppInstance: null,
-                                                     initiator: "ExifGetTrackSyncData");
+                                                     initiator:
+                                                     HelperGenericAncillaryListsArrays.ExifToolInititators
+                                                        .ExifGetTrackSyncDataSyncPhotos);
 
         ///////////////
         //// try to collect the xmp/xml files and then read them back into the listview.
