@@ -6,6 +6,7 @@ using System.IO.Compression;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using geoTagNinja;
@@ -65,15 +66,15 @@ internal static class HelperAPIVersionCheckers
         };
         RestClient client = new(options: options);
 
-        {
-            // admittedly no idea how to do this w/o any auth (as it's not needed) but this appears to work.
-        }
-        ;
+        // ReSharper disable once InconsistentNaming
         RestRequest request_GTNVersionQuery =
             new(resource: "repos/nemethviktor/GeoTagNinja/releases");
+
+        // ReSharper disable once InconsistentNaming
         RestResponse response_GTNVersionQuery =
             client.ExecuteGet(request: request_GTNVersionQuery);
 
+        // ReSharper disable once InconsistentNaming
         int lastGTNBuildOnline = 0;
         if (response_GTNVersionQuery.StatusCode.ToString() == "OK")
         {
@@ -84,17 +85,14 @@ internal static class HelperAPIVersionCheckers
             GTNReleaseAPIResponse[] gtnReleasesApiResponse =
                 GTNReleaseAPIResponse.FromJson(json: data.ToString());
 
-            // January 1, 2000
-            DateTimeOffset january1st2000 = new(year: 2000, month: 1, day: 1, hour: 0,
-                                                minute: 0, second: 0,
-                                                offset: TimeSpan.Zero);
-
-            DateTimeOffset lastGTNBuildDate = default;
+            // ReSharper disable once InconsistentNaming
+            int lastGTNBuildInt = 0;
+            Regex rgx = new(pattern: "[^0-9]");
 
             if (HelperVariables.UserSettingUpdatePreReleaseGTN)
             {
-                lastGTNBuildDate =
-                    new DateTimeOffset(dateTime: gtnReleasesApiResponse[0].PublishedAt);
+                bool _ = int.TryParse(s: rgx.Replace(input: gtnReleasesApiResponse[0].attribute, replacement: ""),
+                    result: out lastGTNBuildInt);
             }
             else
             {
@@ -102,19 +100,17 @@ internal static class HelperAPIVersionCheckers
                 {
                     if ((bool)!gtnReleasesApiResponse[i].Prerelease)
                     {
-                        lastGTNBuildDate =
-                            new DateTimeOffset(
-                                dateTime: gtnReleasesApiResponse[i].PublishedAt);
+                        bool _ = int.TryParse(
+                            s: rgx.Replace(input: gtnReleasesApiResponse[i].attribute, replacement: ""),
+                            result: out lastGTNBuildInt);
+                        ;
                     }
                 }
             }
 
-            // Calculate the number of days between lastGTNBuild and January 1, 2000
-            double daysDifference = (lastGTNBuildDate - january1st2000).TotalDays;
-
             // Add some logic to return 0 for build number if there's no result. While negative 73k isn't likely to be a problem I don't feel like experimenting.
             lastGTNBuildOnline =
-                Math.Max(val1: 0, val2: (int)Math.Floor(d: daysDifference));
+                Math.Max(val1: 0, val2: lastGTNBuildInt);
         }
         else
         {
@@ -125,7 +121,7 @@ internal static class HelperAPIVersionCheckers
                       response_GTNVersionQuery.StatusCode,
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Warning.ToString()),
+                                                                   .Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
@@ -173,10 +169,10 @@ internal static class HelperAPIVersionCheckers
         FrmMainApp.Logger.Trace(message: "nowUnixTime > lastCheckUnixTime:" +
                                          (nowUnixTime - lastCheckUnixTime));
         int checkUpdateVal = 604800; //604800 is a week's worth of seconds
-        #if DEBUG
+    #if DEBUG
         checkUpdateVal = 86400; // 86400 is a day's worth of seconds
-        //checkUpdateVal = 1; 
-        #endif
+        // checkUpdateVal = 1;
+    #endif
 
         if (nowUnixTime > lastCheckUnixTime + checkUpdateVal ||
             strLastOnlineVersionCheck == null)
@@ -188,10 +184,10 @@ internal static class HelperAPIVersionCheckers
 
             string exiftoolCmd = "-ver";
             await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
-                                                         frmMainAppInstance: null,
-                                                         initiator:
-                                                         HelperGenericAncillaryListsArrays.ExifToolInititators
-                                                            .GenericCheckForNewVersions);
+                frmMainAppInstance: null,
+                initiator:
+                HelperGenericAncillaryListsArrays.ExifToolInititators
+                                                 .GenericCheckForNewVersions);
             HelperVariables.CurrentExifToolVersionCloud =
                 API_ExifGetExifToolVersionFromWeb();
 
@@ -205,8 +201,8 @@ internal static class HelperAPIVersionCheckers
             if (HelperVariables.CurrentExifToolVersionCloud >
                 HelperVariables.CurrentExifToolVersionLocal &&
                 !File.Exists(path: Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                                                path2:
-                                                $"exiftool-{HelperVariables.CurrentExifToolVersionCloud}.zip")))
+                    path2:
+                    $"exiftool-{HelperVariables.CurrentExifToolVersionCloud}.zip")))
             {
                 FrmMainApp.Logger.Trace(
                     message: "Downloading newest exifTool version from the cloud. " +
@@ -253,9 +249,9 @@ internal static class HelperAPIVersionCheckers
             }
 
             CreateJsonForUpdate(localMajor: currentGTNVersionBuildMajor,
-                                localMinor: currentGTNVersionBuildMinor,
-                                remoteBuild: newestOnlineGTNVersion.ToString(
-                                    provider: CultureInfo.InvariantCulture));
+                localMinor: currentGTNVersionBuildMinor,
+                remoteBuild: newestOnlineGTNVersion.ToString(
+                    provider: CultureInfo.InvariantCulture));
 
             // write back to SQL
             HelperDataApplicationSettings.DataWriteSQLiteSettings(

@@ -354,8 +354,9 @@ public partial class FrmMainApp : Form
     private static void LaunchAutoUpdater()
     {
         HelperNonStatic updateHelper = new();
-        // AutoUpdater.InstalledVersion = new Version(version: "1.2"); // here for testing only.
-
+    #if DEBUG
+        //AutoUpdater.InstalledVersion = new Version(version: "1.2"); // here for testing only.
+    #endif
         AutoUpdater.Synchronous =
             true; // needs to be true otherwise the single pipe instance crashes. (well, I think _that_ crashes, something does.)
         AutoUpdater.ParseUpdateInfoEvent +=
@@ -364,7 +365,7 @@ public partial class FrmMainApp : Form
 
         string updateJsonPath =
             Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                         path2: "updateJsonData.json");
+                path2: "updateJsonData.json");
         AutoUpdater.Start(appCast: Path.Combine(updateJsonPath));
     }
 
