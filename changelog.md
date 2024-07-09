@@ -2,10 +2,10 @@
 
 **Build 8xxx [20240xxx]** 
 - NEW & UPDATED:
-  - Added an option to Overlay GPX Coordinate Tracks onto the map. This can be found within the Import GPX Tracks Form, at the bottom. Experimental.
+  - Added an option to Overlay GPX Coordinate Tracks onto the map. This can be found within the Import GPX Tracks Form, at the bottom. Experimental. #107
 
 - BUGS & FIXES:
-  - TBA
+  - Changed the way auto-updater works. It was taking `PublishedDate` as a basis for Build number, which wasn't entirely correct. #110
 
 **Build 8897 [20240511]** 
 - NEW & UPDATED:
