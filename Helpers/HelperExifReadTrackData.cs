@@ -12,6 +12,7 @@ using System.Xml.Serialization;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
 using GeoTagNinja.View.ListView;
+using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers;
@@ -24,25 +25,25 @@ internal static class HelperExifReadTrackData
     /// </summary>
     /// <param name="trackFileLocationType">File or Folder</param>
     /// <param name="trackFileLocationVal">The location of the above</param>
-    /// <param name="useTZAdjust">True or False to whether to adjust Time Zone</param>
     /// <param name="compareTZAgainst">If TZ should be compared against CreateDate or DateTimeOriginal</param>
     /// <param name="TZVal">Value as string, e.g "+01:00"</param>
     /// <param name="GeoMaxIntSecs"></param>
     /// <param name="GeoMaxExtSecs"></param>
     /// <param name="doNotReverseGeoCode">Whether reverse geocoding should be skipped</param>
-    /// <param name="language"></param>
+    /// <param name="getTrackDataOverlay">Whether to overlay the track data</param>
+    /// <param name="overlayDateList">Whether to fire up the overlay-track process and if so how</param>
     /// <param name="timeShiftSeconds">Int value if GPS time should be shifted.</param>
     /// <returns></returns>
     internal static async Task ExifGetTrackSyncData(string trackFileLocationType,
-                                                    string trackFileLocationVal,
-                                                    bool useTZAdjust,
-                                                    string compareTZAgainst,
-                                                    string TZVal,
-                                                    int GeoMaxIntSecs,
-                                                    int GeoMaxExtSecs,
-                                                    bool doNotReverseGeoCode,
-                                                    string language,
-                                                    int timeShiftSeconds = 0)
+        string trackFileLocationVal,
+        string compareTZAgainst,
+        string TZVal,
+        int GeoMaxIntSecs,
+        int GeoMaxExtSecs,
+        bool doNotReverseGeoCode,
+        TrackOverlaySetting getTrackDataOverlay,
+        List<DateTime> overlayDateList,
+        int timeShiftSeconds = 0)
     {
         //HelperVariables._sErrorMsg = "";
         HelperVariables._sOutputAndErrorMsg = "";
@@ -66,8 +67,7 @@ internal static class HelperExifReadTrackData
             {
                 trackFileList = Directory
                                .GetFiles(path: trackFileLocationVal)
-                               .Where(predicate: file => HelperGenericAncillaryListsArrays
-                                                        .GpxExtensions()
+                               .Where(predicate: file => GpxExtensions()
                                                         .Any(predicate: file.ToLower()
                                                             .EndsWith))
                                .ToList();
@@ -184,12 +184,12 @@ internal static class HelperExifReadTrackData
                                     dirElemFileToModify.GetAttributeValueString(
                                         attribute: ElementAttribute.GPSLatitude,
                                         version: DirectoryElement.AttributeVersion
-                                           .Stage3ReadyToWrite,
+                                                                 .Stage3ReadyToWrite,
                                         notFoundValue: dirElemFileToModify
                                            .GetAttributeValueString(
                                                 attribute: ElementAttribute.GPSLatitude,
                                                 version: DirectoryElement.AttributeVersion
-                                                   .Original,
+                                                                         .Original,
                                                 notFoundValue: FrmMainApp
                                                    .NullStringEquivalentGeneric,
                                                 nowSavingExif: false),
@@ -198,12 +198,12 @@ internal static class HelperExifReadTrackData
                                     dirElemFileToModify.GetAttributeValueString(
                                         attribute: ElementAttribute.GPSLongitude,
                                         version: DirectoryElement.AttributeVersion
-                                           .Stage3ReadyToWrite,
+                                                                 .Stage3ReadyToWrite,
                                         notFoundValue: dirElemFileToModify
                                            .GetAttributeValueString(
                                                 attribute: ElementAttribute.GPSLongitude,
                                                 version: DirectoryElement.AttributeVersion
-                                                   .Original,
+                                                                         .Original,
                                                 notFoundValue: FrmMainApp
                                                    .NullStringEquivalentGeneric,
                                                 nowSavingExif: false),
@@ -212,12 +212,12 @@ internal static class HelperExifReadTrackData
                                     dirElemFileToModify.GetAttributeValueString(
                                         attribute: ElementAttribute.GPSAltitude,
                                         version: DirectoryElement.AttributeVersion
-                                           .Stage3ReadyToWrite,
+                                                                 .Stage3ReadyToWrite,
                                         notFoundValue: dirElemFileToModify
                                            .GetAttributeValueString(
                                                 attribute: ElementAttribute.GPSAltitude,
                                                 version: DirectoryElement.AttributeVersion
-                                                   .Original,
+                                                                         .Original,
                                                 notFoundValue: FrmMainApp
                                                    .NullStringEquivalentGeneric,
                                                 nowSavingExif: false),
@@ -299,21 +299,21 @@ internal static class HelperExifReadTrackData
                                         attribute: ElementAttribute.GPSLatitude,
                                         value: strLatInAPI,
                                         version: DirectoryElement.AttributeVersion
-                                           .Stage3ReadyToWrite,
+                                                                 .Stage3ReadyToWrite,
                                         isMarkedForDeletion: false);
 
                                     dirElemFileToModify.SetAttributeValueAnyType(
                                         attribute: ElementAttribute.GPSLongitude,
                                         value: strLngInAPI,
                                         version: DirectoryElement.AttributeVersion
-                                           .Stage3ReadyToWrite,
+                                                                 .Stage3ReadyToWrite,
                                         isMarkedForDeletion: false);
 
                                     dirElemFileToModify.SetAttributeValueAnyType(
                                         attribute: ElementAttribute.GPSAltitude,
                                         value: altitudeInAPI,
                                         version: DirectoryElement.AttributeVersion
-                                           .Stage3ReadyToWrite,
+                                                                 .Stage3ReadyToWrite,
                                         isMarkedForDeletion: false);
 
                                     // clear city, state etc
@@ -323,7 +323,7 @@ internal static class HelperExifReadTrackData
                                         dirElemFileToModify.RemoveAttributeValue(
                                             attribute: attribute,
                                             version: DirectoryElement.AttributeVersion
-                                               .Stage3ReadyToWrite);
+                                                                     .Stage3ReadyToWrite);
                                     }
 
                                     // pull from web
@@ -408,6 +408,15 @@ internal static class HelperExifReadTrackData
                     }
                 }
             }
+
+            // this triggers ExifTool
+            if (getTrackDataOverlay == TrackOverlaySetting.OverlayForAllDates ||
+                getTrackDataOverlay == TrackOverlaySetting.OverlayForOverlappingDates)
+            {
+                await HelperExifReadTrackDataPath.ExifReadTrackFileForMapping(trackFileList: trackFileList,
+                    overlayDateSetting: getTrackDataOverlay, overlayDateList: overlayDateList, TZVal: TZVal);
+                frmMainAppInstance.Request_Map_NavigateGo();
+            }
         }
 
         CustomMessageBox customMessageBox = new(
@@ -415,7 +424,7 @@ internal static class HelperExifReadTrackData
                 messageBoxName: "mbx_FrmImportGpx_AskUserWantsReport"),
             caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                 captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question
-                                              .ToString()),
+                                                               .ToString()),
             buttons: MessageBoxButtons.YesNo,
             icon: MessageBoxIcon.Question);
         DialogResult dialogResult = customMessageBox.ShowDialog();

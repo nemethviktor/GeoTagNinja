@@ -11,5 +11,6 @@ gbx_GetAltitude,Get Altitude data,Obtenir les données d'altitude
 gbx_GetToponomy,Get Toponomy data,Obtenir les données de toponymie
 gbx_AppSettings,Application Settings,
 gbx_GeoNamesSettings,GeoNames Settings,
+gbx_OtherSettings,Other Settings,
 gbx_GeoNamesLanguageSettings,GeoNames Language Settings,
 gbx_MapColourMode,Map Colour Mode,

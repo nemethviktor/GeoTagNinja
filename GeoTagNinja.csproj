@@ -198,6 +198,7 @@
     <Compile Include="Helpers\HelperControlThemeManager.cs" />
     <Compile Include="Helpers\HelperDataSettingsExport.cs" />
     <Compile Include="Helpers\HelperDataSettingsImport.cs" />
+    <Compile Include="Helpers\HelperExifReadTrackDataPath.cs" />
     <Compile Include="Helpers\HelperExifWriteTrackDataToSideCar.cs" />
     <Compile Include="Helpers\HelperGenericAppStartup.cs" />
     <Compile Include="Helpers\HelperGenericAncillaryListsArrays.cs" />

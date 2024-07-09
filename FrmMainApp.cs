@@ -601,6 +601,7 @@ public partial class FrmMainApp : Form
     private void btn_NavigateMapGo_Click(object sender,
                                          EventArgs e)
     {
+        HelperVariables.LstTrackPath.Clear();
         HelperVariables.HsMapMarkers.Clear();
         HelperVariables.HsMapMarkers.Add(item: ParseLatLngTextBox());
         Request_Map_NavigateGo();
@@ -680,7 +681,7 @@ public partial class FrmMainApp : Form
                                     attribute: attribute,
                                     value: value,
                                     version: DirectoryElement.AttributeVersion
-                                       .Stage3ReadyToWrite,
+                                                             .Stage3ReadyToWrite,
                                     isMarkedForDeletion: false);
                             }
 
@@ -724,7 +725,7 @@ public partial class FrmMainApp : Form
                                     attribute: attribute,
                                     value: value,
                                     version: DirectoryElement.AttributeVersion
-                                       .Stage3ReadyToWrite,
+                                                             .Stage3ReadyToWrite,
                                     isMarkedForDeletion: false);
                             }
                         }
@@ -909,7 +910,7 @@ public partial class FrmMainApp : Form
     ///     ... and executes the navigation action.
     /// </summary>
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
-    private void Request_Map_NavigateGo()
+    internal void Request_Map_NavigateGo()
     {
         Logger.Debug(message: "Starting");
 
@@ -917,8 +918,9 @@ public partial class FrmMainApp : Form
         IDictionary<string, string> htmlReplacements = new Dictionary<string, string>();
 
         HelperVariables.HTMLAddMarker = "";
-        HelperVariables.HTMLCreatePoints =
-            ""; // this is ok as-is, won't break the map if stays so.
+        HelperVariables.HTMLCreatePoints = ""; // this is ok as-is, won't break the map if stays so.
+        double dblLat = 0;
+        double dblLng = 0;
         double dblMinLat = 180;
         double dblMinLng = 180;
         double dblMaxLat = -180;
@@ -926,49 +928,38 @@ public partial class FrmMainApp : Form
 
         // Add markers on map for every marker-item and
         // find viewing rect. for map (min / max of all markers to enclose all of them)
-        if (HelperVariables.HsMapMarkers.Count > 0)
+        if (HelperVariables.HsMapMarkers.Count > 0 ||
+            HelperVariables.LstTrackPath.Count > 0)
         {
-            double dLat = 0;
-            double dLng = 0;
-            foreach ((string strLat, string strLng) locationCoord in HelperVariables
-                        .HsMapMarkers)
+            if (HelperVariables.HsMapMarkers.Count > 0)
             {
-                // Add marker location
-                HelperVariables.HTMLAddMarker += "var marker = L.marker([" +
-                                                 locationCoord.strLat +
-                                                 ", " +
-                                                 locationCoord.strLng +
-                                                 "],{\n" +
-                                                 "draggable: true,\n" +
-                                                 "autoPan: true\n" +
-                                                 "}).addTo(map).openPopup();" +
-                                                 "\n";
-
-                // Update viewing rectangle if needed
-                dLat = double.Parse(s: locationCoord.strLat,
-                                    provider: CultureInfo.InvariantCulture);
-                dLng = double.Parse(s: locationCoord.strLng,
-                                    provider: CultureInfo.InvariantCulture);
-                dblMinLat = Math.Min(val1: dblMinLat, val2: dLat);
-                dblMaxLat = Math.Max(val1: dblMaxLat, val2: dLat);
-                dblMinLng = Math.Min(val1: dblMinLng, val2: dLng);
-                dblMaxLng = Math.Max(val1: dblMaxLng, val2: dLng);
-
-                Logger.Trace(message: "Added marker: strLatCoordinate: " +
-                                      locationCoord.strLat +
-                                      " / strLngCoordinate:" +
-                                      locationCoord.strLng);
+                foreach ((string strLat, string strLng) locationCoord in HelperVariables.HsMapMarkers)
+                {
+                    AssignViewingRectangle(locationCoord: locationCoord, addMarker: true);
+                }
             }
 
-            HelperVariables.LastLat = dLat;
-            HelperVariables.LastLng = dLng;
+            htmlReplacements.Add(key: "{ HTMLAddMarker }",
+                value: HelperVariables.HTMLAddMarker);
+
+
+            if (HelperVariables.LstTrackPath.Count > 0)
+            {
+                foreach ((string strLat, string strLng) locationCoord in HelperVariables.LstTrackPath)
+                {
+                    {
+                        AssignViewingRectangle(locationCoord: locationCoord, addMarker: false);
+                    }
+                }
+            }
+
+            HelperVariables.LastLat = dblLat;
+            HelperVariables.LastLng = dblLng;
 
             HelperVariables.MinLat = dblMinLat;
             HelperVariables.MinLng = dblMinLng;
             HelperVariables.MaxLat = dblMaxLat;
             HelperVariables.MaxLng = dblMaxLng;
-            htmlReplacements.Add(key: "{ HTMLAddMarker }",
-                                 value: HelperVariables.HTMLAddMarker);
         }
         else
         {
@@ -985,6 +976,25 @@ public partial class FrmMainApp : Form
         string showPointsStr = "";
         string showFOVStr = "";
         string showDestinationPolyLineStr = "";
+        string multiCoordsDefaultStr = """
+                                       var #multiCoordsNum# = [
+                                           [#multiCoordsList#]
+                                       ];
+                                       var plArray = [];
+                                       for(var i=0; i<#multiCoordsNum#.length; i++) {
+                                           plArray.push(L.polyline(#multiCoordsNum#[i]).addTo(map));
+                                       }
+                                       try{
+                                       
+                                           L.polylineDecorator(#multiCoordsNum#, {
+                                               patterns: [
+                                                   {offset: 25, repeat: 50, symbol: L.Symbol.arrowHead({pixelSize: 15, pathOptions: {fillOpacity: 1, weight: 0}})}
+                                               ]
+                                           }).addTo(map);
+                                       }catch(e){
+                                        
+                                       }
+                                       """;
         string mapStyleFilter = HelperVariables.UserSettingMapColourMode switch
         {
             "DarkInverse" =>
@@ -1010,7 +1020,15 @@ public partial class FrmMainApp : Form
                                          newValue: mapStyleFilter);
 
         // check there is one and only one DE selected and add ImgDirection if there's any
+        // ... or that the gpx-import list has values
         ListView lvw = lvw_FileList;
+
+        Dictionary<string, HashSet<string>>
+            dictDestinations =
+                new(); // we use a HashSet here because i want to avoid unnecessary duplication
+
+        AddTrackPathDataToDictDestinations(dictDestinations: dictDestinations);
+
         if (lvw.SelectedItems.Count == 1)
         {
             DirectoryElement directoryElement =
@@ -1030,11 +1048,6 @@ public partial class FrmMainApp : Form
             {
                 imgDirection = null;
             }
-
-            //string imgDirectionRef = directoryElement.GetAttributeValueString(
-            //    attribute: ElementAttribute.GPSImgDirectionRef,
-            //    version: directoryElement.GetMaxAttributeVersion(attribute: ElementAttribute.GPSImgDirectionRef),
-            //    notFoundValue: "Magnetic North");
 
             double? GPSLatitude = directoryElement.GetAttributeValue<double>(
                 attribute: ElementAttribute.GPSLatitude,
@@ -1076,11 +1089,6 @@ public partial class FrmMainApp : Form
                 GPSLatitude != null &&
                 GPSLongitude != null)
             {
-                // this is actually unused
-                //(double, double) northCoords = imgDirectionRef == "Magnetic North"
-                //    ? HelperVariables.MapNorthCoordsMagnetic
-                //    : HelperVariables.MapNorthCoordsGeographic;
-
                 // this is for the line
                 (double, double) targetCoordinates =
                         HelperGenericCalculations.CalculateTargetCoordinates(
@@ -1090,6 +1098,7 @@ public partial class FrmMainApp : Form
                             distance: 10)
                     ;
 
+                // this is for the FOV cone
                 createPointsStr = string.Format(format: """
                                                         /* Create points */
                                                         let points = [
@@ -1107,24 +1116,24 @@ public partial class FrmMainApp : Form
                                                             }},
                                                         ];
                                                         """,
-                                                arg0: GPSLatitudeStr +
-                                                      "," +
-                                                      GPSLongitudeStr,
-                                                arg1: targetCoordinates.Item1
-                                                         .ToString(
-                                                              provider: CultureInfo
-                                                                 .InvariantCulture)
-                                                         .Replace(
-                                                              oldChar: ',',
-                                                              newChar: '.') +
-                                                      "," +
-                                                      targetCoordinates.Item2
-                                                         .ToString(
-                                                              provider: CultureInfo
-                                                                 .InvariantCulture)
-                                                         .Replace(
-                                                              oldChar: ',',
-                                                              newChar: '.'));
+                    arg0: GPSLatitudeStr +
+                          "," +
+                          GPSLongitudeStr,
+                    arg1: targetCoordinates.Item1
+                                           .ToString(
+                                                provider: CultureInfo
+                                                   .InvariantCulture)
+                                           .Replace(
+                                                oldChar: ',',
+                                                newChar: '.') +
+                          "," +
+                          targetCoordinates.Item2
+                                           .ToString(
+                                                provider: CultureInfo
+                                                   .InvariantCulture)
+                                           .Replace(
+                                                oldChar: ',',
+                                                newChar: '.'));
 
                 showLinesStr = """
                                /* Show lines */
@@ -1177,15 +1186,15 @@ public partial class FrmMainApp : Form
                                                            [{2}]
                                                        ]).addTo(map);
                                                        """,
-                                               arg0: GPSLatitudeStr +
-                                                     "," +
-                                                     GPSLongitudeStr,
-                                               arg1: HelperGenericCalculations
-                                                  .ConvertFOVCoordListsToString(
-                                                       sourceList: FOVCoordinates.Item1),
-                                               arg2: HelperGenericCalculations
-                                                  .ConvertFOVCoordListsToString(
-                                                       sourceList: FOVCoordinates.Item2));
+                        arg0: GPSLatitudeStr +
+                              "," +
+                              GPSLongitudeStr,
+                        arg1: HelperGenericCalculations
+                           .ConvertFOVCoordListsToString(
+                                sourceList: FOVCoordinates.Item1),
+                        arg2: HelperGenericCalculations
+                           .ConvertFOVCoordListsToString(
+                                sourceList: FOVCoordinates.Item2));
                 }
             }
         }
@@ -1193,29 +1202,6 @@ public partial class FrmMainApp : Form
         // if we have more than one, check if there are any w/ Destination coords
         else
         {
-            Dictionary<string, HashSet<string>>
-                dictDestinations =
-                    new(); // we use a HashSet here because i want to avoid unnecessary duplication
-            string multiCoordsDefaultStr = """
-                                           var #multiCoordsNum# = [
-                                               [#multiCoordsList#]
-                                           ];
-                                           var plArray = [];
-                                           for(var i=0; i<#multiCoordsNum#.length; i++) {
-                                               plArray.push(L.polyline(#multiCoordsNum#[i]).addTo(map));
-                                           }
-                                           try{
-                                           
-                                               L.polylineDecorator(#multiCoordsNum#, {
-                                                   patterns: [
-                                                       {offset: 25, repeat: 50, symbol: L.Symbol.arrowHead({pixelSize: 15, pathOptions: {fillOpacity: 1, weight: 0}})}
-                                                   ]
-                                               }).addTo(map);
-                                           }catch(e){
-                                            
-                                           }
-                                           """;
-
             foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
             {
                 DirectoryElement directoryElement = (DirectoryElement)lvi.Tag;
@@ -1281,41 +1267,19 @@ public partial class FrmMainApp : Form
                        .Add(item: gpsCoords);
                 }
             }
-
-            if (dictDestinations.Count == 0)
-            {
-                showDestinationPolyLineStr = ""; // reset if false alarm
-            }
-            else
-            {
-                // build a line of lines
-                // for each (numbered) destination group...
-                for (int dictDestinationCounter = 0;
-                     dictDestinationCounter < dictDestinations.Count;
-                     dictDestinationCounter++)
-                {
-                    string multiCoordsListStr = "";
-                    string multiCoordsNum = dictDestinationCounter.ToString();
-                    string multiCoordsStr = multiCoordsDefaultStr.Replace(
-                        oldValue: "#multiCoordsNum#",
-                        newValue: "multiCoords" + multiCoordsNum);
-                    foreach (string gpsCoord in dictDestinations
-                                               .ElementAt(index: dictDestinationCounter)
-                                               .Value)
-                    {
-                        multiCoordsListStr += gpsCoord + ",";
-                    }
-
-                    multiCoordsListStr += dictDestinations
-                                         .ElementAt(index: dictDestinationCounter)
-                                         .Key;
-
-                    multiCoordsStr = multiCoordsStr.Replace(
-                        oldValue: "#multiCoordsList#", newValue: multiCoordsListStr);
-                    showDestinationPolyLineStr += multiCoordsStr;
-                }
-            }
         }
+
+        if (dictDestinations.Count == 0 &&
+            HelperVariables.LstTrackPath.Count == 0)
+        {
+            showDestinationPolyLineStr = ""; // reset if false alarm
+        }
+        else
+        {
+            // build a line of lines
+            showDestinationPolyLineStr = BuildDestinationPolyLineStr(multiCoordsDefaultStr: multiCoordsDefaultStr);
+        }
+
 
         List<(string key, string value)> replacements = new()
         {
@@ -1344,6 +1308,121 @@ public partial class FrmMainApp : Form
         }
 
         UpdateWebView(replacements: htmlReplacements);
+
+        void AddTrackPathDataToDictDestinations(Dictionary<string, HashSet<string>> dictDestinations)
+        {
+            if (HelperVariables.LstTrackPath.Count != 0)
+            {
+                // bit of a trick here and also to make coding easier. 
+                // i'm faking HelperVariables.LstTrackPath into dictDestinations
+
+                // dictDestinations:
+                // key: "[51.493224,0.121858]"
+                // value: "[[51.491087,0.119283], [51.491915,0.121091], [51.493224,0.121858]]"
+
+                // logically then the last item in the list (which is formatted differently) is the key
+                string destCoords =
+                    "[" + HelperVariables.LstTrackPath.Last().strLat + "," +
+                    HelperVariables.LstTrackPath.Last().strLng + "]";
+                if (!dictDestinations.ContainsKey(key: destCoords))
+                {
+                    dictDestinations[key: destCoords] = new HashSet<string>();
+                }
+
+                for (int i = 0; i < HelperVariables.LstTrackPath.Count; i++)
+                {
+                    string gpsCoords = "[" + HelperVariables.LstTrackPath[index: i].strLat + "," +
+                                       HelperVariables.LstTrackPath[index: i].strLng + "]";
+                    dictDestinations[key: destCoords]
+                       .Add(item: gpsCoords);
+                }
+            }
+        }
+
+        double GetMinLatitude(double dLat)
+        {
+            return Math.Min(val1: dblMinLat, val2: dLat);
+        }
+
+        double GetMaxLatitude(double dLat)
+        {
+            return Math.Max(val1: dblMaxLat, val2: dLat);
+        }
+
+        double GetMinLongitude(double dLng)
+        {
+            return Math.Min(val1: dblMinLng, val2: dLng);
+        }
+
+        double GetMaxLongitude(double dLng)
+        {
+            return Math.Max(val1: dblMaxLng, val2: dLng);
+        }
+
+
+        void AssignViewingRectangle((string strLat, string strLng) locationCoord, bool addMarker)
+        {
+            if (addMarker)
+            {
+                // Add marker location
+                HelperVariables.HTMLAddMarker += "var marker = L.marker([" +
+                                                 locationCoord.strLat +
+                                                 ", " +
+                                                 locationCoord.strLng +
+                                                 "],{\n" +
+                                                 "draggable: true,\n" +
+                                                 "autoPan: true\n" +
+                                                 "}).addTo(map).openPopup();" +
+                                                 "\n";
+
+                Logger.Trace(message: "Added marker: strLatCoordinate: " +
+                                      locationCoord.strLat +
+                                      " / strLngCoordinate:" +
+                                      locationCoord.strLng);
+            }
+
+            // Update viewing rectangle if needed
+            dblLat = double.Parse(s: locationCoord.strLat,
+                provider: CultureInfo.InvariantCulture);
+            dblLng = double.Parse(s: locationCoord.strLng,
+                provider: CultureInfo.InvariantCulture);
+
+            dblMinLat = GetMinLatitude(dLat: dblLat);
+            dblMaxLat = GetMaxLatitude(dLat: dblLat);
+            dblMinLng = GetMinLongitude(dLng: dblLng);
+            dblMaxLng = GetMaxLongitude(dLng: dblLng);
+        }
+
+        string BuildDestinationPolyLineStr(string multiCoordsDefaultStr)
+        {
+            // for each (numbered) destination group...
+            for (int dictDestinationCounter = 0;
+                 dictDestinationCounter < dictDestinations.Count;
+                 dictDestinationCounter++)
+            {
+                string multiCoordsListStr = "";
+                string multiCoordsNum = dictDestinationCounter.ToString();
+                string multiCoordsStr = multiCoordsDefaultStr.Replace(
+                    oldValue: "#multiCoordsNum#",
+                    newValue: "multiCoords" + multiCoordsNum);
+                foreach (string gpsCoord in dictDestinations
+                                           .ElementAt(index: dictDestinationCounter)
+                                           .Value)
+                {
+                    multiCoordsListStr += gpsCoord + ",";
+                }
+
+                multiCoordsListStr += dictDestinations
+                                     .ElementAt(index: dictDestinationCounter)
+                                     .Key;
+
+                multiCoordsStr = multiCoordsStr.Replace(
+                    oldValue: "#multiCoordsList#", newValue: multiCoordsListStr);
+                showDestinationPolyLineStr += multiCoordsStr;
+            }
+
+            return showDestinationPolyLineStr;
+        }
     }
 
 
@@ -2308,9 +2387,7 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    ///     Responsible for updating the main listview. For each file depending on the "compatible" or "incompatible" naming
-    ///     ... it assigns the outstanding files according to compatibility and then runs
-    ///     the respective exiftool commands.
+    ///     Responsible for updating the main listview.
     ///     Also I've introduced a "Please Wait" Form to block the Main Form from being interacted with while the folder is
     ///     refreshing. Soz but needed.
     /// </summary>
@@ -2321,6 +2398,7 @@ public partial class FrmMainApp : Form
         Logger.Trace(message: "Clear lvw_FileList");
         lvw_FileList.ClearData();
         DirectoryElements.Clear();
+        HelperVariables.LstTrackPath.Clear();
         Application.DoEvents();
         HelperGenericFileLocking.FilesBeingProcessed.Clear();
         RemoveGeoDataIsRunning = false;
@@ -2573,10 +2651,10 @@ public partial class FrmMainApp : Form
                                      version: DirectoryElement.AttributeVersion.Original,
                                      notFoundValue: null, nowSavingExif: false));
                 lvi.SubItems.Add(text: directoryElement.GetAttributeValueString(
-                                     attribute: attribute,
-                                     version: DirectoryElement.AttributeVersion
-                                        .Stage3ReadyToWrite,
-                                     notFoundValue: null, nowSavingExif: false));
+                    attribute: attribute,
+                    version: DirectoryElement.AttributeVersion
+                                             .Stage3ReadyToWrite,
+                    notFoundValue: null, nowSavingExif: false));
                 lvw_ExifData.Items.Add(value: lvi);
             }
         }

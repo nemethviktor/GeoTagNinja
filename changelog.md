@@ -2,7 +2,7 @@
 
 **Build 8xxx [20240xxx]** 
 - NEW & UPDATED:
-  - TBA
+  - Added an option to Overlay GPX Coordinate Tracks onto the map. This can be found within the Import GPX Tracks Form, at the bottom. Experimental.
 
 - BUGS & FIXES:
   - TBA

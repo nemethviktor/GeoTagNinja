@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
+using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
 using TimeZoneConverter;
+using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
 
 namespace GeoTagNinja;
 
@@ -39,13 +42,14 @@ public partial class FrmImportGpx : Form
         pbx_importFromAnotherFolder.Enabled = false;
         lbl_importOneFile.Enabled = true;
         lbl_importFromAnotherFolder.Enabled = false;
+        ckb_OverlayGPXForSelectedDatesOnly.Enabled = false;
 
         rbt_importFromCurrentFolder.Enabled = !Program.collectionModeEnabled;
 
         HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
 
         // load TZ-CBX
-        foreach (string timezone in HelperGenericAncillaryListsArrays.GetTimeZones())
+        foreach (string timezone in GetTimeZones())
         {
             cbx_UseTimeZone.Items.Add(item: timezone);
         }
@@ -110,11 +114,10 @@ public partial class FrmImportGpx : Form
         ckb_UseDST.Enabled = false;
 
         // set filter for ofd
-        string gpxExtensionsFilter = "Track Files|";
-        foreach (string gpxExtension in HelperGenericAncillaryListsArrays.GpxExtensions())
-        {
-            gpxExtensionsFilter += "*." + gpxExtension + ";";
-        }
+        string gpxExtensionsFilter = GpxExtensions()
+           .Aggregate(seed: "Track Files|",
+                func: (current,
+                    extension) => current + "*." + extension + ";");
 
         ofd_importOneFile.Filter = gpxExtensionsFilter;
 
@@ -216,6 +219,48 @@ public partial class FrmImportGpx : Form
             nud_Days.Value = _lastShiftDay;
             nud_Days.Text = _lastShiftDay.ToString(provider: CultureInfo.InvariantCulture);
         }
+    }
+
+    /// <summary>
+    ///     Gets the min and max 'takenDate' values for the items selected in frmMain's lvw.
+    /// </summary>
+    /// <returns></returns>
+    private List<DateTime> GetMinMaxDateTimesFromFrmMainListView()
+    {
+        DateTime minTakenDateTime = DateTime.MaxValue; // yes these are backwards on purpose
+        DateTime maxTakenDateTime = DateTime.MinValue; // yes these are backwards on purpose
+        List<DateTime> retList = new();
+        ListView lvw = _frmMainAppInstance.lvw_FileList;
+        foreach (ListViewItem lvi in lvw.SelectedItems)
+        {
+            DirectoryElement directoryElement =
+                lvi.Tag as DirectoryElement;
+            DateTime? takenDateTime = directoryElement.GetAttributeValue<DateTime>(
+                attribute: SourcesAndAttributes.ElementAttribute.TakenDate,
+                version: directoryElement.GetMaxAttributeVersion(
+                    attribute: SourcesAndAttributes.ElementAttribute.TakenDate),
+                notFoundValue: null);
+            if (takenDateTime.HasValue)
+            {
+                // i'm sure there are better ways around this but i'm lazy
+                retList.Clear();
+                if (takenDateTime < minTakenDateTime)
+                {
+                    minTakenDateTime = ((DateTime)takenDateTime).Date;
+                }
+
+                if (takenDateTime > maxTakenDateTime)
+                {
+                    maxTakenDateTime = (DateTime)takenDateTime;
+                }
+
+                // the idea is that i'll use indexes 0 and 1 specifically to get the values we need.
+                retList.Add(item: minTakenDateTime);
+                retList.Add(item: maxTakenDateTime);
+            }
+        }
+
+        return retList;
     }
 
 
@@ -347,19 +392,33 @@ public partial class FrmImportGpx : Form
             btn_OK.AutoSize = true;
             btn_OK.Enabled = false;
             btn_Cancel.Enabled = false;
+            List<DateTime> overlayDateList = new();
+
+            TrackOverlaySetting trackOverlaySetting = new();
+            if (!ckb_LoadTrackOntoMap.Checked)
+            {
+                trackOverlaySetting = TrackOverlaySetting.DoNotOverlay;
+            }
+            else if (!ckb_OverlayGPXForSelectedDatesOnly.Checked)
+            {
+                trackOverlaySetting = TrackOverlaySetting.OverlayForAllDates;
+            }
+            else
+            {
+                trackOverlaySetting = TrackOverlaySetting.OverlayForOverlappingDates;
+                overlayDateList = GetMinMaxDateTimesFromFrmMainListView();
+            }
 
             await HelperExifReadTrackData.ExifGetTrackSyncData(
                 trackFileLocationType: trackFileLocationType,
                 trackFileLocationVal: trackFileLocationVal,
-                useTZAdjust: ckb_UseTimeZone.Checked,
                 compareTZAgainst: cbx_ImportTimeAgainst.Text,
                 TZVal: lbl_TZValue.Text,
                 GeoMaxIntSecs: (int)nud_GeoMaxIntSecs.Value,
                 GeoMaxExtSecs: (int)nud_GeoMaxExtSecs.Value,
                 doNotReverseGeoCode: ckb_DoNotQueryAPI.Checked,
-                language: ISO639Lang,
-                timeShiftSeconds: timeShiftSeconds
-            );
+                getTrackDataOverlay: trackOverlaySetting,
+                overlayDateList: overlayDateList, timeShiftSeconds: timeShiftSeconds);
             Hide();
         }
         else
@@ -402,6 +461,12 @@ public partial class FrmImportGpx : Form
                                             .TrimStart(' ')
                                             .TrimEnd(' ');
         lbl_TZValue.Text = updatelbl_TZValue();
+    }
+
+
+    private void ckb_LoadTrackOntoMap_CheckedChanged(object sender, EventArgs e)
+    {
+        ckb_OverlayGPXForSelectedDatesOnly.Enabled = ckb_LoadTrackOntoMap.Checked;
     }
 
 #endregion

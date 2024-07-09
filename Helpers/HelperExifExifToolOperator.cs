@@ -77,7 +77,7 @@ internal static class HelperExifExifToolOperator
                     DirectoryElement dirElemFileToDrop = null;
 
                     prcExifTool.OutputDataReceived += (_,
-                                                       data) =>
+                        data) =>
                     {
                         if (!string.IsNullOrEmpty(value: data.Data))
                         {
@@ -163,9 +163,9 @@ internal static class HelperExifExifToolOperator
                                             // not adding the xmp here because the current code logic would pull a "unified" data point.                         
 
                                             frmMainAppInstance.lvw_FileList
-                                               .ScrollToDataPoint(
-                                                    itemText:
-                                                    fileNameWithoutPath); // this is redundant here.
+                                                              .ScrollToDataPoint(
+                                                                   itemText:
+                                                                   fileNameWithoutPath); // this is redundant here.
                                         }
 
                                         if ((data.Data.Contains(value: "files updated") ||
@@ -183,12 +183,12 @@ internal static class HelperExifExifToolOperator
                                                     fileNameWithPath.Substring(
                                                         startIndex: 0,
                                                         length: fileNameWithPath.Length -
-                                                        4);
+                                                                4);
                                                 dirElemFileToDrop =
                                                     FrmMainApp.DirectoryElements
-                                                       .FindElementByBelongingToXmpWithPath(
-                                                            XMPFileNameWithPath:
-                                                            pathOfFile);
+                                                              .FindElementByBelongingToXmpWithPath(
+                                                                   XMPFileNameWithPath:
+                                                                   pathOfFile);
                                                 RemoveDirElementFromDe3AndCopyDataToOriginal(
                                                     dirElemToDrop: dirElemFileToDrop,
                                                     frmMainAppInstance:
@@ -217,11 +217,11 @@ internal static class HelperExifExifToolOperator
                                     MessageBox.Show(text: data.Data +
                                                           (pathIsLikelyUTF
                                                               ? Environment.NewLine +
-                                                              Environment.NewLine +
-                                                              HelperControlAndMessageBoxHandling
-                                                                 .GenericGetMessageBoxText(
-                                                                      messageBoxName:
-                                                                      "mbx_GenericPathLikelyUTF")
+                                                                Environment.NewLine +
+                                                                HelperControlAndMessageBoxHandling
+                                                                   .GenericGetMessageBoxText(
+                                                                        messageBoxName:
+                                                                        "mbx_GenericPathLikelyUTF")
                                                               : ""));
                                 }
                             }
@@ -229,7 +229,7 @@ internal static class HelperExifExifToolOperator
                     };
 
                     prcExifTool.ErrorDataReceived += (_,
-                                                      data) =>
+                        data) =>
                     {
                         if (!string.IsNullOrEmpty(value: data.Data))
                         {
@@ -240,7 +240,7 @@ internal static class HelperExifExifToolOperator
                 case HelperGenericAncillaryListsArrays.ExifToolInititators
                                                       .GenericCheckForNewVersions:
                     prcExifTool.OutputDataReceived += (_,
-                                                       data) =>
+                        data) =>
                     {
                         if (data.Data != null &&
                             data.Data.Length > 0)
@@ -250,12 +250,12 @@ internal static class HelperExifExifToolOperator
                         }
 
                         decimal.TryParse(s: HelperVariables._sOutputAndErrorMsg
-                                            .Replace(oldValue: "\r", newValue: "")
-                                            .Replace(oldValue: "\n", newValue: ""),
-                                         provider: CultureInfo.InvariantCulture,
-                                         style: NumberStyles.Any,
-                                         result: out HelperVariables
-                                            .CurrentExifToolVersionLocal
+                                                           .Replace(oldValue: "\r", newValue: "")
+                                                           .Replace(oldValue: "\n", newValue: ""),
+                            provider: CultureInfo.InvariantCulture,
+                            style: NumberStyles.Any,
+                            result: out HelperVariables
+                               .CurrentExifToolVersionLocal
                         );
                     };
 
@@ -263,7 +263,7 @@ internal static class HelperExifExifToolOperator
                 case HelperGenericAncillaryListsArrays.ExifToolInititators
                                                       .ExifGetTrackSyncDataSyncPhotos:
                     prcExifTool.OutputDataReceived += (_,
-                                                       data) =>
+                        data) =>
                     {
                         if (data.Data is
                             {
@@ -286,20 +286,22 @@ internal static class HelperExifExifToolOperator
                         }
                     };
                     prcExifTool.ErrorDataReceived += (_,
-                                                      data) =>
+                        data) =>
                     {
                         if (data.Data != null &&
                             data.Data.Length > 0)
                         {
                             HelperVariables._sOutputAndErrorMsg += "ERROR: " +
-                                data.Data.ToString() +
-                                Environment.NewLine;
+                                                                   data.Data.ToString() +
+                                                                   Environment.NewLine;
                         }
                     };
                     break;
+
+                case HelperGenericAncillaryListsArrays.ExifToolInititators.ExifGetTrackSyncDataLoadTrackPath:
                 default:
                     prcExifTool.OutputDataReceived += (_,
-                                                       data) =>
+                        data) =>
                     {
                         if (data.Data != null &&
                             data.Data.Length > 0)
@@ -310,14 +312,14 @@ internal static class HelperExifExifToolOperator
                     };
 
                     prcExifTool.ErrorDataReceived += (_,
-                                                      data) =>
+                        data) =>
                     {
                         if (data.Data != null &&
                             data.Data.Length > 0)
                         {
                             HelperVariables._sOutputAndErrorMsg += "ERROR: " +
-                                data.Data.ToString() +
-                                Environment.NewLine;
+                                                                   data.Data.ToString() +
+                                                                   Environment.NewLine;
                         }
                     };
                     break;
