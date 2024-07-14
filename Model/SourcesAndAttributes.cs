@@ -54,6 +54,7 @@ public static class SourcesAndAttributes
         LensSpec,
         TakenDate,
         CreateDate,
+        GPSDateTime,
         TakenDateDaysShift,
         TakenDateHoursShift,
         TakenDateMinutesShift,
@@ -100,8 +101,6 @@ public static class SourcesAndAttributes
                             "exif:GPSAltitude",
                             "XMP:GPSAltitude"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 8,
                         isGeoData = true
                     }
@@ -124,8 +123,6 @@ public static class SourcesAndAttributes
                             "exif:GPSAltitudeRef",
                             "XMP:GPSAltitudeRef"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 9,
                         isGeoData = true
                     }
@@ -149,8 +146,6 @@ public static class SourcesAndAttributes
                             "exif:GPSDestLatitude",
                             "XMP:GPSDestLatitude"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 16,
                         isGeoData = true
                     }
@@ -172,8 +167,6 @@ public static class SourcesAndAttributes
                             "GPS:GPSDestLatitudeRef",
                             "exif:GPSDestLatitudeRef"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 17,
                         isGeoData = true
                     }
@@ -197,8 +190,6 @@ public static class SourcesAndAttributes
                             "exif:GPSDestLongitude",
                             "XMP:GPSDestLongitude"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 18,
                         isGeoData = true
                     }
@@ -220,8 +211,6 @@ public static class SourcesAndAttributes
                             "GPS:GPSDestLongitudeRef",
                             "exif:GPSDestLongitudeRef"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 19,
                         isGeoData = true
                     }
@@ -242,8 +231,6 @@ public static class SourcesAndAttributes
                             //        "XMP:GPSImgDirection",
                             //        "EXIF:GPSImgDirection"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 20
                     }
                 },
@@ -264,8 +251,6 @@ public static class SourcesAndAttributes
                             //        "XMP:GPSImgDirectionRef",
                             //        "EXIF:GPSImgDirectionRef"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 21
                     }
                 },
@@ -287,8 +272,6 @@ public static class SourcesAndAttributes
                             "exif:GPSLatitude",
                             "XMP:GPSLatitude"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 2,
                         isGeoData = true
                     }
@@ -309,8 +292,6 @@ public static class SourcesAndAttributes
                             "GPS:GPSLatitudeRef",
                             "exif:GPSLatitudeRef"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 3,
                         isGeoData = true
                     }
@@ -333,8 +314,6 @@ public static class SourcesAndAttributes
                             "exif:GPSLongitude",
                             "XMP:GPSLongitude"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 4,
                         isGeoData = true
                     }
@@ -356,8 +335,6 @@ public static class SourcesAndAttributes
                             "GPS:GPSLongitudeRef",
                             "exif:GPSLongitudeRef"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 5,
                         isGeoData = true
                     }
@@ -378,8 +355,6 @@ public static class SourcesAndAttributes
                             "GPS:GPSSpeed",
                             "exif:GPSSpeed"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 6
                     }
                 },
@@ -399,8 +374,6 @@ public static class SourcesAndAttributes
                             "GPS:GPSSpeedRef",
                             "exif:GPSSpeedRef"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 7
                     }
                 },
@@ -412,8 +385,6 @@ public static class SourcesAndAttributes
                         TypeOfElement = typeof(string),
                         InAttributes = new List<string>(),
                         OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 1
                     }
                 },
@@ -425,8 +396,6 @@ public static class SourcesAndAttributes
                         TypeOfElement = typeof(string),
                         InAttributes = new List<string>(),
                         OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 15
                     }
                 },
@@ -446,8 +415,6 @@ public static class SourcesAndAttributes
                             "City",
                             "XMP-photoshop:City"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 13,
                         isGeoData = true
                     }
@@ -469,8 +436,6 @@ public static class SourcesAndAttributes
                             "XMP-iptcCore:CountryCode",
                             "IPTC:Country-PrimaryLocationCode"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 11,
                         isGeoData = true
                     }
@@ -492,8 +457,6 @@ public static class SourcesAndAttributes
                             "XMP-photoshop:Country",
                             "IPTC:Country-PrimaryLocationName"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 10,
                         isGeoData = true
                     }
@@ -515,8 +478,6 @@ public static class SourcesAndAttributes
                             "XMP-photoshop:State",
                             "IPTC:Province-State"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 12,
                         isGeoData = true
                     }
@@ -537,8 +498,6 @@ public static class SourcesAndAttributes
                             "Sub-location",
                             "XMP-iptcCore:Location"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 14,
                         isGeoData = true
                     }
@@ -555,8 +514,6 @@ public static class SourcesAndAttributes
                             "EXIF:Make"
                         },
                         OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 22
                     }
                 },
@@ -572,8 +529,6 @@ public static class SourcesAndAttributes
                             "EXIF:Model"
                         },
                         OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 23
                     }
                 },
@@ -593,8 +548,6 @@ public static class SourcesAndAttributes
                             "XMP:Rating",
                             "EXIF:Rating"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 24
                     }
                 },
@@ -610,8 +563,6 @@ public static class SourcesAndAttributes
                             "EXIF:ExposureTime"
                         },
                         OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 25
                     }
                 },
@@ -627,8 +578,6 @@ public static class SourcesAndAttributes
                             "EXIF:FNumber"
                         },
                         OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 26
                     }
                 },
@@ -644,8 +593,6 @@ public static class SourcesAndAttributes
                             "EXIF:FocalLength"
                         },
                         OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 27
                     }
                 },
@@ -663,8 +610,6 @@ public static class SourcesAndAttributes
                             "Composite:FocalLength35efl"
                         },
                         OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 28
                     }
                 },
@@ -681,8 +626,6 @@ public static class SourcesAndAttributes
                             "Composite:ISO"
                         },
                         OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 29
                     }
                 },
@@ -699,8 +642,6 @@ public static class SourcesAndAttributes
                             "Composite:Lens"
                         },
                         OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 30
                     }
                 },
@@ -720,8 +661,6 @@ public static class SourcesAndAttributes
                             "XMP:DateTimeOriginal",
                             "EXIF:DateTimeOriginal"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 31
                     }
                 },
@@ -741,9 +680,21 @@ public static class SourcesAndAttributes
                             "XMP:CreateDate",
                             "EXIF:CreateDate"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
                         OrderID = 32
+                    }
+                },
+                {
+                    ElementAttribute.GPSDateTime, new ElementAttributeMapping
+                    {
+                        Name = "GPSDateTime",
+                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_DATETIME,
+                        TypeOfElement = typeof(DateTime),
+                        InAttributes = new List<string>
+                        {
+                            "Composite:GPSDateTime"
+                        },
+                        OutAttributes = new List<string>(),
+                        OrderID = 33
                     }
                 },
                 {
@@ -753,9 +704,7 @@ public static class SourcesAndAttributes
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
                         InAttributes = new List<string>(),
-                        OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>()
+                        OutAttributes = new List<string>()
                     }
                 },
                 {
@@ -765,9 +714,7 @@ public static class SourcesAndAttributes
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
                         InAttributes = new List<string>(),
-                        OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>()
+                        OutAttributes = new List<string>()
                     }
                 },
                 {
@@ -777,9 +724,7 @@ public static class SourcesAndAttributes
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
                         InAttributes = new List<string>(),
-                        OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>()
+                        OutAttributes = new List<string>()
                     }
                 },
                 {
@@ -789,9 +734,7 @@ public static class SourcesAndAttributes
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
                         InAttributes = new List<string>(),
-                        OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>()
+                        OutAttributes = new List<string>()
                     }
                 },
                 {
@@ -801,9 +744,7 @@ public static class SourcesAndAttributes
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
                         InAttributes = new List<string>(),
-                        OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>()
+                        OutAttributes = new List<string>()
                     }
                 },
                 {
@@ -813,9 +754,7 @@ public static class SourcesAndAttributes
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
                         InAttributes = new List<string>(),
-                        OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>()
+                        OutAttributes = new List<string>()
                     }
                 },
                 {
@@ -825,9 +764,7 @@ public static class SourcesAndAttributes
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
                         InAttributes = new List<string>(),
-                        OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>()
+                        OutAttributes = new List<string>()
                     }
                 },
                 {
@@ -837,9 +774,7 @@ public static class SourcesAndAttributes
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
                         InAttributes = new List<string>(),
-                        OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>()
+                        OutAttributes = new List<string>()
                     }
                 },
                 {
@@ -858,9 +793,7 @@ public static class SourcesAndAttributes
                             "EXIF:OffsetTimeOriginal",
                             "EXIF:OffsetTime"
                         },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
-                        OrderID = 33
+                        OrderID = 34
                     }
                 },
                 {
@@ -870,9 +803,7 @@ public static class SourcesAndAttributes
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(string),
                         InAttributes = new List<string>(),
-                        OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>()
+                        OutAttributes = new List<string>()
                     }
                 },
                 {
@@ -885,9 +816,7 @@ public static class SourcesAndAttributes
                             { "IPTC:Keywords" },
                         OutAttributes = new List<string>
                             { "IPTC:Keywords" },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
-                        OrderID = 34
+                        OrderID = 35
                     }
                 },
                 {
@@ -900,9 +829,7 @@ public static class SourcesAndAttributes
                             { "XMP:Subject" },
                         OutAttributes = new List<string>
                             { "XMP:Subject" },
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>(),
-                        OrderID = 35
+                        OrderID = 36
                     }
                 },
                 {
@@ -912,9 +839,7 @@ public static class SourcesAndAttributes
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.GUID,
                         TypeOfElement = typeof(string),
                         InAttributes = new List<string>(),
-                        OutAttributes = new List<string>(),
-                        IPTCKeywords = new List<string>(),
-                        XMPSubjects = new List<string>()
+                        OutAttributes = new List<string>()
                     }
                 }
             };
@@ -977,7 +902,7 @@ public static class SourcesAndAttributes
     public static int GetElementAttributesOrderID(ElementAttribute attributeToFind)
     {
         if (TagsToAttributes.TryGetValue(key: attributeToFind,
-                                         value: out ElementAttributeMapping mapping))
+                value: out ElementAttributeMapping mapping))
         {
             return mapping.OrderID;
         }

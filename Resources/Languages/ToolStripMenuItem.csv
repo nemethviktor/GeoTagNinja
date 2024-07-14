@@ -2,7 +2,7 @@
 tmi_File,File,Fichiers
 tmi_File_SaveAll,Save All,Sauver tout
 tmi_File_EditFiles,Edit Files,Editer les fichiers
-tmi_File_ImportGPX,Import GPX/JSON Track Files,Importer des fichiers de piste GPX/JSON
+tmi_File_ImportExportGPX,Import/Export GPX/JSON Track Files,Importer/Exporter des fichiers de piste GPX/JSON
 tmi_File_Quit,Quit,Quitter
 tmi_Settings,Settings,Paramètres
 tmi_Settings_Settings,Settings,Paramètres

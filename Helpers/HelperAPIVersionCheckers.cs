@@ -170,8 +170,8 @@ internal static class HelperAPIVersionCheckers
                                          (nowUnixTime - lastCheckUnixTime));
         int checkUpdateVal = 604800; //604800 is a week's worth of seconds
     #if DEBUG
-        checkUpdateVal = 86400; // 86400 is a day's worth of seconds
-        // checkUpdateVal = 1;
+        //checkUpdateVal = 86400; // 86400 is a day's worth of seconds
+        checkUpdateVal = 1;
     #endif
 
         if (nowUnixTime > lastCheckUnixTime + checkUpdateVal ||

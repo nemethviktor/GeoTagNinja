@@ -42,7 +42,7 @@ namespace GeoTagNinja
             this.tmi_File = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_SaveAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_EditFiles = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_File_ImportGPX = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_File_ImportExportGPX = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_CopyGeoData = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_PasteGeoData = new System.Windows.Forms.ToolStripMenuItem();
             this.tss_ToolStripSeparator_Main = new System.Windows.Forms.ToolStripSeparator();
@@ -60,7 +60,7 @@ namespace GeoTagNinja
             this.tsb_EditFile = new System.Windows.Forms.ToolStripButton();
             this.tsb_GetAllFromWeb = new System.Windows.Forms.ToolStripButton();
             this.tsb_RemoveGeoData = new System.Windows.Forms.ToolStripButton();
-            this.tsb_ImportGPX = new System.Windows.Forms.ToolStripButton();
+            this.tsb_ImportExportGPX = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsb_FeedbackFeatureRequest = new System.Windows.Forms.ToolStripButton();
             this.tsb_BugReport = new System.Windows.Forms.ToolStripButton();
@@ -75,7 +75,7 @@ namespace GeoTagNinja
             this.cmi_ShowHideCols = new System.Windows.Forms.ToolStripMenuItem();
             this.cmi_removeCachedData = new System.Windows.Forms.ToolStripMenuItem();
             this.cmi_OpenCoordsInAPI = new System.Windows.Forms.ToolStripMenuItem();
-            this.pbx_imagePreview = new ImagePreview();
+            this.pbx_imagePreview = new GeoTagNinja.View.ImagePreview();
             this.flp_ProcessingInfo = new System.Windows.Forms.FlowLayoutPanel();
             this.lbl_ParseProgress = new System.Windows.Forms.Label();
             this.tcr_Main = new System.Windows.Forms.TabControl();
@@ -150,7 +150,7 @@ namespace GeoTagNinja
             this.tmi_File.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tmi_File_SaveAll,
             this.tmi_File_EditFiles,
-            this.tmi_File_ImportGPX,
+            this.tmi_File_ImportExportGPX,
             this.tmi_File_CopyGeoData,
             this.tmi_File_PasteGeoData,
             this.tss_ToolStripSeparator_Main,
@@ -175,12 +175,12 @@ namespace GeoTagNinja
             this.tmi_File_EditFiles.Text = "tmi_File_EditFiles";
             this.tmi_File_EditFiles.Click += new System.EventHandler(this.tmi_File_EditFiles_Click);
             // 
-            // tmi_File_ImportGPX
+            // tmi_File_ImportExportGPX
             // 
-            this.tmi_File_ImportGPX.Name = "tmi_File_ImportGPX";
-            this.tmi_File_ImportGPX.Size = new System.Drawing.Size(275, 22);
-            this.tmi_File_ImportGPX.Text = "tmi_File_ImportGPX";
-            this.tmi_File_ImportGPX.Click += new System.EventHandler(this.tmi_File_ImportGPX_Click);
+            this.tmi_File_ImportExportGPX.Name = "tmi_File_ImportExportGPX";
+            this.tmi_File_ImportExportGPX.Size = new System.Drawing.Size(275, 22);
+            this.tmi_File_ImportExportGPX.Text = "tmi_File_ImportExportGPX";
+            this.tmi_File_ImportExportGPX.Click += new System.EventHandler(this.tmi_File_ImportExportGPX_Click);
             // 
             // tmi_File_CopyGeoData
             // 
@@ -275,7 +275,7 @@ namespace GeoTagNinja
             this.tsb_EditFile,
             this.tsb_GetAllFromWeb,
             this.tsb_RemoveGeoData,
-            this.tsb_ImportGPX,
+            this.tsb_ImportExportGPX,
             this.toolStripSeparator1,
             this.tsb_FeedbackFeatureRequest,
             this.tsb_BugReport});
@@ -343,16 +343,16 @@ namespace GeoTagNinja
             this.tsb_RemoveGeoData.Text = "tsb_RemoveGeoData";
             this.tsb_RemoveGeoData.Click += new System.EventHandler(this.tsb_RemoveGeoData_Click);
             // 
-            // tsb_ImportGPX
+            // tsb_ImportExportGPX
             // 
-            this.tsb_ImportGPX.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsb_ImportGPX.Image = ((System.Drawing.Image)(resources.GetObject("tsb_ImportGPX.Image")));
-            this.tsb_ImportGPX.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsb_ImportGPX.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsb_ImportGPX.Name = "tsb_ImportGPX";
-            this.tsb_ImportGPX.Size = new System.Drawing.Size(23, 22);
-            this.tsb_ImportGPX.Text = "tsb_ImportGPX";
-            this.tsb_ImportGPX.Click += new System.EventHandler(this.tsb_ImportGPX_Click);
+            this.tsb_ImportExportGPX.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsb_ImportExportGPX.Image = ((System.Drawing.Image)(resources.GetObject("tsb_ImportExportGPX.Image")));
+            this.tsb_ImportExportGPX.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsb_ImportExportGPX.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsb_ImportExportGPX.Name = "tsb_ImportExportGPX";
+            this.tsb_ImportExportGPX.Size = new System.Drawing.Size(23, 22);
+            this.tsb_ImportExportGPX.Text = "tsb_ImportExportGPX";
+            this.tsb_ImportExportGPX.Click += new System.EventHandler(this.tsb_ImportExportGPX_Click);
             // 
             // toolStripSeparator1
             // 
@@ -501,13 +501,13 @@ namespace GeoTagNinja
             this.cmi_removeCachedData,
             this.cmi_OpenCoordsInAPI});
             this.cms_FileListView.Name = "cms_FileListView";
-            this.cms_FileListView.Size = new System.Drawing.Size(202, 92);
+            this.cms_FileListView.Size = new System.Drawing.Size(204, 70);
             // 
             // cmi_ShowHideCols
             // 
             this.cmi_ShowHideCols.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.cmi_ShowHideCols.Name = "cmi_ShowHideCols";
-            this.cmi_ShowHideCols.Size = new System.Drawing.Size(201, 22);
+            this.cmi_ShowHideCols.Size = new System.Drawing.Size(203, 22);
             this.cmi_ShowHideCols.Text = "cmi_ShowHideCols";
             this.cmi_ShowHideCols.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.cmi_ShowHideCols.Click += new System.EventHandler(this.selectColumnsToolStripMenuItem_Click);
@@ -515,14 +515,14 @@ namespace GeoTagNinja
             // cmi_removeCachedData
             // 
             this.cmi_removeCachedData.Name = "cmi_removeCachedData";
-            this.cmi_removeCachedData.Size = new System.Drawing.Size(201, 22);
+            this.cmi_removeCachedData.Size = new System.Drawing.Size(203, 22);
             this.cmi_removeCachedData.Text = "cmi_removeCachedData";
             this.cmi_removeCachedData.Click += new System.EventHandler(this.cmi_removeCachedData_Click);
             // 
             // cmi_OpenCoordsInAPI
             // 
             this.cmi_OpenCoordsInAPI.Name = "cmi_OpenCoordsInAPI";
-            this.cmi_OpenCoordsInAPI.Size = new System.Drawing.Size(201, 22);
+            this.cmi_OpenCoordsInAPI.Size = new System.Drawing.Size(203, 22);
             this.cmi_OpenCoordsInAPI.Text = "cmi_OpenCoordsInAPI";
             this.cmi_OpenCoordsInAPI.Click += new System.EventHandler(this.cmi_OpenCoordsInAPI_Click);
             // 
@@ -912,8 +912,8 @@ namespace GeoTagNinja
         private ToolStripMenuItem tmi_File_PasteGeoData;
         private ToolStripButton tsb_EditFile;
         private ToolStripButton tsb_RemoveGeoData;
-        private ToolStripMenuItem tmi_File_ImportGPX;
-        private ToolStripButton tsb_ImportGPX;
+        private ToolStripMenuItem tmi_File_ImportExportGPX;
+        private ToolStripButton tsb_ImportExportGPX;
         private ToolStripButton tsb_GetAllFromWeb;
         private SplitContainer splitContainerMain;
         private SplitContainer splitContainerLeftTop;

@@ -3,6 +3,10 @@
 **Build 8xxx [20240xxx]** 
 - NEW & UPDATED:
   - Added an option to Overlay GPX Coordinate Tracks onto the map. This can be found within the Import GPX Tracks Form, at the bottom. Experimental. #107
+  - Added GPX Track Export functionality #114
+  - Added the parsing of `GPSDateTime` tags as a read-only item.
+  - Turned off ExifTool auto-update due to changes in the distribution logic (Phil changed the single-file to a 500-file setup)
+	- Patched ExifTool to 12.87 being the last single-file version.
 
 - BUGS & FIXES:
   - Changed the way auto-updater works. It was taking `PublishedDate` as a basis for Build number, which wasn't entirely correct. #110

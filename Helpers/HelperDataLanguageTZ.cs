@@ -129,7 +129,8 @@ internal static class HelperDataLanguageTZ
         string retStrVal =
             HelperGenericAncillaryListsArrays
                .LanguageStringsDict
-               .Where(predicate: kvp => kvp.Key == objectType + "_" + objectName)
+               .Where(predicate: kvp => string.Equals(a: kvp.Key, b: objectType + "_" + objectName,
+                    comparisonType: StringComparison.OrdinalIgnoreCase))
                .Select(selector: kvp => kvp.Value)
                .FirstOrDefault();
 

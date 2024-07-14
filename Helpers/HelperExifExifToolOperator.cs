@@ -261,7 +261,7 @@ internal static class HelperExifExifToolOperator
 
                     break;
                 case HelperGenericAncillaryListsArrays.ExifToolInititators
-                                                      .ExifGetTrackSyncDataSyncPhotos:
+                                                      .ExifGetTrackSyncDataReadSyncPhotos:
                     prcExifTool.OutputDataReceived += (_,
                         data) =>
                     {
@@ -297,8 +297,8 @@ internal static class HelperExifExifToolOperator
                         }
                     };
                     break;
-
-                case HelperGenericAncillaryListsArrays.ExifToolInititators.ExifGetTrackSyncDataLoadTrackPath:
+                case HelperGenericAncillaryListsArrays.ExifToolInititators.ExifGetTrackSyncDataReadTrackPath:
+                case HelperGenericAncillaryListsArrays.ExifToolInititators.ExifGetTrackSyncDataWriteTrackPath:
                 default:
                     prcExifTool.OutputDataReceived += (_,
                         data) =>
