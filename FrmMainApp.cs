@@ -156,10 +156,10 @@ public partial class FrmMainApp : Form
         }
 
         FileTarget logfile = new(name: "logfile") { FileName = logFileLocation };
-        #if (DEBUG)
+    #if (DEBUG)
         config.AddRule(minLevel: LogLevel.Trace, maxLevel: LogLevel.Fatal,
-                       target: logfile);
-        #else
+            target: logfile);
+    #else
         config.AddRule(minLevel: LogLevel.Debug, maxLevel: LogLevel.Fatal, target: logfile);
     #endif
 
@@ -168,7 +168,7 @@ public partial class FrmMainApp : Form
         ConsoleTarget logconsole = new(name: "logconsole");
 
         config.AddRule(minLevel: LogLevel.Info, maxLevel: LogLevel.Fatal,
-                       target: logconsole);
+            target: logconsole);
 
         // Apply config           
         LogManager.Configuration = config;
@@ -204,10 +204,10 @@ public partial class FrmMainApp : Form
         HelperGenericAppStartup.AppStartupCheckWebView2();
         AppStartupInitializeComponentFrmMainApp();
         AppStartupSetAppTheme();
-        AppStartupApplyVisualStyleDefaults();
 
         AppStartupEnableDoubleBuffering();
         FormClosing += FrmMainApp_FormClosing;
+        //AppStartupApplyVisualStyleDefaults();
 
         Logger.Info(message: "Constructor: Done");
     }
@@ -219,7 +219,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void FrmMainApp_Load(object sender,
-                                       EventArgs e)
+        EventArgs e)
     {
         Logger.Info(message: "OnLoad: Starting");
         // icon
@@ -325,9 +325,12 @@ public partial class FrmMainApp : Form
         // load lvwFileList
         lvw_FileList_LoadOrUpdate();
 
+        splitContainerMain.Paint += splitContainerControl_Paint;
+        splitContainerMain.Invalidate();
+
         Logger.Trace(message: "Assign 'Enter' Key behaviour to tbx_lng");
         nud_lng.KeyPress += (sndr,
-                             ev) =>
+            ev) =>
         {
             if (ev.KeyChar.Equals(obj: (char)13))
             {
@@ -345,7 +348,6 @@ public partial class FrmMainApp : Form
 
         await HelperAPIVersionCheckers.CheckForNewVersions();
         LaunchAutoUpdater();
-
         Logger.Info(message: "OnLoad: Done.");
     }
 
@@ -378,7 +380,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void FrmMainApp_FormClosing(object sender,
-                                              FormClosingEventArgs e)
+        FormClosingEventArgs e)
     {
         Logger.Debug(message: "OnClose: Starting");
 
@@ -466,7 +468,7 @@ public partial class FrmMainApp : Form
                 File.Delete(path: HelperVariables.ExifToolExePathRoamingPerm);
 
                 File.Move(sourceFileName: HelperVariables.ExifToolExePathRoamingTemp,
-                          destFileName: HelperVariables.ExifToolExePathRoamingPerm);
+                    destFileName: HelperVariables.ExifToolExePathRoamingPerm);
             }
             catch
             {
@@ -489,40 +491,10 @@ public partial class FrmMainApp : Form
                 ("lastLat", nud_lat.Text),
                 ("lastLng", nud_lng.Text),
 
-                ("splitContainerMainSizeWidth",
-                 splitContainerMain.Width.ToString(provider: CultureInfo.InvariantCulture)),
-                ("splitContainerMainSizeHeight",
-                 splitContainerMain.Height.ToString(provider: CultureInfo.InvariantCulture)),
-
                 ("splitContainerMainSplitterDistance",
                  splitContainerMain.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture)),
-
-                ("splitContainerMainSplitterWidth",
-                 splitContainerMain.SplitterWidth.ToString(provider: CultureInfo.InvariantCulture)),
-
-                ("splitContainerLeftTopSizeWidth",
-                 splitContainerLeftTop.Width.ToString(provider: CultureInfo.InvariantCulture)),
-
-                ("splitContainerLeftTopSizeHeight",
-                 splitContainerLeftTop.Height.ToString(provider: CultureInfo.InvariantCulture)),
-
                 ("splitContainerLeftTopSplitterDistance",
-                 splitContainerLeftTop.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture)),
-
-                ("splitContainerLeftTopSplitterWidth",
-                 splitContainerLeftTop.SplitterWidth.ToString(provider: CultureInfo.InvariantCulture)),
-
-                ("lvw_FileListSizeWidth", lvw_FileList.Width.ToString(provider: CultureInfo.InvariantCulture)),
-                ("lvw_FileListSizeHeight", lvw_FileList.Height.ToString(provider: CultureInfo.InvariantCulture)),
-                ("pbx_imagePreviewSizeWidth", pbx_imagePreview.Width.ToString(provider: CultureInfo.InvariantCulture)),
-                ("pbx_imagePreviewSizeHeight",
-                 pbx_imagePreview.Height.ToString(provider: CultureInfo.InvariantCulture)),
-                ("tcr_MainSizeWidth", tcr_Main.Width.ToString(provider: CultureInfo.InvariantCulture)),
-                ("tcr_MainSizeHeight", tcr_Main.Height.ToString(provider: CultureInfo.InvariantCulture)),
-                ("tpg_MapSizeWidth", tpg_Map.Width.ToString(provider: CultureInfo.InvariantCulture)),
-                ("tpg_MapSizeHeight", tpg_Map.Height.ToString(provider: CultureInfo.InvariantCulture)),
-                ("wbv_MapAreaSizeWidth", wbv_MapArea.Width.ToString(provider: CultureInfo.InvariantCulture)),
-                ("wbv_MapAreaSizeHeight", wbv_MapArea.Height.ToString(provider: CultureInfo.InvariantCulture))
+                 splitContainerLeftTop.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture))
             ];
             foreach ((string settingId, string settingValue) in settings)
             {
@@ -552,7 +524,6 @@ public partial class FrmMainApp : Form
 
 #endregion
 
-
 #region Map Stuff
 
     /// <summary>
@@ -567,7 +538,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void wbv_MapArea_WebMessageReceived(object sender,
-                                                CoreWebView2WebMessageReceivedEventArgs e)
+        CoreWebView2WebMessageReceivedEventArgs e)
     {
         string jsonString = e.WebMessageAsJson;
 
@@ -582,13 +553,13 @@ public partial class FrmMainApp : Form
             isDragged: true
         };
         double.TryParse(s: strLat, style: NumberStyles.Any,
-                        provider: CultureInfo.InvariantCulture,
-                        result: out
-                        double dblLat); // trust me i hate this f...king culture thing as much as possible...
+            provider: CultureInfo.InvariantCulture,
+            result: out
+            double dblLat); // trust me i hate this f...king culture thing as much as possible...
         double.TryParse(s: strLng, style: NumberStyles.Any,
-                        provider: CultureInfo.InvariantCulture,
-                        result: out
-                        double dblLng); // trust me i hate this f...king culture thing as much as possible...
+            provider: CultureInfo.InvariantCulture,
+            result: out
+            double dblLng); // trust me i hate this f...king culture thing as much as possible...
         // if the user zooms out too much they can encounter an "unreal" coordinate.
 
         double correctedDblLat =
@@ -601,9 +572,9 @@ public partial class FrmMainApp : Form
         nud_lng.Text = correctedDblLng.ToString(provider: CultureInfo.InvariantCulture);
 
         nud_lat.Value = Convert.ToDecimal(value: correctedDblLat,
-                                          provider: CultureInfo.InvariantCulture);
+            provider: CultureInfo.InvariantCulture);
         nud_lng.Value = Convert.ToDecimal(value: correctedDblLng,
-                                          provider: CultureInfo.InvariantCulture);
+            provider: CultureInfo.InvariantCulture);
 
         if (isDragged && askIfUserWantsToSaveDraggedMapData())
         {
@@ -618,7 +589,8 @@ public partial class FrmMainApp : Form
     /// <param name="e">Unused</param>
     private void webView_CoreWebView2InitializationCompleted(object sender,
         CoreWebView2InitializationCompletedEventArgs e)
-    { }
+    {
+    }
 
     /// <summary>
     ///     Checks if the user wants to have a "dragged datapoint" actioned to be sent onto selected files.
@@ -643,7 +615,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void btn_NavigateMapGo_Click(object sender,
-                                         EventArgs e)
+        EventArgs e)
     {
         HelperVariables.LstTrackPath.Clear();
         HelperVariables.HsMapMarkers.Clear();
@@ -658,7 +630,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Name of the button that has been clicked</param>
     /// <param name="e">Unused</param>
     private async void btn_loctToFile_Click(object sender,
-                                            EventArgs e)
+        EventArgs e)
     {
         // convert selected lat/long to str
         string strGPSLatitudeOnTheMap = nud_lat.Text.Replace(oldChar: ',', newChar: '.');
@@ -671,13 +643,13 @@ public partial class FrmMainApp : Form
 
         // lat/long gets written regardless of update-toponomy-choice
         if (double.TryParse(s: strGPSLatitudeOnTheMap,
-                            style: NumberStyles.Any,
-                            provider: CultureInfo.InvariantCulture,
-                            result: out double _) &&
+                style: NumberStyles.Any,
+                provider: CultureInfo.InvariantCulture,
+                result: out double _) &&
             double.TryParse(s: strGPSLongitudeOnTheMap,
-                            style: NumberStyles.Any,
-                            provider: CultureInfo.InvariantCulture,
-                            result: out double _))
+                style: NumberStyles.Any,
+                provider: CultureInfo.InvariantCulture,
+                result: out double _))
         {
             if (lvw_FileList.SelectedItems.Count > 0)
             {
@@ -869,11 +841,11 @@ public partial class FrmMainApp : Form
             double parsedLat;
             double parsedLng;
             if (double.TryParse(s: strLatCoordinate, style: NumberStyles.Any,
-                                provider: CultureInfo.InvariantCulture,
-                                result: out parsedLat) &&
+                    provider: CultureInfo.InvariantCulture,
+                    result: out parsedLat) &&
                 double.TryParse(s: strLngCoordinate, style: NumberStyles.Any,
-                                provider: CultureInfo.InvariantCulture,
-                                result: out parsedLng))
+                    provider: CultureInfo.InvariantCulture,
+                    result: out parsedLng))
             {
                 LatCoordinate = strLatCoordinate;
                 LngCoordinate = strLngCoordinate;
@@ -909,8 +881,8 @@ public partial class FrmMainApp : Form
         if (HelperVariables.UserSettingArcGisApiKey != null)
         {
             htmlCode = htmlCode.Replace(oldValue: "yourApiKey",
-                                        newValue: HelperVariables
-                                           .UserSettingArcGisApiKey);
+                newValue: HelperVariables
+                   .UserSettingArcGisApiKey);
         }
 
         Logger.Trace(message: "HelperStatic.UserSettingArcGisApiKey == null: " +
@@ -919,8 +891,8 @@ public partial class FrmMainApp : Form
         foreach (KeyValuePair<string, string> replacement in replacements)
         {
             Logger.Trace(message: string.Format(format: "Replace: {0} -> {1}",
-                                                arg0: replacement.Key,
-                                                arg1: replacement.Value));
+                arg0: replacement.Key,
+                arg1: replacement.Value));
             htmlCode =
                 htmlCode.Replace(oldValue: replacement.Key, newValue: replacement.Value);
         }
@@ -1061,7 +1033,7 @@ public partial class FrmMainApp : Form
                              	#replaceMe#
                              }
                              """.Replace(oldValue: "#replaceMe#",
-                                         newValue: mapStyleFilter);
+            newValue: mapStyleFilter);
 
         // check there is one and only one DE selected and add ImgDirection if there's any
         // ... or that the gpx-import list has values
@@ -1536,7 +1508,7 @@ public partial class FrmMainApp : Form
             Logger.Trace(message: "Read map.html file");
             _mapHtmlTemplateCode = File.ReadAllText(
                 path: Path.Combine(path1: HelperVariables.ResourcesFolderPath,
-                                   path2: "map.html"));
+                    path2: "map.html"));
             Logger.Trace(message: "Read map.html file OK");
         }
         catch (Exception ex)
@@ -1614,7 +1586,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tmi_File_SaveAll_Click(object sender,
-                                              EventArgs e)
+        EventArgs e)
     {
         // i think having an Item active can cause a lock on it
         while (HelperGenericFileLocking.FileListBeingUpdated ||
@@ -1637,7 +1609,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_File_EditFiles_Click(object sender,
-                                          EventArgs e)
+        EventArgs e)
     {
         filesToEditGUIDStringList.Clear();
 
@@ -1664,7 +1636,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_File_CopyGeoData_Click(object sender,
-                                            EventArgs e)
+        EventArgs e)
     {
         FileListViewCopyPaste.ListViewCopyGeoData();
     }
@@ -1675,7 +1647,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_File_PasteGeoData_Click(object sender,
-                                             EventArgs e)
+        EventArgs e)
     {
         FileListViewCopyPaste.ListViewPasteGeoData();
     }
@@ -1687,7 +1659,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_File_ImportGPX_Click(object sender,
-                                          EventArgs e)
+        EventArgs e)
     {
         FrmImportGpx = new FrmImportGpx();
         FrmImportGpx.Text = HelperDataLanguageTZ.DataReadDTObjectText(
@@ -1703,7 +1675,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_File_Quit_Click(object sender,
-                                     EventArgs e)
+        EventArgs e)
     {
         HelperFileSystemOperators.FsoCleanUpUserFolder();
         Application.Exit();
@@ -1720,7 +1692,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tsb_Refresh_lvwFileList_Click(object sender,
-                                                     EventArgs e)
+        EventArgs e)
     {
         Logger.Debug(message: "Starting");
 
@@ -1790,7 +1762,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tsb_GetAllFromWeb_Click(object sender,
-                                               EventArgs e)
+        EventArgs e)
     {
         HelperVariables.OperationAPIReturnedOKResponse = true;
         _StopProcessingRows = false;
@@ -1822,34 +1794,34 @@ public partial class FrmMainApp : Form
 
                         string strGpsLatitude = lvi.SubItems[
                                                         index: lvw
-                                                           .Columns[
-                                                                key: COL_NAME_PREFIX +
-                                                                FileListColumns
-                                                                   .GPS_LATITUDE]
-                                                           .Index]
+                                                              .Columns[
+                                                                   key: COL_NAME_PREFIX +
+                                                                        FileListColumns
+                                                                           .GPS_LATITUDE]
+                                                              .Index]
                                                    .Text.ToString(
                                                         provider: CultureInfo
                                                            .InvariantCulture);
                         string strGpsLongitude = lvi.SubItems[
                                                          index: lvw
-                                                            .Columns[
-                                                                 key: COL_NAME_PREFIX +
-                                                                 FileListColumns
-                                                                    .GPS_LONGITUDE]
-                                                            .Index]
+                                                               .Columns[
+                                                                    key: COL_NAME_PREFIX +
+                                                                         FileListColumns
+                                                                            .GPS_LONGITUDE]
+                                                               .Index]
                                                     .Text.ToString(
                                                          provider: CultureInfo
                                                             .InvariantCulture);
                         double parsedLat = 0.0;
                         double parsedLng = 0.0;
                         if (double.TryParse(s: strGpsLatitude,
-                                            style: NumberStyles.Any,
-                                            provider: CultureInfo.InvariantCulture,
-                                            result: out parsedLat) &&
+                                style: NumberStyles.Any,
+                                provider: CultureInfo.InvariantCulture,
+                                result: out parsedLat) &&
                             double.TryParse(s: strGpsLongitude,
-                                            style: NumberStyles.Any,
-                                            provider: CultureInfo.InvariantCulture,
-                                            result: out parsedLng))
+                                style: NumberStyles.Any,
+                                provider: CultureInfo.InvariantCulture,
+                                result: out parsedLng))
                         {
                             lvw_FileList_UpdateTagsFromWeb(
                                 strGpsLatitude: strGpsLatitude,
@@ -1871,7 +1843,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void btn_ts_Refresh_lvwFileList_Click(object sender,
-                                                        EventArgs e)
+        EventArgs e)
     {
         Logger.Debug(message: "Starting");
 
@@ -1894,7 +1866,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void btn_OneFolderUp_Click(object sender,
-                                             EventArgs e)
+        EventArgs e)
     {
         Logger.Debug(message: "Starting");
 
@@ -1947,7 +1919,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tsb_EditFile_Click(object sender,
-                                    EventArgs e)
+        EventArgs e)
     {
         filesToEditGUIDStringList.Clear();
 
@@ -1975,7 +1947,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tsb_RemoveGeoData_Click(object sender,
-                                               EventArgs e)
+        EventArgs e)
     {
         // if user is impatient and hammer-spams the button it could create a very long queue of nothing-useful.
         if (!RemoveGeoDataIsRunning)
@@ -1994,7 +1966,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tsb_ImportGPX_Click(object sender,
-                                     EventArgs e)
+        EventArgs e)
     {
         bool validFilesToImport = false;
         foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
@@ -2034,7 +2006,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tbx_FolderName_KeyDown(object sender,
-                                              KeyEventArgs e)
+        KeyEventArgs e)
     {
         if (e.KeyCode == Keys.Enter)
         {
@@ -2054,7 +2026,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tbx_FolderName_Enter(object sender,
-                                      EventArgs e)
+        EventArgs e)
     {
         tbx_FolderName.SelectAll();
     }
@@ -2065,7 +2037,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tsb_SaveFiles_Click(object sender,
-                                           EventArgs e)
+        EventArgs e)
     {
         while (HelperGenericFileLocking.FileListBeingUpdated ||
                HelperGenericFileLocking.FilesAreBeingSaved)
@@ -2088,7 +2060,7 @@ public partial class FrmMainApp : Form
 
     // via https://stackoverflow.com/a/75716080/3968494
     private void ListView_DrawColumnHeader(object sender,
-                                           DrawListViewColumnHeaderEventArgs e)
+        DrawListViewColumnHeaderEventArgs e)
     {
         Color foreColor = HelperVariables.UserSettingUseDarkMode
             ? Color.White
@@ -2118,7 +2090,7 @@ public partial class FrmMainApp : Form
             Rectangle rect = e.Bounds;
             rect.X += 2;
             e.Graphics.DrawString(s: e.Header.Text, font: e.Font, brush: foreColorBrush,
-                                  layoutRectangle: rect, format: stringFormat);
+                layoutRectangle: rect, format: stringFormat);
         }
     }
 
@@ -2132,13 +2104,13 @@ public partial class FrmMainApp : Form
     }
 
     private void ListView_DrawItem(object sender,
-                                   DrawListViewItemEventArgs e)
+        DrawListViewItemEventArgs e)
     {
         e.DrawDefault = true;
     }
 
     private void ListView_DrawSubItem(object sender,
-                                      DrawListViewSubItemEventArgs e)
+        DrawListViewSubItemEventArgs e)
     {
         e.DrawDefault = true;
     }
@@ -2148,7 +2120,8 @@ public partial class FrmMainApp : Form
     private class DarkMenuStripRenderer : ToolStripProfessionalRenderer
     {
         public DarkMenuStripRenderer() : base(professionalColorTable: new DarkColours())
-        { }
+        {
+        }
 
         protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
         {
@@ -2227,8 +2200,8 @@ public partial class FrmMainApp : Form
     /// <param name="strGpsLongitude">Longitude as string</param>
     /// <param name="lvi">ListViewItem in the the main grid</param>
     private void lvw_FileList_UpdateTagsFromWeb(string strGpsLatitude,
-                                                string strGpsLongitude,
-                                                ListViewItem lvi)
+        string strGpsLongitude,
+        ListViewItem lvi)
     {
         if (!_StopProcessingRows)
         {
@@ -2243,7 +2216,7 @@ public partial class FrmMainApp : Form
                                                   index: lvw_FileList
                                                         .Columns[
                                                              key: COL_NAME_PREFIX +
-                                                             FileListColumns.GPS_ALTITUDE]
+                                                                  FileListColumns.GPS_ALTITUDE]
                                                         .Index]
                                              .Text.ToString(
                                                   provider: CultureInfo.InvariantCulture);
@@ -2284,15 +2257,15 @@ public partial class FrmMainApp : Form
 
                 DateTime createDate;
                 bool _ = DateTime.TryParse(s: lvi.SubItems[index: lvw_FileList
-                                                              .Columns[
-                                                                   key: COL_NAME_PREFIX +
-                                                                   FileListColumns
-                                                                      .CREATE_DATE]
-                                                              .Index]
+                                                                 .Columns[
+                                                                      key: COL_NAME_PREFIX +
+                                                                           FileListColumns
+                                                                              .CREATE_DATE]
+                                                                 .Index]
                                                  .Text.ToString(
                                                       provider: CultureInfo
                                                          .InvariantCulture),
-                                           result: out createDate);
+                    result: out createDate);
 
                 try
                 {
@@ -2303,10 +2276,10 @@ public partial class FrmMainApp : Form
                     TZOffset = tst.GetUtcOffset(dateTime: createDate)
                                   .ToString()
                                   .Substring(startIndex: 0, length: tst
-                                                .GetUtcOffset(dateTime: createDate)
-                                                .ToString()
-                                                .Length -
-                                             3);
+                                                                   .GetUtcOffset(dateTime: createDate)
+                                                                   .ToString()
+                                                                   .Length -
+                                                                    3);
                     toponomyOverwrites.Add(
                         item: !TZOffset.StartsWith(value: NullStringEquivalentGeneric)
                             ? (ElementAttribute.OffsetTime, "+" + TZOffset)
@@ -2344,9 +2317,9 @@ public partial class FrmMainApp : Form
                 }
 
                 HandlerUpdateLabelText(label: lbl_ParseProgress,
-                                       text: "Processing: " + fileNameWithoutPath);
+                    text: "Processing: " + fileNameWithoutPath);
                 lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath,
-                                              color: Color.Red);
+                    color: Color.Red);
             }
             else
             {
@@ -2488,7 +2461,7 @@ public partial class FrmMainApp : Form
                 statusMethod: delegate(string statusText)
                 {
                     HandlerUpdateLabelText(label: lbl_ParseProgress,
-                                           text: statusText);
+                        text: statusText);
                 },
                 collectionModeEnabled: Program.collectionModeEnabled);
         }
@@ -2520,7 +2493,7 @@ public partial class FrmMainApp : Form
                     statusMethod: delegate(string statusText)
                     {
                         HandlerUpdateLabelText(label: lbl_ParseProgress,
-                                               text: statusText);
+                            text: statusText);
                     },
                     collectionModeEnabled: Program.collectionModeEnabled);
             }
@@ -2547,7 +2520,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void lvw_FileList_MouseDoubleClick(object sender,
-                                                     MouseEventArgs e)
+        MouseEventArgs e)
     {
         Logger.Debug(message: "Starting");
 
@@ -2590,7 +2563,7 @@ public partial class FrmMainApp : Form
                 {
                     if (Directory.Exists(
                             path: Path.Combine(path1: tbx_FolderName.Text,
-                                               path2: item.Text)))
+                                path2: item.Text)))
                     {
                         tbx_FolderName.Text =
                             Path.Combine(path1: tbx_FolderName.Text, path2: item.Text);
@@ -2678,10 +2651,10 @@ public partial class FrmMainApp : Form
                 Enum.GetValues(enumType: typeof(ElementAttribute))
                     .Cast<ElementAttribute>()
                     .Where(predicate: attribute =>
-                               GetElementAttributesOrderID(
-                                   attributeToFind
-                                   : attribute) >
-                               0)
+                         GetElementAttributesOrderID(
+                             attributeToFind
+                             : attribute) >
+                         0)
                     .ToList();
 
             if (attributesWithValidOrderIDs.Contains(item: attribute))
@@ -2691,9 +2664,9 @@ public partial class FrmMainApp : Form
                     Text = GetElementAttributesName(attributeToFind: attribute)
                 };
                 lvi.SubItems.Add(text: directoryElement.GetAttributeValueString(
-                                     attribute: attribute,
-                                     version: DirectoryElement.AttributeVersion.Original,
-                                     notFoundValue: null, nowSavingExif: false));
+                    attribute: attribute,
+                    version: DirectoryElement.AttributeVersion.Original,
+                    notFoundValue: null, nowSavingExif: false));
                 lvi.SubItems.Add(text: directoryElement.GetAttributeValueString(
                     attribute: attribute,
                     version: DirectoryElement.AttributeVersion
@@ -2715,7 +2688,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void lvw_FileList_KeyUp(object sender,
-                                          KeyEventArgs e)
+        KeyEventArgs e)
     {
         if (
             e.KeyCode == Keys.PageUp ||
@@ -2736,7 +2709,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">The key pressed</param>
     private async void lvw_FileList_KeyDown(object sender,
-                                            KeyEventArgs e)
+        KeyEventArgs e)
     {
         // control A -> select all
         if (e.Modifiers == Keys.Control &&
@@ -2877,7 +2850,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void lvw_FileList_MouseUp(object sender,
-                                            MouseEventArgs e)
+        MouseEventArgs e)
     {
         await lvw_HandleSelectionChange();
     }
@@ -2889,7 +2862,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_Settings_Settings_Click(object sender,
-                                             EventArgs e)
+        EventArgs e)
     {
         FrmSettings = new FrmSettings();
         FrmSettings.Text = HelperDataLanguageTZ.DataReadDTObjectText(
@@ -2905,7 +2878,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_Settings_Favourites_Click(object sender,
-                                               EventArgs e)
+        EventArgs e)
     {
         DtFavourites = HelperGenericAppStartup.AppStartupLoadFavourites();
         if (DtFavourites.Rows.Count > 0)
@@ -2932,14 +2905,14 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_Help_About_Click(object sender,
-                                      EventArgs e)
+        EventArgs e)
     {
         FrmAboutBox frmAboutBox = new();
         frmAboutBox.ShowDialog();
     }
 
     private void tmi_Help_FeedbackFeatureRequest_Click(object sender,
-                                                       EventArgs e)
+        EventArgs e)
     {
         Process.Start(
             fileName:
@@ -2947,7 +2920,7 @@ public partial class FrmMainApp : Form
     }
 
     private void tmi_Help_BugReport_Click(object sender,
-                                          EventArgs e)
+        EventArgs e)
     {
         Process.Start(
             fileName:
@@ -2956,7 +2929,7 @@ public partial class FrmMainApp : Form
 
 
     private void tsb_FeedbackFeatureRequest_Click(object sender,
-                                                  EventArgs e)
+        EventArgs e)
     {
         Process.Start(
             fileName:
@@ -2964,7 +2937,7 @@ public partial class FrmMainApp : Form
     }
 
     private void tsb_BugReport_Click(object sender,
-                                     EventArgs e)
+        EventArgs e)
     {
         Process.Start(
             fileName:
@@ -2977,7 +2950,7 @@ public partial class FrmMainApp : Form
     /// <param name="label">The Label Control that needs updating</param>
     /// <param name="text">The Text that will be assigned</param>
     internal static void HandlerUpdateLabelText(Label label,
-                                                string text)
+        string text)
     {
         // If the current thread is not the UI thread, InvokeRequired will be true
         if (label.InvokeRequired)
@@ -2985,7 +2958,7 @@ public partial class FrmMainApp : Form
             // If so, call Invoke, passing it a lambda expression which calls
             // UpdateText with the same label and text, but on the UI thread instead.
             label.Invoke(method: (Action)(() =>
-                             HandlerUpdateLabelText(label: label, text: text)));
+                HandlerUpdateLabelText(label: label, text: text)));
             return;
         }
 
@@ -3002,31 +2975,31 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void wbv_MapArea_Click(object sender,
-                                   EventArgs e)
+        EventArgs e)
     {
         // note to self: the one you're looking for is called wbv_MapArea_WebMessageReceived
     }
 
     private void FrmMainApp_ResizeBegin(object sender,
-                                        EventArgs e)
+        EventArgs e)
     {
         wbv_MapArea.Hide();
     }
 
     private void FrmMainApp_ResizeEnd(object sender,
-                                      EventArgs e)
+        EventArgs e)
     {
         wbv_MapArea.Show();
     }
 
     private void selectColumnsToolStripMenuItem_Click(object sender,
-                                                      EventArgs e)
+        EventArgs e)
     {
         lvw_FileList.ShowColumnSelectionDialog();
     }
 
     private void btn_SaveLocation_Click(object sender,
-                                        EventArgs e)
+        EventArgs e)
     {
         if (cbx_Favourites.Text.Length > 0)
         {
@@ -3107,7 +3080,7 @@ public partial class FrmMainApp : Form
     }
 
     private async void btn_LoadFavourite_Click(object sender,
-                                               EventArgs e)
+        EventArgs e)
     {
         string favouriteToLoad = cbx_Favourites.Text;
 
@@ -3201,7 +3174,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void cmi_removeCachedData_Click(object sender,
-                                            EventArgs e)
+        EventArgs e)
     {
         bool dataHasBeenRemoved = false;
         foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
@@ -3270,7 +3243,7 @@ public partial class FrmMainApp : Form
     }
 
     private void cbx_Favourites_SelectedValueChanged(object sender,
-                                                     EventArgs e)
+        EventArgs e)
     {
         string favouriteToLoad = cbx_Favourites.Text;
 
@@ -3291,8 +3264,8 @@ public partial class FrmMainApp : Form
             if (drFavouriteData != null)
             {
                 double favLat = double.Parse(s: drFavouriteData[columnName: "GPSLatitude"]
-                                                .ToString(),
-                                             provider: CultureInfo.InvariantCulture);
+                       .ToString(),
+                    provider: CultureInfo.InvariantCulture);
                 double favLng = double.Parse(
                     s: drFavouriteData[columnName: "GPSLongitude"]
                        .ToString(), provider: CultureInfo.InvariantCulture);
@@ -3318,10 +3291,10 @@ public partial class FrmMainApp : Form
 
                 nud_lat.Value =
                     Convert.ToDecimal(value: favLat,
-                                      provider: CultureInfo.InvariantCulture);
+                        provider: CultureInfo.InvariantCulture);
                 nud_lng.Value =
                     Convert.ToDecimal(value: favLng,
-                                      provider: CultureInfo.InvariantCulture);
+                        provider: CultureInfo.InvariantCulture);
 
                 btn_NavigateMapGo_Click(sender: null, e: null);
             }
@@ -3334,7 +3307,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void btn_ManageFavourites_Click(object sender,
-                                            EventArgs e)
+        EventArgs e)
     {
         DtFavourites = HelperGenericAppStartup.AppStartupLoadFavourites();
         if (DtFavourites.Rows.Count > 0)
@@ -3357,7 +3330,7 @@ public partial class FrmMainApp : Form
 
 
     private void cmi_OpenCoordsInAPI_Click(object sender,
-                                           EventArgs e)
+        EventArgs e)
     {
         bool selectionIsValid = false;
         string GPSLatStr = NullStringEquivalentGeneric;
@@ -3426,13 +3399,13 @@ public partial class FrmMainApp : Form
     }
 
     private void lvw_ExifData_KeyUp(object sender,
-                                    KeyEventArgs e)
+        KeyEventArgs e)
     {
         // unused
     }
 
     private void lvw_ExifData_KeyDown(object sender,
-                                      KeyEventArgs e)
+        KeyEventArgs e)
     {
         if (e.Control &&
             e.KeyCode == Keys.C)
@@ -3469,14 +3442,14 @@ public static class ControlExtensions
     /// <param name="control">The Control that needs the value assigned</param>
     /// <param name="enable">Bool true or false (aka on or off)</param>
     public static void DoubleBuffered(this Control control,
-                                      bool enable)
+        bool enable)
     {
         PropertyInfo doubleBufferPropertyInfo = control.GetType()
                                                        .GetProperty(
                                                             name: "DoubleBuffered",
                                                             bindingAttr: BindingFlags
-                                                               .Instance |
-                                                            BindingFlags.NonPublic);
+                                                                            .Instance |
+                                                                         BindingFlags.NonPublic);
         doubleBufferPropertyInfo.SetValue(obj: control, value: enable, index: null);
     }
 }

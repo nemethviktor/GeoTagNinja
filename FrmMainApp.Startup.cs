@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
@@ -28,7 +27,8 @@ public partial class FrmMainApp
         {
             Logger.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeComponent") +
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_ErrorInitializeComponent") +
                       ex.Message,
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
@@ -53,9 +53,11 @@ public partial class FrmMainApp
         {
             Logger.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorDoubleBuffer") +
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_ErrorDoubleBuffer") +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -213,10 +215,10 @@ public partial class FrmMainApp
         {
             ToolTip ttp = valueTuple.Item1;
             ttp.SetToolTip(control: valueTuple.Item2,
-                           caption: HelperDataLanguageTZ.DataReadDTObjectText(
-                               objectType: ControlType.ToolTip,
-                               objectName: valueTuple.Item3
-                           ));
+                caption: HelperDataLanguageTZ.DataReadDTObjectText(
+                    objectType: ControlType.ToolTip,
+                    objectName: valueTuple.Item3
+                ));
         }
     }
 
@@ -277,9 +279,12 @@ public partial class FrmMainApp
         }
 
         HelperVariables.HsMapMarkers.Clear();
-        HelperVariables.HsMapMarkers.Add(item: (nud_lat.Text.Replace(oldChar: ',', newChar: '.'), nud_lng.Text.Replace(oldChar: ',', newChar: '.')));
-        HelperVariables.LastLat = double.Parse(s: nud_lat.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
-        HelperVariables.LastLng = double.Parse(s: nud_lng.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
+        HelperVariables.HsMapMarkers.Add(item: (nud_lat.Text.Replace(oldChar: ',', newChar: '.'),
+                                                nud_lng.Text.Replace(oldChar: ',', newChar: '.')));
+        HelperVariables.LastLat = double.Parse(s: nud_lat.Text.Replace(oldChar: ',', newChar: '.'),
+            provider: CultureInfo.InvariantCulture);
+        HelperVariables.LastLng = double.Parse(s: nud_lng.Text.Replace(oldChar: ',', newChar: '.'),
+            provider: CultureInfo.InvariantCulture);
     }
 
 
@@ -326,29 +331,6 @@ public partial class FrmMainApp
 
         Dictionary<string, int> settingsApplicationDesignValuesDict = new()
         {
-            { "splitContainerMainSizeWidth", 0 },
-            { "splitContainerMainSizeHeight", 0 },
-
-            { "splitContainerLeftTopSizeWidth", 0 },
-            { "splitContainerLeftTopSizeHeight", 0 },
-
-            { "lvw_FileListSizeWidth", 0 },
-            { "lvw_FileListSizeHeight", 0 },
-
-            { "pbx_imagePreviewSizeWidth", 0 },
-            { "pbx_imagePreviewSizeHeight", 0 },
-
-            { "tcr_MainSizeWidth", 0 },
-            { "tcr_MainSizeHeight", 0 },
-
-            { "tpg_MapSizeWidth", 0 },
-            { "tpg_MapSizeHeight", 0 },
-
-            { "wbv_MapAreaSizeWidth", 0 },
-            { "wbv_MapAreaSizeHeight", 0 },
-
-            { "splitContainerMainSplitterWidth", 0 },
-            { "splitContainerLeftTopSplitterWidth", 0 },
             { "splitContainerMainSplitterDistance", 0 },
             { "splitContainerLeftTopSplitterDistance", 0 }
         };
@@ -381,83 +363,7 @@ public partial class FrmMainApp
 
         foreach (KeyValuePair<string, int> settingsApplicationDesignValue in settingsApplicationDesignValuesDict)
         {
-            if (settingsApplicationDesignValue.Key.Contains(value: "SizeWidth") ||
-                settingsApplicationDesignValue.Key.Contains(value: "SizeHeight"))
-            {
-                checkAssignDualValues(dictValueKey: settingsApplicationDesignValue.Key);
-            }
-            else
-            {
-                checkAssignSingleValues(dictValueKey: settingsApplicationDesignValue.Key);
-            }
-        }
-
-        void checkAssignDualValues(string dictValueKey)
-        {
-            int valToAssign = settingsApplicationDesignValuesDict[key: dictValueKey];
-            Logger.Debug(
-                message:
-                $"Assinging value {valToAssign} to {dictValueKey}.");
-            if (valToAssign > 0)
-            {
-                string trimmedDictValueKey = TrimEnd(source: TrimEnd(source: dictValueKey, value: "Width"),
-                    value: "Height");
-                // yes these run twice and i don't care.
-                switch (dictValueKey)
-                {
-                    case "splitContainerMainSizeWidth":
-                    case "splitContainerMainSizeHeight":
-                        splitContainerMain.Size = new Size(
-                            width: settingsApplicationDesignValuesDict[key: trimmedDictValueKey + "Width"],
-                            height: settingsApplicationDesignValuesDict[key: trimmedDictValueKey + "Height"]
-                        );
-                        break;
-
-                    case "splitContainerLeftTopSizeWidth":
-                    case "splitContainerLeftTopSizeHeight":
-                        splitContainerLeftTop.Size = new Size(
-                            width: settingsApplicationDesignValuesDict[key: trimmedDictValueKey + "Width"],
-                            height: settingsApplicationDesignValuesDict[key: trimmedDictValueKey + "Height"]
-                        );
-                        break;
-
-                    case "lvw_FileListSizeWidth":
-                    case "lvw_FileListSizeHeight":
-                        lvw_FileList.Size = new Size(
-                            width: settingsApplicationDesignValuesDict[key: trimmedDictValueKey + "Width"],
-                            height: settingsApplicationDesignValuesDict[key: trimmedDictValueKey + "Height"]
-                        );
-                        break;
-                    case "pbx_imagePreviewSizeWidth":
-                    case "pbx_imagePreviewSizeHeight":
-                        pbx_imagePreview.Size = new Size(
-                            width: settingsApplicationDesignValuesDict[key: trimmedDictValueKey + "Width"],
-                            height: settingsApplicationDesignValuesDict[key: trimmedDictValueKey + "Height"]
-                        );
-                        break;
-                    case "tcr_MainSizeWidth":
-                    case "tcr_MainSizeHeight":
-                        tcr_Main.Size = new Size(
-                            width: settingsApplicationDesignValuesDict[key: trimmedDictValueKey + "Width"],
-                            height: settingsApplicationDesignValuesDict[key: trimmedDictValueKey + "Height"]
-                        );
-                        break;
-                    case "tpg_MapSizeWidth":
-                    case "tpg_MapSizeHeight":
-                        tpg_Map.Size = new Size(
-                            width: settingsApplicationDesignValuesDict[key: trimmedDictValueKey + "Width"],
-                            height: settingsApplicationDesignValuesDict[key: trimmedDictValueKey + "Height"]
-                        );
-                        break;
-                    case "wbv_MapAreaSizeWidth":
-                    case "wbv_MapAreaSizeHeight":
-                        wbv_MapArea.Size = new Size(
-                            width: settingsApplicationDesignValuesDict[key: trimmedDictValueKey + "Width"],
-                            height: settingsApplicationDesignValuesDict[key: trimmedDictValueKey + "Height"]
-                        );
-                        break;
-                }
-            }
+            checkAssignSingleValues(dictValueKey: settingsApplicationDesignValue.Key);
         }
 
         void checkAssignSingleValues(string dictValueKey)
@@ -488,5 +394,13 @@ public partial class FrmMainApp
         }
 
         Logger.Debug(message: "Done");
+    }
+
+    private void splitContainerControl_Paint(object sender, PaintEventArgs e)
+    {
+        // https://stackoverflow.com/a/16006968
+        splitContainerMain.Paint -= splitContainerControl_Paint;
+        // Handle restoration here
+        AppStartupApplyVisualStyleDefaults();
     }
 }

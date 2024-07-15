@@ -75,7 +75,7 @@ namespace GeoTagNinja
             this.cmi_ShowHideCols = new System.Windows.Forms.ToolStripMenuItem();
             this.cmi_removeCachedData = new System.Windows.Forms.ToolStripMenuItem();
             this.cmi_OpenCoordsInAPI = new System.Windows.Forms.ToolStripMenuItem();
-            this.pbx_imagePreview = new ImagePreview();
+            this.pbx_imagePreview = new GeoTagNinja.View.ImagePreview();
             this.flp_ProcessingInfo = new System.Windows.Forms.FlowLayoutPanel();
             this.lbl_ParseProgress = new System.Windows.Forms.Label();
             this.tcr_Main = new System.Windows.Forms.TabControl();
@@ -163,7 +163,7 @@ namespace GeoTagNinja
             // 
             this.tmi_File_SaveAll.Name = "tmi_File_SaveAll";
             this.tmi_File_SaveAll.ShortcutKeyDisplayString = "CTRL+S";
-            this.tmi_File_SaveAll.Size = new System.Drawing.Size(275, 22);
+            this.tmi_File_SaveAll.Size = new System.Drawing.Size(276, 22);
             this.tmi_File_SaveAll.Text = "tmi_File_SaveAll";
             this.tmi_File_SaveAll.Click += new System.EventHandler(this.tmi_File_SaveAll_Click);
             // 
@@ -171,14 +171,14 @@ namespace GeoTagNinja
             // 
             this.tmi_File_EditFiles.Name = "tmi_File_EditFiles";
             this.tmi_File_EditFiles.ShortcutKeyDisplayString = "CTLR+Enter";
-            this.tmi_File_EditFiles.Size = new System.Drawing.Size(275, 22);
+            this.tmi_File_EditFiles.Size = new System.Drawing.Size(276, 22);
             this.tmi_File_EditFiles.Text = "tmi_File_EditFiles";
             this.tmi_File_EditFiles.Click += new System.EventHandler(this.tmi_File_EditFiles_Click);
             // 
             // tmi_File_ImportGPX
             // 
             this.tmi_File_ImportGPX.Name = "tmi_File_ImportGPX";
-            this.tmi_File_ImportGPX.Size = new System.Drawing.Size(275, 22);
+            this.tmi_File_ImportGPX.Size = new System.Drawing.Size(276, 22);
             this.tmi_File_ImportGPX.Text = "tmi_File_ImportGPX";
             this.tmi_File_ImportGPX.Click += new System.EventHandler(this.tmi_File_ImportGPX_Click);
             // 
@@ -186,7 +186,7 @@ namespace GeoTagNinja
             // 
             this.tmi_File_CopyGeoData.Name = "tmi_File_CopyGeoData";
             this.tmi_File_CopyGeoData.ShortcutKeyDisplayString = "Sh + CTRL+C";
-            this.tmi_File_CopyGeoData.Size = new System.Drawing.Size(275, 22);
+            this.tmi_File_CopyGeoData.Size = new System.Drawing.Size(276, 22);
             this.tmi_File_CopyGeoData.Text = "tmi_File_CopyGeoData";
             this.tmi_File_CopyGeoData.Click += new System.EventHandler(this.tmi_File_CopyGeoData_Click);
             // 
@@ -194,20 +194,20 @@ namespace GeoTagNinja
             // 
             this.tmi_File_PasteGeoData.Name = "tmi_File_PasteGeoData";
             this.tmi_File_PasteGeoData.ShortcutKeyDisplayString = "Sh + CTRL + V";
-            this.tmi_File_PasteGeoData.Size = new System.Drawing.Size(275, 22);
+            this.tmi_File_PasteGeoData.Size = new System.Drawing.Size(276, 22);
             this.tmi_File_PasteGeoData.Text = "tmi_File_PasteGeoData";
             this.tmi_File_PasteGeoData.Click += new System.EventHandler(this.tmi_File_PasteGeoData_Click);
             // 
             // tss_ToolStripSeparator_Main
             // 
             this.tss_ToolStripSeparator_Main.Name = "tss_ToolStripSeparator_Main";
-            this.tss_ToolStripSeparator_Main.Size = new System.Drawing.Size(272, 6);
+            this.tss_ToolStripSeparator_Main.Size = new System.Drawing.Size(273, 6);
             // 
             // tmi_File_Quit
             // 
             this.tmi_File_Quit.Name = "tmi_File_Quit";
             this.tmi_File_Quit.ShortcutKeyDisplayString = "ALT+F4";
-            this.tmi_File_Quit.Size = new System.Drawing.Size(275, 22);
+            this.tmi_File_Quit.Size = new System.Drawing.Size(276, 22);
             this.tmi_File_Quit.Text = "tmi_File_Quit";
             this.tmi_File_Quit.Click += new System.EventHandler(this.tmi_File_Quit_Click);
             // 
@@ -421,6 +421,7 @@ namespace GeoTagNinja
             // splitContainerMain
             // 
             this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerMain.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainerMain.Location = new System.Drawing.Point(0, 74);
             this.splitContainerMain.Name = "splitContainerMain";
             // 
@@ -501,13 +502,13 @@ namespace GeoTagNinja
             this.cmi_removeCachedData,
             this.cmi_OpenCoordsInAPI});
             this.cms_FileListView.Name = "cms_FileListView";
-            this.cms_FileListView.Size = new System.Drawing.Size(202, 92);
+            this.cms_FileListView.Size = new System.Drawing.Size(204, 70);
             // 
             // cmi_ShowHideCols
             // 
             this.cmi_ShowHideCols.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.cmi_ShowHideCols.Name = "cmi_ShowHideCols";
-            this.cmi_ShowHideCols.Size = new System.Drawing.Size(201, 22);
+            this.cmi_ShowHideCols.Size = new System.Drawing.Size(203, 22);
             this.cmi_ShowHideCols.Text = "cmi_ShowHideCols";
             this.cmi_ShowHideCols.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.cmi_ShowHideCols.Click += new System.EventHandler(this.selectColumnsToolStripMenuItem_Click);
@@ -515,14 +516,14 @@ namespace GeoTagNinja
             // cmi_removeCachedData
             // 
             this.cmi_removeCachedData.Name = "cmi_removeCachedData";
-            this.cmi_removeCachedData.Size = new System.Drawing.Size(201, 22);
+            this.cmi_removeCachedData.Size = new System.Drawing.Size(203, 22);
             this.cmi_removeCachedData.Text = "cmi_removeCachedData";
             this.cmi_removeCachedData.Click += new System.EventHandler(this.cmi_removeCachedData_Click);
             // 
             // cmi_OpenCoordsInAPI
             // 
             this.cmi_OpenCoordsInAPI.Name = "cmi_OpenCoordsInAPI";
-            this.cmi_OpenCoordsInAPI.Size = new System.Drawing.Size(201, 22);
+            this.cmi_OpenCoordsInAPI.Size = new System.Drawing.Size(203, 22);
             this.cmi_OpenCoordsInAPI.Text = "cmi_OpenCoordsInAPI";
             this.cmi_OpenCoordsInAPI.Click += new System.EventHandler(this.cmi_OpenCoordsInAPI_Click);
             // 
