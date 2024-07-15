@@ -2,7 +2,6 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-    
   <PropertyGroup>
     <ApplicationHighDpiMode>DpiUnaware</ApplicationHighDpiMode>
     <ForceDesignerDPIUnaware>true</ForceDesignerDPIUnaware>
@@ -166,8 +165,8 @@
     <Reference Include="System.Text.Encodings.Web, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
-    <Reference Include="System.Text.Json, Version=8.0.0.3, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Text.Json.8.0.3\lib\net462\System.Text.Json.dll</HintPath>
+    <Reference Include="System.Text.Json, Version=8.0.0.4, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.Json.8.0.4\lib\net462\System.Text.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
@@ -316,9 +315,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmManageFavourites.resx">
       <DependentUpon>FrmManageFavourites.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="View\FrmColumnSelection.resx">
       <DependentUpon>FrmColumnSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmEditFileData.resx">
       <DependentUpon>FrmEditFileData.cs</DependentUpon>
@@ -326,6 +327,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmImportGpx.resx">
       <DependentUpon>FrmImportGpx.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMainApp.resx">
       <DependentUpon>FrmMainApp.cs</DependentUpon>
@@ -333,6 +335,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmPasteWhat.resx">
       <DependentUpon>FrmPasteWhat.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmSettings.resx">
       <DependentUpon>FrmSettings.cs</DependentUpon>
@@ -350,9 +353,11 @@
     </Compile>
     <EmbeddedResource Include="View\ImagePreview.resx">
       <DependentUpon>ImagePreview.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="View\ListView\FileListView.resx">
       <DependentUpon>FileListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="changelog.md">

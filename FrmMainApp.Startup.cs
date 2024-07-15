@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.View.DialogAndMessageBoxes;
@@ -25,7 +27,8 @@ public partial class FrmMainApp
         {
             Logger.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorInitializeComponent") +
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_ErrorInitializeComponent") +
                       ex.Message,
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
@@ -50,9 +53,11 @@ public partial class FrmMainApp
         {
             Logger.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(messageBoxName: "mbx_FrmMainApp_ErrorDoubleBuffer") +
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                          messageBoxName: "mbx_FrmMainApp_ErrorDoubleBuffer") +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -210,10 +215,10 @@ public partial class FrmMainApp
         {
             ToolTip ttp = valueTuple.Item1;
             ttp.SetToolTip(control: valueTuple.Item2,
-                           caption: HelperDataLanguageTZ.DataReadDTObjectText(
-                               objectType: ControlType.ToolTip,
-                               objectName: valueTuple.Item3
-                           ));
+                caption: HelperDataLanguageTZ.DataReadDTObjectText(
+                    objectType: ControlType.ToolTip,
+                    objectName: valueTuple.Item3
+                ));
         }
     }
 
@@ -274,9 +279,12 @@ public partial class FrmMainApp
         }
 
         HelperVariables.HsMapMarkers.Clear();
-        HelperVariables.HsMapMarkers.Add(item: (nud_lat.Text.Replace(oldChar: ',', newChar: '.'), nud_lng.Text.Replace(oldChar: ',', newChar: '.')));
-        HelperVariables.LastLat = double.Parse(s: nud_lat.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
-        HelperVariables.LastLng = double.Parse(s: nud_lng.Text.Replace(oldChar: ',', newChar: '.'), provider: CultureInfo.InvariantCulture);
+        HelperVariables.HsMapMarkers.Add(item: (nud_lat.Text.Replace(oldChar: ',', newChar: '.'),
+                                                nud_lng.Text.Replace(oldChar: ',', newChar: '.')));
+        HelperVariables.LastLat = double.Parse(s: nud_lat.Text.Replace(oldChar: ',', newChar: '.'),
+            provider: CultureInfo.InvariantCulture);
+        HelperVariables.LastLng = double.Parse(s: nud_lng.Text.Replace(oldChar: ',', newChar: '.'),
+            provider: CultureInfo.InvariantCulture);
     }
 
 
@@ -309,5 +317,90 @@ public partial class FrmMainApp
             themeColour: HelperVariables.UserSettingUseDarkMode
                 ? ThemeColour.Dark
                 : ThemeColour.Light, parentControl: this);
+    }
+
+    /// <summary>
+    ///     Reads the data in SQLite for panel widths/heights/sizes and applies them if available.
+    /// </summary>
+    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
+    private void AppStartupApplyVisualStyleDefaults()
+    {
+        Logger.Debug(message: "Starting");
+        // there should be a better way of doing this. 
+        // reflections could do it and i asked GPT on the how-part but it only gave options for storing and retrieving _all_ the controls and _all_ their details, which isn't something i'd like.
+
+        Dictionary<string, int> settingsApplicationDesignValuesDict = new()
+        {
+            { "splitContainerMainSplitterDistance", 0 },
+            { "splitContainerLeftTopSplitterDistance", 0 }
+        };
+
+        // need to make it into a list else the foreach complains that the collection has been modfied.
+        List<string> settingsApplicationDesignValuesKeysList = settingsApplicationDesignValuesDict.Keys.ToList();
+
+        foreach (string settingsApplicationDesignValue
+                 in settingsApplicationDesignValuesKeysList)
+        {
+            string dataInSQL =
+                HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings", settingTabPage: "generic",
+                    settingId: settingsApplicationDesignValue, returnBlankIfNull: true);
+
+            Logger.Debug(
+                message:
+                $"Reading settingsApplicationDesignValue {settingsApplicationDesignValue}, dataInSQL {dataInSQL}.");
+
+
+            bool parsedDataInSQLSuccessfully = int.TryParse(s: dataInSQL,
+                style: NumberStyles.Any,
+                provider: CultureInfo.InvariantCulture,
+                result: out int parsedSQLValueInt);
+
+            if (!string.IsNullOrWhiteSpace(value: dataInSQL) && parsedDataInSQLSuccessfully)
+            {
+                settingsApplicationDesignValuesDict[key: settingsApplicationDesignValue] = parsedSQLValueInt;
+            }
+        }
+
+        foreach (KeyValuePair<string, int> settingsApplicationDesignValue in settingsApplicationDesignValuesDict)
+        {
+            checkAssignSingleValues(dictValueKey: settingsApplicationDesignValue.Key);
+        }
+
+        void checkAssignSingleValues(string dictValueKey)
+        {
+            int valToAssign = settingsApplicationDesignValuesDict[key: dictValueKey];
+            Logger.Debug(
+                message:
+                $"Assinging value {valToAssign} to {dictValueKey}.");
+            if (valToAssign > 0)
+            {
+                switch (dictValueKey)
+                {
+                    case "splitContainerMainSplitterDistance":
+                        splitContainerMain.SplitterDistance = valToAssign;
+                        break;
+                    case "splitContainerLeftTopSplitterDistance":
+                        splitContainerLeftTop.SplitterDistance = valToAssign;
+                        break;
+                }
+            }
+        }
+
+        string TrimEnd(string source, string value)
+        {
+            return !source.EndsWith(value: value)
+                ? source
+                : source.Remove(startIndex: source.LastIndexOf(value: value));
+        }
+
+        Logger.Debug(message: "Done");
+    }
+
+    private void splitContainerControl_Paint(object sender, PaintEventArgs e)
+    {
+        // https://stackoverflow.com/a/16006968
+        splitContainerMain.Paint -= splitContainerControl_Paint;
+        // Handle restoration here
+        AppStartupApplyVisualStyleDefaults();
     }
 }
