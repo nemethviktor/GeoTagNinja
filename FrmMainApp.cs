@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -26,10 +27,8 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using TimeZoneConverter;
-using static System.Environment;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.Model.SourcesAndAttributes;
-using static GeoTagNinja.View.ListView.FileListView;
 
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
@@ -460,14 +459,45 @@ public partial class FrmMainApp : Form
         Logger.Debug(message: "OnClose: Dispose ExifTool");
         _ExifTool.Dispose();
 
-        // Copy/rename exiftool(-k).exe if exists and replace the current real one
+        // Unzip new exiftool version if there is one
         if (File.Exists(path: HelperVariables.ExifToolExePathRoamingTemp))
         {
             try
             {
+                // okay this is a bit silly now but given that the ET distrib is no longer a single-file there's a lot of fuckery to be dealt with
+                // the zip file has a structure such as c:\Users\nemet\AppData\Roaming\GeoTagNinja\exiftool-12.89_64.zip\exiftool-12.89_64\exiftool(-k).exe 
+                // i swear to all the f...king gods this has been the most useless move i've seen with ET development in the last decade.
+                // so we do the following
+                // 1: delete exiftool
                 File.Delete(path: HelperVariables.ExifToolExePathRoamingPerm);
 
-                File.Move(sourceFileName: HelperVariables.ExifToolExePathRoamingTemp,
+                // 2: delete the exiftool_files folder and anything in it.
+                string exifToolFilesDir =
+                    Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exiftool_files");
+                if (Directory.Exists(path: exifToolFilesDir))
+                {
+                    Directory.Delete(path: exifToolFilesDir, recursive: true);
+                }
+
+                // 2b: this shouldn't really happen but anyway:
+                string tempExtractDir = Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                    path2: Path.GetFileNameWithoutExtension(path: HelperVariables.ExifToolExePathRoamingTemp));
+                if (Directory.Exists(path: tempExtractDir))
+                {
+                    Directory.Delete(path: tempExtractDir, recursive: true);
+                }
+
+                // 3: unzip
+                ZipFile.ExtractToDirectory(
+                    sourceArchiveFileName: HelperVariables.ExifToolExePathRoamingTemp,
+                    destinationDirectoryName: HelperVariables.UserDataFolderPath);
+
+                // 4: move to parent
+                Directory.Move(
+                    sourceDirName: Path.Combine(path1: tempExtractDir, path2: "exiftool_files"),
+                    destDirName: Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exiftool_files"));
+
+                File.Move(sourceFileName: Path.Combine(path1: tempExtractDir, path2: "exiftool(-k).exe"),
                     destFileName: HelperVariables.ExifToolExePathRoamingPerm);
             }
             catch
@@ -1732,7 +1762,7 @@ public partial class FrmMainApp : Form
                         customMessageBox.ShowDialog();
                     }
                 }
-                else if (tbx_FolderName.Text == SpecialFolder.MyComputer.ToString())
+                else if (tbx_FolderName.Text == Environment.SpecialFolder.MyComputer.ToString())
                 {
                     lvw_FileList_LoadOrUpdate();
                 }
@@ -1795,8 +1825,8 @@ public partial class FrmMainApp : Form
                         string strGpsLatitude = lvi.SubItems[
                                                         index: lvw
                                                               .Columns[
-                                                                   key: COL_NAME_PREFIX +
-                                                                        FileListColumns
+                                                                   key: FileListView.COL_NAME_PREFIX +
+                                                                        FileListView.FileListColumns
                                                                            .GPS_LATITUDE]
                                                               .Index]
                                                    .Text.ToString(
@@ -1805,8 +1835,8 @@ public partial class FrmMainApp : Form
                         string strGpsLongitude = lvi.SubItems[
                                                          index: lvw
                                                                .Columns[
-                                                                    key: COL_NAME_PREFIX +
-                                                                         FileListColumns
+                                                                    key: FileListView.COL_NAME_PREFIX +
+                                                                         FileListView.FileListColumns
                                                                             .GPS_LONGITUDE]
                                                                .Index]
                                                     .Text.ToString(
@@ -2215,8 +2245,8 @@ public partial class FrmMainApp : Form
                                              .SubItems[
                                                   index: lvw_FileList
                                                         .Columns[
-                                                             key: COL_NAME_PREFIX +
-                                                                  FileListColumns.GPS_ALTITUDE]
+                                                             key: FileListView.COL_NAME_PREFIX +
+                                                                  FileListView.FileListColumns.GPS_ALTITUDE]
                                                         .Index]
                                              .Text.ToString(
                                                   provider: CultureInfo.InvariantCulture);
@@ -2258,8 +2288,8 @@ public partial class FrmMainApp : Form
                 DateTime createDate;
                 bool _ = DateTime.TryParse(s: lvi.SubItems[index: lvw_FileList
                                                                  .Columns[
-                                                                      key: COL_NAME_PREFIX +
-                                                                           FileListColumns
+                                                                      key: FileListView.COL_NAME_PREFIX +
+                                                                           FileListView.FileListColumns
                                                                               .CREATE_DATE]
                                                                  .Index]
                                                  .Text.ToString(
@@ -3183,14 +3213,14 @@ public partial class FrmMainApp : Form
             {
                 string lat = lvi.SubItems[index: lvw_FileList
                                                 .Columns[
-                                                     key: COL_NAME_PREFIX +
-                                                          FileListColumns.GPS_LATITUDE]
+                                                     key: FileListView.COL_NAME_PREFIX +
+                                                          FileListView.FileListColumns.GPS_LATITUDE]
                                                 .Index]
                                 .Text;
                 string lng = lvi.SubItems[index: lvw_FileList
                                                 .Columns[
-                                                     key: COL_NAME_PREFIX +
-                                                          FileListColumns.GPS_LONGITUDE]
+                                                     key: FileListView.COL_NAME_PREFIX +
+                                                          FileListView.FileListColumns.GPS_LONGITUDE]
                                                 .Index]
                                 .Text;
 

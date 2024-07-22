@@ -64,8 +64,7 @@ internal static class HelperVariables
     internal static List<string> LstCityNameIsAdminName4 = new();
     internal static List<string> LstCityNameIsUndefined = new();
 
-    internal static readonly string ExifToolExePathRoamingTemp =
-        GetExifToolExePathRoamingTemp();
+    internal static string ExifToolExePathRoamingTemp = string.Empty;
 
     internal static readonly string ExifToolExePathRoamingPerm =
         GetExifToolExePathRoamingPerm();
@@ -117,18 +116,6 @@ internal static class HelperVariables
             path1: UserDataFolderPath, path2: "database.sqlite");
     }
 
-    /// <summary>
-    ///     Path name of the "(-k)" exiftool - file doesn't have to exist as such.
-    /// </summary>
-    /// <returns>Path name of the (-k) exiftool</returns>
-    private static string GetExifToolExePathRoamingTemp()
-    {
-        // Assign various exiftool location variables
-        return Path.Combine(
-            path1: UserDataFolderPath,
-            path2:
-            "exiftool(-k).exe");
-    }
 
     /// <summary>
     ///     Path name of the "normal" exiftool - file doesn't have to exist as such.

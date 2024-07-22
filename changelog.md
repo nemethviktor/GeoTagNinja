@@ -4,6 +4,7 @@
 - NEW & UPDATED:
   - Added an option to Overlay GPX Coordinate Tracks onto the map. This can be found within the Import GPX Tracks Form, at the bottom. Experimental. #107
   - Panel sizes on the `FrmMainApp` should should now be stored/restored across sessions. #109
+  - Updated the ExifTool-update process to handle the new multi-file package. A mighty annoying move tbh but alas. Anyone experiencing an extra 3 sec delay upon exit, don't complain to me, script now has to extract and move 500 files instead of one.
 
 - BUGS & FIXES:
   - Changed the way auto-updater works. It was taking `PublishedDate` as a basis for Build number, which wasn't entirely correct. #110
