@@ -124,6 +124,7 @@ public partial class FrmSettings : Form
             }
         }
 
+
         _nowLoadingSettingsData = false;
     }
 
@@ -161,7 +162,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void FrmSettings_Load(object sender,
-                                  EventArgs e)
+        EventArgs e)
     {
         // set basics
         CancelButton = btn_Cancel;
@@ -306,6 +307,8 @@ public partial class FrmSettings : Form
 
         LoadCustomRulesDGV();
         LoadCustomCityLogicDGV();
+
+        tbx_ARCGIS_APIKey.UseSystemPasswordChar = !ckb_ShowPassword.Checked;
     }
 
     /// <summary>
@@ -502,9 +505,9 @@ public partial class FrmSettings : Form
         foreach (DataRow dataRow in HelperVariables.DtIsoCountryCodeMapping.Rows)
         {
             clh_CountryCodeOptions.Add(key: dataRow[columnName: "ISO_3166_1A3"]
-                                          .ToString()
-                                     , value: dataRow[columnName: "Country"]
-                                          .ToString());
+                   .ToString()
+              , value: dataRow[columnName: "Country"]
+                   .ToString());
         }
 
         // if _do not_ IncludeNonPredeterminedCountries then remove those
@@ -517,7 +520,7 @@ public partial class FrmSettings : Form
                 if (!HelperVariables.LstCityNameIsUndefined.Contains(item: countryCode))
                 {
                     clh_CountryCodeOptions.Remove(key: dataRow[columnName: "ISO_3166_1A3"]
-                                                     .ToString()
+                       .ToString()
                     );
                 }
             }
@@ -526,6 +529,82 @@ public partial class FrmSettings : Form
         return clh_CountryCodeOptions;
     }
 
+#region DGVs
+
+    /// <summary>
+    ///     Handles the RowValidating event of the dgv_CustomRules DataGridView.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The DataGridViewCellCancelEventArgs instance containing the event data.</param>
+    /// <remarks>
+    ///     This method validates the data in the "clh_TargetPointOutcome" column of the DataGridView.
+    ///     If the value of the "clh_TargetPointOutcome" cell is "Custom" and the corresponding "clh_TargetPointOutcomeCustom"
+    ///     cell is empty,
+    ///     it cancels the event, preventing the user from leaving the cell until a valid value is entered, and displays a
+    ///     warning message.
+    /// </remarks>
+    private void dgv_CustomRules_RowValidating(object sender,
+        DataGridViewCellCancelEventArgs e)
+    {
+        if (e.ColumnIndex ==
+            dgv_CustomRules.Columns[columnName: "clh_TargetPointOutcome"]
+                           .Index)
+        {
+            string clh_TargetPointOutcomeValue = Convert.ToString(
+                value: (dgv_CustomRules.Rows[index: e.RowIndex]
+                                       .Cells[columnName: "clh_TargetPointOutcome"] as
+                    DataGridViewComboBoxCell)?.EditedFormattedValue);
+
+            string clh_TargetPointOutcomeCustomValue = Convert.ToString(
+                value: (dgv_CustomRules.Rows[index: e.RowIndex]
+                                       .Cells[columnName: "clh_TargetPointOutcomeCustom"]
+                    as DataGridViewTextBoxCell)?.EditedFormattedValue);
+            if (clh_TargetPointOutcomeValue == "Custom" &&
+                IsNullOrEmpty(value: clh_TargetPointOutcomeCustomValue))
+            {
+                e.Cancel = true;
+                CustomMessageBox customMessageBox = new(
+                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                        messageBoxName:
+                        "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty"),
+                    caption: HelperControlAndMessageBoxHandling
+                       .GenericGetMessageBoxCaption(
+                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Warning);
+                customMessageBox.ShowDialog();
+            }
+        }
+    }
+
+    /// <summary>
+    ///     Displays an error msg if DGV failed validation
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void dgv_CustomRules_DataError(object sender,
+        DataGridViewDataErrorEventArgs e)
+    {
+        if (e.Exception != null &&
+            e.Context == DataGridViewDataErrorContexts.Commit)
+        {
+            CustomMessageBox customMessageBox = new(
+                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
+                    messageBoxName:
+                    "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty"),
+                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                                                                   .Information.ToString()),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Warning);
+            customMessageBox.ShowDialog();
+        }
+    }
+
+#endregion
+
+#region Events
+
     /// <summary>
     ///     Handles the event where user clicks Cancel. Clears pre-Q and hides form.
     ///     ...Should be updated to use DTs rather than actual tables but it's low-pri.
@@ -533,7 +612,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void Btn_Cancel_Click(object sender,
-                                  EventArgs e)
+        EventArgs e)
     {
         HelperDataApplicationSettings.DataDeleteSQLitesettingsToWritePreQueue();
         Hide();
@@ -551,7 +630,7 @@ public partial class FrmSettings : Form
     ///     it's too much hassle to code and would need a pretty major rewrite.
     /// </remarks>
     private void Btn_OK_Click(object sender,
-                              EventArgs e)
+        EventArgs e)
     {
         List<string> rbtGeoNamesLanguage = new()
         {
@@ -601,11 +680,11 @@ public partial class FrmSettings : Form
                                     HelperGenericAncillaryListsArrays
                                        .GetISO_639_1_Languages()
                                        .Where(predicate: kvp =>
-                                                  kvp.Value ==
-                                                  cbx.SelectedItem.ToString());
+                                            kvp.Value ==
+                                            cbx.SelectedItem.ToString());
 
                                 HelperVariables.APILanguageToUse = result.FirstOrDefault()
-                                   .Key;
+                                                                         .Key;
                             }
                         }
                     }
@@ -638,8 +717,8 @@ public partial class FrmSettings : Form
                                                           .ToString());
 
                                     HelperVariables.APILanguageToUse = result
-                                       .FirstOrDefault()
-                                       .Key;
+                                                                      .FirstOrDefault()
+                                                                      .Key;
                                 }
                             }
                         }
@@ -650,7 +729,7 @@ public partial class FrmSettings : Form
                             {
                                 HelperVariables.UserSettingMapColourMode =
                                     rbt.Name.Replace(oldValue: "rbt_MapColourMode",
-                                                     newValue: "");
+                                        newValue: "");
                             }
                         }
                     }
@@ -683,7 +762,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void Pbx_Browse_Startup_Folder_Click(object sender,
-                                                 EventArgs e)
+        EventArgs e)
     {
         if (fbd_StartupFolder.ShowDialog() == DialogResult.OK)
         {
@@ -699,7 +778,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">SettingTabPage name</param>
     /// <param name="e">Unused</param>
     private void Lbx_fileExtensions_SelectedIndexChanged(object sender,
-                                                         EventArgs e)
+        EventArgs e)
     {
         _nowLoadingSettingsData = true;
         // try to load subcontrol values here
@@ -801,7 +880,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tpg_FileOptions_Enter(object sender,
-                                       EventArgs e)
+        EventArgs e)
     {
         // at this point lbx_fileExtensions.SelectedIndex == 0;
         if (lbx_fileExtensions.SelectedItems.Count == 0)
@@ -817,7 +896,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void Any_rbt_CheckedChanged(object sender,
-                                        EventArgs e)
+        EventArgs e)
     {
         if (!_nowLoadingSettingsData)
         {
@@ -858,7 +937,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">The Control in question</param>
     /// <param name="e">Unused</param>
     private void Any_ckb_CheckStateChanged(object sender,
-                                           EventArgs e)
+        EventArgs e)
     {
         if (!_nowLoadingSettingsData)
         {
@@ -933,7 +1012,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">The Control in question</param>
     /// <param name="e">Unused</param>
     private void Any_tbx_TextChanged(object sender,
-                                     EventArgs e)
+        EventArgs e)
     {
         if (!_nowLoadingSettingsData)
         {
@@ -958,7 +1037,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void Any_cbx_TextChanged(object sender,
-                                     EventArgs e)
+        EventArgs e)
     {
         if (!_nowLoadingSettingsData)
         {
@@ -973,10 +1052,10 @@ public partial class FrmSettings : Form
                 settingValue = settingValue.Split('[')
                                            .Last()
                                            .Substring(startIndex: 0, length: settingValue
-                                                         .Split('[')
-                                                         .Last()
-                                                         .Length -
-                                                      1);
+                                                                            .Split('[')
+                                                                            .Last()
+                                                                            .Length -
+                                                                             1);
             }
 
             // stick it into settings-Q
@@ -997,7 +1076,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void Any_nud_ValueChanged(object sender,
-                                      EventArgs e)
+        EventArgs e)
     {
         NumericUpDown nud = (NumericUpDown)sender;
         if (!_nowLoadingSettingsData)
@@ -1037,7 +1116,7 @@ public partial class FrmSettings : Form
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void Any_nud_Enter(object sender,
-                               EventArgs e)
+        EventArgs e)
     {
         AcceptButton = null;
     }
@@ -1048,7 +1127,7 @@ public partial class FrmSettings : Form
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void Any_nud_Leave(object sender,
-                               EventArgs e)
+        EventArgs e)
     {
         AcceptButton = btn_OK;
     }
@@ -1059,80 +1138,11 @@ public partial class FrmSettings : Form
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void rbx_CustomRulesExplanation_LinkClicked(object sender,
-                                                        LinkClickedEventArgs e)
+        LinkClickedEventArgs e)
     {
         Process.Start(fileName: e.LinkText);
     }
 
-    /// <summary>
-    ///     Displays an error msg if DGV failed validation
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void dgv_CustomRules_DataError(object sender,
-                                           DataGridViewDataErrorEventArgs e)
-    {
-        if (e.Exception != null &&
-            e.Context == DataGridViewDataErrorContexts.Commit)
-        {
-            CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName:
-                    "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Information.ToString()),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Warning);
-            customMessageBox.ShowDialog();
-        }
-    }
-
-    /// <summary>
-    ///     Handles the RowValidating event of the dgv_CustomRules DataGridView.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The DataGridViewCellCancelEventArgs instance containing the event data.</param>
-    /// <remarks>
-    ///     This method validates the data in the "clh_TargetPointOutcome" column of the DataGridView.
-    ///     If the value of the "clh_TargetPointOutcome" cell is "Custom" and the corresponding "clh_TargetPointOutcomeCustom"
-    ///     cell is empty,
-    ///     it cancels the event, preventing the user from leaving the cell until a valid value is entered, and displays a
-    ///     warning message.
-    /// </remarks>
-    private void dgv_CustomRules_RowValidating(object sender,
-                                               DataGridViewCellCancelEventArgs e)
-    {
-        if (e.ColumnIndex ==
-            dgv_CustomRules.Columns[columnName: "clh_TargetPointOutcome"]
-                           .Index)
-        {
-            string clh_TargetPointOutcomeValue = Convert.ToString(
-                value: (dgv_CustomRules.Rows[index: e.RowIndex]
-                                       .Cells[columnName: "clh_TargetPointOutcome"] as
-                    DataGridViewComboBoxCell)?.EditedFormattedValue);
-
-            string clh_TargetPointOutcomeCustomValue = Convert.ToString(
-                value: (dgv_CustomRules.Rows[index: e.RowIndex]
-                                       .Cells[columnName: "clh_TargetPointOutcomeCustom"]
-                    as DataGridViewTextBoxCell)?.EditedFormattedValue);
-            if (clh_TargetPointOutcomeValue == "Custom" &&
-                IsNullOrEmpty(value: clh_TargetPointOutcomeCustomValue))
-            {
-                e.Cancel = true;
-                CustomMessageBox customMessageBox = new(
-                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                        messageBoxName:
-                        "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty"),
-                    caption: HelperControlAndMessageBoxHandling
-                       .GenericGetMessageBoxCaption(
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
-                    buttons: MessageBoxButtons.OK,
-                    icon: MessageBoxIcon.Warning);
-                customMessageBox.ShowDialog();
-            }
-        }
-    }
 
     /// <summary>
     ///     Handles the Click event of the btn_ResetToDefaults control.
@@ -1144,7 +1154,7 @@ public partial class FrmSettings : Form
     ///     reloads the custom city logic data grid view, and displays a message box with information about the operation.
     /// </remarks>
     private void btn_ResetToDefaults_Click(object sender,
-                                           EventArgs e)
+        EventArgs e)
     {
         HelperDataCustomCityAllocationRules
            .DataWriteSQLiteCustomCityAllocationLogicDefaults(resetToDefaults: true);
@@ -1156,12 +1166,23 @@ public partial class FrmSettings : Form
                 messageBoxName: "mbx_GenericDone"),
             caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                 captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                   .Information.ToString()),
+                                                               .Information.ToString()),
             buttons: MessageBoxButtons.OK,
             icon: MessageBoxIcon.Information);
         customMessageBox.ShowDialog();
     }
 
+    /// <summary>
+    ///     Shows or hides the ArcGIS Key value
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void ckb_ShowPassword_CheckedChanged(object sender, EventArgs e)
+    {
+        tbx_ARCGIS_APIKey.UseSystemPasswordChar = !ckb_ShowPassword.Checked;
+    }
+
+#endregion
 
 #region Import-export
 
@@ -1179,7 +1200,7 @@ public partial class FrmSettings : Form
     ///     the error message.
     /// </remarks>
     private void btn_ExportSettings_Click(object sender,
-                                          EventArgs e)
+        EventArgs e)
     {
         Dictionary<string, string> checkboxDictionary = GetCheckboxDictionary();
 
@@ -1191,7 +1212,7 @@ public partial class FrmSettings : Form
                 messageBoxName: "mbx_FrmSettings_QuestionWhatToExport"),
             caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                 captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question
-                                              .ToString()),
+                                                               .ToString()),
             buttonsDictionary: buttonsDictionary,
             orientation: "Vertical",
             checkboxesDictionary: checkboxDictionary);
@@ -1255,7 +1276,7 @@ public partial class FrmSettings : Form
     ///     from the chosen database file.
     /// </remarks>
     private void btn_ImportSettings_Click(object sender,
-                                          EventArgs e)
+        EventArgs e)
     {
         string? databaseFileToImport = GetDatabaseFileToImport();
         if (databaseFileToImport is not null)
@@ -1270,7 +1291,7 @@ public partial class FrmSettings : Form
                     messageBoxName: "mbx_FrmSettings_QuestionWhatToImport"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Question.ToString()),
+                                                                   .Question.ToString()),
                 buttonsDictionary: buttonsDictionary,
                 orientation: "Vertical",
                 checkboxesDictionary: checkboxDictionary);
@@ -1343,20 +1364,20 @@ public partial class FrmSettings : Form
                     messageBoxName: "mbx_FrmSettings_PleaseRestartApp"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Question
-                       .ToString()),
+                                                                   .Question
+                                                                   .ToString()),
                 buttonsDictionary: buttonsDictionary,
                 orientation: "Horizontal",
                 checkboxesDictionary: new Dictionary<string, string>());
 
         // basically this triggers an error in debug mode but works ok in prod.
-        #if !DEBUG
+    #if !DEBUG
         if (displayAndReturnList.Contains(item: "RestartNow"))
         {
             Process.Start(fileName: Application.ExecutablePath);
             Application.Exit();
         }
-        #endif
+    #endif
     }
 
     /// <summary>
@@ -1401,9 +1422,9 @@ public partial class FrmSettings : Form
                      enumType: typeof(SettingsImportExportOptions)))
         {
             checkboxDictionary.Add(key: HelperDataLanguageTZ.DataReadDTObjectText(
-                                       objectType: ControlType.CheckBox,
-                                       objectName: "ckb_ImportExport_" +
-                                                   name), value: name);
+                objectType: ControlType.CheckBox,
+                objectName: "ckb_ImportExport_" +
+                            name), value: name);
         }
 
         return checkboxDictionary;
