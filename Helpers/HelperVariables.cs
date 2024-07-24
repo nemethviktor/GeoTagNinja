@@ -76,6 +76,7 @@ internal static class HelperVariables
     internal static readonly string ExifToolExePathToUse = GetExifToolExePathToUse();
 
     internal static string UOMAbbreviated = "";
+    internal static Dictionary<string, string> fileChecksumhDictionary = new();
 
     /// <summary>
     ///     Pulls (and creates if necessary) the Roaming/Users subfolder for the app.

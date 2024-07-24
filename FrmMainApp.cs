@@ -131,7 +131,6 @@ public partial class FrmMainApp : Form
 
 #endregion
 
-
 #region Form/App Related
 
     internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
@@ -1608,7 +1607,7 @@ public partial class FrmMainApp : Form
 
 #endregion
 
-#region File
+#region File (that is, the "File" menu tree)
 
     /// <summary>
     ///     Handles the tmi_File_SaveAll_Click event -> triggers the file-save process
@@ -1743,7 +1742,7 @@ public partial class FrmMainApp : Form
                     try
                     {
                         lvw_FileList.ClearData();
-                        DirectoryElements.Clear();
+                        // DirectoryElements.Clear();
                         HelperFileSystemOperators.FsoCleanUpUserFolder();
                         FolderName = tbx_FolderName.Text;
                         lvw_FileList_LoadOrUpdate();
@@ -2444,7 +2443,7 @@ public partial class FrmMainApp : Form
 
         Logger.Trace(message: "Clear lvw_FileList");
         lvw_FileList.ClearData();
-        DirectoryElements.Clear();
+        // DirectoryElements.Clear();
         HelperVariables.LstTrackPath.Clear();
         Application.DoEvents();
         HelperGenericFileLocking.FilesBeingProcessed.Clear();

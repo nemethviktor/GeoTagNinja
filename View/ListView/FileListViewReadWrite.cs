@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -87,7 +88,7 @@ internal static class FileListViewReadWrite
                                            .GetAttributeValue<DateTime>(
                                                 attribute: ElementAttribute.TakenDate,
                                                 version: DirectoryElement.AttributeVersion
-                                                   .Stage3ReadyToWrite);
+                                                                         .Stage3ReadyToWrite);
 
                                     DateTime modifiedTakenDateTime = originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
 
@@ -122,7 +123,7 @@ internal static class FileListViewReadWrite
                                            .GetAttributeValue<DateTime>(
                                                 attribute: ElementAttribute.CreateDate,
                                                 version: DirectoryElement.AttributeVersion
-                                                   .Stage3ReadyToWrite);
+                                                                         .Stage3ReadyToWrite);
 
                                     DateTime modifiedCreateDateTime = originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
 
@@ -258,7 +259,9 @@ internal static class FileListViewReadWrite
         int DEFilesWithGeoDataCount = 0;
         foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
         {
-            if (directoryElement.Type == DirectoryElement.ElementType.File)
+            if ((directoryElement.Type == DirectoryElement.ElementType.File && Program.collectionModeEnabled) ||
+                (directoryElement.Type == DirectoryElement.ElementType.File && File.Exists(
+                    path: Path.Combine(path1: FrmMainApp.FolderName, path2: directoryElement.ItemNameWithoutPath))))
             {
                 DEFileCount++;
                 List<ElementAttribute> GeoDataAttributes = Enum
