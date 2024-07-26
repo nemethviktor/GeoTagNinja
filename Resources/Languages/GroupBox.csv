@@ -1,8 +1,8 @@
 ﻿objectName,English,French
 gbx_GPSData,GPS Data,Données GPS
 gbx_LocationData,Location Data,Données de localisation
-gbx_ImportGPXSource,Source,Source
-gbx_ImportGPXTimeSetting,Time Setting,Réglage de l'heure
+gbx_ImportExportGpxSource,Source,Source
+gbx_ImportExportGpxTimeSetting,Time Setting,Réglage de l'heure
 gbx_Dates,Dates,Dates
 gbx_TakenDate,Date (Image) Taken,Date à laquelle l'image a été prise
 gbx_CreateDate,Created Date,Date de création
@@ -14,3 +14,4 @@ gbx_GeoNamesSettings,GeoNames Settings,
 gbx_OtherSettings,Other Settings,
 gbx_GeoNamesLanguageSettings,GeoNames Language Settings,
 gbx_MapColourMode,Map Colour Mode,
+gbx_SaveTrackTo,Save Track (Options),

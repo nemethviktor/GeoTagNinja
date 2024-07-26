@@ -52,12 +52,12 @@ public partial class FileListView : System.Windows.Forms.ListView
     ///     This is to deal with the icons in listview
     ///     from https://stackoverflow.com/a/37806517/3968494
     /// </summary>
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming"),
-     SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local"),
-     SuppressMessage(category: "ReSharper", checkId: "IdentifierTypo"),
-     SuppressMessage(category: "ReSharper", checkId: "StringLiteralTypo"),
-     SuppressMessage(category: "ReSharper", checkId: "MemberCanBePrivate.Local"),
-     SuppressMessage(category: "ReSharper", checkId: "FieldCanBeMadeReadOnly.Local")]
+    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local")]
+    [SuppressMessage(category: "ReSharper", checkId: "IdentifierTypo")]
+    [SuppressMessage(category: "ReSharper", checkId: "StringLiteralTypo")]
+    [SuppressMessage(category: "ReSharper", checkId: "MemberCanBePrivate.Local")]
+    [SuppressMessage(category: "ReSharper", checkId: "FieldCanBeMadeReadOnly.Local")]
     private static class NativeMethods
     {
         public const uint LVM_FIRST = 0x1000;
@@ -77,24 +77,24 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         [DllImport(dllName: "user32")]
         public static extern IntPtr SendMessage(IntPtr hWnd,
-                                                uint msg,
-                                                uint wParam,
-                                                IntPtr lParam);
+            uint msg,
+            uint wParam,
+            IntPtr lParam);
 
         [DllImport(dllName: "comctl32")]
         public static extern bool ImageList_Destroy(IntPtr hImageList);
 
         [DllImport(dllName: "shell32", CharSet = CharSet.Unicode)]
         public static extern IntPtr SHGetFileInfo(string pszPath,
-                                                  uint dwFileAttributes,
-                                                  ref SHFILEINFOW psfi,
-                                                  uint cbSizeFileInfo,
-                                                  uint uFlags);
+            uint dwFileAttributes,
+            ref SHFILEINFOW psfi,
+            uint cbSizeFileInfo,
+            uint uFlags);
 
         [DllImport(dllName: "uxtheme", CharSet = CharSet.Unicode)]
         public static extern int SetWindowTheme(IntPtr hWnd,
-                                                string pszSubAppName,
-                                                string pszSubIdList);
+            string pszSubAppName,
+            string pszSubIdList);
 
 
         [StructLayout(layoutKind: LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -168,6 +168,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         public const string LENS_SPEC = "LensSpec";
         public const string TAKEN_DATE = "TakenDate";
         public const string CREATE_DATE = "CreateDate";
+        public const string GPS_DATETIME = "GPSDateTime";
         public const string OFFSET_TIME = "OffsetTime";
         public const string IPTC_KEYWORDS = "IPTCKeywords";
         public const string XML_SUBJECTS = "XMLSubjects";
@@ -342,6 +343,10 @@ public partial class FileListView : System.Windows.Forms.ListView
                 SourcesAndAttributes.ElementAttribute.CreateDate
             },
             {
+                FileListColumns.GPS_DATETIME,
+                SourcesAndAttributes.ElementAttribute.GPSDateTime
+            },
+            {
                 FileListColumns.OFFSET_TIME,
                 SourcesAndAttributes.ElementAttribute.OffsetTime
             },
@@ -385,7 +390,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <param name="columnHeader">The column in this list view to get data for</param>
     /// <returns>The value for the column as a string</returns>
     private string PickModelValueForColumn(DirectoryElement directoryElement,
-                                           ColumnHeader columnHeader)
+        ColumnHeader columnHeader)
     {
         // The displayed file name has to be derived using shell32.dll,
         // which is done in the actual addListItem method.
@@ -450,13 +455,13 @@ public partial class FileListView : System.Windows.Forms.ListView
         if (directoryElement.Type != DirectoryElement.ElementType.MyComputer)
         {
             himl = NativeMethods.SHGetFileInfo(pszPath: directoryElement.FileNameWithPath,
-                                               dwFileAttributes: 0,
-                                               psfi: ref shfi,
-                                               cbSizeFileInfo: (uint)Marshal.SizeOf(
-                                                   structure: shfi),
-                                               uFlags: NativeMethods.SHGFI_DISPLAYNAME |
-                                                       NativeMethods.SHGFI_SYSICONINDEX |
-                                                       NativeMethods.SHGFI_SMALLICON);
+                dwFileAttributes: 0,
+                psfi: ref shfi,
+                cbSizeFileInfo: (uint)Marshal.SizeOf(
+                    structure: shfi),
+                uFlags: NativeMethods.SHGFI_DISPLAYNAME |
+                        NativeMethods.SHGFI_SYSICONINDEX |
+                        NativeMethods.SHGFI_SMALLICON);
         }
         else
         {
@@ -538,8 +543,8 @@ public partial class FileListView : System.Windows.Forms.ListView
                 if (columnHeader.Name != COL_NAME_PREFIX + FileListColumns.FILENAME)
                 {
                     subItemList.Add(item: PickModelValueForColumn(
-                                        directoryElement: directoryElement,
-                                        columnHeader: columnHeader));
+                        directoryElement: directoryElement,
+                        columnHeader: columnHeader));
                 }
             }
 
@@ -556,8 +561,8 @@ public partial class FileListView : System.Windows.Forms.ListView
                 else if (columnHeader.Name == COL_NAME_PREFIX + FileListColumns.GUID)
                 {
                     subItemList.Add(item: PickModelValueForColumn(
-                                        directoryElement: directoryElement,
-                                        columnHeader: columnHeader));
+                        directoryElement: directoryElement,
+                        columnHeader: columnHeader));
                 }
                 else
                 {
@@ -670,7 +675,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             {
                 // We go for case-insensitive!
                 if (string.Equals(a: columnHeader.Name, b: arrColOrderHeadername[idx],
-                                  comparisonType: StringComparison.OrdinalIgnoreCase))
+                        comparisonType: StringComparison.OrdinalIgnoreCase))
                 {
                     columnHeader.DisplayIndex = idx;
                     Logger.Trace(message: "columnHeader: " +
@@ -797,7 +802,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         // Set up the ListView control's basic properties.
         // Set its theme so it will look like the one used by Explorer.
         NativeMethods.SetWindowTheme(hWnd: Handle, pszSubAppName: "Explorer",
-                                     pszSubIdList: null);
+            pszSubIdList: null);
     }
 
     private void InitializeImageList()
@@ -805,22 +810,22 @@ public partial class FileListView : System.Windows.Forms.ListView
         //https://stackoverflow.com/a/37806517/3968494
         shfi = new NativeMethods.SHFILEINFOW();
         IntPtr hSysImgList = NativeMethods.SHGetFileInfo(pszPath: "",
-                                                         dwFileAttributes: 0,
-                                                         psfi: ref shfi,
-                                                         cbSizeFileInfo: (uint)Marshal
-                                                            .SizeOf(structure: shfi),
-                                                         uFlags: NativeMethods
-                                                            .SHGFI_SYSICONINDEX |
-                                                         NativeMethods.SHGFI_SMALLICON);
+            dwFileAttributes: 0,
+            psfi: ref shfi,
+            cbSizeFileInfo: (uint)Marshal
+               .SizeOf(structure: shfi),
+            uFlags: NativeMethods
+                       .SHGFI_SYSICONINDEX |
+                    NativeMethods.SHGFI_SMALLICON);
         Debug.Assert(condition: hSysImgList !=
                                 IntPtr.Zero); // cross our fingers and hope to succeed!
 
         // Set the ListView control to use that image list.
         IntPtr hOldImgList = NativeMethods.SendMessage(hWnd: Handle,
-                                                       msg: NativeMethods
-                                                          .LVM_SETIMAGELIST,
-                                                       wParam: NativeMethods.LVSIL_SMALL,
-                                                       lParam: hSysImgList);
+            msg: NativeMethods
+               .LVM_SETIMAGELIST,
+            wParam: NativeMethods.LVSIL_SMALL,
+            lParam: hSysImgList);
 
         // If the ListView control already had an image list, delete the old one.
         if (hOldImgList != IntPtr.Zero)
@@ -991,13 +996,13 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <param name="itemText">The particular ListViewItem (by text) that needs updating</param>
     /// <param name="color">Parameter to assign a particular colour (prob red or black) to the whole row</param>
     public void UpdateItemColour(string itemText,
-                                 Color color)
+        Color color)
     {
         // If the current thread is not the UI thread, InvokeRequired will be true
         if (InvokeRequired)
         {
             Invoke(method: (Action)(() =>
-                       UpdateItemColour(itemText: itemText, color: color)));
+                UpdateItemColour(itemText: itemText, color: color)));
             return;
         }
 
@@ -1019,7 +1024,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void FileList_ColumnClick(object sender,
-                                      ColumnClickEventArgs e)
+        ColumnClickEventArgs e)
     {
         if (e.Column == LvwColumnSorter.SortColumn)
         {
@@ -1039,7 +1044,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     }
 
     private void FileList_ColumnWidthChanging(object sender,
-                                              ColumnWidthChangingEventArgs e)
+        ColumnWidthChangingEventArgs e)
     {
         // Columns with width = 0 should stay hidden / may not be resized.
         if (Columns[index: e.ColumnIndex]
@@ -1052,7 +1057,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     }
 
     private void FileList_ColumnReordered(object sender,
-                                          ColumnReorderedEventArgs e)
+        ColumnReorderedEventArgs e)
     {
         // Prevent FileName column to be moved
         if (e.Header.Index == 0)

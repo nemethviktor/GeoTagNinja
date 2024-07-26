@@ -13,6 +13,12 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 	- Due to the lack of a signed certificate, when installing SmartScreen will complain that the app is unsafe. SmartScreen is meant to be called StupidScreen but MS made a typo there.
 	- Just run the installer. As the code is public and people may compile on their own, everyone is welcome to ascertain the app is safe should they feel like.
 
+## Features at-a-glance
+
+- Tag the location coordinates and City/State/etc details of multiple photos with the help of a map
+- Import Track (GPX etc) files and associate them with the photos
+- Export coordinate tracks of photos to GPX
+
 ## Quirks and Things to Note
 
 - Build 8361 [20221122]+: There is now a hold when the user enters a folder - it is kept on until the folder completes load. This is a bit annoying perhaps but is needed because otherwise people can start issuing write-commands before the read-process finishes and that can result in files being written the wrong info.
@@ -38,6 +44,12 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 	- The logic is that a Clipboard of _only_ a pair of coordinates separated by (preferably) the Culture-invariant [aka comma] ListSeparator would be pasted into the Edit Form when pressing CTRL+V (e.g.: 56.1234, 12.5678) <-- and nothing else. 
 	- I coded this in a relatively foolproof way but try not to outsmart it.
 - Build 8831 [20240306]+: ExifTool should now auto-update into the Roaming folder upon app shutdown. (that's c:\Users\username\AppData\Roaming\GeoTagNinja\)
+- Build 8960+ [202407xx]+: There has been a change in how ExifTool is distributed and is no longer packaged as a single file. This doesn't quite work for my purposes, not the least because I don't want 498 files hanging around in the user folder. As such I'll build ET from scratch and pack it occasionally w/ GTN as before. For anyone that wants to follow/check logic:
+	- Get Perl for Windows (eg Strawberry Perl)
+	- `cpanm PAR::Packer`
+	- `cpanm https://github.com/exiftool/exiftool.git --force` 
+	- `pp -o d:\temp\exiftool.exe d:\StrawberryPerl\perl\site\bin\exiftool` 
+	- (replace relevant bits in the last line as...relavant...)
 
 ### A Particular Note on Working with Adobe Bridge (ACR) and RAW files > Saving as JPGs or Other Formats.
 
@@ -94,6 +106,7 @@ I'm generally happy for anyone competent to add pull requests but I don't always
 	- At the moment there's some groundwork-code in the codebase to enable some future interaction with keywords but I haven't quite worked out an efficient way around this. You'll notice that the two `geo:` are easy to capture and edit but the rest are just undefined character strings. A `remove all geodata` command therefore wouldn’t be able to identify whether say `Fxxking` is a verb or a [town in Austria](https://en.wikipedia.org/wiki/Fugging,_Upper_Austria) or perhaps `Bugyi` is a character string that refers to the Hungarian town called Bugyi, or the otherwise equivalent noun that translates as `panties`. If you think I'm entirely crazy, then read the [Wikipedia article](https://en.wikipedia.org/wiki/Bugyi) regarding that settlement.
 	- This means that if your file has Keywords/Subjects and you edit the geo-data the keywords will become out of sync with the changes.
 	- What's therefore likely to happen is that I'll attempt to replace existing `geo:` keywords with up-to-date values as required and ignore the rest.
+- The ExifTool auto-update is currently not working. This is after Phil has changed the single-file exiftool solution into a 498-files distrib and I haven't gotten around to deal with it on my end.
 
 ### Destinations/Possible Bug in WebView2
 
@@ -104,7 +117,6 @@ Longer: Hypothetically the idea with Destinations is that if there are groups of
 - The script parses these N groups, separates them and puts them independently on the map _with a bunch of arrows_.
 	- When viewing the HTML file out of GTN and open in Edge or Chrome there are the appropriate number of grouped paths and arrows show between the individual images, aka it works as expected.
 	- When viewing the same thing within GTN the arrows are missing. Upon inspection it is found that `Uncaught TypeError: Cannot read properties of undefined (reading 'arrowHead') ...` - so basically the arrowHead of the polylineDecorator breaks the WebView2 JS engine, something that isn't a problem in "real" Chrome or Edge.
-
 - For those better versed in JS I've put a try/catch block around this, but I still think there should be some way around the issue so any suggestions here pls shout.
 
 ## Possible Issues & Solutions

@@ -4,12 +4,15 @@
 - NEW & UPDATED:
 	- Added an option to Overlay GPX Coordinate Tracks onto the map. This can be found within the Import GPX Tracks Form, at the bottom. Experimental. #107
 	- Panel sizes on the `FrmMainApp` should should now be stored/restored across sessions. #109
+	- Added GPX Track Export functionality #114
+	- Added the parsing of `GPSDateTime` tags as a read-only item.
 	- Updated the ExifTool-update process to handle the new multi-file package. A mighty annoying move tbh but alas. Anyone experiencing an extra 3 sec delay upon exit, don't complain to me, script now has to extract and move 500 files instead of one.
 	- Added some logic to check if a file had already been process within the session (ie you are reloading a folder or navigating back into a folder you've already visited). If so then the file won't be processed again unless changed.
 		- This somewhat reintroduces the logic eliminated in `build 8391` but less awkwardly. The tradeoff with this is that the app needs to take a checksum of each and every file each time the user does a refresh. This is computer/performance dependent but I tested on 3GB data of 170 files and...
 			- 1st time "enter folder" took around 9 seconds
 			- Consecutive "enter same folder/refresh" took around 3 seconds. 
 			- That on a Ryzen 7 5850 + PCIE3 SSD
+
 
 - BUGS & FIXES:
 	- Changed the way auto-updater works. It was taking `PublishedDate` as a basis for Build number, which wasn't entirely correct. #110

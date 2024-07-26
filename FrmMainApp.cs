@@ -107,7 +107,7 @@ public partial class FrmMainApp : Form
     internal FrmEditFileData FrmEditFileData;
 
     // ReSharper disable once InconsistentNaming
-    private FrmImportGpx FrmImportGpx;
+    private FrmImportExportGpx FrmImportExportGpx;
 
     private string _mapHtmlTemplateCode = "";
 
@@ -158,7 +158,7 @@ public partial class FrmMainApp : Form
         config.AddRule(minLevel: LogLevel.Trace, maxLevel: LogLevel.Fatal,
             target: logfile);
     #else
-        config.AddRule(minLevel: LogLevel.Debug, maxLevel: LogLevel.Fatal, target: logfile);
+        config.AddRule(minLevel: LogLevel.Info, maxLevel: LogLevel.Fatal, target: logfile);
     #endif
 
         logfile.Layout =
@@ -1682,20 +1682,20 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    ///     Handles the tmi_File_ImportGPX_Click event -> Brings up the FrmImportGpx to import track
+    ///     Handles the tmi_File_ImportExportGPX_Click event -> Brings up the FrmImportExportGpx to import track
     ///     files
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private void tmi_File_ImportGPX_Click(object sender,
+    private void tmi_File_ImportExportGPX_Click(object sender,
         EventArgs e)
     {
-        FrmImportGpx = new FrmImportGpx();
-        FrmImportGpx.Text = HelperDataLanguageTZ.DataReadDTObjectText(
+        FrmImportExportGpx = new FrmImportExportGpx();
+        FrmImportExportGpx.Text = HelperDataLanguageTZ.DataReadDTObjectText(
             objectType: ControlType.Form,
-            objectName: "FrmImportGpx"
+            objectName: "FrmImportExportGpx"
         );
-        FrmImportGpx.ShowDialog();
+        FrmImportExportGpx.ShowDialog();
     }
 
     /// <summary>
@@ -1990,11 +1990,11 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    ///     Handles the tsb_ImportGPX_Click event -> shows the FrmImportGpx Form
+    ///     Handles the tsb_ImportExportGPX_Click event -> shows the FrmImportExportGpx Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private void tsb_ImportGPX_Click(object sender,
+    private void tsb_ImportExportGPX_Click(object sender,
         EventArgs e)
     {
         bool validFilesToImport = false;
@@ -2011,7 +2011,7 @@ public partial class FrmMainApp : Form
 
         if (validFilesToImport)
         {
-            FrmImportGpx frmImportGpx = new();
+            FrmImportExportGpx frmImportGpx = new();
             frmImportGpx.StartPosition = FormStartPosition.CenterScreen;
             frmImportGpx.ShowDialog();
         }
@@ -2019,7 +2019,7 @@ public partial class FrmMainApp : Form
         {
             CustomMessageBox customMessageBox = new(
                 text: GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmImportGpx_NoFileSelected"),
+                    messageBoxName: "mbx_FrmImportExportGpx_NoFileSelected"),
                 caption: GenericGetMessageBoxCaption(
                     captionType: MessageBoxCaption.Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
