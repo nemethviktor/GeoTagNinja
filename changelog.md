@@ -2,6 +2,12 @@
 
 **Build 8xxx [20240xxx]** 
 - NEW & UPDATED:
+	- TBA
+- BUGS & FIXES:
+	- TBA
+
+**Build 8973 [20240726]** 
+- NEW & UPDATED:
 	- Added an option to Overlay GPX Coordinate Tracks onto the map. This can be found within the Import GPX Tracks Form, at the bottom. Experimental. #107
 	- Panel sizes on the `FrmMainApp` should should now be stored/restored across sessions. #109
 	- Added GPX Track Export functionality #114
@@ -12,7 +18,7 @@
 			- 1st time "enter folder" took around 9 seconds
 			- Consecutive "enter same folder/refresh" took around 3 seconds. 
 			- That on a Ryzen 7 5850 + PCIE3 SSD
-
+	- App Version Bump: 1.15
 
 - BUGS & FIXES:
 	- Changed the way auto-updater works. It was taking `PublishedDate` as a basis for Build number, which wasn't entirely correct. #110
