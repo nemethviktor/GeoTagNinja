@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -214,7 +215,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     private NativeMethods.SHFILEINFOW shfi;
 
     private static readonly Dictionary<string, SourcesAndAttributes.ElementAttribute>
-        columnToAttributeMap = new()
+        ColumnToAttributeMap = new()
         {
             {
                 FileListColumns.GUID,
@@ -413,7 +414,7 @@ public partial class FileListView : System.Windows.Forms.ListView
                 attribute: atrb, notFoundValue: nfVal, nowSavingExif: false);
         }
 
-        if (columnToAttributeMap.TryGetValue(
+        if (ColumnToAttributeMap.TryGetValue(
                 key: columnHeader.Name.Substring(startIndex: 4),
                 value: out SourcesAndAttributes.ElementAttribute attribute))
         {
@@ -925,12 +926,26 @@ public partial class FileListView : System.Windows.Forms.ListView
         DirectoryElements = directoryElements;
         _fileCount = 0;
 
-        foreach (DirectoryElement item in DirectoryElements)
+        // so now that we don't clear the DE collection we actually need to make sure these items exist in the current folder/scope.
+        foreach (DirectoryElement directoryElement in DirectoryElements)
         {
-            AddListItem(directoryElement: item);
-            if (item.Type == DirectoryElement.ElementType.File)
+            if ((directoryElement.Type == DirectoryElement.ElementType.File && Program.collectionModeEnabled) ||
+                (directoryElement.Type == DirectoryElement.ElementType.File && File.Exists(
+                    path: Path.Combine(path1: FrmMainApp.FolderName, path2: directoryElement.ItemNameWithoutPath))) ||
+                (directoryElement.Type == DirectoryElement.ElementType.SubDirectory &&
+                 Directory.Exists(path: Path.Combine(path1: FrmMainApp.FolderName,
+                     path2: directoryElement.ItemNameWithoutPath))) ||
+                directoryElement.Type == DirectoryElement.ElementType.ParentDirectory ||
+                (FrmMainApp.FolderName == Environment.SpecialFolder.MyComputer.ToString() &&
+                 directoryElement.Type == DirectoryElement.ElementType.Drive))
             {
-                _fileCount++;
+                AddListItem(directoryElement: directoryElement);
+                if ((directoryElement.Type == DirectoryElement.ElementType.File && Program.collectionModeEnabled) ||
+                    (directoryElement.Type == DirectoryElement.ElementType.File && File.Exists(
+                        path: Path.Combine(path1: FrmMainApp.FolderName, path2: directoryElement.ItemNameWithoutPath))))
+                {
+                    _fileCount++;
+                }
             }
         }
 
@@ -943,14 +958,12 @@ public partial class FileListView : System.Windows.Forms.ListView
 
     /// <summary>
     ///     Clears the FileListView.
-    ///     Should be used instead Items.Clear, etc. as it correctly handles
-    ///     all due other things to do for clearing, like clearing the
-    ///     the Directory Elements collection.
+    ///     Should be used instead Items.Clear, etc.
     /// </summary>
     public void ClearData()
     {
         Items.Clear();
-        DirectoryElements.Clear();
+        // DirectoryElements.Clear();
     }
 
 

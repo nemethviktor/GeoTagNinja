@@ -1,5 +1,18 @@
 ﻿objectName,English,French
-rbx_Register_ArcGIS,You'll need a free ArcGIS API Key to use the map search functionality. Get one here: https://goto.arcgis.com/production-developers-signup,Vous aurez besoin d'une clé API ArcGIS gratuite pour utiliser la fonctionnalité de recherche de carte. Obtenez-en une ici : https://goto.arcgis.com/production-developers-signup
+rbx_Register_ArcGIS,"You'll need an ArcGIS API key to use the map search functionality. 
+ArcGIS have changed their registration process as of June 2024. Register [here](https://location.arcgis.com/sign-up/)
+You now need to specify a portal url. Just input anything you want.
+Scroll/Go to `Developer credential creator`
+Then `New Item`
+Then `Developer Credentials`
+Pick `API Key` (not OAUth)
+Set your expiration date to as far into the future as you can (1 year)
+Leave `Referrers` blank
+On the next page pick `Geocoding (not stored)`
+On the next page skip `Item Access`
+On the next page add any title
+Eventually click `Generate the API key and go to item details page. I am ready to copy and save the key.`
+Save the API key when prompted. If you don't do it at the time you'll have to generate another one.",Vous aurez besoin d'une clé API ArcGIS gratuite pour utiliser la fonctionnalité de recherche de carte. Obtenez-en une ici : https://goto.arcgis.com/production-developers-signup
 rbx_Register_GeoNames,You'll need a GeoNames Account to use the reverse geocoding/search function (lat/long --> country/city/...). Get one here: http://www.geonames.org/login,Vous aurez besoin d'un compte GeoNames pour utiliser la fonction de géocodage inversé/recherche (lat/long --> pays/ville/...). Obtenez-en un ici : http://www.geonames.org/login
 rbx_CustomRulesExplanation,"This is an advanced feature. AdminName1-4 & ToponymName refer to the API outputs so if you don't understand that, probably don't poke this at all. 
 Re: ""Predetermined countries"" (checkbox below): Read about those here: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 + check the other tab - Note if you disable that setting it then will blank CountryCode cells that fall outside the relevant grouping but won't actually drop those rows.

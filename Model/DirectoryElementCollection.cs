@@ -15,9 +15,9 @@ namespace GeoTagNinja.Model;
 
 public class DirectoryElementCollection : List<DirectoryElement>
 {
-    internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+    private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-    internal ExifTool _ExifTool;
+    private ExifTool _ExifTool;
 
     public ExifTool ExifTool
     {
@@ -44,8 +44,8 @@ public class DirectoryElementCollection : List<DirectoryElement>
     {
         foreach (DirectoryElement item in this)
         {
-            if (item.GetAttributeValueString(ElementAttribute.GUID,
-                                             nowSavingExif: false) ==
+            if (item.GetAttributeValueString(attribute: ElementAttribute.GUID,
+                    nowSavingExif: false) ==
                 GUID)
             {
                 return item;
@@ -75,23 +75,23 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
 
     /// <summary>
-    /// Searches through all the DEs in this collection for elements
-    /// with dirty (to be saved) attributes.
-    /// 
-    /// TODO: THIS IS VERY INEFFICIENT. With larger element sets, we parse the whole
-    /// collection and for every element every attribute... Need a cache...?
+    ///     Searches through all the DEs in this collection for elements
+    ///     with dirty (to be saved) attributes.
+    ///     TODO: THIS IS VERY INEFFICIENT. With larger element sets, we parse the whole
+    ///     collection and for every element every attribute... Need a cache...?
     /// </summary>
     /// <returns>A HashSet of UIDs of dirty elements. Empty if there are none.</returns>
     public HashSet<string> FindDirtyElements()
     {
-        HashSet<string> uids = new HashSet<string>();
+        HashSet<string> uids = new();
         foreach (DirectoryElement directoryElement in this)
         {
-            if (directoryElement.HasDirtyAttributes(
-                    DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
+            if (directoryElement.HasDirtyAttributes())
+            {
                 uids.Add(
-                    directoryElement.GetAttributeValueString(
-                        ElementAttribute.GUID, nowSavingExif: false));
+                    item: directoryElement.GetAttributeValueString(
+                        attribute: ElementAttribute.GUID, nowSavingExif: false));
+            }
         }
 
         return uids;
@@ -109,7 +109,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
     {
         foreach (DirectoryElement item in this)
         {
-            if (item.FileNameWithPath.StartsWith(XMPFileNameWithPath))
+            if (item.FileNameWithPath.StartsWith(value: XMPFileNameWithPath))
             {
                 return item;
             }
@@ -129,24 +129,26 @@ public class DirectoryElementCollection : List<DirectoryElement>
     ///     Whether in case of already existing item the existing
     ///     item should be replace (or an exception thrown)
     /// </param>
-    public void Add(DirectoryElement item,
-                    bool replaceIfExists)
+    private void Add(DirectoryElement item,
+        bool replaceIfExists)
     {
         DirectoryElement exstgElement = FindElementByFileNameWithPath(FileNameWithPath: item.FileNameWithPath);
-        if (exstgElement != null)
+        if (exstgElement != null && replaceIfExists)
         {
-            if (replaceIfExists)
-            {
-                Remove(item: exstgElement);
-            }
-            else
-            {
-                throw new ArgumentException(
-                    message: string.Format(format: "Error when adding element '{0}': the item must be unique but already exists in collection.",
-                                           arg0: item.FileNameWithPath));
-            }
-
+            Remove(item: exstgElement);
             base.Add(item: item);
+        }
+        else if (exstgElement == null)
+        {
+            base.Add(item: item);
+        }
+        else
+        {
+            throw new ArgumentException(
+                message: string.Format(
+                    format:
+                    "Error when adding element '{0}': the item must be unique but already exists in collection.",
+                    arg0: item.FileNameWithPath));
         }
     }
 
@@ -160,15 +162,17 @@ public class DirectoryElementCollection : List<DirectoryElement>
     /// <param name="statusMethod">The method to call for status updates</param>
     /// <param name="collectionModeEnabled"></param>
     public void ParseFolderOrFileListToDEs(string folderOrCollectionFileName,
-                                           Action<string> statusMethod,
-                                           bool collectionModeEnabled)
+        Action<string> statusMethod,
+        bool collectionModeEnabled)
     {
         Logger.Trace(message: $"Start Parsing Folder '{folderOrCollectionFileName}'");
         statusMethod(obj: "Scanning folder: Initializing ...");
 
         if (_ExifTool == null)
         {
-            throw new InvalidOperationException(message: $"Cannot scan a folder (currently '{folderOrCollectionFileName}') when the EXIF Tool was not set for the DirectoryElementCollection.");
+            throw new InvalidOperationException(
+                message:
+                $"Cannot scan a folder (currently '{folderOrCollectionFileName}') when the EXIF Tool was not set for the DirectoryElementCollection.");
         }
 
         if (!collectionModeEnabled)
@@ -183,13 +187,13 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 {
                     Logger.Trace(message: "Drive:" + drive.Name);
                     Add(item: new DirectoryElement(
-                            itemNameWithoutPath: drive.Name,
-                            type: DirectoryElement.ElementType.Drive,
-                            fileNameWithPath: drive.RootDirectory.FullName
-                        ));
+                        itemNameWithoutPath: drive.Name,
+                        type: DirectoryElement.ElementType.Drive,
+                        fileNameWithPath: drive.RootDirectory.FullName
+                    ), replaceIfExists: true);
                 }
 
-                CreateGUIDsForDirectoryElements();
+                CreateGuiDsForDirectoryElements();
                 Logger.Trace(message: "Listing Drives - OK");
                 return;
             }
@@ -201,13 +205,14 @@ public class DirectoryElementCollection : List<DirectoryElement>
             {
                 Logger.Trace(message: "Files: Adding Parent Folder");
                 string tmpStrParent = HelperFileSystemOperators.FsoGetParent(path: folderOrCollectionFileName);
-                if (tmpStrParent != null && tmpStrParent != SpecialFolder.MyComputer.ToString())
+                if (tmpStrParent != null &&
+                    tmpStrParent != SpecialFolder.MyComputer.ToString())
                 {
                     Add(item: new DirectoryElement(
-                            itemNameWithoutPath: FrmMainApp.ParentFolder,
-                            type: DirectoryElement.ElementType.ParentDirectory,
-                            fileNameWithPath: tmpStrParent
-                        ));
+                        itemNameWithoutPath: FrmMainApp.ParentFolder,
+                        type: DirectoryElement.ElementType.ParentDirectory,
+                        fileNameWithPath: tmpStrParent
+                    ), replaceIfExists: true);
                 }
             }
             catch (Exception ex)
@@ -239,10 +244,10 @@ public class DirectoryElementCollection : List<DirectoryElement>
                         // It's the MyComputer entry
                         Logger.Trace(message: "MyComputer: " + directoryInfo.Name);
                         Add(item: new DirectoryElement(
-                                itemNameWithoutPath: directoryInfo.Name,
-                                type: DirectoryElement.ElementType.MyComputer,
-                                fileNameWithPath: directoryInfo.FullName
-                            ));
+                            itemNameWithoutPath: directoryInfo.Name,
+                            type: DirectoryElement.ElementType.MyComputer,
+                            fileNameWithPath: directoryInfo.FullName
+                        ), replaceIfExists: true);
                     }
                     else if (directoryInfo.Attributes.ToString()
                                           .Contains(value: "Directory") &&
@@ -251,10 +256,10 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     {
                         Logger.Trace(message: "Folder: " + directoryInfo.Name);
                         Add(item: new DirectoryElement(
-                                itemNameWithoutPath: directoryInfo.Name,
-                                type: DirectoryElement.ElementType.SubDirectory,
-                                fileNameWithPath: directoryInfo.FullName
-                            ));
+                            itemNameWithoutPath: directoryInfo.Name,
+                            type: DirectoryElement.ElementType.SubDirectory,
+                            fileNameWithPath: directoryInfo.FullName
+                        ), replaceIfExists: true);
                     }
                 }
             }
@@ -311,7 +316,8 @@ public class DirectoryElementCollection : List<DirectoryElement>
         }
 
         // if we're in normal mode or failed to gather any valid files...
-        if (!collectionModeEnabled || (collectionModeEnabled && filesThatExistWithinCollection == 0))
+        if (!collectionModeEnabled ||
+            (collectionModeEnabled && filesThatExistWithinCollection == 0))
         {
             try
             {
@@ -350,9 +356,11 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 foreach (string sideCarExtension in allowedSideCarExtensions)
                 {
                     string imaginaryFileNameWithPath = fileNameWithoutExtension + "." + sideCarExtension;
-                    if (File.Exists(path: Path.Combine(path1: Path.GetDirectoryName(path: fileNameWithExtension), path2: imaginaryFileNameWithPath)))
+                    if (File.Exists(path: Path.Combine(path1: Path.GetDirectoryName(path: fileNameWithExtension),
+                            path2: imaginaryFileNameWithPath)))
                     {
-                        sidecarFiles.Add(item: Path.Combine(path1: Path.GetDirectoryName(path: fileNameWithExtension), path2: imaginaryFileNameWithPath));
+                        sidecarFiles.Add(item: Path.Combine(path1: Path.GetDirectoryName(path: fileNameWithExtension),
+                            path2: imaginaryFileNameWithPath));
                     }
                 }
             }
@@ -372,9 +380,10 @@ public class DirectoryElementCollection : List<DirectoryElement>
             string scFilenameWithoutExtension = Path.GetFileNameWithoutExtension(path: sidecarFile)
                                                     .ToLower();
             List<string> matchingImageFiles = imageFiles
-                                             .Where(predicate: imgFile => Path.GetFileNameWithoutExtension(path: imgFile)
-                                                                              .ToLower() ==
-                                                                          scFilenameWithoutExtension)
+                                             .Where(predicate: imgFile =>
+                                                  Path.GetFileNameWithoutExtension(path: imgFile)
+                                                      .ToLower() ==
+                                                  scFilenameWithoutExtension)
                                              .ToList();
 
             bool sidecarFileAlreadyAdded = false;
@@ -385,11 +394,11 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
                 // only add the sidecar file linkage if the particular extension is marked to use sidecars
                 bool writeXMPSideCar = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
-                                                             tableName: "settings",
-                                                             settingTabPage: "tpg_FileOptions",
-                                                             settingId: imgFileExtension.ToLower() +
-                                                                        "_" +
-                                                                        "ckb_AddXMPSideCar"));
+                    tableName: "settings",
+                    settingTabPage: "tpg_FileOptions",
+                    settingId: imgFileExtension.ToLower() +
+                               "_" +
+                               "ckb_AddXMPSideCar"));
                 if (writeXMPSideCar)
                 {
                     if (sidecarFileAlreadyAdded)
@@ -420,7 +429,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                       overlappingXmpFileStr,
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Warning.ToString()),
+                                                                   .Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
@@ -438,54 +447,110 @@ public class DirectoryElementCollection : List<DirectoryElement>
             string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
             if (fileCount % 10 == 0)
             {
-                statusMethod(obj: $"Scanning folder {100 * fileCount / imageFiles.Count:0}%: processing file '{fileNameWithoutPath}'");
+                statusMethod(
+                    obj:
+                    $"Scanning folder {100 * fileCount / imageFiles.Count:0}%: processing file '{fileNameWithoutPath}'");
             }
 
-            // Regular (image) files are added to the list of
-            // Directory Elements...
-            DirectoryElement fileToParseDictionaryElement = new(
-                itemNameWithoutPath: Path.GetFileName(path: fileNameWithoutPath),
-                type: DirectoryElement.ElementType.File,
-                fileNameWithPath: fileNameWithPath
-            );
-
-            // Add sidecar file and data if available
-            IDictionary<string, string> dictProperties = new Dictionary<string, string>();
-            if (image2sidecar.ContainsKey(key: fileNameWithPath))
+            // this is a bit complex but in _this_ loop we're not looking at sidecar files at _this_ stage whereas ...
+            // I need to know if an xmp has changed or not
+            bool fileNeedsReDEing = false;
+            image2sidecar.TryGetValue(key: fileNameWithPath, value: out string sideCarFileNameWithPath);
+            // so first we check the details of the image file then those of the xmp's
+            for (int i = 0; i <= 1; i++)
             {
-                string sideCarFileNameWithPath = image2sidecar[key: fileNameWithPath];
-                Logger.Info(message: $"Files: Extracting File Data - adding side car file '{sideCarFileNameWithPath}'");
-                fileToParseDictionaryElement.SidecarFile = sideCarFileNameWithPath;
-                // Logically XMP should take priority because RAW files are not meant to be edited.
-                InitiateEXIFParsing(fileNameWithPathToParse: sideCarFileNameWithPath, properties: dictProperties);
+                string thisCheckSum = string.Empty;
+                string storedChecksum = string.Empty;
+                string fileNameWithPathToCheck = i == 0 ? fileNameWithPath : sideCarFileNameWithPath;
+
+                // note to self: jpgs have no sidecars.
+                if (File.Exists(path: fileNameWithPathToCheck))
+                {
+                    if (HelperVariables.fileChecksumhDictionary.TryGetValue(key: fileNameWithPathToCheck,
+                            value: out string value))
+                    {
+                        storedChecksum = value;
+                    }
+
+
+                    // before anyone points out, yes we could store/check filesizes and match those two but the problem is that particularly
+                    // xmp files can be modified within a single byte and then saved and have their datetime stamp changed to takendatetime
+                    // so basically we could have two files that look identical on the surface but differ in content. 
+                    // as such we do need to do the checksum test regardless of what the files appear like.
+
+                    thisCheckSum = HelperFileSystemGetChecksum.GetChecksum(fileNameWithPath: fileNameWithPathToCheck);
+
+                    fileNeedsReDEing = fileNeedsReDEing || storedChecksum != thisCheckSum ||
+                                       !HelperVariables.fileChecksumhDictionary.ContainsKey(
+                                           key: fileNameWithPathToCheck);
+                }
+
+                if (fileNeedsReDEing && !string.IsNullOrWhiteSpace(value: thisCheckSum))
+                {
+                    // update HelperVariables.fileChecksumhDictionary
+                    HelperVariables.fileChecksumhDictionary[key: fileNameWithPathToCheck] = thisCheckSum;
+                }
             }
 
-            // Parse EXIF properties
-            InitiateEXIFParsing(fileNameWithPathToParse: fileNameWithPath, properties: dictProperties);
+            if (fileNeedsReDEing)
+            {
+                // delete from DE-collection (xmp files don't have a DE entry)
+                DirectoryElement? directoryElementToRemove =
+                    FindElementByFileNameWithPath(FileNameWithPath: fileNameWithPath);
+                if (directoryElementToRemove is not null)
+                {
+                    Remove(item: directoryElementToRemove);
+                }
 
-            // Insert into model
-            fileToParseDictionaryElement.ParseAttributesFromExifToolOutput(dictTagsIn: dictProperties);
+                // Regular (image) files are added to the list of
+                // Directory Elements...
+                DirectoryElement fileToParseDictionaryElement = new(
+                    itemNameWithoutPath: Path.GetFileName(path: fileNameWithoutPath),
+                    type: DirectoryElement.ElementType.File,
+                    fileNameWithPath: fileNameWithPath
+                );
 
-            Add(item: fileToParseDictionaryElement);
+                // Add sidecar file and data if available
+                IDictionary<string, string> dictProperties = new Dictionary<string, string>();
+                if (!string.IsNullOrWhiteSpace(value: sideCarFileNameWithPath))
+                {
+                    Logger.Info(
+                        message: $"Files: Extracting File Data - adding side car file '{sideCarFileNameWithPath}'");
+                    fileToParseDictionaryElement.SidecarFile = sideCarFileNameWithPath;
+                    // Logically XMP should take priority because RAW files are not meant to be edited.
+                    InitiateEXIFParsing(fileNameWithPathToParse: sideCarFileNameWithPath, properties: dictProperties);
+                }
+
+                // Parse EXIF properties
+                InitiateEXIFParsing(fileNameWithPathToParse: fileNameWithPath, properties: dictProperties);
+
+                // Insert into model
+                fileToParseDictionaryElement.ParseAttributesFromExifToolOutput(dictTagsIn: dictProperties);
+
+                Add(item: fileToParseDictionaryElement, replaceIfExists: true);
+            }
+
             fileCount++;
-            FrmMainApp.TaskbarManagerInstance.SetProgressValue(fileCount, imageFiles.Count);
-            Thread.Sleep(1);
+            FrmMainApp.TaskbarManagerInstance.SetProgressValue(currentValue: fileCount, maximumValue: imageFiles.Count);
+            Thread.Sleep(millisecondsTimeout: 1);
         }
 
-        CreateGUIDsForDirectoryElements();
+        CreateGuiDsForDirectoryElements();
 
-        FrmMainApp.TaskbarManagerInstance.SetProgressState(TaskbarProgressBarState.NoProgress);
+        FrmMainApp.TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.NoProgress);
 
         Logger.Info(message: "Files: Extracting File Data - OK");
+    }
 
-        // Assigns a GUID for the DEs in the DECollection
-        void CreateGUIDsForDirectoryElements()
+    /// <summary>
+    ///     Assigns a GUID for the DEs in the DECollection
+    /// </summary>
+    private static void CreateGuiDsForDirectoryElements()
+    {
+        foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
         {
-            foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
-            {
-                directoryElement.SetAttributeValue(ElementAttribute.GUID, Guid.NewGuid()
-                                                                              .ToString(), DirectoryElement.AttributeVersion.Original, false);
-            }
+            directoryElement.SetAttributeValue(attribute: ElementAttribute.GUID, value: Guid.NewGuid()
+               .ToString(), version: DirectoryElement.AttributeVersion.Original, isMarkedForDeletion: false);
         }
     }
 
@@ -493,8 +558,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
     ///     Parses the given file using the given EXIF Tool object into the given
     ///     dictionary. Thereby, ignoring duplicate tags.
     /// </summary>
+    // ReSharper disable once InconsistentNaming
     private void InitiateEXIFParsing(string fileNameWithPathToParse,
-                                     IDictionary<string, string> properties)
+        IDictionary<string, string> properties)
     {
         // Gather EXIF data for the image file
         ICollection<KeyValuePair<string, string>> propertiesRead = new Dictionary<string, string>();
@@ -510,18 +576,19 @@ public class DirectoryElementCollection : List<DirectoryElement>
         }
 
         // force-derive Refs here because they can disagree between RAW and XMP files.
-        if (fileNameWithPathToParse.EndsWith(".xmp"))
+        if (fileNameWithPathToParse.EndsWith(value: ".xmp"))
         {
             // "EXIF" takes prio over "Composite"
             string tmpLatLongValStr;
             string tmpLatLongRefValStr = "";
             double tmpLonLongValDbl = 0.0;
-            if (properties.ContainsKey("XMP:GPSLongitude") && !properties.ContainsKey("EXIF:GPSLongitudeRef"))
+            if (properties.ContainsKey(key: "XMP:GPSLongitude") &&
+                !properties.ContainsKey(key: "EXIF:GPSLongitudeRef"))
             {
                 tmpLatLongValStr = (from x in propertiesRead
-                                    where x.Key == "XMP:GPSLongitude"
-                                    select x.Value).FirstOrDefault();
-                tmpLonLongValDbl = HelperExifDataPointInteractions.AdjustLatLongNegative(tmpLatLongValStr);
+                    where x.Key == "XMP:GPSLongitude"
+                    select x.Value).FirstOrDefault();
+                tmpLonLongValDbl = HelperExifDataPointInteractions.AdjustLatLongNegative(point: tmpLatLongValStr);
                 tmpLatLongRefValStr = tmpLonLongValDbl < 0.0
                     ? "West"
                     : "East";
@@ -529,12 +596,13 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 properties.Add(key: "EXIF:GPSLongitudeRef", value: tmpLatLongRefValStr);
             }
 
-            if (properties.ContainsKey("XMP:GPSLatitude") && !properties.ContainsKey("EXIF:GPSLatitudeRef"))
+            if (properties.ContainsKey(key: "XMP:GPSLatitude") &&
+                !properties.ContainsKey(key: "EXIF:GPSLatitudeRef"))
             {
                 tmpLatLongValStr = (from x in propertiesRead
-                                    where x.Key == "XMP:GPSLatitude"
-                                    select x.Value).FirstOrDefault();
-                tmpLonLongValDbl = HelperExifDataPointInteractions.AdjustLatLongNegative(tmpLatLongValStr);
+                    where x.Key == "XMP:GPSLatitude"
+                    select x.Value).FirstOrDefault();
+                tmpLonLongValDbl = HelperExifDataPointInteractions.AdjustLatLongNegative(point: tmpLatLongValStr);
                 tmpLatLongRefValStr = tmpLonLongValDbl < 0.0
                     ? "South"
                     : "North";

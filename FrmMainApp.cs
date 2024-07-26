@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -26,10 +27,8 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using TimeZoneConverter;
-using static System.Environment;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.Model.SourcesAndAttributes;
-using static GeoTagNinja.View.ListView.FileListView;
 
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
@@ -132,7 +131,6 @@ public partial class FrmMainApp : Form
 
 #endregion
 
-
 #region Form/App Related
 
     internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
@@ -207,6 +205,7 @@ public partial class FrmMainApp : Form
 
         AppStartupEnableDoubleBuffering();
         FormClosing += FrmMainApp_FormClosing;
+        //AppStartupApplyVisualStyleDefaults();
 
         Logger.Info(message: "Constructor: Done");
     }
@@ -324,6 +323,9 @@ public partial class FrmMainApp : Form
         // load lvwFileList
         lvw_FileList_LoadOrUpdate();
 
+        splitContainerMain.Paint += splitContainerControl_Paint;
+        splitContainerMain.Invalidate();
+
         Logger.Trace(message: "Assign 'Enter' Key behaviour to tbx_lng");
         nud_lng.KeyPress += (sndr,
             ev) =>
@@ -344,7 +346,6 @@ public partial class FrmMainApp : Form
 
         await HelperAPIVersionCheckers.CheckForNewVersions();
         LaunchAutoUpdater();
-
         Logger.Info(message: "OnLoad: Done.");
     }
 
@@ -445,25 +446,7 @@ public partial class FrmMainApp : Form
         Logger.Trace(message: "Write column widths to db");
         lvw_FileList.PersistSettings();
 
-        // Write lat/long for future reference to db
-        Logger.Trace(message: "Write lat/long for future reference to db [lat/lng]: " +
-                              nud_lat.Text +
-                              "/" +
-                              nud_lng.Text);
-        List<(string settingId, string settingValue)> settings = new()
-        {
-            ("lastLat", nud_lat.Text),
-            ("lastLng", nud_lng.Text)
-        };
-        foreach ((string settingId, string settingValue) setting in settings)
-        {
-            HelperDataApplicationSettings.DataWriteSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "generic",
-                settingId: setting.settingId,
-                settingValue: setting.settingValue
-            );
-        }
+        AppClosingPersistData();
 
         // Clean up
         Logger.Trace(message: "Set pbx_imagePreview.Image = null");
@@ -475,14 +458,45 @@ public partial class FrmMainApp : Form
         Logger.Debug(message: "OnClose: Dispose ExifTool");
         _ExifTool.Dispose();
 
-        // Copy/rename exiftool(-k).exe if exists and replace the current real one
+        // Unzip new exiftool version if there is one
         if (File.Exists(path: HelperVariables.ExifToolExePathRoamingTemp))
         {
             try
             {
+                // okay this is a bit silly now but given that the ET distrib is no longer a single-file there's a lot of fuckery to be dealt with
+                // the zip file has a structure such as c:\Users\nemet\AppData\Roaming\GeoTagNinja\exiftool-12.89_64.zip\exiftool-12.89_64\exiftool(-k).exe 
+                // i swear to all the f...king gods this has been the most useless move i've seen with ET development in the last decade.
+                // so we do the following
+                // 1: delete exiftool
                 File.Delete(path: HelperVariables.ExifToolExePathRoamingPerm);
 
-                File.Move(sourceFileName: HelperVariables.ExifToolExePathRoamingTemp,
+                // 2: delete the exiftool_files folder and anything in it.
+                string exifToolFilesDir =
+                    Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exiftool_files");
+                if (Directory.Exists(path: exifToolFilesDir))
+                {
+                    Directory.Delete(path: exifToolFilesDir, recursive: true);
+                }
+
+                // 2b: this shouldn't really happen but anyway:
+                string tempExtractDir = Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                    path2: Path.GetFileNameWithoutExtension(path: HelperVariables.ExifToolExePathRoamingTemp));
+                if (Directory.Exists(path: tempExtractDir))
+                {
+                    Directory.Delete(path: tempExtractDir, recursive: true);
+                }
+
+                // 3: unzip
+                ZipFile.ExtractToDirectory(
+                    sourceArchiveFileName: HelperVariables.ExifToolExePathRoamingTemp,
+                    destinationDirectoryName: HelperVariables.UserDataFolderPath);
+
+                // 4: move to parent
+                Directory.Move(
+                    sourceDirName: Path.Combine(path1: tempExtractDir, path2: "exiftool_files"),
+                    destDirName: Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exiftool_files"));
+
+                File.Move(sourceFileName: Path.Combine(path1: tempExtractDir, path2: "exiftool(-k).exe"),
                     destFileName: HelperVariables.ExifToolExePathRoamingPerm);
             }
             catch
@@ -494,6 +508,36 @@ public partial class FrmMainApp : Form
         // Clean up Roaming folder
         HelperFileSystemOperators.FsoCleanUpUserFolder();
         Logger.Debug(message: "OnClose: Done.");
+
+        void AppClosingPersistData()
+        {
+            // Write lat/long + visual settings for future reference to db
+            Logger.Debug(message: "Write lat/long + visual settings for future reference to db");
+
+
+            List<(string settingId, string settingValue)> settings =
+            [
+                ("lastLat", nud_lat.Text),
+                ("lastLng", nud_lng.Text),
+
+                ("splitContainerMainSplitterDistance",
+                 splitContainerMain.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture)),
+                ("splitContainerLeftTopSplitterDistance",
+                 splitContainerLeftTop.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture))
+            ];
+            foreach ((string settingId, string settingValue) in settings)
+            {
+                Logger.Debug(
+                    message:
+                    $"Writing setting.settingId {settingId}, setting.settingValue {settingValue}.");
+                HelperDataApplicationSettings.DataWriteSQLiteSettings(
+                    tableName: "settings",
+                    settingTabPage: "generic",
+                    settingId: settingId,
+                    settingValue: settingValue
+                );
+            }
+        }
     }
 
 
@@ -508,7 +552,6 @@ public partial class FrmMainApp : Form
     }
 
 #endregion
-
 
 #region Map Stuff
 
@@ -1564,7 +1607,7 @@ public partial class FrmMainApp : Form
 
 #endregion
 
-#region File
+#region File (that is, the "File" menu tree)
 
     /// <summary>
     ///     Handles the tmi_File_SaveAll_Click event -> triggers the file-save process
@@ -1699,7 +1742,7 @@ public partial class FrmMainApp : Form
                     try
                     {
                         lvw_FileList.ClearData();
-                        DirectoryElements.Clear();
+                        // DirectoryElements.Clear();
                         HelperFileSystemOperators.FsoCleanUpUserFolder();
                         FolderName = tbx_FolderName.Text;
                         lvw_FileList_LoadOrUpdate();
@@ -1718,7 +1761,7 @@ public partial class FrmMainApp : Form
                         customMessageBox.ShowDialog();
                     }
                 }
-                else if (tbx_FolderName.Text == SpecialFolder.MyComputer.ToString())
+                else if (tbx_FolderName.Text == Environment.SpecialFolder.MyComputer.ToString())
                 {
                     lvw_FileList_LoadOrUpdate();
                 }
@@ -1781,8 +1824,8 @@ public partial class FrmMainApp : Form
                         string strGpsLatitude = lvi.SubItems[
                                                         index: lvw
                                                               .Columns[
-                                                                   key: COL_NAME_PREFIX +
-                                                                        FileListColumns
+                                                                   key: FileListView.COL_NAME_PREFIX +
+                                                                        FileListView.FileListColumns
                                                                            .GPS_LATITUDE]
                                                               .Index]
                                                    .Text.ToString(
@@ -1791,8 +1834,8 @@ public partial class FrmMainApp : Form
                         string strGpsLongitude = lvi.SubItems[
                                                          index: lvw
                                                                .Columns[
-                                                                    key: COL_NAME_PREFIX +
-                                                                         FileListColumns
+                                                                    key: FileListView.COL_NAME_PREFIX +
+                                                                         FileListView.FileListColumns
                                                                             .GPS_LONGITUDE]
                                                                .Index]
                                                     .Text.ToString(
@@ -2201,8 +2244,8 @@ public partial class FrmMainApp : Form
                                              .SubItems[
                                                   index: lvw_FileList
                                                         .Columns[
-                                                             key: COL_NAME_PREFIX +
-                                                                  FileListColumns.GPS_ALTITUDE]
+                                                             key: FileListView.COL_NAME_PREFIX +
+                                                                  FileListView.FileListColumns.GPS_ALTITUDE]
                                                         .Index]
                                              .Text.ToString(
                                                   provider: CultureInfo.InvariantCulture);
@@ -2244,8 +2287,8 @@ public partial class FrmMainApp : Form
                 DateTime createDate;
                 bool _ = DateTime.TryParse(s: lvi.SubItems[index: lvw_FileList
                                                                  .Columns[
-                                                                      key: COL_NAME_PREFIX +
-                                                                           FileListColumns
+                                                                      key: FileListView.COL_NAME_PREFIX +
+                                                                           FileListView.FileListColumns
                                                                               .CREATE_DATE]
                                                                  .Index]
                                                  .Text.ToString(
@@ -2400,7 +2443,7 @@ public partial class FrmMainApp : Form
 
         Logger.Trace(message: "Clear lvw_FileList");
         lvw_FileList.ClearData();
-        DirectoryElements.Clear();
+        // DirectoryElements.Clear();
         HelperVariables.LstTrackPath.Clear();
         Application.DoEvents();
         HelperGenericFileLocking.FilesBeingProcessed.Clear();
@@ -3169,14 +3212,14 @@ public partial class FrmMainApp : Form
             {
                 string lat = lvi.SubItems[index: lvw_FileList
                                                 .Columns[
-                                                     key: COL_NAME_PREFIX +
-                                                          FileListColumns.GPS_LATITUDE]
+                                                     key: FileListView.COL_NAME_PREFIX +
+                                                          FileListView.FileListColumns.GPS_LATITUDE]
                                                 .Index]
                                 .Text;
                 string lng = lvi.SubItems[index: lvw_FileList
                                                 .Columns[
-                                                     key: COL_NAME_PREFIX +
-                                                          FileListColumns.GPS_LONGITUDE]
+                                                     key: FileListView.COL_NAME_PREFIX +
+                                                          FileListView.FileListColumns.GPS_LONGITUDE]
                                                 .Index]
                                 .Text;
 

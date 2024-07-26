@@ -159,6 +159,19 @@ At the same time the current .NET Framework 4.8 is a little obsolete. I haven't 
 ## System Requirements
 
 - Windows 7+ x64 is needed. As I mentioned in the Roadmap it's likely that support for pre-Win10 OSs will remain till some point 2025 but possibly not beyond that.
-- You'll need an ArcGIS API key to use the map search functionality. Register for free [here](https://developers.arcgis.com/)
+- You'll need an ArcGIS API key to use the map search functionality. 
+	- ArcGIS have changed their registration process as of June 2024. Register [here](https://location.arcgis.com/sign-up/)
+	- You now need to specify a portal url. Just input anything you want.
+	- Scroll/Go to `Developer credential creator`
+	- Then `New Item`
+	- Then `Developer Credentials`
+	- Pick `API Key` (not OAUth)
+	- Set your expiration date to as far into the future as you can (1 year)
+	- Leave `Referrers` blank
+	- On the next page pick `Geocoding (not stored)`
+	- On the next page skip `Item Access`
+	- On the next page add any title
+	- Eventually click `Generate the API key and go to item details page. I am ready to copy and save the key.`
+	- Save the API key when prompted. If you don't do it at the time you'll have to generate another one.
 - You'll need a geoNames username and password to use toponomy search. Register for free [here](https://www.geonames.org/)
 - WebView2 is required but should come with your OS most likely. If not, get it from [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703)

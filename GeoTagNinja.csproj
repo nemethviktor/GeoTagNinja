@@ -200,6 +200,7 @@
     <Compile Include="Helpers\HelperExifReadTrackFilePath.cs" />
     <Compile Include="Helpers\HelperExifWriteTrackDataToTrackFile.cs" />
     <Compile Include="Helpers\HelperExifWriteTrackDataToSideCar.cs" />
+    <Compile Include="Helpers\HelperFileSystemGetChecksum.cs" />
     <Compile Include="Helpers\HelperGenericAppStartup.cs" />
     <Compile Include="Helpers\HelperGenericAncillaryListsArrays.cs" />
     <Compile Include="FrmAboutBox.cs">
@@ -316,9 +317,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmManageFavourites.resx">
       <DependentUpon>FrmManageFavourites.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="View\FrmColumnSelection.resx">
       <DependentUpon>FrmColumnSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmEditFileData.resx">
       <DependentUpon>FrmEditFileData.cs</DependentUpon>
@@ -326,6 +329,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmImportExportGpx.resx">
       <DependentUpon>FrmImportExportGpx.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMainApp.resx">
       <DependentUpon>FrmMainApp.cs</DependentUpon>
@@ -333,6 +337,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmPasteWhat.resx">
       <DependentUpon>FrmPasteWhat.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmSettings.resx">
       <DependentUpon>FrmSettings.cs</DependentUpon>
@@ -350,9 +355,11 @@
     </Compile>
     <EmbeddedResource Include="View\ImagePreview.resx">
       <DependentUpon>ImagePreview.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="View\ListView\FileListView.resx">
       <DependentUpon>FileListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="changelog.md">

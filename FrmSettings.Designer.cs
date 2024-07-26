@@ -53,6 +53,7 @@ namespace GeoTagNinja
             this.tbx_Startup_Folder = new System.Windows.Forms.TextBox();
             this.tpg_GeoNames = new System.Windows.Forms.TabPage();
             this.gbx_GeoNamesSettings = new System.Windows.Forms.GroupBox();
+            this.ckb_ShowPassword = new System.Windows.Forms.CheckBox();
             this.lbl_Miles = new System.Windows.Forms.Label();
             this.ckb_PopulatedPlacesOnly = new System.Windows.Forms.CheckBox();
             this.gbx_GeoNamesLanguageSettings = new System.Windows.Forms.GroupBox();
@@ -359,6 +360,7 @@ namespace GeoTagNinja
             // 
             // gbx_GeoNamesSettings
             // 
+            this.gbx_GeoNamesSettings.Controls.Add(this.ckb_ShowPassword);
             this.gbx_GeoNamesSettings.Controls.Add(this.lbl_Miles);
             this.gbx_GeoNamesSettings.Controls.Add(this.ckb_PopulatedPlacesOnly);
             this.gbx_GeoNamesSettings.Controls.Add(this.gbx_GeoNamesLanguageSettings);
@@ -382,6 +384,17 @@ namespace GeoTagNinja
             this.gbx_GeoNamesSettings.TabIndex = 34;
             this.gbx_GeoNamesSettings.TabStop = false;
             this.gbx_GeoNamesSettings.Text = "gbx_GeoNamesSettings";
+            // 
+            // ckb_ShowPassword
+            // 
+            this.ckb_ShowPassword.AutoSize = true;
+            this.ckb_ShowPassword.Location = new System.Drawing.Point(682, 69);
+            this.ckb_ShowPassword.Name = "ckb_ShowPassword";
+            this.ckb_ShowPassword.Size = new System.Drawing.Size(123, 17);
+            this.ckb_ShowPassword.TabIndex = 51;
+            this.ckb_ShowPassword.Text = "ckb_ShowPassword";
+            this.ckb_ShowPassword.UseVisualStyleBackColor = true;
+            this.ckb_ShowPassword.CheckedChanged += new System.EventHandler(this.ckb_ShowPassword_CheckedChanged);
             // 
             // lbl_Miles
             // 
@@ -411,7 +424,7 @@ namespace GeoTagNinja
             this.gbx_GeoNamesLanguageSettings.Controls.Add(this.rbt_UseGeoNamesLocalLanguage);
             this.gbx_GeoNamesLanguageSettings.Location = new System.Drawing.Point(15, 215);
             this.gbx_GeoNamesLanguageSettings.Name = "gbx_GeoNamesLanguageSettings";
-            this.gbx_GeoNamesLanguageSettings.Size = new System.Drawing.Size(548, 117);
+            this.gbx_GeoNamesLanguageSettings.Size = new System.Drawing.Size(812, 117);
             this.gbx_GeoNamesLanguageSettings.TabIndex = 48;
             this.gbx_GeoNamesLanguageSettings.TabStop = false;
             this.gbx_GeoNamesLanguageSettings.Text = "gbx_GeoNamesLanguageSettings";
@@ -541,7 +554,7 @@ namespace GeoTagNinja
             this.rbx_Register_ArcGIS.Location = new System.Drawing.Point(12, 19);
             this.rbx_Register_ArcGIS.Name = "rbx_Register_ArcGIS";
             this.rbx_Register_ArcGIS.ReadOnly = true;
-            this.rbx_Register_ArcGIS.Size = new System.Drawing.Size(551, 42);
+            this.rbx_Register_ArcGIS.Size = new System.Drawing.Size(815, 42);
             this.rbx_Register_ArcGIS.TabIndex = 38;
             this.rbx_Register_ArcGIS.Text = "rbx_Register_ArcGIS";
             // 
@@ -551,7 +564,7 @@ namespace GeoTagNinja
             this.rbx_Register_GeoNames.Location = new System.Drawing.Point(12, 100);
             this.rbx_Register_GeoNames.Name = "rbx_Register_GeoNames";
             this.rbx_Register_GeoNames.ReadOnly = true;
-            this.rbx_Register_GeoNames.Size = new System.Drawing.Size(551, 42);
+            this.rbx_Register_GeoNames.Size = new System.Drawing.Size(815, 42);
             this.rbx_Register_GeoNames.TabIndex = 39;
             this.rbx_Register_GeoNames.Text = "rbx_Register_GeoNames";
             // 
@@ -609,8 +622,7 @@ namespace GeoTagNinja
             this.tbx_ARCGIS_APIKey.Location = new System.Drawing.Point(128, 66);
             this.tbx_ARCGIS_APIKey.Margin = new System.Windows.Forms.Padding(2);
             this.tbx_ARCGIS_APIKey.Name = "tbx_ARCGIS_APIKey";
-            this.tbx_ARCGIS_APIKey.PasswordChar = '*';
-            this.tbx_ARCGIS_APIKey.Size = new System.Drawing.Size(372, 20);
+            this.tbx_ARCGIS_APIKey.Size = new System.Drawing.Size(542, 20);
             this.tbx_ARCGIS_APIKey.TabIndex = 32;
             this.tbx_ARCGIS_APIKey.TextChanged += new System.EventHandler(this.Any_tbx_TextChanged);
             // 
@@ -997,5 +1009,6 @@ namespace GeoTagNinja
         private System.Windows.Forms.CheckBox ckb_UseDarkMode;
         private System.Windows.Forms.Button btn_ExportSettings;
         private System.Windows.Forms.Button btn_ImportSettings;
+        private System.Windows.Forms.CheckBox ckb_ShowPassword;
     }
 }

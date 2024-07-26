@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using System.IO.Compression;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
@@ -188,6 +187,7 @@ internal static class HelperAPIVersionCheckers
                 initiator:
                 HelperGenericAncillaryListsArrays.ExifToolInititators
                                                  .GenericCheckForNewVersions);
+            int CPUBitness = Environment.Is64BitOperatingSystem ? 64 : 32;
             HelperVariables.CurrentExifToolVersionCloud =
                 API_ExifGetExifToolVersionFromWeb();
 
@@ -202,7 +202,7 @@ internal static class HelperAPIVersionCheckers
                 HelperVariables.CurrentExifToolVersionLocal &&
                 !File.Exists(path: Path.Combine(path1: HelperVariables.UserDataFolderPath,
                     path2:
-                    $"exiftool-{HelperVariables.CurrentExifToolVersionCloud}.zip")))
+                    $"exiftool-{HelperVariables.CurrentExifToolVersionCloud}_{CPUBitness}.zip")))
             {
                 FrmMainApp.Logger.Trace(
                     message: "Downloading newest exifTool version from the cloud. " +
@@ -268,15 +268,18 @@ internal static class HelperAPIVersionCheckers
     }
 
     /// <summary>
-    ///     Attempts to download the current ExifTool version and extracts it too.
+    ///     Attempts to download the current ExifTool version.
     /// </summary>
     /// <param name="version">The (most current) version to download.</param>
     /// <returns></returns>
+    /// <see cref="FrmMainApp.FrmMainApp_FormClosing" />
     private static async Task DownloadCurrentExifToolVersion(string version)
     {
-        string remoteUri = $"https://exiftool.org/exiftool-{version}.zip";
+        // ReSharper disable once InconsistentNaming
+        int CPUBitness = Environment.Is64BitOperatingSystem ? 64 : 32;
+        string remoteUri = $"https://exiftool.org/exiftool-{version}_{CPUBitness}.zip";
         string zipPath = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                                      path2: $"exiftool-{version}.zip");
+            path2: $"exiftool-{version}_{CPUBitness}.zip");
         try
         {
             HttpClient httpClient = new();
@@ -285,9 +288,7 @@ internal static class HelperAPIVersionCheckers
             await stream.CopyToAsync(destination: fileStream);
             fileStream.Flush();
             fileStream.Close();
-            ZipFile.ExtractToDirectory(
-                sourceArchiveFileName: zipPath,
-                destinationDirectoryName: HelperVariables.UserDataFolderPath);
+            HelperVariables.ExifToolExePathRoamingTemp = zipPath;
         }
         catch
         {

@@ -27,6 +27,8 @@
 	<s:String x:Key="/Default/CodeStyle/CSharpVarKeywordUsage/ForOtherTypes/@EntryValue">UseExplicitType</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=FMT/@EntryIndexedValue">FMT</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=GPS/@EntryIndexedValue">GPS</s:String>
+	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=API/@EntryIndexedValue">API</s:String>
+	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=SQL/@EntryIndexedValue">SQL</s:String>
 	<s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=B5E8EEF0A149BE448B438205E16EE8B3/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=B5E8EEF0A149BE448B438205E16EE8B3/AbsolutePath/@EntryValue">G:\My Drive\Sajat\Apps\GeoTagNinja\GeoTagNinja.sln.DotSettings</s:String>
 	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=B5E8EEF0A149BE448B438205E16EE8B3/RelativePath/@EntryValue"></s:String>

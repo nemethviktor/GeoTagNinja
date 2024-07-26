@@ -50,7 +50,7 @@ internal static class HelperFileSystemOperators
                     messageBoxName: "mbx_Helper_QuestionFileQIsNotEmpty"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Question.ToString()),
+                                                                   .Question.ToString()),
                 buttons: MessageBoxButtons.YesNoCancel,
                 icon: MessageBoxIcon.Question);
             DialogResult dialogResult = customMessageBox.ShowDialog();
@@ -95,6 +95,23 @@ internal static class HelperFileSystemOperators
 
         DirectoryInfo di = new(path: HelperVariables.UserDataFolderPath);
         List<string> filesToKeep = ["exiftool.exe", ".ExifTool_config"];
+        List<string> foldersToKeep = ["exiftool_files"];
+        foreach (DirectoryInfo directory in di.EnumerateDirectories())
+        {
+            if (!foldersToKeep.Contains(item: directory.Name))
+            {
+                try
+                {
+                    FrmMainApp.Logger.Trace(message: "Deleting:" + directory.Name);
+                    directory.Delete(recursive: true);
+                }
+                catch
+                {
+                    // nothing
+                }
+            }
+        }
+
         foreach (FileInfo file in di.EnumerateFiles())
         {
             if (file.Extension != ".sqlite" &&
