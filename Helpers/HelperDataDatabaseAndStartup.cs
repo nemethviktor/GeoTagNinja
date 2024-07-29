@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GeoTagNinja.Model;
 
 namespace GeoTagNinja.Helpers;
 
@@ -24,7 +26,7 @@ internal static class HelperDataDatabaseAndStartup
 
             if (userDataBaseFile.Exists && userDataBaseFile.Length == 0)
             {
-                FrmMainApp.Logger.Trace(message: "SettingsDatabaseFilePath exists");
+                FrmMainApp.Logger.Trace(message: "SettingsDatabaseFilePath exists with 0 byes volume");
                 userDataBaseFile.Delete();
                 FrmMainApp.Logger.Trace(message: "SettingsDatabaseFilePath deleted");
             }
@@ -39,58 +41,52 @@ internal static class HelperDataDatabaseAndStartup
                     sqliteDB.Open();
 
                     string sql = """
-                            CREATE TABLE settings(
-                                settingTabPage TEXT(255)    NOT NULL,
-                                settingId TEXT(255)         NOT NULL, 
-                                settingValue NTEXT(2000)    DEFAULT "",
-                                PRIMARY KEY(settingTabPage, settingId)
-                            );
-                            CREATE TABLE settingsToWritePreQueue(
-                                settingTabPage TEXT(255)    NOT NULL,
-                                settingId TEXT(255)         NOT NULL, 
-                                settingValue NTEXT(2000)    DEFAULT "",
-                                PRIMARY KEY(settingTabPage, settingId)
-                            );
-                            CREATE TABLE appLayout(
-                                settingTabPage TEXT(255)    NOT NULL,
-                                settingId TEXT(255)         NOT NULL, 
-                                settingValue NTEXT(2000)    DEFAULT "",
-                                PRIMARY KEY(settingTabPage, settingId)
-                            );
-                            CREATE TABLE Favourites(
-                                        favouriteName NTEXT NOT NULL PRIMARY KEY,
-                                        GPSLatitude NTEXT NOT NULL,
-                                        GPSLatitudeRef NTEXT NOT NULL,
-                                        GPSLongitude NTEXT NOT NULL,
-                                        GPSLongitudeRef NTEXT NOT NULL,
-                                        GPSAltitude NTEXT,
-                                        GPSAltitudeRef NTEXT,
-                                        Coordinates NTEXT NOT NULL,
-                                        City NTEXT,
-                                        CountryCode NTEXT,
-                                        Country NTEXT,
-                                        State NTEXT,
-                                        Sub_location NTEXT
-                                        )
-                            ;
-                            CREATE TABLE customRules(
-                                        ruleId INTEGER PRIMARY KEY AUTOINCREMENT,
-                                        CountryCode NTEXT NOT NULL,
-                                        DataPointName NTEXT NOT NULL,
-                                        DataPointConditionType NTEXT NOT NULL,
-                                        DataPointConditionValue NTEXT NOT NULL,
-                                        TargetPointName NTEXT NOT NULL,
-                                        TargetPointOutcome NTEXT NOT NULL,
-                                        TargetPointOutcomeCustom NTEXT
-                                        )
-                            ;
-                            CREATE TABLE IF NOT EXISTS customCityAllocationLogic(
-                                        CountryCode TEXT(3) NOT NULL,
-                                        TargetPointNameCustomCityLogic TEXT(100) NOT NULL,
-                                        PRIMARY KEY(CountryCode, TargetPointNameCustomCityLogic)
-                                        )
-                            ;
-                            """;
+                                 CREATE TABLE settings(
+                                     settingTabPage TEXT(255)    NOT NULL,
+                                     settingId TEXT(255)         NOT NULL, 
+                                     settingValue NTEXT(2000)    DEFAULT "",
+                                     PRIMARY KEY(settingTabPage, settingId)
+                                 );
+                                 CREATE TABLE appLayout(
+                                     settingTabPage TEXT(255)    NOT NULL,
+                                     settingId TEXT(255)         NOT NULL, 
+                                     settingValue NTEXT(2000)    DEFAULT "",
+                                     PRIMARY KEY(settingTabPage, settingId)
+                                 );
+                                 CREATE TABLE Favourites(
+                                             favouriteName NTEXT NOT NULL PRIMARY KEY,
+                                             GPSLatitude NTEXT NOT NULL,
+                                             GPSLatitudeRef NTEXT NOT NULL,
+                                             GPSLongitude NTEXT NOT NULL,
+                                             GPSLongitudeRef NTEXT NOT NULL,
+                                             GPSAltitude NTEXT,
+                                             GPSAltitudeRef NTEXT,
+                                             Coordinates NTEXT NOT NULL,
+                                             City NTEXT,
+                                             CountryCode NTEXT,
+                                             Country NTEXT,
+                                             State NTEXT,
+                                             Sub_location NTEXT
+                                             )
+                                 ;
+                                 CREATE TABLE customRules(
+                                             ruleId INTEGER PRIMARY KEY AUTOINCREMENT,
+                                             CountryCode NTEXT NOT NULL,
+                                             DataPointName NTEXT NOT NULL,
+                                             DataPointConditionType NTEXT NOT NULL,
+                                             DataPointConditionValue NTEXT NOT NULL,
+                                             TargetPointName NTEXT NOT NULL,
+                                             TargetPointOutcome NTEXT NOT NULL,
+                                             TargetPointOutcomeCustom NTEXT
+                                             )
+                                 ;
+                                 CREATE TABLE IF NOT EXISTS customCityAllocationLogic(
+                                             CountryCode TEXT(3) NOT NULL,
+                                             TargetPointNameCustomCityLogic TEXT(100) NOT NULL,
+                                             PRIMARY KEY(CountryCode, TargetPointNameCustomCityLogic)
+                                             )
+                                 ;
+                                 """;
                     SQLiteCommand sqlCommandStr = new(commandText: sql, connection: sqliteDB);
                     sqlCommandStr.ExecuteNonQuery();
                     sqliteDB.Close();
@@ -123,7 +119,7 @@ internal static class HelperDataDatabaseAndStartup
     {
         FrmMainApp.Logger.Debug(message: "Starting");
 
-        string[] ExtensionSpecificControlNamesToAdd =
+        string[] extensionSpecificControlNamesToAdd =
         {
             "ckb_AddXMPSideCar",
             "ckb_OverwriteOriginal",
@@ -131,10 +127,10 @@ internal static class HelperDataDatabaseAndStartup
             "ckb_ResetFileDateToCreated"
         };
 
-        Dictionary<string, List<string>> NotExtensionSpecificControlNamesToAdd = new Dictionary<string, List<string>>()
+        Dictionary<string, List<string>> notExtensionSpecificControlNamesToAdd = new()
         {
             {
-                "tpg_Application", new List<string>()
+                "tpg_Application", new List<string>
                 {
                     "rbt_UseGeoNamesLocalLanguage",
                     "rbt_MapColourModeNormal"
@@ -142,24 +138,25 @@ internal static class HelperDataDatabaseAndStartup
             }
         };
 
-        string existingSQLVal;
 
         // extension-specific
-        foreach (string controlName in ExtensionSpecificControlNamesToAdd)
+        List<AppSettingContainer> settingsToWriteTmp = new();
+
+        foreach (string controlName in extensionSpecificControlNamesToAdd)
         {
+            string settingTabPage = "tpg_FileOptions";
             foreach (string ext in HelperGenericAncillaryListsArrays.AllCompatibleExtensions())
             {
                 string fileExtension = ext.Split('\t')
-                    .FirstOrDefault();
+                                          .FirstOrDefault();
                 string tmptmpCtrlName = ext.Split('\t')
-                                            .FirstOrDefault() +
+                                           .FirstOrDefault() +
                                         '_'; // 'tis ok as is
                 string tmpCtrlName = tmptmpCtrlName + controlName;
                 string tmpCtrlGroup = ext.Split('\t')
-                    .Last()
-                    .ToLower();
+                                         .Last()
+                                         .ToLower();
                 string controlDefaultValue = "false";
-                string settingTabPage = "tpg_FileOptions";
 
                 if (controlName == "ckb_AddXMPSideCar")
                 {
@@ -200,47 +197,84 @@ internal static class HelperDataDatabaseAndStartup
                     controlDefaultValue = "true";
                 }
 
-                UpdateSQLite(settingTabPage: settingTabPage, settingId: tmpCtrlName, controlDefaultValue: controlDefaultValue);
+                settingsToWriteTmp.Add(item: new AppSettingContainer
+                {
+                    TableName = "settings",
+                    SettingTabPage = settingTabPage,
+                    SettingId = tmpCtrlName,
+                    SettingValue = controlDefaultValue
+                });
             }
         }
 
-        foreach (KeyValuePair<string, List<string>> keyValuePair in NotExtensionSpecificControlNamesToAdd)
+        foreach (string settingTabPage in
+                 notExtensionSpecificControlNamesToAdd.Select(selector: keyValuePair => keyValuePair.Key))
         {
-            string settingTabPage = keyValuePair.Key;
-            NotExtensionSpecificControlNamesToAdd.TryGetValue(settingTabPage, out List<string> controlNameList);
-            foreach (string controlName in controlNameList)
+            notExtensionSpecificControlNamesToAdd.TryGetValue(key: settingTabPage,
+                value: out List<string> controlNameList);
+
+            settingsToWriteTmp.AddRange(collection: controlNameList.Select(selector: controlName =>
+                new AppSettingContainer
+                {
+                    TableName = "settings", SettingTabPage = settingTabPage, SettingId = controlName,
+                    SettingValue = "true"
+                }));
+        }
+
+
+        // language -> Add "English" as default if there isn't one defined.
+        string existingSQLVal = HelperDataApplicationSettings.DataReadSQLiteSettings(
+            dataTable: HelperVariables.DtHelperDataApplicationSettings,
+            settingTabPage: "tpg_Application",
+            settingId: "cbx_Language");
+        if (existingSQLVal == "" ||
+            existingSQLVal is null)
+        {
+            settingsToWriteTmp.Add(item: new AppSettingContainer
             {
-                UpdateSQLite(settingTabPage: settingTabPage, settingId: controlName, controlDefaultValue: "true");
-            }
+                TableName = "settings",
+                SettingTabPage = "tpg_Application",
+                SettingId = "cbx_Language",
+                SettingValue = "English"
+            });
         }
 
-        // language
-        existingSQLVal = HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings",
-                                                                              settingTabPage: "tpg_Application",
-                                                                              settingId: "cbx_Language");
-        if (existingSQLVal == "" || existingSQLVal is null)
+        // just make sure we don't overwrite existing data with what's supposed to be a "default".
+        List<AppSettingContainer> settingsToWrite = (from appSettingContainerTmp in settingsToWriteTmp
+            let contains = HelperVariables.DtHelperDataApplicationSettings.AsEnumerable().Any(predicate: row =>
+                row[columnName: "settingTabPage"].ToString() == appSettingContainerTmp.SettingTabPage &&
+                row[columnName: "settingId"].ToString() == appSettingContainerTmp.SettingId)
+            where !contains
+            select appSettingContainerTmp).ToList();
+
+        if (settingsToWrite.Count > 0)
         {
-            HelperDataApplicationSettings.DataWriteSQLiteSettings(tableName: "settings",
-                                                                  settingTabPage: "tpg_Application",
-                                                                  settingId: "cbx_Language",
-                                                                  settingValue: "English");
+            HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
         }
+    }
 
-        void UpdateSQLite(string settingTabPage,
-                          string settingId,
-                          string controlDefaultValue)
-        {
-            existingSQLVal = HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings",
-                                                                                  settingTabPage: settingTabPage,
-                                                                                  settingId: settingId);
 
-            if (existingSQLVal == "" || existingSQLVal is null)
-            {
-                HelperDataApplicationSettings.DataWriteSQLiteSettings(tableName: "settings",
-                                                                      settingTabPage: settingTabPage,
-                                                                      settingId: settingId,
-                                                                      settingValue: controlDefaultValue);
-            }
-        }
+    /// <summary>
+    ///     Generic method to read a SQLite table into a DataTable
+    /// </summary>
+    /// <param name="tableName"></param>
+    /// <returns></returns>
+    internal static DataTable DataReadSQLiteTable(string tableName)
+    {
+        using SQLiteConnection sqliteDB =
+            new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
+        sqliteDB.Open();
+
+        string sqlCommandStr = @"
+                                SELECT *
+                                FROM " + tableName + ";"
+            ;
+
+        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+
+        SQLiteDataReader reader = sqlToRun.ExecuteReader();
+        DataTable dataTable = new();
+        dataTable.Load(reader: reader);
+        return dataTable;
     }
 }

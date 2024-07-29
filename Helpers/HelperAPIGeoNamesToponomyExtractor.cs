@@ -25,8 +25,8 @@ internal static class HelperAPIGeoNamesToponomyExtractor
         {
             try
             {
-                HelperVariables.UserSettingGeoNamesUserName = HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_UserName");
-                HelperVariables.UserSettingGeoNamesPwd = HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_Pwd");
+                HelperVariables.UserSettingGeoNamesUserName = HelperDataApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_UserName");
+                HelperVariables.UserSettingGeoNamesPwd = HelperDataApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_Pwd");
             }
             catch (Exception ex)
             {

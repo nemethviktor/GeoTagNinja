@@ -9,16 +9,11 @@ namespace GeoTagNinja.Helpers;
 
 internal static class HelperGenericAncillaryListsArrays
 {
+#region Languages
+
     // this stores the kvp for language tags and values (ie the label and whatnots + their human-readable counterparts).
     internal static Dictionary<string, string> LanguageStringsDict = new();
 
-    internal enum TimeShiftTypes
-    {
-        TakenDate,
-        CreateDate
-    }
-
-#region Languages
 
     internal static Dictionary<string, string> GetISO_639_1_Languages()
     {
@@ -254,7 +249,13 @@ internal static class HelperGenericAncillaryListsArrays
 
 #endregion
 
-#region Time zones
+#region Time shift & zones
+
+    internal enum TimeShiftTypes
+    {
+        TakenDate,
+        CreateDate
+    }
 
     /// <summary>
     ///     Gets an array of time zone identifiers.

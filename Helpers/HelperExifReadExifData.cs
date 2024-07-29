@@ -59,13 +59,13 @@ internal static class HelperExifReadExifData
         string? timezoneId = "";
 
         bool includePredeterminedCountries = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-            tableName: "settings",
+            dataTable: HelperVariables.DtHelperDataApplicationSettings,
             settingTabPage: "tpg_CustomRules",
             settingId: "ckb_IncludePredeterminedCountries"
         );
 
         bool stopProcessingRules = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-            tableName: "settings",
+            dataTable: HelperVariables.DtHelperDataApplicationSettings,
             settingTabPage: "tpg_CustomRules",
             settingId: "ckb_StopProcessingRules"
         );

@@ -217,6 +217,7 @@
     </Compile>
     <Compile Include="Helpers\HelperGenericCalculations.cs" />
     <Compile Include="Helpers\HelperNonStatic.AutoUpdater.cs" />
+    <Compile Include="Model\AppSettingContainer.cs" />
     <Compile Include="Model\MapWebMessage.cs" />
     <Compile Include="SingleInstance_PipeServer.cs" />
     <Compile Include="View\DialogAndMessageBoxes\CustomMessageBox.cs">

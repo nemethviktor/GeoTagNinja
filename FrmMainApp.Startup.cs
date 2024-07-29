@@ -235,14 +235,14 @@ public partial class FrmMainApp
     /// <summary>
     ///     Pulls the last lat/lng combo from Settings if available, otherwise points to NASA's HQ
     /// </summary>
-    private void AppStartupPullLastLatLngFromSettings()
+    private void AppStartupGetLastLatLngFromSettings()
     {
         Logger.Debug(message: "Starting");
 
         try
         {
             nud_lat.Text = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                tableName: "settings",
+                dataTable: HelperVariables.DtHelperDataApplicationSettings,
                 settingTabPage: "generic",
                 settingId: "lastLat"
             );
@@ -252,7 +252,7 @@ public partial class FrmMainApp
             }
 
             nud_lng.Text = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                tableName: "settings",
+                dataTable: HelperVariables.DtHelperDataApplicationSettings,
                 settingTabPage: "generic",
                 settingId: "lastLng"
             );
@@ -342,7 +342,9 @@ public partial class FrmMainApp
                  in settingsApplicationDesignValuesKeysList)
         {
             string dataInSQL =
-                HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings", settingTabPage: "generic",
+                HelperDataApplicationSettings.DataReadSQLiteSettings(
+                    dataTable: HelperVariables.DtHelperDataApplicationSettings,
+                    settingTabPage: "generic",
                     settingId: settingsApplicationDesignValue, returnBlankIfNull: true);
 
             Logger.Debug(

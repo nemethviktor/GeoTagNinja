@@ -67,8 +67,8 @@ internal static class HelperExifWriteSaveToFile
                                                .Substring(startIndex: 1);
 
                     // check that either/or the orig file or the xmp needs overwriting
-                    processOriginalFile = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_ProcessOriginalFile"));
-                    writeXMPSideCar = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_AddXMPSideCar"));
+                    processOriginalFile = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_ProcessOriginalFile"));
+                    writeXMPSideCar = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_AddXMPSideCar"));
 
                     // this is an issue in Adobe Bridge (unsure). Rating in the XMP needs to be parsed and re-saved.
                     int ratingInXmp = -1;
@@ -96,8 +96,8 @@ internal static class HelperExifWriteSaveToFile
 
                     queueWasEmpty = false;
 
-                    resetFileDateToCreated = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_ResetFileDateToCreated"));
-                    doNotCreateBackup = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(tableName: "settings", settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_OverwriteOriginal"));
+                    resetFileDateToCreated = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_ResetFileDateToCreated"));
+                    doNotCreateBackup = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_OverwriteOriginal"));
 
                     // it's a lot less complicated to just pretend we want both the Original File and the Sidecar updated and then not-include them later than to have a Yggdrasil of IFs scattered all over.
                     // ... which latter I would inevitable f...k up at some point.

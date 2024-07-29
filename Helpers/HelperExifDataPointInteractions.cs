@@ -85,7 +85,7 @@ internal static class HelperExifDataPointInteractions
         geoDataAttributes.Add(item: ElementAttribute.RemoveAllGPS); //"gps*"
 
         if (HelperDataApplicationSettings.DataReadSQLiteSettings(
-                tableName: "settings",
+                dataTable: HelperVariables.DtHelperDataApplicationSettings,
                 settingTabPage: "tpg_Application",
                 settingId: "ckb_RemoveGeoDataRemovesTimeOffset") ==
             "true")

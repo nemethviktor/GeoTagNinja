@@ -116,7 +116,7 @@ internal static class HelperControlAndMessageBoxHandling
             if (senderForm.Name == "FrmSettings")
             {
                 cItem.Text = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                    tableName: "settings",
+                    dataTable: HelperVariables.DtHelperDataApplicationSettings,
                     settingTabPage: parentNameToUse,
                     settingId: cItem.Name
                 );
@@ -129,7 +129,7 @@ internal static class HelperControlAndMessageBoxHandling
                 FrmMainApp.Logger.Trace(message: "Starting - cItem: " + nud.Name);
                 _ = decimal.TryParse(
                     s: HelperDataApplicationSettings.DataReadSQLiteSettings(
-                        tableName: "settings",
+                        dataTable: HelperVariables.DtHelperDataApplicationSettings,
                         settingTabPage: parentNameToUse,
                         settingId: nud.Name
                     ), result: out decimal outVal);

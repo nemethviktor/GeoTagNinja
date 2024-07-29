@@ -2,9 +2,9 @@
 
 **Build 8xxx [20240xxx]** 
 - NEW & UPDATED:
-	- TBA
+	- Rewrote the SQL handling logic to use DataTables and Transactions rather than write everyone on a one-by-one basis. 
 - BUGS & FIXES:
-	- TBA
+	- N/A
 
 **Build 8973 [20240726]** 
 - NEW & UPDATED:

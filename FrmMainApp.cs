@@ -191,8 +191,9 @@ public partial class FrmMainApp : Form
         DirectoryElements.ExifTool = _ExifTool;
         HelperDataOtherDataRelated.GenericCreateDataTables();
 
-        HelperGenericAppStartup.AppStartupCreateDataBaseFile();
+        HelperGenericAppStartup.AppStartupCreateDatabaseFile();
         HelperGenericAppStartup.AppStartupWriteDefaultSettings();
+        HelperGenericAppStartup.AppStartupReadSQLiteTables();
         HelperGenericAppStartup.AppStartupReadAppLanguage();
         HelperGenericAppStartup.AppStartupReadCustomCityLogic();
         HelperGenericAppStartup.AppStartupReadAPILanguage();
@@ -228,7 +229,7 @@ public partial class FrmMainApp : Form
         // clear both tables, just in case + generic cleanup
         try
         {
-            Logger.Debug(message: "Clear DtFileDataToWriteStage1PreQueue");
+            Logger.Debug(message: "Remove Stage 1 AttributeValues");
 
             foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
             {
@@ -339,9 +340,9 @@ public partial class FrmMainApp : Form
 
         HelperGenericAppStartup.AppStartupLoadFavourites();
         HelperGenericAppStartup.AppStartupLoadCustomRules();
-        AppStartupPullLastLatLngFromSettings();
-        HelperGenericAppStartup.AppStartupPullOverWriteBlankToponomy();
-        HelperGenericAppStartup.AppStartupPullToponomyRadiusAndMaxRows();
+        AppStartupGetLastLatLngFromSettings();
+        HelperGenericAppStartup.AppStartupGetOverwriteBlankToponomy();
+        HelperGenericAppStartup.AppStartupGetToponomyRadiusAndMaxRows();
         Request_Map_NavigateGo();
 
         await HelperAPIVersionCheckers.CheckForNewVersions();
@@ -360,8 +361,7 @@ public partial class FrmMainApp : Form
     #endif
         AutoUpdater.Synchronous =
             true; // needs to be true otherwise the single pipe instance crashes. (well, I think _that_ crashes, something does.)
-        AutoUpdater.ParseUpdateInfoEvent +=
-            updateHelper.AutoUpdaterOnParseUpdateInfoEvent;
+        AutoUpdater.ParseUpdateInfoEvent += updateHelper.AutoUpdaterOnParseUpdateInfoEvent;
         AutoUpdater.CheckForUpdateEvent += updateHelper.AutoUpdaterOnCheckForUpdateEvent;
 
         string updateJsonPath =
@@ -513,29 +513,30 @@ public partial class FrmMainApp : Form
         {
             // Write lat/long + visual settings for future reference to db
             Logger.Debug(message: "Write lat/long + visual settings for future reference to db");
+            List<AppSettingContainer> settingsToWrite = new();
+            List<KeyValuePair<string, string>> persistDataSettingsList = new()
+            {
+                new KeyValuePair<string, string>(key: "lastLat", value: nud_lat.Text),
+                new KeyValuePair<string, string>(key: "lastLng", value: nud_lng.Text),
+                new KeyValuePair<string, string>(key: "splitContainerMainSplitterDistance",
+                    value: splitContainerMain.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture)),
+                new KeyValuePair<string, string>(key: "splitContainerLeftTopSplitterDistance",
+                    value: splitContainerLeftTop.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture))
+            };
+            settingsToWrite.AddRange(collection: persistDataSettingsList.Select(selector: persistDataSetting =>
+                new AppSettingContainer
+                {
+                    TableName = "settings", SettingTabPage = "generic", SettingId = persistDataSetting.Key,
+                    SettingValue = persistDataSetting.Value
+                }));
+            HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
 
-
-            List<(string settingId, string settingValue)> settings =
-            [
-                ("lastLat", nud_lat.Text),
-                ("lastLng", nud_lng.Text),
-
-                ("splitContainerMainSplitterDistance",
-                 splitContainerMain.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture)),
-                ("splitContainerLeftTopSplitterDistance",
-                 splitContainerLeftTop.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture))
-            ];
-            foreach ((string settingId, string settingValue) in settings)
+            // Log stuff
+            foreach (KeyValuePair<string, string> keyValuePair in persistDataSettingsList)
             {
                 Logger.Debug(
                     message:
-                    $"Writing setting.settingId {settingId}, setting.settingValue {settingValue}.");
-                HelperDataApplicationSettings.DataWriteSQLiteSettings(
-                    tableName: "settings",
-                    settingTabPage: "generic",
-                    settingId: settingId,
-                    settingValue: settingValue
-                );
+                    $"Writing setting.settingId {keyValuePair.Key}, setting.settingValue {keyValuePair.Value}.");
             }
         }
     }
@@ -1563,7 +1564,7 @@ public partial class FrmMainApp : Form
                 "Replace hard-coded values in the html code - UserSettingArcGisApiKey is null");
             HelperVariables.UserSettingArcGisApiKey =
                 HelperDataApplicationSettings.DataReadSQLiteSettings(
-                    tableName: "settings",
+                    dataTable: HelperVariables.DtHelperDataApplicationSettings,
                     settingTabPage: "tpg_Application",
                     settingId: "tbx_ARCGIS_APIKey",
                     returnBlankIfNull: true);

@@ -16,10 +16,12 @@ internal static class HelperVariables
     internal static string UserSettingArcGisApiKey;
     internal static string UserSettingGeoNamesUserName;
     internal static string UserSettingGeoNamesPwd;
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
     internal static bool UserSettingResetMapToZeroOnMissingValue;
     internal static bool UserSettingUseDarkMode;
     internal static bool UserSettingUpdatePreReleaseGTN;
     internal static bool UserSettingOnlyShowFCodePPL = false;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
     internal static string UserSettingMapColourMode; // DarkInverse or DarkPale (could be Normal too but not relevant)
     internal static bool UserSettingUseImperial = false;
 
@@ -45,11 +47,19 @@ internal static class HelperVariables
     internal static string ToponomyReplaceWithWhat = null;
     internal static string ToponymaxRows = "1";
     internal static string ToponomyRadiusValue = "10";
-    internal static string? CurrentAltitude; // this is needed bcs it can happen that a file has altitude, the api returns -32k and then we'd end up with something worse than what it was originally.
+
+    internal static string?
+        CurrentAltitude; // this is needed bcs it can happen that a file has altitude, the api returns -32k and then we'd end up with something worse than what it was originally.
+
     internal static readonly string DefaultEnglishString = "English [English]";
     internal static string APILanguageToUse;
     internal static DataTable DtCustomRules = new();
     internal static DataTable DtCustomCityLogic = new();
+
+    internal static DataTable DtHelperDataApplicationSettingsPreQueue = new();
+    internal static DataTable DtHelperDataApplicationSettings = new();
+    internal static DataTable DtHelperDataApplicationLayout = new();
+
 
     internal static readonly string ResourcesFolderPath = GetResourcesFolderString();
     internal static readonly string UserDataFolderPath = GetRoamingFolderString();
@@ -104,7 +114,7 @@ internal static class HelperVariables
     {
         return
             Path.Combine(path1: AppDomain.CurrentDomain.BaseDirectory,
-                         path2: "Resources");
+                path2: "Resources");
     }
 
     /// <summary>
@@ -157,23 +167,23 @@ internal static class HelperVariables
 
         FileInfo sourceConfigFileFi =
             new(fileName: Path.Combine(path1: ResourcesFolderPath,
-                                       path2: configFileName));
+                path2: configFileName));
 
         FileInfo destConfigFileFi =
             new(fileName: Path.Combine(path1: UserDataFolderPath,
-                                       path2: sourceConfigFileFi.Name));
+                path2: sourceConfigFileFi.Name));
         if (destConfigFileFi.Exists)
         {
             if (sourceConfigFileFi.LastWriteTime > destConfigFileFi.LastWriteTime)
             {
                 sourceConfigFileFi.CopyTo(destFileName: destConfigFileFi.FullName,
-                                          overwrite: true);
+                    overwrite: true);
             }
         }
         else
         {
             sourceConfigFileFi.CopyTo(destFileName: destConfigFileFi.FullName,
-                                      overwrite: true);
+                overwrite: true);
         }
     }
 }

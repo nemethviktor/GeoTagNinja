@@ -17,7 +17,7 @@ internal static class HelperGenericAppStartup
     /// <summary>
     ///     Creates the database sqlite file
     /// </summary>
-    public static void AppStartupCreateDataBaseFile()
+    public static void AppStartupCreateDatabaseFile()
     {
         FrmMainApp.Logger.Info(message: "Starting");
         // load all settings
@@ -55,6 +55,7 @@ internal static class HelperGenericAppStartup
         // write settings for combobox defaults etc
         try
         {
+            AppStartupReadSQLiteTables();
             HelperDataDatabaseAndStartup.DataWriteSQLiteSettingsDefaultSettings();
         }
         catch (Exception ex)
@@ -74,6 +75,23 @@ internal static class HelperGenericAppStartup
         }
     }
 
+    public static void AppStartupReadSQLiteTables()
+    {
+        try
+        {
+            HelperVariables.DtHelperDataApplicationSettings =
+                HelperDataDatabaseAndStartup.DataReadSQLiteTable(tableName: "settings");
+            HelperVariables.DtHelperDataApplicationSettingsPreQueue =
+                HelperVariables.DtHelperDataApplicationSettings.Clone();
+            HelperVariables.DtHelperDataApplicationLayout =
+                HelperDataDatabaseAndStartup.DataReadSQLiteTable(tableName: "appLayout");
+        }
+        catch
+        {
+            //
+        }
+    }
+
     /// <summary>
     ///     Reads object names from SQLite
     /// </summary>
@@ -84,7 +102,7 @@ internal static class HelperGenericAppStartup
         try
         {
             FrmMainApp._AppLanguage = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                tableName: "settings",
+                dataTable: HelperVariables.DtHelperDataApplicationSettings,
                 settingTabPage: "tpg_Application",
                 settingId: "cbx_Language"
             );
@@ -154,7 +172,7 @@ internal static class HelperGenericAppStartup
         try
         {
             TryUseGeoNamesLanguage = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                tableName: "settings",
+                dataTable: HelperVariables.DtHelperDataApplicationSettings,
                 settingTabPage: "tpg_Application",
                 settingId: "rbt_UseGeoNamesLocalLanguage"
             );
@@ -166,7 +184,7 @@ internal static class HelperGenericAppStartup
             else
             {
                 TryUseGeoNamesLanguage = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                    tableName: "settings",
+                    dataTable: HelperVariables.DtHelperDataApplicationSettings,
                     settingTabPage: "tpg_Application",
                     settingId: "cbx_TryUseGeoNamesLanguage"
                 );
@@ -238,32 +256,35 @@ internal static class HelperGenericAppStartup
                         // In this code, fieldInfo.SetValue(null, true); is used to set the value of the static field to True.
                         // The first parameter is the object instance for instance fields, for static fields this should be null.
                         // The second parameter is the value to set.
-                        fieldInfo.SetValue(obj: null, value: HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-                                               tableName: "settings",
-                                               settingTabPage: "tpg_Application",
-                                               settingId: fieldInfoSettingID
-                                           ));
+                        fieldInfo.SetValue(obj: null,
+                            value: HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
+                                dataTable: HelperVariables.DtHelperDataApplicationSettings,
+                                settingTabPage: "tpg_Application",
+                                settingId: fieldInfoSettingID
+                            ));
                     }
                     else if (fieldInfo.FieldType == typeof(string))
                     {
                         fieldInfo.SetValue(obj: null, value: HelperDataApplicationSettings.DataReadSQLiteSettings(
-                                               tableName: "settings",
-                                               settingTabPage: "tpg_Application",
-                                               settingId: fieldInfoSettingID,
-                                               returnBlankIfNull: true
-                                           ));
+                            dataTable: HelperVariables.DtHelperDataApplicationSettings,
+                            settingTabPage: "tpg_Application",
+                            settingId: fieldInfoSettingID,
+                            returnBlankIfNull: true
+                        ));
                     }
                 }
                 else if (settingsRadioButtonPairsDictionary.ContainsKey(key: fieldInfo.Name))
                 {
                     settingsRadioButtonPairsDictionary.TryGetValue(key: fieldInfo.Name, value: out List<string> optionList);
                     settingsRadioButtonReplaceWhatsDictionary.TryGetValue(key: fieldInfo.Name, value: out string replaceWhat);
-                    fieldInfo.SetValue(obj: null, value: HelperDataApplicationSettings.DataReadRadioButtonSettingTrueOrFalse(
-                                                                                           tableName: "settings",
-                                                                                           settingTabPage: "tpg_Application",
-                                                                                           optionList: optionList
-                                                                                       )
-                                                                                      .Replace(oldValue: replaceWhat, newValue: ""));
+                    fieldInfo.SetValue(obj: null, value: HelperDataApplicationSettings
+                                                        .DataReadRadioButtonSettingTrueOrFalse(
+                                                             dataTable: HelperVariables
+                                                                .DtHelperDataApplicationSettings,
+                                                             settingTabPage: "tpg_Application",
+                                                             optionList: optionList
+                                                         )
+                                                        .Replace(oldValue: replaceWhat, newValue: ""));
                 }
             }
             catch (Exception ex)
@@ -343,17 +364,17 @@ internal static class HelperGenericAppStartup
     /// <summary>
     ///     Pulls the settings for overwriting empty toponomy details if req'd
     /// </summary>
-    internal static void AppStartupPullOverWriteBlankToponomy()
+    internal static void AppStartupGetOverwriteBlankToponomy()
     {
         bool.TryParse(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
-                          tableName: "settings",
-                          settingTabPage: "tpg_Application",
-                          settingId: "ckb_ReplaceBlankToponyms"), result: out HelperVariables.ToponomyReplace);
+            dataTable: HelperVariables.DtHelperDataApplicationSettings,
+            settingTabPage: "tpg_Application",
+            settingId: "ckb_ReplaceBlankToponyms"), result: out HelperVariables.ToponomyReplace);
 
         if (HelperVariables.ToponomyReplace)
         {
             string replaceEmpty = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                tableName: "settings",
+                dataTable: HelperVariables.DtHelperDataApplicationSettings,
                 settingTabPage: "tpg_Application",
                 settingId: "tbx_ReplaceBlankToponyms");
 
@@ -368,10 +389,10 @@ internal static class HelperGenericAppStartup
     ///     Pulls data related to user's Settings re how many choices an API pull should offer and what should be the default
     ///     radius
     /// </summary>
-    internal static void AppStartupPullToponomyRadiusAndMaxRows()
+    internal static void AppStartupGetToponomyRadiusAndMaxRows()
     {
         string choiceCountValue = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                                      tableName: "settings",
+                                      dataTable: HelperVariables.DtHelperDataApplicationSettings,
                                       settingTabPage: "tpg_Application",
                                       settingId: "nud_ChoiceOfferCount"
                                   ) ??
@@ -380,7 +401,7 @@ internal static class HelperGenericAppStartup
         HelperVariables.ToponymaxRows = choiceCountValue;
 
         string radiusValue = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                                 tableName: "settings",
+                                 dataTable: HelperVariables.DtHelperDataApplicationSettings,
                                  settingTabPage: "tpg_Application",
                                  settingId: "nud_ChoiceRadius"
                              ) ??
@@ -442,7 +463,7 @@ internal static class HelperGenericAppStartup
         try
         {
             startupFolder = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                tableName: "settings",
+                dataTable: HelperVariables.DtHelperDataApplicationSettings,
                 settingTabPage: "tpg_Application",
                 settingId: "tbx_Startup_Folder"
             );

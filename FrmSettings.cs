@@ -32,6 +32,19 @@ public partial class FrmSettings : Form
     private readonly string _languageSavedInSQL;
     private bool _nowLoadingSettingsData;
 
+    private List<string> _rbtGeoNamesLanguage = new()
+    {
+        "rbt_UseGeoNamesLocalLanguage",
+        "rbt_TryUseGeoNamesLanguage"
+    };
+
+    private List<string> _rbtMapColourOptions = new()
+    {
+        "rbt_MapColourModeNormal",
+        "rbt_MapColourModeDarkInverse",
+        "rbt_MapColourModeDarkPale"
+    };
+
     /// <summary>
     ///     This Form provides an interface for the user to edit various app and file-specific settings.
     /// </summary>
@@ -78,7 +91,7 @@ public partial class FrmSettings : Form
                     string[] alreadyTranslatedLanguages = { "en", "fr" };
                     _languageSavedInSQL =
                         HelperDataApplicationSettings.DataReadSQLiteSettings(
-                            tableName: "settings",
+                            dataTable: HelperVariables.DtHelperDataApplicationSettings,
                             settingTabPage: parentNameToUse,
                             settingId: cbx.Name
                         );
@@ -195,7 +208,7 @@ public partial class FrmSettings : Form
                         {
                             tbx.Text = HelperDataApplicationSettings
                                .DataReadSQLiteSettings(
-                                    tableName: "settings",
+                                    dataTable: HelperVariables.DtHelperDataApplicationSettings,
                                     settingTabPage: parentNameToUse,
                                     settingId: cItem.Name
                                 );
@@ -211,7 +224,7 @@ public partial class FrmSettings : Form
                         {
                             ckb.CheckState = HelperDataApplicationSettings
                                .DataReadCheckBoxSettingTrueOrFalse(
-                                    tableName: "settings",
+                                    dataTable: HelperVariables.DtHelperDataApplicationSettings,
                                     settingTabPage: parentNameToUse,
                                     settingId: ckb.Name
                                 )
@@ -227,7 +240,7 @@ public partial class FrmSettings : Form
                     {
                         string nudTempValue =
                             HelperDataApplicationSettings.DataReadSQLiteSettings(
-                                tableName: "settings",
+                                dataTable: HelperVariables.DtHelperDataApplicationSettings,
                                 settingTabPage: parentNameToUse,
                                 settingId: cItem.Name
                             );
@@ -261,7 +274,7 @@ public partial class FrmSettings : Form
                         {
                             rbt.Checked = HelperDataApplicationSettings
                                .DataReadCheckBoxSettingTrueOrFalse(
-                                    tableName: "settings",
+                                    dataTable: HelperVariables.DtHelperDataApplicationSettings,
                                     settingTabPage: parentNameToUse,
                                     settingId: rbt.Name
                                 )
@@ -329,7 +342,7 @@ public partial class FrmSettings : Form
         Dictionary<string, string> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(
             ckb_IncludePredeterminedCountries: HelperDataApplicationSettings
                .DataReadCheckBoxSettingTrueOrFalse(
-                    tableName: "settings",
+                    dataTable: HelperVariables.DtHelperDataApplicationSettings,
                     settingTabPage: "tpg_CustomRules",
                     settingId: "ckb_IncludePredeterminedCountries"
                 ));
@@ -614,7 +627,7 @@ public partial class FrmSettings : Form
     private void Btn_Cancel_Click(object sender,
         EventArgs e)
     {
-        HelperDataApplicationSettings.DataDeleteSQLitesettingsToWritePreQueue();
+        HelperVariables.DtHelperDataApplicationSettingsPreQueue.Clear();
         Hide();
     }
 
@@ -632,18 +645,6 @@ public partial class FrmSettings : Form
     private void Btn_OK_Click(object sender,
         EventArgs e)
     {
-        List<string> rbtGeoNamesLanguage = new()
-        {
-            "rbt_UseGeoNamesLocalLanguage",
-            "rbt_TryUseGeoNamesLanguage"
-        };
-
-        List<string> rbtMapColourOptions = new()
-        {
-            "rbt_MapColourModeNormal",
-            "rbt_MapColourModeDarkInverse",
-            "rbt_MapColourModeDarkPale"
-        };
         if (!_importHasBeenProcessed)
         {
             HelperNonStatic helperNonstatic = new();
@@ -692,7 +693,7 @@ public partial class FrmSettings : Form
                     if (cItem is RadioButton rbt)
                     {
                         // this needs to be an IF rather than an ELSE IF
-                        if (rbtGeoNamesLanguage.Contains(item: rbt.Name))
+                        if (_rbtGeoNamesLanguage.Contains(item: rbt.Name))
                         {
                             // (rbt.Font.Style & FontStyle.Bold) here means that there has been a change of state and it needs saving
                             if ((rbt.Font.Style & FontStyle.Bold) != 0 &&
@@ -722,7 +723,7 @@ public partial class FrmSettings : Form
                                 }
                             }
                         }
-                        else if (rbtMapColourOptions.Contains(item: rbt.Name))
+                        else if (_rbtMapColourOptions.Contains(item: rbt.Name))
                         {
                             if ((rbt.Font.Style & FontStyle.Bold) != 0 &&
                                 rbt.Checked)
@@ -736,16 +737,16 @@ public partial class FrmSettings : Form
                 }
             }
 
-            HelperDataApplicationSettings.DataTransferSQLiteSettings();
+            HelperDataApplicationSettings.DataTransferSQLiteSettingsFromPreQueue();
         }
 
-        HelperDataApplicationSettings.DataDeleteSQLitesettingsToWritePreQueue();
+        HelperVariables.DtHelperDataApplicationSettingsPreQueue.Clear();
 
         // refresh user data
         HelperGenericAppStartup.AppStartupApplyDefaults();
 
-        HelperGenericAppStartup.AppStartupPullOverWriteBlankToponomy();
-        HelperGenericAppStartup.AppStartupPullToponomyRadiusAndMaxRows();
+        HelperGenericAppStartup.AppStartupGetOverwriteBlankToponomy();
+        HelperGenericAppStartup.AppStartupGetToponomyRadiusAndMaxRows();
         HelperDataCustomRules.DataWriteSQLiteCustomRules();
         HelperDataCustomCityAllocationRules.DataWriteSQLiteCustomCityAllocationLogic();
         // read back/refresh lists.
@@ -797,7 +798,7 @@ public partial class FrmSettings : Form
                 txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Regular);
                 // see if it's in the settings-change-queue
                 string tmpCtrlVal = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                    tableName: "settingsToWritePreQueue",
+                    dataTable: HelperVariables.DtHelperDataApplicationSettings,
                     settingTabPage: ((Control)sender).Parent.Name,
                     settingId: tmpCtrlName
                 );
@@ -813,7 +814,7 @@ public partial class FrmSettings : Form
                     try
                     {
                         tmpCtrlVal = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                            tableName: "settings",
+                            dataTable: HelperVariables.DtHelperDataApplicationSettings,
                             settingTabPage: ((Control)sender).Parent.Name,
                             settingId: tmpCtrlName
                         );
@@ -855,12 +856,18 @@ public partial class FrmSettings : Form
 
                         tmpCtrlVal = box.Checked.ToString()
                                         .ToLower();
-                        HelperDataApplicationSettings.DataWriteSQLiteSettings(
-                            tableName: "settings",
-                            settingTabPage: ((Control)sender).Parent.Name,
-                            settingId: tmpCtrlName,
-                            settingValue: tmpCtrlVal
-                        );
+
+                        List<AppSettingContainer> settingsToWrite = new()
+                        {
+                            new AppSettingContainer
+                            {
+                                TableName = "settings",
+                                SettingTabPage = ((Control)sender).Parent.Name,
+                                SettingId = "onlineVersionCheckDate",
+                                SettingValue = tmpCtrlVal
+                            }
+                        };
+                        HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
                     }
                 }
 
@@ -914,20 +921,59 @@ public partial class FrmSettings : Form
                     }
 
                     break;
+                case "gbx_MapColourMode":
+                    // also set the other values to False
+                    HelperNonStatic helperNonstatic = new();
+                    IEnumerable<Control> c = helperNonstatic.GetAllControls(control: gbx_MapColourMode);
+                    foreach (Control cntrControl in c)
+                    {
+                        RadioButton rbtTest = (RadioButton)cntrControl;
+                        if (!rbtTest.Checked)
+                        {
+                            DeleteAndWriteToDtPreQueue(settingTabPage: "tpg_Application",
+                                settingId: rbtTest.Name,
+                                settingValue: "false");
+                        }
+                    }
+
+                    break;
             }
 
             // stick it into settings-Q
-            HelperNonStatic helperNonstatic = new();
 
             string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
-            HelperDataApplicationSettings.DataWriteSQLiteSettings(
-                tableName: "settingsToWritePreQueue",
-                settingTabPage: parentNameToUse,
-                settingId: rbt.Name,
-                settingValue: rbt.Checked.ToString()
-                                 .ToLower()
-            );
+            DeleteAndWriteToDtPreQueue(settingTabPage: parentNameToUse, settingId: rbt.Name,
+                settingValue: rbt.Checked.ToString().ToLower());
         }
+    }
+
+
+    /// <summary>
+    ///     Deletes rows from <see cref="HelperVariables.DtHelperDataApplicationSettingsPreQueue" /> and adds new data.
+    /// </summary>
+    /// <param name="settingTabPage"></param>
+    /// <param name="settingId"></param>
+    /// <param name="settingValue"></param>
+    private static void DeleteAndWriteToDtPreQueue(string settingTabPage, string settingId, string settingValue)
+    {
+        HelperVariables.DtHelperDataApplicationSettingsPreQueue.AcceptChanges();
+        foreach (DataRow row in HelperVariables.DtHelperDataApplicationSettingsPreQueue.Rows)
+        {
+            if (row[columnName: "settingTabPage"].ToString() == settingTabPage &&
+                row[columnName: "settingId"].ToString() == settingId)
+            {
+                row.Delete();
+            }
+        }
+
+        HelperVariables.DtHelperDataApplicationSettingsPreQueue.AcceptChanges();
+        DataRow drPreQueue = HelperVariables.DtHelperDataApplicationSettingsPreQueue.NewRow();
+        drPreQueue[columnName: "settingTabPage"] = settingTabPage;
+        drPreQueue[columnName: "settingId"] = settingId;
+        drPreQueue[columnName: "settingValue"] = settingValue;
+
+
+        HelperVariables.DtHelperDataApplicationSettingsPreQueue.Rows.Add(row: drPreQueue);
     }
 
     /// <summary>
@@ -993,16 +1039,10 @@ public partial class FrmSettings : Form
                 }
             }
 
-            // stick it into settings-Q
-            HelperNonStatic helperNonstatic = new();
+            // stick it into settings-Q 
             string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
-            HelperDataApplicationSettings.DataWriteSQLiteSettings(
-                tableName: "settingsToWritePreQueue",
-                settingTabPage: parentNameToUse,
-                settingId: cItemName,
-                settingValue: ckb.Checked.ToString()
-                                 .ToLower()
-            );
+            DeleteAndWriteToDtPreQueue(settingTabPage: parentNameToUse, settingId: cItemName,
+                settingValue: ckb.Checked.ToString().ToLower());
         }
     }
 
@@ -1019,15 +1059,10 @@ public partial class FrmSettings : Form
             TextBox tbx = (TextBox)sender;
             tbx.Font = new Font(prototype: tbx.Font, newStyle: FontStyle.Bold);
 
-            // stick it into settings-Q
-            HelperNonStatic helperNonstatic = new();
+            // stick it into settings-Q 
             string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
-            HelperDataApplicationSettings.DataWriteSQLiteSettings(
-                tableName: "settingsToWritePreQueue",
-                settingTabPage: parentNameToUse,
-                settingId: tbx.Name,
-                settingValue: tbx.Text
-            );
+            DeleteAndWriteToDtPreQueue(settingTabPage: parentNameToUse, settingId: tbx.Name,
+                settingValue: tbx.Text);
         }
     }
 
@@ -1059,14 +1094,9 @@ public partial class FrmSettings : Form
             }
 
             // stick it into settings-Q
-            HelperNonStatic helperNonstatic = new();
             string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
-            HelperDataApplicationSettings.DataWriteSQLiteSettings(
-                tableName: "settingsToWritePreQueue",
-                settingTabPage: parentNameToUse,
-                settingId: cbx.Name,
-                settingValue: settingValue
-            );
+            DeleteAndWriteToDtPreQueue(settingTabPage: parentNameToUse, settingId: cbx.Name,
+                settingValue: settingValue);
         }
     }
 
@@ -1083,15 +1113,10 @@ public partial class FrmSettings : Form
         {
             nud.Font = new Font(prototype: nud.Font, newStyle: FontStyle.Bold);
 
-            // stick it into settings-Q
-            HelperNonStatic helperNonstatic = new();
+            // stick it into settings-Q 
             string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
-            HelperDataApplicationSettings.DataWriteSQLiteSettings(
-                tableName: "settingsToWritePreQueue",
-                settingTabPage: parentNameToUse,
-                settingId: nud.Name,
-                settingValue: nud.Value.ToString(provider: CultureInfo.InvariantCulture)
-            );
+            DeleteAndWriteToDtPreQueue(settingTabPage: parentNameToUse, settingId: nud.Name,
+                settingValue: nud.Value.ToString(provider: CultureInfo.InvariantCulture));
         }
 
         if (nud.Name == "nud_ChoiceRadius")

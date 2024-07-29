@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
@@ -9,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using geoTagNinja;
+using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -144,7 +146,7 @@ internal static class HelperAPIVersionCheckers
 
         string strLastOnlineVersionCheck =
             HelperDataApplicationSettings.DataReadSQLiteSettings(
-                tableName: "settings",
+                dataTable: HelperVariables.DtHelperDataApplicationSettings,
                 settingTabPage: "generic",
                 settingId: "onlineVersionCheckDate"
             );
@@ -153,12 +155,17 @@ internal static class HelperAPIVersionCheckers
         {
             lastCheckUnixTime = nowUnixTime;
             // write back to SQL so it doesn't remain blank
-            HelperDataApplicationSettings.DataWriteSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "generic",
-                settingId: "onlineVersionCheckDate",
-                settingValue: nowUnixTime.ToString(provider: CultureInfo.InvariantCulture)
-            );
+            List<AppSettingContainer> settingsToWrite = new()
+            {
+                new AppSettingContainer
+                {
+                    TableName = "settings",
+                    SettingTabPage = "generic",
+                    SettingId = "onlineVersionCheckDate",
+                    SettingValue = nowUnixTime.ToString(provider: CultureInfo.InvariantCulture)
+                }
+            };
+            HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
         }
         else
         {
@@ -254,12 +261,17 @@ internal static class HelperAPIVersionCheckers
                     provider: CultureInfo.InvariantCulture));
 
             // write back to SQL
-            HelperDataApplicationSettings.DataWriteSQLiteSettings(
-                tableName: "settings",
-                settingTabPage: "generic",
-                settingId: "onlineVersionCheckDate",
-                settingValue: nowUnixTime.ToString()
-            );
+            List<AppSettingContainer> settingsToWrite = new()
+            {
+                new AppSettingContainer
+                {
+                    TableName = "settings",
+                    SettingTabPage = "generic",
+                    SettingId = "onlineVersionCheckDate",
+                    SettingValue = nowUnixTime.ToString(provider: CultureInfo.InvariantCulture)
+                }
+            };
+            HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
         }
         else
         {

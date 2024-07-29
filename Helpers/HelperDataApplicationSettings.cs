@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.SQLite;
+using System.Linq;
+using GeoTagNinja.Model;
 
 // ReSharper disable InconsistentNaming
 
@@ -12,30 +15,32 @@ internal static class HelperDataApplicationSettings
     /// <summary>
     ///     Checks the SQLite database for checkbox-settings and returns true/false accordingly
     /// </summary>
-    /// <param name="tableName">TableName where the particular checkbox is - this is almost always "settings"</param>
+    /// <param name="dataTable">The DataTable form which the data is read</param>
     /// <param name="settingTabPage">TabPage of the above</param>
     /// <param name="settingId">The Checkbox's name itself</param>
     /// <returns>true or false</returns>
-    internal static bool DataReadCheckBoxSettingTrueOrFalse(string tableName,
-        string settingTabPage,
+    internal static bool DataReadCheckBoxSettingTrueOrFalse(DataTable dataTable, string settingTabPage,
         string settingId)
     {
-        string valueInSQL = DataReadSQLiteSettings(
-            tableName: tableName,
-            settingTabPage: settingTabPage,
-            settingId: settingId
-        );
-        return valueInSQL == "true";
+        EnumerableRowCollection<DataRow> drDataTableData =
+            from DataRow dataRow in dataTable.AsEnumerable()
+            where dataRow.Field<string>(columnName: "settingTabPage") == settingTabPage &&
+                  dataRow.Field<string>(columnName: "settingId") ==
+                  settingId
+            select dataRow;
+
+        DataRow dataRows = drDataTableData.FirstOrDefault();
+        return dataRows != null && dataRows[columnName: "settingValue"].ToString() == "true";
     }
 
     /// <summary>
     ///     Checks the SQLite database for radio button settings and returns the selected option.
     /// </summary>
-    /// <param name="tableName">The table name where the particular radio button setting is stored.</param>
+    /// <param name="dataTable">The DataTable form which the data is read</param>
     /// <param name="settingTabPage">The tab page of the setting.</param>
     /// <param name="optionList">The list of options for the radio button.</param>
     /// <returns>The selected option from the radio button setting.</returns>
-    internal static string DataReadRadioButtonSettingTrueOrFalse(string tableName,
+    internal static string DataReadRadioButtonSettingTrueOrFalse(DataTable dataTable,
         string settingTabPage,
         List<string> optionList)
     {
@@ -43,8 +48,8 @@ internal static class HelperDataApplicationSettings
         foreach (string optionValue in optionList)
         {
             if (DataReadCheckBoxSettingTrueOrFalse(
-                    tableName: "settings",
-                    settingTabPage: "tpg_Application",
+                    dataTable: dataTable,
+                    settingTabPage: settingTabPage,
                     settingId: optionValue
                 ))
             {
@@ -57,53 +62,31 @@ internal static class HelperDataApplicationSettings
     }
 
     /// <summary>
-    ///     Reads the user-settings and returns them to the app (such as say default starting folder.)
+    ///     Reads the SQLite table into a DataTable. Easier to manipulate/read.
     /// </summary>
-    /// <param name="tableName">
-    ///     This will generally be "settings" (but could be applayout as well). Remainder of an older
-    ///     design where I had tables for data lined up to be saved
-    /// </param>
-    /// <param name="settingTabPage">This lines up with the tab name on the Settings form</param>
-    /// <param name="settingId">Name of the SettingID for which data is requested</param>
+    /// <param name="dataTable"></param>
+    /// <param name="settingTabPage"></param>
+    /// <param name="settingId"></param>
     /// <param name="returnBlankIfNull"></param>
-    /// <returns>String - the value of the given SettingID</returns>
-    internal static string DataReadSQLiteSettings(string tableName,
-        string settingTabPage,
-        string settingId,
+    /// <returns></returns>
+    public static string? DataReadSQLiteSettings(DataTable dataTable, string settingTabPage, string settingId,
         bool returnBlankIfNull = false)
     {
-        string returnString = null;
+        EnumerableRowCollection<DataRow> drDataTableData =
+            from DataRow dataRow in dataTable.AsEnumerable()
+            where dataRow.Field<string>(columnName: "settingTabPage") == settingTabPage &&
+                  dataRow.Field<string>(columnName: "settingId") ==
+                  settingId
+            select dataRow;
 
-        using SQLiteConnection sqliteDB =
-            new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
-        sqliteDB.Open();
-
-        string sqlCommandStr = @"
-                                SELECT settingValue
-                                FROM " +
-                               tableName +
-                               " " +
-                               @"WHERE 1=1
-                                    AND settingId = @settingId
-                                    AND settingTabPage = @settingTabPage
-                                    ;"
-            ;
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@settingTabPage", value: settingTabPage);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@settingId", value: settingId);
-
-        using SQLiteDataReader reader = sqlToRun.ExecuteReader();
-        while (reader.Read())
+        DataRow dataRows = drDataTableData.FirstOrDefault();
+        if (dataRows != null &&
+            !string.IsNullOrWhiteSpace(value: dataRows[columnName: "settingValue"].ToString()))
         {
-            returnString = reader.GetString(i: 0);
+            return dataRows[columnName: "settingValue"].ToString();
         }
 
-        if (returnBlankIfNull && string.IsNullOrWhiteSpace(value: returnString))
-        {
-            returnString = "";
-        }
-
-        return returnString;
+        return returnBlankIfNull ? "" : null;
     }
 
 #endregion
@@ -113,56 +96,50 @@ internal static class HelperDataApplicationSettings
     /// <summary>
     ///     Similar to the one above (which reads the data) - this one writes it.
     /// </summary>
-    /// <param name="tableName">
-    ///     This will generally be "settings" (but could be applayout as well). Remainder of an older
-    ///     design where I had tables for data lined up to be saved
-    /// </param>
-    /// <param name="settingTabPage">This lines up with the tab name on the Settings form</param>
-    /// <param name="settingId">Name of the SettingID for which data is requested</param>
-    /// <param name="settingValue">The value to be stored.</param>
-    internal static void DataWriteSQLiteSettings(string tableName,
-        string settingTabPage,
-        string settingId,
-        string settingValue)
+    /// <param name="settingsToWrite">List of settings to be written/overwritten</param>
+    internal static void DataWriteSQLiteSettings(List<AppSettingContainer> settingsToWrite)
     {
-        DataDeleteSQLiteSettings(tableName: tableName, settingTabPage: settingTabPage, settingId: settingId);
-
+        List<KeyValuePair<string, string>> settingsToDelete = new();
         using SQLiteConnection sqliteDB =
             new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
+        using SQLiteCommand sqlCommandStr = new(connection: sqliteDB);
+        using SQLiteTransaction transaction = sqliteDB.BeginTransaction();
+        foreach (AppSettingContainer appSettingContainer in settingsToWrite)
+        {
+            sqlCommandStr.CommandText = @"
+                                        DELETE FROM " +
+                                        appSettingContainer.TableName + " " +
+                                        "WHERE settingTabPage = @settingTabPage AND settingId = @settingId;"
+                ;
 
-        string sqlCommandStrCMD = @"
-                                INSERT INTO " +
-                                  tableName + " " +
-                                  " (settingTabPage, settingId, settingValue) " +
-                                  "VALUES (@settingTabPage, @settingId, @settingValue);"
-            ;
+            sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingTabPage",
+                value: appSettingContainer.SettingTabPage);
+            sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingId", value: appSettingContainer.SettingId);
+            sqlCommandStr.ExecuteNonQuery();
+        }
 
-        SQLiteCommand sqlCommandStr = new(commandText: sqlCommandStrCMD, connection: sqliteDB);
-        sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingTabPage", value: settingTabPage);
-        sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingId", value: settingId);
-        sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingValue", value: settingValue);
-        sqlCommandStr.ExecuteNonQuery();
-    }
+        foreach (AppSettingContainer appSettingContainer in settingsToWrite)
+        {
+            sqlCommandStr.CommandText =
+                @"
+                INSERT INTO " +
+                appSettingContainer.TableName + " " +
+                " (settingTabPage, settingId, settingValue) " +
+                "VALUES (@settingTabPage, @settingId, @settingValue);";
 
-    private static void DataDeleteSQLiteSettings(string tableName,
-        string settingTabPage,
-        string settingId)
-    {
-        using SQLiteConnection sqliteDB =
-            new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
-        sqliteDB.Open();
+            sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingTabPage",
+                value: appSettingContainer.SettingTabPage);
+            sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingId", value: appSettingContainer.SettingId);
+            sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingValue",
+                value: appSettingContainer.SettingValue);
+            sqlCommandStr.ExecuteNonQuery();
+        }
 
-        string sqlCommandStrCMD = @"
-                                DELETE FROM " +
-                                  tableName + " " +
-                                  "WHERE settingTabPage = @settingTabPage AND settingId = @settingId;"
-            ;
+        transaction.Commit();
 
-        SQLiteCommand sqlCommandStr = new(commandText: sqlCommandStrCMD, connection: sqliteDB);
-        sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingTabPage", value: settingTabPage);
-        sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingId", value: settingId);
-        sqlCommandStr.ExecuteNonQuery();
+        // refresh main datatables
+        HelperGenericAppStartup.AppStartupReadSQLiteTables();
     }
 
 #endregion
@@ -171,53 +148,25 @@ internal static class HelperDataApplicationSettings
 
     /// <summary>
     ///     Transfers data from the "write queue" to the actual table. This is executed when the user presses the OK button in
-    ///     settings...
-    ///     ... until then the data is kept in the pre-queue table. ...
-    ///     The "main" table (file data table) used to have the same logic but that was converted to in-memory DataTables as
-    ///     writing up to thousands of tags...
-    ///     ... was very inefficient. Since settings only write a few tags I didn't bother doing the same. Boo me.
+    ///     settings until then the data is kept in the pre-queue table.
     /// </summary>
-    internal static void DataTransferSQLiteSettings()
+    internal static void DataTransferSQLiteSettingsFromPreQueue()
     {
-        using SQLiteConnection sqliteDB =
-            new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
-        sqliteDB.Open();
+        List<AppSettingContainer> preQueueAppSettingContainer =
+            (from DataRow dataRow in HelperVariables.DtHelperDataApplicationSettingsPreQueue.Rows
+                select new AppSettingContainer
+                {
+                    TableName = "settings", SettingTabPage = dataRow[columnName: "settingTabPage"].ToString(),
+                    SettingId = dataRow[columnName: "settingId"].ToString(),
+                    SettingValue = dataRow[columnName: "settingValue"].ToString()
+                }).ToList();
 
-        string sqlCommandStr = @"
-                                REPLACE INTO settings (settingTabPage, settingId, settingValue) " +
-                               "SELECT settingTabPage, settingId, settingValue FROM settingsToWritePreQueue;"
-            ;
-
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.ExecuteNonQuery();
+        DataWriteSQLiteSettings(settingsToWrite: preQueueAppSettingContainer);
     }
 
 #endregion
 
 #region Delete & Cleanup
-
-    /// <summary>
-    ///     Deletes the data in the "write queue" table. Gets executed if the user presses ok/cancel on the settings form.
-    ///     Obvs if they press OK then DataTransferSQLiteSettings fires first.
-    /// </summary>
-    internal static void DataDeleteSQLitesettingsToWritePreQueue()
-    {
-        using SQLiteConnection sqliteDB =
-            new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
-        sqliteDB.Open();
-
-        string sqlCommandStr = @"
-                                DELETE
-                                FROM settingsToWritePreQueue
-                                WHERE 1=1
-                                    
-                                
-                                "
-            ;
-        sqlCommandStr += ";";
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.ExecuteNonQuery();
-    }
 
     /// <summary>
     ///     This is largely me being a derp and doing a manual cleanup. My original SQL script was a bit buggy and so we have a

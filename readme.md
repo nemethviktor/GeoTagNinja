@@ -45,13 +45,6 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 	- The logic is that a Clipboard of _only_ a pair of coordinates separated by (preferably) the Culture-invariant [aka comma] ListSeparator would be pasted into the Edit Form when pressing CTRL+V (e.g.: 56.1234, 12.5678) <-- and nothing else. 
 	- I coded this in a relatively foolproof way but try not to outsmart it.
 - `Build 8831 [20240306]`+: ExifTool should now auto-update into the Roaming folder upon app shutdown. (that's c:\Users\username\AppData\Roaming\GeoTagNinja\)
-- ~~`Build 8960+ [202407xx]`+: There has been a change in how ExifTool is distributed and is no longer packaged as a single file. This doesn't quite work for my purposes, not the least because I don't want 498 files hanging around in the user folder. As such I'll build ET from scratch and pack it occasionally w/ GTN as before. For anyone that wants to follow/check logic:~~
-	- ~~Get Perl for Windows (eg Strawberry Perl)~~
-	- ~~`cpanm PAR::Packer`~~
-	- ~~`cpanm https://github.com/ExifTool/ExifTool.git --force` ~~
-	- ~~`pp -o d:\temp\ExifTool.exe d:\StrawberryPerl\perl\site\bin\ExifTool` ~~
-	- ~~(replace relevant bits in the last line as...relavant...)~~
-	- This has actually been undone but I'm leaving it here if you do want to build your own single-file ExifTool
 
 ### A Particular Note on Working with Adobe Bridge (ACR) and RAW files > Saving as JPGs or Other Formats.
 

@@ -619,7 +619,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
             colOrderIndexInt = Convert.ToInt16(
                 value: HelperDataApplicationSettings.DataReadSQLiteSettings(
-                    tableName: "applayout",
+                    dataTable: HelperVariables.DtHelperDataApplicationLayout,
                     settingTabPage: "lvw_FileList",
                     settingId: settingIdToSend));
 
@@ -646,7 +646,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             // Read and process width
             settingIdToSend = Name + "_" + columnHeader.Name + "_width";
             colWidth = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                tableName: "applayout",
+                dataTable: HelperVariables.DtHelperDataApplicationLayout,
                 settingTabPage: "lvw_FileList",
                 settingId: settingIdToSend
             );
@@ -696,25 +696,32 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     private void ColOrderAndWidth_Write()
     {
+        List<AppSettingContainer> settingsToWrite = new();
+
         string settingIdToSend;
         foreach (ColumnHeader columnHeader in Columns)
         {
             settingIdToSend = Name + "_" + columnHeader.Name + "_index";
-            HelperDataApplicationSettings.DataWriteSQLiteSettings(
-                tableName: "applayout",
-                settingTabPage: "lvw_FileList",
-                settingId: settingIdToSend,
-                settingValue: columnHeader.DisplayIndex.ToString()
-            );
+            settingsToWrite.Add(item: new AppSettingContainer
+            {
+                TableName = "applayout",
+                SettingTabPage = "lvw_FileList",
+                SettingId = settingIdToSend,
+                SettingValue = columnHeader.DisplayIndex.ToString()
+            });
 
             settingIdToSend = Name + "_" + columnHeader.Name + "_width";
-            HelperDataApplicationSettings.DataWriteSQLiteSettings(
-                tableName: "applayout",
-                settingTabPage: "lvw_FileList",
-                settingId: settingIdToSend,
-                settingValue: columnHeader.Width.ToString()
-            );
+            settingsToWrite.Add(item: new AppSettingContainer
+            {
+                TableName = "applayout",
+                SettingTabPage = "lvw_FileList",
+                SettingId = settingIdToSend,
+                SettingValue = columnHeader.Width.ToString()
+            });
         }
+
+        HelperDataApplicationSettings.DataWriteSQLiteSettings(
+            settingsToWrite: settingsToWrite);
     }
 
 

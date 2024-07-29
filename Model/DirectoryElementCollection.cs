@@ -394,7 +394,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
                 // only add the sidecar file linkage if the particular extension is marked to use sidecars
                 bool writeXMPSideCar = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
-                    tableName: "settings",
+                    dataTable: HelperVariables.DtHelperDataApplicationSettings,
                     settingTabPage: "tpg_FileOptions",
                     settingId: imgFileExtension.ToLower() +
                                "_" +

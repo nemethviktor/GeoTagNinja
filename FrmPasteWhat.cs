@@ -461,7 +461,7 @@ public partial class FrmPasteWhat : Form
                                                       .InvariantCulture) ??
                                                string.Empty,
                                         version: DirectoryElement.AttributeVersion
-                                           .Stage1EditFormIntraTabTransferQueue,
+                                                                 .Stage1EditFormIntraTabTransferQueue,
                                         isMarkedForDeletion:
                                         keyValuePair.Value.ToString() == "");
                                 }
@@ -473,7 +473,7 @@ public partial class FrmPasteWhat : Form
                                             value: keyValuePair.Value,
                                             provider: CultureInfo.InvariantCulture),
                                         version: DirectoryElement.AttributeVersion
-                                           .Stage1EditFormIntraTabTransferQueue,
+                                                                 .Stage1EditFormIntraTabTransferQueue,
                                         isMarkedForDeletion: false);
                                 }
                             }
@@ -486,7 +486,7 @@ public partial class FrmPasteWhat : Form
                                 takenAlreadyShifted = CheckAdjustTakenTimeShiftActual(
                                     dirElemFileToModify: dirElemFileToModify,
                                     dirElemVersion: DirectoryElement.AttributeVersion
-                                       .Stage1EditFormIntraTabTransferQueue);
+                                                                    .Stage1EditFormIntraTabTransferQueue);
                             }
                             else if (createShiftCopyPasteRequired &&
                                      !createAlreadyShifted)
@@ -494,7 +494,7 @@ public partial class FrmPasteWhat : Form
                                 createAlreadyShifted = CheckAdjustCreateTimeShiftActual(
                                     dirElemFileToModify: dirElemFileToModify,
                                     dirElemVersion: DirectoryElement.AttributeVersion
-                                       .Stage1EditFormIntraTabTransferQueue);
+                                                                    .Stage1EditFormIntraTabTransferQueue);
                             }
                         }
                     }
@@ -597,14 +597,14 @@ public partial class FrmPasteWhat : Form
                             takenAlreadyShifted = CheckAdjustTakenTimeShiftActual(
                                 dirElemFileToModify: dirElemFileToModify,
                                 dirElemVersion: DirectoryElement.AttributeVersion
-                                   .Stage3ReadyToWrite);
+                                                                .Stage3ReadyToWrite);
                         }
                         else if (createShiftCopyPasteRequired && !createAlreadyShifted)
                         {
                             createAlreadyShifted = CheckAdjustCreateTimeShiftActual(
                                 dirElemFileToModify: dirElemFileToModify,
                                 dirElemVersion: DirectoryElement.AttributeVersion
-                                   .Stage3ReadyToWrite);
+                                                                .Stage3ReadyToWrite);
                         }
                     }
 
@@ -979,7 +979,7 @@ public partial class FrmPasteWhat : Form
                     DirectoryElement dirElemFileSource =
                         lvi.Tag as DirectoryElement;
 
-                    // when USING EDIT we use the local data, therefore timeshifts can only possibly live in DtFileDataToWriteStage1PreQueue
+                    // when USING EDIT we use the local data, therefore timeshifts can only possibly live in Stage1EditFormIntraTabTransferQueue
                     foreach (ElementAttribute attribute in listOfTagsToCopyTimeShifts)
                     {
                         if (dirElemFileSource.HasSpecificAttributeWithVersion(
@@ -1050,7 +1050,7 @@ public partial class FrmPasteWhat : Form
             DirectoryElement dirElemFileSource =
                 lvi.Tag as DirectoryElement;
 
-            // when USING EDIT we use the local data, therefore timeshifts can only possibly live in DtFileDataToWriteStage1PreQueue
+            // when USING EDIT we use the local data, therefore timeshifts can only possibly live in Stage1EditFormIntraTabTransferQueue
             foreach (ElementAttribute attribute in listOfTagsToCopyTimeShifts)
             {
                 if (dirElemFileSource.HasSpecificAttributeWithVersion(
@@ -1089,7 +1089,7 @@ public partial class FrmPasteWhat : Form
                     messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Information.ToString()),
+                                                                   .Information.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Information);
             customMessageBox.ShowDialog();
