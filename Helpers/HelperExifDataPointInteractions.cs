@@ -31,28 +31,28 @@ internal static class HelperExifDataPointInteractions
         if (pointOrig.Count(predicate: f => f == '.') == 2)
         {
             bool degreeParse = int.TryParse(s: pointOrig.Split('.')[0],
-                                            style: NumberStyles.Any,
-                                            provider: CultureInfo.InvariantCulture,
-                                            result: out int degree);
+                style: NumberStyles.Any,
+                provider: CultureInfo.InvariantCulture,
+                result: out int degree);
             bool minuteParse = double.TryParse(s: Regex.Replace(
-                                                   input: pointOrig.Split('.')[1] +
-                                                          "." +
-                                                          pointOrig.Split('.')[2],
-                                                   pattern: "[SWNE\"-]",
-                                                   replacement: ""),
-                                               style: NumberStyles.Any,
-                                               provider: CultureInfo.InvariantCulture,
-                                               result: out double minute);
+                    input: pointOrig.Split('.')[1] +
+                           "." +
+                           pointOrig.Split('.')[2],
+                    pattern: "[SWNE\"-]",
+                    replacement: ""),
+                style: NumberStyles.Any,
+                provider: CultureInfo.InvariantCulture,
+                result: out double minute);
             minute = minute / 60;
             pointVal = degree + minute;
         }
         else
         {
-            pointVal =
-                double.Parse(
+            _ =
+                double.TryParse(
                     s: Regex.Replace(input: pointOrig, pattern: "[SWNE\"-]",
-                                     replacement: ""), style: NumberStyles.Any,
-                    provider: CultureInfo.InvariantCulture);
+                        replacement: ""), style: NumberStyles.Any,
+                    provider: CultureInfo.InvariantCulture, result: out pointVal);
         }
 
         pointVal = Math.Round(value: pointVal, digits: 6);
@@ -207,7 +207,7 @@ internal static class HelperExifDataPointInteractions
                                     attribute: toponomyDetail,
                                     value: "",
                                     version: DirectoryElement.AttributeVersion
-                                       .Stage3ReadyToWrite,
+                                                             .Stage3ReadyToWrite,
                                     isMarkedForDeletion: true);
                             }
 

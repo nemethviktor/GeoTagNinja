@@ -47,7 +47,7 @@ internal class TagsToModelValueTransformations
         }
 
         // If reference is set, concat if needed
-        string tmpLatLongRefVal = "";
+        string tmpLatLongRefVal = ""; // this will be something like "N" or "North" etc.
         if (parsed_Values.ContainsKey(key: refAttrib))
             // Was parsed already
         {
@@ -55,7 +55,7 @@ internal class TagsToModelValueTransformations
         }
         else
         {
-            // It was not parsed, yet
+            // Otherwise parse
             bool parseOk = ParseMissingAttribute(arg: refAttrib);
             if (parseOk)
             {
@@ -63,8 +63,9 @@ internal class TagsToModelValueTransformations
             }
         }
 
-        // Not set attribs are null
-        if (tmpLatLongRefVal == null)
+        // Not set attribs are null (or just doesn't start with one of the below)
+        if (tmpLatLongRefVal == null ||
+            !Regex.IsMatch(input: tmpLatLongRefVal, pattern: "^[SWNE\"-]", options: RegexOptions.IgnoreCase))
         {
             tmpLatLongRefVal = "";
         }

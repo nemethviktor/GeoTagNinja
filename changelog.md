@@ -2,9 +2,9 @@
 
 **Build 8xxx [20240xxx]** 
 - NEW & UPDATED:
-	- Rewrote the SQL handling logic to use DataTables and Transactions rather than write everyone on a one-by-one basis. 
+	- Rewrote the SQL handling logic to use DataTables and Transactions rather than write ~~everyone~~ everything [_I swear guv I was sober..._] on a one-by-one basis. Jolly achievement for someone that claims to be a SQL dev rather than a C# dev but alas. 
 - BUGS & FIXES:
-	- N/A
+	- Application should no longer crash when encountering an invalid piece of Exif data #118
 
 **Build 8973 [20240726]** 
 - NEW & UPDATED:

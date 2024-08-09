@@ -1004,115 +1004,124 @@ public class DirectoryElement
 
         // If needed, transform the attribute
         IConvertible resTyped = null;
-        switch (attribute)
+        try
         {
-            case ElementAttribute.GPSAltitude:
-                resTyped =
-                    TagsToModelValueTransformations.T2M_GPSAltitude(
-                        parseResult: parseResult);
-                break;
+            switch (attribute)
+            {
+                case ElementAttribute.GPSAltitude:
+                    resTyped =
+                        TagsToModelValueTransformations.T2M_GPSAltitude(
+                            parseResult: parseResult);
+                    break;
 
-            case ElementAttribute.GPSAltitudeRef:
-                resTyped =
-                    TagsToModelValueTransformations.T2M_AltitudeRef(
-                        parseResult: parseResult);
-                break;
+                case ElementAttribute.GPSAltitudeRef:
+                    resTyped =
+                        TagsToModelValueTransformations.T2M_AltitudeRef(
+                            parseResult: parseResult);
+                    break;
 
-            case ElementAttribute.GPSLatitude:
-            case ElementAttribute.GPSDestLatitude:
-            case ElementAttribute.GPSLongitude:
-            case ElementAttribute.GPSDestLongitude:
-                resTyped = TagsToModelValueTransformations.T2M_GPSLatLong(
-                    attribute: attribute,
-                    parseResult: parseResult,
-                    parsed_Values: parsedValues,
-                    ParseMissingAttribute: delegate(
-                        ElementAttribute atrb)
+                case ElementAttribute.GPSLatitude:
+                case ElementAttribute.GPSDestLatitude:
+                case ElementAttribute.GPSLongitude:
+                case ElementAttribute.GPSDestLongitude:
+                    resTyped = TagsToModelValueTransformations.T2M_GPSLatLong(
+                        attribute: attribute,
+                        parseResult: parseResult,
+                        parsed_Values: parsedValues,
+                        ParseMissingAttribute: delegate(
+                            ElementAttribute atrb)
+                        {
+                            return ParseAttribute(attribute: atrb,
+                                parsedValues: parsedValues,
+                                parsedFails: parsedFails,
+                                tags: tags,
+                                callDepth: callDepth);
+                        });
+                    break;
+
+                case ElementAttribute.GPSImgDirection:
+                    resTyped =
+                        TagsToModelValueTransformations.T2M_GPSImgDirection(
+                            parseResult: parseResult);
+                    break;
+                case ElementAttribute.GPSImgDirectionRef:
+                    resTyped =
+                        TagsToModelValueTransformations.T2M_GPSImgDirectionRef(
+                            parseResult: parseResult);
+                    break;
+
+                case ElementAttribute.ExposureTime:
+                    resTyped =
+                        TagsToModelValueTransformations.T2M_ExposureTime(
+                            parseResult: parseResult);
+                    break;
+
+                case ElementAttribute.Fnumber:
+                case ElementAttribute.FocalLength:
+                case ElementAttribute.FocalLengthIn35mmFormat:
+                    resTyped =
+                        TagsToModelValueTransformations.T2M_F_FocalLength(
+                            attribute: attribute, parseResult: parseResult);
+                    break;
+
+                case ElementAttribute.ISO:
+                    resTyped =
+                        TagsToModelValueTransformations.T2M_F_ISO(
+                            attribute: attribute, parseResult: parseResult);
+                    break;
+
+                case ElementAttribute.TakenDate:
+                case ElementAttribute.CreateDate:
+                    resTyped =
+                        TagsToModelValueTransformations.T2M_TakenCreatedDate(
+                            parseResult: parseResult);
+                    break;
+
+                default:
+
+                    Type typeOfAttribute =
+                        GetElementAttributesType(attributeToFind: attribute);
+                    if (typeOfAttribute == typeof(string))
                     {
-                        return ParseAttribute(attribute: atrb,
-                                              parsedValues: parsedValues,
-                                              parsedFails: parsedFails,
-                                              tags: tags,
-                                              callDepth: callDepth);
-                    });
-                break;
+                        resTyped = parseResult;
+                    }
+                    else if (typeOfAttribute == typeof(double))
+                    {
+                        resTyped =
+                            HelperGenericTypeOperations.TryParseNullableDouble(
+                                val: parseResult) ??
+                            FrmMainApp.NullDoubleEquivalent;
+                    }
+                    else if (typeOfAttribute == typeof(int))
+                    {
+                        resTyped =
+                            HelperGenericTypeOperations
+                               .TryParseNullableInt(val: parseResult) ??
+                            FrmMainApp.NullIntEquivalent;
+                    }
+                    else if (typeOfAttribute == typeof(DateTime))
+                    {
+                        resTyped =
+                            HelperGenericTypeOperations.TryParseNullableDateTime(
+                                val: parseResult) ??
+                            FrmMainApp.NullDateTimeEquivalent;
+                    }
+                    else
+                    {
+                        throw new ArgumentException(
+                            message:
+                            "Trying to get attribute name of unknown attribute with value " +
+                            attribute);
+                    }
 
-            case ElementAttribute.GPSImgDirection:
-                resTyped =
-                    TagsToModelValueTransformations.T2M_GPSImgDirection(
-                        parseResult: parseResult);
-                break;
-            case ElementAttribute.GPSImgDirectionRef:
-                resTyped =
-                    TagsToModelValueTransformations.T2M_GPSImgDirectionRef(
-                        parseResult: parseResult);
-                break;
-
-            case ElementAttribute.ExposureTime:
-                resTyped =
-                    TagsToModelValueTransformations.T2M_ExposureTime(
-                        parseResult: parseResult);
-                break;
-
-            case ElementAttribute.Fnumber:
-            case ElementAttribute.FocalLength:
-            case ElementAttribute.FocalLengthIn35mmFormat:
-                resTyped =
-                    TagsToModelValueTransformations.T2M_F_FocalLength(
-                        attribute: attribute, parseResult: parseResult);
-                break;
-
-            case ElementAttribute.ISO:
-                resTyped =
-                    TagsToModelValueTransformations.T2M_F_ISO(
-                        attribute: attribute, parseResult: parseResult);
-                break;
-
-            case ElementAttribute.TakenDate:
-            case ElementAttribute.CreateDate:
-                resTyped =
-                    TagsToModelValueTransformations.T2M_TakenCreatedDate(
-                        parseResult: parseResult);
-                break;
-
-            default:
-
-                Type typeOfAttribute =
-                    GetElementAttributesType(attributeToFind: attribute);
-                if (typeOfAttribute == typeof(string))
-                {
-                    resTyped = parseResult;
-                }
-                else if (typeOfAttribute == typeof(double))
-                {
-                    resTyped =
-                        HelperGenericTypeOperations.TryParseNullableDouble(
-                            val: parseResult) ??
-                        FrmMainApp.NullDoubleEquivalent;
-                }
-                else if (typeOfAttribute == typeof(int))
-                {
-                    resTyped =
-                        HelperGenericTypeOperations
-                           .TryParseNullableInt(val: parseResult) ??
-                        FrmMainApp.NullIntEquivalent;
-                }
-                else if (typeOfAttribute == typeof(DateTime))
-                {
-                    resTyped =
-                        HelperGenericTypeOperations.TryParseNullableDateTime(
-                            val: parseResult) ??
-                        FrmMainApp.NullDateTimeEquivalent;
-                }
-                else
-                {
-                    throw new ArgumentException(
-                        message:
-                        "Trying to get attribute name of unknown attribute with value " +
-                        attribute);
-                }
-
-                break;
+                    break;
+            }
+        }
+        catch
+        {
+            Logger.Error(
+                message:
+                $"Parse error for attribute '{attribute}': parseResult: {parseResult}, parsedValues: {parsedValues}.");
         }
 
         // Add it to the lists
