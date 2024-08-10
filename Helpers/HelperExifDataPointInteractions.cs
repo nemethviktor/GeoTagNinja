@@ -26,7 +26,7 @@ internal static class HelperExifDataPointInteractions
                                 .Replace(oldChar: ',', newChar: '.');
         // WGS84 DM --> logic here is, before I have to spend hours digging this crap again...
         // degree stays as-is, the totality of the rest gets divided by 60.
-        // so 41,53.23922526N becomes 41 + (53.53.23922526)/60) = 41.88732
+        // so 41,53.23922526N becomes 41 + (53.23922526/60) = 41.88732
         double pointVal = 0.0;
         if (pointOrig.Count(predicate: f => f == '.') == 2)
         {

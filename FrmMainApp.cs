@@ -1750,16 +1750,7 @@ public partial class FrmMainApp : Form
                     }
                     catch (Exception ex)
                     {
-                        CustomMessageBox customMessageBox = new(
-                            text: GenericGetMessageBoxText(
-                                      messageBoxName:
-                                      "mbx_FrmMainApp_ErrorInvalidFolder") +
-                                  ex.Message,
-                            caption: GenericGetMessageBoxCaption(
-                                captionType: MessageBoxCaption.Error.ToString()),
-                            buttons: MessageBoxButtons.OK,
-                            icon: MessageBoxIcon.Error);
-                        customMessageBox.ShowDialog();
+                        ShowInvalidFolderMessage(exceptionMessage: ex.Message);
                     }
                 }
                 else if (tbx_FolderName.Text == Environment.SpecialFolder.MyComputer.ToString())
@@ -1769,19 +1760,32 @@ public partial class FrmMainApp : Form
 
                 else
                 {
-                    CustomMessageBox customMessageBox = new(
-                        text: GenericGetMessageBoxText(
-                            messageBoxName: "mbx_FrmMainApp_ErrorInvalidFolder"),
-                        caption: GenericGetMessageBoxCaption(
-                            captionType: MessageBoxCaption.Error.ToString()),
-                        buttons: MessageBoxButtons.OK,
-                        icon: MessageBoxIcon.Error);
-                    customMessageBox.ShowDialog();
+                    ShowInvalidFolderMessage();
                 }
             }
             else
             {
                 lvw_FileList_LoadOrUpdate();
+            }
+        }
+
+        void ShowInvalidFolderMessage(string exceptionMessage = "")
+        {
+            CustomMessageBox customMessageBox = new(
+                text: GenericGetMessageBoxText(
+                          messageBoxName:
+                          "mbx_FrmMainApp_ErrorInvalidFolder") +
+                      exceptionMessage,
+                caption: GenericGetMessageBoxCaption(
+                    captionType: MessageBoxCaption.Question.ToString()),
+                buttons: MessageBoxButtons.YesNo,
+                icon: MessageBoxIcon.Question);
+            DialogResult dialogResult = customMessageBox.ShowDialog();
+            if (dialogResult == DialogResult.Yes)
+            {
+                tbx_FolderName.Text = @"C:\";
+                tbx_FolderName.Select();
+                SendKeys.Send(keys: "{ENTER}");
             }
         }
     }

@@ -26,7 +26,7 @@ mbx_FrmMainApp_ErrorSettingStartupFolder,Setting Default Startup folder failed (
 mbx_FrmMainApp_QuestionFileQIsNotEmpty,"Some data has been changed - want to save? 
 Data will be discarded if you click No","Des données ont été modifiées - Voulez-vous sauver ?
 Les mises à jour seront perdues si vous clickez Non"
-mbx_FrmMainApp_ErrorInvalidFolder,The folder you entered doesn't seem valid.,Le repertoire saisi ne semble pas valide.
+mbx_FrmMainApp_ErrorInvalidFolder,The folder you entered doesn't seem valid. Revert to C:\?.,Le repertoire saisi ne semble pas valide.
 mbx_FrmMainApp_QuestionDontShowIncompatibleFileWarningAgain,"Your folder and/or file list contains nonstandard characters.
 These will need to be run in 'compatibility mode', which is slower. 
 Suggesting renaming your path and/or files if you have a large number of item.

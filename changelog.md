@@ -5,6 +5,7 @@
 	- Rewrote the SQL handling logic to use DataTables and Transactions rather than write ~~everyone~~ everything [_I swear guv I was sober..._] on a one-by-one basis. Jolly achievement for someone that claims to be a SQL dev rather than a C# dev but alas. 
 - BUGS & FIXES:
 	- Application should no longer crash when encountering an invalid piece of Exif data #118
+	- Added some logic to enable returning to `C:\` if the user enters a 'fake' folder name.
 
 **Build 8973 [20240726]** 
 - NEW & UPDATED:
