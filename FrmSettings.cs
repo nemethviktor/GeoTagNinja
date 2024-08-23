@@ -31,6 +31,7 @@ public partial class FrmSettings : Form
     private static bool _importHasBeenProcessed;
     private readonly string _languageSavedInSQL;
     private bool _nowLoadingSettingsData;
+    private bool _ignoreRestartWarnings;
 
     private List<string> _rbtGeoNamesLanguage = new()
     {
@@ -661,7 +662,10 @@ public partial class FrmSettings : Form
                             if (ckb.Name == "ckb_UseImperialNotMetric" ||
                                 ckb.Name == "ckb_UseDarkMode")
                             {
-                                PromptUserToRestartApp();
+                                if (!_ignoreRestartWarnings)
+                                {
+                                    PromptUserToRestartApp();
+                                }
                             }
                         }
                     }
@@ -673,7 +677,10 @@ public partial class FrmSettings : Form
                         {
                             if (cbx.Name == "cbx_Language")
                             {
-                                PromptUserToRestartApp();
+                                if (!_ignoreRestartWarnings)
+                                {
+                                    PromptUserToRestartApp();
+                                }
                             }
                             else if (cbx.Name == "cbx_TryUseGeoNamesLanguage")
                             {
@@ -1366,19 +1373,22 @@ public partial class FrmSettings : Form
     /// </remarks>
     private void PromptUserToRestartApp()
     {
+    #if !DEBUG
+        string btnRestartNowName = "btn_RestartNow";
+        string btnRestartLaterName = "btn_RestartLater";
         Dictionary<string, string> buttonsDictionary = new()
         {
             {
                 HelperDataLanguageTZ.DataReadDTObjectText(
                     objectType: ControlType.Button,
-                    objectName: "btn_RestartNow"),
-                "RestartNow"
+                    objectName: btnRestartNowName),
+                btnRestartNowName
             },
             {
                 HelperDataLanguageTZ.DataReadDTObjectText(
                     objectType: ControlType.Button,
-                    objectName: "btn_RestartLater"),
-                "RestartLater"
+                    objectName: btnRestartLaterName),
+                btnRestartLaterName
             }
         };
 
@@ -1395,12 +1405,22 @@ public partial class FrmSettings : Form
                 orientation: "Horizontal",
                 checkboxesDictionary: new Dictionary<string, string>());
 
-        // basically this triggers an error in debug mode but works ok in prod.
-    #if !DEBUG
-        if (displayAndReturnList.Contains(item: "RestartNow"))
+
+        if (displayAndReturnList.Contains(item: btnRestartNowName))
         {
-            Process.Start(fileName: Application.ExecutablePath);
-            Application.Exit();
+            _ignoreRestartWarnings = true;
+
+            // the logic here is that "OK"-press triggers the moving from one DataTable to another
+            // but the PromptUserToRestartApp technically precedes that so if user clicks "Now",
+            // we restart the app w/o having written anything to the settings, obvs useless.
+            // ...so we trigger "OK" again but mute the warnings.
+            btn_OK.PerformClick();
+            // Restart doesn't actually save the settings to the DB
+            FrmMainApp frmMainAppInstance =
+                (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+            frmMainAppInstance.PerformAppClosingProcedure(extractNewExifTool: false);
+            Application.Restart();
+            Environment.Exit(exitCode: 0);
         }
     #endif
     }

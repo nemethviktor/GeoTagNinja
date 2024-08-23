@@ -442,6 +442,11 @@ public partial class FrmMainApp : Form
             }
         }
 
+        PerformAppClosingProcedure();
+    }
+
+    internal void PerformAppClosingProcedure(bool extractNewExifTool = true)
+    {
         // Write column widths to db
         Logger.Trace(message: "Write column widths to db");
         lvw_FileList.PersistSettings();
@@ -459,7 +464,7 @@ public partial class FrmMainApp : Form
         _ExifTool.Dispose();
 
         // Unzip new exiftool version if there is one
-        if (File.Exists(path: HelperVariables.ExifToolExePathRoamingTemp))
+        if (File.Exists(path: HelperVariables.ExifToolExePathRoamingTemp) && extractNewExifTool)
         {
             try
             {
@@ -508,10 +513,11 @@ public partial class FrmMainApp : Form
         // Clean up Roaming folder
         HelperFileSystemOperators.FsoCleanUpUserFolder();
         Logger.Debug(message: "OnClose: Done.");
+    }
 
-        void AppClosingPersistData()
-        {
-            // Write lat/long + visual settings for future reference to db
+    private void AppClosingPersistData()
+    {
+        // Write lat/long + visual settings for future reference to db
             Logger.Debug(message: "Write lat/long + visual settings for future reference to db");
             List<AppSettingContainer> settingsToWrite = new();
             List<KeyValuePair<string, string>> persistDataSettingsList = new()
@@ -538,7 +544,6 @@ public partial class FrmMainApp : Form
                     message:
                     $"Writing setting.settingId {keyValuePair.Key}, setting.settingValue {keyValuePair.Value}.");
             }
-        }
     }
 
 

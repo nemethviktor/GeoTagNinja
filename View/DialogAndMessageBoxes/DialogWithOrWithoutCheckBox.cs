@@ -110,20 +110,21 @@ internal class DialogWithOrWithoutCheckBox
                     UseMnemonic = true,
                     Text = btnText is "Yes" or "No"
                         ? "&" + btnText
-                        : btnText
+                        : btnText,
+                    Name = keyValuePair.Value
                 };
                 if (btnText.ToLower()
-                           .Contains(value: "yes") ||
+                           .EndsWith(value: "yes") ||
                     btnText.ToLower()
-                           .Contains(value: "ok"))
+                           .EndsWith(value: "ok"))
                 {
                     promptBoxForm.AcceptButton = btn;
                     acceptButtonReturnText = keyValuePair.Value;
                 }
                 else if (btnText.ToLower()
-                                .Contains(value: "no") ||
+                                .EndsWith(value: "no") ||
                          btnText.ToLower()
-                                .Contains(value: "cancel"))
+                                .EndsWith(value: "cancel"))
                 {
                     promptBoxForm.CancelButton = btn;
                     cancelButtonReturnText = keyValuePair.Value;
@@ -133,6 +134,7 @@ internal class DialogWithOrWithoutCheckBox
                               e) =>
                 {
                     returnChoicesList = ProcessCheckBoxes();
+                    returnChoicesList.Add(item: btn.Name);
                     if (promptBoxForm.AcceptButton == btn)
                     {
                         returnChoicesList.Add(item: acceptButtonReturnText);
