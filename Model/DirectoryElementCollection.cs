@@ -127,7 +127,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
     /// <param name="item">The item to add</param>
     /// <param name="replaceIfExists">
     ///     Whether in case of already existing item the existing
-    ///     item should be replace (or an exception thrown)
+    ///     item should be replaced (or an exception thrown)
     /// </param>
     private void Add(DirectoryElement item,
         bool replaceIfExists)

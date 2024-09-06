@@ -100,7 +100,7 @@ internal static class HelperExifWriteSaveToFile
                     doNotCreateBackup = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_OverwriteOriginal"));
 
                     // it's a lot less complicated to just pretend we want both the Original File and the Sidecar updated and then not-include them later than to have a Yggdrasil of IFs scattered all over.
-                    // ... which latter I would inevitable f...k up at some point.
+                    // ... which latter I would inevitably f...k up at some point.
 
                     UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath)); //needs to include folder name
                     UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-ignoreMinorErrors");
@@ -149,13 +149,13 @@ internal static class HelperExifWriteSaveToFile
                             if (!dirElemFileToModify.IsMarkedForDeletion(
                                     attribute: attribute,
                                     version: DirectoryElement.AttributeVersion
-                                       .Stage3ReadyToWrite))
+                                                             .Stage3ReadyToWrite))
                             {
                                 drFileDataRow[columnName: "settingValue"] =
                                     dirElemFileToModify.GetAttributeValueString(
                                         attribute: attribute,
                                         version: DirectoryElement.AttributeVersion
-                                           .Stage3ReadyToWrite,
+                                                                 .Stage3ReadyToWrite,
                                         nowSavingExif: true);
                             }
                             else
@@ -517,7 +517,7 @@ internal static class HelperExifWriteSaveToFile
                     messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Warning.ToString()),
+                                                                   .Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
@@ -530,7 +530,7 @@ internal static class HelperExifWriteSaveToFile
                     messageBoxName: "mbx_Helper_WarningNothingInWriteQueue"),
                 caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
                     captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Warning.ToString()),
+                                                                   .Warning.ToString()),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();

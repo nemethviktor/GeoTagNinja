@@ -15,8 +15,12 @@ internal static class HelperFileSystemOperators
     ///     When the user leaves the current folder (or refreshes it) we check if there is anything in the write-queue
     ///     If the Q is empty we do as the user requested, else ask user if they want to write the data in the Q or discard it.
     /// </summary>
+    /// <param name="isTheAppClosing">
+    ///     Whether the app is closing at the time of the request. Relevant for avoiding a bug
+    ///     whereby the dialogue-box gets prompted twice.
+    /// </param>
     /// <returns>Realistically nothing but it sets s_changeFolderIsOkay according to the user input and circumstances</returns>
-    internal static async Task FsoCheckOutstandingFiledataOkayToChangeFolderAsync()
+    internal static async Task FsoCheckOutstandingFileDataOkayToChangeFolderAsync(bool isTheAppClosing)
     {
         HelperVariables.OperationChangeFolderIsOkay = false;
 
@@ -25,9 +29,12 @@ internal static class HelperFileSystemOperators
         foreach (DirectoryElement dirElemFileToModify in FrmMainApp.DirectoryElements)
         {
             {
-                foreach (SourcesAndAttributes.ElementAttribute attribute in (SourcesAndAttributes.ElementAttribute[])Enum.GetValues(enumType: typeof(SourcesAndAttributes.ElementAttribute)))
+                foreach (SourcesAndAttributes.ElementAttribute attribute in (SourcesAndAttributes.ElementAttribute[])
+                         Enum.GetValues(enumType: typeof(SourcesAndAttributes.ElementAttribute)))
                 {
-                    if (dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
+                    if (dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute,
+                            version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite) &&
+                        dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
                         if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                         {
@@ -36,15 +43,21 @@ internal static class HelperFileSystemOperators
                         }
 
                         // this shouldn't really come up but alas it does and i'm lazy to debug properly
-                        dirElemFileToModify.RemoveAttributeValue(attribute, DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                        dirElemFileToModify.RemoveAttributeValue(attribute: attribute,
+                            version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
                     }
                 }
             }
         }
 
-        if (dataToWrite)
+        if (dataToWrite && !HelperVariables.AppIsClosingAndWriteFileQuestionHasBeenAsked)
         {
             // ask: do you want to write/save?
+            if (isTheAppClosing)
+            {
+                HelperVariables.AppIsClosingAndWriteFileQuestionHasBeenAsked = true;
+            }
+
             CustomMessageBox customMessageBox = new(
                 text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
                     messageBoxName: "mbx_Helper_QuestionFileQIsNotEmpty"),
@@ -69,9 +82,12 @@ internal static class HelperFileSystemOperators
                 foreach (DirectoryElement dirElemFileToModify in FrmMainApp.DirectoryElements)
                 {
                     {
-                        foreach (SourcesAndAttributes.ElementAttribute attribute in (SourcesAndAttributes.ElementAttribute[])Enum.GetValues(enumType: typeof(SourcesAndAttributes.ElementAttribute)))
+                        foreach (SourcesAndAttributes.ElementAttribute attribute in (
+                                     SourcesAndAttributes.ElementAttribute[])Enum.GetValues(
+                                     enumType: typeof(SourcesAndAttributes.ElementAttribute)))
                         {
-                            dirElemFileToModify.RemoveAttributeValue(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+                            dirElemFileToModify.RemoveAttributeValue(attribute: attribute,
+                                version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
                         }
                     }
                 }

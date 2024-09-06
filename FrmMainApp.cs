@@ -383,68 +383,13 @@ public partial class FrmMainApp : Form
 
         NamedPipeServer.stopServing();
 
-        bool dataWriteQueueIsNotEmpty = true;
-        foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
-        {
-            foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(
-                         enumType: typeof(ElementAttribute)))
-            {
-                if (dirElemFileToModify.HasSpecificAttributeWithVersion(
-                        attribute: attribute,
-                        version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite))
-                {
-                    dataWriteQueueIsNotEmpty = false;
-                    break;
-                }
-            }
-        }
-
-        // check if there is any data in the write-Q
-        if (!dataWriteQueueIsNotEmpty)
-        {
-            CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmMainApp_QuestionFileQIsNotEmpty"),
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Question.ToString()),
-                buttons: MessageBoxButtons.YesNo,
-                icon: MessageBoxIcon.Question);
-            DialogResult dialogResult = customMessageBox.ShowDialog();
-            if (dialogResult == DialogResult.Yes)
-            {
-                while (HelperGenericFileLocking.FileListBeingUpdated ||
-                       HelperGenericFileLocking.FilesAreBeingSaved)
-                {
-                    await Task.Delay(millisecondsDelay: 10);
-                }
-
-                Logger.Debug(message: "Starting ExifWriteExifToFile");
-                await HelperExifWriteSaveToFile.ExifWriteExifToFile();
-                HelperGenericFileLocking.FilesAreBeingSaved = false;
-
-                Logger.Debug(message: "Finished ExifWriteExifToFile");
-            }
-            else if (dialogResult == DialogResult.No)
-            {
-                Logger.Debug(message: "User Chose not to Save.");
-                foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
-                {
-                    foreach (ElementAttribute attribute in (ElementAttribute[])
-                             Enum.GetValues(enumType: typeof(ElementAttribute)))
-                    {
-                        dirElemFileToModify.RemoveAttributeValue(
-                            attribute: attribute,
-                            version: DirectoryElement.AttributeVersion
-                                                     .Stage3ReadyToWrite);
-                    }
-                }
-            }
-        }
+        // this will trigger a write-to-file question/process
+        await HelperFileSystemOperators.FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: true);
 
         PerformAppClosingProcedure();
     }
 
-    internal void PerformAppClosingProcedure(bool extractNewExifTool = true)
+    private void PerformAppClosingProcedure(bool extractNewExifTool = true)
     {
         // Write column widths to db
         Logger.Trace(message: "Write column widths to db");
@@ -1732,7 +1677,7 @@ public partial class FrmMainApp : Form
 
         HelperVariables.OperationChangeFolderIsOkay = false;
         await HelperFileSystemOperators
-           .FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
+           .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
         if (HelperVariables.OperationChangeFolderIsOkay)
         {
             if (!Program.collectionModeEnabled)
@@ -1887,7 +1832,7 @@ public partial class FrmMainApp : Form
 
         HelperVariables.OperationChangeFolderIsOkay = false;
         await HelperFileSystemOperators
-           .FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
+           .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
         Logger.Trace(message: "OperationChangeFolderIsOkay: " +
                               HelperVariables.OperationChangeFolderIsOkay);
 
@@ -1910,7 +1855,7 @@ public partial class FrmMainApp : Form
 
         HelperVariables.OperationChangeFolderIsOkay = false;
         await HelperFileSystemOperators
-           .FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
+           .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
         Logger.Trace(message: "OperationChangeFolderIsOkay: " +
                               HelperVariables.OperationChangeFolderIsOkay);
 
@@ -2050,7 +1995,7 @@ public partial class FrmMainApp : Form
         {
             HelperVariables.OperationChangeFolderIsOkay = false;
             await HelperFileSystemOperators
-               .FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
+               .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
             if (HelperVariables.OperationChangeFolderIsOkay)
             {
                 btn_ts_Refresh_lvwFileList_Click(sender: this, e: new EventArgs());
@@ -2596,7 +2541,7 @@ public partial class FrmMainApp : Form
                 // check for outstanding files first and save if user wants
                 HelperVariables.OperationChangeFolderIsOkay = false;
                 await HelperFileSystemOperators
-                   .FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
+                   .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
                 if (HelperVariables.OperationChangeFolderIsOkay)
                 {
                     if (Directory.Exists(
@@ -2839,7 +2784,7 @@ public partial class FrmMainApp : Form
                     // check for outstanding files first and save if user wants
                     HelperVariables.OperationChangeFolderIsOkay = false;
                     await HelperFileSystemOperators
-                       .FsoCheckOutstandingFiledataOkayToChangeFolderAsync();
+                       .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
                     if (HelperVariables.OperationChangeFolderIsOkay)
                     {
                         if (Directory.Exists(path: dirElemFileToModify.FileNameWithPath))

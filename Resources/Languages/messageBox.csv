@@ -23,9 +23,6 @@ mbx_FrmMainApp_ErrorLanguageFileColumnHeaders,There was an error reading the lan
 mbx_FrmMainApp_ErrorClearingFileDataQTables,Error clearing the filedata-Q tables (Please file an issue on github): ,Erreur d'effacement des tables filedata-Q  (merci de générer une issue dans Github):
 mbx_FrmMainApp_ErrorResizingColumns,Resizing Columns failed (Please file an issue on github): ,Erreur de redimensionnement des colonnes  (merci de générer une issue dans Github):
 mbx_FrmMainApp_ErrorSettingStartupFolder,Setting Default Startup folder failed (Please file an issue on github): ,Erreur de mise a jour du dossier par défaut de démarrage  (merci de générer une issue dans Github):
-mbx_FrmMainApp_QuestionFileQIsNotEmpty,"Some data has been changed - want to save? 
-Data will be discarded if you click No","Des données ont été modifiées - Voulez-vous sauver ?
-Les mises à jour seront perdues si vous clickez Non"
 mbx_FrmMainApp_ErrorInvalidFolder,The folder you entered doesn't seem valid. Revert to C:\?.,Le repertoire saisi ne semble pas valide.
 mbx_FrmMainApp_QuestionDontShowIncompatibleFileWarningAgain,"Your folder and/or file list contains nonstandard characters.
 These will need to be run in 'compatibility mode', which is slower. 
