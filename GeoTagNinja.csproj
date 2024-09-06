@@ -118,8 +118,8 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="RestSharp, Version=110.2.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
-      <HintPath>packages\RestSharp.110.2.0\lib\net471\RestSharp.dll</HintPath>
+    <Reference Include="RestSharp, Version=112.0.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>packages\RestSharp.112.0.0\lib\net48\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="SQLitePCLRaw.core, Version=2.1.8.2226, Culture=neutral, PublicKeyToken=1488e028ca7ab535, processorArchitecture=MSIL">
       <HintPath>packages\SQLitePCLRaw.core.2.1.8\lib\netstandard2.0\SQLitePCLRaw.core.dll</HintPath>

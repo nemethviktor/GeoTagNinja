@@ -30,43 +30,7 @@ internal static class FileListViewCopyPaste
                 // ... then the DE-data would be cleared and thus cross-folder-paste wouldn't be possible
                 FrmMainApp.CopyPoolDict.Clear();
 
-                List<ElementAttribute> listOfTagsToCopy = new()
-                {
-                    ElementAttribute.Coordinates,
-                    ElementAttribute.GPSLatitude,
-                    ElementAttribute.GPSLatitudeRef,
-                    ElementAttribute.GPSLongitude,
-                    ElementAttribute.GPSLongitudeRef,
-                    ElementAttribute.GPSSpeed,
-                    ElementAttribute.GPSSpeedRef,
-                    ElementAttribute.GPSAltitude,
-                    ElementAttribute.GPSAltitudeRef,
-                    ElementAttribute.Country,
-                    ElementAttribute.CountryCode,
-                    ElementAttribute.State,
-                    ElementAttribute.City,
-                    ElementAttribute.Sub_location,
-                    ElementAttribute.DestCoordinates,
-                    ElementAttribute.GPSDestLatitude,
-                    ElementAttribute.GPSDestLatitudeRef,
-                    ElementAttribute.GPSDestLongitude,
-                    ElementAttribute.GPSDestLongitudeRef,
-                    ElementAttribute.GPSImgDirection,
-                    ElementAttribute.GPSImgDirectionRef,
-                    ElementAttribute.TakenDate,
-                    ElementAttribute.CreateDate,
-                    ElementAttribute.OffsetTime,
-                    ElementAttribute.TakenDateSecondsShift,
-                    ElementAttribute.TakenDateMinutesShift,
-                    ElementAttribute.TakenDateHoursShift,
-                    ElementAttribute.TakenDateDaysShift,
-                    ElementAttribute.CreateDateSecondsShift,
-                    ElementAttribute.CreateDateMinutesShift,
-                    ElementAttribute.CreateDateHoursShift,
-                    ElementAttribute.CreateDateDaysShift
-                };
-
-                foreach (ElementAttribute attribute in listOfTagsToCopy)
+                foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays.TagsToCopy)
                 {
                     // this would sit in Stage3ReadyToWrite if exists
                     if (dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(

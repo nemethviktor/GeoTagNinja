@@ -24,7 +24,7 @@ public partial class FrmPasteWhat : Form
     ///     This Form controls what data to paste from a "current file" to "selected file(s)".
     ///     The overall logic is different on whether the Paste takes place in the FrmMainApp or FrmEditFileData.
     ///     - If the prior then stuff will come from FrmMainApp.CopyPoolDict - logic being that users can move around folders
-    ///     etc and we're pre-storing data in a "pool"
+    ///     etc. and we're pre-storing data in a "pool"
     ///     - If the latter then things are a bit different because there is no "copy" so to say, only "paste" (ie there is no
     ///     CTRL+C element taking place) and we take data directly from the file
     /// </summary>
@@ -102,7 +102,13 @@ public partial class FrmPasteWhat : Form
                         searchAllChildren: true)
                    .FirstOrDefault() is CheckBox cbx)
                 {
-                    cbx.Checked = keyValuePair.Value.Item2;
+                    // activate checkboxes for anything that have changed or if they are coordinates. it's likely this will want to be pasted.
+                    cbx.Checked = keyValuePair.Value.Item2 ||
+                                  GetElementAttributesName(attributeToFind: attribute) ==
+                                  GetElementAttributesName(attributeToFind: ElementAttribute.GPSLatitude) ||
+                                  GetElementAttributesName(attributeToFind: attribute) ==
+                                  GetElementAttributesName(attributeToFind: ElementAttribute.GPSLongitude)
+                        ;
                 }
             }
         }

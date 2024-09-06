@@ -116,8 +116,7 @@ public partial class FrmMainApp : Form
 
     // this is for copy-paste
     // the elements are: EA, Value, Changed?
-    internal static Dictionary<ElementAttribute, Tuple<string, bool>>
-        CopyPoolDict = new();
+    internal static Dictionary<ElementAttribute, Tuple<string, bool>> CopyPoolDict = new();
 
     // this is for checking if files need to be re-parsed.
     internal static DataTable DtToponomySessionData;

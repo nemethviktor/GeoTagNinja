@@ -1264,5 +1264,45 @@ internal static class HelperGenericAncillaryListsArrays
         File.WriteAllText(path: fmtFilePath, contents: fmtFileContent);
     }
 
-#endregion
+    #endregion
+
+    #region Copy-Paste
+
+    internal static readonly List<ElementAttribute> TagsToCopy =
+    [
+        ElementAttribute.Coordinates,
+        ElementAttribute.GPSLatitude,
+        ElementAttribute.GPSLatitudeRef,
+        ElementAttribute.GPSLongitude,
+        ElementAttribute.GPSLongitudeRef,
+        ElementAttribute.GPSSpeed,
+        ElementAttribute.GPSSpeedRef,
+        ElementAttribute.GPSAltitude,
+        ElementAttribute.GPSAltitudeRef,
+        ElementAttribute.Country,
+        ElementAttribute.CountryCode,
+        ElementAttribute.State,
+        ElementAttribute.City,
+        ElementAttribute.Sub_location,
+        ElementAttribute.DestCoordinates,
+        ElementAttribute.GPSDestLatitude,
+        ElementAttribute.GPSDestLatitudeRef,
+        ElementAttribute.GPSDestLongitude,
+        ElementAttribute.GPSDestLongitudeRef,
+        ElementAttribute.GPSImgDirection,
+        ElementAttribute.GPSImgDirectionRef,
+        ElementAttribute.TakenDate,
+        ElementAttribute.CreateDate,
+        ElementAttribute.OffsetTime,
+        ElementAttribute.TakenDateSecondsShift,
+        ElementAttribute.TakenDateMinutesShift,
+        ElementAttribute.TakenDateHoursShift,
+        ElementAttribute.TakenDateDaysShift,
+        ElementAttribute.CreateDateSecondsShift,
+        ElementAttribute.CreateDateMinutesShift,
+        ElementAttribute.CreateDateHoursShift,
+        ElementAttribute.CreateDateDaysShift
+    ];
+
+    #endregion
 }
