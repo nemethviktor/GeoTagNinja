@@ -389,7 +389,7 @@ public partial class FrmMainApp : Form
         PerformAppClosingProcedure();
     }
 
-    private void PerformAppClosingProcedure(bool extractNewExifTool = true)
+    internal void PerformAppClosingProcedure(bool extractNewExifTool = true)
     {
         // Write column widths to db
         Logger.Trace(message: "Write column widths to db");
