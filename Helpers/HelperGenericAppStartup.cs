@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
@@ -17,7 +18,7 @@ internal static class HelperGenericAppStartup
     /// <summary>
     ///     Creates the database sqlite file
     /// </summary>
-    public static void AppStartupCreateDatabaseFile()
+    public static Task AppStartupCreateDatabaseFile()
     {
         FrmMainApp.Logger.Info(message: "Starting");
         // load all settings
@@ -43,12 +44,14 @@ internal static class HelperGenericAppStartup
             customMessageBox.ShowDialog();
             Application.Exit();
         }
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
     ///     Writes defaults to sqlite if they don't exist
     /// </summary>
-    public static void AppStartupWriteDefaultSettings()
+    public static Task AppStartupWriteDefaultSettings()
     {
         FrmMainApp.Logger.Debug(message: "Starting");
 
@@ -73,9 +76,11 @@ internal static class HelperGenericAppStartup
             customMessageBox.ShowDialog();
             Application.Exit();
         }
+
+        return Task.CompletedTask;
     }
 
-    public static void AppStartupReadSQLiteTables()
+    public static Task AppStartupReadSQLiteTables()
     {
         try
         {
@@ -90,12 +95,14 @@ internal static class HelperGenericAppStartup
         {
             //
         }
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
     ///     Reads object names from SQLite
     /// </summary>
-    public static void AppStartupReadAppLanguage()
+    public static Task AppStartupReadAppLanguage()
     {
         FrmMainApp.Logger.Debug(message: "Starting");
 
@@ -124,9 +131,11 @@ internal static class HelperGenericAppStartup
             customMessageBox.ShowDialog();
             Application.Exit();
         }
+
+        return Task.CompletedTask;
     }
 
-    internal static void AppStartupReadCustomCityLogic()
+    internal static Task AppStartupReadCustomCityLogic()
     {
         HelperVariables.DtCustomCityLogic = HelperDataCustomCityAllocationRules.DataReadSQLiteCustomCityAllocationLogic();
         HelperVariables.LstCityNameIsAdminName1.Clear();
@@ -160,12 +169,14 @@ internal static class HelperGenericAppStartup
                     break;
             }
         }
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
     ///     Reads the value for API-language-use from SQLite.
     /// </summary>
-    public static void AppStartupReadAPILanguage()
+    public static Task AppStartupReadAPILanguage()
     {
         FrmMainApp.Logger.Debug(message: "Starting");
         string TryUseGeoNamesLanguage = null;
@@ -203,12 +214,14 @@ internal static class HelperGenericAppStartup
             HelperVariables.APILanguageToUse = result.FirstOrDefault()
                                                      .Key;
         }
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
     ///     Applies default settings
     /// </summary>
-    public static void AppStartupApplyDefaults()
+    public static Task AppStartupApplyDefaults()
     {
         // get some defaults
         FrmMainApp.Logger.Debug(message: "Starting");
@@ -326,12 +339,14 @@ internal static class HelperGenericAppStartup
                 value: SourcesAndAttributes.GetElementAttributesOrderID(
                     attributeToFind: attribute));
         }
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
     ///     Makes sure there is webview2 installed and working
     /// </summary>
-    public static void AppStartupCheckWebView2()
+    public static Task AppStartupCheckWebView2()
     {
         // Check webView2 availability
         FrmMainApp.Logger.Debug(message: "Starting");
@@ -359,6 +374,8 @@ internal static class HelperGenericAppStartup
             customMessageBox.ShowDialog();
             Application.Exit();
         }
+
+        return Task.CompletedTask;
     }
 
     /// <summary>

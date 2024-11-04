@@ -140,6 +140,8 @@ public partial class FrmMainApp : Form
     /// </summary>
     public FrmMainApp()
     {
+        _ = InitialiseApplication();
+
     #region Define Logging Config
 
         // Set up logging
@@ -188,26 +190,46 @@ public partial class FrmMainApp : Form
         }
 
         DirectoryElements.ExifTool = _ExifTool;
-        HelperDataOtherDataRelated.GenericCreateDataTables();
 
-        HelperGenericAppStartup.AppStartupCreateDatabaseFile();
-        HelperGenericAppStartup.AppStartupWriteDefaultSettings();
-        HelperGenericAppStartup.AppStartupReadSQLiteTables();
-        HelperGenericAppStartup.AppStartupReadAppLanguage();
-        HelperGenericAppStartup.AppStartupReadCustomCityLogic();
-        HelperGenericAppStartup.AppStartupReadAPILanguage();
-        HelperGenericAppStartup.AppStartupApplyDefaults();
-        HelperDataLanguageTZ.DataReadLanguageDataFromCSV();
-        HelperDataLanguageTZ.DataReadCountryCodeDataFromCSV();
-        HelperGenericAppStartup.AppStartupCheckWebView2();
-        AppStartupInitializeComponentFrmMainApp();
-        AppStartupSetAppTheme();
-
-        AppStartupEnableDoubleBuffering();
-        FormClosing += FrmMainApp_FormClosing;
-        //AppStartupApplyVisualStyleDefaults();
 
         Logger.Info(message: "Constructor: Done");
+    }
+
+    /// <summary>
+    ///     Async method to force all startup elements into one group, which are then awaited.
+    ///     The idea is that user shouldn't see stuff like "tmi_help" changing its shape into Help while waiting for the app to
+    ///     boot up.
+    /// </summary>
+    /// <returns></returns>
+    private async Task<Task> InitialiseApplication()
+    {
+        Visible = false;
+        SuspendLayout();
+        Task[] tasks =
+        [
+            HelperDataOtherDataRelated.GenericCreateDataTables(),
+            HelperGenericAppStartup.AppStartupCreateDatabaseFile(),
+            HelperGenericAppStartup.AppStartupWriteDefaultSettings(),
+            HelperGenericAppStartup.AppStartupReadSQLiteTables(),
+            HelperGenericAppStartup.AppStartupReadAppLanguage(),
+            HelperGenericAppStartup.AppStartupReadCustomCityLogic(),
+            HelperGenericAppStartup.AppStartupReadAPILanguage(),
+            HelperGenericAppStartup.AppStartupApplyDefaults(),
+            HelperDataLanguageTZ.DataReadLanguageDataFromCSV(),
+            HelperDataLanguageTZ.DataReadCountryCodeDataFromCSV(),
+            HelperGenericAppStartup.AppStartupCheckWebView2(),
+            AppStartupInitializeComponentFrmMainApp(),
+            AppStartupSetAppTheme(),
+            AppStartupEnableDoubleBuffering()
+        ];
+
+        FormClosing += FrmMainApp_FormClosing;
+        //AppStartupApplyVisualStyleDefaults();
+        ResumeLayout();
+        Visible = true;
+
+        await Task.WhenAll(tasks: tasks);
+        return Task.CompletedTask;
     }
 
 

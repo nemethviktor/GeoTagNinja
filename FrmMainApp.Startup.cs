@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.View.DialogAndMessageBoxes;
@@ -14,7 +15,7 @@ public partial class FrmMainApp
     /// <summary>
     ///     Calls the InitializeComponent
     /// </summary>
-    private void AppStartupInitializeComponentFrmMainApp()
+    private Task AppStartupInitializeComponentFrmMainApp()
     {
         // InitializeComponent();
         Logger.Debug(message: "Starting");
@@ -36,12 +37,14 @@ public partial class FrmMainApp
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
         }
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
     ///     Enables double-buffering so that the listview doesn't flicker
     /// </summary>
-    private void AppStartupEnableDoubleBuffering()
+    private Task AppStartupEnableDoubleBuffering()
     {
         Logger.Debug(message: "Starting");
 
@@ -62,6 +65,8 @@ public partial class FrmMainApp
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
         }
+
+        return Task.CompletedTask;
     }
 
 
@@ -297,7 +302,7 @@ public partial class FrmMainApp
     ///     If the user has not chosen to use dark mode, the method sets the theme color to light and uses the default
     ///     rendering for the controls.
     /// </remarks>
-    private void AppStartupSetAppTheme()
+    private Task AppStartupSetAppTheme()
     {
         // the custom logic is ugly af so no need to be pushy about it in light mode.
         if (!HelperVariables.UserSettingUseDarkMode)
@@ -317,6 +322,8 @@ public partial class FrmMainApp
             themeColour: HelperVariables.UserSettingUseDarkMode
                 ? ThemeColour.Dark
                 : ThemeColour.Light, parentControl: this);
+
+        return Task.CompletedTask;
     }
 
     /// <summary>

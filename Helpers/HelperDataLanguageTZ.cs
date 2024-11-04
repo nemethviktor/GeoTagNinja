@@ -85,7 +85,7 @@ internal static class HelperDataLanguageTZ
     /// <summary>
     ///     Reads the CountryCodes/Country data from the CSV file into a DT
     /// </summary>
-    internal static void DataReadCountryCodeDataFromCSV()
+    internal static Task DataReadCountryCodeDataFromCSV()
     {
         string countryCodeCsvFilePath = Path.Combine(
             path1: HelperVariables.ResourcesFolderPath,
@@ -93,6 +93,8 @@ internal static class HelperDataLanguageTZ
         HelperVariables.DtIsoCountryCodeMapping =
             HelperDataCSVFileOperations.GetDataTableFromCsv(
                 fileNameWithPath: countryCodeCsvFilePath, isUTF: true);
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -151,7 +153,7 @@ internal static class HelperDataLanguageTZ
     /// <summary>
     ///     Reads all the language CSV files into one table (FrmMainApp.DtLanguageLabels)
     /// </summary>
-    internal static void DataReadLanguageDataFromCSV()
+    internal static Task DataReadLanguageDataFromCSV()
     {
         string languagesFolderPath =
             Path.Combine(path1: HelperVariables.ResourcesFolderPath, path2: "Languages");
@@ -256,5 +258,7 @@ internal static class HelperDataLanguageTZ
                 }
             }
         }
+
+        return Task.CompletedTask;
     }
 }

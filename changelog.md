@@ -1,5 +1,11 @@
 ﻿# GeoTagNinja Changelog
 
+**Build 9xxx [20241xxx]** 
+- NEW & UPDATED:
+	- NA
+- BUGS & FIXES:
+	- I've moved the startup methods to be async/awaited. Hopefully this will hide random occurrences of stuff like "tmi_Help". 
+
 **Build 9054 [20241015]** 
 - NEW & UPDATED:
 	- Rewrote the SQL handling logic to use DataTables and Transactions rather than write ~~everyone~~ everything [_I swear guv I was sober..._] on a one-by-one basis. Jolly achievement for someone that claims to be a SQL dev rather than a C# dev but alas. 

@@ -7,7 +7,7 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 
 ## Download & Install (Windows 7+ x64 only)
 
-- Download the .msi file from [Releases (latest)](https://github.com/nemethviktor/GeoTagNinja/releases/latest) - Click on Assets if they are not showing. [There are now Development and Prod releases, both should be stable but if you'd like to be on the safer side, pick the prod updates.]
+- Download the .msi file from [Releases (latest)](https://github.com/nemethviktor/GeoTagNinja/releases/latest) - Click on Assets if they are not showing. 
 - As of `Build 8371 [20221202]` I've removed the built-in webView2 installer because it was more of a pain in the backside than benefit. If the app breaks complaining about the lack of webView2, it's available [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703)
 - The app is unsigned. This is because a certificate costs in the vicinity of £250 per year but the app is free, and I don't particularly feel like splurging out on this at the moment.
 	- Due to the lack of a signed certificate, when installing SmartScreen will complain that the app is unsafe. SmartScreen is meant to be called StupidScreen but MS made a typo there.
@@ -16,6 +16,7 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 ## Features at-a-glance
 
 - Tag the location coordinates and City/State/etc details of multiple photos with the help of a map
+- Save and retrieve favourite locations
 - Import Track (GPX etc) files and associate them with the photos
 - Export coordinate tracks of photos to GPX
 - Ability to define custom rules/logic wrt naming of places at country level
@@ -78,7 +79,7 @@ If you want to build the project, probably use Visual Studio - I used v2022 Comm
 There are 2 parts to the project. One is the "main" the other is the installer. You'll generally have problems w/ the installer bcs it hasn't been pushed to git so it's going to be missing that half.
 For the "main" project you should be okay without anything separate. It has worked ok for me on a blank VM when pulled from Git. Just build and F5/run.
 
-There is currently no preset release cycle. I don't expect one to happen in a systematic way. There is a `development` branch as mentioned above for people that like to live dangerously.
+There is currently no preset release cycle. I don't expect one to happen in a systematic way.
 
 ## Pull Requests
 

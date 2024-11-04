@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GeoTagNinja.Helpers;
 
@@ -10,7 +11,7 @@ internal static class HelperDataOtherDataRelated
     ///     This creates the DataTables for the main Form - been moved out here because it's otherwise tedious to keep track
     ///     of.
     /// </summary>
-    public static void GenericCreateDataTables()
+    public static Task GenericCreateDataTables()
     {
         FrmMainApp.Logger.Debug(message: "Starting");
 
@@ -35,6 +36,7 @@ internal static class HelperDataOtherDataRelated
         FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "CountryCode");
         FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "GPSAltitude");
         FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "timezoneId");
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -44,10 +46,10 @@ internal static class HelperDataOtherDataRelated
     /// <param name="keyEqualsWhat">Key filter</param>
     /// <returns>String of Value</returns>
     internal static string DataGetFirstOrDefaultFromKVPList(Dictionary<string, string> lstIn,
-                                                            string keyEqualsWhat)
+        string keyEqualsWhat)
     {
         return lstIn.FirstOrDefault(predicate: kvp => kvp.Key == keyEqualsWhat)
-            .Value;
+                    .Value;
     }
 
 
@@ -85,10 +87,10 @@ internal static class HelperDataOtherDataRelated
                 DataRow thisDr = FrmMainApp.DtToponomySessionData.Rows[index: i];
                 if (
                     thisDr[columnName: "lat"]
-                        .ToString() ==
+                       .ToString() ==
                     lat &&
                     thisDr[columnName: "lng"]
-                        .ToString() ==
+                       .ToString() ==
                     lng
                 )
                 {
