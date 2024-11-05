@@ -2,7 +2,7 @@
 
 **Build 9xxx [20241xxx]** 
 - NEW & UPDATED:
-	- NA
+	- I've moved the whole logic of languages being held in CSV files to RESx files.
 - BUGS & FIXES:
 	- I've moved the startup methods to be async/awaited. Hopefully this will hide random occurrences of stuff like "tmi_Help". 
 
@@ -217,7 +217,7 @@
 	- Added some logic to locally store (for the length of the session) each file's data. This is so that if the actual image/xmp files don't change then there's no need to re-parse everything _again_. It's slow and pointless.
 	- Added functionality to "Get Data from Other File" in the Edit File section.
 	- Changed logic around the addition of sidecar XMP files and (possibly) overwriting the source image file.
-	- Added this changelog.md file to the project outputs. I don't expect anyone to read it locally but at least now it's possible.
+	- Added this changeLog.md file to the project outputs. I don't expect anyone to read it locally but at least now it's possible.
 	- Bumped exifTool to v12.51
 	- Added some logic to the above to allow for "Original Files DateTime" to be reset to CreateDateTime by default for RAW images. (These can all be changed in Settings/File Specific)
 	- Rewrote the Excel macro that deals with exporting languages. It can now also import. (less relevant for the users but makes my life easier.)
@@ -298,7 +298,7 @@
 **Build 8251 [20220804]**
 - NEW & UPDATED:
 	- Added "Remove GeoData" to main form as well as Edit form
-	- Added this changelog.md file
+	- Added this changeLog.md file
 	- Added a readme to the ExtraFiles folder
 	- Added handling to MessageBox texts being read from SQLite
  

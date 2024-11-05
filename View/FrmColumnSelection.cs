@@ -15,22 +15,23 @@ public partial class FrmColumnSelection : Form
     /// <summary>
     ///     Creates the form
     /// </summary>
-    /// <param name="ColList">The ColumnHeaderCollection of the ListView</param>
-    public FrmColumnSelection(
-        System.Windows.Forms.ListView.ColumnHeaderCollection ColList,
-        string AppLanguage)
+    /// <param name="colList">The ColumnHeaderCollection of the ListView</param>
+    public FrmColumnSelection(System.Windows.Forms.ListView.ColumnHeaderCollection colList)
     {
-        _colList = ColList;
+        _colList = colList;
         InitializeComponent();
 
-        btn_Cancel.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-            ControlType.Button, objectName: "btn_Cancel");
-        btn_Ok.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-            ControlType.Button, objectName: "btn_OK");
-        lbl_SelectColsTitle.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-            ControlType.Label, objectName: "lbl_SelectColsTitle");
-        ckb_DeSelectAll.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-            ControlType.CheckBox, objectName: "ckb_DeSelectAll");
+        btn_Generic_Cancel.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
+            controlName: "btn_Generic_Cancel",
+            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button);
+        btn_Generic_OK.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
+            controlName: "btn_Generic_OK", fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button);
+        lbl_SelectColsTitle.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
+            controlName: "lbl_SelectColsTitle",
+            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Label);
+        ckb_DeSelectAll.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
+            controlName: "ckb_DeSelectAll",
+            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.CheckBox);
 
         foreach (ColumnHeader col in _colList)
         {
@@ -89,13 +90,13 @@ public partial class FrmColumnSelection : Form
         }
     }
 
-    private void btn_Ok_Click(object sender,
+    private void btn_Generic_OK_Click(object sender,
                               EventArgs e)
     {
         PerformClosing(SaveChanges: true);
     }
 
-    private void btn_Cancel_Click(object sender,
+    private void btn_Generic_Cancel_Click(object sender,
                                   EventArgs e)
     {
         PerformClosing(SaveChanges: false);

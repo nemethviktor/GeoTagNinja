@@ -11,6 +11,7 @@ using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
 using NLog;
+using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 
 namespace GeoTagNinja.View.ListView;
 /*
@@ -42,7 +43,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     public FileListView()
     {
-        Logger.Info(message: "Creating List View ...");
+        Log.Info(message: "Creating List View ...");
         InitializeComponent();
     }
 
@@ -132,6 +133,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     ///     Class containing all the relevant column names to be used
     ///     when e.g. querying for information.
     /// </summary>
+    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     public static class FileListColumns
     {
         public const string FILENAME = "FileName";
@@ -156,7 +158,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         public const string COUNTRY_CODE = "CountryCode";
         public const string COUNTRY = "Country";
         public const string STATE = "State";
-        public const string SUB_LOCATION = "Sub_location";
+        public const string Sublocation = "Sublocation";
         public const string MAKE = "Make";
         public const string MODEL = "Model";
         public const string RATING = "Rating";
@@ -176,7 +178,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
 #region Internal Variables
 
-    private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     /// <summary>
     ///     The used application language
@@ -295,8 +297,8 @@ public partial class FileListView : System.Windows.Forms.ListView
                 SourcesAndAttributes.ElementAttribute.State
             },
             {
-                FileListColumns.SUB_LOCATION,
-                SourcesAndAttributes.ElementAttribute.Sub_location
+                FileListColumns.Sublocation,
+                SourcesAndAttributes.ElementAttribute.Sublocation
             },
             {
                 FileListColumns.MAKE,
@@ -591,7 +593,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <exception cref="InvalidOperationException">If it encounters a missing CLH</exception>
     private void ColOrderAndWidth_Read()
     {
-        Logger.Debug(message: "Starting");
+        Log.Info(message: "Starting");
 
         BeginUpdate(); // stop drawing
 
@@ -638,10 +640,10 @@ public partial class FileListView : System.Windows.Forms.ListView
 
             colOrderIndex.Add(item: colOrderIndexInt);
 
-            Logger.Trace(message: "columnHeader: " +
-                                  columnHeader.Name +
-                                  " - colOrderIndex: " +
-                                  colOrderIndexInt);
+            Log.Trace(message: "columnHeader: " +
+                               columnHeader.Name +
+                               " - colOrderIndex: " +
+                               colOrderIndexInt);
 
             // Read and process width
             settingIdToSend = Name + "_" + columnHeader.Name + "_width";
@@ -659,10 +661,10 @@ public partial class FileListView : System.Windows.Forms.ListView
                 columnHeader.Width = Convert.ToInt16(value: colWidth);
             }
 
-            Logger.Trace(message: "columnHeader: " +
-                                  columnHeader.Name +
-                                  " - columnHeader.Width: " +
-                                  columnHeader.Width);
+            Log.Trace(message: "columnHeader: " +
+                               columnHeader.Name +
+                               " - columnHeader.Width: " +
+                               columnHeader.Width);
         }
 
         // Finally set the column order - setting them from first to last col
@@ -678,10 +680,10 @@ public partial class FileListView : System.Windows.Forms.ListView
                         comparisonType: StringComparison.OrdinalIgnoreCase))
                 {
                     columnHeader.DisplayIndex = idx;
-                    Logger.Trace(message: "columnHeader: " +
-                                          columnHeader.Name +
-                                          " - columnHeader.DisplayIndex: " +
-                                          columnHeader.DisplayIndex);
+                    Log.Trace(message: "columnHeader: " +
+                                       columnHeader.Name +
+                                       " - columnHeader.DisplayIndex: " +
+                                       columnHeader.DisplayIndex);
                     break;
                 }
             }
@@ -731,7 +733,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     public void ShowColumnSelectionDialog()
     {
         FrmColumnSelection frm_ColSel = new(
-            ColList: Columns, AppLanguage: _AppLanguage);
+            colList: Columns);
         Point lvwLoc = PointToScreen(p: new Point(x: 0, y: 0));
         lvwLoc.Offset(dx: 20, dy: 10); // Relative to list view top left
         frm_ColSel.Location = lvwLoc; // in screen coords...
@@ -748,7 +750,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     private void SetupColumns()
     {
-        Logger.Debug(message: "Starting");
+        Log.Info(message: "Starting");
         List<SourcesAndAttributes.ElementAttribute> attributesWithValidOrderIDs = Enum
                                                             .GetValues(enumType: typeof(SourcesAndAttributes.ElementAttribute))
                                                             .Cast<SourcesAndAttributes.ElementAttribute>()
@@ -767,7 +769,7 @@ public partial class FileListView : System.Windows.Forms.ListView
                 Name = COL_NAME_PREFIX + clhName
             };
             Columns.Add(value: clh);
-            Logger.Trace(message: "Added column: " + clhName);
+            Log.Trace(message: "Added column: " + clhName);
         }
 
         // Encapsulate locatization - in case it fails above column setup still there...
@@ -775,28 +777,29 @@ public partial class FileListView : System.Windows.Forms.ListView
         {
             foreach (ColumnHeader clh in Columns)
             {
-                Logger.Trace(message: "Loading localization for: " + clh.Name);
-                clh.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: ControlType.ColumnHeader,
-                    objectName: clh.Name
+                Log.Trace(message: "Loading localization for: " + clh.Name);
+                clh.Text = ReturnControlText(
+                    fakeControlType: FakeControlTypes.ColumnHeader,
+                    controlName: clh.Name
                 );
-                Logger.Trace(message: "Loaded localization: " +
-                                      clh.Name +
-                                      " --> " +
-                                      clh.Text);
+                Log.Trace(message: "Loaded localization: " +
+                                   clh.Name +
+                                   " --> " +
+                                   clh.Text);
             }
         }
         catch (Exception ex)
         {
-            Logger.Fatal(message: "Error: " + ex.Message);
+            Log.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName:
-                          "mbx_FrmMainApp_ErrorLanguageFileColumnHeaders") +
+                text: ReturnControlText(
+                          controlName:
+                          "mbx_FrmMainApp_ErrorLanguageFileColumnHeaders",
+                          fakeControlType: FakeControlTypes.MessageBox) +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Error.ToString()),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption
+                                .Error.ToString(), fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -864,7 +867,7 @@ public partial class FileListView : System.Windows.Forms.ListView
                 message: "Trying to initialize the FileListView more than once.");
         }
 
-        Logger.Debug(message: "Starting");
+        Log.Info(message: "Starting");
         _AppLanguage = appLanguage;
 
         SetupColumns();
@@ -927,7 +930,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     public void ReloadFromDEs(DirectoryElementCollection directoryElements)
     {
         // Temp. disable sorting of the list view
-        Logger.Trace(message: "Disable ListViewItemSorter");
+        Log.Trace(message: "Disable ListViewItemSorter");
         SuspendColumnSorting();
 
         DirectoryElements = directoryElements;
@@ -957,7 +960,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
 
         // Resume sorting...
-        Logger.Trace(message: "Enable ListViewItemSorter");
+        Log.Trace(message: "Enable ListViewItemSorter");
         ResumeColumnSorting();
         Sort();
     }

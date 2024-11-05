@@ -29,9 +29,9 @@ public partial class FrmSettings : Form
     private static List<Control> _lstTpgApplicationControls = new(); // do not rename
     private static List<Control> _lstTpgGeoNamesControls = new(); // do not rename
     private static bool _importHasBeenProcessed;
-    private readonly string _languageSavedInSQL;
-    private bool _nowLoadingSettingsData;
+    private string _languageSavedInSQL;
     private bool _ignoreRestartWarnings;
+    private bool _nowLoadingSettingsData;
 
     private List<string> _rbtGeoNamesLanguage = new()
     {
@@ -54,18 +54,16 @@ public partial class FrmSettings : Form
         InitializeComponent();
 
         // the custom logic is ugly af so no need to be pushy about it in light mode.
-        if (!HelperVariables.UserSettingUseDarkMode)
-        {
-            tcr_Settings.DrawMode = TabDrawMode.Normal;
-        }
-
-        HelperControlThemeManager.SetThemeColour(
-            themeColour: HelperVariables.UserSettingUseDarkMode
-                ? ThemeColour.Dark
-                : ThemeColour.Light, parentControl: this);
+        SetFormTheme();
 
         // this one is largely responsible for disabling the detection of "new" (changed) data. (ie when going from "noting" to "something")
         _nowLoadingSettingsData = true;
+        AssignControlLabelsAndValues();
+        _nowLoadingSettingsData = false;
+    }
+
+    private void AssignControlLabelsAndValues()
+    {
         HelperNonStatic helperNonstatic = new();
         HelperControlAndMessageBoxHandling.ReturnControlText(
             cItem: this, senderForm: this);
@@ -77,54 +75,94 @@ public partial class FrmSettings : Form
         _lstTpgGeoNamesControls = helperNonstatic.GetAllControls(control: tpg_GeoNames)
                                                  .ToList();
 
+
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         if (c != null)
         {
             foreach (Control cItem in c)
             {
+                // Note to self: do not remove this block. 
+                // The two comboboxes work differently than other items.
                 string parentNameToUse = GetParentNameToUse(cItem: cItem);
 
+
+                // Part 1: Fill the comboboxes
+                // We want to have something like "Français [French]"
                 if (cItem.Name == "cbx_Language" ||
                     cItem.Name == "cbx_TryUseGeoNamesLanguage")
                 {
                     ComboBox cbx = (ComboBox)cItem;
+                    List<string> languageList;
 
-                    string[] alreadyTranslatedLanguages = { "en", "fr" };
-                    _languageSavedInSQL =
-                        HelperDataApplicationSettings.DataReadSQLiteSettings(
-                            dataTable: HelperVariables.DtHelperDataApplicationSettings,
-                            settingTabPage: parentNameToUse,
-                            settingId: cbx.Name
-                        );
-
-                    foreach (KeyValuePair<string, string> languagePair in
-                             HelperGenericAncillaryListsArrays.GetISO_639_1_Languages())
+                    if (cItem.Name == "cbx_Language")
                     {
-                        if ((cItem.Name == "cbx_Language" &&
-                             alreadyTranslatedLanguages.Contains(
-                                 value: languagePair.Key)) ||
-                            cItem.Name == "cbx_TryUseGeoNamesLanguage")
-
-                        {
-                            cbx.Items.Add(item: languagePair.Value);
-                        }
-                    }
-
-                    if (_languageSavedInSQL == null)
-                    {
-                        cbx.SelectedIndex =
-                            cbx.FindStringExact(s: HelperVariables.DefaultEnglishString);
+                        languageList = HelperLocalisationLanguageManager.GetTranslatedLanguages();
                     }
                     else
                     {
-                        for (int i = 0; i < cbx.Items.Count; i++)
+                        languageList = FrmMainApp.DTLanguageMapping.AsEnumerable()
+                                                 .Select(selector: r => r.Field<string>(columnName: "languageCode"))
+                                                 .ToList();
+                    }
+
+                    DataTable dt = new();
+                    string native;
+                    string english;
+                    dt.Columns.Add(columnName: "id");
+                    dt.Columns.Add(columnName: "displayValue");
+                    foreach (string alreadyTranslatedLanguage in languageList)
+                    {
+                        DataRow dr = dt.NewRow();
+                        dr[columnName: "id"] = alreadyTranslatedLanguage; // "en"
+
+
+                        native =
+                            HelperDataOtherDataRelated.DataGetFirstOrDefaultFromDataTable(
+                                dataTableIn: FrmMainApp.DTLanguageMapping,
+                                dataColumnFilter: "languageCode", dataColumnReturn: "languageNative",
+                                keyEqualsWhat: alreadyTranslatedLanguage);
+                        english = HelperDataOtherDataRelated.DataGetFirstOrDefaultFromDataTable(
+                            dataTableIn: FrmMainApp.DTLanguageMapping,
+                            dataColumnFilter: "languageCode", dataColumnReturn: "languageEnglish",
+                            keyEqualsWhat: alreadyTranslatedLanguage);
+                        dr[columnName: "displayValue"] = $"{native} [{english}]";
+
+                        dt.Rows.Add(row: dr);
+                    }
+
+                    cbx.ValueMember = "id";
+                    cbx.DisplayMember = "displayValue";
+                    cbx.DataSource = dt;
+
+                    // Part 2: select the saved value if there is one.
+                    // legacy code was that this would be something like "English" or "French" but i want it to be the character mapping
+
+                    _languageSavedInSQL =
+                        (HelperDataApplicationSettings.DataReadSQLiteSettings(
+                            dataTable: HelperVariables.DtHelperDataApplicationSettings,
+                            settingTabPage: parentNameToUse,
+                            settingId: cbx.Name
+                        ) ?? HelperVariables.DefaultEnglishString).ToLower().Substring(startIndex: 0, length: 2);
+
+
+                    native =
+                        HelperDataOtherDataRelated.DataGetFirstOrDefaultFromDataTable(
+                            dataTableIn: FrmMainApp.DTLanguageMapping,
+                            dataColumnFilter: "languageCode", dataColumnReturn: "languageNative",
+                            keyEqualsWhat: _languageSavedInSQL);
+                    english = HelperDataOtherDataRelated.DataGetFirstOrDefaultFromDataTable(
+                        dataTableIn: FrmMainApp.DTLanguageMapping,
+                        dataColumnFilter: "languageCode", dataColumnReturn: "languageEnglish",
+                        keyEqualsWhat: _languageSavedInSQL);
+                    string longLanguageVal = $"{native} [{english}]";
+
+                    for (int i = 0; i < cbx.Items.Count; i++)
+                    {
+                        string value = cbx.GetItemText(item: cbx.Items[index: i]);
+                        if (value == longLanguageVal)
                         {
-                            string value = cbx.GetItemText(item: cbx.Items[index: i]);
-                            if (value.Contains(value: _languageSavedInSQL))
-                            {
-                                cbx.SelectedIndex = i;
-                                break;
-                            }
+                            cbx.SelectedIndex = i;
+                            break;
                         }
                     }
                 }
@@ -137,9 +175,19 @@ public partial class FrmSettings : Form
                 }
             }
         }
+    }
 
+    private void SetFormTheme()
+    {
+        if (!HelperVariables.UserSettingUseDarkMode)
+        {
+            tcr_Settings.DrawMode = TabDrawMode.Normal;
+        }
 
-        _nowLoadingSettingsData = false;
+        HelperControlThemeManager.SetThemeColour(
+            themeColour: HelperVariables.UserSettingUseDarkMode
+                ? ThemeColour.Dark
+                : ThemeColour.Light, parentControl: this);
     }
 
     /// <summary>
@@ -179,8 +227,8 @@ public partial class FrmSettings : Form
         EventArgs e)
     {
         // set basics
-        CancelButton = btn_Cancel;
-        AcceptButton = btn_OK;
+        CancelButton = btn_Generic_Cancel;
+        AcceptButton = btn_Generic_OK;
 
         // this one is largely responsible for disabling the detection of "new" (changed) data. (ie when going from "noting" to "something
         _nowLoadingSettingsData = true;
@@ -351,9 +399,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "CountryCode",
             Name = COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE,
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: ControlType.ColumnHeader,
-                objectName: COL_NAME_PREFIX + FileListColumns.COUNTRY),
+            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: COL_NAME_PREFIX + FileListColumns.COUNTRY,
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader),
             DataSource = clh_CountryCodeOptions.ToList(), // needs to be a list
             ValueMember = "Key",
             DisplayMember = "Value"
@@ -363,8 +411,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "DataPointName",
             Name = "clh_DataPointName",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: ControlType.ColumnHeader, objectName: "clh_DataPointName")
+            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                controlName: "clh_DataPointName")
         };
 
         // e.g.: "AdminName1","AdminName2"...
@@ -378,9 +427,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "DataPointConditionType",
             Name = "clh_DataPointConditionType",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: ControlType.ColumnHeader,
-                objectName: "clh_DataPointConditionType")
+            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                controlName: "clh_DataPointConditionType")
         };
 
         // e.g.: "Is","Contains"...
@@ -394,17 +443,18 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "DataPointConditionValue",
             Name = "clh_DataPointConditionValue",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: ControlType.ColumnHeader,
-                objectName: "clh_DataPointConditionValue")
+            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                controlName: "clh_DataPointConditionValue")
         };
 
         DataGridViewComboBoxColumn clh_TargetPointName = new()
         {
             DataPropertyName = "TargetPointName",
             Name = "clh_TargetPointName",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: ControlType.ColumnHeader, objectName: "clh_TargetPointName")
+            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                controlName: "clh_TargetPointName")
         };
 
         // e.g.:  "State","City"...
@@ -418,9 +468,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "TargetPointOutcome",
             Name = "clh_TargetPointOutcome",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: ControlType.ColumnHeader,
-                objectName: "clh_TargetPointOutcome")
+            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                controlName: "clh_TargetPointOutcome")
         };
 
         // e.g.: "AdminName1","AdminName2"... +Null (empty)" + Custom
@@ -434,9 +484,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "TargetPointOutcomeCustom",
             Name = "clh_TargetPointOutcomeCustom",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: ControlType.ColumnHeader,
-                objectName: "clh_TargetPointOutcomeCustom")
+            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                controlName: "clh_TargetPointOutcomeCustom")
         };
 
         dgv_CustomRules.Columns.AddRange(
@@ -475,9 +525,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "CountryCode",
             Name = COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE,
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: ControlType.ColumnHeader,
-                objectName: COL_NAME_PREFIX + FileListColumns.COUNTRY),
+            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                controlName: COL_NAME_PREFIX + FileListColumns.COUNTRY),
             DataSource = clh_CountryCodeOptions.ToList(), // needs to be a list
             ValueMember = "Key",
             DisplayMember = "Value",
@@ -488,9 +538,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "TargetPointNameCustomCityLogic",
             Name = "clh_TargetPointNameCustomCityLogic",
-            HeaderText = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: ControlType.ColumnHeader,
-                objectName: "clh_TargetPointNameCustomCityLogic")
+            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                controlName: "clh_TargetPointNameCustomCityLogic")
         };
 
         // e.g.: "AdminName1","AdminName2"... 
@@ -578,12 +628,14 @@ public partial class FrmSettings : Form
             {
                 e.Cancel = true;
                 CustomMessageBox customMessageBox = new(
-                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                        messageBoxName:
-                        "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty"),
+                    text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName:
+                        "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
                     caption: HelperControlAndMessageBoxHandling
-                       .GenericGetMessageBoxCaption(
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
+                       .ReturnControlText(
+                            controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString(),
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Warning);
                 customMessageBox.ShowDialog();
@@ -603,12 +655,14 @@ public partial class FrmSettings : Form
             e.Context == DataGridViewDataErrorContexts.Commit)
         {
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName:
-                    "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Information.ToString()),
+                text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName:
+                    "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                                                                   .Information.ToString(),
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
@@ -625,7 +679,7 @@ public partial class FrmSettings : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private void Btn_Cancel_Click(object sender,
+    private void btn_Generic_Cancel_Click(object sender,
         EventArgs e)
     {
         HelperVariables.DtHelperDataApplicationSettingsPreQueue.Clear();
@@ -643,7 +697,7 @@ public partial class FrmSettings : Form
     ///     While I could probably import into the settings' write-queue rather than the database file itself, at the moment
     ///     it's too much hassle to code and would need a pretty major rewrite.
     /// </remarks>
-    private void Btn_OK_Click(object sender,
+    private void btn_Generic_OK_Click(object sender,
         EventArgs e)
     {
         if (!_importHasBeenProcessed)
@@ -1090,14 +1144,21 @@ public partial class FrmSettings : Form
             if (cbx.Name == "cbx_Language" ||
                 cbx.Name == "cbx_TryUseGeoNamesLanguage")
             {
-                // convert e.g. "Français [French]" to "French"
-                settingValue = settingValue.Split('[')
-                                           .Last()
-                                           .Substring(startIndex: 0, length: settingValue
-                                                                            .Split('[')
-                                                                            .Last()
-                                                                            .Length -
-                                                                             1);
+                // convert e.g. "Français [French]" to "fr"
+                // we can't just take the first two characters because for example 
+                // { "an", "aragonés [Aragonese]" },
+                // { "ar", "اللغة العربية [Arabic]" },
+                // ... start with "ar" but they aren't the same.
+
+                string language = cbx.Text.Split('[')
+                                     .First().Trim();
+
+                string iso2char =
+                    HelperDataOtherDataRelated.DataGetFirstOrDefaultFromDataTable(
+                        dataTableIn: FrmMainApp.DTLanguageMapping,
+                        dataColumnFilter: "languageNative", dataColumnReturn: "languageCode", keyEqualsWhat: language);
+
+                settingValue = iso2char;
             }
 
             // stick it into settings-Q
@@ -1129,15 +1190,12 @@ public partial class FrmSettings : Form
         if (nud.Name == "nud_ChoiceRadius")
         {
             string tmpLabelText =
-                HelperControlAndMessageBoxHandling.ReturnControlTextAsString(
-                    cItem: lbl_Miles, senderForm: this);
-            lbl_Miles.Text =
-                "(" +
-                Math.Round(d: nud.Value / (decimal)1.60934, decimals: 2)
-                    .ToString(provider: CultureInfo.CurrentCulture) +
-                " " +
-                tmpLabelText +
-                ")"
+                HelperLocalisationResourceManager.GetResourceValue(control: lbl_Generic_Miles,
+                    location: HelperVariables.ResourceNameForGenericControlItems);
+
+            lbl_Generic_Miles.Text =
+                $"({Math.Round(d: nud.Value / (decimal)1.60934, decimals: 2)
+                        .ToString(provider: CultureInfo.CurrentCulture)} {tmpLabelText})"
                 ;
         }
     }
@@ -1161,7 +1219,7 @@ public partial class FrmSettings : Form
     private void Any_nud_Leave(object sender,
         EventArgs e)
     {
-        AcceptButton = btn_OK;
+        AcceptButton = btn_Generic_OK;
     }
 
     /// <summary>
@@ -1194,11 +1252,13 @@ public partial class FrmSettings : Form
         dgv_CustomCityLogic.Columns.Clear();
         LoadCustomCityLogicDGV();
         CustomMessageBox customMessageBox = new(
-            text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                messageBoxName: "mbx_GenericDone"),
-            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                               .Information.ToString()),
+            text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: "mbx_GenericDone",
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+            caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                                                               .Information.ToString(),
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
             buttons: MessageBoxButtons.OK,
             icon: MessageBoxIcon.Information);
         customMessageBox.ShowDialog();
@@ -1240,11 +1300,13 @@ public partial class FrmSettings : Form
 
         // ReSharper disable once InconsistentNaming
         List<string> ItemsToExport = DialogWithOrWithoutCheckBox.DisplayAndReturnList(
-            labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                messageBoxName: "mbx_FrmSettings_QuestionWhatToExport"),
-            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question
-                                                               .ToString()),
+            labelText: HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: "mbx_FrmSettings_QuestionWhatToExport",
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+            caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question
+                                                               .ToString(),
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
             buttonsDictionary: buttonsDictionary,
             orientation: "Vertical",
             checkboxesDictionary: checkboxDictionary);
@@ -1280,13 +1342,17 @@ public partial class FrmSettings : Form
                     {
                         CustomMessageBox customMessageBox = new(
                             text: HelperControlAndMessageBoxHandling
-                                     .GenericGetMessageBoxText(
-                                          messageBoxName:
-                                          "mbx_FrmSettings_ErrorExportFailed") +
+                                     .ReturnControlText(
+                                          controlName:
+                                          "mbx_FrmSettings_ErrorExportFailed",
+                                          fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes
+                                             .MessageBox) +
                                   ex.Message,
                             caption: HelperControlAndMessageBoxHandling
-                               .GenericGetMessageBoxCaption(
-                                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                               .ReturnControlText(
+                                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString(),
+                                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes
+                                       .MessageBoxCaption),
                             buttons: MessageBoxButtons.OK,
                             icon: MessageBoxIcon.Error);
                         customMessageBox.ShowDialog();
@@ -1319,11 +1385,13 @@ public partial class FrmSettings : Form
 
             // ReSharper disable once InconsistentNaming
             List<string> ItemsToImport = DialogWithOrWithoutCheckBox.DisplayAndReturnList(
-                labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmSettings_QuestionWhatToImport"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Question.ToString()),
+                labelText: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmSettings_QuestionWhatToImport",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                                                                   .Question.ToString(),
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                 buttonsDictionary: buttonsDictionary,
                 orientation: "Vertical",
                 checkboxesDictionary: checkboxDictionary);
@@ -1342,7 +1410,7 @@ public partial class FrmSettings : Form
                 if (_importHasBeenProcessed)
                 {
                     PromptUserToRestartApp();
-                    btn_Cancel.PerformClick();
+                    btn_Generic_Cancel.PerformClick();
                 }
             }
         }
@@ -1379,15 +1447,15 @@ public partial class FrmSettings : Form
         Dictionary<string, string> buttonsDictionary = new()
         {
             {
-                HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: ControlType.Button,
-                    objectName: btnRestartNowName),
+                HelperControlAndMessageBoxHandling.ReturnControlText(
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button,
+                    controlName: btnRestartNowName),
                 btnRestartNowName
             },
             {
-                HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: ControlType.Button,
-                    objectName: btnRestartLaterName),
+                HelperControlAndMessageBoxHandling.ReturnControlText(
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button,
+                    controlName: btnRestartLaterName),
                 btnRestartLaterName
             }
         };
@@ -1395,12 +1463,14 @@ public partial class FrmSettings : Form
         // ReSharper disable once InconsistentNaming
         List<string> displayAndReturnList =
             DialogWithOrWithoutCheckBox.DisplayAndReturnList(
-                labelText: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmSettings_PleaseRestartApp"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                labelText: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmSettings_PleaseRestartApp",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
                                                                    .Question
-                                                                   .ToString()),
+                                                                   .ToString(),
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                 buttonsDictionary: buttonsDictionary,
                 orientation: "Horizontal",
                 checkboxesDictionary: new Dictionary<string, string>());
@@ -1414,7 +1484,7 @@ public partial class FrmSettings : Form
             // but the PromptUserToRestartApp technically precedes that so if user clicks "Now",
             // we restart the app w/o having written anything to the settings, obvs useless.
             // ...so we trigger "OK" again but mute the warnings.
-            btn_OK.PerformClick();
+            btn_Generic_OK.PerformClick();
             // Restart doesn't actually save the settings to the DB
             FrmMainApp frmMainAppInstance =
                 (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
@@ -1426,26 +1496,26 @@ public partial class FrmSettings : Form
     }
 
     /// <summary>
-    ///     Creates and returns a dictionary representing buttons in the dialog.
+    ///     Creates and returns a dictionary representing buttons in the diaLog.
     ///     Each key-value pair in the dictionary represents a button, where the key is the text displayed on the button,
     ///     and the value is the return value when the button is clicked.
     /// </summary>
-    /// <returns>A dictionary of string pairs representing the buttons in the dialog.</returns>
+    /// <returns>A dictionary of string pairs representing the buttons in the diaLog.</returns>
     private static Dictionary<string, string> GetButtonsDictionary()
     {
         Dictionary<string, string> buttonsDictionary = new()
         {
             {
-                HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: ControlType.Button,
-                    objectName: "btn_OK"
+                HelperControlAndMessageBoxHandling.ReturnControlText(
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button,
+                    controlName: "btn_Generic_OK"
                 ),
                 "yes" // that's ok
             },
             {
-                HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: ControlType.Button,
-                    objectName: "btn_Cancel"
+                HelperControlAndMessageBoxHandling.ReturnControlText(
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button,
+                    controlName: "btn_Generic_Cancel"
                 ),
                 "no" // that's ok
             }
@@ -1454,22 +1524,22 @@ public partial class FrmSettings : Form
     }
 
     /// <summary>
-    ///     Creates and returns a dictionary representing checkboxes for the settings import/export dialog.
+    ///     Creates and returns a dictionary representing checkboxes for the settings import/export diaLog.
     ///     Each key-value pair in the dictionary represents a checkbox, where the key is the text displayed next to the
     ///     checkbox,
     ///     and the value is the name of the corresponding `SettingsImportExportOptions` enum value.
     /// </summary>
-    /// <returns>A dictionary of string pairs representing the checkboxes in the settings import/export dialog.</returns>
+    /// <returns>A dictionary of string pairs representing the checkboxes in the settings import/export diaLog.</returns>
     private static Dictionary<string, string> GetCheckboxDictionary()
     {
         Dictionary<string, string> checkboxDictionary = new();
         foreach (string name in Enum.GetNames(
                      enumType: typeof(SettingsImportExportOptions)))
         {
-            checkboxDictionary.Add(key: HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: ControlType.CheckBox,
-                objectName: "ckb_ImportExport_" +
-                            name), value: name);
+            checkboxDictionary.Add(key: HelperControlAndMessageBoxHandling.ReturnControlText(
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.CheckBox,
+                controlName: "ckb_ImportExport_" +
+                             name), value: name);
         }
 
         return checkboxDictionary;

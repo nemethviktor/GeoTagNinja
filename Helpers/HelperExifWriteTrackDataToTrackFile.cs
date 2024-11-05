@@ -23,7 +23,7 @@ internal class HelperExifWriteTrackDataToTrackFile
         if (!string.IsNullOrWhiteSpace(value: outFilePath) &&
             fileList.Count > 0)
         {
-            FrmMainApp.Logger.Debug(message: "Starting");
+            FrmMainApp.Log.Info(message: "Starting");
 
             string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath,
                 path2: "exifArgsToWriteForTrackExport.args");
@@ -86,11 +86,13 @@ internal class HelperExifWriteTrackDataToTrackFile
         else
         {
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmImportExportGpx_FileOrFolderDoesntExist"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Error.ToString()),
+                text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmImportExportGpx_FileOrFolderDoesntExist",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                                                                   .Error.ToString(),
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();

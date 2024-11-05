@@ -12,7 +12,7 @@ internal static class HelperDataFavourites
     /// <param name="favouriteName">Name of the "favourite" (like "home")</param>
     internal static void DataDeleteSQLiteFavourite(string favouriteName)
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
@@ -70,7 +70,7 @@ internal static class HelperDataFavourites
     internal static void DataRenameSQLiteFavourite(string oldName,
                                                    string newName)
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
@@ -94,7 +94,7 @@ internal static class HelperDataFavourites
     /// </summary>
     internal static void DataWriteSQLiteAddNewFavourite(DataRow drFavourite)
     {
-        FrmMainApp.Logger.Trace(message: "Starting");
+        FrmMainApp.Log.Trace(message: "Starting");
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
@@ -112,9 +112,9 @@ internal static class HelperDataFavourites
                                     CountryCode,
                                     Country,
                                     State,
-                                    Sub_location
+                                    Sublocation
                                     ) " +
-                               "VALUES (@favouriteName, @GPSAltitude,@GPSAltitudeRef,@GPSLatitude,@GPSLatitudeRef,@GPSLongitude,@GPSLongitudeRef,@Coordinates,@City,@CountryCode,@Country,@State,@Sub_location);"
+                               "VALUES (@favouriteName, @GPSAltitude,@GPSAltitudeRef,@GPSLatitude,@GPSLatitudeRef,@GPSLongitude,@GPSLongitudeRef,@Coordinates,@City,@CountryCode,@Country,@State,@Sublocation);"
             ;
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
@@ -144,7 +144,7 @@ internal static class HelperDataFavourites
                                                         string state,
                                                         string subLocation)
     {
-        FrmMainApp.Logger.Trace(message: "Starting");
+        FrmMainApp.Log.Trace(message: "Starting");
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
 
@@ -154,7 +154,7 @@ internal static class HelperDataFavourites
                                     CountryCode = @CountryCode,
                                     City = @City,
                                     State = @State,
-                                    Sub_location = @Sub_location
+                                    Sublocation = @Sublocation
                                 WHERE favouriteName = @favouriteName;
                                 "
             ;
@@ -164,7 +164,7 @@ internal static class HelperDataFavourites
         sqlToRun.Parameters.AddWithValue(parameterName: "@CountryCode", value: countryCode);
         sqlToRun.Parameters.AddWithValue(parameterName: "@City", value: city);
         sqlToRun.Parameters.AddWithValue(parameterName: "@State", value: state);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@Sub_location", value: subLocation);
+        sqlToRun.Parameters.AddWithValue(parameterName: "@Sublocation", value: subLocation);
 
         sqlToRun.ExecuteNonQuery();
     }
@@ -177,7 +177,7 @@ internal static class HelperDataFavourites
     /// </summary>
     internal static void DataCreateSQLiteFavourites()
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();
@@ -196,7 +196,7 @@ internal static class HelperDataFavourites
                                         CountryCode NTEXT,
                                         Country NTEXT,
                                         State NTEXT,
-                                        Sub_location NTEXT
+                                        Sublocation NTEXT
                                         )
                                 ;
                                 "
@@ -205,51 +205,5 @@ internal static class HelperDataFavourites
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
 
         sqlToRun.ExecuteNonQuery();
-    }
-
-    /// <summary>
-    ///     See comment above but generally the problem here is that I started the coding as locationName and then at some
-    ///     stage renamed the code to favouriteName so I need to check and eventually rename any user's data if the old column
-    ///     name exists.
-    /// </summary>
-    /// <returns></returns>
-    internal static void DataWriteSQLiteRenameFavouritesLocationNameCol()
-    {
-        try
-        {
-            using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
-            sqliteDB.Open();
-
-            // Get the schema for the columns in the database.
-            DataTable colsTable = sqliteDB.GetSchema(collectionName: "Columns");
-
-            // Query the columns schema using SQL statements to work out if the required columns exist.
-            bool locationNameExists = colsTable.Select(filterExpression: "COLUMN_NAME='locationName' AND TABLE_NAME='Favourites'")
-                                          .Length !=
-                                      0;
-            bool favouriteNameExists = colsTable.Select(filterExpression: "COLUMN_NAME='favouriteName' AND TABLE_NAME='Favourites'")
-                                           .Length !=
-                                       0;
-            if (locationNameExists)
-            {
-                string sqlCommandStr = @"
-                                ALTER TABLE Favourites
-                                RENAME COLUMN locationName TO favouriteName
-
-                                ;
-                                "
-                    ;
-
-                SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-
-                sqlToRun.ExecuteNonQuery();
-            }
-
-            sqliteDB.Close();
-        }
-        catch
-        {
-            // nothing
-        }
     }
 }

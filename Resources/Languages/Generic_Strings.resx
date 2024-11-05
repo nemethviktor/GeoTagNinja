@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+		Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Generic_All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="Generic_GPSAltitude" xml:space="preserve">
+    <value>Altitude</value>
+  </data>
+  <data name="Generic_GPSAltitudeRef" xml:space="preserve">
+    <value>Altitude Ref</value>
+  </data>
+  <data name="Generic_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Generic_City" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="Generic_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Generic_Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="Generic_CountryCode" xml:space="preserve">
+    <value>Country Code</value>
+  </data>
+  <data name="Generic_CreateDate" xml:space="preserve">
+    <value>Create Date</value>
+  </data>
+  <data name="Generic_Days" xml:space="preserve">
+    <value>Days</value>
+  </data>
+  <data name="Generic_Decimal" xml:space="preserve">
+    <value>Decimal</value>
+  </data>
+  <data name="Generic_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Generic_GPSDestLatitude" xml:space="preserve">
+    <value>Dest Latitude</value>
+  </data>
+  <data name="Generic_GPSDestLatitudeRef" xml:space="preserve">
+    <value>Dest Latitude Ref</value>
+  </data>
+  <data name="Generic_GPSDestLongitude" xml:space="preserve">
+    <value>Dest Longitude</value>
+  </data>
+  <data name="Generic_GPSDestLongitudeRef" xml:space="preserve">
+    <value>Dest Longitude Ref</value>
+  </data>
+  <data name="Generic_QuestionDontAskAgain" xml:space="preserve">
+    <value>Don't Ask again</value>
+  </data>
+  <data name="Generic_Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Generic_Favourites" xml:space="preserve">
+    <value>Favourites</value>
+  </data>
+  <data name="Generic_Feet" xml:space="preserve">
+    <value>Feet</value>
+  </data>
+  <data name="Generic_ForAllImages" xml:space="preserve">
+    <value>For All Images</value>
+  </data>
+  <data name="Generic_ForThisImage" xml:space="preserve">
+    <value>For This Image</value>
+  </data>
+  <data name="Generic_Feet_Abbr" xml:space="preserve">
+    <value>ft</value>
+  </data>
+  <data name="Generic_Hours" xml:space="preserve">
+    <value>Hours</value>
+  </data>
+  <data name="Generic_GPSImgDirection" xml:space="preserve">
+    <value>Img Direction</value>
+  </data>
+  <data name="Generic_GPSImgDirectionRef" xml:space="preserve">
+    <value>Img Direction Ref</value>
+  </data>
+  <data name="Generic_Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="Generic_Insert" xml:space="preserve">
+    <value>Insert</value>
+  </data>
+  <data name="Generic_GPSLatitude" xml:space="preserve">
+    <value>Latitude</value>
+  </data>
+  <data name="Generic_GPSLatitudeRef" xml:space="preserve">
+    <value>Latitude Ref</value>
+  </data>
+  <data name="Generic_GPSLongitude" xml:space="preserve">
+    <value>Longitude</value>
+  </data>
+  <data name="Generic_GPSLongitudeRef" xml:space="preserve">
+    <value>Longitude Ref</value>
+  </data>
+  <data name="Generic_Metres_Abbr" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="Generic_Metres" xml:space="preserve">
+    <value>Metres</value>
+  </data>
+  <data name="Generic_Miles" xml:space="preserve">
+    <value>Miles</value>
+  </data>
+  <data name="Generic_Minutes" xml:space="preserve">
+    <value>Minutes</value>
+  </data>
+  <data name="Generic_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Generic_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Generic_OK" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="Generic_PleaseWait" xml:space="preserve">
+    <value>Pls wait...</value>
+  </data>
+  <data name="Generic_Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="Generic_Save" xml:space="preserve">
+    <value>Save the Current Changes</value>
+  </data>
+  <data name="Generic_Seconds" xml:space="preserve">
+    <value>Secs</value>
+  </data>
+  <data name="Generic_GPSSpeed" xml:space="preserve">
+    <value>Speed</value>
+  </data>
+  <data name="Generic_GPSSpeedRef" xml:space="preserve">
+    <value>Speed Ref</value>
+  </data>
+  <data name="Generic_State" xml:space="preserve">
+    <value>State/Province</value>
+  </data>
+  <data name="Generic_Sublocation" xml:space="preserve">
+    <value>Sublocation</value>
+  </data>
+  <data name="Generic_TakenDate" xml:space="preserve">
+    <value>Taken Date</value>
+  </data>
+  <data name="Generic_OffsetTime" xml:space="preserve">
+    <value>Time Zone Offset</value>
+  </data>
+  <data name="Generic_TZTime" xml:space="preserve">
+    <value>Time Zone Adjustment:</value>
+  </data>
+  <data name="Generic_ExportTrackTimeStampType" xml:space="preserve">
+    <value>TimeStamp Value</value>
+  </data>
+  <data name="Generic_UseDST" xml:space="preserve">
+    <value>Use DST?</value>
+  </data>
+  <data name="Generic_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="Generic_Fnumber" xml:space="preserve">
+    <value>Aperture</value>
+  </data>
+  <data name="Generic_Coordinates" xml:space="preserve">
+    <value>Coordinates</value>
+  </data>
+  <data name="Generic_DestCoordinates" xml:space="preserve">
+    <value>Dest Coordinates</value>
+  </data>
+  <data name="Generic_ExposureTime" xml:space="preserve">
+    <value>Exposure Time</value>
+  </data>
+  <data name="Generic_FileModifyDate" xml:space="preserve">
+    <value>File Date</value>
+  </data>
+  <data name="Generic_FileName" xml:space="preserve">
+    <value>File Name</value>
+  </data>
+  <data name="Generic_FocalLength" xml:space="preserve">
+    <value>Focal Length</value>
+  </data>
+  <data name="Generic_FocalLengthIn35mmFormat" xml:space="preserve">
+    <value>Focal Length (35mm)</value>
+  </data>
+  <data name="Generic_GPSDateTime" xml:space="preserve">
+    <value>GPS DateTime</value>
+  </data>
+  <data name="Generic_GUID" xml:space="preserve">
+    <value>GUID</value>
+  </data>
+  <data name="Generic_IPTCKeywords" xml:space="preserve">
+    <value>IPTC Keywords</value>
+  </data>
+  <data name="Generic_ISO" xml:space="preserve">
+    <value>ISO Speed</value>
+  </data>
+  <data name="Generic_LensSpec" xml:space="preserve">
+    <value>Lens</value>
+  </data>
+  <data name="Generic_Make" xml:space="preserve">
+    <value>Make</value>
+  </data>
+  <data name="Generic_Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="Generic_Rating" xml:space="preserve">
+    <value>Rating</value>
+  </data>
+  <data name="Generic_XMLSubjects" xml:space="preserve">
+    <value>XML Subjects</value>
+  </data>
+</root>

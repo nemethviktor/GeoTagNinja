@@ -37,13 +37,14 @@ internal static class HelperExifReadExifData
         dtReturn.Columns.Add(columnName: "Country");
         dtReturn.Columns.Add(columnName: "City");
         dtReturn.Columns.Add(columnName: "State");
-        dtReturn.Columns.Add(columnName: "Sub_location");
+        dtReturn.Columns.Add(columnName: "Sublocation");
         dtReturn.Columns.Add(columnName: "GPSAltitude");
         dtReturn.Columns.Add(columnName: "timezoneId");
 
-        EnumerableRowCollection<DataRow> drDataTableData = from DataRow dataRow in FrmMainApp.DtToponomySessionData.AsEnumerable()
-                                                           where dataRow.Field<string>(columnName: "lat") == lat && dataRow.Field<string>(columnName: "lng") == lng
-                                                           select dataRow;
+        EnumerableRowCollection<DataRow> drDataTableData =
+            from DataRow dataRow in FrmMainApp.DTToponomySessionData.AsEnumerable()
+            where dataRow.Field<string>(columnName: "lat") == lat && dataRow.Field<string>(columnName: "lng") == lng
+            select dataRow;
 
         List<DataRow> lstToponomySessionData = drDataTableData.ToList();
 
@@ -54,7 +55,7 @@ internal static class HelperExifReadExifData
         string? Country = "";
         string? City = "";
         string? State = "";
-        string? Sub_location = "";
+        string? Sublocation = "";
         string? Altitude = "0";
         string? timezoneId = "";
 
@@ -80,9 +81,9 @@ internal static class HelperExifReadExifData
             CountryCode = lstToponomySessionData[index: 0][columnName: "CountryCode"]
                .ToString();
             Country = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
-                    queryWhat: "ISO_3166_1A3",
+                    queryWhat: LanguageMappingQueryOrReturnWhat.ISO_3166_1A3,
                     inputVal: CountryCode,
-                    returnWhat: "Country")
+                    returnWhat: LanguageMappingQueryOrReturnWhat.Country)
                 ;
 
             Altitude = lstToponomySessionData[index: 0][columnName: "GPSAltitude"]
@@ -115,7 +116,7 @@ internal static class HelperExifReadExifData
             {
                 isPredeterminedCountry = true;
 
-                Sub_location = ToponymNameInSQL;
+                Sublocation = ToponymNameInSQL;
 
                 if (HelperVariables.LstCityNameIsAdminName1.Contains(item: CountryCode))
                 {
@@ -135,9 +136,9 @@ internal static class HelperExifReadExifData
                     City = AdminName4InSQL;
                 }
 
-                if (City == Sub_location)
+                if (City == Sublocation)
                 {
-                    Sub_location = "";
+                    Sublocation = "";
                 }
 
                 if (!HelperVariables.LstCityNameIsAdminName1.Contains(item: CountryCode))
@@ -150,7 +151,7 @@ internal static class HelperExifReadExifData
             {
                 bool customRuleChangedState = false;
                 bool customRuleChangedCity = false;
-                bool customRuleChangedSub_location = false;
+                bool customRuleChangedSublocation = false;
 
                 EnumerableRowCollection<DataRow> drCustomRulesData = from DataRow dataRow in HelperVariables.DtCustomRules.AsEnumerable()
                                                                      where dataRow.Field<string>(columnName: "CountryCode") == CountryCode
@@ -227,7 +228,8 @@ internal static class HelperExifReadExifData
                                     break;
                             }
 
-                            if (comparisonIsTrue && ((stopProcessingRules && !customRuleChangedSub_location) || !stopProcessingRules))
+                            if (comparisonIsTrue && ((stopProcessingRules && !customRuleChangedSublocation) ||
+                                                     !stopProcessingRules))
                             {
                                 string? TargetPointName = dataRow[columnName: "TargetPointName"]
                                    .ToString();
@@ -294,34 +296,34 @@ internal static class HelperExifReadExifData
 
                                         customRuleChangedCity = true;
                                         break;
-                                    case "Sub_location":
+                                    case "Sublocation":
                                         switch (TargetPointOutcome)
                                         {
                                             //todo dontprocessmorerules
                                             case "AdminName1":
-                                                Sub_location = AdminName1InSQL;
+                                                Sublocation = AdminName1InSQL;
                                                 break;
                                             case "AdminName2":
-                                                Sub_location = AdminName2InSQL;
+                                                Sublocation = AdminName2InSQL;
                                                 break;
                                             case "AdminName3":
-                                                Sub_location = AdminName3InSQL;
+                                                Sublocation = AdminName3InSQL;
                                                 break;
                                             case "AdminName4":
-                                                Sub_location = AdminName4InSQL;
+                                                Sublocation = AdminName4InSQL;
                                                 break;
                                             case "ToponymName":
-                                                Sub_location = ToponymNameInSQL;
+                                                Sublocation = ToponymNameInSQL;
                                                 break;
                                             case "Null (empty)":
-                                                Sub_location = "";
+                                                Sublocation = "";
                                                 break;
                                             case "Custom":
-                                                Sub_location = TargetPointOutcomeCustom;
+                                                Sublocation = TargetPointOutcomeCustom;
                                                 break;
                                         }
 
-                                        customRuleChangedSub_location = true;
+                                        customRuleChangedSublocation = true;
                                         break;
                                 }
                             }
@@ -339,9 +341,9 @@ internal static class HelperExifReadExifData
                     City = ToponymNameInSQL;
                 }
 
-                if (!customRuleChangedSub_location)
+                if (!customRuleChangedSublocation)
                 {
-                    Sub_location = "";
+                    Sublocation = "";
                 }
             }
 
@@ -351,7 +353,7 @@ internal static class HelperExifReadExifData
             drReturnRow[columnName: "Country"] = Country;
             drReturnRow[columnName: "City"] = City;
             drReturnRow[columnName: "State"] = State;
-            drReturnRow[columnName: "Sub_location"] = Sub_location;
+            drReturnRow[columnName: "Sublocation"] = Sublocation;
             drReturnRow[columnName: "GPSAltitude"] = Altitude;
             drReturnRow[columnName: "timezoneId"] = timezoneId;
 
@@ -385,11 +387,13 @@ internal static class HelperExifReadExifData
                 else
                 {
                     CustomMessageBox customMessageBox = new(
-                        text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                            messageBoxName: "mbx_HelperStaticExifNoAPI"),
+                        text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                            controlName: "mbx_HelperStaticExifNoAPI",
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
                         caption: HelperControlAndMessageBoxHandling
-                           .GenericGetMessageBoxCaption(
-                                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                           .ReturnControlText(
+                                controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString(),
+                                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                         buttons: MessageBoxButtons.OK,
                         icon: MessageBoxIcon.Error);
                     customMessageBox.ShowDialog();
@@ -398,11 +402,13 @@ internal static class HelperExifReadExifData
             catch
             {
                 CustomMessageBox customMessageBox = new(
-                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                        messageBoxName: "mbx_HelperStaticExifNoAPI"),
+                    text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: "mbx_HelperStaticExifNoAPI",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
                     caption: HelperControlAndMessageBoxHandling
-                       .GenericGetMessageBoxCaption(
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                       .ReturnControlText(
+                            controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString(),
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Error);
                 customMessageBox.ShowDialog();
@@ -437,14 +443,14 @@ internal static class HelperExifReadExifData
                         if (APICountryCode.Length == 2)
                         {
                             CountryCode = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
-                                queryWhat: "ISO_3166_1A2",
+                                queryWhat: LanguageMappingQueryOrReturnWhat.ISO_3166_1A2,
                                 inputVal: APICountryCode,
-                                returnWhat: "ISO_3166_1A3"
+                                returnWhat: LanguageMappingQueryOrReturnWhat.ISO_3166_1A3
                             );
                             Country = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
-                                queryWhat: "ISO_3166_1A2",
+                                queryWhat: LanguageMappingQueryOrReturnWhat.ISO_3166_1A2,
                                 inputVal: APICountryCode,
-                                returnWhat: "Country"
+                                returnWhat: LanguageMappingQueryOrReturnWhat.Country
                             );
                         }
 
@@ -504,8 +510,8 @@ internal static class HelperExifReadExifData
                         {
                             isPredeterminedCountry = true;
 
-                            Sub_location = readJsonToponomy.Geonames[index]
-                                                           .ToponymName;
+                            Sublocation = readJsonToponomy.Geonames[index]
+                                                          .ToponymName;
                             if (HelperVariables.LstCityNameIsAdminName1.Contains(item: CountryCode))
                             {
                                 City = AdminName1InAPI;
@@ -524,9 +530,9 @@ internal static class HelperExifReadExifData
                                 City = AdminName4InAPI;
                             }
 
-                            if (City == Sub_location)
+                            if (City == Sublocation)
                             {
-                                Sub_location = "";
+                                Sublocation = "";
                             }
 
                             if (!HelperVariables.LstCityNameIsAdminName1.Contains(item: CountryCode))
@@ -539,7 +545,7 @@ internal static class HelperExifReadExifData
                         {
                             bool customRuleChangedState = false;
                             bool customRuleChangedCity = false;
-                            bool customRuleChangedSub_location = false;
+                            bool customRuleChangedSublocation = false;
 
                             EnumerableRowCollection<DataRow> drCustomRulesData = from DataRow dataRow in HelperVariables.DtCustomRules.AsEnumerable()
                                                                                  where dataRow.Field<string>(columnName: "CountryCode") == CountryCode
@@ -615,14 +621,17 @@ internal static class HelperExifReadExifData
                                                 break;
                                         }
 
-                                        if (comparisonIsTrue && ((stopProcessingRules && !customRuleChangedSub_location) || !stopProcessingRules))
+                                        if (comparisonIsTrue &&
+                                            ((stopProcessingRules && !customRuleChangedSublocation) ||
+                                             !stopProcessingRules))
                                         {
                                             string? TargetPointName = dataRow[columnName: "TargetPointName"]
                                                .ToString();
                                             string? TargetPointOutcome = dataRow[columnName: "TargetPointOutcome"]
                                                .ToString();
-                                            string? TargetPointOutcomeCustom = dataRow[columnName: "TargetPointOutcomeCustom"]
-                                               .ToString();
+                                            string? TargetPointOutcomeCustom =
+                                                dataRow[columnName: "TargetPointOutcomeCustom"]
+                                                   .ToString();
 
                                             switch (TargetPointName)
                                             {
@@ -682,33 +691,33 @@ internal static class HelperExifReadExifData
 
                                                     customRuleChangedCity = true;
                                                     break;
-                                                case "Sub_location":
+                                                case "Sublocation":
                                                     switch (TargetPointOutcome)
                                                     {
                                                         case "AdminName1":
-                                                            Sub_location = AdminName1InAPI;
+                                                            Sublocation = AdminName1InAPI;
                                                             break;
                                                         case "AdminName2":
-                                                            Sub_location = AdminName2InAPI;
+                                                            Sublocation = AdminName2InAPI;
                                                             break;
                                                         case "AdminName3":
-                                                            Sub_location = AdminName3InAPI;
+                                                            Sublocation = AdminName3InAPI;
                                                             break;
                                                         case "AdminName4":
-                                                            Sub_location = AdminName4InAPI;
+                                                            Sublocation = AdminName4InAPI;
                                                             break;
                                                         case "ToponymName":
-                                                            Sub_location = ToponymNameInAPI;
+                                                            Sublocation = ToponymNameInAPI;
                                                             break;
                                                         case "Null (empty)":
-                                                            Sub_location = "";
+                                                            Sublocation = "";
                                                             break;
                                                         case "Custom":
-                                                            Sub_location = TargetPointOutcomeCustom;
+                                                            Sublocation = TargetPointOutcomeCustom;
                                                             break;
                                                     }
 
-                                                    customRuleChangedSub_location = true;
+                                                    customRuleChangedSublocation = true;
                                                     break;
                                             }
                                         }
@@ -726,9 +735,9 @@ internal static class HelperExifReadExifData
                                 City = ToponymNameInAPI;
                             }
 
-                            if (!customRuleChangedSub_location)
+                            if (!customRuleChangedSublocation)
                             {
-                                Sub_location = "";
+                                Sublocation = "";
                             }
                         }
 
@@ -738,7 +747,7 @@ internal static class HelperExifReadExifData
                         drApiToponomyRow[columnName: "Country"] = Country;
                         drApiToponomyRow[columnName: "City"] = City;
                         drApiToponomyRow[columnName: "State"] = State;
-                        drApiToponomyRow[columnName: "Sub_location"] = Sub_location;
+                        drApiToponomyRow[columnName: "Sublocation"] = Sublocation;
                         drApiToponomyRow[columnName: "GPSAltitude"] = Altitude;
                         drApiToponomyRow[columnName: "timezoneId"] = timezoneId;
 
@@ -847,8 +856,9 @@ internal static class HelperExifReadExifData
                         {
                             Form FrmPickDataFromAPIBox = new()
                             {
-                                Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                                    ControlType.Form, objectName: "FrmPickDataFromAPIBox"),
+                                Text = HelperControlAndMessageBoxHandling.ReturnControlText(
+                                    controlName: "FrmPickDataFromAPIBox",
+                                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Form),
                                 MinimizeBox = false,
                                 MaximizeBox = false,
                                 ShowIcon = false,
@@ -921,25 +931,26 @@ internal static class HelperExifReadExifData
                             panel.Controls.Add(value: lvwDataChoices);
                             panel.SetFlowBreak(control: lvwDataChoices, value: true);
 
-                            Button btn_OK = new()
+                            Button btn_Generic_OK = new()
                             {
-                                Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                                    ControlType.Button, objectName: "btn_OK")
+                                Text = HelperControlAndMessageBoxHandling.ReturnControlText(
+                                    controlName: "btn_Generic_OK",
+                                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button)
                             };
-                            btn_OK.Click += (sender,
+                            btn_Generic_OK.Click += (sender,
                                              e) =>
                             {
                                 FrmPickDataFromAPIBox.Close();
                             };
-                            btn_OK.Location = new Point(x: 10, y: lvwDataChoices.Bottom + 15);
-                            btn_OK.AutoSize = true;
-                            panel.Controls.Add(value: btn_OK);
+                            btn_Generic_OK.Location = new Point(x: 10, y: lvwDataChoices.Bottom + 15);
+                            btn_Generic_OK.AutoSize = true;
+                            panel.Controls.Add(value: btn_Generic_OK);
 
                             panel.Padding = new Padding(all: 5);
                             panel.AutoSize = true;
 
                             FrmPickDataFromAPIBox.Controls.Add(value: panel);
-                            FrmPickDataFromAPIBox.MinimumSize = new Size(width: lvwDataChoices.Width + 40, height: btn_OK.Bottom + 20);
+                            FrmPickDataFromAPIBox.MinimumSize = new Size(width: lvwDataChoices.Width + 40, height: btn_Generic_OK.Bottom + 20);
 
                             FrmPickDataFromAPIBox.ShowDialog();
 
@@ -1012,7 +1023,7 @@ internal static class HelperExifReadExifData
     private static string ExifGetRawDataPointFromExif(DataTable dtFileExif,
                                                       string dataPoint)
     {
-        FrmMainApp.Logger.Trace(message: "Starting - dataPoint:" + dataPoint);
+        FrmMainApp.Log.Trace(message: "Starting - dataPoint:" + dataPoint);
         string returnVal = FrmMainApp.NullStringEquivalentGeneric;
         string tryDataValue = FrmMainApp.NullStringEquivalentGeneric;
         ElementAttribute attribute = GetElementAttributesElementAttribute(dataPoint);
@@ -1030,14 +1041,14 @@ internal static class HelperExifReadExifData
                       ?.ToString();
                     if (!string.IsNullOrEmpty(value: tryDataValue))
                     {
-                        FrmMainApp.Logger.Trace(message: "dataPoint:" + dataPoint + " -> " + tagWanted + ": " + tryDataValue);
+                        FrmMainApp.Log.Trace(message: "dataPoint:" + dataPoint + " -> " + tagWanted + ": " + tryDataValue);
                         break;
                     }
                 }
             }
         }
 
-        FrmMainApp.Logger.Debug(message: "Done - dataPoint:" + dataPoint);
+        FrmMainApp.Log.Debug(message: "Done - dataPoint:" + dataPoint);
         return tryDataValue;
     }
 
@@ -1061,16 +1072,16 @@ internal static class HelperExifReadExifData
 
         string tmpOutLatLongVal = "";
 
-        FrmMainApp.Logger.Trace(message: "Starting - dataPoint:" + dataPoint);
+        FrmMainApp.Log.Trace(message: "Starting - dataPoint:" + dataPoint);
         try
         {
             tryDataValue = ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: dataPoint);
             // Not logging this bcs it gets called inside and is basically redunant here.
-            // FrmMainApp.Logger.Trace(message: "dataPoint:" + dataPoint + " - ExifGetRawDataPointFromExif: " + tryDataValue);
+            // FrmMainApp.Log.Trace(message: "dataPoint:" + dataPoint + " - ExifGetRawDataPointFromExif: " + tryDataValue);
         }
         catch (Exception ex)
         {
-            FrmMainApp.Logger.Error(message: "datapoint:" + dataPoint + " - Error: " + ex.Message);
+            FrmMainApp.Log.Error(message: "datapoint:" + dataPoint + " - Error: " + ex.Message);
         }
 
         switch (dataPoint)
@@ -1332,7 +1343,7 @@ internal static class HelperExifReadExifData
             }
         }
 
-        FrmMainApp.Logger.Trace(message: "Done - dataPoint:" +
+        FrmMainApp.Log.Trace(message: "Done - dataPoint:" +
                                          dataPoint +
                                          ": " +
                                          tryDataValue);

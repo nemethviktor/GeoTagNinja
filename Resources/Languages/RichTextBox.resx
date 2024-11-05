@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+		Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="rbx_Register_ArcGIS" xml:space="preserve">
+    <value>You'll need an ArcGIS API key to use the map search functionality. 
+ArcGIS have changed their registration process as of June 2024. Register [here](https://location.arcgis.com/sign-up/)
+You now need to specify a portal url. Just input anything you want.
+Scroll/Go to `Developer credential creator`
+Then `New Item`
+Then `Developer Credentials`
+Pick `API Key` (not OAUth)
+Set your expiration date to as far into the future as you can (1 year)
+Leave `Referrers` blank
+On the next page pick `Geocoding (not stored)`
+On the next page skip `Item Access`
+On the next page add any title
+Eventually click `Generate the API key and go to item details page. I am ready to copy and save the key.`
+Save the API key when prompted. If you don't do it at the time you'll have to generate another one.</value>
+  </data>
+  <data name="rbx_Register_GeoNames" xml:space="preserve">
+    <value>You'll need a GeoNames Account to use the reverse geocoding/search function (lat/long --&gt; country/city/...). Get one here: http://www.geonames.org/login</value>
+  </data>
+  <data name="rbx_CustomRulesExplanation" xml:space="preserve">
+    <value>This is an advanced feature. AdminName1-4 &amp; ToponymName refer to the API outputs so if you don't understand that, probably don't poke this at all. 
+Re: "Predetermined countries" (checkbox below): Read about those here: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 + check the other tab - Note if you disable that setting it then will blank CountryCode cells that fall outside the relevant grouping but won't actually drop those rows.
+All columns are compulsory exc for "Custom" but if you set the Outcome to "Custom" and leave the "Custom" col empty the row will be ignored. Data is not-case-sensitive. For each datapoint (e.g. City, State) the last row overwrites the previous ones. Basically be sensible. The more rows you add the slower it will get.
+Example: the default data return from the API for London UK is poor because for that particular region adminName2 = "Greater London", and it'd be discarded as such (cities are usually from "ToponymName"). -&gt; set: "what" = "adminName2", "if" = "is", "Condition Value" = "Greater London", "then" = "City", "becomes" = "adminName2". Repeat the whole thing in a 2nd row but "then" = "Sub_Loction" and "becomes" = "ToponymName".</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold" xml:space="preserve">
+    <value>Note that changes to the table below are immediately affected and the OK/Cancel button has no effect per se on them. You also need to right-click and click Reset Cached Data for any files that may be affected by your changes if you want to pull data within this session (or just restart the app.)</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanation" xml:space="preserve">
+    <value>This is an advanced feature. AdminName1-4 &amp; ToponymName refer to the API outputs so if you don't understand that, probably don't poke this at all. 
+For an overall rundown, check: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 .
+What this Setting does is that you can add your own choices of countries to get the "City" value from one of the specific AdminNames.</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanationBold" xml:space="preserve">
+    <value>Note that changes to the table below are immediately affected and the OK/Cancel button has no effect per se on them. You also need to right-click and click Reset Cached Data for any files that may be affected by your changes if you want to pull data within this session (or just restart the app.)</value>
+  </data>
+</root>

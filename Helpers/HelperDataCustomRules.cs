@@ -90,7 +90,7 @@ internal static class HelperDataCustomRules
     /// </remarks>
     internal static void DataCreateSQLiteCustomRules()
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
         using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
         sqliteDB.Open();

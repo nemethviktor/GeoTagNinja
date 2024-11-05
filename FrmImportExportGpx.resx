@@ -117,7 +117,119 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="tpg_ImportExport_Import.AutoScroll" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="tpg_ImportExport_Import.AutoScrollMargin" type="System.Drawing.Size, System.Drawing">
+    <value>0, 10</value>
+  </data>
+  <data name="ckb_OverlayGPXForSelectedDatesOnly.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_OverlayGPXForSelectedDatesOnly.Location" type="System.Drawing.Point, System.Drawing">
+    <value>46, 83</value>
+  </data>
+  <data name="ckb_OverlayGPXForSelectedDatesOnly.Size" type="System.Drawing.Size, System.Drawing">
+    <value>214, 17</value>
+  </data>
+  <data name="ckb_OverlayGPXForSelectedDatesOnly.TabIndex" type="System.Int32, mscorlib">
+    <value>30</value>
+  </data>
+  <data name="ckb_OverlayGPXForSelectedDatesOnly.Text" xml:space="preserve">
+    <value>ckb_OverlayGPXForSelectedDatesOnly</value>
+  </data>
+  <data name="&gt;&gt;ckb_OverlayGPXForSelectedDatesOnly.Name" xml:space="preserve">
+    <value>ckb_OverlayGPXForSelectedDatesOnly</value>
+  </data>
+  <data name="&gt;&gt;ckb_OverlayGPXForSelectedDatesOnly.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_OverlayGPXForSelectedDatesOnly.Parent" xml:space="preserve">
+    <value>gbx_OtherSettings</value>
+  </data>
+  <data name="&gt;&gt;ckb_OverlayGPXForSelectedDatesOnly.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 57</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap.Size" type="System.Drawing.Size, System.Drawing">
+    <value>146, 17</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap.TabIndex" type="System.Int32, mscorlib">
+    <value>29</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap.Text" xml:space="preserve">
+    <value>ckb_LoadTrackOntoMap</value>
+  </data>
+  <data name="&gt;&gt;ckb_LoadTrackOntoMap.Name" xml:space="preserve">
+    <value>ckb_LoadTrackOntoMap</value>
+  </data>
+  <data name="&gt;&gt;ckb_LoadTrackOntoMap.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_LoadTrackOntoMap.Parent" xml:space="preserve">
+    <value>gbx_OtherSettings</value>
+  </data>
+  <data name="&gt;&gt;ckb_LoadTrackOntoMap.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 31</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI.Size" type="System.Drawing.Size, System.Drawing">
+    <value>126, 17</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI.TabIndex" type="System.Int32, mscorlib">
+    <value>28</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI.Text" xml:space="preserve">
+    <value>ckb_DoNotQueryAPI</value>
+  </data>
+  <data name="&gt;&gt;ckb_DoNotQueryAPI.Name" xml:space="preserve">
+    <value>ckb_DoNotQueryAPI</value>
+  </data>
+  <data name="&gt;&gt;ckb_DoNotQueryAPI.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_DoNotQueryAPI.Parent" xml:space="preserve">
+    <value>gbx_OtherSettings</value>
+  </data>
+  <data name="&gt;&gt;ckb_DoNotQueryAPI.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="gbx_OtherSettings.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 554</value>
+  </data>
+  <data name="gbx_OtherSettings.Size" type="System.Drawing.Size, System.Drawing">
+    <value>725, 117</value>
+  </data>
+  <data name="gbx_OtherSettings.TabIndex" type="System.Int32, mscorlib">
+    <value>32</value>
+  </data>
+  <data name="gbx_OtherSettings.Text" xml:space="preserve">
+    <value>gbx_OtherSettings</value>
+  </data>
+  <data name="&gt;&gt;gbx_OtherSettings.Name" xml:space="preserve">
+    <value>gbx_OtherSettings</value>
+  </data>
+  <data name="&gt;&gt;gbx_OtherSettings.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gbx_OtherSettings.Parent" xml:space="preserve">
+    <value>tpg_ImportExport_Import</value>
+  </data>
+  <data name="&gt;&gt;gbx_OtherSettings.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="pbx_importOneFile.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
@@ -129,6 +241,34 @@
         McgAoFePAl0QD9UKATPyGe5BXUEQA9U+7i1k4IRqHXDAwAAANSDaAOvc+eMAAAAASUVORK5CYII=
 </value>
   </data>
+  <data name="pbx_importOneFile.Location" type="System.Drawing.Point, System.Drawing">
+    <value>292, 27</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="pbx_importOneFile.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="pbx_importOneFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>16, 16</value>
+  </data>
+  <data name="pbx_importOneFile.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>AutoSize</value>
+  </data>
+  <data name="pbx_importOneFile.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <data name="&gt;&gt;pbx_importOneFile.Name" xml:space="preserve">
+    <value>pbx_importOneFile</value>
+  </data>
+  <data name="&gt;&gt;pbx_importOneFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pbx_importOneFile.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXSource</value>
+  </data>
+  <data name="&gt;&gt;pbx_importOneFile.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="pbx_importFromAnotherFolder.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
@@ -139,6 +279,891 @@
         O9QLeQyPZuUzJKBrQsYgA6YUMTgD1b6cVcCgDdUONSCf4Rw2TcgY7IJchupZeQwnoFohAOyFAoY2bJqQ
         McgAoFePAl0QD9UKATPyGe5BXUEQA9U+7i1k4IRqHXDAwAAANSDaAOvc+eMAAAAASUVORK5CYII=
 </value>
+  </data>
+  <data name="pbx_importFromAnotherFolder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>292, 95</value>
+  </data>
+  <data name="pbx_importFromAnotherFolder.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="pbx_importFromAnotherFolder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>16, 16</value>
+  </data>
+  <data name="pbx_importFromAnotherFolder.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>AutoSize</value>
+  </data>
+  <data name="pbx_importFromAnotherFolder.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="&gt;&gt;pbx_importFromAnotherFolder.Name" xml:space="preserve">
+    <value>pbx_importFromAnotherFolder</value>
+  </data>
+  <data name="&gt;&gt;pbx_importFromAnotherFolder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pbx_importFromAnotherFolder.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXSource</value>
+  </data>
+  <data name="&gt;&gt;pbx_importFromAnotherFolder.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lbl_importFromAnotherFolder.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_importFromAnotherFolder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>313, 94</value>
+  </data>
+  <data name="lbl_importFromAnotherFolder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>142, 15</value>
+  </data>
+  <data name="lbl_importFromAnotherFolder.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="lbl_importFromAnotherFolder.Text" xml:space="preserve">
+    <value>lbl_importFromAnotherFolder</value>
+  </data>
+  <data name="&gt;&gt;lbl_importFromAnotherFolder.Name" xml:space="preserve">
+    <value>lbl_importFromAnotherFolder</value>
+  </data>
+  <data name="&gt;&gt;lbl_importFromAnotherFolder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_importFromAnotherFolder.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXSource</value>
+  </data>
+  <data name="&gt;&gt;lbl_importFromAnotherFolder.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="lbl_importOneFile.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_importOneFile.Location" type="System.Drawing.Point, System.Drawing">
+    <value>313, 30</value>
+  </data>
+  <data name="lbl_importOneFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>89, 15</value>
+  </data>
+  <data name="lbl_importOneFile.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="lbl_importOneFile.Text" xml:space="preserve">
+    <value>lbl_importOneFile</value>
+  </data>
+  <data name="&gt;&gt;lbl_importOneFile.Name" xml:space="preserve">
+    <value>lbl_importOneFile</value>
+  </data>
+  <data name="&gt;&gt;lbl_importOneFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_importOneFile.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXSource</value>
+  </data>
+  <data name="&gt;&gt;lbl_importOneFile.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="rbt_importFromAnotherFolder.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbt_importFromAnotherFolder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>31, 92</value>
+  </data>
+  <data name="rbt_importFromAnotherFolder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>160, 17</value>
+  </data>
+  <data name="rbt_importFromAnotherFolder.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="rbt_importFromAnotherFolder.Text" xml:space="preserve">
+    <value>rbt_importFromAnotherFolder</value>
+  </data>
+  <data name="&gt;&gt;rbt_importFromAnotherFolder.Name" xml:space="preserve">
+    <value>rbt_importFromAnotherFolder</value>
+  </data>
+  <data name="&gt;&gt;rbt_importFromAnotherFolder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbt_importFromAnotherFolder.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXSource</value>
+  </data>
+  <data name="&gt;&gt;rbt_importFromAnotherFolder.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="rbt_importFromCurrentFolder.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbt_importFromCurrentFolder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>31, 60</value>
+  </data>
+  <data name="rbt_importFromCurrentFolder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>157, 17</value>
+  </data>
+  <data name="rbt_importFromCurrentFolder.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="rbt_importFromCurrentFolder.Text" xml:space="preserve">
+    <value>rbt_importFromCurrentFolder</value>
+  </data>
+  <data name="&gt;&gt;rbt_importFromCurrentFolder.Name" xml:space="preserve">
+    <value>rbt_importFromCurrentFolder</value>
+  </data>
+  <data name="&gt;&gt;rbt_importFromCurrentFolder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbt_importFromCurrentFolder.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXSource</value>
+  </data>
+  <data name="&gt;&gt;rbt_importFromCurrentFolder.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="rbt_importOneFile.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbt_importOneFile.Location" type="System.Drawing.Point, System.Drawing">
+    <value>31, 28</value>
+  </data>
+  <data name="rbt_importOneFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 17</value>
+  </data>
+  <data name="rbt_importOneFile.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="rbt_importOneFile.Text" xml:space="preserve">
+    <value>rbt_importOneFile</value>
+  </data>
+  <data name="&gt;&gt;rbt_importOneFile.Name" xml:space="preserve">
+    <value>rbt_importOneFile</value>
+  </data>
+  <data name="&gt;&gt;rbt_importOneFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbt_importOneFile.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXSource</value>
+  </data>
+  <data name="&gt;&gt;rbt_importOneFile.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="gbx_ImportGPXSource.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 14</value>
+  </data>
+  <data name="gbx_ImportGPXSource.Size" type="System.Drawing.Size, System.Drawing">
+    <value>726, 125</value>
+  </data>
+  <data name="gbx_ImportGPXSource.TabIndex" type="System.Int32, mscorlib">
+    <value>28</value>
+  </data>
+  <data name="gbx_ImportGPXSource.Text" xml:space="preserve">
+    <value>gbx_ImportGPXSource</value>
+  </data>
+  <data name="&gt;&gt;gbx_ImportGPXSource.Name" xml:space="preserve">
+    <value>gbx_ImportGPXSource</value>
+  </data>
+  <data name="&gt;&gt;gbx_ImportGPXSource.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gbx_ImportGPXSource.Parent" xml:space="preserve">
+    <value>tpg_ImportExport_Import</value>
+  </data>
+  <data name="&gt;&gt;gbx_ImportGPXSource.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="btn_PullMostRecentTrackSyncShift.Location" type="System.Drawing.Point, System.Drawing">
+    <value>47, 332</value>
+  </data>
+  <data name="btn_PullMostRecentTrackSyncShift.Size" type="System.Drawing.Size, System.Drawing">
+    <value>177, 23</value>
+  </data>
+  <data name="btn_PullMostRecentTrackSyncShift.TabIndex" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="btn_PullMostRecentTrackSyncShift.Text" xml:space="preserve">
+    <value>btn_PullMostRecentTrackSyncShift</value>
+  </data>
+  <data name="&gt;&gt;btn_PullMostRecentTrackSyncShift.Name" xml:space="preserve">
+    <value>btn_PullMostRecentTrackSyncShift</value>
+  </data>
+  <data name="&gt;&gt;btn_PullMostRecentTrackSyncShift.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_PullMostRecentTrackSyncShift.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;btn_PullMostRecentTrackSyncShift.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="nud_GeoMaxExtSecs.Location" type="System.Drawing.Point, System.Drawing">
+    <value>540, 196</value>
+  </data>
+  <data name="nud_GeoMaxExtSecs.Size" type="System.Drawing.Size, System.Drawing">
+    <value>61, 20</value>
+  </data>
+  <data name="nud_GeoMaxExtSecs.TabIndex" type="System.Int32, mscorlib">
+    <value>24</value>
+  </data>
+  <data name="nud_GeoMaxExtSecs.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;nud_GeoMaxExtSecs.Name" xml:space="preserve">
+    <value>nud_GeoMaxExtSecs</value>
+  </data>
+  <data name="&gt;&gt;nud_GeoMaxExtSecs.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nud_GeoMaxExtSecs.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;nud_GeoMaxExtSecs.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="nud_GeoMaxIntSecs.Location" type="System.Drawing.Point, System.Drawing">
+    <value>540, 162</value>
+  </data>
+  <data name="nud_GeoMaxIntSecs.Size" type="System.Drawing.Size, System.Drawing">
+    <value>61, 20</value>
+  </data>
+  <data name="nud_GeoMaxIntSecs.TabIndex" type="System.Int32, mscorlib">
+    <value>23</value>
+  </data>
+  <data name="nud_GeoMaxIntSecs.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;nud_GeoMaxIntSecs.Name" xml:space="preserve">
+    <value>nud_GeoMaxIntSecs</value>
+  </data>
+  <data name="&gt;&gt;nud_GeoMaxIntSecs.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nud_GeoMaxIntSecs.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;nud_GeoMaxIntSecs.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="lbl_GeoMaxExtSecs.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_GeoMaxExtSecs.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 198</value>
+  </data>
+  <data name="lbl_GeoMaxExtSecs.MaximumSize" type="System.Drawing.Size, System.Drawing">
+    <value>600, 0</value>
+  </data>
+  <data name="lbl_GeoMaxExtSecs.Size" type="System.Drawing.Size, System.Drawing">
+    <value>102, 13</value>
+  </data>
+  <data name="lbl_GeoMaxExtSecs.TabIndex" type="System.Int32, mscorlib">
+    <value>22</value>
+  </data>
+  <data name="lbl_GeoMaxExtSecs.Text" xml:space="preserve">
+    <value>lbl_GeoMaxExtSecs</value>
+  </data>
+  <data name="&gt;&gt;lbl_GeoMaxExtSecs.Name" xml:space="preserve">
+    <value>lbl_GeoMaxExtSecs</value>
+  </data>
+  <data name="&gt;&gt;lbl_GeoMaxExtSecs.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_GeoMaxExtSecs.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;lbl_GeoMaxExtSecs.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="lbl_GeoMaxIntSecs.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_GeoMaxIntSecs.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 162</value>
+  </data>
+  <data name="lbl_GeoMaxIntSecs.MaximumSize" type="System.Drawing.Size, System.Drawing">
+    <value>600, 0</value>
+  </data>
+  <data name="lbl_GeoMaxIntSecs.Size" type="System.Drawing.Size, System.Drawing">
+    <value>99, 13</value>
+  </data>
+  <data name="lbl_GeoMaxIntSecs.TabIndex" type="System.Int32, mscorlib">
+    <value>21</value>
+  </data>
+  <data name="lbl_GeoMaxIntSecs.Text" xml:space="preserve">
+    <value>lbl_GeoMaxIntSecs</value>
+  </data>
+  <data name="&gt;&gt;lbl_GeoMaxIntSecs.Name" xml:space="preserve">
+    <value>lbl_GeoMaxIntSecs</value>
+  </data>
+  <data name="&gt;&gt;lbl_GeoMaxIntSecs.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_GeoMaxIntSecs.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;lbl_GeoMaxIntSecs.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="lbl_CameraTimeNote.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_CameraTimeNote.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 234</value>
+  </data>
+  <data name="lbl_CameraTimeNote.MaximumSize" type="System.Drawing.Size, System.Drawing">
+    <value>600, 0</value>
+  </data>
+  <data name="lbl_CameraTimeNote.Size" type="System.Drawing.Size, System.Drawing">
+    <value>105, 13</value>
+  </data>
+  <data name="lbl_CameraTimeNote.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <data name="lbl_CameraTimeNote.Text" xml:space="preserve">
+    <value>lbl_CameraTimeNote</value>
+  </data>
+  <data name="&gt;&gt;lbl_CameraTimeNote.Name" xml:space="preserve">
+    <value>lbl_CameraTimeNote</value>
+  </data>
+  <data name="&gt;&gt;lbl_CameraTimeNote.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_CameraTimeNote.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;lbl_CameraTimeNote.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="lbl_TZNote.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_TZNote.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 61</value>
+  </data>
+  <data name="lbl_TZNote.MaximumSize" type="System.Drawing.Size, System.Drawing">
+    <value>600, 0</value>
+  </data>
+  <data name="lbl_TZNote.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 13</value>
+  </data>
+  <data name="lbl_TZNote.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="lbl_TZNote.Text" xml:space="preserve">
+    <value>lbl_TZNote</value>
+  </data>
+  <data name="&gt;&gt;lbl_TZNote.Name" xml:space="preserve">
+    <value>lbl_TZNote</value>
+  </data>
+  <data name="&gt;&gt;lbl_TZNote.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_TZNote.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;lbl_TZNote.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="lbl_TZValue.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_TZValue.Location" type="System.Drawing.Point, System.Drawing">
+    <value>448, 121</value>
+  </data>
+  <data name="lbl_TZValue.Size" type="System.Drawing.Size, System.Drawing">
+    <value>64, 13</value>
+  </data>
+  <data name="lbl_TZValue.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="lbl_TZValue.Text" xml:space="preserve">
+    <value>lbl_TZValue</value>
+  </data>
+  <data name="&gt;&gt;lbl_TZValue.Name" xml:space="preserve">
+    <value>lbl_TZValue</value>
+  </data>
+  <data name="&gt;&gt;lbl_TZValue.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_TZValue.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;lbl_TZValue.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="ckb_UseDST.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_UseDST.Location" type="System.Drawing.Point, System.Drawing">
+    <value>47, 119</value>
+  </data>
+  <data name="ckb_UseDST.Size" type="System.Drawing.Size, System.Drawing">
+    <value>91, 17</value>
+  </data>
+  <data name="ckb_UseDST.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="ckb_UseDST.Text" xml:space="preserve">
+    <value>ckb_UseDST</value>
+  </data>
+  <data name="&gt;&gt;ckb_UseDST.Name" xml:space="preserve">
+    <value>ckb_UseDST</value>
+  </data>
+  <data name="&gt;&gt;ckb_UseDST.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_UseDST.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;ckb_UseDST.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="lbl_TZTime.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_TZTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>272, 121</value>
+  </data>
+  <data name="lbl_TZTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 13</value>
+  </data>
+  <data name="lbl_TZTime.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="lbl_TZTime.Text" xml:space="preserve">
+    <value>lbl_TZTime</value>
+  </data>
+  <data name="&gt;&gt;lbl_TZTime.Name" xml:space="preserve">
+    <value>lbl_TZTime</value>
+  </data>
+  <data name="&gt;&gt;lbl_TZTime.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_TZTime.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;lbl_TZTime.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="ckb_UseTimeZone.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_UseTimeZone.Location" type="System.Drawing.Point, System.Drawing">
+    <value>30, 93</value>
+  </data>
+  <data name="ckb_UseTimeZone.Size" type="System.Drawing.Size, System.Drawing">
+    <value>117, 17</value>
+  </data>
+  <data name="ckb_UseTimeZone.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="ckb_UseTimeZone.Text" xml:space="preserve">
+    <value>ckb_UseTimeZone</value>
+  </data>
+  <data name="&gt;&gt;ckb_UseTimeZone.Name" xml:space="preserve">
+    <value>ckb_UseTimeZone</value>
+  </data>
+  <data name="&gt;&gt;ckb_UseTimeZone.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_UseTimeZone.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;ckb_UseTimeZone.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="cbx_ImportUseTimeZone.Location" type="System.Drawing.Point, System.Drawing">
+    <value>272, 93</value>
+  </data>
+  <data name="cbx_ImportUseTimeZone.Size" type="System.Drawing.Size, System.Drawing">
+    <value>437, 21</value>
+  </data>
+  <data name="cbx_ImportUseTimeZone.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="&gt;&gt;cbx_ImportUseTimeZone.Name" xml:space="preserve">
+    <value>cbx_ImportUseTimeZone</value>
+  </data>
+  <data name="&gt;&gt;cbx_ImportUseTimeZone.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbx_ImportUseTimeZone.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;cbx_ImportUseTimeZone.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="lbl_CameraTimeData.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_CameraTimeData.Location" type="System.Drawing.Point, System.Drawing">
+    <value>494, 294</value>
+  </data>
+  <data name="lbl_CameraTimeData.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 15</value>
+  </data>
+  <data name="lbl_CameraTimeData.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="lbl_CameraTimeData.Text" xml:space="preserve">
+    <value>lbl_CameraTimeData</value>
+  </data>
+  <data name="&gt;&gt;lbl_CameraTimeData.Name" xml:space="preserve">
+    <value>lbl_CameraTimeData</value>
+  </data>
+  <data name="&gt;&gt;lbl_CameraTimeData.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_CameraTimeData.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;lbl_CameraTimeData.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="lbl_CameraTime.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_CameraTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>491, 267</value>
+  </data>
+  <data name="lbl_CameraTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>82, 13</value>
+  </data>
+  <data name="lbl_CameraTime.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="lbl_CameraTime.Text" xml:space="preserve">
+    <value>lbl_CameraTime</value>
+  </data>
+  <data name="&gt;&gt;lbl_CameraTime.Name" xml:space="preserve">
+    <value>lbl_CameraTime</value>
+  </data>
+  <data name="&gt;&gt;lbl_CameraTime.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_CameraTime.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;lbl_CameraTime.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="lbl_ImportGPXSeconds.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_ImportGPXSeconds.Location" type="System.Drawing.Point, System.Drawing">
+    <value>407, 267</value>
+  </data>
+  <data name="lbl_ImportGPXSeconds.Size" type="System.Drawing.Size, System.Drawing">
+    <value>116, 13</value>
+  </data>
+  <data name="lbl_ImportGPXSeconds.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="lbl_ImportGPXSeconds.Text" xml:space="preserve">
+    <value>lbl_ImportGPXSeconds</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportGPXSeconds.Name" xml:space="preserve">
+    <value>lbl_ImportGPXSeconds</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportGPXSeconds.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportGPXSeconds.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportGPXSeconds.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="lbl_ImportGPXMinutes.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_ImportGPXMinutes.Location" type="System.Drawing.Point, System.Drawing">
+    <value>332, 267</value>
+  </data>
+  <data name="lbl_ImportGPXMinutes.Size" type="System.Drawing.Size, System.Drawing">
+    <value>111, 13</value>
+  </data>
+  <data name="lbl_ImportGPXMinutes.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="lbl_ImportGPXMinutes.Text" xml:space="preserve">
+    <value>lbl_ImportGPXMinutes</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportGPXMinutes.Name" xml:space="preserve">
+    <value>lbl_ImportGPXMinutes</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportGPXMinutes.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportGPXMinutes.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportGPXMinutes.ZOrder" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="lbl_ImportGPXHours.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_ImportGPXHours.Location" type="System.Drawing.Point, System.Drawing">
+    <value>266, 267</value>
+  </data>
+  <data name="lbl_ImportGPXHours.Size" type="System.Drawing.Size, System.Drawing">
+    <value>102, 13</value>
+  </data>
+  <data name="lbl_ImportGPXHours.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="lbl_ImportGPXHours.Text" xml:space="preserve">
+    <value>lbl_ImportGPXHours</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportGPXHours.Name" xml:space="preserve">
+    <value>lbl_ImportGPXHours</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportGPXHours.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportGPXHours.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportGPXHours.ZOrder" xml:space="preserve">
+    <value>16</value>
+  </data>
+  <data name="lbl_ImportGPXDays.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_ImportGPXDays.Location" type="System.Drawing.Point, System.Drawing">
+    <value>204, 267</value>
+  </data>
+  <data name="lbl_ImportGPXDays.Size" type="System.Drawing.Size, System.Drawing">
+    <value>98, 13</value>
+  </data>
+  <data name="lbl_ImportGPXDays.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="lbl_ImportGPXDays.Text" xml:space="preserve">
+    <value>lbl_ImportGPXDays</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportGPXDays.Name" xml:space="preserve">
+    <value>lbl_ImportGPXDays</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportGPXDays.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportGPXDays.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportGPXDays.ZOrder" xml:space="preserve">
+    <value>17</value>
+  </data>
+  <data name="nud_Seconds.Location" type="System.Drawing.Point, System.Drawing">
+    <value>420, 293</value>
+  </data>
+  <data name="nud_Seconds.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 20</value>
+  </data>
+  <data name="nud_Seconds.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;nud_Seconds.Name" xml:space="preserve">
+    <value>nud_Seconds</value>
+  </data>
+  <data name="&gt;&gt;nud_Seconds.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nud_Seconds.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;nud_Seconds.ZOrder" xml:space="preserve">
+    <value>18</value>
+  </data>
+  <data name="nud_Minutes.Location" type="System.Drawing.Point, System.Drawing">
+    <value>345, 293</value>
+  </data>
+  <data name="nud_Minutes.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 20</value>
+  </data>
+  <data name="nud_Minutes.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;nud_Minutes.Name" xml:space="preserve">
+    <value>nud_Minutes</value>
+  </data>
+  <data name="&gt;&gt;nud_Minutes.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nud_Minutes.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;nud_Minutes.ZOrder" xml:space="preserve">
+    <value>19</value>
+  </data>
+  <data name="nud_Hours.Location" type="System.Drawing.Point, System.Drawing">
+    <value>279, 293</value>
+  </data>
+  <data name="nud_Hours.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 20</value>
+  </data>
+  <data name="nud_Hours.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;nud_Hours.Name" xml:space="preserve">
+    <value>nud_Hours</value>
+  </data>
+  <data name="&gt;&gt;nud_Hours.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nud_Hours.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;nud_Hours.ZOrder" xml:space="preserve">
+    <value>20</value>
+  </data>
+  <data name="nud_Days.Location" type="System.Drawing.Point, System.Drawing">
+    <value>214, 293</value>
+  </data>
+  <data name="nud_Days.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 20</value>
+  </data>
+  <data name="nud_Days.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;nud_Days.Name" xml:space="preserve">
+    <value>nud_Days</value>
+  </data>
+  <data name="&gt;&gt;nud_Days.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nud_Days.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;nud_Days.ZOrder" xml:space="preserve">
+    <value>21</value>
+  </data>
+  <data name="lbl_ShiftTrackTimeBy.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_ShiftTrackTimeBy.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 294</value>
+  </data>
+  <data name="lbl_ShiftTrackTimeBy.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 13</value>
+  </data>
+  <data name="lbl_ShiftTrackTimeBy.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="lbl_ShiftTrackTimeBy.Text" xml:space="preserve">
+    <value>lbl_ShiftTrackTimeBy</value>
+  </data>
+  <data name="&gt;&gt;lbl_ShiftTrackTimeBy.Name" xml:space="preserve">
+    <value>lbl_ShiftTrackTimeBy</value>
+  </data>
+  <data name="&gt;&gt;lbl_ShiftTrackTimeBy.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_ShiftTrackTimeBy.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;lbl_ShiftTrackTimeBy.ZOrder" xml:space="preserve">
+    <value>22</value>
+  </data>
+  <data name="cbx_ImportTimeAgainst.Location" type="System.Drawing.Point, System.Drawing">
+    <value>358, 26</value>
+  </data>
+  <data name="cbx_ImportTimeAgainst.Size" type="System.Drawing.Size, System.Drawing">
+    <value>125, 21</value>
+  </data>
+  <data name="cbx_ImportTimeAgainst.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;cbx_ImportTimeAgainst.Name" xml:space="preserve">
+    <value>cbx_ImportTimeAgainst</value>
+  </data>
+  <data name="&gt;&gt;cbx_ImportTimeAgainst.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbx_ImportTimeAgainst.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;cbx_ImportTimeAgainst.ZOrder" xml:space="preserve">
+    <value>23</value>
+  </data>
+  <data name="lbl_ImportTimeAgainst.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_ImportTimeAgainst.Location" type="System.Drawing.Point, System.Drawing">
+    <value>27, 29</value>
+  </data>
+  <data name="lbl_ImportTimeAgainst.Size" type="System.Drawing.Size, System.Drawing">
+    <value>110, 13</value>
+  </data>
+  <data name="lbl_ImportTimeAgainst.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lbl_ImportTimeAgainst.Text" xml:space="preserve">
+    <value>lbl_ImportTimeAgainst</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportTimeAgainst.Name" xml:space="preserve">
+    <value>lbl_ImportTimeAgainst</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportTimeAgainst.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportTimeAgainst.Parent" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;lbl_ImportTimeAgainst.ZOrder" xml:space="preserve">
+    <value>24</value>
+  </data>
+  <data name="gbx_ImportGPXTimeSetting.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 160</value>
+  </data>
+  <data name="gbx_ImportGPXTimeSetting.Size" type="System.Drawing.Size, System.Drawing">
+    <value>725, 381</value>
+  </data>
+  <data name="gbx_ImportGPXTimeSetting.TabIndex" type="System.Int32, mscorlib">
+    <value>29</value>
+  </data>
+  <data name="gbx_ImportGPXTimeSetting.Text" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;gbx_ImportGPXTimeSetting.Name" xml:space="preserve">
+    <value>gbx_ImportGPXTimeSetting</value>
+  </data>
+  <data name="&gt;&gt;gbx_ImportGPXTimeSetting.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gbx_ImportGPXTimeSetting.Parent" xml:space="preserve">
+    <value>tpg_ImportExport_Import</value>
+  </data>
+  <data name="&gt;&gt;gbx_ImportGPXTimeSetting.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="tpg_ImportExport_Import.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tpg_ImportExport_Import.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tpg_ImportExport_Import.Size" type="System.Drawing.Size, System.Drawing">
+    <value>769, 390</value>
+  </data>
+  <data name="tpg_ImportExport_Import.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="tpg_ImportExport_Import.Text" xml:space="preserve">
+    <value>tpg_ImportExport_Import</value>
+  </data>
+  <data name="&gt;&gt;tpg_ImportExport_Import.Name" xml:space="preserve">
+    <value>tpg_ImportExport_Import</value>
+  </data>
+  <data name="&gt;&gt;tpg_ImportExport_Import.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tpg_ImportExport_Import.Parent" xml:space="preserve">
+    <value>tcr_ImportExport</value>
+  </data>
+  <data name="&gt;&gt;tpg_ImportExport_Import.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tpg_ImportExport_Export.AutoScroll" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="tpg_ImportExport_Export.AutoScrollMargin" type="System.Drawing.Size, System.Drawing">
+    <value>0, 10</value>
   </data>
   <data name="pbx_GPSDataPaste.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -152,6 +1177,177 @@
         dQAAAABJRU5ErkJggg==
 </value>
   </data>
+  <data name="pbx_GPSDataPaste.Location" type="System.Drawing.Point, System.Drawing">
+    <value>35, 151</value>
+  </data>
+  <data name="pbx_GPSDataPaste.Size" type="System.Drawing.Size, System.Drawing">
+    <value>16, 16</value>
+  </data>
+  <data name="pbx_GPSDataPaste.TabIndex" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="&gt;&gt;pbx_GPSDataPaste.Name" xml:space="preserve">
+    <value>pbx_GPSDataPaste</value>
+  </data>
+  <data name="&gt;&gt;pbx_GPSDataPaste.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pbx_GPSDataPaste.Parent" xml:space="preserve">
+    <value>gbx_SaveTrackOptions</value>
+  </data>
+  <data name="&gt;&gt;pbx_GPSDataPaste.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampTypeNote.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampTypeNote.Location" type="System.Drawing.Point, System.Drawing">
+    <value>56, 151</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampTypeNote.Size" type="System.Drawing.Size, System.Drawing">
+    <value>181, 13</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampTypeNote.TabIndex" type="System.Int32, mscorlib">
+    <value>24</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampTypeNote.Text" xml:space="preserve">
+    <value>lbl_ExportTrackTimeStampTypeNote</value>
+  </data>
+  <data name="&gt;&gt;lbl_ExportTrackTimeStampTypeNote.Name" xml:space="preserve">
+    <value>lbl_ExportTrackTimeStampTypeNote</value>
+  </data>
+  <data name="&gt;&gt;lbl_ExportTrackTimeStampTypeNote.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_ExportTrackTimeStampTypeNote.Parent" xml:space="preserve">
+    <value>gbx_SaveTrackOptions</value>
+  </data>
+  <data name="&gt;&gt;lbl_ExportTrackTimeStampTypeNote.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="cbx_ExportTrackTimeStampType.Location" type="System.Drawing.Point, System.Drawing">
+    <value>358, 120</value>
+  </data>
+  <data name="cbx_ExportTrackTimeStampType.Size" type="System.Drawing.Size, System.Drawing">
+    <value>125, 21</value>
+  </data>
+  <data name="cbx_ExportTrackTimeStampType.TabIndex" type="System.Int32, mscorlib">
+    <value>23</value>
+  </data>
+  <data name="&gt;&gt;cbx_ExportTrackTimeStampType.Name" xml:space="preserve">
+    <value>cbx_ExportTrackTimeStampType</value>
+  </data>
+  <data name="&gt;&gt;cbx_ExportTrackTimeStampType.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbx_ExportTrackTimeStampType.Parent" xml:space="preserve">
+    <value>gbx_SaveTrackOptions</value>
+  </data>
+  <data name="&gt;&gt;cbx_ExportTrackTimeStampType.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampType.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampType.Location" type="System.Drawing.Point, System.Drawing">
+    <value>32, 123</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampType.Size" type="System.Drawing.Size, System.Drawing">
+    <value>158, 13</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampType.TabIndex" type="System.Int32, mscorlib">
+    <value>22</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampType.Text" xml:space="preserve">
+    <value>lbl_ExportTrackTimeStampType</value>
+  </data>
+  <data name="&gt;&gt;lbl_ExportTrackTimeStampType.Name" xml:space="preserve">
+    <value>lbl_ExportTrackTimeStampType</value>
+  </data>
+  <data name="&gt;&gt;lbl_ExportTrackTimeStampType.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_ExportTrackTimeStampType.Parent" xml:space="preserve">
+    <value>gbx_SaveTrackOptions</value>
+  </data>
+  <data name="&gt;&gt;lbl_ExportTrackTimeStampType.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="cbx_ExportTrackOrderBy.Location" type="System.Drawing.Point, System.Drawing">
+    <value>358, 93</value>
+  </data>
+  <data name="cbx_ExportTrackOrderBy.Size" type="System.Drawing.Size, System.Drawing">
+    <value>125, 21</value>
+  </data>
+  <data name="cbx_ExportTrackOrderBy.TabIndex" type="System.Int32, mscorlib">
+    <value>21</value>
+  </data>
+  <data name="&gt;&gt;cbx_ExportTrackOrderBy.Name" xml:space="preserve">
+    <value>cbx_ExportTrackOrderBy</value>
+  </data>
+  <data name="&gt;&gt;cbx_ExportTrackOrderBy.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbx_ExportTrackOrderBy.Parent" xml:space="preserve">
+    <value>gbx_SaveTrackOptions</value>
+  </data>
+  <data name="&gt;&gt;cbx_ExportTrackOrderBy.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="lbl_ExportTrackOrderBy.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_ExportTrackOrderBy.Location" type="System.Drawing.Point, System.Drawing">
+    <value>32, 96</value>
+  </data>
+  <data name="lbl_ExportTrackOrderBy.Size" type="System.Drawing.Size, System.Drawing">
+    <value>119, 13</value>
+  </data>
+  <data name="lbl_ExportTrackOrderBy.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <data name="lbl_ExportTrackOrderBy.Text" xml:space="preserve">
+    <value>lbl_ExportTrackOrderBy</value>
+  </data>
+  <data name="&gt;&gt;lbl_ExportTrackOrderBy.Name" xml:space="preserve">
+    <value>lbl_ExportTrackOrderBy</value>
+  </data>
+  <data name="&gt;&gt;lbl_ExportTrackOrderBy.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_ExportTrackOrderBy.Parent" xml:space="preserve">
+    <value>gbx_SaveTrackOptions</value>
+  </data>
+  <data name="&gt;&gt;lbl_ExportTrackOrderBy.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude.Location" type="System.Drawing.Point, System.Drawing">
+    <value>32, 63</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude.Size" type="System.Drawing.Size, System.Drawing">
+    <value>178, 17</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude.Text" xml:space="preserve">
+    <value>ckb_ExportTrackIncludeAltitude</value>
+  </data>
+  <data name="&gt;&gt;ckb_ExportTrackIncludeAltitude.Name" xml:space="preserve">
+    <value>ckb_ExportTrackIncludeAltitude</value>
+  </data>
+  <data name="&gt;&gt;ckb_ExportTrackIncludeAltitude.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_ExportTrackIncludeAltitude.Parent" xml:space="preserve">
+    <value>gbx_SaveTrackOptions</value>
+  </data>
+  <data name="&gt;&gt;ckb_ExportTrackIncludeAltitude.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
   <data name="pbx_Browse_SaveTo_Folder.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
@@ -163,6 +1359,159 @@
         McgAoFePAl0QD9UKATPyGe5BXUEQA9U+7i1k4IRqHXDAwAAANSDaAOvc+eMAAAAASUVORK5CYII=
 </value>
   </data>
+  <data name="pbx_Browse_SaveTo_Folder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>530, 34</value>
+  </data>
+  <data name="pbx_Browse_SaveTo_Folder.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="pbx_Browse_SaveTo_Folder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>16, 16</value>
+  </data>
+  <data name="pbx_Browse_SaveTo_Folder.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>AutoSize</value>
+  </data>
+  <data name="pbx_Browse_SaveTo_Folder.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="&gt;&gt;pbx_Browse_SaveTo_Folder.Name" xml:space="preserve">
+    <value>pbx_Browse_SaveTo_Folder</value>
+  </data>
+  <data name="&gt;&gt;pbx_Browse_SaveTo_Folder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pbx_Browse_SaveTo_Folder.Parent" xml:space="preserve">
+    <value>gbx_SaveTrackOptions</value>
+  </data>
+  <data name="&gt;&gt;pbx_Browse_SaveTo_Folder.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="lbl_SaveTrackTo.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_SaveTrackTo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>23, 34</value>
+  </data>
+  <data name="lbl_SaveTrackTo.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
+  </data>
+  <data name="lbl_SaveTrackTo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>89, 13</value>
+  </data>
+  <data name="lbl_SaveTrackTo.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="lbl_SaveTrackTo.Text" xml:space="preserve">
+    <value>lbl_SaveTrackTo</value>
+  </data>
+  <data name="&gt;&gt;lbl_SaveTrackTo.Name" xml:space="preserve">
+    <value>lbl_SaveTrackTo</value>
+  </data>
+  <data name="&gt;&gt;lbl_SaveTrackTo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_SaveTrackTo.Parent" xml:space="preserve">
+    <value>gbx_SaveTrackOptions</value>
+  </data>
+  <data name="&gt;&gt;lbl_SaveTrackTo.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="tbx_SaveTrackTo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>139, 30</value>
+  </data>
+  <data name="tbx_SaveTrackTo.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="tbx_SaveTrackTo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>372, 20</value>
+  </data>
+  <data name="tbx_SaveTrackTo.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="&gt;&gt;tbx_SaveTrackTo.Name" xml:space="preserve">
+    <value>tbx_SaveTrackTo</value>
+  </data>
+  <data name="&gt;&gt;tbx_SaveTrackTo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tbx_SaveTrackTo.Parent" xml:space="preserve">
+    <value>gbx_SaveTrackOptions</value>
+  </data>
+  <data name="&gt;&gt;tbx_SaveTrackTo.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="gbx_SaveTrackOptions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>23, 16</value>
+  </data>
+  <data name="gbx_SaveTrackOptions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>706, 194</value>
+  </data>
+  <data name="gbx_SaveTrackOptions.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="gbx_SaveTrackOptions.Text" xml:space="preserve">
+    <value>gbx_SaveTrackOptions</value>
+  </data>
+  <data name="&gt;&gt;gbx_SaveTrackOptions.Name" xml:space="preserve">
+    <value>gbx_SaveTrackOptions</value>
+  </data>
+  <data name="&gt;&gt;gbx_SaveTrackOptions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gbx_SaveTrackOptions.Parent" xml:space="preserve">
+    <value>tpg_ImportExport_Export</value>
+  </data>
+  <data name="&gt;&gt;gbx_SaveTrackOptions.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tpg_ImportExport_Export.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tpg_ImportExport_Export.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tpg_ImportExport_Export.Size" type="System.Drawing.Size, System.Drawing">
+    <value>769, 390</value>
+  </data>
+  <data name="tpg_ImportExport_Export.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tpg_ImportExport_Export.Text" xml:space="preserve">
+    <value>tpg_ImportExport_Export</value>
+  </data>
+  <data name="&gt;&gt;tpg_ImportExport_Export.Name" xml:space="preserve">
+    <value>tpg_ImportExport_Export</value>
+  </data>
+  <data name="&gt;&gt;tpg_ImportExport_Export.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tpg_ImportExport_Export.Parent" xml:space="preserve">
+    <value>tcr_ImportExport</value>
+  </data>
+  <data name="&gt;&gt;tpg_ImportExport_Export.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tcr_ImportExport.Location" type="System.Drawing.Point, System.Drawing">
+    <value>13, 13</value>
+  </data>
+  <data name="tcr_ImportExport.Size" type="System.Drawing.Size, System.Drawing">
+    <value>777, 416</value>
+  </data>
+  <data name="tcr_ImportExport.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tcr_ImportExport.Name" xml:space="preserve">
+    <value>tcr_ImportExport</value>
+  </data>
+  <data name="&gt;&gt;tcr_ImportExport.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tcr_ImportExport.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;tcr_ImportExport.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
   <metadata name="ofd_importOneFile.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
@@ -172,6 +1521,66 @@
   <metadata name="ofd_SaveTrackTo.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>387, 17</value>
   </metadata>
+  <data name="btn_Generic_Cancel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>702, 439</value>
+  </data>
+  <data name="btn_Generic_Cancel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btn_Generic_Cancel.TabIndex" type="System.Int32, mscorlib">
+    <value>33</value>
+  </data>
+  <data name="btn_Generic_Cancel.Text" xml:space="preserve">
+    <value>btn_Generic_Cancel</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_Cancel.Name" xml:space="preserve">
+    <value>btn_Generic_Cancel</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_Cancel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_Cancel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_Cancel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="btn_Generic_OK.Location" type="System.Drawing.Point, System.Drawing">
+    <value>608, 439</value>
+  </data>
+  <data name="btn_Generic_OK.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btn_Generic_OK.TabIndex" type="System.Int32, mscorlib">
+    <value>32</value>
+  </data>
+  <data name="btn_Generic_OK.Text" xml:space="preserve">
+    <value>btn_Generic_OK</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_OK.Name" xml:space="preserve">
+    <value>btn_Generic_OK</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_OK.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_OK.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_OK.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>819, 472</value>
+  </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAYAAAAAAAEAIADGIQEAZgAAAICAAAABACAAKAgBACwiAQBAQAAAAQAgAChCAABUKgIAMDAAAAEA
@@ -3073,5 +4482,32 @@
         AAAAAAAAAAAAAAAAh1MyHk51rLQtxuquJYOKGgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAHAADAAwAA
         gAEAAIABAACAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAACAAQAAwAEAAMADAADABwAA8B8AAPw/AAA=
 </value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>FrmImportExportGpx</value>
+  </data>
+  <data name="&gt;&gt;ofd_importOneFile.Name" xml:space="preserve">
+    <value>ofd_importOneFile</value>
+  </data>
+  <data name="&gt;&gt;ofd_importOneFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;fbd_importFromAnotherFolder.Name" xml:space="preserve">
+    <value>fbd_importFromAnotherFolder</value>
+  </data>
+  <data name="&gt;&gt;fbd_importFromAnotherFolder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FolderBrowserDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ofd_SaveTrackTo.Name" xml:space="preserve">
+    <value>ofd_SaveTrackTo</value>
+  </data>
+  <data name="&gt;&gt;ofd_SaveTrackTo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>FrmImportExportGpx</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

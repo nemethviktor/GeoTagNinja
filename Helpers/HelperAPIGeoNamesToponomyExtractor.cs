@@ -31,12 +31,14 @@ internal static class HelperAPIGeoNamesToponomyExtractor
             catch (Exception ex)
             {
                 CustomMessageBox customMessageBox = new(
-                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                              messageBoxName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB") +
+                    text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                              controlName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB",
+                              fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox) +
                           ex.Message,
                     caption: HelperControlAndMessageBoxHandling
-                       .GenericGetMessageBoxCaption(
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                       .ReturnControlText(
+                            controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString(),
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Error);
                 customMessageBox.ShowDialog();
@@ -72,12 +74,14 @@ internal static class HelperAPIGeoNamesToponomyExtractor
         {
             HelperVariables.OperationAPIReturnedOKResponse = false;
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") +
+                text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                          controlName: "mbx_Helper_WarningGeoNamesAPIResponse",
+                          fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox) +
                       responseToponomy.Content,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Warning.ToString()),
+                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                                                                   .Warning.ToString(),
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
@@ -93,12 +97,14 @@ internal static class HelperAPIGeoNamesToponomyExtractor
         {
             HelperVariables.OperationAPIReturnedOKResponse = false;
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_Helper_WarningGeoNamesAPIResponse") +
+                text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                          controlName: "mbx_Helper_WarningGeoNamesAPIResponse",
+                          fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox) +
                       responseToponomy.StatusCode,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Warning.ToString()),
+                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                                                                   .Warning.ToString(),
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();

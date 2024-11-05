@@ -18,11 +18,10 @@ namespace GeoTagNinja;
 /// </summary>
 internal class SingleInstance_PipeServer
 {
-
-    internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+    internal static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     /// <summary>
-    /// The single threaded server thread
+    ///     The single threaded server thread
     /// </summary>
     internal Thread serverThread = null;
 
@@ -63,7 +62,7 @@ internal class SingleInstance_PipeServer
     /// </summary>
     public void stopServing()
     {
-        Logger.Info(message: "Stopping pipe serving ...");
+        Log.Info(message: "Stopping pipe serving ...");
         if (cTokenSource != null)
         {
             cTokenSource.Cancel();
@@ -82,7 +81,7 @@ internal class SingleInstance_PipeServer
     /// </summary>
     private void PipeServer_ServingThread()
     {
-        Logger.Info(message: $"Starting pipe serving under user '{myUserName}' ...");
+        Log.Info(message: $"Starting pipe serving under user '{myUserName}' ...");
 
         // Create a cancelation token to abort the task
         cTokenSource = new CancellationTokenSource();
@@ -113,7 +112,7 @@ internal class SingleInstance_PipeServer
                 pipeSecurity: npSec);
 
             int threadID = Thread.CurrentThread.ManagedThreadId;
-            Logger.Info(message: $"Server: started with Thread ID {threadID.ToString()}");
+            Log.Info(message: $"Server: started with Thread ID {threadID.ToString()}");
 
             // Async wait for connection that can be canceled
             IAsyncResult npConnectionResult =
@@ -131,7 +130,7 @@ internal class SingleInstance_PipeServer
 
             if ((cTokenSource == null) || (cTokenSource.IsCancellationRequested))
             {
-                Logger.Info(message: $"Server ({threadID.ToString()}): cancellation requested.");
+                Log.Info(message: $"Server ({threadID.ToString()}): cancellation requested.");
                 return;
             }
         }
@@ -143,7 +142,7 @@ internal class SingleInstance_PipeServer
 
      private void PipeServer_ServingThread()
        {
-           Logger.Info(message: $"Starting pipe serving under user '{myUserName}' ...");
+           Log.Info(message: $"Starting pipe serving under user '{myUserName}' ...");
 
            // Create a cancelation token to abort the task
            cTokenSource = new CancellationTokenSource();
@@ -180,7 +179,7 @@ internal class SingleInstance_PipeServer
                );
 
                int threadID = Thread.CurrentThread.ManagedThreadId;
-               Logger.Info(message: $"Server: started with Thread ID {threadID.ToString()}");
+               Log.Info(message: $"Server: started with Thread ID {threadID.ToString()}");
 
                // Async wait for connection that can be canceled
                IAsyncResult npConnectionResult =
@@ -198,7 +197,7 @@ internal class SingleInstance_PipeServer
 
                if ((cTokenSource == null) || (cTokenSource.IsCancellationRequested))
                {
-                   Logger.Info(message: $"Server ({threadID.ToString()}): cancellation requested.");
+                   Log.Info(message: $"Server ({threadID.ToString()}): cancellation requested.");
                    return;
                }
            }
@@ -207,8 +206,8 @@ internal class SingleInstance_PipeServer
      */
 
     /// <summary>
-    /// Method to handle the information transmission upon
-    /// a successful connection through the named pipe.
+    ///     Method to handle the information transmission upon
+    ///     a successful connection through the named pipe.
     /// </summary>
     /// <param name="npServer">The NamedPipeServerStream connected with</param>
     /// <param name="threadID">The thread ID (for logging)</param>
@@ -224,7 +223,7 @@ internal class SingleInstance_PipeServer
             // Username only available after reading from pipe
             // But access is limited to current user only ...
             string sendingUser = npServer.GetImpersonationUserName();
-            Logger.Info(message: $"Server ({threadID.ToString()}): connected to user {sendingUser}");
+            Log.Info(message: $"Server ({threadID.ToString()}): connected to user {sendingUser}");
 
             msgCallback.Invoke(obj: $"Message from user '{sendingUser}': {inputLine}");
             Console.WriteLine(value: inputLine);
@@ -232,8 +231,8 @@ internal class SingleInstance_PipeServer
         catch (IOException e)
         {
             // IOException raised if pipe is broken / disconnected...
-            Logger.Info(message: $"Server ({threadID.ToString()}): Server session ended - " +
-                                 e.Message);
+            Log.Info(message: $"Server ({threadID.ToString()}): Server session ended - " +
+                              e.Message);
         }
     }
 

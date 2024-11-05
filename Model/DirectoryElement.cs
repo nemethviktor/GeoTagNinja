@@ -28,7 +28,7 @@ public class DirectoryElement
         Unknown = 99
     }
 
-    internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+    internal static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
 
     /// <summary>
@@ -878,8 +878,8 @@ public class DirectoryElement
     private (string, string) GetDataPointFromTags(ElementAttribute attribute,
                                                   IDictionary<string, string> tags)
     {
-        Logger.Trace(message: "Starting to parse dict for attribute: " +
-                              GetElementAttributesName(attributeToFind: attribute));
+        Log.Trace(message: "Starting to parse dict for attribute: " +
+                           GetElementAttributesName(attributeToFind: attribute));
         List<ElementAttribute> ignoreElementAttributes = new()
         {
             ElementAttribute.Coordinates,
@@ -905,7 +905,7 @@ public class DirectoryElement
                 if (tags.ContainsKey(key: tagsWithAttributesIn[index: i]
                                         .ToUpper()))
                 {
-                    Logger.Trace(
+                    Log.Trace(
                         message:
                         $"Parse dict for attribute: '{GetElementAttributesName(attributeToFind: attribute)}" +
                         $"' yielded value '{tags[key: tagsWithAttributesIn[index: i].ToUpper()]}'");
@@ -916,7 +916,7 @@ public class DirectoryElement
             }
         }
 
-        Logger.Trace(
+        Log.Trace(
             message:
             $"Parse dict for attribute: '{GetElementAttributesName(attributeToFind: attribute)}" +
             "' yielded no value.");
@@ -943,7 +943,7 @@ public class DirectoryElement
                                 IDictionary<string, string> tags,
                                 int callDepth)
     {
-        Logger.Trace(
+        Log.Trace(
             message:
             $"Parse attribute '{GetElementAttributesName(attributeToFind: attribute)}' at depth {callDepth.ToString()}...");
         if (parsedFails.Contains(item: attribute))
@@ -994,7 +994,7 @@ public class DirectoryElement
         }
         catch
         {
-            Logger.Error(
+            Log.Error(
                 message:
                 $"Parse attribute failed '{GetElementAttributesName(attributeToFind: attribute)}' at depth {callDepth.ToString()}...");
             return false; // be triple sure here.
@@ -1119,7 +1119,7 @@ public class DirectoryElement
         }
         catch
         {
-            Logger.Error(
+            Log.Error(
                 message:
                 $"Parse error for attribute '{attribute}': parseResult: {parseResult}, parsedValues: {parsedValues}.");
         }
@@ -1145,7 +1145,7 @@ public class DirectoryElement
     /// <param name="dictTagsIn">The tags to parse</param>
     public void ParseAttributesFromExifToolOutput(IDictionary<string, string> dictTagsIn)
     {
-        Logger.Trace(message: $"Parse dict for item '{ItemNameWithoutPath}'...");
+        Log.Trace(message: $"Parse dict for item '{ItemNameWithoutPath}'...");
         IEnumerable<ElementAttribute> possibleAttributes =
             (IEnumerable<ElementAttribute>)Enum.GetValues(
                 enumType: typeof(ElementAttribute));
@@ -1192,7 +1192,7 @@ public class DirectoryElement
                               isMarkedForDeletion: false);
         }
 
-        Logger.Trace(message: $"Parse dict for item '{ItemNameWithoutPath}' - OK");
+        Log.Trace(message: $"Parse dict for item '{ItemNameWithoutPath}' - OK");
     }
 
 #endregion

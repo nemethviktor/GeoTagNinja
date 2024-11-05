@@ -15,7 +15,7 @@ namespace GeoTagNinja.Model;
 
 public class DirectoryElementCollection : List<DirectoryElement>
 {
-    private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     private ExifTool _ExifTool;
 
@@ -165,7 +165,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         Action<string> statusMethod,
         bool collectionModeEnabled)
     {
-        Logger.Trace(message: $"Start Parsing Folder '{folderOrCollectionFileName}'");
+        Log.Trace(message: $"Start Parsing Folder '{folderOrCollectionFileName}'");
         statusMethod(obj: "Scanning folder: Initializing ...");
 
         if (_ExifTool == null)
@@ -182,10 +182,10 @@ public class DirectoryElementCollection : List<DirectoryElement>
             // Only list drives... then exit
             if (folderOrCollectionFileName == SpecialFolder.MyComputer.ToString())
             {
-                Logger.Trace(message: "Listing Drives");
+                Log.Trace(message: "Listing Drives");
                 foreach (DriveInfo drive in DriveInfo.GetDrives())
                 {
-                    Logger.Trace(message: "Drive:" + drive.Name);
+                    Log.Trace(message: "Drive:" + drive.Name);
                     Add(item: new DirectoryElement(
                         itemNameWithoutPath: drive.Name,
                         type: DirectoryElement.ElementType.Drive,
@@ -194,7 +194,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 }
 
                 CreateGuiDsForDirectoryElements();
-                Logger.Trace(message: "Listing Drives - OK");
+                Log.Trace(message: "Listing Drives - OK");
                 return;
             }
 
@@ -203,7 +203,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
             try
             {
-                Logger.Trace(message: "Files: Adding Parent Folder");
+                Log.Trace(message: "Files: Adding Parent Folder");
                 string tmpStrParent = HelperFileSystemOperators.FsoGetParent(path: folderOrCollectionFileName);
                 if (tmpStrParent != null &&
                     tmpStrParent != SpecialFolder.MyComputer.ToString())
@@ -217,13 +217,15 @@ public class DirectoryElementCollection : List<DirectoryElement>
             }
             catch (Exception ex)
             {
-                Logger.Error(message: $"Could not add parent. Error: {ex.Message}");
+                Log.Error(message: $"Could not add parent. Error: {ex.Message}");
                 CustomMessageBox customMessageBox = new(
-                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                        messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
+                    text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: "mbx_DirectoryElementCollection_ErrorParsing",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
                     caption: HelperControlAndMessageBoxHandling
-                       .GenericGetMessageBoxCaption(
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                       .ReturnControlText(
+                            controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString(),
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Error);
                 customMessageBox.ShowDialog();
@@ -232,7 +234,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
             // ******************************
             // list folders, ReparsePoint means these are links.
             statusMethod(obj: "Scanning folder: processing directories ...");
-            Logger.Trace(message: "Listing Folders");
+            Log.Trace(message: "Listing Folders");
             List<string> dirs = new();
             try
             {
@@ -242,7 +244,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     if (directoryInfo.FullName == SpecialFolder.MyComputer.ToString())
                     {
                         // It's the MyComputer entry
-                        Logger.Trace(message: "MyComputer: " + directoryInfo.Name);
+                        Log.Trace(message: "MyComputer: " + directoryInfo.Name);
                         Add(item: new DirectoryElement(
                             itemNameWithoutPath: directoryInfo.Name,
                             type: DirectoryElement.ElementType.MyComputer,
@@ -254,7 +256,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                              !directoryInfo.Attributes.ToString()
                                            .Contains(value: "ReparsePoint"))
                     {
-                        Logger.Trace(message: "Folder: " + directoryInfo.Name);
+                        Log.Trace(message: "Folder: " + directoryInfo.Name);
                         Add(item: new DirectoryElement(
                             itemNameWithoutPath: directoryInfo.Name,
                             type: DirectoryElement.ElementType.SubDirectory,
@@ -265,31 +267,33 @@ public class DirectoryElementCollection : List<DirectoryElement>
             }
             catch (Exception ex)
             {
-                Logger.Error(message: "Error: " + ex.Message);
+                Log.Error(message: "Error: " + ex.Message);
                 CustomMessageBox customMessageBox = new(
-                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                        messageBoxName: "mbx_DirectoryElementCollection_ErrorParsing"),
+                    text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: "mbx_DirectoryElementCollection_ErrorParsing",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
                     caption: HelperControlAndMessageBoxHandling
-                       .GenericGetMessageBoxCaption(
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                       .ReturnControlText(
+                            controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString(),
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Error);
                 customMessageBox.ShowDialog();
             }
 
-            Logger.Trace(message: "Listing Folders - OK");
+            Log.Trace(message: "Listing Folders - OK");
         }
 
-        Logger.Trace(message: "Loading allowedExtensions");
+        Log.Trace(message: "Loading allowedExtensions");
         string[] allowedImageExtensions = HelperGenericAncillaryListsArrays.AllCompatibleExtensionsExt();
         string[] allowedSideCarExtensions = HelperGenericAncillaryListsArrays.GetSideCarExtensionsArray();
-        Logger.Trace(message: "Loading allowedExtensions - OK");
+        Log.Trace(message: "Loading allowedExtensions - OK");
 
         // ******************************
         // list files that have supported extensions
         // separate these into side car and image files
         statusMethod(obj: "Scanning folder: processing supported files ...");
-        Logger.Trace(message: "Files: Listing Files");
+        Log.Trace(message: "Files: Listing Files");
         HashSet<string> imageFiles = new();
         HashSet<string> sidecarFiles = new();
 
@@ -325,7 +329,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
             }
             catch (Exception ex)
             {
-                Logger.Trace(message: "Files: Listing Files - Error: " + ex.Message);
+                Log.Trace(message: "Files: Listing Files - Error: " + ex.Message);
                 MessageBox.Show(text: ex.Message);
                 return;
             }
@@ -366,14 +370,14 @@ public class DirectoryElementCollection : List<DirectoryElement>
             }
         }
 
-        Logger.Trace(message: "Files: Listing Files - OK, image file count: " + imageFiles.Count);
+        Log.Trace(message: "Files: Listing Files - OK, image file count: " + imageFiles.Count);
 
         // ******************************
         // Map side car files to image file
         IDictionary<string, string> image2sidecar = new Dictionary<string, string>();
         HashSet<string> overlappingXmpFileList = new();
 
-        Logger.Trace(message: "Files: Checking sidecar files, count: " + sidecarFiles.Count);
+        Log.Trace(message: "Files: Checking sidecar files, count: " + sidecarFiles.Count);
         foreach (string sidecarFile in sidecarFiles)
         {
             // Get (by comparing w/o extension) list of matching image files in lower case
@@ -404,7 +408,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     if (sidecarFileAlreadyAdded)
                     {
                         overlappingXmpFileList.Add(item: sidecarFile);
-                        Logger.Warn(message: $"Sidecar file '{sidecarFile}' matches multiple image files!");
+                        Log.Warn(message: $"Sidecar file '{sidecarFile}' matches multiple image files!");
                     }
 
                     image2sidecar[key: imgFile] = sidecarFile;
@@ -422,14 +426,16 @@ public class DirectoryElementCollection : List<DirectoryElement>
             }
 
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName:
-                          "mbx_FrmMainApp_WarningMultipleImageFilesForXMP") +
+                text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                          controlName:
+                          "mbx_FrmMainApp_WarningMultipleImageFilesForXMP",
+                          fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox) +
                       NewLine +
                       overlappingXmpFileStr,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Warning.ToString()),
+                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                                                                   .Warning.ToString(),
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
@@ -437,13 +443,13 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
         // ******************************
         // Extract data for all files that are supported
-        Logger.Info(message: "Files: Extracting File Data");
+        Log.Info(message: "Files: Extracting File Data");
         int fileCount = 0;
         _ExifTool ??= new ExifTool();
 
         foreach (string fileNameWithPath in imageFiles)
         {
-            Logger.Info(message: $"File: {fileNameWithPath}");
+            Log.Info(message: $"File: {fileNameWithPath}");
             string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
             if (fileCount % 10 == 0)
             {
@@ -514,7 +520,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 IDictionary<string, string> dictProperties = new Dictionary<string, string>();
                 if (!string.IsNullOrWhiteSpace(value: sideCarFileNameWithPath))
                 {
-                    Logger.Info(
+                    Log.Info(
                         message: $"Files: Extracting File Data - adding side car file '{sideCarFileNameWithPath}'");
                     fileToParseDictionaryElement.SidecarFile = sideCarFileNameWithPath;
                     // Logically XMP should take priority because RAW files are not meant to be edited.
@@ -539,7 +545,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
         FrmMainApp.TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.NoProgress);
 
-        Logger.Info(message: "Files: Extracting File Data - OK");
+        Log.Info(message: "Files: Extracting File Data - OK");
     }
 
     /// <summary>

@@ -30,7 +30,7 @@ internal class HelperExifReadTrackFilePath
         string TZVal
     )
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
         string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath,
             path2: "exifReadTrackFileForMapping.args");
@@ -173,11 +173,13 @@ internal class HelperExifReadTrackFilePath
         static void ShowTrackImportFailedMessageBox()
         {
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmImportExportGpx_TrackContainsNoData"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Error.ToString()),
+                text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmImportExportGpx_TrackContainsNoData",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                                                                   .Error.ToString(),
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();

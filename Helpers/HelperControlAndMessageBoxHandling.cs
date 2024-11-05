@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Forms;
+using Application = System.Windows.Forms.Application;
 
 namespace GeoTagNinja.Helpers;
 
@@ -20,71 +21,52 @@ internal static class HelperControlAndMessageBoxHandling
     }
 
     /// <summary>
-    ///     Bit of out sync with the rest but this returns the localised captions for MessageBoxes (e.g. "info" or "error")
+    ///     This is probably the worst idea ever but I'm creating fake control types for allocating them to the text-reader
+    ///     e.g. ColumnHeader isn't a real control type but I use them.
     /// </summary>
-    /// <param name="captionType">E.g. "info", "error"....</param>
-    /// <returns>Localised version of the above.</returns>
-    internal static string GenericGetMessageBoxCaption(string captionType)
+    public enum FakeControlTypes
     {
-        FrmMainApp frmMainAppInstance =
-            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        return HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: ControlType.MessageBoxCaption,
-            objectName: captionType
-        );
-    }
-
-    /// <summary>
-    ///     This is a special member of the objectMapping/Language and really should sit there not here.
-    ///     MessageBoxes are a bit more complicate to work with than "simple" objects and this takes their language-value and
-    ///     returns it efficiently
-    /// </summary>
-    /// <param name="messageBoxName">A pseudonym for the MessageBox whose value is requested.</param>
-    /// <returns>MessageBox text contents</returns>
-    internal static string GenericGetMessageBoxText(string messageBoxName)
-    {
-        return HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: ControlType.MessageBox,
-            objectName: messageBoxName
-        );
-    }
-
-    /// <summary>
-    ///     Rather than setting the cItem's Text, it just returns the value as string. Useful where ad-hoc modifications need
-    ///     to be made on the fly, such as a metric/imperial conversion
-    /// </summary>
-    /// <param name="cItem">Name of the Item</param>
-    /// <param name="senderForm">Name of the Form on which the Item is</param>
-    /// <returns></returns>
-    internal static string ReturnControlTextAsString(Control cItem,
-                                                     Form senderForm)
-    {
-        return HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: HelperDataLanguageTZ.GetControlType(
-                controlType: cItem.GetType()),
-            objectName: cItem.Name
-        );
+        Button,
+        CheckBox,
+        ColumnHeader,
+        Form,
+        GroupBox,
+        MessageBox,
+        MessageBoxCaption,
+        Generic,
+        Label,
+        PictureBox,
+        RadioButton,
+        TabPage,
+        ToolStripButton,
+        ToolStripMenuItem,
+        ToolTip,
+        Undefined
     }
 
     /// <summary>
     ///     This (mostly) sets the various texts for most Controls in various forms, especially labels and buttons/boxes.
     /// </summary>
     /// <param name="cItem">The Control whose details need adjusting</param>
-    /// <param name="senderForm">Name of the Form on which the Control appears</param>
-    /// <param name="parentNameToUse"></param>
+    /// <param name="senderForm">Name of the Form on which the Control appears. Only relevant for NUDs on the Settings Form</param>
+    /// <param name="parentNameToUse">Obsolete most likely at this stage.</param>
     internal static void ReturnControlText(Control cItem,
-                                           Form senderForm,
-                                           string parentNameToUse = null)
+        Form senderForm = null,
+        string parentNameToUse = null)
     {
         if (parentNameToUse == null &&
-            !(cItem is Form))
+            cItem is not Form)
         {
             parentNameToUse = cItem.Parent.Name;
         }
 
+
         FrmMainApp frmMainAppInstance =
             (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
+
+        // Note to self: do not add TextBoxes and ComboBoxes.
+        // Also cannot add ColumnHeader because it's not a Control
         if (
             cItem is Label ||
             cItem is GroupBox ||
@@ -92,41 +74,43 @@ internal static class HelperControlAndMessageBoxHandling
             cItem is CheckBox ||
             cItem is TabPage ||
             cItem is RichTextBox ||
-            cItem is RadioButton
+            cItem is RadioButton ||
+            cItem is Form
             //||
         )
         {
-            FrmMainApp.Logger.Trace(message: "Starting - cItem: " + cItem.Name);
-            // for some reason there is no .Last() being offered here
-            cItem.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: HelperDataLanguageTZ.GetControlType(
-                    controlType: cItem.GetType()),
-                objectName: cItem.Name
-            );
-        }
-        else if (cItem is Form)
-        {
-            cItem.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: ControlType.Form,
-                objectName: cItem.Name);
-        }
-        else if (cItem is TextBox ||
-                 cItem is ComboBox)
-        {
-            if (senderForm.Name == "FrmSettings")
+            FrmMainApp.Log.Trace(message: "Starting - cItem: " + cItem.Name);
+            string location = HelperGenericAncillaryListsArrays.IsGenericControlName(controlName: cItem.Name) ||
+                              cItem.Name.Contains(value: "Generic")
+                ? HelperVariables.ResourceNameForGenericControlItems
+                : HelperVariables.ControlItemNameNotGeneric;
+
+            location = location switch
             {
-                cItem.Text = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                    dataTable: HelperVariables.DtHelperDataApplicationSettings,
-                    settingTabPage: parentNameToUse,
-                    settingId: cItem.Name
-                );
-            }
+                HelperVariables.ControlItemNameNotGeneric => cItem switch
+                {
+                    Label => "Label",
+                    GroupBox => "GroupBox",
+                    Button => "Button",
+                    CheckBox => "CheckBox",
+                    TabPage => "TabPage",
+                    RichTextBox => "RichTextBox",
+                    RadioButton => "RadioButton",
+                    Form => "Form",
+                    _ => null
+                },
+                _ => location
+            };
+
+            cItem.Text = HelperLocalisationResourceManager.GetResourceValue(control: cItem, location: location);
         }
+
         else if (cItem is NumericUpDown nud)
         {
-            if (senderForm.Name == "FrmSettings")
+            if (senderForm != null &&
+                senderForm.Name == "FrmSettings")
             {
-                FrmMainApp.Logger.Trace(message: "Starting - cItem: " + nud.Name);
+                FrmMainApp.Log.Trace(message: "Starting - cItem: " + nud.Name);
                 _ = decimal.TryParse(
                     s: HelperDataApplicationSettings.DataReadSQLiteSettings(
                         dataTable: HelperVariables.DtHelperDataApplicationSettings,
@@ -139,5 +123,40 @@ internal static class HelperControlAndMessageBoxHandling
                 nud.Text = outVal.ToString(provider: CultureInfo.InvariantCulture);
             }
         }
+    }
+
+    internal static string ReturnControlText(string controlName, FakeControlTypes fakeControlType)
+    {
+        FrmMainApp.Log.Trace(message: "Starting - cItem: " + controlName);
+        string location = HelperGenericAncillaryListsArrays.IsGenericControlName(controlName: controlName) ||
+                          controlName.Contains(value: "Generic")
+            ? HelperVariables.ResourceNameForGenericControlItems
+            : HelperVariables.ControlItemNameNotGeneric;
+
+        location = location switch
+        {
+            HelperVariables.ControlItemNameNotGeneric => fakeControlType switch
+            {
+                FakeControlTypes.Button => "Button",
+                FakeControlTypes.CheckBox => "CheckBox",
+                FakeControlTypes.ColumnHeader => "ColumnHeader",
+                FakeControlTypes.Form => "Form",
+                FakeControlTypes.Generic => "Generic",
+                FakeControlTypes.GroupBox => "GroupBox",
+                FakeControlTypes.Label => "Label",
+                FakeControlTypes.MessageBox => "MessageBox",
+                FakeControlTypes.MessageBoxCaption => "MessageBoxCaption",
+                // FakeControlTypes.PictureBox => "PictureBox", // PictureBoxes shouldn't have text assigned to them.
+                FakeControlTypes.RadioButton => "RadioButton",
+                FakeControlTypes.TabPage => "TabPage",
+                FakeControlTypes.ToolStripButton => "ToolStripButton",
+                FakeControlTypes.ToolStripMenuItem => "ToolStripMenuItem",
+                FakeControlTypes.ToolTip => "ToolTip",
+                _ => null
+            },
+            _ => location
+        };
+
+        return HelperLocalisationResourceManager.GetResourceValue(controlName: controlName, location: location);
     }
 }

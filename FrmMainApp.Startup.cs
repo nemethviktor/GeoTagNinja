@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.View.DialogAndMessageBoxes;
+using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 
 namespace GeoTagNinja;
 
@@ -18,7 +19,7 @@ public partial class FrmMainApp
     private Task AppStartupInitializeComponentFrmMainApp()
     {
         // InitializeComponent();
-        Logger.Debug(message: "Starting");
+        Log.Info(message: "Starting");
 
         try
         {
@@ -26,13 +27,15 @@ public partial class FrmMainApp
         }
         catch (Exception ex)
         {
-            Logger.Fatal(message: "Error: " + ex.Message);
+            Log.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_ErrorInitializeComponent") +
+                text: ReturnControlText(
+                          controlName: "mbx_FrmMainApp_ErrorInitializeComponent",
+                          fakeControlType: FakeControlTypes.MessageBox) +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Error.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -46,7 +49,7 @@ public partial class FrmMainApp
     /// </summary>
     private Task AppStartupEnableDoubleBuffering()
     {
-        Logger.Debug(message: "Starting");
+        Log.Info(message: "Starting");
 
         try
         {
@@ -54,13 +57,15 @@ public partial class FrmMainApp
         }
         catch (Exception ex)
         {
-            Logger.Fatal(message: "Error: " + ex.Message);
+            Log.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_ErrorDoubleBuffer") +
+                text: ReturnControlText(
+                          controlName: "mbx_FrmMainApp_ErrorDoubleBuffer",
+                          fakeControlType: FakeControlTypes.MessageBox) +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Error.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -74,18 +79,17 @@ public partial class FrmMainApp
     ///     Assigns labels to various objects in the application during startup. This includes buttons, labels, checkboxes, and
     ///     other UI elements.
     ///     It also sets up tooltips for specific controls. The labels and tooltips are fetched from a data source using the
-    ///     HelperDataLanguageTZ.DataReadDTObjectText method.
+    ///     HelperControlAndMessageBoxHandling.ReturnControlText method.
     /// </summary>
     private void AppStartupAssignLabelsToObjects()
     {
-        Logger.Debug(message: "Starting");
+        Log.Info(message: "Starting");
 
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         string objectName;
         string objectText;
 
-        GetUOMAbbreviated();
 
         foreach (Control cItem in c)
         {
@@ -104,31 +108,25 @@ public partial class FrmMainApp
                 if (cItem.Name == "lbl_ParseProgress")
                 {
                     objectName = cItem.Name;
-                    objectText = HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: HelperDataLanguageTZ.GetControlType(
-                            controlType: cItem.GetType())
-                       ,
-                        objectName: objectName + "_Normal"
-                    );
+                    objectText = ReturnControlText(controlName: "lbl_ParseProgress_Normal",
+                            fakeControlType: FakeControlTypes.Label)
+                        ;
                     cItem.Text = objectText;
-                    Logger.Trace(message: "" + objectName + ": " + objectText);
+                    Log.Trace(message: "" + objectName + ": " + objectText);
                 }
                 else if (cItem is ToolStrip ts)
                 {
                     // https://www.codeproject.com/Messages/3329190/How-to-convert-a-Control-into-a-ToolStripButton.aspx
                     foreach (ToolStripItem tsi in ts.Items)
                     {
-                        ToolStripButton tsb = tsi as ToolStripButton;
-                        if (tsb != null)
+                        if (tsi is ToolStripButton tsb)
                         {
                             objectName = tsb.Name;
-                            objectText = HelperDataLanguageTZ.DataReadDTObjectText(
-                                objectType: HelperDataLanguageTZ.GetControlType(
-                                    controlType: tsb.GetType()),
-                                objectName: tsb.Name
-                            );
+                            objectText = ReturnControlText(controlName: objectName,
+                                fakeControlType: FakeControlTypes.ToolStripButton);
+
                             tsb.ToolTipText = objectText;
-                            Logger.Trace(message: "" + objectName + ": " + objectText);
+                            Log.Trace(message: "" + objectName + ": " + objectText);
                         }
                     }
                 }
@@ -139,42 +137,33 @@ public partial class FrmMainApp
                         // this is entirely stupid but .Name in this case returns nothing of use even though it's hard-coded in the Designer.
                         // alas .Text works -- fml.
                         objectName = columnHeader.Text;
-                        objectText = HelperDataLanguageTZ.DataReadDTObjectText(
-                            objectType: HelperDataLanguageTZ.GetControlType(
-                                controlType: columnHeader.GetType()),
-                            objectName: objectName
-                        );
+                        objectText = ReturnControlText(controlName: objectName,
+                            fakeControlType: FakeControlTypes.ColumnHeader);
                         columnHeader.Text = objectText;
                         columnHeader.Width = 120; // arbitrary
-                        Logger.Trace(message: "" + objectName + ": " + objectText);
+                        Log.Trace(message: "" + objectName + ": " + objectText);
                     }
                 }
                 else
                 {
                     objectName = cItem.Name;
-                    objectText = HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: HelperDataLanguageTZ.GetControlType(
-                            controlType: cItem.GetType()),
-                        objectName: cItem.Name
-                    );
-                    cItem.Text = objectText;
-                    Logger.Trace(message: "" + objectName + ": " + objectText);
+                    ReturnControlText(cItem: cItem, senderForm: this);
+
+                    Log.Trace(message: "" + objectName + ": " + cItem.Text);
                 }
             }
         }
 
         // Text for ImagePreview
-        pbx_imagePreview.EmptyText = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: ControlType.PictureBox,
-            objectName: "pbx_imagePreviewEmptyText"
-        );
+        pbx_imagePreview.EmptyText = ReturnControlText(controlName: "pbx_imagePreviewEmptyText",
+            fakeControlType: FakeControlTypes.PictureBox);
 
-        // don't think the menustrip above is working
+        // The MenuStrip logic above is not working
         List<ToolStripItem> allMenuItems = new();
         foreach (ToolStripItem toolItem in mns_MenuStrip.Items)
         {
             allMenuItems.Add(item: toolItem);
-            Logger.Trace(message: "Menu: " + toolItem.Name);
+            Log.Trace(message: "Menu: " + toolItem.Name);
             //add sub items - not logging this.
             allMenuItems.AddRange(collection: helperNonstatic.GetMenuItems(item: toolItem));
         }
@@ -186,27 +175,18 @@ public partial class FrmMainApp
             allMenuItems.AddRange(collection: helperNonstatic.GetMenuItems(item: toolItem));
         }
 
-        foreach (ToolStripItem cItem in allMenuItems)
+        foreach (ToolStripMenuItem cItem in allMenuItems.OfType<ToolStripMenuItem>())
         {
-            if (cItem is ToolStripMenuItem)
-            {
-                objectName = cItem.Name;
-                objectText = HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: HelperDataLanguageTZ.GetControlType(
-                        controlType: cItem.GetType()),
-                    objectName: cItem.Name
-                );
-                cItem.Text = objectText;
-                Logger.Trace(message: objectName + ": " + objectText);
-            }
+            objectName = cItem.Name;
+            objectText = ReturnControlText(controlName: objectName,
+                fakeControlType: FakeControlTypes.ToolStripMenuItem);
+
+            cItem.Text = objectText;
+            Log.Trace(message: objectName + ": " + objectText);
         }
 
-        pbx_imagePreview.EmptyText = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: ControlType.PictureBox,
-            objectName: "pbx_imagePreviewEmptyText"
-        );
 
-        Logger.Trace(message: "Setting Tooltips");
+        Log.Trace(message: "Setting Tooltips");
         List<(ToolTip, Control, string)> ttpLabelsList = new()
         {
             (ttp_loctToFile, btn_loctToFile, "ttp_loctToFile"),
@@ -220,29 +200,18 @@ public partial class FrmMainApp
         {
             ToolTip ttp = valueTuple.Item1;
             ttp.SetToolTip(control: valueTuple.Item2,
-                caption: HelperDataLanguageTZ.DataReadDTObjectText(
-                    objectType: ControlType.ToolTip,
-                    objectName: valueTuple.Item3
-                ));
+                caption: ReturnControlText(controlName: valueTuple.Item3,
+                    fakeControlType: FakeControlTypes.ToolTip));
         }
     }
 
-    internal static string GetUOMAbbreviated()
-    {
-        return HelperVariables.UOMAbbreviated = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: ControlType.Label,
-            objectName: HelperVariables.UserSettingUseImperial
-                ? "lbl_Feet_Abbr"
-                : "lbl_Metres_Abbr"
-        );
-    }
 
     /// <summary>
     ///     Pulls the last lat/lng combo from Settings if available, otherwise points to NASA's HQ
     /// </summary>
     private void AppStartupGetLastLatLngFromSettings()
     {
-        Logger.Debug(message: "Starting");
+        Log.Info(message: "Starting");
 
         try
         {
@@ -332,7 +301,7 @@ public partial class FrmMainApp
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     private void AppStartupApplyVisualStyleDefaults()
     {
-        Logger.Debug(message: "Starting");
+        Log.Info(message: "Starting");
         // there should be a better way of doing this. 
         // reflections could do it and i asked GPT on the how-part but it only gave options for storing and retrieving _all_ the controls and _all_ their details, which isn't something i'd like.
 
@@ -354,7 +323,7 @@ public partial class FrmMainApp
                     settingTabPage: "generic",
                     settingId: settingsApplicationDesignValue, returnBlankIfNull: true);
 
-            Logger.Debug(
+            Log.Debug(
                 message:
                 $"Reading settingsApplicationDesignValue {settingsApplicationDesignValue}, dataInSQL {dataInSQL}.");
 
@@ -378,7 +347,7 @@ public partial class FrmMainApp
         void checkAssignSingleValues(string dictValueKey)
         {
             int valToAssign = settingsApplicationDesignValuesDict[key: dictValueKey];
-            Logger.Debug(
+            Log.Debug(
                 message:
                 $"Assinging value {valToAssign} to {dictValueKey}.");
             if (valToAssign > 0)
@@ -402,7 +371,7 @@ public partial class FrmMainApp
                 : source.Remove(startIndex: source.LastIndexOf(value: value));
         }
 
-        Logger.Debug(message: "Done");
+        Log.Debug(message: "Done");
     }
 
     private void splitContainerControl_Paint(object sender, PaintEventArgs e)

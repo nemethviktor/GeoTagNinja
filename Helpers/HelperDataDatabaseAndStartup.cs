@@ -6,34 +6,35 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
+using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 
 namespace GeoTagNinja.Helpers;
 
 internal static class HelperDataDatabaseAndStartup
 {
     /// <summary>
-    ///     Creates the SQLite DB if it doesn't exist yet
+    ///     Creates the SQLite DB if it doesn't yet exist
     /// </summary>
     internal static void DataCreateSQLiteDB()
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
         try
         {
             // create folder in Appdata if doesn't exist
-            FrmMainApp.Logger.Trace(message: "SettingsDatabaseFilePath is " + HelperVariables.SettingsDatabaseFilePath);
+            FrmMainApp.Log.Trace(message: "SettingsDatabaseFilePath is " + HelperVariables.SettingsDatabaseFilePath);
             FileInfo userDataBaseFile = new(fileName: HelperVariables.SettingsDatabaseFilePath);
 
             if (userDataBaseFile.Exists && userDataBaseFile.Length == 0)
             {
-                FrmMainApp.Logger.Trace(message: "SettingsDatabaseFilePath exists with 0 byes volume");
+                FrmMainApp.Log.Trace(message: "SettingsDatabaseFilePath exists with 0 byes volume");
                 userDataBaseFile.Delete();
-                FrmMainApp.Logger.Trace(message: "SettingsDatabaseFilePath deleted");
+                FrmMainApp.Log.Trace(message: "SettingsDatabaseFilePath deleted");
             }
 
             if (!userDataBaseFile.Exists)
             {
-                FrmMainApp.Logger.Trace(message: "Creating " + HelperVariables.SettingsDatabaseFilePath);
+                FrmMainApp.Log.Trace(message: "Creating " + HelperVariables.SettingsDatabaseFilePath);
                 try
                 {
                     SQLiteConnection.CreateFile(databaseFileName: Path.Combine(HelperVariables.SettingsDatabaseFilePath));
@@ -66,7 +67,7 @@ internal static class HelperDataDatabaseAndStartup
                                              CountryCode NTEXT,
                                              Country NTEXT,
                                              State NTEXT,
-                                             Sub_location NTEXT
+                                             Sublocation NTEXT
                                              )
                                  ;
                                  CREATE TABLE customRules(
@@ -93,7 +94,7 @@ internal static class HelperDataDatabaseAndStartup
                 }
                 catch (Exception ex)
                 {
-                    FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
+                    FrmMainApp.Log.Fatal(message: "Error: " + ex.Message);
                     MessageBox.Show(text: ex.Message);
                 }
             }
@@ -102,12 +103,15 @@ internal static class HelperDataDatabaseAndStartup
                 HelperDataFavourites.DataCreateSQLiteFavourites();
                 HelperDataCustomRules.DataCreateSQLiteCustomRules();
                 HelperDataCustomCityAllocationRules.DataCreateSQLiteCustomCityAllocationLogic();
-                HelperDataFavourites.DataWriteSQLiteRenameFavouritesLocationNameCol();
+                DataWriteSQLiteRenameColumn(tableName: "Favourites", columnNameFrom: "locationName",
+                    columnNameTo: "favouriteName");
+                DataWriteSQLiteRenameColumn(tableName: "Favourites", columnNameFrom: "Sub_location",
+                    columnNameTo: "Sublocation");
             }
         }
         catch (Exception ex)
         {
-            FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
+            FrmMainApp.Log.Fatal(message: "Error: " + ex.Message);
             MessageBox.Show(text: ex.Message);
         }
     }
@@ -117,15 +121,15 @@ internal static class HelperDataDatabaseAndStartup
     /// </summary>
     internal static void DataWriteSQLiteSettingsDefaultSettings()
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
         string[] extensionSpecificControlNamesToAdd =
-        {
+        [
             "ckb_AddXMPSideCar",
             "ckb_OverwriteOriginal",
             "ckb_ProcessOriginalFile",
             "ckb_ResetFileDateToCreated"
-        };
+        ];
 
         Dictionary<string, List<string>> notExtensionSpecificControlNamesToAdd = new()
         {
@@ -276,5 +280,68 @@ internal static class HelperDataDatabaseAndStartup
         DataTable dataTable = new();
         dataTable.Load(reader: reader);
         return dataTable;
+    }
+
+    /// <summary>
+    ///     This function helps rename columns. Some of the naming logic has changed over time and since users already have
+    ///     existing databases those need to be patched to work properly.
+    /// </summary>
+    /// <param name="tableName"></param>
+    /// <param name="columnNameFrom"></param>
+    /// <param name="columnNameTo"></param>
+    /// <returns></returns>
+    private static void DataWriteSQLiteRenameColumn(string tableName, string columnNameFrom, string columnNameTo)
+    {
+        try
+        {
+            using SQLiteConnection sqliteDB =
+                new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
+            sqliteDB.Open();
+
+            // Get the schema for the columns in the database.
+            DataTable colsTable = sqliteDB.GetSchema(collectionName: "Columns");
+
+            // Query the columns schema using SQL statements to work out if the required columns exist.
+            bool locationNameExists =
+                colsTable.Select(filterExpression: $"COLUMN_NAME='{columnNameFrom}' AND TABLE_NAME='{tableName}'")
+                         .Length !=
+                0;
+            bool favouriteNameExists =
+                colsTable.Select(filterExpression: $"COLUMN_NAME='favouriteName' AND TABLE_NAME='{tableName}'")
+                         .Length !=
+                0;
+            if (locationNameExists)
+            {
+                string sqlCommandStr = $@"
+                                ALTER TABLE {tableName}
+                                RENAME COLUMN {columnNameFrom} TO {columnNameTo}
+
+                                ;
+                                "
+                    ;
+
+                SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+
+                sqlToRun.ExecuteNonQuery();
+            }
+
+            sqliteDB.Close();
+        }
+        catch
+        {
+            // nothing
+        }
+    }
+
+    /// <summary>
+    ///     Gets the Unit of Measure abbreviation (ie 'ft' or 'm')
+    /// </summary>
+    /// <returns></returns>
+    internal static string GetUnitOfMeasureAbbreviated()
+    {
+        return ReturnControlText(controlName: HelperVariables.UserSettingUseImperial
+                ? "lbl_Feet_Abbr"
+                : "lbl_Metres_Abbr"
+          , fakeControlType: FakeControlTypes.Label);
     }
 }

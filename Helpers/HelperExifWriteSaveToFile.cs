@@ -19,7 +19,7 @@ internal static class HelperExifWriteSaveToFile
 {
     internal static async Task ExifWriteExifToFile()
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
         HelperGenericFileLocking.FilesAreBeingSaved = true;
         string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exifArgsToWrite.args");
@@ -52,7 +52,7 @@ internal static class HelperExifWriteSaveToFile
         foreach (string GUID in DistinctGUIDs)
         {
             DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: GUID);
-            FrmMainApp.Logger.Trace(message: dirElemFileToModify.FileNameWithPath);
+            FrmMainApp.Log.Trace(message: dirElemFileToModify.FileNameWithPath);
 
             if (dirElemFileToModify != null)
             {
@@ -119,11 +119,11 @@ internal static class HelperExifWriteSaveToFile
 
                     if (writeXMPSideCar)
                     {
-                        FrmMainApp.Logger.Trace(message: fileNameWithPath + " - writeXMPSideCar - " + writeXMPSideCar);
+                        FrmMainApp.Log.Trace(message: fileNameWithPath + " - writeXMPSideCar - " + writeXMPSideCar);
 
                         if (!File.Exists(path: xmpFileLocation))
                         {
-                            FrmMainApp.Logger.Trace(message: fileNameWithPath + " - writeXMPSideCar - " + writeXMPSideCar + " - File has been created.");
+                            FrmMainApp.Log.Trace(message: fileNameWithPath + " - writeXMPSideCar - " + writeXMPSideCar + " - File has been created.");
 
                             // otherwise create a new one. 
                             xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath);
@@ -199,7 +199,7 @@ internal static class HelperExifWriteSaveToFile
                                 // ignore.
                             }
 
-                            FrmMainApp.Logger.Trace(message: fileNameWithPath + " - " + settingId + ": " + settingValue);
+                            FrmMainApp.Log.Trace(message: fileNameWithPath + " - " + settingId + ": " + settingValue);
 
                             // non-xmp always
                             if (deleteAllGPSData && !deleteTagAlreadyAdded)
@@ -390,7 +390,7 @@ internal static class HelperExifWriteSaveToFile
                                         }
                                     }
 
-                                    FrmMainApp.Logger.Trace(
+                                    FrmMainApp.Log.Trace(
                                         message: fileNameWithPath +
                                                  " - " +
                                                  exifToolAttribute +
@@ -444,15 +444,19 @@ internal static class HelperExifWriteSaveToFile
                     if (!processOriginalFile && !writeXMPSideCar)
                     {
                         failWriteNothingEnabled = true;
-                        FrmMainApp.Logger.Info(message: "Both file-writes disabled. Nothing Written.");
+                        FrmMainApp.Log.Info(message: "Both file-writes disabled. Nothing Written.");
                         CustomMessageBox customMessageBox = new(
                             text: HelperControlAndMessageBoxHandling
-                               .GenericGetMessageBoxText(
-                                    messageBoxName:
-                                    "mbx_Helper_WarningNoWriteSettingEnabled"),
+                               .ReturnControlText(
+                                    controlName:
+                                    "mbx_Helper_WarningNoWriteSettingEnabled",
+                                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
                             caption: HelperControlAndMessageBoxHandling
-                               .GenericGetMessageBoxCaption(
-                                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning.ToString()),
+                               .ReturnControlText(
+                                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning
+                                                                  .ToString(),
+                                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes
+                                       .MessageBoxCaption),
                             buttons: MessageBoxButtons.OK,
                             icon: MessageBoxIcon.Warning);
                         customMessageBox.ShowDialog();
@@ -494,7 +498,7 @@ internal static class HelperExifWriteSaveToFile
         // this is the "optimal" scenario
         if (!failWriteNothingEnabled && !queueWasEmpty)
         {
-            FrmMainApp.Logger.Info(message: "Starting ExifTool.");
+            FrmMainApp.Log.Info(message: "Starting ExifTool.");
             ///////////////
 
             ;
@@ -511,26 +515,30 @@ internal static class HelperExifWriteSaveToFile
         }
         else if (!queueWasEmpty)
         {
-            FrmMainApp.Logger.Info(message: "Both file-writes disabled. Nothing Written.");
+            FrmMainApp.Log.Info(message: "Both file-writes disabled. Nothing Written.");
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName: "mbx_Helper_WarningNoWriteSettingEnabled"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Warning.ToString()),
+                text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_Helper_WarningNoWriteSettingEnabled",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                                                                   .Warning.ToString(),
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
         }
         else
         {
-            FrmMainApp.Logger.Info(message: "Queue was empty. Nothing Written.");
+            FrmMainApp.Log.Info(message: "Queue was empty. Nothing Written.");
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName: "mbx_Helper_WarningNothingInWriteQueue"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Warning.ToString()),
+                text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_Helper_WarningNothingInWriteQueue",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                                                                   .Warning.ToString(),
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();

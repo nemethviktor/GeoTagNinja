@@ -117,12 +117,14 @@ internal static class HelperAPIVersionCheckers
         {
             HelperVariables.OperationAPIReturnedOKResponse = false;
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_Helper_WarningGTNVerAPIResponse") +
+                text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                          controlName: "mbx_Helper_WarningGTNVerAPIResponse",
+                          fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox) +
                       response_GTNVersionQuery.StatusCode,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Warning.ToString()),
+                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                                                                   .Warning.ToString(),
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
@@ -138,7 +140,7 @@ internal static class HelperAPIVersionCheckers
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     internal static async Task CheckForNewVersions()
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
         // check when the last polling took place
         long nowUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
@@ -172,7 +174,7 @@ internal static class HelperAPIVersionCheckers
             lastCheckUnixTime = long.Parse(s: strLastOnlineVersionCheck);
         }
 
-        FrmMainApp.Logger.Trace(message: "nowUnixTime > lastCheckUnixTime:" +
+        FrmMainApp.Log.Trace(message: "nowUnixTime > lastCheckUnixTime:" +
                                          (nowUnixTime - lastCheckUnixTime));
         int checkUpdateVal = 604800; //604800 is a week's worth of seconds
     #if DEBUG
@@ -183,7 +185,7 @@ internal static class HelperAPIVersionCheckers
         if (nowUnixTime > lastCheckUnixTime + checkUpdateVal ||
             strLastOnlineVersionCheck == null)
         {
-            FrmMainApp.Logger.Trace(message: "Checking for new versions.");
+            FrmMainApp.Log.Trace(message: "Checking for new versions.");
 
             // get current & newest exiftool version -- do this here at the end so it doesn't hold up the process
             ///////////////
@@ -198,7 +200,7 @@ internal static class HelperAPIVersionCheckers
             HelperVariables.CurrentExifToolVersionCloud =
                 API_ExifGetExifToolVersionFromWeb();
 
-            FrmMainApp.Logger.Trace(message: "currentExifToolVersionLocal: " +
+            FrmMainApp.Log.Trace(message: "currentExifToolVersionLocal: " +
                                              HelperVariables
                                                 .CurrentExifToolVersionLocal +
                                              " / newestExifToolVersionOnline: " +
@@ -211,7 +213,7 @@ internal static class HelperAPIVersionCheckers
                     path2:
                     $"exiftool-{HelperVariables.CurrentExifToolVersionCloud}_{CPUBitness}.zip")))
             {
-                FrmMainApp.Logger.Trace(
+                FrmMainApp.Log.Trace(
                     message: "Downloading newest exifTool version from the cloud. " +
                              HelperVariables.CurrentExifToolVersionCloud.ToString(
                                  provider: CultureInfo
@@ -275,7 +277,7 @@ internal static class HelperAPIVersionCheckers
         }
         else
         {
-            FrmMainApp.Logger.Trace(message: "Not checking for new versions.");
+            FrmMainApp.Log.Trace(message: "Not checking for new versions.");
         }
     }
 
@@ -320,7 +322,7 @@ internal static class HelperAPIVersionCheckers
             url =
                 $"https://github.com/nemethviktor/GeoTagNinja/releases/download/b{remoteBuild}/GeoTagNinja_Setup.msi",
             changelog =
-                $"https://github.com/nemethviktor/GeoTagNinja/blob/b{remoteBuild}/changelog.md"
+                $"https://github.com/nemethviktor/GeoTagNinja/blob/b{remoteBuild}/changeLog.md"
         };
 
         string jsonContent =

@@ -14,15 +14,15 @@ internal class DialogWithOrWithoutCheckBox
     /// <param name="labelText">The text to be displayed at the top of the dialog box.</param>
     /// <param name="caption">The text to be displayed in the title bar of the dialog box.</param>
     /// <param name="buttonsDictionary">
-    ///     A dictionary where each key-value pair represents a button in the dialog. The key is
+    ///     A dictionary where each key-value pair represents a button in the diaLog. The key is
     ///     the text to be displayed on the button, and the value is the return value when the button is clicked.
     /// </param>
     /// <param name="orientation">
-    ///     The layout orientation of the checkboxes and buttons in the dialog. Can be either "Vertical"
+    ///     The layout orientation of the checkboxes and buttons in the diaLog. Can be either "Vertical"
     ///     or "Horizontal".
     /// </param>
     /// <param name="checkboxesDictionary">
-    ///     A dictionary where each key-value pair represents a checkbox in the dialog. The key
+    ///     A dictionary where each key-value pair represents a checkbox in the diaLog. The key
     ///     is the text to be displayed next to the checkbox, and the value is the return value when the checkbox is selected.
     /// </param>
     /// <returns>A list of strings representing the return values of the selected checkboxes and clicked button.</returns>

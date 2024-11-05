@@ -17,7 +17,6 @@ using AutoUpdaterDotNET;
 using geoTagNinja;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
-using GeoTagNinja.Properties;
 using GeoTagNinja.View.DialogAndMessageBoxes;
 using GeoTagNinja.View.EditFileForm;
 using GeoTagNinja.View.ListView;
@@ -77,7 +76,7 @@ public partial class FrmMainApp : Form
     /// <summary>
     ///     Returns the currently set application language for localization.
     /// </summary>
-    private static string AppLanguage => _AppLanguage;
+    private static string _AppLanguage => AppLanguage;
 
     /// <summary>
     ///     Returns the list of elements in the currently opened directory.
@@ -88,13 +87,13 @@ public partial class FrmMainApp : Form
 
 #region Variables
 
-    internal static DataTable DtLanguageLabels;
+    internal static DataTable DTLanguageMapping;
     internal static DataTable DtFavourites;
 
     // CustomCityLogic
 
     internal static string FolderName;
-    internal static string _AppLanguage = "English"; // default to english
+    internal static string AppLanguage; // default to english
     internal static List<string> LstFavourites = new();
 
     private static bool _showLocToMapDialogChoice = true;
@@ -119,7 +118,7 @@ public partial class FrmMainApp : Form
     internal static Dictionary<ElementAttribute, Tuple<string, bool>> CopyPoolDict = new();
 
     // this is for checking if files need to be re-parsed.
-    internal static DataTable DtToponomySessionData;
+    internal static DataTable DTToponomySessionData;
 
     internal static List<string> filesToEditGUIDStringList = new();
 
@@ -132,7 +131,7 @@ public partial class FrmMainApp : Form
 
 #region Form/App Related
 
-    internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+    internal static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     /// <summary>
     ///     This is the main Form for the app. This particular section handles the initialisation of the form and loading
@@ -155,7 +154,7 @@ public partial class FrmMainApp : Form
         }
 
         FileTarget logfile = new(name: "logfile") { FileName = logFileLocation };
-    #if (DEBUG)
+    #if DEBUG
         config.AddRule(minLevel: LogLevel.Trace, maxLevel: LogLevel.Fatal,
             target: logfile);
     #else
@@ -176,11 +175,11 @@ public partial class FrmMainApp : Form
 
         int procID = Process.GetCurrentProcess()
                             .Id;
-        Logger.Info(message: "Constructor: Starting GTN with process ID " + procID);
-        Logger.Info(message: "Collection mode: " + Program.collectionModeEnabled);
+        Log.Info(message: "Constructor: Starting GTN with process ID " + procID);
+        Log.Info(message: "Collection mode: " + Program.collectionModeEnabled);
         if (Program.collectionModeEnabled)
         {
-            Logger.Info(message: "Collection source: " + Program.collectionFileLocation);
+            Log.Info(message: "Collection source: " + Program.collectionFileLocation);
         }
 
         if (Program.singleInstance_Highlander)
@@ -192,7 +191,7 @@ public partial class FrmMainApp : Form
         DirectoryElements.ExifTool = _ExifTool;
 
 
-        Logger.Info(message: "Constructor: Done");
+        Log.Info(message: "Constructor: Done");
     }
 
     /// <summary>
@@ -215,7 +214,6 @@ public partial class FrmMainApp : Form
             HelperGenericAppStartup.AppStartupReadCustomCityLogic(),
             HelperGenericAppStartup.AppStartupReadAPILanguage(),
             HelperGenericAppStartup.AppStartupApplyDefaults(),
-            HelperDataLanguageTZ.DataReadLanguageDataFromCSV(),
             HelperDataLanguageTZ.DataReadCountryCodeDataFromCSV(),
             HelperGenericAppStartup.AppStartupCheckWebView2(),
             AppStartupInitializeComponentFrmMainApp(),
@@ -241,16 +239,15 @@ public partial class FrmMainApp : Form
     private async void FrmMainApp_Load(object sender,
         EventArgs e)
     {
-        Logger.Info(message: "OnLoad: Starting");
+        Log.Info(message: "OnLoad: Starting");
         // icon
 
-        Logger.Trace(message: "Setting Icon");
-        Icon = Resources.AppIcon;
+        Log.Trace(message: "Setting Icon");
 
         // clear both tables, just in case + generic cleanup
         try
         {
-            Logger.Debug(message: "Remove Stage 1 AttributeValues");
+            Log.Debug(message: "Remove Stage 1 AttributeValues");
 
             foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
             {
@@ -266,7 +263,7 @@ public partial class FrmMainApp : Form
                 }
             }
 
-            Logger.Debug(message: "Clear DtFileDataToWriteStage3ReadyToWrite");
+            Log.Debug(message: "Clear DtFileDataToWriteStage3ReadyToWrite");
             foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
             {
                 {
@@ -283,13 +280,15 @@ public partial class FrmMainApp : Form
         }
         catch (Exception ex)
         {
-            Logger.Fatal(message: "Error: " + ex.Message);
+            Log.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_ErrorClearingFileDataQTables") +
+                text: ReturnControlText(
+                          controlName: "mbx_FrmMainApp_ErrorClearingFileDataQTables",
+                          fakeControlType: FakeControlTypes.MessageBox) +
                       ex.Message,
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Error.ToString()),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Error.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -302,23 +301,25 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             // not really fatal
-            Logger.Error(message: "Error: " + ex.Message);
+            Log.Error(message: "Error: " + ex.Message);
         }
 
         // Setup the List View
         try
         {
-            lvw_FileList.ReadAndApplySetting(appLanguage: AppLanguage);
+            lvw_FileList.ReadAndApplySetting(appLanguage: _AppLanguage);
         }
         catch (Exception ex)
         {
-            Logger.Error(message: "Error: " + ex.Message);
+            Log.Error(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                    text: GenericGetMessageBoxText(
-                              messageBoxName: "mbx_FrmMainApp_ErrorResizingColumns") +
+                    text: ReturnControlText(
+                              controlName: "mbx_FrmMainApp_ErrorResizingColumns",
+                              fakeControlType: FakeControlTypes.MessageBox) +
                           ex.Message,
-                    caption: GenericGetMessageBoxCaption(
-                        captionType: MessageBoxCaption.Error.ToString()),
+                    caption: ReturnControlText(
+                        controlName: MessageBoxCaption.Error.ToString(),
+                        fakeControlType: FakeControlTypes.MessageBoxCaption),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Error)
                 ;
@@ -326,7 +327,7 @@ public partial class FrmMainApp : Form
         }
 
         // can't log inside.
-        Logger.Debug(message: "Run CoreWebView2InitializationCompleted");
+        Log.Debug(message: "Run CoreWebView2InitializationCompleted");
         wbv_MapArea.CoreWebView2InitializationCompleted +=
             webView_CoreWebView2InitializationCompleted;
 
@@ -348,7 +349,7 @@ public partial class FrmMainApp : Form
         splitContainerMain.Paint += splitContainerControl_Paint;
         splitContainerMain.Invalidate();
 
-        Logger.Trace(message: "Assign 'Enter' Key behaviour to tbx_lng");
+        Log.Trace(message: "Assign 'Enter' Key behaviour to tbx_lng");
         nud_lng.KeyPress += (sndr,
             ev) =>
         {
@@ -368,7 +369,7 @@ public partial class FrmMainApp : Form
 
         await HelperAPIVersionCheckers.CheckForNewVersions();
         LaunchAutoUpdater();
-        Logger.Info(message: "OnLoad: Done.");
+        Log.Info(message: "OnLoad: Done.");
     }
 
     /// <summary>
@@ -401,7 +402,7 @@ public partial class FrmMainApp : Form
     private async void FrmMainApp_FormClosing(object sender,
         FormClosingEventArgs e)
     {
-        Logger.Debug(message: "OnClose: Starting");
+        Log.Debug(message: "OnClose: Starting");
 
         NamedPipeServer.stopServing();
 
@@ -414,19 +415,19 @@ public partial class FrmMainApp : Form
     internal void PerformAppClosingProcedure(bool extractNewExifTool = true)
     {
         // Write column widths to db
-        Logger.Trace(message: "Write column widths to db");
+        Log.Trace(message: "Write column widths to db");
         lvw_FileList.PersistSettings();
 
         AppClosingPersistData();
 
         // Clean up
-        Logger.Trace(message: "Set pbx_imagePreview.Image = null");
+        Log.Trace(message: "Set pbx_imagePreview.Image = null");
         pbx_imagePreview.Image = null; // unlocks files. theoretically.
         HelperDataApplicationSettings.DataDeleteSQLitesettingsCleanup();
         HelperDataApplicationSettings.DataVacuumDatabase();
 
         // Shut down ExifTool
-        Logger.Debug(message: "OnClose: Dispose ExifTool");
+        Log.Debug(message: "OnClose: Dispose ExifTool");
         _ExifTool.Dispose();
 
         // Unzip new exiftool version if there is one
@@ -478,38 +479,38 @@ public partial class FrmMainApp : Form
 
         // Clean up Roaming folder
         HelperFileSystemOperators.FsoCleanUpUserFolder();
-        Logger.Debug(message: "OnClose: Done.");
+        Log.Debug(message: "OnClose: Done.");
     }
 
     private void AppClosingPersistData()
     {
         // Write lat/long + visual settings for future reference to db
-            Logger.Debug(message: "Write lat/long + visual settings for future reference to db");
-            List<AppSettingContainer> settingsToWrite = new();
-            List<KeyValuePair<string, string>> persistDataSettingsList = new()
+        Log.Debug(message: "Write lat/long + visual settings for future reference to db");
+        List<AppSettingContainer> settingsToWrite = new();
+        List<KeyValuePair<string, string>> persistDataSettingsList = new()
+        {
+            new KeyValuePair<string, string>(key: "lastLat", value: nud_lat.Text),
+            new KeyValuePair<string, string>(key: "lastLng", value: nud_lng.Text),
+            new KeyValuePair<string, string>(key: "splitContainerMainSplitterDistance",
+                value: splitContainerMain.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture)),
+            new KeyValuePair<string, string>(key: "splitContainerLeftTopSplitterDistance",
+                value: splitContainerLeftTop.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture))
+        };
+        settingsToWrite.AddRange(collection: persistDataSettingsList.Select(selector: persistDataSetting =>
+            new AppSettingContainer
             {
-                new KeyValuePair<string, string>(key: "lastLat", value: nud_lat.Text),
-                new KeyValuePair<string, string>(key: "lastLng", value: nud_lng.Text),
-                new KeyValuePair<string, string>(key: "splitContainerMainSplitterDistance",
-                    value: splitContainerMain.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture)),
-                new KeyValuePair<string, string>(key: "splitContainerLeftTopSplitterDistance",
-                    value: splitContainerLeftTop.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture))
-            };
-            settingsToWrite.AddRange(collection: persistDataSettingsList.Select(selector: persistDataSetting =>
-                new AppSettingContainer
-                {
-                    TableName = "settings", SettingTabPage = "generic", SettingId = persistDataSetting.Key,
-                    SettingValue = persistDataSetting.Value
-                }));
-            HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
+                TableName = "settings", SettingTabPage = "generic", SettingId = persistDataSetting.Key,
+                SettingValue = persistDataSetting.Value
+            }));
+        HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
 
-            // Log stuff
-            foreach (KeyValuePair<string, string> keyValuePair in persistDataSettingsList)
-            {
-                Logger.Debug(
-                    message:
-                    $"Writing setting.settingId {keyValuePair.Key}, setting.settingValue {keyValuePair.Value}.");
-            }
+        // Log stuff
+        foreach (KeyValuePair<string, string> keyValuePair in persistDataSettingsList)
+        {
+            Log.Debug(
+                message:
+                $"Writing setting.settingId {keyValuePair.Key}, setting.settingValue {keyValuePair.Value}.");
+        }
     }
 
 
@@ -600,10 +601,12 @@ public partial class FrmMainApp : Form
     private bool askIfUserWantsToSaveDraggedMapData()
     {
         CustomMessageBox customMessageBox = new(
-            text: GenericGetMessageBoxText(
-                messageBoxName: "mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles"),
-            caption: GenericGetMessageBoxCaption(
-                captionType: MessageBoxCaption.Question.ToString()),
+            text: ReturnControlText(
+                controlName: "mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles",
+                fakeControlType: FakeControlTypes.MessageBox),
+            caption: ReturnControlText(
+                controlName: MessageBoxCaption.Question.ToString(),
+                fakeControlType: FakeControlTypes.MessageBoxCaption),
             buttons: MessageBoxButtons.YesNo,
             icon: MessageBoxIcon.Question);
         DialogResult dialogResult = customMessageBox.ShowDialog();
@@ -759,32 +762,26 @@ public partial class FrmMainApp : Form
         // Not logging this.
         FileListViewReadWrite.ListViewCountItemsWithGeoData();
 
-        void ShowLocToMapDialog()
+        static void ShowLocToMapDialog()
         {
             Dictionary<string, string> checkboxDictionary = new()
             {
                 {
-                    HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: ControlType.CheckBox,
-                        objectName: "ckb_QuestionAddToponomyDontAskAgain"
-                    ),
+                    ReturnControlText(controlName: "ckb_QuestionDontAskAgain",
+                        fakeControlType: FakeControlTypes.CheckBox),
                     "_remember"
                 }
             };
             Dictionary<string, string> buttonsDictionary = new()
             {
                 {
-                    HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: ControlType.Button,
-                        objectName: "btn_Yes"
-                    ),
+                    ReturnControlText(controlName: "btn_Yes",
+                        fakeControlType: FakeControlTypes.Button),
                     "yes"
                 },
                 {
-                    HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: ControlType.Button,
-                        objectName: "btn_No"
-                    ),
+                    ReturnControlText(controlName: "btn_No",
+                        fakeControlType: FakeControlTypes.Button),
                     "no"
                 }
             };
@@ -792,12 +789,11 @@ public partial class FrmMainApp : Form
             // via https://stackoverflow.com/a/17385937/3968494
             List<string> getLocToMapDialogChoice =
                 DialogWithOrWithoutCheckBox.DisplayAndReturnList(
-                    labelText: HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: ControlType.Label,
-                        objectName: "lbl_QuestionAddToponomy"
-                    ),
-                    caption: GenericGetMessageBoxCaption(
-                        captionType: MessageBoxCaption.Question.ToString()),
+                    labelText: ReturnControlText(controlName: "lbl_QuestionAddToponomy",
+                        fakeControlType: FakeControlTypes.Label),
+                    caption: ReturnControlText(
+                        controlName: MessageBoxCaption.Question.ToString(),
+                        fakeControlType: FakeControlTypes.MessageBoxCaption),
                     buttonsDictionary: buttonsDictionary,
                     orientation: "Horizontal", checkboxesDictionary: checkboxDictionary);
 
@@ -816,7 +812,7 @@ public partial class FrmMainApp : Form
     /// </summary>
     private (string, string) ParseLatLngTextBox()
     {
-        Logger.Trace(message: "Starting parseLatLngTextBox ...");
+        Log.Trace(message: "Starting parseLatLngTextBox ...");
 
         // Default values if text field is empty
         string LatCoordinate = "0";
@@ -838,7 +834,7 @@ public partial class FrmMainApp : Form
         // Check if it's a valid double -> otherwise defaults above
         try
         {
-            Logger.Trace(message: "parseLatLngTextBox");
+            Log.Trace(message: "parseLatLngTextBox");
             double parsedLat;
             double parsedLng;
             if (double.TryParse(s: strLatCoordinate, style: NumberStyles.Any,
@@ -850,21 +846,23 @@ public partial class FrmMainApp : Form
             {
                 LatCoordinate = strLatCoordinate;
                 LngCoordinate = strLngCoordinate;
-                Logger.Trace(message: "parseLatLngTextBox OK - LatCoordinate: " +
-                                      strLatCoordinate +
-                                      " - LngCoordinate: " +
-                                      strLngCoordinate);
+                Log.Trace(message: "parseLatLngTextBox OK - LatCoordinate: " +
+                                   strLatCoordinate +
+                                   " - LngCoordinate: " +
+                                   strLngCoordinate);
             }
         }
         catch (Exception ex)
         {
-            Logger.Fatal(message: "Error: " + ex.Message);
+            Log.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode") +
+                text: ReturnControlText(
+                          controlName: "mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode",
+                          fakeControlType: FakeControlTypes.MessageBox) +
                       ex.Message,
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Error.ToString()),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Error.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -886,12 +884,12 @@ public partial class FrmMainApp : Form
                    .UserSettingArcGisApiKey);
         }
 
-        Logger.Trace(message: "HelperStatic.UserSettingArcGisApiKey == null: " +
-                              (HelperVariables.UserSettingArcGisApiKey == null));
+        Log.Trace(message: "HelperStatic.UserSettingArcGisApiKey == null: " +
+                           (HelperVariables.UserSettingArcGisApiKey == null));
 
         foreach (KeyValuePair<string, string> replacement in replacements)
         {
-            Logger.Trace(message: string.Format(format: "Replace: {0} -> {1}",
+            Log.Trace(message: string.Format(format: "Replace: {0} -> {1}",
                 arg0: replacement.Key,
                 arg1: replacement.Value));
             htmlCode =
@@ -901,20 +899,22 @@ public partial class FrmMainApp : Form
         // show the decoded location on the map
         try
         {
-            Logger.Trace(message: "Calling wbv_MapArea.NavigateToString");
+            Log.Trace(message: "Calling wbv_MapArea.NavigateToString");
             wbv_MapArea.NavigateToString(htmlContent: htmlCode);
-            Logger.Trace(message: "Calling wbv_MapArea.NavigateToString - OK");
+            Log.Trace(message: "Calling wbv_MapArea.NavigateToString - OK");
         }
         catch (Exception ex)
         {
-            Logger.Fatal(message: "Error: " + ex.Message);
+            Log.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                          messageBoxName:
-                          "mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile") +
+                text: ReturnControlText(
+                          controlName:
+                          "mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile",
+                          fakeControlType: FakeControlTypes.MessageBox) +
                       ex.Message,
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Error.ToString()),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Error.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -929,7 +929,7 @@ public partial class FrmMainApp : Form
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     internal void Request_Map_NavigateGo()
     {
-        Logger.Debug(message: "Starting");
+        Log.Info(message: "Starting");
 
         // Set up replacements
         IDictionary<string, string> htmlReplacements = new Dictionary<string, string>();
@@ -984,9 +984,9 @@ public partial class FrmMainApp : Form
             htmlReplacements.Add(key: "{ HTMLAddMarker }", value: "");
         }
 
-        Logger.Trace(message: "Added " +
-                              HelperVariables.HsMapMarkers.Count +
-                              " map markers.");
+        Log.Trace(message: "Added " +
+                           HelperVariables.HsMapMarkers.Count +
+                           " map markers.");
 
         string createPointsStr = "";
         string showLinesStr = "";
@@ -1392,10 +1392,10 @@ public partial class FrmMainApp : Form
                                                  "}).addTo(map).openPopup();" +
                                                  "\n";
 
-                Logger.Trace(message: "Added marker: strLatCoordinate: " +
-                                      locationCoord.strLat +
-                                      " / strLngCoordinate:" +
-                                      locationCoord.strLng);
+                Log.Trace(message: "Added marker: strLatCoordinate: " +
+                                   locationCoord.strLat +
+                                   " / strLngCoordinate:" +
+                                   locationCoord.strLng);
             }
 
             // Update viewing rectangle if needed
@@ -1449,14 +1449,14 @@ public partial class FrmMainApp : Form
     /// <returns></returns>
     private async Task InitialiseWebView()
     {
-        Logger.Debug(message: "Starting");
+        Log.Info(message: "Starting");
 
         // Create Browser Connection
         try
         {
             // silly thing dumps the folder by default right into Program Files where it can't write further due to permission issues
             // need to move it elsewhere.
-            Logger.Trace(message: "await CoreWebView2Environment");
+            Log.Trace(message: "await CoreWebView2Environment");
             CoreWebView2Environment c2Wv = await CoreWebView2Environment.CreateAsync(
                 browserExecutableFolder: null,
                 userDataFolder: Path.GetTempPath(),
@@ -1466,14 +1466,16 @@ public partial class FrmMainApp : Form
         }
         catch (Exception ex)
         {
-            Logger.Fatal(message: "Error: " + ex.Message);
+            Log.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                          messageBoxName:
-                          "mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async") +
+                text: ReturnControlText(
+                          controlName:
+                          "mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async",
+                          fakeControlType: FakeControlTypes.MessageBox) +
                       ex.Message,
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Error.ToString()),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Error.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -1484,20 +1486,22 @@ public partial class FrmMainApp : Form
         {
             if (wbv_MapArea.CoreWebView2 != null)
             {
-                Logger.Trace(message: "CoreWebView2.Settings.IsWebMessageEnabled");
+                Log.Trace(message: "CoreWebView2.Settings.IsWebMessageEnabled");
                 wbv_MapArea.CoreWebView2.Settings.IsWebMessageEnabled = true;
             }
         }
         catch (Exception ex)
         {
-            Logger.Fatal(message: "Error: " + ex.Message);
+            Log.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                          messageBoxName:
-                          "mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled") +
+                text: ReturnControlText(
+                          controlName:
+                          "mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled",
+                          fakeControlType: FakeControlTypes.MessageBox) +
                       ex.Message,
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Error.ToString()),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Error.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -1506,22 +1510,24 @@ public partial class FrmMainApp : Form
         // read the "map.html" file.
         try
         {
-            Logger.Trace(message: "Read map.html file");
+            Log.Trace(message: "Read map.html file");
             _mapHtmlTemplateCode = File.ReadAllText(
                 path: Path.Combine(path1: HelperVariables.ResourcesFolderPath,
                     path2: "map.html"));
-            Logger.Trace(message: "Read map.html file OK");
+            Log.Trace(message: "Read map.html file OK");
         }
         catch (Exception ex)
         {
-            Logger.Fatal(message: "Read map.html file - Error: " + ex.Message);
+            Log.Fatal(message: "Read map.html file - Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                          messageBoxName:
-                          "mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile") +
+                text: ReturnControlText(
+                          controlName:
+                          "mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile",
+                          fakeControlType: FakeControlTypes.MessageBox) +
                       ex.Message,
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Error.ToString()),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Error.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -1530,7 +1536,7 @@ public partial class FrmMainApp : Form
         // Get the ArcGis API Key
         if (string.IsNullOrEmpty(value: HelperVariables.UserSettingArcGisApiKey))
         {
-            Logger.Trace(
+            Log.Trace(
                 message:
                 "Replace hard-coded values in the html code - UserSettingArcGisApiKey is null");
             HelperVariables.UserSettingArcGisApiKey =
@@ -1539,7 +1545,7 @@ public partial class FrmMainApp : Form
                     settingTabPage: "tpg_Application",
                     settingId: "tbx_ARCGIS_APIKey",
                     returnBlankIfNull: true);
-            Logger.Trace(
+            Log.Trace(
                 message:
                 "Replace hard-coded values in the html code - UserSettingArcGisApiKey obtained from SQLite OK");
         }
@@ -1558,19 +1564,21 @@ public partial class FrmMainApp : Form
         // Set up event handler for clicks in map
         try
         {
-            Logger.Trace(message: "wbv_MapArea.WebMessageReceived");
+            Log.Trace(message: "wbv_MapArea.WebMessageReceived");
             wbv_MapArea.WebMessageReceived += wbv_MapArea_WebMessageReceived;
         }
         catch (Exception ex)
         {
-            Logger.Fatal(message: "Error:" + ex.Message);
+            Log.Fatal(message: "Error:" + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                          messageBoxName:
-                          "mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived") +
+                text: ReturnControlText(
+                          controlName:
+                          "mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived",
+                          fakeControlType: FakeControlTypes.MessageBox) +
                       ex.Message,
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Error.ToString()),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Error.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -1663,9 +1671,9 @@ public partial class FrmMainApp : Form
         EventArgs e)
     {
         FrmImportExportGpx = new FrmImportExportGpx();
-        FrmImportExportGpx.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: ControlType.Form,
-            objectName: "FrmImportExportGpx"
+        FrmImportExportGpx.Text = ReturnControlText(
+            fakeControlType: FakeControlTypes.Form,
+            controlName: "FrmImportExportGpx"
         );
         FrmImportExportGpx.ShowDialog();
     }
@@ -1695,7 +1703,7 @@ public partial class FrmMainApp : Form
     private async void tsb_Refresh_lvwFileList_Click(object sender,
         EventArgs e)
     {
-        Logger.Debug(message: "Starting");
+        Log.Info(message: "Starting");
 
         HelperVariables.OperationChangeFolderIsOkay = false;
         await HelperFileSystemOperators
@@ -1743,12 +1751,13 @@ public partial class FrmMainApp : Form
         void ShowInvalidFolderMessage(string exceptionMessage = "")
         {
             CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                          messageBoxName:
-                          "mbx_FrmMainApp_ErrorInvalidFolder") +
+                text: ReturnControlText(
+                          controlName:
+                          "mbx_FrmMainApp_ErrorInvalidFolder", fakeControlType: FakeControlTypes.MessageBox) +
                       exceptionMessage,
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Question.ToString()),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Question.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.YesNo,
                 icon: MessageBoxIcon.Question);
             DialogResult dialogResult = customMessageBox.ShowDialog();
@@ -1850,13 +1859,13 @@ public partial class FrmMainApp : Form
     private async void btn_ts_Refresh_lvwFileList_Click(object sender,
         EventArgs e)
     {
-        Logger.Debug(message: "Starting");
+        Log.Info(message: "Starting");
 
         HelperVariables.OperationChangeFolderIsOkay = false;
         await HelperFileSystemOperators
            .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
-        Logger.Trace(message: "OperationChangeFolderIsOkay: " +
-                              HelperVariables.OperationChangeFolderIsOkay);
+        Log.Trace(message: "OperationChangeFolderIsOkay: " +
+                           HelperVariables.OperationChangeFolderIsOkay);
 
         if (HelperVariables.OperationChangeFolderIsOkay)
         {
@@ -1873,13 +1882,13 @@ public partial class FrmMainApp : Form
     private async void btn_OneFolderUp_Click(object sender,
         EventArgs e)
     {
-        Logger.Debug(message: "Starting");
+        Log.Info(message: "Starting");
 
         HelperVariables.OperationChangeFolderIsOkay = false;
         await HelperFileSystemOperators
            .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
-        Logger.Trace(message: "OperationChangeFolderIsOkay: " +
-                              HelperVariables.OperationChangeFolderIsOkay);
+        Log.Trace(message: "OperationChangeFolderIsOkay: " +
+                           HelperVariables.OperationChangeFolderIsOkay);
 
         if (HelperVariables.OperationChangeFolderIsOkay)
         {
@@ -1912,7 +1921,7 @@ public partial class FrmMainApp : Form
             Application.DoEvents();
             FolderName = tbx_FolderName.Text;
 
-            Logger.Trace(message: "FolderName: " + FolderName);
+            Log.Trace(message: "FolderName: " + FolderName);
 
             btn_ts_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
         }
@@ -1994,10 +2003,11 @@ public partial class FrmMainApp : Form
         else
         {
             CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmImportExportGpx_NoFileSelected"),
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Warning.ToString()),
+                text: ReturnControlText(
+                    controlName: "mbx_FrmImportExportGpx_NoFileSelected", fakeControlType: FakeControlTypes.MessageBox),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Warning.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
@@ -2331,9 +2341,9 @@ public partial class FrmMainApp : Form
                 Dictionary<string, string> checkboxDictionary = new()
                 {
                     {
-                        HelperDataLanguageTZ.DataReadDTObjectText(
-                            objectType: ControlType.CheckBox,
-                            objectName: "ckb_QuestionStopProcessingRows"
+                        ReturnControlText(
+                            fakeControlType: FakeControlTypes.CheckBox,
+                            controlName: "ckb_QuestionStopProcessingRows"
                         ),
                         "_stopprocessing"
                     }
@@ -2341,16 +2351,16 @@ public partial class FrmMainApp : Form
                 Dictionary<string, string> buttonsDictionary = new()
                 {
                     {
-                        HelperDataLanguageTZ.DataReadDTObjectText(
-                            objectType: ControlType.Button,
-                            objectName: "btn_Yes"
+                        ReturnControlText(
+                            fakeControlType: FakeControlTypes.Button,
+                            controlName: "btn_Yes"
                         ),
                         "yes"
                     },
                     {
-                        HelperDataLanguageTZ.DataReadDTObjectText(
-                            objectType: ControlType.Button,
-                            objectName: "btn_No"
+                        ReturnControlText(
+                            fakeControlType: FakeControlTypes.Button,
+                            controlName: "btn_No"
                         ),
                         "no"
                     }
@@ -2359,10 +2369,12 @@ public partial class FrmMainApp : Form
                 // ReSharper disable once InconsistentNaming
                 List<string> APIHandlingChoice =
                     DialogWithOrWithoutCheckBox.DisplayAndReturnList(
-                        labelText: GenericGetMessageBoxText(
-                            messageBoxName: "mbx_FrmMainApp_QuestionNoRowsFromAPI"),
-                        caption: GenericGetMessageBoxCaption(
-                            captionType: MessageBoxCaption.Question.ToString()),
+                        labelText: ReturnControlText(
+                            controlName: "mbx_FrmMainApp_QuestionNoRowsFromAPI",
+                            fakeControlType: FakeControlTypes.MessageBox),
+                        caption: ReturnControlText(
+                            controlName: MessageBoxCaption.Question.ToString(),
+                            fakeControlType: FakeControlTypes.MessageBoxCaption),
                         buttonsDictionary: buttonsDictionary,
                         orientation: "Horizontal",
                         checkboxesDictionary: checkboxDictionary);
@@ -2415,9 +2427,9 @@ public partial class FrmMainApp : Form
     /// </summary>
     private void lvw_FileList_LoadOrUpdate()
     {
-        Logger.Debug(message: "Starting");
+        Log.Info(message: "Starting");
 
-        Logger.Trace(message: "Clear lvw_FileList");
+        Log.Trace(message: "Clear lvw_FileList");
         lvw_FileList.ClearData();
         // DirectoryElements.Clear();
         HelperVariables.LstTrackPath.Clear();
@@ -2427,7 +2439,7 @@ public partial class FrmMainApp : Form
 
     #region FrmPleaseWaitBox
 
-        Logger.Trace(message: "Create FrmPleaseWaitBox");
+        Log.Trace(message: "Create FrmPleaseWaitBox");
 
         Form FrmPleaseWaitBox = new()
         {
@@ -2435,28 +2447,28 @@ public partial class FrmMainApp : Form
             ShowInTaskbar = false,
             Size = new Size(width: 300, height: 40),
             Padding = new Padding(left: 4, top: 2, right: 2, bottom: 4),
-            Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                objectType: ControlType.Form,
-                objectName: "FrmPleaseWaitBox"
+            Text = ReturnControlText(
+                fakeControlType: FakeControlTypes.Form,
+                controlName: "FrmPleaseWaitBox"
             ),
             StartPosition = FormStartPosition.CenterScreen
         };
 
-        Logger.Trace(message: "Show FrmPleaseWaitBox");
+        Log.Trace(message: "Show FrmPleaseWaitBox");
         FrmPleaseWaitBox.Show();
-        Logger.Trace(message: "Disable FrmMainApp");
+        Log.Trace(message: "Disable FrmMainApp");
         Enabled = false;
 
     #endregion
 
         // Clear Tables that keep track of the current folder...
-        Logger.Trace(message: "Clear OriginalTakenDateDict and OriginalCreateDateDict");
+        Log.Trace(message: "Clear OriginalTakenDateDict and OriginalCreateDateDict");
 
         tbx_FolderName.Enabled = !Program.collectionModeEnabled;
 
         if (Program.collectionModeEnabled)
         {
-            Logger.Trace(message: "FolderName: disabled - using collectionModeEnabled");
+            Log.Trace(message: "FolderName: disabled - using collectionModeEnabled");
             tbx_FolderName.Text =
                 @"** collectionMode enabled **"; // point here is that this doesn't exist and as such will block certain operations (like "go up one level"), which is what we want.
 
@@ -2475,11 +2487,11 @@ public partial class FrmMainApp : Form
         {
             tbx_FolderName.Enabled = true;
 
-            Logger.Trace(message: "tbx_FolderName.Text: " + tbx_FolderName.Text);
+            Log.Trace(message: "tbx_FolderName.Text: " + tbx_FolderName.Text);
             if (tbx_FolderName.Text != null)
             {
                 // this shouldn't really happen but just in case
-                Logger.Trace(message: "FolderName: " + FolderName);
+                Log.Trace(message: "FolderName: " + FolderName);
                 if (FolderName is null)
                 {
                     if (!Directory.Exists(path: tbx_FolderName.Text))
@@ -2488,8 +2500,8 @@ public partial class FrmMainApp : Form
                     }
 
                     FolderName = tbx_FolderName.Text;
-                    Logger.Trace(message: "FolderName [was null, now updated]: " +
-                                          FolderName);
+                    Log.Trace(message: "FolderName [was null, now updated]: " +
+                                       FolderName);
                 }
 
                 // Load data (and add to DEs)
@@ -2509,9 +2521,9 @@ public partial class FrmMainApp : Form
 
         HelperGenericFileLocking.FileListBeingUpdated = false;
         HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Ready.");
-        Logger.Trace(message: "Enable FrmMainApp");
+        Log.Trace(message: "Enable FrmMainApp");
         Enabled = true;
-        Logger.Trace(message: "Hide PleaseWaitBox");
+        Log.Trace(message: "Hide PleaseWaitBox");
         FrmPleaseWaitBox.Hide();
 
         // Not logging this.
@@ -2527,7 +2539,7 @@ public partial class FrmMainApp : Form
     private async void lvw_FileList_MouseDoubleClick(object sender,
         MouseEventArgs e)
     {
-        Logger.Debug(message: "Starting");
+        Log.Info(message: "Starting");
 
         ListViewHitTestInfo info = lvw_FileList.HitTest(x: e.X, y: e.Y);
         ListViewItem item = info.Item;
@@ -2536,10 +2548,11 @@ public partial class FrmMainApp : Form
         {
             lvw_FileList.SelectedItems.Clear();
             CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"),
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Information.ToString()),
+                text: ReturnControlText(
+                    controlName: "mbx_FrmMainApp_WarningNoItemSelected", fakeControlType: FakeControlTypes.MessageBox),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Information.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
@@ -2547,7 +2560,7 @@ public partial class FrmMainApp : Form
         }
 
         DirectoryElement directoryElement = (DirectoryElement)item.Tag;
-        Logger.Trace(message: "item: " + item.Text);
+        Log.Trace(message: "item: " + item.Text);
 
         switch (directoryElement.Type)
         {
@@ -2591,7 +2604,7 @@ public partial class FrmMainApp : Form
 
             // Edit file
             case DirectoryElement.ElementType.File:
-                Logger.Trace(message: "Trigger FrmEditFileData");
+                Log.Trace(message: "Trigger FrmEditFileData");
                 filesToEditGUIDStringList.Clear();
 
                 filesToEditGUIDStringList.Add(
@@ -2601,7 +2614,7 @@ public partial class FrmMainApp : Form
                                                  .Original, // GUIDs don't change
                         notFoundValue: null, nowSavingExif: false));
 
-                Logger.Trace(message: "Add File To lvw_FileListEditImages");
+                Log.Trace(message: "Add File To lvw_FileListEditImages");
                 EditFileFormGeneric.ShowFrmEditFileData();
                 break;
         }
@@ -2870,9 +2883,9 @@ public partial class FrmMainApp : Form
         EventArgs e)
     {
         FrmSettings = new FrmSettings();
-        FrmSettings.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: ControlType.Form,
-            objectName: "FrmSettings"
+        FrmSettings.Text = ReturnControlText(
+            fakeControlType: FakeControlTypes.Form,
+            controlName: "FrmSettings"
         );
         FrmSettings.ShowDialog();
     }
@@ -2894,10 +2907,11 @@ public partial class FrmMainApp : Form
         else
         {
             CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmMainApp_NoFavouritesDefined"),
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Information.ToString()),
+                text: ReturnControlText(
+                    controlName: "mbx_FrmMainApp_NoFavouritesDefined", fakeControlType: FakeControlTypes.MessageBox),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Information.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Information);
             customMessageBox.ShowDialog();
@@ -3050,10 +3064,11 @@ public partial class FrmMainApp : Form
 
                 DtFavourites = HelperGenericAppStartup.AppStartupLoadFavourites();
                 CustomMessageBox customMessageBox = new(
-                    text: GenericGetMessageBoxText(
-                        messageBoxName: "mbx_FrmMainApp_InfoFavouriteSaved"),
-                    caption: GenericGetMessageBoxCaption(
-                        captionType: MessageBoxCaption.Information.ToString()),
+                    text: ReturnControlText(
+                        controlName: "mbx_FrmMainApp_InfoFavouriteSaved", fakeControlType: FakeControlTypes.MessageBox),
+                    caption: ReturnControlText(
+                        controlName: MessageBoxCaption.Information.ToString(),
+                        fakeControlType: FakeControlTypes.MessageBoxCaption),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Information);
                 customMessageBox.ShowDialog();
@@ -3062,10 +3077,12 @@ public partial class FrmMainApp : Form
             else
             {
                 CustomMessageBox customMessageBox = new(
-                    text: GenericGetMessageBoxText(
-                        messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"),
-                    caption: GenericGetMessageBoxCaption(
-                        captionType: MessageBoxCaption.Information.ToString()),
+                    text: ReturnControlText(
+                        controlName: "mbx_FrmMainApp_WarningNoItemSelected",
+                        fakeControlType: FakeControlTypes.MessageBox),
+                    caption: ReturnControlText(
+                        controlName: MessageBoxCaption.Information.ToString(),
+                        fakeControlType: FakeControlTypes.MessageBoxCaption),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Warning);
                 customMessageBox.ShowDialog();
@@ -3074,10 +3091,12 @@ public partial class FrmMainApp : Form
         else
         {
             CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank"),
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Information.ToString()),
+                text: ReturnControlText(
+                    controlName: "mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank",
+                    fakeControlType: FakeControlTypes.MessageBox),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Information.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
@@ -3151,10 +3170,12 @@ public partial class FrmMainApp : Form
             else
             {
                 CustomMessageBox customMessageBox = new(
-                    text: GenericGetMessageBoxText(
-                        messageBoxName: "mbx_FrmMainApp_WarningNoItemSelected"),
-                    caption: GenericGetMessageBoxCaption(
-                        captionType: MessageBoxCaption.Information.ToString()),
+                    text: ReturnControlText(
+                        controlName: "mbx_FrmMainApp_WarningNoItemSelected",
+                        fakeControlType: FakeControlTypes.MessageBox),
+                    caption: ReturnControlText(
+                        controlName: MessageBoxCaption.Information.ToString(),
+                        fakeControlType: FakeControlTypes.MessageBoxCaption),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Warning);
                 customMessageBox.ShowDialog();
@@ -3163,10 +3184,11 @@ public partial class FrmMainApp : Form
         else
         {
             CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmMainApp_InfoFavouriteNotValid"),
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Information.ToString()),
+                text: ReturnControlText(
+                    controlName: "mbx_FrmMainApp_InfoFavouriteNotValid", fakeControlType: FakeControlTypes.MessageBox),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Information.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Information);
             customMessageBox.ShowDialog();
@@ -3199,9 +3221,9 @@ public partial class FrmMainApp : Form
                                                 .Index]
                                 .Text;
 
-                for (int i = DtToponomySessionData.Rows.Count - 1; i >= 0; i--)
+                for (int i = DTToponomySessionData.Rows.Count - 1; i >= 0; i--)
                 {
-                    DataRow dr = DtToponomySessionData.Rows[index: i];
+                    DataRow dr = DTToponomySessionData.Rows[index: i];
                     if (dr[columnName: "lat"]
                            .ToString() ==
                         lat &&
@@ -3215,7 +3237,7 @@ public partial class FrmMainApp : Form
                     dataHasBeenRemoved = true;
                 }
 
-                DtToponomySessionData.AcceptChanges();
+                DTToponomySessionData.AcceptChanges();
             }
             catch
             {
@@ -3226,10 +3248,11 @@ public partial class FrmMainApp : Form
         if (dataHasBeenRemoved)
         {
             CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmMainApp_InfoCahcedDataRemoved"),
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Information.ToString()),
+                text: ReturnControlText(
+                    controlName: "mbx_FrmMainApp_InfoCahcedDataRemoved", fakeControlType: FakeControlTypes.MessageBox),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Information.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Information);
             customMessageBox.ShowDialog();
@@ -3237,10 +3260,12 @@ public partial class FrmMainApp : Form
         else
         {
             CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmMainApp_InfoCahcedDataNotRemoved"),
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Information.ToString()),
+                text: ReturnControlText(
+                    controlName: "mbx_FrmMainApp_InfoCahcedDataNotRemoved",
+                    fakeControlType: FakeControlTypes.MessageBox),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Information.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Information);
             customMessageBox.ShowDialog();
@@ -3323,10 +3348,11 @@ public partial class FrmMainApp : Form
         else
         {
             CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmMainApp_NoFavouritesDefined"),
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Information.ToString()),
+                text: ReturnControlText(
+                    controlName: "mbx_FrmMainApp_NoFavouritesDefined", fakeControlType: FakeControlTypes.MessageBox),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Information.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Information);
             customMessageBox.ShowDialog();
@@ -3369,10 +3395,12 @@ public partial class FrmMainApp : Form
         if (!selectionIsValid)
         {
             CustomMessageBox customMessageBox = new(
-                text: GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmMainApp_WarningTooManyFilesSelected"),
-                caption: GenericGetMessageBoxCaption(
-                    captionType: MessageBoxCaption.Warning.ToString()),
+                text: ReturnControlText(
+                    controlName: "mbx_FrmMainApp_WarningTooManyFilesSelected",
+                    fakeControlType: FakeControlTypes.MessageBox),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Warning.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();

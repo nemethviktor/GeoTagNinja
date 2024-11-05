@@ -13,45 +13,78 @@ internal static class HelperDataOtherDataRelated
     /// </summary>
     public static Task GenericCreateDataTables()
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
-        // DtLanguageLabels
-        FrmMainApp.DtLanguageLabels = new DataTable();
-        FrmMainApp.DtLanguageLabels.Clear();
-        FrmMainApp.DtLanguageLabels.Columns.Add(columnName: "languageName");
-        FrmMainApp.DtLanguageLabels.Columns.Add(columnName: "objectType");
-        FrmMainApp.DtLanguageLabels.Columns.Add(columnName: "objectName");
-        FrmMainApp.DtLanguageLabels.Columns.Add(columnName: "objectText");
 
-        // DtToponomySessionData;
-        FrmMainApp.DtToponomySessionData = new DataTable();
-        FrmMainApp.DtToponomySessionData.Clear();
-        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "lat");
-        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "lng");
-        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "AdminName1");
-        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "AdminName2");
-        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "AdminName3");
-        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "AdminName4");
-        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "ToponymName");
-        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "CountryCode");
-        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "GPSAltitude");
-        FrmMainApp.DtToponomySessionData.Columns.Add(columnName: "timezoneId");
+        // DTLanguageMapping
+        FrmMainApp.DTLanguageMapping = new DataTable();
+        FrmMainApp.DTLanguageMapping.Clear();
+        //  "ab", "аҧсуа бызшәа [Abkhaz]" 
+        FrmMainApp.DTLanguageMapping.Columns.Add(columnName: "languageCode");
+        FrmMainApp.DTLanguageMapping.Columns.Add(columnName: "languageNative");
+        FrmMainApp.DTLanguageMapping.Columns.Add(columnName: "languageEnglish");
+
+        FillDTLanguageMapping();
+
+        // DTToponomySessionData;
+        FrmMainApp.DTToponomySessionData = new DataTable();
+        FrmMainApp.DTToponomySessionData.Clear();
+        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "lat");
+        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "lng");
+        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "AdminName1");
+        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "AdminName2");
+        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "AdminName3");
+        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "AdminName4");
+        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "ToponymName");
+        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "CountryCode");
+        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "GPSAltitude");
+        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "timezoneId");
         return Task.CompletedTask;
     }
 
     /// <summary>
     ///     Gets the "FirstOrDefault" from a List of KVP
     /// </summary>
-    /// <param name="lstIn">List (KVP) to check</param>
+    /// <param name="kvpListIn">List (KVP) to check</param>
     /// <param name="keyEqualsWhat">Key filter</param>
     /// <returns>String of Value</returns>
-    internal static string DataGetFirstOrDefaultFromKVPList(Dictionary<string, string> lstIn,
+    internal static string DataGetFirstOrDefaultFromKVPList(Dictionary<string, string> kvpListIn,
         string keyEqualsWhat)
     {
-        return lstIn.FirstOrDefault(predicate: kvp => kvp.Key == keyEqualsWhat)
-                    .Value;
+        return kvpListIn.FirstOrDefault(predicate: kvp => kvp.Key == keyEqualsWhat)
+                        .Value;
     }
 
+    internal static string DataGetFirstOrDefaultFromDataTable(DataTable dataTableIn, string dataColumnFilter,
+        string dataColumnReturn,
+        string keyEqualsWhat)
+    {
+        EnumerableRowCollection<DataRow> res = from row in dataTableIn.AsEnumerable()
+            where row.Field<string>(columnName: dataColumnFilter) == keyEqualsWhat
+            select row;
+
+        return res.ToList()[index: 0][columnName: dataColumnReturn].ToString();
+    }
+
+    /// <summary>
+    ///     Fills up the language mapping datatable
+    /// </summary>
+    private static void FillDTLanguageMapping()
+    {
+        FrmMainApp.DTLanguageMapping.Rows.Clear();
+
+        //{ "lo", "ພາສາ [Lao]" },
+        foreach (KeyValuePair<string, string> iso6391Language in HelperGenericAncillaryListsArrays
+                    .GetISO_639_1_Languages())
+        {
+            DataRow dr = FrmMainApp.DTLanguageMapping.NewRow();
+            dr[columnName: "languageCode"] = iso6391Language.Key;
+            dr[columnName: "languageNative"] = iso6391Language.Value.Split('[')[0].Trim();
+            dr[columnName: "languageEnglish"] =
+                iso6391Language.Value.Split('[')[1].Trim().Replace(oldValue: "]", newValue: "");
+            FrmMainApp.DTLanguageMapping.Rows.Add(row: dr);
+        }
+    }
 
     /// <summary>
     ///     Updates the sessions storage for the Toponomy DT
@@ -82,9 +115,9 @@ internal static class HelperDataOtherDataRelated
         lock (HelperGenericFileLocking.TableLock)
         {
             // delete any existing rows with the current combination
-            for (int i = FrmMainApp.DtToponomySessionData.Rows.Count - 1; i >= 0; i--)
+            for (int i = FrmMainApp.DTToponomySessionData.Rows.Count - 1; i >= 0; i--)
             {
-                DataRow thisDr = FrmMainApp.DtToponomySessionData.Rows[index: i];
+                DataRow thisDr = FrmMainApp.DTToponomySessionData.Rows[index: i];
                 if (
                     thisDr[columnName: "lat"]
                        .ToString() ==
@@ -98,10 +131,10 @@ internal static class HelperDataOtherDataRelated
                 }
             }
 
-            FrmMainApp.DtToponomySessionData.AcceptChanges();
+            FrmMainApp.DTToponomySessionData.AcceptChanges();
 
             // add new
-            DataRow newDr = FrmMainApp.DtToponomySessionData.NewRow();
+            DataRow newDr = FrmMainApp.DTToponomySessionData.NewRow();
             newDr[columnName: "lat"] = lat;
             newDr[columnName: "lng"] = lng;
             newDr[columnName: "AdminName1"] = adminName1;
@@ -113,8 +146,8 @@ internal static class HelperDataOtherDataRelated
             newDr[columnName: "GPSAltitude"] = altitude;
             newDr[columnName: "timezoneId"] = timezoneId;
 
-            FrmMainApp.DtToponomySessionData.Rows.Add(row: newDr);
-            FrmMainApp.DtToponomySessionData.AcceptChanges();
+            FrmMainApp.DTToponomySessionData.Rows.Add(row: newDr);
+            FrmMainApp.DTToponomySessionData.AcceptChanges();
         }
     }
 }

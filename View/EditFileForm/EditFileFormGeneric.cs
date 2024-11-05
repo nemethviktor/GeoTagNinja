@@ -79,11 +79,13 @@ internal static class EditFileFormGeneric
         else
         {
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName: "mbx_Helper_WarningFileDisappeared"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Warning.ToString()),
+                text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_Helper_WarningFileDisappeared",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                                                                   .Warning.ToString(),
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();

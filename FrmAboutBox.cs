@@ -22,8 +22,8 @@ internal partial class FrmAboutBox : Form
         InitializeComponent();
         rtb_AboutBox.LinkClicked += rtb_AboutBox_LinkClicked;
         HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
-                                                     ? ThemeColour.Dark
-                                                     : ThemeColour.Light, parentControl: this);
+            ? ThemeColour.Dark
+            : ThemeColour.Light, parentControl: this);
         HelperNonStatic helperNonstatic = new();
         HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
 
@@ -32,8 +32,9 @@ internal partial class FrmAboutBox : Form
                                   .GetName()
                                   .Version;
         DateTime buildDateTime = new DateTime(year: 2000, month: 1, day: 1).Add(value: new TimeSpan(
-                                                                                    ticks: TimeSpan.TicksPerDay * version.Build + // days since 1 January 2000
-                                                                                           TimeSpan.TicksPerSecond * 2 * version.Revision)); // seconds since midnight, (multiply by 2 to get original)
+            ticks: TimeSpan.TicksPerDay * version.Build + // days since 1 January 2000
+                   TimeSpan.TicksPerSecond * 2 *
+                   version.Revision)); // seconds since midnight, (multiply by 2 to get original)
 
         Text = AssemblyTitle;
 
@@ -59,13 +60,6 @@ internal partial class FrmAboutBox : Form
         }
     }
 
-    private void AppendText(RichTextBox box,
-                            string text,
-                            string link = null)
-    {
-        box.AppendText(text: text + " " + link + Environment.NewLine);
-    }
-
 
     public sealed override string Text
     {
@@ -73,14 +67,21 @@ internal partial class FrmAboutBox : Form
         set => base.Text = value;
     }
 
-    private void Btn_OK_Click(object sender,
-                              EventArgs e)
+    private void AppendText(RichTextBox box,
+        string text,
+        string link = null)
+    {
+        box.AppendText(text: text + " " + link + Environment.NewLine);
+    }
+
+    private void btn_Generic_OK_Click(object sender,
+        EventArgs e)
     {
         Hide();
     }
 
     private void rtb_AboutBox_LinkClicked(object sender,
-                                          LinkClickedEventArgs e)
+        LinkClickedEventArgs e)
     {
         Process.Start(fileName: e.LinkText);
     }
@@ -99,7 +100,8 @@ internal partial class FrmAboutBox : Form
         get
         {
             object[] attributes = Assembly.GetExecutingAssembly()
-                                          .GetCustomAttributes(attributeType: typeof(AssemblyTitleAttribute), inherit: false);
+                                          .GetCustomAttributes(attributeType: typeof(AssemblyTitleAttribute),
+                                               inherit: false);
             if (attributes.Length > 0)
             {
                 AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
@@ -127,7 +129,8 @@ internal partial class FrmAboutBox : Form
         get
         {
             object[] attributes = Assembly.GetExecutingAssembly()
-                                          .GetCustomAttributes(attributeType: typeof(AssemblyDescriptionAttribute), inherit: false);
+                                          .GetCustomAttributes(attributeType: typeof(AssemblyDescriptionAttribute),
+                                               inherit: false);
             if (attributes.Length == 0)
             {
                 return "";
@@ -148,7 +151,8 @@ internal partial class FrmAboutBox : Form
         get
         {
             object[] attributes = Assembly.GetExecutingAssembly()
-                                          .GetCustomAttributes(attributeType: typeof(AssemblyProductAttribute), inherit: false);
+                                          .GetCustomAttributes(attributeType: typeof(AssemblyProductAttribute),
+                                               inherit: false);
             if (attributes.Length == 0)
             {
                 return "";
@@ -169,7 +173,8 @@ internal partial class FrmAboutBox : Form
         get
         {
             object[] attributes = Assembly.GetExecutingAssembly()
-                                          .GetCustomAttributes(attributeType: typeof(AssemblyCopyrightAttribute), inherit: false);
+                                          .GetCustomAttributes(attributeType: typeof(AssemblyCopyrightAttribute),
+                                               inherit: false);
             if (attributes.Length == 0)
             {
                 return "";
@@ -191,7 +196,8 @@ internal partial class FrmAboutBox : Form
         get
         {
             object[] attributes = Assembly.GetExecutingAssembly()
-                                          .GetCustomAttributes(attributeType: typeof(AssemblyCompanyAttribute), inherit: false);
+                                          .GetCustomAttributes(attributeType: typeof(AssemblyCompanyAttribute),
+                                               inherit: false);
             if (attributes.Length == 0)
             {
                 return "";

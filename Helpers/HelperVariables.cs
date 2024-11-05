@@ -12,6 +12,9 @@ internal static class HelperVariables
     internal const double MetreToFeet = 3.28084;
     internal const string DoubleQuoteStr = "\"";
 
+    internal const string ControlItemNameNotGeneric = "Not Generic";
+    internal const string ResourceNameForGenericControlItems = "Generic_Strings";
+
     // user-defined settings updateable via Reflection
     internal static string UserSettingArcGisApiKey;
     internal static string UserSettingGeoNamesUserName;
@@ -51,7 +54,7 @@ internal static class HelperVariables
     internal static string?
         CurrentAltitude; // this is needed bcs it can happen that a file has altitude, the api returns -32k and then we'd end up with something worse than what it was originally.
 
-    internal static readonly string DefaultEnglishString = "English [English]";
+    internal static readonly string DefaultEnglishString = "en";
     internal static string APILanguageToUse;
     internal static DataTable DtCustomRules = new();
     internal static DataTable DtCustomCityLogic = new();

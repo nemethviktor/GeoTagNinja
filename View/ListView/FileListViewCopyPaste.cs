@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
+using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.View.ListView;
@@ -68,11 +68,12 @@ internal static class FileListViewCopyPaste
         else
         {
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName: "mbx_Helper_WarningTooManyFilesSelected"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Warning.ToString()),
+                text: ReturnControlText(
+                    controlName: "mbx_Helper_WarningTooManyFilesSelected",
+                    fakeControlType: FakeControlTypes.MessageBox),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption
+                                .Warning.ToString(), fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();
@@ -98,11 +99,12 @@ internal static class FileListViewCopyPaste
         else
         {
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName: "mbx_Helper_WarningNothingToPaste"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                       .Warning.ToString()),
+                text: ReturnControlText(
+                    controlName: "mbx_Helper_WarningNothingToPaste",
+                    fakeControlType: FakeControlTypes.MessageBox),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption
+                                .Warning.ToString(), fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Warning);
             customMessageBox.ShowDialog();

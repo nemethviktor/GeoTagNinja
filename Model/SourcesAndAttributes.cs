@@ -42,7 +42,7 @@ public static class SourcesAndAttributes
         CountryCode,
         Country,
         State,
-        Sub_location,
+        Sublocation,
         Make,
         Model,
         Rating,
@@ -483,10 +483,10 @@ public static class SourcesAndAttributes
                     }
                 },
                 {
-                    ElementAttribute.Sub_location, new ElementAttributeMapping
+                    ElementAttribute.Sublocation, new ElementAttributeMapping
                     {
-                        Name = "Sub_location",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.SUB_LOCATION,
+                        Name = "Sublocation",
+                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.Sublocation,
                         TypeOfElement = typeof(string),
                         InAttributes = new List<string>
                         {

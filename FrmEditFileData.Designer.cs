@@ -44,12 +44,11 @@ namespace GeoTagNinja
             this.tbx_OffsetTime = new System.Windows.Forms.TextBox();
             this.cbx_OffsetTime = new System.Windows.Forms.ComboBox();
             this.lbl_OffsetTime = new System.Windows.Forms.Label();
-            this.tbx_Sub_location = new System.Windows.Forms.TextBox();
+            this.tbx_Sublocation = new System.Windows.Forms.TextBox();
             this.tbx_City = new System.Windows.Forms.TextBox();
             this.tbx_State = new System.Windows.Forms.TextBox();
             this.cbx_Country = new System.Windows.Forms.ComboBox();
             this.cbx_CountryCode = new System.Windows.Forms.ComboBox();
-            this.lbl_Sub_location = new System.Windows.Forms.Label();
             this.lbl_City = new System.Windows.Forms.Label();
             this.lbl_State = new System.Windows.Forms.Label();
             this.lbl_Country = new System.Windows.Forms.Label();
@@ -94,14 +93,15 @@ namespace GeoTagNinja
             this.rbt_TakenDateSetToFixedDate = new System.Windows.Forms.RadioButton();
             this.btn_InsertTakenDate = new System.Windows.Forms.Button();
             this.igl_TabPages = new System.Windows.Forms.ImageList(this.components);
-            this.btn_Cancel = new System.Windows.Forms.Button();
-            this.btn_OK = new System.Windows.Forms.Button();
+            this.btn_Generic_Cancel = new System.Windows.Forms.Button();
+            this.btn_Generic_OK = new System.Windows.Forms.Button();
             this.btn_SetCurrentValues = new System.Windows.Forms.Button();
             this.ttp_OffsetTime = new System.Windows.Forms.ToolTip(this.components);
             this.gbx_EditImageList = new System.Windows.Forms.GroupBox();
             this.lvw_FileListEditImages = new System.Windows.Forms.ListView();
             this.ttp_GPSDataPaste = new System.Windows.Forms.ToolTip(this.components);
             this.btn_ApplyAndNext = new System.Windows.Forms.Button();
+            this.lbl_Sublocation = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_imagePreview)).BeginInit();
             this.tpg_Location.SuspendLayout();
             this.gbx_LocationData.SuspendLayout();
@@ -130,11 +130,8 @@ namespace GeoTagNinja
             // pbx_imagePreview
             // 
             this.pbx_imagePreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pbx_imagePreview.Location = new System.Drawing.Point(12, 338);
+            resources.ApplyResources(this.pbx_imagePreview, "pbx_imagePreview");
             this.pbx_imagePreview.Name = "pbx_imagePreview";
-            this.pbx_imagePreview.Size = new System.Drawing.Size(438, 219);
-            this.pbx_imagePreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pbx_imagePreview.TabIndex = 2;
             this.pbx_imagePreview.TabStop = false;
             // 
             // tpg_Location
@@ -142,18 +139,13 @@ namespace GeoTagNinja
             this.tpg_Location.Controls.Add(this.gbx_LocationData);
             this.tpg_Location.Controls.Add(this.gbx_GPSData);
             this.tpg_Location.Controls.Add(this.btn_RemoveGeoData);
-            this.tpg_Location.ImageKey = "PublishOnDemand.png";
-            this.tpg_Location.Location = new System.Drawing.Point(4, 23);
-            this.tpg_Location.Margin = new System.Windows.Forms.Padding(2);
+            resources.ApplyResources(this.tpg_Location, "tpg_Location");
             this.tpg_Location.Name = "tpg_Location";
-            this.tpg_Location.Padding = new System.Windows.Forms.Padding(2);
-            this.tpg_Location.Size = new System.Drawing.Size(557, 491);
-            this.tpg_Location.TabIndex = 0;
-            this.tpg_Location.Text = "tpg_Location";
             this.tpg_Location.UseVisualStyleBackColor = true;
             // 
             // gbx_LocationData
             // 
+            this.gbx_LocationData.Controls.Add(this.lbl_Sublocation);
             this.gbx_LocationData.Controls.Add(this.gbx_GetToponomy);
             this.gbx_LocationData.Controls.Add(this.tbx_CreateDate);
             this.gbx_LocationData.Controls.Add(this.pbx_OffsetTimeInfo);
@@ -161,94 +153,66 @@ namespace GeoTagNinja
             this.gbx_LocationData.Controls.Add(this.tbx_OffsetTime);
             this.gbx_LocationData.Controls.Add(this.cbx_OffsetTime);
             this.gbx_LocationData.Controls.Add(this.lbl_OffsetTime);
-            this.gbx_LocationData.Controls.Add(this.tbx_Sub_location);
+            this.gbx_LocationData.Controls.Add(this.tbx_Sublocation);
             this.gbx_LocationData.Controls.Add(this.tbx_City);
             this.gbx_LocationData.Controls.Add(this.tbx_State);
             this.gbx_LocationData.Controls.Add(this.cbx_Country);
             this.gbx_LocationData.Controls.Add(this.cbx_CountryCode);
-            this.gbx_LocationData.Controls.Add(this.lbl_Sub_location);
             this.gbx_LocationData.Controls.Add(this.lbl_City);
             this.gbx_LocationData.Controls.Add(this.lbl_State);
             this.gbx_LocationData.Controls.Add(this.lbl_Country);
             this.gbx_LocationData.Controls.Add(this.lbl_CountryCode);
-            this.gbx_LocationData.Location = new System.Drawing.Point(13, 189);
-            this.gbx_LocationData.Margin = new System.Windows.Forms.Padding(2);
+            resources.ApplyResources(this.gbx_LocationData, "gbx_LocationData");
             this.gbx_LocationData.Name = "gbx_LocationData";
-            this.gbx_LocationData.Padding = new System.Windows.Forms.Padding(2);
-            this.gbx_LocationData.Size = new System.Drawing.Size(518, 257);
-            this.gbx_LocationData.TabIndex = 1;
             this.gbx_LocationData.TabStop = false;
-            this.gbx_LocationData.Text = "gbx_LocationData";
             // 
             // gbx_GetToponomy
             // 
             this.gbx_GetToponomy.Controls.Add(this.btn_getFromWeb_Toponomy);
             this.gbx_GetToponomy.Controls.Add(this.btn_getAllFromWeb_Toponomy);
-            this.gbx_GetToponomy.Location = new System.Drawing.Point(313, 60);
+            resources.ApplyResources(this.gbx_GetToponomy, "gbx_GetToponomy");
             this.gbx_GetToponomy.Name = "gbx_GetToponomy";
-            this.gbx_GetToponomy.Size = new System.Drawing.Size(200, 100);
-            this.gbx_GetToponomy.TabIndex = 20;
             this.gbx_GetToponomy.TabStop = false;
-            this.gbx_GetToponomy.Text = "gbx_GetToponomy";
             // 
             // btn_getFromWeb_Toponomy
             // 
-            this.btn_getFromWeb_Toponomy.Location = new System.Drawing.Point(22, 24);
+            resources.ApplyResources(this.btn_getFromWeb_Toponomy, "btn_getFromWeb_Toponomy");
             this.btn_getFromWeb_Toponomy.Name = "btn_getFromWeb_Toponomy";
-            this.btn_getFromWeb_Toponomy.Size = new System.Drawing.Size(160, 23);
-            this.btn_getFromWeb_Toponomy.TabIndex = 11;
-            this.btn_getFromWeb_Toponomy.Text = "btn_getFromWeb_Toponomy";
             this.btn_getFromWeb_Toponomy.UseVisualStyleBackColor = true;
             this.btn_getFromWeb_Toponomy.Click += new System.EventHandler(this.btn_getFromWeb_Click);
             // 
             // btn_getAllFromWeb_Toponomy
             // 
-            this.btn_getAllFromWeb_Toponomy.Location = new System.Drawing.Point(22, 62);
+            resources.ApplyResources(this.btn_getAllFromWeb_Toponomy, "btn_getAllFromWeb_Toponomy");
             this.btn_getAllFromWeb_Toponomy.Name = "btn_getAllFromWeb_Toponomy";
-            this.btn_getAllFromWeb_Toponomy.Size = new System.Drawing.Size(160, 23);
-            this.btn_getAllFromWeb_Toponomy.TabIndex = 12;
-            this.btn_getAllFromWeb_Toponomy.Text = "btn_getAllFromWeb_Toponomy";
             this.btn_getAllFromWeb_Toponomy.UseVisualStyleBackColor = true;
             this.btn_getAllFromWeb_Toponomy.Click += new System.EventHandler(this.btn_getFromWeb_Click);
             // 
             // tbx_CreateDate
             // 
-            this.tbx_CreateDate.Enabled = false;
-            this.tbx_CreateDate.Location = new System.Drawing.Point(298, 210);
+            resources.ApplyResources(this.tbx_CreateDate, "tbx_CreateDate");
             this.tbx_CreateDate.Name = "tbx_CreateDate";
             this.tbx_CreateDate.ReadOnly = true;
-            this.tbx_CreateDate.Size = new System.Drawing.Size(160, 20);
-            this.tbx_CreateDate.TabIndex = 19;
-            this.tbx_CreateDate.Visible = false;
             // 
             // pbx_OffsetTimeInfo
             // 
-            this.pbx_OffsetTimeInfo.Image = ((System.Drawing.Image)(resources.GetObject("pbx_OffsetTimeInfo.Image")));
-            this.pbx_OffsetTimeInfo.Location = new System.Drawing.Point(124, 180);
+            resources.ApplyResources(this.pbx_OffsetTimeInfo, "pbx_OffsetTimeInfo");
             this.pbx_OffsetTimeInfo.Name = "pbx_OffsetTimeInfo";
-            this.pbx_OffsetTimeInfo.Size = new System.Drawing.Size(16, 16);
-            this.pbx_OffsetTimeInfo.TabIndex = 18;
             this.pbx_OffsetTimeInfo.TabStop = false;
             this.pbx_OffsetTimeInfo.MouseHover += new System.EventHandler(this.pbx_OffsetTimeInfo_MouseHover);
             // 
             // ckb_UseDST
             // 
-            this.ckb_UseDST.AutoSize = true;
-            this.ckb_UseDST.Location = new System.Drawing.Point(14, 210);
+            resources.ApplyResources(this.ckb_UseDST, "ckb_UseDST");
             this.ckb_UseDST.Name = "ckb_UseDST";
-            this.ckb_UseDST.Size = new System.Drawing.Size(91, 17);
-            this.ckb_UseDST.TabIndex = 17;
-            this.ckb_UseDST.Text = "ckb_UseDST";
             this.ckb_UseDST.UseVisualStyleBackColor = true;
             this.ckb_UseDST.CheckedChanged += new System.EventHandler(this.ckb_UseDST_CheckedChanged);
             // 
             // tbx_OffsetTime
             // 
-            this.tbx_OffsetTime.Location = new System.Drawing.Point(163, 210);
+            resources.ApplyResources(this.tbx_OffsetTime, "tbx_OffsetTime");
             this.tbx_OffsetTime.Name = "tbx_OffsetTime";
             this.tbx_OffsetTime.ReadOnly = true;
-            this.tbx_OffsetTime.Size = new System.Drawing.Size(79, 20);
-            this.tbx_OffsetTime.TabIndex = 16;
             this.tbx_OffsetTime.TextChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             // 
             // cbx_OffsetTime
@@ -257,45 +221,32 @@ namespace GeoTagNinja
             this.cbx_OffsetTime.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cbx_OffsetTime.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbx_OffsetTime.FormattingEnabled = true;
-            this.cbx_OffsetTime.Location = new System.Drawing.Point(163, 177);
+            resources.ApplyResources(this.cbx_OffsetTime, "cbx_OffsetTime");
             this.cbx_OffsetTime.Name = "cbx_OffsetTime";
-            this.cbx_OffsetTime.Size = new System.Drawing.Size(342, 21);
             this.cbx_OffsetTime.Sorted = true;
-            this.cbx_OffsetTime.TabIndex = 15;
             this.cbx_OffsetTime.SelectedIndexChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             // 
             // lbl_OffsetTime
             // 
-            this.lbl_OffsetTime.AutoSize = true;
-            this.lbl_OffsetTime.Location = new System.Drawing.Point(11, 180);
-            this.lbl_OffsetTime.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            resources.ApplyResources(this.lbl_OffsetTime, "lbl_OffsetTime");
             this.lbl_OffsetTime.Name = "lbl_OffsetTime";
-            this.lbl_OffsetTime.Size = new System.Drawing.Size(74, 13);
-            this.lbl_OffsetTime.TabIndex = 14;
-            this.lbl_OffsetTime.Text = "lbl_OffsetTime";
             // 
-            // tbx_Sub_location
+            // tbx_Sublocation
             // 
-            this.tbx_Sub_location.Location = new System.Drawing.Point(124, 147);
-            this.tbx_Sub_location.Name = "tbx_Sub_location";
-            this.tbx_Sub_location.Size = new System.Drawing.Size(176, 20);
-            this.tbx_Sub_location.TabIndex = 10;
-            this.tbx_Sub_location.TextChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
+            resources.ApplyResources(this.tbx_Sublocation, "tbx_Sublocation");
+            this.tbx_Sublocation.Name = "tbx_Sublocation";
+            this.tbx_Sublocation.TextChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             // 
             // tbx_City
             // 
-            this.tbx_City.Location = new System.Drawing.Point(124, 113);
+            resources.ApplyResources(this.tbx_City, "tbx_City");
             this.tbx_City.Name = "tbx_City";
-            this.tbx_City.Size = new System.Drawing.Size(176, 20);
-            this.tbx_City.TabIndex = 9;
             this.tbx_City.TextChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             // 
             // tbx_State
             // 
-            this.tbx_State.Location = new System.Drawing.Point(124, 87);
+            resources.ApplyResources(this.tbx_State, "tbx_State");
             this.tbx_State.Name = "tbx_State";
-            this.tbx_State.Size = new System.Drawing.Size(176, 20);
-            this.tbx_State.TabIndex = 8;
             this.tbx_State.TextChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             // 
             // cbx_Country
@@ -304,11 +255,9 @@ namespace GeoTagNinja
             this.cbx_Country.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cbx_Country.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbx_Country.FormattingEnabled = true;
-            this.cbx_Country.Location = new System.Drawing.Point(124, 57);
+            resources.ApplyResources(this.cbx_Country, "cbx_Country");
             this.cbx_Country.Name = "cbx_Country";
-            this.cbx_Country.Size = new System.Drawing.Size(176, 21);
             this.cbx_Country.Sorted = true;
-            this.cbx_Country.TabIndex = 7;
             this.cbx_Country.SelectedValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             // 
             // cbx_CountryCode
@@ -317,62 +266,30 @@ namespace GeoTagNinja
             this.cbx_CountryCode.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cbx_CountryCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbx_CountryCode.FormattingEnabled = true;
-            this.cbx_CountryCode.Location = new System.Drawing.Point(124, 27);
+            resources.ApplyResources(this.cbx_CountryCode, "cbx_CountryCode");
             this.cbx_CountryCode.Name = "cbx_CountryCode";
-            this.cbx_CountryCode.Size = new System.Drawing.Size(68, 21);
             this.cbx_CountryCode.Sorted = true;
-            this.cbx_CountryCode.TabIndex = 6;
             this.cbx_CountryCode.SelectedValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
-            // 
-            // lbl_Sub_location
-            // 
-            this.lbl_Sub_location.AutoSize = true;
-            this.lbl_Sub_location.Location = new System.Drawing.Point(11, 150);
-            this.lbl_Sub_location.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lbl_Sub_location.Name = "lbl_Sub_location";
-            this.lbl_Sub_location.Size = new System.Drawing.Size(85, 13);
-            this.lbl_Sub_location.TabIndex = 0;
-            this.lbl_Sub_location.Text = "lbl_Sub_location";
             // 
             // lbl_City
             // 
-            this.lbl_City.AutoSize = true;
-            this.lbl_City.Location = new System.Drawing.Point(11, 120);
-            this.lbl_City.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            resources.ApplyResources(this.lbl_City, "lbl_City");
             this.lbl_City.Name = "lbl_City";
-            this.lbl_City.Size = new System.Drawing.Size(40, 13);
-            this.lbl_City.TabIndex = 0;
-            this.lbl_City.Text = "lbl_City";
             // 
             // lbl_State
             // 
-            this.lbl_State.AutoSize = true;
-            this.lbl_State.Location = new System.Drawing.Point(11, 90);
-            this.lbl_State.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            resources.ApplyResources(this.lbl_State, "lbl_State");
             this.lbl_State.Name = "lbl_State";
-            this.lbl_State.Size = new System.Drawing.Size(48, 13);
-            this.lbl_State.TabIndex = 0;
-            this.lbl_State.Text = "lbl_State";
             // 
             // lbl_Country
             // 
-            this.lbl_Country.AutoSize = true;
-            this.lbl_Country.Location = new System.Drawing.Point(12, 60);
-            this.lbl_Country.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            resources.ApplyResources(this.lbl_Country, "lbl_Country");
             this.lbl_Country.Name = "lbl_Country";
-            this.lbl_Country.Size = new System.Drawing.Size(59, 13);
-            this.lbl_Country.TabIndex = 0;
-            this.lbl_Country.Text = "lbl_Country";
             // 
             // lbl_CountryCode
             // 
-            this.lbl_CountryCode.AutoSize = true;
-            this.lbl_CountryCode.Location = new System.Drawing.Point(11, 30);
-            this.lbl_CountryCode.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            resources.ApplyResources(this.lbl_CountryCode, "lbl_CountryCode");
             this.lbl_CountryCode.Name = "lbl_CountryCode";
-            this.lbl_CountryCode.Size = new System.Drawing.Size(84, 13);
-            this.lbl_CountryCode.TabIndex = 0;
-            this.lbl_CountryCode.Text = "lbl_CountryCode";
             // 
             // gbx_GPSData
             // 
@@ -384,37 +301,27 @@ namespace GeoTagNinja
             this.gbx_GPSData.Controls.Add(this.lbl_GPSLongitude);
             this.gbx_GPSData.Controls.Add(this.lbl_GPSLatitude);
             this.gbx_GPSData.Controls.Add(this.lbl_Decimal);
-            this.gbx_GPSData.Location = new System.Drawing.Point(13, 17);
-            this.gbx_GPSData.Margin = new System.Windows.Forms.Padding(2);
+            resources.ApplyResources(this.gbx_GPSData, "gbx_GPSData");
             this.gbx_GPSData.Name = "gbx_GPSData";
-            this.gbx_GPSData.Padding = new System.Windows.Forms.Padding(2);
-            this.gbx_GPSData.Size = new System.Drawing.Size(518, 157);
-            this.gbx_GPSData.TabIndex = 0;
             this.gbx_GPSData.TabStop = false;
-            this.gbx_GPSData.Text = "gbx_GPSData";
             // 
             // pbx_GPSDataPaste
             // 
-            this.pbx_GPSDataPaste.Image = ((System.Drawing.Image)(resources.GetObject("pbx_GPSDataPaste.Image")));
-            this.pbx_GPSDataPaste.Location = new System.Drawing.Point(196, 13);
+            resources.ApplyResources(this.pbx_GPSDataPaste, "pbx_GPSDataPaste");
             this.pbx_GPSDataPaste.Name = "pbx_GPSDataPaste";
-            this.pbx_GPSDataPaste.Size = new System.Drawing.Size(16, 16);
-            this.pbx_GPSDataPaste.TabIndex = 19;
             this.pbx_GPSDataPaste.TabStop = false;
             this.pbx_GPSDataPaste.MouseHover += new System.EventHandler(this.pbx_GPSDataPaste_MouseHover);
             // 
             // nud_GPSAltitude
             // 
             this.nud_GPSAltitude.DecimalPlaces = 2;
-            this.nud_GPSAltitude.Location = new System.Drawing.Point(124, 117);
+            resources.ApplyResources(this.nud_GPSAltitude, "nud_GPSAltitude");
             this.nud_GPSAltitude.Maximum = new decimal(new int[] {
             65536,
             0,
             0,
             0});
             this.nud_GPSAltitude.Name = "nud_GPSAltitude";
-            this.nud_GPSAltitude.Size = new System.Drawing.Size(120, 20);
-            this.nud_GPSAltitude.TabIndex = 15;
             this.nud_GPSAltitude.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             this.nud_GPSAltitude.Enter += new System.EventHandler(this.any_nud_Enter);
             this.nud_GPSAltitude.Leave += new System.EventHandler(this.any_nud_Leave);
@@ -422,7 +329,7 @@ namespace GeoTagNinja
             // nud_GPSLongitude
             // 
             this.nud_GPSLongitude.DecimalPlaces = 6;
-            this.nud_GPSLongitude.Location = new System.Drawing.Point(124, 65);
+            resources.ApplyResources(this.nud_GPSLongitude, "nud_GPSLongitude");
             this.nud_GPSLongitude.Maximum = new decimal(new int[] {
             180,
             0,
@@ -434,8 +341,6 @@ namespace GeoTagNinja
             0,
             -2147483648});
             this.nud_GPSLongitude.Name = "nud_GPSLongitude";
-            this.nud_GPSLongitude.Size = new System.Drawing.Size(120, 20);
-            this.nud_GPSLongitude.TabIndex = 14;
             this.nud_GPSLongitude.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             this.nud_GPSLongitude.Enter += new System.EventHandler(this.any_nud_Enter);
             this.nud_GPSLongitude.Leave += new System.EventHandler(this.any_nud_Leave);
@@ -443,7 +348,7 @@ namespace GeoTagNinja
             // nud_GPSLatitude
             // 
             this.nud_GPSLatitude.DecimalPlaces = 6;
-            this.nud_GPSLatitude.Location = new System.Drawing.Point(124, 36);
+            resources.ApplyResources(this.nud_GPSLatitude, "nud_GPSLatitude");
             this.nud_GPSLatitude.Maximum = new decimal(new int[] {
             180,
             0,
@@ -455,56 +360,34 @@ namespace GeoTagNinja
             0,
             -2147483648});
             this.nud_GPSLatitude.Name = "nud_GPSLatitude";
-            this.nud_GPSLatitude.Size = new System.Drawing.Size(120, 20);
-            this.nud_GPSLatitude.TabIndex = 13;
             this.nud_GPSLatitude.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             this.nud_GPSLatitude.Enter += new System.EventHandler(this.any_nud_Enter);
             this.nud_GPSLatitude.Leave += new System.EventHandler(this.any_nud_Leave);
             // 
             // lbl_GPSAltitude
             // 
-            this.lbl_GPSAltitude.AutoSize = true;
-            this.lbl_GPSAltitude.Location = new System.Drawing.Point(14, 117);
+            resources.ApplyResources(this.lbl_GPSAltitude, "lbl_GPSAltitude");
             this.lbl_GPSAltitude.Name = "lbl_GPSAltitude";
-            this.lbl_GPSAltitude.Size = new System.Drawing.Size(80, 13);
-            this.lbl_GPSAltitude.TabIndex = 12;
-            this.lbl_GPSAltitude.Text = "lbl_GPSAltitude";
             // 
             // lbl_GPSLongitude
             // 
-            this.lbl_GPSLongitude.AutoSize = true;
-            this.lbl_GPSLongitude.Location = new System.Drawing.Point(14, 66);
+            resources.ApplyResources(this.lbl_GPSLongitude, "lbl_GPSLongitude");
             this.lbl_GPSLongitude.Name = "lbl_GPSLongitude";
-            this.lbl_GPSLongitude.Size = new System.Drawing.Size(92, 13);
-            this.lbl_GPSLongitude.TabIndex = 12;
-            this.lbl_GPSLongitude.Text = "lbl_GPSLongitude";
             // 
             // lbl_GPSLatitude
             // 
-            this.lbl_GPSLatitude.AutoSize = true;
-            this.lbl_GPSLatitude.Location = new System.Drawing.Point(14, 38);
+            resources.ApplyResources(this.lbl_GPSLatitude, "lbl_GPSLatitude");
             this.lbl_GPSLatitude.Name = "lbl_GPSLatitude";
-            this.lbl_GPSLatitude.Size = new System.Drawing.Size(83, 13);
-            this.lbl_GPSLatitude.TabIndex = 12;
-            this.lbl_GPSLatitude.Text = "lbl_GPSLatitude";
             // 
             // lbl_Decimal
             // 
-            this.lbl_Decimal.AutoSize = true;
-            this.lbl_Decimal.Location = new System.Drawing.Point(130, 16);
-            this.lbl_Decimal.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            resources.ApplyResources(this.lbl_Decimal, "lbl_Decimal");
             this.lbl_Decimal.Name = "lbl_Decimal";
-            this.lbl_Decimal.Size = new System.Drawing.Size(61, 13);
-            this.lbl_Decimal.TabIndex = 1;
-            this.lbl_Decimal.Text = "lbl_Decimal";
             // 
             // btn_RemoveGeoData
             // 
-            this.btn_RemoveGeoData.Location = new System.Drawing.Point(146, 455);
+            resources.ApplyResources(this.btn_RemoveGeoData, "btn_RemoveGeoData");
             this.btn_RemoveGeoData.Name = "btn_RemoveGeoData";
-            this.btn_RemoveGeoData.Size = new System.Drawing.Size(325, 23);
-            this.btn_RemoveGeoData.TabIndex = 13;
-            this.btn_RemoveGeoData.Text = "btn_RemoveGeoData";
             this.btn_RemoveGeoData.UseVisualStyleBackColor = true;
             this.btn_RemoveGeoData.Click += new System.EventHandler(this.btn_RemoveGeoData_Click);
             // 
@@ -514,23 +397,16 @@ namespace GeoTagNinja
             this.tcr_EditData.Controls.Add(this.tpg_DateTime);
             this.tcr_EditData.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
             this.tcr_EditData.ImageList = this.igl_TabPages;
-            this.tcr_EditData.Location = new System.Drawing.Point(455, 11);
-            this.tcr_EditData.Margin = new System.Windows.Forms.Padding(2);
+            resources.ApplyResources(this.tcr_EditData, "tcr_EditData");
             this.tcr_EditData.Name = "tcr_EditData";
             this.tcr_EditData.SelectedIndex = 0;
-            this.tcr_EditData.Size = new System.Drawing.Size(565, 518);
-            this.tcr_EditData.TabIndex = 0;
             // 
             // tpg_DateTime
             // 
             this.tpg_DateTime.Controls.Add(this.gbx_CreateDate);
             this.tpg_DateTime.Controls.Add(this.gbx_TakenDate);
-            this.tpg_DateTime.ImageKey = "DateTimeAxis.png";
-            this.tpg_DateTime.Location = new System.Drawing.Point(4, 23);
+            resources.ApplyResources(this.tpg_DateTime, "tpg_DateTime");
             this.tpg_DateTime.Name = "tpg_DateTime";
-            this.tpg_DateTime.Size = new System.Drawing.Size(557, 491);
-            this.tpg_DateTime.TabIndex = 1;
-            this.tpg_DateTime.Text = "tpg_DateTime";
             this.tpg_DateTime.UseVisualStyleBackColor = true;
             // 
             // gbx_CreateDate
@@ -548,64 +424,40 @@ namespace GeoTagNinja
             this.gbx_CreateDate.Controls.Add(this.rbt_CreateDateTimeShift);
             this.gbx_CreateDate.Controls.Add(this.rbt_CreateDateSetToFixedDate);
             this.gbx_CreateDate.Controls.Add(this.btn_InsertCreateDate);
-            this.gbx_CreateDate.Location = new System.Drawing.Point(17, 234);
-            this.gbx_CreateDate.Margin = new System.Windows.Forms.Padding(2);
+            resources.ApplyResources(this.gbx_CreateDate, "gbx_CreateDate");
             this.gbx_CreateDate.Name = "gbx_CreateDate";
-            this.gbx_CreateDate.Padding = new System.Windows.Forms.Padding(2);
-            this.gbx_CreateDate.Size = new System.Drawing.Size(501, 198);
-            this.gbx_CreateDate.TabIndex = 14;
             this.gbx_CreateDate.TabStop = false;
-            this.gbx_CreateDate.Text = "gbx_CreateDate";
             // 
             // btn_InsertFromTakenDate
             // 
-            this.btn_InsertFromTakenDate.Location = new System.Drawing.Point(204, 60);
+            resources.ApplyResources(this.btn_InsertFromTakenDate, "btn_InsertFromTakenDate");
             this.btn_InsertFromTakenDate.Name = "btn_InsertFromTakenDate";
-            this.btn_InsertFromTakenDate.Size = new System.Drawing.Size(145, 23);
-            this.btn_InsertFromTakenDate.TabIndex = 38;
-            this.btn_InsertFromTakenDate.Text = "btn_InsertFromTakenDate";
             this.btn_InsertFromTakenDate.UseVisualStyleBackColor = true;
             this.btn_InsertFromTakenDate.Click += new System.EventHandler(this.btn_InsertFromTakenDate_Click);
             // 
             // lbl_CreateDateSecondsShift
             // 
-            this.lbl_CreateDateSecondsShift.AutoSize = true;
-            this.lbl_CreateDateSecondsShift.Location = new System.Drawing.Point(269, 122);
+            resources.ApplyResources(this.lbl_CreateDateSecondsShift, "lbl_CreateDateSecondsShift");
             this.lbl_CreateDateSecondsShift.Name = "lbl_CreateDateSecondsShift";
-            this.lbl_CreateDateSecondsShift.Size = new System.Drawing.Size(140, 13);
-            this.lbl_CreateDateSecondsShift.TabIndex = 37;
-            this.lbl_CreateDateSecondsShift.Text = "lbl_CreateDateSecondsShift";
             // 
             // lbl_CreateDateMinutesShift
             // 
-            this.lbl_CreateDateMinutesShift.AutoSize = true;
-            this.lbl_CreateDateMinutesShift.Location = new System.Drawing.Point(189, 122);
+            resources.ApplyResources(this.lbl_CreateDateMinutesShift, "lbl_CreateDateMinutesShift");
             this.lbl_CreateDateMinutesShift.Name = "lbl_CreateDateMinutesShift";
-            this.lbl_CreateDateMinutesShift.Size = new System.Drawing.Size(135, 13);
-            this.lbl_CreateDateMinutesShift.TabIndex = 36;
-            this.lbl_CreateDateMinutesShift.Text = "lbl_CreateDateMinutesShift";
             // 
             // lbl_CreateDateHoursShift
             // 
-            this.lbl_CreateDateHoursShift.AutoSize = true;
-            this.lbl_CreateDateHoursShift.Location = new System.Drawing.Point(118, 122);
+            resources.ApplyResources(this.lbl_CreateDateHoursShift, "lbl_CreateDateHoursShift");
             this.lbl_CreateDateHoursShift.Name = "lbl_CreateDateHoursShift";
-            this.lbl_CreateDateHoursShift.Size = new System.Drawing.Size(126, 13);
-            this.lbl_CreateDateHoursShift.TabIndex = 35;
-            this.lbl_CreateDateHoursShift.Text = "lbl_CreateDateHoursShift";
             // 
             // lbl_CreateDateDaysShift
             // 
-            this.lbl_CreateDateDaysShift.AutoSize = true;
-            this.lbl_CreateDateDaysShift.Location = new System.Drawing.Point(56, 122);
+            resources.ApplyResources(this.lbl_CreateDateDaysShift, "lbl_CreateDateDaysShift");
             this.lbl_CreateDateDaysShift.Name = "lbl_CreateDateDaysShift";
-            this.lbl_CreateDateDaysShift.Size = new System.Drawing.Size(122, 13);
-            this.lbl_CreateDateDaysShift.TabIndex = 34;
-            this.lbl_CreateDateDaysShift.Text = "lbl_CreateDateDaysShift";
             // 
             // nud_CreateDateSecondsShift
             // 
-            this.nud_CreateDateSecondsShift.Location = new System.Drawing.Point(282, 148);
+            resources.ApplyResources(this.nud_CreateDateSecondsShift, "nud_CreateDateSecondsShift");
             this.nud_CreateDateSecondsShift.Maximum = new decimal(new int[] {
             59,
             0,
@@ -617,15 +469,13 @@ namespace GeoTagNinja
             0,
             -2147483648});
             this.nud_CreateDateSecondsShift.Name = "nud_CreateDateSecondsShift";
-            this.nud_CreateDateSecondsShift.Size = new System.Drawing.Size(36, 20);
-            this.nud_CreateDateSecondsShift.TabIndex = 33;
             this.nud_CreateDateSecondsShift.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             this.nud_CreateDateSecondsShift.Enter += new System.EventHandler(this.any_nud_Enter);
             this.nud_CreateDateSecondsShift.Leave += new System.EventHandler(this.any_nud_Leave);
             // 
             // nud_CreateDateMinutesShift
             // 
-            this.nud_CreateDateMinutesShift.Location = new System.Drawing.Point(202, 148);
+            resources.ApplyResources(this.nud_CreateDateMinutesShift, "nud_CreateDateMinutesShift");
             this.nud_CreateDateMinutesShift.Maximum = new decimal(new int[] {
             59,
             0,
@@ -637,15 +487,13 @@ namespace GeoTagNinja
             0,
             -2147483648});
             this.nud_CreateDateMinutesShift.Name = "nud_CreateDateMinutesShift";
-            this.nud_CreateDateMinutesShift.Size = new System.Drawing.Size(36, 20);
-            this.nud_CreateDateMinutesShift.TabIndex = 32;
             this.nud_CreateDateMinutesShift.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             this.nud_CreateDateMinutesShift.Enter += new System.EventHandler(this.any_nud_Enter);
             this.nud_CreateDateMinutesShift.Leave += new System.EventHandler(this.any_nud_Leave);
             // 
             // nud_CreateDateHoursShift
             // 
-            this.nud_CreateDateHoursShift.Location = new System.Drawing.Point(131, 148);
+            resources.ApplyResources(this.nud_CreateDateHoursShift, "nud_CreateDateHoursShift");
             this.nud_CreateDateHoursShift.Maximum = new decimal(new int[] {
             23,
             0,
@@ -657,15 +505,13 @@ namespace GeoTagNinja
             0,
             -2147483648});
             this.nud_CreateDateHoursShift.Name = "nud_CreateDateHoursShift";
-            this.nud_CreateDateHoursShift.Size = new System.Drawing.Size(36, 20);
-            this.nud_CreateDateHoursShift.TabIndex = 31;
             this.nud_CreateDateHoursShift.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             this.nud_CreateDateHoursShift.Enter += new System.EventHandler(this.any_nud_Enter);
             this.nud_CreateDateHoursShift.Leave += new System.EventHandler(this.any_nud_Leave);
             // 
             // nud_CreateDateDaysShift
             // 
-            this.nud_CreateDateDaysShift.Location = new System.Drawing.Point(66, 148);
+            resources.ApplyResources(this.nud_CreateDateDaysShift, "nud_CreateDateDaysShift");
             this.nud_CreateDateDaysShift.Maximum = new decimal(new int[] {
             30,
             0,
@@ -677,57 +523,41 @@ namespace GeoTagNinja
             0,
             -2147483648});
             this.nud_CreateDateDaysShift.Name = "nud_CreateDateDaysShift";
-            this.nud_CreateDateDaysShift.Size = new System.Drawing.Size(36, 20);
-            this.nud_CreateDateDaysShift.TabIndex = 30;
             this.nud_CreateDateDaysShift.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             this.nud_CreateDateDaysShift.Enter += new System.EventHandler(this.any_nud_Enter);
             this.nud_CreateDateDaysShift.Leave += new System.EventHandler(this.any_nud_Leave);
             // 
             // dtp_CreateDate
             // 
-            this.dtp_CreateDate.CustomFormat = "";
+            resources.ApplyResources(this.dtp_CreateDate, "dtp_CreateDate");
             this.dtp_CreateDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtp_CreateDate.Location = new System.Drawing.Point(25, 59);
             this.dtp_CreateDate.MaxDate = new System.DateTime(2069, 12, 31, 0, 0, 0, 0);
             this.dtp_CreateDate.MinDate = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
             this.dtp_CreateDate.Name = "dtp_CreateDate";
-            this.dtp_CreateDate.Size = new System.Drawing.Size(164, 20);
-            this.dtp_CreateDate.TabIndex = 29;
             this.dtp_CreateDate.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             this.dtp_CreateDate.Enter += new System.EventHandler(this.dtp_CreateDate_Enter);
             this.dtp_CreateDate.Leave += new System.EventHandler(this.dtp_CreateDate_Leave);
             // 
             // rbt_CreateDateTimeShift
             // 
-            this.rbt_CreateDateTimeShift.AutoSize = true;
-            this.rbt_CreateDateTimeShift.Location = new System.Drawing.Point(15, 91);
+            resources.ApplyResources(this.rbt_CreateDateTimeShift, "rbt_CreateDateTimeShift");
             this.rbt_CreateDateTimeShift.Name = "rbt_CreateDateTimeShift";
-            this.rbt_CreateDateTimeShift.Size = new System.Drawing.Size(141, 17);
-            this.rbt_CreateDateTimeShift.TabIndex = 28;
-            this.rbt_CreateDateTimeShift.Text = "rbt_CreateDateTimeShift";
             this.rbt_CreateDateTimeShift.UseVisualStyleBackColor = true;
             this.rbt_CreateDateTimeShift.CheckedChanged += new System.EventHandler(this.rbt_CreateDateTimeShift_CheckedChanged);
             // 
             // rbt_CreateDateSetToFixedDate
             // 
-            this.rbt_CreateDateSetToFixedDate.AutoSize = true;
+            resources.ApplyResources(this.rbt_CreateDateSetToFixedDate, "rbt_CreateDateSetToFixedDate");
             this.rbt_CreateDateSetToFixedDate.Checked = true;
-            this.rbt_CreateDateSetToFixedDate.Location = new System.Drawing.Point(15, 36);
             this.rbt_CreateDateSetToFixedDate.Name = "rbt_CreateDateSetToFixedDate";
-            this.rbt_CreateDateSetToFixedDate.Size = new System.Drawing.Size(174, 17);
-            this.rbt_CreateDateSetToFixedDate.TabIndex = 27;
             this.rbt_CreateDateSetToFixedDate.TabStop = true;
-            this.rbt_CreateDateSetToFixedDate.Text = "rbt_CreateDateSetToFixedDate";
             this.rbt_CreateDateSetToFixedDate.UseVisualStyleBackColor = true;
             this.rbt_CreateDateSetToFixedDate.CheckedChanged += new System.EventHandler(this.rbt_CreateDateSetToFixedDate_CheckedChanged);
             // 
             // btn_InsertCreateDate
             // 
-            this.btn_InsertCreateDate.Location = new System.Drawing.Point(237, 30);
+            resources.ApplyResources(this.btn_InsertCreateDate, "btn_InsertCreateDate");
             this.btn_InsertCreateDate.Name = "btn_InsertCreateDate";
-            this.btn_InsertCreateDate.Size = new System.Drawing.Size(112, 23);
-            this.btn_InsertCreateDate.TabIndex = 26;
-            this.btn_InsertCreateDate.Text = "btn_InsertCreateDate";
             this.btn_InsertCreateDate.UseVisualStyleBackColor = true;
             this.btn_InsertCreateDate.Click += new System.EventHandler(this.btn_InsertCreateDate_Click);
             // 
@@ -745,54 +575,33 @@ namespace GeoTagNinja
             this.gbx_TakenDate.Controls.Add(this.rbt_TakenDateTimeShift);
             this.gbx_TakenDate.Controls.Add(this.rbt_TakenDateSetToFixedDate);
             this.gbx_TakenDate.Controls.Add(this.btn_InsertTakenDate);
-            this.gbx_TakenDate.Location = new System.Drawing.Point(17, 22);
-            this.gbx_TakenDate.Margin = new System.Windows.Forms.Padding(2);
+            resources.ApplyResources(this.gbx_TakenDate, "gbx_TakenDate");
             this.gbx_TakenDate.Name = "gbx_TakenDate";
-            this.gbx_TakenDate.Padding = new System.Windows.Forms.Padding(2);
-            this.gbx_TakenDate.Size = new System.Drawing.Size(501, 185);
-            this.gbx_TakenDate.TabIndex = 1;
             this.gbx_TakenDate.TabStop = false;
-            this.gbx_TakenDate.Text = "gbx_TakenDate";
             // 
             // lbl_TakenDateSecondsShift
             // 
-            this.lbl_TakenDateSecondsShift.AutoSize = true;
-            this.lbl_TakenDateSecondsShift.Location = new System.Drawing.Point(271, 111);
+            resources.ApplyResources(this.lbl_TakenDateSecondsShift, "lbl_TakenDateSecondsShift");
             this.lbl_TakenDateSecondsShift.Name = "lbl_TakenDateSecondsShift";
-            this.lbl_TakenDateSecondsShift.Size = new System.Drawing.Size(140, 13);
-            this.lbl_TakenDateSecondsShift.TabIndex = 25;
-            this.lbl_TakenDateSecondsShift.Text = "lbl_TakenDateSecondsShift";
             // 
             // lbl_TakenDateMinutesShift
             // 
-            this.lbl_TakenDateMinutesShift.AutoSize = true;
-            this.lbl_TakenDateMinutesShift.Location = new System.Drawing.Point(191, 111);
+            resources.ApplyResources(this.lbl_TakenDateMinutesShift, "lbl_TakenDateMinutesShift");
             this.lbl_TakenDateMinutesShift.Name = "lbl_TakenDateMinutesShift";
-            this.lbl_TakenDateMinutesShift.Size = new System.Drawing.Size(135, 13);
-            this.lbl_TakenDateMinutesShift.TabIndex = 24;
-            this.lbl_TakenDateMinutesShift.Text = "lbl_TakenDateMinutesShift";
             // 
             // lbl_TakenDateHoursShift
             // 
-            this.lbl_TakenDateHoursShift.AutoSize = true;
-            this.lbl_TakenDateHoursShift.Location = new System.Drawing.Point(120, 111);
+            resources.ApplyResources(this.lbl_TakenDateHoursShift, "lbl_TakenDateHoursShift");
             this.lbl_TakenDateHoursShift.Name = "lbl_TakenDateHoursShift";
-            this.lbl_TakenDateHoursShift.Size = new System.Drawing.Size(126, 13);
-            this.lbl_TakenDateHoursShift.TabIndex = 23;
-            this.lbl_TakenDateHoursShift.Text = "lbl_TakenDateHoursShift";
             // 
             // lbl_TakenDateDaysShift
             // 
-            this.lbl_TakenDateDaysShift.AutoSize = true;
-            this.lbl_TakenDateDaysShift.Location = new System.Drawing.Point(58, 111);
+            resources.ApplyResources(this.lbl_TakenDateDaysShift, "lbl_TakenDateDaysShift");
             this.lbl_TakenDateDaysShift.Name = "lbl_TakenDateDaysShift";
-            this.lbl_TakenDateDaysShift.Size = new System.Drawing.Size(122, 13);
-            this.lbl_TakenDateDaysShift.TabIndex = 22;
-            this.lbl_TakenDateDaysShift.Text = "lbl_TakenDateDaysShift";
             // 
             // nud_TakenDateSecondsShift
             // 
-            this.nud_TakenDateSecondsShift.Location = new System.Drawing.Point(284, 137);
+            resources.ApplyResources(this.nud_TakenDateSecondsShift, "nud_TakenDateSecondsShift");
             this.nud_TakenDateSecondsShift.Maximum = new decimal(new int[] {
             59,
             0,
@@ -804,15 +613,13 @@ namespace GeoTagNinja
             0,
             -2147483648});
             this.nud_TakenDateSecondsShift.Name = "nud_TakenDateSecondsShift";
-            this.nud_TakenDateSecondsShift.Size = new System.Drawing.Size(36, 20);
-            this.nud_TakenDateSecondsShift.TabIndex = 21;
             this.nud_TakenDateSecondsShift.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             this.nud_TakenDateSecondsShift.Enter += new System.EventHandler(this.any_nud_Enter);
             this.nud_TakenDateSecondsShift.Leave += new System.EventHandler(this.any_nud_Enter);
             // 
             // nud_TakenDateMinutesShift
             // 
-            this.nud_TakenDateMinutesShift.Location = new System.Drawing.Point(204, 137);
+            resources.ApplyResources(this.nud_TakenDateMinutesShift, "nud_TakenDateMinutesShift");
             this.nud_TakenDateMinutesShift.Maximum = new decimal(new int[] {
             59,
             0,
@@ -824,15 +631,13 @@ namespace GeoTagNinja
             0,
             -2147483648});
             this.nud_TakenDateMinutesShift.Name = "nud_TakenDateMinutesShift";
-            this.nud_TakenDateMinutesShift.Size = new System.Drawing.Size(36, 20);
-            this.nud_TakenDateMinutesShift.TabIndex = 20;
             this.nud_TakenDateMinutesShift.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             this.nud_TakenDateMinutesShift.Enter += new System.EventHandler(this.any_nud_Enter);
             this.nud_TakenDateMinutesShift.Leave += new System.EventHandler(this.any_nud_Enter);
             // 
             // nud_TakenDateHoursShift
             // 
-            this.nud_TakenDateHoursShift.Location = new System.Drawing.Point(133, 137);
+            resources.ApplyResources(this.nud_TakenDateHoursShift, "nud_TakenDateHoursShift");
             this.nud_TakenDateHoursShift.Maximum = new decimal(new int[] {
             23,
             0,
@@ -844,15 +649,13 @@ namespace GeoTagNinja
             0,
             -2147483648});
             this.nud_TakenDateHoursShift.Name = "nud_TakenDateHoursShift";
-            this.nud_TakenDateHoursShift.Size = new System.Drawing.Size(36, 20);
-            this.nud_TakenDateHoursShift.TabIndex = 19;
             this.nud_TakenDateHoursShift.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             this.nud_TakenDateHoursShift.Enter += new System.EventHandler(this.any_nud_Enter);
             this.nud_TakenDateHoursShift.Leave += new System.EventHandler(this.any_nud_Enter);
             // 
             // nud_TakenDateDaysShift
             // 
-            this.nud_TakenDateDaysShift.Location = new System.Drawing.Point(68, 137);
+            resources.ApplyResources(this.nud_TakenDateDaysShift, "nud_TakenDateDaysShift");
             this.nud_TakenDateDaysShift.Maximum = new decimal(new int[] {
             30,
             0,
@@ -864,57 +667,41 @@ namespace GeoTagNinja
             0,
             -2147483648});
             this.nud_TakenDateDaysShift.Name = "nud_TakenDateDaysShift";
-            this.nud_TakenDateDaysShift.Size = new System.Drawing.Size(36, 20);
-            this.nud_TakenDateDaysShift.TabIndex = 18;
             this.nud_TakenDateDaysShift.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             this.nud_TakenDateDaysShift.Enter += new System.EventHandler(this.any_nud_Enter);
             this.nud_TakenDateDaysShift.Leave += new System.EventHandler(this.any_nud_Enter);
             // 
             // dtp_TakenDate
             // 
-            this.dtp_TakenDate.CustomFormat = "";
+            resources.ApplyResources(this.dtp_TakenDate, "dtp_TakenDate");
             this.dtp_TakenDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtp_TakenDate.Location = new System.Drawing.Point(27, 48);
             this.dtp_TakenDate.MaxDate = new System.DateTime(2069, 12, 31, 0, 0, 0, 0);
             this.dtp_TakenDate.MinDate = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
             this.dtp_TakenDate.Name = "dtp_TakenDate";
-            this.dtp_TakenDate.Size = new System.Drawing.Size(164, 20);
-            this.dtp_TakenDate.TabIndex = 17;
             this.dtp_TakenDate.ValueChanged += new System.EventHandler(this.tbx_cbx_dtp_nud_Any_TextChanged);
             this.dtp_TakenDate.Enter += new System.EventHandler(this.any_nud_Enter);
             this.dtp_TakenDate.Leave += new System.EventHandler(this.any_nud_Leave);
             // 
             // rbt_TakenDateTimeShift
             // 
-            this.rbt_TakenDateTimeShift.AutoSize = true;
-            this.rbt_TakenDateTimeShift.Location = new System.Drawing.Point(17, 80);
+            resources.ApplyResources(this.rbt_TakenDateTimeShift, "rbt_TakenDateTimeShift");
             this.rbt_TakenDateTimeShift.Name = "rbt_TakenDateTimeShift";
-            this.rbt_TakenDateTimeShift.Size = new System.Drawing.Size(141, 17);
-            this.rbt_TakenDateTimeShift.TabIndex = 15;
-            this.rbt_TakenDateTimeShift.Text = "rbt_TakenDateTimeShift";
             this.rbt_TakenDateTimeShift.UseVisualStyleBackColor = true;
             this.rbt_TakenDateTimeShift.CheckedChanged += new System.EventHandler(this.rbt_TakenDateTimeShift_CheckedChanged);
             // 
             // rbt_TakenDateSetToFixedDate
             // 
-            this.rbt_TakenDateSetToFixedDate.AutoSize = true;
+            resources.ApplyResources(this.rbt_TakenDateSetToFixedDate, "rbt_TakenDateSetToFixedDate");
             this.rbt_TakenDateSetToFixedDate.Checked = true;
-            this.rbt_TakenDateSetToFixedDate.Location = new System.Drawing.Point(17, 25);
             this.rbt_TakenDateSetToFixedDate.Name = "rbt_TakenDateSetToFixedDate";
-            this.rbt_TakenDateSetToFixedDate.Size = new System.Drawing.Size(174, 17);
-            this.rbt_TakenDateSetToFixedDate.TabIndex = 14;
             this.rbt_TakenDateSetToFixedDate.TabStop = true;
-            this.rbt_TakenDateSetToFixedDate.Text = "rbt_TakenDateSetToFixedDate";
             this.rbt_TakenDateSetToFixedDate.UseVisualStyleBackColor = true;
             this.rbt_TakenDateSetToFixedDate.CheckedChanged += new System.EventHandler(this.rbt_TakenDateSetToFixedDate_CheckedChanged);
             // 
             // btn_InsertTakenDate
             // 
-            this.btn_InsertTakenDate.Location = new System.Drawing.Point(239, 19);
+            resources.ApplyResources(this.btn_InsertTakenDate, "btn_InsertTakenDate");
             this.btn_InsertTakenDate.Name = "btn_InsertTakenDate";
-            this.btn_InsertTakenDate.Size = new System.Drawing.Size(112, 23);
-            this.btn_InsertTakenDate.TabIndex = 5;
-            this.btn_InsertTakenDate.Text = "btn_InsertTakenDate";
             this.btn_InsertTakenDate.UseVisualStyleBackColor = true;
             this.btn_InsertTakenDate.Click += new System.EventHandler(this.btn_InsertTakenDate_Click);
             // 
@@ -925,35 +712,26 @@ namespace GeoTagNinja
             this.igl_TabPages.Images.SetKeyName(0, "DateTimeAxis.png");
             this.igl_TabPages.Images.SetKeyName(1, "PublishOnDemand.png");
             // 
-            // btn_Cancel
+            // btn_Generic_Cancel
             // 
-            this.btn_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_Cancel.Location = new System.Drawing.Point(892, 590);
-            this.btn_Cancel.Name = "btn_Cancel";
-            this.btn_Cancel.Size = new System.Drawing.Size(84, 23);
-            this.btn_Cancel.TabIndex = 15;
-            this.btn_Cancel.Text = "btn_Cancel";
-            this.btn_Cancel.UseVisualStyleBackColor = true;
-            this.btn_Cancel.Click += new System.EventHandler(this.btn_Cancel_Click);
+            this.btn_Generic_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            resources.ApplyResources(this.btn_Generic_Cancel, "btn_Generic_Cancel");
+            this.btn_Generic_Cancel.Name = "btn_Generic_Cancel";
+            this.btn_Generic_Cancel.UseVisualStyleBackColor = true;
+            this.btn_Generic_Cancel.Click += new System.EventHandler(this.btn_Generic_Cancel_Click);
             // 
-            // btn_OK
+            // btn_Generic_OK
             // 
-            this.btn_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btn_OK.Location = new System.Drawing.Point(796, 590);
-            this.btn_OK.Name = "btn_OK";
-            this.btn_OK.Size = new System.Drawing.Size(84, 23);
-            this.btn_OK.TabIndex = 14;
-            this.btn_OK.Text = "btn_OK";
-            this.btn_OK.UseVisualStyleBackColor = true;
-            this.btn_OK.Click += new System.EventHandler(this.btn_OK_Click);
+            this.btn_Generic_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            resources.ApplyResources(this.btn_Generic_OK, "btn_Generic_OK");
+            this.btn_Generic_OK.Name = "btn_Generic_OK";
+            this.btn_Generic_OK.UseVisualStyleBackColor = true;
+            this.btn_Generic_OK.Click += new System.EventHandler(this.btn_Generic_OK_Click);
             // 
             // btn_SetCurrentValues
             // 
-            this.btn_SetCurrentValues.Location = new System.Drawing.Point(715, 534);
+            resources.ApplyResources(this.btn_SetCurrentValues, "btn_SetCurrentValues");
             this.btn_SetCurrentValues.Name = "btn_SetCurrentValues";
-            this.btn_SetCurrentValues.Size = new System.Drawing.Size(288, 23);
-            this.btn_SetCurrentValues.TabIndex = 16;
-            this.btn_SetCurrentValues.Text = "btn_SetCurrentValues";
             this.btn_SetCurrentValues.UseVisualStyleBackColor = true;
             this.btn_SetCurrentValues.Click += new System.EventHandler(this.btn_SetCurrentValues_Click);
             // 
@@ -964,26 +742,20 @@ namespace GeoTagNinja
             // gbx_EditImageList
             // 
             this.gbx_EditImageList.Controls.Add(this.lvw_FileListEditImages);
-            this.gbx_EditImageList.Location = new System.Drawing.Point(12, 12);
+            resources.ApplyResources(this.gbx_EditImageList, "gbx_EditImageList");
             this.gbx_EditImageList.Name = "gbx_EditImageList";
-            this.gbx_EditImageList.Size = new System.Drawing.Size(438, 312);
-            this.gbx_EditImageList.TabIndex = 17;
             this.gbx_EditImageList.TabStop = false;
-            this.gbx_EditImageList.Text = "gbx_EditImageList";
             // 
             // lvw_FileListEditImages
             // 
             this.lvw_FileListEditImages.FullRowSelect = true;
             this.lvw_FileListEditImages.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lvw_FileListEditImages.HideSelection = false;
-            this.lvw_FileListEditImages.LabelWrap = false;
-            this.lvw_FileListEditImages.Location = new System.Drawing.Point(6, 22);
+            resources.ApplyResources(this.lvw_FileListEditImages, "lvw_FileListEditImages");
             this.lvw_FileListEditImages.MultiSelect = false;
             this.lvw_FileListEditImages.Name = "lvw_FileListEditImages";
             this.lvw_FileListEditImages.OwnerDraw = true;
-            this.lvw_FileListEditImages.Size = new System.Drawing.Size(426, 284);
             this.lvw_FileListEditImages.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.lvw_FileListEditImages.TabIndex = 1;
             this.lvw_FileListEditImages.UseCompatibleStateImageBehavior = false;
             this.lvw_FileListEditImages.View = System.Windows.Forms.View.Details;
             this.lvw_FileListEditImages.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
@@ -997,38 +769,34 @@ namespace GeoTagNinja
             // 
             // btn_ApplyAndNext
             // 
-            this.btn_ApplyAndNext.Location = new System.Drawing.Point(635, 590);
+            resources.ApplyResources(this.btn_ApplyAndNext, "btn_ApplyAndNext");
             this.btn_ApplyAndNext.Name = "btn_ApplyAndNext";
-            this.btn_ApplyAndNext.Size = new System.Drawing.Size(149, 23);
-            this.btn_ApplyAndNext.TabIndex = 18;
-            this.btn_ApplyAndNext.Text = "btn_ApplyAndNext";
             this.btn_ApplyAndNext.UseVisualStyleBackColor = true;
             this.btn_ApplyAndNext.Click += new System.EventHandler(this.btn_ApplyAndNext_Click);
             // 
+            // lbl_Sublocation
+            // 
+            resources.ApplyResources(this.lbl_Sublocation, "lbl_Sublocation");
+            this.lbl_Sublocation.Name = "lbl_Sublocation";
+            // 
             // FrmEditFileData
             // 
-            this.AcceptButton = this.btn_OK;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AcceptButton = this.btn_Generic_OK;
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
-            this.CancelButton = this.btn_Cancel;
-            this.ClientSize = new System.Drawing.Size(1031, 634);
+            this.CancelButton = this.btn_Generic_Cancel;
             this.Controls.Add(this.btn_ApplyAndNext);
             this.Controls.Add(this.gbx_EditImageList);
             this.Controls.Add(this.btn_SetCurrentValues);
-            this.Controls.Add(this.btn_OK);
-            this.Controls.Add(this.btn_Cancel);
+            this.Controls.Add(this.btn_Generic_OK);
+            this.Controls.Add(this.btn_Generic_Cancel);
             this.Controls.Add(this.pbx_imagePreview);
             this.Controls.Add(this.tcr_EditData);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(20, 490);
             this.Name = "FrmEditFileData";
             this.ShowInTaskbar = false;
-            this.Text = "FrmEditFileData";
             this.Load += new System.EventHandler(this.FrmEditFileData_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmEditFileData_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pbx_imagePreview)).EndInit();
@@ -1069,12 +837,11 @@ namespace GeoTagNinja
         private System.Windows.Forms.Button btn_RemoveGeoData;
         private System.Windows.Forms.Button btn_getAllFromWeb_Toponomy;
         private System.Windows.Forms.Button btn_getFromWeb_Toponomy;
-        internal System.Windows.Forms.TextBox tbx_Sub_location;
+        internal System.Windows.Forms.TextBox tbx_Sublocation;
         internal System.Windows.Forms.TextBox tbx_City;
         internal System.Windows.Forms.TextBox tbx_State;
         internal System.Windows.Forms.ComboBox cbx_Country;
         internal System.Windows.Forms.ComboBox cbx_CountryCode;
-        private System.Windows.Forms.Label lbl_Sub_location;
         private System.Windows.Forms.Label lbl_City;
         private System.Windows.Forms.Label lbl_State;
         private System.Windows.Forms.Label lbl_Country;
@@ -1084,8 +851,8 @@ namespace GeoTagNinja
         private System.Windows.Forms.Label lbl_GPSLatitude;
         private System.Windows.Forms.Label lbl_Decimal;
         private System.Windows.Forms.TabControl tcr_EditData;
-        private System.Windows.Forms.Button btn_Cancel;
-        private System.Windows.Forms.Button btn_OK;
+        private System.Windows.Forms.Button btn_Generic_Cancel;
+        private System.Windows.Forms.Button btn_Generic_OK;
         private System.Windows.Forms.ImageList igl_TabPages;
         private System.Windows.Forms.TabPage tpg_DateTime;
         private System.Windows.Forms.GroupBox gbx_CreateDate;
@@ -1134,5 +901,6 @@ namespace GeoTagNinja
         private System.Windows.Forms.PictureBox pbx_GPSDataPaste;
         private System.Windows.Forms.ToolTip ttp_GPSDataPaste;
         private System.Windows.Forms.Button btn_ApplyAndNext;
+        private System.Windows.Forms.Label lbl_Sublocation;
     }
 }

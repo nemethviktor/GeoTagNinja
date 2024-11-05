@@ -256,7 +256,7 @@ public partial class FrmImportExportGpx : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private async void btn_OK_Click(object sender,
+    private async void btn_Generic_OK_Click(object sender,
         EventArgs e)
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
@@ -299,14 +299,12 @@ public partial class FrmImportExportGpx : Form
                     (trackFileLocationType == "folder" && Directory.Exists(path: trackFileLocationVal)))
                 {
                     // indicate that something is going on
-                    btn_OK.Text = HelperDataLanguageTZ.DataReadDTObjectText(
-                        objectType: HelperDataLanguageTZ.GetControlType(
-                            controlType: sender.GetType()),
-                        objectName: "btn_OK_Working"
-                    );
-                    btn_OK.AutoSize = true;
-                    btn_OK.Enabled = false;
-                    btn_Cancel.Enabled = false;
+                    btn_Generic_OK.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: "Generic_PleaseWait",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Generic);
+                    btn_Generic_OK.AutoSize = true;
+                    btn_Generic_OK.Enabled = false;
+                    btn_Generic_Cancel.Enabled = false;
                     List<DateTime> overlayDateList = new();
 
                     TrackOverlaySetting trackOverlaySetting = new();
@@ -340,11 +338,13 @@ public partial class FrmImportExportGpx : Form
                 else
                 {
                     CustomMessageBox customMessageBox = new(
-                        text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                            messageBoxName: "mbx_FrmImportExportGpx_FileOrFolderDoesntExist"),
-                        caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                           .Error.ToString()),
+                        text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                            controlName: "mbx_FrmImportExportGpx_FileOrFolderDoesntExist",
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                        caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                            controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                                                                           .Error.ToString(),
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                         buttons: MessageBoxButtons.OK,
                         icon: MessageBoxIcon.Error);
                     customMessageBox.ShowDialog();
@@ -378,7 +378,7 @@ public partial class FrmImportExportGpx : Form
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private void btn_Cancel_Click(object sender,
+    private void btn_Generic_Cancel_Click(object sender,
         EventArgs e)
     {
         Hide();
@@ -494,11 +494,13 @@ public partial class FrmImportExportGpx : Form
             _lastShiftDay == 0)
         {
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmImportNoStoredShiftValues"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Error.ToString()),
+                text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmImportNoStoredShiftValues",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                                                                   .Error.ToString(),
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();

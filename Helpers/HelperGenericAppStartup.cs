@@ -1,15 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
 using GeoTagNinja.View.ListView;
 using Microsoft.Web.WebView2.Core;
+using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 
 namespace GeoTagNinja.Helpers;
 
@@ -20,25 +23,26 @@ internal static class HelperGenericAppStartup
     /// </summary>
     public static Task AppStartupCreateDatabaseFile()
     {
-        FrmMainApp.Logger.Info(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
         // load all settings
         try
         {
-            FrmMainApp.Logger.Debug(message: "applicationDataGeoTagNinjaFolder");
+            FrmMainApp.Log.Debug(message: "applicationDataGeoTagNinjaFolder");
             string applicationDataGeoTagNinjaFolder = Path.Combine(path1: Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationData), path2: "GeoTagNinja");
             Directory.CreateDirectory(path: applicationDataGeoTagNinjaFolder);
             HelperDataDatabaseAndStartup.DataCreateSQLiteDB();
         }
         catch (Exception ex)
         {
-            FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
+            FrmMainApp.Log.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_ErrorCantCreateSQLiteDB") +
+                text: ReturnControlText(
+                          controlName: "mbx_FrmMainApp_ErrorCantCreateSQLiteDB",
+                          fakeControlType: FakeControlTypes.MessageBox) +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Error.ToString()),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption
+                                .Error.ToString(), fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -53,7 +57,7 @@ internal static class HelperGenericAppStartup
     /// </summary>
     public static Task AppStartupWriteDefaultSettings()
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
         // write settings for combobox defaults etc
         try
@@ -63,14 +67,15 @@ internal static class HelperGenericAppStartup
         }
         catch (Exception ex)
         {
-            FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
+            FrmMainApp.Log.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_ErrorCantWriteSQLiteDB") +
+                text: ReturnControlText(
+                          controlName: "mbx_FrmMainApp_ErrorCantWriteSQLiteDB",
+                          fakeControlType: FakeControlTypes.MessageBox) +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Error.ToString()),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption
+                                .Error.ToString(), fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -104,28 +109,42 @@ internal static class HelperGenericAppStartup
     /// </summary>
     public static Task AppStartupReadAppLanguage()
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
         try
         {
-            FrmMainApp._AppLanguage = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                dataTable: HelperVariables.DtHelperDataApplicationSettings,
-                settingTabPage: "tpg_Application",
-                settingId: "cbx_Language"
-            );
+            string lang = HelperDataApplicationSettings.DataReadSQLiteSettings(
+                dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_Application",
+                settingId: "cbx_Language") ?? "en"; // default to "en".
 
-            FrmMainApp.Logger.Trace(message: "AppLanguage is" + FrmMainApp._AppLanguage);
+            FrmMainApp.Log.Info(message: "AppLanguage lang is" + lang);
+
+            FrmMainApp.AppLanguage = lang switch
+            {
+                // this is rather legacy poking. 
+                "English" => "en",
+                "French" => "fr",
+
+                _ => lang
+            };
+
+            CultureInfo cultureInfo = CultureInfo.GetCultureInfo(name: FrmMainApp.AppLanguage);
+
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(name: cultureInfo.ToString());
+
+            FrmMainApp.Log.Info(message: "AppLanguage is" + FrmMainApp.AppLanguage);
         }
         catch (Exception ex)
         {
-            FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
+            FrmMainApp.Log.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_ErrorCantLoadSQLiteDB") +
+                text: ReturnControlText(
+                          controlName: "mbx_FrmMainApp_ErrorCantLoadSQLiteDB",
+                          fakeControlType: FakeControlTypes.MessageBox) +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Error.ToString()),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption
+                                .Error.ToString(), fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -178,7 +197,7 @@ internal static class HelperGenericAppStartup
     /// </summary>
     public static Task AppStartupReadAPILanguage()
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
         string TryUseGeoNamesLanguage = null;
         try
         {
@@ -224,7 +243,7 @@ internal static class HelperGenericAppStartup
     public static Task AppStartupApplyDefaults()
     {
         // get some defaults
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
         Dictionary<string, string> settingsStringBoolPairsDictionary = new()
         {
@@ -262,7 +281,7 @@ internal static class HelperGenericAppStartup
             {
                 if (settingsStringBoolPairsDictionary.ContainsKey(key: fieldInfo.Name))
                 {
-                    FrmMainApp.Logger.Debug(message: "Now retrieving: " + fieldInfo.Name);
+                    FrmMainApp.Log.Debug(message: "Now retrieving: " + fieldInfo.Name);
                     settingsStringBoolPairsDictionary.TryGetValue(key: fieldInfo.Name, value: out string fieldInfoSettingID);
                     if (fieldInfo.FieldType == typeof(bool))
                     {
@@ -302,15 +321,16 @@ internal static class HelperGenericAppStartup
             }
             catch (Exception ex)
             {
-                FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
+                FrmMainApp.Log.Fatal(message: "Error: " + ex.Message);
                 CustomMessageBox customMessageBox = new(
-                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                              messageBoxName:
-                              "mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB") +
+                    text: ReturnControlText(
+                              controlName:
+                              "mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB",
+                              fakeControlType: FakeControlTypes.MessageBox) +
                           ex.Message,
-                    caption: HelperControlAndMessageBoxHandling
-                       .GenericGetMessageBoxCaption(
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString()),
+                    caption: ReturnControlText(
+                        controlName: MessageBoxCaption.Error.ToString(),
+                        fakeControlType: FakeControlTypes.MessageBoxCaption),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Error);
                 customMessageBox.ShowDialog();
@@ -340,6 +360,7 @@ internal static class HelperGenericAppStartup
                     attributeToFind: attribute));
         }
 
+        HelperVariables.UOMAbbreviated = HelperDataDatabaseAndStartup.GetUnitOfMeasureAbbreviated();
         return Task.CompletedTask;
     }
 
@@ -349,7 +370,7 @@ internal static class HelperGenericAppStartup
     public static Task AppStartupCheckWebView2()
     {
         // Check webView2 availability
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
         try
         {
@@ -357,18 +378,19 @@ internal static class HelperGenericAppStartup
             webView2Version =
                 CoreWebView2Environment.GetAvailableBrowserVersionString(
                     browserExecutableFolder: null);
-            FrmMainApp.Logger.Trace(message: "Check webView2 version is: " + webView2Version);
+            FrmMainApp.Log.Trace(message: "Check webView2 version is: " + webView2Version);
         }
         catch (Exception ex)
         {
-            FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
+            FrmMainApp.Log.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_ErrorCantLoadWebView2") +
+                text: ReturnControlText(
+                          controlName: "mbx_FrmMainApp_ErrorCantLoadWebView2",
+                          fakeControlType: FakeControlTypes.MessageBox) +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Error.ToString()),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption
+                                .Error.ToString(), fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -433,7 +455,7 @@ internal static class HelperGenericAppStartup
     /// <returns></returns>
     public static DataTable AppStartupLoadFavourites(bool clearDropDown = true)
     {
-        FrmMainApp.Logger.Info(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
         FrmMainApp.DtFavourites = HelperDataFavourites.DataReadSQLiteFavourites();
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
@@ -474,7 +496,7 @@ internal static class HelperGenericAppStartup
     /// <param name="toolStripTextBox"></param>
     public static void AppSetupInitialiseStartupFolder(ToolStripTextBox toolStripTextBox)
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
         string startupFolder = "";
         try
@@ -484,18 +506,19 @@ internal static class HelperGenericAppStartup
                 settingTabPage: "tpg_Application",
                 settingId: "tbx_Startup_Folder"
             );
-            FrmMainApp.Logger.Trace(message: "Startup Folder is: " + startupFolder);
+            FrmMainApp.Log.Trace(message: "Startup Folder is: " + startupFolder);
         }
         catch (Exception ex)
         {
-            FrmMainApp.Logger.Fatal(message: "Error: " + ex.Message);
+            FrmMainApp.Log.Fatal(message: "Error: " + ex.Message);
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                          messageBoxName: "mbx_FrmMainApp_ErrorSettingStartupFolder") +
+                text: ReturnControlText(
+                          controlName: "mbx_FrmMainApp_ErrorSettingStartupFolder",
+                          fakeControlType: FakeControlTypes.MessageBox) +
                       ex.Message,
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Error.ToString()),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption
+                                .Error.ToString(), fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -504,7 +527,8 @@ internal static class HelperGenericAppStartup
         if (startupFolder == null)
         {
             startupFolder = Environment.GetFolderPath(folder: Environment.SpecialFolder.MyPictures);
-            FrmMainApp.Logger.Trace(message: "Startup Folder is null, defaulting to SpecialFolder.MyPictures: " + startupFolder);
+            FrmMainApp.Log.Trace(message: "Startup Folder is null, defaulting to SpecialFolder.MyPictures: " +
+                                          startupFolder);
         }
 
         if (startupFolder.EndsWith(value: "\\"))

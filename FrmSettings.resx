@@ -117,6 +117,1457 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="tcr_Settings.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="tpg_Application.AutoScroll" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_UseDarkMode.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="ckb_UseDarkMode.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 169</value>
+  </data>
+  <data name="ckb_UseDarkMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>119, 17</value>
+  </data>
+  <data name="ckb_UseDarkMode.TabIndex" type="System.Int32, mscorlib">
+    <value>56</value>
+  </data>
+  <data name="&gt;&gt;ckb_UseDarkMode.Name" xml:space="preserve">
+    <value>ckb_UseDarkMode</value>
+  </data>
+  <data name="&gt;&gt;ckb_UseDarkMode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_UseDarkMode.Parent" xml:space="preserve">
+    <value>gbx_AppSettings</value>
+  </data>
+  <data name="&gt;&gt;ckb_UseDarkMode.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="rbt_MapColourModeDarkPale.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbt_MapColourModeDarkPale.Location" type="System.Drawing.Point, System.Drawing">
+    <value>355, 25</value>
+  </data>
+  <data name="rbt_MapColourModeDarkPale.Size" type="System.Drawing.Size, System.Drawing">
+    <value>165, 17</value>
+  </data>
+  <data name="rbt_MapColourModeDarkPale.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;rbt_MapColourModeDarkPale.Name" xml:space="preserve">
+    <value>rbt_MapColourModeDarkPale</value>
+  </data>
+  <data name="&gt;&gt;rbt_MapColourModeDarkPale.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbt_MapColourModeDarkPale.Parent" xml:space="preserve">
+    <value>gbx_MapColourMode</value>
+  </data>
+  <data name="&gt;&gt;rbt_MapColourModeDarkPale.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="rbt_MapColourModeNormal.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbt_MapColourModeNormal.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 25</value>
+  </data>
+  <data name="rbt_MapColourModeNormal.Size" type="System.Drawing.Size, System.Drawing">
+    <value>154, 17</value>
+  </data>
+  <data name="rbt_MapColourModeNormal.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;rbt_MapColourModeNormal.Name" xml:space="preserve">
+    <value>rbt_MapColourModeNormal</value>
+  </data>
+  <data name="&gt;&gt;rbt_MapColourModeNormal.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbt_MapColourModeNormal.Parent" xml:space="preserve">
+    <value>gbx_MapColourMode</value>
+  </data>
+  <data name="&gt;&gt;rbt_MapColourModeNormal.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="rbt_MapColourModeDarkInverse.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbt_MapColourModeDarkInverse.Location" type="System.Drawing.Point, System.Drawing">
+    <value>170, 25</value>
+  </data>
+  <data name="rbt_MapColourModeDarkInverse.Size" type="System.Drawing.Size, System.Drawing">
+    <value>179, 17</value>
+  </data>
+  <data name="rbt_MapColourModeDarkInverse.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;rbt_MapColourModeDarkInverse.Name" xml:space="preserve">
+    <value>rbt_MapColourModeDarkInverse</value>
+  </data>
+  <data name="&gt;&gt;rbt_MapColourModeDarkInverse.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbt_MapColourModeDarkInverse.Parent" xml:space="preserve">
+    <value>gbx_MapColourMode</value>
+  </data>
+  <data name="&gt;&gt;rbt_MapColourModeDarkInverse.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="gbx_MapColourMode.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 201</value>
+  </data>
+  <data name="gbx_MapColourMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>548, 55</value>
+  </data>
+  <data name="gbx_MapColourMode.TabIndex" type="System.Int32, mscorlib">
+    <value>55</value>
+  </data>
+  <data name="&gt;&gt;gbx_MapColourMode.Name" xml:space="preserve">
+    <value>gbx_MapColourMode</value>
+  </data>
+  <data name="&gt;&gt;gbx_MapColourMode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gbx_MapColourMode.Parent" xml:space="preserve">
+    <value>gbx_AppSettings</value>
+  </data>
+  <data name="&gt;&gt;gbx_MapColourMode.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="ckb_UpdateCheckPreRelease.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_UpdateCheckPreRelease.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 146</value>
+  </data>
+  <data name="ckb_UpdateCheckPreRelease.Size" type="System.Drawing.Size, System.Drawing">
+    <value>171, 17</value>
+  </data>
+  <data name="ckb_UpdateCheckPreRelease.TabIndex" type="System.Int32, mscorlib">
+    <value>53</value>
+  </data>
+  <data name="&gt;&gt;ckb_UpdateCheckPreRelease.Name" xml:space="preserve">
+    <value>ckb_UpdateCheckPreRelease</value>
+  </data>
+  <data name="&gt;&gt;ckb_UpdateCheckPreRelease.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_UpdateCheckPreRelease.Parent" xml:space="preserve">
+    <value>gbx_AppSettings</value>
+  </data>
+  <data name="&gt;&gt;ckb_UpdateCheckPreRelease.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="lbl_Metres_Abbr.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_Metres_Abbr.Location" type="System.Drawing.Point, System.Drawing">
+    <value>331, 126</value>
+  </data>
+  <data name="lbl_Metres_Abbr.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
+  </data>
+  <data name="lbl_Metres_Abbr.Size" type="System.Drawing.Size, System.Drawing">
+    <value>83, 13</value>
+  </data>
+  <data name="lbl_Metres_Abbr.TabIndex" type="System.Int32, mscorlib">
+    <value>52</value>
+  </data>
+  <data name="lbl_Metres_Abbr.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;lbl_Metres_Abbr.Name" xml:space="preserve">
+    <value>lbl_Metres_Abbr</value>
+  </data>
+  <data name="&gt;&gt;lbl_Metres_Abbr.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_Metres_Abbr.Parent" xml:space="preserve">
+    <value>gbx_AppSettings</value>
+  </data>
+  <data name="&gt;&gt;lbl_Metres_Abbr.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="lbl_Feet_Abbr.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_Feet_Abbr.Location" type="System.Drawing.Point, System.Drawing">
+    <value>204, 126</value>
+  </data>
+  <data name="lbl_Feet_Abbr.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
+  </data>
+  <data name="lbl_Feet_Abbr.Size" type="System.Drawing.Size, System.Drawing">
+    <value>72, 13</value>
+  </data>
+  <data name="lbl_Feet_Abbr.TabIndex" type="System.Int32, mscorlib">
+    <value>51</value>
+  </data>
+  <data name="lbl_Feet_Abbr.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;lbl_Feet_Abbr.Name" xml:space="preserve">
+    <value>lbl_Feet_Abbr</value>
+  </data>
+  <data name="&gt;&gt;lbl_Feet_Abbr.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_Feet_Abbr.Parent" xml:space="preserve">
+    <value>gbx_AppSettings</value>
+  </data>
+  <data name="&gt;&gt;lbl_Feet_Abbr.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="ckb_UseImperialNotMetric.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_UseImperialNotMetric.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 124</value>
+  </data>
+  <data name="ckb_UseImperialNotMetric.Size" type="System.Drawing.Size, System.Drawing">
+    <value>151, 17</value>
+  </data>
+  <data name="ckb_UseImperialNotMetric.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="&gt;&gt;ckb_UseImperialNotMetric.Name" xml:space="preserve">
+    <value>ckb_UseImperialNotMetric</value>
+  </data>
+  <data name="&gt;&gt;ckb_UseImperialNotMetric.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_UseImperialNotMetric.Parent" xml:space="preserve">
+    <value>gbx_AppSettings</value>
+  </data>
+  <data name="&gt;&gt;ckb_UseImperialNotMetric.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="ckb_RemoveGeoDataRemovesTimeOffset.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_RemoveGeoDataRemovesTimeOffset.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 102</value>
+  </data>
+  <data name="ckb_RemoveGeoDataRemovesTimeOffset.Size" type="System.Drawing.Size, System.Drawing">
+    <value>229, 17</value>
+  </data>
+  <data name="ckb_RemoveGeoDataRemovesTimeOffset.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="&gt;&gt;ckb_RemoveGeoDataRemovesTimeOffset.Name" xml:space="preserve">
+    <value>ckb_RemoveGeoDataRemovesTimeOffset</value>
+  </data>
+  <data name="&gt;&gt;ckb_RemoveGeoDataRemovesTimeOffset.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_RemoveGeoDataRemovesTimeOffset.Parent" xml:space="preserve">
+    <value>gbx_AppSettings</value>
+  </data>
+  <data name="&gt;&gt;ckb_RemoveGeoDataRemovesTimeOffset.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="ckb_ResetMapToZero.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_ResetMapToZero.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 80</value>
+  </data>
+  <data name="ckb_ResetMapToZero.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 17</value>
+  </data>
+  <data name="ckb_ResetMapToZero.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="&gt;&gt;ckb_ResetMapToZero.Name" xml:space="preserve">
+    <value>ckb_ResetMapToZero</value>
+  </data>
+  <data name="&gt;&gt;ckb_ResetMapToZero.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_ResetMapToZero.Parent" xml:space="preserve">
+    <value>gbx_AppSettings</value>
+  </data>
+  <data name="&gt;&gt;ckb_ResetMapToZero.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="cbx_Language.Location" type="System.Drawing.Point, System.Drawing">
+    <value>185, 50</value>
+  </data>
+  <data name="cbx_Language.Size" type="System.Drawing.Size, System.Drawing">
+    <value>155, 21</value>
+  </data>
+  <data name="cbx_Language.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="&gt;&gt;cbx_Language.Name" xml:space="preserve">
+    <value>cbx_Language</value>
+  </data>
+  <data name="&gt;&gt;cbx_Language.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbx_Language.Parent" xml:space="preserve">
+    <value>gbx_AppSettings</value>
+  </data>
+  <data name="&gt;&gt;cbx_Language.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="lbl_Language.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_Language.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 53</value>
+  </data>
+  <data name="lbl_Language.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
+  </data>
+  <data name="lbl_Language.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 13</value>
+  </data>
+  <data name="lbl_Language.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="&gt;&gt;lbl_Language.Name" xml:space="preserve">
+    <value>lbl_Language</value>
+  </data>
+  <data name="&gt;&gt;lbl_Language.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_Language.Parent" xml:space="preserve">
+    <value>gbx_AppSettings</value>
+  </data>
+  <data name="&gt;&gt;lbl_Language.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="pbx_Browse_Startup_Folder.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAABFklE
+        QVQ4T2MgGcTsKmGI3u0A5ZEBYnfbMMTueskQs9MJKkIECF3FBtTUCcTPgPg/BO+8CpUlAsTu7ADiLQxx
+        e6TBzo/Z9QrFGzPyGB7MzGf4j4Q/Ts9nQCiI3fmUIXqbDJiNLQzAmgoYJGF4Wh5D8PQ8hq8gcbACkJNB
+        6vIY7oP56ADdAJwYZiA6oIoBs0oYDID0B7BhxOA8hp1Q7RADgAHZBqRXggIPF56Wz1AAooGuWQg0YApU
+        O9QLeQyPZuUzJKBrQsYgA6YUMTgD1b6cVcCgDdUONSCf4Rw2TcgY7IJchupZeQwnoFohAOyFAoY2bJqQ
+        McgAoFePAl0QD9UKATPyGe5BXUEQA9U+7i1k4IRqHXDAwAAANSDaAOvc+eMAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="pbx_Browse_Startup_Folder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>519, 28</value>
+  </data>
+  <data name="pbx_Browse_Startup_Folder.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="pbx_Browse_Startup_Folder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>16, 16</value>
+  </data>
+  <data name="pbx_Browse_Startup_Folder.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>AutoSize</value>
+  </data>
+  <data name="pbx_Browse_Startup_Folder.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="&gt;&gt;pbx_Browse_Startup_Folder.Name" xml:space="preserve">
+    <value>pbx_Browse_Startup_Folder</value>
+  </data>
+  <data name="&gt;&gt;pbx_Browse_Startup_Folder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pbx_Browse_Startup_Folder.Parent" xml:space="preserve">
+    <value>gbx_AppSettings</value>
+  </data>
+  <data name="&gt;&gt;pbx_Browse_Startup_Folder.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="lbl_Startup_Folder.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_Startup_Folder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 28</value>
+  </data>
+  <data name="lbl_Startup_Folder.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
+  </data>
+  <data name="lbl_Startup_Folder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>0, 13</value>
+  </data>
+  <data name="lbl_Startup_Folder.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;lbl_Startup_Folder.Name" xml:space="preserve">
+    <value>lbl_Startup_Folder</value>
+  </data>
+  <data name="&gt;&gt;lbl_Startup_Folder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_Startup_Folder.Parent" xml:space="preserve">
+    <value>gbx_AppSettings</value>
+  </data>
+  <data name="&gt;&gt;lbl_Startup_Folder.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="tbx_Startup_Folder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>128, 24</value>
+  </data>
+  <data name="tbx_Startup_Folder.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="tbx_Startup_Folder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>372, 20</value>
+  </data>
+  <data name="tbx_Startup_Folder.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="&gt;&gt;tbx_Startup_Folder.Name" xml:space="preserve">
+    <value>tbx_Startup_Folder</value>
+  </data>
+  <data name="&gt;&gt;tbx_Startup_Folder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tbx_Startup_Folder.Parent" xml:space="preserve">
+    <value>gbx_AppSettings</value>
+  </data>
+  <data name="&gt;&gt;tbx_Startup_Folder.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="gbx_AppSettings.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 20</value>
+  </data>
+  <data name="gbx_AppSettings.Size" type="System.Drawing.Size, System.Drawing">
+    <value>852, 307</value>
+  </data>
+  <data name="gbx_AppSettings.TabIndex" type="System.Int32, mscorlib">
+    <value>32</value>
+  </data>
+  <data name="&gt;&gt;gbx_AppSettings.Name" xml:space="preserve">
+    <value>gbx_AppSettings</value>
+  </data>
+  <data name="&gt;&gt;gbx_AppSettings.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gbx_AppSettings.Parent" xml:space="preserve">
+    <value>tpg_Application</value>
+  </data>
+  <data name="&gt;&gt;gbx_AppSettings.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tpg_Application.ImageKey" xml:space="preserve">
+    <value>Settings.png</value>
+  </data>
+  <data name="tpg_Application.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 23</value>
+  </data>
+  <data name="tpg_Application.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="tpg_Application.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="tpg_Application.Size" type="System.Drawing.Size, System.Drawing">
+    <value>898, 484</value>
+  </data>
+  <data name="tpg_Application.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tpg_Application.Name" xml:space="preserve">
+    <value>tpg_Application</value>
+  </data>
+  <data name="&gt;&gt;tpg_Application.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tpg_Application.Parent" xml:space="preserve">
+    <value>tcr_Settings</value>
+  </data>
+  <data name="&gt;&gt;tpg_Application.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="ckb_ShowPassword.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_ShowPassword.Location" type="System.Drawing.Point, System.Drawing">
+    <value>682, 69</value>
+  </data>
+  <data name="ckb_ShowPassword.Size" type="System.Drawing.Size, System.Drawing">
+    <value>123, 17</value>
+  </data>
+  <data name="ckb_ShowPassword.TabIndex" type="System.Int32, mscorlib">
+    <value>51</value>
+  </data>
+  <data name="&gt;&gt;ckb_ShowPassword.Name" xml:space="preserve">
+    <value>ckb_ShowPassword</value>
+  </data>
+  <data name="&gt;&gt;ckb_ShowPassword.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_ShowPassword.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;ckb_ShowPassword.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="lbl_Generic_Miles.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_Generic_Miles.Location" type="System.Drawing.Point, System.Drawing">
+    <value>467, 342</value>
+  </data>
+  <data name="lbl_Generic_Miles.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
+  </data>
+  <data name="lbl_Generic_Miles.Size" type="System.Drawing.Size, System.Drawing">
+    <value>47, 13</value>
+  </data>
+  <data name="lbl_Generic_Miles.TabIndex" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <data name="&gt;&gt;lbl_Generic_Miles.Name" xml:space="preserve">
+    <value>lbl_Generic_Miles</value>
+  </data>
+  <data name="&gt;&gt;lbl_Generic_Miles.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_Generic_Miles.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;lbl_Generic_Miles.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="ckb_PopulatedPlacesOnly.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_PopulatedPlacesOnly.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 397</value>
+  </data>
+  <data name="ckb_PopulatedPlacesOnly.Size" type="System.Drawing.Size, System.Drawing">
+    <value>151, 17</value>
+  </data>
+  <data name="ckb_PopulatedPlacesOnly.TabIndex" type="System.Int32, mscorlib">
+    <value>49</value>
+  </data>
+  <data name="&gt;&gt;ckb_PopulatedPlacesOnly.Name" xml:space="preserve">
+    <value>ckb_PopulatedPlacesOnly</value>
+  </data>
+  <data name="&gt;&gt;ckb_PopulatedPlacesOnly.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_PopulatedPlacesOnly.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;ckb_PopulatedPlacesOnly.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="cbx_TryUseGeoNamesLanguage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>34, 67</value>
+  </data>
+  <data name="cbx_TryUseGeoNamesLanguage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>277, 21</value>
+  </data>
+  <data name="cbx_TryUseGeoNamesLanguage.TabIndex" type="System.Int32, mscorlib">
+    <value>47</value>
+  </data>
+  <data name="&gt;&gt;cbx_TryUseGeoNamesLanguage.Name" xml:space="preserve">
+    <value>cbx_TryUseGeoNamesLanguage</value>
+  </data>
+  <data name="&gt;&gt;cbx_TryUseGeoNamesLanguage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbx_TryUseGeoNamesLanguage.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesLanguageSettings</value>
+  </data>
+  <data name="&gt;&gt;cbx_TryUseGeoNamesLanguage.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="rbt_TryUseGeoNamesLanguage.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbt_TryUseGeoNamesLanguage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 44</value>
+  </data>
+  <data name="rbt_TryUseGeoNamesLanguage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>178, 17</value>
+  </data>
+  <data name="rbt_TryUseGeoNamesLanguage.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;rbt_TryUseGeoNamesLanguage.Name" xml:space="preserve">
+    <value>rbt_TryUseGeoNamesLanguage</value>
+  </data>
+  <data name="&gt;&gt;rbt_TryUseGeoNamesLanguage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbt_TryUseGeoNamesLanguage.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesLanguageSettings</value>
+  </data>
+  <data name="&gt;&gt;rbt_TryUseGeoNamesLanguage.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="rbt_UseGeoNamesLocalLanguage.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbt_UseGeoNamesLocalLanguage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 20</value>
+  </data>
+  <data name="rbt_UseGeoNamesLocalLanguage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>189, 17</value>
+  </data>
+  <data name="rbt_UseGeoNamesLocalLanguage.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;rbt_UseGeoNamesLocalLanguage.Name" xml:space="preserve">
+    <value>rbt_UseGeoNamesLocalLanguage</value>
+  </data>
+  <data name="&gt;&gt;rbt_UseGeoNamesLocalLanguage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbt_UseGeoNamesLocalLanguage.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesLanguageSettings</value>
+  </data>
+  <data name="&gt;&gt;rbt_UseGeoNamesLocalLanguage.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="gbx_GeoNamesLanguageSettings.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 215</value>
+  </data>
+  <data name="gbx_GeoNamesLanguageSettings.Size" type="System.Drawing.Size, System.Drawing">
+    <value>812, 117</value>
+  </data>
+  <data name="gbx_GeoNamesLanguageSettings.TabIndex" type="System.Int32, mscorlib">
+    <value>48</value>
+  </data>
+  <data name="&gt;&gt;gbx_GeoNamesLanguageSettings.Name" xml:space="preserve">
+    <value>gbx_GeoNamesLanguageSettings</value>
+  </data>
+  <data name="&gt;&gt;gbx_GeoNamesLanguageSettings.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gbx_GeoNamesLanguageSettings.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;gbx_GeoNamesLanguageSettings.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="ckb_ReplaceBlankToponyms.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_ReplaceBlankToponyms.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 374</value>
+  </data>
+  <data name="ckb_ReplaceBlankToponyms.Size" type="System.Drawing.Size, System.Drawing">
+    <value>166, 17</value>
+  </data>
+  <data name="ckb_ReplaceBlankToponyms.TabIndex" type="System.Int32, mscorlib">
+    <value>45</value>
+  </data>
+  <data name="&gt;&gt;ckb_ReplaceBlankToponyms.Name" xml:space="preserve">
+    <value>ckb_ReplaceBlankToponyms</value>
+  </data>
+  <data name="&gt;&gt;ckb_ReplaceBlankToponyms.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_ReplaceBlankToponyms.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;ckb_ReplaceBlankToponyms.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="tbx_ReplaceBlankToponyms.Location" type="System.Drawing.Point, System.Drawing">
+    <value>408, 371</value>
+  </data>
+  <data name="tbx_ReplaceBlankToponyms.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="tbx_ReplaceBlankToponyms.Size" type="System.Drawing.Size, System.Drawing">
+    <value>155, 20</value>
+  </data>
+  <data name="tbx_ReplaceBlankToponyms.TabIndex" type="System.Int32, mscorlib">
+    <value>44</value>
+  </data>
+  <data name="&gt;&gt;tbx_ReplaceBlankToponyms.Name" xml:space="preserve">
+    <value>tbx_ReplaceBlankToponyms</value>
+  </data>
+  <data name="&gt;&gt;tbx_ReplaceBlankToponyms.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tbx_ReplaceBlankToponyms.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;tbx_ReplaceBlankToponyms.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="lbl_ChoiceRadius.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_ChoiceRadius.Location" type="System.Drawing.Point, System.Drawing">
+    <value>277, 340</value>
+  </data>
+  <data name="lbl_ChoiceRadius.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
+  </data>
+  <data name="lbl_ChoiceRadius.Size" type="System.Drawing.Size, System.Drawing">
+    <value>89, 13</value>
+  </data>
+  <data name="lbl_ChoiceRadius.TabIndex" type="System.Int32, mscorlib">
+    <value>43</value>
+  </data>
+  <data name="&gt;&gt;lbl_ChoiceRadius.Name" xml:space="preserve">
+    <value>lbl_ChoiceRadius</value>
+  </data>
+  <data name="&gt;&gt;lbl_ChoiceRadius.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_ChoiceRadius.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;lbl_ChoiceRadius.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="lbl_ChoiceOfferCount.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_ChoiceOfferCount.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 340</value>
+  </data>
+  <data name="lbl_ChoiceOfferCount.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
+  </data>
+  <data name="lbl_ChoiceOfferCount.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 13</value>
+  </data>
+  <data name="lbl_ChoiceOfferCount.TabIndex" type="System.Int32, mscorlib">
+    <value>42</value>
+  </data>
+  <data name="&gt;&gt;lbl_ChoiceOfferCount.Name" xml:space="preserve">
+    <value>lbl_ChoiceOfferCount</value>
+  </data>
+  <data name="&gt;&gt;lbl_ChoiceOfferCount.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_ChoiceOfferCount.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;lbl_ChoiceOfferCount.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="nud_ChoiceRadius.Location" type="System.Drawing.Point, System.Drawing">
+    <value>410, 340</value>
+  </data>
+  <data name="nud_ChoiceRadius.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 20</value>
+  </data>
+  <data name="nud_ChoiceRadius.TabIndex" type="System.Int32, mscorlib">
+    <value>41</value>
+  </data>
+  <data name="&gt;&gt;nud_ChoiceRadius.Name" xml:space="preserve">
+    <value>nud_ChoiceRadius</value>
+  </data>
+  <data name="&gt;&gt;nud_ChoiceRadius.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nud_ChoiceRadius.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;nud_ChoiceRadius.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="nud_ChoiceOfferCount.Location" type="System.Drawing.Point, System.Drawing">
+    <value>207, 338</value>
+  </data>
+  <data name="nud_ChoiceOfferCount.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 20</value>
+  </data>
+  <data name="nud_ChoiceOfferCount.TabIndex" type="System.Int32, mscorlib">
+    <value>40</value>
+  </data>
+  <data name="&gt;&gt;nud_ChoiceOfferCount.Name" xml:space="preserve">
+    <value>nud_ChoiceOfferCount</value>
+  </data>
+  <data name="&gt;&gt;nud_ChoiceOfferCount.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nud_ChoiceOfferCount.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;nud_ChoiceOfferCount.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="rbx_Register_ArcGIS.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 19</value>
+  </data>
+  <data name="rbx_Register_ArcGIS.Size" type="System.Drawing.Size, System.Drawing">
+    <value>815, 42</value>
+  </data>
+  <data name="rbx_Register_ArcGIS.TabIndex" type="System.Int32, mscorlib">
+    <value>38</value>
+  </data>
+  <data name="&gt;&gt;rbx_Register_ArcGIS.Name" xml:space="preserve">
+    <value>rbx_Register_ArcGIS</value>
+  </data>
+  <data name="&gt;&gt;rbx_Register_ArcGIS.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbx_Register_ArcGIS.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;rbx_Register_ArcGIS.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="rbx_Register_GeoNames.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 100</value>
+  </data>
+  <data name="rbx_Register_GeoNames.Size" type="System.Drawing.Size, System.Drawing">
+    <value>815, 42</value>
+  </data>
+  <data name="rbx_Register_GeoNames.TabIndex" type="System.Int32, mscorlib">
+    <value>39</value>
+  </data>
+  <data name="&gt;&gt;rbx_Register_GeoNames.Name" xml:space="preserve">
+    <value>rbx_Register_GeoNames</value>
+  </data>
+  <data name="&gt;&gt;rbx_Register_GeoNames.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbx_Register_GeoNames.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;rbx_Register_GeoNames.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="lbl_GeoNames_Pwd.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_GeoNames_Pwd.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 181</value>
+  </data>
+  <data name="lbl_GeoNames_Pwd.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
+  </data>
+  <data name="lbl_GeoNames_Pwd.Size" type="System.Drawing.Size, System.Drawing">
+    <value>103, 13</value>
+  </data>
+  <data name="lbl_GeoNames_Pwd.TabIndex" type="System.Int32, mscorlib">
+    <value>35</value>
+  </data>
+  <data name="&gt;&gt;lbl_GeoNames_Pwd.Name" xml:space="preserve">
+    <value>lbl_GeoNames_Pwd</value>
+  </data>
+  <data name="&gt;&gt;lbl_GeoNames_Pwd.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_GeoNames_Pwd.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;lbl_GeoNames_Pwd.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="lbl_GeoNames_UserName.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_GeoNames_UserName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 150</value>
+  </data>
+  <data name="lbl_GeoNames_UserName.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
+  </data>
+  <data name="lbl_GeoNames_UserName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>132, 13</value>
+  </data>
+  <data name="lbl_GeoNames_UserName.TabIndex" type="System.Int32, mscorlib">
+    <value>36</value>
+  </data>
+  <data name="&gt;&gt;lbl_GeoNames_UserName.Name" xml:space="preserve">
+    <value>lbl_GeoNames_UserName</value>
+  </data>
+  <data name="&gt;&gt;lbl_GeoNames_UserName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_GeoNames_UserName.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;lbl_GeoNames_UserName.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="lbl_ARCGIS_APIKey.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_ARCGIS_APIKey.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 69</value>
+  </data>
+  <data name="lbl_ARCGIS_APIKey.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
+  </data>
+  <data name="lbl_ARCGIS_APIKey.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 13</value>
+  </data>
+  <data name="lbl_ARCGIS_APIKey.TabIndex" type="System.Int32, mscorlib">
+    <value>37</value>
+  </data>
+  <data name="&gt;&gt;lbl_ARCGIS_APIKey.Name" xml:space="preserve">
+    <value>lbl_ARCGIS_APIKey</value>
+  </data>
+  <data name="&gt;&gt;lbl_ARCGIS_APIKey.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_ARCGIS_APIKey.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;lbl_ARCGIS_APIKey.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="tbx_GeoNames_Pwd.Location" type="System.Drawing.Point, System.Drawing">
+    <value>186, 178</value>
+  </data>
+  <data name="tbx_GeoNames_Pwd.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="tbx_GeoNames_Pwd.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value>*</value>
+  </data>
+  <data name="tbx_GeoNames_Pwd.Size" type="System.Drawing.Size, System.Drawing">
+    <value>155, 20</value>
+  </data>
+  <data name="tbx_GeoNames_Pwd.TabIndex" type="System.Int32, mscorlib">
+    <value>34</value>
+  </data>
+  <data name="&gt;&gt;tbx_GeoNames_Pwd.Name" xml:space="preserve">
+    <value>tbx_GeoNames_Pwd</value>
+  </data>
+  <data name="&gt;&gt;tbx_GeoNames_Pwd.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tbx_GeoNames_Pwd.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;tbx_GeoNames_Pwd.ZOrder" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="tbx_GeoNames_UserName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>186, 147</value>
+  </data>
+  <data name="tbx_GeoNames_UserName.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="tbx_GeoNames_UserName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>155, 20</value>
+  </data>
+  <data name="tbx_GeoNames_UserName.TabIndex" type="System.Int32, mscorlib">
+    <value>33</value>
+  </data>
+  <data name="&gt;&gt;tbx_GeoNames_UserName.Name" xml:space="preserve">
+    <value>tbx_GeoNames_UserName</value>
+  </data>
+  <data name="&gt;&gt;tbx_GeoNames_UserName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tbx_GeoNames_UserName.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;tbx_GeoNames_UserName.ZOrder" xml:space="preserve">
+    <value>16</value>
+  </data>
+  <data name="tbx_ARCGIS_APIKey.Location" type="System.Drawing.Point, System.Drawing">
+    <value>128, 66</value>
+  </data>
+  <data name="tbx_ARCGIS_APIKey.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="tbx_ARCGIS_APIKey.Size" type="System.Drawing.Size, System.Drawing">
+    <value>542, 20</value>
+  </data>
+  <data name="tbx_ARCGIS_APIKey.TabIndex" type="System.Int32, mscorlib">
+    <value>32</value>
+  </data>
+  <data name="&gt;&gt;tbx_ARCGIS_APIKey.Name" xml:space="preserve">
+    <value>tbx_ARCGIS_APIKey</value>
+  </data>
+  <data name="&gt;&gt;tbx_ARCGIS_APIKey.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tbx_ARCGIS_APIKey.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;tbx_ARCGIS_APIKey.ZOrder" xml:space="preserve">
+    <value>17</value>
+  </data>
+  <data name="gbx_GeoNamesSettings.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 20</value>
+  </data>
+  <data name="gbx_GeoNamesSettings.Size" type="System.Drawing.Size, System.Drawing">
+    <value>852, 428</value>
+  </data>
+  <data name="gbx_GeoNamesSettings.TabIndex" type="System.Int32, mscorlib">
+    <value>34</value>
+  </data>
+  <data name="&gt;&gt;gbx_GeoNamesSettings.Name" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;gbx_GeoNamesSettings.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gbx_GeoNamesSettings.Parent" xml:space="preserve">
+    <value>tpg_GeoNames</value>
+  </data>
+  <data name="&gt;&gt;gbx_GeoNamesSettings.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tpg_GeoNames.ImageKey" xml:space="preserve">
+    <value>PublishOnDemand.png</value>
+  </data>
+  <data name="tpg_GeoNames.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 23</value>
+  </data>
+  <data name="tpg_GeoNames.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tpg_GeoNames.Size" type="System.Drawing.Size, System.Drawing">
+    <value>898, 484</value>
+  </data>
+  <data name="tpg_GeoNames.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;tpg_GeoNames.Name" xml:space="preserve">
+    <value>tpg_GeoNames</value>
+  </data>
+  <data name="&gt;&gt;tpg_GeoNames.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tpg_GeoNames.Parent" xml:space="preserve">
+    <value>tcr_Settings</value>
+  </data>
+  <data name="&gt;&gt;tpg_GeoNames.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopLeft</value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated.Location" type="System.Drawing.Point, System.Drawing">
+    <value>567, 62</value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>100, 20</value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated.Size" type="System.Drawing.Size, System.Drawing">
+    <value>264, 62</value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopLeft</value>
+  </data>
+  <data name="&gt;&gt;ckb_ResetFileDateToCreated.Name" xml:space="preserve">
+    <value>ckb_ResetFileDateToCreated</value>
+  </data>
+  <data name="&gt;&gt;ckb_ResetFileDateToCreated.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_ResetFileDateToCreated.Parent" xml:space="preserve">
+    <value>tpg_FileOptions</value>
+  </data>
+  <data name="&gt;&gt;ckb_ResetFileDateToCreated.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="ckb_ProcessOriginalFile.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopLeft</value>
+  </data>
+  <data name="ckb_ProcessOriginalFile.Location" type="System.Drawing.Point, System.Drawing">
+    <value>545, 18</value>
+  </data>
+  <data name="ckb_ProcessOriginalFile.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>100, 20</value>
+  </data>
+  <data name="ckb_ProcessOriginalFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>286, 38</value>
+  </data>
+  <data name="ckb_ProcessOriginalFile.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="ckb_ProcessOriginalFile.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopLeft</value>
+  </data>
+  <data name="&gt;&gt;ckb_ProcessOriginalFile.Name" xml:space="preserve">
+    <value>ckb_ProcessOriginalFile</value>
+  </data>
+  <data name="&gt;&gt;ckb_ProcessOriginalFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_ProcessOriginalFile.Parent" xml:space="preserve">
+    <value>tpg_FileOptions</value>
+  </data>
+  <data name="&gt;&gt;ckb_ProcessOriginalFile.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="ckb_OverwriteOriginal.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopLeft</value>
+  </data>
+  <data name="ckb_OverwriteOriginal.Location" type="System.Drawing.Point, System.Drawing">
+    <value>545, 190</value>
+  </data>
+  <data name="ckb_OverwriteOriginal.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>100, 20</value>
+  </data>
+  <data name="ckb_OverwriteOriginal.Size" type="System.Drawing.Size, System.Drawing">
+    <value>286, 38</value>
+  </data>
+  <data name="ckb_OverwriteOriginal.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="ckb_OverwriteOriginal.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopLeft</value>
+  </data>
+  <data name="&gt;&gt;ckb_OverwriteOriginal.Name" xml:space="preserve">
+    <value>ckb_OverwriteOriginal</value>
+  </data>
+  <data name="&gt;&gt;ckb_OverwriteOriginal.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_OverwriteOriginal.Parent" xml:space="preserve">
+    <value>tpg_FileOptions</value>
+  </data>
+  <data name="&gt;&gt;ckb_OverwriteOriginal.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="ckb_AddXMPSideCar.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopLeft</value>
+  </data>
+  <data name="ckb_AddXMPSideCar.Location" type="System.Drawing.Point, System.Drawing">
+    <value>545, 130</value>
+  </data>
+  <data name="ckb_AddXMPSideCar.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>100, 20</value>
+  </data>
+  <data name="ckb_AddXMPSideCar.Size" type="System.Drawing.Size, System.Drawing">
+    <value>286, 38</value>
+  </data>
+  <data name="ckb_AddXMPSideCar.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="ckb_AddXMPSideCar.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopLeft</value>
+  </data>
+  <data name="&gt;&gt;ckb_AddXMPSideCar.Name" xml:space="preserve">
+    <value>ckb_AddXMPSideCar</value>
+  </data>
+  <data name="&gt;&gt;ckb_AddXMPSideCar.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_AddXMPSideCar.Parent" xml:space="preserve">
+    <value>tpg_FileOptions</value>
+  </data>
+  <data name="&gt;&gt;ckb_AddXMPSideCar.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="lbx_fileExtensions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 6</value>
+  </data>
+  <data name="lbx_fileExtensions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>512, 368</value>
+  </data>
+  <data name="lbx_fileExtensions.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;lbx_fileExtensions.Name" xml:space="preserve">
+    <value>lbx_fileExtensions</value>
+  </data>
+  <data name="&gt;&gt;lbx_fileExtensions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbx_fileExtensions.Parent" xml:space="preserve">
+    <value>tpg_FileOptions</value>
+  </data>
+  <data name="&gt;&gt;lbx_fileExtensions.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="tpg_FileOptions.ImageKey" xml:space="preserve">
+    <value>SettingsFile.png</value>
+  </data>
+  <data name="tpg_FileOptions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 23</value>
+  </data>
+  <data name="tpg_FileOptions.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="tpg_FileOptions.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="tpg_FileOptions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>898, 484</value>
+  </data>
+  <data name="tpg_FileOptions.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;tpg_FileOptions.Name" xml:space="preserve">
+    <value>tpg_FileOptions</value>
+  </data>
+  <data name="&gt;&gt;tpg_FileOptions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tpg_FileOptions.Parent" xml:space="preserve">
+    <value>tcr_Settings</value>
+  </data>
+  <data name="&gt;&gt;tpg_FileOptions.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanationBold.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanationBold.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 144</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanationBold.Size" type="System.Drawing.Size, System.Drawing">
+    <value>885, 40</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanationBold.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;rbx_CustomCityLogicExplanationBold.Name" xml:space="preserve">
+    <value>rbx_CustomCityLogicExplanationBold</value>
+  </data>
+  <data name="&gt;&gt;rbx_CustomCityLogicExplanationBold.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbx_CustomCityLogicExplanationBold.Parent" xml:space="preserve">
+    <value>tpg_CustomCityLogic</value>
+  </data>
+  <data name="&gt;&gt;rbx_CustomCityLogicExplanationBold.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="btn_ResetToDefaults.Location" type="System.Drawing.Point, System.Drawing">
+    <value>771, 613</value>
+  </data>
+  <data name="btn_ResetToDefaults.Size" type="System.Drawing.Size, System.Drawing">
+    <value>106, 23</value>
+  </data>
+  <data name="btn_ResetToDefaults.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;btn_ResetToDefaults.Name" xml:space="preserve">
+    <value>btn_ResetToDefaults</value>
+  </data>
+  <data name="&gt;&gt;btn_ResetToDefaults.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_ResetToDefaults.Parent" xml:space="preserve">
+    <value>tpg_CustomCityLogic</value>
+  </data>
+  <data name="&gt;&gt;btn_ResetToDefaults.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanation.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 6</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanation.Size" type="System.Drawing.Size, System.Drawing">
+    <value>885, 132</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanation.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;rbx_CustomCityLogicExplanation.Name" xml:space="preserve">
+    <value>rbx_CustomCityLogicExplanation</value>
+  </data>
+  <data name="&gt;&gt;rbx_CustomCityLogicExplanation.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbx_CustomCityLogicExplanation.Parent" xml:space="preserve">
+    <value>tpg_CustomCityLogic</value>
+  </data>
+  <data name="&gt;&gt;rbx_CustomCityLogicExplanation.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="dgv_CustomCityLogic.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 190</value>
+  </data>
+  <data name="dgv_CustomCityLogic.Size" type="System.Drawing.Size, System.Drawing">
+    <value>885, 288</value>
+  </data>
+  <data name="dgv_CustomCityLogic.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;dgv_CustomCityLogic.Name" xml:space="preserve">
+    <value>dgv_CustomCityLogic</value>
+  </data>
+  <data name="&gt;&gt;dgv_CustomCityLogic.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;dgv_CustomCityLogic.Parent" xml:space="preserve">
+    <value>tpg_CustomCityLogic</value>
+  </data>
+  <data name="&gt;&gt;dgv_CustomCityLogic.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="tpg_CustomCityLogic.ImageKey" xml:space="preserve">
+    <value>CustomAction.png</value>
+  </data>
+  <data name="tpg_CustomCityLogic.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 23</value>
+  </data>
+  <data name="tpg_CustomCityLogic.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tpg_CustomCityLogic.Size" type="System.Drawing.Size, System.Drawing">
+    <value>898, 484</value>
+  </data>
+  <data name="tpg_CustomCityLogic.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;tpg_CustomCityLogic.Name" xml:space="preserve">
+    <value>tpg_CustomCityLogic</value>
+  </data>
+  <data name="&gt;&gt;tpg_CustomCityLogic.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tpg_CustomCityLogic.Parent" xml:space="preserve">
+    <value>tcr_Settings</value>
+  </data>
+  <data name="&gt;&gt;tpg_CustomCityLogic.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 144</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold.Size" type="System.Drawing.Size, System.Drawing">
+    <value>885, 40</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="&gt;&gt;rbx_CustomRulesExplanationBold.Name" xml:space="preserve">
+    <value>rbx_CustomRulesExplanationBold</value>
+  </data>
+  <data name="&gt;&gt;rbx_CustomRulesExplanationBold.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbx_CustomRulesExplanationBold.Parent" xml:space="preserve">
+    <value>tpg_CustomRules</value>
+  </data>
+  <data name="&gt;&gt;rbx_CustomRulesExplanationBold.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="ckb_StopProcessingRules.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_StopProcessingRules.Location" type="System.Drawing.Point, System.Drawing">
+    <value>535, 190</value>
+  </data>
+  <data name="ckb_StopProcessingRules.Size" type="System.Drawing.Size, System.Drawing">
+    <value>151, 17</value>
+  </data>
+  <data name="ckb_StopProcessingRules.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="&gt;&gt;ckb_StopProcessingRules.Name" xml:space="preserve">
+    <value>ckb_StopProcessingRules</value>
+  </data>
+  <data name="&gt;&gt;ckb_StopProcessingRules.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_StopProcessingRules.Parent" xml:space="preserve">
+    <value>tpg_CustomRules</value>
+  </data>
+  <data name="&gt;&gt;ckb_StopProcessingRules.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 190</value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries.Size" type="System.Drawing.Size, System.Drawing">
+    <value>197, 17</value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="&gt;&gt;ckb_IncludePredeterminedCountries.Name" xml:space="preserve">
+    <value>ckb_IncludePredeterminedCountries</value>
+  </data>
+  <data name="&gt;&gt;ckb_IncludePredeterminedCountries.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_IncludePredeterminedCountries.Parent" xml:space="preserve">
+    <value>tpg_CustomRules</value>
+  </data>
+  <data name="&gt;&gt;ckb_IncludePredeterminedCountries.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="rbx_CustomRulesExplanation.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 6</value>
+  </data>
+  <data name="rbx_CustomRulesExplanation.Size" type="System.Drawing.Size, System.Drawing">
+    <value>885, 132</value>
+  </data>
+  <data name="rbx_CustomRulesExplanation.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;rbx_CustomRulesExplanation.Name" xml:space="preserve">
+    <value>rbx_CustomRulesExplanation</value>
+  </data>
+  <data name="&gt;&gt;rbx_CustomRulesExplanation.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbx_CustomRulesExplanation.Parent" xml:space="preserve">
+    <value>tpg_CustomRules</value>
+  </data>
+  <data name="&gt;&gt;rbx_CustomRulesExplanation.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="dgv_CustomRules.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 220</value>
+  </data>
+  <data name="dgv_CustomRules.Size" type="System.Drawing.Size, System.Drawing">
+    <value>885, 258</value>
+  </data>
+  <data name="dgv_CustomRules.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;dgv_CustomRules.Name" xml:space="preserve">
+    <value>dgv_CustomRules</value>
+  </data>
+  <data name="&gt;&gt;dgv_CustomRules.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;dgv_CustomRules.Parent" xml:space="preserve">
+    <value>tpg_CustomRules</value>
+  </data>
+  <data name="&gt;&gt;dgv_CustomRules.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="tpg_CustomRules.ImageKey" xml:space="preserve">
+    <value>CustomAction.png</value>
+  </data>
+  <data name="tpg_CustomRules.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 23</value>
+  </data>
+  <data name="tpg_CustomRules.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tpg_CustomRules.Size" type="System.Drawing.Size, System.Drawing">
+    <value>898, 484</value>
+  </data>
+  <data name="tpg_CustomRules.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;tpg_CustomRules.Name" xml:space="preserve">
+    <value>tpg_CustomRules</value>
+  </data>
+  <data name="&gt;&gt;tpg_CustomRules.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tpg_CustomRules.Parent" xml:space="preserve">
+    <value>tcr_Settings</value>
+  </data>
+  <data name="&gt;&gt;tpg_CustomRules.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
   <metadata name="igl_Settings.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>184, 20</value>
   </metadata>
@@ -125,7 +1576,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAABI
-        DQAAAk1TRnQBSQFMAgEBBQEAAbABAQGwAQEBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        DQAAAk1TRnQBSQFMAgEBBQEAAcABAQHAAQEBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABQAMAASADAAEBAQABCAYAAQgYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
         AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
         AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA
@@ -184,19 +1635,169 @@
         AQMB4AEDAbABLwGIAYcB4AEHAeABBwGwAe8B/wHvAfwBPwHgAQ8BsQHvCP8L
 </value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="pbx_Browse_Startup_Folder.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAABFklE
-        QVQ4T2MgGcTsKmGI3u0A5ZEBYnfbMMTueskQs9MJKkIECF3FBtTUCcTPgPg/BO+8CpUlAsTu7ADiLQxx
-        e6TBzo/Z9QrFGzPyGB7MzGf4j4Q/Ts9nQCiI3fmUIXqbDJiNLQzAmgoYJGF4Wh5D8PQ8hq8gcbACkJNB
-        6vIY7oP56ADdAJwYZiA6oIoBs0oYDID0B7BhxOA8hp1Q7RADgAHZBqRXggIPF56Wz1AAooGuWQg0YApU
-        O9QLeQyPZuUzJKBrQsYgA6YUMTgD1b6cVcCgDdUONSCf4Rw2TcgY7IJchupZeQwnoFohAOyFAoY2bJqQ
-        McgAoFePAl0QD9UKATPyGe5BXUEQA9U+7i1k4IRqHXDAwAAANSDaAOvc+eMAAAAASUVORK5CYII=
-</value>
+  <data name="tcr_Settings.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 12</value>
+  </data>
+  <data name="tcr_Settings.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="tcr_Settings.Size" type="System.Drawing.Size, System.Drawing">
+    <value>906, 511</value>
+  </data>
+  <data name="tcr_Settings.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tcr_Settings.Name" xml:space="preserve">
+    <value>tcr_Settings</value>
+  </data>
+  <data name="&gt;&gt;tcr_Settings.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tcr_Settings.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;tcr_Settings.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="btn_Generic_OK.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Right</value>
+  </data>
+  <data name="btn_Generic_OK.Location" type="System.Drawing.Point, System.Drawing">
+    <value>759, 537</value>
+  </data>
+  <data name="btn_Generic_OK.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="btn_Generic_OK.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btn_Generic_OK.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_OK.Name" xml:space="preserve">
+    <value>btn_Generic_OK</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_OK.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_OK.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_OK.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="btn_Generic_Cancel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Right</value>
+  </data>
+  <data name="btn_Generic_Cancel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>847, 537</value>
+  </data>
+  <data name="btn_Generic_Cancel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="btn_Generic_Cancel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btn_Generic_Cancel.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_Cancel.Name" xml:space="preserve">
+    <value>btn_Generic_Cancel</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_Cancel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_Cancel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_Cancel.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <metadata name="fbd_StartupFolder.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>35, 20</value>
   </metadata>
+  <data name="fbd_StartupFolder.Description" xml:space="preserve">
+    <value>fbd_StartupFolder</value>
+  </data>
+  <data name="btn_ExportSettings.Location" type="System.Drawing.Point, System.Drawing">
+    <value>124, 537</value>
+  </data>
+  <data name="btn_ExportSettings.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btn_ExportSettings.TabIndex" type="System.Int32, mscorlib">
+    <value>22</value>
+  </data>
+  <data name="&gt;&gt;btn_ExportSettings.Name" xml:space="preserve">
+    <value>btn_ExportSettings</value>
+  </data>
+  <data name="&gt;&gt;btn_ExportSettings.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_ExportSettings.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btn_ExportSettings.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="btn_ImportSettings.Location" type="System.Drawing.Point, System.Drawing">
+    <value>35, 537</value>
+  </data>
+  <data name="btn_ImportSettings.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btn_ImportSettings.TabIndex" type="System.Int32, mscorlib">
+    <value>21</value>
+  </data>
+  <data name="&gt;&gt;btn_ImportSettings.Name" xml:space="preserve">
+    <value>btn_ImportSettings</value>
+  </data>
+  <data name="&gt;&gt;btn_ImportSettings.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_ImportSettings.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btn_ImportSettings.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>937, 568</value>
+  </data>
+  <data name="$this.Location" type="System.Drawing.Point, System.Drawing">
+    <value>350, 100</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>20, 490</value>
+  </data>
+  <data name="&gt;&gt;igl_Settings.Name" xml:space="preserve">
+    <value>igl_Settings</value>
+  </data>
+  <data name="&gt;&gt;igl_Settings.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ImageList, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;fbd_StartupFolder.Name" xml:space="preserve">
+    <value>fbd_StartupFolder</value>
+  </data>
+  <data name="&gt;&gt;fbd_StartupFolder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FolderBrowserDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>FrmSettings</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

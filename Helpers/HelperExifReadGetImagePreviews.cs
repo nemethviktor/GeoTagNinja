@@ -21,7 +21,7 @@ internal static class HelperExifReadGetImagePreviews
     /// <returns>Realistically nothing but the process generates the bitmap if possible</returns>
     internal static async Task ExifGetImagePreviews(string fileNameWithPath)
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
     #region ExifToolConfiguration
 
@@ -65,7 +65,7 @@ internal static class HelperExifReadGetImagePreviews
                                contents: "-execute" + Environment.NewLine);
         }
 
-        FrmMainApp.Logger.Trace(message: "Starting ExifTool");
+        FrmMainApp.Log.Trace(message: "Starting ExifTool");
         ///////////////
         await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
                                                      frmMainAppInstance: null,
@@ -73,7 +73,7 @@ internal static class HelperExifReadGetImagePreviews
                                                      HelperGenericAncillaryListsArrays.ExifToolInititators
                                                         .ExifGetImagePreviews);
         ///////////////
-        FrmMainApp.Logger.Debug(message: "Done");
+        FrmMainApp.Log.Debug(message: "Done");
     }
 
     /// <summary>
@@ -121,9 +121,9 @@ internal static class HelperExifReadGetImagePreviews
         }
 
         //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
-        string pbxErrorMsg = HelperDataLanguageTZ.DataReadDTObjectText(
-            objectType: ControlType.PictureBox,
-            objectName: "pbx_imagePreviewCouldNotRetrieve"
+        string pbxErrorMsg = HelperControlAndMessageBoxHandling.ReturnControlText(
+            controlName: "pbx_imagePreviewCouldNotRetrieve",
+            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.PictureBox
         );
 
         try

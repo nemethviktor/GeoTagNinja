@@ -205,6 +205,152 @@ internal static class HelperGenericAncillaryListsArrays
         return result;
     }
 
+    internal static bool IsGenericControlName(string controlName)
+    {
+        return GetGenericControlName(controlName: controlName) != HelperVariables.ControlItemNameNotGeneric;
+    }
+
+    /// <summary>
+    ///     This is part of a messy and obsolete code logic whereby I was using separate buttons and lables and whatnots for
+    ///     ultimately identical purposes (e.g. "OK" or "None" etc). These have now been merged more-or-less and this
+    ///     dictionary provides a translation vessel between the old and new because I haven't actually changed everything I'd
+    ///     hazard.
+    ///     The other part of the logic is that there is some code that's dependent on the name of the object, for example the
+    ///     code dealing with Taken Date vs Create Date (amongst others) needs to know what button was pressed but the
+    ///     user-facing translation is identical.
+    /// </summary>
+    /// <param name="controlName"></param>
+    /// <returns></returns>
+    internal static string GetGenericControlName(string controlName)
+    {
+        Dictionary<string, string> lookupDictionary = new()
+        {
+            { "btn_AllData_All", "Generic_All" },
+            { "btn_AllData_None", "Generic_None" },
+            { "btn_Cancel", "Generic_Cancel" },
+            { "btn_Close", "Generic_Close" },
+            { "btn_Dates_All", "Generic_All" },
+            { "btn_Dates_None", "Generic_None" },
+            { "btn_Delete", "Generic_Delete" },
+            { "btn_ExportSettings", "Generic_Export" },
+            { "btn_getAllFromWeb_Altitude", "Generic_ForAllImages" },
+            { "btn_getAllFromWeb_Toponomy", "Generic_ForAllImages" },
+            { "btn_getFromWeb_Altitude", "Generic_ForThisImage" },
+            { "btn_getFromWeb_Toponomy", "Generic_ForThisImage" },
+            { "btn_GPSData_All", "Generic_All" },
+            { "btn_GPSData_None", "Generic_None" },
+            { "btn_ImportSettings", "Generic_Import" },
+            { "btn_InsertCreateDate", "Generic_Insert" },
+            { "btn_InsertTakenDate", "Generic_Insert" },
+            { "btn_LocationData_All", "Generic_All" },
+            { "btn_LocationData_None", "Generic_None" },
+            { "btn_No", "Generic_No" },
+            { "btn_OK", "Generic_OK" },
+            { "btn_PleaseWait", "Generic_PleaseWait" },
+            { "btn_Rename", "Generic_Rename" },
+            { "btn_Save", "Generic_Save" },
+            { "btn_Yes", "Generic_Yes" },
+            { "ckb_City", "Generic_City" },
+            { "ckb_Country", "Generic_Country" },
+            { "ckb_CountryCode", "Generic_CountryCode" },
+            { "ckb_CreateDate", "Generic_CreateDate" },
+            { "ckb_GPSAltitude", "Generic_GPSAltitude" },
+            { "ckb_GPSDestLatitude", "Generic_GPSDestLatitude" },
+            { "ckb_GPSDestLongitude", "Generic_GPSDestLongitude" },
+            { "ckb_GPSImgDirection", "Generic_GPSImgDirection" },
+            { "ckb_GPSLatitude", "Generic_GPSLatitude" },
+            { "ckb_GPSLongitude", "Generic_GPSLongitude" },
+            { "ckb_GPSSpeed", "Generic_GPSSpeed" },
+            { "ckb_QuestionDontAskAgain", "Generic_QuestionDontAskAgain" },
+            { "ckb_State", "Generic_State" },
+            { "ckb_Sublocation", "Generic_Sublocation" },
+            { "ckb_TakenDate", "Generic_TakenDate" },
+            { "ckb_UseDST", "Generic_UseDST" },
+            { "clh_City", "Generic_City" },
+            { "clh_Coordinates", "Generic_Coordinates" },
+            { "clh_Country", "Generic_Country" },
+            { "clh_CountryCode", "Generic_CountryCode" },
+            { "clh_CreateDate", "Generic_CreateDate" },
+            { "clh_DestCoordinates", "Generic_DestCoordinates" },
+            { "clh_ExposureTime", "Generic_ExposureTime" },
+            { "clh_FileModifyDate", "Generic_FileModifyDate" },
+            { "clh_FileName", "Generic_FileName" },
+            { "clh_Fnumber", "Generic_Fnumber" },
+            { "clh_FocalLength", "Generic_FocalLength" },
+            { "clh_FocalLengthIn35mmFormat", "Generic_FocalLengthIn35mmFormat" },
+            { "clh_GPSAltitude", "Generic_GPSAltitude" },
+            { "clh_GPSAltitudeRef", "Generic_GPSAltitudeRef" },
+            { "clh_GPSDateTime", "Generic_GPSDateTime" },
+            { "clh_GPSDestLatitude", "Generic_GPSDestLatitude" },
+            { "clh_GPSDestLatitudeRef", "Generic_GPSDestLatitudeRef" },
+            { "clh_GPSDestLongitude", "Generic_GPSDestLongitude" },
+            { "clh_GPSDestLongitudeRef", "Generic_GPSDestLongitudeRef" },
+            { "clh_GPSImgDirection", "Generic_GPSImgDirection" },
+            { "clh_GPSImgDirectionRef", "Generic_GPSImgDirectionRef" },
+            { "clh_GPSLatitude", "Generic_GPSLatitude" },
+            { "clh_GPSLatitudeRef", "Generic_GPSLatitudeRef" },
+            { "clh_GPSLongitude", "Generic_GPSLongitude" },
+            { "clh_GPSLongitudeRef", "Generic_GPSLongitudeRef" },
+            { "clh_GPSSpeed", "Generic_GPSSpeed" },
+            { "clh_GPSSpeedRef", "Generic_GPSSpeedRef" },
+            { "clh_GUID", "Generic_GUID" },
+            { "clh_IPTCKeywords", "Generic_IPTCKeywords" },
+            { "clh_ISO", "Generic_ISO" },
+            { "clh_LensSpec", "Generic_LensSpec" },
+            { "clh_Make", "Generic_Make" },
+            { "clh_Model", "Generic_Model" },
+            { "clh_OffsetTime", "Generic_OffsetTime" },
+            { "clh_Rating", "Generic_Rating" },
+            { "clh_State", "Generic_State" },
+            { "clh_Sublocation", "Generic_Sublocation" },
+            { "clh_TakenDate", "Generic_TakenDate" },
+            { "clh_XMLSubjects", "Generic_XMLSubjects" },
+            { "lbl_City", "Generic_City" },
+            { "lbl_Country", "Generic_Country" },
+            { "lbl_CountryCode", "Generic_CountryCode" },
+            { "lbl_CreateDateDaysShift", "Generic_Days" },
+            { "lbl_CreateDateHoursShift", "Generic_Hours" },
+            { "lbl_CreateDateMinutesShift", "Generic_Minutes" },
+            { "lbl_CreateDateSecondsShift", "Generic_Seconds" },
+            { "lbl_Decimal", "Generic_Decimal" },
+            { "lbl_Favourites", "Generic_Favourites" },
+            { "lbl_Feet", "Generic_Feet" },
+            { "lbl_Feet_Abbr", "Generic_Feet_Abbr" },
+            { "lbl_GPSAltitude", "Generic_GPSAltitude" },
+            { "lbl_GPSAltitudeRef", "Generic_GPSAltitudeRef" },
+            { "lbl_GPSDestLatitude", "Generic_GPSDestLatitude" },
+            { "lbl_GPSDestLatitudeRef", "Generic_GPSDestLatitudeRef" },
+            { "lbl_GPSDestLongitude", "Generic_GPSDestLongitude" },
+            { "lbl_GPSDestLongitudeRef", "Generic_GPSDestLongitudeRef" },
+            { "lbl_GPSImgDirection", "Generic_GPSImgDirection" },
+            { "lbl_GPSImgDirectionRef", "Generic_GPSImgDirectionRef" },
+            { "lbl_GPSLatitude", "Generic_GPSLatitude" },
+            { "lbl_GPSLatitudeRef", "Generic_GPSLatitudeRef" },
+            { "lbl_GPSLongitude", "Generic_GPSLongitude" },
+            { "lbl_GPSLongitudeRef", "Generic_GPSLongitudeRef" },
+            { "lbl_GPSSpeed", "Generic_GPSSpeed" },
+            { "lbl_GPSSpeedRef", "Generic_GPSSpeedRef" },
+            { "lbl_ImportExportGpxDays", "Generic_Days" },
+            { "lbl_ImportExportGpxHours", "Generic_Hours" },
+            { "lbl_ImportExportGpxMinutes", "Generic_Minutes" },
+            { "lbl_ImportExportGpxSeconds", "Generic_Seconds" },
+            { "lbl_lat", "Generic_GPSLatitude" },
+            { "lbl_lng", "Generic_GPSLongitude" },
+            { "lbl_Metres", "Generic_Metres" },
+            { "lbl_Metres_Abbr", "Generic_Metres_Abbr" },
+            { "lbl_Miles", "Generic_Miles" },
+            { "lbl_State", "Generic_State" },
+            { "lbl_Sublocation", "Generic_Sublocation" },
+            { "lbl_TakenDateDaysShift", "Generic_Days" },
+            { "lbl_TakenDateHoursShift", "Generic_Hours" },
+            { "lbl_TakenDateMinutesShift", "Generic_Minutes" },
+            { "lbl_TakenDateSecondsShift", "Generic_Seconds" }
+        };
+
+        bool isInDictionary = lookupDictionary.TryGetValue(key: controlName, value: out string retValue);
+        return isInDictionary ? retValue : HelperVariables.ControlItemNameNotGeneric;
+    }
+
 #endregion
 
 #region Settings Import/Export
@@ -904,7 +1050,7 @@ internal static class HelperGenericAncillaryListsArrays
         {
             ElementAttribute.City,
             ElementAttribute.State,
-            ElementAttribute.Sub_location,
+            ElementAttribute.Sublocation,
             ElementAttribute.GPSAltitude
         };
         return result;
@@ -925,7 +1071,7 @@ internal static class HelperGenericAncillaryListsArrays
             ElementAttribute.CountryCode,
             ElementAttribute.Country,
             ElementAttribute.State,
-            ElementAttribute.Sub_location
+            ElementAttribute.Sublocation
         };
         return result;
     }
@@ -936,7 +1082,7 @@ internal static class HelperGenericAncillaryListsArrays
         {
             ElementAttribute.State,
             ElementAttribute.City,
-            ElementAttribute.Sub_location
+            ElementAttribute.Sublocation
         };
 
         return result;
@@ -1264,9 +1410,9 @@ internal static class HelperGenericAncillaryListsArrays
         File.WriteAllText(path: fmtFilePath, contents: fmtFileContent);
     }
 
-    #endregion
+#endregion
 
-    #region Copy-Paste
+#region Copy-Paste
 
     internal static readonly List<ElementAttribute> TagsToCopy =
     [
@@ -1283,7 +1429,7 @@ internal static class HelperGenericAncillaryListsArrays
         ElementAttribute.CountryCode,
         ElementAttribute.State,
         ElementAttribute.City,
-        ElementAttribute.Sub_location,
+        ElementAttribute.Sublocation,
         ElementAttribute.DestCoordinates,
         ElementAttribute.GPSDestLatitude,
         ElementAttribute.GPSDestLatitudeRef,
@@ -1304,5 +1450,5 @@ internal static class HelperGenericAncillaryListsArrays
         ElementAttribute.CreateDateDaysShift
     ];
 
-    #endregion
+#endregion
 }

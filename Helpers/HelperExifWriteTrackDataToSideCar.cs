@@ -30,7 +30,7 @@ internal class HelperExifWriteTrackDataToSideCar
                                                            int timeShiftSeconds = 0
     )
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
         string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exifArgsToWriteForTrackExport.args");
         File.Delete(path: argsFile);

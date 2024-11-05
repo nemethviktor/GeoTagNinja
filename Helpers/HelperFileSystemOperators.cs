@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
 using static System.Environment;
+using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 
 namespace GeoTagNinja.Helpers;
 
@@ -59,11 +60,12 @@ internal static class HelperFileSystemOperators
             }
 
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName: "mbx_Helper_QuestionFileQIsNotEmpty"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Question.ToString()),
+                text: ReturnControlText(
+                    controlName: "mbx_Helper_QuestionFileQIsNotEmpty",
+                    fakeControlType: FakeControlTypes.MessageBox),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption
+                                .Question.ToString(), fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.YesNoCancel,
                 icon: MessageBoxIcon.Question);
             DialogResult dialogResult = customMessageBox.ShowDialog();
@@ -107,7 +109,7 @@ internal static class HelperFileSystemOperators
     /// </summary>
     internal static void FsoCleanUpUserFolder()
     {
-        FrmMainApp.Logger.Debug(message: "Starting");
+        FrmMainApp.Log.Info(message: "Starting");
 
         DirectoryInfo di = new(path: HelperVariables.UserDataFolderPath);
         List<string> filesToKeep = ["exiftool.exe", ".ExifTool_config"];
@@ -118,7 +120,7 @@ internal static class HelperFileSystemOperators
             {
                 try
                 {
-                    FrmMainApp.Logger.Trace(message: "Deleting:" + directory.Name);
+                    FrmMainApp.Log.Trace(message: "Deleting:" + directory.Name);
                     directory.Delete(recursive: true);
                 }
                 catch
@@ -136,7 +138,7 @@ internal static class HelperFileSystemOperators
             {
                 try
                 {
-                    FrmMainApp.Logger.Trace(message: "Deleting:" + file.Name);
+                    FrmMainApp.Log.Trace(message: "Deleting:" + file.Name);
                     file.Delete();
                 }
                 catch

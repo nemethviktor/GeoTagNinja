@@ -153,7 +153,7 @@ public partial class FrmPasteWhat : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void FrmPasteWhat_Load(object sender,
-                                   EventArgs e)
+        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         HelperControlAndMessageBoxHandling.ReturnControlText(
@@ -187,8 +187,8 @@ public partial class FrmPasteWhat : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     /// <exception cref="NotImplementedException">Warn that I did something incorrect.</exception>
-    private async void btn_OK_Click(object sender,
-                                    EventArgs e)
+    private async void btn_Generic_OK_Click(object sender,
+        EventArgs e)
     {
         // this can't be 'string' because some of the types aren't strings
         Dictionary<ElementAttribute, object> copyPasteDict = new();
@@ -273,8 +273,8 @@ public partial class FrmPasteWhat : Form
                                         tagsToPaste.Add(
                                             item: GetElementAttributesElementAttribute(
                                                 attributeToFind: attributeString +
-                                                timeUnit +
-                                                "Shift"));
+                                                                 timeUnit +
+                                                                 "Shift"));
                                     }
                                 }
 
@@ -291,8 +291,8 @@ public partial class FrmPasteWhat : Form
                                         tagsToPaste.Add(
                                             item: GetElementAttributesElementAttribute(
                                                 attributeToFind: attributeString +
-                                                timeUnit +
-                                                "Shift"));
+                                                                 timeUnit +
+                                                                 "Shift"));
                                     }
                                 }
 
@@ -345,8 +345,8 @@ public partial class FrmPasteWhat : Form
                     IConvertible pasteConvertible = null;
 
                     // by this point we know that _there is_ something to paste.
-                    btn_OK.Enabled = false;
-                    btn_Cancel.Enabled = false;
+                    btn_Generic_OK.Enabled = false;
+                    btn_Generic_Cancel.Enabled = false;
 
                     // check it's sitting somewhere already? -- can't be null.
                     DirectoryElement.AttributeVersion maxAttributeVersion =
@@ -514,8 +514,8 @@ public partial class FrmPasteWhat : Form
             if (frmMainAppInstance != null)
             {
                 // by this point we know that _there is_ something to paste.
-                btn_OK.Enabled = false;
-                btn_Cancel.Enabled = false;
+                btn_Generic_OK.Enabled = false;
+                btn_Generic_Cancel.Enabled = false;
 
                 foreach (ElementAttribute attribute in tagsToPaste)
                 {
@@ -539,7 +539,7 @@ public partial class FrmPasteWhat : Form
                     else // this will be marked as "remove" later
                     {
                         copyPasteDict.Add(key: attribute,
-                                          value: FrmMainApp.NullStringEquivalentGeneric);
+                            value: FrmMainApp.NullStringEquivalentGeneric);
                     }
                 }
 
@@ -650,8 +650,8 @@ public partial class FrmPasteWhat : Form
         Hide();
 
         bool CheckAdjustTakenTimeShiftActual(DirectoryElement dirElemFileToModify,
-                                             DirectoryElement.AttributeVersion
-                                                 dirElemVersion)
+            DirectoryElement.AttributeVersion
+                dirElemVersion)
         {
             int shiftedDays = 0;
             int shiftedHours = 0;
@@ -695,15 +695,15 @@ public partial class FrmPasteWhat : Form
             dirElemFileToModify.SetAttributeValueAnyType(
                 attribute: ElementAttribute.TakenDate,
                 value: Convert.ToString(value: modifiedTakenDateTime,
-                                        provider: CultureInfo.CurrentUICulture),
+                    provider: CultureInfo.CurrentUICulture),
                 version: dirElemVersion,
                 isMarkedForDeletion: false);
             return true;
         }
 
         bool CheckAdjustCreateTimeShiftActual(DirectoryElement dirElemFileToModify,
-                                              DirectoryElement.AttributeVersion
-                                                  dirElemVersion)
+            DirectoryElement.AttributeVersion
+                dirElemVersion)
         {
             int shiftedDays = 0;
             int shiftedHours = 0;
@@ -747,7 +747,7 @@ public partial class FrmPasteWhat : Form
             dirElemFileToModify.SetAttributeValueAnyType(
                 attribute: ElementAttribute.CreateDate,
                 value: Convert.ToString(value: modifiedCreateDateTime,
-                                        provider: CultureInfo.CurrentUICulture),
+                    provider: CultureInfo.CurrentUICulture),
                 version: dirElemVersion,
                 isMarkedForDeletion: false);
             return true;
@@ -755,14 +755,14 @@ public partial class FrmPasteWhat : Form
     }
 
 
-    private void btn_Cancel_Click(object sender,
-                                  EventArgs e)
+    private void btn_Generic_Cancel_Click(object sender,
+        EventArgs e)
     {
         Hide();
     }
 
     private void btn_AllData_All_Click(object sender,
-                                       EventArgs e)
+        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c =
@@ -775,7 +775,7 @@ public partial class FrmPasteWhat : Form
     }
 
     private void btn_AllData_None_Click(object sender,
-                                        EventArgs e)
+        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c =
@@ -789,7 +789,7 @@ public partial class FrmPasteWhat : Form
 
 
     private void btn_PullMostRecentPasteSettings_Click(object sender,
-                                                       EventArgs e)
+        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c =
@@ -804,7 +804,7 @@ public partial class FrmPasteWhat : Form
 #region GPSData
 
     private void btn_GPSData_All_Click(object sender,
-                                       EventArgs e)
+        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
@@ -824,7 +824,7 @@ public partial class FrmPasteWhat : Form
     }
 
     private void btn_GPSData_None_Click(object sender,
-                                        EventArgs e)
+        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
@@ -848,7 +848,7 @@ public partial class FrmPasteWhat : Form
 #region LocationData
 
     private void btn_LocationData_All_Click(object sender,
-                                            EventArgs e)
+        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
@@ -869,7 +869,7 @@ public partial class FrmPasteWhat : Form
 
 
     private void btn_LocationData_None_Click(object sender,
-                                             EventArgs e)
+        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
@@ -893,7 +893,7 @@ public partial class FrmPasteWhat : Form
 #region DateTimes
 
     private void btn_Dates_All_Click(object sender,
-                                     EventArgs e)
+        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
@@ -913,7 +913,7 @@ public partial class FrmPasteWhat : Form
     }
 
     private void btn_Dates_None_Click(object sender,
-                                      EventArgs e)
+        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
@@ -934,7 +934,7 @@ public partial class FrmPasteWhat : Form
 
 
     private void ckb_TakenDate_CheckedChanged(object sender,
-                                              EventArgs e)
+        EventArgs e)
     {
         rbt_PasteTakenDateActual.Enabled = ckb_TakenDate.Checked;
         if (ckb_TakenDate.Checked)
@@ -946,7 +946,7 @@ public partial class FrmPasteWhat : Form
     }
 
     private void ckb_CreateDate_CheckedChanged(object sender,
-                                               EventArgs e)
+        EventArgs e)
     {
         rbt_PasteCreateDateActual.Enabled = ckb_CreateDate.Checked;
         if (ckb_CreateDate.Checked)
@@ -959,7 +959,7 @@ public partial class FrmPasteWhat : Form
 
 
     private void rbt_PasteTakenDateShift_CheckedChanged(object sender,
-                                                        EventArgs e)
+        EventArgs e)
     {
         if (rbt_PasteTakenDateShift.Checked)
         {
@@ -1021,11 +1021,13 @@ public partial class FrmPasteWhat : Form
             {
                 rbt_PasteTakenDateActual.Checked = true;
                 CustomMessageBox customMessageBox = new(
-                    text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                        messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
+                    text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: "mbx_FrmPasteWhat_NoDateShiftToPaste",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
                     caption: HelperControlAndMessageBoxHandling
-                       .GenericGetMessageBoxCaption(
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString()),
+                       .ReturnControlText(
+                            controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString(),
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                     buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Information);
                 customMessageBox.ShowDialog();
@@ -1034,7 +1036,7 @@ public partial class FrmPasteWhat : Form
     }
 
     private void rbt_PasteCreateDateShift_CheckedChanged(object sender,
-                                                         EventArgs e)
+        EventArgs e)
     {
         bool createDateShiftDataExists = false;
 
@@ -1091,11 +1093,13 @@ public partial class FrmPasteWhat : Form
         {
             rbt_PasteCreateDateActual.Checked = true;
             CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                    messageBoxName: "mbx_FrmPasteWhat_NoDateShiftToPaste"),
-                caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Information.ToString()),
+                text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmPasteWhat_NoDateShiftToPaste",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                                                                   .Information.ToString(),
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Information);
             customMessageBox.ShowDialog();

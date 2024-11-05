@@ -171,7 +171,7 @@ internal static class HelperExifReadTrackFile
                                     ElementAttribute.Country,
                                     ElementAttribute.City,
                                     ElementAttribute.State,
-                                    ElementAttribute.Sub_location
+                                    ElementAttribute.Sublocation
                                 };
 
                                 DirectoryElement dirElemFileToModify =
@@ -367,9 +367,9 @@ internal static class HelperExifReadTrackFile
                                                      dtToponomy.Rows[index: 0][
                                                              columnName: "State"]
                                                         .ToString()),
-                                                    (ElementAttribute.Sub_location,
+                                                    (ElementAttribute.Sublocation,
                                                      dtToponomy.Rows[index: 0][
-                                                             columnName: "Sub_location"]
+                                                             columnName: "Sublocation"]
                                                         .ToString())
                                                 };
 
@@ -420,11 +420,13 @@ internal static class HelperExifReadTrackFile
         }
 
         CustomMessageBox customMessageBox = new(
-            text: HelperControlAndMessageBoxHandling.GenericGetMessageBoxText(
-                messageBoxName: "mbx_FrmImportExportGpx_AskUserWantsReport"),
-            caption: HelperControlAndMessageBoxHandling.GenericGetMessageBoxCaption(
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question
-                                                               .ToString()),
+            text: HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: "mbx_FrmImportExportGpx_AskUserWantsReport",
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+            caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question
+                                                               .ToString(),
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
             buttons: MessageBoxButtons.YesNo,
             icon: MessageBoxIcon.Question);
         DialogResult dialogResult = customMessageBox.ShowDialog();

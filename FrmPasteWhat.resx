@@ -118,6 +118,889 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btn_Generic_OK.Location" type="System.Drawing.Point, System.Drawing">
+    <value>627, 607</value>
+  </data>
+  <data name="btn_Generic_OK.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="btn_Generic_OK.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="btn_Generic_OK.Text" xml:space="preserve">
+    <value>btn_Generic_OK</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_OK.Name" xml:space="preserve">
+    <value>btn_Generic_OK</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_OK.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_OK.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_OK.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="btn_Generic_Cancel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>708, 607</value>
+  </data>
+  <data name="btn_Generic_Cancel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btn_Generic_Cancel.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="btn_Generic_Cancel.Text" xml:space="preserve">
+    <value>btn_Generic_Cancel</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_Cancel.Name" xml:space="preserve">
+    <value>btn_Generic_Cancel</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_Cancel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_Cancel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btn_Generic_Cancel.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="ckb_Sublocation.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_Sublocation.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 131</value>
+  </data>
+  <data name="ckb_Sublocation.Size" type="System.Drawing.Size, System.Drawing">
+    <value>112, 17</value>
+  </data>
+  <data name="ckb_Sublocation.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="ckb_Sublocation.Text" xml:space="preserve">
+    <value>ckb_Sublocation</value>
+  </data>
+  <data name="&gt;&gt;ckb_Sublocation.Name" xml:space="preserve">
+    <value>ckb_Sublocation</value>
+  </data>
+  <data name="&gt;&gt;ckb_Sublocation.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_Sublocation.Parent" xml:space="preserve">
+    <value>gbx_LocationData</value>
+  </data>
+  <data name="&gt;&gt;ckb_Sublocation.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="ckb_State.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_State.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 98</value>
+  </data>
+  <data name="ckb_State.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 17</value>
+  </data>
+  <data name="ckb_State.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="ckb_State.Text" xml:space="preserve">
+    <value>ckb_State</value>
+  </data>
+  <data name="&gt;&gt;ckb_State.Name" xml:space="preserve">
+    <value>ckb_State</value>
+  </data>
+  <data name="&gt;&gt;ckb_State.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_State.Parent" xml:space="preserve">
+    <value>gbx_LocationData</value>
+  </data>
+  <data name="&gt;&gt;ckb_State.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="ckb_Country.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_Country.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 65</value>
+  </data>
+  <data name="ckb_Country.Size" type="System.Drawing.Size, System.Drawing">
+    <value>86, 17</value>
+  </data>
+  <data name="ckb_Country.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="ckb_Country.Text" xml:space="preserve">
+    <value>ckb_Country</value>
+  </data>
+  <data name="&gt;&gt;ckb_Country.Name" xml:space="preserve">
+    <value>ckb_Country</value>
+  </data>
+  <data name="&gt;&gt;ckb_Country.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_Country.Parent" xml:space="preserve">
+    <value>gbx_LocationData</value>
+  </data>
+  <data name="&gt;&gt;ckb_Country.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="btn_LocationData_None.Location" type="System.Drawing.Point, System.Drawing">
+    <value>272, 158</value>
+  </data>
+  <data name="btn_LocationData_None.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btn_LocationData_None.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="btn_LocationData_None.Text" xml:space="preserve">
+    <value>btn_LocationData_None</value>
+  </data>
+  <data name="&gt;&gt;btn_LocationData_None.Name" xml:space="preserve">
+    <value>btn_LocationData_None</value>
+  </data>
+  <data name="&gt;&gt;btn_LocationData_None.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_LocationData_None.Parent" xml:space="preserve">
+    <value>gbx_LocationData</value>
+  </data>
+  <data name="&gt;&gt;btn_LocationData_None.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="btn_LocationData_All.Location" type="System.Drawing.Point, System.Drawing">
+    <value>191, 158</value>
+  </data>
+  <data name="btn_LocationData_All.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btn_LocationData_All.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="btn_LocationData_All.Text" xml:space="preserve">
+    <value>btn_LocationData_All</value>
+  </data>
+  <data name="&gt;&gt;btn_LocationData_All.Name" xml:space="preserve">
+    <value>btn_LocationData_All</value>
+  </data>
+  <data name="&gt;&gt;btn_LocationData_All.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_LocationData_All.Parent" xml:space="preserve">
+    <value>gbx_LocationData</value>
+  </data>
+  <data name="&gt;&gt;btn_LocationData_All.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="ckb_City.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_City.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 32</value>
+  </data>
+  <data name="ckb_City.Size" type="System.Drawing.Size, System.Drawing">
+    <value>67, 17</value>
+  </data>
+  <data name="ckb_City.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="ckb_City.Text" xml:space="preserve">
+    <value>ckb_City</value>
+  </data>
+  <data name="&gt;&gt;ckb_City.Name" xml:space="preserve">
+    <value>ckb_City</value>
+  </data>
+  <data name="&gt;&gt;ckb_City.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_City.Parent" xml:space="preserve">
+    <value>gbx_LocationData</value>
+  </data>
+  <data name="&gt;&gt;ckb_City.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="gbx_LocationData.Location" type="System.Drawing.Point, System.Drawing">
+    <value>26, 383</value>
+  </data>
+  <data name="gbx_LocationData.Size" type="System.Drawing.Size, System.Drawing">
+    <value>386, 199</value>
+  </data>
+  <data name="gbx_LocationData.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="gbx_LocationData.Text" xml:space="preserve">
+    <value>gbx_LocationData</value>
+  </data>
+  <data name="&gt;&gt;gbx_LocationData.Name" xml:space="preserve">
+    <value>gbx_LocationData</value>
+  </data>
+  <data name="&gt;&gt;gbx_LocationData.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gbx_LocationData.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;gbx_LocationData.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="ckb_GPSDestLongitude.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_GPSDestLongitude.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 196</value>
+  </data>
+  <data name="ckb_GPSDestLongitude.Size" type="System.Drawing.Size, System.Drawing">
+    <value>141, 17</value>
+  </data>
+  <data name="ckb_GPSDestLongitude.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="ckb_GPSDestLongitude.Text" xml:space="preserve">
+    <value>ckb_GPSDestLongitude</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSDestLongitude.Name" xml:space="preserve">
+    <value>ckb_GPSDestLongitude</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSDestLongitude.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSDestLongitude.Parent" xml:space="preserve">
+    <value>gbx_GPSData</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSDestLongitude.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="ckb_GPSSpeed.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_GPSSpeed.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 278</value>
+  </data>
+  <data name="ckb_GPSSpeed.Size" type="System.Drawing.Size, System.Drawing">
+    <value>103, 17</value>
+  </data>
+  <data name="ckb_GPSSpeed.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="ckb_GPSSpeed.Text" xml:space="preserve">
+    <value>ckb_GPSSpeed</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSSpeed.Name" xml:space="preserve">
+    <value>ckb_GPSSpeed</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSSpeed.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSSpeed.Parent" xml:space="preserve">
+    <value>gbx_GPSData</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSSpeed.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="ckb_GPSImgDirection.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_GPSImgDirection.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 237</value>
+  </data>
+  <data name="ckb_GPSImgDirection.Size" type="System.Drawing.Size, System.Drawing">
+    <value>131, 17</value>
+  </data>
+  <data name="ckb_GPSImgDirection.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="ckb_GPSImgDirection.Text" xml:space="preserve">
+    <value>ckb_GPSImgDirection</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSImgDirection.Name" xml:space="preserve">
+    <value>ckb_GPSImgDirection</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSImgDirection.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSImgDirection.Parent" xml:space="preserve">
+    <value>gbx_GPSData</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSImgDirection.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="ckb_GPSDestLatitude.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_GPSDestLatitude.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 155</value>
+  </data>
+  <data name="ckb_GPSDestLatitude.Size" type="System.Drawing.Size, System.Drawing">
+    <value>132, 17</value>
+  </data>
+  <data name="ckb_GPSDestLatitude.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="ckb_GPSDestLatitude.Text" xml:space="preserve">
+    <value>ckb_GPSDestLatitude</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSDestLatitude.Name" xml:space="preserve">
+    <value>ckb_GPSDestLatitude</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSDestLatitude.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSDestLatitude.Parent" xml:space="preserve">
+    <value>gbx_GPSData</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSDestLatitude.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="ckb_GPSAltitude.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_GPSAltitude.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 114</value>
+  </data>
+  <data name="ckb_GPSAltitude.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 17</value>
+  </data>
+  <data name="ckb_GPSAltitude.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="ckb_GPSAltitude.Text" xml:space="preserve">
+    <value>ckb_GPSAltitude</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSAltitude.Name" xml:space="preserve">
+    <value>ckb_GPSAltitude</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSAltitude.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSAltitude.Parent" xml:space="preserve">
+    <value>gbx_GPSData</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSAltitude.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="ckb_GPSLongitude.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_GPSLongitude.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 73</value>
+  </data>
+  <data name="ckb_GPSLongitude.Size" type="System.Drawing.Size, System.Drawing">
+    <value>119, 17</value>
+  </data>
+  <data name="ckb_GPSLongitude.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="ckb_GPSLongitude.Text" xml:space="preserve">
+    <value>ckb_GPSLongitude</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSLongitude.Name" xml:space="preserve">
+    <value>ckb_GPSLongitude</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSLongitude.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSLongitude.Parent" xml:space="preserve">
+    <value>gbx_GPSData</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSLongitude.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="btn_GPSData_None.Location" type="System.Drawing.Point, System.Drawing">
+    <value>272, 305</value>
+  </data>
+  <data name="btn_GPSData_None.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btn_GPSData_None.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="btn_GPSData_None.Text" xml:space="preserve">
+    <value>btn_GPSData_None</value>
+  </data>
+  <data name="&gt;&gt;btn_GPSData_None.Name" xml:space="preserve">
+    <value>btn_GPSData_None</value>
+  </data>
+  <data name="&gt;&gt;btn_GPSData_None.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_GPSData_None.Parent" xml:space="preserve">
+    <value>gbx_GPSData</value>
+  </data>
+  <data name="&gt;&gt;btn_GPSData_None.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="btn_GPSData_All.Location" type="System.Drawing.Point, System.Drawing">
+    <value>191, 305</value>
+  </data>
+  <data name="btn_GPSData_All.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btn_GPSData_All.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="btn_GPSData_All.Text" xml:space="preserve">
+    <value>btn_GPSData_All</value>
+  </data>
+  <data name="&gt;&gt;btn_GPSData_All.Name" xml:space="preserve">
+    <value>btn_GPSData_All</value>
+  </data>
+  <data name="&gt;&gt;btn_GPSData_All.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_GPSData_All.Parent" xml:space="preserve">
+    <value>gbx_GPSData</value>
+  </data>
+  <data name="&gt;&gt;btn_GPSData_All.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="ckb_GPSLatitude.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_GPSLatitude.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 32</value>
+  </data>
+  <data name="ckb_GPSLatitude.Size" type="System.Drawing.Size, System.Drawing">
+    <value>110, 17</value>
+  </data>
+  <data name="ckb_GPSLatitude.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="ckb_GPSLatitude.Text" xml:space="preserve">
+    <value>ckb_GPSLatitude</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSLatitude.Name" xml:space="preserve">
+    <value>ckb_GPSLatitude</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSLatitude.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSLatitude.Parent" xml:space="preserve">
+    <value>gbx_GPSData</value>
+  </data>
+  <data name="&gt;&gt;ckb_GPSLatitude.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="gbx_GPSData.Location" type="System.Drawing.Point, System.Drawing">
+    <value>26, 30</value>
+  </data>
+  <data name="gbx_GPSData.Size" type="System.Drawing.Size, System.Drawing">
+    <value>386, 347</value>
+  </data>
+  <data name="gbx_GPSData.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="gbx_GPSData.Text" xml:space="preserve">
+    <value>gbx_GPSData</value>
+  </data>
+  <data name="&gt;&gt;gbx_GPSData.Name" xml:space="preserve">
+    <value>gbx_GPSData</value>
+  </data>
+  <data name="&gt;&gt;gbx_GPSData.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gbx_GPSData.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;gbx_GPSData.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="ckb_CreateDate.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_CreateDate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 29</value>
+  </data>
+  <data name="ckb_CreateDate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 17</value>
+  </data>
+  <data name="ckb_CreateDate.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="ckb_CreateDate.Text" xml:space="preserve">
+    <value>ckb_CreateDate</value>
+  </data>
+  <data name="&gt;&gt;ckb_CreateDate.Name" xml:space="preserve">
+    <value>ckb_CreateDate</value>
+  </data>
+  <data name="&gt;&gt;ckb_CreateDate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_CreateDate.Parent" xml:space="preserve">
+    <value>gbx_CreateDate</value>
+  </data>
+  <data name="&gt;&gt;ckb_CreateDate.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="rbt_PasteCreateDateShift.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbt_PasteCreateDateShift.Location" type="System.Drawing.Point, System.Drawing">
+    <value>41, 75</value>
+  </data>
+  <data name="rbt_PasteCreateDateShift.Size" type="System.Drawing.Size, System.Drawing">
+    <value>145, 17</value>
+  </data>
+  <data name="rbt_PasteCreateDateShift.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="rbt_PasteCreateDateShift.Text" xml:space="preserve">
+    <value>rbt_PasteCreateDateShift</value>
+  </data>
+  <data name="&gt;&gt;rbt_PasteCreateDateShift.Name" xml:space="preserve">
+    <value>rbt_PasteCreateDateShift</value>
+  </data>
+  <data name="&gt;&gt;rbt_PasteCreateDateShift.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbt_PasteCreateDateShift.Parent" xml:space="preserve">
+    <value>gbx_CreateDate</value>
+  </data>
+  <data name="&gt;&gt;rbt_PasteCreateDateShift.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="rbt_PasteCreateDateActual.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbt_PasteCreateDateActual.Location" type="System.Drawing.Point, System.Drawing">
+    <value>41, 52</value>
+  </data>
+  <data name="rbt_PasteCreateDateActual.Size" type="System.Drawing.Size, System.Drawing">
+    <value>154, 17</value>
+  </data>
+  <data name="rbt_PasteCreateDateActual.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="rbt_PasteCreateDateActual.Text" xml:space="preserve">
+    <value>rbt_PasteCreateDateActual</value>
+  </data>
+  <data name="&gt;&gt;rbt_PasteCreateDateActual.Name" xml:space="preserve">
+    <value>rbt_PasteCreateDateActual</value>
+  </data>
+  <data name="&gt;&gt;rbt_PasteCreateDateActual.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbt_PasteCreateDateActual.Parent" xml:space="preserve">
+    <value>gbx_CreateDate</value>
+  </data>
+  <data name="&gt;&gt;rbt_PasteCreateDateActual.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="gbx_CreateDate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>14, 140</value>
+  </data>
+  <data name="gbx_CreateDate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>333, 115</value>
+  </data>
+  <data name="gbx_CreateDate.TabIndex" type="System.Int32, mscorlib">
+    <value>24</value>
+  </data>
+  <data name="gbx_CreateDate.Text" xml:space="preserve">
+    <value>gbx_CreateDate</value>
+  </data>
+  <data name="&gt;&gt;gbx_CreateDate.Name" xml:space="preserve">
+    <value>gbx_CreateDate</value>
+  </data>
+  <data name="&gt;&gt;gbx_CreateDate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gbx_CreateDate.Parent" xml:space="preserve">
+    <value>gbx_Dates</value>
+  </data>
+  <data name="&gt;&gt;gbx_CreateDate.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="rbt_PasteTakenDateShift.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbt_PasteTakenDateShift.Location" type="System.Drawing.Point, System.Drawing">
+    <value>41, 78</value>
+  </data>
+  <data name="rbt_PasteTakenDateShift.Size" type="System.Drawing.Size, System.Drawing">
+    <value>145, 17</value>
+  </data>
+  <data name="rbt_PasteTakenDateShift.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="rbt_PasteTakenDateShift.Text" xml:space="preserve">
+    <value>rbt_PasteTakenDateShift</value>
+  </data>
+  <data name="&gt;&gt;rbt_PasteTakenDateShift.Name" xml:space="preserve">
+    <value>rbt_PasteTakenDateShift</value>
+  </data>
+  <data name="&gt;&gt;rbt_PasteTakenDateShift.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbt_PasteTakenDateShift.Parent" xml:space="preserve">
+    <value>gbx_TakenDate</value>
+  </data>
+  <data name="&gt;&gt;rbt_PasteTakenDateShift.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="rbt_PasteTakenDateActual.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rbt_PasteTakenDateActual.Location" type="System.Drawing.Point, System.Drawing">
+    <value>41, 55</value>
+  </data>
+  <data name="rbt_PasteTakenDateActual.Size" type="System.Drawing.Size, System.Drawing">
+    <value>154, 17</value>
+  </data>
+  <data name="rbt_PasteTakenDateActual.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="rbt_PasteTakenDateActual.Text" xml:space="preserve">
+    <value>rbt_PasteTakenDateActual</value>
+  </data>
+  <data name="&gt;&gt;rbt_PasteTakenDateActual.Name" xml:space="preserve">
+    <value>rbt_PasteTakenDateActual</value>
+  </data>
+  <data name="&gt;&gt;rbt_PasteTakenDateActual.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rbt_PasteTakenDateActual.Parent" xml:space="preserve">
+    <value>gbx_TakenDate</value>
+  </data>
+  <data name="&gt;&gt;rbt_PasteTakenDateActual.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="ckb_TakenDate.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_TakenDate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 32</value>
+  </data>
+  <data name="ckb_TakenDate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 17</value>
+  </data>
+  <data name="ckb_TakenDate.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="ckb_TakenDate.Text" xml:space="preserve">
+    <value>ckb_TakenDate</value>
+  </data>
+  <data name="&gt;&gt;ckb_TakenDate.Name" xml:space="preserve">
+    <value>ckb_TakenDate</value>
+  </data>
+  <data name="&gt;&gt;ckb_TakenDate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_TakenDate.Parent" xml:space="preserve">
+    <value>gbx_TakenDate</value>
+  </data>
+  <data name="&gt;&gt;ckb_TakenDate.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="gbx_TakenDate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>14, 19</value>
+  </data>
+  <data name="gbx_TakenDate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>333, 115</value>
+  </data>
+  <data name="gbx_TakenDate.TabIndex" type="System.Int32, mscorlib">
+    <value>23</value>
+  </data>
+  <data name="gbx_TakenDate.Text" xml:space="preserve">
+    <value>gbx_TakenDate</value>
+  </data>
+  <data name="&gt;&gt;gbx_TakenDate.Name" xml:space="preserve">
+    <value>gbx_TakenDate</value>
+  </data>
+  <data name="&gt;&gt;gbx_TakenDate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gbx_TakenDate.Parent" xml:space="preserve">
+    <value>gbx_Dates</value>
+  </data>
+  <data name="&gt;&gt;gbx_TakenDate.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="ckb_OffsetTime.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_OffsetTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>25, 270</value>
+  </data>
+  <data name="ckb_OffsetTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>101, 17</value>
+  </data>
+  <data name="ckb_OffsetTime.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="ckb_OffsetTime.Text" xml:space="preserve">
+    <value>ckb_OffsetTime</value>
+  </data>
+  <data name="&gt;&gt;ckb_OffsetTime.Name" xml:space="preserve">
+    <value>ckb_OffsetTime</value>
+  </data>
+  <data name="&gt;&gt;ckb_OffsetTime.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_OffsetTime.Parent" xml:space="preserve">
+    <value>gbx_Dates</value>
+  </data>
+  <data name="&gt;&gt;ckb_OffsetTime.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="btn_Dates_None.Location" type="System.Drawing.Point, System.Drawing">
+    <value>272, 305</value>
+  </data>
+  <data name="btn_Dates_None.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btn_Dates_None.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="btn_Dates_None.Text" xml:space="preserve">
+    <value>btn_Dates_None</value>
+  </data>
+  <data name="&gt;&gt;btn_Dates_None.Name" xml:space="preserve">
+    <value>btn_Dates_None</value>
+  </data>
+  <data name="&gt;&gt;btn_Dates_None.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_Dates_None.Parent" xml:space="preserve">
+    <value>gbx_Dates</value>
+  </data>
+  <data name="&gt;&gt;btn_Dates_None.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="btn_Dates_All.Location" type="System.Drawing.Point, System.Drawing">
+    <value>191, 305</value>
+  </data>
+  <data name="btn_Dates_All.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btn_Dates_All.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="btn_Dates_All.Text" xml:space="preserve">
+    <value>btn_Dates_All</value>
+  </data>
+  <data name="&gt;&gt;btn_Dates_All.Name" xml:space="preserve">
+    <value>btn_Dates_All</value>
+  </data>
+  <data name="&gt;&gt;btn_Dates_All.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_Dates_All.Parent" xml:space="preserve">
+    <value>gbx_Dates</value>
+  </data>
+  <data name="&gt;&gt;btn_Dates_All.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="gbx_Dates.Location" type="System.Drawing.Point, System.Drawing">
+    <value>436, 30</value>
+  </data>
+  <data name="gbx_Dates.Size" type="System.Drawing.Size, System.Drawing">
+    <value>386, 347</value>
+  </data>
+  <data name="gbx_Dates.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="gbx_Dates.Text" xml:space="preserve">
+    <value>gbx_Dates</value>
+  </data>
+  <data name="&gt;&gt;gbx_Dates.Name" xml:space="preserve">
+    <value>gbx_Dates</value>
+  </data>
+  <data name="&gt;&gt;gbx_Dates.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gbx_Dates.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;gbx_Dates.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="btn_AllData_None.Location" type="System.Drawing.Point, System.Drawing">
+    <value>436, 607</value>
+  </data>
+  <data name="btn_AllData_None.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btn_AllData_None.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="btn_AllData_None.Text" xml:space="preserve">
+    <value>btn_AllData_None</value>
+  </data>
+  <data name="&gt;&gt;btn_AllData_None.Name" xml:space="preserve">
+    <value>btn_AllData_None</value>
+  </data>
+  <data name="&gt;&gt;btn_AllData_None.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_AllData_None.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btn_AllData_None.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="btn_AllData_All.Location" type="System.Drawing.Point, System.Drawing">
+    <value>355, 607</value>
+  </data>
+  <data name="btn_AllData_All.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="btn_AllData_All.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="btn_AllData_All.Text" xml:space="preserve">
+    <value>btn_AllData_All</value>
+  </data>
+  <data name="&gt;&gt;btn_AllData_All.Name" xml:space="preserve">
+    <value>btn_AllData_All</value>
+  </data>
+  <data name="&gt;&gt;btn_AllData_All.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_AllData_All.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btn_AllData_All.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="btn_PullMostRecentPasteSettings.Location" type="System.Drawing.Point, System.Drawing">
+    <value>95, 607</value>
+  </data>
+  <data name="btn_PullMostRecentPasteSettings.Size" type="System.Drawing.Size, System.Drawing">
+    <value>197, 23</value>
+  </data>
+  <data name="btn_PullMostRecentPasteSettings.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <data name="btn_PullMostRecentPasteSettings.Text" xml:space="preserve">
+    <value>btn_PullMostRecentPasteSettings</value>
+  </data>
+  <data name="&gt;&gt;btn_PullMostRecentPasteSettings.Name" xml:space="preserve">
+    <value>btn_PullMostRecentPasteSettings</value>
+  </data>
+  <data name="&gt;&gt;btn_PullMostRecentPasteSettings.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_PullMostRecentPasteSettings.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btn_PullMostRecentPasteSettings.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>844, 642</value>
+  </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAYAAAAAAAEAIADGIQEAZgAAAICAAAABACAAKAgBACwiAQBAQAAAAQAgAChCAABUKgIAMDAAAAEA
@@ -3019,5 +3902,14 @@
         AAAAAAAAAAAAAAAAh1MyHk51rLQtxuquJYOKGgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAHAADAAwAA
         gAEAAIABAACAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAACAAQAAwAEAAMADAADABwAA8B8AAPw/AAA=
 </value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>FrmPasteWhat</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>FrmPasteWhat</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

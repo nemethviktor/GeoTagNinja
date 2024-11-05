@@ -37,7 +37,7 @@ internal static class HelperExifExifToolOperator
     {
         int lviIndex = 0;
         _exifInvokeCounter += 1;
-        FrmMainApp.Logger.Trace(message: "Start EXIF Tool number " +
+        FrmMainApp.Log.Trace(message: "Start EXIF Tool number " +
                                          _exifInvokeCounter +
                                          " for " +
                                          initiator +
@@ -127,7 +127,7 @@ internal static class HelperExifExifToolOperator
                                 FrmMainApp.HandlerUpdateLabelText(
                                     label: frmMainAppInstance.lbl_ParseProgress,
                                     text: "Processing: " + fileNameWithoutPath);
-                                FrmMainApp.Logger.Debug(
+                                FrmMainApp.Log.Debug(
                                     message: "Writing " +
                                              fileNameWithoutPath +
                                              " [this is via OutputDataReceived]");
@@ -219,9 +219,11 @@ internal static class HelperExifExifToolOperator
                                                               ? Environment.NewLine +
                                                                 Environment.NewLine +
                                                                 HelperControlAndMessageBoxHandling
-                                                                   .GenericGetMessageBoxText(
-                                                                        messageBoxName:
-                                                                        "mbx_GenericPathLikelyUTF")
+                                                                   .ReturnControlText(
+                                                                        controlName:
+                                                                        "mbx_GenericPathLikelyUTF",
+                                                                        fakeControlType:
+                                                                        HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox)
                                                               : ""));
                                 }
                             }
@@ -325,32 +327,32 @@ internal static class HelperExifExifToolOperator
                     break;
             }
 
-            FrmMainApp.Logger.Trace(message: "EXIF number " +
+            FrmMainApp.Log.Trace(message: "EXIF number " +
                                              _exifInvokeCounter +
                                              ": Start");
             prcExifTool.Start();
             prcExifTool.BeginOutputReadLine();
             prcExifTool.BeginErrorReadLine();
-            FrmMainApp.Logger.Trace(message: "EXIF number " +
+            FrmMainApp.Log.Trace(message: "EXIF number " +
                                              _exifInvokeCounter +
                                              ": Wait for Exit");
             prcExifTool.WaitForExit();
-            FrmMainApp.Logger.Trace(message: "EXIF number " +
+            FrmMainApp.Log.Trace(message: "EXIF number " +
                                              _exifInvokeCounter +
                                              ": Close");
             prcExifTool.Close();
-            FrmMainApp.Logger.Trace(message: "Closing exifTool");
+            FrmMainApp.Log.Trace(message: "Closing exifTool");
 
             // if still here then exorcise
             try
             {
-                FrmMainApp.Logger.Trace(message: "Killing exifTool");
+                FrmMainApp.Log.Trace(message: "Killing exifTool");
                 prcExifTool.Kill();
             }
             catch
             {
                 // "funnily" enough this seems to persist for some reason. Unsure why.
-                FrmMainApp.Logger.Error(message: "Killing exifTool failed");
+                FrmMainApp.Log.Error(message: "Killing exifTool failed");
             }
         });
     }
