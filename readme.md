@@ -1,3 +1,4 @@
+[![Translation status](https://hosted.weblate.org/widget/geotagninja/svg-badge.svg)](https://hosted.weblate.org/engage/geotagninja/)
 
 # Welcome to GeoTagNinja
 
@@ -81,9 +82,14 @@ For the "main" project you should be okay without anything separate. It has work
 
 There is currently no preset release cycle. I don't expect one to happen in a systematic way.
 
-## Pull Requests
+## Translations, Contributions & Pull Requests
 
-I'm generally happy for anyone competent to add pull requests but I don't always sync the commits as they come with GitHub until there is an actual release - it's therefore possible that my local commits are lightyears away from the public ones. If you'd like to do a pull request, drop a message/open a ticket first please and we can sync the details.
+The project is now available for translation via [Weblate](https://hosted.weblate.org/engage/geotagninja/) - any translations and new additions (new languages) will sync to the project and be included in future builds.
+
+As for code updates, I'm generally happy for anyone competent to add pull requests but I don't always sync the commits as they come with GitHub until there is an actual release - it's therefore possible that my local commits are lightyears away from the public ones. If you'd like to do a pull request, drop a message/open a ticket first please and we can sync the details.
+
+### Translation Progress
+[![Translation status](https://hosted.weblate.org/widget/geotagninja/multi-auto.svg)](https://hosted.weblate.org/engage/geotagninja/)
 
 ## Known Issues
 
