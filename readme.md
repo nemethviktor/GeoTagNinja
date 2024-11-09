@@ -91,6 +91,7 @@ As for code updates, I'm generally happy for anyone competent to add pull reques
 ### Translation Progress
 [![Translation status](https://hosted.weblate.org/widget/geotagninja/multi-auto.svg)](https://hosted.weblate.org/engage/geotagninja/)
 
+
 ## Known Issues
 
 - There is a likelihood that the app will struggle to read file data if your files are kept in folders with accent marks (umlauts, non-standard English, Asian, Russian, Unicode, etc. characters) in the path and/or filename. This is a limitation of ExifTool + cmd. If you encounter a problem, move your files to something like "C:\temp" and see if it works better.
