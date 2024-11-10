@@ -51,7 +51,7 @@ public partial class FrmImportExportGpx : Form
         lbl_importFromAnotherFolder.Enabled = false;
         ckb_OverlayGPXForSelectedDatesOnly.Enabled = false;
 
-        rbt_importFromCurrentFolder.Enabled = !Program.collectionModeEnabled;
+        rbt_importFromCurrentFolder.Enabled = !Program.CollectionModeEnabled;
 
         HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
 

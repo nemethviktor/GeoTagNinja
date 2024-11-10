@@ -10,20 +10,26 @@ namespace GeoTagNinja;
 
 internal static class Program
 {
-    public static string collectionFileLocation = null;
-    public static bool collectionModeEnabled = false;
+    private const string PipeErrorAbandonedMutexException = "AbandonedMutexException";
+    private const string PipeErrorConnectionTimeout = "Connection timed out: ";
+    private const string PipeErrorIoError = "IO Error: ";
+    private const string PipeErrorAccessDenied = "Access Denied: ";
+    private const string PipeErrorCouldNotConnect = "Could not connect to other GTN instance";
+    private const string PipeErrorUnexpectedError = "Unexpected Error: ";
+    public static string CollectionFileLocation;
+    public static bool CollectionModeEnabled;
 
-    public static string singleInstance_PipeName = "GeoTagNinjaSingleInstance";
+    public const string SingleInstancePipeName = "GeoTagNinjaSingleInstance";
 
     /// <summary>
-    /// If true, this is the "first" instance of the program
+    ///     If true, this is the "first" instance of the program
     /// </summary>
-    public static bool singleInstance_Highlander = false;
+    public static bool SingleInstanceHighlander;
 
     /// <summary>
-    /// A Mutex that is held by the first instance of the application
+    ///     A Mutex that is held by the first instance of the application
     /// </summary>
-    static Mutex singleInstance_Mutext = new Mutex(false, "GeoTagNinja.SingleInstance");
+    private static Mutex _singleInstanceMutex = new(initiallyOwned: false, name: "GeoTagNinja.SingleInstance");
 
     /// <summary>
     ///     The main entry point for the application.
@@ -40,63 +46,95 @@ internal static class Program
             {
                 if (File.Exists(path: o.Collection))
                 {
-                    collectionFileLocation = o.Collection;
-                    collectionModeEnabled = true;
+                    CollectionFileLocation = o.Collection;
+                    CollectionModeEnabled = true;
                 }
             });
 
         // Brief wait in case current instance is exiting
         try
         {
-            singleInstance_Highlander = singleInstance_Mutext.WaitOne(1000);
+            SingleInstanceHighlander = _singleInstanceMutex.WaitOne(millisecondsTimeout: 1000);
         }
-        catch (AbandonedMutexException) {
+        catch (AbandonedMutexException)
+        {
             // Other application did not release Mutex properly
-            Console.WriteLine("AbandonedMutexException");
+            MessageBox.Show(text: PipeErrorAbandonedMutexException);
         }
 
-        if (!singleInstance_Highlander)
+        if (!SingleInstanceHighlander)
         {
-            passInfoToRunningInstance();
-        } else
+            PassInfoToRunningInstance();
+        }
+        else
         {
             Application.Run(mainForm: new FrmMainApp());
-            singleInstance_Mutext.ReleaseMutex();
+            _singleInstanceMutex.ReleaseMutex();
         }
     }
 
 
     /// <summary>
-    /// Passes information to the already running first instance of
-    /// GTN using a named pipe.
+    ///     Passes information to the already running first instance of
+    ///     GTN using a named pipe.
     /// </summary>
-    private static void passInfoToRunningInstance()
+    private static void PassInfoToRunningInstance()
     {
-        NamedPipeClientStream pipeClient = new NamedPipeClientStream(
-            ".", singleInstance_PipeName, PipeDirection.Out, PipeOptions.None,
-            TokenImpersonationLevel.Identification);
+        NamedPipeClientStream pipeClient = new(
+            serverName: ".", pipeName: SingleInstancePipeName, direction: PipeDirection.Out, options: PipeOptions.None,
+            impersonationLevel: TokenImpersonationLevel.Identification);
 
         try
         {
-            pipeClient.Connect(3000);
-        } catch (TimeoutException) {
+            pipeClient.Connect(timeout: 3000);
+        }
+        catch (TimeoutException ex)
+        {
+            MessageBox.Show(text: PipeErrorConnectionTimeout + ex.Message);
+            return;
+        }
+        catch (IOException ex)
+        {
+            MessageBox.Show(text: PipeErrorIoError + ex.Message);
+            return;
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            MessageBox.Show(text: PipeErrorAccessDenied + ex.Message);
+            return;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(text: PipeErrorUnexpectedError + ex.Message);
+            return;
         }
 
         // Could not get hold of server - abort
         if (!pipeClient.IsConnected)
         {
-            Console.WriteLine("Could not connect to other GTN instance");
+            MessageBox.Show(text: PipeErrorCouldNotConnect);
             return;
         }
 
-        using (StreamWriter streamer = new StreamWriter(pipeClient))
+        try
         {
-            streamer.WriteLine("Test");
+            using StreamWriter streamer = new(stream: pipeClient);
+            streamer.WriteLine(value: "Could not connect to other GTN instance");
             streamer.Flush();
             streamer.Close();
         }
-
-        pipeClient.Close();
+        catch (IOException ex)
+        {
+            MessageBox.Show(text: PipeErrorIoError + ex.Message);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(text: PipeErrorUnexpectedError + ex.Message);
+        }
+        finally
+        {
+            pipeClient.Close();
+        }
     }
 
 

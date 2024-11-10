@@ -304,7 +304,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         if (collectionModeEnabled)
         {
             List<string> filesInCollection = new();
-            foreach (string collectItemWithPath in File.ReadLines(path: Program.collectionFileLocation))
+            foreach (string collectItemWithPath in File.ReadLines(path: Program.CollectionFileLocation))
             {
                 if (File.Exists(path: collectItemWithPath))
                 {

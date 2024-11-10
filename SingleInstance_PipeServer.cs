@@ -104,8 +104,8 @@ internal class SingleInstance_PipeServer
         {
             // Note: has to be set to async, as otherwise cancelation token
             // is ignored, cf. https://stackoverflow.com/questions/53695427/cancellationtoken-not-working-with-waitforconnectionasync
-            NamedPipeServerStream npServer = new NamedPipeServerStream(
-                pipeName: Program.singleInstance_PipeName, direction: PipeDirection.In,
+            NamedPipeServerStream npServer = new(
+                pipeName: Program.SingleInstancePipeName, direction: PipeDirection.In,
                 maxNumberOfServerInstances: 1,
                 transmissionMode: PipeTransmissionMode.Byte,
                 options: PipeOptions.Asynchronous, inBufferSize: 0, outBufferSize: 0,

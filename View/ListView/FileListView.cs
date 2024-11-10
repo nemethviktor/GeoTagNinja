@@ -939,7 +939,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         // so now that we don't clear the DE collection we actually need to make sure these items exist in the current folder/scope.
         foreach (DirectoryElement directoryElement in DirectoryElements)
         {
-            if ((directoryElement.Type == DirectoryElement.ElementType.File && Program.collectionModeEnabled) ||
+            if ((directoryElement.Type == DirectoryElement.ElementType.File && Program.CollectionModeEnabled) ||
                 (directoryElement.Type == DirectoryElement.ElementType.File && File.Exists(
                     path: Path.Combine(path1: FrmMainApp.FolderName, path2: directoryElement.ItemNameWithoutPath))) ||
                 (directoryElement.Type == DirectoryElement.ElementType.SubDirectory &&
@@ -950,7 +950,7 @@ public partial class FileListView : System.Windows.Forms.ListView
                  directoryElement.Type == DirectoryElement.ElementType.Drive))
             {
                 AddListItem(directoryElement: directoryElement);
-                if ((directoryElement.Type == DirectoryElement.ElementType.File && Program.collectionModeEnabled) ||
+                if ((directoryElement.Type == DirectoryElement.ElementType.File && Program.CollectionModeEnabled) ||
                     (directoryElement.Type == DirectoryElement.ElementType.File && File.Exists(
                         path: Path.Combine(path1: FrmMainApp.FolderName, path2: directoryElement.ItemNameWithoutPath))))
                 {

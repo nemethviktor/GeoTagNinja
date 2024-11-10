@@ -176,13 +176,13 @@ public partial class FrmMainApp : Form
         int procID = Process.GetCurrentProcess()
                             .Id;
         Log.Info(message: "Constructor: Starting GTN with process ID " + procID);
-        Log.Info(message: "Collection mode: " + Program.collectionModeEnabled);
-        if (Program.collectionModeEnabled)
+        Log.Info(message: "Collection mode: " + Program.CollectionModeEnabled);
+        if (Program.CollectionModeEnabled)
         {
-            Log.Info(message: "Collection source: " + Program.collectionFileLocation);
+            Log.Info(message: "Collection source: " + Program.CollectionFileLocation);
         }
 
-        if (Program.singleInstance_Highlander)
+        if (Program.SingleInstanceHighlander)
         {
             NamedPipeServer =
                 new SingleInstance_PipeServer(messageCallback: PipeCmd_ShowMessage);
@@ -331,7 +331,7 @@ public partial class FrmMainApp : Form
         wbv_MapArea.CoreWebView2InitializationCompleted +=
             webView_CoreWebView2InitializationCompleted;
 
-        if (!Program.collectionModeEnabled)
+        if (!Program.CollectionModeEnabled)
         {
             HelperGenericAppStartup.AppSetupInitialiseStartupFolder(
                 toolStripTextBox: tbx_FolderName);
@@ -1710,7 +1710,7 @@ public partial class FrmMainApp : Form
            .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
         if (HelperVariables.OperationChangeFolderIsOkay)
         {
-            if (!Program.collectionModeEnabled)
+            if (!Program.CollectionModeEnabled)
             {
                 if (Directory.Exists(path: tbx_FolderName.Text))
                 {
@@ -2464,9 +2464,9 @@ public partial class FrmMainApp : Form
         // Clear Tables that keep track of the current folder...
         Log.Trace(message: "Clear OriginalTakenDateDict and OriginalCreateDateDict");
 
-        tbx_FolderName.Enabled = !Program.collectionModeEnabled;
+        tbx_FolderName.Enabled = !Program.CollectionModeEnabled;
 
-        if (Program.collectionModeEnabled)
+        if (Program.CollectionModeEnabled)
         {
             Log.Trace(message: "FolderName: disabled - using collectionModeEnabled");
             tbx_FolderName.Text =
@@ -2474,13 +2474,13 @@ public partial class FrmMainApp : Form
 
             // Load data (and add to DEs)
             DirectoryElements.ParseFolderOrFileListToDEs(
-                folderOrCollectionFileName: Program.collectionFileLocation,
+                folderOrCollectionFileName: Program.CollectionFileLocation,
                 statusMethod: delegate(string statusText)
                 {
                     HandlerUpdateLabelText(label: lbl_ParseProgress,
                         text: statusText);
                 },
-                collectionModeEnabled: Program.collectionModeEnabled);
+                collectionModeEnabled: Program.CollectionModeEnabled);
         }
         // not collectionModeEnabled
         else
@@ -2512,7 +2512,7 @@ public partial class FrmMainApp : Form
                         HandlerUpdateLabelText(label: lbl_ParseProgress,
                             text: statusText);
                     },
-                    collectionModeEnabled: Program.collectionModeEnabled);
+                    collectionModeEnabled: Program.CollectionModeEnabled);
             }
         }
 

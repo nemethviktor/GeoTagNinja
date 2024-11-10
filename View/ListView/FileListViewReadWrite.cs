@@ -259,7 +259,7 @@ internal static class FileListViewReadWrite
         int DEFilesWithGeoDataCount = 0;
         foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
         {
-            if ((directoryElement.Type == DirectoryElement.ElementType.File && Program.collectionModeEnabled) ||
+            if ((directoryElement.Type == DirectoryElement.ElementType.File && Program.CollectionModeEnabled) ||
                 (directoryElement.Type == DirectoryElement.ElementType.File && File.Exists(
                     path: Path.Combine(path1: FrmMainApp.FolderName, path2: directoryElement.ItemNameWithoutPath))))
             {
