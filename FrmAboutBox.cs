@@ -39,21 +39,23 @@ internal partial class FrmAboutBox : Form
         Text = AssemblyTitle;
 
         tbx_Description.Text = AssemblyDescription;
-        List<(string text, string link)> aboutBoxEntries = new()
-        {
-            (AssemblyTitle, null),
-            ("Version/Build: " +
-             Assembly.GetExecutingAssembly()
-                     .GetName()
-                     .Version.Build.ToString(provider: CultureInfo.InvariantCulture) +
-             " [" +
-             buildDateTime.ToString(format: "yyyyMMdd:HHmm") +
-             "]", null),
-            ("Rights: " + AssemblyCopyright, null),
-            ("Written by: " + AssemblyCompany, null),
-            ("Paypal: ", "https://paypal.me/NemethV"),
-            ("GitHub: ", "https://github.com/nemethviktor/GeoTagNinja")
-        };
+        List<(string text, string link)> aboutBoxEntries =
+        [
+            (text: AssemblyTitle, link: null),
+            (text: "Version/Build: " +
+                   Assembly.GetExecutingAssembly()
+                           .GetName()
+                           .Version.Build.ToString(provider: CultureInfo.InvariantCulture) +
+                   " [" +
+                   buildDateTime.ToString(format: "yyyyMMdd:HHmm") +
+                   "]", link: null),
+
+            (text: "Rights: " + AssemblyCopyright, link: null),
+            (text: "Written by: " + AssemblyCompany, link: null),
+            (text: "Paypal: ", link: "https://paypal.me/NemethV"),
+            (text: "GitHub: ", link: "https://github.com/nemethviktor/GeoTagNinja"),
+            (text: "ExifTool Ver: " + HelperVariables.CurrentExifToolVersionLocal, link: null)
+        ];
         foreach ((string text, string link) in aboutBoxEntries)
         {
             AppendText(box: rtb_AboutBox, text: text, link: link);
@@ -67,7 +69,7 @@ internal partial class FrmAboutBox : Form
         set => base.Text = value;
     }
 
-    private void AppendText(RichTextBox box,
+    private static void AppendText(RichTextBox box,
         string text,
         string link = null)
     {
@@ -95,7 +97,7 @@ internal partial class FrmAboutBox : Form
     ///     If the AssemblyTitleAttribute is not found or the title is empty,
     ///     it returns the file name of the assembly without the extension.
     /// </summary>
-    private string AssemblyTitle
+    private static string AssemblyTitle
     {
         get
         {
@@ -124,19 +126,14 @@ internal partial class FrmAboutBox : Form
     ///     The assembly description is retrieved from the AssemblyDescriptionAttribute of the executing assembly.
     ///     If the AssemblyDescriptionAttribute is not found, an empty string is returned.
     /// </remarks>
-    private string AssemblyDescription
+    private static string AssemblyDescription
     {
         get
         {
             object[] attributes = Assembly.GetExecutingAssembly()
                                           .GetCustomAttributes(attributeType: typeof(AssemblyDescriptionAttribute),
                                                inherit: false);
-            if (attributes.Length == 0)
-            {
-                return "";
-            }
-
-            return ((AssemblyDescriptionAttribute)attributes[0]).Description;
+            return attributes.Length == 0 ? "" : ((AssemblyDescriptionAttribute)attributes[0]).Description;
         }
     }
 
@@ -153,12 +150,7 @@ internal partial class FrmAboutBox : Form
             object[] attributes = Assembly.GetExecutingAssembly()
                                           .GetCustomAttributes(attributeType: typeof(AssemblyProductAttribute),
                                                inherit: false);
-            if (attributes.Length == 0)
-            {
-                return "";
-            }
-
-            return ((AssemblyProductAttribute)attributes[0]).Product;
+            return attributes.Length == 0 ? "" : ((AssemblyProductAttribute)attributes[0]).Product;
         }
     }
 
@@ -168,19 +160,14 @@ internal partial class FrmAboutBox : Form
     /// <returns>
     ///     The copyright information if it exists; otherwise, an empty string.
     /// </returns>
-    private string AssemblyCopyright
+    private static string AssemblyCopyright
     {
         get
         {
             object[] attributes = Assembly.GetExecutingAssembly()
                                           .GetCustomAttributes(attributeType: typeof(AssemblyCopyrightAttribute),
                                                inherit: false);
-            if (attributes.Length == 0)
-            {
-                return "";
-            }
-
-            return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
+            return attributes.Length == 0 ? "" : ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
         }
     }
 
@@ -191,19 +178,14 @@ internal partial class FrmAboutBox : Form
     ///     The company information as a string. If no company information is found in the assembly, an empty string is
     ///     returned.
     /// </returns>
-    private string AssemblyCompany
+    private static string AssemblyCompany
     {
         get
         {
             object[] attributes = Assembly.GetExecutingAssembly()
                                           .GetCustomAttributes(attributeType: typeof(AssemblyCompanyAttribute),
                                                inherit: false);
-            if (attributes.Length == 0)
-            {
-                return "";
-            }
-
-            return ((AssemblyCompanyAttribute)attributes[0]).Company;
+            return attributes.Length == 0 ? "" : ((AssemblyCompanyAttribute)attributes[0]).Company;
         }
     }
 

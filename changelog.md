@@ -3,6 +3,7 @@
 **Build 9xxx [20241xxx]** 
 - NEW & UPDATED:
 	- I've moved the whole logic of languages being held in CSV files to RESx files.
+	- Added ExifTool version number to the info within the `About` Form/Box.
 - BUGS & FIXES:
 	- I've moved the startup methods to be async/awaited. Hopefully this will hide random occurrences of stuff like "tmi_Help". 
 
