@@ -99,53 +99,74 @@
   </resheader>
   <data name="tmi_File" xml:space="preserve">
     <value>File</value>
+    <comment>The File Menu</comment>
   </data>
   <data name="tmi_File_SaveAll" xml:space="preserve">
     <value>Save All</value>
+    <comment>Save All</comment>
   </data>
   <data name="tmi_File_EditFiles" xml:space="preserve">
     <value>Edit Files</value>
+    <comment>Edit Files Button</comment>
   </data>
   <data name="tmi_File_ImportExportGPX" xml:space="preserve">
     <value>Import/Export GPX/JSON Track Files</value>
+    <comment>Import/Export Track File</comment>
   </data>
   <data name="tmi_File_Quit" xml:space="preserve">
     <value>Quit</value>
+    <comment>Quit the program</comment>
   </data>
   <data name="tmi_Settings" xml:space="preserve">
     <value>Settings</value>
+    <comment>Settings Menu</comment>
   </data>
   <data name="tmi_Settings_Settings" xml:space="preserve">
     <value>Settings</value>
+    <comment>Open Settings Form</comment>
   </data>
   <data name="tmi_Help" xml:space="preserve">
     <value>Help</value>
+    <comment>Help Menu</comment>
   </data>
   <data name="tmi_Help_About" xml:space="preserve">
     <value>About</value>
+    <comment>Open About Box</comment>
   </data>
   <data name="tmi_File_CopyGeoData" xml:space="preserve">
     <value>Copy All Geodata</value>
+    <comment>Button to copy all geodata from a file (to the clipboard)</comment>
   </data>
   <data name="tmi_File_PasteGeoData" xml:space="preserve">
     <value>Paste All Geodata</value>
+    <comment>Button to paste all geodata from a file (from the clipboard)</comment>
   </data>
   <data name="cmi_ShowHideCols" xml:space="preserve">
     <value>Show or Hide Columns</value>
+    <comment>Form to let the user show or hide columns</comment>
   </data>
   <data name="cmi_removeCachedData" xml:space="preserve">
     <value>Remove Cached Data</value>
+    <comment>Remove all cached data for a selected file</comment>
   </data>
   <data name="tmi_Settings_Favourites" xml:space="preserve">
     <value>Manage Favourites</value>
+    <comment>Form to Manage Favs</comment>
   </data>
   <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
     <value>Open Coordinates in API</value>
+    <comment>Open the file's GPS coords in Browser</comment>
   </data>
   <data name="tmi_Help_FeedbackFeatureRequest" xml:space="preserve">
     <value>File a feature request (GitHub)</value>
+    <comment>Open Browser to GitHub and file a feature req.</comment>
   </data>
   <data name="tmi_Help_BugReport" xml:space="preserve">
     <value>File a bug report (GitHub)</value>
+    <comment>Open Browser to GitHub and file a bug report.</comment>
+  </data>
+  <data name="tmi_File_FlatMode" xml:space="preserve">
+    <value>Flat Mode (parse Subfolders)</value>
+    <comment>Enable Flat Mode. This will trigger parsing subfolders too.</comment>
   </data>
 </root>

@@ -88,6 +88,15 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel Pressed. Folder parsing has stopped but files that have been collected will be parsed..
+        /// </summary>
+        public static string lbl_CancelPressed {
+            get {
+                return ResourceManager.GetString("lbl_CancelPressed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show this many toponym options.
         /// </summary>
         public static string lbl_ChoiceOfferCount {
@@ -238,6 +247,42 @@ namespace GeoTagNinja.Resources.Languages {
         public static string lbl_ParseProgress_Write {
             get {
                 return ResourceManager.GetString("lbl_ParseProgress_Write", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parsing Files &amp;&amp; Folders, please wait. .
+        /// </summary>
+        public static string lbl_ParsingFolders {
+            get {
+                return ResourceManager.GetString("lbl_ParsingFolders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parsing Data:.
+        /// </summary>
+        public static string lbl_PleaseWaitBoxActionParsing {
+            get {
+                return ResourceManager.GetString("lbl_PleaseWaitBoxActionParsing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scanning File:.
+        /// </summary>
+        public static string lbl_PleaseWaitBoxActionScanning {
+            get {
+                return ResourceManager.GetString("lbl_PleaseWaitBoxActionScanning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Press Cancel to stop..
+        /// </summary>
+        public static string lbl_PressCancelToStop {
+            get {
+                return ResourceManager.GetString("lbl_PressCancelToStop", resourceCulture);
             }
         }
         

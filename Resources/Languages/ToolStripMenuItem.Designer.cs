@@ -115,6 +115,15 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Flat Mode (parse Subfolders).
+        /// </summary>
+        public static string tmi_File_FlatMode {
+            get {
+                return ResourceManager.GetString("tmi_File_FlatMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Import/Export GPX/JSON Track Files.
         /// </summary>
         public static string tmi_File_ImportExportGPX {

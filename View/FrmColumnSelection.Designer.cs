@@ -31,9 +31,9 @@
             this.clb_ColList = new System.Windows.Forms.CheckedListBox();
             this.lbl_SelectColsTitle = new System.Windows.Forms.Label();
             this.ckb_DeSelectAll = new System.Windows.Forms.CheckBox();
-            this.btn_Generic_Cancel = new System.Windows.Forms.Button();
+            this.btn_Cancel = new System.Windows.Forms.Button();
             this.tlp_Buttons = new System.Windows.Forms.TableLayoutPanel();
-            this.btn_Generic_OK = new System.Windows.Forms.Button();
+            this.btn_OK = new System.Windows.Forms.Button();
             this.tlp_Buttons.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -76,26 +76,26 @@
             this.ckb_DeSelectAll.UseVisualStyleBackColor = true;
             this.ckb_DeSelectAll.CheckedChanged += new System.EventHandler(this.ckb_DeSelectAll_CheckedChanged);
             // 
-            // btn_Generic_Cancel
+            // btn_Cancel
             // 
-            this.btn_Generic_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_Generic_Cancel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn_Generic_Cancel.Location = new System.Drawing.Point(0, 0);
-            this.btn_Generic_Cancel.Margin = new System.Windows.Forms.Padding(0);
-            this.btn_Generic_Cancel.Name = "btn_Generic_Cancel";
-            this.btn_Generic_Cancel.Size = new System.Drawing.Size(91, 23);
-            this.btn_Generic_Cancel.TabIndex = 3;
-            this.btn_Generic_Cancel.Text = "Cancel";
-            this.btn_Generic_Cancel.UseVisualStyleBackColor = true;
-            this.btn_Generic_Cancel.Click += new System.EventHandler(this.btn_Generic_Cancel_Click);
+            this.btn_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btn_Cancel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btn_Cancel.Location = new System.Drawing.Point(0, 0);
+            this.btn_Cancel.Margin = new System.Windows.Forms.Padding(0);
+            this.btn_Cancel.Name = "btn_Cancel";
+            this.btn_Cancel.Size = new System.Drawing.Size(91, 23);
+            this.btn_Cancel.TabIndex = 3;
+            this.btn_Cancel.Text = "Cancel";
+            this.btn_Cancel.UseVisualStyleBackColor = true;
+            this.btn_Cancel.Click += new System.EventHandler(this.btn_Generic_Cancel_Click);
             // 
             // tlp_Buttons
             // 
             this.tlp_Buttons.ColumnCount = 2;
             this.tlp_Buttons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlp_Buttons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlp_Buttons.Controls.Add(this.btn_Generic_Cancel, 0, 0);
-            this.tlp_Buttons.Controls.Add(this.btn_Generic_OK, 1, 0);
+            this.tlp_Buttons.Controls.Add(this.btn_Cancel, 0, 0);
+            this.tlp_Buttons.Controls.Add(this.btn_OK, 1, 0);
             this.tlp_Buttons.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tlp_Buttons.Location = new System.Drawing.Point(5, 264);
             this.tlp_Buttons.Margin = new System.Windows.Forms.Padding(0);
@@ -106,24 +106,24 @@
             this.tlp_Buttons.Size = new System.Drawing.Size(182, 23);
             this.tlp_Buttons.TabIndex = 4;
             // 
-            // btn_Generic_OK
+            // btn_OK
             // 
-            this.btn_Generic_OK.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btn_Generic_OK.Location = new System.Drawing.Point(91, 0);
-            this.btn_Generic_OK.Margin = new System.Windows.Forms.Padding(0);
-            this.btn_Generic_OK.Name = "btn_Generic_OK";
-            this.btn_Generic_OK.Size = new System.Drawing.Size(91, 23);
-            this.btn_Generic_OK.TabIndex = 4;
-            this.btn_Generic_OK.Text = "Ok";
-            this.btn_Generic_OK.UseVisualStyleBackColor = true;
-            this.btn_Generic_OK.Click += new System.EventHandler(this.btn_Generic_OK_Click);
+            this.btn_OK.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btn_OK.Location = new System.Drawing.Point(91, 0);
+            this.btn_OK.Margin = new System.Windows.Forms.Padding(0);
+            this.btn_OK.Name = "btn_OK";
+            this.btn_OK.Size = new System.Drawing.Size(91, 23);
+            this.btn_OK.TabIndex = 4;
+            this.btn_OK.Text = "Ok";
+            this.btn_OK.UseVisualStyleBackColor = true;
+            this.btn_OK.Click += new System.EventHandler(this.btn_Generic_OK_Click);
             // 
             // FrmColumnSelection
             // 
-            this.AcceptButton = this.btn_Generic_OK;
+            this.AcceptButton = this.btn_OK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.btn_Generic_Cancel;
+            this.CancelButton = this.btn_Cancel;
             this.ClientSize = new System.Drawing.Size(192, 292);
             this.ControlBox = false;
             this.Controls.Add(this.clb_ColList);
@@ -149,8 +149,8 @@
         private System.Windows.Forms.CheckedListBox clb_ColList;
         private System.Windows.Forms.Label lbl_SelectColsTitle;
         private System.Windows.Forms.CheckBox ckb_DeSelectAll;
-        private System.Windows.Forms.Button btn_Generic_Cancel;
+        private System.Windows.Forms.Button btn_Cancel;
         private System.Windows.Forms.TableLayoutPanel tlp_Buttons;
-        private System.Windows.Forms.Button btn_Generic_OK;
+        private System.Windows.Forms.Button btn_OK;
     }
 }

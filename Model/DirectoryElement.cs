@@ -28,7 +28,7 @@ public class DirectoryElement
         Unknown = 99
     }
 
-    internal static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
 
     /// <summary>
@@ -199,7 +199,7 @@ public class DirectoryElement
     /// <summary>
     ///     The sidecar file associated with this directory element.
     /// </summary>
-    public string SidecarFile { set; get; }
+    public FileInfo SidecarFile { set; get; }
 
 #endregion
 

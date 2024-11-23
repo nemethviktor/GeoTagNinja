@@ -1292,7 +1292,7 @@ internal static class HelperGenericAncillaryListsArrays
     ///     The extension must be in lower case due to its use in comparisons!
     ///     Dictionary Extension -> Description
     /// </summary>
-    internal static IDictionary<string, string> SideCarExtensions()
+    private static IDictionary<string, string> SideCarExtensions()
     {
         IDictionary<string, string> result = new Dictionary<string, string>
         {
@@ -1315,7 +1315,7 @@ internal static class HelperGenericAncillaryListsArrays
     internal static string[] GpxExtensions()
     {
         string[] result =
-        {
+        [
             "gpx", // GPX	
             "nmea", // NMEA (RMC, GGA, GLL and GSA sentences)	
             "kml", // KML	
@@ -1325,7 +1325,7 @@ internal static class HelperGenericAncillaryListsArrays
             "txt", // Winplus Beacon .TXT	
             "json", // Google Takeout .JSON	
             "csv" // GPS/IMU .CSV + // DJI .CSV + // ExifTool .CSV file	
-        };
+        ];
 
         return result;
     }

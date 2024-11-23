@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AutoUpdaterDotNET;
@@ -124,6 +125,10 @@ public partial class FrmMainApp : Form
 
     internal static readonly TaskbarManager TaskbarManagerInstance =
         TaskbarManager.Instance;
+
+    internal CancellationTokenSource _cts = new();
+    private CancellationToken _token;
+    internal static bool FlatMode;
 
 #endregion
 
@@ -248,35 +253,11 @@ public partial class FrmMainApp : Form
         try
         {
             Log.Debug(message: "Remove Stage 1 AttributeValues");
-
-            foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
-            {
-                {
-                    foreach (ElementAttribute attribute in (ElementAttribute[])
-                             Enum.GetValues(enumType: typeof(ElementAttribute)))
-                    {
-                        dirElemFileToModify.RemoveAttributeValue(
-                            attribute: attribute,
-                            version: DirectoryElement.AttributeVersion
-                                                     .Stage1EditFormIntraTabTransferQueue);
-                    }
-                }
-            }
-
-            Log.Debug(message: "Clear DtFileDataToWriteStage3ReadyToWrite");
-            foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
-            {
-                {
-                    foreach (ElementAttribute attribute in (ElementAttribute[])
-                             Enum.GetValues(enumType: typeof(ElementAttribute)))
-                    {
-                        dirElemFileToModify.RemoveAttributeValue(
-                            attribute: attribute,
-                            version: DirectoryElement.AttributeVersion
-                                                     .Stage3ReadyToWrite);
-                    }
-                }
-            }
+            DirectoryElements.CleanupAllDataInStage(
+                attributeVersion: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
+            Log.Debug(message: "Remove Stage 3 AttributeValues");
+            DirectoryElements.CleanupAllDataInStage(
+                attributeVersion: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
         }
         catch (Exception ex)
         {
@@ -2425,9 +2406,13 @@ public partial class FrmMainApp : Form
     ///     Also I've introduced a "Please Wait" Form to block the Main Form from being interacted with while the folder is
     ///     refreshing. Soz but needed.
     /// </summary>
-    private void lvw_FileList_LoadOrUpdate()
+    private async Task lvw_FileList_LoadOrUpdate()
     {
         Log.Info(message: "Starting");
+        // Initialize a new CancellationTokenSource
+
+        _cts = new CancellationTokenSource();
+        _token = _cts.Token;
 
         Log.Trace(message: "Clear lvw_FileList");
         lvw_FileList.ClearData();
@@ -2437,27 +2422,17 @@ public partial class FrmMainApp : Form
         HelperGenericFileLocking.FilesBeingProcessed.Clear();
         RemoveGeoDataIsRunning = false;
 
+
+        // ReSharper disable once InconsistentNaming
+        //FrmPleaseWaitBox frmPleaseWaitBox = new();
+        //frmPleaseWaitBox.Show();
+
     #region FrmPleaseWaitBox
 
-        Log.Trace(message: "Create FrmPleaseWaitBox");
-
-        Form FrmPleaseWaitBox = new()
-        {
-            ControlBox = false,
-            ShowInTaskbar = false,
-            Size = new Size(width: 300, height: 40),
-            Padding = new Padding(left: 4, top: 2, right: 2, bottom: 4),
-            Text = ReturnControlText(
-                fakeControlType: FakeControlTypes.Form,
-                controlName: "FrmPleaseWaitBox"
-            ),
-            StartPosition = FormStartPosition.CenterScreen
-        };
-
-        Log.Trace(message: "Show FrmPleaseWaitBox");
-        FrmPleaseWaitBox.Show();
-        Log.Trace(message: "Disable FrmMainApp");
+        FrmPleaseWaitBox frmPleaseWaitBox = new();
         Enabled = false;
+        frmPleaseWaitBox.Show();
+        // ReSharper disable once InconsistentNaming
 
     #endregion
 
@@ -2468,19 +2443,37 @@ public partial class FrmMainApp : Form
 
         if (Program.CollectionModeEnabled)
         {
-            Log.Trace(message: "FolderName: disabled - using collectionModeEnabled");
-            tbx_FolderName.Text =
-                @"** collectionMode enabled **"; // point here is that this doesn't exist and as such will block certain operations (like "go up one level"), which is what we want.
+            try
+            {
+                Log.Trace(message: "FolderName: disabled - using collectionModeEnabled");
+                tbx_FolderName.Text =
+                    @"** collectionMode enabled **"; // point here is that this doesn't exist and as such will block certain operations (like "go up one level"), which is what we want.
 
-            // Load data (and add to DEs)
-            DirectoryElements.ParseFolderOrFileListToDEs(
-                folderOrCollectionFileName: Program.CollectionFileLocation,
-                statusMethod: delegate(string statusText)
-                {
-                    HandlerUpdateLabelText(label: lbl_ParseProgress,
-                        text: statusText);
-                },
-                collectionModeEnabled: Program.CollectionModeEnabled);
+                // Load data (and add to DEs)
+                await DirectoryElements.ParseFolderOrFileListToDEsAsync(
+                    folderOrCollectionFileName: Program.CollectionFileLocation,
+                    processSubFolders: false,
+                    updateProgressHandler: delegate(string statusText)
+                    {
+                        Invoke(method: new Action(() =>
+                            HandlerUpdateLabelText(label: lbl_ParseProgress, text: statusText)));
+                    },
+                    collectionModeEnabled: Program.CollectionModeEnabled,
+                    cts: _cts
+                );
+            }
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine(value: "Operation canceled by user.");
+            }
+            finally
+            {
+                // Ensure `cts` is disposed here
+                _cts?.Dispose();
+                _cts = null;
+
+                frmPleaseWaitBox.Close();
+            }
         }
         // not collectionModeEnabled
         else
@@ -2505,14 +2498,32 @@ public partial class FrmMainApp : Form
                 }
 
                 // Load data (and add to DEs)
-                DirectoryElements.ParseFolderOrFileListToDEs(
-                    folderOrCollectionFileName: FolderName,
-                    statusMethod: delegate(string statusText)
-                    {
-                        HandlerUpdateLabelText(label: lbl_ParseProgress,
-                            text: statusText);
-                    },
-                    collectionModeEnabled: Program.CollectionModeEnabled);
+                try
+                {
+                    await DirectoryElements.ParseFolderOrFileListToDEsAsync(
+                        folderOrCollectionFileName: FolderName,
+                        processSubFolders: FlatMode,
+                        updateProgressHandler: delegate(string statusText)
+                        {
+                            Invoke(method: new Action(() =>
+                                HandlerUpdateLabelText(label: lbl_ParseProgress, text: statusText)));
+                        },
+                        collectionModeEnabled: Program.CollectionModeEnabled,
+                        cts: _cts
+                    );
+                }
+                catch (OperationCanceledException)
+                {
+                    Console.WriteLine(value: "Operation canceled by user.");
+                }
+                finally
+                {
+                    // Ensure `cts` is disposed here
+                    _cts?.Dispose();
+                    _cts = null;
+
+                    frmPleaseWaitBox.Close();
+                }
             }
         }
 
@@ -2524,11 +2535,11 @@ public partial class FrmMainApp : Form
         Log.Trace(message: "Enable FrmMainApp");
         Enabled = true;
         Log.Trace(message: "Hide PleaseWaitBox");
-        FrmPleaseWaitBox.Hide();
 
         // Not logging this.
         FileListViewReadWrite.ListViewCountItemsWithGeoData();
     }
+
 
     /// <summary>
     ///     Handles the lvw_FileList_MouseDoubleClick event -> if user clicked on a folder then enter, if a file then edit
@@ -3460,9 +3471,16 @@ public partial class FrmMainApp : Form
             Clipboard.SetText(text: builder.ToString());
         }
     }
+
+    private void tmiFileFlatModeToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        FlatMode = !FlatMode;
+    }
 }
 
 #endregion
+
+#region ControlExtensions
 
 public static class ControlExtensions
 {
@@ -3486,3 +3504,5 @@ public static class ControlExtensions
         doubleBufferPropertyInfo.SetValue(obj: control, value: enable, index: null);
     }
 }
+
+#endregion

@@ -89,7 +89,7 @@ internal static class HelperVariables
     internal static readonly string ExifToolExePathToUse = GetExifToolExePathToUse();
 
     internal static string UOMAbbreviated = "";
-    internal static Dictionary<string, string> fileChecksumhDictionary = new();
+    internal static Dictionary<FileInfo, string> FileChecksumDictionary = new();
 
 
     // this is a bug where, upon closing the app the "do you want to write the queue?" question comes up twice but i can't seem to track it properly so this is to avoid that happening.

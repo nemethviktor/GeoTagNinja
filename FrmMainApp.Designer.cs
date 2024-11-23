@@ -38,35 +38,6 @@ namespace GeoTagNinja
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMainApp));
-            this.mns_MenuStrip = new System.Windows.Forms.MenuStrip();
-            this.tmi_File = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_File_SaveAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_File_EditFiles = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_File_ImportExportGPX = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_File_CopyGeoData = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_File_PasteGeoData = new System.Windows.Forms.ToolStripMenuItem();
-            this.tss_ToolStripSeparator_Main = new System.Windows.Forms.ToolStripSeparator();
-            this.tmi_File_Quit = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_Settings = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_Settings_Settings = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_Settings_Favourites = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_Help = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_Help_About = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_Help_FeedbackFeatureRequest = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_Help_BugReport = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsr_MainAppToolStrip = new System.Windows.Forms.ToolStrip();
-            this.tsb_SaveFiles = new System.Windows.Forms.ToolStripButton();
-            this.tsb_Refresh_lvwFileList = new System.Windows.Forms.ToolStripButton();
-            this.tsb_EditFile = new System.Windows.Forms.ToolStripButton();
-            this.tsb_GetAllFromWeb = new System.Windows.Forms.ToolStripButton();
-            this.tsb_RemoveGeoData = new System.Windows.Forms.ToolStripButton();
-            this.tsb_ImportExportGPX = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsb_FeedbackFeatureRequest = new System.Windows.Forms.ToolStripButton();
-            this.tsb_BugReport = new System.Windows.Forms.ToolStripButton();
-            this.tsr_FolderControl = new System.Windows.Forms.ToolStrip();
-            this.tbx_FolderName = new System.Windows.Forms.ToolStripTextBox();
-            this.tsb_OneFolderUp = new System.Windows.Forms.ToolStripButton();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.splitContainerLeftTop = new System.Windows.Forms.SplitContainer();
             this.lvw_FileList = new GeoTagNinja.View.ListView.FileListView();
@@ -100,6 +71,37 @@ namespace GeoTagNinja
             this.clh_OriginalValue = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clh_ModifiedValue = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.igl_RightHandSide = new System.Windows.Forms.ImageList(this.components);
+            this.mns_MenuStrip = new System.Windows.Forms.MenuStrip();
+            this.tmi_File = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_File_SaveAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_File_EditFiles = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_File_ImportExportGPX = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_File_CopyGeoData = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_File_PasteGeoData = new System.Windows.Forms.ToolStripMenuItem();
+            this.tss_ToolStripSeparator_Main = new System.Windows.Forms.ToolStripSeparator();
+            this.tmiFileFlatModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tmi_File_Quit = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Settings = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Settings_Settings = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Settings_Favourites = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Help = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Help_About = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Help_FeedbackFeatureRequest = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Help_BugReport = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsr_MainAppToolStrip = new System.Windows.Forms.ToolStrip();
+            this.tsb_SaveFiles = new System.Windows.Forms.ToolStripButton();
+            this.tsb_Refresh_lvwFileList = new System.Windows.Forms.ToolStripButton();
+            this.tsb_EditFile = new System.Windows.Forms.ToolStripButton();
+            this.tsb_GetAllFromWeb = new System.Windows.Forms.ToolStripButton();
+            this.tsb_RemoveGeoData = new System.Windows.Forms.ToolStripButton();
+            this.tsb_ImportExportGPX = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsb_FeedbackFeatureRequest = new System.Windows.Forms.ToolStripButton();
+            this.tsb_BugReport = new System.Windows.Forms.ToolStripButton();
+            this.tsr_FolderControl = new System.Windows.Forms.ToolStrip();
+            this.tbx_FolderName = new System.Windows.Forms.ToolStripTextBox();
+            this.tsb_OneFolderUp = new System.Windows.Forms.ToolStripButton();
             this.ttp_NavigateMapGo = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_loctToFile = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_SaveFavourite = new System.Windows.Forms.ToolTip(this.components);
@@ -108,9 +110,6 @@ namespace GeoTagNinja
             this.ttp_loctToFileDestination = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_FeedbackFeatureRequest = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_BugReport = new System.Windows.Forms.ToolTip(this.components);
-            this.mns_MenuStrip.SuspendLayout();
-            this.tsr_MainAppToolStrip.SuspendLayout();
-            this.tsr_FolderControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
@@ -129,223 +128,10 @@ namespace GeoTagNinja
             ((System.ComponentModel.ISupportInitialize)(this.nud_lng)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.wbv_MapArea)).BeginInit();
             this.tpg_Exif.SuspendLayout();
+            this.mns_MenuStrip.SuspendLayout();
+            this.tsr_MainAppToolStrip.SuspendLayout();
+            this.tsr_FolderControl.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // mns_MenuStrip
-            // 
-            this.mns_MenuStrip.ImageScalingSize = new System.Drawing.Size(28, 28);
-            this.mns_MenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tmi_File,
-            this.tmi_Settings,
-            this.tmi_Help});
-            resources.ApplyResources(this.mns_MenuStrip, "mns_MenuStrip");
-            this.mns_MenuStrip.Name = "mns_MenuStrip";
-            // 
-            // tmi_File
-            // 
-            this.tmi_File.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tmi_File_SaveAll,
-            this.tmi_File_EditFiles,
-            this.tmi_File_ImportExportGPX,
-            this.tmi_File_CopyGeoData,
-            this.tmi_File_PasteGeoData,
-            this.tss_ToolStripSeparator_Main,
-            this.tmi_File_Quit});
-            this.tmi_File.Name = "tmi_File";
-            resources.ApplyResources(this.tmi_File, "tmi_File");
-            // 
-            // tmi_File_SaveAll
-            // 
-            this.tmi_File_SaveAll.Name = "tmi_File_SaveAll";
-            resources.ApplyResources(this.tmi_File_SaveAll, "tmi_File_SaveAll");
-            this.tmi_File_SaveAll.Click += new System.EventHandler(this.tmi_File_SaveAll_Click);
-            // 
-            // tmi_File_EditFiles
-            // 
-            this.tmi_File_EditFiles.Name = "tmi_File_EditFiles";
-            resources.ApplyResources(this.tmi_File_EditFiles, "tmi_File_EditFiles");
-            this.tmi_File_EditFiles.Click += new System.EventHandler(this.tmi_File_EditFiles_Click);
-            // 
-            // tmi_File_ImportExportGPX
-            // 
-            this.tmi_File_ImportExportGPX.Name = "tmi_File_ImportExportGPX";
-            resources.ApplyResources(this.tmi_File_ImportExportGPX, "tmi_File_ImportExportGPX");
-            this.tmi_File_ImportExportGPX.Click += new System.EventHandler(this.tmi_File_ImportExportGPX_Click);
-            // 
-            // tmi_File_CopyGeoData
-            // 
-            this.tmi_File_CopyGeoData.Name = "tmi_File_CopyGeoData";
-            resources.ApplyResources(this.tmi_File_CopyGeoData, "tmi_File_CopyGeoData");
-            this.tmi_File_CopyGeoData.Click += new System.EventHandler(this.tmi_File_CopyGeoData_Click);
-            // 
-            // tmi_File_PasteGeoData
-            // 
-            this.tmi_File_PasteGeoData.Name = "tmi_File_PasteGeoData";
-            resources.ApplyResources(this.tmi_File_PasteGeoData, "tmi_File_PasteGeoData");
-            this.tmi_File_PasteGeoData.Click += new System.EventHandler(this.tmi_File_PasteGeoData_Click);
-            // 
-            // tss_ToolStripSeparator_Main
-            // 
-            this.tss_ToolStripSeparator_Main.Name = "tss_ToolStripSeparator_Main";
-            resources.ApplyResources(this.tss_ToolStripSeparator_Main, "tss_ToolStripSeparator_Main");
-            // 
-            // tmi_File_Quit
-            // 
-            this.tmi_File_Quit.Name = "tmi_File_Quit";
-            resources.ApplyResources(this.tmi_File_Quit, "tmi_File_Quit");
-            this.tmi_File_Quit.Click += new System.EventHandler(this.tmi_File_Quit_Click);
-            // 
-            // tmi_Settings
-            // 
-            this.tmi_Settings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tmi_Settings_Settings,
-            this.tmi_Settings_Favourites});
-            this.tmi_Settings.Name = "tmi_Settings";
-            resources.ApplyResources(this.tmi_Settings, "tmi_Settings");
-            // 
-            // tmi_Settings_Settings
-            // 
-            this.tmi_Settings_Settings.Name = "tmi_Settings_Settings";
-            resources.ApplyResources(this.tmi_Settings_Settings, "tmi_Settings_Settings");
-            this.tmi_Settings_Settings.Click += new System.EventHandler(this.tmi_Settings_Settings_Click);
-            // 
-            // tmi_Settings_Favourites
-            // 
-            this.tmi_Settings_Favourites.Name = "tmi_Settings_Favourites";
-            resources.ApplyResources(this.tmi_Settings_Favourites, "tmi_Settings_Favourites");
-            this.tmi_Settings_Favourites.Click += new System.EventHandler(this.tmi_Settings_Favourites_Click);
-            // 
-            // tmi_Help
-            // 
-            this.tmi_Help.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tmi_Help_About,
-            this.tmi_Help_FeedbackFeatureRequest,
-            this.tmi_Help_BugReport});
-            this.tmi_Help.Name = "tmi_Help";
-            resources.ApplyResources(this.tmi_Help, "tmi_Help");
-            // 
-            // tmi_Help_About
-            // 
-            this.tmi_Help_About.Name = "tmi_Help_About";
-            resources.ApplyResources(this.tmi_Help_About, "tmi_Help_About");
-            this.tmi_Help_About.Click += new System.EventHandler(this.tmi_Help_About_Click);
-            // 
-            // tmi_Help_FeedbackFeatureRequest
-            // 
-            this.tmi_Help_FeedbackFeatureRequest.Name = "tmi_Help_FeedbackFeatureRequest";
-            resources.ApplyResources(this.tmi_Help_FeedbackFeatureRequest, "tmi_Help_FeedbackFeatureRequest");
-            this.tmi_Help_FeedbackFeatureRequest.Click += new System.EventHandler(this.tmi_Help_FeedbackFeatureRequest_Click);
-            // 
-            // tmi_Help_BugReport
-            // 
-            this.tmi_Help_BugReport.Name = "tmi_Help_BugReport";
-            resources.ApplyResources(this.tmi_Help_BugReport, "tmi_Help_BugReport");
-            this.tmi_Help_BugReport.Click += new System.EventHandler(this.tmi_Help_BugReport_Click);
-            // 
-            // tsr_MainAppToolStrip
-            // 
-            this.tsr_MainAppToolStrip.GripMargin = new System.Windows.Forms.Padding(0);
-            this.tsr_MainAppToolStrip.ImageScalingSize = new System.Drawing.Size(0, 0);
-            this.tsr_MainAppToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsb_SaveFiles,
-            this.tsb_Refresh_lvwFileList,
-            this.tsb_EditFile,
-            this.tsb_GetAllFromWeb,
-            this.tsb_RemoveGeoData,
-            this.tsb_ImportExportGPX,
-            this.toolStripSeparator1,
-            this.tsb_FeedbackFeatureRequest,
-            this.tsb_BugReport});
-            resources.ApplyResources(this.tsr_MainAppToolStrip, "tsr_MainAppToolStrip");
-            this.tsr_MainAppToolStrip.Name = "tsr_MainAppToolStrip";
-            // 
-            // tsb_SaveFiles
-            // 
-            this.tsb_SaveFiles.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            resources.ApplyResources(this.tsb_SaveFiles, "tsb_SaveFiles");
-            this.tsb_SaveFiles.Name = "tsb_SaveFiles";
-            this.tsb_SaveFiles.Click += new System.EventHandler(this.tsb_SaveFiles_Click);
-            // 
-            // tsb_Refresh_lvwFileList
-            // 
-            this.tsb_Refresh_lvwFileList.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            resources.ApplyResources(this.tsb_Refresh_lvwFileList, "tsb_Refresh_lvwFileList");
-            this.tsb_Refresh_lvwFileList.Name = "tsb_Refresh_lvwFileList";
-            this.tsb_Refresh_lvwFileList.Click += new System.EventHandler(this.tsb_Refresh_lvwFileList_Click);
-            // 
-            // tsb_EditFile
-            // 
-            this.tsb_EditFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            resources.ApplyResources(this.tsb_EditFile, "tsb_EditFile");
-            this.tsb_EditFile.Name = "tsb_EditFile";
-            this.tsb_EditFile.Click += new System.EventHandler(this.tsb_EditFile_Click);
-            // 
-            // tsb_GetAllFromWeb
-            // 
-            this.tsb_GetAllFromWeb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            resources.ApplyResources(this.tsb_GetAllFromWeb, "tsb_GetAllFromWeb");
-            this.tsb_GetAllFromWeb.Name = "tsb_GetAllFromWeb";
-            this.tsb_GetAllFromWeb.Click += new System.EventHandler(this.tsb_GetAllFromWeb_Click);
-            // 
-            // tsb_RemoveGeoData
-            // 
-            this.tsb_RemoveGeoData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            resources.ApplyResources(this.tsb_RemoveGeoData, "tsb_RemoveGeoData");
-            this.tsb_RemoveGeoData.Name = "tsb_RemoveGeoData";
-            this.tsb_RemoveGeoData.Click += new System.EventHandler(this.tsb_RemoveGeoData_Click);
-            // 
-            // tsb_ImportExportGPX
-            // 
-            this.tsb_ImportExportGPX.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            resources.ApplyResources(this.tsb_ImportExportGPX, "tsb_ImportExportGPX");
-            this.tsb_ImportExportGPX.Name = "tsb_ImportExportGPX";
-            this.tsb_ImportExportGPX.Click += new System.EventHandler(this.tsb_ImportExportGPX_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
-            // 
-            // tsb_FeedbackFeatureRequest
-            // 
-            this.tsb_FeedbackFeatureRequest.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            resources.ApplyResources(this.tsb_FeedbackFeatureRequest, "tsb_FeedbackFeatureRequest");
-            this.tsb_FeedbackFeatureRequest.Name = "tsb_FeedbackFeatureRequest";
-            this.tsb_FeedbackFeatureRequest.Click += new System.EventHandler(this.tsb_FeedbackFeatureRequest_Click);
-            // 
-            // tsb_BugReport
-            // 
-            this.tsb_BugReport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            resources.ApplyResources(this.tsb_BugReport, "tsb_BugReport");
-            this.tsb_BugReport.Name = "tsb_BugReport";
-            this.tsb_BugReport.Click += new System.EventHandler(this.tsb_BugReport_Click);
-            // 
-            // tsr_FolderControl
-            // 
-            this.tsr_FolderControl.GripMargin = new System.Windows.Forms.Padding(0);
-            this.tsr_FolderControl.ImageScalingSize = new System.Drawing.Size(0, 0);
-            this.tsr_FolderControl.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tbx_FolderName,
-            this.tsb_OneFolderUp});
-            resources.ApplyResources(this.tsr_FolderControl, "tsr_FolderControl");
-            this.tsr_FolderControl.Name = "tsr_FolderControl";
-            // 
-            // tbx_FolderName
-            // 
-            this.tbx_FolderName.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.tbx_FolderName.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this.tbx_FolderName.Name = "tbx_FolderName";
-            resources.ApplyResources(this.tbx_FolderName, "tbx_FolderName");
-            this.tbx_FolderName.Enter += new System.EventHandler(this.tbx_FolderName_Enter);
-            this.tbx_FolderName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbx_FolderName_KeyDown);
-            this.tbx_FolderName.Click += new System.EventHandler(this.tbx_FolderName_Enter);
-            // 
-            // tsb_OneFolderUp
-            // 
-            this.tsb_OneFolderUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            resources.ApplyResources(this.tsb_OneFolderUp, "tsb_OneFolderUp");
-            this.tsb_OneFolderUp.Name = "tsb_OneFolderUp";
-            this.tsb_OneFolderUp.Click += new System.EventHandler(this.btn_OneFolderUp_Click);
             // 
             // splitContainerMain
             // 
@@ -643,6 +429,236 @@ namespace GeoTagNinja
             this.igl_RightHandSide.Images.SetKeyName(0, "PublishOnDemand.png");
             this.igl_RightHandSide.Images.SetKeyName(1, "StringData.png");
             // 
+            // mns_MenuStrip
+            // 
+            this.mns_MenuStrip.ImageScalingSize = new System.Drawing.Size(28, 28);
+            this.mns_MenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tmi_File,
+            this.tmi_Settings,
+            this.tmi_Help});
+            resources.ApplyResources(this.mns_MenuStrip, "mns_MenuStrip");
+            this.mns_MenuStrip.Name = "mns_MenuStrip";
+            // 
+            // tmi_File
+            // 
+            this.tmi_File.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tmi_File_SaveAll,
+            this.tmi_File_EditFiles,
+            this.tmi_File_ImportExportGPX,
+            this.tmi_File_CopyGeoData,
+            this.tmi_File_PasteGeoData,
+            this.tss_ToolStripSeparator_Main,
+            this.tmiFileFlatModeToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.tmi_File_Quit});
+            this.tmi_File.Name = "tmi_File";
+            resources.ApplyResources(this.tmi_File, "tmi_File");
+            // 
+            // tmi_File_SaveAll
+            // 
+            this.tmi_File_SaveAll.Name = "tmi_File_SaveAll";
+            resources.ApplyResources(this.tmi_File_SaveAll, "tmi_File_SaveAll");
+            this.tmi_File_SaveAll.Click += new System.EventHandler(this.tmi_File_SaveAll_Click);
+            // 
+            // tmi_File_EditFiles
+            // 
+            this.tmi_File_EditFiles.Name = "tmi_File_EditFiles";
+            resources.ApplyResources(this.tmi_File_EditFiles, "tmi_File_EditFiles");
+            this.tmi_File_EditFiles.Click += new System.EventHandler(this.tmi_File_EditFiles_Click);
+            // 
+            // tmi_File_ImportExportGPX
+            // 
+            this.tmi_File_ImportExportGPX.Name = "tmi_File_ImportExportGPX";
+            resources.ApplyResources(this.tmi_File_ImportExportGPX, "tmi_File_ImportExportGPX");
+            this.tmi_File_ImportExportGPX.Click += new System.EventHandler(this.tmi_File_ImportExportGPX_Click);
+            // 
+            // tmi_File_CopyGeoData
+            // 
+            this.tmi_File_CopyGeoData.Name = "tmi_File_CopyGeoData";
+            resources.ApplyResources(this.tmi_File_CopyGeoData, "tmi_File_CopyGeoData");
+            this.tmi_File_CopyGeoData.Click += new System.EventHandler(this.tmi_File_CopyGeoData_Click);
+            // 
+            // tmi_File_PasteGeoData
+            // 
+            this.tmi_File_PasteGeoData.Name = "tmi_File_PasteGeoData";
+            resources.ApplyResources(this.tmi_File_PasteGeoData, "tmi_File_PasteGeoData");
+            this.tmi_File_PasteGeoData.Click += new System.EventHandler(this.tmi_File_PasteGeoData_Click);
+            // 
+            // tss_ToolStripSeparator_Main
+            // 
+            this.tss_ToolStripSeparator_Main.Name = "tss_ToolStripSeparator_Main";
+            resources.ApplyResources(this.tss_ToolStripSeparator_Main, "tss_ToolStripSeparator_Main");
+            // 
+            // tmiFileFlatModeToolStripMenuItem
+            // 
+            this.tmiFileFlatModeToolStripMenuItem.CheckOnClick = true;
+            this.tmiFileFlatModeToolStripMenuItem.Name = "tmiFileFlatModeToolStripMenuItem";
+            resources.ApplyResources(this.tmiFileFlatModeToolStripMenuItem, "tmiFileFlatModeToolStripMenuItem");
+            this.tmiFileFlatModeToolStripMenuItem.Click += new System.EventHandler(this.tmiFileFlatModeToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
+            // 
+            // tmi_File_Quit
+            // 
+            this.tmi_File_Quit.Name = "tmi_File_Quit";
+            resources.ApplyResources(this.tmi_File_Quit, "tmi_File_Quit");
+            this.tmi_File_Quit.Click += new System.EventHandler(this.tmi_File_Quit_Click);
+            // 
+            // tmi_Settings
+            // 
+            this.tmi_Settings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tmi_Settings_Settings,
+            this.tmi_Settings_Favourites});
+            this.tmi_Settings.Name = "tmi_Settings";
+            resources.ApplyResources(this.tmi_Settings, "tmi_Settings");
+            // 
+            // tmi_Settings_Settings
+            // 
+            this.tmi_Settings_Settings.Name = "tmi_Settings_Settings";
+            resources.ApplyResources(this.tmi_Settings_Settings, "tmi_Settings_Settings");
+            this.tmi_Settings_Settings.Click += new System.EventHandler(this.tmi_Settings_Settings_Click);
+            // 
+            // tmi_Settings_Favourites
+            // 
+            this.tmi_Settings_Favourites.Name = "tmi_Settings_Favourites";
+            resources.ApplyResources(this.tmi_Settings_Favourites, "tmi_Settings_Favourites");
+            this.tmi_Settings_Favourites.Click += new System.EventHandler(this.tmi_Settings_Favourites_Click);
+            // 
+            // tmi_Help
+            // 
+            this.tmi_Help.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tmi_Help_About,
+            this.tmi_Help_FeedbackFeatureRequest,
+            this.tmi_Help_BugReport});
+            this.tmi_Help.Name = "tmi_Help";
+            resources.ApplyResources(this.tmi_Help, "tmi_Help");
+            // 
+            // tmi_Help_About
+            // 
+            this.tmi_Help_About.Name = "tmi_Help_About";
+            resources.ApplyResources(this.tmi_Help_About, "tmi_Help_About");
+            this.tmi_Help_About.Click += new System.EventHandler(this.tmi_Help_About_Click);
+            // 
+            // tmi_Help_FeedbackFeatureRequest
+            // 
+            this.tmi_Help_FeedbackFeatureRequest.Name = "tmi_Help_FeedbackFeatureRequest";
+            resources.ApplyResources(this.tmi_Help_FeedbackFeatureRequest, "tmi_Help_FeedbackFeatureRequest");
+            this.tmi_Help_FeedbackFeatureRequest.Click += new System.EventHandler(this.tmi_Help_FeedbackFeatureRequest_Click);
+            // 
+            // tmi_Help_BugReport
+            // 
+            this.tmi_Help_BugReport.Name = "tmi_Help_BugReport";
+            resources.ApplyResources(this.tmi_Help_BugReport, "tmi_Help_BugReport");
+            this.tmi_Help_BugReport.Click += new System.EventHandler(this.tmi_Help_BugReport_Click);
+            // 
+            // tsr_MainAppToolStrip
+            // 
+            this.tsr_MainAppToolStrip.GripMargin = new System.Windows.Forms.Padding(0);
+            this.tsr_MainAppToolStrip.ImageScalingSize = new System.Drawing.Size(0, 0);
+            this.tsr_MainAppToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsb_SaveFiles,
+            this.tsb_Refresh_lvwFileList,
+            this.tsb_EditFile,
+            this.tsb_GetAllFromWeb,
+            this.tsb_RemoveGeoData,
+            this.tsb_ImportExportGPX,
+            this.toolStripSeparator1,
+            this.tsb_FeedbackFeatureRequest,
+            this.tsb_BugReport});
+            resources.ApplyResources(this.tsr_MainAppToolStrip, "tsr_MainAppToolStrip");
+            this.tsr_MainAppToolStrip.Name = "tsr_MainAppToolStrip";
+            // 
+            // tsb_SaveFiles
+            // 
+            this.tsb_SaveFiles.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            resources.ApplyResources(this.tsb_SaveFiles, "tsb_SaveFiles");
+            this.tsb_SaveFiles.Name = "tsb_SaveFiles";
+            this.tsb_SaveFiles.Click += new System.EventHandler(this.tsb_SaveFiles_Click);
+            // 
+            // tsb_Refresh_lvwFileList
+            // 
+            this.tsb_Refresh_lvwFileList.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            resources.ApplyResources(this.tsb_Refresh_lvwFileList, "tsb_Refresh_lvwFileList");
+            this.tsb_Refresh_lvwFileList.Name = "tsb_Refresh_lvwFileList";
+            this.tsb_Refresh_lvwFileList.Click += new System.EventHandler(this.tsb_Refresh_lvwFileList_Click);
+            // 
+            // tsb_EditFile
+            // 
+            this.tsb_EditFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            resources.ApplyResources(this.tsb_EditFile, "tsb_EditFile");
+            this.tsb_EditFile.Name = "tsb_EditFile";
+            this.tsb_EditFile.Click += new System.EventHandler(this.tsb_EditFile_Click);
+            // 
+            // tsb_GetAllFromWeb
+            // 
+            this.tsb_GetAllFromWeb.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            resources.ApplyResources(this.tsb_GetAllFromWeb, "tsb_GetAllFromWeb");
+            this.tsb_GetAllFromWeb.Name = "tsb_GetAllFromWeb";
+            this.tsb_GetAllFromWeb.Click += new System.EventHandler(this.tsb_GetAllFromWeb_Click);
+            // 
+            // tsb_RemoveGeoData
+            // 
+            this.tsb_RemoveGeoData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            resources.ApplyResources(this.tsb_RemoveGeoData, "tsb_RemoveGeoData");
+            this.tsb_RemoveGeoData.Name = "tsb_RemoveGeoData";
+            this.tsb_RemoveGeoData.Click += new System.EventHandler(this.tsb_RemoveGeoData_Click);
+            // 
+            // tsb_ImportExportGPX
+            // 
+            this.tsb_ImportExportGPX.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            resources.ApplyResources(this.tsb_ImportExportGPX, "tsb_ImportExportGPX");
+            this.tsb_ImportExportGPX.Name = "tsb_ImportExportGPX";
+            this.tsb_ImportExportGPX.Click += new System.EventHandler(this.tsb_ImportExportGPX_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
+            // 
+            // tsb_FeedbackFeatureRequest
+            // 
+            this.tsb_FeedbackFeatureRequest.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            resources.ApplyResources(this.tsb_FeedbackFeatureRequest, "tsb_FeedbackFeatureRequest");
+            this.tsb_FeedbackFeatureRequest.Name = "tsb_FeedbackFeatureRequest";
+            this.tsb_FeedbackFeatureRequest.Click += new System.EventHandler(this.tsb_FeedbackFeatureRequest_Click);
+            // 
+            // tsb_BugReport
+            // 
+            this.tsb_BugReport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            resources.ApplyResources(this.tsb_BugReport, "tsb_BugReport");
+            this.tsb_BugReport.Name = "tsb_BugReport";
+            this.tsb_BugReport.Click += new System.EventHandler(this.tsb_BugReport_Click);
+            // 
+            // tsr_FolderControl
+            // 
+            this.tsr_FolderControl.GripMargin = new System.Windows.Forms.Padding(0);
+            this.tsr_FolderControl.ImageScalingSize = new System.Drawing.Size(0, 0);
+            this.tsr_FolderControl.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tbx_FolderName,
+            this.tsb_OneFolderUp});
+            resources.ApplyResources(this.tsr_FolderControl, "tsr_FolderControl");
+            this.tsr_FolderControl.Name = "tsr_FolderControl";
+            // 
+            // tbx_FolderName
+            // 
+            this.tbx_FolderName.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.tbx_FolderName.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
+            this.tbx_FolderName.Name = "tbx_FolderName";
+            resources.ApplyResources(this.tbx_FolderName, "tbx_FolderName");
+            this.tbx_FolderName.Enter += new System.EventHandler(this.tbx_FolderName_Enter);
+            this.tbx_FolderName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbx_FolderName_KeyDown);
+            this.tbx_FolderName.Click += new System.EventHandler(this.tbx_FolderName_Enter);
+            // 
+            // tsb_OneFolderUp
+            // 
+            this.tsb_OneFolderUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            resources.ApplyResources(this.tsb_OneFolderUp, "tsb_OneFolderUp");
+            this.tsb_OneFolderUp.Name = "tsb_OneFolderUp";
+            this.tsb_OneFolderUp.Click += new System.EventHandler(this.btn_OneFolderUp_Click);
+            // 
             // FrmMainApp
             // 
             resources.ApplyResources(this, "$this");
@@ -658,12 +674,6 @@ namespace GeoTagNinja
             this.Load += new System.EventHandler(this.FrmMainApp_Load);
             this.ResizeBegin += new System.EventHandler(this.FrmMainApp_ResizeBegin);
             this.ResizeEnd += new System.EventHandler(this.FrmMainApp_ResizeEnd);
-            this.mns_MenuStrip.ResumeLayout(false);
-            this.mns_MenuStrip.PerformLayout();
-            this.tsr_MainAppToolStrip.ResumeLayout(false);
-            this.tsr_MainAppToolStrip.PerformLayout();
-            this.tsr_FolderControl.ResumeLayout(false);
-            this.tsr_FolderControl.PerformLayout();
             this.splitContainerMain.Panel1.ResumeLayout(false);
             this.splitContainerMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).EndInit();
@@ -684,6 +694,12 @@ namespace GeoTagNinja
             ((System.ComponentModel.ISupportInitialize)(this.nud_lng)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.wbv_MapArea)).EndInit();
             this.tpg_Exif.ResumeLayout(false);
+            this.mns_MenuStrip.ResumeLayout(false);
+            this.mns_MenuStrip.PerformLayout();
+            this.tsr_MainAppToolStrip.ResumeLayout(false);
+            this.tsr_MainAppToolStrip.PerformLayout();
+            this.tsr_FolderControl.ResumeLayout(false);
+            this.tsr_FolderControl.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -760,6 +776,8 @@ namespace GeoTagNinja
         private ToolStripButton tsb_BugReport;
         private ToolTip ttp_FeedbackFeatureRequest;
         private ToolTip ttp_BugReport;
+        private ToolStripMenuItem tmiFileFlatModeToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator2;
     }
 }
 

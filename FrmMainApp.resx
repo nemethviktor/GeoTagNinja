@@ -117,423 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="mns_MenuStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>613, 17</value>
-  </metadata>
-  <data name="tmi_File_SaveAll.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>CTRL+S</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="tmi_File_SaveAll.Size" type="System.Drawing.Size, System.Drawing">
-    <value>275, 22</value>
-  </data>
-  <data name="tmi_File_SaveAll.Text" xml:space="preserve">
-    <value>tmi_File_SaveAll</value>
-  </data>
-  <data name="tmi_File_EditFiles.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>CTLR+Enter</value>
-  </data>
-  <data name="tmi_File_EditFiles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>275, 22</value>
-  </data>
-  <data name="tmi_File_EditFiles.Text" xml:space="preserve">
-    <value>tmi_File_EditFiles</value>
-  </data>
-  <data name="tmi_File_ImportExportGPX.Size" type="System.Drawing.Size, System.Drawing">
-    <value>275, 22</value>
-  </data>
-  <data name="tmi_File_ImportExportGPX.Text" xml:space="preserve">
-    <value>tmi_File_ImportExportGPX</value>
-  </data>
-  <data name="tmi_File_CopyGeoData.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Sh + CTRL+C</value>
-  </data>
-  <data name="tmi_File_CopyGeoData.Size" type="System.Drawing.Size, System.Drawing">
-    <value>275, 22</value>
-  </data>
-  <data name="tmi_File_CopyGeoData.Text" xml:space="preserve">
-    <value>tmi_File_CopyGeoData</value>
-  </data>
-  <data name="tmi_File_PasteGeoData.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Sh + CTRL + V</value>
-  </data>
-  <data name="tmi_File_PasteGeoData.Size" type="System.Drawing.Size, System.Drawing">
-    <value>275, 22</value>
-  </data>
-  <data name="tmi_File_PasteGeoData.Text" xml:space="preserve">
-    <value>tmi_File_PasteGeoData</value>
-  </data>
-  <data name="tss_ToolStripSeparator_Main.Size" type="System.Drawing.Size, System.Drawing">
-    <value>272, 6</value>
-  </data>
-  <data name="tmi_File_Quit.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>ALT+F4</value>
-  </data>
-  <data name="tmi_File_Quit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>275, 22</value>
-  </data>
-  <data name="tmi_File_Quit.Text" xml:space="preserve">
-    <value>tmi_File_Quit</value>
-  </data>
-  <data name="tmi_File.Size" type="System.Drawing.Size, System.Drawing">
-    <value>60, 22</value>
-  </data>
-  <data name="tmi_File.Text" xml:space="preserve">
-    <value>tmi_File</value>
-  </data>
-  <data name="tmi_Settings_Settings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
-  </data>
-  <data name="tmi_Settings_Settings.Text" xml:space="preserve">
-    <value>tmi_Settings_Settings</value>
-  </data>
-  <data name="tmi_Settings_Favourites.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
-  </data>
-  <data name="tmi_Settings_Favourites.Text" xml:space="preserve">
-    <value>tmi_Settings_Favourites</value>
-  </data>
-  <data name="tmi_Settings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>84, 22</value>
-  </data>
-  <data name="tmi_Settings.Text" xml:space="preserve">
-    <value>tmi_Settings</value>
-  </data>
-  <data name="tmi_Help_About.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 22</value>
-  </data>
-  <data name="tmi_Help_About.Text" xml:space="preserve">
-    <value>tmi_Help_About</value>
-  </data>
-  <data name="tmi_Help_FeedbackFeatureRequest.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 22</value>
-  </data>
-  <data name="tmi_Help_FeedbackFeatureRequest.Text" xml:space="preserve">
-    <value>tmi_Help_Feedback</value>
-  </data>
-  <data name="tmi_Help_BugReport.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 22</value>
-  </data>
-  <data name="tmi_Help_BugReport.Text" xml:space="preserve">
-    <value>tmi_Help_BugReport</value>
-  </data>
-  <data name="tmi_Help.Size" type="System.Drawing.Size, System.Drawing">
-    <value>67, 22</value>
-  </data>
-  <data name="tmi_Help.Text" xml:space="preserve">
-    <value>tmi_Help</value>
-  </data>
-  <data name="mns_MenuStrip.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="mns_MenuStrip.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 1, 0, 1</value>
-  </data>
-  <data name="mns_MenuStrip.Size" type="System.Drawing.Size, System.Drawing">
-    <value>730, 24</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="mns_MenuStrip.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="mns_MenuStrip.Text" xml:space="preserve">
-    <value>mns_MenuStrip</value>
-  </data>
-  <data name="&gt;&gt;mns_MenuStrip.Name" xml:space="preserve">
-    <value>mns_MenuStrip</value>
-  </data>
-  <data name="&gt;&gt;mns_MenuStrip.Type" xml:space="preserve">
-    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mns_MenuStrip.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;mns_MenuStrip.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <metadata name="tsr_MainAppToolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <data name="tsb_SaveFiles.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACfSURBVDhPY6AuiN21nCF2536COGZXPYP9fhaoLhIBSGPM
-        zhawIXAQs/MB0Pb/BHHUzjUMaWdYwYaAXAIHIMno7ZJgjMxGFovdLQe0dRvYELAeUg0A00BDQGywHnIM
-        gLHBenAZELPrEZiPjEFiRBtACOM3YOcGIPsoVgySI2gAWCHUJnQMkxtEBgCTPRyQYwAKwBZ1uHD0rvtQ
-        XdQADAwA4VARVEAd8KsAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="tsb_SaveFiles.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="tsb_SaveFiles.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="tsb_SaveFiles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
-  </data>
-  <data name="tsb_SaveFiles.Text" xml:space="preserve">
-    <value>tsb_SaveFiles</value>
-  </data>
-  <data name="tsb_Refresh_lvwFileList.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFGSURBVDhPrZI9SwQxEIansrLwo1DU/yCIKIIfnZ0gwnEf
-        yayFP8JWC0UtRRD1H1jf3SbZg+tsBRtLQRAVFQtRsNJJfD1huTXNPRB23tmZl0wS6g1st4jdV2cpd4M/
-        f5TO+4izYagCtFklbj4EkzyczZF2t6TtCjI52K0RN+7kO93VwKPNZNhdYpeRAZXWiDQ9hmZPkYHHm/ja
-        9fYAMoK225I8gfJnsoeoO9oeyjibUIJ2l6TSBag42s6SshdQQtW9U60+CBWn1O6ncuMZSmDzQRtmCCqO
-        N+D6G5TA5krOYAkqjh/Bj92B3a6YnEHFYXck9TtQQsWNUTl9pcTMIFOMSqek+UmucRQZoI2imr3/1yQ0
-        y2NTropMjsTqsBNtTyVeDG/f3w5n83JtxzL3S3HzL6o5IYUHsq5l1s+wfuJ9SlrjqOoVRN8kcIOT3ZSG
-        iAAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="tsb_Refresh_lvwFileList.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="tsb_Refresh_lvwFileList.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="tsb_Refresh_lvwFileList.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
-  </data>
-  <data name="tsb_Refresh_lvwFileList.Text" xml:space="preserve">
-    <value>tsb_Refresh_lvwFileList</value>
-  </data>
-  <data name="tsb_Refresh_lvwFileList.ToolTipText" xml:space="preserve">
-    <value>btn_Refresh_lvwFileList</value>
-  </data>
-  <data name="tsb_EditFile.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAElSURBVDhPrZM9TsNAEEanCS1S6CzLfzICmRQgV1BBRJMD
-        IIi9TiqUgrPQ0XCDXCDx7loREj0tF4DADZCoYLweBJssZgs+6WvseW/WKxn+LWEYTrF3pgZBMPN9f59G
-        zakHHcfZMpVEPI7jAxpfj4WgXWIpUJ9DiJ42wc/iXVSE6LERuK7bRcEhFNUpFPwGxiIl/G9BDSdJsoHg
-        OWTiFZi8xj4R3i5YgzN+AkxcQVY+Ev67oIbTNO1o8EhMoJAvMCr3CDcLvmF5puAL0UfRpYKZ6BHaxCRo
-        jr0Cs9lS2/yVVUEURZu4JQTG34At+urYQ/4MY75LiB4UaP+C53lHuP0W+wGFuFc3npc7NG6RfO4i/N4I
-        5AKGcpveWCavjhF8wKMP6IkhAJ8hqpRF5ebyLgAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="tsb_EditFile.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="tsb_EditFile.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="tsb_EditFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
-  </data>
-  <data name="tsb_EditFile.Text" xml:space="preserve">
-    <value>tsb_EditFile</value>
-  </data>
-  <data name="tsb_GetAllFromWeb.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFMSURBVDhPtZE/LwRBGMYfiUqrkhBX0Ghor3KR+AQiivWn
-        u0RF2NmZQ1zhW2B35nYpKK+RrEIh9wUuQtApFJfQKJTrnTF79o6cW4lf8mQy77zPM5N38D9UrwbBFSc9
-        YEO9gwe3YKpsT3tQrg9BHBfBahFceY1KOA8RTkDIRTD/Hp48sJ3dJAPgch+b/itc1QT3b7B7Mo6daORL
-        coZ6XrAVjFlTBk+t03MbqERTnaYuMVWnvhB74bR1WlzZhDgt/mjKylWrFHAIFjxDBEvWTWyrFrxo9Jsh
-        S7bOgzm69NGeEHpgXC50NGlpVuLErNm6no+eVxvmz9IcnmjaDqqy0DOABZP0G0f0ijNTb8NlidT4/HeV
-        GGnSgLTmyjcIdQ5RGzb1X0kDcrN2UTBrGpDu+0I3O3ELzmXJBOhV73OFpCYTYMNyo03L8d3fzH0BfACi
-        JbQHfFGZ5AAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="tsb_GetAllFromWeb.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="tsb_GetAllFromWeb.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="tsb_GetAllFromWeb.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
-  </data>
-  <data name="tsb_GetAllFromWeb.Text" xml:space="preserve">
-    <value>tsb_GetAllFromWeb</value>
-  </data>
-  <data name="tsb_RemoveGeoData.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGYSURBVDhPlZG9S0JhFMaPLrU2Nlw/0EEK/NiKJGsqWiOo
-        sMkp0Xv7FiJwahNCQb3W9QbR0lJGENQSgWP/QRa0VkMEOrTUc/TVrl+XeuBwXs57fg/nvC/1Uih0PBgY
-        1585i5JRVqfTmUFUHQ7Hvqj9yj9R9PmD+lkgqH838pFXXLGsgIqA7+12+7QkSZ+Ncvg2QeGbHT6aGLRg
-        t9s9whmRBgxw6fqlHsKER/cFtYphBQua8zAou1yuUeQ7hI66tadBh0zgphg0wFqU7KpCe/k4bXk9Nt0c
-        NigdpwEG1QjVCjKV06uWq4OItbYyOzTHOwMuoq03rMZpFvGYVOhLlekkE6O3nEzzMNxgE69HOkVbN8zj
-        YtQLNUZPAJcZYjivUKppko5aLmGeEEi7AD0UFCppm9h7jYY5Ok14HfQlBdIuNE21xhUGRhNeJyVTlScV
-        SLfMTMSb7IrW/sKYwbxMr1hnIbdOY3i8bdQWszJV+HdEm7l4EkDviA9NocmsQpVDhWbE9d/UXAcmJfzM
-        uSj/T2xS/x2ZbKLUR0Q/oJfFV0mRrVYAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="tsb_RemoveGeoData.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="tsb_RemoveGeoData.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="tsb_RemoveGeoData.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
-  </data>
-  <data name="tsb_RemoveGeoData.Text" xml:space="preserve">
-    <value>tsb_RemoveGeoData</value>
-  </data>
-  <data name="tsb_ImportExportGPX.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACwSURBVDhPYxhEIG0TF0PMriaG6J13GGJ31kJFiQQgzbE7
-        jgMN2MwQvduUIXQVG1SGSACyGaSZbAB29i4TKI8MELvrJ0PSBl4oDzuI364AZWEBhFwA0hy96xUwfByg
-        ImggZmcjwTAAacZpSMgxTqArjgGjbwtD3A4znLFA0JDYnQ1Ar9wG4j9A/B833nkVqotEELvbBmjAS6CX
-        naAiJIDo7bbkayYYC8QAvOmAbMDAAADQ81o+V3g1mAAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="tsb_ImportExportGPX.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="tsb_ImportExportGPX.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="tsb_ImportExportGPX.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
-  </data>
-  <data name="tsb_ImportExportGPX.Text" xml:space="preserve">
-    <value>tsb_ImportExportGPX</value>
-  </data>
-  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 25</value>
-  </data>
-  <data name="tsb_FeedbackFeatureRequest.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAENSURBVDhPxZA7SgNRGIWncgPCwAzDvA1mKqOlkC5kHYK4
-        C+0s0gluwlTaWCiRLMRSuzxImyp+J/zjMJlIUgQ8cLiX/zzuwzk4kiR5iuN4vIvyWaQOhLHv+8e7KJ9F
-        6vjfgqIojqIoevc8byGyfwzD0Nu7gOGDCmAny7JzPmukkr0LCEwV1Kki+wuMc5mNQ4WDIOjifbVYBU6b
-        bBZoZvL6f5hfsj7ned6xcQWEga6tEoXZf2hm8roAvlB6ZqM6EHuu6y5ZV6Lteybrifd/hhHv4DeB6zRN
-        T0TMV/CT+a3ZtgNDH+MXbJfvL8ns1Ip/b9IAhpFO3gyXRL9BfzN7E4gzXXlbWERvUTI1+yHhOD/rWGp2
-        xBPz2wAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="tsb_FeedbackFeatureRequest.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="tsb_FeedbackFeatureRequest.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="tsb_FeedbackFeatureRequest.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
-  </data>
-  <data name="tsb_FeedbackFeatureRequest.Text" xml:space="preserve">
-    <value>tsb_FeedbackFeatureRequest</value>
-  </data>
-  <data name="tsb_BugReport.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB4SURBVDhPY6AaUFRUXAHE+7FhBQWFrfLy8gZQpdgBSKGU
-        lJQwNgw1aIeKioohVDkmIMIA/IYQaQDYO1AtqACfAcgYpA6qBRVgMwAo9h+L2KgBJBpghkWMOANAmoH4
-        PxCboomT5AIUzVAxnAbgzExoeAVUCzUAAwMAtOBlRBRV4JEAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="tsb_BugReport.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="tsb_BugReport.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="tsb_BugReport.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
-  </data>
-  <data name="tsb_BugReport.Text" xml:space="preserve">
-    <value>tsb_BugReport</value>
-  </data>
-  <data name="tsr_MainAppToolStrip.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 24</value>
-  </data>
-  <data name="tsr_MainAppToolStrip.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>1, 1, 1, 1</value>
-  </data>
-  <data name="tsr_MainAppToolStrip.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 2, 0</value>
-  </data>
-  <data name="tsr_MainAppToolStrip.Size" type="System.Drawing.Size, System.Drawing">
-    <value>730, 25</value>
-  </data>
-  <data name="tsr_MainAppToolStrip.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
-  </data>
-  <data name="tsr_MainAppToolStrip.Text" xml:space="preserve">
-    <value>tsr_MainAppToolStrip</value>
-  </data>
-  <data name="&gt;&gt;tsr_MainAppToolStrip.Name" xml:space="preserve">
-    <value>tsr_MainAppToolStrip</value>
-  </data>
-  <data name="&gt;&gt;tsr_MainAppToolStrip.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tsr_MainAppToolStrip.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;tsr_MainAppToolStrip.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <metadata name="tsr_FolderControl.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>184, 17</value>
-  </metadata>
-  <data name="tbx_FolderName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>400, 25</value>
-  </data>
-  <data name="tsb_OneFolderUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABtSURBVDhPY6AZkJeXd1BUVLwOoqFCxAOQJjk5uVdAA/6D
-        aJIMAWqylZGReamkpOQEMgBI28D4UCW4AbJmKP8/iCbKEHTNIAAzAAQIGqKgoFCK7ldkA0AAJA9SB+US
-        BugGkAxGDRgMBtABMDAAAAlxKNerCu/DAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="tsb_OneFolderUp.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="tsb_OneFolderUp.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="tsb_OneFolderUp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
-  </data>
-  <data name="tsb_OneFolderUp.Text" xml:space="preserve">
-    <value>tsb_OneFolderUp</value>
-  </data>
-  <data name="tsb_OneFolderUp.ToolTipText" xml:space="preserve">
-    <value>tsb_OneFolderUp</value>
-  </data>
-  <data name="tsr_FolderControl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 49</value>
-  </data>
-  <data name="tsr_FolderControl.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>1, 1, 1, 1</value>
-  </data>
-  <data name="tsr_FolderControl.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 2, 0</value>
-  </data>
-  <data name="tsr_FolderControl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>730, 25</value>
-  </data>
-  <data name="tsr_FolderControl.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
-  <data name="tsr_FolderControl.Text" xml:space="preserve">
-    <value>tsr_FolderControl</value>
-  </data>
-  <data name="&gt;&gt;tsr_FolderControl.Name" xml:space="preserve">
-    <value>tsr_FolderControl</value>
-  </data>
-  <data name="&gt;&gt;tsr_FolderControl.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tsr_FolderControl.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;tsr_FolderControl.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
   <data name="splitContainerMain.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="splitContainerMain.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 74</value>
   </data>
@@ -597,6 +185,7 @@
   <data name="lvw_FileList.Size" type="System.Drawing.Size, System.Drawing">
     <value>295, 174</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="lvw_FileList.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
   </data>
@@ -604,7 +193,7 @@
     <value>lvw_FileList</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.ListView.FileListView, GeoTagNinja, Version=1.15.9075.21984, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.ListView.FileListView, GeoTagNinja, Version=1.15.9093.40097, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel1</value>
@@ -652,7 +241,7 @@
     <value>pbx_imagePreview</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.ImagePreview, GeoTagNinja, Version=1.15.9075.21984, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.ImagePreview, GeoTagNinja, Version=1.15.9093.40097, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel2</value>
@@ -1302,7 +891,7 @@
     <value>3, 3</value>
   </data>
   <data name="lvw_ExifData.Size" type="System.Drawing.Size, System.Drawing">
-    <value>405, 378</value>
+    <value>410, 378</value>
   </data>
   <data name="lvw_ExifData.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -1329,7 +918,7 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpg_Exif.Size" type="System.Drawing.Size, System.Drawing">
-    <value>411, 384</value>
+    <value>416, 384</value>
   </data>
   <data name="tpg_Exif.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -1360,7 +949,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAD8
-        CAAAAk1TRnQBSQFMAgEBAgEAARABAwEQAQMBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        CAAAAk1TRnQBSQFMAgEBAgEAASABAwEgAQMBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABQAMAARADAAEBAQABCAYAAQQYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
         AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
         AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA
@@ -1466,6 +1055,426 @@
   </data>
   <data name="&gt;&gt;splitContainerMain.ZOrder" xml:space="preserve">
     <value>1</value>
+  </data>
+  <metadata name="mns_MenuStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>613, 17</value>
+  </metadata>
+  <data name="tmi_File_SaveAll.ShortcutKeyDisplayString" xml:space="preserve">
+    <value>CTRL+S</value>
+  </data>
+  <data name="tmi_File_SaveAll.Size" type="System.Drawing.Size, System.Drawing">
+    <value>275, 22</value>
+  </data>
+  <data name="tmi_File_SaveAll.Text" xml:space="preserve">
+    <value>tmi_File_SaveAll</value>
+  </data>
+  <data name="tmi_File_EditFiles.ShortcutKeyDisplayString" xml:space="preserve">
+    <value>CTLR+Enter</value>
+  </data>
+  <data name="tmi_File_EditFiles.Size" type="System.Drawing.Size, System.Drawing">
+    <value>275, 22</value>
+  </data>
+  <data name="tmi_File_EditFiles.Text" xml:space="preserve">
+    <value>tmi_File_EditFiles</value>
+  </data>
+  <data name="tmi_File_ImportExportGPX.Size" type="System.Drawing.Size, System.Drawing">
+    <value>275, 22</value>
+  </data>
+  <data name="tmi_File_ImportExportGPX.Text" xml:space="preserve">
+    <value>tmi_File_ImportExportGPX</value>
+  </data>
+  <data name="tmi_File_CopyGeoData.ShortcutKeyDisplayString" xml:space="preserve">
+    <value>Sh + CTRL+C</value>
+  </data>
+  <data name="tmi_File_CopyGeoData.Size" type="System.Drawing.Size, System.Drawing">
+    <value>275, 22</value>
+  </data>
+  <data name="tmi_File_CopyGeoData.Text" xml:space="preserve">
+    <value>tmi_File_CopyGeoData</value>
+  </data>
+  <data name="tmi_File_PasteGeoData.ShortcutKeyDisplayString" xml:space="preserve">
+    <value>Sh + CTRL + V</value>
+  </data>
+  <data name="tmi_File_PasteGeoData.Size" type="System.Drawing.Size, System.Drawing">
+    <value>275, 22</value>
+  </data>
+  <data name="tmi_File_PasteGeoData.Text" xml:space="preserve">
+    <value>tmi_File_PasteGeoData</value>
+  </data>
+  <data name="tss_ToolStripSeparator_Main.Size" type="System.Drawing.Size, System.Drawing">
+    <value>272, 6</value>
+  </data>
+  <data name="tmiFileFlatModeToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>275, 22</value>
+  </data>
+  <data name="tmiFileFlatModeToolStripMenuItem.Text" xml:space="preserve">
+    <value>tmi_File_FlatMode</value>
+  </data>
+  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>272, 6</value>
+  </data>
+  <data name="tmi_File_Quit.ShortcutKeyDisplayString" xml:space="preserve">
+    <value>ALT+F4</value>
+  </data>
+  <data name="tmi_File_Quit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>275, 22</value>
+  </data>
+  <data name="tmi_File_Quit.Text" xml:space="preserve">
+    <value>tmi_File_Quit</value>
+  </data>
+  <data name="tmi_File.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 22</value>
+  </data>
+  <data name="tmi_File.Text" xml:space="preserve">
+    <value>tmi_File</value>
+  </data>
+  <data name="tmi_Settings_Settings.Size" type="System.Drawing.Size, System.Drawing">
+    <value>198, 22</value>
+  </data>
+  <data name="tmi_Settings_Settings.Text" xml:space="preserve">
+    <value>tmi_Settings_Settings</value>
+  </data>
+  <data name="tmi_Settings_Favourites.Size" type="System.Drawing.Size, System.Drawing">
+    <value>198, 22</value>
+  </data>
+  <data name="tmi_Settings_Favourites.Text" xml:space="preserve">
+    <value>tmi_Settings_Favourites</value>
+  </data>
+  <data name="tmi_Settings.Size" type="System.Drawing.Size, System.Drawing">
+    <value>84, 22</value>
+  </data>
+  <data name="tmi_Settings.Text" xml:space="preserve">
+    <value>tmi_Settings</value>
+  </data>
+  <data name="tmi_Help_About.Size" type="System.Drawing.Size, System.Drawing">
+    <value>183, 22</value>
+  </data>
+  <data name="tmi_Help_About.Text" xml:space="preserve">
+    <value>tmi_Help_About</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest.Size" type="System.Drawing.Size, System.Drawing">
+    <value>183, 22</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest.Text" xml:space="preserve">
+    <value>tmi_Help_Feedback</value>
+  </data>
+  <data name="tmi_Help_BugReport.Size" type="System.Drawing.Size, System.Drawing">
+    <value>183, 22</value>
+  </data>
+  <data name="tmi_Help_BugReport.Text" xml:space="preserve">
+    <value>tmi_Help_BugReport</value>
+  </data>
+  <data name="tmi_Help.Size" type="System.Drawing.Size, System.Drawing">
+    <value>67, 22</value>
+  </data>
+  <data name="tmi_Help.Text" xml:space="preserve">
+    <value>tmi_Help</value>
+  </data>
+  <data name="mns_MenuStrip.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="mns_MenuStrip.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 1, 0, 1</value>
+  </data>
+  <data name="mns_MenuStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>730, 24</value>
+  </data>
+  <data name="mns_MenuStrip.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="mns_MenuStrip.Text" xml:space="preserve">
+    <value>mns_MenuStrip</value>
+  </data>
+  <data name="&gt;&gt;mns_MenuStrip.Name" xml:space="preserve">
+    <value>mns_MenuStrip</value>
+  </data>
+  <data name="&gt;&gt;mns_MenuStrip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mns_MenuStrip.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;mns_MenuStrip.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <metadata name="tsr_MainAppToolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="tsb_SaveFiles.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACfSURBVDhPY6AuiN21nCF2536COGZXPYP9fhaoLhIBSGPM
+        zhawIXAQs/MB0Pb/BHHUzjUMaWdYwYaAXAIHIMno7ZJgjMxGFovdLQe0dRvYELAeUg0A00BDQGywHnIM
+        gLHBenAZELPrEZiPjEFiRBtACOM3YOcGIPsoVgySI2gAWCHUJnQMkxtEBgCTPRyQYwAKwBZ1uHD0rvtQ
+        XdQADAwA4VARVEAd8KsAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="tsb_SaveFiles.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="tsb_SaveFiles.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="tsb_SaveFiles.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="tsb_SaveFiles.Text" xml:space="preserve">
+    <value>tsb_SaveFiles</value>
+  </data>
+  <data name="tsb_Refresh_lvwFileList.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFGSURBVDhPrZI9SwQxEIansrLwo1DU/yCIKIIfnZ0gwnEf
+        yayFP8JWC0UtRRD1H1jf3SbZg+tsBRtLQRAVFQtRsNJJfD1huTXNPRB23tmZl0wS6g1st4jdV2cpd4M/
+        f5TO+4izYagCtFklbj4EkzyczZF2t6TtCjI52K0RN+7kO93VwKPNZNhdYpeRAZXWiDQ9hmZPkYHHm/ja
+        9fYAMoK225I8gfJnsoeoO9oeyjibUIJ2l6TSBag42s6SshdQQtW9U60+CBWn1O6ncuMZSmDzQRtmCCqO
+        N+D6G5TA5krOYAkqjh/Bj92B3a6YnEHFYXck9TtQQsWNUTl9pcTMIFOMSqek+UmucRQZoI2imr3/1yQ0
+        y2NTropMjsTqsBNtTyVeDG/f3w5n83JtxzL3S3HzL6o5IYUHsq5l1s+wfuJ9SlrjqOoVRN8kcIOT3ZSG
+        iAAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="tsb_Refresh_lvwFileList.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="tsb_Refresh_lvwFileList.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="tsb_Refresh_lvwFileList.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="tsb_Refresh_lvwFileList.Text" xml:space="preserve">
+    <value>tsb_Refresh_lvwFileList</value>
+  </data>
+  <data name="tsb_Refresh_lvwFileList.ToolTipText" xml:space="preserve">
+    <value>btn_Refresh_lvwFileList</value>
+  </data>
+  <data name="tsb_EditFile.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAElSURBVDhPrZM9TsNAEEanCS1S6CzLfzICmRQgV1BBRJMD
+        IIi9TiqUgrPQ0XCDXCDx7loREj0tF4DADZCoYLweBJssZgs+6WvseW/WKxn+LWEYTrF3pgZBMPN9f59G
+        zakHHcfZMpVEPI7jAxpfj4WgXWIpUJ9DiJ42wc/iXVSE6LERuK7bRcEhFNUpFPwGxiIl/G9BDSdJsoHg
+        OWTiFZi8xj4R3i5YgzN+AkxcQVY+Ev67oIbTNO1o8EhMoJAvMCr3CDcLvmF5puAL0UfRpYKZ6BHaxCRo
+        jr0Cs9lS2/yVVUEURZu4JQTG34At+urYQ/4MY75LiB4UaP+C53lHuP0W+wGFuFc3npc7NG6RfO4i/N4I
+        5AKGcpveWCavjhF8wKMP6IkhAJ8hqpRF5ebyLgAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="tsb_EditFile.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="tsb_EditFile.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="tsb_EditFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="tsb_EditFile.Text" xml:space="preserve">
+    <value>tsb_EditFile</value>
+  </data>
+  <data name="tsb_GetAllFromWeb.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFMSURBVDhPtZE/LwRBGMYfiUqrkhBX0Ghor3KR+AQiivWn
+        u0RF2NmZQ1zhW2B35nYpKK+RrEIh9wUuQtApFJfQKJTrnTF79o6cW4lf8mQy77zPM5N38D9UrwbBFSc9
+        YEO9gwe3YKpsT3tQrg9BHBfBahFceY1KOA8RTkDIRTD/Hp48sJ3dJAPgch+b/itc1QT3b7B7Mo6daORL
+        coZ6XrAVjFlTBk+t03MbqERTnaYuMVWnvhB74bR1WlzZhDgt/mjKylWrFHAIFjxDBEvWTWyrFrxo9Jsh
+        S7bOgzm69NGeEHpgXC50NGlpVuLErNm6no+eVxvmz9IcnmjaDqqy0DOABZP0G0f0ijNTb8NlidT4/HeV
+        GGnSgLTmyjcIdQ5RGzb1X0kDcrN2UTBrGpDu+0I3O3ELzmXJBOhV73OFpCYTYMNyo03L8d3fzH0BfACi
+        JbQHfFGZ5AAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="tsb_GetAllFromWeb.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="tsb_GetAllFromWeb.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="tsb_GetAllFromWeb.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="tsb_GetAllFromWeb.Text" xml:space="preserve">
+    <value>tsb_GetAllFromWeb</value>
+  </data>
+  <data name="tsb_RemoveGeoData.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGYSURBVDhPlZG9S0JhFMaPLrU2Nlw/0EEK/NiKJGsqWiOo
+        sMkp0Xv7FiJwahNCQb3W9QbR0lJGENQSgWP/QRa0VkMEOrTUc/TVrl+XeuBwXs57fg/nvC/1Uih0PBgY
+        1585i5JRVqfTmUFUHQ7Hvqj9yj9R9PmD+lkgqH838pFXXLGsgIqA7+12+7QkSZ+Ncvg2QeGbHT6aGLRg
+        t9s9whmRBgxw6fqlHsKER/cFtYphBQua8zAou1yuUeQ7hI66tadBh0zgphg0wFqU7KpCe/k4bXk9Nt0c
+        NigdpwEG1QjVCjKV06uWq4OItbYyOzTHOwMuoq03rMZpFvGYVOhLlekkE6O3nEzzMNxgE69HOkVbN8zj
+        YtQLNUZPAJcZYjivUKppko5aLmGeEEi7AD0UFCppm9h7jYY5Ok14HfQlBdIuNE21xhUGRhNeJyVTlScV
+        SLfMTMSb7IrW/sKYwbxMr1hnIbdOY3i8bdQWszJV+HdEm7l4EkDviA9NocmsQpVDhWbE9d/UXAcmJfzM
+        uSj/T2xS/x2ZbKLUR0Q/oJfFV0mRrVYAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="tsb_RemoveGeoData.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="tsb_RemoveGeoData.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="tsb_RemoveGeoData.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="tsb_RemoveGeoData.Text" xml:space="preserve">
+    <value>tsb_RemoveGeoData</value>
+  </data>
+  <data name="tsb_ImportExportGPX.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACwSURBVDhPYxhEIG0TF0PMriaG6J13GGJ31kJFiQQgzbE7
+        jgMN2MwQvduUIXQVG1SGSACyGaSZbAB29i4TKI8MELvrJ0PSBl4oDzuI364AZWEBhFwA0hy96xUwfByg
+        ImggZmcjwTAAacZpSMgxTqArjgGjbwtD3A4znLFA0JDYnQ1Ar9wG4j9A/B833nkVqotEELvbBmjAS6CX
+        naAiJIDo7bbkayYYC8QAvOmAbMDAAADQ81o+V3g1mAAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="tsb_ImportExportGPX.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="tsb_ImportExportGPX.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="tsb_ImportExportGPX.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="tsb_ImportExportGPX.Text" xml:space="preserve">
+    <value>tsb_ImportExportGPX</value>
+  </data>
+  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>6, 25</value>
+  </data>
+  <data name="tsb_FeedbackFeatureRequest.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAENSURBVDhPxZA7SgNRGIWncgMyxQzDvA1mKqOlkC5kHYK4
+        C+0s0gluwlTaWCiRLMRSuzxImyp+J/zjMJlIUgQ8cLiX/zzuwzk4kiR5iuN4vIvyWaQOhLHv+8e7KJ9F
+        6vjfgqIojqIoevc8byGyfwzD0Nu7gOGDCmAny7JzPmukkr0LCEwV1Kki+wuMc5mNQ4WDIOjifbVYBU6b
+        bBZoZvL6f5hfsj7ned6xcQWEga6tEoXZf2hm8roAvlB6ZqM6EHuu6y5ZV6Lteybrifd/hhHv4DeB6zRN
+        T0TMV/CT+a3ZtgNDH+MXbJfvL8ns1Ip/b9IAhpFO3gyXRL9BfzN7E4gzXXlbWERvUTI1+yHhOD/ixGpw
+        04eJIQAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="tsb_FeedbackFeatureRequest.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="tsb_FeedbackFeatureRequest.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="tsb_FeedbackFeatureRequest.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="tsb_FeedbackFeatureRequest.Text" xml:space="preserve">
+    <value>tsb_FeedbackFeatureRequest</value>
+  </data>
+  <data name="tsb_BugReport.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB4SURBVDhPY6AaUFRUXAHE+7FhBQWFrfLy8gZQpdgBSKGU
+        lJQwNgw1aIeKioohVDkmIMIA/IYQaQDYO1AtqACfAcgYpA6qBRVgMwAo9h+L2KgBJBpghkWMOANAmoH4
+        PxCboomT5AIUzVAxnAbgzExoeAVUCzUAAwMAtOBlRBRV4JEAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="tsb_BugReport.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="tsb_BugReport.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="tsb_BugReport.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="tsb_BugReport.Text" xml:space="preserve">
+    <value>tsb_BugReport</value>
+  </data>
+  <data name="tsr_MainAppToolStrip.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 24</value>
+  </data>
+  <data name="tsr_MainAppToolStrip.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>1, 1, 1, 1</value>
+  </data>
+  <data name="tsr_MainAppToolStrip.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 2, 0</value>
+  </data>
+  <data name="tsr_MainAppToolStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>730, 25</value>
+  </data>
+  <data name="tsr_MainAppToolStrip.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="tsr_MainAppToolStrip.Text" xml:space="preserve">
+    <value>tsr_MainAppToolStrip</value>
+  </data>
+  <data name="&gt;&gt;tsr_MainAppToolStrip.Name" xml:space="preserve">
+    <value>tsr_MainAppToolStrip</value>
+  </data>
+  <data name="&gt;&gt;tsr_MainAppToolStrip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tsr_MainAppToolStrip.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;tsr_MainAppToolStrip.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <metadata name="tsr_FolderControl.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>184, 17</value>
+  </metadata>
+  <data name="tbx_FolderName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>400, 25</value>
+  </data>
+  <data name="tsb_OneFolderUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABtSURBVDhPY6AZkJeXd1BUVLwOoqFCxAOQJjk5uVdAA/6D
+        aJIMAWqylZGReamkpOQEMgBI28D4UCW4AbJmKP8/iCbKEHTNIAAzAAQIGqKgoFCK7ldkA0AAJA9SB+US
+        BugGkAxGDRgMBtABMDAAAAlxKNerCu/DAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="tsb_OneFolderUp.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="tsb_OneFolderUp.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="tsb_OneFolderUp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="tsb_OneFolderUp.Text" xml:space="preserve">
+    <value>tsb_OneFolderUp</value>
+  </data>
+  <data name="tsb_OneFolderUp.ToolTipText" xml:space="preserve">
+    <value>tsb_OneFolderUp</value>
+  </data>
+  <data name="tsr_FolderControl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 49</value>
+  </data>
+  <data name="tsr_FolderControl.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>1, 1, 1, 1</value>
+  </data>
+  <data name="tsr_FolderControl.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 2, 0</value>
+  </data>
+  <data name="tsr_FolderControl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>730, 25</value>
+  </data>
+  <data name="tsr_FolderControl.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="tsr_FolderControl.Text" xml:space="preserve">
+    <value>tsr_FolderControl</value>
+  </data>
+  <data name="&gt;&gt;tsr_FolderControl.Name" xml:space="preserve">
+    <value>tsr_FolderControl</value>
+  </data>
+  <data name="&gt;&gt;tsr_FolderControl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tsr_FolderControl.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;tsr_FolderControl.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <metadata name="ttp_NavigateMapGo.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>329, 17</value>
@@ -4417,6 +4426,54 @@
   <data name="$this.Text" xml:space="preserve">
     <value>GeoTagNinja</value>
   </data>
+  <data name="&gt;&gt;clh_FileName.Name" xml:space="preserve">
+    <value>clh_FileName</value>
+  </data>
+  <data name="&gt;&gt;clh_FileName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cmi_ShowHideCols.Name" xml:space="preserve">
+    <value>cmi_ShowHideCols</value>
+  </data>
+  <data name="&gt;&gt;cmi_ShowHideCols.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cmi_removeCachedData.Name" xml:space="preserve">
+    <value>cmi_removeCachedData</value>
+  </data>
+  <data name="&gt;&gt;cmi_removeCachedData.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cmi_OpenCoordsInAPI.Name" xml:space="preserve">
+    <value>cmi_OpenCoordsInAPI</value>
+  </data>
+  <data name="&gt;&gt;cmi_OpenCoordsInAPI.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;clh_ExifTag.Name" xml:space="preserve">
+    <value>clh_ExifTag</value>
+  </data>
+  <data name="&gt;&gt;clh_ExifTag.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;clh_OriginalValue.Name" xml:space="preserve">
+    <value>clh_OriginalValue</value>
+  </data>
+  <data name="&gt;&gt;clh_OriginalValue.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;clh_ModifiedValue.Name" xml:space="preserve">
+    <value>clh_ModifiedValue</value>
+  </data>
+  <data name="&gt;&gt;clh_ModifiedValue.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;igl_RightHandSide.Name" xml:space="preserve">
+    <value>igl_RightHandSide</value>
+  </data>
+  <data name="&gt;&gt;igl_RightHandSide.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ImageList, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;tmi_File.Name" xml:space="preserve">
     <value>tmi_File</value>
   </data>
@@ -4457,6 +4514,18 @@
     <value>tss_ToolStripSeparator_Main</value>
   </data>
   <data name="&gt;&gt;tss_ToolStripSeparator_Main.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tmiFileFlatModeToolStripMenuItem.Name" xml:space="preserve">
+    <value>tmiFileFlatModeToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;tmiFileFlatModeToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
+    <value>toolStripSeparator2</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tmi_File_Quit.Name" xml:space="preserve">
@@ -4572,54 +4641,6 @@
   </data>
   <data name="&gt;&gt;tsb_OneFolderUp.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;clh_FileName.Name" xml:space="preserve">
-    <value>clh_FileName</value>
-  </data>
-  <data name="&gt;&gt;clh_FileName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cmi_ShowHideCols.Name" xml:space="preserve">
-    <value>cmi_ShowHideCols</value>
-  </data>
-  <data name="&gt;&gt;cmi_ShowHideCols.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cmi_removeCachedData.Name" xml:space="preserve">
-    <value>cmi_removeCachedData</value>
-  </data>
-  <data name="&gt;&gt;cmi_removeCachedData.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cmi_OpenCoordsInAPI.Name" xml:space="preserve">
-    <value>cmi_OpenCoordsInAPI</value>
-  </data>
-  <data name="&gt;&gt;cmi_OpenCoordsInAPI.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;clh_ExifTag.Name" xml:space="preserve">
-    <value>clh_ExifTag</value>
-  </data>
-  <data name="&gt;&gt;clh_ExifTag.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;clh_OriginalValue.Name" xml:space="preserve">
-    <value>clh_OriginalValue</value>
-  </data>
-  <data name="&gt;&gt;clh_OriginalValue.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;clh_ModifiedValue.Name" xml:space="preserve">
-    <value>clh_ModifiedValue</value>
-  </data>
-  <data name="&gt;&gt;clh_ModifiedValue.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;igl_RightHandSide.Name" xml:space="preserve">
-    <value>igl_RightHandSide</value>
-  </data>
-  <data name="&gt;&gt;igl_RightHandSide.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ImageList, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;ttp_NavigateMapGo.Name" xml:space="preserve">
     <value>ttp_NavigateMapGo</value>

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.View.DialogAndMessageBoxes;
@@ -18,6 +20,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     private ExifTool _ExifTool;
+    private FrmPleaseWaitBox _frmPleaseWaitBoxInstance;
 
     public ExifTool ExifTool
     {
@@ -153,27 +156,51 @@ public class DirectoryElementCollection : List<DirectoryElement>
     }
 
     /// <summary>
+    ///     Clears up the data stored in the 'stage' for the whole DE
+    /// </summary>
+    /// <param name="attributeVersion"></param>
+    internal void CleanupAllDataInStage(DirectoryElement.AttributeVersion attributeVersion)
+    {
+        foreach (DirectoryElement item in this)
+        {
+            foreach (ElementAttribute attribute in (ElementAttribute[])
+                     Enum.GetValues(enumType: typeof(ElementAttribute)))
+            {
+                item.RemoveAttributeValue(
+                    attribute: attribute,
+                    version: attributeVersion);
+            }
+        }
+    }
+
+    /// <summary>
     ///     Parses the given folder (or list of files if in CollectionMode) into DirectoryElements.
     ///     The previous collection of directory elements is cleared before.
-    ///     The statusMethod to be passed optionally accepts a string
+    ///     The updateProgressHandler to be passed optionally accepts a string
     ///     containing a short status text.
     /// </summary>
     /// <param name="folderOrCollectionFileName"></param>
-    /// <param name="statusMethod">The method to call for status updates</param>
+    /// <param name="updateProgressHandler">The method to call for status updates</param>
     /// <param name="collectionModeEnabled"></param>
-    public void ParseFolderOrFileListToDEs(string folderOrCollectionFileName,
-        Action<string> statusMethod,
-        bool collectionModeEnabled)
+    /// <param name="processSubFolders"></param>
+    /// <param name="cts"></param>
+    public async Task ParseFolderOrFileListToDEsAsync(string folderOrCollectionFileName,
+        Action<string> updateProgressHandler,
+        bool collectionModeEnabled,
+        bool processSubFolders,
+        CancellationTokenSource cts)
     {
         Log.Trace(message: $"Start Parsing Folder '{folderOrCollectionFileName}'");
-        statusMethod(obj: "Scanning folder: Initializing ...");
+        updateProgressHandler(obj: "Scanning folder: Initializing ...");
 
+        CancellationToken token = cts.Token;
         if (_ExifTool == null)
         {
             throw new InvalidOperationException(
                 message:
                 $"Cannot scan a folder (currently '{folderOrCollectionFileName}') when the EXIF Tool was not set for the DirectoryElementCollection.");
         }
+
 
         if (!collectionModeEnabled)
         {
@@ -193,7 +220,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     ), replaceIfExists: true);
                 }
 
-                CreateGuiDsForDirectoryElements();
+                CreateGUIDsForDirectoryElements();
                 Log.Trace(message: "Listing Drives - OK");
                 return;
             }
@@ -233,7 +260,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
             // ******************************
             // list folders, ReparsePoint means these are links.
-            statusMethod(obj: "Scanning folder: processing directories ...");
+            updateProgressHandler(obj: "Scanning folder: processing directories ...");
             Log.Trace(message: "Listing Folders");
             List<string> dirs = new();
             try
@@ -286,36 +313,37 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
         Log.Trace(message: "Loading allowedExtensions");
         string[] allowedImageExtensions = HelperGenericAncillaryListsArrays.AllCompatibleExtensionsExt();
-        string[] allowedSideCarExtensions = HelperGenericAncillaryListsArrays.GetSideCarExtensionsArray();
+        string[] allowedSidecarExtensions = HelperGenericAncillaryListsArrays.GetSideCarExtensionsArray();
         Log.Trace(message: "Loading allowedExtensions - OK");
 
         // ******************************
         // list files that have supported extensions
         // separate these into side car and image files
-        statusMethod(obj: "Scanning folder: processing supported files ...");
+        updateProgressHandler(obj: "Scanning folder: processing supported files ...");
         Log.Trace(message: "Files: Listing Files");
-        HashSet<string> imageFiles = new();
-        HashSet<string> sidecarFiles = new();
+        HashSet<FileInfo> imageFiles = new();
+        HashSet<FileInfo> sidecarFiles = new();
 
-        string[] filesInDir = { };
+        IEnumerable<FileInfo> filesInDir = null;
         int filesThatExistWithinCollection = 0;
 
         // if we're in collection-mode...
         if (collectionModeEnabled)
         {
-            List<string> filesInCollection = new();
+            List<FileInfo> filesInCollection = new();
             foreach (string collectItemWithPath in File.ReadLines(path: Program.CollectionFileLocation))
             {
                 if (File.Exists(path: collectItemWithPath))
                 {
-                    filesInCollection.Add(item: collectItemWithPath);
+                    FileInfo fi = new(fileName: collectItemWithPath);
+                    filesInCollection.Add(item: fi);
                     filesThatExistWithinCollection++;
                 }
             }
 
             if (filesThatExistWithinCollection > 0)
             {
-                filesInDir = filesInCollection.ToArray();
+                filesInDir = filesInCollection;
             }
         }
 
@@ -323,48 +351,78 @@ public class DirectoryElementCollection : List<DirectoryElement>
         if (!collectionModeEnabled ||
             (collectionModeEnabled && filesThatExistWithinCollection == 0))
         {
+            _frmPleaseWaitBoxInstance =
+                (FrmPleaseWaitBox)Application.OpenForms[name: "FrmPleaseWaitBox"];
+
+            _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxActionScanning.Visible = true;
+
+
             try
             {
-                filesInDir = Directory.GetFiles(path: folderOrCollectionFileName);
+                await Task.Run(action: () =>
+                {
+                    filesInDir = GetFiles(
+                        folder: folderOrCollectionFileName,
+                        filter: allowedImageExtensions.Concat(second: allowedSidecarExtensions).ToArray(),
+                        recursive: processSubFolders,
+                        updateProgressHandler: updateProgressHandler,
+                        cancellationToken: token
+                    ); // Force enumeration to ensure all files are processed
+                });
+            }
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine(value: "Operation canceled.");
             }
             catch (Exception ex)
             {
-                Log.Trace(message: "Files: Listing Files - Error: " + ex.Message);
-                MessageBox.Show(text: ex.Message);
-                return;
+                Console.WriteLine(value: $"Error: {ex.Message}");
+            }
+
+            if (_frmPleaseWaitBoxInstance != null)
+            {
+                _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxActionScanning.Visible = false;
+                _frmPleaseWaitBoxInstance.btn_Cancel.Enabled = false;
+                _frmPleaseWaitBoxInstance.lbl_PressCancelToStop.Visible = false;
             }
         }
 
-        foreach (string fileNameWithExtension in filesInDir)
+        if (filesInDir != null)
         {
-            // Check, if it is a side car file. If so,
-            // add it to the list to attach to image files later
-            if (allowedSideCarExtensions.Contains(value: Path.GetExtension(path: fileNameWithExtension)
-                                                             .ToLower()
-                                                             .Replace(oldValue: ".", newValue: "")))
+            foreach (FileInfo fileInfoItem in filesInDir)
             {
-                sidecarFiles.Add(item: fileNameWithExtension);
-            }
-
-            // Image file
-            else if (allowedImageExtensions.Contains(value: Path.GetExtension(path: fileNameWithExtension)
-                                                                .ToLower()
-                                                                .Replace(oldValue: ".", newValue: "")))
-            {
-                imageFiles.Add(item: fileNameWithExtension);
-
-                // collection mode throws a slight problem with sidecar files: 
-                // if an xmp (or other, currently undefined) file is not explicitly on the collection-mode-list then it gets ignored.
-                // so we check if there is an xmp file with the same name as the image here.
-                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(path: fileNameWithExtension);
-                foreach (string sideCarExtension in allowedSideCarExtensions)
+                // Check, if it is a side car file. If so,
+                // add it to the list to attach to image files later
+                if (allowedSidecarExtensions.Contains(
+                        value: fileInfoItem.Extension.Replace(oldValue: ".", newValue: ""),
+                        comparer: StringComparer.InvariantCultureIgnoreCase))
                 {
-                    string imaginaryFileNameWithPath = fileNameWithoutExtension + "." + sideCarExtension;
-                    if (File.Exists(path: Path.Combine(path1: Path.GetDirectoryName(path: fileNameWithExtension),
-                            path2: imaginaryFileNameWithPath)))
+                    sidecarFiles.Add(item: fileInfoItem);
+                }
+
+                // Image file
+                else if (allowedImageExtensions.Contains(
+                             value: fileInfoItem.Extension.Replace(oldValue: ".", newValue: ""),
+                             comparer: StringComparer.InvariantCultureIgnoreCase))
+                {
+                    imageFiles.Add(item: fileInfoItem);
+
+                    // collection mode throws a slight problem with sidecar files: 
+                    // if an xmp (or other, currently undefined) file is not explicitly on the collection-mode-list then it gets ignored.
+                    // so we check if there is an xmp file with the same name as the image here.
+
+                    foreach (string sideCarExtension in allowedSidecarExtensions)
                     {
-                        sidecarFiles.Add(item: Path.Combine(path1: Path.GetDirectoryName(path: fileNameWithExtension),
-                            path2: imaginaryFileNameWithPath));
+                        string imaginarySidecarFileNameWithPath =
+                            Path.GetFileNameWithoutExtension(path: fileInfoItem.FullName) + "." + sideCarExtension;
+                        if (File.Exists(path: Path.Combine(path1: fileInfoItem.DirectoryName,
+                                path2: imaginarySidecarFileNameWithPath)))
+                        {
+                            FileInfo fiSidecarFileInfoItem = new(fileName: Path.Combine(
+                                path1: fileInfoItem.DirectoryName,
+                                path2: imaginarySidecarFileNameWithPath));
+                            sidecarFiles.Add(item: fiSidecarFileInfoItem);
+                        }
                     }
                 }
             }
@@ -373,28 +431,26 @@ public class DirectoryElementCollection : List<DirectoryElement>
         Log.Trace(message: "Files: Listing Files - OK, image file count: " + imageFiles.Count);
 
         // ******************************
-        // Map side car files to image file
-        IDictionary<string, string> image2sidecar = new Dictionary<string, string>();
-        HashSet<string> overlappingXmpFileList = new();
+        // Map sidecar files to image file
+        IDictionary<FileInfo, FileInfo> imageToSidecarFileMapping = new Dictionary<FileInfo, FileInfo>();
+        HashSet<FileInfo> overlappingXMPFileList = new();
 
         Log.Trace(message: "Files: Checking sidecar files, count: " + sidecarFiles.Count);
-        foreach (string sidecarFile in sidecarFiles)
+        foreach (FileInfo sideCarFileInfoItem in sidecarFiles)
         {
             // Get (by comparing w/o extension) list of matching image files in lower case
-            string scFilenameWithoutExtension = Path.GetFileNameWithoutExtension(path: sidecarFile)
-                                                    .ToLower();
-            List<string> matchingImageFiles = imageFiles
-                                             .Where(predicate: imgFile =>
-                                                  Path.GetFileNameWithoutExtension(path: imgFile)
-                                                      .ToLower() ==
-                                                  scFilenameWithoutExtension)
-                                             .ToList();
+            string scFilenameWithoutExtension = sideCarFileInfoItem.Name.ToLower();
+            List<FileInfo> matchingImageFiles = imageFiles
+                                               .Where(predicate: imgFile =>
+                                                    imgFile.Name
+                                                           .ToLower() ==
+                                                    scFilenameWithoutExtension)
+                                               .ToList();
 
             bool sidecarFileAlreadyAdded = false;
-            foreach (string imgFile in matchingImageFiles)
+            foreach (FileInfo imagefileFileInfoItem in matchingImageFiles)
             {
-                string imgFileExtension = Path.GetExtension(path: imgFile)
-                                              .Substring(startIndex: 1);
+                string imgFileExtension = imagefileFileInfoItem.Extension;
 
                 // only add the sidecar file linkage if the particular extension is marked to use sidecars
                 bool writeXMPSideCar = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
@@ -407,22 +463,23 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 {
                     if (sidecarFileAlreadyAdded)
                     {
-                        overlappingXmpFileList.Add(item: sidecarFile);
-                        Log.Warn(message: $"Sidecar file '{sidecarFile}' matches multiple image files!");
+                        overlappingXMPFileList.Add(item: sideCarFileInfoItem);
+                        Log.Warn(message: $"Sidecar file '{sideCarFileInfoItem}' matches multiple image files!");
                     }
 
-                    image2sidecar[key: imgFile] = sidecarFile;
+                    imageToSidecarFileMapping[key: imagefileFileInfoItem] = sideCarFileInfoItem;
                     sidecarFileAlreadyAdded = true;
                 }
             }
         }
 
-        if (overlappingXmpFileList.Count > 0)
+        // check if we have 1 xmp belonging to multiple images. 
+        if (overlappingXMPFileList.Count > 0)
         {
             string overlappingXmpFileStr = "";
-            foreach (string s in overlappingXmpFileList)
+            foreach (FileInfo fi in overlappingXMPFileList)
             {
-                overlappingXmpFileStr += s + NewLine;
+                overlappingXmpFileStr += fi.FullName + NewLine;
             }
 
             CustomMessageBox customMessageBox = new(
@@ -447,13 +504,20 @@ public class DirectoryElementCollection : List<DirectoryElement>
         int fileCount = 0;
         _ExifTool ??= new ExifTool();
 
-        foreach (string fileNameWithPath in imageFiles)
+        if (_frmPleaseWaitBoxInstance != null)
         {
-            Log.Info(message: $"File: {fileNameWithPath}");
-            string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
+            _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxActionParsing.Visible = true;
+        }
+
+        foreach (FileInfo imagefileFileInfoItem in imageFiles)
+        {
+            Log.Info(message: $"File: {imagefileFileInfoItem.FullName}");
+            string fileNameWithoutPath = imagefileFileInfoItem.Name;
+            _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Text = imagefileFileInfoItem.FullName;
             if (fileCount % 10 == 0)
             {
-                statusMethod(
+                Application.DoEvents();
+                updateProgressHandler(
                     obj:
                     $"Scanning folder {100 * fileCount / imageFiles.Count:0}%: processing file '{fileNameWithoutPath}'");
             }
@@ -461,18 +525,19 @@ public class DirectoryElementCollection : List<DirectoryElement>
             // this is a bit complex but in _this_ loop we're not looking at sidecar files at _this_ stage whereas ...
             // I need to know if an xmp has changed or not
             bool fileNeedsReDEing = false;
-            image2sidecar.TryGetValue(key: fileNameWithPath, value: out string sideCarFileNameWithPath);
+            imageToSidecarFileMapping.TryGetValue(key: imagefileFileInfoItem, value: out FileInfo sidecarFileInfoItem);
             // so first we check the details of the image file then those of the xmp's
             for (int i = 0; i <= 1; i++)
             {
                 string thisCheckSum = string.Empty;
                 string storedChecksum = string.Empty;
-                string fileNameWithPathToCheck = i == 0 ? fileNameWithPath : sideCarFileNameWithPath;
+                FileInfo fileNameWithPathToCheck = i == 0 ? imagefileFileInfoItem : sidecarFileInfoItem;
 
                 // note to self: jpgs have no sidecars.
-                if (File.Exists(path: fileNameWithPathToCheck))
+                if (fileNameWithPathToCheck != null &&
+                    File.Exists(path: fileNameWithPathToCheck.FullName))
                 {
-                    if (HelperVariables.fileChecksumhDictionary.TryGetValue(key: fileNameWithPathToCheck,
+                    if (HelperVariables.FileChecksumDictionary.TryGetValue(key: fileNameWithPathToCheck,
                             value: out string value))
                     {
                         storedChecksum = value;
@@ -484,25 +549,27 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     // so basically we could have two files that look identical on the surface but differ in content. 
                     // as such we do need to do the checksum test regardless of what the files appear like.
 
-                    thisCheckSum = HelperFileSystemGetChecksum.GetChecksum(fileNameWithPath: fileNameWithPathToCheck);
+                    thisCheckSum =
+                        HelperFileSystemGetChecksum.GetChecksum(fileNameWithPath: fileNameWithPathToCheck.FullName);
 
                     fileNeedsReDEing = fileNeedsReDEing || storedChecksum != thisCheckSum ||
-                                       !HelperVariables.fileChecksumhDictionary.ContainsKey(
+                                       !HelperVariables.FileChecksumDictionary.ContainsKey(
                                            key: fileNameWithPathToCheck);
                 }
 
                 if (fileNeedsReDEing && !string.IsNullOrWhiteSpace(value: thisCheckSum))
                 {
                     // update HelperVariables.fileChecksumhDictionary
-                    HelperVariables.fileChecksumhDictionary[key: fileNameWithPathToCheck] = thisCheckSum;
+                    HelperVariables.FileChecksumDictionary[key: fileNameWithPathToCheck] = thisCheckSum;
                 }
             }
+
 
             if (fileNeedsReDEing)
             {
                 // delete from DE-collection (xmp files don't have a DE entry)
                 DirectoryElement? directoryElementToRemove =
-                    FindElementByFileNameWithPath(FileNameWithPath: fileNameWithPath);
+                    FindElementByFileNameWithPath(FileNameWithPath: imagefileFileInfoItem.FullName);
                 if (directoryElementToRemove is not null)
                 {
                     Remove(item: directoryElementToRemove);
@@ -511,24 +578,26 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 // Regular (image) files are added to the list of
                 // Directory Elements...
                 DirectoryElement fileToParseDictionaryElement = new(
-                    itemNameWithoutPath: Path.GetFileName(path: fileNameWithoutPath),
+                    itemNameWithoutPath: imagefileFileInfoItem.Name,
                     type: DirectoryElement.ElementType.File,
-                    fileNameWithPath: fileNameWithPath
+                    fileNameWithPath: imagefileFileInfoItem.FullName
                 );
 
                 // Add sidecar file and data if available
                 IDictionary<string, string> dictProperties = new Dictionary<string, string>();
-                if (!string.IsNullOrWhiteSpace(value: sideCarFileNameWithPath))
+                if (sidecarFileInfoItem != null &&
+                    File.Exists(path: sidecarFileInfoItem.FullName))
                 {
                     Log.Info(
-                        message: $"Files: Extracting File Data - adding side car file '{sideCarFileNameWithPath}'");
-                    fileToParseDictionaryElement.SidecarFile = sideCarFileNameWithPath;
+                        message: $"Files: Extracting File Data - adding side car file '{sidecarFileInfoItem}'");
+                    fileToParseDictionaryElement.SidecarFile = sidecarFileInfoItem;
                     // Logically XMP should take priority because RAW files are not meant to be edited.
-                    InitiateEXIFParsing(fileNameWithPathToParse: sideCarFileNameWithPath, properties: dictProperties);
+                    InitiateEXIFParsing(fileinfoItem: sidecarFileInfoItem, properties: dictProperties);
                 }
 
-                // Parse EXIF properties
-                InitiateEXIFParsing(fileNameWithPathToParse: fileNameWithPath, properties: dictProperties);
+
+                // Parse EXIF properties for the image.
+                InitiateEXIFParsing(fileinfoItem: imagefileFileInfoItem, properties: dictProperties);
 
                 // Insert into model
                 fileToParseDictionaryElement.ParseAttributesFromExifToolOutput(dictTagsIn: dictProperties);
@@ -541,7 +610,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
             Thread.Sleep(millisecondsTimeout: 1);
         }
 
-        CreateGuiDsForDirectoryElements();
+        CreateGUIDsForDirectoryElements();
 
         FrmMainApp.TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.NoProgress);
 
@@ -551,7 +620,8 @@ public class DirectoryElementCollection : List<DirectoryElement>
     /// <summary>
     ///     Assigns a GUID for the DEs in the DECollection
     /// </summary>
-    private static void CreateGuiDsForDirectoryElements()
+    // ReSharper disable once InconsistentNaming
+    private static void CreateGUIDsForDirectoryElements()
     {
         foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
         {
@@ -565,12 +635,12 @@ public class DirectoryElementCollection : List<DirectoryElement>
     ///     dictionary. Thereby, ignoring duplicate tags.
     /// </summary>
     // ReSharper disable once InconsistentNaming
-    private void InitiateEXIFParsing(string fileNameWithPathToParse,
+    private void InitiateEXIFParsing(FileInfo fileinfoItem,
         IDictionary<string, string> properties)
     {
         // Gather EXIF data for the image file
         ICollection<KeyValuePair<string, string>> propertiesRead = new Dictionary<string, string>();
-        _ExifTool.GetProperties(filename: fileNameWithPathToParse, propertiesRead: propertiesRead);
+        _ExifTool.GetProperties(filename: fileinfoItem.FullName, propertiesRead: propertiesRead);
 
         // EXIF Tool can return duplicate properties - handle, but ignore these...
         foreach (KeyValuePair<string, string> kvp in propertiesRead)
@@ -582,7 +652,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         }
 
         // force-derive Refs here because they can disagree between RAW and XMP files.
-        if (fileNameWithPathToParse.EndsWith(value: ".xmp"))
+        if (fileinfoItem.Extension.EndsWith(value: ".xmp"))
         {
             // "EXIF" takes prio over "Composite"
             string tmpLatLongValStr;
@@ -614,6 +684,85 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     : "North";
 
                 properties.Add(key: "EXIF:GPSLatitudeRef", value: tmpLatLongRefValStr);
+            }
+        }
+    }
+
+
+    /// <summary>
+    ///     Loops a given folder while ignoring access and other errors.
+    ///     via https://stackoverflow.com/a/33172145/3968494
+    /// </summary>
+    /// <param name="folder">The root folder to parse</param>
+    /// <param name="filter">Filters to enact</param>
+    /// <param name="recursive">Whether recursive or not</param>
+    /// <param name="updateProgressHandler">Action link to the <see cref="FrmMainApp.HandlerUpdateLabelText" /></param>
+    /// <param name="cancellationToken">The CT</param>
+    /// <returns></returns>
+    private IEnumerable<FileInfo> GetFiles(
+        string folder,
+        string[] filter,
+        bool recursive,
+        Action<string> updateProgressHandler,
+        CancellationToken cancellationToken)
+    {
+        Debug.Assert(condition: _frmPleaseWaitBoxInstance != null,
+            message: nameof(_frmPleaseWaitBoxInstance) + " != null");
+        IEnumerable<string> found = new List<string>();
+        try
+        {
+            found = Directory.GetFiles(path: folder)
+                             .Where(predicate: file =>
+                                  filter.Any(predicate: ext => file.ToLower().EndsWith(value: ext)));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(value: $"Error accessing folder {folder}: {ex.Message}");
+        }
+
+        int counter = 0;
+        foreach (string file in found)
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                yield break;
+            }
+
+            if (counter % 10 == 0)
+            {
+                Application.DoEvents();
+            }
+
+            // updateProgressHandler(obj: $"Scanning file: {file}");
+            _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Text = file;
+            yield return new FileInfo(fileName: file);
+            counter++;
+        }
+
+        if (recursive)
+        {
+            IEnumerable<string> directories = new List<string>();
+            try
+            {
+                directories = Directory.GetDirectories(path: folder);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(value: $"Error accessing subdirectories in {folder}: {ex.Message}");
+            }
+
+            foreach (string dir in directories)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    yield break;
+                }
+
+                foreach (FileInfo subFile in GetFiles(folder: dir, filter: filter, recursive: recursive,
+                             updateProgressHandler: updateProgressHandler, cancellationToken: cancellationToken))
+                {
+                    yield return subFile;
+                }
             }
         }
     }

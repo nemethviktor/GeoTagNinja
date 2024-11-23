@@ -208,4 +208,24 @@ If you click 'stop asking' it will take the answer as Yes and won't ask again th
 Some HEIC files have this, most other formats don't.</value>
     <comment>Location: Import/Export GPX</comment>
   </data>
+  <data name="lbl_ParsingFolders" xml:space="preserve">
+    <value>Parsing Files &amp;&amp; Folders, please wait. </value>
+    <comment>Location: "Please Wait" Form</comment>
+  </data>
+  <data name="lbl_CancelPressed" xml:space="preserve">
+    <value>Cancel Pressed. Folder parsing has stopped but files that have been collected will be parsed.</value>
+    <comment>Location: "Please Wait" Form</comment>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionParsing" xml:space="preserve">
+    <value>Parsing Data:</value>
+    <comment>Location: "Please Wait" Form</comment>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionScanning" xml:space="preserve">
+    <value>Scanning File:</value>
+    <comment>Location: "Please Wait" Form</comment>
+  </data>
+  <data name="lbl_PressCancelToStop" xml:space="preserve">
+    <value>Press Cancel to stop.</value>
+    <comment>Location: "Please Wait" Form</comment>
+  </data>
 </root>

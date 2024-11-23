@@ -12,7 +12,7 @@ internal static class HelperFileSystemGetChecksum
     ///     Basically the idea is that we can checksum files relatively quickly and then if matching whatever is stored in the
     ///     memory then don't reload every bit of data again.
     /// </summary>
-    /// <returns>The checksum of the file or string.Empty if the file doesn't exist.</returns>
+    /// <returns>The checksum of the file or string. Empty if the file doesn't exist.</returns>
     internal static string GetChecksum(string fileNameWithPath)
     {
         if (File.Exists(path: fileNameWithPath))

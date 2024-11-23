@@ -574,7 +574,10 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
 
         // don't add twice. this could happen if user does F5 too fast/too many times/is derp. (mostly the last one.)
-        if (FindItemWithText(text: lvi.Text) == null)
+        bool itemAlreadyInListview = Items.Cast<ListViewItem>()
+                                          .Any(predicate: listViewItem => directoryElement == listViewItem.Tag);
+
+        if (!itemAlreadyInListview)
         {
             lvi.Tag = directoryElement;
             Items.Add(value: lvi)
@@ -939,20 +942,57 @@ public partial class FileListView : System.Windows.Forms.ListView
         // so now that we don't clear the DE collection we actually need to make sure these items exist in the current folder/scope.
         foreach (DirectoryElement directoryElement in DirectoryElements)
         {
-            if ((directoryElement.Type == DirectoryElement.ElementType.File && Program.CollectionModeEnabled) ||
-                (directoryElement.Type == DirectoryElement.ElementType.File && File.Exists(
-                    path: Path.Combine(path1: FrmMainApp.FolderName, path2: directoryElement.ItemNameWithoutPath))) ||
-                (directoryElement.Type == DirectoryElement.ElementType.SubDirectory &&
-                 Directory.Exists(path: Path.Combine(path1: FrmMainApp.FolderName,
-                     path2: directoryElement.ItemNameWithoutPath))) ||
-                directoryElement.Type == DirectoryElement.ElementType.ParentDirectory ||
-                (FrmMainApp.FolderName == Environment.SpecialFolder.MyComputer.ToString() &&
-                 directoryElement.Type == DirectoryElement.ElementType.Drive))
+            // it's a file and we are in collectionMode
+            bool aFileAndWeAreInCollectionMode = directoryElement.Type == DirectoryElement.ElementType.File &&
+                                                 Program.CollectionModeEnabled;
+            // it's a file and it exists in the current folder and we're not in flatfile mode
+            bool aFileAndWeAreNotInCollectionModeButFileIsWithinMainFolder =
+                directoryElement.Type == DirectoryElement.ElementType.File &&
+                !FrmMainApp.FlatMode &&
+                File.Exists(
+                    path: Path.Combine(path1: FrmMainApp.FolderName,
+                        path2: directoryElement.ItemNameWithoutPath));
+
+            // it's a file and it's in a subfolder of the current "main" folder and we are in flatfile mode
+            bool aFileAndWeAreNotInCollectionModeAndItsInARelevantSubfolder =
+                directoryElement.Type == DirectoryElement.ElementType.File &&
+                FrmMainApp.FlatMode &&
+                Directory.GetFiles(path: FrmMainApp.FolderName, searchPattern: directoryElement.ItemNameWithoutPath,
+                              searchOption: SearchOption.AllDirectories)
+                         .FirstOrDefault() != null;
+
+            // it's a subfolder within the current "main" folder
+            bool aSubfolderWithinMainFolder =
+                directoryElement.Type == DirectoryElement.ElementType.SubDirectory &&
+                Directory.Exists(path: Path.Combine(path1: FrmMainApp.FolderName,
+                    path2: directoryElement.ItemNameWithoutPath));
+
+            // it's ".." and fileNameWithPath is the actual parent of the current main folder.
+            bool dotDotParent = directoryElement.Type == DirectoryElement.ElementType.ParentDirectory &&
+                                (!FrmMainApp.FlatMode || (FrmMainApp.FlatMode &&
+                                                          Directory.GetParent(path: FrmMainApp.FolderName)
+                                                                  ?.Parent.FullName ==
+                                                          directoryElement.FileNameWithPath));
+
+            // we're My Computer and it's a Drive
+            bool weAreInMyComputerAndItsADrive =
+                FrmMainApp.FolderName == Environment.SpecialFolder.MyComputer.ToString() &&
+                directoryElement.Type == DirectoryElement.ElementType.Drive;
+
+            if (aFileAndWeAreInCollectionMode ||
+                aFileAndWeAreNotInCollectionModeButFileIsWithinMainFolder ||
+                aFileAndWeAreNotInCollectionModeAndItsInARelevantSubfolder ||
+                aSubfolderWithinMainFolder ||
+                dotDotParent ||
+                weAreInMyComputerAndItsADrive)
+
             {
                 AddListItem(directoryElement: directoryElement);
-                if ((directoryElement.Type == DirectoryElement.ElementType.File && Program.CollectionModeEnabled) ||
-                    (directoryElement.Type == DirectoryElement.ElementType.File && File.Exists(
-                        path: Path.Combine(path1: FrmMainApp.FolderName, path2: directoryElement.ItemNameWithoutPath))))
+
+                // increment file count
+                if (aFileAndWeAreInCollectionMode ||
+                    aFileAndWeAreNotInCollectionModeButFileIsWithinMainFolder ||
+                    aFileAndWeAreNotInCollectionModeAndItsInARelevantSubfolder)
                 {
                     _fileCount++;
                 }

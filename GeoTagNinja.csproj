@@ -195,6 +195,12 @@
     <Compile Include="FrmMainApp.Startup.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="FrmPleaseWaitBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmPleaseWaitBox.Designer.cs">
+      <DependentUpon>FrmPleaseWaitBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\HelperControlThemeManager.cs" />
     <Compile Include="Helpers\HelperDataSettingsExport.cs" />
     <Compile Include="Helpers\HelperDataSettingsImport.cs" />
@@ -422,6 +428,9 @@
     <EmbeddedResource Include="FrmManageFavourites.resx">
       <DependentUpon>FrmManageFavourites.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmPleaseWaitBox.resx">
+      <DependentUpon>FrmPleaseWaitBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Languages\ColumnHeader.fr.resx" />
     <EmbeddedResource Include="Resources\Languages\ColumnHeader.resx">

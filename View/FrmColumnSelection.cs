@@ -21,11 +21,11 @@ public partial class FrmColumnSelection : Form
         _colList = colList;
         InitializeComponent();
 
-        btn_Generic_Cancel.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
-            controlName: "btn_Generic_Cancel",
+        btn_Cancel.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
+            controlName: "btn_Cancel",
             fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button);
-        btn_Generic_OK.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
-            controlName: "btn_Generic_OK", fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button);
+        btn_OK.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
+            controlName: "btn_OK", fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button);
         lbl_SelectColsTitle.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
             controlName: "lbl_SelectColsTitle",
             fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Label);
