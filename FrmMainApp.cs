@@ -2660,7 +2660,7 @@ public partial class FrmMainApp : Form
                 if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                 {
                     await HelperExifReadGetImagePreviews.GenericCreateImagePreview(
-                        fileNameWithPath: fileNameWithPath, initiator: "FrmMainApp");
+                        directoryElement: dirElemFileToModify, initiator: "FrmMainApp");
                 }
                 else
                 {

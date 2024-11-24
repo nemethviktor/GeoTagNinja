@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using geoTagNinja;
+using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
@@ -810,9 +811,10 @@ internal static class HelperExifReadExifData
                             string fileNameWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath);
                             ListViewItem lvi = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath);
                             frmMainAppInstance.lvw_FileList.FocusedItem = lvi;
+                            DirectoryElement directoryElement = lvi.Tag as DirectoryElement;
                             frmMainAppInstance.lvw_FileList.EnsureVisible(index: lvi.Index);
                             HelperExifReadGetImagePreviews.GenericCreateImagePreview(
-                                fileNameWithPath: fileNameWithPath, initiator: "FrmMainAppAPIDataSelection"
+                                directoryElement: directoryElement, initiator: "FrmMainAppAPIDataSelection"
                             );
                             Application.DoEvents();
                         }

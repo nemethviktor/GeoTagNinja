@@ -43,7 +43,9 @@ internal static class EditFileFormGeneric
                 overallCount++;
                 ListViewItem lvi = new()
                 {
-                    Text = dirElemFileToModify.ItemNameWithoutPath,
+                    Text = FrmMainApp.FlatMode
+                        ? dirElemFileToModify.FileNameWithPath
+                        : dirElemFileToModify.ItemNameWithoutPath,
                     Tag = dirElemFileToModify
                 };
                 //lvi.SubItems.Add(text: fileToEditGUID);
