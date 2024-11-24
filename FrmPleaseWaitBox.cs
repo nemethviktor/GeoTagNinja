@@ -11,13 +11,6 @@ public partial class FrmPleaseWaitBox : Form
     private FrmMainApp _frmMainAppInstance =
         (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
-    internal enum ActionStages
-    {
-        SCANNING,
-        PARSING,
-        POPULATING_LISTVIEW
-    }
-
     public FrmPleaseWaitBox()
     {
         InitializeComponent();
@@ -116,7 +109,7 @@ public partial class FrmPleaseWaitBox : Form
         {
             lbl_ParsingFolders.Visible = false;
             lbl_CancelPressed.Visible = false;
-            lbl_PleaseWaitBoxMessage.Visible = false;
+            lbl_PleaseWaitBoxMessage.Visible = true;
             lbl_PressCancelToStop.Visible = false;
             btn_Cancel.Visible = false;
             lbl_PleaseWaitBoxActionScanning.Visible = false;
@@ -125,5 +118,12 @@ public partial class FrmPleaseWaitBox : Form
         }
 
         Application.DoEvents();
+    }
+
+    internal enum ActionStages
+    {
+        SCANNING,
+        PARSING,
+        POPULATING_LISTVIEW
     }
 }

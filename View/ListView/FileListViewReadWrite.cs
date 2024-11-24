@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -257,29 +256,33 @@ internal static class FileListViewReadWrite
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         int DEFileCount = 0;
         int DEFilesWithGeoDataCount = 0;
-        foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
+        if (frmMainAppInstance != null)
         {
-            if ((directoryElement.Type == DirectoryElement.ElementType.File && Program.CollectionModeEnabled) ||
-                (directoryElement.Type == DirectoryElement.ElementType.File && File.Exists(
-                    path: Path.Combine(path1: FrmMainApp.FolderName, path2: directoryElement.ItemNameWithoutPath))))
+            List<DirectoryElement> lvwDirectoryElements =
+                (from ListViewItem lvi in frmMainAppInstance.lvw_FileList.Items select lvi.Tag as DirectoryElement)
+               .ToList();
+            foreach (DirectoryElement directoryElement in lvwDirectoryElements)
             {
-                DEFileCount++;
-                List<ElementAttribute> GeoDataAttributes = Enum
-                                                          .GetValues(
-                                                               enumType:
-                                                               typeof(ElementAttribute))
-                                                          .Cast<ElementAttribute>()
-                                                          .Where(
-                                                               predicate:
-                                                               GetElementAttributesIsGeoData)
-                                                          .ToList();
-
-                foreach (ElementAttribute geoDataAttribute in GeoDataAttributes)
+                if (directoryElement.Type == DirectoryElement.ElementType.File)
                 {
-                    if (directoryElement.HasSpecificAttributeWithAnyVersion(attribute: geoDataAttribute))
+                    DEFileCount++;
+                    List<ElementAttribute> GeoDataAttributes = Enum
+                                                              .GetValues(
+                                                                   enumType:
+                                                                   typeof(ElementAttribute))
+                                                              .Cast<ElementAttribute>()
+                                                              .Where(
+                                                                   predicate:
+                                                                   GetElementAttributesIsGeoData)
+                                                              .ToList();
+
+                    foreach (ElementAttribute geoDataAttribute in GeoDataAttributes)
                     {
-                        DEFilesWithGeoDataCount++;
-                        break;
+                        if (directoryElement.HasSpecificAttributeWithAnyVersion(attribute: geoDataAttribute))
+                        {
+                            DEFilesWithGeoDataCount++;
+                            break;
+                        }
                     }
                 }
             }

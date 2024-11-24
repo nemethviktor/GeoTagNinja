@@ -68,9 +68,9 @@
             // 
             // lbl_PleaseWaitBoxMessage
             // 
-            this.lbl_PleaseWaitBoxMessage.Location = new System.Drawing.Point(118, 158);
+            this.lbl_PleaseWaitBoxMessage.Location = new System.Drawing.Point(30, 158);
             this.lbl_PleaseWaitBoxMessage.Name = "lbl_PleaseWaitBoxMessage";
-            this.lbl_PleaseWaitBoxMessage.Size = new System.Drawing.Size(561, 13);
+            this.lbl_PleaseWaitBoxMessage.Size = new System.Drawing.Size(741, 19);
             this.lbl_PleaseWaitBoxMessage.TabIndex = 3;
             this.lbl_PleaseWaitBoxMessage.Text = "lbl_PleaseWaitBoxMessage";
             // 

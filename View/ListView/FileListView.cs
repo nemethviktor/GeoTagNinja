@@ -948,6 +948,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     public void ReloadFromDEs(DirectoryElementCollection directoryElements)
     {
         Application.DoEvents();
+        BeginUpdate();
         FrmPleaseWaitBox _frmPleaseWaitBoxInstance =
             (FrmPleaseWaitBox)Application.OpenForms[name: "FrmPleaseWaitBox"];
 
@@ -970,10 +971,19 @@ public partial class FileListView : System.Windows.Forms.ListView
                 searchOption: SearchOption.AllDirectories)
             : new List<string>();
 
-
+        int count = 1;
+        int directoryElementCollectionLength = DirectoryElements.Count;
         // so now that we don't clear the DE collection we actually need to make sure these items exist in the current folder/scope.
         foreach (DirectoryElement directoryElement in DirectoryElements)
         {
+            if (_frmPleaseWaitBoxInstance != null)
+            {
+                Application.DoEvents();
+                _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Text =
+                    $"{count} / {directoryElementCollectionLength}";
+                count++;
+            }
+
             // it's a file and we are in collectionMode
             bool aFileAndWeAreInCollectionMode = directoryElement.Type == DirectoryElement.ElementType.File &&
                                                  Program.CollectionModeEnabled;
@@ -1060,6 +1070,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         // Resume sorting...
         Log.Trace(message: "Enable ListViewItemSorter");
+        EndUpdate();
         ResumeColumnSorting();
         Sort();
     }
