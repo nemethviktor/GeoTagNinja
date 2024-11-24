@@ -375,8 +375,10 @@ public class DirectoryElementCollection : List<DirectoryElement>
             _frmPleaseWaitBoxInstance =
                 (FrmPleaseWaitBox)Application.OpenForms[name: "FrmPleaseWaitBox"];
 
-            _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxActionScanning.Visible = true;
-
+            if (_frmPleaseWaitBoxInstance != null)
+            {
+                _frmPleaseWaitBoxInstance.UpdateLabels(stage: FrmPleaseWaitBox.ActionStages.SCANNING);
+            }
 
             try
             {
@@ -402,9 +404,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
             if (_frmPleaseWaitBoxInstance != null)
             {
-                _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxActionScanning.Visible = false;
-                _frmPleaseWaitBoxInstance.btn_Cancel.Enabled = false;
-                _frmPleaseWaitBoxInstance.lbl_PressCancelToStop.Visible = false;
+                _frmPleaseWaitBoxInstance.UpdateLabels(stage: FrmPleaseWaitBox.ActionStages.PARSING);
             }
         }
 
@@ -528,17 +528,19 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
         if (_frmPleaseWaitBoxInstance != null)
         {
-            _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxActionParsing.Visible = true;
+            _frmPleaseWaitBoxInstance.UpdateLabels(stage: FrmPleaseWaitBox.ActionStages
+                                                                          .PARSING); // i'm pretty sure this is a duplicate
         }
 
         foreach (FileInfo imagefileFileInfoItem in imageFiles)
         {
             Log.Info(message: $"File: {imagefileFileInfoItem.FullName}");
             string fileNameWithoutPath = imagefileFileInfoItem.Name;
-            _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Text = imagefileFileInfoItem.FullName;
-            if (fileCount % 10 == 0)
+            if (_frmPleaseWaitBoxInstance != null)
             {
                 Application.DoEvents();
+                _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Text = imagefileFileInfoItem.FullName;
+
                 updateProgressHandler(
                     obj:
                     $"Scanning folder {100 * fileCount / imageFiles.Count:0}%: processing file '{fileNameWithoutPath}'");
@@ -559,7 +561,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 if (fileNameWithPathToCheck != null &&
                     File.Exists(path: fileNameWithPathToCheck.FullName))
                 {
-                    if (HelperVariables.FileChecksumDictionary.TryGetValue(key: fileNameWithPathToCheck,
+                    if (HelperVariables.FileChecksumDictionary.TryGetValue(key: fileNameWithPathToCheck.FullName,
                             value: out string value))
                     {
                         storedChecksum = value;
@@ -576,13 +578,13 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
                     fileNeedsReDEing = fileNeedsReDEing || storedChecksum != thisCheckSum ||
                                        !HelperVariables.FileChecksumDictionary.ContainsKey(
-                                           key: fileNameWithPathToCheck);
+                                           key: fileNameWithPathToCheck.FullName);
                 }
 
                 if (fileNeedsReDEing && !string.IsNullOrWhiteSpace(value: thisCheckSum))
                 {
                     // update HelperVariables.fileChecksumhDictionary
-                    HelperVariables.FileChecksumDictionary[key: fileNameWithPathToCheck] = thisCheckSum;
+                    HelperVariables.FileChecksumDictionary[key: fileNameWithPathToCheck.FullName] = thisCheckSum;
                 }
             }
 

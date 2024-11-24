@@ -11,6 +11,13 @@ public partial class FrmPleaseWaitBox : Form
     private FrmMainApp _frmMainAppInstance =
         (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
+    internal enum ActionStages
+    {
+        SCANNING,
+        PARSING,
+        POPULATING_LISTVIEW
+    }
+
     public FrmPleaseWaitBox()
     {
         InitializeComponent();
@@ -19,6 +26,10 @@ public partial class FrmPleaseWaitBox : Form
         HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
             ? ThemeColour.Dark
             : ThemeColour.Light, parentControl: this);
+
+        lbl_PleaseWaitBoxActionScanning.Visible = false;
+        lbl_PleaseWaitBoxActionParsing.Visible = false;
+        lbl_PleaseWaitBoxActionPopulatingListView.Visible = false;
     }
 
     private void btn_Cancel_Click(object sender, EventArgs e)
@@ -70,13 +81,49 @@ public partial class FrmPleaseWaitBox : Form
                     fakeControlType: fakeControlType);
             }
         }
-
-        lbl_PleaseWaitBoxActionParsing.Visible = false;
-        lbl_PleaseWaitBoxActionScanning.Visible = false;
     }
 
     private void FrmPleaseWaitBox_FormClosing(object sender, FormClosingEventArgs e)
     {
         _frmMainAppInstance.Enabled = true;
+    }
+
+    internal void UpdateLabels(ActionStages stage)
+    {
+        if (stage == ActionStages.SCANNING)
+        {
+            lbl_ParsingFolders.Visible = false;
+            lbl_CancelPressed.Visible = false;
+            lbl_PleaseWaitBoxMessage.Visible = false;
+            lbl_PressCancelToStop.Visible = true;
+            btn_Cancel.Visible = true;
+            lbl_PleaseWaitBoxActionScanning.Visible = true;
+            lbl_PleaseWaitBoxActionParsing.Visible = false;
+            lbl_PleaseWaitBoxActionPopulatingListView.Visible = false;
+        }
+        else if (stage == ActionStages.PARSING)
+        {
+            lbl_ParsingFolders.Visible = true;
+            lbl_CancelPressed.Visible = false;
+            lbl_PleaseWaitBoxMessage.Visible = true;
+            lbl_PressCancelToStop.Visible = false;
+            btn_Cancel.Visible = false;
+            lbl_PleaseWaitBoxActionScanning.Visible = false;
+            lbl_PleaseWaitBoxActionParsing.Visible = true;
+            lbl_PleaseWaitBoxActionPopulatingListView.Visible = false;
+        }
+        else if (stage == ActionStages.POPULATING_LISTVIEW)
+        {
+            lbl_ParsingFolders.Visible = false;
+            lbl_CancelPressed.Visible = false;
+            lbl_PleaseWaitBoxMessage.Visible = false;
+            lbl_PressCancelToStop.Visible = false;
+            btn_Cancel.Visible = false;
+            lbl_PleaseWaitBoxActionScanning.Visible = false;
+            lbl_PleaseWaitBoxActionParsing.Visible = false;
+            lbl_PleaseWaitBoxActionPopulatingListView.Visible = true;
+        }
+
+        Application.DoEvents();
     }
 }

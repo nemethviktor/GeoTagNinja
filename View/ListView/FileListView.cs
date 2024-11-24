@@ -947,6 +947,15 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     public void ReloadFromDEs(DirectoryElementCollection directoryElements)
     {
+        Application.DoEvents();
+        FrmPleaseWaitBox _frmPleaseWaitBoxInstance =
+            (FrmPleaseWaitBox)Application.OpenForms[name: "FrmPleaseWaitBox"];
+
+        if (_frmPleaseWaitBoxInstance != null)
+        {
+            _frmPleaseWaitBoxInstance.UpdateLabels(stage: FrmPleaseWaitBox.ActionStages.POPULATING_LISTVIEW);
+        }
+
         // Temp. disable sorting of the list view
         Log.Trace(message: "Disable ListViewItemSorter");
         SuspendColumnSorting();

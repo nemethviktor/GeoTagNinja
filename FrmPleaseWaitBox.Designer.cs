@@ -35,6 +35,7 @@
             this.lbl_PleaseWaitBoxActionScanning = new System.Windows.Forms.Label();
             this.lbl_PleaseWaitBoxActionParsing = new System.Windows.Forms.Label();
             this.lbl_PressCancelToStop = new System.Windows.Forms.Label();
+            this.lbl_PleaseWaitBoxActionPopulatingListView = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btn_Cancel
@@ -97,6 +98,14 @@
             this.lbl_PressCancelToStop.TabIndex = 6;
             this.lbl_PressCancelToStop.Text = "lbl_PressCancelToStop";
             // 
+            // lbl_PleaseWaitBoxActionPopulatingListView
+            // 
+            this.lbl_PleaseWaitBoxActionPopulatingListView.Location = new System.Drawing.Point(13, 134);
+            this.lbl_PleaseWaitBoxActionPopulatingListView.Name = "lbl_PleaseWaitBoxActionPopulatingListView";
+            this.lbl_PleaseWaitBoxActionPopulatingListView.Size = new System.Drawing.Size(246, 13);
+            this.lbl_PleaseWaitBoxActionPopulatingListView.TabIndex = 7;
+            this.lbl_PleaseWaitBoxActionPopulatingListView.Text = "lbl_PleaseWaitBoxActionPopulatingListView";
+            // 
             // FrmPleaseWaitBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -104,6 +113,7 @@
             this.CancelButton = this.btn_Cancel;
             this.ClientSize = new System.Drawing.Size(800, 240);
             this.ControlBox = false;
+            this.Controls.Add(this.lbl_PleaseWaitBoxActionPopulatingListView);
             this.Controls.Add(this.lbl_PressCancelToStop);
             this.Controls.Add(this.lbl_PleaseWaitBoxActionParsing);
             this.Controls.Add(this.lbl_PleaseWaitBoxActionScanning);
@@ -131,5 +141,6 @@
         internal System.Windows.Forms.Label lbl_PleaseWaitBoxActionScanning;
         internal System.Windows.Forms.Label lbl_PleaseWaitBoxActionParsing;
         internal System.Windows.Forms.Label lbl_PressCancelToStop;
+        internal System.Windows.Forms.Label lbl_PleaseWaitBoxActionPopulatingListView;
     }
 }

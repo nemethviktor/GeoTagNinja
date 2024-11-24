@@ -2474,8 +2474,6 @@ public partial class FrmMainApp : Form
                 // Ensure `cts` is disposed here
                 _cts?.Dispose();
                 _cts = null;
-
-                frmPleaseWaitBox.Close();
             }
         }
         // not collectionModeEnabled
@@ -2523,8 +2521,6 @@ public partial class FrmMainApp : Form
                     // Ensure `cts` is disposed here
                     _cts?.Dispose();
                     _cts = null;
-
-                    frmPleaseWaitBox.Close();
                 }
             }
         }
@@ -2535,7 +2531,7 @@ public partial class FrmMainApp : Form
         HelperGenericFileLocking.FileListBeingUpdated = false;
         HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Ready.");
         Log.Trace(message: "Enable FrmMainApp");
-        Enabled = true;
+        frmPleaseWaitBox.Close();
         Log.Trace(message: "Hide PleaseWaitBox");
 
         // Not logging this.

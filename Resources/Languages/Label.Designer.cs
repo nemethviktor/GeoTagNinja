@@ -269,6 +269,15 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Populating the main Grid (ListView).
+        /// </summary>
+        public static string lbl_PleaseWaitBoxActionPopulatingListView {
+            get {
+                return ResourceManager.GetString("lbl_PleaseWaitBoxActionPopulatingListView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Scanning File:.
         /// </summary>
         public static string lbl_PleaseWaitBoxActionScanning {
