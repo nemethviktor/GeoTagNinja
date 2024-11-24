@@ -221,6 +221,11 @@ public class DirectoryElement
                 return ItemNameWithoutPath;
             }
 
+            if (Type == ElementType.ParentDirectory)
+            {
+                return "..";
+            }
+
             return _DisplayName;
         }
         set => _DisplayName = value;

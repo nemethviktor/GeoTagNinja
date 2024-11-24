@@ -1288,7 +1288,7 @@ internal static class HelperGenericAncillaryListsArrays
 
 
     /// <summary>
-    ///     List of supported side car file extensions.
+    ///     List of supported sidecar file extensions.
     ///     The extension must be in lower case due to its use in comparisons!
     ///     Dictionary Extension -> Description
     /// </summary>
@@ -1303,7 +1303,7 @@ internal static class HelperGenericAncillaryListsArrays
 
 
     /// <summary>
-    ///     Returns an array of extensions (string) of compatible side car files.
+    ///     Returns an array of extensions (string) of compatible sidecar files.
     ///     The returned array is a copy and can be used freely.
     /// </summary>
     internal static string[] GetSideCarExtensionsArray()

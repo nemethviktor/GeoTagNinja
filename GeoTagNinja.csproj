@@ -223,8 +223,10 @@
       <DependentUpon>FrmManageFavourites.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\HelperGenericCalculations.cs" />
+    <Compile Include="Helpers\HelperNonStatic.FileInfo.cs" />
     <Compile Include="Helpers\HelperNonStatic.AutoUpdater.cs" />
     <Compile Include="Helpers\HelperLocalisationResourceManager.cs" />
+    <Compile Include="Helpers\HelperNonStatic.FileOperations.cs" />
     <Compile Include="Model\AppSettingContainer.cs" />
     <Compile Include="Model\MapWebMessage.cs" />
     <Compile Include="Helpers\HelperLocalisationLanguageManager.cs" />

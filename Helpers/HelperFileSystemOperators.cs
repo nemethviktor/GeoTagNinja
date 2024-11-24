@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
@@ -173,5 +174,45 @@ internal static class HelperFileSystemOperators
         }
 
         return parentName;
+    }
+
+
+    /// <summary>
+    ///     Mimics the normal GetDirectories but handles Unauthorized errors efficiently
+    ///     from/via https://stackoverflow.com/a/7296968/3968494
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="searchPattern"></param>
+    /// <param name="searchOption"></param>
+    /// <returns></returns>
+    internal static List<string> GetDirectories(string path, string searchPattern = "*",
+        SearchOption searchOption = SearchOption.AllDirectories)
+    {
+        if (searchOption == SearchOption.TopDirectoryOnly)
+        {
+            return Directory.GetDirectories(path: path, searchPattern: searchPattern).ToList();
+        }
+
+        List<string> directories =
+            new List<string>(collection: GetDirectories(path: path, searchPattern: searchPattern));
+
+        for (int i = 0; i < directories.Count; i++)
+        {
+            directories.AddRange(collection: GetDirectories(path: directories[index: i], searchPattern: searchPattern));
+        }
+
+        return directories;
+    }
+
+    private static List<string> GetDirectories(string path, string searchPattern)
+    {
+        try
+        {
+            return Directory.GetDirectories(path: path, searchPattern: searchPattern).ToList();
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return new List<string>();
+        }
     }
 }

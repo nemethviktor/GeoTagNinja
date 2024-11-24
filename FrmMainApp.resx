@@ -143,6 +143,27 @@
   <metadata name="cms_FileListView.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>750, 17</value>
   </metadata>
+  <data name="cmi_ShowHideCols.Size" type="System.Drawing.Size, System.Drawing">
+    <value>203, 22</value>
+  </data>
+  <data name="cmi_ShowHideCols.Text" xml:space="preserve">
+    <value>cmi_ShowHideCols</value>
+  </data>
+  <data name="cmi_ShowHideCols.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="cmi_removeCachedData.Size" type="System.Drawing.Size, System.Drawing">
+    <value>203, 22</value>
+  </data>
+  <data name="cmi_removeCachedData.Text" xml:space="preserve">
+    <value>cmi_removeCachedData</value>
+  </data>
+  <data name="cmi_OpenCoordsInAPI.Size" type="System.Drawing.Size, System.Drawing">
+    <value>203, 22</value>
+  </data>
+  <data name="cmi_OpenCoordsInAPI.Text" xml:space="preserve">
+    <value>cmi_OpenCoordsInAPI</value>
+  </data>
   <data name="cms_FileListView.Size" type="System.Drawing.Size, System.Drawing">
     <value>204, 70</value>
   </data>
@@ -172,7 +193,7 @@
     <value>lvw_FileList</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.ListView.FileListView, GeoTagNinja, Version=1.15.9093.41094, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.ListView.FileListView, GeoTagNinja, Version=1.15.9094.23479, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel1</value>
@@ -220,7 +241,7 @@
     <value>pbx_imagePreview</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.ImagePreview, GeoTagNinja, Version=1.15.9093.41094, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.ImagePreview, GeoTagNinja, Version=1.15.9094.23479, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel2</value>
@@ -266,6 +287,24 @@
   </data>
   <data name="&gt;&gt;splitContainerLeftTop.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="lbl_ParseProgress.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_ParseProgress.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 7</value>
+  </data>
+  <data name="lbl_ParseProgress.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 7, 3, 0</value>
+  </data>
+  <data name="lbl_ParseProgress.Size" type="System.Drawing.Size, System.Drawing">
+    <value>91, 13</value>
+  </data>
+  <data name="lbl_ParseProgress.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="lbl_ParseProgress.Text" xml:space="preserve">
+    <value>lbl_ParseProgress</value>
   </data>
   <data name="&gt;&gt;lbl_ParseProgress.Name" xml:space="preserve">
     <value>lbl_ParseProgress</value>
@@ -325,445 +364,6 @@
     <value>splitContainerMain</value>
   </data>
   <data name="&gt;&gt;splitContainerMain.Panel1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;flp_GeoCoords.Name" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;flp_GeoCoords.Type" xml:space="preserve">
-    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;flp_GeoCoords.Parent" xml:space="preserve">
-    <value>tpg_Map</value>
-  </data>
-  <data name="&gt;&gt;flp_GeoCoords.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;wbv_MapArea.Name" xml:space="preserve">
-    <value>wbv_MapArea</value>
-  </data>
-  <data name="&gt;&gt;wbv_MapArea.Type" xml:space="preserve">
-    <value>Microsoft.Web.WebView2.WinForms.WebView2, Microsoft.Web.WebView2.WinForms, Version=1.0.2535.41, Culture=neutral, PublicKeyToken=2a8ab48044d2601e</value>
-  </data>
-  <data name="&gt;&gt;wbv_MapArea.Parent" xml:space="preserve">
-    <value>tpg_Map</value>
-  </data>
-  <data name="&gt;&gt;wbv_MapArea.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="tpg_Map.ImageKey" xml:space="preserve">
-    <value>PublishOnDemand.png</value>
-  </data>
-  <data name="tpg_Map.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 23</value>
-  </data>
-  <data name="tpg_Map.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
-  </data>
-  <data name="tpg_Map.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
-  </data>
-  <data name="tpg_Map.Size" type="System.Drawing.Size, System.Drawing">
-    <value>411, 384</value>
-  </data>
-  <data name="tpg_Map.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="tpg_Map.Text" xml:space="preserve">
-    <value>tpg_Map</value>
-  </data>
-  <data name="&gt;&gt;tpg_Map.Name" xml:space="preserve">
-    <value>tpg_Map</value>
-  </data>
-  <data name="&gt;&gt;tpg_Map.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tpg_Map.Parent" xml:space="preserve">
-    <value>tcr_Main</value>
-  </data>
-  <data name="&gt;&gt;tpg_Map.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;lvw_ExifData.Name" xml:space="preserve">
-    <value>lvw_ExifData</value>
-  </data>
-  <data name="&gt;&gt;lvw_ExifData.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lvw_ExifData.Parent" xml:space="preserve">
-    <value>tpg_Exif</value>
-  </data>
-  <data name="&gt;&gt;lvw_ExifData.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="tpg_Exif.ImageKey" xml:space="preserve">
-    <value>StringData.png</value>
-  </data>
-  <data name="tpg_Exif.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 23</value>
-  </data>
-  <data name="tpg_Exif.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="tpg_Exif.Size" type="System.Drawing.Size, System.Drawing">
-    <value>416, 384</value>
-  </data>
-  <data name="tpg_Exif.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="tpg_Exif.Text" xml:space="preserve">
-    <value>tpg_Exif</value>
-  </data>
-  <data name="&gt;&gt;tpg_Exif.Name" xml:space="preserve">
-    <value>tpg_Exif</value>
-  </data>
-  <data name="&gt;&gt;tpg_Exif.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tpg_Exif.Parent" xml:space="preserve">
-    <value>tcr_Main</value>
-  </data>
-  <data name="&gt;&gt;tpg_Exif.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="tcr_Main.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <metadata name="igl_RightHandSide.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>484, 54</value>
-  </metadata>
-  <data name="igl_RightHandSide.ImageStream" mimetype="application/x-microsoft.net.object.binary.base64">
-    <value>
-        AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
-        LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
-        ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAD8
-        CAAAAk1TRnQBSQFMAgEBAgEAASgBAwEoAQMBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
-        AwABQAMAARADAAEBAQABCAYAAQQYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
-        AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
-        AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA
-        AWYDAAGZAwABzAIAATMDAAIzAgABMwFmAgABMwGZAgABMwHMAgABMwH/AgABZgMAAWYBMwIAAmYCAAFm
-        AZkCAAFmAcwCAAFmAf8CAAGZAwABmQEzAgABmQFmAgACmQIAAZkBzAIAAZkB/wIAAcwDAAHMATMCAAHM
-        AWYCAAHMAZkCAALMAgABzAH/AgAB/wFmAgAB/wGZAgAB/wHMAQABMwH/AgAB/wEAATMBAAEzAQABZgEA
-        ATMBAAGZAQABMwEAAcwBAAEzAQAB/wEAAf8BMwIAAzMBAAIzAWYBAAIzAZkBAAIzAcwBAAIzAf8BAAEz
-        AWYCAAEzAWYBMwEAATMCZgEAATMBZgGZAQABMwFmAcwBAAEzAWYB/wEAATMBmQIAATMBmQEzAQABMwGZ
-        AWYBAAEzApkBAAEzAZkBzAEAATMBmQH/AQABMwHMAgABMwHMATMBAAEzAcwBZgEAATMBzAGZAQABMwLM
-        AQABMwHMAf8BAAEzAf8BMwEAATMB/wFmAQABMwH/AZkBAAEzAf8BzAEAATMC/wEAAWYDAAFmAQABMwEA
-        AWYBAAFmAQABZgEAAZkBAAFmAQABzAEAAWYBAAH/AQABZgEzAgABZgIzAQABZgEzAWYBAAFmATMBmQEA
-        AWYBMwHMAQABZgEzAf8BAAJmAgACZgEzAQADZgEAAmYBmQEAAmYBzAEAAWYBmQIAAWYBmQEzAQABZgGZ
-        AWYBAAFmApkBAAFmAZkBzAEAAWYBmQH/AQABZgHMAgABZgHMATMBAAFmAcwBmQEAAWYCzAEAAWYBzAH/
-        AQABZgH/AgABZgH/ATMBAAFmAf8BmQEAAWYB/wHMAQABzAEAAf8BAAH/AQABzAEAApkCAAGZATMBmQEA
-        AZkBAAGZAQABmQEAAcwBAAGZAwABmQIzAQABmQEAAWYBAAGZATMBzAEAAZkBAAH/AQABmQFmAgABmQFm
-        ATMBAAGZATMBZgEAAZkBZgGZAQABmQFmAcwBAAGZATMB/wEAApkBMwEAApkBZgEAA5kBAAKZAcwBAAKZ
-        Af8BAAGZAcwCAAGZAcwBMwEAAWYBzAFmAQABmQHMAZkBAAGZAswBAAGZAcwB/wEAAZkB/wIAAZkB/wEz
-        AQABmQHMAWYBAAGZAf8BmQEAAZkB/wHMAQABmQL/AQABzAMAAZkBAAEzAQABzAEAAWYBAAHMAQABmQEA
-        AcwBAAHMAQABmQEzAgABzAIzAQABzAEzAWYBAAHMATMBmQEAAcwBMwHMAQABzAEzAf8BAAHMAWYCAAHM
-        AWYBMwEAAZkCZgEAAcwBZgGZAQABzAFmAcwBAAGZAWYB/wEAAcwBmQIAAcwBmQEzAQABzAGZAWYBAAHM
-        ApkBAAHMAZkBzAEAAcwBmQH/AQACzAIAAswBMwEAAswBZgEAAswBmQEAA8wBAALMAf8BAAHMAf8CAAHM
-        Af8BMwEAAZkB/wFmAQABzAH/AZkBAAHMAf8BzAEAAcwC/wEAAcwBAAEzAQAB/wEAAWYBAAH/AQABmQEA
-        AcwBMwIAAf8CMwEAAf8BMwFmAQAB/wEzAZkBAAH/ATMBzAEAAf8BMwH/AQAB/wFmAgAB/wFmATMBAAHM
-        AmYBAAH/AWYBmQEAAf8BZgHMAQABzAFmAf8BAAH/AZkCAAH/AZkBMwEAAf8BmQFmAQAB/wKZAQAB/wGZ
-        AcwBAAH/AZkB/wEAAf8BzAIAAf8BzAEzAQAB/wHMAWYBAAH/AcwBmQEAAf8CzAEAAf8BzAH/AQAC/wEz
-        AQABzAH/AWYBAAL/AZkBAAL/AcwBAAJmAf8BAAFmAf8BZgEAAWYC/wEAAf8CZgEAAf8BZgH/AQAC/wFm
-        AQABIQEAAaUBAANfAQADdwEAA4YBAAOWAQADywEAA7IBAAPXAQAD3QEAA+MBAAPqAQAD8QEAA/gBAAHw
-        AfsB/wEAAaQCoAEAA4ADAAH/AgAB/wMAAv8BAAH/AwAB/wEAAf8BAAL/AgAD/w4AAf8BCQH/PAAB9AHy
-        AbQ9AAEGAbQBCQH0CwAC8S8AA6wBGQoAAf8BFAEVAf8uAAKsARkCAAjsAQAB7QIQAe0lAAHzAdsCsgHb
-        Av8CAAGsAboB/w0AAv8kAAEZAc4BswMJAf8BsgHzAQAB1QH/AwAB7AH0AQACvAHtAewB6wHzAf8B6wLt
-        IwAB8wHOAfQBsgL0Af8BAAHzAQkBAAH/BAAB8AHrAe0BEwH/Ae0B/wHxAe8B9wHxJQAB2wWsAf8CrAHz
-        AQAB8wKsAgAB/wHsAfQB7QEAAe0B7AHqAfQB7AH/JQABsgH0ARkBCQP/AQAB8wEJAfMBCQHzBAABkgH3
-        AfEBAAHtAf8B7wHyAQcBvCUAAQYB9AEZAQkE/wGyAfMBrAHzAbIB/wMAAfMBbQH/AQAB9wHtAewB9AH/
-        AfcB7AHtIwAB2wWsAdMB8wH/AQABrAEAAf8zAAHzAc4B9AGyAvQBsgH0AQgB/wYADewkAAEZAc4BswIJ
-        ArQBGTkAAfMB2wGyAQYB2wHzdwABQgFNAT4HAAE+AwABKAMAAUADAAEQAwABAQEAAQEFAAGAFwAD/wEA
-        Af8B+AL/BAAB/wHxAv8EAAH/AfAB/wHnBAAB/wHwAf8BwwQAAf8B8QGAAUMEAAHgATEB/wHzBAABwAET
-        AZABAwQAAYABlwGAAQ8EAAGAAREBhAEPBAABgAGDAcQBDwQAAYABAQHEAQMEAAGAASsC/wQAAYABHwGA
-        AQMEAAHAAT8C/wQAAeABfwL/BAAE/wQACw==
-</value>
-  </data>
-  <data name="tcr_Main.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="tcr_Main.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
-  </data>
-  <data name="tcr_Main.Padding" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="tcr_Main.Size" type="System.Drawing.Size, System.Drawing">
-    <value>419, 411</value>
-  </data>
-  <data name="tcr_Main.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;tcr_Main.Name" xml:space="preserve">
-    <value>tcr_Main</value>
-  </data>
-  <data name="&gt;&gt;tcr_Main.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tcr_Main.Parent" xml:space="preserve">
-    <value>splitContainerMain.Panel2</value>
-  </data>
-  <data name="&gt;&gt;tcr_Main.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="splitContainerMain.Panel2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 5, 0</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.Panel2.Name" xml:space="preserve">
-    <value>splitContainerMain.Panel2</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.Panel2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.Panel2.Parent" xml:space="preserve">
-    <value>splitContainerMain</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.Panel2.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="splitContainerMain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>730, 411</value>
-  </data>
-  <data name="splitContainerMain.SplitterDistance" type="System.Int32, mscorlib">
-    <value>300</value>
-  </data>
-  <data name="splitContainerMain.SplitterWidth" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="splitContainerMain.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.Name" xml:space="preserve">
-    <value>splitContainerMain</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;splitContainerMain.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="cmi_ShowHideCols.Size" type="System.Drawing.Size, System.Drawing">
-    <value>203, 22</value>
-  </data>
-  <data name="cmi_ShowHideCols.Text" xml:space="preserve">
-    <value>cmi_ShowHideCols</value>
-  </data>
-  <data name="cmi_ShowHideCols.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="cmi_removeCachedData.Size" type="System.Drawing.Size, System.Drawing">
-    <value>203, 22</value>
-  </data>
-  <data name="cmi_removeCachedData.Text" xml:space="preserve">
-    <value>cmi_removeCachedData</value>
-  </data>
-  <data name="cmi_OpenCoordsInAPI.Size" type="System.Drawing.Size, System.Drawing">
-    <value>203, 22</value>
-  </data>
-  <data name="cmi_OpenCoordsInAPI.Text" xml:space="preserve">
-    <value>cmi_OpenCoordsInAPI</value>
-  </data>
-  <data name="lbl_ParseProgress.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lbl_ParseProgress.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 7</value>
-  </data>
-  <data name="lbl_ParseProgress.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 7, 3, 0</value>
-  </data>
-  <data name="lbl_ParseProgress.Size" type="System.Drawing.Size, System.Drawing">
-    <value>91, 13</value>
-  </data>
-  <data name="lbl_ParseProgress.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
-  </data>
-  <data name="lbl_ParseProgress.Text" xml:space="preserve">
-    <value>lbl_ParseProgress</value>
-  </data>
-  <data name="&gt;&gt;lbl_ParseProgress.Name" xml:space="preserve">
-    <value>lbl_ParseProgress</value>
-  </data>
-  <data name="&gt;&gt;lbl_ParseProgress.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lbl_ParseProgress.Parent" xml:space="preserve">
-    <value>flp_ProcessingInfo</value>
-  </data>
-  <data name="&gt;&gt;lbl_ParseProgress.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;lbl_lat.Name" xml:space="preserve">
-    <value>lbl_lat</value>
-  </data>
-  <data name="&gt;&gt;lbl_lat.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lbl_lat.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;lbl_lat.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;nud_lat.Name" xml:space="preserve">
-    <value>nud_lat</value>
-  </data>
-  <data name="&gt;&gt;nud_lat.Type" xml:space="preserve">
-    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;nud_lat.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;nud_lat.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;lbl_lng.Name" xml:space="preserve">
-    <value>lbl_lng</value>
-  </data>
-  <data name="&gt;&gt;lbl_lng.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lbl_lng.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;lbl_lng.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;nud_lng.Name" xml:space="preserve">
-    <value>nud_lng</value>
-  </data>
-  <data name="&gt;&gt;nud_lng.Type" xml:space="preserve">
-    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;nud_lng.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;nud_lng.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;btn_NavigateMapGo.Name" xml:space="preserve">
-    <value>btn_NavigateMapGo</value>
-  </data>
-  <data name="&gt;&gt;btn_NavigateMapGo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btn_NavigateMapGo.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;btn_NavigateMapGo.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;btn_loctToFile.Name" xml:space="preserve">
-    <value>btn_loctToFile</value>
-  </data>
-  <data name="&gt;&gt;btn_loctToFile.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btn_loctToFile.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;btn_loctToFile.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;btn_loctToFileDestination.Name" xml:space="preserve">
-    <value>btn_loctToFileDestination</value>
-  </data>
-  <data name="&gt;&gt;btn_loctToFileDestination.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btn_loctToFileDestination.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;btn_loctToFileDestination.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;lbl_Favourites.Name" xml:space="preserve">
-    <value>lbl_Favourites</value>
-  </data>
-  <data name="&gt;&gt;lbl_Favourites.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lbl_Favourites.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;lbl_Favourites.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;cbx_Favourites.Name" xml:space="preserve">
-    <value>cbx_Favourites</value>
-  </data>
-  <data name="&gt;&gt;cbx_Favourites.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cbx_Favourites.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;cbx_Favourites.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="&gt;&gt;btn_SaveFavourite.Name" xml:space="preserve">
-    <value>btn_SaveFavourite</value>
-  </data>
-  <data name="&gt;&gt;btn_SaveFavourite.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btn_SaveFavourite.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;btn_SaveFavourite.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="&gt;&gt;btn_LoadFavourite.Name" xml:space="preserve">
-    <value>btn_LoadFavourite</value>
-  </data>
-  <data name="&gt;&gt;btn_LoadFavourite.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btn_LoadFavourite.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;btn_LoadFavourite.ZOrder" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="&gt;&gt;btn_ManageFavourites.Name" xml:space="preserve">
-    <value>btn_ManageFavourites</value>
-  </data>
-  <data name="&gt;&gt;btn_ManageFavourites.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btn_ManageFavourites.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;btn_ManageFavourites.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
-  <data name="flp_GeoCoords.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Bottom</value>
-  </data>
-  <data name="flp_GeoCoords.Location" type="System.Drawing.Point, System.Drawing">
-    <value>2, 336</value>
-  </data>
-  <data name="flp_GeoCoords.MinimumSize" type="System.Drawing.Size, System.Drawing">
-    <value>0, 30</value>
-  </data>
-  <data name="flp_GeoCoords.Size" type="System.Drawing.Size, System.Drawing">
-    <value>407, 46</value>
-  </data>
-  <data name="flp_GeoCoords.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
-  <data name="&gt;&gt;flp_GeoCoords.Name" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;flp_GeoCoords.Type" xml:space="preserve">
-    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;flp_GeoCoords.Parent" xml:space="preserve">
-    <value>tpg_Map</value>
-  </data>
-  <data name="&gt;&gt;flp_GeoCoords.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <data name="lbl_lat.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
@@ -1188,6 +788,33 @@
   <data name="&gt;&gt;btn_ManageFavourites.ZOrder" xml:space="preserve">
     <value>11</value>
   </data>
+  <data name="flp_GeoCoords.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="flp_GeoCoords.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 336</value>
+  </data>
+  <data name="flp_GeoCoords.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>0, 30</value>
+  </data>
+  <data name="flp_GeoCoords.Size" type="System.Drawing.Size, System.Drawing">
+    <value>407, 46</value>
+  </data>
+  <data name="flp_GeoCoords.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;flp_GeoCoords.Name" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;flp_GeoCoords.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;flp_GeoCoords.Parent" xml:space="preserve">
+    <value>tpg_Map</value>
+  </data>
+  <data name="&gt;&gt;flp_GeoCoords.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="wbv_MapArea.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
@@ -1215,6 +842,48 @@
   <data name="&gt;&gt;wbv_MapArea.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="tpg_Map.ImageKey" xml:space="preserve">
+    <value>PublishOnDemand.png</value>
+  </data>
+  <data name="tpg_Map.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 23</value>
+  </data>
+  <data name="tpg_Map.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="tpg_Map.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="tpg_Map.Size" type="System.Drawing.Size, System.Drawing">
+    <value>411, 384</value>
+  </data>
+  <data name="tpg_Map.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="tpg_Map.Text" xml:space="preserve">
+    <value>tpg_Map</value>
+  </data>
+  <data name="&gt;&gt;tpg_Map.Name" xml:space="preserve">
+    <value>tpg_Map</value>
+  </data>
+  <data name="&gt;&gt;tpg_Map.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tpg_Map.Parent" xml:space="preserve">
+    <value>tcr_Main</value>
+  </data>
+  <data name="&gt;&gt;tpg_Map.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="clh_ExifTag.Text" xml:space="preserve">
+    <value>clh_ExifTag</value>
+  </data>
+  <data name="clh_OriginalValue.Text" xml:space="preserve">
+    <value>clh_OriginalValue</value>
+  </data>
+  <data name="clh_ModifiedValue.Text" xml:space="preserve">
+    <value>clh_ModifiedValue</value>
+  </data>
   <data name="lvw_ExifData.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
@@ -1239,14 +908,153 @@
   <data name="&gt;&gt;lvw_ExifData.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="clh_ExifTag.Text" xml:space="preserve">
-    <value>clh_ExifTag</value>
+  <data name="tpg_Exif.ImageKey" xml:space="preserve">
+    <value>StringData.png</value>
   </data>
-  <data name="clh_OriginalValue.Text" xml:space="preserve">
-    <value>clh_OriginalValue</value>
+  <data name="tpg_Exif.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 23</value>
   </data>
-  <data name="clh_ModifiedValue.Text" xml:space="preserve">
-    <value>clh_ModifiedValue</value>
+  <data name="tpg_Exif.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tpg_Exif.Size" type="System.Drawing.Size, System.Drawing">
+    <value>416, 384</value>
+  </data>
+  <data name="tpg_Exif.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tpg_Exif.Text" xml:space="preserve">
+    <value>tpg_Exif</value>
+  </data>
+  <data name="&gt;&gt;tpg_Exif.Name" xml:space="preserve">
+    <value>tpg_Exif</value>
+  </data>
+  <data name="&gt;&gt;tpg_Exif.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tpg_Exif.Parent" xml:space="preserve">
+    <value>tcr_Main</value>
+  </data>
+  <data name="&gt;&gt;tpg_Exif.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tcr_Main.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <metadata name="igl_RightHandSide.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>484, 54</value>
+  </metadata>
+  <data name="igl_RightHandSide.ImageStream" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>
+        AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
+        LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
+        ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAD8
+        CAAAAk1TRnQBSQFMAgEBAgEAATgBAwE4AQMBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        AwABQAMAARADAAEBAQABCAYAAQQYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
+        AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
+        AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA
+        AWYDAAGZAwABzAIAATMDAAIzAgABMwFmAgABMwGZAgABMwHMAgABMwH/AgABZgMAAWYBMwIAAmYCAAFm
+        AZkCAAFmAcwCAAFmAf8CAAGZAwABmQEzAgABmQFmAgACmQIAAZkBzAIAAZkB/wIAAcwDAAHMATMCAAHM
+        AWYCAAHMAZkCAALMAgABzAH/AgAB/wFmAgAB/wGZAgAB/wHMAQABMwH/AgAB/wEAATMBAAEzAQABZgEA
+        ATMBAAGZAQABMwEAAcwBAAEzAQAB/wEAAf8BMwIAAzMBAAIzAWYBAAIzAZkBAAIzAcwBAAIzAf8BAAEz
+        AWYCAAEzAWYBMwEAATMCZgEAATMBZgGZAQABMwFmAcwBAAEzAWYB/wEAATMBmQIAATMBmQEzAQABMwGZ
+        AWYBAAEzApkBAAEzAZkBzAEAATMBmQH/AQABMwHMAgABMwHMATMBAAEzAcwBZgEAATMBzAGZAQABMwLM
+        AQABMwHMAf8BAAEzAf8BMwEAATMB/wFmAQABMwH/AZkBAAEzAf8BzAEAATMC/wEAAWYDAAFmAQABMwEA
+        AWYBAAFmAQABZgEAAZkBAAFmAQABzAEAAWYBAAH/AQABZgEzAgABZgIzAQABZgEzAWYBAAFmATMBmQEA
+        AWYBMwHMAQABZgEzAf8BAAJmAgACZgEzAQADZgEAAmYBmQEAAmYBzAEAAWYBmQIAAWYBmQEzAQABZgGZ
+        AWYBAAFmApkBAAFmAZkBzAEAAWYBmQH/AQABZgHMAgABZgHMATMBAAFmAcwBmQEAAWYCzAEAAWYBzAH/
+        AQABZgH/AgABZgH/ATMBAAFmAf8BmQEAAWYB/wHMAQABzAEAAf8BAAH/AQABzAEAApkCAAGZATMBmQEA
+        AZkBAAGZAQABmQEAAcwBAAGZAwABmQIzAQABmQEAAWYBAAGZATMBzAEAAZkBAAH/AQABmQFmAgABmQFm
+        ATMBAAGZATMBZgEAAZkBZgGZAQABmQFmAcwBAAGZATMB/wEAApkBMwEAApkBZgEAA5kBAAKZAcwBAAKZ
+        Af8BAAGZAcwCAAGZAcwBMwEAAWYBzAFmAQABmQHMAZkBAAGZAswBAAGZAcwB/wEAAZkB/wIAAZkB/wEz
+        AQABmQHMAWYBAAGZAf8BmQEAAZkB/wHMAQABmQL/AQABzAMAAZkBAAEzAQABzAEAAWYBAAHMAQABmQEA
+        AcwBAAHMAQABmQEzAgABzAIzAQABzAEzAWYBAAHMATMBmQEAAcwBMwHMAQABzAEzAf8BAAHMAWYCAAHM
+        AWYBMwEAAZkCZgEAAcwBZgGZAQABzAFmAcwBAAGZAWYB/wEAAcwBmQIAAcwBmQEzAQABzAGZAWYBAAHM
+        ApkBAAHMAZkBzAEAAcwBmQH/AQACzAIAAswBMwEAAswBZgEAAswBmQEAA8wBAALMAf8BAAHMAf8CAAHM
+        Af8BMwEAAZkB/wFmAQABzAH/AZkBAAHMAf8BzAEAAcwC/wEAAcwBAAEzAQAB/wEAAWYBAAH/AQABmQEA
+        AcwBMwIAAf8CMwEAAf8BMwFmAQAB/wEzAZkBAAH/ATMBzAEAAf8BMwH/AQAB/wFmAgAB/wFmATMBAAHM
+        AmYBAAH/AWYBmQEAAf8BZgHMAQABzAFmAf8BAAH/AZkCAAH/AZkBMwEAAf8BmQFmAQAB/wKZAQAB/wGZ
+        AcwBAAH/AZkB/wEAAf8BzAIAAf8BzAEzAQAB/wHMAWYBAAH/AcwBmQEAAf8CzAEAAf8BzAH/AQAC/wEz
+        AQABzAH/AWYBAAL/AZkBAAL/AcwBAAJmAf8BAAFmAf8BZgEAAWYC/wEAAf8CZgEAAf8BZgH/AQAC/wFm
+        AQABIQEAAaUBAANfAQADdwEAA4YBAAOWAQADywEAA7IBAAPXAQAD3QEAA+MBAAPqAQAD8QEAA/gBAAHw
+        AfsB/wEAAaQCoAEAA4ADAAH/AgAB/wMAAv8BAAH/AwAB/wEAAf8BAAL/AgAD/w4AAf8BCQH/PAAB9AHy
+        AbQ9AAEGAbQBCQH0CwAC8S8AA6wBGQoAAf8BFAEVAf8uAAKsARkCAAjsAQAB7QIQAe0lAAHzAdsCsgHb
+        Av8CAAGsAboB/w0AAv8kAAEZAc4BswMJAf8BsgHzAQAB1QH/AwAB7AH0AQACvAHtAewB6wHzAf8B6wLt
+        IwAB8wHOAfQBsgL0Af8BAAHzAQkBAAH/BAAB8AHrAe0BEwH/Ae0B/wHxAe8B9wHxJQAB2wWsAf8CrAHz
+        AQAB8wKsAgAB/wHsAfQB7QEAAe0B7AHqAfQB7AH/JQABsgH0ARkBCQP/AQAB8wEJAfMBCQHzBAABkgH3
+        AfEBAAHtAf8B7wHyAQcBvCUAAQYB9AEZAQkE/wGyAfMBrAHzAbIB/wMAAfMBbQH/AQAB9wHtAewB9AH/
+        AfcB7AHtIwAB2wWsAdMB8wH/AQABrAEAAf8zAAHzAc4B9AGyAvQBsgH0AQgB/wYADewkAAEZAc4BswIJ
+        ArQBGTkAAfMB2wGyAQYB2wHzdwABQgFNAT4HAAE+AwABKAMAAUADAAEQAwABAQEAAQEFAAGAFwAD/wEA
+        Af8B+AL/BAAB/wHxAv8EAAH/AfAB/wHnBAAB/wHwAf8BwwQAAf8B8QGAAUMEAAHgATEB/wHzBAABwAET
+        AZABAwQAAYABlwGAAQ8EAAGAAREBhAEPBAABgAGDAcQBDwQAAYABAQHEAQMEAAGAASsC/wQAAYABHwGA
+        AQMEAAHAAT8C/wQAAeABfwL/BAAE/wQACw==
+</value>
+  </data>
+  <data name="tcr_Main.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="tcr_Main.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="tcr_Main.Padding" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="tcr_Main.Size" type="System.Drawing.Size, System.Drawing">
+    <value>419, 411</value>
+  </data>
+  <data name="tcr_Main.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;tcr_Main.Name" xml:space="preserve">
+    <value>tcr_Main</value>
+  </data>
+  <data name="&gt;&gt;tcr_Main.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tcr_Main.Parent" xml:space="preserve">
+    <value>splitContainerMain.Panel2</value>
+  </data>
+  <data name="&gt;&gt;tcr_Main.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="splitContainerMain.Panel2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 5, 0</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel2.Name" xml:space="preserve">
+    <value>splitContainerMain.Panel2</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel2.Parent" xml:space="preserve">
+    <value>splitContainerMain</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="splitContainerMain.Size" type="System.Drawing.Size, System.Drawing">
+    <value>730, 411</value>
+  </data>
+  <data name="splitContainerMain.SplitterDistance" type="System.Int32, mscorlib">
+    <value>300</value>
+  </data>
+  <data name="splitContainerMain.SplitterWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="splitContainerMain.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Name" xml:space="preserve">
+    <value>splitContainerMain</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;splitContainerMain.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <metadata name="mns_MenuStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>613, 17</value>
@@ -1320,11 +1128,41 @@
   <data name="tmi_File.Text" xml:space="preserve">
     <value>tmi_File</value>
   </data>
+  <data name="tmi_Settings_Settings.Size" type="System.Drawing.Size, System.Drawing">
+    <value>198, 22</value>
+  </data>
+  <data name="tmi_Settings_Settings.Text" xml:space="preserve">
+    <value>tmi_Settings_Settings</value>
+  </data>
+  <data name="tmi_Settings_Favourites.Size" type="System.Drawing.Size, System.Drawing">
+    <value>198, 22</value>
+  </data>
+  <data name="tmi_Settings_Favourites.Text" xml:space="preserve">
+    <value>tmi_Settings_Favourites</value>
+  </data>
   <data name="tmi_Settings.Size" type="System.Drawing.Size, System.Drawing">
     <value>84, 22</value>
   </data>
   <data name="tmi_Settings.Text" xml:space="preserve">
     <value>tmi_Settings</value>
+  </data>
+  <data name="tmi_Help_About.Size" type="System.Drawing.Size, System.Drawing">
+    <value>183, 22</value>
+  </data>
+  <data name="tmi_Help_About.Text" xml:space="preserve">
+    <value>tmi_Help_About</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest.Size" type="System.Drawing.Size, System.Drawing">
+    <value>183, 22</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest.Text" xml:space="preserve">
+    <value>tmi_Help_Feedback</value>
+  </data>
+  <data name="tmi_Help_BugReport.Size" type="System.Drawing.Size, System.Drawing">
+    <value>183, 22</value>
+  </data>
+  <data name="tmi_Help_BugReport.Text" xml:space="preserve">
+    <value>tmi_Help_BugReport</value>
   </data>
   <data name="tmi_Help.Size" type="System.Drawing.Size, System.Drawing">
     <value>67, 22</value>
@@ -1359,69 +1197,9 @@
   <data name="&gt;&gt;mns_MenuStrip.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
-  <data name="tmi_Settings_Settings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
-  </data>
-  <data name="tmi_Settings_Settings.Text" xml:space="preserve">
-    <value>tmi_Settings_Settings</value>
-  </data>
-  <data name="tmi_Settings_Favourites.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
-  </data>
-  <data name="tmi_Settings_Favourites.Text" xml:space="preserve">
-    <value>tmi_Settings_Favourites</value>
-  </data>
-  <data name="tmi_Help_About.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 22</value>
-  </data>
-  <data name="tmi_Help_About.Text" xml:space="preserve">
-    <value>tmi_Help_About</value>
-  </data>
-  <data name="tmi_Help_FeedbackFeatureRequest.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 22</value>
-  </data>
-  <data name="tmi_Help_FeedbackFeatureRequest.Text" xml:space="preserve">
-    <value>tmi_Help_Feedback</value>
-  </data>
-  <data name="tmi_Help_BugReport.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 22</value>
-  </data>
-  <data name="tmi_Help_BugReport.Text" xml:space="preserve">
-    <value>tmi_Help_BugReport</value>
-  </data>
   <metadata name="tsr_MainAppToolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="tsr_MainAppToolStrip.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 24</value>
-  </data>
-  <data name="tsr_MainAppToolStrip.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>1, 1, 1, 1</value>
-  </data>
-  <data name="tsr_MainAppToolStrip.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 2, 0</value>
-  </data>
-  <data name="tsr_MainAppToolStrip.Size" type="System.Drawing.Size, System.Drawing">
-    <value>730, 25</value>
-  </data>
-  <data name="tsr_MainAppToolStrip.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
-  </data>
-  <data name="tsr_MainAppToolStrip.Text" xml:space="preserve">
-    <value>tsr_MainAppToolStrip</value>
-  </data>
-  <data name="&gt;&gt;tsr_MainAppToolStrip.Name" xml:space="preserve">
-    <value>tsr_MainAppToolStrip</value>
-  </data>
-  <data name="&gt;&gt;tsr_MainAppToolStrip.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tsr_MainAppToolStrip.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;tsr_MainAppToolStrip.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
   <data name="tsb_SaveFiles.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -1609,9 +1387,65 @@
   <data name="tsb_BugReport.Text" xml:space="preserve">
     <value>tsb_BugReport</value>
   </data>
+  <data name="tsr_MainAppToolStrip.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 24</value>
+  </data>
+  <data name="tsr_MainAppToolStrip.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>1, 1, 1, 1</value>
+  </data>
+  <data name="tsr_MainAppToolStrip.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 2, 0</value>
+  </data>
+  <data name="tsr_MainAppToolStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>730, 25</value>
+  </data>
+  <data name="tsr_MainAppToolStrip.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="tsr_MainAppToolStrip.Text" xml:space="preserve">
+    <value>tsr_MainAppToolStrip</value>
+  </data>
+  <data name="&gt;&gt;tsr_MainAppToolStrip.Name" xml:space="preserve">
+    <value>tsr_MainAppToolStrip</value>
+  </data>
+  <data name="&gt;&gt;tsr_MainAppToolStrip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tsr_MainAppToolStrip.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;tsr_MainAppToolStrip.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
   <metadata name="tsr_FolderControl.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>184, 17</value>
   </metadata>
+  <data name="tbx_FolderName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>400, 25</value>
+  </data>
+  <data name="tsb_OneFolderUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABtSURBVDhPY6AZkJeXd1BUVLwOoqFCxAOQJjk5uVdAA/6D
+        aJIMAWqylZGReamkpOQEMgBI28D4UCW4AbJmKP8/iCbKEHTNIAAzAAQIGqKgoFCK7ldkA0AAJA9SB+US
+        BugGkAxGDRgMBtABMDAAAAlxKNerCu/DAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="tsb_OneFolderUp.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="tsb_OneFolderUp.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="tsb_OneFolderUp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="tsb_OneFolderUp.Text" xml:space="preserve">
+    <value>tsb_OneFolderUp</value>
+  </data>
+  <data name="tsb_OneFolderUp.ToolTipText" xml:space="preserve">
+    <value>tsb_OneFolderUp</value>
+  </data>
   <data name="tsr_FolderControl.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 49</value>
   </data>
@@ -1641,32 +1475,6 @@
   </data>
   <data name="&gt;&gt;tsr_FolderControl.ZOrder" xml:space="preserve">
     <value>2</value>
-  </data>
-  <data name="tbx_FolderName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>400, 25</value>
-  </data>
-  <data name="tsb_OneFolderUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABtSURBVDhPY6AZkJeXd1BUVLwOoqFCxAOQJjk5uVdAA/6D
-        aJIMAWqylZGReamkpOQEMgBI28D4UCW4AbJmKP8/iCbKEHTNIAAzAAQIGqKgoFCK7ldkA0AAJA9SB+US
-        BugGkAxGDRgMBtABMDAAAAlxKNerCu/DAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="tsb_OneFolderUp.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="tsb_OneFolderUp.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="tsb_OneFolderUp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
-  </data>
-  <data name="tsb_OneFolderUp.Text" xml:space="preserve">
-    <value>tsb_OneFolderUp</value>
-  </data>
-  <data name="tsb_OneFolderUp.ToolTipText" xml:space="preserve">
-    <value>tsb_OneFolderUp</value>
   </data>
   <metadata name="ttp_NavigateMapGo.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>329, 17</value>

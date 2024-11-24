@@ -453,6 +453,7 @@ namespace GeoTagNinja
             this.tmi_File_Quit});
             this.tmi_File.Name = "tmi_File";
             resources.ApplyResources(this.tmi_File, "tmi_File");
+            this.tmi_File.DropDownOpening += new System.EventHandler(this.tmi_File_DropDownOpening);
             // 
             // tmi_File_SaveAll
             // 
@@ -583,7 +584,7 @@ namespace GeoTagNinja
             this.tsb_Refresh_lvwFileList.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             resources.ApplyResources(this.tsb_Refresh_lvwFileList, "tsb_Refresh_lvwFileList");
             this.tsb_Refresh_lvwFileList.Name = "tsb_Refresh_lvwFileList";
-            this.tsb_Refresh_lvwFileList.Click += new System.EventHandler((sender, e) => this.tsb_Refresh_lvwFileList_Click(sender, e));
+            this.tsb_Refresh_lvwFileList.Click += new System.EventHandler(this.tsb_Refresh_lvwFileList_Click);
             // 
             // tsb_EditFile
             // 

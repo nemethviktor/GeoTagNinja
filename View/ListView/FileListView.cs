@@ -11,7 +11,6 @@ using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
 using NLog;
-using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 
 namespace GeoTagNinja.View.ListView;
 /*
@@ -703,10 +702,17 @@ public partial class FileListView : System.Windows.Forms.ListView
         {
             if (columnHeader.Name == columnHeaderName)
             {
-                if (columnHeader.Width == 0)
+                if ((columnHeader.Width == 0) & setVisible)
                 {
                     columnHeader.AutoResize(headerAutoResize: ColumnHeaderAutoResizeStyle.HeaderSize);
                 }
+                else if (columnHeader.Width > 0 &&
+                         !setVisible)
+                {
+                    columnHeader.Width = 0;
+                }
+
+                return;
             }
         }
     }
@@ -798,8 +804,8 @@ public partial class FileListView : System.Windows.Forms.ListView
             foreach (ColumnHeader clh in Columns)
             {
                 Log.Trace(message: $"Loading localization for: {clh.Name}");
-                clh.Text = ReturnControlText(
-                    fakeControlType: FakeControlTypes.ColumnHeader,
+                clh.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
                     controlName: clh.Name
                 );
                 Log.Trace(message: $"Loaded localization: {clh.Name} --> {clh.Text}");
@@ -809,14 +815,14 @@ public partial class FileListView : System.Windows.Forms.ListView
         {
             Log.Fatal(message: $"Error: {ex.Message}");
             CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
+                text: HelperControlAndMessageBoxHandling.ReturnControlText(
                           controlName:
                           "mbx_FrmMainApp_ErrorLanguageFileColumnHeaders",
-                          fakeControlType: FakeControlTypes.MessageBox) +
+                          fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox) +
                       ex.Message,
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption
-                                .Error.ToString(), fakeControlType: FakeControlTypes.MessageBoxCaption),
+                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                                                                   .Error.ToString(), fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
             customMessageBox.ShowDialog();
@@ -948,8 +954,12 @@ public partial class FileListView : System.Windows.Forms.ListView
         DirectoryElements = directoryElements;
         _fileCount = 0;
         bool dotDotAdded = false;
-        string[] subFolders = Directory.GetDirectories(path: FrmMainApp.FolderName, searchPattern: "*",
-            searchOption: SearchOption.AllDirectories);
+
+        // don't parse the subfolders if we're not in Flat mode, it can be very time-consuming.
+        List<string> subFolders = FrmMainApp.FlatMode
+            ? HelperFileSystemOperators.GetDirectories(path: FrmMainApp.FolderName, searchPattern: "*",
+                searchOption: SearchOption.AllDirectories)
+            : new List<string>();
 
 
         // so now that we don't clear the DE collection we actually need to make sure these items exist in the current folder/scope.
@@ -959,11 +969,12 @@ public partial class FileListView : System.Windows.Forms.ListView
             bool aFileAndWeAreInCollectionMode = directoryElement.Type == DirectoryElement.ElementType.File &&
                                                  Program.CollectionModeEnabled;
 
-            // it's a file and it exists in the current folder and we're not in Flat Mode
+            // it's a file and it exists in the current folder and we're not in Flat Mode...and the file factually exists. (like hasn't been deleted etc.)
             bool aFileAndWeAreNotInFlatModeButFileIsWithinMainFolder =
                 directoryElement.Type == DirectoryElement.ElementType.File &&
                 !FrmMainApp.FlatMode &&
-                directoryElement.Folder + "\\" == FrmMainApp.FolderName;
+                directoryElement.Folder + "\\" == FrmMainApp.FolderName &&
+                File.Exists(path: directoryElement.FileNameWithPath);
 
             // it's a file and it's in a subfolder of the current FrmMainApp.FolderName folder and we are in Flat Mode
             bool aFileAndWeAreInFlatModeAndItsInARelevantSubfolder =

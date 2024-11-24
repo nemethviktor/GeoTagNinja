@@ -3468,6 +3468,11 @@ public partial class FrmMainApp : Form
             Clipboard.SetText(text: builder.ToString());
         }
     }
+
+    private void tmi_File_DropDownOpening(object sender, EventArgs e)
+    {
+        tmi_File_FlatMode.Checked = FlatMode;
+    }
 }
 
 #endregion

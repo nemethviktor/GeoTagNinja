@@ -103,6 +103,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btn_Cancel;
             this.ClientSize = new System.Drawing.Size(800, 240);
+            this.ControlBox = false;
             this.Controls.Add(this.lbl_PressCancelToStop);
             this.Controls.Add(this.lbl_PleaseWaitBoxActionParsing);
             this.Controls.Add(this.lbl_PleaseWaitBoxActionScanning);
