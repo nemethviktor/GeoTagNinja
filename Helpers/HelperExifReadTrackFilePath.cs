@@ -37,13 +37,12 @@ internal class HelperExifReadTrackFilePath
         File.Delete(path: argsFile);
 
         string exiftoolCmd =
-            " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8" +
-            " -@ " + HelperVariables.DoubleQuoteStr + argsFile + HelperVariables.DoubleQuoteStr;
+            $" -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 -@ {HelperVariables.DoubleQuoteStr}{argsFile}{HelperVariables.DoubleQuoteStr}";
 
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         // if user switches folder in the process of writing this will keep it standard
-        Debug.Assert(condition: frmMainAppInstance != null, message: nameof(frmMainAppInstance) + " != null");
+        Debug.Assert(condition: frmMainAppInstance != null, message: $"{nameof(frmMainAppInstance)} != null");
         string exifArgsForOriginalFile = "";
 
         // as per https://exiftool.org/forum/index.php?topic=16184.msg86958#msg86958 the logic needs to be
@@ -53,12 +52,12 @@ internal class HelperExifReadTrackFilePath
            NUL
          */
 
-        exifArgsForOriginalFile += "-v4" + Environment.NewLine;
+        exifArgsForOriginalFile += $"-v4{Environment.NewLine}";
 
         exifArgsForOriginalFile = trackFileList.Aggregate(seed: exifArgsForOriginalFile,
-            func: (current, trackFilePath) => current + "-geotag=" + trackFilePath + Environment.NewLine);
+            func: (current, trackFilePath) => $"{current}-geotag={trackFilePath}{Environment.NewLine}");
 
-        exifArgsForOriginalFile += "NUL" + Environment.NewLine;
+        exifArgsForOriginalFile += $"NUL{Environment.NewLine}";
 
         File.WriteAllText(path: argsFile, contents: exifArgsForOriginalFile, encoding: Encoding.UTF8);
         ///////////////

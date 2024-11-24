@@ -35,9 +35,7 @@ internal static class HelperExifDataPointInteractions
                 provider: CultureInfo.InvariantCulture,
                 result: out int degree);
             bool minuteParse = double.TryParse(s: Regex.Replace(
-                    input: pointOrig.Split('.')[1] +
-                           "." +
-                           pointOrig.Split('.')[2],
+                    input: $"{pointOrig.Split('.')[1]}.{pointOrig.Split('.')[2]}",
                     pattern: "[SWNE\"-]",
                     replacement: ""),
                 style: NumberStyles.Any,

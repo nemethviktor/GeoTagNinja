@@ -109,7 +109,7 @@ internal class DialogWithOrWithoutCheckBox
                 {
                     UseMnemonic = true,
                     Text = btnText is "Yes" or "No"
-                        ? "&" + btnText
+                        ? $"&{btnText}"
                         : btnText,
                     Name = keyValuePair.Value
                 };

@@ -154,10 +154,10 @@ internal class ListViewColumnSorter : IComparer
                 }
                 else if (attributeType == typeof(double))
                 {
-                    double? compareWhat = (double?)deX.GetAttributeValue<double>(
+                    double? compareWhat = deX.GetAttributeValue<double>(
                         attribute: attribute,
                         version: deXHighestAttributeVersion);
-                    double? compareToWhat = (double?)deY.GetAttributeValue<double>(
+                    double? compareToWhat = deY.GetAttributeValue<double>(
                         attribute: attribute,
                         version: deYHighestAttributeVersion);
 
@@ -165,10 +165,10 @@ internal class ListViewColumnSorter : IComparer
                 }
                 else if (attributeType == typeof(int))
                 {
-                    int? compareWhat = (int?)deX.GetAttributeValue<int>(
+                    int? compareWhat = deX.GetAttributeValue<int>(
                         attribute: attribute,
                         version: deXHighestAttributeVersion);
-                    int? compareToWhat = (int?)deY.GetAttributeValue<int>(
+                    int? compareToWhat = deY.GetAttributeValue<int>(
                         attribute: attribute,
                         version: deYHighestAttributeVersion);
 
@@ -176,10 +176,10 @@ internal class ListViewColumnSorter : IComparer
                 }
                 else if (attributeType == typeof(DateTime))
                 {
-                    DateTime? compareWhat = (DateTime?)deX.GetAttributeValue<DateTime>(
+                    DateTime? compareWhat = deX.GetAttributeValue<DateTime>(
                         attribute: attribute,
                         version: deXHighestAttributeVersion);
-                    DateTime? compareToWhat = (DateTime?)deY.GetAttributeValue<DateTime>(
+                    DateTime? compareToWhat = deY.GetAttributeValue<DateTime>(
                         attribute: attribute,
                         version: deYHighestAttributeVersion);
 
@@ -187,7 +187,8 @@ internal class ListViewColumnSorter : IComparer
                 }
                 else
                 {
-                    throw new ArgumentException(message: "Trying to get attribute type of unknown attribute with value " + attribute);
+                    throw new ArgumentException(message:
+                        $"Trying to get attribute type of unknown attribute with value {attribute}");
                 }
             }
         }

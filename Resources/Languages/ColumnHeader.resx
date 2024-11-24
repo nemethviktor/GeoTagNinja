@@ -140,4 +140,8 @@
     <value>Modified (Unsaved) Value</value>
     <comment>Location: Rules</comment>
   </data>
+  <data name="clh_Folder" xml:space="preserve">
+    <value>Folder</value>
+    <comment>Refers to the location of a file</comment>
+  </data>
 </root>

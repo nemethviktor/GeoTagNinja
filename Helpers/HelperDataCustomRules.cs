@@ -21,7 +21,8 @@ internal static class HelperDataCustomRules
     /// </returns>
     internal static DataTable DataReadSQLiteCustomRules()
     {
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
+        using SQLiteConnection sqliteDB = new(connectionString:
+            $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -53,7 +54,8 @@ internal static class HelperDataCustomRules
     internal static void DataWriteSQLiteCustomRules()
     {
         // write back
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
+        using SQLiteConnection sqliteDB = new(connectionString:
+            $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
         sqliteDB.Open();
 
         using SQLiteDataAdapter sqliteAdapter = new(commandText: @"select * from customRules", connection: sqliteDB);
@@ -92,7 +94,8 @@ internal static class HelperDataCustomRules
     {
         FrmMainApp.Log.Info(message: "Starting");
 
-        using SQLiteConnection sqliteDB = new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
+        using SQLiteConnection sqliteDB = new(connectionString:
+            $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
         sqliteDB.Open();
 
         string sqlCommandStr = @"

@@ -54,7 +54,8 @@ namespace GeoTagNinja.Helpers
                     importConnection.Open();
                     settingsConnection.Open();
                     // Backup the settings database
-                    File.Copy(sourceFileName: HelperVariables.SettingsDatabaseFilePath, destFileName: HelperVariables.SettingsDatabaseFilePath + ".bak", overwrite: true);
+                    File.Copy(sourceFileName: HelperVariables.SettingsDatabaseFilePath, destFileName:
+                        $"{HelperVariables.SettingsDatabaseFilePath}.bak", overwrite: true);
                     foreach (string tableName in settingsTablesToBeImportedList)
                     {
                         // Check if the table exists in the import database
@@ -95,7 +96,7 @@ namespace GeoTagNinja.Helpers
             }
 
             // Delete the backup if no errors occurred
-            File.Delete(path: HelperVariables.SettingsDatabaseFilePath + ".bak");
+            File.Delete(path: $"{HelperVariables.SettingsDatabaseFilePath}.bak");
             return true;
         }
 

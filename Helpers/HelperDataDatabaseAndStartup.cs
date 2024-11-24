@@ -22,7 +22,7 @@ internal static class HelperDataDatabaseAndStartup
         try
         {
             // create folder in Appdata if doesn't exist
-            FrmMainApp.Log.Trace(message: "SettingsDatabaseFilePath is " + HelperVariables.SettingsDatabaseFilePath);
+            FrmMainApp.Log.Trace(message: $"SettingsDatabaseFilePath is {HelperVariables.SettingsDatabaseFilePath}");
             FileInfo userDataBaseFile = new(fileName: HelperVariables.SettingsDatabaseFilePath);
 
             if (userDataBaseFile.Exists && userDataBaseFile.Length == 0)
@@ -34,11 +34,12 @@ internal static class HelperDataDatabaseAndStartup
 
             if (!userDataBaseFile.Exists)
             {
-                FrmMainApp.Log.Trace(message: "Creating " + HelperVariables.SettingsDatabaseFilePath);
+                FrmMainApp.Log.Trace(message: $"Creating {HelperVariables.SettingsDatabaseFilePath}");
                 try
                 {
                     SQLiteConnection.CreateFile(databaseFileName: Path.Combine(HelperVariables.SettingsDatabaseFilePath));
-                    SQLiteConnection sqliteDB = new(connectionString: @"Data Source=" + Path.Combine(HelperVariables.SettingsDatabaseFilePath) + "; Version=3");
+                    SQLiteConnection sqliteDB = new(connectionString:
+                        $@"Data Source={Path.Combine(HelperVariables.SettingsDatabaseFilePath)}; Version=3");
                     sqliteDB.Open();
 
                     string sql = """
@@ -94,7 +95,7 @@ internal static class HelperDataDatabaseAndStartup
                 }
                 catch (Exception ex)
                 {
-                    FrmMainApp.Log.Fatal(message: "Error: " + ex.Message);
+                    FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
                     MessageBox.Show(text: ex.Message);
                 }
             }
@@ -111,7 +112,7 @@ internal static class HelperDataDatabaseAndStartup
         }
         catch (Exception ex)
         {
-            FrmMainApp.Log.Fatal(message: "Error: " + ex.Message);
+            FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
             MessageBox.Show(text: ex.Message);
         }
     }
@@ -153,9 +154,8 @@ internal static class HelperDataDatabaseAndStartup
             {
                 string fileExtension = ext.Split('\t')
                                           .FirstOrDefault();
-                string tmptmpCtrlName = ext.Split('\t')
-                                           .FirstOrDefault() +
-                                        '_'; // 'tis ok as is
+                string tmptmpCtrlName = $"{ext.Split('\t')
+                                              .FirstOrDefault()}_"; // 'tis ok as is
                 string tmpCtrlName = tmptmpCtrlName + controlName;
                 string tmpCtrlGroup = ext.Split('\t')
                                          .Last()
@@ -266,12 +266,12 @@ internal static class HelperDataDatabaseAndStartup
     internal static DataTable DataReadSQLiteTable(string tableName)
     {
         using SQLiteConnection sqliteDB =
-            new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
+            new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
         sqliteDB.Open();
 
-        string sqlCommandStr = @"
+        string sqlCommandStr = $@"
                                 SELECT *
-                                FROM " + tableName + ";"
+                                FROM {tableName};"
             ;
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
@@ -295,7 +295,7 @@ internal static class HelperDataDatabaseAndStartup
         try
         {
             using SQLiteConnection sqliteDB =
-                new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
+                new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
             sqliteDB.Open();
 
             // Get the schema for the columns in the database.

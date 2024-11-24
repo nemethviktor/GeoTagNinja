@@ -45,10 +45,10 @@ public partial class FrmColumnSelection : Form
     ///     Executes the closing of the form, incl. taking over selection
     ///     into the actual list view columns.
     /// </summary>
-    /// <param name="SaveChanges">Whether the changes should be carried over to the ListView</param>
-    private void PerformClosing(bool SaveChanges)
+    /// <param name="saveChanges">Whether the changes should be carried over to the ListView</param>
+    private void PerformClosing(bool saveChanges)
     {
-        if (SaveChanges)
+        if (saveChanges)
         {
             // Transfer changes to columns
             foreach (ColumnHeader col in _colList)
@@ -93,12 +93,12 @@ public partial class FrmColumnSelection : Form
     private void btn_Generic_OK_Click(object sender,
                               EventArgs e)
     {
-        PerformClosing(SaveChanges: true);
+        PerformClosing(saveChanges: true);
     }
 
     private void btn_Generic_Cancel_Click(object sender,
                                   EventArgs e)
     {
-        PerformClosing(SaveChanges: false);
+        PerformClosing(saveChanges: false);
     }
 }

@@ -120,7 +120,7 @@ internal static class HelperFileSystemOperators
             {
                 try
                 {
-                    FrmMainApp.Log.Trace(message: "Deleting:" + directory.Name);
+                    FrmMainApp.Log.Trace(message: $"Deleting:{directory.Name}");
                     directory.Delete(recursive: true);
                 }
                 catch
@@ -138,7 +138,7 @@ internal static class HelperFileSystemOperators
             {
                 try
                 {
-                    FrmMainApp.Log.Trace(message: "Deleting:" + file.Name);
+                    FrmMainApp.Log.Trace(message: $"Deleting:{file.Name}");
                     file.Delete();
                 }
                 catch

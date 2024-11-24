@@ -101,16 +101,14 @@ internal static class HelperDataApplicationSettings
     {
         List<KeyValuePair<string, string>> settingsToDelete = new();
         using SQLiteConnection sqliteDB =
-            new(connectionString: "Data Source=" + HelperVariables.SettingsDatabaseFilePath);
+            new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
         sqliteDB.Open();
         using SQLiteCommand sqlCommandStr = new(connection: sqliteDB);
         using SQLiteTransaction transaction = sqliteDB.BeginTransaction();
         foreach (AppSettingContainer appSettingContainer in settingsToWrite)
         {
-            sqlCommandStr.CommandText = @"
-                                        DELETE FROM " +
-                                        appSettingContainer.TableName + " " +
-                                        "WHERE settingTabPage = @settingTabPage AND settingId = @settingId;"
+            sqlCommandStr.CommandText = $@"
+                                        DELETE FROM {appSettingContainer.TableName} WHERE settingTabPage = @settingTabPage AND settingId = @settingId;"
                 ;
 
             sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingTabPage",
@@ -122,11 +120,8 @@ internal static class HelperDataApplicationSettings
         foreach (AppSettingContainer appSettingContainer in settingsToWrite)
         {
             sqlCommandStr.CommandText =
-                @"
-                INSERT INTO " +
-                appSettingContainer.TableName + " " +
-                " (settingTabPage, settingId, settingValue) " +
-                "VALUES (@settingTabPage, @settingId, @settingValue);";
+                $@"
+                INSERT INTO {appSettingContainer.TableName}  (settingTabPage, settingId, settingValue) VALUES (@settingTabPage, @settingId, @settingValue);";
 
             sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingTabPage",
                 value: appSettingContainer.SettingTabPage);
@@ -175,8 +170,7 @@ internal static class HelperDataApplicationSettings
     internal static void DataDeleteSQLitesettingsCleanup()
     {
         using SQLiteConnection sqliteDB =
-            new(connectionString: "Data Source=" +
-                                  HelperVariables.SettingsDatabaseFilePath);
+            new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
         sqliteDB.Open();
 
         string sqlCommandStr = @"
@@ -201,8 +195,7 @@ internal static class HelperDataApplicationSettings
     internal static void DataVacuumDatabase()
     {
         using SQLiteConnection sqliteDB =
-            new(connectionString: "Data Source=" +
-                                  HelperVariables.SettingsDatabaseFilePath);
+            new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
         sqliteDB.Open();
 
         string sqlCommandStr = @"VACUUM;"

@@ -167,6 +167,6 @@
   </data>
   <data name="tmi_File_FlatMode" xml:space="preserve">
     <value>Flat Mode (parse Subfolders)</value>
-    <comment>Enable Flat Mode. This will trigger parsing subfolders too.</comment>
+    <comment>Toggle Flat Mode. This will trigger parsing subfolders too.</comment>
   </data>
 </root>

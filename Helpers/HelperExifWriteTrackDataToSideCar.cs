@@ -35,12 +35,13 @@ internal class HelperExifWriteTrackDataToSideCar
         string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exifArgsToWriteForTrackExport.args");
         File.Delete(path: argsFile);
 
-        string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8" + " -@ " + HelperVariables.DoubleQuoteStr + argsFile + HelperVariables.DoubleQuoteStr;
+        string exiftoolCmd =
+            $" -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 -@ {HelperVariables.DoubleQuoteStr}{argsFile}{HelperVariables.DoubleQuoteStr}";
 
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         // if user switches folder in the process of writing this will keep it standard
-        Debug.Assert(condition: frmMainAppInstance != null, message: nameof(frmMainAppInstance) + " != null");
+        Debug.Assert(condition: frmMainAppInstance != null, message: $"{nameof(frmMainAppInstance)} != null");
         string exifArgsForOriginalFile = "";
 
         // as per https://exiftool.org/forum/index.php?msg=78652 + https://exiftool.org/forum/index.php?topic=16011.new#new the logic needs to be
@@ -63,31 +64,31 @@ internal class HelperExifWriteTrackDataToSideCar
         foreach (string trackFilePath in trackFileList)
         {
             // -geotag=D:\temp3\2023-02-27.gpx
-            exifArgsForOriginalFile += "-geotag=" + trackFilePath + Environment.NewLine;
+            exifArgsForOriginalFile += $"-geotag={trackFilePath}{Environment.NewLine}";
         }
 
         // -geotime<${DateTimeOriginal#}+00:00
-        exifArgsForOriginalFile += "-geotime<${" + compareTZAgainst + "#}" + TZVal + Environment.NewLine;
+        exifArgsForOriginalFile += $"-geotime<${{{compareTZAgainst}#}}{TZVal}{Environment.NewLine}";
 
         // -geosync
         if (timeShiftSeconds < 0)
         {
-            exifArgsForOriginalFile += "-geosync=" + timeShiftSeconds + Environment.NewLine;
+            exifArgsForOriginalFile += $"-geosync={timeShiftSeconds}{Environment.NewLine}";
         }
         else if (timeShiftSeconds > 0)
         {
-            exifArgsForOriginalFile += "-geosync=+" + timeShiftSeconds + Environment.NewLine;
+            exifArgsForOriginalFile += $"-geosync=+{timeShiftSeconds}{Environment.NewLine}";
         }
 
         // -api
-        exifArgsForOriginalFile += "-api" + Environment.NewLine;
+        exifArgsForOriginalFile += $"-api{Environment.NewLine}";
         // GeoMaxIntSecs=1800
-        exifArgsForOriginalFile += "GeoMaxIntSecs=" + GeoMaxIntSecs + Environment.NewLine;
+        exifArgsForOriginalFile += $"GeoMaxIntSecs={GeoMaxIntSecs}{Environment.NewLine}";
 
         // -api
-        exifArgsForOriginalFile += "-api" + Environment.NewLine;
+        exifArgsForOriginalFile += $"-api{Environment.NewLine}";
         // GeoMaxExtSecs
-        exifArgsForOriginalFile += "GeoMaxExtSecs=" + GeoMaxExtSecs + Environment.NewLine;
+        exifArgsForOriginalFile += $"GeoMaxExtSecs={GeoMaxExtSecs}{Environment.NewLine}";
 
         //D:\temp3\_2280104.ORF
         //D:\temp3\_2280105.ORF
@@ -98,14 +99,14 @@ internal class HelperExifWriteTrackDataToSideCar
         }
 
         // -v3
-        exifArgsForOriginalFile += "-v3" + Environment.NewLine;
+        exifArgsForOriginalFile += $"-v3{Environment.NewLine}";
         // -srcfile
-        exifArgsForOriginalFile += "-srcfile" + Environment.NewLine;
+        exifArgsForOriginalFile += $"-srcfile{Environment.NewLine}";
         // C:\Users\nemet\AppData\Roaming\GeoTagNinja\tmpLocFiles\%F.xmp
-        string tmpFolder = Path.Combine(HelperVariables.UserDataFolderPath + @"\tmpLocFiles\");
-        exifArgsForOriginalFile += tmpFolder + "%F.xmp" + Environment.NewLine;
+        string tmpFolder = Path.Combine($@"{HelperVariables.UserDataFolderPath}\tmpLocFiles\");
+        exifArgsForOriginalFile += $"{tmpFolder}%F.xmp{Environment.NewLine}";
 
-        exifArgsForOriginalFile += "-overwrite_original_in_place" + Environment.NewLine;
+        exifArgsForOriginalFile += $"-overwrite_original_in_place{Environment.NewLine}";
 
         File.WriteAllText(path: argsFile, contents: exifArgsForOriginalFile, encoding: Encoding.UTF8);
         ///////////////

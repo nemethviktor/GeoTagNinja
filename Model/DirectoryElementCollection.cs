@@ -212,7 +212,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 Log.Trace(message: "Listing Drives");
                 foreach (DriveInfo drive in DriveInfo.GetDrives())
                 {
-                    Log.Trace(message: "Drive:" + drive.Name);
+                    Log.Trace(message: $"Drive:{drive.Name}");
                     Add(item: new DirectoryElement(
                         itemNameWithoutPath: drive.Name,
                         type: DirectoryElement.ElementType.Drive,
@@ -271,7 +271,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     if (directoryInfo.FullName == SpecialFolder.MyComputer.ToString())
                     {
                         // It's the MyComputer entry
-                        Log.Trace(message: "MyComputer: " + directoryInfo.Name);
+                        Log.Trace(message: $"MyComputer: {directoryInfo.Name}");
                         Add(item: new DirectoryElement(
                             itemNameWithoutPath: directoryInfo.Name,
                             type: DirectoryElement.ElementType.MyComputer,
@@ -283,7 +283,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                              !directoryInfo.Attributes.ToString()
                                            .Contains(value: "ReparsePoint"))
                     {
-                        Log.Trace(message: "Folder: " + directoryInfo.Name);
+                        Log.Trace(message: $"Folder: {directoryInfo.Name}");
                         Add(item: new DirectoryElement(
                             itemNameWithoutPath: directoryInfo.Name,
                             type: DirectoryElement.ElementType.SubDirectory,
@@ -294,7 +294,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
             }
             catch (Exception ex)
             {
-                Log.Error(message: "Error: " + ex.Message);
+                Log.Error(message: $"Error: {ex.Message}");
                 CustomMessageBox customMessageBox = new(
                     text: HelperControlAndMessageBoxHandling.ReturnControlText(
                         controlName: "mbx_DirectoryElementCollection_ErrorParsing",
@@ -414,7 +414,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     foreach (string sideCarExtension in allowedSidecarExtensions)
                     {
                         string imaginarySidecarFileNameWithPath =
-                            Path.GetFileNameWithoutExtension(path: fileInfoItem.FullName) + "." + sideCarExtension;
+                            $"{Path.GetFileNameWithoutExtension(path: fileInfoItem.FullName)}.{sideCarExtension}";
                         if (File.Exists(path: Path.Combine(path1: fileInfoItem.DirectoryName,
                                 path2: imaginarySidecarFileNameWithPath)))
                         {
@@ -428,14 +428,14 @@ public class DirectoryElementCollection : List<DirectoryElement>
             }
         }
 
-        Log.Trace(message: "Files: Listing Files - OK, image file count: " + imageFiles.Count);
+        Log.Trace(message: $"Files: Listing Files - OK, image file count: {imageFiles.Count}");
 
         // ******************************
         // Map sidecar files to image file
         IDictionary<FileInfo, FileInfo> imageToSidecarFileMapping = new Dictionary<FileInfo, FileInfo>();
         HashSet<FileInfo> overlappingXMPFileList = new();
 
-        Log.Trace(message: "Files: Checking sidecar files, count: " + sidecarFiles.Count);
+        Log.Trace(message: $"Files: Checking sidecar files, count: {sidecarFiles.Count}");
         foreach (FileInfo sideCarFileInfoItem in sidecarFiles)
         {
             // Get (by comparing w/o extension) list of matching image files in lower case
@@ -456,9 +456,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 bool writeXMPSideCar = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
                     dataTable: HelperVariables.DtHelperDataApplicationSettings,
                     settingTabPage: "tpg_FileOptions",
-                    settingId: imgFileExtension.ToLower() +
-                               "_" +
-                               "ckb_AddXMPSideCar"));
+                    settingId: $"{imgFileExtension.ToLower()}_ckb_AddXMPSideCar"));
                 if (writeXMPSideCar)
                 {
                     if (sidecarFileAlreadyAdded)
@@ -707,7 +705,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         CancellationToken cancellationToken)
     {
         Debug.Assert(condition: _frmPleaseWaitBoxInstance != null,
-            message: nameof(_frmPleaseWaitBoxInstance) + " != null");
+            message: $"{nameof(_frmPleaseWaitBoxInstance)} != null");
         IEnumerable<string> found = new List<string>();
         try
         {

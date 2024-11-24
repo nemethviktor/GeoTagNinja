@@ -68,7 +68,7 @@ public partial class FrmImportExportGpx : Form
         string gpxExtensionsFilter = GpxExtensions()
            .Aggregate(seed: "Track Files|",
                 func: (current,
-                    extension) => current + "*." + extension + ";");
+                        extension) => $"{current}*.{extension};");
 
         ofd_importOneFile.Filter = gpxExtensionsFilter;
 
@@ -159,10 +159,8 @@ public partial class FrmImportExportGpx : Form
             for (int i = 0; i < cbxToFill.Items.Count; i++)
             {
                 if (cbxToFill.GetItemText(item: cbxToFill.Items[index: i])
-                             .StartsWith(value: "(" +
-                                                plusMinusChar +
-                                                TimeZoneInfo.Local.BaseUtcOffset.ToString()
-                                                            .Substring(startIndex: 0, length: 5)))
+                             .StartsWith(value: $"({plusMinusChar}{TimeZoneInfo.Local.BaseUtcOffset.ToString()
+                                .Substring(startIndex: 0, length: 5)}"))
                 {
                     cbxToFill.SelectedIndex = i;
                     TZFound = true;

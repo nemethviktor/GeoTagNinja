@@ -231,8 +231,7 @@ internal class SingleInstance_PipeServer
         catch (IOException e)
         {
             // IOException raised if pipe is broken / disconnected...
-            Log.Info(message: $"Server ({threadID.ToString()}): Server session ended - " +
-                              e.Message);
+            Log.Info(message: $"Server ({threadID.ToString()}): Server session ended - {e.Message}");
         }
     }
 

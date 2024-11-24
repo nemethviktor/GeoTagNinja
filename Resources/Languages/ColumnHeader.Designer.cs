@@ -106,6 +106,15 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Folder.
+        /// </summary>
+        public static string clh_Folder {
+            get {
+                return ResourceManager.GetString("clh_Folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Modified (Unsaved) Value.
         /// </summary>
         public static string clh_ModifiedValue {

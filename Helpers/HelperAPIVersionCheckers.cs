@@ -174,8 +174,7 @@ internal static class HelperAPIVersionCheckers
             lastCheckUnixTime = long.Parse(s: strLastOnlineVersionCheck);
         }
 
-        FrmMainApp.Log.Trace(message: "nowUnixTime > lastCheckUnixTime:" +
-                                         (nowUnixTime - lastCheckUnixTime));
+        FrmMainApp.Log.Trace(message: $"nowUnixTime > lastCheckUnixTime:{nowUnixTime - lastCheckUnixTime}");
         int checkUpdateVal = 604800; //604800 is a week's worth of seconds
     #if DEBUG
         //checkUpdateVal = 86400; // 86400 is a day's worth of seconds
@@ -200,11 +199,8 @@ internal static class HelperAPIVersionCheckers
             HelperVariables.CurrentExifToolVersionCloud =
                 API_ExifGetExifToolVersionFromWeb();
 
-            FrmMainApp.Log.Trace(message: "currentExifToolVersionLocal: " +
-                                             HelperVariables
-                                                .CurrentExifToolVersionLocal +
-                                             " / newestExifToolVersionOnline: " +
-                                             HelperVariables.CurrentExifToolVersionCloud);
+            FrmMainApp.Log.Trace(message: $"currentExifToolVersionLocal: {HelperVariables
+               .CurrentExifToolVersionLocal} / newestExifToolVersionOnline: {HelperVariables.CurrentExifToolVersionCloud}");
 
             // if cloud version is newer and there isn't an identically named file in Roaming then download
             if (HelperVariables.CurrentExifToolVersionCloud >
@@ -214,10 +210,10 @@ internal static class HelperAPIVersionCheckers
                     $"exiftool-{HelperVariables.CurrentExifToolVersionCloud}_{CPUBitness}.zip")))
             {
                 FrmMainApp.Log.Trace(
-                    message: "Downloading newest exifTool version from the cloud. " +
-                             HelperVariables.CurrentExifToolVersionCloud.ToString(
-                                 provider: CultureInfo
-                                    .InvariantCulture));
+                    message:
+                    $"Downloading newest exifTool version from the cloud. {HelperVariables.CurrentExifToolVersionCloud.ToString(
+                        provider: CultureInfo
+                           .InvariantCulture)}");
 
                 // get new version from online - it will get "armed" on app exit.
                 await DownloadCurrentExifToolVersion(

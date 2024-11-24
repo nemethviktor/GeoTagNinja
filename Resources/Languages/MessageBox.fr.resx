@@ -151,46 +151,43 @@
     <value>Erreur dans FrmMainApp.InitializeComponent  (merci de générer une issue dans Github): </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async" xml:space="preserve">
-    <value>Erreur dans FrmMainApp.InitialiseWebView (await wbv_MapArea.EnsureCoreWebView2Async(c2wv))  (merci de générer une issue dans Github):</value>
+    <value>Erreur dans FrmMainApp.InitialiseWebView (await wbv_MapArea.EnsureCoreWebView2Async(c2wv))  (merci de générer une issue dans Github): </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled" xml:space="preserve">
     <value>Erreur dans FrmMainApp.InitialiseWebView (IsWebMessageEnabled)  (merci de générer une issue dans Github): </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile" xml:space="preserve">
-    <value>Erreur dans FrmMainApp.InitialiseWebView (reading HTMLCode file)  (merci de générer une issue dans Github):</value>
+    <value>Erreur dans FrmMainApp.InitialiseWebView (reading HTMLCode file)  (merci de générer une issue dans Github): </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile" xml:space="preserve">
     <value>Erreur dans FrmMainApp.InitialiseWebView (parsing coordinates from HTMLCode file)  (merci de générer une issue dans Github): </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewReplaceStringInHTMLFile" xml:space="preserve">
-    <value>Erreur dans FrmMainApp.InitialiseWebView (replacing constants in HTMLCode file)  (merci de générer une issue dans Github):</value>
+    <value>Erreur dans FrmMainApp.InitialiseWebView (replacing constants in HTMLCode file)  (merci de générer une issue dans Github): </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile" xml:space="preserve">
-    <value>Erreur dans FrmMainApp.InitialiseWebView (NavigateToString in HTMLCode file)  (merci de générer une issue dans Github):</value>
+    <value>Erreur dans FrmMainApp.InitialiseWebView (NavigateToString in HTMLCode file)  (merci de générer une issue dans Github): </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode" xml:space="preserve">
-    <value>Erreur dans FrmMainApp.NavigateMapGo (string HTMLCode)  (merci de générer une issue dans Github):</value>
+    <value>Erreur dans FrmMainApp.NavigateMapGo (string HTMLCode)  (merci de générer une issue dans Github): </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived" xml:space="preserve">
-    <value>Erreur dans l'exécution de  wbv_MapArea_WebMessageReceived  (merci de générer une issue dans Github):</value>
+    <value>Erreur dans l'exécution de  wbv_MapArea_WebMessageReceived  (merci de générer une issue dans Github): </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorDoubleBuffer" xml:space="preserve">
-    <value>Erreur de DoubleBuffer (merci de générer une issue dans Github):</value>
+    <value>Erreur de DoubleBuffer (merci de générer une issue dans Github): </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorLanguageFileColumnHeaders" xml:space="preserve">
     <value>Erreur de lecture du fichier de langue et d'assignation de colonne (merci de générer une issue dans Github): </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorClearingFileDataQTables" xml:space="preserve">
-    <value>Erreur d'effacement des tables filedata-Q  (merci de générer une issue dans Github):</value>
+    <value>Erreur d'effacement des tables filedata-Q  (merci de générer une issue dans Github): </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorResizingColumns" xml:space="preserve">
     <value>Erreur de redimensionnement des colonnes  (merci de générer une issue dans Github): </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorSettingStartupFolder" xml:space="preserve">
-    <value>Erreur de mise a jour du dossier par défaut de démarrage  (merci de générer une issue dans Github):</value>
-  </data>
-  <data name="mbx_FrmMainApp_ErrorInvalidFolder" xml:space="preserve">
-    <value>Le repertoire saisi ne semble pas valide.</value>
+    <value>Erreur de mise a jour du dossier par défaut de démarrage  (merci de générer une issue dans Github): </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorFileGoneMissing" xml:space="preserve">
     <value>Le fichier ne semble plus exister: </value>

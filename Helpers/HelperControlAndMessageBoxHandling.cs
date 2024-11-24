@@ -79,7 +79,7 @@ internal static class HelperControlAndMessageBoxHandling
             //||
         )
         {
-            FrmMainApp.Log.Trace(message: "Starting - cItem: " + cItem.Name);
+            FrmMainApp.Log.Trace(message: $"Starting - cItem: {cItem.Name}");
             string location = HelperGenericAncillaryListsArrays.IsGenericControlName(controlName: cItem.Name) ||
                               cItem.Name.Contains(value: "Generic")
                 ? HelperVariables.ResourceNameForGenericControlItems
@@ -110,7 +110,7 @@ internal static class HelperControlAndMessageBoxHandling
             if (senderForm != null &&
                 senderForm.Name == "FrmSettings")
             {
-                FrmMainApp.Log.Trace(message: "Starting - cItem: " + nud.Name);
+                FrmMainApp.Log.Trace(message: $"Starting - cItem: {nud.Name}");
                 _ = decimal.TryParse(
                     s: HelperDataApplicationSettings.DataReadSQLiteSettings(
                         dataTable: HelperVariables.DtHelperDataApplicationSettings,
@@ -127,7 +127,7 @@ internal static class HelperControlAndMessageBoxHandling
 
     internal static string ReturnControlText(string controlName, FakeControlTypes fakeControlType)
     {
-        FrmMainApp.Log.Trace(message: "Starting - cItem: " + controlName);
+        FrmMainApp.Log.Trace(message: $"Starting - cItem: {controlName}");
         string location = HelperGenericAncillaryListsArrays.IsGenericControlName(controlName: controlName) ||
                           controlName.Contains(value: "Generic")
             ? HelperVariables.ResourceNameForGenericControlItems

@@ -56,7 +56,8 @@ internal static class HelperGenericTypeOperations
     internal static string ConvertStringToDateTimeBackToString(string dateTimeToConvert)
     {
         bool isDT = DateTime.TryParse(s: dateTimeToConvert, result: out DateTime tryDataValueDT);
-        string tryDataValueStr = tryDataValueDT.ToString(format: CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern);
+        string tryDataValueStr = tryDataValueDT.ToString(format:
+            $"{CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern} {CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern}");
         if (isDT)
         {
             return tryDataValueStr;

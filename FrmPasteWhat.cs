@@ -75,8 +75,7 @@ public partial class FrmPasteWhat : Form
                         // https://stackoverflow.com/a/28352807/3968494
                         if (Controls
                            .Find(
-                                key: "ckb_" +
-                                     GetElementAttributesName(attributeToFind: attribute),
+                                key: $"ckb_{GetElementAttributesName(attributeToFind: attribute)}",
                                 searchAllChildren: true)
                            .FirstOrDefault() is CheckBox cbx)
                         {
@@ -97,8 +96,7 @@ public partial class FrmPasteWhat : Form
                 // https://stackoverflow.com/a/28352807/3968494
                 if (Controls
                    .Find(
-                        key: "ckb_" +
-                             GetElementAttributesName(attributeToFind: attribute),
+                        key: $"ckb_{GetElementAttributesName(attributeToFind: attribute)}",
                         searchAllChildren: true)
                    .FirstOrDefault() is CheckBox cbx)
                 {
@@ -272,9 +270,7 @@ public partial class FrmPasteWhat : Form
                                     {
                                         tagsToPaste.Add(
                                             item: GetElementAttributesElementAttribute(
-                                                attributeToFind: attributeString +
-                                                                 timeUnit +
-                                                                 "Shift"));
+                                                attributeToFind: $"{attributeString}{timeUnit}Shift"));
                                     }
                                 }
 
@@ -290,9 +286,7 @@ public partial class FrmPasteWhat : Form
                                     {
                                         tagsToPaste.Add(
                                             item: GetElementAttributesElementAttribute(
-                                                attributeToFind: attributeString +
-                                                                 timeUnit +
-                                                                 "Shift"));
+                                                attributeToFind: $"{attributeString}{timeUnit}Shift"));
                                     }
                                 }
 
@@ -315,7 +309,7 @@ public partial class FrmPasteWhat : Form
                     {
                         tagsToPaste.Add(
                             item: GetElementAttributesElementAttribute(
-                                attributeToFind: attributeString + "Ref"));
+                                attributeToFind: $"{attributeString}Ref"));
                     }
                 }
             }
@@ -630,8 +624,7 @@ public partial class FrmPasteWhat : Form
                            .ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
                         FrmMainApp.HandlerUpdateLabelText(
                             label: frmMainAppInstance.lbl_ParseProgress,
-                            text: "Processing: " +
-                                  dirElemFileToModify.ItemNameWithoutPath);
+                            text: $"Processing: {dirElemFileToModify.ItemNameWithoutPath}");
                         FrmMainApp.TaskbarManagerInstance.SetProgressValue(
                             currentValue: fileCounter,
                             maximumValue:

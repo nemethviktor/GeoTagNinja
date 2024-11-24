@@ -8,13 +8,13 @@ namespace GeoTagNinja;
 
 public partial class FrmPleaseWaitBox : Form
 {
-    private FrmMainApp frmMainAppInstance =
+    private FrmMainApp _frmMainAppInstance =
         (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
     public FrmPleaseWaitBox()
     {
         InitializeComponent();
-        Debug.Assert(condition: frmMainAppInstance != null, message: nameof(frmMainAppInstance) + " != null");
+        Debug.Assert(condition: _frmMainAppInstance != null, message: $"{nameof(_frmMainAppInstance)} != null");
         lbl_CancelPressed.Visible = false;
         HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
             ? ThemeColour.Dark
@@ -24,15 +24,15 @@ public partial class FrmPleaseWaitBox : Form
     private void btn_Cancel_Click(object sender, EventArgs e)
     {
         // Check if `_cts` is already disposed or null
-        if (frmMainAppInstance._cts == null ||
-            frmMainAppInstance._cts.Token.IsCancellationRequested)
+        if (_frmMainAppInstance._cts == null ||
+            _frmMainAppInstance._cts.Token.IsCancellationRequested)
         {
             Console.WriteLine(value: "Cancellation already requested or `_cts` disposed.");
             return;
         }
 
         // Request cancellation
-        frmMainAppInstance._cts.Cancel();
+        _frmMainAppInstance._cts.Cancel();
         Enabled = false;
         lbl_CancelPressed.Visible = true;
     }
@@ -40,7 +40,7 @@ public partial class FrmPleaseWaitBox : Form
     private void FrmPleaseWaitBox_Load(object sender, EventArgs e)
     {
         HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
-        frmMainAppInstance.Enabled = false;
+        _frmMainAppInstance.Enabled = false;
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
@@ -77,6 +77,6 @@ public partial class FrmPleaseWaitBox : Form
 
     private void FrmPleaseWaitBox_FormClosing(object sender, FormClosingEventArgs e)
     {
-        frmMainAppInstance.Enabled = true;
+        _frmMainAppInstance.Enabled = true;
     }
 }

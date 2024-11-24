@@ -27,7 +27,7 @@ public partial class FrmMainApp
         }
         catch (Exception ex)
         {
-            Log.Fatal(message: "Error: " + ex.Message);
+            Log.Fatal(message: $"Error: {ex.Message}");
             CustomMessageBox customMessageBox = new(
                 text: ReturnControlText(
                           controlName: "mbx_FrmMainApp_ErrorInitializeComponent",
@@ -57,7 +57,7 @@ public partial class FrmMainApp
         }
         catch (Exception ex)
         {
-            Log.Fatal(message: "Error: " + ex.Message);
+            Log.Fatal(message: $"Error: {ex.Message}");
             CustomMessageBox customMessageBox = new(
                 text: ReturnControlText(
                           controlName: "mbx_FrmMainApp_ErrorDoubleBuffer",
@@ -112,7 +112,7 @@ public partial class FrmMainApp
                             fakeControlType: FakeControlTypes.Label)
                         ;
                     cItem.Text = objectText;
-                    Log.Trace(message: "" + objectName + ": " + objectText);
+                    Log.Trace(message: $"{objectName}: {objectText}");
                 }
                 else if (cItem is ToolStrip ts)
                 {
@@ -126,7 +126,7 @@ public partial class FrmMainApp
                                 fakeControlType: FakeControlTypes.ToolStripButton);
 
                             tsb.ToolTipText = objectText;
-                            Log.Trace(message: "" + objectName + ": " + objectText);
+                            Log.Trace(message: $"{objectName}: {objectText}");
                         }
                     }
                 }
@@ -141,7 +141,7 @@ public partial class FrmMainApp
                             fakeControlType: FakeControlTypes.ColumnHeader);
                         columnHeader.Text = objectText;
                         columnHeader.Width = 120; // arbitrary
-                        Log.Trace(message: "" + objectName + ": " + objectText);
+                        Log.Trace(message: $"{objectName}: {objectText}");
                     }
                 }
                 else
@@ -149,7 +149,7 @@ public partial class FrmMainApp
                     objectName = cItem.Name;
                     ReturnControlText(cItem: cItem, senderForm: this);
 
-                    Log.Trace(message: "" + objectName + ": " + cItem.Text);
+                    Log.Trace(message: $"{objectName}: {cItem.Text}");
                 }
             }
         }
@@ -163,7 +163,7 @@ public partial class FrmMainApp
         foreach (ToolStripItem toolItem in mns_MenuStrip.Items)
         {
             allMenuItems.Add(item: toolItem);
-            Log.Trace(message: "Menu: " + toolItem.Name);
+            Log.Trace(message: $"Menu: {toolItem.Name}");
             //add sub items - not logging this.
             allMenuItems.AddRange(collection: helperNonstatic.GetMenuItems(item: toolItem));
         }
@@ -182,7 +182,7 @@ public partial class FrmMainApp
                 fakeControlType: FakeControlTypes.ToolStripMenuItem);
 
             cItem.Text = objectText;
-            Log.Trace(message: objectName + ": " + objectText);
+            Log.Trace(message: $"{objectName}: {objectText}");
         }
 
 

@@ -1370,27 +1370,27 @@ internal static class HelperGenericAncillaryListsArrays
     {
         string fmtFileContent = "";
         fmtFileContent +=
-            """
-            #------------------------------------------------------------------------------
-            # Taken from https://github.com/exiftool/exiftool/blob/master/fmt_files/gpx.fmt
-            # On 20240713
-            #------------------------------------------------------------------------------
-            #[HEAD]<?xml version="1.0" encoding="utf-8"?>
-            #[HEAD]<gpx version="1.0"
-            #[HEAD] creator="ExifTool $ExifToolVersion"
-            #[HEAD] xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            #[HEAD] xmlns="http://www.topografix.com/GPX/1/0"
-            #[HEAD] xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd">
-            #[HEAD]<trk>
-            #[HEAD]<number>1</number>
-            #[HEAD]<trkseg>
-            #[IF]  $gpslatitude $gpslongitude
-            #[BODY]<trkpt lat="$gpslatitude#" lon="$gpslongitude#">
-            """ + Environment.NewLine;
+            $"""
+             #------------------------------------------------------------------------------
+             # Taken from https://github.com/exiftool/exiftool/blob/master/fmt_files/gpx.fmt
+             # On 20240713
+             #------------------------------------------------------------------------------
+             #[HEAD]<?xml version="1.0" encoding="utf-8"?>
+             #[HEAD]<gpx version="1.0"
+             #[HEAD] creator="ExifTool $ExifToolVersion"
+             #[HEAD] xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             #[HEAD] xmlns="http://www.topografix.com/GPX/1/0"
+             #[HEAD] xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd">
+             #[HEAD]<trk>
+             #[HEAD]<number>1</number>
+             #[HEAD]<trkseg>
+             #[IF]  $gpslatitude $gpslongitude
+             #[BODY]<trkpt lat="$gpslatitude#" lon="$gpslongitude#">{Environment.NewLine}
+             """;
         if (includeAltitude)
         {
             fmtFileContent +=
-                """#[BODY]  <ele>$gpsaltitude#</ele>""" + Environment.NewLine;
+                $"""#[BODY]  <ele>$gpsaltitude#</ele>{Environment.NewLine}""";
             ;
         }
 

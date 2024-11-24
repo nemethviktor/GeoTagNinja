@@ -28,6 +28,6 @@ internal class ModelToColumnValueTransformations
             attribute: longAttrib,
             notFoundValue: nfVal, nowSavingExif: false);
 
-        return latValue + ";" + longValue;
+        return $"{latValue};{longValue}";
     }
 }

@@ -34,7 +34,7 @@ internal static class HelperGenericAppStartup
         }
         catch (Exception ex)
         {
-            FrmMainApp.Log.Fatal(message: "Error: " + ex.Message);
+            FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
             CustomMessageBox customMessageBox = new(
                 text: ReturnControlText(
                           controlName: "mbx_FrmMainApp_ErrorCantCreateSQLiteDB",
@@ -67,7 +67,7 @@ internal static class HelperGenericAppStartup
         }
         catch (Exception ex)
         {
-            FrmMainApp.Log.Fatal(message: "Error: " + ex.Message);
+            FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
             CustomMessageBox customMessageBox = new(
                 text: ReturnControlText(
                           controlName: "mbx_FrmMainApp_ErrorCantWriteSQLiteDB",
@@ -117,7 +117,7 @@ internal static class HelperGenericAppStartup
                 dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_Application",
                 settingId: "cbx_Language") ?? "en"; // default to "en".
 
-            FrmMainApp.Log.Info(message: "AppLanguage lang is" + lang);
+            FrmMainApp.Log.Info(message: $"AppLanguage lang is{lang}");
 
             FrmMainApp.AppLanguage = lang switch
             {
@@ -132,11 +132,11 @@ internal static class HelperGenericAppStartup
 
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(name: cultureInfo.ToString());
 
-            FrmMainApp.Log.Info(message: "AppLanguage is" + FrmMainApp.AppLanguage);
+            FrmMainApp.Log.Info(message: $"AppLanguage is{FrmMainApp.AppLanguage}");
         }
         catch (Exception ex)
         {
-            FrmMainApp.Log.Fatal(message: "Error: " + ex.Message);
+            FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
             CustomMessageBox customMessageBox = new(
                 text: ReturnControlText(
                           controlName: "mbx_FrmMainApp_ErrorCantLoadSQLiteDB",
@@ -281,7 +281,7 @@ internal static class HelperGenericAppStartup
             {
                 if (settingsStringBoolPairsDictionary.ContainsKey(key: fieldInfo.Name))
                 {
-                    FrmMainApp.Log.Debug(message: "Now retrieving: " + fieldInfo.Name);
+                    FrmMainApp.Log.Debug(message: $"Now retrieving: {fieldInfo.Name}");
                     settingsStringBoolPairsDictionary.TryGetValue(key: fieldInfo.Name, value: out string fieldInfoSettingID);
                     if (fieldInfo.FieldType == typeof(bool))
                     {
@@ -321,7 +321,7 @@ internal static class HelperGenericAppStartup
             }
             catch (Exception ex)
             {
-                FrmMainApp.Log.Fatal(message: "Error: " + ex.Message);
+                FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
                 CustomMessageBox customMessageBox = new(
                     text: ReturnControlText(
                               controlName:
@@ -378,11 +378,11 @@ internal static class HelperGenericAppStartup
             webView2Version =
                 CoreWebView2Environment.GetAvailableBrowserVersionString(
                     browserExecutableFolder: null);
-            FrmMainApp.Log.Trace(message: "Check webView2 version is: " + webView2Version);
+            FrmMainApp.Log.Trace(message: $"Check webView2 version is: {webView2Version}");
         }
         catch (Exception ex)
         {
-            FrmMainApp.Log.Fatal(message: "Error: " + ex.Message);
+            FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
             CustomMessageBox customMessageBox = new(
                 text: ReturnControlText(
                           controlName: "mbx_FrmMainApp_ErrorCantLoadWebView2",
@@ -506,11 +506,11 @@ internal static class HelperGenericAppStartup
                 settingTabPage: "tpg_Application",
                 settingId: "tbx_Startup_Folder"
             );
-            FrmMainApp.Log.Trace(message: "Startup Folder is: " + startupFolder);
+            FrmMainApp.Log.Trace(message: $"Startup Folder is: {startupFolder}");
         }
         catch (Exception ex)
         {
-            FrmMainApp.Log.Fatal(message: "Error: " + ex.Message);
+            FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
             CustomMessageBox customMessageBox = new(
                 text: ReturnControlText(
                           controlName: "mbx_FrmMainApp_ErrorSettingStartupFolder",
@@ -527,8 +527,8 @@ internal static class HelperGenericAppStartup
         if (startupFolder == null)
         {
             startupFolder = Environment.GetFolderPath(folder: Environment.SpecialFolder.MyPictures);
-            FrmMainApp.Log.Trace(message: "Startup Folder is null, defaulting to SpecialFolder.MyPictures: " +
-                                          startupFolder);
+            FrmMainApp.Log.Trace(message:
+                $"Startup Folder is null, defaulting to SpecialFolder.MyPictures: {startupFolder}");
         }
 
         if (startupFolder.EndsWith(value: "\\"))
@@ -537,7 +537,7 @@ internal static class HelperGenericAppStartup
         }
         else
         {
-            toolStripTextBox.Text = startupFolder + "\\";
+            toolStripTextBox.Text = $"{startupFolder}\\";
         }
     }
 }

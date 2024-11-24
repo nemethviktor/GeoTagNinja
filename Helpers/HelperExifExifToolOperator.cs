@@ -37,12 +37,8 @@ internal static class HelperExifExifToolOperator
     {
         int lviIndex = 0;
         _exifInvokeCounter += 1;
-        FrmMainApp.Log.Trace(message: "Start EXIF Tool number " +
-                                         _exifInvokeCounter +
-                                         " for " +
-                                         initiator +
-                                         " with cmdLine: " +
-                                         exiftoolCmd);
+        FrmMainApp.Log.Trace(message:
+            $"Start EXIF Tool number {_exifInvokeCounter} for {initiator} with cmdLine: {exiftoolCmd}");
         await Task.Run(action: () =>
         {
             using Process prcExifTool = new();
@@ -50,14 +46,8 @@ internal static class HelperExifExifToolOperator
             prcExifTool.StartInfo =
                 new ProcessStartInfo(fileName: @"c:\windows\system32\cmd.exe")
                 {
-                    Arguments = @"/c " +
-                                HelperVariables.DoubleQuoteStr +
-                                HelperVariables.DoubleQuoteStr +
-                                HelperVariables.ExifToolExePathToUse +
-                                HelperVariables.DoubleQuoteStr +
-                                " " +
-                                exiftoolCmd +
-                                HelperVariables.DoubleQuoteStr,
+                    Arguments =
+                        $@"/c {HelperVariables.DoubleQuoteStr}{HelperVariables.DoubleQuoteStr}{HelperVariables.ExifToolExePathToUse}{HelperVariables.DoubleQuoteStr} {exiftoolCmd}{HelperVariables.DoubleQuoteStr}",
                     UseShellExecute = false,
                     RedirectStandardError = true,
                     RedirectStandardOutput = true,
@@ -126,11 +116,9 @@ internal static class HelperExifExifToolOperator
                                     dirElemFileToDrop.ItemNameWithoutPath;
                                 FrmMainApp.HandlerUpdateLabelText(
                                     label: frmMainAppInstance.lbl_ParseProgress,
-                                    text: "Processing: " + fileNameWithoutPath);
+                                    text: $"Processing: {fileNameWithoutPath}");
                                 FrmMainApp.Log.Debug(
-                                    message: "Writing " +
-                                             fileNameWithoutPath +
-                                             " [this is via OutputDataReceived]");
+                                    message: $"Writing {fileNameWithoutPath} [this is via OutputDataReceived]");
 
                                 try
                                 {
@@ -293,9 +281,7 @@ internal static class HelperExifExifToolOperator
                         if (data.Data != null &&
                             data.Data.Length > 0)
                         {
-                            HelperVariables._sOutputAndErrorMsg += "ERROR: " +
-                                                                   data.Data.ToString() +
-                                                                   Environment.NewLine;
+                            HelperVariables._sOutputAndErrorMsg += $"ERROR: {data.Data}{Environment.NewLine}";
                         }
                     };
                     break;
@@ -319,27 +305,19 @@ internal static class HelperExifExifToolOperator
                         if (data.Data != null &&
                             data.Data.Length > 0)
                         {
-                            HelperVariables._sOutputAndErrorMsg += "ERROR: " +
-                                                                   data.Data.ToString() +
-                                                                   Environment.NewLine;
+                            HelperVariables._sOutputAndErrorMsg += $"ERROR: {data.Data}{Environment.NewLine}";
                         }
                     };
                     break;
             }
 
-            FrmMainApp.Log.Trace(message: "EXIF number " +
-                                             _exifInvokeCounter +
-                                             ": Start");
+            FrmMainApp.Log.Trace(message: $"EXIF number {_exifInvokeCounter}: Start");
             prcExifTool.Start();
             prcExifTool.BeginOutputReadLine();
             prcExifTool.BeginErrorReadLine();
-            FrmMainApp.Log.Trace(message: "EXIF number " +
-                                             _exifInvokeCounter +
-                                             ": Wait for Exit");
+            FrmMainApp.Log.Trace(message: $"EXIF number {_exifInvokeCounter}: Wait for Exit");
             prcExifTool.WaitForExit();
-            FrmMainApp.Log.Trace(message: "EXIF number " +
-                                             _exifInvokeCounter +
-                                             ": Close");
+            FrmMainApp.Log.Trace(message: $"EXIF number {_exifInvokeCounter}: Close");
             prcExifTool.Close();
             FrmMainApp.Log.Trace(message: "Closing exifTool");
 
@@ -407,6 +385,6 @@ internal static class HelperExifExifToolOperator
         }
 
         frmMainAppInstance.lvw_FileList.UpdateItemColour(
-            itemText: dirElemToDrop.ItemNameWithoutPath, color: Color.Black);
+            directoryElement: dirElemToDrop, color: Color.Black);
     }
 }

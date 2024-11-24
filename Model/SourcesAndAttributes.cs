@@ -17,32 +17,38 @@ namespace GeoTagNinja.Model;
 /// </remarks>
 public static class SourcesAndAttributes
 {
+    private const int ORDER_INCREMENT_VALUE = 1;
+
     /// <summary>
-    ///     ElementAttributes available
+    ///     ElementAttributes available. Do not reorder the list as the order of apperance is directly translated to the order
+    ///     in which items appear in the columns of the listviews.
+    ///     When inserting new items that do not require an order ID (ie stuff the users don't see or aren't real tags per se),
+    ///     put them at the end.
     /// </summary>
     public enum ElementAttribute
     {
-        GPSAltitude,
-        GPSAltitudeRef,
-        GPSDestLatitude,
-        GPSDestLatitudeRef,
-        GPSDestLongitude,
-        GPSDestLongitudeRef,
-        GPSImgDirection,
-        GPSImgDirectionRef,
+        Folder,
+        Coordinates,
         GPSLatitude,
         GPSLatitudeRef,
         GPSLongitude,
         GPSLongitudeRef,
         GPSSpeed,
         GPSSpeedRef,
-        Coordinates,
-        DestCoordinates,
-        City,
-        CountryCode,
+        GPSAltitude,
+        GPSAltitudeRef,
         Country,
+        CountryCode,
         State,
+        City,
         Sublocation,
+        DestCoordinates,
+        GPSDestLatitude,
+        GPSDestLatitudeRef,
+        GPSDestLongitude,
+        GPSDestLongitudeRef,
+        GPSImgDirection,
+        GPSImgDirectionRef,
         Make,
         Model,
         Rating,
@@ -55,6 +61,12 @@ public static class SourcesAndAttributes
         TakenDate,
         CreateDate,
         GPSDateTime,
+        OffsetTime,
+        IPTCKeywords,
+        XMLSubjects,
+
+        // items without OrderID below this line
+
         TakenDateDaysShift,
         TakenDateHoursShift,
         TakenDateMinutesShift,
@@ -63,10 +75,7 @@ public static class SourcesAndAttributes
         CreateDateHoursShift,
         CreateDateMinutesShift,
         CreateDateSecondsShift,
-        OffsetTime,
         RemoveAllGPS,
-        IPTCKeywords,
-        XMLSubjects,
         GUID
     }
 
@@ -101,7 +110,7 @@ public static class SourcesAndAttributes
                             "exif:GPSAltitude",
                             "XMP:GPSAltitude"
                         },
-                        OrderID = 8,
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSAltitude,
                         isGeoData = true
                     }
                 },
@@ -123,7 +132,7 @@ public static class SourcesAndAttributes
                             "exif:GPSAltitudeRef",
                             "XMP:GPSAltitudeRef"
                         },
-                        OrderID = 9,
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSAltitudeRef,
                         isGeoData = true
                     }
                 },
@@ -146,7 +155,7 @@ public static class SourcesAndAttributes
                             "exif:GPSDestLatitude",
                             "XMP:GPSDestLatitude"
                         },
-                        OrderID = 16,
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSDestLatitude,
                         isGeoData = true
                     }
                 },
@@ -167,7 +176,7 @@ public static class SourcesAndAttributes
                             "GPS:GPSDestLatitudeRef",
                             "exif:GPSDestLatitudeRef"
                         },
-                        OrderID = 17,
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSDestLatitudeRef,
                         isGeoData = true
                     }
                 },
@@ -190,7 +199,7 @@ public static class SourcesAndAttributes
                             "exif:GPSDestLongitude",
                             "XMP:GPSDestLongitude"
                         },
-                        OrderID = 18,
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSDestLongitude,
                         isGeoData = true
                     }
                 },
@@ -211,7 +220,7 @@ public static class SourcesAndAttributes
                             "GPS:GPSDestLongitudeRef",
                             "exif:GPSDestLongitudeRef"
                         },
-                        OrderID = 19,
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSDestLongitudeRef,
                         isGeoData = true
                     }
                 },
@@ -231,7 +240,7 @@ public static class SourcesAndAttributes
                             //        "XMP:GPSImgDirection",
                             //        "EXIF:GPSImgDirection"
                         },
-                        OrderID = 20
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSImgDirection
                     }
                 },
                 {
@@ -251,7 +260,7 @@ public static class SourcesAndAttributes
                             //        "XMP:GPSImgDirectionRef",
                             //        "EXIF:GPSImgDirectionRef"
                         },
-                        OrderID = 21
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSImgDirectionRef
                     }
                 },
                 {
@@ -272,7 +281,7 @@ public static class SourcesAndAttributes
                             "exif:GPSLatitude",
                             "XMP:GPSLatitude"
                         },
-                        OrderID = 2,
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSLatitude,
                         isGeoData = true
                     }
                 },
@@ -292,7 +301,7 @@ public static class SourcesAndAttributes
                             "GPS:GPSLatitudeRef",
                             "exif:GPSLatitudeRef"
                         },
-                        OrderID = 3,
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSLatitudeRef,
                         isGeoData = true
                     }
                 },
@@ -314,7 +323,7 @@ public static class SourcesAndAttributes
                             "exif:GPSLongitude",
                             "XMP:GPSLongitude"
                         },
-                        OrderID = 4,
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSLongitude,
                         isGeoData = true
                     }
                 },
@@ -335,7 +344,7 @@ public static class SourcesAndAttributes
                             "GPS:GPSLongitudeRef",
                             "exif:GPSLongitudeRef"
                         },
-                        OrderID = 5,
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSLongitudeRef,
                         isGeoData = true
                     }
                 },
@@ -355,7 +364,7 @@ public static class SourcesAndAttributes
                             "GPS:GPSSpeed",
                             "exif:GPSSpeed"
                         },
-                        OrderID = 6
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSSpeed
                     }
                 },
                 {
@@ -374,7 +383,7 @@ public static class SourcesAndAttributes
                             "GPS:GPSSpeedRef",
                             "exif:GPSSpeedRef"
                         },
-                        OrderID = 7
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSSpeedRef
                     }
                 },
                 {
@@ -385,7 +394,7 @@ public static class SourcesAndAttributes
                         TypeOfElement = typeof(string),
                         InAttributes = new List<string>(),
                         OutAttributes = new List<string>(),
-                        OrderID = 1
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.Coordinates
                     }
                 },
                 {
@@ -396,7 +405,7 @@ public static class SourcesAndAttributes
                         TypeOfElement = typeof(string),
                         InAttributes = new List<string>(),
                         OutAttributes = new List<string>(),
-                        OrderID = 15
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.DestCoordinates
                     }
                 },
                 {
@@ -415,7 +424,7 @@ public static class SourcesAndAttributes
                             "City",
                             "XMP-photoshop:City"
                         },
-                        OrderID = 13,
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.City,
                         isGeoData = true
                     }
                 },
@@ -436,7 +445,7 @@ public static class SourcesAndAttributes
                             "XMP-iptcCore:CountryCode",
                             "IPTC:Country-PrimaryLocationCode"
                         },
-                        OrderID = 11,
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.CountryCode,
                         isGeoData = true
                     }
                 },
@@ -457,7 +466,7 @@ public static class SourcesAndAttributes
                             "XMP-photoshop:Country",
                             "IPTC:Country-PrimaryLocationName"
                         },
-                        OrderID = 10,
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.Country,
                         isGeoData = true
                     }
                 },
@@ -478,7 +487,7 @@ public static class SourcesAndAttributes
                             "XMP-photoshop:State",
                             "IPTC:Province-State"
                         },
-                        OrderID = 12,
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.State,
                         isGeoData = true
                     }
                 },
@@ -498,7 +507,7 @@ public static class SourcesAndAttributes
                             "Sub-location",
                             "XMP-iptcCore:Location"
                         },
-                        OrderID = 14,
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.Sublocation,
                         isGeoData = true
                     }
                 },
@@ -514,7 +523,7 @@ public static class SourcesAndAttributes
                             "EXIF:Make"
                         },
                         OutAttributes = new List<string>(),
-                        OrderID = 22
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.Make
                     }
                 },
                 {
@@ -529,7 +538,7 @@ public static class SourcesAndAttributes
                             "EXIF:Model"
                         },
                         OutAttributes = new List<string>(),
-                        OrderID = 23
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.Model
                     }
                 },
                 {
@@ -548,7 +557,7 @@ public static class SourcesAndAttributes
                             "XMP:Rating",
                             "EXIF:Rating"
                         },
-                        OrderID = 24
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.Rating
                     }
                 },
                 {
@@ -563,7 +572,7 @@ public static class SourcesAndAttributes
                             "EXIF:ExposureTime"
                         },
                         OutAttributes = new List<string>(),
-                        OrderID = 25
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.ExposureTime
                     }
                 },
                 {
@@ -578,7 +587,7 @@ public static class SourcesAndAttributes
                             "EXIF:FNumber"
                         },
                         OutAttributes = new List<string>(),
-                        OrderID = 26
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.Fnumber
                     }
                 },
                 {
@@ -593,7 +602,7 @@ public static class SourcesAndAttributes
                             "EXIF:FocalLength"
                         },
                         OutAttributes = new List<string>(),
-                        OrderID = 27
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.FocalLength
                     }
                 },
                 {
@@ -610,7 +619,7 @@ public static class SourcesAndAttributes
                             "Composite:FocalLength35efl"
                         },
                         OutAttributes = new List<string>(),
-                        OrderID = 28
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.FocalLengthIn35mmFormat
                     }
                 },
                 {
@@ -626,7 +635,7 @@ public static class SourcesAndAttributes
                             "Composite:ISO"
                         },
                         OutAttributes = new List<string>(),
-                        OrderID = 29
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.ISO
                     }
                 },
                 {
@@ -642,7 +651,7 @@ public static class SourcesAndAttributes
                             "Composite:Lens"
                         },
                         OutAttributes = new List<string>(),
-                        OrderID = 30
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.LensSpec
                     }
                 },
                 {
@@ -661,7 +670,7 @@ public static class SourcesAndAttributes
                             "XMP:DateTimeOriginal",
                             "EXIF:DateTimeOriginal"
                         },
-                        OrderID = 31
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.TakenDate
                     }
                 },
                 {
@@ -680,7 +689,7 @@ public static class SourcesAndAttributes
                             "XMP:CreateDate",
                             "EXIF:CreateDate"
                         },
-                        OrderID = 32
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.CreateDate
                     }
                 },
                 {
@@ -694,7 +703,7 @@ public static class SourcesAndAttributes
                             "Composite:GPSDateTime"
                         },
                         OutAttributes = new List<string>(),
-                        OrderID = 33
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSDateTime
                     }
                 },
                 {
@@ -793,7 +802,18 @@ public static class SourcesAndAttributes
                             "EXIF:OffsetTimeOriginal",
                             "EXIF:OffsetTime"
                         },
-                        OrderID = 34
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.OffsetTime
+                    }
+                },
+                {
+                    ElementAttribute.Folder, new ElementAttributeMapping
+                    {
+                        Name = "Folder",
+                        // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
+                        TypeOfElement = typeof(string),
+                        InAttributes = new List<string>(),
+                        OutAttributes = new List<string>(),
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.Folder
                     }
                 },
                 {

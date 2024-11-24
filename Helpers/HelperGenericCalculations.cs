@@ -165,6 +165,6 @@ internal static class HelperGenericCalculations
                        .Item1.ToString(provider: CultureInfo.InvariantCulture);
         string tmpLng = sourceList[index: 0]
                        .Item2.ToString(provider: CultureInfo.InvariantCulture);
-        return tmpLat + ", " + tmpLng;
+        return $"{tmpLat}, {tmpLng}";
     }
 }

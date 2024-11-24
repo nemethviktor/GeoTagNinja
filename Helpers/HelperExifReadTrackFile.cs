@@ -50,8 +50,7 @@ internal static class HelperExifReadTrackFile
         FrmMainApp frmMainAppInstance =
             (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
-        Directory.CreateDirectory(path: HelperVariables.UserDataFolderPath +
-                                        @"\tmpLocFiles");
+        Directory.CreateDirectory(path: $@"{HelperVariables.UserDataFolderPath}\tmpLocFiles");
         List<string> trackFileList = new();
         List<string> imageFileList = new();
         ListView lvw = frmMainAppInstance.lvw_FileList;
@@ -86,7 +85,7 @@ internal static class HelperExifReadTrackFile
             }
 
             string tmpFolder =
-                Path.Combine(HelperVariables.UserDataFolderPath + @"\tmpLocFiles");
+                Path.Combine($@"{HelperVariables.UserDataFolderPath}\tmpLocFiles");
 
             // this is a little superflous but...
             DirectoryInfo diTmpLocFiles = new(path: tmpFolder);
@@ -138,7 +137,7 @@ internal static class HelperExifReadTrackFile
 
                             foreach (PropertyInfo trackData in properties)
                             {
-                                string attribute = "exif:" + trackData.Name;
+                                string attribute = $"exif:{trackData.Name}";
                                 object tagValue =
                                     trackData.GetValue(
                                         obj: trackFileXMPData.RDF.Description);
@@ -291,9 +290,9 @@ internal static class HelperExifReadTrackFile
                                 {
                                     FrmMainApp.HandlerUpdateLabelText(
                                         label: frmMainAppInstance.lbl_ParseProgress,
-                                        text: "Processing: " + fileNameWithoutPath);
+                                        text: $"Processing: {fileNameWithoutPath}");
                                     frmMainAppInstance.lvw_FileList.UpdateItemColour(
-                                        itemText: fileNameWithoutPath, color: Color.Red);
+                                        directoryElement: dirElemFileToModify, color: Color.Red);
 
                                     dirElemFileToModify.SetAttributeValueAnyType(
                                         attribute: ElementAttribute.GPSLatitude,

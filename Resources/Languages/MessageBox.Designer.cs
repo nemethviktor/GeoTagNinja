@@ -160,7 +160,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Can&apos;t create SQLite database (Please file an issue on github): .
+        ///   Looks up a localized string similar to Can&apos;t create SQLite database (Please file an issue on GitHub): .
         /// </summary>
         public static string mbx_FrmMainApp_ErrorCantCreateSQLiteDB {
             get {
@@ -169,7 +169,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Loading data from SQL Failed (Please file an issue on github): .
+        ///   Looks up a localized string similar to Loading data from SQL Failed (Please file an issue on GitHub): .
         /// </summary>
         public static string mbx_FrmMainApp_ErrorCantLoadSQLiteDB {
             get {
@@ -187,7 +187,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to read default values from SQL (Please file an issue on github): .
+        ///   Looks up a localized string similar to Failed to read default values from SQL (Please file an issue on GitHub): .
         /// </summary>
         public static string mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB {
             get {
@@ -196,7 +196,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Created but can&apos;t write SQLite database (Please file an issue on github): .
+        ///   Looks up a localized string similar to Created but can&apos;t write SQLite database (Please file an issue on GitHub): .
         /// </summary>
         public static string mbx_FrmMainApp_ErrorCantWriteSQLiteDB {
             get {
@@ -205,7 +205,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error clearing the filedata-Q tables (Please file an issue on github): .
+        ///   Looks up a localized string similar to Error clearing the filedata-Q tables (Please file an issue on GitHub): .
         /// </summary>
         public static string mbx_FrmMainApp_ErrorClearingFileDataQTables {
             get {
@@ -214,7 +214,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DoubleBuffer Error (Please file an issue on github): .
+        ///   Looks up a localized string similar to DoubleBuffer Error (Please file an issue on GitHub): .
         /// </summary>
         public static string mbx_FrmMainApp_ErrorDoubleBuffer {
             get {
@@ -232,7 +232,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error in FrmMainApp.InitializeComponent (Please file an issue on github): .
+        ///   Looks up a localized string similar to Error in FrmMainApp.InitializeComponent (Please file an issue on GitHub): .
         /// </summary>
         public static string mbx_FrmMainApp_ErrorInitializeComponent {
             get {
@@ -241,7 +241,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error in FrmMainApp.InitialiseWebView (await wbv_MapArea.EnsureCoreWebView2Async(c2wv)) (Please file an issue on github): .
+        ///   Looks up a localized string similar to Error in FrmMainApp.InitialiseWebView (await wbv_MapArea.EnsureCoreWebView2Async(c2wv)) (Please file an issue on GitHub): .
         /// </summary>
         public static string mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async {
             get {
@@ -250,7 +250,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error in FrmMainApp.InitialiseWebView (IsWebMessageEnabled) (Please file an issue on github): .
+        ///   Looks up a localized string similar to Error in FrmMainApp.InitialiseWebView (IsWebMessageEnabled) (Please file an issue on GitHub): .
         /// </summary>
         public static string mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled {
             get {
@@ -259,7 +259,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error in FrmMainApp.InitialiseWebView (NavigateToString in HTMLCode file) (Please file an issue on github): .
+        ///   Looks up a localized string similar to Error in FrmMainApp.InitialiseWebView (NavigateToString in HTMLCode file) (Please file an issue on GitHub): .
         /// </summary>
         public static string mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile {
             get {
@@ -295,7 +295,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error while performing  wbv_MapArea_WebMessageReceived (Please file an issue on github): .
+        ///   Looks up a localized string similar to Error while performing  wbv_MapArea_WebMessageReceived (Please file an issue on GitHub): .
         /// </summary>
         public static string mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived {
             get {
@@ -322,7 +322,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error in FrmMainApp.NavigateMapGo (string HTMLCode) (Please file an issue on github): .
+        ///   Looks up a localized string similar to Error in FrmMainApp.NavigateMapGo (string HTMLCode) (Please file an issue on GitHub): .
         /// </summary>
         public static string mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode {
             get {
@@ -331,7 +331,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Resizing Columns failed (Please file an issue on github): .
+        ///   Looks up a localized string similar to Resizing Columns failed (Please file an issue on GitHub): .
         /// </summary>
         public static string mbx_FrmMainApp_ErrorResizingColumns {
             get {
@@ -340,7 +340,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Setting Default Startup folder failed (Please file an issue on github): .
+        ///   Looks up a localized string similar to Setting Default Startup folder failed (Please file an issue on GitHub): .
         /// </summary>
         public static string mbx_FrmMainApp_ErrorSettingStartupFolder {
             get {
@@ -408,6 +408,15 @@ namespace GeoTagNinja.Resources.Languages {
         public static string mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles {
             get {
                 return ResourceManager.GetString("mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Flat Mode is turned on. Do you want to turn it off?.
+        /// </summary>
+        public static string mbx_FrmMainApp_QuestionDisableFlatMode {
+            get {
+                return ResourceManager.GetString("mbx_FrmMainApp_QuestionDisableFlatMode", resourceCulture);
             }
         }
         
@@ -547,7 +556,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to asyncExifTool.ExecuteAsync failed (Please file an issue on github): .
+        ///   Looks up a localized string similar to asyncExifTool.ExecuteAsync failed (Please file an issue on GitHub): .
         /// </summary>
         public static string mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed {
             get {
@@ -556,7 +565,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to read default values from SQL (Please file an issue on github): .
+        ///   Looks up a localized string similar to Failed to read default values from SQL (Please file an issue on GitHub): .
         /// </summary>
         public static string mbx_Helper_ErrorCantReadDefaultSQLiteDB {
             get {

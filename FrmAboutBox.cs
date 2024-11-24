@@ -42,19 +42,16 @@ internal partial class FrmAboutBox : Form
         List<(string text, string link)> aboutBoxEntries =
         [
             (text: AssemblyTitle, link: null),
-            (text: "Version/Build: " +
-                   Assembly.GetExecutingAssembly()
-                           .GetName()
-                           .Version.Build.ToString(provider: CultureInfo.InvariantCulture) +
-                   " [" +
-                   buildDateTime.ToString(format: "yyyyMMdd:HHmm") +
-                   "]", link: null),
+            (text: $"Version/Build: {Assembly.GetExecutingAssembly()
+                                             .GetName()
+                                             .Version.Build.ToString(provider: CultureInfo.InvariantCulture)} [{buildDateTime:yyyyMMdd:HHmm}]",
+             link: null),
 
-            (text: "Rights: " + AssemblyCopyright, link: null),
-            (text: "Written by: " + AssemblyCompany, link: null),
+            (text: $"Rights: {AssemblyCopyright}", link: null),
+            (text: $"Written by: {AssemblyCompany}", link: null),
             (text: "Paypal: ", link: "https://paypal.me/NemethV"),
             (text: "GitHub: ", link: "https://github.com/nemethviktor/GeoTagNinja"),
-            (text: "ExifTool Ver: " + HelperVariables.CurrentExifToolVersionLocal, link: null)
+            (text: $"ExifTool Ver: {HelperVariables.CurrentExifToolVersionLocal}", link: null)
         ];
         foreach ((string text, string link) in aboutBoxEntries)
         {
@@ -73,7 +70,7 @@ internal partial class FrmAboutBox : Form
         string text,
         string link = null)
     {
-        box.AppendText(text: text + " " + link + Environment.NewLine);
+        box.AppendText(text: $"{text} {link}{Environment.NewLine}");
     }
 
     private void btn_Generic_OK_Click(object sender,

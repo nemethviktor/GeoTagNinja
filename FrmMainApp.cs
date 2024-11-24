@@ -129,6 +129,7 @@ public partial class FrmMainApp : Form
     internal CancellationTokenSource _cts = new();
     private CancellationToken _token;
     internal static bool FlatMode;
+    private static bool _ignoreFlatMode;
 
 #endregion
 
@@ -180,11 +181,11 @@ public partial class FrmMainApp : Form
 
         int procID = Process.GetCurrentProcess()
                             .Id;
-        Log.Info(message: "Constructor: Starting GTN with process ID " + procID);
-        Log.Info(message: "Collection mode: " + Program.CollectionModeEnabled);
+        Log.Info(message: $"Constructor: Starting GTN with process ID {procID}");
+        Log.Info(message: $"Collection mode: {Program.CollectionModeEnabled}");
         if (Program.CollectionModeEnabled)
         {
-            Log.Info(message: "Collection source: " + Program.CollectionFileLocation);
+            Log.Info(message: $"Collection source: {Program.CollectionFileLocation}");
         }
 
         if (Program.SingleInstanceHighlander)
@@ -261,7 +262,7 @@ public partial class FrmMainApp : Form
         }
         catch (Exception ex)
         {
-            Log.Fatal(message: "Error: " + ex.Message);
+            Log.Fatal(message: $"Error: {ex.Message}");
             CustomMessageBox customMessageBox = new(
                 text: ReturnControlText(
                           controlName: "mbx_FrmMainApp_ErrorClearingFileDataQTables",
@@ -282,7 +283,7 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             // not really fatal
-            Log.Error(message: "Error: " + ex.Message);
+            Log.Error(message: $"Error: {ex.Message}");
         }
 
         // Setup the List View
@@ -292,7 +293,7 @@ public partial class FrmMainApp : Form
         }
         catch (Exception ex)
         {
-            Log.Error(message: "Error: " + ex.Message);
+            Log.Error(message: $"Error: {ex.Message}");
             CustomMessageBox customMessageBox = new(
                     text: ReturnControlText(
                               controlName: "mbx_FrmMainApp_ErrorResizingColumns",
@@ -559,7 +560,7 @@ public partial class FrmMainApp : Form
         nud_lng.Value = Convert.ToDecimal(value: correctedDblLng,
             provider: CultureInfo.InvariantCulture);
 
-        if (isDragged && askIfUserWantsToSaveDraggedMapData())
+        if (isDragged && AskIfUserWantsToSaveDraggedMapData())
         {
             btn_loctToFile.PerformClick();
         }
@@ -579,7 +580,7 @@ public partial class FrmMainApp : Form
     ///     Checks if the user wants to have a "dragged datapoint" actioned to be sent onto selected files.
     /// </summary>
     /// <returns></returns>
-    private bool askIfUserWantsToSaveDraggedMapData()
+    private bool AskIfUserWantsToSaveDraggedMapData()
     {
         CustomMessageBox customMessageBox = new(
             text: ReturnControlText(
@@ -659,11 +660,9 @@ public partial class FrmMainApp : Form
                         if (senderName == "btn_loctToFile")
                         {
                             string tmpCoords =
-                                strGPSLatitudeOnTheMap + ";" + strGPSLongitudeOnTheMap !=
+                                $"{strGPSLatitudeOnTheMap};{strGPSLongitudeOnTheMap}" !=
                                 ";"
-                                    ? strGPSLatitudeOnTheMap +
-                                      ";" +
-                                      strGPSLongitudeOnTheMap
+                                    ? $"{strGPSLatitudeOnTheMap};{strGPSLongitudeOnTheMap}"
                                     : "";
 
                             List<(ElementAttribute attribute, string value)> attributes =
@@ -703,11 +702,9 @@ public partial class FrmMainApp : Form
                         else if (senderName == "btn_loctToFileDestination")
                         {
                             string tmpCoords =
-                                strGPSLatitudeOnTheMap + ";" + strGPSLongitudeOnTheMap !=
+                                $"{strGPSLatitudeOnTheMap};{strGPSLongitudeOnTheMap}" !=
                                 ";"
-                                    ? strGPSLatitudeOnTheMap +
-                                      ";" +
-                                      strGPSLongitudeOnTheMap
+                                    ? $"{strGPSLatitudeOnTheMap};{strGPSLongitudeOnTheMap}"
                                     : "";
 
                             List<(ElementAttribute attribute, string value)>
@@ -827,15 +824,13 @@ public partial class FrmMainApp : Form
             {
                 LatCoordinate = strLatCoordinate;
                 LngCoordinate = strLngCoordinate;
-                Log.Trace(message: "parseLatLngTextBox OK - LatCoordinate: " +
-                                   strLatCoordinate +
-                                   " - LngCoordinate: " +
-                                   strLngCoordinate);
+                Log.Trace(message:
+                    $"parseLatLngTextBox OK - LatCoordinate: {strLatCoordinate} - LngCoordinate: {strLngCoordinate}");
             }
         }
         catch (Exception ex)
         {
-            Log.Fatal(message: "Error: " + ex.Message);
+            Log.Fatal(message: $"Error: {ex.Message}");
             CustomMessageBox customMessageBox = new(
                 text: ReturnControlText(
                           controlName: "mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode",
@@ -865,8 +860,8 @@ public partial class FrmMainApp : Form
                    .UserSettingArcGisApiKey);
         }
 
-        Log.Trace(message: "HelperStatic.UserSettingArcGisApiKey == null: " +
-                           (HelperVariables.UserSettingArcGisApiKey == null));
+        Log.Trace(message:
+            $"HelperStatic.UserSettingArcGisApiKey == null: {HelperVariables.UserSettingArcGisApiKey == null}");
 
         foreach (KeyValuePair<string, string> replacement in replacements)
         {
@@ -886,7 +881,7 @@ public partial class FrmMainApp : Form
         }
         catch (Exception ex)
         {
-            Log.Fatal(message: "Error: " + ex.Message);
+            Log.Fatal(message: $"Error: {ex.Message}");
             CustomMessageBox customMessageBox = new(
                 text: ReturnControlText(
                           controlName:
@@ -965,9 +960,7 @@ public partial class FrmMainApp : Form
             htmlReplacements.Add(key: "{ HTMLAddMarker }", value: "");
         }
 
-        Log.Trace(message: "Added " +
-                           HelperVariables.HsMapMarkers.Count +
-                           " map markers.");
+        Log.Trace(message: $"Added {HelperVariables.HsMapMarkers.Count} map markers.");
 
         string createPointsStr = "";
         string showLinesStr = "";
@@ -1114,24 +1107,20 @@ public partial class FrmMainApp : Form
                                                             }},
                                                         ];
                                                         """,
-                    arg0: GPSLatitudeStr +
-                          "," +
-                          GPSLongitudeStr,
-                    arg1: targetCoordinates.Item1
-                                           .ToString(
-                                                provider: CultureInfo
-                                                   .InvariantCulture)
-                                           .Replace(
-                                                oldChar: ',',
-                                                newChar: '.') +
-                          "," +
-                          targetCoordinates.Item2
-                                           .ToString(
-                                                provider: CultureInfo
-                                                   .InvariantCulture)
-                                           .Replace(
-                                                oldChar: ',',
-                                                newChar: '.'));
+                    arg0: $"{GPSLatitudeStr},{GPSLongitudeStr}",
+                    arg1: $"{targetCoordinates.Item1
+                                              .ToString(
+                                                   provider: CultureInfo
+                                                      .InvariantCulture)
+                                              .Replace(
+                                                   oldChar: ',',
+                                                   newChar: '.')},{targetCoordinates.Item2
+                                                  .ToString(
+                                                       provider: CultureInfo
+                                                          .InvariantCulture)
+                                                  .Replace(
+                                                       oldChar: ',',
+                                                       newChar: '.')}");
 
                 showLinesStr = """
                                /* Show lines */
@@ -1184,9 +1173,7 @@ public partial class FrmMainApp : Form
                                                            [{2}]
                                                        ]).addTo(map);
                                                        """,
-                        arg0: GPSLatitudeStr +
-                              "," +
-                              GPSLongitudeStr,
+                        arg0: $"{GPSLatitudeStr},{GPSLongitudeStr}",
                         arg1: HelperGenericCalculations
                            .ConvertFOVCoordListsToString(
                                 sourceList: FOVCoordinates.Item1),
@@ -1254,8 +1241,8 @@ public partial class FrmMainApp : Form
                       string.IsNullOrWhiteSpace(value: GPSDestLongitudeStr)))
                 {
                     string destCoords =
-                        "[" + GPSDestLatitudeStr + "," + GPSDestLongitudeStr + "]";
-                    string gpsCoords = "[" + GPSLatitudeStr + "," + GPSLongitudeStr + "]";
+                        $"[{GPSDestLatitudeStr},{GPSDestLongitudeStr}]";
+                    string gpsCoords = $"[{GPSLatitudeStr},{GPSLongitudeStr}]";
                     if (!dictDestinations.ContainsKey(key: destCoords))
                     {
                         dictDestinations[key: destCoords] = new HashSet<string>();
@@ -1320,8 +1307,7 @@ public partial class FrmMainApp : Form
 
                 // logically then the last item in the list (which is formatted differently) is the key
                 string destCoords =
-                    "[" + HelperVariables.LstTrackPath.Last().strLat + "," +
-                    HelperVariables.LstTrackPath.Last().strLng + "]";
+                    $"[{HelperVariables.LstTrackPath.Last().strLat},{HelperVariables.LstTrackPath.Last().strLng}]";
                 if (!dictDestinations.ContainsKey(key: destCoords))
                 {
                     dictDestinations[key: destCoords] = new HashSet<string>();
@@ -1329,8 +1315,8 @@ public partial class FrmMainApp : Form
 
                 for (int i = 0; i < HelperVariables.LstTrackPath.Count; i++)
                 {
-                    string gpsCoords = "[" + HelperVariables.LstTrackPath[index: i].strLat + "," +
-                                       HelperVariables.LstTrackPath[index: i].strLng + "]";
+                    string gpsCoords =
+                        $"[{HelperVariables.LstTrackPath[index: i].strLat},{HelperVariables.LstTrackPath[index: i].strLng}]";
                     dictDestinations[key: destCoords]
                        .Add(item: gpsCoords);
                 }
@@ -1363,20 +1349,11 @@ public partial class FrmMainApp : Form
             if (addMarker)
             {
                 // Add marker location
-                HelperVariables.HTMLAddMarker += "var marker = L.marker([" +
-                                                 locationCoord.strLat +
-                                                 ", " +
-                                                 locationCoord.strLng +
-                                                 "],{\n" +
-                                                 "draggable: true,\n" +
-                                                 "autoPan: true\n" +
-                                                 "}).addTo(map).openPopup();" +
-                                                 "\n";
+                HelperVariables.HTMLAddMarker +=
+                    $"var marker = L.marker([{locationCoord.strLat}, {locationCoord.strLng}],{{\ndraggable: true,\nautoPan: true\n}}).addTo(map).openPopup();\n";
 
-                Log.Trace(message: "Added marker: strLatCoordinate: " +
-                                   locationCoord.strLat +
-                                   " / strLngCoordinate:" +
-                                   locationCoord.strLng);
+                Log.Trace(message:
+                    $"Added marker: strLatCoordinate: {locationCoord.strLat} / strLngCoordinate:{locationCoord.strLng}");
             }
 
             // Update viewing rectangle if needed
@@ -1402,12 +1379,12 @@ public partial class FrmMainApp : Form
                 string multiCoordsNum = dictDestinationCounter.ToString();
                 string multiCoordsStr = multiCoordsDefaultStr.Replace(
                     oldValue: "#multiCoordsNum#",
-                    newValue: "multiCoords" + multiCoordsNum);
+                    newValue: $"multiCoords{multiCoordsNum}");
                 foreach (string gpsCoord in dictDestinations
                                            .ElementAt(index: dictDestinationCounter)
                                            .Value)
                 {
-                    multiCoordsListStr += gpsCoord + ",";
+                    multiCoordsListStr += $"{gpsCoord},";
                 }
 
                 multiCoordsListStr += dictDestinations
@@ -1447,7 +1424,7 @@ public partial class FrmMainApp : Form
         }
         catch (Exception ex)
         {
-            Log.Fatal(message: "Error: " + ex.Message);
+            Log.Fatal(message: $"Error: {ex.Message}");
             CustomMessageBox customMessageBox = new(
                 text: ReturnControlText(
                           controlName:
@@ -1473,7 +1450,7 @@ public partial class FrmMainApp : Form
         }
         catch (Exception ex)
         {
-            Log.Fatal(message: "Error: " + ex.Message);
+            Log.Fatal(message: $"Error: {ex.Message}");
             CustomMessageBox customMessageBox = new(
                 text: ReturnControlText(
                           controlName:
@@ -1499,7 +1476,7 @@ public partial class FrmMainApp : Form
         }
         catch (Exception ex)
         {
-            Log.Fatal(message: "Read map.html file - Error: " + ex.Message);
+            Log.Fatal(message: $"Read map.html file - Error: {ex.Message}");
             CustomMessageBox customMessageBox = new(
                 text: ReturnControlText(
                           controlName:
@@ -1550,7 +1527,7 @@ public partial class FrmMainApp : Form
         }
         catch (Exception ex)
         {
-            Log.Fatal(message: "Error:" + ex.Message);
+            Log.Fatal(message: $"Error:{ex.Message}");
             CustomMessageBox customMessageBox = new(
                 text: ReturnControlText(
                           controlName:
@@ -1671,6 +1648,34 @@ public partial class FrmMainApp : Form
         Application.Exit();
     }
 
+
+    /// <summary>
+    ///     Fires if FlatMode is on and the folder is being changed/refreshed.
+    /// </summary>
+    /// <returns></returns>
+    private bool AskIfUserWantsToDisableFlatMode()
+    {
+        CustomMessageBox customMessageBox = new(
+            text: ReturnControlText(
+                controlName: "mbx_FrmMainApp_QuestionDisableFlatMode",
+                fakeControlType: FakeControlTypes.MessageBox),
+            caption: ReturnControlText(
+                controlName: MessageBoxCaption.Question.ToString(),
+                fakeControlType: FakeControlTypes.MessageBoxCaption),
+            buttons: MessageBoxButtons.YesNo,
+            icon: MessageBoxIcon.Question);
+        DialogResult dialogResult = customMessageBox.ShowDialog();
+        return dialogResult == DialogResult.Yes;
+    }
+
+    private void tmiFileFlatModeToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        FlatMode = !FlatMode;
+        _ignoreFlatMode = true;
+        tsb_Refresh_lvwFileList.PerformClick();
+        _ignoreFlatMode = false;
+    }
+
 #endregion
 
 #region FrmMainApp's TaskBar Stuff
@@ -1678,6 +1683,7 @@ public partial class FrmMainApp : Form
     /// <summary>
     ///     Handles the tsb_Refresh_lvwFileList_Click event -> checks if there is anything in the write-Q
     ///     ... then cleans up the user-folder and triggers lvw_FileList_LoadOrUpdate
+    ///     Also checks if FlatMode is on and asks the user if they want to turn it off.
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
@@ -1687,6 +1693,11 @@ public partial class FrmMainApp : Form
         Log.Info(message: "Starting");
 
         HelperVariables.OperationChangeFolderIsOkay = false;
+        if (FlatMode && !_ignoreFlatMode)
+        {
+            FlatMode = !AskIfUserWantsToDisableFlatMode();
+        }
+
         await HelperFileSystemOperators
            .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
         if (HelperVariables.OperationChangeFolderIsOkay)
@@ -1706,7 +1717,7 @@ public partial class FrmMainApp : Form
                         // DirectoryElements.Clear();
                         HelperFileSystemOperators.FsoCleanUpUserFolder();
                         FolderName = tbx_FolderName.Text;
-                        lvw_FileList_LoadOrUpdate();
+                        await lvw_FileList_LoadOrUpdate();
                     }
                     catch (Exception ex)
                     {
@@ -1715,7 +1726,7 @@ public partial class FrmMainApp : Form
                 }
                 else if (tbx_FolderName.Text == Environment.SpecialFolder.MyComputer.ToString())
                 {
-                    lvw_FileList_LoadOrUpdate();
+                    await lvw_FileList_LoadOrUpdate();
                 }
 
                 else
@@ -1725,7 +1736,7 @@ public partial class FrmMainApp : Form
             }
             else
             {
-                lvw_FileList_LoadOrUpdate();
+                await lvw_FileList_LoadOrUpdate();
             }
         }
 
@@ -1845,8 +1856,7 @@ public partial class FrmMainApp : Form
         HelperVariables.OperationChangeFolderIsOkay = false;
         await HelperFileSystemOperators
            .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
-        Log.Trace(message: "OperationChangeFolderIsOkay: " +
-                           HelperVariables.OperationChangeFolderIsOkay);
+        Log.Trace(message: $"OperationChangeFolderIsOkay: {HelperVariables.OperationChangeFolderIsOkay}");
 
         if (HelperVariables.OperationChangeFolderIsOkay)
         {
@@ -1868,8 +1878,7 @@ public partial class FrmMainApp : Form
         HelperVariables.OperationChangeFolderIsOkay = false;
         await HelperFileSystemOperators
            .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
-        Log.Trace(message: "OperationChangeFolderIsOkay: " +
-                           HelperVariables.OperationChangeFolderIsOkay);
+        Log.Trace(message: $"OperationChangeFolderIsOkay: {HelperVariables.OperationChangeFolderIsOkay}");
 
         if (HelperVariables.OperationChangeFolderIsOkay)
         {
@@ -1902,7 +1911,7 @@ public partial class FrmMainApp : Form
             Application.DoEvents();
             FolderName = tbx_FolderName.Text;
 
-            Log.Trace(message: "FolderName: " + FolderName);
+            Log.Trace(message: $"FolderName: {FolderName}");
 
             btn_ts_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
         }
@@ -2278,7 +2287,7 @@ public partial class FrmMainApp : Form
                                                                     3);
                     toponomyOverwrites.Add(
                         item: !TZOffset.StartsWith(value: NullStringEquivalentGeneric)
-                            ? (ElementAttribute.OffsetTime, "+" + TZOffset)
+                            ? (ElementAttribute.OffsetTime, $"+{TZOffset}")
                             : (ElementAttribute.OffsetTime, TZOffset));
                 }
                 catch
@@ -2313,9 +2322,8 @@ public partial class FrmMainApp : Form
                 }
 
                 HandlerUpdateLabelText(label: lbl_ParseProgress,
-                    text: "Processing: " + fileNameWithoutPath);
-                lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath,
-                    color: Color.Red);
+                    text: $"Processing: {fileNameWithoutPath}");
+                lvw_FileList.UpdateItemColour(directoryElement: dirElemFileToModify, color: Color.Red);
             }
             else
             {
@@ -2423,16 +2431,11 @@ public partial class FrmMainApp : Form
         RemoveGeoDataIsRunning = false;
 
 
-        // ReSharper disable once InconsistentNaming
-        //FrmPleaseWaitBox frmPleaseWaitBox = new();
-        //frmPleaseWaitBox.Show();
-
     #region FrmPleaseWaitBox
 
         FrmPleaseWaitBox frmPleaseWaitBox = new();
         Enabled = false;
         frmPleaseWaitBox.Show();
-        // ReSharper disable once InconsistentNaming
 
     #endregion
 
@@ -2480,11 +2483,11 @@ public partial class FrmMainApp : Form
         {
             tbx_FolderName.Enabled = true;
 
-            Log.Trace(message: "tbx_FolderName.Text: " + tbx_FolderName.Text);
+            Log.Trace(message: $"tbx_FolderName.Text: {tbx_FolderName.Text}");
             if (tbx_FolderName.Text != null)
             {
                 // this shouldn't really happen but just in case
-                Log.Trace(message: "FolderName: " + FolderName);
+                Log.Trace(message: $"FolderName: {FolderName}");
                 if (FolderName is null)
                 {
                     if (!Directory.Exists(path: tbx_FolderName.Text))
@@ -2493,8 +2496,7 @@ public partial class FrmMainApp : Form
                     }
 
                     FolderName = tbx_FolderName.Text;
-                    Log.Trace(message: "FolderName [was null, now updated]: " +
-                                       FolderName);
+                    Log.Trace(message: $"FolderName [was null, now updated]: {FolderName}");
                 }
 
                 // Load data (and add to DEs)
@@ -2540,6 +2542,9 @@ public partial class FrmMainApp : Form
         FileListViewReadWrite.ListViewCountItemsWithGeoData();
     }
 
+#endregion
+
+#region Events
 
     /// <summary>
     ///     Handles the lvw_FileList_MouseDoubleClick event -> if user clicked on a folder then enter, if a file then edit
@@ -2571,7 +2576,7 @@ public partial class FrmMainApp : Form
         }
 
         DirectoryElement directoryElement = (DirectoryElement)item.Tag;
-        Log.Trace(message: "item: " + item.Text);
+        Log.Trace(message: $"item: {item.Text}");
 
         switch (directoryElement.Type)
         {
@@ -2601,11 +2606,10 @@ public partial class FrmMainApp : Form
                     {
                         // itemText.Text here will be something like "C_Windows_320GB_M2_nVME (C:\)"
                         // so just extract whatever is in the parentheses
-                        tbx_FolderName.Text = item.Text.Split('(')
-                                                  .Last()
-                                                  .Split(')')
-                                                  .FirstOrDefault() +
-                                              @"\";
+                        tbx_FolderName.Text = $@"{item.Text.Split('(')
+                                                      .Last()
+                                                      .Split(')')
+                                                      .FirstOrDefault()}\";
                     }
 
                     btn_ts_Refresh_lvwFileList_Click(sender: this, e: EventArgs.Empty);
@@ -2669,7 +2673,12 @@ public partial class FrmMainApp : Form
         }
     }
 
-    private async Task UpdateLvwExifDataItems(DirectoryElement directoryElement)
+    /// <summary>
+    ///     This updates the listview with the information gathered from the files
+    /// </summary>
+    /// <param name="directoryElement"></param>
+    /// <returns></returns>
+    private Task UpdateLvwExifDataItems(DirectoryElement directoryElement)
     {
         // fill lvw_ExifData
         foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(
@@ -2709,6 +2718,8 @@ public partial class FrmMainApp : Form
         {
             columnHeader.Width = -2;
         }
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -3423,21 +3434,7 @@ public partial class FrmMainApp : Form
                 ? "&fcode=PPL"
                 : "";
             string openAPILink =
-                "http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&lat=" +
-                GPSLatStr +
-                "&lng=" +
-                GPSLngStr +
-                "&lang=" +
-                HelperVariables.APILanguageToUse +
-                SOnlyShowFCodePPL +
-                "&style=FULL" +
-                "&radius=" +
-                HelperVariables.ToponomyRadiusValue +
-                "&maxRows=" +
-                HelperVariables.ToponymaxRows +
-                "&username=" +
-                HelperVariables.UserSettingGeoNamesUserName +
-                "&password=any";
+                $"http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&lat={GPSLatStr}&lng={GPSLngStr}&lang={HelperVariables.APILanguageToUse}{SOnlyShowFCodePPL}&style=FULL&radius={HelperVariables.ToponomyRadiusValue}&maxRows={HelperVariables.ToponymaxRows}&username={HelperVariables.UserSettingGeoNamesUserName}&password=any";
             Process.Start(fileName: openAPILink);
         }
     }
@@ -3470,11 +3467,6 @@ public partial class FrmMainApp : Form
 
             Clipboard.SetText(text: builder.ToString());
         }
-    }
-
-    private void tmiFileFlatModeToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        FlatMode = !FlatMode;
     }
 }
 

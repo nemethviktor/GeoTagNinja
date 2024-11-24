@@ -13,7 +13,7 @@ internal static class HelperLocalisationResourceManager
     /// <returns></returns>
     public static string GetResourceValue(Control control, string location)
     {
-        ResourceManager resourceManager = new(baseName: "GeoTagNinja.Resources.Languages." + location,
+        ResourceManager resourceManager = new(baseName: $"GeoTagNinja.Resources.Languages.{location}",
             assembly: typeof(HelperNonStatic).Assembly);
 
         // Attempt to get the resource value based on the control's name
@@ -65,12 +65,12 @@ internal static class HelperLocalisationResourceManager
     public static string GetResourceValue(string controlName, string location)
     {
         string resourceKey = controlName; // bit lame but to keep in line with the above block.
-        ResourceManager resourceManager = new(baseName: "GeoTagNinja.Resources.Languages." + location,
+        ResourceManager resourceManager = new(baseName: $"GeoTagNinja.Resources.Languages.{location}",
             assembly: typeof(HelperLocalisationResourceManager).Assembly);
         if (resourceKey.Contains(value: "Generic") ||
             location == HelperVariables.ResourceNameForGenericControlItems)
         {
-            resourceKey = "Generic_" + resourceKey.Substring(startIndex: resourceKey.IndexOf(value: '_') + 1);
+            resourceKey = $"Generic_{resourceKey.Substring(startIndex: resourceKey.IndexOf(value: '_') + 1)}";
         }
 
         string resourceValue = string.Empty;

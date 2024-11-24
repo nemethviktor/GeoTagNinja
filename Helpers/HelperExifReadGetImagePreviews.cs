@@ -33,19 +33,9 @@ internal static class HelperExifReadGetImagePreviews
                 input: fileNameWithPath.Replace(oldValue: folderName, newValue: ""),
                 replacement: "_");
         string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                                       path2: "exifArgs_getPreview_" +
-                                              fileNameReplaced +
-                                              ".args");
+            path2: $"exifArgs_getPreview_{fileNameReplaced}.args");
         string exiftoolCmd =
-            " -charset utf8 -charset filename=utf8 -b -preview:GTNPreview -w! " +
-            HelperVariables.DoubleQuoteStr +
-            HelperVariables.UserDataFolderPath +
-            @"\%F.jpg" +
-            HelperVariables.DoubleQuoteStr +
-            " -@ " +
-            HelperVariables.DoubleQuoteStr +
-            argsFile +
-            HelperVariables.DoubleQuoteStr;
+            $@" -charset utf8 -charset filename=utf8 -b -preview:GTNPreview -w! {HelperVariables.DoubleQuoteStr}{HelperVariables.UserDataFolderPath}\%F.jpg{HelperVariables.DoubleQuoteStr} -@ {HelperVariables.DoubleQuoteStr}{argsFile}{HelperVariables.DoubleQuoteStr}";
 
         File.Delete(path: argsFile);
 
@@ -62,7 +52,7 @@ internal static class HelperExifReadGetImagePreviews
                                contents: fileNameWithPath + Environment.NewLine,
                                encoding: Encoding.UTF8);
             File.AppendAllText(path: argsFile,
-                               contents: "-execute" + Environment.NewLine);
+                contents: $"-execute{Environment.NewLine}");
         }
 
         FrmMainApp.Log.Trace(message: "Starting ExifTool");
@@ -97,27 +87,25 @@ internal static class HelperExifReadGetImagePreviews
         {
             frmMainAppInstance.pbx_imagePreview.Image = null;
             generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                                             path2: frmMainAppInstance.lvw_FileList
-                                                       .SelectedItems[index: 0]
-                                                       .Text +
-                                                    ".jpg");
+                path2: $"{frmMainAppInstance.lvw_FileList
+                                            .SelectedItems[index: 0]
+                                            .Text}.jpg");
         }
         else if (initiator == "FrmMainAppAPIDataSelection" && frmMainAppInstance != null)
         {
             frmMainAppInstance.pbx_imagePreview.Image = null;
             string fileNameWithoutPath = Path.GetFileName(path: fileNameWithPath);
             generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                                             path2: fileNameWithoutPath + ".jpg");
+                path2: $"{fileNameWithoutPath}.jpg");
         }
         else if (initiator == "FrmEditFileData" && frmEditFileDataInstance != null)
         {
             frmEditFileDataInstance.pbx_imagePreview.Image = null;
             generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                                             path2: frmEditFileDataInstance
-                                                   .lvw_FileListEditImages
-                                                   .SelectedItems[index: 0]
-                                                   .Text +
-                                                    ".jpg");
+                path2: $"{frmEditFileDataInstance
+                         .lvw_FileListEditImages
+                         .SelectedItems[index: 0]
+                         .Text}.jpg");
         }
 
         //sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)

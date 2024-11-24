@@ -849,11 +849,9 @@ public partial class FrmSettings : Form
             if (subctrl is CheckBox box)
             {
                 object lbi = lbx_fileExtensions.SelectedItem;
-                string tmpCtrlName = lbi.ToString()
-                                        .Split('\t')
-                                        .FirstOrDefault() +
-                                     '_' +
-                                     subctrl.Name;
+                string tmpCtrlName = $"{lbi.ToString()
+                                           .Split('\t')
+                                           .FirstOrDefault()}_{subctrl.Name}";
 
                 CheckBox txt = box;
                 txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Regular);
@@ -890,10 +888,9 @@ public partial class FrmSettings : Form
                         }
                         else if (box.Name == "ckb_AddXMPSideCar")
                         {
-                            string tmptmpCtrlName = lbi.ToString()
-                                                       .Split('\t')
-                                                       .FirstOrDefault() +
-                                                    '_'; // 'tis ok as is
+                            string tmptmpCtrlName = $"{lbi.ToString()
+                                                          .Split('\t')
+                                                          .FirstOrDefault()}_"; // 'tis ok as is
                             string tmpCtrlGroup = lbi.ToString()
                                                      .Split('\t')
                                                      .Last()
@@ -1064,11 +1061,9 @@ public partial class FrmSettings : Form
 
             if (lbi != null)
             {
-                cItemName = lbi.ToString()
-                               .Split('\t')
-                               .FirstOrDefault() +
-                            '_' +
-                            ckb.Name;
+                cItemName = $"{lbi.ToString()
+                                  .Split('\t')
+                                  .FirstOrDefault()}_{ckb.Name}";
             }
             else
             {
@@ -1320,9 +1315,7 @@ public partial class FrmSettings : Form
             {
                 exportFileDialog.Filter = "SQLite Databasee|*.db";
                 exportFileDialog.Title = "Save a SQLite File";
-                exportFileDialog.FileName = "GeoTagNinja_Settings_Export_" +
-                                            DateTime.Now.ToString(
-                                                format: "yyyyMMdd_HHmm");
+                exportFileDialog.FileName = $"GeoTagNinja_Settings_Export_{DateTime.Now:yyyyMMdd_HHmm}";
                 exportFileDialog.ShowDialog();
 
                 // If the file name is not an empty string open it for saving.
@@ -1538,8 +1531,7 @@ public partial class FrmSettings : Form
         {
             checkboxDictionary.Add(key: HelperControlAndMessageBoxHandling.ReturnControlText(
                 fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.CheckBox,
-                controlName: "ckb_ImportExport_" +
-                             name), value: name);
+                controlName: $"ckb_ImportExport_{name}"), value: name);
         }
 
         return checkboxDictionary;

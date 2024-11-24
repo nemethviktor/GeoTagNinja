@@ -114,9 +114,7 @@ public partial class FrmEditFileData : Form
         nud_TakenDateSecondsShift.Enabled = false;
 
         dtp_TakenDate.CustomFormat =
-            CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern +
-            " " +
-            CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern;
+            $"{CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern} {CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern}";
 
         // CreateDate
         dtp_CreateDate.Enabled = true;
@@ -125,9 +123,7 @@ public partial class FrmEditFileData : Form
         nud_CreateDateMinutesShift.Enabled = false;
         nud_CreateDateSecondsShift.Enabled = false;
         dtp_CreateDate.CustomFormat =
-            CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern +
-            " " +
-            CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern;
+            $"{CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern} {CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern}";
         ReturnControlText(
             cItem: this, senderForm: this);
 
@@ -234,8 +230,7 @@ public partial class FrmEditFileData : Form
 
                 try
                 {
-                    Log.Trace(message: "cItem: " + debugItemName + " (Type: " + cItem.GetType().Name +
-                                       ") - Starting.");
+                    Log.Trace(message: $"cItem: {debugItemName} (Type: {cItem.GetType().Name}) - Starting.");
 
                     if (lstControlTypesNoDEValue.Contains(item: cItem.GetType()))
                     {
@@ -315,9 +310,8 @@ public partial class FrmEditFileData : Form
                                     cItem.Text = stringValueOfCItem;
                                 }
 
-                                Log.Trace(message: "cItem: " +
-                                                   cItem.Name +
-                                                   " - Adding to Stage2EditFormReadyToSaveAndMoveToWriteQueue");
+                                Log.Trace(message:
+                                    $"cItem: {cItem.Name} - Adding to Stage2EditFormReadyToSaveAndMoveToWriteQueue");
 
                                 dirElemFileToModify.SetAttributeValueAnyType(
                                     attribute: attribute,
@@ -424,12 +418,8 @@ public partial class FrmEditFileData : Form
                     // ignored
                 }
 
-                Log.Trace(message: "cItem: " +
-                                   cItem.Name +
-                                   " (Type: " +
-                                   cItem.GetType()
-                                        .Name +
-                                   ") - Done.");
+                Log.Trace(message: $"cItem: {cItem.Name} (Type: {cItem.GetType()
+                                                                      .Name}) - Done.");
             }
         }
 
@@ -588,9 +578,7 @@ public partial class FrmEditFileData : Form
                     DECreateDate.AddSeconds(value: totalShiftedSeconds);
             }
 
-            Log.Trace(message: "cItem: " +
-                               cItem.Name +
-                               " - Updating DateTimePicker");
+            Log.Trace(message: $"cItem: {cItem.Name} - Updating DateTimePicker");
             if (maxAttributeVersion !=
                 DirectoryElement.AttributeVersion.Original ||
                 totalShiftedSeconds != 0)
@@ -1133,7 +1121,7 @@ public partial class FrmEditFileData : Form
                                     {
                                         toponomyOverwrites.Add(
                                             item: (ElementAttribute.OffsetTime,
-                                                   "+" + TZOffset));
+                                                   $"+{TZOffset}"));
                                     }
                                     else
                                     {
@@ -1214,7 +1202,7 @@ public partial class FrmEditFileData : Form
                                                                         3);
                         toponomyOverwrites.Add(
                             item: !TZOffset.StartsWith(value: NullStringEquivalentGeneric)
-                                ? (ElementAttribute.OffsetTime, "+" + TZOffset)
+                                ? (ElementAttribute.OffsetTime, $"+{TZOffset}")
                                 : (ElementAttribute.OffsetTime, TZOffset));
                     }
                 }
@@ -1324,7 +1312,7 @@ public partial class FrmEditFileData : Form
             }
             else
             {
-                Log.Debug(message: "File disappeared: " + fileNameWithPath);
+                Log.Debug(message: $"File disappeared: {fileNameWithPath}");
                 CustomMessageBox customMessageBox = new(
                     text: ReturnControlText(
                         controlName: "mbx_FrmEditFileData_WarningFileDisappeared",

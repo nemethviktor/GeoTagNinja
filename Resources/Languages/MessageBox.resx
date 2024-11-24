@@ -99,54 +99,54 @@
   </resheader>
   <data name="mbx_FrmEditFileData_WarningLatLongMustBeNumbers" xml:space="preserve">
     <value>This needs to have numbers only. Will default to zero.</value>
-    <comment>Location: Edit File</comment>
+    <comment>Warns the user that they've tried to assign a non-numeric value to latitude or longitude.</comment>
   </data>
   <data name="mbx_FrmEditFileData_InfoDataUpdated" xml:space="preserve">
     <value>Data Updated.</value>
-    <comment>Location: Edit File</comment>
+    <comment>File Info has been updated.</comment>
   </data>
   <data name="mbx_FrmEditFileData_ErrorInvalidSender" xml:space="preserve">
     <value>This will be a bug.  Please file an issue on github and that the 'sender' was: </value>
-    <comment>Location: Edit File</comment>
+    <comment>Generic error message telling the user "something has gone wrong."</comment>
   </data>
   <data name="mbx_FrmEditFileData_ErrorAPIError" xml:space="preserve">
     <value>The app encountered errors communicating with the API. If you got an Unauthorised error, pls set your username as password in the settings.</value>
-    <comment>Location: Edit File</comment>
+    <comment>Error informing the user that there was something wrong while trying to talk to the GeoNames API</comment>
   </data>
   <data name="mbx_FrmEditFileData_WarningFileDisappeared" xml:space="preserve">
     <value>Your files seem to have disappeared.</value>
-    <comment>Location: Edit File</comment>
+    <comment>Warning that the file the user was trying to edit has disappeared (realistaically deleted in the background)</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorCantCreateSQLiteDB" xml:space="preserve">
-    <value>Can't create SQLite database (Please file an issue on github): </value>
-    <comment>This is a possible app-start error.</comment>
+    <value>Can't create SQLite database (Please file an issue on GitHub): </value>
+    <comment>SQL Error information</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorCantWriteSQLiteDB" xml:space="preserve">
-    <value>Created but can't write SQLite database (Please file an issue on github): </value>
-    <comment>This is a possible app-start error.</comment>
+    <value>Created but can't write SQLite database (Please file an issue on GitHub): </value>
+    <comment>SQL Error information</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorCantLoadSQLiteDB" xml:space="preserve">
-    <value>Loading data from SQL Failed (Please file an issue on github): </value>
-    <comment>This is a possible app-start error.</comment>
+    <value>Loading data from SQL Failed (Please file an issue on GitHub): </value>
+    <comment>SQL Error information</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
-    <value>Failed to read default values from SQL (Please file an issue on github): </value>
-    <comment>This is a possible app-start error.</comment>
+    <value>Failed to read default values from SQL (Please file an issue on GitHub): </value>
+    <comment>SQL Error information</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorCantLoadWebView2" xml:space="preserve">
     <value>Error loading webview2 - Have you installed it?</value>
     <comment>This is a possible app-start error.</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeComponent" xml:space="preserve">
-    <value>Error in FrmMainApp.InitializeComponent (Please file an issue on github): </value>
+    <value>Error in FrmMainApp.InitializeComponent (Please file an issue on GitHub): </value>
     <comment>This is a possible app-start error.</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async" xml:space="preserve">
-    <value>Error in FrmMainApp.InitialiseWebView (await wbv_MapArea.EnsureCoreWebView2Async(c2wv)) (Please file an issue on github): </value>
+    <value>Error in FrmMainApp.InitialiseWebView (await wbv_MapArea.EnsureCoreWebView2Async(c2wv)) (Please file an issue on GitHub): </value>
     <comment>This is a possible app-start error.</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled" xml:space="preserve">
-    <value>Error in FrmMainApp.InitialiseWebView (IsWebMessageEnabled) (Please file an issue on github): </value>
+    <value>Error in FrmMainApp.InitialiseWebView (IsWebMessageEnabled) (Please file an issue on GitHub): </value>
     <comment>This is a possible app-start error.</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile" xml:space="preserve">
@@ -162,34 +162,35 @@
     <comment>This is a possible app-start error.</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile" xml:space="preserve">
-    <value>Error in FrmMainApp.InitialiseWebView (NavigateToString in HTMLCode file) (Please file an issue on github): </value>
+    <value>Error in FrmMainApp.InitialiseWebView (NavigateToString in HTMLCode file) (Please file an issue on GitHub): </value>
     <comment>This is a possible app-start error.</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode" xml:space="preserve">
-    <value>Error in FrmMainApp.NavigateMapGo (string HTMLCode) (Please file an issue on github): </value>
+    <value>Error in FrmMainApp.NavigateMapGo (string HTMLCode) (Please file an issue on GitHub): </value>
     <comment>This is a possible app-start error.</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived" xml:space="preserve">
-    <value>Error while performing  wbv_MapArea_WebMessageReceived (Please file an issue on github): </value>
+    <value>Error while performing  wbv_MapArea_WebMessageReceived (Please file an issue on GitHub): </value>
     <comment>This is a possible app-start error.</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorDoubleBuffer" xml:space="preserve">
-    <value>DoubleBuffer Error (Please file an issue on github): </value>
+    <value>DoubleBuffer Error (Please file an issue on GitHub): </value>
     <comment>This is a possible app-start error.</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorLanguageFileColumnHeaders" xml:space="preserve">
     <value>There was an error reading the language file and assigning columnheaders (Please file an issue on github): </value>
+    <comment>This is a possible app-start error.</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorClearingFileDataQTables" xml:space="preserve">
-    <value>Error clearing the filedata-Q tables (Please file an issue on github): </value>
+    <value>Error clearing the filedata-Q tables (Please file an issue on GitHub): </value>
     <comment>This is a possible app-start error.</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorResizingColumns" xml:space="preserve">
-    <value>Resizing Columns failed (Please file an issue on github): </value>
+    <value>Resizing Columns failed (Please file an issue on GitHub): </value>
     <comment>This is a possible app-start error.</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorSettingStartupFolder" xml:space="preserve">
-    <value>Setting Default Startup folder failed (Please file an issue on github): </value>
+    <value>Setting Default Startup folder failed (Please file an issue on GitHub): </value>
     <comment>This is a possible app-start error.</comment>
   </data>
   <data name="mbx_FrmMainApp_ErrorInvalidFolder" xml:space="preserve">
@@ -211,10 +212,10 @@
     <value>You'll need to provide an ArcGIS API Key in the Settings for the app to work properly.</value>
   </data>
   <data name="mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed" xml:space="preserve">
-    <value>asyncExifTool.ExecuteAsync failed (Please file an issue on github): </value>
+    <value>asyncExifTool.ExecuteAsync failed (Please file an issue on GitHub): </value>
   </data>
   <data name="mbx_Helper_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
-    <value>Failed to read default values from SQL (Please file an issue on github): </value>
+    <value>Failed to read default values from SQL (Please file an issue on GitHub): </value>
   </data>
   <data name="mbx_Helper_WarningGeoNamesAPIResponse" xml:space="preserve">
     <value>GeoNames API Returned the following response: </value>
@@ -293,7 +294,7 @@ Data will be discarded if you click No</value>
   </data>
   <data name="mbx_FrmImportNoStoredShiftValues" xml:space="preserve">
     <value>No "shift" values stored. Data will remain 0.</value>
-    <comment>Location: Import/Export GPX</comment>
+    <comment>Location: Import/Export GPX. This basically means that the user tried to apply a time shift (like shift by 1 hour or some such) but didn't specify how they wanted the shift to take place.</comment>
   </data>
   <data name="mbx_DirectoryElementCollection_ErrorParsing" xml:space="preserve">
     <value>Error while parsing folder to DirectoryElements</value>
@@ -338,5 +339,9 @@ Data will be discarded if you click No</value>
   <data name="mbx_FrmImportExportGpx_TrackContainsNoData" xml:space="preserve">
     <value>Failed to import Track overlay - found no relevant-looking data.</value>
     <comment>Location: Import/Export GPX</comment>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionDisableFlatMode" xml:space="preserve">
+    <value>Flat Mode is turned on. Do you want to turn it off?</value>
+    <comment>Question relating to whether the user wants to retain the "Flat Mode" when moving to another folder (which would instruct the app to parse subfolders recursively)</comment>
   </data>
 </root>

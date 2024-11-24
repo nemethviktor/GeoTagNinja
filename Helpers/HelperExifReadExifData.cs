@@ -1023,7 +1023,7 @@ internal static class HelperExifReadExifData
     private static string ExifGetRawDataPointFromExif(DataTable dtFileExif,
                                                       string dataPoint)
     {
-        FrmMainApp.Log.Trace(message: "Starting - dataPoint:" + dataPoint);
+        FrmMainApp.Log.Trace(message: $"Starting - dataPoint:{dataPoint}");
         string returnVal = FrmMainApp.NullStringEquivalentGeneric;
         string tryDataValue = FrmMainApp.NullStringEquivalentGeneric;
         ElementAttribute attribute = GetElementAttributesElementAttribute(dataPoint);
@@ -1033,7 +1033,7 @@ internal static class HelperExifReadExifData
         {
             foreach (string tagWanted in orderedTags)
             {
-                DataRow filteredRows = dtFileExif.Select(filterExpression: "attribute = '" + tagWanted + "'")
+                DataRow filteredRows = dtFileExif.Select(filterExpression: $"attribute = '{tagWanted}'")
                                                  .FirstOrDefault();
                 if (filteredRows != null)
                 {
@@ -1041,14 +1041,14 @@ internal static class HelperExifReadExifData
                       ?.ToString();
                     if (!string.IsNullOrEmpty(value: tryDataValue))
                     {
-                        FrmMainApp.Log.Trace(message: "dataPoint:" + dataPoint + " -> " + tagWanted + ": " + tryDataValue);
+                        FrmMainApp.Log.Trace(message: $"dataPoint:{dataPoint} -> {tagWanted}: {tryDataValue}");
                         break;
                     }
                 }
             }
         }
 
-        FrmMainApp.Log.Debug(message: "Done - dataPoint:" + dataPoint);
+        FrmMainApp.Log.Debug(message: $"Done - dataPoint:{dataPoint}");
         return tryDataValue;
     }
 
@@ -1072,7 +1072,7 @@ internal static class HelperExifReadExifData
 
         string tmpOutLatLongVal = "";
 
-        FrmMainApp.Log.Trace(message: "Starting - dataPoint:" + dataPoint);
+        FrmMainApp.Log.Trace(message: $"Starting - dataPoint:{dataPoint}");
         try
         {
             tryDataValue = ExifGetRawDataPointFromExif(dtFileExif: dtFileExif, dataPoint: dataPoint);
@@ -1081,7 +1081,7 @@ internal static class HelperExifReadExifData
         }
         catch (Exception ex)
         {
-            FrmMainApp.Log.Error(message: "datapoint:" + dataPoint + " - Error: " + ex.Message);
+            FrmMainApp.Log.Error(message: $"datapoint:{dataPoint} - Error: {ex.Message}");
         }
 
         switch (dataPoint)
@@ -1098,7 +1098,7 @@ internal static class HelperExifReadExifData
                     {
                         tmpLatLongRefVal =
                             ExifGetRawDataPointFromExif(
-                                    dtFileExif: dtFileExif, dataPoint: dataPoint + "Ref")
+                                    dtFileExif: dtFileExif, dataPoint: $"{dataPoint}Ref")
                                .Substring(startIndex: 0, length: 1);
                     }
                     catch
@@ -1129,10 +1129,10 @@ internal static class HelperExifReadExifData
                 // check there is lat/long
                 string tmpLatVal =
                     ExifGetRawDataPointFromExif(dtFileExif: dtFileExif,
-                                                dataPoint: "GPS" + isDest + "Latitude")
+                            dataPoint: $"GPS{isDest}Latitude")
                        .Replace(oldChar: ',', newChar: '.');
                 tmpLongVal = ExifGetRawDataPointFromExif(
-                        dtFileExif: dtFileExif, dataPoint: "GPS" + isDest + "Longitude")
+                        dtFileExif: dtFileExif, dataPoint: $"GPS{isDest}Longitude")
                    .Replace(oldChar: ',', newChar: '.');
                 if (tmpLatVal == "")
                 {
@@ -1145,24 +1145,22 @@ internal static class HelperExifReadExifData
                 }
 
                 if (ExifGetRawDataPointFromExif(dtFileExif: dtFileExif,
-                                                dataPoint: "GPS" + isDest + "LatitudeRef")
+                            dataPoint: $"GPS{isDest}LatitudeRef")
                        .Length >
                     0 &&
                     ExifGetRawDataPointFromExif(dtFileExif: dtFileExif,
-                                                dataPoint: "GPS" +
-                                                           isDest +
-                                                           "LongitudeRef")
+                            dataPoint: $"GPS{isDest}LongitudeRef")
                        .Length >
                     0)
                 {
                     tmpLatRefVal = ExifGetRawDataPointFromExif(
                                        dtFileExif: dtFileExif,
-                                       dataPoint: "GPS" + isDest + "LatitudeRef")
+                                       dataPoint: $"GPS{isDest}LatitudeRef")
                                   .Substring(startIndex: 0, length: 1)
                                   .Replace(oldChar: ',', newChar: '.');
                     tmpLongRefVal = ExifGetRawDataPointFromExif(
                                         dtFileExif: dtFileExif,
-                                        dataPoint: "GPS" + isDest + "LongitudeRef")
+                                        dataPoint: $"GPS{isDest}LongitudeRef")
                                    .Substring(startIndex: 0, length: 1)
                                    .Replace(oldChar: ',', newChar: '.');
                 }
@@ -1210,7 +1208,7 @@ internal static class HelperExifReadExifData
                                 .AdjustLatLongNegative(point: tmpLongVal)
                                 .ToString()
                                 .Replace(oldChar: ',', newChar: '.');
-                    tryDataValue = tmpLatVal + ";" + tmpLongVal;
+                    tryDataValue = $"{tmpLatVal};{tmpLongVal}";
                 }
                 else
                 {
@@ -1343,10 +1341,7 @@ internal static class HelperExifReadExifData
             }
         }
 
-        FrmMainApp.Log.Trace(message: "Done - dataPoint:" +
-                                         dataPoint +
-                                         ": " +
-                                         tryDataValue);
+        FrmMainApp.Log.Trace(message: $"Done - dataPoint:{dataPoint}: {tryDataValue}");
         returnVal = tryDataValue;
         return returnVal;
     }

@@ -25,12 +25,12 @@ namespace GeoTagNinja.View.ListView;
 public partial class FileListView : System.Windows.Forms.ListView
 {
     // Default values to set for entries
-    public const string UNKNOWN_VALUE_FILE = "-";
+    private const string UNKNOWN_VALUE_FILE = "-";
 
     // Note - if this is changed, all checks for unknown need to be udpated
     // because currently this works via item.replace and check versus ""
     // but replace did not take ""
-    public const string UNKNOWN_VALUE_DIR = "";
+    private const string UNKNOWN_VALUE_DIR = "";
 
     /// <summary>
     ///     Every column has this prefix for its name when it is created.
@@ -137,6 +137,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     public static class FileListColumns
     {
         public const string FILENAME = "FileName";
+        public const string FOLDER = "Folder";
         public const string GUID = "GUID";
         public const string GPS_ALTITUDE = "GPSAltitude";
         public const string GPS_ALTITUDE_REF = "GPSAltitudeRef";
@@ -370,7 +371,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <summary>
     ///     The list of directory elements to display.
     /// </summary>
-    public DirectoryElementCollection DirectoryElements { get; private set; } = new();
+    private DirectoryElementCollection DirectoryElements { get; set; } = new();
 
     /// <summary>
     ///     The number of elements of type file in the view as
@@ -507,7 +508,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             }
             else
             {
-                lvi.Text = shfi.szDisplayName + "." + directoryElement.Extension;
+                lvi.Text = $"{shfi.szDisplayName}.{directoryElement.Extension}";
             }
         }
         else
@@ -542,17 +543,25 @@ public partial class FileListView : System.Windows.Forms.ListView
         {
             foreach (ColumnHeader columnHeader in Columns)
             {
-                if (columnHeader.Name != COL_NAME_PREFIX + FileListColumns.FILENAME)
+                if (columnHeader.Name == COL_NAME_PREFIX + FileListColumns.FILENAME)
                 {
-                    subItemList.Add(item: PickModelValueForColumn(
-                        directoryElement: directoryElement,
-                        columnHeader: columnHeader));
+                    continue;
                 }
+
+                if (columnHeader.Name == COL_NAME_PREFIX + FileListColumns.FOLDER)
+                {
+                    subItemList.Add(item: directoryElement.Folder);
+                    continue;
+                }
+
+                subItemList.Add(item: PickModelValueForColumn(
+                    directoryElement: directoryElement,
+                    columnHeader: columnHeader));
             }
 
             // For each non-file (i.e. dirs), create empty sub items (needed for sorting)
         }
-        else
+        else // ie != DirectoryElement.ElementType.File
         {
             foreach (ColumnHeader columnHeader in Columns)
             {
@@ -618,7 +627,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             }
 
             // Read index / order
-            settingIdToSend = Name + "_" + columnHeader.Name + "_index";
+            settingIdToSend = $"{Name}_{columnHeader.Name}_index";
             colOrderHeadername.Add(item: columnHeader.Name);
             int colOrderIndexInt = 0;
 
@@ -643,13 +652,10 @@ public partial class FileListView : System.Windows.Forms.ListView
 
             colOrderIndex.Add(item: colOrderIndexInt);
 
-            Log.Trace(message: "columnHeader: " +
-                               columnHeader.Name +
-                               " - colOrderIndex: " +
-                               colOrderIndexInt);
+            Log.Trace(message: $"columnHeader: {columnHeader.Name} - colOrderIndex: {colOrderIndexInt}");
 
             // Read and process width
-            settingIdToSend = Name + "_" + columnHeader.Name + "_width";
+            settingIdToSend = $"{Name}_{columnHeader.Name}_width";
             colWidth = HelperDataApplicationSettings.DataReadSQLiteSettings(
                 dataTable: HelperVariables.DtHelperDataApplicationLayout,
                 settingTabPage: "lvw_FileList",
@@ -664,10 +670,7 @@ public partial class FileListView : System.Windows.Forms.ListView
                 columnHeader.Width = Convert.ToInt16(value: colWidth);
             }
 
-            Log.Trace(message: "columnHeader: " +
-                               columnHeader.Name +
-                               " - columnHeader.Width: " +
-                               columnHeader.Width);
+            Log.Trace(message: $"columnHeader: {columnHeader.Name} - columnHeader.Width: {columnHeader.Width}");
         }
 
         // Finally set the column order - setting them from first to last col
@@ -683,10 +686,8 @@ public partial class FileListView : System.Windows.Forms.ListView
                         comparisonType: StringComparison.OrdinalIgnoreCase))
                 {
                     columnHeader.DisplayIndex = idx;
-                    Log.Trace(message: "columnHeader: " +
-                                       columnHeader.Name +
-                                       " - columnHeader.DisplayIndex: " +
-                                       columnHeader.DisplayIndex);
+                    Log.Trace(message:
+                        $"columnHeader: {columnHeader.Name} - columnHeader.DisplayIndex: {columnHeader.DisplayIndex}");
                     break;
                 }
             }
@@ -695,6 +696,20 @@ public partial class FileListView : System.Windows.Forms.ListView
         EndUpdate(); // continue drawing
     }
 
+
+    private void ToggleIndividualColumnVisibility(string columnHeaderName, bool setVisible)
+    {
+        foreach (ColumnHeader columnHeader in Columns)
+        {
+            if (columnHeader.Name == columnHeaderName)
+            {
+                if (columnHeader.Width == 0)
+                {
+                    columnHeader.AutoResize(headerAutoResize: ColumnHeaderAutoResizeStyle.HeaderSize);
+                }
+            }
+        }
+    }
 
     /// <summary>
     ///     Sends the CLH width and column order to SQL for writing.
@@ -706,7 +721,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         string settingIdToSend;
         foreach (ColumnHeader columnHeader in Columns)
         {
-            settingIdToSend = Name + "_" + columnHeader.Name + "_index";
+            settingIdToSend = $"{Name}_{columnHeader.Name}_index";
             settingsToWrite.Add(item: new AppSettingContainer
             {
                 TableName = "applayout",
@@ -715,7 +730,7 @@ public partial class FileListView : System.Windows.Forms.ListView
                 SettingValue = columnHeader.DisplayIndex.ToString()
             });
 
-            settingIdToSend = Name + "_" + columnHeader.Name + "_width";
+            settingIdToSend = $"{Name}_{columnHeader.Name}_width";
             settingsToWrite.Add(item: new AppSettingContainer
             {
                 TableName = "applayout",
@@ -762,6 +777,8 @@ public partial class FileListView : System.Windows.Forms.ListView
                                                                      attributeToFind: attribute) >
                                                                  0)
                                                             .ToList();
+
+
         foreach (SourcesAndAttributes.ElementAttribute attribute in
                  attributesWithValidOrderIDs)
         {
@@ -772,7 +789,7 @@ public partial class FileListView : System.Windows.Forms.ListView
                 Name = COL_NAME_PREFIX + clhName
             };
             Columns.Add(value: clh);
-            Log.Trace(message: "Added column: " + clhName);
+            Log.Trace(message: $"Added column: {clhName}");
         }
 
         // Encapsulate locatization - in case it fails above column setup still there...
@@ -780,20 +797,17 @@ public partial class FileListView : System.Windows.Forms.ListView
         {
             foreach (ColumnHeader clh in Columns)
             {
-                Log.Trace(message: "Loading localization for: " + clh.Name);
+                Log.Trace(message: $"Loading localization for: {clh.Name}");
                 clh.Text = ReturnControlText(
                     fakeControlType: FakeControlTypes.ColumnHeader,
                     controlName: clh.Name
                 );
-                Log.Trace(message: "Loaded localization: " +
-                                   clh.Name +
-                                   " --> " +
-                                   clh.Text);
+                Log.Trace(message: $"Loaded localization: {clh.Name} --> {clh.Text}");
             }
         }
         catch (Exception ex)
         {
-            Log.Fatal(message: "Error: " + ex.Message);
+            Log.Fatal(message: $"Error: {ex.Message}");
             CustomMessageBox customMessageBox = new(
                 text: ReturnControlText(
                           controlName:
@@ -853,11 +867,6 @@ public partial class FileListView : System.Windows.Forms.ListView
     ///     Must be called before items are added to it.
     /// </summary>
     /// <param name="appLanguage">The application language to use</param>
-    /// <param name="objectNames">
-    ///     A data table containing the list of
-    ///     columns to be used in column "objectName" and the default ordering
-    ///     of these in column "sqlOrder"
-    /// </param>
     /// <exception cref="InvalidOperationException">
     ///     If this method is called
     ///     more than once.
@@ -876,7 +885,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         SetupColumns();
 
         // Create the sorter for the list view
-        LvwColumnSorter = new ListViewColumnSorter();
+        LvwColumnSorter = new ListViewColumnSorter(); // Don't remove this line.
         ListViewItemSorter = LvwColumnSorter;
 
         // Apply column order and size
@@ -938,6 +947,10 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         DirectoryElements = directoryElements;
         _fileCount = 0;
+        bool dotDotAdded = false;
+        string[] subFolders = Directory.GetDirectories(path: FrmMainApp.FolderName, searchPattern: "*",
+            searchOption: SearchOption.AllDirectories);
+
 
         // so now that we don't clear the DE collection we actually need to make sure these items exist in the current folder/scope.
         foreach (DirectoryElement directoryElement in DirectoryElements)
@@ -945,29 +958,40 @@ public partial class FileListView : System.Windows.Forms.ListView
             // it's a file and we are in collectionMode
             bool aFileAndWeAreInCollectionMode = directoryElement.Type == DirectoryElement.ElementType.File &&
                                                  Program.CollectionModeEnabled;
-            // it's a file and it exists in the current folder and we're not in flatfile mode
-            bool aFileAndWeAreNotInCollectionModeButFileIsWithinMainFolder =
+
+            // it's a file and it exists in the current folder and we're not in Flat Mode
+            bool aFileAndWeAreNotInFlatModeButFileIsWithinMainFolder =
                 directoryElement.Type == DirectoryElement.ElementType.File &&
                 !FrmMainApp.FlatMode &&
-                File.Exists(
-                    path: Path.Combine(path1: FrmMainApp.FolderName,
-                        path2: directoryElement.ItemNameWithoutPath));
+                directoryElement.Folder + "\\" == FrmMainApp.FolderName;
 
-            // it's a file and it's in a subfolder of the current "main" folder and we are in flatfile mode
-            bool aFileAndWeAreNotInCollectionModeAndItsInARelevantSubfolder =
-                directoryElement.Type == DirectoryElement.ElementType.File &&
-                FrmMainApp.FlatMode &&
-                Directory.GetFiles(path: FrmMainApp.FolderName, searchPattern: directoryElement.ItemNameWithoutPath,
-                              searchOption: SearchOption.AllDirectories)
-                         .FirstOrDefault() != null;
+            // it's a file and it's in a subfolder of the current FrmMainApp.FolderName folder and we are in Flat Mode
+            bool aFileAndWeAreInFlatModeAndItsInARelevantSubfolder =
+                    directoryElement.Type == DirectoryElement.ElementType.File &&
+                    FrmMainApp.FlatMode &&
+                    // this on its own won't work because if we have a 1.jpg in FrmMainApp.FolderName and another in FrmMainApp.FolderName\subFolder, it's still going to show due to how the logic is coded elsewhere.
+                    Directory.GetFiles(path: FrmMainApp.FolderName, searchPattern: directoryElement.ItemNameWithoutPath,
+                                  searchOption: SearchOption.AllDirectories)
+                             .FirstOrDefault() != null &&
+                    // thus we make sure that directoryElement.Folder is a subfolder of FrmMainApp.FolderName
+                    (subFolders.Contains(value: directoryElement.Folder) ||
+                     FrmMainApp.FolderName == directoryElement.Folder ||
+                     FrmMainApp.FolderName == directoryElement.Folder + "\\")
+                ;
 
-            // it's a subfolder within the current "main" folder
+            // it's an immediate subfolder within the current FrmMainApp.FolderName folder
             bool aSubfolderWithinMainFolder =
                 directoryElement.Type == DirectoryElement.ElementType.SubDirectory &&
+                // problem here is that if we have a C:\temp and a D:\temp then we can get a duplicate just by using the below logic
                 Directory.Exists(path: Path.Combine(path1: FrmMainApp.FolderName,
-                    path2: directoryElement.ItemNameWithoutPath));
+                    path2: directoryElement.ItemNameWithoutPath)) &&
+                // we check this is an immediate subfolder of the main folder.
+                // ... there's some odd fuckery with the backslashes.
+                (Directory.GetParent(path: directoryElement.FileNameWithPath).FullName + "\\" ==
+                 FrmMainApp.FolderName ||
+                 Directory.GetParent(path: directoryElement.FileNameWithPath).FullName == FrmMainApp.FolderName);
 
-            // it's ".." and fileNameWithPath is the actual parent of the current main folder.
+            // it's ".." and fileNameWithPath is the actual parent of the current FrmMainApp.FolderName folder.
             bool dotDotParent = directoryElement.Type == DirectoryElement.ElementType.ParentDirectory &&
                                 (!FrmMainApp.FlatMode || (FrmMainApp.FlatMode &&
                                                           Directory.GetParent(path: FrmMainApp.FolderName)
@@ -980,24 +1004,39 @@ public partial class FileListView : System.Windows.Forms.ListView
                 directoryElement.Type == DirectoryElement.ElementType.Drive;
 
             if (aFileAndWeAreInCollectionMode ||
-                aFileAndWeAreNotInCollectionModeButFileIsWithinMainFolder ||
-                aFileAndWeAreNotInCollectionModeAndItsInARelevantSubfolder ||
+                aFileAndWeAreNotInFlatModeButFileIsWithinMainFolder ||
+                aFileAndWeAreInFlatModeAndItsInARelevantSubfolder ||
                 aSubfolderWithinMainFolder ||
                 dotDotParent ||
                 weAreInMyComputerAndItsADrive)
 
             {
-                AddListItem(directoryElement: directoryElement);
+                // for some reason i keep getting the .. multiple times. 
+                if ((dotDotParent && !dotDotAdded) ||
+                    !dotDotParent)
+                {
+                    AddListItem(directoryElement: directoryElement);
+                }
+
+                if (dotDotParent)
+                {
+                    dotDotAdded = true;
+                }
 
                 // increment file count
                 if (aFileAndWeAreInCollectionMode ||
-                    aFileAndWeAreNotInCollectionModeButFileIsWithinMainFolder ||
-                    aFileAndWeAreNotInCollectionModeAndItsInARelevantSubfolder)
+                    aFileAndWeAreNotInFlatModeButFileIsWithinMainFolder ||
+                    aFileAndWeAreInFlatModeAndItsInARelevantSubfolder)
                 {
                     _fileCount++;
                 }
             }
         }
+
+
+        ToggleIndividualColumnVisibility(columnHeaderName: COL_NAME_PREFIX + FileListColumns.FOLDER,
+            setVisible: FrmMainApp.FlatMode ||
+                        Program.CollectionModeEnabled);
 
         // Resume sorting...
         Log.Trace(message: "Enable ListViewItemSorter");
@@ -1042,25 +1081,35 @@ public partial class FileListView : System.Windows.Forms.ListView
     ///     Deals with invoking the listview (from outside the thread) and updating the colour of a particular row (Item) to
     ///     the assigned colour.
     /// </summary>
-    /// <param name="lvw">The listView Control that needs updating. Most likely the one in the main Form</param>
-    /// <param name="itemText">The particular ListViewItem (by text) that needs updating</param>
+    /// <param name="directoryElement">The particular ListViewItem (by directoryElement/Tag) that needs updating</param>
     /// <param name="color">Parameter to assign a particular colour (prob red or black) to the whole row</param>
-    public void UpdateItemColour(string itemText,
+    public void UpdateItemColour(DirectoryElement directoryElement,
         Color color)
     {
         // If the current thread is not the UI thread, InvokeRequired will be true
         if (InvokeRequired)
         {
             Invoke(method: (Action)(() =>
-                UpdateItemColour(itemText: itemText, color: color)));
+                UpdateItemColour(directoryElement: directoryElement, color: color)));
             return;
         }
 
-        ListViewItem itemToModify = FindItemWithText(text: itemText);
+        ListViewItem itemToModify = FindItemByDirectoryElement(directoryElement: directoryElement);
         if (itemToModify != null)
         {
             itemToModify.ForeColor = color;
         }
+    }
+
+    /// <summary>
+    ///     Instead of trying to find items by their names (texts) we find them by Tag. This is needed because if the user is
+    ///     in Flat mode then it's wholly possible to have identical files across folders.
+    /// </summary>
+    /// <param name="directoryElement"></param>
+    /// <returns></returns>
+    private ListViewItem FindItemByDirectoryElement(DirectoryElement directoryElement)
+    {
+        return Items.Cast<ListViewItem>().FirstOrDefault(predicate: item => item.Tag == directoryElement);
     }
 
 #endregion

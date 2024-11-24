@@ -23,12 +23,13 @@ internal static class HelperExifWriteSaveToFile
 
         HelperGenericFileLocking.FilesAreBeingSaved = true;
         string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exifArgsToWrite.args");
-        string exiftoolCmd = " -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8" + " -@ " + HelperVariables.DoubleQuoteStr + argsFile + HelperVariables.DoubleQuoteStr;
+        string exiftoolCmd =
+            $" -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 -@ {HelperVariables.DoubleQuoteStr}{argsFile}{HelperVariables.DoubleQuoteStr}";
 
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         // if user switches folder in the process of writing this will keep it standard
-        Debug.Assert(condition: frmMainAppInstance != null, message: nameof(frmMainAppInstance) + " != null");
+        Debug.Assert(condition: frmMainAppInstance != null, message: $"{nameof(frmMainAppInstance)} != null");
 
         File.Delete(path: argsFile);
 
@@ -67,12 +68,19 @@ internal static class HelperExifWriteSaveToFile
                                                .Substring(startIndex: 1);
 
                     // check that either/or the orig file or the xmp needs overwriting
-                    processOriginalFile = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_ProcessOriginalFile"));
-                    writeXMPSideCar = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_AddXMPSideCar"));
+                    processOriginalFile = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
+                        dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_FileOptions",
+                        settingId:
+                        $"{fileExtension.ToLower()}_ckb_ProcessOriginalFile"));
+                    writeXMPSideCar = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
+                        dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_FileOptions",
+                        settingId:
+                        $"{fileExtension.ToLower()}_ckb_AddXMPSideCar"));
 
                     // this is an issue in Adobe Bridge (unsure). Rating in the XMP needs to be parsed and re-saved.
                     int ratingInXmp = -1;
-                    string xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath)) + ".xmp");
+                    string xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2:
+                        $"{Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath))}.xmp");
                     if (File.Exists(path: xmpFileLocation) && writeXMPSideCar) // don't bother if we don't need to (over)write the xmp
                     {
                         foreach (string line in File.ReadLines(path: xmpFileLocation))
@@ -96,8 +104,15 @@ internal static class HelperExifWriteSaveToFile
 
                     queueWasEmpty = false;
 
-                    resetFileDateToCreated = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_ResetFileDateToCreated"));
-                    doNotCreateBackup = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_FileOptions", settingId: fileExtension.ToLower() + "_" + "ckb_OverwriteOriginal"));
+                    resetFileDateToCreated = Convert.ToBoolean(
+                        value: HelperDataApplicationSettings.DataReadSQLiteSettings(
+                            dataTable: HelperVariables.DtHelperDataApplicationSettings,
+                            settingTabPage: "tpg_FileOptions", settingId:
+                            $"{fileExtension.ToLower()}_ckb_ResetFileDateToCreated"));
+                    doNotCreateBackup = Convert.ToBoolean(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
+                        dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_FileOptions",
+                        settingId:
+                        $"{fileExtension.ToLower()}_ckb_OverwriteOriginal"));
 
                     // it's a lot less complicated to just pretend we want both the Original File and the Sidecar updated and then not-include them later than to have a Yggdrasil of IFs scattered all over.
                     // ... which latter I would inevitably f...k up at some point.
@@ -109,25 +124,29 @@ internal static class HelperExifWriteSaveToFile
                     // this doesn't need to be sent back to the actual XMP file, it's a bug.
                     if (ratingInXmp >= 0)
                     {
-                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-Rating=" + ratingInXmp);
+                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: $"-Rating={ratingInXmp}");
                     }
 
-                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText: Path.Combine(path1: folderNameToWrite, path2: Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath)) + ".xmp")); //needs to include folder name
+                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText: Path.Combine(
+                        path1: folderNameToWrite, path2:
+                        $"{Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath))}.xmp")); //needs to include folder name
                     UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText: "-progress");
 
                     // sidecar copying needs to be in a separate batch, as technically it's a different file
 
                     if (writeXMPSideCar)
                     {
-                        FrmMainApp.Log.Trace(message: fileNameWithPath + " - writeXMPSideCar - " + writeXMPSideCar);
+                        FrmMainApp.Log.Trace(message: $"{fileNameWithPath} - writeXMPSideCar - {writeXMPSideCar}");
 
                         if (!File.Exists(path: xmpFileLocation))
                         {
-                            FrmMainApp.Log.Trace(message: fileNameWithPath + " - writeXMPSideCar - " + writeXMPSideCar + " - File has been created.");
+                            FrmMainApp.Log.Trace(message:
+                                $"{fileNameWithPath} - writeXMPSideCar - {writeXMPSideCar} - File has been created.");
 
                             // otherwise create a new one. 
                             xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath);
-                            UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText: "-tagsfromfile=" + xmpFileLocation);
+                            UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText:
+                                $"-tagsfromfile={xmpFileLocation}");
                         }
                     }
 
@@ -199,7 +218,7 @@ internal static class HelperExifWriteSaveToFile
                                 // ignore.
                             }
 
-                            FrmMainApp.Log.Trace(message: fileNameWithPath + " - " + settingId + ": " + settingValue);
+                            FrmMainApp.Log.Trace(message: $"{fileNameWithPath} - {settingId}: {settingValue}");
 
                             // non-xmp always
                             if (deleteAllGPSData && !deleteTagAlreadyAdded)
@@ -224,10 +243,7 @@ internal static class HelperExifWriteSaveToFile
                                     {
                                         UpdateArgsFile(
                                             argfileToUpdate: ArgfileToUpdate.Both,
-                                            whatText: "-" +
-                                                      exifToolAttribute +
-                                                      "=" +
-                                                      updateExifVal);
+                                            whatText: $"-{exifToolAttribute}={updateExifVal}");
 
                                         //if lat/long/alt then add Ref. 
                                         if (!exifToolAttribute.StartsWith(value: "XMP"))
@@ -243,22 +259,14 @@ internal static class HelperExifWriteSaveToFile
                                                     UpdateArgsFile(
                                                         argfileToUpdate: ArgfileToUpdate
                                                            .Both,
-                                                        whatText: "-" +
-                                                        exifToolAttribute +
-                                                        "Ref" +
-                                                        "=" +
-                                                        "South");
+                                                        whatText: $"-{exifToolAttribute}Ref=South");
                                                 }
                                                 else
                                                 {
                                                     UpdateArgsFile(
                                                         argfileToUpdate: ArgfileToUpdate
                                                            .Both,
-                                                        whatText: "-" +
-                                                        exifToolAttribute +
-                                                        "Ref" +
-                                                        "=" +
-                                                        "North");
+                                                        whatText: $"-{exifToolAttribute}Ref=North");
                                                 }
                                             }
                                             else if (exifToolAttribute.EndsWith(
@@ -272,22 +280,14 @@ internal static class HelperExifWriteSaveToFile
                                                     UpdateArgsFile(
                                                         argfileToUpdate: ArgfileToUpdate
                                                            .Both,
-                                                        whatText: "-" +
-                                                        exifToolAttribute +
-                                                        "Ref" +
-                                                        "=" +
-                                                        "West");
+                                                        whatText: $"-{exifToolAttribute}Ref=West");
                                                 }
                                                 else
                                                 {
                                                     UpdateArgsFile(
                                                         argfileToUpdate: ArgfileToUpdate
                                                            .Both,
-                                                        whatText: "-" +
-                                                        exifToolAttribute +
-                                                        "Ref" +
-                                                        "=" +
-                                                        "East");
+                                                        whatText: $"-{exifToolAttribute}Ref=East");
                                                 }
                                             }
                                             else if (exifToolAttribute.EndsWith(
@@ -303,7 +303,7 @@ internal static class HelperExifWriteSaveToFile
                                                        .UserSettingUseImperial
                                                         ? Math.Round(
                                                             value: tmpAltitude /
-                                                            HelperVariables.MetreToFeet,
+                                                                   HelperVariables.MetreToFeet,
                                                             digits: 2)
                                                         : tmpAltitude)
                                                    .ToString(
@@ -313,21 +313,14 @@ internal static class HelperExifWriteSaveToFile
                                                 // add ref -- "ExifTool will also accept number when writing this tag, with negative numbers indicating below sea level"
                                                 UpdateArgsFile(
                                                     argfileToUpdate: ArgfileToUpdate.Both,
-                                                    whatText: "-" +
-                                                    exifToolAttribute +
-                                                    "Ref" +
-                                                    "=" +
-                                                    (tmpAltitude > 0
+                                                    whatText: $"-{exifToolAttribute}Ref={(tmpAltitude > 0
                                                         ? "0"
-                                                        : "-1"));
+                                                        : "-1")}");
 
                                                 // same as below/generic
                                                 UpdateArgsFile(
                                                     argfileToUpdate: ArgfileToUpdate.Both,
-                                                    whatText: "-" +
-                                                    exifToolAttribute +
-                                                    "=" +
-                                                    updateExifVal);
+                                                    whatText: $"-{exifToolAttribute}={updateExifVal}");
                                             }
                                         }
                                     }
@@ -335,7 +328,7 @@ internal static class HelperExifWriteSaveToFile
                                     {
                                         UpdateArgsFile(
                                             argfileToUpdate: ArgfileToUpdate.Both,
-                                            whatText: "-" + exifToolAttribute + "=");
+                                            whatText: $"-{exifToolAttribute}=");
 
                                         //if lat/long then add Ref. 
                                         if (!exifToolAttribute.StartsWith(value: "XMP"))
@@ -351,10 +344,7 @@ internal static class HelperExifWriteSaveToFile
                                             {
                                                 UpdateArgsFile(
                                                     argfileToUpdate: ArgfileToUpdate.Both,
-                                                    whatText: "-" +
-                                                    exifToolAttribute +
-                                                    "Ref" +
-                                                    "=");
+                                                    whatText: $"-{exifToolAttribute}Ref=");
                                             }
                                         }
                                     }
@@ -391,17 +381,10 @@ internal static class HelperExifWriteSaveToFile
                                     }
 
                                     FrmMainApp.Log.Trace(
-                                        message: fileNameWithPath +
-                                                 " - " +
-                                                 exifToolAttribute +
-                                                 ": " +
-                                                 updateExifVal);
+                                        message: $"{fileNameWithPath} - {exifToolAttribute}: {updateExifVal}");
 
                                     UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both,
-                                                   whatText: "-" +
-                                                   exifToolAttribute +
-                                                   "=" +
-                                                   updateExifVal);
+                                        whatText: $"-{exifToolAttribute}={updateExifVal}");
                                 }
                             }
                         }

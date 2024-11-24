@@ -39,8 +39,8 @@ internal static class FileListViewReadWrite
             int d = lvi.Index;
             if (lvi.Tag is DirectoryElement dirElemFileToModify && dirElemFileToModify.HasDirtyAttributes())
             {
-                string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
-                frmMainAppInstance.lvw_FileList.UpdateItemColour(itemText: fileNameWithoutPath, color: Color.Red);
+                frmMainAppInstance.lvw_FileList.UpdateItemColour(directoryElement: dirElemFileToModify,
+                    color: Color.Red);
                 bool takenAlreadyShifted = false;
                 bool createAlreadyShifted = false;
                 lvw.BeginUpdate();
@@ -157,8 +157,8 @@ internal static class FileListViewReadWrite
                                     attribute: ElementAttribute.GPSLongitude,
                                     version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSLongitude),
                                     notFoundValue: "", nowSavingExif: false);
-                                string tmpCoords = tmpLat + ";" + tmpLng != ";"
-                                    ? tmpLat + ";" + tmpLng
+                                string tmpCoords = $"{tmpLat};{tmpLng}" != ";"
+                                    ? $"{tmpLat};{tmpLng}"
                                     : "";
 
                                 lvi.SubItems[index: lvchs[key: GetElementAttributesColumnHeader(ElementAttribute.Coordinates)]
@@ -175,8 +175,8 @@ internal static class FileListViewReadWrite
                                     attribute: ElementAttribute.GPSDestLongitude,
                                     version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSDestLongitude),
                                     notFoundValue: "", nowSavingExif: false);
-                                string tmpCoords = tmpLat + ";" + tmpLng != ";"
-                                    ? tmpLat + ";" + tmpLng
+                                string tmpCoords = $"{tmpLat};{tmpLng}" != ";"
+                                    ? $"{tmpLat};{tmpLng}"
                                     : "";
 
                                 lvi.SubItems[index: lvchs[key: GetElementAttributesColumnHeader(ElementAttribute.DestCoordinates)]
@@ -289,10 +289,7 @@ internal static class FileListViewReadWrite
         {
             FrmMainApp.HandlerUpdateLabelText(
                 label: frmMainAppInstance.lbl_ParseProgress,
-                text: "Ready. Files: Total: " +
-                      DEFileCount +
-                      " Geodata: " +
-                      DEFilesWithGeoDataCount);
+                text: $"Ready. Files: Total: {DEFileCount} Geodata: {DEFilesWithGeoDataCount}");
         }
     }
 }
