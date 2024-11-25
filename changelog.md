@@ -8,6 +8,7 @@
 - BUGS & FIXES:
 	- I've moved the startup methods to be async/awaited. Hopefully this will hide random occurrences of stuff like "tmi_Help". 
 	- Also revamped how column orders are handled internally.
+	- _Hopefully_ fixed the f....ing SQL Interop issues that occasionally crop up post-installation. It's a bug in VS Installer/Project config and is mighty annoying because it doesn't come up much in debug.
 
 **Build 9054 [20241015]** 
 - NEW & UPDATED:

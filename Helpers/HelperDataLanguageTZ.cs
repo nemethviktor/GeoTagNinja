@@ -2,6 +2,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using GeoTagNinja.View.DialogAndMessageBoxes;
+using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 
 namespace GeoTagNinja.Helpers;
 
@@ -24,6 +27,23 @@ internal static class HelperDataLanguageTZ
         string countryCodeCsvFilePath = Path.Combine(
             path1: HelperVariables.ResourcesFolderPath,
             path2: "isoCountryCodeMapping.csv");
+
+        if (!File.Exists(path: countryCodeCsvFilePath))
+        {
+            FrmMainApp.Log.Fatal(message: "Error: isoCountryCodeMapping.csv missing");
+            CustomMessageBox customMessageBox = new(
+                text: ReturnControlText(
+                    controlName:
+                    "mbx_FrmMainApp_ErrorIsoCountryCodeMappingMissing",
+                    fakeControlType: FakeControlTypes.MessageBox),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption.Error.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
+                buttons: MessageBoxButtons.OK,
+                icon: MessageBoxIcon.Error);
+            customMessageBox.ShowDialog();
+        }
+
         HelperVariables.DtIsoCountryCodeMapping =
             HelperDataCSVFileOperations.GetDataTableFromCsv(
                 fileNameWithPath: countryCodeCsvFilePath, isUTF: true);

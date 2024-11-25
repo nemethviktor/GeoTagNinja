@@ -42,11 +42,11 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 - `Build 8658 [20230915]`+: There is now some support for `Dark Mode`. This is a little "unbeautiful", however there is no proper API support in .NET Framework 4.8.x for "real" (read: Windows 11 style) Dark Mode.
 	- Some Borders and Scrollbars don't draw proper "dark" lines/brushes - so there's a discrepancy around the edges. From what I gather as an outcome of the above (lack of support).
 	- Point being Dark Mode is an option so that the app doesn't burn your eyes if you are the night owl type, rather than to be pretty, apologies.
-	- In newer builds there has been considerable improvements wrt Dark Mode as I now have a slave to do some of the dirty work (ReSharper AI FTW).
 - `Build 8829 [20240304]`+: Added a feature to Paste coordinate pairs into the GPSData (Lat/Long) of the Edit File. 
-	- The logic is that a Clipboard of _only_ a pair of coordinates separated by (preferably) the Culture-invariant [aka comma] ListSeparator would be pasted into the Edit Form when pressing CTRL+V (e.g.: 56.1234, 12.5678) <-- and nothing else. 
+	- The logic is that a Clipboard of _only_ a pair of coordinates separated by (preferably) the Culture-invariant [aka comma] ListSeparator would be pasted into the Edit Form when pressing CTRL+V (e.g.: `56.1234, 12.5678`) <-- and nothing else. 
 	- I coded this in a relatively foolproof way but try not to outsmart it.
 - `Build 8831 [20240306]`+: ExifTool should now auto-update into the Roaming folder upon app shutdown. (that's c:\Users\username\AppData\Roaming\GeoTagNinja\)
+- `Build 9095 [20241125]`+: There is now an option for `Flat Mode` that can be triggered from within the `File` menu. This will parse and load all subfolders within the currently selected folder. It's a little experimental although should work.
 
 ### A Particular Note on Working with Adobe Bridge (ACR) and RAW files > Saving as JPGs or Other Formats.
 

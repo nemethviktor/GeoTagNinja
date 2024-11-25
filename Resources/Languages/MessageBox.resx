@@ -344,4 +344,8 @@ Data will be discarded if you click No</value>
     <value>Flat Mode is turned on. Do you want to turn it off?</value>
     <comment>Question relating to whether the user wants to retain the "Flat Mode" when moving to another folder (which would instruct the app to parse subfolders recursively)</comment>
   </data>
+  <data name="mbx_FrmMainApp_ErrorIsoCountryCodeMappingMissing" xml:space="preserve">
+    <value>The file isoCountryCodeMapping.csv is missing from the Resources folder. Without it the app can't load.</value>
+    <comment>CSV file is missing and it's required to load the app</comment>
+  </data>
 </root>
