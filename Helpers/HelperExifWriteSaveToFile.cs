@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.DialogAndMessageBoxes;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
@@ -428,24 +427,15 @@ internal static class HelperExifWriteSaveToFile
                     {
                         failWriteNothingEnabled = true;
                         FrmMainApp.Log.Info(message: "Both file-writes disabled. Nothing Written.");
-                        CustomMessageBox customMessageBox = new(
-                            text: HelperControlAndMessageBoxHandling
-                               .ReturnControlText(
-                                    controlName:
-                                    "mbx_Helper_WarningNoWriteSettingEnabled",
-                                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                            caption: HelperControlAndMessageBoxHandling
-                               .ReturnControlText(
-                                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning
-                                                                  .ToString(),
-                                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes
-                                       .MessageBoxCaption),
-                            buttons: MessageBoxButtons.OK,
-                            icon: MessageBoxIcon.Warning);
-                        customMessageBox.ShowDialog();
+                        HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                            controlName: "mbx_Helper_WarningNoWriteSettingEnabled",
+                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
+                            buttons: MessageBoxButtons.OK);
                     }
                 }
             }
+
+            continue;
 
             // this patches the args files in a more organised way.
             void UpdateArgsFile(ArgfileToUpdate argfileToUpdate,
@@ -499,32 +489,18 @@ internal static class HelperExifWriteSaveToFile
         else if (!queueWasEmpty)
         {
             FrmMainApp.Log.Info(message: "Both file-writes disabled. Nothing Written.");
-            CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: "mbx_Helper_WarningNoWriteSettingEnabled",
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Warning.ToString(),
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Warning);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_Helper_WarningNoWriteSettingEnabled",
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
+                buttons: MessageBoxButtons.OK);
         }
         else
         {
             FrmMainApp.Log.Info(message: "Queue was empty. Nothing Written.");
-            CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: "mbx_Helper_WarningNothingInWriteQueue",
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Warning.ToString(),
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Warning);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_Helper_WarningNothingInWriteQueue",
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
+                buttons: MessageBoxButtons.OK);
         }
 
         ///////////////

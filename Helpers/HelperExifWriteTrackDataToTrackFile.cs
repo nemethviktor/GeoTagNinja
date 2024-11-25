@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GeoTagNinja.View.DialogAndMessageBoxes;
 
 namespace GeoTagNinja.Helpers;
 
@@ -60,7 +59,8 @@ internal class HelperExifWriteTrackDataToTrackFile
             string exifArgsForOriginalFile = fileList
                                             .Where(predicate: trackFilePath => File.Exists(path: trackFilePath))
                                             .Aggregate(seed: "",
-                                                 func: (current, trackFilePath) =>
+                                                 func: (current,
+                                                        trackFilePath) =>
                                                      current + trackFilePath + Environment.NewLine);
 
             // -p
@@ -83,17 +83,9 @@ internal class HelperExifWriteTrackDataToTrackFile
         }
         else
         {
-            CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: "mbx_FrmImportExportGpx_FileOrFolderDoesntExist",
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Error.ToString(),
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Error);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmImportExportGpx_FileOrFolderDoesntExist",
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error, buttons: MessageBoxButtons.OK);
         }
     }
 }

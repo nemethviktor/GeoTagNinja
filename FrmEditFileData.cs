@@ -10,7 +10,6 @@ using System.Threading;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.DialogAndMessageBoxes;
 using GeoTagNinja.View.ListView;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using NLog;
@@ -19,6 +18,8 @@ using static GeoTagNinja.FrmMainApp;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
 using static GeoTagNinja.Model.SourcesAndAttributes;
+using HelperControlAndMessageBoxCustomMessageBoxManager =
+    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
 
 namespace GeoTagNinja;
@@ -428,6 +429,7 @@ public partial class FrmEditFileData : Form
         // done load
         Log.Debug(message: "Done");
         _frmEditFileDataNowLoadingFileData = false;
+        return;
 
         void DisableDateTimeItems(Control cItem)
         {
@@ -872,7 +874,7 @@ public partial class FrmEditFileData : Form
 
         //reset this just in case.
         HelperVariables.OperationAPIReturnedOKResponse = true;
-        CustomMessageBox customMessageBox;
+
         switch (((Button)sender).Name)
         {
             case "btn_getFromWeb_Toponomy":
@@ -900,38 +902,23 @@ public partial class FrmEditFileData : Form
 
                 break;
             default:
-                customMessageBox = new CustomMessageBox(
-                    text: ReturnControlText(
-                              controlName: "mbx_FrmEditFileData_ErrorInvalidSender",
-                              fakeControlType: FakeControlTypes.MessageBox) +
-                          ((Button)sender).Name,
-                    caption: ReturnControlText(
-                        controlName: MessageBoxCaption.Error.ToString(),
-                        fakeControlType: FakeControlTypes.MessageBoxCaption),
-                    buttons: MessageBoxButtons.OK,
-                    icon: MessageBoxIcon.Error);
-                customMessageBox.ShowDialog();
+                // took me a while to understand my own code. what we are doing here is that we are trying to tell the user (and by proxy, the developer) that something other than the two buttons defined above have been pressed.
+                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                    controlName: "mbx_FrmEditFileData_ErrorInvalidSender", captionType: MessageBoxCaption.Error,
+                    buttons: MessageBoxButtons.OK, extraMessage: ((Button)sender).Name);
                 break;
         }
 
         string messageBoxName = HelperVariables.OperationAPIReturnedOKResponse
             ? "mbx_FrmEditFileData_InfoDataUpdated"
             : "mbx_FrmEditFileData_ErrorAPIError";
-        string controlName = HelperVariables.OperationAPIReturnedOKResponse
-            ? MessageBoxCaption.Information.ToString()
-            : MessageBoxCaption.Error.ToString();
-        MessageBoxIcon icon = HelperVariables.OperationAPIReturnedOKResponse
-            ? MessageBoxIcon.Information
-            : MessageBoxIcon.Error;
-        customMessageBox = new CustomMessageBox(
-            text: ReturnControlText(
-                controlName: messageBoxName,
-                fakeControlType: FakeControlTypes.MessageBox),
-            caption: ReturnControlText(
-                controlName: controlName, fakeControlType: FakeControlTypes.MessageBoxCaption),
-            buttons: MessageBoxButtons.OK,
-            icon: icon);
-        customMessageBox.ShowDialog();
+        MessageBoxCaption messageBoxCaption = HelperVariables.OperationAPIReturnedOKResponse
+            ? MessageBoxCaption.Information
+            : MessageBoxCaption.Error;
+
+        HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(controlName: messageBoxName,
+            captionType: messageBoxCaption,
+            buttons: MessageBoxButtons.OK);
     }
 
     /// <summary>
@@ -1313,16 +1300,9 @@ public partial class FrmEditFileData : Form
             else
             {
                 Log.Debug(message: $"File disappeared: {fileNameWithPath}");
-                CustomMessageBox customMessageBox = new(
-                    text: ReturnControlText(
-                        controlName: "mbx_FrmEditFileData_WarningFileDisappeared",
-                        fakeControlType: FakeControlTypes.MessageBox),
-                    caption: ReturnControlText(
-                        controlName: MessageBoxCaption.Error.ToString(),
-                        fakeControlType: FakeControlTypes.MessageBoxCaption),
-                    buttons: MessageBoxButtons.OK,
-                    icon: MessageBoxIcon.Warning);
-                customMessageBox.ShowDialog();
+                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                    controlName: "mbx_FrmEditFileData_WarningFileDisappeared", captionType: MessageBoxCaption.Error,
+                    buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
             }
         }
 

@@ -6,9 +6,10 @@ using System.Linq;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.DialogAndMessageBoxes;
 using TimeZoneConverter;
 using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
+using HelperControlAndMessageBoxCustomMessageBoxManager =
+    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 
 namespace GeoTagNinja;
 
@@ -335,17 +336,10 @@ public partial class FrmImportExportGpx : Form
                 }
                 else
                 {
-                    CustomMessageBox customMessageBox = new(
-                        text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                            controlName: "mbx_FrmImportExportGpx_FileOrFolderDoesntExist",
-                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                        caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                            controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                           .Error.ToString(),
-                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-                        buttons: MessageBoxButtons.OK,
-                        icon: MessageBoxIcon.Error);
-                    customMessageBox.ShowDialog();
+                    HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                        controlName: "mbx_FrmImportExportGpx_FileOrFolderDoesntExist",
+                        captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
+                        buttons: MessageBoxButtons.OK);
                 }
 
                 _lastShiftSecond = decimal.ToInt16(value: nud_Seconds.Value);
@@ -491,17 +485,9 @@ public partial class FrmImportExportGpx : Form
             _lastShiftHour == 0 &&
             _lastShiftDay == 0)
         {
-            CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: "mbx_FrmImportNoStoredShiftValues",
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Error.ToString(),
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Error);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmImportNoStoredShiftValues",
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error, buttons: MessageBoxButtons.OK);
         }
 
         if (_lastShiftSecond != 0)

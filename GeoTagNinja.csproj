@@ -207,6 +207,7 @@
     <Compile Include="FrmPleaseWaitBox.Designer.cs">
       <DependentUpon>FrmPleaseWaitBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\HelperControlAndMessageBoxCustomMessageBoxManager.cs" />
     <Compile Include="Helpers\HelperControlThemeManager.cs" />
     <Compile Include="Helpers\HelperDataSettingsExport.cs" />
     <Compile Include="Helpers\HelperDataSettingsImport.cs" />

@@ -256,10 +256,10 @@ Les mises à jour seront perdues si vous clickez Non</value>
   <data name="mbx_FrmMainApp_InfoFavouriteSaved" xml:space="preserve">
     <value>Favori sauvé correctement</value>
   </data>
-  <data name="mbx_FrmMainApp_InfoCahcedDataRemoved" xml:space="preserve">
+  <data name="mbx_FrmMainApp_InfoCachedDataRemoved" xml:space="preserve">
     <value>Si des données existent les données en cache des fichiers séléctionnés ont été supprimées.</value>
   </data>
-  <data name="mbx_FrmMainApp_InfoCahcedDataNotRemoved" xml:space="preserve">
+  <data name="mbx_FrmMainApp_InfoCachedDataNotRemoved" xml:space="preserve">
     <value>Aucune donnée n'a été supprimée. Soit vous n'avez pas sélectionné les champs corrects soit les champs séléctionnés n'ont pas de cache.</value>
   </data>
 </root>

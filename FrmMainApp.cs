@@ -29,6 +29,8 @@ using NLog.Targets;
 using TimeZoneConverter;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.Model.SourcesAndAttributes;
+using HelperControlAndMessageBoxCustomMessageBoxManager =
+    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
@@ -263,17 +265,9 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Log.Fatal(message: $"Error: {ex.Message}");
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                          controlName: "mbx_FrmMainApp_ErrorClearingFileDataQTables",
-                          fakeControlType: FakeControlTypes.MessageBox) +
-                      ex.Message,
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Error.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Error);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_ErrorClearingFileDataQTables", captionType: MessageBoxCaption.Error,
+                buttons: MessageBoxButtons.OK);
         }
 
         try
@@ -294,19 +288,11 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Log.Error(message: $"Error: {ex.Message}");
-            CustomMessageBox customMessageBox = new(
-                    text: ReturnControlText(
-                              controlName: "mbx_FrmMainApp_ErrorResizingColumns",
-                              fakeControlType: FakeControlTypes.MessageBox) +
-                          ex.Message,
-                    caption: ReturnControlText(
-                        controlName: MessageBoxCaption.Error.ToString(),
-                        fakeControlType: FakeControlTypes.MessageBoxCaption),
-                    buttons: MessageBoxButtons.OK,
-                    icon: MessageBoxIcon.Error)
-                ;
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_ErrorResizingColumns", captionType: MessageBoxCaption.Error,
+                buttons: MessageBoxButtons.OK);
         }
+
 
         // can't log inside.
         Log.Debug(message: "Run CoreWebView2InitializationCompleted");
@@ -498,12 +484,11 @@ public partial class FrmMainApp : Form
 
     private void PipeCmd_ShowMessage(string text)
     {
-        CustomMessageBox customMessageBox = new(
-            text: $"Pipe Server has this message:\n{text}",
-            caption: "Pipe Server",
-            buttons: MessageBoxButtons.OK,
-            icon: MessageBoxIcon.Information);
-        customMessageBox.ShowDialog();
+        HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(controlName: "",
+            captionType: MessageBoxCaption.Information,
+            buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information,
+            extraMessage: $"Pipe Server has this message:\n{text}",
+            textSource: HelperControlAndMessageBoxCustomMessageBoxManager.MessageBoxTextSource.MANUAL);
     }
 
 #endregion
@@ -582,17 +567,9 @@ public partial class FrmMainApp : Form
     /// <returns></returns>
     private bool AskIfUserWantsToSaveDraggedMapData()
     {
-        CustomMessageBox customMessageBox = new(
-            text: ReturnControlText(
-                controlName: "mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles",
-                fakeControlType: FakeControlTypes.MessageBox),
-            caption: ReturnControlText(
-                controlName: MessageBoxCaption.Question.ToString(),
-                fakeControlType: FakeControlTypes.MessageBoxCaption),
-            buttons: MessageBoxButtons.YesNo,
-            icon: MessageBoxIcon.Question);
-        DialogResult dialogResult = customMessageBox.ShowDialog();
-        return dialogResult == DialogResult.Yes;
+        return HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBoxWithResult(
+            controlName: "mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles", captionType: MessageBoxCaption.Question,
+            buttons: MessageBoxButtons.YesNo) == DialogResult.Yes;
     }
 
     /// <summary>
@@ -739,6 +716,7 @@ public partial class FrmMainApp : Form
 
         // Not logging this.
         FileListViewReadWrite.ListViewCountItemsWithGeoData();
+        return;
 
         static void ShowLocToMapDialog()
         {
@@ -831,17 +809,11 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Log.Fatal(message: $"Error: {ex.Message}");
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                          controlName: "mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode",
-                          fakeControlType: FakeControlTypes.MessageBox) +
-                      ex.Message,
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Error.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode",
+                captionType: MessageBoxCaption.Error,
                 buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Error);
-            customMessageBox.ShowDialog();
+                extraMessage: ex.Message);
         }
 
         return (LatCoordinate, LngCoordinate);
@@ -882,18 +854,9 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Log.Fatal(message: $"Error: {ex.Message}");
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                          controlName:
-                          "mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile",
-                          fakeControlType: FakeControlTypes.MessageBox) +
-                      ex.Message,
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Error.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Error);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile",
+                captionType: MessageBoxCaption.Error, buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
         }
     }
 
@@ -1293,6 +1256,7 @@ public partial class FrmMainApp : Form
         }
 
         UpdateWebView(replacements: htmlReplacements);
+        return;
 
         void AddTrackPathDataToDictDestinations(Dictionary<string, HashSet<string>> dictDestinations)
         {
@@ -1425,18 +1389,9 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Log.Fatal(message: $"Error: {ex.Message}");
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                          controlName:
-                          "mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async",
-                          fakeControlType: FakeControlTypes.MessageBox) +
-                      ex.Message,
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Error.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Error);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async",
+                captionType: MessageBoxCaption.Error, buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
         }
 
         // Initialize WebView
@@ -1451,18 +1406,9 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Log.Fatal(message: $"Error: {ex.Message}");
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                          controlName:
-                          "mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled",
-                          fakeControlType: FakeControlTypes.MessageBox) +
-                      ex.Message,
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Error.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Error);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled",
+                captionType: MessageBoxCaption.Error, buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
         }
 
         // read the "map.html" file.
@@ -1477,18 +1423,9 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Log.Fatal(message: $"Read map.html file - Error: {ex.Message}");
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                          controlName:
-                          "mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile",
-                          fakeControlType: FakeControlTypes.MessageBox) +
-                      ex.Message,
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Error.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Error);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile", captionType: MessageBoxCaption.Error,
+                buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
         }
 
         // Get the ArcGis API Key
@@ -1528,18 +1465,9 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Log.Fatal(message: $"Error:{ex.Message}");
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                          controlName:
-                          "mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived",
-                          fakeControlType: FakeControlTypes.MessageBox) +
-                      ex.Message,
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Error.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Error);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived",
+                captionType: MessageBoxCaption.Error, buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
         }
     }
 
@@ -1655,17 +1583,10 @@ public partial class FrmMainApp : Form
     /// <returns></returns>
     private bool AskIfUserWantsToDisableFlatMode()
     {
-        CustomMessageBox customMessageBox = new(
-            text: ReturnControlText(
-                controlName: "mbx_FrmMainApp_QuestionDisableFlatMode",
-                fakeControlType: FakeControlTypes.MessageBox),
-            caption: ReturnControlText(
-                controlName: MessageBoxCaption.Question.ToString(),
-                fakeControlType: FakeControlTypes.MessageBoxCaption),
-            buttons: MessageBoxButtons.YesNo,
-            icon: MessageBoxIcon.Question);
-        DialogResult dialogResult = customMessageBox.ShowDialog();
-        return dialogResult == DialogResult.Yes;
+        return HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBoxWithResult(
+                   controlName: "mbx_FrmMainApp_QuestionDisableFlatMode", captionType: MessageBoxCaption.Question,
+                   buttons: MessageBoxButtons.YesNo) ==
+               DialogResult.Yes;
     }
 
     private void tmiFileFlatModeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1740,19 +1661,14 @@ public partial class FrmMainApp : Form
             }
         }
 
+        return;
+
         void ShowInvalidFolderMessage(string exceptionMessage = "")
         {
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                          controlName:
-                          "mbx_FrmMainApp_ErrorInvalidFolder", fakeControlType: FakeControlTypes.MessageBox) +
-                      exceptionMessage,
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Question.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.YesNo,
-                icon: MessageBoxIcon.Question);
-            DialogResult dialogResult = customMessageBox.ShowDialog();
+            DialogResult dialogResult = HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBoxWithResult(
+                controlName: "mbx_FrmMainApp_ErrorInvalidFolder", captionType: MessageBoxCaption.Question,
+                buttons: MessageBoxButtons.YesNo);
+
             if (dialogResult == DialogResult.Yes)
             {
                 tbx_FolderName.Text = @"C:\";
@@ -1992,15 +1908,9 @@ public partial class FrmMainApp : Form
         }
         else
         {
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                    controlName: "mbx_FrmImportExportGpx_NoFileSelected", fakeControlType: FakeControlTypes.MessageBox),
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Warning.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Warning);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmImportExportGpx_NoFileSelected", captionType: MessageBoxCaption.Warning,
+                buttons: MessageBoxButtons.OK);
         }
     }
 
@@ -2559,15 +2469,9 @@ public partial class FrmMainApp : Form
         if (item == null)
         {
             lvw_FileList.SelectedItems.Clear();
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                    controlName: "mbx_FrmMainApp_WarningNoItemSelected", fakeControlType: FakeControlTypes.MessageBox),
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Information.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Warning);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_WarningNoItemSelected", captionType: MessageBoxCaption.Warning,
+                buttons: MessageBoxButtons.OK);
             return;
         }
 
@@ -2924,15 +2828,9 @@ public partial class FrmMainApp : Form
         }
         else
         {
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                    controlName: "mbx_FrmMainApp_NoFavouritesDefined", fakeControlType: FakeControlTypes.MessageBox),
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Information.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Information);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_NoFavouritesDefined", captionType: MessageBoxCaption.Information,
+                buttons: MessageBoxButtons.OK);
         }
     }
 
@@ -3081,43 +2979,23 @@ public partial class FrmMainApp : Form
                     drFavourite: drFavourite);
 
                 DtFavourites = HelperGenericAppStartup.AppStartupLoadFavourites();
-                CustomMessageBox customMessageBox = new(
-                    text: ReturnControlText(
-                        controlName: "mbx_FrmMainApp_InfoFavouriteSaved", fakeControlType: FakeControlTypes.MessageBox),
-                    caption: ReturnControlText(
-                        controlName: MessageBoxCaption.Information.ToString(),
-                        fakeControlType: FakeControlTypes.MessageBoxCaption),
-                    buttons: MessageBoxButtons.OK,
-                    icon: MessageBoxIcon.Information);
-                customMessageBox.ShowDialog();
+                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                    controlName: "mbx_FrmMainApp_InfoFavouriteSaved", captionType: MessageBoxCaption.Information,
+                    buttons: MessageBoxButtons.OK);
             }
 
             else
             {
-                CustomMessageBox customMessageBox = new(
-                    text: ReturnControlText(
-                        controlName: "mbx_FrmMainApp_WarningNoItemSelected",
-                        fakeControlType: FakeControlTypes.MessageBox),
-                    caption: ReturnControlText(
-                        controlName: MessageBoxCaption.Information.ToString(),
-                        fakeControlType: FakeControlTypes.MessageBoxCaption),
-                    buttons: MessageBoxButtons.OK,
-                    icon: MessageBoxIcon.Warning);
-                customMessageBox.ShowDialog();
+                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                    controlName: "mbx_FrmMainApp_WarningNoItemSelected", captionType: MessageBoxCaption.Warning,
+                    buttons: MessageBoxButtons.OK);
             }
         }
         else
         {
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                    controlName: "mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank",
-                    fakeControlType: FakeControlTypes.MessageBox),
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Information.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Warning);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank", captionType: MessageBoxCaption.Warning,
+                buttons: MessageBoxButtons.OK);
         }
     }
 
@@ -3187,29 +3065,16 @@ public partial class FrmMainApp : Form
 
             else
             {
-                CustomMessageBox customMessageBox = new(
-                    text: ReturnControlText(
-                        controlName: "mbx_FrmMainApp_WarningNoItemSelected",
-                        fakeControlType: FakeControlTypes.MessageBox),
-                    caption: ReturnControlText(
-                        controlName: MessageBoxCaption.Information.ToString(),
-                        fakeControlType: FakeControlTypes.MessageBoxCaption),
-                    buttons: MessageBoxButtons.OK,
-                    icon: MessageBoxIcon.Warning);
-                customMessageBox.ShowDialog();
+                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                    controlName: "mbx_FrmMainApp_WarningNoItemSelected", captionType: MessageBoxCaption.Warning,
+                    buttons: MessageBoxButtons.OK);
             }
         }
         else
         {
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                    controlName: "mbx_FrmMainApp_InfoFavouriteNotValid", fakeControlType: FakeControlTypes.MessageBox),
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Information.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Information);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_InfoFavouriteNotValid", captionType: MessageBoxCaption.Information,
+                buttons: MessageBoxButtons.OK);
         }
     }
 
@@ -3265,28 +3130,15 @@ public partial class FrmMainApp : Form
 
         if (dataHasBeenRemoved)
         {
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                    controlName: "mbx_FrmMainApp_InfoCahcedDataRemoved", fakeControlType: FakeControlTypes.MessageBox),
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Information.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Information);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_InfoCachedDataRemoved", captionType: MessageBoxCaption.Information,
+                buttons: MessageBoxButtons.OK);
         }
         else
         {
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                    controlName: "mbx_FrmMainApp_InfoCahcedDataNotRemoved",
-                    fakeControlType: FakeControlTypes.MessageBox),
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Information.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Information);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_InfoCachedDataNotRemoved", captionType: MessageBoxCaption.Information,
+                buttons: MessageBoxButtons.OK);
         }
     }
 
@@ -3365,15 +3217,9 @@ public partial class FrmMainApp : Form
         }
         else
         {
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                    controlName: "mbx_FrmMainApp_NoFavouritesDefined", fakeControlType: FakeControlTypes.MessageBox),
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Information.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Information);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_NoFavouritesDefined", captionType: MessageBoxCaption.Information,
+                buttons: MessageBoxButtons.OK);
         }
     }
 
@@ -3412,16 +3258,9 @@ public partial class FrmMainApp : Form
 
         if (!selectionIsValid)
         {
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                    controlName: "mbx_FrmMainApp_WarningTooManyFilesSelected",
-                    fakeControlType: FakeControlTypes.MessageBox),
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Warning.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Warning);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_WarningTooManyFilesSelected", captionType: MessageBoxCaption.Warning,
+                buttons: MessageBoxButtons.OK);
         }
         else
         {
@@ -3449,6 +3288,8 @@ public partial class FrmMainApp : Form
         {
             CopySelectedValuesToClipboard();
         }
+
+        return;
 
         void CopySelectedValuesToClipboard()
         {

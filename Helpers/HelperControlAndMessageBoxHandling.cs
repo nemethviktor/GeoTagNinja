@@ -125,6 +125,12 @@ internal static class HelperControlAndMessageBoxHandling
         }
     }
 
+    /// <summary>
+    ///     Gets the localised Text for the Control.
+    /// </summary>
+    /// <param name="controlName">The name of the Control as it appears in the Designer</param>
+    /// <param name="fakeControlType">One of the <see cref="FakeControlTypes" /> (e.g.FakeControlTypes.Button =&gt; "Button")</param>
+    /// <returns></returns>
     internal static string ReturnControlText(string controlName, FakeControlTypes fakeControlType)
     {
         FrmMainApp.Log.Trace(message: $"Starting - cItem: {controlName}");

@@ -351,18 +351,18 @@ namespace GeoTagNinja.Resources.Languages {
         /// <summary>
         ///   Looks up a localized string similar to No data has been removed. Either you didn&apos;t select valid items or the ones you picked didn&apos;t have cached data..
         /// </summary>
-        public static string mbx_FrmMainApp_InfoCahcedDataNotRemoved {
+        public static string mbx_FrmMainApp_InfoCachedDataNotRemoved {
             get {
-                return ResourceManager.GetString("mbx_FrmMainApp_InfoCahcedDataNotRemoved", resourceCulture);
+                return ResourceManager.GetString("mbx_FrmMainApp_InfoCachedDataNotRemoved", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to If there was any, cached data for selected items has been removed..
         /// </summary>
-        public static string mbx_FrmMainApp_InfoCahcedDataRemoved {
+        public static string mbx_FrmMainApp_InfoCachedDataRemoved {
             get {
-                return ResourceManager.GetString("mbx_FrmMainApp_InfoCahcedDataRemoved", resourceCulture);
+                return ResourceManager.GetString("mbx_FrmMainApp_InfoCachedDataRemoved", resourceCulture);
             }
         }
         

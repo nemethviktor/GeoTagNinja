@@ -6,8 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
-using GeoTagNinja.View.DialogAndMessageBoxes;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
+using HelperControlAndMessageBoxCustomMessageBoxManager =
+    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 
 namespace GeoTagNinja;
 
@@ -28,17 +29,9 @@ public partial class FrmMainApp
         catch (Exception ex)
         {
             Log.Fatal(message: $"Error: {ex.Message}");
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                          controlName: "mbx_FrmMainApp_ErrorInitializeComponent",
-                          fakeControlType: FakeControlTypes.MessageBox) +
-                      ex.Message,
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Error.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Error);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_ErrorInitializeComponent", captionType: MessageBoxCaption.Error,
+                buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
         }
 
         return Task.CompletedTask;
@@ -58,17 +51,9 @@ public partial class FrmMainApp
         catch (Exception ex)
         {
             Log.Fatal(message: $"Error: {ex.Message}");
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                          controlName: "mbx_FrmMainApp_ErrorDoubleBuffer",
-                          fakeControlType: FakeControlTypes.MessageBox) +
-                      ex.Message,
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption.Error.ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Error);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_ErrorDoubleBuffer", captionType: MessageBoxCaption.Error,
+                buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
         }
 
         return Task.CompletedTask;

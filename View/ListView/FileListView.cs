@@ -9,8 +9,9 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.DialogAndMessageBoxes;
 using NLog;
+using HelperControlAndMessageBoxCustomMessageBoxManager =
+    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 
 namespace GeoTagNinja.View.ListView;
 /*
@@ -814,18 +815,10 @@ public partial class FileListView : System.Windows.Forms.ListView
         catch (Exception ex)
         {
             Log.Fatal(message: $"Error: {ex.Message}");
-            CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                          controlName:
-                          "mbx_FrmMainApp_ErrorLanguageFileColumnHeaders",
-                          fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox) +
-                      ex.Message,
-                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Error.ToString(), fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Error);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_ErrorLanguageFileColumnHeaders",
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error, buttons: MessageBoxButtons.OK,
+                extraMessage: ex.Message);
         }
     }
 

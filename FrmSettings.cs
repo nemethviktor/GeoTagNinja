@@ -14,6 +14,8 @@ using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
 using static System.String;
 using static GeoTagNinja.View.ListView.FileListView;
+using HelperControlAndMessageBoxCustomMessageBoxManager =
+    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 
 namespace GeoTagNinja;
 
@@ -627,18 +629,10 @@ public partial class FrmSettings : Form
                 IsNullOrEmpty(value: clh_TargetPointOutcomeCustomValue))
             {
                 e.Cancel = true;
-                CustomMessageBox customMessageBox = new(
-                    text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                        controlName:
-                        "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty",
-                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                    caption: HelperControlAndMessageBoxHandling
-                       .ReturnControlText(
-                            controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information.ToString(),
-                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-                    buttons: MessageBoxButtons.OK,
-                    icon: MessageBoxIcon.Warning);
-                customMessageBox.ShowDialog();
+                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                    controlName: "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty",
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
+                    buttons: MessageBoxButtons.OK);
             }
         }
     }
@@ -654,18 +648,10 @@ public partial class FrmSettings : Form
         if (e.Exception != null &&
             e.Context == DataGridViewDataErrorContexts.Commit)
         {
-            CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName:
-                    "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty",
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Information.ToString(),
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Warning);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty",
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
+                buttons: MessageBoxButtons.OK);
         }
     }
 
@@ -1246,17 +1232,9 @@ public partial class FrmSettings : Form
         // reload
         dgv_CustomCityLogic.Columns.Clear();
         LoadCustomCityLogicDGV();
-        CustomMessageBox customMessageBox = new(
-            text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                controlName: "mbx_GenericDone",
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-            caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                               .Information.ToString(),
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-            buttons: MessageBoxButtons.OK,
-            icon: MessageBoxIcon.Information);
-        customMessageBox.ShowDialog();
+        HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(controlName: "mbx_GenericDone",
+            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information,
+            buttons: MessageBoxButtons.OK);
     }
 
     /// <summary>
@@ -1333,22 +1311,10 @@ public partial class FrmSettings : Form
                     }
                     catch (Exception ex)
                     {
-                        CustomMessageBox customMessageBox = new(
-                            text: HelperControlAndMessageBoxHandling
-                                     .ReturnControlText(
-                                          controlName:
-                                          "mbx_FrmSettings_ErrorExportFailed",
-                                          fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes
-                                             .MessageBox) +
-                                  ex.Message,
-                            caption: HelperControlAndMessageBoxHandling
-                               .ReturnControlText(
-                                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString(),
-                                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes
-                                       .MessageBoxCaption),
-                            buttons: MessageBoxButtons.OK,
-                            icon: MessageBoxIcon.Error);
-                        customMessageBox.ShowDialog();
+                        HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                            controlName: "mbx_FrmSettings_ErrorExportFailed",
+                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
+                            buttons: MessageBoxButtons.OK);
                     }
                 }
             }
@@ -1407,6 +1373,8 @@ public partial class FrmSettings : Form
                 }
             }
         }
+
+        return;
 
         string GetDatabaseFileToImport()
         {

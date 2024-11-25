@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.DialogAndMessageBoxes;
 using GeoTagNinja.View.ListView;
 using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
 using static GeoTagNinja.Model.SourcesAndAttributes;
@@ -418,17 +417,11 @@ internal static class HelperExifReadTrackFile
             }
         }
 
-        CustomMessageBox customMessageBox = new(
-            text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                controlName: "mbx_FrmImportExportGpx_AskUserWantsReport",
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-            caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question
-                                                               .ToString(),
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-            buttons: MessageBoxButtons.YesNo,
-            icon: MessageBoxIcon.Question);
-        DialogResult dialogResult = customMessageBox.ShowDialog();
+        DialogResult dialogResult = HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBoxWithResult(
+            controlName: "mbx_FrmImportExportGpx_AskUserWantsReport",
+            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question,
+            buttons: MessageBoxButtons.YesNo);
+
         if (dialogResult == DialogResult.Yes)
         {
             Form reportBox = new();

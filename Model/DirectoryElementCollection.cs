@@ -6,10 +6,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
-using GeoTagNinja.View.DialogAndMessageBoxes;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using NLog;
 using static System.Environment;
+using HelperControlAndMessageBoxCustomMessageBoxManager =
+    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 
 namespace GeoTagNinja.Model;
 
@@ -251,17 +252,10 @@ public class DirectoryElementCollection : List<DirectoryElement>
             catch (Exception ex)
             {
                 Log.Error(message: $"Could not add parent. Error: {ex.Message}");
-                CustomMessageBox customMessageBox = new(
-                    text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                        controlName: "mbx_DirectoryElementCollection_ErrorParsing",
-                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                    caption: HelperControlAndMessageBoxHandling
-                       .ReturnControlText(
-                            controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString(),
-                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-                    buttons: MessageBoxButtons.OK,
-                    icon: MessageBoxIcon.Error);
-                customMessageBox.ShowDialog();
+                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                    controlName: "mbx_DirectoryElementCollection_ErrorParsing",
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
+                    buttons: MessageBoxButtons.OK);
             }
 
         #endregion
@@ -305,17 +299,10 @@ public class DirectoryElementCollection : List<DirectoryElement>
             catch (Exception ex)
             {
                 Log.Error(message: $"Error: {ex.Message}");
-                CustomMessageBox customMessageBox = new(
-                    text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                        controlName: "mbx_DirectoryElementCollection_ErrorParsing",
-                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                    caption: HelperControlAndMessageBoxHandling
-                       .ReturnControlText(
-                            controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString(),
-                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-                    buttons: MessageBoxButtons.OK,
-                    icon: MessageBoxIcon.Error);
-                customMessageBox.ShowDialog();
+                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                    controlName: "mbx_DirectoryElementCollection_ErrorParsing",
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
+                    buttons: MessageBoxButtons.OK);
             }
 
             Log.Trace(message: "Listing Folders - OK");
@@ -504,20 +491,10 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 overlappingXmpFileStr += fi.FullName + NewLine;
             }
 
-            CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                          controlName:
-                          "mbx_FrmMainApp_WarningMultipleImageFilesForXMP",
-                          fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox) +
-                      NewLine +
-                      overlappingXmpFileStr,
-                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Warning.ToString(),
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Warning);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_WarningMultipleImageFilesForXMP",
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
+                buttons: MessageBoxButtons.OK, extraMessage: overlappingXmpFileStr);
         }
 
         // ******************************

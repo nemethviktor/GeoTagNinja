@@ -5,8 +5,9 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
-using GeoTagNinja.View.DialogAndMessageBoxes;
 using Microsoft.VisualBasic;
+using HelperControlAndMessageBoxCustomMessageBoxManager =
+    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 
 namespace GeoTagNinja;
 
@@ -137,18 +138,10 @@ public partial class FrmManageFavourites : Form
             city: tbx_City.Text,
             state: tbx_State.Text,
             subLocation: tbx_Sublocation.Text);
-
-        CustomMessageBox customMessageBox = new(
-            text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                controlName: "mbx_FrmMainApp_InfoFavouriteSaved",
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-            caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                               .Information.ToString(),
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-            buttons: MessageBoxButtons.OK,
-            icon: MessageBoxIcon.Information);
-        customMessageBox.ShowDialog();
+        HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+            controlName: "mbx_FrmMainApp_InfoFavouriteSaved",
+            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information,
+            buttons: MessageBoxButtons.OK);
 
         _frmNowLoadingFavouriteData = true;
 

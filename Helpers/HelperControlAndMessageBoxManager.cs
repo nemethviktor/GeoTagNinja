@@ -17,7 +17,7 @@ using System.Text;
 namespace System.Windows.Forms;
 
 // via https://www.codeproject.com/Articles/18399/Localizing-System-MessageBox
-public class MessageBoxManager
+public class HelperControlAndMessageBoxCustomMessageBoxManager
 {
     private const int WH_CALLWNDPROCRET = 12;
     private const int WM_DESTROY = 0x0002;
@@ -76,7 +76,7 @@ public class MessageBoxManager
     /// </summary>
     public static string No = "&No";
 
-    static MessageBoxManager()
+    static HelperControlAndMessageBoxCustomMessageBoxManager()
     {
         hookProc = MessageBoxHookProc;
         enumProc = MessageBoxEnumProc;
@@ -86,57 +86,57 @@ public class MessageBoxManager
 
     [DllImport(dllName: "user32.dll")]
     private static extern IntPtr SendMessage(IntPtr hWnd,
-                                             int Msg,
-                                             IntPtr wParam,
-                                             IntPtr lParam);
+        int Msg,
+        IntPtr wParam,
+        IntPtr lParam);
 
     [DllImport(dllName: "user32.dll")]
     private static extern IntPtr SetWindowsHookEx(int idHook,
-                                                  HookProc lpfn,
-                                                  IntPtr hInstance,
-                                                  int threadId);
+        HookProc lpfn,
+        IntPtr hInstance,
+        int threadId);
 
     [DllImport(dllName: "user32.dll")]
     private static extern int UnhookWindowsHookEx(IntPtr idHook);
 
     [DllImport(dllName: "user32.dll")]
     private static extern IntPtr CallNextHookEx(IntPtr idHook,
-                                                int nCode,
-                                                IntPtr wParam,
-                                                IntPtr lParam);
+        int nCode,
+        IntPtr wParam,
+        IntPtr lParam);
 
     [DllImport(dllName: "user32.dll", EntryPoint = "GetWindowTextLengthW", CharSet = CharSet.Unicode)]
     private static extern int GetWindowTextLength(IntPtr hWnd);
 
     [DllImport(dllName: "user32.dll", EntryPoint = "GetWindowTextW", CharSet = CharSet.Unicode)]
     private static extern int GetWindowText(IntPtr hWnd,
-                                            StringBuilder text,
-                                            int maxLength);
+        StringBuilder text,
+        int maxLength);
 
     [DllImport(dllName: "user32.dll")]
     private static extern int EndDialog(IntPtr hDlg,
-                                        IntPtr nResult);
+        IntPtr nResult);
 
     [DllImport(dllName: "user32.dll")]
     private static extern bool EnumChildWindows(IntPtr hWndParent,
-                                                EnumChildProc lpEnumFunc,
-                                                IntPtr lParam);
+        EnumChildProc lpEnumFunc,
+        IntPtr lParam);
 
     [DllImport(dllName: "user32.dll", EntryPoint = "GetClassNameW", CharSet = CharSet.Unicode)]
     private static extern int GetClassName(IntPtr hWnd,
-                                           StringBuilder lpClassName,
-                                           int nMaxCount);
+        StringBuilder lpClassName,
+        int nMaxCount);
 
     [DllImport(dllName: "user32.dll")]
     private static extern int GetDlgCtrlID(IntPtr hwndCtl);
 
     [DllImport(dllName: "user32.dll")]
     private static extern IntPtr GetDlgItem(IntPtr hDlg,
-                                            int nIDDlgItem);
+        int nIDDlgItem);
 
     [DllImport(dllName: "user32.dll", EntryPoint = "SetWindowTextW", CharSet = CharSet.Unicode)]
     private static extern bool SetWindowText(IntPtr hWnd,
-                                             string lpString);
+        string lpString);
 
     /// <summary>
     ///     Enables MessageBoxManager functionality
@@ -152,7 +152,8 @@ public class MessageBoxManager
             throw new NotSupportedException(message: "One hook per thread allowed.");
         }
 
-        hHook = SetWindowsHookEx(idHook: WH_CALLWNDPROCRET, lpfn: hookProc, hInstance: IntPtr.Zero, threadId: AppDomain.GetCurrentThreadId());
+        hHook = SetWindowsHookEx(idHook: WH_CALLWNDPROCRET, lpfn: hookProc, hInstance: IntPtr.Zero,
+            threadId: AppDomain.GetCurrentThreadId());
     }
 
     /// <summary>
@@ -171,8 +172,8 @@ public class MessageBoxManager
     }
 
     private static IntPtr MessageBoxHookProc(int nCode,
-                                             IntPtr wParam,
-                                             IntPtr lParam)
+        IntPtr wParam,
+        IntPtr lParam)
     {
         if (nCode < 0)
         {
@@ -206,7 +207,7 @@ public class MessageBoxManager
     }
 
     private static bool MessageBoxEnumProc(IntPtr hWnd,
-                                           IntPtr lParam)
+        IntPtr lParam)
     {
         StringBuilder className = new(capacity: 10);
         GetClassName(hWnd: hWnd, lpClassName: className, nMaxCount: className.Capacity);
@@ -245,11 +246,11 @@ public class MessageBoxManager
     }
 
     private delegate IntPtr HookProc(int nCode,
-                                     IntPtr wParam,
-                                     IntPtr lParam);
+        IntPtr wParam,
+        IntPtr lParam);
 
     private delegate bool EnumChildProc(IntPtr hWnd,
-                                        IntPtr lParam);
+        IntPtr lParam);
 
 
     [StructLayout(layoutKind: LayoutKind.Sequential)]

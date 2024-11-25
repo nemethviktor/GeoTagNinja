@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.DialogAndMessageBoxes;
 using static System.Environment;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 
@@ -60,16 +59,10 @@ internal static class HelperFileSystemOperators
                 HelperVariables.AppIsClosingAndWriteFileQuestionHasBeenAsked = true;
             }
 
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                    controlName: "mbx_Helper_QuestionFileQIsNotEmpty",
-                    fakeControlType: FakeControlTypes.MessageBox),
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption
-                                .Question.ToString(), fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.YesNoCancel,
-                icon: MessageBoxIcon.Question);
-            DialogResult dialogResult = customMessageBox.ShowDialog();
+            DialogResult dialogResult = HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBoxWithResult(
+                controlName: "mbx_Helper_QuestionFileQIsNotEmpty", captionType: MessageBoxCaption.Question,
+                buttons: MessageBoxButtons.YesNoCancel);
+
             if (dialogResult == DialogResult.Yes)
             {
                 while (HelperGenericFileLocking.FileListBeingUpdated || HelperGenericFileLocking.FilesAreBeingSaved)

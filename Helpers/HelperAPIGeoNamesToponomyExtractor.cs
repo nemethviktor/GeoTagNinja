@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using geoTagNinja;
-using GeoTagNinja.View.DialogAndMessageBoxes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -30,18 +29,10 @@ internal static class HelperAPIGeoNamesToponomyExtractor
             }
             catch (Exception ex)
             {
-                CustomMessageBox customMessageBox = new(
-                    text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                              controlName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB",
-                              fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox) +
-                          ex.Message,
-                    caption: HelperControlAndMessageBoxHandling
-                       .ReturnControlText(
-                            controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error.ToString(),
-                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-                    buttons: MessageBoxButtons.OK,
-                    icon: MessageBoxIcon.Error);
-                customMessageBox.ShowDialog();
+                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                    controlName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB",
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
+                    buttons: MessageBoxButtons.OK);
             }
         }
 
@@ -63,18 +54,10 @@ internal static class HelperAPIGeoNamesToponomyExtractor
         if (responseToponomy.Content != null && responseToponomy.Content.Contains(value: "the hourly limit of "))
         {
             HelperVariables.OperationAPIReturnedOKResponse = false;
-            CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                          controlName: "mbx_Helper_WarningGeoNamesAPIResponse",
-                          fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox) +
-                      responseToponomy.Content,
-                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Warning.ToString(),
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Warning);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_Helper_WarningGeoNamesAPIResponse",
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
+                buttons: MessageBoxButtons.OK);
         }
         else if (responseToponomy.StatusCode.ToString() == "OK")
         {
@@ -86,18 +69,10 @@ internal static class HelperAPIGeoNamesToponomyExtractor
         else
         {
             HelperVariables.OperationAPIReturnedOKResponse = false;
-            CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                          controlName: "mbx_Helper_WarningGeoNamesAPIResponse",
-                          fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox) +
-                      responseToponomy.StatusCode,
-                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Warning.ToString(),
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Warning);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_Helper_WarningGeoNamesAPIResponse",
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
+                buttons: MessageBoxButtons.OK);
         }
 
         return returnVal;

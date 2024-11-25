@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Windows.Forms;
-using GeoTagNinja.View.DialogAndMessageBoxes;
 
 namespace GeoTagNinja.Helpers;
 
@@ -39,17 +38,9 @@ internal static class HelperDataSettingsExport
         KeepSQLiteTables(tablesToKeep: settingsTablesToBeKeptList, exportFilePath: exportFilePath);
 
         // finally
-        CustomMessageBox customMessageBox = new(
-            text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                controlName: "mbx_GenericDone",
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-            caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                               .Information.ToString(),
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-            buttons: MessageBoxButtons.OK,
-            icon: MessageBoxIcon.Information);
-        customMessageBox.ShowDialog();
+        HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(controlName: "mbx_GenericDone",
+            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information,
+            buttons: MessageBoxButtons.OK);
         return;
 
         // ReSharper disable once InconsistentNaming

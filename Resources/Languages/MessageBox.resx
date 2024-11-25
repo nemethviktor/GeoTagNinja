@@ -270,11 +270,11 @@ Data will be discarded if you click No</value>
     <value>Favourite saved OK</value>
     <comment>Location: Favourites</comment>
   </data>
-  <data name="mbx_FrmMainApp_InfoCahcedDataRemoved" xml:space="preserve">
+  <data name="mbx_FrmMainApp_InfoCachedDataRemoved" xml:space="preserve">
     <value>If there was any, cached data for selected items has been removed.</value>
     <comment>Shows when user requests to remove cached data from a file that had some.</comment>
   </data>
-  <data name="mbx_FrmMainApp_InfoCahcedDataNotRemoved" xml:space="preserve">
+  <data name="mbx_FrmMainApp_InfoCachedDataNotRemoved" xml:space="preserve">
     <value>No data has been removed. Either you didn't select valid items or the ones you picked didn't have cached data.</value>
     <comment>Shows when user requests to remove cached data from a file that had none.</comment>
   </data>

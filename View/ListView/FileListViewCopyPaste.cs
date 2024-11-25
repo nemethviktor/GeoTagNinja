@@ -2,9 +2,10 @@
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.DialogAndMessageBoxes;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.Model.SourcesAndAttributes;
+using HelperControlAndMessageBoxCustomMessageBoxManager =
+    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 
 namespace GeoTagNinja.View.ListView;
 
@@ -39,44 +40,37 @@ internal static class FileListViewCopyPaste
                                                      .Stage3ReadyToWrite))
                     {
                         FrmMainApp.CopyPoolDict.Add(key: attribute,
-                                                    value: new Tuple<string, bool>(
-                                                        item1: dirElemFileToCopyFrom
-                                                           .GetAttributeValueString(
-                                                                attribute: attribute,
-                                                                version: DirectoryElement.AttributeVersion
-                                                                   .Stage3ReadyToWrite,
-                                                                nowSavingExif: false),
-                                                        item2: true));
+                            value: new Tuple<string, bool>(
+                                item1: dirElemFileToCopyFrom
+                                   .GetAttributeValueString(
+                                        attribute: attribute,
+                                        version: DirectoryElement.AttributeVersion
+                                                                 .Stage3ReadyToWrite,
+                                        nowSavingExif: false),
+                                item2: true));
                     }
                     else if (dirElemFileToCopyFrom.HasSpecificAttributeWithVersion(
                                  attribute: attribute,
                                  version: DirectoryElement.AttributeVersion.Original))
                     {
                         FrmMainApp.CopyPoolDict.Add(key: attribute,
-                                                    value: new Tuple<string, bool>(
-                                                        item1: dirElemFileToCopyFrom
-                                                           .GetAttributeValueString(
-                                                                attribute: attribute,
-                                                                version: DirectoryElement.AttributeVersion
-                                                                   .Original,
-                                                                nowSavingExif: false),
-                                                        item2: false));
+                            value: new Tuple<string, bool>(
+                                item1: dirElemFileToCopyFrom
+                                   .GetAttributeValueString(
+                                        attribute: attribute,
+                                        version: DirectoryElement.AttributeVersion
+                                                                 .Original,
+                                        nowSavingExif: false),
+                                item2: false));
                     }
                 }
             }
         }
         else
         {
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                    controlName: "mbx_Helper_WarningTooManyFilesSelected",
-                    fakeControlType: FakeControlTypes.MessageBox),
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption
-                                .Warning.ToString(), fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Warning);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_Helper_WarningTooManyFilesSelected", captionType: MessageBoxCaption.Warning,
+                buttons: MessageBoxButtons.OK);
         }
     }
 
@@ -98,16 +92,9 @@ internal static class FileListViewCopyPaste
         }
         else
         {
-            CustomMessageBox customMessageBox = new(
-                text: ReturnControlText(
-                    controlName: "mbx_Helper_WarningNothingToPaste",
-                    fakeControlType: FakeControlTypes.MessageBox),
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption
-                                .Warning.ToString(), fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Warning);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_Helper_WarningNothingToPaste", captionType: MessageBoxCaption.Warning,
+                buttons: MessageBoxButtons.OK);
         }
     }
 }

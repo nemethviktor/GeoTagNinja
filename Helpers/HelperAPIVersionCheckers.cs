@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using geoTagNinja;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.DialogAndMessageBoxes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -116,18 +115,10 @@ internal static class HelperAPIVersionCheckers
         else
         {
             HelperVariables.OperationAPIReturnedOKResponse = false;
-            CustomMessageBox customMessageBox = new(
-                text: HelperControlAndMessageBoxHandling.ReturnControlText(
-                          controlName: "mbx_Helper_WarningGTNVerAPIResponse",
-                          fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox) +
-                      response_GTNVersionQuery.StatusCode,
-                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Warning.ToString(),
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Warning);
-            customMessageBox.ShowDialog();
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_Helper_WarningGTNVerAPIResponse",
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
+                buttons: MessageBoxButtons.OK, extraMessage: response_GTNVersionQuery.StatusCode.ToString());
         }
 
         return lastGTNBuildOnline;

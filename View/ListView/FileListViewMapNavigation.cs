@@ -37,6 +37,8 @@ internal static class FileListViewMapNavigation
             }
         }
 
+        return;
+
         [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
         (double, double) getCoordinateValues(DirectoryElement directoryElement)
         {
