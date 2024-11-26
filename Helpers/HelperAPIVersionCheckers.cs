@@ -172,20 +172,22 @@ internal static class HelperAPIVersionCheckers
         checkUpdateVal = 1;
     #endif
 
+        // this needs to run each time the app runs because it's part of the info in the About box.
+        // get current exiftool version
+        string exiftoolCmd = "-ver";
+        await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
+            frmMainAppInstance: null,
+            initiator:
+            HelperGenericAncillaryListsArrays.ExifToolInititators
+                                             .GenericCheckForNewVersions);
+
         if (nowUnixTime > lastCheckUnixTime + checkUpdateVal ||
             strLastOnlineVersionCheck == null)
         {
             FrmMainApp.Log.Trace(message: "Checking for new versions.");
+            // get the newest exiftool version -- do this here at the end so it doesn't hold up the process
+            /////////////////
 
-            // get current & newest exiftool version -- do this here at the end so it doesn't hold up the process
-            ///////////////
-
-            string exiftoolCmd = "-ver";
-            await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
-                frmMainAppInstance: null,
-                initiator:
-                HelperGenericAncillaryListsArrays.ExifToolInititators
-                                                 .GenericCheckForNewVersions);
             int CPUBitness = Environment.Is64BitOperatingSystem ? 64 : 32;
             HelperVariables.CurrentExifToolVersionCloud =
                 API_ExifGetExifToolVersionFromWeb();

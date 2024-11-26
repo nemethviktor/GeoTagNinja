@@ -5,6 +5,7 @@
 	- I've moved the whole logic of languages being held in CSV files to RESx files.
 	- Added ExifTool version number to the info within the `About` Form/Box.
 	- Added a Flat Mode ref Ticket #123 - this is a little experimental atm but should work.
+	- App version Bump 1.16
 - BUGS & FIXES:
 	- I've moved the startup methods to be async/awaited. Hopefully this will hide random occurrences of stuff like "tmi_Help". 
 	- Also revamped how column orders are handled internally.
