@@ -151,6 +151,15 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Only display API data filtered to &quot;Populated places&quot; (fcode=PPL) [not recommended].
+        /// </summary>
+        public static string ckb_PopulatedPlacesOnly {
+            get {
+                return ResourceManager.GetString("ckb_PopulatedPlacesOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Process the Image File itself.
         /// </summary>
         public static string ckb_ProcessOriginalFile {
@@ -201,15 +210,6 @@ namespace GeoTagNinja.Resources.Languages {
         public static string ckb_ResetMapToZero {
             get {
                 return ResourceManager.GetString("ckb_ResetMapToZero", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Show Password.
-        /// </summary>
-        public static string ckb_ShowPassword {
-            get {
-                return ResourceManager.GetString("ckb_ShowPassword", resourceCulture);
             }
         }
         

@@ -628,6 +628,15 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Password.
+        /// </summary>
+        public static string Generic_ShowPassword {
+            get {
+                return ResourceManager.GetString("Generic_ShowPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to State/Province.
         /// </summary>
         public static string Generic_State {

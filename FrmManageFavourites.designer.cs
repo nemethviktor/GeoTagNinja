@@ -200,6 +200,7 @@
             this.Controls.Add(this.lbl_Favourites);
             this.Controls.Add(this.btn_Close);
             this.Controls.Add(this.cbx_Favourites);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "FrmManageFavourites";
             this.ShowInTaskbar = false;
             this.Load += new System.EventHandler(this.FrmManageFavourites_Load);

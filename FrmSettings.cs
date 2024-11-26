@@ -226,7 +226,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void FrmSettings_Load(object sender,
-        EventArgs e)
+                                  EventArgs e)
     {
         // set basics
         CancelButton = btn_Generic_Cancel;
@@ -372,7 +372,8 @@ public partial class FrmSettings : Form
         LoadCustomRulesDGV();
         LoadCustomCityLogicDGV();
 
-        tbx_ARCGIS_APIKey.UseSystemPasswordChar = !ckb_ShowPassword.Checked;
+        tbx_ARCGIS_APIKey.UseSystemPasswordChar = !ckb_ShowPassword_ARCGIS_APIKey.Checked;
+        tbx_GeoNames_Pwd.UseSystemPasswordChar = !ckb_ShowPassword_GeoNames.Checked;
     }
 
     /// <summary>
@@ -563,8 +564,7 @@ public partial class FrmSettings : Form
     ///     checkbox changes.
     /// </summary>
     /// <returns>KVP list of country codes and countries</returns>
-    private static Dictionary<string, string> refreshClh_CountryCodeOptions(
-        bool ckb_IncludePredeterminedCountries)
+    private static Dictionary<string, string> refreshClh_CountryCodeOptions(bool ckb_IncludePredeterminedCountries)
     {
         Dictionary<string, string> clh_CountryCodeOptions = new();
         // e.g. "GBR//United Kingdom of...."
@@ -610,7 +610,7 @@ public partial class FrmSettings : Form
     ///     warning message.
     /// </remarks>
     private void dgv_CustomRules_RowValidating(object sender,
-        DataGridViewCellCancelEventArgs e)
+                                               DataGridViewCellCancelEventArgs e)
     {
         if (e.ColumnIndex ==
             dgv_CustomRules.Columns[columnName: "clh_TargetPointOutcome"]
@@ -643,7 +643,7 @@ public partial class FrmSettings : Form
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void dgv_CustomRules_DataError(object sender,
-        DataGridViewDataErrorEventArgs e)
+                                           DataGridViewDataErrorEventArgs e)
     {
         if (e.Exception != null &&
             e.Context == DataGridViewDataErrorContexts.Commit)
@@ -666,7 +666,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void btn_Generic_Cancel_Click(object sender,
-        EventArgs e)
+                                          EventArgs e)
     {
         HelperVariables.DtHelperDataApplicationSettingsPreQueue.Clear();
         Hide();
@@ -684,7 +684,7 @@ public partial class FrmSettings : Form
     ///     it's too much hassle to code and would need a pretty major rewrite.
     /// </remarks>
     private void btn_Generic_OK_Click(object sender,
-        EventArgs e)
+                                      EventArgs e)
     {
         if (!_importHasBeenProcessed)
         {
@@ -810,7 +810,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void Pbx_Browse_Startup_Folder_Click(object sender,
-        EventArgs e)
+                                                 EventArgs e)
     {
         if (fbd_StartupFolder.ShowDialog() == DialogResult.OK)
         {
@@ -826,7 +826,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">SettingTabPage name</param>
     /// <param name="e">Unused</param>
     private void Lbx_fileExtensions_SelectedIndexChanged(object sender,
-        EventArgs e)
+                                                         EventArgs e)
     {
         _nowLoadingSettingsData = true;
         // try to load subcontrol values here
@@ -931,7 +931,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tpg_FileOptions_Enter(object sender,
-        EventArgs e)
+                                       EventArgs e)
     {
         // at this point lbx_fileExtensions.SelectedIndex == 0;
         if (lbx_fileExtensions.SelectedItems.Count == 0)
@@ -947,7 +947,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void Any_rbt_CheckedChanged(object sender,
-        EventArgs e)
+                                        EventArgs e)
     {
         if (!_nowLoadingSettingsData)
         {
@@ -998,7 +998,9 @@ public partial class FrmSettings : Form
     /// <param name="settingTabPage"></param>
     /// <param name="settingId"></param>
     /// <param name="settingValue"></param>
-    private static void DeleteAndWriteToDtPreQueue(string settingTabPage, string settingId, string settingValue)
+    private static void DeleteAndWriteToDtPreQueue(string settingTabPage,
+                                                   string settingId,
+                                                   string settingValue)
     {
         HelperVariables.DtHelperDataApplicationSettingsPreQueue.AcceptChanges();
         foreach (DataRow row in HelperVariables.DtHelperDataApplicationSettingsPreQueue.Rows)
@@ -1027,7 +1029,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">The Control in question</param>
     /// <param name="e">Unused</param>
     private void Any_ckb_CheckStateChanged(object sender,
-        EventArgs e)
+                                           EventArgs e)
     {
         if (!_nowLoadingSettingsData)
         {
@@ -1094,7 +1096,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">The Control in question</param>
     /// <param name="e">Unused</param>
     private void Any_tbx_TextChanged(object sender,
-        EventArgs e)
+                                     EventArgs e)
     {
         if (!_nowLoadingSettingsData)
         {
@@ -1114,7 +1116,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void Any_cbx_TextChanged(object sender,
-        EventArgs e)
+                                     EventArgs e)
     {
         if (!_nowLoadingSettingsData)
         {
@@ -1155,7 +1157,7 @@ public partial class FrmSettings : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void Any_nud_ValueChanged(object sender,
-        EventArgs e)
+                                      EventArgs e)
     {
         NumericUpDown nud = (NumericUpDown)sender;
         if (!_nowLoadingSettingsData)
@@ -1187,7 +1189,7 @@ public partial class FrmSettings : Form
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void Any_nud_Enter(object sender,
-        EventArgs e)
+                               EventArgs e)
     {
         AcceptButton = null;
     }
@@ -1198,7 +1200,7 @@ public partial class FrmSettings : Form
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void Any_nud_Leave(object sender,
-        EventArgs e)
+                               EventArgs e)
     {
         AcceptButton = btn_Generic_OK;
     }
@@ -1209,7 +1211,7 @@ public partial class FrmSettings : Form
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void rbx_CustomRulesExplanation_LinkClicked(object sender,
-        LinkClickedEventArgs e)
+                                                        LinkClickedEventArgs e)
     {
         Process.Start(fileName: e.LinkText);
     }
@@ -1225,7 +1227,7 @@ public partial class FrmSettings : Form
     ///     reloads the custom city logic data grid view, and displays a message box with information about the operation.
     /// </remarks>
     private void btn_ResetToDefaults_Click(object sender,
-        EventArgs e)
+                                           EventArgs e)
     {
         HelperDataCustomCityAllocationRules
            .DataWriteSQLiteCustomCityAllocationLogicDefaults(resetToDefaults: true);
@@ -1242,9 +1244,16 @@ public partial class FrmSettings : Form
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void ckb_ShowPassword_CheckedChanged(object sender, EventArgs e)
+    private void ckb_ShowPassword_ARCGIS_APIKey_CheckedChanged(object sender,
+                                                               EventArgs e)
     {
-        tbx_ARCGIS_APIKey.UseSystemPasswordChar = !ckb_ShowPassword.Checked;
+        tbx_ARCGIS_APIKey.UseSystemPasswordChar = !ckb_ShowPassword_ARCGIS_APIKey.Checked;
+    }
+
+    private void ckb_ShowPassword_GeoNames_CheckedChanged(object sender,
+                                                          EventArgs e)
+    {
+        tbx_GeoNames_Pwd.UseSystemPasswordChar = !ckb_ShowPassword_GeoNames.Checked;
     }
 
 #endregion
@@ -1265,7 +1274,7 @@ public partial class FrmSettings : Form
     ///     the error message.
     /// </remarks>
     private void btn_ExportSettings_Click(object sender,
-        EventArgs e)
+                                          EventArgs e)
     {
         Dictionary<string, string> checkboxDictionary = GetCheckboxDictionary();
 
@@ -1333,7 +1342,7 @@ public partial class FrmSettings : Form
     ///     from the chosen database file.
     /// </remarks>
     private void btn_ImportSettings_Click(object sender,
-        EventArgs e)
+                                          EventArgs e)
     {
         string? databaseFileToImport = GetDatabaseFileToImport();
         if (databaseFileToImport is not null)

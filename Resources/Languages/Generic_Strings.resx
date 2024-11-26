@@ -307,4 +307,7 @@
   <data name="Generic_XMLSubjects" xml:space="preserve">
     <value>XML Subjects</value>
   </data>
+  <data name="Generic_ShowPassword" xml:space="preserve">
+    <value>Show Password</value>
+  </data>
 </root>

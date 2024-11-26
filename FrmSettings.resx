@@ -138,6 +138,9 @@
   <data name="ckb_UseDarkMode.TabIndex" type="System.Int32, mscorlib">
     <value>56</value>
   </data>
+  <data name="ckb_UseDarkMode.Text" xml:space="preserve">
+    <value>ckb_UseDarkMode</value>
+  </data>
   <data name="&gt;&gt;ckb_UseDarkMode.Name" xml:space="preserve">
     <value>ckb_UseDarkMode</value>
   </data>
@@ -161,6 +164,9 @@
   </data>
   <data name="rbt_MapColourModeDarkPale.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
+  </data>
+  <data name="rbt_MapColourModeDarkPale.Text" xml:space="preserve">
+    <value>rbt_MapColourModeDarkPale</value>
   </data>
   <data name="&gt;&gt;rbt_MapColourModeDarkPale.Name" xml:space="preserve">
     <value>rbt_MapColourModeDarkPale</value>
@@ -186,6 +192,9 @@
   <data name="rbt_MapColourModeNormal.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
+  <data name="rbt_MapColourModeNormal.Text" xml:space="preserve">
+    <value>rbt_MapColourModeNormal</value>
+  </data>
   <data name="&gt;&gt;rbt_MapColourModeNormal.Name" xml:space="preserve">
     <value>rbt_MapColourModeNormal</value>
   </data>
@@ -210,6 +219,9 @@
   <data name="rbt_MapColourModeDarkInverse.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
+  <data name="rbt_MapColourModeDarkInverse.Text" xml:space="preserve">
+    <value>rbt_MapColourModeDarkInverse</value>
+  </data>
   <data name="&gt;&gt;rbt_MapColourModeDarkInverse.Name" xml:space="preserve">
     <value>rbt_MapColourModeDarkInverse</value>
   </data>
@@ -230,6 +242,9 @@
   </data>
   <data name="gbx_MapColourMode.TabIndex" type="System.Int32, mscorlib">
     <value>55</value>
+  </data>
+  <data name="gbx_MapColourMode.Text" xml:space="preserve">
+    <value>gbx_MapColourMode</value>
   </data>
   <data name="&gt;&gt;gbx_MapColourMode.Name" xml:space="preserve">
     <value>gbx_MapColourMode</value>
@@ -254,6 +269,9 @@
   </data>
   <data name="ckb_UpdateCheckPreRelease.TabIndex" type="System.Int32, mscorlib">
     <value>53</value>
+  </data>
+  <data name="ckb_UpdateCheckPreRelease.Text" xml:space="preserve">
+    <value>ckb_UpdateCheckPreRelease</value>
   </data>
   <data name="&gt;&gt;ckb_UpdateCheckPreRelease.Name" xml:space="preserve">
     <value>ckb_UpdateCheckPreRelease</value>
@@ -281,6 +299,9 @@
   </data>
   <data name="lbl_Metres_Abbr.TabIndex" type="System.Int32, mscorlib">
     <value>52</value>
+  </data>
+  <data name="lbl_Metres_Abbr.Text" xml:space="preserve">
+    <value>lbl_Metres_Abbr</value>
   </data>
   <data name="lbl_Metres_Abbr.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -312,6 +333,9 @@
   <data name="lbl_Feet_Abbr.TabIndex" type="System.Int32, mscorlib">
     <value>51</value>
   </data>
+  <data name="lbl_Feet_Abbr.Text" xml:space="preserve">
+    <value>lbl_Feet_Abbr</value>
+  </data>
   <data name="lbl_Feet_Abbr.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
@@ -339,6 +363,9 @@
   <data name="ckb_UseImperialNotMetric.TabIndex" type="System.Int32, mscorlib">
     <value>19</value>
   </data>
+  <data name="ckb_UseImperialNotMetric.Text" xml:space="preserve">
+    <value>ckb_UseImperialNotMetric</value>
+  </data>
   <data name="&gt;&gt;ckb_UseImperialNotMetric.Name" xml:space="preserve">
     <value>ckb_UseImperialNotMetric</value>
   </data>
@@ -363,6 +390,9 @@
   <data name="ckb_RemoveGeoDataRemovesTimeOffset.TabIndex" type="System.Int32, mscorlib">
     <value>18</value>
   </data>
+  <data name="ckb_RemoveGeoDataRemovesTimeOffset.Text" xml:space="preserve">
+    <value>ckb_RemoveGeoDataRemovesTimeOffset</value>
+  </data>
   <data name="&gt;&gt;ckb_RemoveGeoDataRemovesTimeOffset.Name" xml:space="preserve">
     <value>ckb_RemoveGeoDataRemovesTimeOffset</value>
   </data>
@@ -386,6 +416,9 @@
   </data>
   <data name="ckb_ResetMapToZero.TabIndex" type="System.Int32, mscorlib">
     <value>17</value>
+  </data>
+  <data name="ckb_ResetMapToZero.Text" xml:space="preserve">
+    <value>ckb_ResetMapToZero</value>
   </data>
   <data name="&gt;&gt;ckb_ResetMapToZero.Name" xml:space="preserve">
     <value>ckb_ResetMapToZero</value>
@@ -434,6 +467,9 @@
   </data>
   <data name="lbl_Language.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
+  </data>
+  <data name="lbl_Language.Text" xml:space="preserve">
+    <value>lbl_Language</value>
   </data>
   <data name="&gt;&gt;lbl_Language.Name" xml:space="preserve">
     <value>lbl_Language</value>
@@ -495,10 +531,13 @@
     <value>2, 0, 2, 0</value>
   </data>
   <data name="lbl_Startup_Folder.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 13</value>
+    <value>92, 13</value>
   </data>
   <data name="lbl_Startup_Folder.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
+  </data>
+  <data name="lbl_Startup_Folder.Text" xml:space="preserve">
+    <value>lbl_Startup_Folder</value>
   </data>
   <data name="&gt;&gt;lbl_Startup_Folder.Name" xml:space="preserve">
     <value>lbl_Startup_Folder</value>
@@ -524,6 +563,9 @@
   <data name="tbx_Startup_Folder.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
   </data>
+  <data name="tbx_Startup_Folder.Text" xml:space="preserve">
+    <value>tbx_Startup_Folder</value>
+  </data>
   <data name="&gt;&gt;tbx_Startup_Folder.Name" xml:space="preserve">
     <value>tbx_Startup_Folder</value>
   </data>
@@ -544,6 +586,9 @@
   </data>
   <data name="gbx_AppSettings.TabIndex" type="System.Int32, mscorlib">
     <value>32</value>
+  </data>
+  <data name="gbx_AppSettings.Text" xml:space="preserve">
+    <value>gbx_AppSettings</value>
   </data>
   <data name="&gt;&gt;gbx_AppSettings.Name" xml:space="preserve">
     <value>gbx_AppSettings</value>
@@ -575,6 +620,9 @@
   <data name="tpg_Application.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
+  <data name="tpg_Application.Text" xml:space="preserve">
+    <value>tpg_Application</value>
+  </data>
   <data name="&gt;&gt;tpg_Application.Name" xml:space="preserve">
     <value>tpg_Application</value>
   </data>
@@ -587,29 +635,62 @@
   <data name="&gt;&gt;tpg_Application.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="ckb_ShowPassword.AutoSize" type="System.Boolean, mscorlib">
+  <data name="ckb_ShowPassword_GeoNames.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="ckb_ShowPassword.Location" type="System.Drawing.Point, System.Drawing">
-    <value>682, 69</value>
+  <data name="ckb_ShowPassword_GeoNames.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="ckb_ShowPassword.Size" type="System.Drawing.Size, System.Drawing">
-    <value>123, 17</value>
+  <data name="ckb_ShowPassword_GeoNames.Location" type="System.Drawing.Point, System.Drawing">
+    <value>373, 181</value>
   </data>
-  <data name="ckb_ShowPassword.TabIndex" type="System.Int32, mscorlib">
-    <value>51</value>
+  <data name="ckb_ShowPassword_GeoNames.Size" type="System.Drawing.Size, System.Drawing">
+    <value>182, 17</value>
   </data>
-  <data name="&gt;&gt;ckb_ShowPassword.Name" xml:space="preserve">
-    <value>ckb_ShowPassword</value>
+  <data name="ckb_ShowPassword_GeoNames.TabIndex" type="System.Int32, mscorlib">
+    <value>52</value>
   </data>
-  <data name="&gt;&gt;ckb_ShowPassword.Type" xml:space="preserve">
+  <data name="ckb_ShowPassword_GeoNames.Text" xml:space="preserve">
+    <value>ckb_ShowPassword_GeoNames</value>
+  </data>
+  <data name="&gt;&gt;ckb_ShowPassword_GeoNames.Name" xml:space="preserve">
+    <value>ckb_ShowPassword_GeoNames</value>
+  </data>
+  <data name="&gt;&gt;ckb_ShowPassword_GeoNames.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;ckb_ShowPassword.Parent" xml:space="preserve">
+  <data name="&gt;&gt;ckb_ShowPassword_GeoNames.Parent" xml:space="preserve">
     <value>gbx_GeoNamesSettings</value>
   </data>
-  <data name="&gt;&gt;ckb_ShowPassword.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;ckb_ShowPassword_GeoNames.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="ckb_ShowPassword_ARCGIS_APIKey.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_ShowPassword_ARCGIS_APIKey.Location" type="System.Drawing.Point, System.Drawing">
+    <value>682, 69</value>
+  </data>
+  <data name="ckb_ShowPassword_ARCGIS_APIKey.Size" type="System.Drawing.Size, System.Drawing">
+    <value>210, 17</value>
+  </data>
+  <data name="ckb_ShowPassword_ARCGIS_APIKey.TabIndex" type="System.Int32, mscorlib">
+    <value>51</value>
+  </data>
+  <data name="ckb_ShowPassword_ARCGIS_APIKey.Text" xml:space="preserve">
+    <value>ckb_ShowPassword_ARCGIS_APIKey</value>
+  </data>
+  <data name="&gt;&gt;ckb_ShowPassword_ARCGIS_APIKey.Name" xml:space="preserve">
+    <value>ckb_ShowPassword_ARCGIS_APIKey</value>
+  </data>
+  <data name="&gt;&gt;ckb_ShowPassword_ARCGIS_APIKey.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_ShowPassword_ARCGIS_APIKey.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;ckb_ShowPassword_ARCGIS_APIKey.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="lbl_Generic_Miles.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -621,10 +702,13 @@
     <value>2, 0, 2, 0</value>
   </data>
   <data name="lbl_Generic_Miles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>47, 13</value>
+    <value>90, 13</value>
   </data>
   <data name="lbl_Generic_Miles.TabIndex" type="System.Int32, mscorlib">
     <value>50</value>
+  </data>
+  <data name="lbl_Generic_Miles.Text" xml:space="preserve">
+    <value>lbl_Generic_Miles</value>
   </data>
   <data name="&gt;&gt;lbl_Generic_Miles.Name" xml:space="preserve">
     <value>lbl_Generic_Miles</value>
@@ -636,7 +720,7 @@
     <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;lbl_Generic_Miles.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="ckb_PopulatedPlacesOnly.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -650,6 +734,9 @@
   <data name="ckb_PopulatedPlacesOnly.TabIndex" type="System.Int32, mscorlib">
     <value>49</value>
   </data>
+  <data name="ckb_PopulatedPlacesOnly.Text" xml:space="preserve">
+    <value>ckb_PopulatedPlacesOnly</value>
+  </data>
   <data name="&gt;&gt;ckb_PopulatedPlacesOnly.Name" xml:space="preserve">
     <value>ckb_PopulatedPlacesOnly</value>
   </data>
@@ -660,7 +747,7 @@
     <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;ckb_PopulatedPlacesOnly.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="cbx_TryUseGeoNamesLanguage.Location" type="System.Drawing.Point, System.Drawing">
     <value>34, 67</value>
@@ -695,6 +782,9 @@
   <data name="rbt_TryUseGeoNamesLanguage.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
+  <data name="rbt_TryUseGeoNamesLanguage.Text" xml:space="preserve">
+    <value>rbt_TryUseGeoNamesLanguage</value>
+  </data>
   <data name="&gt;&gt;rbt_TryUseGeoNamesLanguage.Name" xml:space="preserve">
     <value>rbt_TryUseGeoNamesLanguage</value>
   </data>
@@ -719,6 +809,9 @@
   <data name="rbt_UseGeoNamesLocalLanguage.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
+  <data name="rbt_UseGeoNamesLocalLanguage.Text" xml:space="preserve">
+    <value>rbt_UseGeoNamesLocalLanguage</value>
+  </data>
   <data name="&gt;&gt;rbt_UseGeoNamesLocalLanguage.Name" xml:space="preserve">
     <value>rbt_UseGeoNamesLocalLanguage</value>
   </data>
@@ -740,6 +833,9 @@
   <data name="gbx_GeoNamesLanguageSettings.TabIndex" type="System.Int32, mscorlib">
     <value>48</value>
   </data>
+  <data name="gbx_GeoNamesLanguageSettings.Text" xml:space="preserve">
+    <value>gbx_GeoNamesLanguageSettings</value>
+  </data>
   <data name="&gt;&gt;gbx_GeoNamesLanguageSettings.Name" xml:space="preserve">
     <value>gbx_GeoNamesLanguageSettings</value>
   </data>
@@ -750,7 +846,7 @@
     <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;gbx_GeoNamesLanguageSettings.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="ckb_ReplaceBlankToponyms.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -764,6 +860,9 @@
   <data name="ckb_ReplaceBlankToponyms.TabIndex" type="System.Int32, mscorlib">
     <value>45</value>
   </data>
+  <data name="ckb_ReplaceBlankToponyms.Text" xml:space="preserve">
+    <value>ckb_ReplaceBlankToponyms</value>
+  </data>
   <data name="&gt;&gt;ckb_ReplaceBlankToponyms.Name" xml:space="preserve">
     <value>ckb_ReplaceBlankToponyms</value>
   </data>
@@ -774,7 +873,7 @@
     <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;ckb_ReplaceBlankToponyms.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="tbx_ReplaceBlankToponyms.Location" type="System.Drawing.Point, System.Drawing">
     <value>408, 371</value>
@@ -798,7 +897,7 @@
     <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;tbx_ReplaceBlankToponyms.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="lbl_ChoiceRadius.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -815,6 +914,9 @@
   <data name="lbl_ChoiceRadius.TabIndex" type="System.Int32, mscorlib">
     <value>43</value>
   </data>
+  <data name="lbl_ChoiceRadius.Text" xml:space="preserve">
+    <value>lbl_ChoiceRadius</value>
+  </data>
   <data name="&gt;&gt;lbl_ChoiceRadius.Name" xml:space="preserve">
     <value>lbl_ChoiceRadius</value>
   </data>
@@ -825,7 +927,7 @@
     <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;lbl_ChoiceRadius.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="lbl_ChoiceOfferCount.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -842,6 +944,9 @@
   <data name="lbl_ChoiceOfferCount.TabIndex" type="System.Int32, mscorlib">
     <value>42</value>
   </data>
+  <data name="lbl_ChoiceOfferCount.Text" xml:space="preserve">
+    <value>lbl_ChoiceOfferCount</value>
+  </data>
   <data name="&gt;&gt;lbl_ChoiceOfferCount.Name" xml:space="preserve">
     <value>lbl_ChoiceOfferCount</value>
   </data>
@@ -852,7 +957,7 @@
     <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;lbl_ChoiceOfferCount.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="nud_ChoiceRadius.Location" type="System.Drawing.Point, System.Drawing">
     <value>410, 340</value>
@@ -873,7 +978,7 @@
     <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;nud_ChoiceRadius.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="nud_ChoiceOfferCount.Location" type="System.Drawing.Point, System.Drawing">
     <value>207, 338</value>
@@ -894,7 +999,7 @@
     <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;nud_ChoiceOfferCount.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="rbx_Register_ArcGIS.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 19</value>
@@ -904,6 +1009,9 @@
   </data>
   <data name="rbx_Register_ArcGIS.TabIndex" type="System.Int32, mscorlib">
     <value>38</value>
+  </data>
+  <data name="rbx_Register_ArcGIS.Text" xml:space="preserve">
+    <value>rbx_Register_ArcGIS</value>
   </data>
   <data name="&gt;&gt;rbx_Register_ArcGIS.Name" xml:space="preserve">
     <value>rbx_Register_ArcGIS</value>
@@ -915,7 +1023,7 @@
     <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;rbx_Register_ArcGIS.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="rbx_Register_GeoNames.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 100</value>
@@ -925,6 +1033,9 @@
   </data>
   <data name="rbx_Register_GeoNames.TabIndex" type="System.Int32, mscorlib">
     <value>39</value>
+  </data>
+  <data name="rbx_Register_GeoNames.Text" xml:space="preserve">
+    <value>rbx_Register_GeoNames</value>
   </data>
   <data name="&gt;&gt;rbx_Register_GeoNames.Name" xml:space="preserve">
     <value>rbx_Register_GeoNames</value>
@@ -936,7 +1047,7 @@
     <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;rbx_Register_GeoNames.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>12</value>
   </data>
   <data name="lbl_GeoNames_Pwd.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -953,6 +1064,9 @@
   <data name="lbl_GeoNames_Pwd.TabIndex" type="System.Int32, mscorlib">
     <value>35</value>
   </data>
+  <data name="lbl_GeoNames_Pwd.Text" xml:space="preserve">
+    <value>lbl_GeoNames_Pwd</value>
+  </data>
   <data name="&gt;&gt;lbl_GeoNames_Pwd.Name" xml:space="preserve">
     <value>lbl_GeoNames_Pwd</value>
   </data>
@@ -963,7 +1077,7 @@
     <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;lbl_GeoNames_Pwd.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>13</value>
   </data>
   <data name="lbl_GeoNames_UserName.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -980,6 +1094,9 @@
   <data name="lbl_GeoNames_UserName.TabIndex" type="System.Int32, mscorlib">
     <value>36</value>
   </data>
+  <data name="lbl_GeoNames_UserName.Text" xml:space="preserve">
+    <value>lbl_GeoNames_UserName</value>
+  </data>
   <data name="&gt;&gt;lbl_GeoNames_UserName.Name" xml:space="preserve">
     <value>lbl_GeoNames_UserName</value>
   </data>
@@ -990,7 +1107,7 @@
     <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;lbl_GeoNames_UserName.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>14</value>
   </data>
   <data name="lbl_ARCGIS_APIKey.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1002,7 +1119,7 @@
     <value>2, 0, 2, 0</value>
   </data>
   <data name="lbl_ARCGIS_APIKey.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 13</value>
+    <value>0, 13</value>
   </data>
   <data name="lbl_ARCGIS_APIKey.TabIndex" type="System.Int32, mscorlib">
     <value>37</value>
@@ -1017,16 +1134,13 @@
     <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;lbl_ARCGIS_APIKey.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>15</value>
   </data>
   <data name="tbx_GeoNames_Pwd.Location" type="System.Drawing.Point, System.Drawing">
     <value>186, 178</value>
   </data>
   <data name="tbx_GeoNames_Pwd.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
-  </data>
-  <data name="tbx_GeoNames_Pwd.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
-    <value>*</value>
   </data>
   <data name="tbx_GeoNames_Pwd.Size" type="System.Drawing.Size, System.Drawing">
     <value>155, 20</value>
@@ -1044,7 +1158,7 @@
     <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;tbx_GeoNames_Pwd.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>16</value>
   </data>
   <data name="tbx_GeoNames_UserName.Location" type="System.Drawing.Point, System.Drawing">
     <value>186, 147</value>
@@ -1068,7 +1182,7 @@
     <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;tbx_GeoNames_UserName.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>17</value>
   </data>
   <data name="tbx_ARCGIS_APIKey.Location" type="System.Drawing.Point, System.Drawing">
     <value>128, 66</value>
@@ -1092,7 +1206,7 @@
     <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;tbx_ARCGIS_APIKey.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>18</value>
   </data>
   <data name="gbx_GeoNamesSettings.Location" type="System.Drawing.Point, System.Drawing">
     <value>16, 20</value>
@@ -1102,6 +1216,9 @@
   </data>
   <data name="gbx_GeoNamesSettings.TabIndex" type="System.Int32, mscorlib">
     <value>34</value>
+  </data>
+  <data name="gbx_GeoNamesSettings.Text" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
   </data>
   <data name="&gt;&gt;gbx_GeoNamesSettings.Name" xml:space="preserve">
     <value>gbx_GeoNamesSettings</value>
@@ -1130,6 +1247,9 @@
   <data name="tpg_GeoNames.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
   </data>
+  <data name="tpg_GeoNames.Text" xml:space="preserve">
+    <value>tpg_GeoNames</value>
+  </data>
   <data name="&gt;&gt;tpg_GeoNames.Name" xml:space="preserve">
     <value>tpg_GeoNames</value>
   </data>
@@ -1141,36 +1261,6 @@
   </data>
   <data name="&gt;&gt;tpg_GeoNames.ZOrder" xml:space="preserve">
     <value>1</value>
-  </data>
-  <data name="ckb_ResetFileDateToCreated.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>TopLeft</value>
-  </data>
-  <data name="ckb_ResetFileDateToCreated.Location" type="System.Drawing.Point, System.Drawing">
-    <value>567, 62</value>
-  </data>
-  <data name="ckb_ResetFileDateToCreated.MinimumSize" type="System.Drawing.Size, System.Drawing">
-    <value>100, 20</value>
-  </data>
-  <data name="ckb_ResetFileDateToCreated.Size" type="System.Drawing.Size, System.Drawing">
-    <value>264, 62</value>
-  </data>
-  <data name="ckb_ResetFileDateToCreated.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="ckb_ResetFileDateToCreated.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>TopLeft</value>
-  </data>
-  <data name="&gt;&gt;ckb_ResetFileDateToCreated.Name" xml:space="preserve">
-    <value>ckb_ResetFileDateToCreated</value>
-  </data>
-  <data name="&gt;&gt;ckb_ResetFileDateToCreated.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ckb_ResetFileDateToCreated.Parent" xml:space="preserve">
-    <value>tpg_FileOptions</value>
-  </data>
-  <data name="&gt;&gt;ckb_ResetFileDateToCreated.ZOrder" xml:space="preserve">
-    <value>0</value>
   </data>
   <data name="ckb_ProcessOriginalFile.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>TopLeft</value>
@@ -1187,6 +1277,9 @@
   <data name="ckb_ProcessOriginalFile.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
   </data>
+  <data name="ckb_ProcessOriginalFile.Text" xml:space="preserve">
+    <value>ckb_ProcessOriginalFile</value>
+  </data>
   <data name="ckb_ProcessOriginalFile.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>TopLeft</value>
   </data>
@@ -1200,37 +1293,40 @@
     <value>tpg_FileOptions</value>
   </data>
   <data name="&gt;&gt;ckb_ProcessOriginalFile.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>0</value>
   </data>
-  <data name="ckb_OverwriteOriginal.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+  <data name="ckb_ResetFileDateToCreated.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>TopLeft</value>
   </data>
-  <data name="ckb_OverwriteOriginal.Location" type="System.Drawing.Point, System.Drawing">
-    <value>545, 190</value>
+  <data name="ckb_ResetFileDateToCreated.Location" type="System.Drawing.Point, System.Drawing">
+    <value>567, 62</value>
   </data>
-  <data name="ckb_OverwriteOriginal.MinimumSize" type="System.Drawing.Size, System.Drawing">
+  <data name="ckb_ResetFileDateToCreated.MinimumSize" type="System.Drawing.Size, System.Drawing">
     <value>100, 20</value>
   </data>
-  <data name="ckb_OverwriteOriginal.Size" type="System.Drawing.Size, System.Drawing">
-    <value>286, 38</value>
+  <data name="ckb_ResetFileDateToCreated.Size" type="System.Drawing.Size, System.Drawing">
+    <value>264, 62</value>
   </data>
-  <data name="ckb_OverwriteOriginal.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+  <data name="ckb_ResetFileDateToCreated.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
   </data>
-  <data name="ckb_OverwriteOriginal.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+  <data name="ckb_ResetFileDateToCreated.Text" xml:space="preserve">
+    <value>ckb_ResetFileDateToCreated</value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>TopLeft</value>
   </data>
-  <data name="&gt;&gt;ckb_OverwriteOriginal.Name" xml:space="preserve">
-    <value>ckb_OverwriteOriginal</value>
+  <data name="&gt;&gt;ckb_ResetFileDateToCreated.Name" xml:space="preserve">
+    <value>ckb_ResetFileDateToCreated</value>
   </data>
-  <data name="&gt;&gt;ckb_OverwriteOriginal.Type" xml:space="preserve">
+  <data name="&gt;&gt;ckb_ResetFileDateToCreated.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;ckb_OverwriteOriginal.Parent" xml:space="preserve">
+  <data name="&gt;&gt;ckb_ResetFileDateToCreated.Parent" xml:space="preserve">
     <value>tpg_FileOptions</value>
   </data>
-  <data name="&gt;&gt;ckb_OverwriteOriginal.ZOrder" xml:space="preserve">
-    <value>2</value>
+  <data name="&gt;&gt;ckb_ResetFileDateToCreated.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="ckb_AddXMPSideCar.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>TopLeft</value>
@@ -1247,6 +1343,9 @@
   <data name="ckb_AddXMPSideCar.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
+  <data name="ckb_AddXMPSideCar.Text" xml:space="preserve">
+    <value>ckb_AddXMPSideCar</value>
+  </data>
   <data name="ckb_AddXMPSideCar.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>TopLeft</value>
   </data>
@@ -1260,10 +1359,43 @@
     <value>tpg_FileOptions</value>
   </data>
   <data name="&gt;&gt;ckb_AddXMPSideCar.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="ckb_OverwriteOriginal.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopLeft</value>
+  </data>
+  <data name="ckb_OverwriteOriginal.Location" type="System.Drawing.Point, System.Drawing">
+    <value>545, 190</value>
+  </data>
+  <data name="ckb_OverwriteOriginal.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>100, 20</value>
+  </data>
+  <data name="ckb_OverwriteOriginal.Size" type="System.Drawing.Size, System.Drawing">
+    <value>286, 38</value>
+  </data>
+  <data name="ckb_OverwriteOriginal.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="ckb_OverwriteOriginal.Text" xml:space="preserve">
+    <value>ckb_OverwriteOriginal</value>
+  </data>
+  <data name="ckb_OverwriteOriginal.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopLeft</value>
+  </data>
+  <data name="&gt;&gt;ckb_OverwriteOriginal.Name" xml:space="preserve">
+    <value>ckb_OverwriteOriginal</value>
+  </data>
+  <data name="&gt;&gt;ckb_OverwriteOriginal.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_OverwriteOriginal.Parent" xml:space="preserve">
+    <value>tpg_FileOptions</value>
+  </data>
+  <data name="&gt;&gt;ckb_OverwriteOriginal.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
   <data name="lbx_fileExtensions.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 6</value>
+    <value>0, 0</value>
   </data>
   <data name="lbx_fileExtensions.Size" type="System.Drawing.Size, System.Drawing">
     <value>512, 368</value>
@@ -1301,6 +1433,9 @@
   <data name="tpg_FileOptions.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
+  <data name="tpg_FileOptions.Text" xml:space="preserve">
+    <value>tpg_FileOptions</value>
+  </data>
   <data name="&gt;&gt;tpg_FileOptions.Name" xml:space="preserve">
     <value>tpg_FileOptions</value>
   </data>
@@ -1325,6 +1460,9 @@
   <data name="rbx_CustomCityLogicExplanationBold.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
   </data>
+  <data name="rbx_CustomCityLogicExplanationBold.Text" xml:space="preserve">
+    <value>rbx_CustomCityLogicExplanationBold</value>
+  </data>
   <data name="&gt;&gt;rbx_CustomCityLogicExplanationBold.Name" xml:space="preserve">
     <value>rbx_CustomCityLogicExplanationBold</value>
   </data>
@@ -1346,6 +1484,9 @@
   <data name="btn_ResetToDefaults.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
   </data>
+  <data name="btn_ResetToDefaults.Text" xml:space="preserve">
+    <value>btn_ResetToDefaults</value>
+  </data>
   <data name="&gt;&gt;btn_ResetToDefaults.Name" xml:space="preserve">
     <value>btn_ResetToDefaults</value>
   </data>
@@ -1366,6 +1507,9 @@
   </data>
   <data name="rbx_CustomCityLogicExplanation.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanation.Text" xml:space="preserve">
+    <value>rbx_CustomCityLogicExplanation</value>
   </data>
   <data name="&gt;&gt;rbx_CustomCityLogicExplanation.Name" xml:space="preserve">
     <value>rbx_CustomCityLogicExplanation</value>
@@ -1415,6 +1559,9 @@
   <data name="tpg_CustomCityLogic.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
   </data>
+  <data name="tpg_CustomCityLogic.Text" xml:space="preserve">
+    <value>tpg_CustomCityLogic</value>
+  </data>
   <data name="&gt;&gt;tpg_CustomCityLogic.Name" xml:space="preserve">
     <value>tpg_CustomCityLogic</value>
   </data>
@@ -1438,6 +1585,9 @@
   </data>
   <data name="rbx_CustomRulesExplanationBold.TabIndex" type="System.Int32, mscorlib">
     <value>18</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold.Text" xml:space="preserve">
+    <value>rbx_CustomRulesExplanationBold</value>
   </data>
   <data name="&gt;&gt;rbx_CustomRulesExplanationBold.Name" xml:space="preserve">
     <value>rbx_CustomRulesExplanationBold</value>
@@ -1463,6 +1613,9 @@
   <data name="ckb_StopProcessingRules.TabIndex" type="System.Int32, mscorlib">
     <value>17</value>
   </data>
+  <data name="ckb_StopProcessingRules.Text" xml:space="preserve">
+    <value>ckb_StopProcessingRules</value>
+  </data>
   <data name="&gt;&gt;ckb_StopProcessingRules.Name" xml:space="preserve">
     <value>ckb_StopProcessingRules</value>
   </data>
@@ -1487,6 +1640,9 @@
   <data name="ckb_IncludePredeterminedCountries.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
   </data>
+  <data name="ckb_IncludePredeterminedCountries.Text" xml:space="preserve">
+    <value>ckb_IncludePredeterminedCountries</value>
+  </data>
   <data name="&gt;&gt;ckb_IncludePredeterminedCountries.Name" xml:space="preserve">
     <value>ckb_IncludePredeterminedCountries</value>
   </data>
@@ -1507,6 +1663,9 @@
   </data>
   <data name="rbx_CustomRulesExplanation.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
+  </data>
+  <data name="rbx_CustomRulesExplanation.Text" xml:space="preserve">
+    <value>rbx_CustomRulesExplanation</value>
   </data>
   <data name="&gt;&gt;rbx_CustomRulesExplanation.Name" xml:space="preserve">
     <value>rbx_CustomRulesExplanation</value>
@@ -1556,6 +1715,9 @@
   <data name="tpg_CustomRules.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
+  <data name="tpg_CustomRules.Text" xml:space="preserve">
+    <value>tpg_CustomRules</value>
+  </data>
   <data name="&gt;&gt;tpg_CustomRules.Name" xml:space="preserve">
     <value>tpg_CustomRules</value>
   </data>
@@ -1576,7 +1738,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAABI
-        DQAAAk1TRnQBSQFMAgEBBQEAAcABAQHAAQEBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        DQAAAk1TRnQBSQFMAgEBBQEAAegBAQHoAQEBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABQAMAASADAAEBAQABCAYAAQgYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
         AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
         AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA
@@ -1674,6 +1836,9 @@
   <data name="btn_Generic_OK.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
   </data>
+  <data name="btn_Generic_OK.Text" xml:space="preserve">
+    <value>btn_Generic_OK</value>
+  </data>
   <data name="&gt;&gt;btn_Generic_OK.Name" xml:space="preserve">
     <value>btn_Generic_OK</value>
   </data>
@@ -1700,6 +1865,9 @@
   </data>
   <data name="btn_Generic_Cancel.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
+  </data>
+  <data name="btn_Generic_Cancel.Text" xml:space="preserve">
+    <value>btn_Generic_Cancel</value>
   </data>
   <data name="&gt;&gt;btn_Generic_Cancel.Name" xml:space="preserve">
     <value>btn_Generic_Cancel</value>
@@ -1728,6 +1896,9 @@
   <data name="btn_ExportSettings.TabIndex" type="System.Int32, mscorlib">
     <value>22</value>
   </data>
+  <data name="btn_ExportSettings.Text" xml:space="preserve">
+    <value>btn_ExportSettings</value>
+  </data>
   <data name="&gt;&gt;btn_ExportSettings.Name" xml:space="preserve">
     <value>btn_ExportSettings</value>
   </data>
@@ -1748,6 +1919,9 @@
   </data>
   <data name="btn_ImportSettings.TabIndex" type="System.Int32, mscorlib">
     <value>21</value>
+  </data>
+  <data name="btn_ImportSettings.Text" xml:space="preserve">
+    <value>btn_ImportSettings</value>
   </data>
   <data name="&gt;&gt;btn_ImportSettings.Name" xml:space="preserve">
     <value>btn_ImportSettings</value>

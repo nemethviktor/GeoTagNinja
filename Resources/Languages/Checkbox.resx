@@ -99,27 +99,27 @@
   </resheader>
   <data name="ckb_ProcessOriginalFile" xml:space="preserve">
     <value>Process the Image File itself</value>
-    <comment>Location: Settings</comment>
+    <comment>Settings - Refers to whether the original image file should be processed (overwritten)</comment>
   </data>
   <data name="ckb_ResetFileDateToCreated" xml:space="preserve">
     <value>Reset Image File DateTime to CreateDate</value>
-    <comment>Location: Settings</comment>
+    <comment>Settings - Whether the image file's datetime should be aligned with the CreateDate in the Exif</comment>
   </data>
   <data name="ckb_AddXMPSideCar" xml:space="preserve">
     <value>Add/Overwrite Sidecar XMP</value>
-    <comment>Location: Settings</comment>
+    <comment>Settings - Whether the xmp file belonging to the image should be edited.</comment>
   </data>
   <data name="ckb_OverwriteOriginal" xml:space="preserve">
     <value>Do NOT Make a xxx_original Backup</value>
-    <comment>Location: Settings</comment>
+    <comment>Settings - Whether to overwrite the original file (rather than making a backup)</comment>
   </data>
   <data name="ckb_ResetMapToZero" xml:space="preserve">
     <value>Set Map to 0/0 if no GeoData</value>
-    <comment>Location: Settings</comment>
+    <comment>Settings - Whether to set the map to 0/0 coordinates if there is no geodata in the exif for the file</comment>
   </data>
   <data name="ckb_UseTimeZone" xml:space="preserve">
     <value>Use this Time Zone:</value>
-    <comment>Location: Import/Export GPX</comment>
+    <comment>Import GPX - Specifies which time zone to use</comment>
   </data>
   <data name="ckb_OffsetTime" xml:space="preserve">
     <value>Time Zone Offset</value>
@@ -131,19 +131,19 @@
   </data>
   <data name="ckb_RemoveGeoDataRemovesTimeOffset" xml:space="preserve">
     <value>The "Remove Geodata" function also removes TimeZone Offset</value>
-    <comment>Location: Settings</comment>
+    <comment>Settings - Whether to remove the time offset data when issuing a 'remove all geodata' command.</comment>
   </data>
   <data name="ckb_ReplaceBlankToponyms" xml:space="preserve">
     <value>Replace blank City, State, Sublocation values with: </value>
-    <comment>Location: Settings</comment>
+    <comment>Settings - Allows to preset a default value for blanks</comment>
   </data>
   <data name="ckb_IncludePredeterminedCountries" xml:space="preserve">
     <value>Include "Predetermined" countries? (see link above + caveat/warning)</value>
-    <comment>Location: Settings</comment>
+    <comment>Settings - This relates to overriding certain "predetermined" countries' logics when it comes to the API allocation of data. </comment>
   </data>
   <data name="ckb_StopProcessingRules" xml:space="preserve">
     <value>Stop processing rules after first Country+Target match</value>
-    <comment>Location: Settings</comment>
+    <comment>Settings - Means that if a value is "hit" by a rule then no more rules should be processed. </comment>
   </data>
   <data name="ckb_DoNotQueryAPI" xml:space="preserve">
     <value>Do NOT do reverse geocoding (only get the coordinates, but not the City/state/etc)</value>
@@ -181,8 +181,8 @@
     <value>Include Altitude data in Export</value>
     <comment>Location: Import/Export GPX</comment>
   </data>
-  <data name="ckb_ShowPassword" xml:space="preserve">
-    <value>Show Password</value>
-    <comment>Location: Settings</comment>
+  <data name="ckb_PopulatedPlacesOnly" xml:space="preserve">
+    <value>Only display API data filtered to "Populated places" (fcode=PPL) [not recommended]</value>
+    <comment>Settings - Whether the API should only return values of "populated places". This is an internal definition of the API</comment>
   </data>
 </root>

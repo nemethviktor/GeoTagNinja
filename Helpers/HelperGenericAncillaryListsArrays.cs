@@ -262,6 +262,8 @@ internal static class HelperGenericAncillaryListsArrays
             { "ckb_GPSLongitude", "Generic_GPSLongitude" },
             { "ckb_GPSSpeed", "Generic_GPSSpeed" },
             { "ckb_QuestionDontAskAgain", "Generic_QuestionDontAskAgain" },
+            { "ckb_ShowPassword_ARCGIS_APIKey", "Generic_ShowPassword" },
+            { "ckb_ShowPassword_GeoNames", "Generic_ShowPassword" },
             { "ckb_State", "Generic_State" },
             { "ckb_Sublocation", "Generic_Sublocation" },
             { "ckb_TakenDate", "Generic_TakenDate" },

@@ -53,7 +53,8 @@ namespace GeoTagNinja
             this.tbx_Startup_Folder = new System.Windows.Forms.TextBox();
             this.tpg_GeoNames = new System.Windows.Forms.TabPage();
             this.gbx_GeoNamesSettings = new System.Windows.Forms.GroupBox();
-            this.ckb_ShowPassword = new System.Windows.Forms.CheckBox();
+            this.ckb_ShowPassword_GeoNames = new System.Windows.Forms.CheckBox();
+            this.ckb_ShowPassword_ARCGIS_APIKey = new System.Windows.Forms.CheckBox();
             this.lbl_Generic_Miles = new System.Windows.Forms.Label();
             this.ckb_PopulatedPlacesOnly = new System.Windows.Forms.CheckBox();
             this.gbx_GeoNamesLanguageSettings = new System.Windows.Forms.GroupBox();
@@ -272,7 +273,8 @@ namespace GeoTagNinja
             // 
             // gbx_GeoNamesSettings
             // 
-            this.gbx_GeoNamesSettings.Controls.Add(this.ckb_ShowPassword);
+            this.gbx_GeoNamesSettings.Controls.Add(this.ckb_ShowPassword_GeoNames);
+            this.gbx_GeoNamesSettings.Controls.Add(this.ckb_ShowPassword_ARCGIS_APIKey);
             this.gbx_GeoNamesSettings.Controls.Add(this.lbl_Generic_Miles);
             this.gbx_GeoNamesSettings.Controls.Add(this.ckb_PopulatedPlacesOnly);
             this.gbx_GeoNamesSettings.Controls.Add(this.gbx_GeoNamesLanguageSettings);
@@ -294,12 +296,19 @@ namespace GeoTagNinja
             this.gbx_GeoNamesSettings.Name = "gbx_GeoNamesSettings";
             this.gbx_GeoNamesSettings.TabStop = false;
             // 
-            // ckb_ShowPassword
+            // ckb_ShowPassword_GeoNames
             // 
-            resources.ApplyResources(this.ckb_ShowPassword, "ckb_ShowPassword");
-            this.ckb_ShowPassword.Name = "ckb_ShowPassword";
-            this.ckb_ShowPassword.UseVisualStyleBackColor = true;
-            this.ckb_ShowPassword.CheckedChanged += new System.EventHandler(this.ckb_ShowPassword_CheckedChanged);
+            resources.ApplyResources(this.ckb_ShowPassword_GeoNames, "ckb_ShowPassword_GeoNames");
+            this.ckb_ShowPassword_GeoNames.Name = "ckb_ShowPassword_GeoNames";
+            this.ckb_ShowPassword_GeoNames.UseVisualStyleBackColor = true;
+            this.ckb_ShowPassword_GeoNames.CheckedChanged += new System.EventHandler(this.ckb_ShowPassword_GeoNames_CheckedChanged);
+            // 
+            // ckb_ShowPassword_ARCGIS_APIKey
+            // 
+            resources.ApplyResources(this.ckb_ShowPassword_ARCGIS_APIKey, "ckb_ShowPassword_ARCGIS_APIKey");
+            this.ckb_ShowPassword_ARCGIS_APIKey.Name = "ckb_ShowPassword_ARCGIS_APIKey";
+            this.ckb_ShowPassword_ARCGIS_APIKey.UseVisualStyleBackColor = true;
+            this.ckb_ShowPassword_ARCGIS_APIKey.CheckedChanged += new System.EventHandler(this.ckb_ShowPassword_ARCGIS_APIKey_CheckedChanged);
             // 
             // lbl_Generic_Miles
             // 
@@ -443,6 +452,7 @@ namespace GeoTagNinja
             // 
             resources.ApplyResources(this.tbx_GeoNames_Pwd, "tbx_GeoNames_Pwd");
             this.tbx_GeoNames_Pwd.Name = "tbx_GeoNames_Pwd";
+            this.tbx_GeoNames_Pwd.UseSystemPasswordChar = true;
             this.tbx_GeoNames_Pwd.TextChanged += new System.EventHandler(this.Any_tbx_TextChanged);
             // 
             // tbx_GeoNames_UserName
@@ -460,10 +470,10 @@ namespace GeoTagNinja
             // tpg_FileOptions
             // 
             this.tpg_FileOptions.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.tpg_FileOptions.Controls.Add(this.ckb_ResetFileDateToCreated);
             this.tpg_FileOptions.Controls.Add(this.ckb_ProcessOriginalFile);
-            this.tpg_FileOptions.Controls.Add(this.ckb_OverwriteOriginal);
+            this.tpg_FileOptions.Controls.Add(this.ckb_ResetFileDateToCreated);
             this.tpg_FileOptions.Controls.Add(this.ckb_AddXMPSideCar);
+            this.tpg_FileOptions.Controls.Add(this.ckb_OverwriteOriginal);
             this.tpg_FileOptions.Controls.Add(this.lbx_fileExtensions);
             resources.ApplyResources(this.tpg_FileOptions, "tpg_FileOptions");
             this.tpg_FileOptions.Name = "tpg_FileOptions";
@@ -747,6 +757,7 @@ namespace GeoTagNinja
         private System.Windows.Forms.CheckBox ckb_UseDarkMode;
         private System.Windows.Forms.Button btn_ExportSettings;
         private System.Windows.Forms.Button btn_ImportSettings;
-        private System.Windows.Forms.CheckBox ckb_ShowPassword;
+        private System.Windows.Forms.CheckBox ckb_ShowPassword_ARCGIS_APIKey;
+        private System.Windows.Forms.CheckBox ckb_ShowPassword_GeoNames;
     }
 }
