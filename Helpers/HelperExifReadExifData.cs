@@ -1041,7 +1041,7 @@ internal static class HelperExifReadExifData
 
     /// <summary>
     ///     Wrangles data from raw exiftool output to presentable and standardised data.
-    /// This only gets called via the API calls.
+    ///     This only gets called via the API calls (e.g. ReadTrackFile), not the "normal" exif extraction.
     /// </summary>
     /// <param name="dtFileExif">Raw values tag from exiftool</param>
     /// <param name="dataPoint">Name of the exiftag we want the data for</param>
@@ -1211,39 +1211,7 @@ internal static class HelperExifReadExifData
                                                .Replace(oldChar: ',', newChar: '.');
                 }
 
-                if (tryDataValue.Contains(value: "/"))
-                {
-                    if (tryDataValue.Contains(value: ",") ||
-                        tryDataValue.Contains(value: "."))
-                    {
-                        tryDataValue = tryDataValue.Split('/')[0]
-                                                   .Trim()
-                                                   .Replace(oldChar: ',', newChar: '.');
-                    }
-                    else // attempt to convert it to decimal
-                    {
-                        try
-                        {
-                            bool parseBool = double.TryParse(
-                                s: tryDataValue.Split('/')[0], style: NumberStyles.Any,
-                                provider: CultureInfo.InvariantCulture,
-                                result: out double numerator);
-                            parseBool = double.TryParse(
-                                s: tryDataValue.Split('/')[1], style: NumberStyles.Any,
-                                provider: CultureInfo.InvariantCulture,
-                                result: out double denominator);
-                            tryDataValue = Math
-                                          .Round(value: numerator / denominator,
-                                                 digits: 2)
-                                          .ToString(
-                                               provider: CultureInfo.InvariantCulture);
-                        }
-                        catch
-                        {
-                            tryDataValue = "0.0";
-                        }
-                    }
-                }
+                tryDataValue = ConvertFractionalToString(tryDataValue: tryDataValue);
 
                 break;
             case "GPSAltitudeRef":
@@ -1258,6 +1226,11 @@ internal static class HelperExifReadExifData
                     tryDataValue = "Above Sea Level";
                 }
 
+                break;
+            case "GPSDOP":
+                // i'm a little unsure about this because it's supposed to be a numeric value but in the first attempt i've seen stuff like "43/10" rather than "4.3"
+
+                tryDataValue = ConvertFractionalToString(tryDataValue: tryDataValue);
                 break;
             case "ExposureTime":
                 tryDataValue = tryDataValue.Replace(oldValue: "sec", newValue: "")
@@ -1274,7 +1247,7 @@ internal static class HelperExifReadExifData
                         {
                             tryDataValue = Regex
                                           .Replace(input: tryDataValue,
-                                                   pattern: @"[^\d:.]", replacement: "")
+                                               pattern: @"[^\d:.]", replacement: "")
                                           .Split(':')
                                           .Last();
                         }
@@ -1331,5 +1304,50 @@ internal static class HelperExifReadExifData
         FrmMainApp.Log.Trace(message: $"Done - dataPoint:{dataPoint}: {tryDataValue}");
         returnVal = tryDataValue;
         return returnVal;
+    }
+
+    /// <summary>
+    ///     Takes a string and attempts to convert it to a number-looking-string if it's actually a fractional. (ie "43/10" to
+    ///     "4.3")
+    /// </summary>
+    /// <param name="tryDataValue"></param>
+    /// <returns></returns>
+    private static string ConvertFractionalToString(string tryDataValue)
+    {
+        if (tryDataValue.Contains(value: "/"))
+        {
+            if (tryDataValue.Contains(value: ",") ||
+                tryDataValue.Contains(value: "."))
+            {
+                tryDataValue = tryDataValue.Split('/')[0]
+                                           .Trim()
+                                           .Replace(oldChar: ',', newChar: '.');
+            }
+            else // attempt to convert it to decimal
+            {
+                try
+                {
+                    bool parseBool = double.TryParse(
+                        s: tryDataValue.Split('/')[0], style: NumberStyles.Any,
+                        provider: CultureInfo.InvariantCulture,
+                        result: out double numerator);
+                    parseBool = double.TryParse(
+                        s: tryDataValue.Split('/')[1], style: NumberStyles.Any,
+                        provider: CultureInfo.InvariantCulture,
+                        result: out double denominator);
+                    tryDataValue = Math
+                                  .Round(value: numerator / denominator,
+                                       digits: 2)
+                                  .ToString(
+                                       provider: CultureInfo.InvariantCulture);
+                }
+                catch
+                {
+                    tryDataValue = "0.0";
+                }
+            }
+        }
+
+        return tryDataValue;
     }
 }

@@ -81,6 +81,8 @@ public class RDFDescription
 
     private string gPSTrackRefField;
 
+    private string gPSDOPField;
+
     /// <remarks />
     [XmlElement(Namespace = "http://ns.adobe.com/exif/1.0/")]
     public string GPSAltitude
@@ -159,6 +161,14 @@ public class RDFDescription
     {
         get => gPSSpeedField;
         set => gPSSpeedField = value;
+    }
+
+    /// <remarks />
+    [XmlElement(Namespace = "http://ns.adobe.com/exif/1.0/")]
+    public string GPSDOP
+    {
+        get => gPSDOPField;
+        set => gPSDOPField = value;
     }
 
     /// <remarks />

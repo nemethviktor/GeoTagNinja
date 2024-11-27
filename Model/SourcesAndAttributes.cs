@@ -76,7 +76,8 @@ public static class SourcesAndAttributes
         CreateDateMinutesShift,
         CreateDateSecondsShift,
         RemoveAllGPS,
-        GUID
+        GUID,
+        GPSDOP
     }
 
     /// <summary>
@@ -861,6 +862,20 @@ public static class SourcesAndAttributes
                         InAttributes = new List<string>(),
                         OutAttributes = new List<string>()
                     }
+                },
+                {
+                    ElementAttribute.GPSDOP, new ElementAttributeMapping
+                    {
+                        Name = "GPSDOP",
+                        TypeOfElement = typeof(double),
+                        InAttributes = new List<string>
+                            { "EXIF:GPSDOP" },
+                        OutAttributes = new List<string>
+                        {
+                            "EXIF:GPSDOP",
+                            "XMP:GPSDOP"
+                        }
+                    }
                 }
             };
 
@@ -1022,13 +1037,8 @@ public static class SourcesAndAttributes
     /// <returns>Returns true if the specified attributeToFind attribute is related to geographic data, otherwise false.</returns>
     public static bool GetElementAttributesIsGeoData(ElementAttribute attributeToFind)
     {
-        if (TagsToAttributes.TryGetValue(key: attributeToFind,
-                                         value: out ElementAttributeMapping mapping))
-        {
-            return mapping.isGeoData;
-        }
-
-        return false;
+        return TagsToAttributes.TryGetValue(key: attributeToFind,
+            value: out ElementAttributeMapping mapping) && mapping.isGeoData;
     }
 
     /// <summary>
@@ -1039,7 +1049,7 @@ public static class SourcesAndAttributes
     ///     subjects, and geodata information.
     ///     It also contains the order ID for the element and a flag indicating whether the element contains geodata.
     /// </remarks>
-    internal struct ElementAttributeMapping
+    private struct ElementAttributeMapping
     {
         public string Name;
         public string ColumnHeader;

@@ -1556,12 +1556,20 @@ public partial class FrmMainApp : Form
     private void tmi_File_ImportExportGPX_Click(object sender,
         EventArgs e)
     {
-        FrmImportExportGpx = new FrmImportExportGpx();
-        FrmImportExportGpx.Text = ReturnControlText(
-            fakeControlType: FakeControlTypes.Form,
-            controlName: "FrmImportExportGpx"
-        );
-        FrmImportExportGpx.ShowDialog();
+        // warn user that this is a bad idea in flatmode.
+        if (!FlatMode ||
+            (FlatMode && HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBoxWithResult(
+                controlName: "mbx_FrmMainApp_QuestionRunImportExportInFlatMode",
+                captionType: MessageBoxCaption.Question,
+                buttons: MessageBoxButtons.YesNo) == DialogResult.Yes))
+        {
+            FrmImportExportGpx = new FrmImportExportGpx();
+            FrmImportExportGpx.Text = ReturnControlText(
+                fakeControlType: FakeControlTypes.Form,
+                controlName: "FrmImportExportGpx"
+            );
+            FrmImportExportGpx.ShowDialog();
+        }
     }
 
     /// <summary>
@@ -3097,10 +3105,9 @@ public partial class FrmMainApp : Form
     /// <param name="e"></param>
     /// <param name="displayMessage"></param>
     private void cmi_removeCachedData_Click(object sender,
-                                            EventArgs e,
-                                            bool displayMessage = true)
+                                            EventArgs e)
     {
-        RemoveCachedData(displayMessage: displayMessage);
+        RemoveCachedData(displayMessage: true);
     }
 
     /// <summary>
@@ -3112,42 +3119,47 @@ public partial class FrmMainApp : Form
         bool dataHasBeenRemoved = false;
         foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
         {
-            try
+            DirectoryElement directoryElement = lvi.Tag as DirectoryElement;
+            if (directoryElement.Type == DirectoryElement.ElementType.File)
             {
-                string lat = lvi.SubItems[index: lvw_FileList
-                                                .Columns[
-                                                     key: FileListView.COL_NAME_PREFIX +
-                                                          FileListView.FileListColumns.GPS_LATITUDE]
-                                                .Index]
-                                .Text;
-                string lng = lvi.SubItems[index: lvw_FileList
-                                                .Columns[
-                                                     key: FileListView.COL_NAME_PREFIX +
-                                                          FileListView.FileListColumns.GPS_LONGITUDE]
-                                                .Index]
-                                .Text;
-
-                for (int i = DTToponomySessionData.Rows.Count - 1; i >= 0; i--)
+                try
                 {
-                    DataRow dr = DTToponomySessionData.Rows[index: i];
-                    if (dr[columnName: "lat"]
-                           .ToString() ==
-                        lat &&
-                        dr[columnName: "lng"]
-                           .ToString() ==
-                        lng)
+                    string lat = lvi
+                                .SubItems[
+                                     index: lvw_FileList
+                                           .Columns[
+                                                key: FileListView.COL_NAME_PREFIX +
+                                                     FileListView.FileListColumns.GPS_LATITUDE].Index].Text;
+                    string lng = lvi
+                                .SubItems[
+                                     index: lvw_FileList
+                                           .Columns[
+                                                key: FileListView.COL_NAME_PREFIX +
+                                                     FileListView.FileListColumns.GPS_LONGITUDE].Index].Text;
+
+                    for (int i = DTToponomySessionData.Rows.Count - 1; i >= 0; i--)
                     {
-                        dr.Delete();
+                        DataRow dr = DTToponomySessionData.Rows[index: i];
+                        if (dr[columnName: "lat"].ToString() == lat &&
+                            dr[columnName: "lng"].ToString() == lng)
+                        {
+                            dr.Delete();
+                        }
+
+                        dataHasBeenRemoved = true;
                     }
 
-                    dataHasBeenRemoved = true;
+                    DTToponomySessionData.AcceptChanges();
+
+                    // also remove from hash dictionary
+
+                    HelperVariables.FileChecksumDictionary.Remove(key: directoryElement.FileNameWithPath);
                 }
 
-                DTToponomySessionData.AcceptChanges();
-            }
-            catch
-            {
-                // nothing
+                catch
+                {
+                    // nothing
+                }
             }
         }
 

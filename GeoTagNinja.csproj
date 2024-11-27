@@ -282,6 +282,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MenuStrip.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\Languages\MessageBox.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MessageBox.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\Languages\MessageBoxCaption.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -484,6 +489,7 @@
     <EmbeddedResource Include="Resources\Languages\MessageBox.fr.resx" />
     <EmbeddedResource Include="Resources\Languages\MessageBox.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>MessageBox.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Languages\MessageBoxCaption.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

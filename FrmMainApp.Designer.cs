@@ -212,8 +212,7 @@ namespace GeoTagNinja
             // 
             this.cmi_removeCachedData.Name = "cmi_removeCachedData";
             resources.ApplyResources(this.cmi_removeCachedData, "cmi_removeCachedData");
-            this.cmi_removeCachedData.Click += new System.EventHandler((sender,
-                                                                        e) => this.cmi_removeCachedData_Click(sender, e));
+            this.cmi_removeCachedData.Click += new System.EventHandler(this.cmi_removeCachedData_Click);
             // 
             // cmi_OpenCoordsInAPI
             // 

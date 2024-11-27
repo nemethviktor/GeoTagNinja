@@ -352,4 +352,7 @@ Data will be discarded if you click No</value>
     <value>Remove GeoData process has failed/returned an error.</value>
     <comment>ng" sort of message that is displayed when the "remove geodata" process throws an error.</comment>
   </data>
+  <data name="mbx_FrmMainApp_QuestionRunImportExportInFlatMode" xml:space="preserve">
+    <value>Running Track Import/Export while in Flat Mode is a bad idea because track interactions use special logic that can't differentiate between possible identically named files across folders. Are you sure you want to run this?</value>
+  </data>
 </root>

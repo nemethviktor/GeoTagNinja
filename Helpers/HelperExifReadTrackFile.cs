@@ -107,16 +107,17 @@ internal static class HelperExifReadTrackFile
 
             foreach (FileInfo exifFileIn in diTmpLocFiles.EnumerateFiles())
             {
+                // note to self -> this is the xmp file in the folder produced by the track parsing, not an xmp file that belongs to a nef file etc.
                 if (exifFileIn.Extension == ".xmp")
                 {
                     try
                     {
-                        string XMP = File.ReadAllText(
+                        string textInTheXMPFile = File.ReadAllText(
                             path: Path.Combine(path1: tmpFolder, path2: exifFileIn.Name));
 
                         XmlSerializer serializer = new(type: typeof(xmpmeta));
                         xmpmeta trackFileXMPData;
-                        using (StringReader reader = new(s: XMP))
+                        using (StringReader reader = new(s: textInTheXMPFile))
                         {
                             trackFileXMPData =
                                 (xmpmeta)serializer.Deserialize(textReader: reader);
@@ -151,7 +152,7 @@ internal static class HelperExifReadTrackFile
                             DataTable dtDistinctFileExifTable =
                                 dtFileExifTable.DefaultView.ToTable(distinct: true);
 
-                            lvw = frmMainAppInstance.lvw_FileList;
+                            // note to self -> should find a way to handle multiple identically-named files somehow.
                             ListViewItem lvi =
                                 frmMainAppInstance.lvw_FileList.FindItemWithText(
                                     text: exifFileIn.Name.Substring(
@@ -172,147 +173,66 @@ internal static class HelperExifReadTrackFile
                                     ElementAttribute.Sublocation
                                 };
 
-                                DirectoryElement dirElemFileToModify =
-                                    lvi.Tag as DirectoryElement;
-                                string fileNameWithoutPath =
-                                    dirElemFileToModify.ItemNameWithoutPath;
+                                DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;
+                                string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
+
 
                                 // get the current stuff, either from DE3 or Orig or just blank if none.
-                                string currentLat =
-                                    dirElemFileToModify.GetAttributeValueString(
-                                        attribute: ElementAttribute.GPSLatitude,
-                                        version: DirectoryElement.AttributeVersion
-                                                                 .Stage3ReadyToWrite,
-                                        notFoundValue: dirElemFileToModify
-                                           .GetAttributeValueString(
-                                                attribute: ElementAttribute.GPSLatitude,
-                                                version: DirectoryElement.AttributeVersion
-                                                                         .Original,
-                                                notFoundValue: FrmMainApp
-                                                   .NullStringEquivalentGeneric,
-                                                nowSavingExif: false),
-                                        nowSavingExif: false);
-                                string currentLng =
-                                    dirElemFileToModify.GetAttributeValueString(
-                                        attribute: ElementAttribute.GPSLongitude,
-                                        version: DirectoryElement.AttributeVersion
-                                                                 .Stage3ReadyToWrite,
-                                        notFoundValue: dirElemFileToModify
-                                           .GetAttributeValueString(
-                                                attribute: ElementAttribute.GPSLongitude,
-                                                version: DirectoryElement.AttributeVersion
-                                                                         .Original,
-                                                notFoundValue: FrmMainApp
-                                                   .NullStringEquivalentGeneric,
-                                                nowSavingExif: false),
-                                        nowSavingExif: false);
-                                string currentAltitude =
-                                    dirElemFileToModify.GetAttributeValueString(
-                                        attribute: ElementAttribute.GPSAltitude,
-                                        version: DirectoryElement.AttributeVersion
-                                                                 .Stage3ReadyToWrite,
-                                        notFoundValue: dirElemFileToModify
-                                           .GetAttributeValueString(
-                                                attribute: ElementAttribute.GPSAltitude,
-                                                version: DirectoryElement.AttributeVersion
-                                                                         .Original,
-                                                notFoundValue: FrmMainApp
-                                                   .NullStringEquivalentGeneric,
-                                                nowSavingExif: false),
-                                        nowSavingExif: false);
+                                // we're doing this so we can compare if the data received from the track parse is different from the one in the file
+                                // if so then later we'll trigger the store-to-Stage3-process
 
-                                string strLatInAPI =
-                                    FrmMainApp.NullStringEquivalentGeneric;
-                                try
-                                {
-                                    strLatInAPI =
-                                        HelperExifReadExifData
-                                           .ExifGetStandardisedDataPointFromExif(
-                                                dtFileExif: dtDistinctFileExifTable,
-                                                dataPoint: GetElementAttributesName(
-                                                    attributeToFind: ElementAttribute
-                                                       .GPSLatitude));
-                                }
-                                catch
-                                {
-                                    // ignore
-                                }
+                                string currentLat = GetCurrentValue(dirElemFileToModify: dirElemFileToModify,
+                                    attribute: ElementAttribute.GPSDestLatitude);
+                                string currentLng = GetCurrentValue(dirElemFileToModify: dirElemFileToModify,
+                                    attribute: ElementAttribute.GPSLongitude);
+                                string currentAltitude = GetCurrentValue(dirElemFileToModify: dirElemFileToModify,
+                                    attribute: ElementAttribute.GPSAltitude);
 
-                                string strLngInAPI =
-                                    FrmMainApp.NullStringEquivalentGeneric;
-                                try
-                                {
-                                    strLngInAPI =
-                                        HelperExifReadExifData
-                                           .ExifGetStandardisedDataPointFromExif(
-                                                dtFileExif: dtDistinctFileExifTable,
-                                                dataPoint: GetElementAttributesName(
-                                                    attributeToFind: ElementAttribute
-                                                       .GPSLongitude));
-                                }
-                                catch
-                                {
-                                    // ignore
-                                }
 
-                                string altitudeInAPI =
-                                    FrmMainApp.NullStringEquivalentGeneric;
-                                try
-                                {
-                                    altitudeInAPI =
-                                        HelperExifReadExifData
-                                           .ExifGetStandardisedDataPointFromExif(
-                                                dtFileExif: dtDistinctFileExifTable,
-                                                dataPoint: GetElementAttributesName(
-                                                    attributeToFind: ElementAttribute
-                                                       .GPSAltitude));
-                                    if (int.TryParse(s: altitudeInAPI,
-                                                     result: out int altitudeInAPIInt))
-                                    {
-                                        if (Math.Abs(value: altitudeInAPIInt) >
-                                            20000) // API is stupid
-                                        {
-                                            altitudeInAPI = currentAltitude;
-                                        }
-                                    }
-                                }
-                                catch
-                                {
-                                    // ignore
-                                }
+                                string strLatInTrackFile = GetValueInTrackFile(
+                                    dtDistinctFileExifTable: dtDistinctFileExifTable,
+                                    attribute: ElementAttribute.GPSLatitude);
+                                string strLngInTrackFile = GetValueInTrackFile(
+                                    dtDistinctFileExifTable: dtDistinctFileExifTable,
+                                    attribute: ElementAttribute.GPSLongitude);
+                                string altitudeInTrackFile = GetValueInTrackFile(
+                                    dtDistinctFileExifTable: dtDistinctFileExifTable,
+                                    attribute: ElementAttribute.GPSAltitude);
+                                string gpsDOPInTrackFile = GetValueInTrackFile(
+                                    dtDistinctFileExifTable: dtDistinctFileExifTable,
+                                    attribute: ElementAttribute.GPSDOP);
+
 
                                 bool coordinatesHaveChanged =
-                                    !(currentLat == strLatInAPI &&
-                                      currentLng == strLngInAPI &&
-                                      currentAltitude == altitudeInAPI);
+                                    !(currentLat == strLatInTrackFile &&
+                                      currentLng == strLngInTrackFile &&
+                                      currentAltitude == altitudeInTrackFile);
                                 if (coordinatesHaveChanged)
                                 {
-                                    FrmMainApp.HandlerUpdateLabelText(
-                                        label: frmMainAppInstance.lbl_ParseProgress,
+                                    FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress,
                                         text: $"Processing: {fileNameWithoutPath}");
                                     frmMainAppInstance.lvw_FileList.UpdateItemColour(
                                         directoryElement: dirElemFileToModify, color: Color.Red);
-
                                     dirElemFileToModify.SetAttributeValueAnyType(
-                                        attribute: ElementAttribute.GPSLatitude,
-                                        value: strLatInAPI,
-                                        version: DirectoryElement.AttributeVersion
-                                                                 .Stage3ReadyToWrite,
+                                        attribute: ElementAttribute.GPSLatitude, value: strLatInTrackFile,
+                                        version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                                        isMarkedForDeletion: false);
+                                    dirElemFileToModify.SetAttributeValueAnyType(
+                                        attribute: ElementAttribute.GPSLongitude, value: strLngInTrackFile,
+                                        version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                                        isMarkedForDeletion: false);
+                                    dirElemFileToModify.SetAttributeValueAnyType(
+                                        attribute: ElementAttribute.GPSAltitude, value: altitudeInTrackFile,
+                                        version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                                        isMarkedForDeletion: false);
+                                    dirElemFileToModify.SetAttributeValueAnyType(
+                                        attribute: ElementAttribute.GPSDOP, value: HelperExifReadExifData
+                                           .ExifGetStandardisedDataPointFromExif(dtFileExif: dtDistinctFileExifTable,
+                                                dataPoint: GetElementAttributesName(
+                                                    attributeToFind: ElementAttribute.GPSDOP)),
+                                        version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
                                         isMarkedForDeletion: false);
 
-                                    dirElemFileToModify.SetAttributeValueAnyType(
-                                        attribute: ElementAttribute.GPSLongitude,
-                                        value: strLngInAPI,
-                                        version: DirectoryElement.AttributeVersion
-                                                                 .Stage3ReadyToWrite,
-                                        isMarkedForDeletion: false);
-
-                                    dirElemFileToModify.SetAttributeValueAnyType(
-                                        attribute: ElementAttribute.GPSAltitude,
-                                        value: altitudeInAPI,
-                                        version: DirectoryElement.AttributeVersion
-                                                                 .Stage3ReadyToWrite,
-                                        isMarkedForDeletion: false);
 
                                     // clear city, state etc
                                     foreach (ElementAttribute attribute in
@@ -332,10 +252,10 @@ internal static class HelperExifReadTrackFile
                                         DataTable dtToponomy =
                                             HelperExifReadExifData
                                                .DTFromAPIExifGetToponomyFromWebOrSQL(
-                                                    lat: strLatInAPI.ToString(
+                                                    lat: strLatInTrackFile.ToString(
                                                         provider: CultureInfo
                                                            .InvariantCulture),
-                                                    lng: strLngInAPI.ToString(
+                                                    lng: strLngInTrackFile.ToString(
                                                         provider: CultureInfo
                                                            .InvariantCulture),
                                                     fileNameWithoutPath:
@@ -350,25 +270,15 @@ internal static class HelperExifReadTrackFile
                                                 toponomyOverwrites = new()
                                                 {
                                                     (ElementAttribute.CountryCode,
-                                                     dtToponomy.Rows[index: 0][
-                                                             columnName: "CountryCode"]
-                                                        .ToString()),
+                                                     dtToponomy.Rows[index: 0][columnName: "CountryCode"].ToString()),
                                                     (ElementAttribute.Country,
-                                                     dtToponomy.Rows[index: 0][
-                                                             columnName: "Country"]
-                                                        .ToString()),
+                                                     dtToponomy.Rows[index: 0][columnName: "Country"].ToString()),
                                                     (ElementAttribute.City,
-                                                     dtToponomy.Rows[index: 0][
-                                                             columnName: "City"]
-                                                        .ToString()),
+                                                     dtToponomy.Rows[index: 0][columnName: "City"].ToString()),
                                                     (ElementAttribute.State,
-                                                     dtToponomy.Rows[index: 0][
-                                                             columnName: "State"]
-                                                        .ToString()),
+                                                     dtToponomy.Rows[index: 0][columnName: "State"].ToString()),
                                                     (ElementAttribute.Sublocation,
-                                                     dtToponomy.Rows[index: 0][
-                                                             columnName: "Sublocation"]
-                                                        .ToString())
+                                                     dtToponomy.Rows[index: 0][columnName: "Sublocation"].ToString())
                                                 };
 
                                             foreach ((ElementAttribute attribute, string
@@ -400,10 +310,12 @@ internal static class HelperExifReadTrackFile
                     {
                         // nothing. errors should have already come up
                     }
+                #if !DEBUG
                     finally
                     {
                         File.Delete(path: exifFileIn.FullName); // clean up
                     }
+                #endif
                 }
             }
 
@@ -469,6 +381,39 @@ internal static class HelperExifReadTrackFile
                     : ThemeColour.Light,
                 parentControl: reportBox);
             reportBox.ShowDialog();
+        }
+
+        string GetCurrentValue(DirectoryElement dirElemFileToModify,
+                               ElementAttribute attribute)
+        {
+            string currentValue = dirElemFileToModify.GetAttributeValueString(
+                attribute: attribute,
+                version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                notFoundValue: dirElemFileToModify.GetAttributeValueString(
+                    attribute: attribute,
+                    version: DirectoryElement.AttributeVersion.Original,
+                    notFoundValue: FrmMainApp.NullStringEquivalentGeneric, nowSavingExif: false),
+                nowSavingExif: false);
+            return currentValue;
+        }
+
+        string GetValueInTrackFile(DataTable dtDistinctFileExifTable,
+                                   ElementAttribute attribute)
+        {
+            string apiValue = FrmMainApp.NullStringEquivalentGeneric;
+            try
+            {
+                apiValue = HelperExifReadExifData.ExifGetStandardisedDataPointFromExif(
+                    dtFileExif: dtDistinctFileExifTable,
+                    dataPoint: GetElementAttributesName(
+                        attributeToFind: attribute));
+            }
+            catch
+            {
+                // ignore
+            }
+
+            return apiValue;
         }
     }
 }
