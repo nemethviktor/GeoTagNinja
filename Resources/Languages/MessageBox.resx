@@ -348,4 +348,8 @@ Data will be discarded if you click No</value>
     <value>The file isoCountryCodeMapping.csv is missing from the Resources folder. Without it the app can't load.</value>
     <comment>CSV file is missing and it's required to load the app</comment>
   </data>
+  <data name="mbx_FrmMainApp_ErrorRemoveGeoDataFailed" xml:space="preserve">
+    <value>Remove GeoData process has failed/returned an error.</value>
+    <comment>ng" sort of message that is displayed when the "remove geodata" process throws an error.</comment>
+  </data>
 </root>

@@ -1869,14 +1869,26 @@ public partial class FrmMainApp : Form
     private async void tsb_RemoveGeoData_Click(object sender,
         EventArgs e)
     {
-        // if user is impatient and hammer-spams the button it could create a very long queue of nothing-useful.
-        if (!RemoveGeoDataIsRunning)
+        try
         {
-            RemoveGeoDataIsRunning = true;
-            await HelperExifDataPointInteractions.ExifRemoveLocationData(
-                senderName: "FrmMainApp");
-            RemoveGeoDataIsRunning = false;
-            FileListViewReadWrite.ListViewCountItemsWithGeoData();
+            // if user is impatient and hammer-spams the button it could create a very long queue of nothing-useful.
+            if (!RemoveGeoDataIsRunning)
+            {
+                RemoveGeoDataIsRunning = true;
+                await HelperExifDataPointInteractions.ExifRemoveLocationData(
+                    senderName: "FrmMainApp");
+                RemoveGeoDataIsRunning = false;
+                RemoveCachedData(displayMessage: false); // remove cache. otherwise the app will report silly things.
+                FileListViewReadWrite.ListViewCountItemsWithGeoData();
+            }
+        }
+        catch (Exception ex)
+        {
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_ErrorRemoveGeoDataFailed",
+                captionType: MessageBoxCaption.Error,
+                buttons: MessageBoxButtons.OK,
+                extraMessage: ex.Message);
         }
     }
 
@@ -3083,8 +3095,19 @@ public partial class FrmMainApp : Form
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
+    /// <param name="displayMessage"></param>
     private void cmi_removeCachedData_Click(object sender,
-        EventArgs e)
+                                            EventArgs e,
+                                            bool displayMessage = true)
+    {
+        RemoveCachedData(displayMessage: displayMessage);
+    }
+
+    /// <summary>
+    ///     Removes any (session) cached data for the selected DE(s)
+    /// </summary>
+    /// <param name="displayMessage"></param>
+    private void RemoveCachedData(bool displayMessage)
     {
         bool dataHasBeenRemoved = false;
         foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
@@ -3128,22 +3151,18 @@ public partial class FrmMainApp : Form
             }
         }
 
-        if (dataHasBeenRemoved)
+        if (displayMessage)
         {
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_InfoCachedDataRemoved", captionType: MessageBoxCaption.Information,
-                buttons: MessageBoxButtons.OK);
-        }
-        else
-        {
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_InfoCachedDataNotRemoved", captionType: MessageBoxCaption.Information,
+                controlName: dataHasBeenRemoved
+                    ? "mbx_FrmMainApp_InfoCachedDataRemoved"
+                    : "mbx_FrmMainApp_InfoCachedDataNotRemoved", captionType: MessageBoxCaption.Information,
                 buttons: MessageBoxButtons.OK);
         }
     }
 
     private void cbx_Favourites_SelectedValueChanged(object sender,
-        EventArgs e)
+                                                     EventArgs e)
     {
         string favouriteToLoad = cbx_Favourites.Text;
 
