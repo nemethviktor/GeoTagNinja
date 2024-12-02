@@ -20,6 +20,8 @@ internal partial class FrmAboutBox : Form
     public FrmAboutBox()
     {
         InitializeComponent();
+        rtb_AboutBox.Text = string.Empty;
+
         rtb_AboutBox.LinkClicked += rtb_AboutBox_LinkClicked;
         HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
             ? ThemeColour.Dark

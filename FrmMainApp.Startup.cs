@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
@@ -25,6 +26,13 @@ public partial class FrmMainApp
         try
         {
             InitializeComponent();
+
+
+            Text = $"{((AssemblyTitleAttribute)Assembly.GetExecutingAssembly()
+                                                       .GetCustomAttributes(attributeType: typeof(AssemblyTitleAttribute),
+                                                            inherit: false)[0]).Title} [b{Assembly.GetExecutingAssembly()
+                                                           .GetName()
+                                                           .Version.Build.ToString(provider: CultureInfo.InvariantCulture)}]";
         }
         catch (Exception ex)
         {
