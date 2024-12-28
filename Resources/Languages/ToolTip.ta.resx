@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -58,4 +58,30 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ttp_loctToFile" xml:space="preserve">
+    <value>தேர்ந்தெடுக்கப்பட்ட கோப்பில் (கள்) தற்போதைய ஒருங்கிணைப்பை சேமிக்கவும்</value>
+  </data>
+  <data name="ttp_NavigateMapGo" xml:space="preserve">
+    <value>தேர்ந்தெடுக்கப்பட்ட கோப்புகளின் ஆயங்களை வரைபடத்தில் வைக்கவும்</value>
+  </data>
+  <data name="ttp_loctToFileDestination" xml:space="preserve">
+    <value>தேர்ந்தெடுக்கப்பட்ட கோப்புகளின் இலக்குக்கு தற்போதைய ஒருங்கிணைப்பை சேமிக்கவும்</value>
+  </data>
+  <data name="ttp_OffsetTime" xml:space="preserve">
+    <value>சேமிக்கப்பட்ட மதிப்பு என்ன என்பதைப் பொருட்படுத்தாமல் நேர மண்டலங்கள் திறந்த நிலையில் காலியாக விடப்படுகின்றன. TZ க்கு எக்சிஃப் குறிச்சொல் இல்லை, ஆனால் 'ஆஃப்செட்' மட்டுமே, இது '+01: 00' போன்றது. '+01: 00' உண்மையில் சி.இ.டி.யை விட பிஎச்டி என்று கூறியது, ஒன்று மற்றொன்று இல்லை என்பதை என்னால் அறிய முடியாது. ஒன்று கைமுறையாக சரிசெய்யவும் அல்லது வலையிலிருந்து இழுக்கவும் - ஆயத்தொகுப்புகளின் கலவையானது + உருவாக்கப்பட்டது உண்மையான TZ மதிப்பின் நிரலை தீர்க்கமாக தெரிவிக்கும். படிக்க மட்டும் உரைப்பெட்டியில் உள்ள மதிப்பு கோப்பில் சேமிக்கப்படும்.</value>
+  </data>
+  <data name="ttp_SaveFavourite" xml:space="preserve">
+    <value>தற்போது தேர்ந்தெடுக்கப்பட்ட கோப்பின் மெட்டாடேட்டாவை உங்களுக்கு பிடித்தவைகளில் சேமிக்கவும் (அல்லது மேலெழுதவும்)</value>
+  </data>
+  <data name="ttp_LoadFavourite" xml:space="preserve">
+    <value>உங்களுக்கு பிடித்தவைகளிலிருந்து தேர்ந்தெடுக்கப்பட்ட கோப்பிற்கான மெட்டாடேட்டாவை ஏற்றவும்</value>
+  </data>
+  <data name="ttp_ManageFavourites" xml:space="preserve">
+    <value>பிடித்தவைகளை நிர்வகிக்கவும்</value>
+  </data>
+  <data name="ttp_GPSDataPaste" xml:space="preserve">
+    <value>LAT/நீண்ட ஒதுக்கிடங்களுக்கு செல்லுபடியாகும் இணை தசமங்களை ஒட்ட CTRL+V ஐ அழுத்தவும்.
+ கிளிப்போர்டில் ஒரு இணை தசமங்கள் மட்டுமே இருக்க வேண்டும், முன்னுரிமை "மாறுபாடு" (ஆங்கிலம்) அமைப்பில், இது 12.345, 56.897 போன்ற முழு எண்-டாட்-டெசிமல்-கம்மா-இன்டர்சர்-டாட்-டெசிமல் ஆகும்
+ _Should_ குறியீடு மற்ற தளவமைப்புகளை புரிந்து கொள்ள முடியும் என்று அது கூறியது. மேலே செயல்பாட்டைத் தவிர வேறு ஏதாவது கிளிப்போர்டில் இருந்தால் தோல்வியடையும் (எதுவும் நடக்காது.)</value>
+  </data>
 </root>
