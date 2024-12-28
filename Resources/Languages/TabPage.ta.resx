@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -58,4 +58,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="tpg_Application" xml:space="preserve">
+    <value>பயன்பாடு</value>
+  </data>
+  <data name="tpg_FileOptions" xml:space="preserve">
+    <value>கோப்பு விருப்பங்கள்</value>
+  </data>
+  <data name="tpg_Exif" xml:space="preserve">
+    <value>Exif</value>
+  </data>
+  <data name="tpg_Map" xml:space="preserve">
+    <value>வரைபடம்</value>
+  </data>
+  <data name="tpg_Location" xml:space="preserve">
+    <value>இடம்</value>
+  </data>
+  <data name="tpg_DateTime" xml:space="preserve">
+    <value>தேதி &amp; நேரம்</value>
+  </data>
+  <data name="tpg_CustomRules" xml:space="preserve">
+    <value>தனிப்பயன் விதிகள்</value>
+  </data>
+  <data name="tpg_CustomCityLogic" xml:space="preserve">
+    <value>தனிப்பயன் நகர ஒதுக்கீட்டு வழக்கு</value>
+  </data>
+  <data name="tpg_GeoNames" xml:space="preserve">
+    <value>சியோனேம்ச் அமைப்புகள்</value>
+  </data>
+  <data name="tpg_ImportExport_Import" xml:space="preserve">
+    <value>தடங்களை இறக்குமதி செய்யுங்கள்</value>
+  </data>
+  <data name="tpg_ImportExport_Export" xml:space="preserve">
+    <value>ஏற்றுமதி தடங்கள்</value>
+  </data>
 </root>
