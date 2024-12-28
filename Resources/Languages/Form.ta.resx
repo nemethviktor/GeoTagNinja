@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -58,4 +58,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="FrmSettings" xml:space="preserve">
+    <value>அமைப்புகள்</value>
+  </data>
+  <data name="FrmEditFileData" xml:space="preserve">
+    <value>தரவைத் திருத்தவும்</value>
+  </data>
+  <data name="FrmImportExportGpx" xml:space="preserve">
+    <value>GPX/JSON தரவை இறக்குமதி செய்க</value>
+  </data>
+  <data name="FrmPasteWhat" xml:space="preserve">
+    <value>ஒட்டவும்… என்ன?</value>
+  </data>
+  <data name="FrmManageFavourites" xml:space="preserve">
+    <value>பிடித்தவைகளை நிர்வகிக்கவும்</value>
+  </data>
+  <data name="FrmPickDataFromAPIBox" xml:space="preserve">
+    <value>Toponmany walces ஐத் தேர்வுசெய்க</value>
+  </data>
+  <data name="FrmPleaseWaitBox" xml:space="preserve">
+    <value>கோப்புறை ஏற்றும்போது காத்திருங்கள்.</value>
+  </data>
 </root>
