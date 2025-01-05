@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="mbx_FrmEditFileData_WarningLatLongMustBeNumbers" xml:space="preserve">
+    <value>இதற்கு எண்கள் மட்டுமே இருக்க வேண்டும். இயல்புநிலை பூச்சியத்திற்கு இருக்கும்.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoDataUpdated" xml:space="preserve">
+    <value>தரவு புதுப்பிக்கப்பட்டது.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorDoubleBuffer" xml:space="preserve">
+    <value>டபுள் பஃபர் பிழை (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorLanguageFileColumnHeaders" xml:space="preserve">
+    <value>மொழி கோப்பைப் படித்து நெடுவரிசைஎடர்களை ஒதுக்குவதில் பிழை ஏற்பட்டது (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_NoFavouritesDefined" xml:space="preserve">
+    <value>உங்களுக்கு பிடித்தவை எதுவும் வரையறுக்கப்படவில்லை. வரைபடத்தின் கீழ் உள்ள பொத்தான்களைப் பயன்படுத்தி ஒன்றைச் சேர்க்கவும்.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorInvalidSender" xml:space="preserve">
+    <value>இது ஒரு பிழையாக இருக்கும். தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள், மேலும் 'அனுப்புநர்': </value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorAPIError" xml:space="preserve">
+    <value>பயன்பாடு பநிஇ உடன் தொடர்பு கொள்ளும் பிழைகளை எதிர்கொண்டது. உங்களுக்கு அங்கீகரிக்கப்படாத பிழை ஏற்பட்டால், பி.எல்.எச் உங்கள் பயனர்பெயரை அமைப்புகளில் கடவுச்சொல்லாக அமைக்கவும்.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningFileDisappeared" xml:space="preserve">
+    <value>உங்கள் கோப்புகள் மறைந்துவிட்டதாகத் தெரிகிறது.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantCreateSQLiteDB" xml:space="preserve">
+    <value>SQLITE தரவுத்தளத்தை உருவாக்க முடியாது (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantWriteSQLiteDB" xml:space="preserve">
+    <value>SQLite தரவுத்தளத்தை எழுத முடியாது ஆனால் Github இல் சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadSQLiteDB" xml:space="preserve">
+    <value>கவிமொ இலிருந்து தரவை ஏற்றுவது தோல்வியுற்றது (தயவுசெய்து Github இல் சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>கவிமொ இலிருந்து இயல்புநிலை மதிப்புகளைப் படிக்கத் தவறிவிட்டது (தயவுசெய்து கிதுபில் சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadWebView2" xml:space="preserve">
+    <value>வெப்வியூ 2 ஐ ஏற்றுவதில் பிழை - அதை நிறுவியிருக்கிறீர்களா?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeComponent" xml:space="preserve">
+    <value>Frmmainapp.initializecomponent இல் பிழை (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled" xml:space="preserve">
+    <value>Frmmainapp.initialisewebview (iswebmessageenabled) இல் பிழை (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async" xml:space="preserve">
+    <value>Frmmainapp.initialisewebview இல் பிழை (wbv_maparea.ensurecorewebview2async (c2wv) இல் காத்திருங்கள்) (தயவுசெய்து கிட்அப்பில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile" xml:space="preserve">
+    <value>Frmmainapp.initialisewebview இல் பிழை (HTMLCode கோப்பைப் படித்தல்) (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile" xml:space="preserve">
+    <value>Frmmainapp.initialisewebview இல் பிழை (HTMLCode கோப்பிலிருந்து பாகுபடுத்தும் ஆயத்தொலைவுகள்) (தயவுசெய்து கிட்அப்பில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReplaceStringInHTMLFile" xml:space="preserve">
+    <value>Frmmainapp.initialisewebview இல் பிழை (HTMLCode கோப்பில் மாறிலிகளை மாற்றுவது) (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile" xml:space="preserve">
+    <value>Frmmainapp.initialisewebview இல் பிழை (HTMLCode கோப்பில் NavigateTostring) (தயவுசெய்து கிட்அப்பில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode" xml:space="preserve">
+    <value>Frmmainapp.navigatemapgo (சரம் htmlcode) இல் பிழை (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived" xml:space="preserve">
+    <value>WBV_MAPAREA_WEBMESSAGEREDED ஐ நிகழ்த்தும்போது பிழை (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorClearingFileDataQTables" xml:space="preserve">
+    <value>Filedata-Q அட்டவணைகளை அழிப்பதில் பிழை (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorResizingColumns" xml:space="preserve">
+    <value>நெடுவரிசைகள் தோல்வியுற்றன (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorSettingStartupFolder" xml:space="preserve">
+    <value>இயல்புநிலை தொடக்க கோப்புறையை அமைப்பது தோல்வியடைந்தது (தயவுசெய்து கிதுபில் சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInvalidFolder" xml:space="preserve">
+    <value>நீங்கள் உள்ளிட்ட கோப்புறை செல்லுபடியாகாது. C க்கு திரும்பவும்: \?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorFileGoneMissing" xml:space="preserve">
+    <value>கோப்பு இனி இருப்பதாகத் தெரியவில்லை: </value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningNoItemSelected" xml:space="preserve">
+    <value>உருப்படி எதுவும் தேர்ந்தெடுக்கப்படவில்லை.</value>
+  </data>
+  <data name="mbx_Helper_WarningNoWriteSettingEnabled" xml:space="preserve">
+    <value>அசல் கோப்பின் செயலாக்கத்தை _and_ பக்கவாட்டு எக்ச்எம்பி இரண்டையும் நீங்கள் முடக்கியுள்ளீர்கள், எனவே எழுத எதுவும் இல்லை.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingInWriteQueue" xml:space="preserve">
+    <value>உங்கள் எழுதும் வினையில் எதுவும் இல்லை.</value>
+  </data>
+  <data name="mbx_Helper_WarningNoARCGISKey" xml:space="preserve">
+    <value>பயன்பாடு சரியாக வேலை செய்வதற்கான அமைப்புகளில் நீங்கள் ஒரு ARCGIS பநிஇ விசையை வழங்க வேண்டும்.</value>
+  </data>
+  <data name="mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed" xml:space="preserve">
+    <value>asyncexiftool.executeasync தோல்வியுற்றது (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_Helper_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>கவிமொ இலிருந்து இயல்புநிலை மதிப்புகளைப் படிக்கத் தவறிவிட்டது (தயவுசெய்து Github இல் சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_Helper_WarningGeoNamesAPIResponse" xml:space="preserve">
+    <value>சியோனேம்ச் பநிஇ பின்வரும் பதிலைத் திருப்பியது: </value>
+  </data>
+  <data name="mbx_Helper_WarningFileDisappeared" xml:space="preserve">
+    <value>உங்கள் கோப்புகள் மறைந்துவிட்டதாகத் தெரிகிறது.</value>
+  </data>
+  <data name="mbx_Helper_QuestionFileQIsNotEmpty" xml:space="preserve">
+    <value>சில தரவு மாற்றப்பட்டுள்ளது - சேமிக்க விரும்புகிறீர்களா?
+ நீங்கள் இல்லை என்பதைக் சொடுக்கு செய்தால் தரவு நிராகரிக்கப்படும்</value>
+  </data>
+  <data name="mbx_Helper_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>உங்களிடம் ஒரே ஒரு கோப்பு தேர்ந்தெடுக்கப்பட்டால் மட்டுமே இது செயல்படும்.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingToPaste" xml:space="preserve">
+    <value>ஒட்டுவதற்கு எதுவும் இல்லை.</value>
+  </data>
+  <data name="mbx_Helper_WarningExifToolVerAPIResponse" xml:space="preserve">
+    <value>Exiftoolverapiresponse பநிஇ பின்வரும் பதிலைத் திருப்பியது: </value>
+  </data>
+  <data name="mbx_Helper_WarningGTNVerAPIResponse" xml:space="preserve">
+    <value>அறிவிலிமையம் பநிஇ பின்வரும் பதிலைத் திருப்பியது: </value>
+  </data>
+  <data name="mbx_FrmSettings_PleaseRestartApp" xml:space="preserve">
+    <value>மாற்றம் நடைபெற பயன்பாட்டை மறுதொடக்கம் செய்யுங்கள்.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_FileOrFolderDoesntExist" xml:space="preserve">
+    <value>நீங்கள் தேர்ந்தெடுத்த கோப்பு அல்லது கோப்புறை தவறானது.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_AskUserWantsReport" xml:space="preserve">
+    <value>இறக்குமதி செயல்முறை குறித்த அறிக்கையை நீங்கள் காண விரும்புகிறீர்களா?</value>
+  </data>
+  <data name="mbx_FrmPasteWhat_NoDateShiftToPaste" xml:space="preserve">
+    <value>தேதிநேர மாற்றத்திற்கான நகல் குளத்தில் மதிப்புகள் குறிப்பிடப்படவில்லை</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_NoFileSelected" xml:space="preserve">
+    <value>இறக்குமதி செய்ய எந்த கோப்புகளும் தேர்ந்தெடுக்கப்படவில்லை.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNotValid" xml:space="preserve">
+    <value>நீங்கள் தேர்ந்தெடுத்த சேமித்த உருப்படி செல்லுபடியாகாது</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank" xml:space="preserve">
+    <value>பெயர் காலியாக/காலியாக இருக்க முடியாது</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteSaved" xml:space="preserve">
+    <value>பிடித்த சேமிக்கப்பட்டது சரி</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataRemoved" xml:space="preserve">
+    <value>ஏதேனும் இருந்தால், தேர்ந்தெடுக்கப்பட்ட பொருட்களுக்கான தற்காலிக சேமிப்பு தரவு அகற்றப்பட்டுள்ளது.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataNotRemoved" xml:space="preserve">
+    <value>தரவு எதுவும் அகற்றப்படவில்லை. ஒன்று நீங்கள் செல்லுபடியாகும் உருப்படிகளைத் தேர்ந்தெடுக்கவில்லை அல்லது நீங்கள் தேர்ந்தெடுத்தவற்றில் தற்காலிக சேமிப்பு தரவு இல்லை.</value>
+  </data>
+  <data name="mbx_HelperStaticExifNoAPI" xml:space="preserve">
+    <value>பநிஇ ஐ அடையத் தவறிவிட்டது - ஏதேனும் சந்தர்ப்பத்தால் நீங்கள் ஆஃப்லைனில் இருக்கிறீர்களா?</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty" xml:space="preserve">
+    <value>அனைத்து கீழ்தோன்றும் நெடுவரிசைகளும் காலியாக இல்லாத மதிப்பைக் கொண்டிருக்க வேண்டும், மேலும் "என்றால்" நிபந்தனை மதிப்பு காலியாக இருக்கக்கூடாது.</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty" xml:space="preserve">
+    <value>முடிவுக்கு "தனிப்பயன்" என்பதைத் தேர்ந்தெடுத்தால், தனிப்பயன் விளைவு நெடுவரிசை காலியாக இருக்கக்கூடாது. நீங்கள் அமைப்புகள் படிவத்தை மூடிவிட்டால், இது சரி செய்யப்படாவிட்டால், உங்கள் வரிசை நீக்கப்படும்.</value>
+  </data>
+  <data name="mbx_FrmImportNoStoredShiftValues" xml:space="preserve">
+    <value>"சிப்ட்" மதிப்புகள் சேமிக்கப்படவில்லை. தரவு 0 இருக்கும்.</value>
+  </data>
+  <data name="mbx_DirectoryElementCollection_ErrorParsing" xml:space="preserve">
+    <value>கோப்புறையை கோப்பகத்திற்கு அனுப்பும் போது பிழை</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionNoRowsFromAPI" xml:space="preserve">
+    <value>பநிஇ வினவல் எந்த சரியான தகவலையும் திருப்பித் தரவில்லை. நிலப்பரப்பு மதிப்புகளை வெறுமை செய்ய விரும்புகிறீர்களா?</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>துல்லியமாக 1 கோப்பு தேர்ந்தெடுக்கப்பட வேண்டும்.</value>
+  </data>
+  <data name="mbx_GenericDone" xml:space="preserve">
+    <value>முடிந்தது.</value>
+  </data>
+  <data name="mbx_GenericDoneRestartApp" xml:space="preserve">
+    <value>முடிந்தது - நீங்கள் பயன்பாட்டை மறுதொடக்கம் செய்ய விரும்புவீர்கள்.</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningMultipleImageFilesForXMP" xml:space="preserve">
+    <value>எச்சரிக்கை: பின்வரும் பக்கவாட்டு கோப்புகள் பல படக் கோப்புகளுடன் பெயர்களைப் பகிரவும் - தரவு தவறாகப் படித்திருக்கலாம்:</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToExport" xml:space="preserve">
+    <value>எதை ஏற்றுமதி செய்ய வேண்டும் என்பதைத் தேர்வுசெய்க. ஏற்றுமதி செயல்பாடு _in_ தரவுத்தளத்தை ஏற்றுமதி செய்கிறது அல்லது வேறுவிதமாகக் கூறினால் சேமிக்கப்பட்டுள்ளது என்பதை நினைவில் கொள்க. அமைப்புகளில் உங்களுக்கு மாற்றங்கள் நிலுவையில் இருந்தால், அவற்றைச் சேமிக்கவும் (அமைப்புகள் படிவத்தில் சரி என்பதைக் சொடுக்கு செய்க), பின்னர் இங்கே வாருங்கள்.</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToImport" xml:space="preserve">
+    <value>இறக்குமதி செய்ய என்ன என்பதைத் தேர்வுசெய்க. இறக்குமதி செயல்முறை வெற்றிகரமாக முடிந்ததும் தரவுத்தளத்தின் தொடர்புடைய பிட்கள் மேலெழுதப்படும் என்பதை நினைவில் கொள்க. ஏதேனும் தோல்வியுற்றால், உங்கள் AppData கோப்புறையில் உங்கள் DB இன் காப்பு கோப்பு இருக்கும்.</value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorExportFailed" xml:space="preserve">
+    <value>ஏற்றுமதி தோல்வியுற்றது: </value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorImportFailed" xml:space="preserve">
+    <value>இறக்குமதி தோல்வியுற்றது: </value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles" xml:space="preserve">
+    <value>தேர்ந்தெடுக்கப்பட்ட கோப்பு (கள்) க்கு ஆயங்களை ஒதுக்க விரும்புகிறீர்களா?</value>
+  </data>
+  <data name="mbx_GenericPathLikelyUTF" xml:space="preserve">
+    <value>கோப்பு பாதையில் யுடிஎஃப் (ஆசிய, சிரிலிக் போன்ற தரமற்றது அல்லாத) எழுத்துக்கள் உள்ளன, மேலும் இது பிழையை ஏற்படுத்தக்கூடும். “உலகளாவிய மொழி ஆதரவுக்கு யூனிகோட் யுடிஎஃப் -8 ஐப் பயன்படுத்துங்கள்” அம்சத்தை நீங்கள் இயக்கியுள்ளீர்கள் என்பதை உறுதிப்படுத்தவும். (இதற்காக README இல் அறியப்பட்ட சிக்கல்களைப் பார்க்கவும்)</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_TrackContainsNoData" xml:space="preserve">
+    <value>டிராக் மேலடுக்கை இறக்குமதி செய்வதில் தோல்வி - பொருத்தமான தோற்றமுடைய தரவைக் காணவில்லை.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorIsoCountryCodeMappingMissing" xml:space="preserve">
+    <value>ISOCOUNTRYCODEMAPPING.CSV கோப்பு வளங்கள் கோப்புறையிலிருந்து காணவில்லை. இது இல்லாமல் பயன்பாட்டை ஏற்ற முடியாது.</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionDisableFlatMode" xml:space="preserve">
+    <value>பிளாட் பயன்முறை இயக்கப்பட்டுள்ளது. நீங்கள் அதை அணைக்க விரும்புகிறீர்களா?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorRemoveGeoDataFailed" xml:space="preserve">
+    <value>சியோடேட்டா செயல்முறையை அகற்று பிழையில் தோல்வியுற்றது/திருப்பித் தரப்பட்டுள்ளது.</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionRunImportExportInFlatMode" xml:space="preserve">
+    <value>பிளாட் பயன்முறையில் இருக்கும்போது டிராக் இறக்குமதி/ஏற்றுமதி இயங்கும் ஒரு மோசமான யோசனையாகும், ஏனெனில் தடங்கள் இடைவினைகள் சிறப்பு தர்க்கத்தைப் பயன்படுத்துகின்றன, அவை கோப்புறைகளில் ஒரே மாதிரியாக பெயரிடப்பட்ட கோப்புகளுக்கு இடையில் வேறுபடுத்த முடியாது. இதை இயக்க விரும்புகிறீர்களா?</value>
+  </data>
+</root>
