@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="lbl_ARCGIS_APIKey" xml:space="preserve">
+    <value>ArcGIS பநிஇ விசை</value>
+  </data>
+  <data name="lbl_GeoNames_Pwd" xml:space="preserve">
+    <value>சியோனேம்ச் கடவுச்சொல்</value>
+  </data>
+  <data name="lbl_Startup_Folder" xml:space="preserve">
+    <value>தொடக்க கோப்புறை</value>
+  </data>
+  <data name="lbl_Language" xml:space="preserve">
+    <value>மொழி</value>
+  </data>
+  <data name="lbl_ImportTimeAgainst" xml:space="preserve">
+    <value>ட்ராக் கோப்புகளில் உள்ள நேர முத்திரையை ஒப்பிடுகையில்:</value>
+  </data>
+  <data name="lbl_SaveTrackTo" xml:space="preserve">
+    <value>வெளியீட்டைச் சேமிக்கவும்</value>
+  </data>
+  <data name="lbl_GeoNames_UserName" xml:space="preserve">
+    <value>சியோனேம்ச் பயனர்பெயர்</value>
+  </data>
+  <data name="lbl_ParseProgress_Read" xml:space="preserve">
+    <value>படித்தல்:</value>
+  </data>
+  <data name="lbl_ParseProgress_Write" xml:space="preserve">
+    <value>எழுதுதல்:</value>
+  </data>
+  <data name="lbl_ParseProgress_Normal" xml:space="preserve">
+    <value>ஆயத்தம்</value>
+  </data>
+  <data name="lbl_QuestionAddToponomy" xml:space="preserve">
+    <value>உயரம் மற்றும் நிலப்பரப்பு மதிப்புகளையும் ஒதுக்க விரும்புகிறீர்களா?
+ நீங்கள் இல்லை என்பதைத் தேர்ந்தெடுத்தால், உங்கள் LAT/நீண்ட தரவு எந்தவொரு உட்பொதிக்கப்பட்ட நிலத்தடி தரவையும் ஒத்திசைக்காது.
+ நீங்கள் 'கேட்பதை நிறுத்துங்கள்' என்பதைக் சொடுக்கு செய்தால், அது ஆம் என பதிலை எடுக்கும், இந்த அமர்வை மீண்டும் கேட்காது. மீட்டமைக்க மறுதொடக்கம்.</value>
+  </data>
+  <data name="lbl_ShiftTrackTimeBy" xml:space="preserve">
+    <value>டிராக் கோப்பு நேரத்தை மாற்றவும்:</value>
+  </data>
+  <data name="lbl_CameraTime" xml:space="preserve">
+    <value>கேமரா தேதி/நேரம்</value>
+  </data>
+  <data name="lbl_TZTime" xml:space="preserve">
+    <value>நேர மண்டல சரிசெய்தல்:</value>
+  </data>
+  <data name="lbl_TZNote" xml:space="preserve">
+    <value>குறிப்பு: தேதி/நேரக் குறிச்சொல்லில் நேர மண்டலத்தை சேர்க்கவில்லை என்றால் ஒன்று சேர்க்கப்படலாம் (கீழே காண்க), இல்லையெனில் உள்ளக கணினி நேரம் கருதப்படுகிறது.</value>
+  </data>
+  <data name="lbl_importOneFile" xml:space="preserve">
+    <value>&lt;- இறக்குமதி மூல கோப்பை அமைக்கவும் என்பதைக் சொடுக்கு செய்க</value>
+  </data>
+  <data name="lbl_CameraTimeNote" xml:space="preserve">
+    <value>குறிப்பு: பட நேர முத்திரைகள் சி.பி.எச் நேரத்துடன் சரியாக ஒத்திசைக்கப்படாதபோது மட்டுமே நேர மாற்றம் தேவைப்படுகிறது. தேவையில்லை என்றால் 0S ஆக விடவும்.</value>
+  </data>
+  <data name="lbl_importFromAnotherFolder" xml:space="preserve">
+    <value>&lt;- இறக்குமதி மூல கோப்புறையை அமைக்கவும் என்பதைக் சொடுக்கு செய்க</value>
+  </data>
+  <data name="lbl_GeoMaxIntSecs" xml:space="preserve">
+    <value>அதிகபட்ச இடைக்கணிப்பு ('பாதை யூகித்தல்') நொடிகளில் நேரம். முடக்க 0 என அமைக்கவும்.</value>
+  </data>
+  <data name="lbl_GeoMaxExtSecs" xml:space="preserve">
+    <value>அதிகபட்ச எக்ச்ட்ராபோலேசன் (டேக் டைம்ச்டாம்ப் மற்றும் டிராக் பாயிண்ட் இடையே நேர வேறுபாடு) நேரம்.</value>
+  </data>
+  <data name="lbl_OffsetTime" xml:space="preserve">
+    <value>நேர மண்டலம்</value>
+  </data>
+  <data name="lbl_SelectColsTitle" xml:space="preserve">
+    <value>நெடுவரிசைகளைத் தேர்ந்தெடுக்கவும்</value>
+  </data>
+  <data name="lbl_ChoiceOfferCount" xml:space="preserve">
+    <value>இந்த பல இடுப்பு விருப்பங்களைக் காட்டுங்கள்</value>
+  </data>
+  <data name="lbl_ChoiceRadius" xml:space="preserve">
+    <value>ஆரம் [கி.மீ]</value>
+  </data>
+  <data name="lbl_ExportTrackOrderBy" xml:space="preserve">
+    <value>டிராக் பாயிண்ட்களை வரிசைப்படுத்துங்கள்</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampType" xml:space="preserve">
+    <value>நேர முத்திரை மதிப்பு</value>
+  </data>
+  <data name="lbl_ParsingFolders" xml:space="preserve">
+    <value>கோப்புகளை பாகுபடுத்துதல் &amp;&amp; கோப்புறைகள், தயவுசெய்து காத்திருங்கள். </value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampTypeNote" xml:space="preserve">
+    <value>நீங்கள் GPSDateTime ஐத் தேர்ந்தெடுத்து, உங்கள் கோப்பில் அத்தகைய பண்புக்கூறு இல்லை என்றால் ஏற்றுமதி தோல்வியடையும்.
+ சில HEIC கோப்புகளில் இது உள்ளது, பிற வடிவங்கள் இல்லை.</value>
+  </data>
+  <data name="lbl_CancelPressed" xml:space="preserve">
+    <value>அழுத்தப்பட்டதை ரத்துசெய். கோப்புறை பாகுபடுத்தல் நிறுத்தப்பட்டுள்ளது, ஆனால் சேகரிக்கப்பட்ட கோப்புகள் பாகுபடுத்தப்படும்.</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionPopulatingListView" xml:space="preserve">
+    <value>முதன்மையான கட்டத்தை விரிவுபடுத்துதல் (பட்டியல் காட்சி)</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionParsing" xml:space="preserve">
+    <value>தரவு பாகுபடுத்தல்:</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionScanning" xml:space="preserve">
+    <value>ச்கேனிங் கோப்பு:</value>
+  </data>
+  <data name="lbl_PressCancelToStop" xml:space="preserve">
+    <value>நிறுத்த ரத்துசெய்.</value>
+  </data>
+</root>
