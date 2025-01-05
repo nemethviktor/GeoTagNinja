@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="tmi_File" xml:space="preserve">
+    <value>கோப்பு</value>
+  </data>
+  <data name="tmi_File_SaveAll" xml:space="preserve">
+    <value>அனைத்தையும் சேமி</value>
+  </data>
+  <data name="tmi_File_EditFiles" xml:space="preserve">
+    <value>கோப்புகளைத் திருத்தவும்</value>
+  </data>
+  <data name="tmi_File_ImportExportGPX" xml:space="preserve">
+    <value>GPX/JSON மின்தடம் கோப்புகளை இறக்குமதி/ஏற்றுமதி செய்யுங்கள்</value>
+  </data>
+  <data name="tmi_File_Quit" xml:space="preserve">
+    <value>வெளியேறு</value>
+  </data>
+  <data name="tmi_Help" xml:space="preserve">
+    <value>உதவி</value>
+  </data>
+  <data name="tmi_Help_About" xml:space="preserve">
+    <value>பற்றி</value>
+  </data>
+  <data name="tmi_File_CopyGeoData" xml:space="preserve">
+    <value>அனைத்து சியோடேட்டாவையும் நகலெடுக்கவும்</value>
+  </data>
+  <data name="tmi_File_PasteGeoData" xml:space="preserve">
+    <value>அனைத்து சியோடேட்டாவையும் ஒட்டவும்</value>
+  </data>
+  <data name="tmi_Settings" xml:space="preserve">
+    <value>அமைப்புகள்</value>
+  </data>
+  <data name="tmi_Settings_Settings" xml:space="preserve">
+    <value>அமைப்புகள்</value>
+  </data>
+  <data name="cmi_ShowHideCols" xml:space="preserve">
+    <value>நெடுவரிசைகளைக் காட்டவும் அல்லது மறைக்கவும்</value>
+  </data>
+  <data name="cmi_removeCachedData" xml:space="preserve">
+    <value>தற்காலிக சேமிப்பு தரவை அகற்று</value>
+  </data>
+  <data name="tmi_Settings_Favourites" xml:space="preserve">
+    <value>பிடித்தவைகளை நிர்வகிக்கவும்</value>
+  </data>
+  <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
+    <value>பநிஇ இல் திறந்த ஒருங்கிணைப்புகள்</value>
+  </data>
+  <data name="tmi_File_FlatMode" xml:space="preserve">
+    <value>பிளாட் பயன்முறை (பாகுபடுத்தும் துணை கோப்புறைகள்)</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest" xml:space="preserve">
+    <value>அம்ச கோரிக்கையை தாக்கல் செய்யுங்கள் (கிதுப்)</value>
+  </data>
+  <data name="tmi_Help_BugReport" xml:space="preserve">
+    <value>பிழை அறிக்கையை (கிதுப்) தாக்கல் செய்யுங்கள்</value>
+  </data>
+</root>
