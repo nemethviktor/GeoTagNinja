@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="rbx_Register_ArcGIS" xml:space="preserve">
+    <value>வரைபட தேடல் செயல்பாட்டைப் பயன்படுத்த உங்களுக்கு ARCGIS பநிஇ விசை தேவை.
+ ஆர்கிசிச் சூன் 2024 நிலவரப்படி தங்கள் பதிவு செயல்முறையை மாற்றியுள்ளது.
+ நீங்கள் இப்போது ஒரு போர்டல் முகவரி ஐ குறிப்பிட வேண்டும். நீங்கள் விரும்பும் எதையும் உள்ளிடவும்.
+ `டெவலப்பர் நற்சான்றிதழ் படைப்பாளருக்கு` உருட்டவும்/செல்லவும்
+ பின்னர் `புதிய உருப்படி`
+ பின்னர் `டெவலப்பர் நற்சான்றிதழ்கள்`
+ `Api key` (oauth அல்ல)
+ உங்கள் காலாவதி தேதியை உங்களால் முடிந்தவரை (1 வருடம்) எதிர்காலத்தில் அமைக்கவும்
+ `பரிந்துரைப்பாளர்களை காலியாக விடுங்கள்
+ அடுத்த பக்கத்தில் `சியோகோடிங் (சேமிக்கப்படவில்லை)`
+ அடுத்த பக்கத்தில் `உருப்படி அணுகல்` ஐத் தவிர்க்கவும்
+ அடுத்த பக்கத்தில் எந்த தலைப்பையும் சேர்க்கவும்
+ இறுதியில் `ஏபிஐ விசையை உருவாக்கி உருப்படி விவரங்கள் பக்கத்திற்குச் செல்லவும். விசையை நகலெடுத்து சேமிக்க நான் தயாராக இருக்கிறேன் .`
+ கேட்கும் போது பநிஇ விசையை சேமிக்கவும். அந்த நேரத்தில் நீங்கள் அதைச் செய்யாவிட்டால், நீங்கள் இன்னொன்றை உருவாக்க வேண்டும்.</value>
+  </data>
+  <data name="rbx_Register_GeoNames" xml:space="preserve">
+    <value>தலைகீழ் சியோகோடிங்/தேடல் செயல்பாட்டை (லாட்/லாங் -&gt; நாடு/நகரம்/...) பயன்படுத்த உங்களுக்கு சியோனேம்ச் கணக்கு தேவை. ஒன்றைப் பெறுங்கள்: http://www.geonames.org/login</value>
+  </data>
+  <data name="rbx_CustomRulesExplanation" xml:space="preserve">
+    <value>இது ஒரு மேம்பட்ட நற்பொருத்தம். Adminname1-4 &amp; toponmanmname பநிஇ வெளியீடுகளைக் குறிக்கின்றன, எனவே உங்களுக்கு அது புரியவில்லை என்றால், இதை ஒன்றும் குத்த வேண்டாம்.
+ Re: "முன்னரே தீர்மானிக்கப்பட்ட நாடுகள்" (கீழே உள்ள தேர்வுப்பெட்டி): இங்கே இருப்பதைப் படியுங்கள்: https://github.com/nemethviktor/geotagninja/issues/38#issuecomment-1356844255 + மற்ற தாவலை முடக்கினால் அந்த அமைப்பை சரிபார்க்கவும் தொடர்புடைய குழுவிற்கு வெளியே வரும் வெற்று கன்ட்ரி கோட் செல்கள் ஆனால் உண்மையில் அந்த வரிசைகளை கைவிடாது.
+ எல்லா நெடுவரிசைகளும் "தனிப்பயன்" என்பதற்கு கட்டாய EXC ஆகும், ஆனால் நீங்கள் முடிவை "தனிப்பயன்" என்று அமைத்து, "தனிப்பயன்" கோலை காலியாக விட்டால் வரிசை புறக்கணிக்கப்படும். தரவு-உணர்திறன் இல்லை. ஒவ்வொரு தரவுத்தொகுப்பிற்கும் (எ.கா. நகரம், மாநிலம்) கடைசி வரிசை முந்தையவற்றை மேலெழுதும். அடிப்படையில் விவேகமானதாக இருங்கள். அதிக வரிசைகள் நீங்கள் மெதுவாகச் சேர்க்கும்.
+ எடுத்துக்காட்டு: லண்டன் இங்கிலாந்தின் ஏபிஐயில் இருந்து இயல்புநிலை தரவு வருமானம் மோசமாக உள்ளது, ஏனெனில் அந்த குறிப்பிட்ட பிராந்தியத்திற்கு நிர்வாகி பெயர் 2 = "கிரேட்டர் லண்டன்", மேலும் இது அப்படி நிராகரிக்கப்படும் (நகரங்கள் பொதுவாக "டாப் பெயர் பெயர்" இலிருந்து). . முழு விசயத்தையும் 2 வது வரிசையில் மீண்டும் செய்யவும், ஆனால் "பின்னர்" = "சப்_லோக்சன்" மற்றும் "=" TopomanmyName "ஆகிறது.</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold" xml:space="preserve">
+    <value>கீழேயுள்ள அட்டவணையில் மாற்றங்கள் உடனடியாக பாதிக்கப்படுகின்றன என்பதையும், சரி/ரத்துசெய் பொத்தானை அவற்றில் எந்த விளைவும் இல்லை என்பதையும் நினைவில் கொள்க. இந்த அமர்வுக்குள் தரவை இழுக்க விரும்பினால் (அல்லது பயன்பாட்டை மறுதொடக்கம் செய்யுங்கள்.) உங்கள் மாற்றங்களால் பாதிக்கப்படக்கூடிய எந்தவொரு கோப்பிற்கும் தற்காலிக சேமிப்பு தரவை மீட்டமைக்க வேண்டும் என்பதைக் சொடுக்கு செய்து சொடுக்கு செய்ய வேண்டும்.</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanation" xml:space="preserve">
+    <value>இது ஒரு மேம்பட்ட நற்பொருத்தம். Adminname1-4 &amp; toponmanmname பநிஇ வெளியீடுகளைக் குறிக்கின்றன, எனவே உங்களுக்கு அது புரியவில்லை என்றால், இதை ஒன்றும் குத்த வேண்டாம்.
+ ஒட்டுமொத்த தீர்வுக்கு, சரிபார்க்கவும்: https://github.com/nemethviktor/geotagninja/issues/38#issuecomment-1356844255.
+ இந்த அமைப்பு என்னவென்றால், குறிப்பிட்ட நிர்வாகப் பெயர்களில் ஒன்றிலிருந்து "நகரம்" மதிப்பைப் பெற நாடுகளின் சொந்த தேர்வுகளை நீங்கள் சேர்க்கலாம்.</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanationBold" xml:space="preserve">
+    <value>கீழேயுள்ள அட்டவணையில் மாற்றங்கள் உடனடியாக பாதிக்கப்படுகின்றன என்பதையும், சரி/ரத்துசெய் பொத்தானை அவற்றில் எந்த விளைவும் இல்லை என்பதையும் நினைவில் கொள்க. இந்த அமர்வுக்குள் தரவை இழுக்க விரும்பினால் (அல்லது பயன்பாட்டை மறுதொடக்கம் செய்யுங்கள்.) உங்கள் மாற்றங்களால் பாதிக்கப்படக்கூடிய எந்தவொரு கோப்பிற்கும் தற்காலிக சேமிப்பு தரவை மீட்டமைக்க வேண்டும் என்பதைக் சொடுக்கு செய்து சொடுக்கு செய்ய வேண்டும்.</value>
+  </data>
+</root>
