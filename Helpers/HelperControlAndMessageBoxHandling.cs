@@ -81,7 +81,6 @@ internal static class HelperControlAndMessageBoxHandling
         {
             FrmMainApp.Log.Trace(message: $"Starting - cItem: {cItem.Name}");
 
-
             cItem.Text = HelperLocalisationResourceManager.GetResourceValue(control: cItem, location: "Strings");
         }
 

@@ -105,7 +105,7 @@ public partial class FrmPleaseWaitBox : Form
             lbl_CancelPressed.Visible = false;
             lbl_PleaseWaitBoxMessage.Visible = true;
             lbl_PressCancelToStop.Visible = false;
-            btn_Cancel.Visible = false;
+            btn_Cancel.Visible = true;
             lbl_PleaseWaitBoxActionScanning.Visible = false;
             lbl_PleaseWaitBoxActionParsing.Visible = true;
             lbl_PleaseWaitBoxActionPopulatingListView.Visible = false;

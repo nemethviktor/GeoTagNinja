@@ -193,7 +193,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         Log.Trace(message: $"Start Parsing Folder '{folderOrCollectionFileName}'");
         updateProgressHandler(obj: "Scanning folder: Initializing ...");
 
-        CancellationToken token = cts.Token;
+        CancellationToken cancellationToken = cts.Token;
         if (_ExifTool == null)
         {
             throw new InvalidOperationException(
@@ -371,12 +371,12 @@ public class DirectoryElementCollection : List<DirectoryElement>
             {
                 await Task.Run(action: () =>
                 {
-                    filesInDir = _helperNonStatic.GetFiles(
+                    filesInDir = _helperNonStatic.GetFilesFromAFolder(
                         folder: folderOrCollectionFileName,
                         filter: allowedImageExtensions.Concat(second: allowedSidecarExtensions).ToArray(),
                         recursive: processSubFolders,
                         updateProgressHandler: updateProgressHandler,
-                        cancellationToken: token
+                        cancellationToken: cancellationToken
                     ); // Force enumeration to ensure all files are processed
                 });
             }
@@ -387,11 +387,6 @@ public class DirectoryElementCollection : List<DirectoryElement>
             catch (Exception ex)
             {
                 Console.WriteLine(value: $"Error: {ex.Message}");
-            }
-
-            if (_frmPleaseWaitBoxInstance != null)
-            {
-                _frmPleaseWaitBoxInstance.UpdateLabels(stage: FrmPleaseWaitBox.ActionStages.PARSING);
             }
         }
 
@@ -506,17 +501,60 @@ public class DirectoryElementCollection : List<DirectoryElement>
         if (_frmPleaseWaitBoxInstance != null)
         {
             _frmPleaseWaitBoxInstance.UpdateLabels(stage: FrmPleaseWaitBox.ActionStages
-                                                                          .PARSING); // i'm pretty sure this is a duplicate
+                                                                          .PARSING);
         }
 
+        await Task.Run(action: () =>
+        {
+            ParseImagesToDirectoryElements(updateProgressHandler: updateProgressHandler,
+                imageFiles: imageFiles,
+                fileCount: fileCount,
+                imageToSidecarFileMapping: imageToSidecarFileMapping,
+                cancellationToken: cancellationToken);
+        });
+
+        CreateGUIDsForDirectoryElements();
+
+        FrmMainApp.TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.NoProgress);
+
+        Log.Info(message: "Files: Extracting File Data - OK");
+
+    #endregion
+
+    #endregion
+    }
+
+    /// <summary>
+    ///     Parses the files into DEs. If Cancel is hit the operation terminates as-is (w/o listing the rest of the files.)
+    /// </summary>
+    /// <param name="updateProgressHandler"></param>
+    /// <param name="imageFiles"></param>
+    /// <param name="fileCount"></param>
+    /// <param name="imageToSidecarFileMapping"></param>
+    /// <param name="cancellationToken"></param>
+    private void ParseImagesToDirectoryElements(Action<string> updateProgressHandler,
+                                                HashSet<FileInfo> imageFiles,
+                                                int fileCount,
+                                                IDictionary<FileInfo, FileInfo> imageToSidecarFileMapping,
+                                                CancellationToken cancellationToken)
+    {
         foreach (FileInfo imagefileFileInfoItem in imageFiles)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                break;
+            }
+
             Log.Info(message: $"File: {imagefileFileInfoItem.FullName}");
             string fileNameWithoutPath = imagefileFileInfoItem.Name;
             if (_frmPleaseWaitBoxInstance != null)
             {
                 Application.DoEvents();
-                _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Text = imagefileFileInfoItem.FullName;
+                _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Invoke(method: (MethodInvoker)delegate
+                {
+                    // Running on the UI thread
+                    _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Text = imagefileFileInfoItem.FullName;
+                });
 
                 updateProgressHandler(
                     obj:
@@ -569,7 +607,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
             if (fileNeedsReDEing)
             {
                 // delete from DE-collection (xmp files don't have a DE entry)
-                DirectoryElement? directoryElementToRemove =
+                DirectoryElement directoryElementToRemove =
                     FindElementByFileNameWithPath(FileNameWithPath: imagefileFileInfoItem.FullName);
                 if (directoryElementToRemove is not null)
                 {
@@ -610,16 +648,6 @@ public class DirectoryElementCollection : List<DirectoryElement>
             FrmMainApp.TaskbarManagerInstance.SetProgressValue(currentValue: fileCount, maximumValue: imageFiles.Count);
             Thread.Sleep(millisecondsTimeout: 1);
         }
-
-        CreateGUIDsForDirectoryElements();
-
-        FrmMainApp.TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.NoProgress);
-
-        Log.Info(message: "Files: Extracting File Data - OK");
-
-    #endregion
-
-    #endregion
     }
 
     /// <summary>

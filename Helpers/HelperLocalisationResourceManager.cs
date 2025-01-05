@@ -38,6 +38,12 @@ internal static class HelperLocalisationResourceManager
             resourceKey = control.Name;
         }
 
+        if (control is Form &&
+            !resourceKey.StartsWith(value: "frm_"))
+        {
+            resourceKey = $"frm_{resourceKey}";
+        }
+
         string resourceValue = string.Empty;
         try
         {

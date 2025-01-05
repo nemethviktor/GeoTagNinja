@@ -2,9 +2,10 @@
 
 **Build 9xxx [20250xxx]** 
 - NEW & UPDATED:
-	- TBA
+	- Added a CancellationToken to the Parsing of DirectoryElements (aka you can now cancel loading a folder.) #120
 - BUGS & FIXES:
-	- TBA
+	- Changed the Translation/resources logic into a single file. I realised that having 10 different files would yield 20+ PRs if anyone does an update and it's annoying.
+	- Fixed half of the translations not actually working because...not even sure why. My bad nonetheless.
 
 **Build 9102 [20241202]** 
 - NEW & UPDATED:

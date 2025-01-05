@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -22,16 +23,16 @@ internal partial class HelperNonStatic
     /// <param name="updateProgressHandler">Action link to the <see cref="FrmMainApp.HandlerUpdateLabelText" /></param>
     /// <param name="cancellationToken">The CT</param>
     /// <returns></returns>
-    internal IEnumerable<FileInfo> GetFiles(
-        string folder,
-        string[] filter,
-        bool recursive,
-        Action<string> updateProgressHandler,
-        CancellationToken cancellationToken)
+    internal IEnumerable<FileInfo> GetFilesFromAFolder(string folder,
+                                                       string[] filter,
+                                                       bool recursive,
+                                                       Action<string> updateProgressHandler,
+                                                       CancellationToken cancellationToken)
     {
         _frmPleaseWaitBoxInstance =
             (FrmPleaseWaitBox)Application.OpenForms[name: "FrmPleaseWaitBox"];
-
+        Debug.Assert(condition: _frmPleaseWaitBoxInstance != null,
+            message: $"{nameof(_frmPleaseWaitBoxInstance)} != null");
         IEnumerable<string> found = new List<string>();
         try
         {
@@ -58,10 +59,7 @@ internal partial class HelperNonStatic
             }
 
             // updateProgressHandler(obj: $"Scanning file: {file}");
-            if (_frmPleaseWaitBoxInstance != null)
-            {
-                _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Text = file;
-            }
+            _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Text = file;
 
             yield return new FileInfo(fileName: file);
             counter++;
@@ -86,7 +84,7 @@ internal partial class HelperNonStatic
                     yield break;
                 }
 
-                foreach (FileInfo subFile in GetFiles(folder: dir, filter: filter, recursive: recursive,
+                foreach (FileInfo subFile in GetFilesFromAFolder(folder: dir, filter: filter, recursive: recursive,
                              updateProgressHandler: updateProgressHandler, cancellationToken: cancellationToken))
                 {
                     yield return subFile;
