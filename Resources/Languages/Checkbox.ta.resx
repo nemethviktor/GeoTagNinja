@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ckb_ProcessOriginalFile" xml:space="preserve">
+    <value>படக் கோப்பை செயலாக்கவும்</value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated" xml:space="preserve">
+    <value>படக் கோப்பை உருவாக்குவதற்கு மீட்டமைக்கவும்</value>
+  </data>
+  <data name="ckb_AddXMPSideCar" xml:space="preserve">
+    <value>சைட்கார் எக்ச்எம்பியைச் சேர்க்கவும்/மேலெழுதவும்</value>
+  </data>
+  <data name="ckb_OverwriteOriginal" xml:space="preserve">
+    <value>XXX_ORIGINAL காப்புப்பிரதியை உருவாக்க வேண்டாம்</value>
+  </data>
+  <data name="ckb_ResetMapToZero" xml:space="preserve">
+    <value>சியோடேட்டா இல்லை என்றால் வரைபடத்தை 0/0 ஆக அமைக்கவும்</value>
+  </data>
+  <data name="ckb_UseTimeZone" xml:space="preserve">
+    <value>இந்த நேர மண்டலத்தைப் பயன்படுத்தவும்:</value>
+  </data>
+  <data name="ckb_OffsetTime" xml:space="preserve">
+    <value>நேர மண்டலம் ஆஃப்செட்</value>
+  </data>
+  <data name="ckb_DeSelectAll" xml:space="preserve">
+    <value>(ஐ.நா) அனைத்தையும் சரிபார்க்கவும்</value>
+  </data>
+  <data name="ckb_RemoveGeoDataRemovesTimeOffset" xml:space="preserve">
+    <value>"சியோடேட்டாவை அகற்று" செயல்பாடு நேர மண்டல ஆஃப்செட்டையும் நீக்குகிறது</value>
+  </data>
+  <data name="ckb_ReplaceBlankToponyms" xml:space="preserve">
+    <value>வெற்று நகரம், மாநில, சப்ளோகேசன் மதிப்புகளை மாற்றவும்: </value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries" xml:space="preserve">
+    <value>"முன்னரே தீர்மானிக்கப்பட்ட" நாடுகளைச் சேர்க்கவா? (மேலே உள்ள இணைப்பைக் காண்க + எச்சரிக்கை/எச்சரிக்கை)</value>
+  </data>
+  <data name="ckb_StopProcessingRules" xml:space="preserve">
+    <value>முதல் நாடு+இலக்கு பொருத்தத்திற்குப் பிறகு செயலாக்க விதிகளை நிறுத்துங்கள்</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI" xml:space="preserve">
+    <value>தலைகீழ் சியோகோடிங்கைச் செய்ய வேண்டாம் (ஆயங்களை மட்டுமே பெறுங்கள், ஆனால் நகரம்/மாநிலம்/போன்றவை அல்ல)</value>
+  </data>
+  <data name="ckb_QuestionStopProcessingRows" xml:space="preserve">
+    <value>மேலும் வரிசைகளை செயலாக்குவதை நிறுத்தவா?</value>
+  </data>
+  <data name="ckb_UseImperialNotMetric" xml:space="preserve">
+    <value>உயரத்திற்கு இம்பீரியல் (அடி) பயன்படுத்தவும் (மெட்ரிக் [மீட்டர்] ஐ விட)</value>
+  </data>
+  <data name="ckb_UpdateCheckPreRelease" xml:space="preserve">
+    <value>முன் வெளியீடு [பீட்டா] புதுப்பிப்புகளையும் சரிபார்க்கவும்?</value>
+  </data>
+  <data name="ckb_UseDarkMode" xml:space="preserve">
+    <value>பயன்பாட்டின் இடைமுகம் இல் இருண்ட பயன்முறையைப் பயன்படுத்தவா?</value>
+  </data>
+  <data name="ckb_ImportExport_CityRulesSettings" xml:space="preserve">
+    <value>சிட்டி ருலெசெட்டிங்ச்</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap" xml:space="preserve">
+    <value>வரைபடத்தில் மேலடுக்கு டிராக் கோப்பு</value>
+  </data>
+  <data name="ckb_OverlayGPXForSelectedDatesOnly" xml:space="preserve">
+    <value>தேர்ந்தெடுக்கப்பட்ட கோப்புகளின் முதல் மற்றும் கடைசி தேதிக்குள் வரும் தேதிகளுக்கு மட்டுமே</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude" xml:space="preserve">
+    <value>ஏற்றுமதியில் உயரத் தரவைச் சேர்க்கவும்</value>
+  </data>
+  <data name="ckb_PopulatedPlacesOnly" xml:space="preserve">
+    <value>"மக்கள் தொகை கொண்ட இடங்களுக்கு" (FCODE = PPL) வடிகட்டப்பட்ட பநிஇ தரவை மட்டுமே காண்பி [பரிந்துரைக்கப்படவில்லை]</value>
+  </data>
+</root>
