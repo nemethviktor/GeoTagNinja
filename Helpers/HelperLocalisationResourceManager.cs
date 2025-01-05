@@ -1,5 +1,8 @@
-﻿using System.Resources;
+﻿using System.Globalization;
+using System.Resources;
+using System.Threading;
 using System.Windows.Forms;
+using GeoTagNinja.Resources.Languages;
 
 namespace GeoTagNinja.Helpers;
 
@@ -13,8 +16,9 @@ internal static class HelperLocalisationResourceManager
     /// <returns></returns>
     public static string GetResourceValue(Control control, string location)
     {
-        ResourceManager resourceManager = new(baseName: $"GeoTagNinja.Resources.Languages.{location}",
-            assembly: typeof(HelperNonStatic).Assembly);
+        ResourceManager resourceManager = new(resourceSource: typeof(Strings));
+        string resourceKeyInGenericMapping =
+            HelperGenericAncillaryListsArrays.GetGenericControlName(controlName: control.Name);
 
         // Attempt to get the resource value based on the control's name
         // This has been done a little oddly because items like btn_OK became btn_Generic_Ok and lbl_Generic_OK so we're taking whatever comes after the first underscore.
@@ -24,9 +28,9 @@ internal static class HelperLocalisationResourceManager
             resourceKey = control.Name.Substring(startIndex: control.Name.IndexOf(value: '_') + 1);
         }
         // Alternatively if it's not been designated as Generic but is nonetheless then we use the lookup dict
-        else if (location == HelperVariables.ResourceNameForGenericControlItems)
+        else if (resourceKeyInGenericMapping != HelperVariables.ControlItemNameNotGeneric)
         {
-            resourceKey = HelperGenericAncillaryListsArrays.GetGenericControlName(controlName: control.Name);
+            resourceKey = resourceKeyInGenericMapping;
         }
         // Still alternatively we just take the name of the item
         else
@@ -37,6 +41,8 @@ internal static class HelperLocalisationResourceManager
         string resourceValue = string.Empty;
         try
         {
+            Thread.CurrentThread.CurrentUICulture =
+                new CultureInfo(name: CultureInfo.GetCultureInfo(name: FrmMainApp.AppLanguage).Name);
             resourceValue = resourceManager.GetString(name: resourceKey);
         }
         catch
@@ -65,17 +71,29 @@ internal static class HelperLocalisationResourceManager
     public static string GetResourceValue(string controlName, string location)
     {
         string resourceKey = controlName; // bit lame but to keep in line with the above block.
+        string resourceKeyInGenericMapping =
+            HelperGenericAncillaryListsArrays.GetGenericControlName(controlName: controlName);
+
+        string resourceValue = string.Empty;
+
         ResourceManager resourceManager = new(baseName: $"GeoTagNinja.Resources.Languages.{location}",
             assembly: typeof(HelperLocalisationResourceManager).Assembly);
+
         if (resourceKey.Contains(value: "Generic") ||
             location == HelperVariables.ResourceNameForGenericControlItems)
         {
             resourceKey = $"Generic_{resourceKey.Substring(startIndex: resourceKey.IndexOf(value: '_') + 1)}";
         }
+        // Alternatively if it's not been designated as Generic but is nonetheless then we use the lookup dict
+        else if (resourceKeyInGenericMapping != HelperVariables.ControlItemNameNotGeneric)
+        {
+            resourceKey = resourceKeyInGenericMapping;
+        }
 
-        string resourceValue = string.Empty;
         try
         {
+            Thread.CurrentThread.CurrentUICulture =
+                new CultureInfo(name: CultureInfo.GetCultureInfo(name: FrmMainApp.AppLanguage).Name);
             resourceValue = resourceManager.GetString(name: resourceKey);
         }
         catch

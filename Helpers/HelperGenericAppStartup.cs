@@ -104,7 +104,8 @@ internal static class HelperGenericAppStartup
 
             FrmMainApp.AppLanguage = lang switch
             {
-                // this is rather legacy poking. 
+                // This is rather legacy poking. Basically if there is a remnant of the old database data this will convert it to "new".
+                // No need to add any further languages here.
                 "English" => "en",
                 "French" => "fr",
 

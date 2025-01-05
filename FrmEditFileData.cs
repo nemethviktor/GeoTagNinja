@@ -904,8 +904,10 @@ public partial class FrmEditFileData : Form
             default:
                 // took me a while to understand my own code. what we are doing here is that we are trying to tell the user (and by proxy, the developer) that something other than the two buttons defined above have been pressed.
                 HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                    controlName: "mbx_FrmEditFileData_ErrorInvalidSender", captionType: MessageBoxCaption.Error,
-                    buttons: MessageBoxButtons.OK, extraMessage: ((Button)sender).Name);
+                    controlName: "mbx_FrmEditFileData_ErrorInvalidSender",
+                    captionType: MessageBoxCaption.Error,
+                    buttons: MessageBoxButtons.OK,
+                    extraMessage: ((Button)sender).Name);
                 break;
         }
 

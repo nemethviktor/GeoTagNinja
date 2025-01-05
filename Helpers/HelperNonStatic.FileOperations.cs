@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -32,8 +31,7 @@ internal partial class HelperNonStatic
     {
         _frmPleaseWaitBoxInstance =
             (FrmPleaseWaitBox)Application.OpenForms[name: "FrmPleaseWaitBox"];
-        Debug.Assert(condition: _frmPleaseWaitBoxInstance != null,
-            message: $"{nameof(_frmPleaseWaitBoxInstance)} != null");
+
         IEnumerable<string> found = new List<string>();
         try
         {
@@ -60,7 +58,11 @@ internal partial class HelperNonStatic
             }
 
             // updateProgressHandler(obj: $"Scanning file: {file}");
-            _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Text = file;
+            if (_frmPleaseWaitBoxInstance != null)
+            {
+                _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Text = file;
+            }
+
             yield return new FileInfo(fileName: file);
             counter++;
         }

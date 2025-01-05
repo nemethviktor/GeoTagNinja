@@ -1,0 +1,1080 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ckb_AddXMPSideCar" xml:space="preserve">
+    <value>சைட்கார் எக்ச்எம்பியைச் சேர்க்கவும்/மேலெழுதவும்</value>
+  </data>
+  <data name="ckb_DeSelectAll" xml:space="preserve">
+    <value>(ஐ.நா) அனைத்தையும் சரிபார்க்கவும்</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI" xml:space="preserve">
+    <value>தலைகீழ் சியோகோடிங்கைச் செய்ய வேண்டாம் (ஆயங்களை மட்டுமே பெறுங்கள், ஆனால் நகரம்/மாநிலம்/போன்றவை அல்ல)</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude" xml:space="preserve">
+    <value>ஏற்றுமதியில் உயரத் தரவைச் சேர்க்கவும்</value>
+  </data>
+  <data name="ckb_ImportExport_CityRulesSettings" xml:space="preserve">
+    <value>சிட்டி ருலெசெட்டிங்ச்</value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries" xml:space="preserve">
+    <value>"முன்னரே தீர்மானிக்கப்பட்ட" நாடுகளைச் சேர்க்கவா? (மேலே உள்ள இணைப்பைக் காண்க + எச்சரிக்கை/எச்சரிக்கை)</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap" xml:space="preserve">
+    <value>வரைபடத்தில் மேலடுக்கு டிராக் கோப்பு</value>
+  </data>
+  <data name="ckb_OffsetTime" xml:space="preserve">
+    <value>நேர மண்டலம் ஆஃப்செட்</value>
+  </data>
+  <data name="ckb_OverlayGPXForSelectedDatesOnly" xml:space="preserve">
+    <value>தேர்ந்தெடுக்கப்பட்ட கோப்புகளின் முதல் மற்றும் கடைசி தேதிக்குள் வரும் தேதிகளுக்கு மட்டுமே</value>
+  </data>
+  <data name="ckb_OverwriteOriginal" xml:space="preserve">
+    <value>XXX_ORIGINAL காப்புப்பிரதியை உருவாக்க வேண்டாம்</value>
+  </data>
+  <data name="ckb_PopulatedPlacesOnly" xml:space="preserve">
+    <value>"மக்கள் தொகை கொண்ட இடங்களுக்கு" (FCODE = PPL) வடிகட்டப்பட்ட பநிஇ தரவை மட்டுமே காண்பி [பரிந்துரைக்கப்படவில்லை]</value>
+  </data>
+  <data name="ckb_ProcessOriginalFile" xml:space="preserve">
+    <value>படக் கோப்பை செயலாக்கவும்</value>
+  </data>
+  <data name="ckb_QuestionStopProcessingRows" xml:space="preserve">
+    <value>மேலும் வரிசைகளை செயலாக்குவதை நிறுத்தவா?</value>
+  </data>
+  <data name="ckb_RemoveGeoDataRemovesTimeOffset" xml:space="preserve">
+    <value>"சியோடேட்டாவை அகற்று" செயல்பாடு நேர மண்டல ஆஃப்செட்டையும் நீக்குகிறது</value>
+  </data>
+  <data name="ckb_ReplaceBlankToponyms" xml:space="preserve">
+    <value>வெற்று நகரம், மாநில, சப்ளோகேசன் மதிப்புகளை மாற்றவும்: </value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated" xml:space="preserve">
+    <value>படக் கோப்பை உருவாக்குவதற்கு மீட்டமைக்கவும்</value>
+  </data>
+  <data name="ckb_ResetMapToZero" xml:space="preserve">
+    <value>சியோடேட்டா இல்லை என்றால் வரைபடத்தை 0/0 ஆக அமைக்கவும்</value>
+  </data>
+  <data name="ckb_StopProcessingRules" xml:space="preserve">
+    <value>முதல் நாடு+இலக்கு பொருத்தத்திற்குப் பிறகு செயலாக்க விதிகளை நிறுத்துங்கள்</value>
+  </data>
+  <data name="ckb_UpdateCheckPreRelease" xml:space="preserve">
+    <value>முன் வெளியீடு [பீட்டா] புதுப்பிப்புகளையும் சரிபார்க்கவும்?</value>
+  </data>
+  <data name="ckb_UseDarkMode" xml:space="preserve">
+    <value>பயன்பாட்டின் இடைமுகம் இல் இருண்ட பயன்முறையைப் பயன்படுத்தவா?</value>
+  </data>
+  <data name="ckb_UseImperialNotMetric" xml:space="preserve">
+    <value>உயரத்திற்கு இம்பீரியல் (அடி) பயன்படுத்தவும் (மெட்ரிக் [மீட்டர்] ஐ விட)</value>
+  </data>
+  <data name="ckb_UseTimeZone" xml:space="preserve">
+    <value>இந்த நேர மண்டலத்தைப் பயன்படுத்தவும்:</value>
+  </data>
+  <data name="clh_BlankOutTargetPoint" xml:space="preserve">
+    <value>வெற்று வெளியே?</value>
+  </data>
+  <data name="clh_DataPointConditionType" xml:space="preserve">
+    <value>என்றால்</value>
+  </data>
+  <data name="clh_DataPointConditionValue" xml:space="preserve">
+    <value>மதிப்பு</value>
+  </data>
+  <data name="clh_DataPointName" xml:space="preserve">
+    <value>என்ன</value>
+  </data>
+  <data name="clh_ExifTag" xml:space="preserve">
+    <value>Exif (gtn internal) குறிச்சொல்</value>
+  </data>
+  <data name="clh_Folder" xml:space="preserve">
+    <value>கோப்புறை</value>
+  </data>
+  <data name="clh_ModifiedValue" xml:space="preserve">
+    <value>மாற்றியமைக்கப்பட்ட (சேமிக்கப்படாத) மதிப்பு</value>
+  </data>
+  <data name="clh_OriginalValue" xml:space="preserve">
+    <value>அசல் (சேமிக்கப்பட்ட) மதிப்பு</value>
+  </data>
+  <data name="clh_TargetPointName" xml:space="preserve">
+    <value>பின்னர்</value>
+  </data>
+  <data name="clh_TargetPointNameCustomCityLogic" xml:space="preserve">
+    <value>நகரத்திலிருந்து படிக்கிறது</value>
+  </data>
+  <data name="clh_TargetPointOutcome" xml:space="preserve">
+    <value>ஆகிறது</value>
+  </data>
+  <data name="clh_TargetPointOutcomeCustom" xml:space="preserve">
+    <value>தனிப்பயன் விளைவு</value>
+  </data>
+  <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
+    <value>பநிஇ இல் திறந்த ஒருங்கிணைப்புகள்</value>
+  </data>
+  <data name="cmi_removeCachedData" xml:space="preserve">
+    <value>தற்காலிக சேமிப்பு தரவை அகற்று</value>
+  </data>
+  <data name="cmi_ShowHideCols" xml:space="preserve">
+    <value>நெடுவரிசைகளைக் காட்டவும் அல்லது மறைக்கவும்</value>
+  </data>
+  <data name="fbd_StartupFolder" xml:space="preserve">
+    <value>தொடக்க கோப்புறைக்கு உலாவுக</value>
+  </data>
+  <data name="frm_FrmEditFileData" xml:space="preserve">
+    <value>தரவைத் திருத்தவும்</value>
+  </data>
+  <data name="frm_FrmImportExportGpx" xml:space="preserve">
+    <value>GPX/JSON தரவை இறக்குமதி செய்க</value>
+  </data>
+  <data name="frm_FrmManageFavourites" xml:space="preserve">
+    <value>பிடித்தவைகளை நிர்வகிக்கவும்</value>
+  </data>
+  <data name="frm_FrmPasteWhat" xml:space="preserve">
+    <value>ஒட்டவும்… என்ன?</value>
+  </data>
+  <data name="frm_FrmPickDataFromAPIBox" xml:space="preserve">
+    <value>Toponmany walces ஐத் தேர்வுசெய்க</value>
+  </data>
+  <data name="frm_FrmPleaseWaitBox" xml:space="preserve">
+    <value>கோப்புறை ஏற்றும்போது காத்திருங்கள்.</value>
+  </data>
+  <data name="frm_FrmSettings" xml:space="preserve">
+    <value>அமைப்புகள்</value>
+  </data>
+  <data name="gbx_AppSettings" xml:space="preserve">
+    <value>பயன்பாட்டு அமைப்புகள்</value>
+  </data>
+  <data name="gbx_CreateDate" xml:space="preserve">
+    <value>உருவாக்கப்பட்ட தேதி</value>
+  </data>
+  <data name="gbx_Dates" xml:space="preserve">
+    <value>தேதிகள்</value>
+  </data>
+  <data name="gbx_EditImageList" xml:space="preserve">
+    <value>திருத்துதல் தேர்ந்தெடுக்கப்பட்ட படங்கள்</value>
+  </data>
+  <data name="gbx_GeoNamesLanguageSettings" xml:space="preserve">
+    <value>சியோனேம்ச் மொழி அமைப்புகள்</value>
+  </data>
+  <data name="gbx_GeoNamesSettings" xml:space="preserve">
+    <value>சியோனேம்ச் அமைப்புகள்</value>
+  </data>
+  <data name="gbx_GetAltitude" xml:space="preserve">
+    <value>உயரத் தரவைப் பெறுங்கள்</value>
+  </data>
+  <data name="gbx_GetToponomy" xml:space="preserve">
+    <value>Poponomy தரவைப் பெறுங்கள்</value>
+  </data>
+  <data name="gbx_GPSData" xml:space="preserve">
+    <value>சி.பி.எச் தரவு</value>
+  </data>
+  <data name="gbx_ImportExportGpxSource" xml:space="preserve">
+    <value>மூலம்</value>
+  </data>
+  <data name="gbx_ImportExportGpxTimeSetting" xml:space="preserve">
+    <value>நேர அமைப்பு</value>
+  </data>
+  <data name="gbx_LocationData" xml:space="preserve">
+    <value>இருப்பிட தரவு</value>
+  </data>
+  <data name="gbx_MapColourMode" xml:space="preserve">
+    <value>வரைபட வண்ண பயன்முறை</value>
+  </data>
+  <data name="gbx_OtherSettings" xml:space="preserve">
+    <value>பிற அமைப்புகள்</value>
+  </data>
+  <data name="gbx_SaveTrackTo" xml:space="preserve">
+    <value>தடத்தை சேமி (விருப்பங்கள்)</value>
+  </data>
+  <data name="gbx_TakenDate" xml:space="preserve">
+    <value>தேதி (படம்) எடுக்கப்பட்டது</value>
+  </data>
+  <data name="Generic_All" xml:space="preserve">
+    <value>அனைத்தும்</value>
+  </data>
+  <data name="Generic_Cancel" xml:space="preserve">
+    <value>ரத்துசெய்</value>
+  </data>
+  <data name="Generic_City" xml:space="preserve">
+    <value>நகரம்</value>
+  </data>
+  <data name="Generic_Close" xml:space="preserve">
+    <value>மூடு</value>
+  </data>
+  <data name="Generic_Coordinates" xml:space="preserve">
+    <value>ஒருங்கிணைப்புகள்</value>
+  </data>
+  <data name="Generic_Country" xml:space="preserve">
+    <value>நாடு</value>
+  </data>
+  <data name="Generic_CountryCode" xml:space="preserve">
+    <value>நாட்டின் குறியீடு</value>
+  </data>
+  <data name="Generic_CreateDate" xml:space="preserve">
+    <value>தேதியை உருவாக்கு</value>
+  </data>
+  <data name="Generic_Days" xml:space="preserve">
+    <value>நாட்கள்</value>
+  </data>
+  <data name="Generic_Decimal" xml:space="preserve">
+    <value>தசம</value>
+  </data>
+  <data name="Generic_Delete" xml:space="preserve">
+    <value>நீக்கு</value>
+  </data>
+  <data name="Generic_DestCoordinates" xml:space="preserve">
+    <value>டெச்ட் ஆயத்தொகுதிகள்</value>
+  </data>
+  <data name="Generic_Export" xml:space="preserve">
+    <value>ஏற்றுமதி</value>
+  </data>
+  <data name="Generic_ExportTrackTimeStampType" xml:space="preserve">
+    <value>நேர முத்திரை மதிப்பு</value>
+  </data>
+  <data name="Generic_ExposureTime" xml:space="preserve">
+    <value>நேரிடுதல் காலம்</value>
+  </data>
+  <data name="Generic_Favourites" xml:space="preserve">
+    <value>பிடித்தவை</value>
+  </data>
+  <data name="Generic_Feet" xml:space="preserve">
+    <value>அடி</value>
+  </data>
+  <data name="Generic_Feet_Abbr" xml:space="preserve">
+    <value>அடி</value>
+  </data>
+  <data name="Generic_FileModifyDate" xml:space="preserve">
+    <value>கோப்பு தேதி</value>
+  </data>
+  <data name="Generic_FileName" xml:space="preserve">
+    <value>கோப்பு பெயர்</value>
+  </data>
+  <data name="Generic_Fnumber" xml:space="preserve">
+    <value>துளை</value>
+  </data>
+  <data name="Generic_FocalLength" xml:space="preserve">
+    <value>குவிநீளம், குவியத் தொலைவு</value>
+  </data>
+  <data name="Generic_FocalLengthIn35mmFormat" xml:space="preserve">
+    <value>குவிய நீளம் (35 மிமீ)</value>
+  </data>
+  <data name="Generic_ForAllImages" xml:space="preserve">
+    <value>எல்லா படங்களுக்கும்</value>
+  </data>
+  <data name="Generic_ForThisImage" xml:space="preserve">
+    <value>இந்த படத்திற்கு</value>
+  </data>
+  <data name="Generic_GPSAltitude" xml:space="preserve">
+    <value>குத்துயரம்</value>
+  </data>
+  <data name="Generic_GPSAltitudeRef" xml:space="preserve">
+    <value>உயர்வு குறிப்பு</value>
+  </data>
+  <data name="Generic_GPSDateTime" xml:space="preserve">
+    <value>சி.பி.எச் தேதிநேரம்</value>
+  </data>
+  <data name="Generic_GPSDestLatitude" xml:space="preserve">
+    <value>அட்சரேகை அட்சரேகை</value>
+  </data>
+  <data name="Generic_GPSDestLatitudeRef" xml:space="preserve">
+    <value>டெச்ட் அட்சரேகை குறிப்பு</value>
+  </data>
+  <data name="Generic_GPSDestLongitude" xml:space="preserve">
+    <value>தீர்க்கதரிசனம்</value>
+  </data>
+  <data name="Generic_GPSDestLongitudeRef" xml:space="preserve">
+    <value>டெச்ட் தீர்க்கரேகை குறிப்பு</value>
+  </data>
+  <data name="Generic_GPSImgDirection" xml:space="preserve">
+    <value>IMG திசை</value>
+  </data>
+  <data name="Generic_GPSImgDirectionRef" xml:space="preserve">
+    <value>Img திசை ref</value>
+  </data>
+  <data name="Generic_GPSLatitude" xml:space="preserve">
+    <value>அகலாங்கு</value>
+  </data>
+  <data name="Generic_GPSLatitudeRef" xml:space="preserve">
+    <value>அட்சரேகை குறிப்பு</value>
+  </data>
+  <data name="Generic_GPSLongitude" xml:space="preserve">
+    <value>நெட்டாங்கு</value>
+  </data>
+  <data name="Generic_GPSLongitudeRef" xml:space="preserve">
+    <value>தீர்க்கரேகை குறிப்பு</value>
+  </data>
+  <data name="Generic_GPSSpeed" xml:space="preserve">
+    <value>வேகம்</value>
+  </data>
+  <data name="Generic_GPSSpeedRef" xml:space="preserve">
+    <value>வேக குறிப்பு</value>
+  </data>
+  <data name="Generic_GUID" xml:space="preserve">
+    <value>வழிகாட்டுதல்</value>
+  </data>
+  <data name="Generic_Hours" xml:space="preserve">
+    <value>மணி</value>
+  </data>
+  <data name="Generic_Import" xml:space="preserve">
+    <value>இறக்குமதி</value>
+  </data>
+  <data name="Generic_Insert" xml:space="preserve">
+    <value>செருகவும்</value>
+  </data>
+  <data name="Generic_IPTCKeywords" xml:space="preserve">
+    <value>ஐபிடிசி முக்கிய வார்த்தைகள்</value>
+  </data>
+  <data name="Generic_ISO" xml:space="preserve">
+    <value>ஐஎச்ஓ விரைவு</value>
+  </data>
+  <data name="Generic_LensSpec" xml:space="preserve">
+    <value>லென்ச்</value>
+  </data>
+  <data name="Generic_Make" xml:space="preserve">
+    <value>உருவாக்கு</value>
+  </data>
+  <data name="Generic_Metres" xml:space="preserve">
+    <value>மீட்டர்</value>
+  </data>
+  <data name="Generic_Metres_Abbr" xml:space="preserve">
+    <value>மீ</value>
+  </data>
+  <data name="Generic_Miles" xml:space="preserve">
+    <value>மைல்கள்</value>
+  </data>
+  <data name="Generic_Minutes" xml:space="preserve">
+    <value>நிமிடங்கள்</value>
+  </data>
+  <data name="Generic_Model" xml:space="preserve">
+    <value>மாதிரியுரு</value>
+  </data>
+  <data name="Generic_No" xml:space="preserve">
+    <value>இல்லை</value>
+  </data>
+  <data name="Generic_None" xml:space="preserve">
+    <value>எதுவுமில்லை</value>
+  </data>
+  <data name="Generic_OffsetTime" xml:space="preserve">
+    <value>நேர மண்டலம் ஆஃப்செட்</value>
+  </data>
+  <data name="Generic_OK" xml:space="preserve">
+    <value>சரி</value>
+  </data>
+  <data name="Generic_PleaseWait" xml:space="preserve">
+    <value>தயவுசெய்து காத்திருங்கள் ...</value>
+  </data>
+  <data name="Generic_QuestionDontAskAgain" xml:space="preserve">
+    <value>மீண்டும் கேட்க வேண்டாம்</value>
+  </data>
+  <data name="Generic_Rating" xml:space="preserve">
+    <value>செயல்வரம்பு</value>
+  </data>
+  <data name="Generic_Rename" xml:space="preserve">
+    <value>மறுபெயரிடுங்கள்</value>
+  </data>
+  <data name="Generic_Save" xml:space="preserve">
+    <value>தற்போதைய மாற்றங்களைச் சேமிக்கவும்</value>
+  </data>
+  <data name="Generic_Seconds" xml:space="preserve">
+    <value>நொடி</value>
+  </data>
+  <data name="Generic_ShowPassword" xml:space="preserve">
+    <value>கடவுச்சொல்லைக் காட்டு</value>
+  </data>
+  <data name="Generic_State" xml:space="preserve">
+    <value>மாநில/மாகாணம்</value>
+  </data>
+  <data name="Generic_Sublocation" xml:space="preserve">
+    <value>துணை</value>
+  </data>
+  <data name="Generic_TakenDate" xml:space="preserve">
+    <value>தேதி எடுக்கப்பட்டது</value>
+  </data>
+  <data name="Generic_TZTime" xml:space="preserve">
+    <value>நேர மண்டல சரிசெய்தல்:</value>
+  </data>
+  <data name="Generic_UseDST" xml:space="preserve">
+    <value>டிஎச்டி பயன்படுத்தவா?</value>
+  </data>
+  <data name="Generic_XMLSubjects" xml:space="preserve">
+    <value>எக்ச்எம்எல் பாடங்கள்</value>
+  </data>
+  <data name="Generic_Yes" xml:space="preserve">
+    <value>ஆம்</value>
+  </data>
+  <data name="lbl_ARCGIS_APIKey" xml:space="preserve">
+    <value>ArcGIS பநிஇ விசை</value>
+  </data>
+  <data name="lbl_CameraTime" xml:space="preserve">
+    <value>கேமரா தேதி/நேரம்</value>
+  </data>
+  <data name="lbl_CameraTimeNote" xml:space="preserve">
+    <value>குறிப்பு: பட நேர முத்திரைகள் சி.பி.எச் நேரத்துடன் சரியாக ஒத்திசைக்கப்படாதபோது மட்டுமே நேர மாற்றம் தேவைப்படுகிறது. தேவையில்லை என்றால் 0S ஆக விடவும்.</value>
+  </data>
+  <data name="lbl_CancelPressed" xml:space="preserve">
+    <value>அழுத்தப்பட்டதை ரத்துசெய். கோப்புறை பாகுபடுத்தல் நிறுத்தப்பட்டுள்ளது, ஆனால் சேகரிக்கப்பட்ட கோப்புகள் பாகுபடுத்தப்படும்.</value>
+  </data>
+  <data name="lbl_ChoiceOfferCount" xml:space="preserve">
+    <value>இந்த பல இடுப்பு விருப்பங்களைக் காட்டுங்கள்</value>
+  </data>
+  <data name="lbl_ChoiceRadius" xml:space="preserve">
+    <value>ஆரம் [கி.மீ]</value>
+  </data>
+  <data name="lbl_ExportTrackOrderBy" xml:space="preserve">
+    <value>டிராக் பாயிண்ட்களை வரிசைப்படுத்துங்கள்</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampType" xml:space="preserve">
+    <value>நேர முத்திரை மதிப்பு</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampTypeNote" xml:space="preserve">
+    <value>நீங்கள் GPSDateTime ஐத் தேர்ந்தெடுத்து, உங்கள் கோப்பில் அத்தகைய பண்புக்கூறு இல்லை என்றால் ஏற்றுமதி தோல்வியடையும்.
+ சில HEIC கோப்புகளில் இது உள்ளது, பிற வடிவங்கள் இல்லை.</value>
+  </data>
+  <data name="lbl_GeoMaxExtSecs" xml:space="preserve">
+    <value>அதிகபட்ச எக்ச்ட்ராபோலேசன் (டேக் டைம்ச்டாம்ப் மற்றும் டிராக் பாயிண்ட் இடையே நேர வேறுபாடு) நேரம்.</value>
+  </data>
+  <data name="lbl_GeoMaxIntSecs" xml:space="preserve">
+    <value>அதிகபட்ச இடைக்கணிப்பு ('பாதை யூகித்தல்') நொடிகளில் நேரம். முடக்க 0 என அமைக்கவும்.</value>
+  </data>
+  <data name="lbl_GeoNames_Pwd" xml:space="preserve">
+    <value>சியோனேம்ச் கடவுச்சொல்</value>
+  </data>
+  <data name="lbl_GeoNames_UserName" xml:space="preserve">
+    <value>சியோனேம்ச் பயனர்பெயர்</value>
+  </data>
+  <data name="lbl_importFromAnotherFolder" xml:space="preserve">
+    <value>&lt;- இறக்குமதி மூல கோப்புறையை அமைக்கவும் என்பதைக் சொடுக்கு செய்க</value>
+  </data>
+  <data name="lbl_importOneFile" xml:space="preserve">
+    <value>&lt;- இறக்குமதி மூல கோப்பை அமைக்கவும் என்பதைக் சொடுக்கு செய்க</value>
+  </data>
+  <data name="lbl_ImportTimeAgainst" xml:space="preserve">
+    <value>ட்ராக் கோப்புகளில் உள்ள நேர முத்திரையை ஒப்பிடுகையில்:</value>
+  </data>
+  <data name="lbl_Language" xml:space="preserve">
+    <value>மொழி</value>
+  </data>
+  <data name="lbl_OffsetTime" xml:space="preserve">
+    <value>நேர மண்டலம்</value>
+  </data>
+  <data name="lbl_ParseProgress_Normal" xml:space="preserve">
+    <value>ஆயத்தம்</value>
+  </data>
+  <data name="lbl_ParseProgress_Read" xml:space="preserve">
+    <value>படித்தல்:</value>
+  </data>
+  <data name="lbl_ParseProgress_Write" xml:space="preserve">
+    <value>எழுதுதல்:</value>
+  </data>
+  <data name="lbl_ParsingFolders" xml:space="preserve">
+    <value>கோப்புகளை பாகுபடுத்துதல் &amp;&amp; கோப்புறைகள், தயவுசெய்து காத்திருங்கள். </value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionParsing" xml:space="preserve">
+    <value>தரவு பாகுபடுத்தல்:</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionPopulatingListView" xml:space="preserve">
+    <value>முதன்மையான கட்டத்தை விரிவுபடுத்துதல் (பட்டியல் காட்சி)</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionScanning" xml:space="preserve">
+    <value>ச்கேனிங் கோப்பு:</value>
+  </data>
+  <data name="lbl_PressCancelToStop" xml:space="preserve">
+    <value>நிறுத்த ரத்துசெய்.</value>
+  </data>
+  <data name="lbl_QuestionAddToponomy" xml:space="preserve">
+    <value>உயரம் மற்றும் நிலப்பரப்பு மதிப்புகளையும் ஒதுக்க விரும்புகிறீர்களா?
+ நீங்கள் இல்லை என்பதைத் தேர்ந்தெடுத்தால், உங்கள் LAT/நீண்ட தரவு எந்தவொரு உட்பொதிக்கப்பட்ட நிலத்தடி தரவையும் ஒத்திசைக்காது.
+ நீங்கள் 'கேட்பதை நிறுத்துங்கள்' என்பதைக் சொடுக்கு செய்தால், அது ஆம் என பதிலை எடுக்கும், இந்த அமர்வை மீண்டும் கேட்காது. மீட்டமைக்க மறுதொடக்கம்.</value>
+  </data>
+  <data name="lbl_SaveTrackTo" xml:space="preserve">
+    <value>வெளியீட்டைச் சேமிக்கவும்</value>
+  </data>
+  <data name="lbl_SelectColsTitle" xml:space="preserve">
+    <value>நெடுவரிசைகளைத் தேர்ந்தெடுக்கவும்</value>
+  </data>
+  <data name="lbl_ShiftTrackTimeBy" xml:space="preserve">
+    <value>டிராக் கோப்பு நேரத்தை மாற்றவும்:</value>
+  </data>
+  <data name="lbl_Startup_Folder" xml:space="preserve">
+    <value>தொடக்க கோப்புறை</value>
+  </data>
+  <data name="lbl_TZNote" xml:space="preserve">
+    <value>குறிப்பு: தேதி/நேரக் குறிச்சொல்லில் நேர மண்டலத்தை சேர்க்கவில்லை என்றால் ஒன்று சேர்க்கப்படலாம் (கீழே காண்க), இல்லையெனில் உள்ளக கணினி நேரம் கருதப்படுகிறது.</value>
+  </data>
+  <data name="lbl_TZTime" xml:space="preserve">
+    <value>நேர மண்டல சரிசெய்தல்:</value>
+  </data>
+  <data name="mbx_DirectoryElementCollection_ErrorParsing" xml:space="preserve">
+    <value>கோப்புறையை கோப்பகத்திற்கு அனுப்பும் போது பிழை</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorAPIError" xml:space="preserve">
+    <value>பயன்பாடு பநிஇ உடன் தொடர்பு கொள்ளும் பிழைகளை எதிர்கொண்டது. உங்களுக்கு அங்கீகரிக்கப்படாத பிழை ஏற்பட்டால், பி.எல்.எச் உங்கள் பயனர்பெயரை அமைப்புகளில் கடவுச்சொல்லாக அமைக்கவும்.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorInvalidSender" xml:space="preserve">
+    <value>இது ஒரு பிழையாக இருக்கும். தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள், மேலும் 'அனுப்புநர்': </value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoDataUpdated" xml:space="preserve">
+    <value>தரவு புதுப்பிக்கப்பட்டது.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningFileDisappeared" xml:space="preserve">
+    <value>உங்கள் கோப்புகள் மறைந்துவிட்டதாகத் தெரிகிறது.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningLatLongMustBeNumbers" xml:space="preserve">
+    <value>இதற்கு எண்கள் மட்டுமே இருக்க வேண்டும். இயல்புநிலை பூச்சியத்திற்கு இருக்கும்.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_AskUserWantsReport" xml:space="preserve">
+    <value>இறக்குமதி செயல்முறை குறித்த அறிக்கையை நீங்கள் காண விரும்புகிறீர்களா?</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_FileOrFolderDoesntExist" xml:space="preserve">
+    <value>நீங்கள் தேர்ந்தெடுத்த கோப்பு அல்லது கோப்புறை தவறானது.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_NoFileSelected" xml:space="preserve">
+    <value>இறக்குமதி செய்ய எந்த கோப்புகளும் தேர்ந்தெடுக்கப்படவில்லை.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_TrackContainsNoData" xml:space="preserve">
+    <value>டிராக் மேலடுக்கை இறக்குமதி செய்வதில் தோல்வி - பொருத்தமான தோற்றமுடைய தரவைக் காணவில்லை.</value>
+  </data>
+  <data name="mbx_FrmImportNoStoredShiftValues" xml:space="preserve">
+    <value>"சிப்ட்" மதிப்புகள் சேமிக்கப்படவில்லை. தரவு 0 இருக்கும்.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantCreateSQLiteDB" xml:space="preserve">
+    <value>SQLITE தரவுத்தளத்தை உருவாக்க முடியாது (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadSQLiteDB" xml:space="preserve">
+    <value>கவிமொ இலிருந்து தரவை ஏற்றுவது தோல்வியுற்றது (தயவுசெய்து Github இல் சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadWebView2" xml:space="preserve">
+    <value>வெப்வியூ 2 ஐ ஏற்றுவதில் பிழை - அதை நிறுவியிருக்கிறீர்களா?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>கவிமொ இலிருந்து இயல்புநிலை மதிப்புகளைப் படிக்கத் தவறிவிட்டது (தயவுசெய்து கிதுபில் சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantWriteSQLiteDB" xml:space="preserve">
+    <value>SQLite தரவுத்தளத்தை எழுத முடியாது ஆனால் Github இல் சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorClearingFileDataQTables" xml:space="preserve">
+    <value>Filedata-Q அட்டவணைகளை அழிப்பதில் பிழை (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorDoubleBuffer" xml:space="preserve">
+    <value>டபுள் பஃபர் பிழை (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorFileGoneMissing" xml:space="preserve">
+    <value>கோப்பு இனி இருப்பதாகத் தெரியவில்லை: </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeComponent" xml:space="preserve">
+    <value>Frmmainapp.initializecomponent இல் பிழை (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async" xml:space="preserve">
+    <value>Frmmainapp.initialisewebview இல் பிழை (wbv_maparea.ensurecorewebview2async (c2wv) இல் காத்திருங்கள்) (தயவுசெய்து கிட்அப்பில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled" xml:space="preserve">
+    <value>Frmmainapp.initialisewebview (iswebmessageenabled) இல் பிழை (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile" xml:space="preserve">
+    <value>Frmmainapp.initialisewebview இல் பிழை (HTMLCode கோப்பில் NavigateTostring) (தயவுசெய்து கிட்அப்பில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile" xml:space="preserve">
+    <value>Frmmainapp.initialisewebview இல் பிழை (HTMLCode கோப்பிலிருந்து பாகுபடுத்தும் ஆயத்தொலைவுகள்) (தயவுசெய்து கிட்அப்பில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile" xml:space="preserve">
+    <value>Frmmainapp.initialisewebview இல் பிழை (HTMLCode கோப்பைப் படித்தல்) (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReplaceStringInHTMLFile" xml:space="preserve">
+    <value>Frmmainapp.initialisewebview இல் பிழை (HTMLCode கோப்பில் மாறிலிகளை மாற்றுவது) (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived" xml:space="preserve">
+    <value>WBV_MAPAREA_WEBMESSAGEREDED ஐ நிகழ்த்தும்போது பிழை (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInvalidFolder" xml:space="preserve">
+    <value>நீங்கள் உள்ளிட்ட கோப்புறை செல்லுபடியாகாது. C க்கு திரும்பவும்: \?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorIsoCountryCodeMappingMissing" xml:space="preserve">
+    <value>ISOCOUNTRYCODEMAPPING.CSV கோப்பு வளங்கள் கோப்புறையிலிருந்து காணவில்லை. இது இல்லாமல் பயன்பாட்டை ஏற்ற முடியாது.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorLanguageFileColumnHeaders" xml:space="preserve">
+    <value>மொழி கோப்பைப் படித்து நெடுவரிசைஎடர்களை ஒதுக்குவதில் பிழை ஏற்பட்டது (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode" xml:space="preserve">
+    <value>Frmmainapp.navigatemapgo (சரம் htmlcode) இல் பிழை (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorRemoveGeoDataFailed" xml:space="preserve">
+    <value>சியோடேட்டா செயல்முறையை அகற்று பிழையில் தோல்வியுற்றது/திருப்பித் தரப்பட்டுள்ளது.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorResizingColumns" xml:space="preserve">
+    <value>நெடுவரிசைகள் தோல்வியுற்றன (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorSettingStartupFolder" xml:space="preserve">
+    <value>இயல்புநிலை தொடக்க கோப்புறையை அமைப்பது தோல்வியடைந்தது (தயவுசெய்து கிதுபில் சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataNotRemoved" xml:space="preserve">
+    <value>தரவு எதுவும் அகற்றப்படவில்லை. ஒன்று நீங்கள் செல்லுபடியாகும் உருப்படிகளைத் தேர்ந்தெடுக்கவில்லை அல்லது நீங்கள் தேர்ந்தெடுத்தவற்றில் தற்காலிக சேமிப்பு தரவு இல்லை.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataRemoved" xml:space="preserve">
+    <value>ஏதேனும் இருந்தால், தேர்ந்தெடுக்கப்பட்ட பொருட்களுக்கான தற்காலிக சேமிப்பு தரவு அகற்றப்பட்டுள்ளது.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank" xml:space="preserve">
+    <value>பெயர் காலியாக/காலியாக இருக்க முடியாது</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNotValid" xml:space="preserve">
+    <value>நீங்கள் தேர்ந்தெடுத்த சேமித்த உருப்படி செல்லுபடியாகாது</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteSaved" xml:space="preserve">
+    <value>பிடித்த சேமிக்கப்பட்டது சரி</value>
+  </data>
+  <data name="mbx_FrmMainApp_NoFavouritesDefined" xml:space="preserve">
+    <value>உங்களுக்கு பிடித்தவை எதுவும் வரையறுக்கப்படவில்லை. வரைபடத்தின் கீழ் உள்ள பொத்தான்களைப் பயன்படுத்தி ஒன்றைச் சேர்க்கவும்.</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles" xml:space="preserve">
+    <value>தேர்ந்தெடுக்கப்பட்ட கோப்பு (கள்) க்கு ஆயங்களை ஒதுக்க விரும்புகிறீர்களா?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionDisableFlatMode" xml:space="preserve">
+    <value>பிளாட் பயன்முறை இயக்கப்பட்டுள்ளது. நீங்கள் அதை அணைக்க விரும்புகிறீர்களா?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionNoRowsFromAPI" xml:space="preserve">
+    <value>பநிஇ வினவல் எந்த சரியான தகவலையும் திருப்பித் தரவில்லை. நிலப்பரப்பு மதிப்புகளை வெறுமை செய்ய விரும்புகிறீர்களா?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionRunImportExportInFlatMode" xml:space="preserve">
+    <value>பிளாட் பயன்முறையில் இருக்கும்போது டிராக் இறக்குமதி/ஏற்றுமதி இயங்கும் ஒரு மோசமான யோசனையாகும், ஏனெனில் தடங்கள் இடைவினைகள் சிறப்பு தர்க்கத்தைப் பயன்படுத்துகின்றன, அவை கோப்புறைகளில் ஒரே மாதிரியாக பெயரிடப்பட்ட கோப்புகளுக்கு இடையில் வேறுபடுத்த முடியாது. இதை இயக்க விரும்புகிறீர்களா?</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningMultipleImageFilesForXMP" xml:space="preserve">
+    <value>எச்சரிக்கை: பின்வரும் பக்கவாட்டு கோப்புகள் பல படக் கோப்புகளுடன் பெயர்களைப் பகிரவும் - தரவு தவறாகப் படித்திருக்கலாம்:</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningNoItemSelected" xml:space="preserve">
+    <value>உருப்படி எதுவும் தேர்ந்தெடுக்கப்படவில்லை.</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>துல்லியமாக 1 கோப்பு தேர்ந்தெடுக்கப்பட வேண்டும்.</value>
+  </data>
+  <data name="mbx_FrmPasteWhat_NoDateShiftToPaste" xml:space="preserve">
+    <value>தேதிநேர மாற்றத்திற்கான நகல் குளத்தில் மதிப்புகள் குறிப்பிடப்படவில்லை</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty" xml:space="preserve">
+    <value>அனைத்து கீழ்தோன்றும் நெடுவரிசைகளும் காலியாக இல்லாத மதிப்பைக் கொண்டிருக்க வேண்டும், மேலும் "என்றால்" நிபந்தனை மதிப்பு காலியாக இருக்கக்கூடாது.</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty" xml:space="preserve">
+    <value>முடிவுக்கு "தனிப்பயன்" என்பதைத் தேர்ந்தெடுத்தால், தனிப்பயன் விளைவு நெடுவரிசை காலியாக இருக்கக்கூடாது. நீங்கள் அமைப்புகள் படிவத்தை மூடிவிட்டால், இது சரி செய்யப்படாவிட்டால், உங்கள் வரிசை நீக்கப்படும்.</value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorExportFailed" xml:space="preserve">
+    <value>ஏற்றுமதி தோல்வியுற்றது: </value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorImportFailed" xml:space="preserve">
+    <value>இறக்குமதி தோல்வியுற்றது: </value>
+  </data>
+  <data name="mbx_FrmSettings_PleaseRestartApp" xml:space="preserve">
+    <value>மாற்றம் நடைபெற பயன்பாட்டை மறுதொடக்கம் செய்யுங்கள்.</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToExport" xml:space="preserve">
+    <value>எதை ஏற்றுமதி செய்ய வேண்டும் என்பதைத் தேர்வுசெய்க. ஏற்றுமதி செயல்பாடு _in_ தரவுத்தளத்தை ஏற்றுமதி செய்கிறது அல்லது வேறுவிதமாகக் கூறினால் சேமிக்கப்பட்டுள்ளது என்பதை நினைவில் கொள்க. அமைப்புகளில் உங்களுக்கு மாற்றங்கள் நிலுவையில் இருந்தால், அவற்றைச் சேமிக்கவும் (அமைப்புகள் படிவத்தில் சரி என்பதைக் சொடுக்கு செய்க), பின்னர் இங்கே வாருங்கள்.</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToImport" xml:space="preserve">
+    <value>இறக்குமதி செய்ய என்ன என்பதைத் தேர்வுசெய்க. இறக்குமதி செயல்முறை வெற்றிகரமாக முடிந்ததும் தரவுத்தளத்தின் தொடர்புடைய பிட்கள் மேலெழுதப்படும் என்பதை நினைவில் கொள்க. ஏதேனும் தோல்வியுற்றால், உங்கள் AppData கோப்புறையில் உங்கள் DB இன் காப்பு கோப்பு இருக்கும்.</value>
+  </data>
+  <data name="mbx_GenericDone" xml:space="preserve">
+    <value>முடிந்தது.</value>
+  </data>
+  <data name="mbx_GenericDoneRestartApp" xml:space="preserve">
+    <value>முடிந்தது - நீங்கள் பயன்பாட்டை மறுதொடக்கம் செய்ய விரும்புவீர்கள்.</value>
+  </data>
+  <data name="mbx_GenericPathLikelyUTF" xml:space="preserve">
+    <value>கோப்பு பாதையில் யுடிஎஃப் (ஆசிய, சிரிலிக் போன்ற தரமற்றது அல்லாத) எழுத்துக்கள் உள்ளன, மேலும் இது பிழையை ஏற்படுத்தக்கூடும். “உலகளாவிய மொழி ஆதரவுக்கு யூனிகோட் யுடிஎஃப் -8 ஐப் பயன்படுத்துங்கள்” அம்சத்தை நீங்கள் இயக்கியுள்ளீர்கள் என்பதை உறுதிப்படுத்தவும். (இதற்காக README இல் அறியப்பட்ட சிக்கல்களைப் பார்க்கவும்)</value>
+  </data>
+  <data name="mbx_HelperStaticExifNoAPI" xml:space="preserve">
+    <value>பநிஇ ஐ அடையத் தவறிவிட்டது - ஏதேனும் சந்தர்ப்பத்தால் நீங்கள் ஆஃப்லைனில் இருக்கிறீர்களா?</value>
+  </data>
+  <data name="mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed" xml:space="preserve">
+    <value>asyncexiftool.executeasync தோல்வியுற்றது (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_Helper_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>கவிமொ இலிருந்து இயல்புநிலை மதிப்புகளைப் படிக்கத் தவறிவிட்டது (தயவுசெய்து Github இல் சிக்கலை தாக்கல் செய்யுங்கள்): </value>
+  </data>
+  <data name="mbx_Helper_QuestionFileQIsNotEmpty" xml:space="preserve">
+    <value>சில தரவு மாற்றப்பட்டுள்ளது - சேமிக்க விரும்புகிறீர்களா?
+ நீங்கள் இல்லை என்பதைக் சொடுக்கு செய்தால் தரவு நிராகரிக்கப்படும்</value>
+  </data>
+  <data name="mbx_Helper_WarningExifToolVerAPIResponse" xml:space="preserve">
+    <value>Exiftoolverapiresponse பநிஇ பின்வரும் பதிலைத் திருப்பியது: </value>
+  </data>
+  <data name="mbx_Helper_WarningFileDisappeared" xml:space="preserve">
+    <value>உங்கள் கோப்புகள் மறைந்துவிட்டதாகத் தெரிகிறது.</value>
+  </data>
+  <data name="mbx_Helper_WarningGeoNamesAPIResponse" xml:space="preserve">
+    <value>சியோனேம்ச் பநிஇ பின்வரும் பதிலைத் திருப்பியது: </value>
+  </data>
+  <data name="mbx_Helper_WarningGTNVerAPIResponse" xml:space="preserve">
+    <value>அறிவிலிமையம் பநிஇ பின்வரும் பதிலைத் திருப்பியது: </value>
+  </data>
+  <data name="mbx_Helper_WarningNoARCGISKey" xml:space="preserve">
+    <value>பயன்பாடு சரியாக வேலை செய்வதற்கான அமைப்புகளில் நீங்கள் ஒரு ARCGIS பநிஇ விசையை வழங்க வேண்டும்.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingInWriteQueue" xml:space="preserve">
+    <value>உங்கள் எழுதும் வினையில் எதுவும் இல்லை.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingToPaste" xml:space="preserve">
+    <value>ஒட்டுவதற்கு எதுவும் இல்லை.</value>
+  </data>
+  <data name="mbx_Helper_WarningNoWriteSettingEnabled" xml:space="preserve">
+    <value>அசல் கோப்பின் செயலாக்கத்தை _and_ பக்கவாட்டு எக்ச்எம்பி இரண்டையும் நீங்கள் முடக்கியுள்ளீர்கள், எனவே எழுத எதுவும் இல்லை.</value>
+  </data>
+  <data name="mbx_Helper_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>உங்களிடம் ஒரே ஒரு கோப்பு தேர்ந்தெடுக்கப்பட்டால் மட்டுமே இது செயல்படும்.</value>
+  </data>
+  <data name="mns_File" xml:space="preserve">
+    <value>கோப்பு</value>
+  </data>
+  <data name="mns_Help" xml:space="preserve">
+    <value>உதவி</value>
+  </data>
+  <data name="mns_Settings" xml:space="preserve">
+    <value>அமைப்புகள்</value>
+  </data>
+  <data name="pbx_Browse_Startup_Folder" xml:space="preserve">
+    <value>தொடக்க கோப்புறைக்கு உலாவுக</value>
+  </data>
+  <data name="pbx_imagePreviewCouldNotRetrieve" xml:space="preserve">
+    <value>பட முன்னோட்டத்தை மீட்டெடுக்க/உருவாக்க முடியவில்லை</value>
+  </data>
+  <data name="pbx_imagePreviewEmptyText" xml:space="preserve">
+    <value>காட்ட படம் இல்லை</value>
+  </data>
+  <data name="pbx_importFromAnotherFolder" xml:space="preserve">
+    <value>தடங்கள் கோப்புறைக்கு உலாவுக</value>
+  </data>
+  <data name="pbx_importOneFile" xml:space="preserve">
+    <value>தடங்கள் கோப்பிற்கு உலாவுக</value>
+  </data>
+  <data name="rbt_CreateDateSetToFixedDate" xml:space="preserve">
+    <value>நிலையான தேதிக்கு அமைக்கவும்</value>
+  </data>
+  <data name="rbt_CreateDateTimeShift" xml:space="preserve">
+    <value>நேர மாற்றம்</value>
+  </data>
+  <data name="rbt_importFromAnotherFolder" xml:space="preserve">
+    <value>மற்றொரு கோப்புறையிலிருந்து இறக்குமதி செய்யுங்கள்</value>
+  </data>
+  <data name="rbt_importFromCurrentFolder" xml:space="preserve">
+    <value>தற்போதைய கோப்புறையிலிருந்து இறக்குமதி செய்யுங்கள்</value>
+  </data>
+  <data name="rbt_importOneFile" xml:space="preserve">
+    <value>தேர்ந்தெடுக்கப்பட்ட கோப்பிலிருந்து இறக்குமதி செய்யுங்கள்</value>
+  </data>
+  <data name="rbt_MapColourModeDarkInverse" xml:space="preserve">
+    <value>இருண்ட (தலைகீழ்)</value>
+  </data>
+  <data name="rbt_MapColourModeDarkPale" xml:space="preserve">
+    <value>இருண்ட (வெளிர்)</value>
+  </data>
+  <data name="rbt_MapColourModeNormal" xml:space="preserve">
+    <value>சாதாரண</value>
+  </data>
+  <data name="rbt_PasteCreateDateActual" xml:space="preserve">
+    <value>உண்மையான (நிலையான மதிப்புகள்)</value>
+  </data>
+  <data name="rbt_PasteCreateDateShift" xml:space="preserve">
+    <value>நேர மாற்றம்</value>
+  </data>
+  <data name="rbt_PasteTakenDateActual" xml:space="preserve">
+    <value>உண்மையான (நிலையான மதிப்புகள்)</value>
+  </data>
+  <data name="rbt_PasteTakenDateShift" xml:space="preserve">
+    <value>நேர மாற்றம்</value>
+  </data>
+  <data name="rbt_TakenDateSetToFixedDate" xml:space="preserve">
+    <value>நிலையான தேதிக்கு அமைக்கவும்</value>
+  </data>
+  <data name="rbt_TakenDateTimeShift" xml:space="preserve">
+    <value>நேர மாற்றம்</value>
+  </data>
+  <data name="rbt_TryUseGeoNamesLanguage" xml:space="preserve">
+    <value>இருப்பிட பெயர்களை மீட்டெடுக்கும் போது இந்த மொழியைப் பயன்படுத்த முயற்சிக்கவும்:</value>
+  </data>
+  <data name="rbt_UseGeoNamesLocalLanguage" xml:space="preserve">
+    <value>இருப்பிட பெயர்களை மீட்டெடுக்கும்போது "உள்ளக மொழியை" பயன்படுத்த முயற்சிக்கவும்</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanation" xml:space="preserve">
+    <value>இது ஒரு மேம்பட்ட நற்பொருத்தம். Adminname1-4 &amp; toponmanmname பநிஇ வெளியீடுகளைக் குறிக்கின்றன, எனவே உங்களுக்கு அது புரியவில்லை என்றால், இதை ஒன்றும் குத்த வேண்டாம்.
+ ஒட்டுமொத்த தீர்வுக்கு, சரிபார்க்கவும்: https://github.com/nemethviktor/geotagninja/issues/38#issuecomment-1356844255.
+ இந்த அமைப்பு என்னவென்றால், குறிப்பிட்ட நிர்வாகப் பெயர்களில் ஒன்றிலிருந்து "நகரம்" மதிப்பைப் பெற நாடுகளின் சொந்த தேர்வுகளை நீங்கள் சேர்க்கலாம்.</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanationBold" xml:space="preserve">
+    <value>கீழேயுள்ள அட்டவணையில் மாற்றங்கள் உடனடியாக பாதிக்கப்படுகின்றன என்பதையும், சரி/ரத்துசெய் பொத்தானை அவற்றில் எந்த விளைவும் இல்லை என்பதையும் நினைவில் கொள்க. இந்த அமர்வுக்குள் தரவை இழுக்க விரும்பினால் (அல்லது பயன்பாட்டை மறுதொடக்கம் செய்யுங்கள்.) உங்கள் மாற்றங்களால் பாதிக்கப்படக்கூடிய எந்தவொரு கோப்பிற்கும் தற்காலிக சேமிப்பு தரவை மீட்டமைக்க வேண்டும் என்பதைக் சொடுக்கு செய்து சொடுக்கு செய்ய வேண்டும்.</value>
+  </data>
+  <data name="rbx_CustomRulesExplanation" xml:space="preserve">
+    <value>இது ஒரு மேம்பட்ட நற்பொருத்தம். Adminname1-4 &amp; toponmanmname பநிஇ வெளியீடுகளைக் குறிக்கின்றன, எனவே உங்களுக்கு அது புரியவில்லை என்றால், இதை ஒன்றும் குத்த வேண்டாம்.
+ Re: "முன்னரே தீர்மானிக்கப்பட்ட நாடுகள்" (கீழே உள்ள தேர்வுப்பெட்டி): இங்கே இருப்பதைப் படியுங்கள்: https://github.com/nemethviktor/geotagninja/issues/38#issuecomment-1356844255 + மற்ற தாவலை முடக்கினால் அந்த அமைப்பை சரிபார்க்கவும் தொடர்புடைய குழுவிற்கு வெளியே வரும் வெற்று கன்ட்ரி கோட் செல்கள் ஆனால் உண்மையில் அந்த வரிசைகளை கைவிடாது.
+ எல்லா நெடுவரிசைகளும் "தனிப்பயன்" என்பதற்கு கட்டாய EXC ஆகும், ஆனால் நீங்கள் முடிவை "தனிப்பயன்" என்று அமைத்து, "தனிப்பயன்" கோலை காலியாக விட்டால் வரிசை புறக்கணிக்கப்படும். தரவு-உணர்திறன் இல்லை. ஒவ்வொரு தரவுத்தொகுப்பிற்கும் (எ.கா. நகரம், மாநிலம்) கடைசி வரிசை முந்தையவற்றை மேலெழுதும். அடிப்படையில் விவேகமானதாக இருங்கள். அதிக வரிசைகள் நீங்கள் மெதுவாகச் சேர்க்கும்.
+ எடுத்துக்காட்டு: லண்டன் இங்கிலாந்தின் ஏபிஐயில் இருந்து இயல்புநிலை தரவு வருமானம் மோசமாக உள்ளது, ஏனெனில் அந்த குறிப்பிட்ட பிராந்தியத்திற்கு நிர்வாகி பெயர் 2 = "கிரேட்டர் லண்டன்", மேலும் இது அப்படி நிராகரிக்கப்படும் (நகரங்கள் பொதுவாக "டாப் பெயர் பெயர்" இலிருந்து). . முழு விசயத்தையும் 2 வது வரிசையில் மீண்டும் செய்யவும், ஆனால் "பின்னர்" = "சப்_லோக்சன்" மற்றும் "=" TopomanmyName "ஆகிறது.</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold" xml:space="preserve">
+    <value>கீழேயுள்ள அட்டவணையில் மாற்றங்கள் உடனடியாக பாதிக்கப்படுகின்றன என்பதையும், சரி/ரத்துசெய் பொத்தானை அவற்றில் எந்த விளைவும் இல்லை என்பதையும் நினைவில் கொள்க. இந்த அமர்வுக்குள் தரவை இழுக்க விரும்பினால் (அல்லது பயன்பாட்டை மறுதொடக்கம் செய்யுங்கள்.) உங்கள் மாற்றங்களால் பாதிக்கப்படக்கூடிய எந்தவொரு கோப்பிற்கும் தற்காலிக சேமிப்பு தரவை மீட்டமைக்க வேண்டும் என்பதைக் சொடுக்கு செய்து சொடுக்கு செய்ய வேண்டும்.</value>
+  </data>
+  <data name="rbx_Register_ArcGIS" xml:space="preserve">
+    <value>வரைபட தேடல் செயல்பாட்டைப் பயன்படுத்த உங்களுக்கு ARCGIS பநிஇ விசை தேவை.
+ ஆர்கிசிச் சூன் 2024 நிலவரப்படி தங்கள் பதிவு செயல்முறையை மாற்றியுள்ளது.
+ நீங்கள் இப்போது ஒரு போர்டல் முகவரி ஐ குறிப்பிட வேண்டும். நீங்கள் விரும்பும் எதையும் உள்ளிடவும்.
+ `டெவலப்பர் நற்சான்றிதழ் படைப்பாளருக்கு` உருட்டவும்/செல்லவும்
+ பின்னர் `புதிய உருப்படி`
+ பின்னர் `டெவலப்பர் நற்சான்றிதழ்கள்`
+ `Api key` (oauth அல்ல)
+ உங்கள் காலாவதி தேதியை உங்களால் முடிந்தவரை (1 வருடம்) எதிர்காலத்தில் அமைக்கவும்
+ `பரிந்துரைப்பாளர்களை காலியாக விடுங்கள்
+ அடுத்த பக்கத்தில் `சியோகோடிங் (சேமிக்கப்படவில்லை)`
+ அடுத்த பக்கத்தில் `உருப்படி அணுகல்` ஐத் தவிர்க்கவும்
+ அடுத்த பக்கத்தில் எந்த தலைப்பையும் சேர்க்கவும்
+ இறுதியில் `ஏபிஐ விசையை உருவாக்கி உருப்படி விவரங்கள் பக்கத்திற்குச் செல்லவும். விசையை நகலெடுத்து சேமிக்க நான் தயாராக இருக்கிறேன் .`
+ கேட்கும் போது பநிஇ விசையை சேமிக்கவும். அந்த நேரத்தில் நீங்கள் அதைச் செய்யாவிட்டால், நீங்கள் இன்னொன்றை உருவாக்க வேண்டும்.</value>
+  </data>
+  <data name="rbx_Register_GeoNames" xml:space="preserve">
+    <value>தலைகீழ் சியோகோடிங்/தேடல் செயல்பாட்டை (லாட்/லாங் -&gt; நாடு/நகரம்/...) பயன்படுத்த உங்களுக்கு சியோனேம்ச் கணக்கு தேவை. ஒன்றைப் பெறுங்கள்: http://www.geonames.org/login</value>
+  </data>
+  <data name="tcr_EditData" xml:space="preserve">
+    <value>தரவைத் திருத்தவும்</value>
+  </data>
+  <data name="tmi_File" xml:space="preserve">
+    <value>கோப்பு</value>
+  </data>
+  <data name="tmi_File_CopyGeoData" xml:space="preserve">
+    <value>அனைத்து சியோடேட்டாவையும் நகலெடுக்கவும்</value>
+  </data>
+  <data name="tmi_File_EditFiles" xml:space="preserve">
+    <value>கோப்புகளைத் திருத்தவும்</value>
+  </data>
+  <data name="tmi_File_FlatMode" xml:space="preserve">
+    <value>பிளாட் பயன்முறை (பாகுபடுத்தும் துணை கோப்புறைகள்)</value>
+  </data>
+  <data name="tmi_File_ImportExportGPX" xml:space="preserve">
+    <value>GPX/JSON மின்தடம் கோப்புகளை இறக்குமதி/ஏற்றுமதி செய்யுங்கள்</value>
+  </data>
+  <data name="tmi_File_PasteGeoData" xml:space="preserve">
+    <value>அனைத்து சியோடேட்டாவையும் ஒட்டவும்</value>
+  </data>
+  <data name="tmi_File_Quit" xml:space="preserve">
+    <value>வெளியேறு</value>
+  </data>
+  <data name="tmi_File_SaveAll" xml:space="preserve">
+    <value>அனைத்தையும் சேமி</value>
+  </data>
+  <data name="tmi_Help" xml:space="preserve">
+    <value>உதவி</value>
+  </data>
+  <data name="tmi_Help_About" xml:space="preserve">
+    <value>பற்றி</value>
+  </data>
+  <data name="tmi_Help_BugReport" xml:space="preserve">
+    <value>பிழை அறிக்கையை (கிதுப்) தாக்கல் செய்யுங்கள்</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest" xml:space="preserve">
+    <value>அம்ச கோரிக்கையை தாக்கல் செய்யுங்கள் (கிதுப்)</value>
+  </data>
+  <data name="tmi_Settings" xml:space="preserve">
+    <value>அமைப்புகள்</value>
+  </data>
+  <data name="tmi_Settings_Favourites" xml:space="preserve">
+    <value>பிடித்தவைகளை நிர்வகிக்கவும்</value>
+  </data>
+  <data name="tmi_Settings_Settings" xml:space="preserve">
+    <value>அமைப்புகள்</value>
+  </data>
+  <data name="tpg_Application" xml:space="preserve">
+    <value>பயன்பாடு</value>
+  </data>
+  <data name="tpg_CustomCityLogic" xml:space="preserve">
+    <value>தனிப்பயன் நகர ஒதுக்கீட்டு வழக்கு</value>
+  </data>
+  <data name="tpg_CustomRules" xml:space="preserve">
+    <value>தனிப்பயன் விதிகள்</value>
+  </data>
+  <data name="tpg_DateTime" xml:space="preserve">
+    <value>தேதி &amp; நேரம்</value>
+  </data>
+  <data name="tpg_Exif" xml:space="preserve">
+    <value>Exif</value>
+  </data>
+  <data name="tpg_FileOptions" xml:space="preserve">
+    <value>கோப்பு விருப்பங்கள்</value>
+  </data>
+  <data name="tpg_GeoNames" xml:space="preserve">
+    <value>சியோனேம்ச் அமைப்புகள்</value>
+  </data>
+  <data name="tpg_ImportExport_Export" xml:space="preserve">
+    <value>ஏற்றுமதி தடங்கள்</value>
+  </data>
+  <data name="tpg_ImportExport_Import" xml:space="preserve">
+    <value>தடங்களை இறக்குமதி செய்யுங்கள்</value>
+  </data>
+  <data name="tpg_Location" xml:space="preserve">
+    <value>இடம்</value>
+  </data>
+  <data name="tpg_Map" xml:space="preserve">
+    <value>வரைபடம்</value>
+  </data>
+  <data name="tsb_BugReport" xml:space="preserve">
+    <value>பிழை அறிக்கையை தாக்கல் செய்யுங்கள் (கிதுப் கணக்கு தேவை)</value>
+  </data>
+  <data name="tsb_EditFile" xml:space="preserve">
+    <value>கோப்பைத் திருத்து</value>
+  </data>
+  <data name="tsb_FeedbackFeatureRequest" xml:space="preserve">
+    <value>அம்ச கோரிக்கையை தாக்கல் செய்யுங்கள் (கிதுப் கணக்கு தேவை)</value>
+  </data>
+  <data name="tsb_GetAllFromWeb" xml:space="preserve">
+    <value>தேர்ந்தெடுக்கப்பட்ட அனைத்து கோப்புகளுக்கும் நிலப்பரப்பு மற்றும் உயரத் தகவலைப் பெறுங்கள்</value>
+  </data>
+  <data name="tsb_ImportExportGPX" xml:space="preserve">
+    <value>GPX/JSON மின்தடம் கோப்புகளை இறக்குமதி/ஏற்றுமதி செய்யுங்கள்</value>
+  </data>
+  <data name="tsb_OneFolderUp" xml:space="preserve">
+    <value>பெற்றோர் கோப்புறை</value>
+  </data>
+  <data name="tsb_Refresh_lvwFileList" xml:space="preserve">
+    <value>கோப்பு பட்டியலைப் புதுப்பிக்கவும்</value>
+  </data>
+  <data name="tsb_RemoveGeoData" xml:space="preserve">
+    <value>எல்லா இருப்பிட தரவுகளையும் அகற்று</value>
+  </data>
+  <data name="tsb_SaveFiles" xml:space="preserve">
+    <value>கோப்புகளை சேமிக்கவும்</value>
+  </data>
+  <data name="tsr_FolderControl" xml:space="preserve">
+    <value>கோப்புறை கட்டுப்பாடு</value>
+  </data>
+  <data name="tsr_MainAppToolStrip" xml:space="preserve">
+    <value>முக்கிய</value>
+  </data>
+  <data name="ttp_GPSDataPaste" xml:space="preserve">
+    <value>LAT/நீண்ட ஒதுக்கிடங்களுக்கு செல்லுபடியாகும் இணை தசமங்களை ஒட்ட CTRL+V ஐ அழுத்தவும்.
+ கிளிப்போர்டில் ஒரு இணை தசமங்கள் மட்டுமே இருக்க வேண்டும், முன்னுரிமை "மாறுபாடு" (ஆங்கிலம்) அமைப்பில், இது 12.345, 56.897 போன்ற முழு எண்-டாட்-டெசிமல்-கம்மா-இன்டர்சர்-டாட்-டெசிமல் ஆகும்
+ _Should_ குறியீடு மற்ற தளவமைப்புகளை புரிந்து கொள்ள முடியும் என்று அது கூறியது. மேலே செயல்பாட்டைத் தவிர வேறு ஏதாவது கிளிப்போர்டில் இருந்தால் தோல்வியடையும் (எதுவும் நடக்காது.)</value>
+  </data>
+  <data name="ttp_LoadFavourite" xml:space="preserve">
+    <value>உங்களுக்கு பிடித்தவைகளிலிருந்து தேர்ந்தெடுக்கப்பட்ட கோப்பிற்கான மெட்டாடேட்டாவை ஏற்றவும்</value>
+  </data>
+  <data name="ttp_loctToFile" xml:space="preserve">
+    <value>தேர்ந்தெடுக்கப்பட்ட கோப்பில் (கள்) தற்போதைய ஒருங்கிணைப்பை சேமிக்கவும்</value>
+  </data>
+  <data name="ttp_loctToFileDestination" xml:space="preserve">
+    <value>தேர்ந்தெடுக்கப்பட்ட கோப்புகளின் இலக்குக்கு தற்போதைய ஒருங்கிணைப்பை சேமிக்கவும்</value>
+  </data>
+  <data name="ttp_ManageFavourites" xml:space="preserve">
+    <value>பிடித்தவைகளை நிர்வகிக்கவும்</value>
+  </data>
+  <data name="ttp_NavigateMapGo" xml:space="preserve">
+    <value>தேர்ந்தெடுக்கப்பட்ட கோப்புகளின் ஆயங்களை வரைபடத்தில் வைக்கவும்</value>
+  </data>
+  <data name="ttp_OffsetTime" xml:space="preserve">
+    <value>சேமிக்கப்பட்ட மதிப்பு என்ன என்பதைப் பொருட்படுத்தாமல் நேர மண்டலங்கள் திறந்த நிலையில் காலியாக விடப்படுகின்றன. TZ க்கு எக்சிஃப் குறிச்சொல் இல்லை, ஆனால் 'ஆஃப்செட்' மட்டுமே, இது '+01: 00' போன்றது. '+01: 00' உண்மையில் சி.இ.டி.யை விட பிஎச்டி என்று கூறியது, ஒன்று மற்றொன்று இல்லை என்பதை என்னால் அறிய முடியாது. ஒன்று கைமுறையாக சரிசெய்யவும் அல்லது வலையிலிருந்து இழுக்கவும் - ஆயத்தொகுப்புகளின் கலவையானது + உருவாக்கப்பட்டது உண்மையான TZ மதிப்பின் நிரலை தீர்க்கமாக தெரிவிக்கும். படிக்க மட்டும் உரைப்பெட்டியில் உள்ள மதிப்பு கோப்பில் சேமிக்கப்படும்.</value>
+  </data>
+  <data name="ttp_SaveFavourite" xml:space="preserve">
+    <value>தற்போது தேர்ந்தெடுக்கப்பட்ட கோப்பின் மெட்டாடேட்டாவை உங்களுக்கு பிடித்தவைகளில் சேமிக்கவும் (அல்லது மேலெழுதவும்)</value>
+  </data>
+</root>

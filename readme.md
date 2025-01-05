@@ -109,7 +109,6 @@ As for code updates, I'm generally happy for anyone competent to add pull reques
 	- At the moment there's some groundwork-code in the codebase to enable some future interaction with keywords but I haven't quite worked out an efficient way around this. You'll notice that the two `geo:` are easy to capture and edit but the rest are just undefined character strings. A `remove all geodata` command therefore wouldn’t be able to identify whether say `Fxxking` is a verb or a [town in Austria](https://en.wikipedia.org/wiki/Fugging,_Upper_Austria) or perhaps `Bugyi` is a character string that refers to the Hungarian town called Bugyi, or the otherwise equivalent noun that translates as `panties`. If you think I'm entirely crazy, then read the [Wikipedia article](https://en.wikipedia.org/wiki/Bugyi) regarding that settlement.
 	- This means that if your file has Keywords/Subjects and you edit the geo-data the keywords will become out of sync with the changes.
 	- What's therefore likely to happen is that I'll attempt to replace existing `geo:` keywords with up-to-date values as required and ignore the rest.
-- The ExifTool auto-update is currently not working. This is after Phil has changed the single-file ExifTool solution into a 498-files distrib and I haven't gotten around to deal with it on my end.
 
 ### Destinations/Possible Bug in WebView2
 

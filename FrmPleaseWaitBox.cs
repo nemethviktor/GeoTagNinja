@@ -45,6 +45,11 @@ public partial class FrmPleaseWaitBox : Form
     {
         HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
         _frmMainAppInstance.Enabled = false;
+        GetControlNames();
+    }
+
+    private void GetControlNames()
+    {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)

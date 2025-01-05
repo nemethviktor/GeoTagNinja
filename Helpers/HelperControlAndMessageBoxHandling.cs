@@ -80,29 +80,9 @@ internal static class HelperControlAndMessageBoxHandling
         )
         {
             FrmMainApp.Log.Trace(message: $"Starting - cItem: {cItem.Name}");
-            string location = HelperGenericAncillaryListsArrays.IsGenericControlName(controlName: cItem.Name) ||
-                              cItem.Name.Contains(value: "Generic")
-                ? HelperVariables.ResourceNameForGenericControlItems
-                : HelperVariables.ControlItemNameNotGeneric;
 
-            location = location switch
-            {
-                HelperVariables.ControlItemNameNotGeneric => cItem switch
-                {
-                    Label => "Label",
-                    GroupBox => "GroupBox",
-                    Button => "Button",
-                    CheckBox => "CheckBox",
-                    TabPage => "TabPage",
-                    RichTextBox => "RichTextBox",
-                    RadioButton => "RadioButton",
-                    Form => "Form",
-                    _ => null
-                },
-                _ => location
-            };
 
-            cItem.Text = HelperLocalisationResourceManager.GetResourceValue(control: cItem, location: location);
+            cItem.Text = HelperLocalisationResourceManager.GetResourceValue(control: cItem, location: "Strings");
         }
 
         else if (cItem is NumericUpDown nud)
@@ -134,35 +114,12 @@ internal static class HelperControlAndMessageBoxHandling
     internal static string ReturnControlText(string controlName, FakeControlTypes fakeControlType)
     {
         FrmMainApp.Log.Trace(message: $"Starting - cItem: {controlName}");
-        string location = HelperGenericAncillaryListsArrays.IsGenericControlName(controlName: controlName) ||
-                          controlName.Contains(value: "Generic")
-            ? HelperVariables.ResourceNameForGenericControlItems
-            : HelperVariables.ControlItemNameNotGeneric;
 
-        location = location switch
+        if (fakeControlType == FakeControlTypes.Form)
         {
-            HelperVariables.ControlItemNameNotGeneric => fakeControlType switch
-            {
-                FakeControlTypes.Button => "Button",
-                FakeControlTypes.CheckBox => "CheckBox",
-                FakeControlTypes.ColumnHeader => "ColumnHeader",
-                FakeControlTypes.Form => "Form",
-                FakeControlTypes.Generic => "Generic",
-                FakeControlTypes.GroupBox => "GroupBox",
-                FakeControlTypes.Label => "Label",
-                FakeControlTypes.MessageBox => "MessageBox",
-                FakeControlTypes.MessageBoxCaption => "MessageBoxCaption",
-                // FakeControlTypes.PictureBox => "PictureBox", // PictureBoxes shouldn't have text assigned to them.
-                FakeControlTypes.RadioButton => "RadioButton",
-                FakeControlTypes.TabPage => "TabPage",
-                FakeControlTypes.ToolStripButton => "ToolStripButton",
-                FakeControlTypes.ToolStripMenuItem => "ToolStripMenuItem",
-                FakeControlTypes.ToolTip => "ToolTip",
-                _ => null
-            },
-            _ => location
-        };
+            controlName = $"frm_{controlName}";
+        }
 
-        return HelperLocalisationResourceManager.GetResourceValue(controlName: controlName, location: location);
+        return HelperLocalisationResourceManager.GetResourceValue(controlName: controlName, location: "Strings");
     }
 }

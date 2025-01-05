@@ -1174,7 +1174,7 @@ public partial class FrmSettings : Form
         {
             string tmpLabelText =
                 HelperLocalisationResourceManager.GetResourceValue(control: lbl_Generic_Miles,
-                    location: HelperVariables.ResourceNameForGenericControlItems);
+                    location: "Strings");
 
             lbl_Generic_Miles.Text =
                 $"({Math.Round(d: nud.Value / (decimal)1.60934, decimals: 2)

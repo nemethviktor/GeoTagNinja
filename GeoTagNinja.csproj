@@ -237,105 +237,10 @@
     <Compile Include="Model\AppSettingContainer.cs" />
     <Compile Include="Model\MapWebMessage.cs" />
     <Compile Include="Helpers\HelperLocalisationLanguageManager.cs" />
-    <Compile Include="Resources\Languages\ColumnHeader.Designer.cs">
+    <Compile Include="Resources\Languages\Strings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ColumnHeader.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\FileBrowser.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>FileBrowser.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\Form.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Form.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\Generic_Strings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Generic_Strings.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\GroupBox.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GroupBox.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\Label.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Label.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\Button.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Button.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\Checkbox.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Checkbox.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\MenuStrip.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MenuStrip.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\MessageBox.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MessageBox.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\MessageBoxCaption.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MessageBoxCaption.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\PictureBox.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PictureBox.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\RadioButton.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RadioButton.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\RichTextBox.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RichTextBox.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\TabControl.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TabControl.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\TabPage.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TabPage.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\ToolStrip.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ToolStrip.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\ToolStripButton.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ToolStripButton.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\ToolStripMenuItem.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ToolStripMenuItem.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\ToolTip.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ToolTip.resx</DependentUpon>
+      <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
     <Compile Include="SingleInstance_PipeServer.cs" />
     <Compile Include="View\DialogAndMessageBoxes\CustomMessageBox.cs">
@@ -441,104 +346,10 @@
     <EmbeddedResource Include="FrmPleaseWaitBox.resx">
       <DependentUpon>FrmPleaseWaitBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\ColumnHeader.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\ColumnHeader.resx">
+    <EmbeddedResource Include="Resources\Languages\Strings.*.resx" />
+    <EmbeddedResource Include="Resources\Languages\Strings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ColumnHeader.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\FileBrowser.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\FileBrowser.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>FileBrowser.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\Form.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\Form.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Form.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\Generic_Strings.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\Generic_Strings.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Generic_Strings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\GroupBox.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\GroupBox.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>GroupBox.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\Label.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\Label.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Label.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\Button.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\Button.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Button.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\Checkbox.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\Checkbox.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Checkbox.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\MenuStrip.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\MenuStrip.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>MenuStrip.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\MessageBox.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\MessageBox.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>MessageBox.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\MessageBoxCaption.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>MessageBoxCaption.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\PictureBox.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\PictureBox.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>PictureBox.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\RadioButton.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\RadioButton.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>RadioButton.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\RichTextBox.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\RichTextBox.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>RichTextBox.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\TabControl.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\TabControl.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>TabControl.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\TabPage.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\TabPage.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>TabPage.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\ToolStrip.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\ToolStrip.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ToolStrip.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\ToolStripButton.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\ToolStripButton.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ToolStripButton.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\ToolStripMenuItem.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\ToolStripMenuItem.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ToolStripMenuItem.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\ToolTip.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\ToolTip.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ToolTip.Designer.cs</LastGenOutput>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="View\FrmColumnSelection.resx">
       <DependentUpon>FrmColumnSelection.cs</DependentUpon>

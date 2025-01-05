@@ -32,8 +32,12 @@ internal class HelperControlAndMessageBoxCustomMessageBoxManager
                                         string extraMessage = "",
                                         MessageBoxTextSource textSource = MessageBoxTextSource.CONTROLTYPE)
     {
-        _ = ShowMessageBoxWithResult(controlName: controlName, captionType: captionType, buttons: buttons, icon: icon,
-            extraMessage: extraMessage, textSource: textSource);
+        _ = ShowMessageBoxWithResult(controlName: controlName,
+            captionType: captionType,
+            buttons: buttons,
+            icon: icon,
+            extraMessage: extraMessage,
+            textSource: textSource);
     }
 
     /// <summary>
@@ -93,7 +97,7 @@ internal class HelperControlAndMessageBoxCustomMessageBoxManager
         CustomMessageBox customMessageBox = new(
             text:
             $"{(textSource == MessageBoxTextSource.CONTROLTYPE ? ReturnControlText(controlName: controlName, fakeControlType: FakeControlTypes.MessageBox) : string.Empty)}{extraMessage}",
-            caption: ReturnControlText(controlName: captionType.ToString(),
+            caption: ReturnControlText(controlName: $"mbc_{captionType.ToString()}",
                 fakeControlType: FakeControlTypes.MessageBoxCaption),
             buttons: buttons,
             icon: icon);
