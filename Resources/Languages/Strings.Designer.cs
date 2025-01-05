@@ -61,7 +61,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Apply Move to Next.
+        ///   Looks up a localized string similar to Apply &amp;&amp; Move to Next.
         /// </summary>
         public static string btn_ApplyAndNext {
             get {

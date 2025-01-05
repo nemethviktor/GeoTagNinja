@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="btn_ApplyAndNext" xml:space="preserve">
-    <value>Apply Move to Next</value>
+    <value>Apply &amp;&amp; Move to Next</value>
     <comment>Location: Edit File Data</comment>
   </data>
   <data name="btn_InsertFromTakenDate" xml:space="preserve">

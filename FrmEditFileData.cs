@@ -528,56 +528,51 @@ public partial class FrmEditFileData : Form
             }
         }
 
+        [SuppressMessage(category: "ReSharper", checkId: "PossibleInvalidOperationException")]
         void HandleDateTimePickerTimeShift(DateTimePicker dtp,
-            DirectoryElement directoryElement,
-            Control cItem,
-            DirectoryElement.AttributeVersion
-                maxAttributeVersion)
+                                           DirectoryElement directoryElement,
+                                           Control cItem,
+                                           DirectoryElement.AttributeVersion
+                                               maxAttributeVersion)
         {
-            DateTime DECreateDate = default;
-            DateTime DETakenDate = default;
+            DateTime directoryElementDateTimeOriginal = default;
+            DateTime directoryElementDateTimeMaxVersion = default;
+
+            // Update ref ticket #147:
+            // The logic here was a bit flawed. What this does/should do is that we (should) take the Original value,
+            // ... also take the amount of time already shifted and add the two together, if and only if the time shifted !=0.
+            // ... otherwise we'd always return to the Original value even when it's already been modified. 
+
             int totalShiftedSeconds = 0;
-            if (dtp == dtp_TakenDate &&
-                directoryElement.GetAttributeValue<DateTime>(
-                    attribute: ElementAttribute.TakenDate,
-                    version: DirectoryElement.AttributeVersion
-                                             .Original,
-                    notFoundValue: null) !=
-                null)
+
+            Dictionary<DateTimePicker, ElementAttribute> dtpMapping = new()
             {
-                DETakenDate = (DateTime)directoryElement.GetAttributeValue<DateTime>(
-                    attribute: ElementAttribute.TakenDate,
-                    version: DirectoryElement.AttributeVersion
-                                             .Original,
+                { dtp_TakenDate, ElementAttribute.TakenDate },
+                { dtp_CreateDate, ElementAttribute.CreateDate }
+            };
+            if (directoryElement.GetAttributeValue<DateTime>(
+                    attribute: dtpMapping[key: dtp],
+                    version: DirectoryElement.AttributeVersion.Original,
+                    notFoundValue: null) != null)
+            {
+                directoryElementDateTimeOriginal = (DateTime)directoryElement.GetAttributeValue<DateTime>(
+                    attribute: dtpMapping[key: dtp],
+                    version: DirectoryElement.AttributeVersion.Original,
                     notFoundValue: null);
+
+                directoryElementDateTimeMaxVersion = (DateTime)directoryElement.GetAttributeValue<DateTime>(
+                    attribute: dtpMapping[key: dtp],
+                    version: maxAttributeVersion,
+                    notFoundValue: null);
+
                 totalShiftedSeconds =
                     ShiftTimeForDateTimePicker(
                         whatToShift: TimeShiftTypes.TakenDate,
                         dirElemFileToModify: directoryElement);
 
-                dtp.Value =
-                    DETakenDate.AddSeconds(value: totalShiftedSeconds);
-            }
-            else if (dtp == dtp_CreateDate &&
-                     directoryElement.GetAttributeValue<DateTime>(
-                         attribute: ElementAttribute.CreateDate,
-                         version: DirectoryElement.AttributeVersion
-                                                  .Original,
-                         notFoundValue: null) !=
-                     null)
-            {
-                DECreateDate = (DateTime)directoryElement.GetAttributeValue<DateTime>(
-                    attribute: ElementAttribute.CreateDate,
-                    version: DirectoryElement.AttributeVersion
-                                             .Original,
-                    notFoundValue: null);
-                totalShiftedSeconds =
-                    ShiftTimeForDateTimePicker(
-                        whatToShift: TimeShiftTypes.CreateDate,
-                        dirElemFileToModify: directoryElement);
-
-                dtp.Value =
-                    DECreateDate.AddSeconds(value: totalShiftedSeconds);
+                dtp.Value = totalShiftedSeconds != 0
+                    ? directoryElementDateTimeOriginal.AddSeconds(value: totalShiftedSeconds)
+                    : directoryElementDateTimeMaxVersion;
             }
 
             Log.Trace(message: $"cItem: {cItem.Name} - Updating DateTimePicker");
