@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Generic_All" xml:space="preserve">
+    <value>அனைத்தும்</value>
+  </data>
+  <data name="Generic_Metres_Abbr" xml:space="preserve">
+    <value>மீ</value>
+  </data>
+  <data name="Generic_Metres" xml:space="preserve">
+    <value>மீட்டர்</value>
+  </data>
+  <data name="Generic_Miles" xml:space="preserve">
+    <value>மைல்கள்</value>
+  </data>
+  <data name="Generic_Minutes" xml:space="preserve">
+    <value>நிமிடங்கள்</value>
+  </data>
+  <data name="Generic_No" xml:space="preserve">
+    <value>இல்லை</value>
+  </data>
+  <data name="Generic_OK" xml:space="preserve">
+    <value>சரி</value>
+  </data>
+  <data name="Generic_PleaseWait" xml:space="preserve">
+    <value>தயவுசெய்து காத்திருங்கள் ...</value>
+  </data>
+  <data name="Generic_GPSAltitude" xml:space="preserve">
+    <value>குத்துயரம்</value>
+  </data>
+  <data name="Generic_GPSAltitudeRef" xml:space="preserve">
+    <value>உயர்வு குறிப்பு</value>
+  </data>
+  <data name="Generic_Cancel" xml:space="preserve">
+    <value>ரத்துசெய்</value>
+  </data>
+  <data name="Generic_City" xml:space="preserve">
+    <value>நகரம்</value>
+  </data>
+  <data name="Generic_Close" xml:space="preserve">
+    <value>மூடு</value>
+  </data>
+  <data name="Generic_Country" xml:space="preserve">
+    <value>நாடு</value>
+  </data>
+  <data name="Generic_CountryCode" xml:space="preserve">
+    <value>நாட்டின் குறியீடு</value>
+  </data>
+  <data name="Generic_CreateDate" xml:space="preserve">
+    <value>தேதியை உருவாக்கு</value>
+  </data>
+  <data name="Generic_Days" xml:space="preserve">
+    <value>நாட்கள்</value>
+  </data>
+  <data name="Generic_Decimal" xml:space="preserve">
+    <value>தசம</value>
+  </data>
+  <data name="Generic_Delete" xml:space="preserve">
+    <value>நீக்கு</value>
+  </data>
+  <data name="Generic_GPSDestLatitude" xml:space="preserve">
+    <value>அட்சரேகை அட்சரேகை</value>
+  </data>
+  <data name="Generic_GPSDestLatitudeRef" xml:space="preserve">
+    <value>டெச்ட் அட்சரேகை குறிப்பு</value>
+  </data>
+  <data name="Generic_GPSDestLongitude" xml:space="preserve">
+    <value>தீர்க்கதரிசனம்</value>
+  </data>
+  <data name="Generic_GPSDestLongitudeRef" xml:space="preserve">
+    <value>டெச்ட் தீர்க்கரேகை குறிப்பு</value>
+  </data>
+  <data name="Generic_QuestionDontAskAgain" xml:space="preserve">
+    <value>மீண்டும் கேட்க வேண்டாம்</value>
+  </data>
+  <data name="Generic_Export" xml:space="preserve">
+    <value>ஏற்றுமதி</value>
+  </data>
+  <data name="Generic_Favourites" xml:space="preserve">
+    <value>பிடித்தவை</value>
+  </data>
+  <data name="Generic_Feet" xml:space="preserve">
+    <value>அடி</value>
+  </data>
+  <data name="Generic_ForAllImages" xml:space="preserve">
+    <value>எல்லா படங்களுக்கும்</value>
+  </data>
+  <data name="Generic_ForThisImage" xml:space="preserve">
+    <value>இந்த படத்திற்கு</value>
+  </data>
+  <data name="Generic_Feet_Abbr" xml:space="preserve">
+    <value>அடி</value>
+  </data>
+  <data name="Generic_Hours" xml:space="preserve">
+    <value>மணி</value>
+  </data>
+  <data name="Generic_GPSImgDirection" xml:space="preserve">
+    <value>IMG திசை</value>
+  </data>
+  <data name="Generic_GPSImgDirectionRef" xml:space="preserve">
+    <value>Img திசை ref</value>
+  </data>
+  <data name="Generic_Import" xml:space="preserve">
+    <value>இறக்குமதி</value>
+  </data>
+  <data name="Generic_Insert" xml:space="preserve">
+    <value>செருகவும்</value>
+  </data>
+  <data name="Generic_GPSLatitude" xml:space="preserve">
+    <value>அகலாங்கு</value>
+  </data>
+  <data name="Generic_GPSLatitudeRef" xml:space="preserve">
+    <value>அட்சரேகை குறிப்பு</value>
+  </data>
+  <data name="Generic_GPSLongitude" xml:space="preserve">
+    <value>நெட்டாங்கு</value>
+  </data>
+  <data name="Generic_GPSLongitudeRef" xml:space="preserve">
+    <value>தீர்க்கரேகை குறிப்பு</value>
+  </data>
+  <data name="Generic_None" xml:space="preserve">
+    <value>எதுவுமில்லை</value>
+  </data>
+  <data name="Generic_Rename" xml:space="preserve">
+    <value>மறுபெயரிடுங்கள்</value>
+  </data>
+  <data name="Generic_Save" xml:space="preserve">
+    <value>தற்போதைய மாற்றங்களைச் சேமிக்கவும்</value>
+  </data>
+  <data name="Generic_Seconds" xml:space="preserve">
+    <value>நொடி</value>
+  </data>
+  <data name="Generic_GPSSpeed" xml:space="preserve">
+    <value>வேகம்</value>
+  </data>
+  <data name="Generic_GPSSpeedRef" xml:space="preserve">
+    <value>வேக குறிப்பு</value>
+  </data>
+  <data name="Generic_State" xml:space="preserve">
+    <value>மாநில/மாகாணம்</value>
+  </data>
+  <data name="Generic_Sublocation" xml:space="preserve">
+    <value>துணை</value>
+  </data>
+  <data name="Generic_TakenDate" xml:space="preserve">
+    <value>தேதி எடுக்கப்பட்டது</value>
+  </data>
+  <data name="Generic_OffsetTime" xml:space="preserve">
+    <value>நேர மண்டலம் ஆஃப்செட்</value>
+  </data>
+  <data name="Generic_TZTime" xml:space="preserve">
+    <value>நேர மண்டல சரிசெய்தல்:</value>
+  </data>
+  <data name="Generic_ExportTrackTimeStampType" xml:space="preserve">
+    <value>நேர முத்திரை மதிப்பு</value>
+  </data>
+  <data name="Generic_UseDST" xml:space="preserve">
+    <value>டிஎச்டி பயன்படுத்தவா?</value>
+  </data>
+  <data name="Generic_Yes" xml:space="preserve">
+    <value>ஆம்</value>
+  </data>
+  <data name="Generic_Fnumber" xml:space="preserve">
+    <value>துளை</value>
+  </data>
+  <data name="Generic_Coordinates" xml:space="preserve">
+    <value>ஒருங்கிணைப்புகள்</value>
+  </data>
+  <data name="Generic_DestCoordinates" xml:space="preserve">
+    <value>டெச்ட் ஆயத்தொகுதிகள்</value>
+  </data>
+  <data name="Generic_ExposureTime" xml:space="preserve">
+    <value>நேரிடுதல் காலம்</value>
+  </data>
+  <data name="Generic_FileModifyDate" xml:space="preserve">
+    <value>கோப்பு தேதி</value>
+  </data>
+  <data name="Generic_FileName" xml:space="preserve">
+    <value>கோப்பு பெயர்</value>
+  </data>
+  <data name="Generic_FocalLength" xml:space="preserve">
+    <value>குவிநீளம், குவியத் தொலைவு</value>
+  </data>
+  <data name="Generic_FocalLengthIn35mmFormat" xml:space="preserve">
+    <value>குவிய நீளம் (35 மிமீ)</value>
+  </data>
+  <data name="Generic_GPSDateTime" xml:space="preserve">
+    <value>சி.பி.எச் தேதிநேரம்</value>
+  </data>
+  <data name="Generic_GUID" xml:space="preserve">
+    <value>வழிகாட்டுதல்</value>
+  </data>
+  <data name="Generic_IPTCKeywords" xml:space="preserve">
+    <value>ஐபிடிசி முக்கிய வார்த்தைகள்</value>
+  </data>
+  <data name="Generic_ISO" xml:space="preserve">
+    <value>ஐஎச்ஓ விரைவு</value>
+  </data>
+  <data name="Generic_LensSpec" xml:space="preserve">
+    <value>லென்ச்</value>
+  </data>
+  <data name="Generic_Make" xml:space="preserve">
+    <value>உருவாக்கு</value>
+  </data>
+  <data name="Generic_Model" xml:space="preserve">
+    <value>மாதிரியுரு</value>
+  </data>
+  <data name="Generic_Rating" xml:space="preserve">
+    <value>செயல்வரம்பு</value>
+  </data>
+  <data name="Generic_XMLSubjects" xml:space="preserve">
+    <value>எக்ச்எம்எல் பாடங்கள்</value>
+  </data>
+  <data name="Generic_ShowPassword" xml:space="preserve">
+    <value>கடவுச்சொல்லைக் காட்டு</value>
+  </data>
+</root>
