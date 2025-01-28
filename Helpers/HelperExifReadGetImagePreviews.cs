@@ -122,9 +122,9 @@ internal static class HelperExifReadGetImagePreviews
         {
             List<string> magickExtensionList =
             [
-                ".heic",
-                ".heif",
-                ".webp"
+                "heic",
+                "heif",
+                "webp"
             ];
 
             if (magickExtensionList.Contains(item: directoryElement.Extension.TrimStart('.').ToLower()))

@@ -6,6 +6,8 @@
 - BUGS & FIXES:
 	- Changed the Translation/resources logic into a single file. I realised that having 10 different files would yield 20+ PRs if anyone does an update and it's annoying.
 	- Fixed half of the translations not actually working because...not even sure why. My bad nonetheless.
+	- Fixed the time element of the TakenDate/CreateDate not being read properly after modify #147
+	- Fixed HEIC previews misbehaving #152
 
 **Build 9102 [20241202]** 
 - NEW & UPDATED:
