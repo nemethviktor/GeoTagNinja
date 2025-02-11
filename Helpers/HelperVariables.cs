@@ -91,6 +91,8 @@ internal static class HelperVariables
     internal static string UOMAbbreviated = "";
     internal static Dictionary<string, string> FileChecksumDictionary = new();
 
+    internal static HashSet<string> errorsAlreadyShownHashSet = new();
+
 
     // this is a bug where, upon closing the app the "do you want to write the queue?" question comes up twice but i can't seem to track it properly so this is to avoid that happening.
     internal static bool AppIsClosingAndWriteFileQuestionHasBeenAsked = false;

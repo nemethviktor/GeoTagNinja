@@ -8,6 +8,7 @@
 	- Fixed half of the translations not actually working because...not even sure why. My bad nonetheless.
 	- Fixed the time element of the TakenDate/CreateDate not being read properly after modify #147
 	- Fixed HEIC previews misbehaving #152
+	- Fixed the "No access to API" error cropping up multiple times #153
 
 **Build 9102 [20241202]** 
 - NEW & UPDATED:

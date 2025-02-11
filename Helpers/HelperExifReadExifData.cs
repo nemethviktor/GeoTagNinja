@@ -370,6 +370,7 @@ internal static class HelperExifReadExifData
                 radius: HelperVariables.ToponomyRadiusValue
             );
 
+            string ctrlNameForLocalError = "mbx_HelperStaticExifNoAPI";
             // if that returns nothing then try again with something bigger.
             try
             {
@@ -386,18 +387,26 @@ internal static class HelperExifReadExifData
                 }
                 else
                 {
-                    HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                        controlName: "mbx_HelperStaticExifNoAPI",
-                        captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
-                        buttons: MessageBoxButtons.OK);
+                    if (!HelperVariables.errorsAlreadyShownHashSet.Contains(item: ctrlNameForLocalError))
+                    {
+                        HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                            controlName: ctrlNameForLocalError,
+                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
+                            buttons: MessageBoxButtons.OK);
+                        HelperVariables.errorsAlreadyShownHashSet.Add(item: ctrlNameForLocalError);
+                    }
                 }
             }
             catch
             {
-                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                    controlName: "mbx_HelperStaticExifNoAPI",
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
-                    buttons: MessageBoxButtons.OK);
+                if (!HelperVariables.errorsAlreadyShownHashSet.Contains(item: ctrlNameForLocalError))
+                {
+                    HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                        controlName: ctrlNameForLocalError,
+                        captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
+                        buttons: MessageBoxButtons.OK);
+                    HelperVariables.errorsAlreadyShownHashSet.Add(item: ctrlNameForLocalError);
+                }
             }
 
             // ignore if unauthorised or some such
