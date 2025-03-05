@@ -538,7 +538,7 @@ public class DirectoryElement
             }
 
             string formattedDateTime =
-                dateTimeValue.Item1.ToString(format: "yyyy:MM:dd HH:mm:ss");
+                dateTimeValue.Item1.ToString(format: "yyyy-MM-dd HH:mm:ss");
 
             return !nowSavingExif
                 ? dateTimeValue.Item1.ToString(provider: CultureInfo.InstalledUICulture)
