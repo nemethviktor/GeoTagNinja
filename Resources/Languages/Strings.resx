@@ -1253,4 +1253,12 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
   <data name="ttp_SaveFavourite" xml:space="preserve">
     <value>Save (or overwrite) the currently selected file's metadata to your Favourites</value>
   </data>
+  <data name="ckb_ImportExport_ApplicationSettings" xml:space="preserve">
+    <value>ApplicationSettings</value>
+    <comment>Location: Settings</comment>
+  </data>
+  <data name="ckb_ImportExport_CustomRulesSettings" xml:space="preserve">
+    <value>CustomRulesSettings</value>
+    <comment>ngs</comment>
+  </data>
 </root>

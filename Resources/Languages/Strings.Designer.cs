@@ -178,11 +178,29 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ApplicationSettings.
+        /// </summary>
+        public static string ckb_ImportExport_ApplicationSettings {
+            get {
+                return ResourceManager.GetString("ckb_ImportExport_ApplicationSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CityRulesSettings.
         /// </summary>
         public static string ckb_ImportExport_CityRulesSettings {
             get {
                 return ResourceManager.GetString("ckb_ImportExport_CityRulesSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CustomRulesSettings.
+        /// </summary>
+        public static string ckb_ImportExport_CustomRulesSettings {
+            get {
+                return ResourceManager.GetString("ckb_ImportExport_CustomRulesSettings", resourceCulture);
             }
         }
         

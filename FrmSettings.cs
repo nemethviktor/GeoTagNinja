@@ -1478,14 +1478,14 @@ public partial class FrmSettings : Form
             {
                 HelperControlAndMessageBoxHandling.ReturnControlText(
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button,
-                    controlName: "btn_Generic_OK"
+                    controlName: "Generic_OK"
                 ),
                 "yes" // that's ok
             },
             {
                 HelperControlAndMessageBoxHandling.ReturnControlText(
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button,
-                    controlName: "btn_Generic_Cancel"
+                    controlName: "Generic_Cancel"
                 ),
                 "no" // that's ok
             }
@@ -1494,7 +1494,7 @@ public partial class FrmSettings : Form
     }
 
     /// <summary>
-    ///     Creates and returns a dictionary representing checkboxes for the settings import/export diaLog.
+    ///     Creates and returns a dictionary representing checkboxes for the settings import/export dialog.
     ///     Each key-value pair in the dictionary represents a checkbox, where the key is the text displayed next to the
     ///     checkbox,
     ///     and the value is the name of the corresponding `SettingsImportExportOptions` enum value.
@@ -1506,9 +1506,10 @@ public partial class FrmSettings : Form
         foreach (string name in Enum.GetNames(
                      enumType: typeof(SettingsImportExportOptions)))
         {
-            checkboxDictionary.Add(key: HelperControlAndMessageBoxHandling.ReturnControlText(
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.CheckBox,
-                controlName: $"ckb_ImportExport_{name}"), value: name);
+            checkboxDictionary.Add(key:
+                HelperControlAndMessageBoxHandling.ReturnControlText(
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.CheckBox,
+                    controlName: $"ckb_ImportExport_{name}"), value: name);
         }
 
         return checkboxDictionary;
