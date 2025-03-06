@@ -9,6 +9,8 @@
 	- Fixed the time element of the TakenDate/CreateDate not being read properly after modify #147
 	- Fixed HEIC previews misbehaving #152
 	- Fixed the "No access to API" error cropping up multiple times #153
+	- Fixed Import (settings) not working due to localisation issues
+	- Fixed DateTime copypaste not working and  not being handled properly on some Cultures [eg en-AU] #155
 
 **Build 9102 [20241202]** 
 - NEW & UPDATED:

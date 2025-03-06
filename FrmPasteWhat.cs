@@ -472,7 +472,7 @@ public partial class FrmPasteWhat : Form
                                         attribute: keyValuePair.Key,
                                         value: Convert.ToString(
                                             value: keyValuePair.Value,
-                                            provider: CultureInfo.InvariantCulture),
+                                            provider: CultureInfo.CurrentCulture), // this can't be invariant because it breaks Australian dates apparently.
                                         version: DirectoryElement.AttributeVersion
                                                                  .Stage1EditFormIntraTabTransferQueue,
                                         isMarkedForDeletion: false);

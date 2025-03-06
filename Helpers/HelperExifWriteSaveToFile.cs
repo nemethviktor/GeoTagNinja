@@ -240,15 +240,20 @@ internal static class HelperExifWriteSaveToFile
 
                                     if (updateExifVal != "")
                                     {
-                                        UpdateArgsFile(
+                                        if (
+                                            !objectTagNameOut.EndsWith(value: "DateTimeOriginal") && // TakenDate
+                                            !objectTagNameOut.EndsWith(value: "CreateDate") // CreateDate
+                                       )
+                                        {
+                                            UpdateArgsFile(
                                             argfileToUpdate: ArgfileToUpdate.Both,
                                             whatText: $"-{exifToolAttribute}={updateExifVal}");
+                                        }
 
                                         //if lat/long/alt then add Ref. 
                                         if (!exifToolAttribute.StartsWith(value: "XMP"))
                                         {
-                                            if (exifToolAttribute.EndsWith(
-                                                    value: "GPSLatitude"))
+                                            if (exifToolAttribute.EndsWith(value: "GPSLatitude"))
                                             {
                                                 if (updateExifVal.Substring(
                                                         startIndex: 0, length: 1) ==
@@ -268,8 +273,7 @@ internal static class HelperExifWriteSaveToFile
                                                         whatText: $"-{exifToolAttribute}Ref=North");
                                                 }
                                             }
-                                            else if (exifToolAttribute.EndsWith(
-                                                         value: "GPSLongitude"))
+                                            else if (exifToolAttribute.EndsWith(value: "GPSLongitude"))
                                             {
                                                 if (updateExifVal.Substring(
                                                         startIndex: 0, length: 1) ==
@@ -289,8 +293,7 @@ internal static class HelperExifWriteSaveToFile
                                                         whatText: $"-{exifToolAttribute}Ref=East");
                                                 }
                                             }
-                                            else if (exifToolAttribute.EndsWith(
-                                                         value: "GPSAltitude"))
+                                            else if (exifToolAttribute.EndsWith(value: "GPSAltitude"))
                                             {
                                                 double.TryParse(
                                                     s: updateExifVal,
@@ -348,21 +351,17 @@ internal static class HelperExifWriteSaveToFile
                                         }
                                     }
 
-                                    if (objectTagNameOut.EndsWith(
-                                            value: "DateTimeOriginal") || // TakenDate
-                                        objectTagNameOut.EndsWith(
-                                            value: "CreateDate") // CreateDate
+                                    if (objectTagNameOut.EndsWith(value: "DateTimeOriginal") || // TakenDate
+                                        objectTagNameOut.EndsWith(value: "CreateDate") // CreateDate
                                        )
                                     {
                                         bool isTakenDate = false;
                                         bool isCreateDate = false;
-                                        if (objectTagNameOut.EndsWith(
-                                                value: "DateTimeOriginal"))
+                                        if (objectTagNameOut.EndsWith(value: "DateTimeOriginal"))
                                         {
                                             isTakenDate = true;
                                         }
-                                        else if (objectTagNameOut.EndsWith(
-                                                     value: "CreateDate"))
+                                        else if (objectTagNameOut.EndsWith(value: "CreateDate"))
                                         {
                                             isCreateDate = true;
                                         }
@@ -371,7 +370,8 @@ internal static class HelperExifWriteSaveToFile
                                         {
                                             updateExifVal = DateTime
                                                .Parse(s: settingValue)
-                                               .ToString(format: "yyyy-MM-dd HH:mm:ss");
+                                               .ToString(format: "yyyy-MM-dd HH:mm:ss", 
+                                               provider: CultureInfo.InvariantCulture);
                                         }
                                         catch
                                         {
