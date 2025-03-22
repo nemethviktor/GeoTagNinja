@@ -1096,7 +1096,7 @@ Eventually click `Generate the API key and go to item details page. I am ready t
 Save the API key when prompted. If you don't do it at the time you'll have to generate another one.</value>
   </data>
   <data name="rbx_Register_GeoNames" xml:space="preserve">
-    <value>You'll need a GeoNames Account to use the reverse geocoding/search function (lat/long --&gt; country/city/...). Get one here: http://www.geonames.org/login</value>
+    <value>You'll need a GeoNames Account to use the reverse geocoding/search function (lat/long --&gt; country/city/...). Get one here: http://www.geonames.org/login and then enable "Free Web Services" access here: https://www.geonames.org/manageaccount</value>
   </data>
   <data name="tcr_EditData" xml:space="preserve">
     <value>Edit Data</value>
