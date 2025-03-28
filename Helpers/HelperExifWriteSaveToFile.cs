@@ -49,6 +49,7 @@ internal static class HelperExifWriteSaveToFile
         string exifArgsForSidecar = "";
         // check there's anything to write.
         // ReSharper disable once InconsistentNaming
+
         foreach (string GUID in DistinctGUIDs)
         {
             DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: GUID);
@@ -116,20 +117,46 @@ internal static class HelperExifWriteSaveToFile
                     // it's a lot less complicated to just pretend we want both the Original File and the Sidecar updated and then not-include them later than to have a Yggdrasil of IFs scattered all over.
                     // ... which latter I would inevitably f...k up at some point.
 
-                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath)); //needs to include folder name
-                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-ignoreMinorErrors");
-                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-progress");
+                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig,
+                        whatText: Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath),
+                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                        exifArgsForSidecar: ref exifArgsForSidecar); //needs to include folder name
+                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-ignoreMinorErrors",
+                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                        exifArgsForSidecar: ref exifArgsForSidecar);
+                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-progress",
+                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                        exifArgsForSidecar: ref exifArgsForSidecar);
 
                     // this doesn't need to be sent back to the actual XMP file, it's a bug.
                     if (ratingInXmp >= 0)
                     {
-                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: $"-Rating={ratingInXmp}");
+                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: $"-Rating={ratingInXmp}",
+                            exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                            exifArgsForSidecar: ref exifArgsForSidecar);
                     }
 
+                    // this is re issue #159 and blocking certain warnings from cropping up
+                    // -api
+                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-api",
+                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                        exifArgsForSidecar: ref exifArgsForSidecar);
+
+                    // "NoWarning=(requires ExifVersion \d+ or higher|is not allowed in JPEG)" [or some such - don't add doublequotes]
+                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig,
+                        whatText:
+                        "NoWarning=(requires ExifVersion \\d+ or higher|is not allowed in JPEG|MakerNote)",
+                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                        exifArgsForSidecar: ref exifArgsForSidecar);
+
                     UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText: Path.Combine(
-                        path1: folderNameToWrite, path2:
-                        $"{Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath))}.xmp")); //needs to include folder name
-                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText: "-progress");
+                            path1: folderNameToWrite, path2:
+                            $"{Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath))}.xmp"),
+                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                        exifArgsForSidecar: ref exifArgsForSidecar); //needs to include folder name
+                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText: "-progress",
+                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                        exifArgsForSidecar: ref exifArgsForSidecar);
 
                     // sidecar copying needs to be in a separate batch, as technically it's a different file
 
@@ -145,11 +172,15 @@ internal static class HelperExifWriteSaveToFile
                             // otherwise create a new one. 
                             xmpFileLocation = Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath);
                             UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText:
-                                $"-tagsfromfile={xmpFileLocation}");
+                                $"-tagsfromfile={xmpFileLocation}",
+                                exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                                exifArgsForSidecar: ref exifArgsForSidecar);
                         }
                     }
 
-                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText: "-ignoreMinorErrors");
+                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText: "-ignoreMinorErrors",
+                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                        exifArgsForSidecar: ref exifArgsForSidecar);
 
                     DataTable dtFileWriteQueue = new();
                     dtFileWriteQueue.Clear();
@@ -222,11 +253,15 @@ internal static class HelperExifWriteSaveToFile
                             // non-xmp always
                             if (deleteAllGPSData && !deleteTagAlreadyAdded)
                             {
-                                UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-gps*=");
+                                UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-gps*=",
+                                    exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                                    exifArgsForSidecar: ref exifArgsForSidecar);
 
                                 // this is moved up/in here because the deletion of all gps has to come before just about anything else in case user wants to add (rather than delete) in more tags (later).
 
-                                UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-xmp:gps*=");
+                                UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both, whatText: "-xmp:gps*=",
+                                    exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                                    exifArgsForSidecar: ref exifArgsForSidecar);
 
                                 deleteTagAlreadyAdded = true;
                             }
@@ -243,11 +278,13 @@ internal static class HelperExifWriteSaveToFile
                                         if (
                                             !objectTagNameOut.EndsWith(value: "DateTimeOriginal") && // TakenDate
                                             !objectTagNameOut.EndsWith(value: "CreateDate") // CreateDate
-                                       )
+                                        )
                                         {
                                             UpdateArgsFile(
-                                            argfileToUpdate: ArgfileToUpdate.Both,
-                                            whatText: $"-{exifToolAttribute}={updateExifVal}");
+                                                argfileToUpdate: ArgfileToUpdate.Both,
+                                                whatText: $"-{exifToolAttribute}={updateExifVal}",
+                                                exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                                                exifArgsForSidecar: ref exifArgsForSidecar);
                                         }
 
                                         //if lat/long/alt then add Ref. 
@@ -263,14 +300,18 @@ internal static class HelperExifWriteSaveToFile
                                                     UpdateArgsFile(
                                                         argfileToUpdate: ArgfileToUpdate
                                                            .Both,
-                                                        whatText: $"-{exifToolAttribute}Ref=South");
+                                                        whatText: $"-{exifToolAttribute}Ref=South",
+                                                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                                                        exifArgsForSidecar: ref exifArgsForSidecar);
                                                 }
                                                 else
                                                 {
                                                     UpdateArgsFile(
                                                         argfileToUpdate: ArgfileToUpdate
                                                            .Both,
-                                                        whatText: $"-{exifToolAttribute}Ref=North");
+                                                        whatText: $"-{exifToolAttribute}Ref=North",
+                                                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                                                        exifArgsForSidecar: ref exifArgsForSidecar);
                                                 }
                                             }
                                             else if (exifToolAttribute.EndsWith(value: "GPSLongitude"))
@@ -283,14 +324,18 @@ internal static class HelperExifWriteSaveToFile
                                                     UpdateArgsFile(
                                                         argfileToUpdate: ArgfileToUpdate
                                                            .Both,
-                                                        whatText: $"-{exifToolAttribute}Ref=West");
+                                                        whatText: $"-{exifToolAttribute}Ref=West",
+                                                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                                                        exifArgsForSidecar: ref exifArgsForSidecar);
                                                 }
                                                 else
                                                 {
                                                     UpdateArgsFile(
                                                         argfileToUpdate: ArgfileToUpdate
                                                            .Both,
-                                                        whatText: $"-{exifToolAttribute}Ref=East");
+                                                        whatText: $"-{exifToolAttribute}Ref=East",
+                                                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                                                        exifArgsForSidecar: ref exifArgsForSidecar);
                                                 }
                                             }
                                             else if (exifToolAttribute.EndsWith(value: "GPSAltitude"))
@@ -317,12 +362,15 @@ internal static class HelperExifWriteSaveToFile
                                                     argfileToUpdate: ArgfileToUpdate.Both,
                                                     whatText: $"-{exifToolAttribute}Ref={(tmpAltitude > 0
                                                         ? "0"
-                                                        : "-1")}");
+                                                        : "-1")}", exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                                                    exifArgsForSidecar: ref exifArgsForSidecar);
 
                                                 // same as below/generic
                                                 UpdateArgsFile(
                                                     argfileToUpdate: ArgfileToUpdate.Both,
-                                                    whatText: $"-{exifToolAttribute}={updateExifVal}");
+                                                    whatText: $"-{exifToolAttribute}={updateExifVal}",
+                                                    exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                                                    exifArgsForSidecar: ref exifArgsForSidecar);
                                             }
                                         }
                                     }
@@ -330,7 +378,9 @@ internal static class HelperExifWriteSaveToFile
                                     {
                                         UpdateArgsFile(
                                             argfileToUpdate: ArgfileToUpdate.Both,
-                                            whatText: $"-{exifToolAttribute}=");
+                                            whatText: $"-{exifToolAttribute}=",
+                                            exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                                            exifArgsForSidecar: ref exifArgsForSidecar);
 
                                         //if lat/long then add Ref. 
                                         if (!exifToolAttribute.StartsWith(value: "XMP"))
@@ -346,7 +396,9 @@ internal static class HelperExifWriteSaveToFile
                                             {
                                                 UpdateArgsFile(
                                                     argfileToUpdate: ArgfileToUpdate.Both,
-                                                    whatText: $"-{exifToolAttribute}Ref=");
+                                                    whatText: $"-{exifToolAttribute}Ref=",
+                                                    exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                                                    exifArgsForSidecar: ref exifArgsForSidecar);
                                             }
                                         }
                                     }
@@ -383,7 +435,9 @@ internal static class HelperExifWriteSaveToFile
                                         message: $"{fileNameWithPath} - {exifToolAttribute}: {updateExifVal}");
 
                                     UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both,
-                                        whatText: $"-{exifToolAttribute}={updateExifVal}");
+                                        whatText: $"-{exifToolAttribute}={updateExifVal}",
+                                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                                        exifArgsForSidecar: ref exifArgsForSidecar);
                                 }
                             }
                         }
@@ -391,19 +445,33 @@ internal static class HelperExifWriteSaveToFile
 
                     if (doNotCreateBackup)
                     {
-                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-overwrite_original_in_place");
+                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-overwrite_original_in_place",
+                            exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                            exifArgsForSidecar: ref exifArgsForSidecar);
                     }
 
-                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-iptc:codedcharacterset=utf8");
+                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-iptc:codedcharacterset=utf8",
+                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                        exifArgsForSidecar: ref exifArgsForSidecar);
 
                     if (resetFileDateToCreated)
                     {
-                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-filemodifydate<datetimeoriginal");
-                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-filecreatedate<datetimeoriginal");
+                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig,
+                            whatText: "-filemodifydate<datetimeoriginal",
+                            exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                            exifArgsForSidecar: ref exifArgsForSidecar);
+                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig,
+                            whatText: "-filecreatedate<datetimeoriginal",
+                            exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                            exifArgsForSidecar: ref exifArgsForSidecar);
                     }
 
-                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-IPTCDigest=");
-                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-execute");
+                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-IPTCDigest=",
+                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                        exifArgsForSidecar: ref exifArgsForSidecar);
+                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-execute",
+                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                        exifArgsForSidecar: ref exifArgsForSidecar);
 
                     if (processOriginalFile)
                     {
@@ -415,10 +483,15 @@ internal static class HelperExifWriteSaveToFile
                         if (doNotCreateBackup)
                         {
                             //UpdateArgsFile(ArgfileToUpdate.SideCar, "-IPTCDigest=" + Environment.NewLine;
-                            UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText: "-overwrite_original_in_place");
+                            UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar,
+                                whatText: "-overwrite_original_in_place",
+                                exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                                exifArgsForSidecar: ref exifArgsForSidecar);
                         }
 
-                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText: "-execute");
+                        UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText: "-execute",
+                            exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                            exifArgsForSidecar: ref exifArgsForSidecar);
 
                         File.AppendAllText(path: argsFile, contents: exifArgsForSidecar, encoding: Encoding.UTF8);
                     }
@@ -431,38 +504,6 @@ internal static class HelperExifWriteSaveToFile
                             controlName: "mbx_Helper_WarningNoWriteSettingEnabled",
                             captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
                             buttons: MessageBoxButtons.OK);
-                    }
-                }
-            }
-
-            continue;
-
-            // this patches the args files in a more organised way.
-            void UpdateArgsFile(ArgfileToUpdate argfileToUpdate,
-                                string whatText,
-                                bool addNewLine = true)
-            {
-                if (argfileToUpdate == ArgfileToUpdate.Orig || argfileToUpdate == ArgfileToUpdate.Both)
-                {
-                    if (!exifArgsForOriginalFile.Contains(value: whatText))
-                    {
-                        exifArgsForOriginalFile += whatText +
-                                                   (addNewLine
-                                                       ? Environment.NewLine
-                                                       : "");
-                    }
-                }
-
-                ;
-
-                if (argfileToUpdate == ArgfileToUpdate.SideCar || argfileToUpdate == ArgfileToUpdate.Both)
-                {
-                    if (!exifArgsForSidecar.Contains(value: whatText))
-                    {
-                        exifArgsForSidecar += whatText +
-                                              (addNewLine
-                                                  ? Environment.NewLine
-                                                  : "");
                     }
                 }
             }
@@ -507,6 +548,47 @@ internal static class HelperExifWriteSaveToFile
         FrmMainApp.TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.NoProgress);
         FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Ready.");
         HelperGenericFileLocking.FilesAreBeingSaved = false;
+    }
+
+    /// <summary>
+    ///     Updates the arguments file
+    /// </summary>
+    /// <param name="argfileToUpdate">Which file to update -> <see cref="ArgfileToUpdate" /></param>
+    /// <param name="whatText">The text to add</param>
+    /// <param name="exifArgsForOriginalFile">String for the "main" image</param>
+    /// <param name="exifArgsForSidecar">String for the sidecar image</param>
+    /// <param name="addNewLine">Whether to add a new line (default true)</param>
+    private static void UpdateArgsFile(ArgfileToUpdate argfileToUpdate,
+                                       string whatText,
+                                       ref string exifArgsForOriginalFile,
+                                       ref string exifArgsForSidecar,
+                                       bool addNewLine = true)
+    {
+        if (argfileToUpdate == ArgfileToUpdate.Orig ||
+            argfileToUpdate == ArgfileToUpdate.Both)
+        {
+            if (!exifArgsForOriginalFile.Contains(value: whatText))
+            {
+                exifArgsForOriginalFile += whatText +
+                                           (addNewLine
+                                               ? Environment.NewLine
+                                               : "");
+            }
+        }
+
+        ;
+
+        if (argfileToUpdate == ArgfileToUpdate.SideCar ||
+            argfileToUpdate == ArgfileToUpdate.Both)
+        {
+            if (!exifArgsForSidecar.Contains(value: whatText))
+            {
+                exifArgsForSidecar += whatText +
+                                      (addNewLine
+                                          ? Environment.NewLine
+                                          : "");
+            }
+        }
     }
 
     /// <summary>

@@ -1,6 +1,12 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 9xxx [20250xxx]** 
+**Build 9xxx [2025xxxx]** 
+- NEW & UPDATED:
+	- TBA
+- BUGS & FIXES:
+	- Added some logic to ignore certain particular warnings cropping up when saving files #159
+
+**Build 9196 [20250306]** 
 - NEW & UPDATED:
 	- Added a CancellationToken to the Parsing of DirectoryElements (aka you can now cancel loading a folder.) #120
 - BUGS & FIXES:
