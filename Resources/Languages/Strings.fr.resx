@@ -133,7 +133,7 @@
     <value>(De)valider tout</value>
   </data>
   <data name="ckb_OffsetTime" xml:space="preserve">
-    <value>Décalage horaire</value>
+    <value>Décalage du fuseau horaire</value>
   </data>
   <data name="ckb_OverwriteOriginal" xml:space="preserve">
     <value>Ne pas conserver de fichier de sauvegarde (xxxx_original)</value>
@@ -238,7 +238,7 @@
     <value>Coordonnées de destination</value>
   </data>
   <data name="Generic_Export" xml:space="preserve">
-    <value> </value>
+    <value>Exportation</value>
   </data>
   <data name="Generic_ExposureTime" xml:space="preserve">
     <value>Temps d'exposition</value>
@@ -343,7 +343,7 @@
     <value>Aucun</value>
   </data>
   <data name="Generic_OffsetTime" xml:space="preserve">
-    <value>Décalage horaire</value>
+    <value>Décalage du fuseau horaire</value>
   </data>
   <data name="Generic_OK" xml:space="preserve">
     <value>OK</value>
@@ -388,7 +388,7 @@
     <value>Remarque : le décalage d'heure n'est nécessaire que lorsque les horodatages des images ne sont pas correctement synchronisés avec l'heure GPS. Laissez à 0 sauf si nécessaire.</value>
   </data>
   <data name="lbl_ChoiceOfferCount" xml:space="preserve">
-    <value>Montrer le nombre d'options de toponymes suivant</value>
+    <value>Montrer ce nombre d'options de toponymes</value>
   </data>
   <data name="lbl_ChoiceRadius" xml:space="preserve">
     <value>Dans un rayon de [kms]</value>
@@ -668,7 +668,7 @@ Enfin, cliquez sur `Générer la clé API et allez à la page des détails de l'
 Enregistrez la clé API lorsque vous y êtes invité. Si vous ne le faites pas à ce moment-là, vous devrez en générer une autre.</value>
   </data>
   <data name="rbx_Register_GeoNames" xml:space="preserve">
-    <value>Vous aurez besoin d'un compte GeoNames pour utiliser la fonction de géocodage inversé/recherche (lat/long --&gt; pays/ville/...). Obtenez-en un ici : http://www.geonames.org/login</value>
+    <value>Vous aurez besoin d'un compte GeoNames pour utiliser la fonction de géocodage et de recherche inversée (lat/long --&gt; pays/ville/...). Obtenez-en un ici : http://www.geonames.org/login et activez l'accès « Free Web Services » ici : https://www.geonames.org/manageaccount</value>
   </data>
   <data name="tcr_EditData" xml:space="preserve">
     <value>Modifier les données</value>
@@ -707,7 +707,7 @@ Enregistrez la clé API lorsque vous y êtes invité. Si vous ne le faites pas �
     <value>Paramètres</value>
   </data>
   <data name="tpg_Application" xml:space="preserve">
-    <value>Repertoire par défaut</value>
+    <value>Application</value>
   </data>
   <data name="tpg_DateTime" xml:space="preserve">
     <value>Date et heure</value>
@@ -746,7 +746,7 @@ Enregistrez la clé API lorsque vous y êtes invité. Si vous ne le faites pas �
     <value>Enregistrer les fichiers</value>
   </data>
   <data name="tsr_FolderControl" xml:space="preserve">
-    <value>Controle de repertoire</value>
+    <value>Contrôle de répertoire</value>
   </data>
   <data name="tsr_MainAppToolStrip" xml:space="preserve">
     <value>Principal</value>
@@ -801,7 +801,7 @@ Certains fichiers HEIC disposent de cet attribut, mais pas la plupart des autres
     <value>Arrêter le traitement des règles après la première correspondance Pays+Cible</value>
   </data>
   <data name="ckb_UseImperialNotMetric" xml:space="preserve">
-    <value>Utiliser le système impérial (pieds) pour l'altitude plutôt que le système métrique (mètres)</value>
+    <value>Utiliser le système impérial (en pieds) pour l'altitude plutôt que le système métrique (en mètres)</value>
   </data>
   <data name="clh_DataPointName" xml:space="preserve">
     <value>Quoi</value>
@@ -864,7 +864,7 @@ Certains fichiers HEIC disposent de cet attribut, mais pas la plupart des autres
     <value>Export de fichiers de suivi GPS</value>
   </data>
   <data name="tpg_ImportExport_Import" xml:space="preserve">
-    <value>Import de fichiers de suivi GPS</value>
+    <value>Importation de fichiers de suivi GPS</value>
   </data>
   <data name="tsb_BugReport" xml:space="preserve">
     <value>Soumettre un rapport de bug (nécessite un compte GitHub)</value>
@@ -992,5 +992,134 @@ Exemple : les données par défaut renvoyées par l'API pour Londres UK sont m�
   </data>
   <data name="clh_TargetPointNameCustomCityLogic" xml:space="preserve">
     <value>Lire la ville depuis</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionParsing" xml:space="preserve">
+    <value>Analyse des données :</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionPopulatingListView" xml:space="preserve">
+    <value>Remplir la grille principale (vue en liste)</value>
+  </data>
+  <data name="lbl_PressCancelToStop" xml:space="preserve">
+    <value>Appuyez sur Annuler pour arrêter.</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude" xml:space="preserve">
+    <value>Inclure les données d'altitude dans l'exportation</value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries" xml:space="preserve">
+    <value>Inclure les pays « prédéterminés » ? (voir lien ci-dessus + avertissement)</value>
+  </data>
+  <data name="ckb_QuestionStopProcessingRows" xml:space="preserve">
+    <value>Arrêter le traitement des lignes supplémentaires ?</value>
+  </data>
+  <data name="clh_BlankOutTargetPoint" xml:space="preserve">
+    <value>En blanc ?</value>
+  </data>
+  <data name="clh_DataPointConditionType" xml:space="preserve">
+    <value>Si</value>
+  </data>
+  <data name="clh_TargetPointName" xml:space="preserve">
+    <value>Alors</value>
+  </data>
+  <data name="clh_Folder" xml:space="preserve">
+    <value>Dossier</value>
+  </data>
+  <data name="Generic_Close" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="Generic_Delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="Generic_Feet" xml:space="preserve">
+    <value>Pied</value>
+  </data>
+  <data name="Generic_Feet_Abbr" xml:space="preserve">
+    <value>pi</value>
+  </data>
+  <data name="Generic_GPSDateTime" xml:space="preserve">
+    <value>Date et heure GPS</value>
+  </data>
+  <data name="Generic_Import" xml:space="preserve">
+    <value>Importation</value>
+  </data>
+  <data name="Generic_IPTCKeywords" xml:space="preserve">
+    <value>Mots-clés IPTC</value>
+  </data>
+  <data name="Generic_Metres_Abbr" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="Generic_Metres" xml:space="preserve">
+    <value>Mètres</value>
+  </data>
+  <data name="Generic_Rename" xml:space="preserve">
+    <value>Renommer</value>
+  </data>
+  <data name="Generic_Save" xml:space="preserve">
+    <value>Sauvegarder les modifications en cours</value>
+  </data>
+  <data name="Generic_XMLSubjects" xml:space="preserve">
+    <value>Sujets XML</value>
+  </data>
+  <data name="lbl_ExportTrackOrderBy" xml:space="preserve">
+    <value>Trier les points de suivi par</value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorExportFailed" xml:space="preserve">
+    <value>L'exportation a échoué : </value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorImportFailed" xml:space="preserve">
+    <value>L'importation a échoué : </value>
+  </data>
+  <data name="rbt_MapColourModeNormal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="btn_ResetToDefaults" xml:space="preserve">
+    <value>Réinitialisation aux valeurs par défaut</value>
+  </data>
+  <data name="btn_RestartLater" xml:space="preserve">
+    <value>Redémarrer plus tard</value>
+  </data>
+  <data name="btn_RestartNow" xml:space="preserve">
+    <value>Redémarrer maintenant</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_TrackContainsNoData" xml:space="preserve">
+    <value>Échec de l'importation de la superposition de pistes - aucune donnée pertinente n'a été trouvée.</value>
+  </data>
+  <data name="lbl_SaveTrackTo" xml:space="preserve">
+    <value>Enregistrer le résultat vers</value>
+  </data>
+  <data name="mbc_Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="mbc_Information" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="mbc_Question" xml:space="preserve">
+    <value>Question</value>
+  </data>
+  <data name="mbc_Warning" xml:space="preserve">
+    <value>Avertissement</value>
+  </data>
+  <data name="mbx_DirectoryElementCollection_ErrorParsing" xml:space="preserve">
+    <value>Erreur lors de l'analyse d'un dossier en éléments de répertoire</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInvalidFolder" xml:space="preserve">
+    <value>Le dossier que vous avez saisi ne semble pas valide. Revenir à C:\ ?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorRemoveGeoDataFailed" xml:space="preserve">
+    <value>Le processus de suppression des données de géolocalisation a échoué ou a renvoyé une erreur.</value>
+  </data>
+  <data name="mbx_GenericDoneRestartApp" xml:space="preserve">
+    <value>Terminé - vous devrez probablement redémarrer l'application.</value>
+  </data>
+  <data name="mbx_GenericDone" xml:space="preserve">
+    <value>Terminé .</value>
+  </data>
+  <data name="mbx_HelperStaticExifNoAPI" xml:space="preserve">
+    <value>Échec de l'accès à l'API - Êtes-vous hors ligne par hasard ?</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI" xml:space="preserve">
+    <value>Ne PAS faire de géocodage inversé (obtenir seulement les coordonnées, mais pas la ville/l'état/etc...)</value>
+  </data>
+  <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
+    <value>Coordonnées ouvertes dans l'API</value>
   </data>
 </root>
