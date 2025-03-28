@@ -121,13 +121,13 @@
     <value>Utiliser la Date de prise de vue</value>
   </data>
   <data name="btn_RemoveGeoData" xml:space="preserve">
-    <value>Supprimer toutes les données de localisation</value>
+    <value>Supprimer toutes les données de géolocalisation</value>
   </data>
   <data name="btn_SetCurrentValues" xml:space="preserve">
-    <value>Définir les valeurs actuelles pour toutes les images sélectionnées...</value>
+    <value>Définir les valeurs actuelles pour toutes les images sélectionnées pour l'édition...</value>
   </data>
   <data name="ckb_AddXMPSideCar" xml:space="preserve">
-    <value>Créer/remplacer les tags dans un fichier XMP séparé</value>
+    <value>Créer/remplacer les métadonnées dans un fichier de métadonnées XMP séparé</value>
   </data>
   <data name="ckb_DeSelectAll" xml:space="preserve">
     <value>(De)valider tout</value>
@@ -136,19 +136,19 @@
     <value>Décalage horaire</value>
   </data>
   <data name="ckb_OverwriteOriginal" xml:space="preserve">
-    <value>Ne pas conserver de sauvegarde xxxx_original</value>
+    <value>Ne pas conserver de fichier de sauvegarde (xxxx_original)</value>
   </data>
   <data name="ckb_ProcessOriginalFile" xml:space="preserve">
-    <value>Modifier le fichier image</value>
+    <value>Traiter le fichier image lui-même</value>
   </data>
   <data name="ckb_RemoveGeoDataRemovesTimeOffset" xml:space="preserve">
-    <value>La fonction "retirer les geodata" efface le time-offset egalement</value>
+    <value>La fonction « Supprimer les données de géolocalisation » supprime également le décalage de fuseau horaire</value>
   </data>
   <data name="ckb_ResetFileDateToCreated" xml:space="preserve">
-    <value>Réinitialiser la date et l'heure du fichier image avec sa date de creation</value>
+    <value>Réinitialiser l'horodatage du fichier image avec celui de sa date de création</value>
   </data>
   <data name="ckb_ResetMapToZero" xml:space="preserve">
-    <value>Pointer la carte sur 0/0 s'il n'y a pas de GeoData</value>
+    <value>Pointer la carte sur 0/0 s'il n'y a pas de données de géolocalisation</value>
   </data>
   <data name="ckb_UseTimeZone" xml:space="preserve">
     <value>Utilisez ce fuseau horaire :</value>
@@ -175,7 +175,7 @@
     <value>Veuillez patienter pendant le chargement du dossier.</value>
   </data>
   <data name="frm_FrmSettings" xml:space="preserve">
-    <value>Réglages</value>
+    <value>Paramètres</value>
   </data>
   <data name="gbx_CreateDate" xml:space="preserve">
     <value>Date de création</value>
@@ -271,43 +271,43 @@
     <value>Altitude</value>
   </data>
   <data name="Generic_GPSAltitudeRef" xml:space="preserve">
-    <value>Ref d'Altitude</value>
+    <value>Réf d'Altitude</value>
   </data>
   <data name="Generic_GPSDestLatitude" xml:space="preserve">
     <value>Latitude de destination</value>
   </data>
   <data name="Generic_GPSDestLatitudeRef" xml:space="preserve">
-    <value>Ref de latitude de destination</value>
+    <value>Réf de latitude de destination</value>
   </data>
   <data name="Generic_GPSDestLongitude" xml:space="preserve">
     <value>Longitude de destination</value>
   </data>
   <data name="Generic_GPSDestLongitudeRef" xml:space="preserve">
-    <value>Ref de longitude de destination</value>
+    <value>Réf de longitude de destination</value>
   </data>
   <data name="Generic_GPSImgDirection" xml:space="preserve">
     <value>Direction de la photo</value>
   </data>
   <data name="Generic_GPSImgDirectionRef" xml:space="preserve">
-    <value>Ref de direction de la photo</value>
+    <value>Réf de direction de la photo</value>
   </data>
   <data name="Generic_GPSLatitude" xml:space="preserve">
     <value>Latitude</value>
   </data>
   <data name="Generic_GPSLatitudeRef" xml:space="preserve">
-    <value>Ref de latitude</value>
+    <value>Réf de latitude</value>
   </data>
   <data name="Generic_GPSLongitude" xml:space="preserve">
     <value>Longitude</value>
   </data>
   <data name="Generic_GPSLongitudeRef" xml:space="preserve">
-    <value>Ref de longitude</value>
+    <value>Réf de longitude</value>
   </data>
   <data name="Generic_GPSSpeed" xml:space="preserve">
     <value>Vitesse</value>
   </data>
   <data name="Generic_GPSSpeedRef" xml:space="preserve">
-    <value>Ref de vitesse</value>
+    <value>Réf de vitesse</value>
   </data>
   <data name="Generic_GUID" xml:space="preserve">
     <value>GUID</value>
@@ -355,7 +355,7 @@
     <value>Ne plus demander</value>
   </data>
   <data name="Generic_Rating" xml:space="preserve">
-    <value>Rating</value>
+    <value>Notation</value>
   </data>
   <data name="Generic_Seconds" xml:space="preserve">
     <value>Secs</value>
@@ -385,16 +385,16 @@
     <value>Date/heure de la caméra</value>
   </data>
   <data name="lbl_CameraTimeNote" xml:space="preserve">
-    <value>Remarque : Time Shift n'est nécessaire que lorsque les horodatages des images ne sont pas correctement synchronisés avec l'heure GPS. Laissez à 0 sauf si nécessaire.</value>
+    <value>Remarque : le décalage d'heure n'est nécessaire que lorsque les horodatages des images ne sont pas correctement synchronisés avec l'heure GPS. Laissez à 0 sauf si nécessaire.</value>
   </data>
   <data name="lbl_ChoiceOfferCount" xml:space="preserve">
-    <value>Montrer toutes les options de toponymie</value>
+    <value>Montrer le nombre d'options de toponymes suivant</value>
   </data>
   <data name="lbl_ChoiceRadius" xml:space="preserve">
     <value>Dans un rayon de [kms]</value>
   </data>
   <data name="lbl_GeoMaxExtSecs" xml:space="preserve">
-    <value>Durée maximale d'extrapolation (différence de temps entre la photo et le fichier de tracking) en secs.</value>
+    <value>Durée maximale d'extrapolation (différence de temps entre la photo et le fichier de suivi GPS) en secondes.</value>
   </data>
   <data name="lbl_GeoMaxIntSecs" xml:space="preserve">
     <value>Durée maximale d'interpolation ('devinette de chemin') en secs. Mettre à 0 pour désactiver.</value>
@@ -412,10 +412,10 @@
     <value>&lt;-- Cliquez ici pour définir le fichier source d'importation</value>
   </data>
   <data name="lbl_ImportTimeAgainst" xml:space="preserve">
-    <value>Comparez l'horodatage dans les fichiers de suivi avec :</value>
+    <value>Comparez l'horodatage dans les fichiers de suivi GPS avec :</value>
   </data>
   <data name="lbl_Language" xml:space="preserve">
-    <value>Langage</value>
+    <value>Langue</value>
   </data>
   <data name="lbl_OffsetTime" xml:space="preserve">
     <value>Fuseau horaire</value>
@@ -438,7 +438,7 @@ Si vous cliquez sur 'Arrêter de demander', la réponse sera 'Oui' et ne redeman
     <value>Selectionner les colonnes</value>
   </data>
   <data name="lbl_ShiftTrackTimeBy" xml:space="preserve">
-    <value>Décaler l'heure du fichier de tracking de :</value>
+    <value>Décaler l'heure du fichier de suivi GPS de :</value>
   </data>
   <data name="lbl_Startup_Folder" xml:space="preserve">
     <value>Dossier de démarrage</value>
@@ -450,10 +450,10 @@ Si vous cliquez sur 'Arrêter de demander', la réponse sera 'Oui' et ne redeman
     <value>Réglage du fuseau horaire :</value>
   </data>
   <data name="mbx_FrmEditFileData_ErrorAPIError" xml:space="preserve">
-    <value>L'application a rencontré des erreurs de communication avec l'API.Si l'erreur concerne un probléme d'autorisation, merci de rentrer vos login/password dans l'API.</value>
+    <value>L'application a rencontré des erreurs de communication avec l'API. Si vous avez reçu un message d'erreur Unauthorised, veuillez définir votre nom d'utilisateur et votre mot de passe dans les paramètres.</value>
   </data>
   <data name="mbx_FrmEditFileData_ErrorInvalidSender" xml:space="preserve">
-    <value>C'est un bug. Merci de saisir une issue sur Github sous l'expéditeur: </value>
+    <value>Ceci est un bug. Veuillez soumettre un rapport de bug sur Github et indiquer que l'« expéditeur » était : </value>
   </data>
   <data name="mbx_FrmEditFileData_InfoDataUpdated" xml:space="preserve">
     <value>Données mises à jour.</value>
@@ -474,64 +474,64 @@ Si vous cliquez sur 'Arrêter de demander', la réponse sera 'Oui' et ne redeman
     <value>Aucun fichier n'a été sélectionné pour l'importation.</value>
   </data>
   <data name="mbx_FrmMainApp_ErrorCantCreateSQLiteDB" xml:space="preserve">
-    <value>Ne peut créer la base SQLite (merci de générer une issue dans Github): </value>
+    <value>Impossible de créer la base SQLite (veuillez soumettre un rapport de bug sur Github): </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorCantLoadSQLiteDB" xml:space="preserve">
-    <value>Erreur de chargement de la base SQLite (merci de générer une issue dans Github): </value>
+    <value>Erreur de chargement de la base SQLite veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorCantLoadWebView2" xml:space="preserve">
     <value>Erreur de chargement dewebview2 - l'avez-vous installée?</value>
   </data>
   <data name="mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
-    <value>Erreur de lecture des valeurs par défaut de la base SQLite (merci de générer une issue dans Github): </value>
+    <value>Erreur de lecture des valeurs par défaut de la base SQLite (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorCantWriteSQLiteDB" xml:space="preserve">
-    <value>Créé mais ne peut écrire dans la base SQLite (merci de générer une issue dans Github): </value>
+    <value>Créé mais impossible d'écrire dans la base SQLite (veuillez soumettre un rapport de bug sur Github): </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorClearingFileDataQTables" xml:space="preserve">
-    <value>Erreur d'effacement des tables filedata-Q  (merci de générer une issue dans Github): </value>
+    <value>Erreur d'effacement des tables filedata-Q (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorDoubleBuffer" xml:space="preserve">
-    <value>Erreur de DoubleBuffer (merci de générer une issue dans Github): </value>
+    <value>Erreur de DoubleBuffer (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorFileGoneMissing" xml:space="preserve">
-    <value>Le fichier ne semble plus exister: </value>
+    <value>Le fichier ne semble plus exister : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeComponent" xml:space="preserve">
-    <value>Erreur dans FrmMainApp.InitializeComponent  (merci de générer une issue dans Github): </value>
+    <value>Erreur dans FrmMainApp.InitializeComponent (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async" xml:space="preserve">
-    <value>Erreur dans FrmMainApp.InitialiseWebView (await wbv_MapArea.EnsureCoreWebView2Async(c2wv))  (merci de générer une issue dans Github): </value>
+    <value>Erreur dans FrmMainApp.InitialiseWebView (await wbv_MapArea.EnsureCoreWebView2Async(c2wv)) (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled" xml:space="preserve">
-    <value>Erreur dans FrmMainApp.InitialiseWebView (IsWebMessageEnabled)  (merci de générer une issue dans Github): </value>
+    <value>Erreur dans FrmMainApp.InitialiseWebView (IsWebMessageEnabled) (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile" xml:space="preserve">
-    <value>Erreur dans FrmMainApp.InitialiseWebView (NavigateToString in HTMLCode file)  (merci de générer une issue dans Github): </value>
+    <value>Erreur dans FrmMainApp.InitialiseWebView (NavigateToString in HTMLCode file) (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile" xml:space="preserve">
-    <value>Erreur dans FrmMainApp.InitialiseWebView (parsing coordinates from HTMLCode file)  (merci de générer une issue dans Github): </value>
+    <value>Erreur dans FrmMainApp.InitialiseWebView (parsing coordinates from HTMLCode file) (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile" xml:space="preserve">
-    <value>Erreur dans FrmMainApp.InitialiseWebView (reading HTMLCode file)  (merci de générer une issue dans Github): </value>
+    <value>Erreur dans FrmMainApp.InitialiseWebView (reading HTMLCode file) (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewReplaceStringInHTMLFile" xml:space="preserve">
-    <value>Erreur dans FrmMainApp.InitialiseWebView (replacing constants in HTMLCode file)  (merci de générer une issue dans Github): </value>
+    <value>Erreur dans FrmMainApp.InitialiseWebView (replacing constants in HTMLCode file) (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived" xml:space="preserve">
-    <value>Erreur dans l'exécution de  wbv_MapArea_WebMessageReceived  (merci de générer une issue dans Github): </value>
+    <value>Erreur dans l'exécution de  wbv_MapArea_WebMessageReceived (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorLanguageFileColumnHeaders" xml:space="preserve">
-    <value>Erreur de lecture du fichier de langue et d'assignation de colonne (merci de générer une issue dans Github): </value>
+    <value>Erreur de lecture du fichier de langue et d'assignation de columnheaders (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode" xml:space="preserve">
-    <value>Erreur dans FrmMainApp.NavigateMapGo (string HTMLCode)  (merci de générer une issue dans Github): </value>
+    <value>Erreur dans FrmMainApp.NavigateMapGo (string HTMLCode) (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorResizingColumns" xml:space="preserve">
-    <value>Erreur de redimensionnement des colonnes  (merci de générer une issue dans Github): </value>
+    <value>Erreur de redimensionnement des colonnes (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorSettingStartupFolder" xml:space="preserve">
-    <value>Erreur de mise a jour du dossier par défaut de démarrage  (merci de générer une issue dans Github): </value>
+    <value>Erreur de mise à jour du dossier par défaut de démarrage (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_InfoCachedDataNotRemoved" xml:space="preserve">
     <value>Aucune donnée n'a été supprimée. Soit vous n'avez pas sélectionné les champs corrects soit les champs séléctionnés n'ont pas de cache.</value>
@@ -552,23 +552,23 @@ Si vous cliquez sur 'Arrêter de demander', la réponse sera 'Oui' et ne redeman
     <value>Pas de fichier séléctionné.</value>
   </data>
   <data name="mbx_FrmPasteWhat_NoDateShiftToPaste" xml:space="preserve">
-    <value>Pas de valeurs détectées dans le groupe de valeurs pour le décalage de temps</value>
+    <value>Pas de valeurs détectées dans le groupe de valeurs pour le décalage horaire</value>
   </data>
   <data name="mbx_FrmSettings_PleaseRestartApp" xml:space="preserve">
     <value>Veuillez redémarrer l'application pour que le changement ait lieu.</value>
   </data>
   <data name="mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed" xml:space="preserve">
-    <value>Erreur dans asyncExifTool.ExecuteAsync (merci de générer une issue dans Github): </value>
+    <value>Erreur dans asyncExifTool.ExecuteAsync (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_Helper_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
-    <value>Ne peut lire les valeurs par défaut de la base SQL (merci de générer une issue dans Github): </value>
+    <value>Erreur de lecture des valeurs par défaut de la base SQL (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_Helper_QuestionFileQIsNotEmpty" xml:space="preserve">
-    <value>Des données ont été modifiées - Voulez-vous sauver ?
-Les mises à jour seront perdues si vous clickez Non</value>
+    <value>Des données ont été modifiées - Voulez-vous sauvegarder ?
+Les mises à jour seront perdues si vous cliquez Non</value>
   </data>
   <data name="mbx_Helper_WarningExifToolVerAPIResponse" xml:space="preserve">
-    <value>L'API ExifToolVerAPIResponse a donné la reponse suivante: </value>
+    <value>L'API ExifToolVerAPIResponse a retourné la réponse suivante : </value>
   </data>
   <data name="mbx_Helper_WarningFileDisappeared" xml:space="preserve">
     <value>Vos fichiers paraissent avoir disparu.</value>
@@ -580,7 +580,7 @@ Les mises à jour seront perdues si vous clickez Non</value>
     <value>L'API Github a renvoyé l'erreur suivante: </value>
   </data>
   <data name="mbx_Helper_WarningNoARCGISKey" xml:space="preserve">
-    <value>Vous devez fournir une clef API ArcGis dans les paramètres afin que le programme fonctionne correctement.</value>
+    <value>Vous devez fournir une clef API ArcGIS dans les paramètres afin que le programme fonctionne correctement.</value>
   </data>
   <data name="mbx_Helper_WarningNothingInWriteQueue" xml:space="preserve">
     <value>Il n'y a rien dans votre file d'attente d'écriture.</value>
@@ -589,10 +589,10 @@ Les mises à jour seront perdues si vous clickez Non</value>
     <value>Rien à coller.</value>
   </data>
   <data name="mbx_Helper_WarningNoWriteSettingEnabled" xml:space="preserve">
-    <value>Vous avez désactivé à la fois le traitement du fichier d'origine _et_ le XMP sidecar, il n'y a donc rien sur quoi écrire.</value>
+    <value>Vous avez désactivé à la fois le traitement du fichier d'origine et le fichier de métadonnées XMP. Il n'y a donc rien sur quoi écrire.</value>
   </data>
   <data name="mbx_Helper_WarningTooManyFilesSelected" xml:space="preserve">
-    <value>Ne fonctionne qu'avec un seul fichier séléctionné.</value>
+    <value>Ceci ne fonctionne qu'avec un seul fichier sélectionné.</value>
   </data>
   <data name="mns_File" xml:space="preserve">
     <value>Fichier</value>
@@ -613,16 +613,16 @@ Les mises à jour seront perdues si vous clickez Non</value>
     <value>Aucune image à montrer</value>
   </data>
   <data name="pbx_importFromAnotherFolder" xml:space="preserve">
-    <value>Parcourir le dossier des trackings</value>
+    <value>Recherche de dossier des fichiers de suivi GPS</value>
   </data>
   <data name="pbx_importOneFile" xml:space="preserve">
-    <value>Rechercher un fichier de tracking</value>
+    <value>Recherche de fichier de suivi GPS</value>
   </data>
   <data name="rbt_CreateDateSetToFixedDate" xml:space="preserve">
     <value>Définir à une date fixe</value>
   </data>
   <data name="rbt_CreateDateTimeShift" xml:space="preserve">
-    <value>Décalage dans le temps</value>
+    <value>Décalage horaire</value>
   </data>
   <data name="rbt_importFromAnotherFolder" xml:space="preserve">
     <value>Importer depuis un autre dossier</value>
@@ -631,28 +631,41 @@ Les mises à jour seront perdues si vous clickez Non</value>
     <value>Importer depuis le dossier actuel</value>
   </data>
   <data name="rbt_importOneFile" xml:space="preserve">
-    <value>Importer depuis un fichier donné</value>
+    <value>Importer depuis un fichier</value>
   </data>
   <data name="rbt_PasteCreateDateActual" xml:space="preserve">
-    <value>Réel (valeurs fixes)</value>
+    <value>Actuel (valeurs fixes)</value>
   </data>
   <data name="rbt_PasteCreateDateShift" xml:space="preserve">
-    <value>Décalage dans le temps</value>
+    <value>Décalage horaire</value>
   </data>
   <data name="rbt_PasteTakenDateActual" xml:space="preserve">
-    <value>Réel (valeurs fixes)</value>
+    <value>Actuel (valeurs fixes)</value>
   </data>
   <data name="rbt_PasteTakenDateShift" xml:space="preserve">
-    <value>Décalage dans le temps</value>
+    <value>Décalage horaire</value>
   </data>
   <data name="rbt_TakenDateSetToFixedDate" xml:space="preserve">
     <value>Définir à une date fixe</value>
   </data>
   <data name="rbt_TakenDateTimeShift" xml:space="preserve">
-    <value>Décalage dans le temps</value>
+    <value>Décalage horaire</value>
   </data>
   <data name="rbx_Register_ArcGIS" xml:space="preserve">
-    <value>Vous aurez besoin d'une clé API ArcGIS gratuite pour utiliser la fonctionnalité de recherche de carte. Obtenez-en une ici : https://goto.arcgis.com/production-developers-signup</value>
+    <value>Vous aurez besoin d'une clé API ArcGIS pour utiliser la fonctionnalité de recherche cartographique. 
+ArcGIS a modifié son processus d'enregistrement à partir de juin 2024. S'inscrire ici : https://location.arcgis.com/sign-up/
+Vous devez maintenant spécifier l'url du portail. Saisissez ce que vous voulez.
+Faites défiler l'écran jusqu'à `Developer credential creator`.
+Puis `New Item` (nouvel élément)
+Puis `Identifiants du développeur`
+Choisissez `API Key` (pas OAUth)
+Fixez votre date d'expiration aussi loin que possible dans le futur (1 an)
+Laissez le champ `Referrers` vide
+Sur la page suivante, choisissez « Geocoding (not stored)` ».
+Sur la page suivante, ignorez « Accès à l'article ».
+Sur la page suivante, ajoutez n'importe quel titre
+Enfin, cliquez sur `Générer la clé API et allez à la page des détails de l'article. Je suis prêt à copier et à enregistrer la clé.
+Enregistrez la clé API lorsque vous y êtes invité. Si vous ne le faites pas à ce moment-là, vous devrez en générer une autre.</value>
   </data>
   <data name="rbx_Register_GeoNames" xml:space="preserve">
     <value>Vous aurez besoin d'un compte GeoNames pour utiliser la fonction de géocodage inversé/recherche (lat/long --&gt; pays/ville/...). Obtenez-en un ici : http://www.geonames.org/login</value>
@@ -661,19 +674,19 @@ Les mises à jour seront perdues si vous clickez Non</value>
     <value>Modifier les données</value>
   </data>
   <data name="tmi_File" xml:space="preserve">
-    <value>Fichiers</value>
+    <value>Fichier</value>
   </data>
   <data name="tmi_File_CopyGeoData" xml:space="preserve">
-    <value>Copier toutes les Geodatas</value>
+    <value>Copier toutes les données de géolocalisation</value>
   </data>
   <data name="tmi_File_EditFiles" xml:space="preserve">
     <value>Editer les fichiers</value>
   </data>
   <data name="tmi_File_ImportExportGPX" xml:space="preserve">
-    <value>Importer/Exporter des fichiers de piste GPX/JSON</value>
+    <value>Importer/Exporter des fichiers de suivi GPX/JSON</value>
   </data>
   <data name="tmi_File_PasteGeoData" xml:space="preserve">
-    <value>Coller toutes les Geodatas</value>
+    <value>Coller toutes les données de géolocalisation</value>
   </data>
   <data name="tmi_File_Quit" xml:space="preserve">
     <value>Quitter</value>
@@ -685,7 +698,7 @@ Les mises à jour seront perdues si vous clickez Non</value>
     <value>Aide</value>
   </data>
   <data name="tmi_Help_About" xml:space="preserve">
-    <value>A propos</value>
+    <value>À propos</value>
   </data>
   <data name="tmi_Settings" xml:space="preserve">
     <value>Paramètres</value>
@@ -703,7 +716,7 @@ Les mises à jour seront perdues si vous clickez Non</value>
     <value>Exif</value>
   </data>
   <data name="tpg_FileOptions" xml:space="preserve">
-    <value>Application Option de fichier</value>
+    <value>Options des fichiers</value>
   </data>
   <data name="tpg_Location" xml:space="preserve">
     <value>Localisation</value>
@@ -715,10 +728,10 @@ Les mises à jour seront perdues si vous clickez Non</value>
     <value>Modifier le fichier</value>
   </data>
   <data name="tsb_GetAllFromWeb" xml:space="preserve">
-    <value>Obtenez des informations sur la toponymie et l'altitude pour tous les fichiers sélectionnés</value>
+    <value>Obtenir les informations sur la toponymie et l'altitude pour tous les fichiers sélectionnés</value>
   </data>
   <data name="tsb_ImportExportGPX" xml:space="preserve">
-    <value>Importer/Exporter des fichiers de piste GPX/JSON</value>
+    <value>Importer/Exporter des fichiers de suivi GPX/JSON</value>
   </data>
   <data name="tsb_OneFolderUp" xml:space="preserve">
     <value>Dossier parent</value>
@@ -739,18 +752,245 @@ Les mises à jour seront perdues si vous clickez Non</value>
     <value>Principal</value>
   </data>
   <data name="ttp_LoadFavourite" xml:space="preserve">
-    <value>Recharger les metadata des fichiers selectionnés depuis vos favoris</value>
+    <value>Charger les métadonnées du ou des fichiers sélectionnés dans vos favoris</value>
   </data>
   <data name="ttp_loctToFile" xml:space="preserve">
-    <value>Copie positions dans le(s) fichier(s) selectionné(s)</value>
+    <value>Enregistrer les coordonnées actuelles dans le(s) fichier(s) sélectionné(s)</value>
   </data>
   <data name="ttp_NavigateMapGo" xml:space="preserve">
     <value>Placer les coordonnées des fichiers sélectionnés sur la carte</value>
   </data>
   <data name="ttp_OffsetTime" xml:space="preserve">
-    <value>Les time zones sont laissées vides à l'ouverture quelles que soient lesvaleurs stockées. Il by a pas de tag Exif pour TZ mais seulement un offset ressemblant à +01:00, Comme il n'y a aucune indication ni pour TZ ni pour l'heure d'été/hivers, on ne peut savoir ce que signifie ce +01:00 qui peut etre BST ou CET ou heure d'ete/hivers. Lors du reglage manuel ou à partir du web, c'est la combinaison localisation et date de creation qui decideront de la vraie valeur du parametre TZ. La valeur en lecture seule sera sauvée dans le fichier.</value>
+    <value>Les fuseaux horaires sont laissés vides à l'ouverture, quelle que soit la valeur stockée. Il n'y a pas d'étiquette Exif pour le fuseau horaire, mais seulement un « décalage », qui correspond à quelque chose comme « +01:00 ». Comme il n'y a pas d'indication pour TZ ou DST en soi, je ne peux pas m'assurer que '+01:00' était en fait BST plutôt que CET, l'un étant DST et l'autre non. La combinaison des coordonnées et de la date de création informerait de manière décisive le programme de la valeur réelle de la ZC. La valeur figurant dans la zone de texte en lecture seule sera enregistrée dans le fichier.</value>
   </data>
   <data name="ttp_SaveFavourite" xml:space="preserve">
-    <value>Sauver ou modifier les metadata des fichiers selectionnés dans vos favoris</value>
+    <value>Enregistrer (ou écraser) les métadonnées du fichier sélectionné dans vos favoris</value>
+  </data>
+  <data name="ckb_ImportExport_ApplicationSettings" xml:space="preserve">
+    <value>Paramètres de l'application</value>
+  </data>
+  <data name="ckb_ImportExport_CustomRulesSettings" xml:space="preserve">
+    <value>Règles personnalisées</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampTypeNote" xml:space="preserve">
+    <value>Si vous sélectionnez GPSDateTime et que votre fichier ne possède pas cet attribut, l'exportation échouera. 
+Certains fichiers HEIC disposent de cet attribut, mais pas la plupart des autres formats.</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionScanning" xml:space="preserve">
+    <value>Analyse du fichier :</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningMultipleImageFilesForXMP" xml:space="preserve">
+    <value>Avertissement : les fichiers de métadonnées XMP suivants partagent des noms avec plusieurs fichiers image - les données peuvent avoir été mal lues :</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>Un seul et unique fichier doit être sélectionné.</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap" xml:space="preserve">
+    <value>Superposition d'un fichier de suivi GPS sur la carte</value>
+  </data>
+  <data name="ckb_OverlayGPXForSelectedDatesOnly" xml:space="preserve">
+    <value>Uniquement pour les dates qui tombent entre la première et la dernière date des fichiers sélectionnés</value>
+  </data>
+  <data name="ckb_ReplaceBlankToponyms" xml:space="preserve">
+    <value>Remplacer les valeurs Ville, État, Lieu vides par : </value>
+  </data>
+  <data name="ckb_UpdateCheckPreRelease" xml:space="preserve">
+    <value>Vérifier également les mises à jour de préversion (bêta) ?</value>
+  </data>
+  <data name="ckb_StopProcessingRules" xml:space="preserve">
+    <value>Arrêter le traitement des règles après la première correspondance Pays+Cible</value>
+  </data>
+  <data name="ckb_UseImperialNotMetric" xml:space="preserve">
+    <value>Utiliser le système impérial (pieds) pour l'altitude plutôt que le système métrique (mètres)</value>
+  </data>
+  <data name="clh_DataPointName" xml:space="preserve">
+    <value>Quoi</value>
+  </data>
+  <data name="clh_DataPointConditionValue" xml:space="preserve">
+    <value>Valeur</value>
+  </data>
+  <data name="clh_ExifTag" xml:space="preserve">
+    <value>Tag Exif (GTN interne)</value>
+  </data>
+  <data name="clh_ModifiedValue" xml:space="preserve">
+    <value>Valeur modifiée (non sauvegardée)</value>
+  </data>
+  <data name="clh_OriginalValue" xml:space="preserve">
+    <value>Valeur originale (sauvegardée)</value>
+  </data>
+  <data name="frm_FrmManageFavourites" xml:space="preserve">
+    <value>Gérer les favoris</value>
+  </data>
+  <data name="frm_FrmPickDataFromAPIBox" xml:space="preserve">
+    <value>Choisir les valeurs de la toponymie</value>
+  </data>
+  <data name="gbx_AppSettings" xml:space="preserve">
+    <value>Paramètres de l'application</value>
+  </data>
+  <data name="gbx_GeoNamesLanguageSettings" xml:space="preserve">
+    <value>Paramètres linguistiques de GeoNames</value>
+  </data>
+  <data name="gbx_GeoNamesSettings" xml:space="preserve">
+    <value>Paramètres de GeoNames</value>
+  </data>
+  <data name="gbx_MapColourMode" xml:space="preserve">
+    <value>Mode couleur de la carte</value>
+  </data>
+  <data name="gbx_OtherSettings" xml:space="preserve">
+    <value>Autres paramètres</value>
+  </data>
+  <data name="gbx_SaveTrackTo" xml:space="preserve">
+    <value>Sauvegarder le fichier de suivi GPS (Options)</value>
+  </data>
+  <data name="Generic_ExportTrackTimeStampType" xml:space="preserve">
+    <value>Valeur de l'horodatage</value>
+  </data>
+  <data name="Generic_ShowPassword" xml:space="preserve">
+    <value>Afficher le mot de passe</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampType" xml:space="preserve">
+    <value>Valeur de l'horodatage</value>
+  </data>
+  <data name="rbt_TryUseGeoNamesLanguage" xml:space="preserve">
+    <value>Essayez d'utiliser cette langue lorsque vous recherchez des noms de lieux :</value>
+  </data>
+  <data name="rbt_UseGeoNamesLocalLanguage" xml:space="preserve">
+    <value>Essayez d'utiliser la « langue locale » lorsque vous recherchez des noms de lieux</value>
+  </data>
+  <data name="tpg_GeoNames" xml:space="preserve">
+    <value>Paramètres de GeoNames</value>
+  </data>
+  <data name="tpg_ImportExport_Export" xml:space="preserve">
+    <value>Export de fichiers de suivi GPS</value>
+  </data>
+  <data name="tpg_ImportExport_Import" xml:space="preserve">
+    <value>Import de fichiers de suivi GPS</value>
+  </data>
+  <data name="tsb_BugReport" xml:space="preserve">
+    <value>Soumettre un rapport de bug (nécessite un compte GitHub)</value>
+  </data>
+  <data name="tsb_FeedbackFeatureRequest" xml:space="preserve">
+    <value>Soumettre une demande de fonctionnalité (nécessite un compte GitHub)</value>
+  </data>
+  <data name="btn_ApplyAndNext" xml:space="preserve">
+    <value>Appliquer &amp;&amp; Passer au suivant</value>
+  </data>
+  <data name="btn_PullMostRecentPasteSettings" xml:space="preserve">
+    <value>Obtenir les "derniers" paramètres de copier/coller</value>
+  </data>
+  <data name="btn_PullMostRecentTrackSyncShift" xml:space="preserve">
+    <value>Obtenir les « derniers » paramètres de décalage</value>
+  </data>
+  <data name="mbx_FrmImportNoStoredShiftValues" xml:space="preserve">
+    <value>Aucune valeur de « décalage » n'est enregistrée. Les données restent à 0.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorIsoCountryCodeMappingMissing" xml:space="preserve">
+    <value>Le fichier isoCountryCodeMapping.csv est manquant dans le dossier "Resources". Sans ce fichier, l'application ne peut pas se charger.</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles" xml:space="preserve">
+    <value>Voulez-vous attribuer les coordonnées au(x) fichier(s) sélectionné(s) ?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionDisableFlatMode" xml:space="preserve">
+    <value>Le mode récursif est activé. Voulez-vous le désactiver ?</value>
+  </data>
+  <data name="rbt_MapColourModeDarkInverse" xml:space="preserve">
+    <value>Sombre (inverse)</value>
+  </data>
+  <data name="rbt_MapColourModeDarkPale" xml:space="preserve">
+    <value>Sombre (pâle)</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToImport" xml:space="preserve">
+    <value>Choisissez les données à importer. Veuillez noter qu'une fois le processus d'importation terminé avec succès, les éléments pertinents de la base de données seront écrasés. En cas d'échec, il y aura un fichier de sauvegarde de votre base de données dans votre dossier AppData.</value>
+  </data>
+  <data name="tmi_Settings_Favourites" xml:space="preserve">
+    <value>Gérer les favoris</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold" xml:space="preserve">
+    <value>Notez que les modifications apportées au tableau ci-dessous sont immédiatement prises en compte et que le bouton OK/Annuler n'a pas d'effet en soi. Vous devez également faire un clic droit et cliquer sur Réinitialiser les données mises en cache pour tous les fichiers susceptibles d'être affectés par vos modifications si vous souhaitez extraire des données au cours de cette session (ou simplement redémarrer l'application)</value>
+  </data>
+  <data name="tmi_Help_BugReport" xml:space="preserve">
+    <value>Soumettre un rapport de bug (GitHub)</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest" xml:space="preserve">
+    <value>Soumettre une demande de fonctionnalité (GitHub)</value>
+  </data>
+  <data name="tmi_File_FlatMode" xml:space="preserve">
+    <value>Mode récursif (analyse des sous-dossiers)</value>
+  </data>
+  <data name="tpg_CustomCityLogic" xml:space="preserve">
+    <value>Logique d'affectation des villes personnalisée</value>
+  </data>
+  <data name="tpg_CustomRules" xml:space="preserve">
+    <value>Règles personnalisées</value>
+  </data>
+  <data name="ttp_loctToFileDestination" xml:space="preserve">
+    <value>Enregistrer les coordonnées actuelles dans les fichiers sélectionnés</value>
+  </data>
+  <data name="ttp_GPSDataPaste" xml:space="preserve">
+    <value>Appuyez sur CTRL+V pour coller une paire valide de décimales dans les espaces réservés lat/long. 
+Le presse-papiers ne doit contenir qu'une paire de décimales, de préférence en configuration « invariante » (anglaise), c'est-à-dire en nombre entier-point-décimal-virgule-en nombre entier-point-décimal, comme 12.345, 56.897.
+Cela dit, le code devrait être capable de comprendre d'autres présentations. Notez que si le presse-papiers a une autre présentation que celle décrite ci-dessus, l'opération échouera (il ne se passera rien)</value>
+  </data>
+  <data name="ttp_ManageFavourites" xml:space="preserve">
+    <value>Gérer les favoris</value>
+  </data>
+  <data name="mbx_FrmMainApp_NoFavouritesDefined" xml:space="preserve">
+    <value>Vous n'avez pas de favoris définis. Ajoutez-en un à l'aide des boutons situés sous la carte.</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanation" xml:space="preserve">
+    <value>Il s'agit d'une fonctionnalité avancée. AdminName1-4 et ToponymName font référence aux sorties de l'API, donc si vous ne comprenez pas cela, il est préférable de ne pas creuser plus le sujet. 
+Pour un aperçu général, consultez : https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 .
+Ce réglage vous permet d'ajouter vos propres choix de pays pour obtenir la valeur « Ville » à partir de l'un des AdminNames spécifiques.</value>
+  </data>
+  <data name="rbx_CustomRulesExplanation" xml:space="preserve">
+    <value>Il s'agit d'une fonctionnalité avancée. AdminName1-4 et ToponymName font référence aux résultats de l'API, donc si vous ne comprenez pas cela, il est préférable de ne pas creuser plus le sujet. 
+Re : « Pays prédéterminés » (case à cocher ci-dessous) : Lisez à ce sujet cette page : https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255, et vérifiez l'autre onglet - Notez que si vous désactivez ce paramètre, les cellules CountryCode qui ne font pas partie du groupe concerné seront vides, mais ces lignes ne seront pas supprimées pour autant.
+Toutes les colonnes sont obligatoires à l'exception de « Custom » mais si vous réglez le résultat sur « Custom » et que vous laissez la colonne « Custom » vide, la ligne sera ignorée. Les données ne sont pas sensibles à la casse. Pour chaque point de données (par exemple, ville, État), la dernière ligne écrase les précédentes. Soyez raisonnable. Plus vous ajoutez de lignes, plus le traitement est lent.
+Exemple : les données par défaut renvoyées par l'API pour Londres UK sont médiocres parce que pour cette région particulière adminName2 = « Greater London », et elles seraient rejetées en tant que telles (les villes proviennent généralement de « ToponymName »). -&gt; ensemble : « what » = “adminName2”, “if” = “is”, “Condition Value” = “Greater London”, “then” = “City”, “becomes” = “adminName2”. Répétez le tout dans une 2ème ligne mais « then » = « Sub_Loction » et « becomes » = « ToponymName ».</value>
+  </data>
+  <data name="ckb_UseDarkMode" xml:space="preserve">
+    <value>Utiliser le mode sombre dans l'interface utilisateur de l'application ?</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToExport" xml:space="preserve">
+    <value>Choisissez les données à exporter. Veuillez noter que la fonction d'exportation exporte des données telles qu'elles sont dans la base de données, ou en d'autres termes qui ont été sauvegardées. Si vous avez des modifications en attente dans les paramètres, sortez, enregistrez-les (cliquez sur OK dans le formulaire des paramètres), puis revenez ici.</value>
+  </data>
+  <data name="lbl_CancelPressed" xml:space="preserve">
+    <value>Le bouton Annuler a été pressé. L'analyse des dossiers s'est arrêtée mais les fichiers qui ont été collectés seront analysés.</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionNoRowsFromAPI" xml:space="preserve">
+    <value>La requête API n'a pas renvoyé d'informations valides. Voulez-vous supprimer les valeurs de toponomie ?</value>
+  </data>
+  <data name="mbx_GenericPathLikelyUTF" xml:space="preserve">
+    <value>Le chemin d'accès au fichier contient probablement des caractères UTF-8 (non standard, tels que les caractères asiatiques, cyrilliques, etc.), ce qui peut être à l'origine de l'erreur. Assurez-vous d'avoir activé la fonction « Utiliser Unicode UTF-8 pour la prise en charge des langues du monde entier ». (voir les problèmes connus dans le fichier Readme pour cela)</value>
+  </data>
+  <data name="lbl_ParsingFolders" xml:space="preserve">
+    <value>Analyse des fichiers et des dossiers, veuillez patienter. </value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanationBold" xml:space="preserve">
+    <value>Notez que les modifications apportées au tableau ci-dessous sont immédiatement prises en compte et que le bouton OK/Annuler n'a pas d'effet en soi. Vous devez également faire un clic droit et cliquer sur Réinitialiser les données mises en cache pour tous les fichiers susceptibles d'être affectés par vos modifications si vous souhaitez extraire des données au cours de cette session (ou simplement redémarrer l'application)</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionRunImportExportInFlatMode" xml:space="preserve">
+    <value>L'exécution de l'importation/exportation de fichiers de suivi GPS en mode récursif est une mauvaise idée, car les interactions entre les pistes utilisent une logique spéciale qui ne peut pas différencier les éventuels fichiers portant le même nom dans les dossiers. Êtes-vous sûr de vouloir exécuter cette opération ?</value>
+  </data>
+  <data name="clh_TargetPointOutcome" xml:space="preserve">
+    <value>Devient</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty" xml:space="preserve">
+    <value>Toutes les colonnes déroulantes doivent avoir une valeur non vide et la valeur de la condition « si » ne doit pas être vide.</value>
+  </data>
+  <data name="ckb_ImportExport_CityRulesSettings" xml:space="preserve">
+    <value>Règle de nommage des villes</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty" xml:space="preserve">
+    <value>Si vous choisissez « Personnalisé » comme résultat, la colonne Résultat personnalisé ne doit pas être vide. Si vous fermez le formulaire de configuration et que ce problème n'est pas résolu, votre ligne sera supprimée.</value>
+  </data>
+  <data name="clh_TargetPointOutcomeCustom" xml:space="preserve">
+    <value>Résultat personnalisé</value>
+  </data>
+  <data name="ckb_PopulatedPlacesOnly" xml:space="preserve">
+    <value>Afficher uniquement les données API filtrées sur les « lieux habités » (fcode=PPL) [non recommandé]</value>
+  </data>
+  <data name="clh_TargetPointNameCustomCityLogic" xml:space="preserve">
+    <value>Lire la ville depuis</value>
   </data>
 </root>
