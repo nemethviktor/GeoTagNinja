@@ -5,6 +5,7 @@
 	- TBA
 - BUGS & FIXES:
 	- Added some logic to ignore certain particular warnings cropping up when saving files #159
+	- Fix Custom Rules not working properly with the `TargetPointName` attribute
 
 **Build 9196 [20250306]** 
 - NEW & UPDATED:

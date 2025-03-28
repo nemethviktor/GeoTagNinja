@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -12,6 +13,8 @@ namespace GeoTagNinja.Helpers;
 
 internal static class HelperDataDatabaseAndStartup
 {
+    private static readonly string DoubleQuote = @"""";
+
     /// <summary>
     ///     Creates the SQLite DB if it doesn't yet exist
     /// </summary>
@@ -108,6 +111,9 @@ internal static class HelperDataDatabaseAndStartup
                     columnNameTo: "favouriteName");
                 DataWriteSQLiteRenameColumn(tableName: "Favourites", columnNameFrom: "Sub_location",
                     columnNameTo: "Sublocation");
+                DataWriteSQLiteRenameDataInTable(tableName: "customRules", columnName: "TargetPointName",
+                    dataFrom: "Sub_location",
+                    dataTo: "Sublocation");
             }
         }
         catch (Exception ex)
@@ -304,12 +310,7 @@ internal static class HelperDataDatabaseAndStartup
             // Query the columns schema using SQL statements to work out if the required columns exist.
             bool locationNameExists =
                 colsTable.Select(filterExpression: $"COLUMN_NAME='{columnNameFrom}' AND TABLE_NAME='{tableName}'")
-                         .Length !=
-                0;
-            bool favouriteNameExists =
-                colsTable.Select(filterExpression: $"COLUMN_NAME='favouriteName' AND TABLE_NAME='{tableName}'")
-                         .Length !=
-                0;
+                         .Length != 0;
             if (locationNameExists)
             {
                 string sqlCommandStr = $@"
@@ -332,6 +333,45 @@ internal static class HelperDataDatabaseAndStartup
             // nothing
         }
     }
+
+    /// <summary>
+    ///     Renames values in a table's data
+    /// </summary>
+    /// <param name="tableName"></param>
+    /// <param name="columnName"></param>
+    /// <param name="dataFrom"></param>
+    /// <param name="dataTo"></param>
+    private static void DataWriteSQLiteRenameDataInTable(string tableName,
+                                                         string columnName,
+                                                         string dataFrom,
+                                                         string dataTo)
+    {
+        try
+        {
+            using SQLiteConnection sqliteDB =
+                new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
+            sqliteDB.Open();
+
+            // Get the schema for the columns in the database.
+            DataTable colsTable = sqliteDB.GetSchema(collectionName: "Columns");
+
+
+            string sqlCommandStr =
+                $"""UPDATE {tableName} SET {columnName} = "{dataTo}" WHERE {columnName} = "{dataFrom}" """;
+
+
+            SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+
+            sqlToRun.ExecuteNonQuery();
+
+            sqliteDB.Close();
+        }
+        catch (Exception ex)
+        {
+            Debug.Print(message: ex.Message);
+        }
+    }
+
 
     /// <summary>
     ///     Gets the Unit of Measure abbreviation (ie 'ft' or 'm')

@@ -1078,6 +1078,10 @@ internal static class HelperGenericAncillaryListsArrays
         return result;
     }
 
+    /// <summary>
+    ///     City, State, Sublocation
+    /// </summary>
+    /// <returns></returns>
     internal static ElementAttribute[] CustomRulesDataTargets()
     {
         ElementAttribute[] result =
@@ -1088,7 +1092,6 @@ internal static class HelperGenericAncillaryListsArrays
         };
 
         return result;
-        ;
     }
 
     internal static string[] CustomCityLogicDataSources()

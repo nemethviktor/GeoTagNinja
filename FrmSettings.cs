@@ -384,13 +384,16 @@ public partial class FrmSettings : Form
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     private void LoadCustomRulesDGV()
     {
+        // Read the SQL
         HelperVariables.DtCustomRules = HelperDataCustomRules.DataReadSQLiteCustomRules();
         dgv_CustomRules.AutoGenerateColumns = false;
 
+        // Bind data
         BindingSource source = new();
         source.DataSource = HelperVariables.DtCustomRules;
         dgv_CustomRules.DataSource = source;
 
+        // 01a get list of country codes
         Dictionary<string, string> clh_CountryCodeOptions = refreshClh_CountryCodeOptions(
             ckb_IncludePredeterminedCountries: HelperDataApplicationSettings
                .DataReadCheckBoxSettingTrueOrFalse(
@@ -398,6 +401,10 @@ public partial class FrmSettings : Form
                     settingTabPage: "tpg_CustomRules",
                     settingId: "ckb_IncludePredeterminedCountries"
                 ));
+
+
+        // 01b transfer to screen 
+        // Country (e.g. United Kingdom)
         DataGridViewComboBoxColumn clh_CountryCode = new()
         {
             DataPropertyName = "CountryCode",
@@ -410,6 +417,10 @@ public partial class FrmSettings : Form
             DisplayMember = "Value"
         };
 
+
+        // 02a fill dropdown 
+        // 02b transfer to screen 
+        // What (e.g.: "AdminName1", "AdminName2")
         DataGridViewComboBoxColumn clh_DataPointName = new()
         {
             DataPropertyName = "DataPointName",
@@ -419,13 +430,12 @@ public partial class FrmSettings : Form
                 controlName: "clh_DataPointName")
         };
 
-        // e.g.: "AdminName1","AdminName2"...
-        foreach (string itemName in HelperGenericAncillaryListsArrays
-                    .CustomRulesDataSources())
+        foreach (string itemName in HelperGenericAncillaryListsArrays.CustomRulesDataSources())
         {
             clh_DataPointName.Items.Add(item: itemName);
         }
 
+        // 03a get values
         DataGridViewComboBoxColumn clh_DataPointConditionType = new()
         {
             DataPropertyName = "DataPointConditionType",
@@ -435,13 +445,15 @@ public partial class FrmSettings : Form
                 controlName: "clh_DataPointConditionType")
         };
 
-        // e.g.: "Is","Contains"...
-        foreach (string itemName in HelperGenericAncillaryListsArrays
-                    .CustomRulesDataConditions())
+        // 03b fill dropdown
+        // If (e.g.: "Is", "Contains")
+        foreach (string itemName in HelperGenericAncillaryListsArrays.CustomRulesDataConditions())
         {
             clh_DataPointConditionType.Items.Add(item: itemName);
         }
 
+        // 04
+        // Value (e.g.: "Greater London")
         DataGridViewTextBoxColumn clh_DataPointConditionValue = new()
         {
             DataPropertyName = "DataPointConditionValue",
@@ -451,6 +463,8 @@ public partial class FrmSettings : Form
                 controlName: "clh_DataPointConditionValue")
         };
 
+        // 05 
+        // Then (e.g. "City", "State")
         DataGridViewComboBoxColumn clh_TargetPointName = new()
         {
             DataPropertyName = "TargetPointName",
@@ -460,13 +474,14 @@ public partial class FrmSettings : Form
                 controlName: "clh_TargetPointName")
         };
 
-        // e.g.:  "State","City"...
         foreach (SourcesAndAttributes.ElementAttribute itemName in
                  HelperGenericAncillaryListsArrays.CustomRulesDataTargets())
         {
-            clh_TargetPointName.Items.Add(item: itemName);
+            clh_TargetPointName.Items.Add(item: itemName.ToString());
         }
 
+        // 06
+        // Becomes (e.g.: "AdminName1","AdminName2"... + Null (empty)" + Custom)
         DataGridViewComboBoxColumn clh_TargetPointOutcome = new()
         {
             DataPropertyName = "TargetPointOutcome",
@@ -476,13 +491,12 @@ public partial class FrmSettings : Form
                 controlName: "clh_TargetPointOutcome")
         };
 
-        // e.g.: "AdminName1","AdminName2"... +Null (empty)" + Custom
-        foreach (string itemName in HelperGenericAncillaryListsArrays
-                    .CustomRulesDataSources(isOutcome: true))
+        foreach (string itemName in HelperGenericAncillaryListsArrays.CustomRulesDataSources(isOutcome: true))
         {
             clh_TargetPointOutcome.Items.Add(item: itemName);
         }
 
+        // 07 Becomes (custom value)
         DataGridViewTextBoxColumn clh_TargetPointOutcomeCustom = new()
         {
             DataPropertyName = "TargetPointOutcomeCustom",
@@ -492,6 +506,7 @@ public partial class FrmSettings : Form
                 controlName: "clh_TargetPointOutcomeCustom")
         };
 
+        // Add cols to DGV
         dgv_CustomRules.Columns.AddRange(
             clh_CountryCode,
             clh_DataPointName,
@@ -564,6 +579,7 @@ public partial class FrmSettings : Form
     ///     checkbox changes.
     /// </summary>
     /// <returns>KVP list of country codes and countries</returns>
+    // ReSharper disable once InconsistentNaming
     private static Dictionary<string, string> refreshClh_CountryCodeOptions(bool ckb_IncludePredeterminedCountries)
     {
         Dictionary<string, string> clh_CountryCodeOptions = new();
@@ -609,10 +625,12 @@ public partial class FrmSettings : Form
     ///     it cancels the event, preventing the user from leaving the cell until a valid value is entered, and displays a
     ///     warning message.
     /// </remarks>
+    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     private void dgv_CustomRules_RowValidating(object sender,
                                                DataGridViewCellCancelEventArgs e)
     {
         if (e.ColumnIndex ==
+            // ReSharper disable once PossibleNullReferenceException
             dgv_CustomRules.Columns[columnName: "clh_TargetPointOutcome"]
                            .Index)
         {
@@ -1028,6 +1046,7 @@ public partial class FrmSettings : Form
     /// </summary>
     /// <param name="sender">The Control in question</param>
     /// <param name="e">Unused</param>
+    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     private void Any_ckb_CheckStateChanged(object sender,
                                            EventArgs e)
     {
