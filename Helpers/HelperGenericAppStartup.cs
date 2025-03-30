@@ -454,31 +454,42 @@ internal static class HelperGenericAppStartup
 
     /// <summary>
     ///     Sets the startup folder. Defaults to "MyPictures" if null.
+    ///     Accepts value from the -f parameter upon launch.
     /// </summary>
     /// <param name="toolStripTextBox"></param>
     public static void AppSetupInitialiseStartupFolder(ToolStripTextBox toolStripTextBox)
     {
         FrmMainApp.Log.Info(message: "Starting");
 
-        string startupFolder = "";
-        try
+        string startupFolder = string.Empty;
+        if (!string.IsNullOrEmpty(value: Program.FolderToLaunchIn))
         {
-            startupFolder = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                dataTable: HelperVariables.DtHelperDataApplicationSettings,
-                settingTabPage: "tpg_Application",
-                settingId: "tbx_Startup_Folder"
-            );
-            FrmMainApp.Log.Trace(message: $"Startup Folder is: {startupFolder}");
+            if (Directory.Exists(path: Program.FolderToLaunchIn))
+            {
+                startupFolder = Program.FolderToLaunchIn;
+            }
         }
-        catch (Exception ex)
+        else
         {
-            FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_ErrorSettingStartupFolder", captionType: MessageBoxCaption.Error,
-                buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
+            try
+            {
+                startupFolder = HelperDataApplicationSettings.DataReadSQLiteSettings(
+                    dataTable: HelperVariables.DtHelperDataApplicationSettings,
+                    settingTabPage: "tpg_Application",
+                    settingId: "tbx_Startup_Folder"
+                );
+                FrmMainApp.Log.Trace(message: $"Startup Folder is: {startupFolder}");
+            }
+            catch (Exception ex)
+            {
+                FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
+                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                    controlName: "mbx_FrmMainApp_ErrorSettingStartupFolder", captionType: MessageBoxCaption.Error,
+                    buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
+            }
         }
 
-        if (startupFolder == null)
+        if (string.IsNullOrWhiteSpace(value: startupFolder))
         {
             startupFolder = Environment.GetFolderPath(folder: Environment.SpecialFolder.MyPictures);
             FrmMainApp.Log.Trace(message:
