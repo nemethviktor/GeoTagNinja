@@ -2598,7 +2598,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You&apos;ll need a GeoNames Account to use the reverse geocoding/search function (lat/long --&gt; country/city/...). Get one here: http://www.geonames.org/login.
+        ///   Looks up a localized string similar to You&apos;ll need a GeoNames Account to use the reverse geocoding/search function (lat/long --&gt; country/city/...). Get one here: http://www.geonames.org/login and then enable &quot;Free Web Services&quot; access here: https://www.geonames.org/manageaccount.
         /// </summary>
         public static string rbx_Register_GeoNames {
             get {

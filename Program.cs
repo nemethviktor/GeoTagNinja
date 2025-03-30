@@ -17,6 +17,7 @@ internal static class Program
     private const string PipeErrorCouldNotConnect = "Could not connect to other GTN instance";
     private const string PipeErrorUnexpectedError = "Unexpected Error: ";
     public static string CollectionFileLocation;
+    public static string FolderToLaunchIn;
     public static bool CollectionModeEnabled;
 
     public const string SingleInstancePipeName = "GeoTagNinjaSingleInstance";
@@ -41,15 +42,33 @@ internal static class Program
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(defaultValue: false);
 
-        Parser.Default.ParseArguments<Options>(args: args)
-            .WithParsed(action: o =>
-            {
-                if (File.Exists(path: o.Collection))
-                {
-                    CollectionFileLocation = o.Collection;
-                    CollectionModeEnabled = true;
-                }
-            });
+        Parser.Default.ParseArguments<OptionsMutuallyExclusive>(args: args)
+              .WithParsed(action: o =>
+               {
+                   if (File.Exists(path: o.Collection))
+                   {
+                       CollectionFileLocation = o.Collection;
+                       CollectionModeEnabled = true;
+                   }
+
+                   if (!string.IsNullOrWhiteSpace(value: o.Folder))
+                   {
+                       // o.Folder can be a number of things depending on how the user executes, ie could be -f C:\temp or -f=C:\temp or "" enclosed etc
+                       // yes i know this can be doen in one step but it's easier to debug/follow like thi
+
+                       // 1. remove any ""s
+                       string trimmedPath = o.Folder.Replace(oldValue: "\"", newValue: "");
+                       // 2. remove "=" if any
+                       trimmedPath = trimmedPath.TrimStart('=');
+                       // 3. remove "\" from the end.
+                       trimmedPath = trimmedPath.TrimEnd(Convert.ToChar(value: "\\"));
+
+                       if (Directory.Exists(path: trimmedPath))
+                       {
+                           FolderToLaunchIn = trimmedPath;
+                       }
+                   }
+               });
 
         // Brief wait in case current instance is exiting
         try
@@ -137,10 +156,20 @@ internal static class Program
         }
     }
 
-
-    private class Options
+    /// <summary>
+    ///     Note to self / from https://github.com/commandlineparser/commandline/wiki/Mutually-Exclusive-Options
+    ///     "If you combine a SetName1 option with a SetName2 one, parsing will fail. Options in the SAME set can be combined
+    ///     together,
+    ///     but options cannot be combined across sets"
+    /// </summary>
+    private class OptionsMutuallyExclusive
     {
-        [Option(shortName: 'c', longName: "collection", Required = false, HelpText = "Location (full path) of a text file that has the list of files to process, one per line.")]
+        [Option(shortName: 'c', longName: "collection", Required = false, SetName = "collection",
+            HelpText = "Location (full path) of a text file that has the list of files to process, one per line.")]
         public string Collection { get; set; }
+
+        [Option(shortName: 'f', longName: "folder", Required = false, SetName = "folder",
+            HelpText = "Folder to open GTN with (likely use with a SendTo command)")]
+        public string Folder { get; set; }
     }
 }

@@ -22,6 +22,10 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 - Export coordinate tracks of photos to GPX
 - Ability to define custom rules/logic wrt naming of places at country level
 
+## Parameters
+- `-f` or `--folder` (e.g. `geotagninja.exe -f "g:\My Drive\DigiPics_4K_JPG"`) will launch gtn into a specified folder assuming it exists. Trailing "\" char will be auto-removed.
+- `-c` or `--collection` will launch collectionMode; read about this further down. `-f` and `-c` are mutually exclusive.
+
 ## Quirks and Things to Note
 
 - `Build 8361 [20221122]`+: There is now a hold when the user enters a folder - it is kept on until the folder completes load. This is a bit annoying perhaps but is needed because otherwise people can start issuing write-commands before the read-process finishes and that can result in files being written the wrong info.
