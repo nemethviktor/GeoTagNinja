@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="btn_InsertFromTakenDate" xml:space="preserve">
-    <value>Utiliser la Date de prise de vue</value>
+    <value>Utiliser Date de prise de vue</value>
   </data>
   <data name="btn_RemoveGeoData" xml:space="preserve">
     <value>Supprimer toutes les données de géolocalisation</value>
   </data>
   <data name="btn_SetCurrentValues" xml:space="preserve">
-    <value>Définir les valeurs actuelles pour toutes les images sélectionnées pour l'édition...</value>
+    <value>Définir les valeurs courantes pour toutes les images sélectionnées pour l'édition...</value>
   </data>
   <data name="ckb_AddXMPSideCar" xml:space="preserve">
     <value>Créer/remplacer les métadonnées dans un fichier de métadonnées XMP séparé</value>
@@ -145,7 +145,7 @@
     <value>La fonction « Supprimer les données de géolocalisation » supprime également le décalage de fuseau horaire</value>
   </data>
   <data name="ckb_ResetFileDateToCreated" xml:space="preserve">
-    <value>Réinitialiser l'horodatage du fichier image avec celui de sa date de création</value>
+    <value>Remplacer l'horodatage du fichier image avec celui de sa date de création</value>
   </data>
   <data name="ckb_ResetMapToZero" xml:space="preserve">
     <value>Pointer la carte sur 0/0 s'il n'y a pas de données de géolocalisation</value>
@@ -169,7 +169,7 @@
     <value>Importer des données GPX/JSON</value>
   </data>
   <data name="frm_FrmPasteWhat" xml:space="preserve">
-    <value>Coller… Quoi ?</value>
+    <value>Quelles informations coller ?</value>
   </data>
   <data name="frm_FrmPleaseWaitBox" xml:space="preserve">
     <value>Veuillez patienter pendant le chargement du dossier.</value>
@@ -178,7 +178,7 @@
     <value>Paramètres</value>
   </data>
   <data name="gbx_CreateDate" xml:space="preserve">
-    <value>Date de création</value>
+    <value>Date créée</value>
   </data>
   <data name="gbx_Dates" xml:space="preserve">
     <value>Dates</value>
@@ -217,7 +217,7 @@
     <value>Ville</value>
   </data>
   <data name="Generic_Coordinates" xml:space="preserve">
-    <value>Coordonées</value>
+    <value>Coordonnées</value>
   </data>
   <data name="Generic_Country" xml:space="preserve">
     <value>Pays</value>
@@ -229,10 +229,10 @@
     <value>Date de création</value>
   </data>
   <data name="Generic_Days" xml:space="preserve">
-    <value>Journées</value>
+    <value>Jours</value>
   </data>
   <data name="Generic_Decimal" xml:space="preserve">
-    <value>Decimal</value>
+    <value>Décimal</value>
   </data>
   <data name="Generic_DestCoordinates" xml:space="preserve">
     <value>Coordonnées de destination</value>
@@ -271,7 +271,7 @@
     <value>Altitude</value>
   </data>
   <data name="Generic_GPSAltitudeRef" xml:space="preserve">
-    <value>Réf d'Altitude</value>
+    <value>Réf d'altitude</value>
   </data>
   <data name="Generic_GPSDestLatitude" xml:space="preserve">
     <value>Latitude de destination</value>
@@ -358,13 +358,13 @@
     <value>Notation</value>
   </data>
   <data name="Generic_Seconds" xml:space="preserve">
-    <value>Secs</value>
+    <value>Secondes</value>
   </data>
   <data name="Generic_State" xml:space="preserve">
-    <value>Etat/Province</value>
+    <value>État/Province</value>
   </data>
   <data name="Generic_Sublocation" xml:space="preserve">
-    <value>Departement</value>
+    <value>Lieu</value>
   </data>
   <data name="Generic_TakenDate" xml:space="preserve">
     <value>Date de prise de vue</value>
@@ -379,7 +379,7 @@
     <value>Oui</value>
   </data>
   <data name="lbl_ARCGIS_APIKey" xml:space="preserve">
-    <value>ARCGIS API Key</value>
+    <value>Clé API ArcGIS</value>
   </data>
   <data name="lbl_CameraTime" xml:space="preserve">
     <value>Date/heure de la caméra</value>
@@ -424,10 +424,10 @@
     <value>Pret</value>
   </data>
   <data name="lbl_ParseProgress_Read" xml:space="preserve">
-    <value>Lecture:</value>
+    <value>Lecture :</value>
   </data>
   <data name="lbl_ParseProgress_Write" xml:space="preserve">
-    <value>Ecriture:</value>
+    <value>Écriture :</value>
   </data>
   <data name="lbl_QuestionAddToponomy" xml:space="preserve">
     <value>Voulez-vous également attribuer des valeurs d'altitude et de toponymie ?
@@ -474,19 +474,19 @@ Si vous cliquez sur 'Arrêter de demander', la réponse sera 'Oui' et ne redeman
     <value>Aucun fichier n'a été sélectionné pour l'importation.</value>
   </data>
   <data name="mbx_FrmMainApp_ErrorCantCreateSQLiteDB" xml:space="preserve">
-    <value>Impossible de créer la base SQLite (veuillez soumettre un rapport de bug sur Github): </value>
+    <value>Impossible de créer la base SQLite (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorCantLoadSQLiteDB" xml:space="preserve">
     <value>Erreur de chargement de la base SQLite veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorCantLoadWebView2" xml:space="preserve">
-    <value>Erreur de chargement dewebview2 - l'avez-vous installée?</value>
+    <value>Erreur de chargement de webview2 - l'avez-vous installée ?</value>
   </data>
   <data name="mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
     <value>Erreur de lecture des valeurs par défaut de la base SQLite (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorCantWriteSQLiteDB" xml:space="preserve">
-    <value>Créé mais impossible d'écrire dans la base SQLite (veuillez soumettre un rapport de bug sur Github): </value>
+    <value>Créé mais impossible d'écrire dans la base SQLite (veuillez soumettre un rapport de bug sur Github) : </value>
   </data>
   <data name="mbx_FrmMainApp_ErrorClearingFileDataQTables" xml:space="preserve">
     <value>Erreur d'effacement des tables filedata-Q (veuillez soumettre un rapport de bug sur Github) : </value>
@@ -552,7 +552,7 @@ Si vous cliquez sur 'Arrêter de demander', la réponse sera 'Oui' et ne redeman
     <value>Pas de fichier séléctionné.</value>
   </data>
   <data name="mbx_FrmPasteWhat_NoDateShiftToPaste" xml:space="preserve">
-    <value>Pas de valeurs détectées dans le groupe de valeurs pour le décalage horaire</value>
+    <value>Pas de valeur à coller pour le décalage horaire</value>
   </data>
   <data name="mbx_FrmSettings_PleaseRestartApp" xml:space="preserve">
     <value>Veuillez redémarrer l'application pour que le changement ait lieu.</value>
@@ -574,16 +574,16 @@ Les mises à jour seront perdues si vous cliquez Non</value>
     <value>Vos fichiers paraissent avoir disparu.</value>
   </data>
   <data name="mbx_Helper_WarningGeoNamesAPIResponse" xml:space="preserve">
-    <value>L'API Geonames a retourné la reponse suivante: </value>
+    <value>L'API Geonames a retourné la réponse suivante : </value>
   </data>
   <data name="mbx_Helper_WarningGTNVerAPIResponse" xml:space="preserve">
-    <value>L'API Github a renvoyé l'erreur suivante: </value>
+    <value>L'API Github a retourné la réponse suivante : </value>
   </data>
   <data name="mbx_Helper_WarningNoARCGISKey" xml:space="preserve">
     <value>Vous devez fournir une clef API ArcGIS dans les paramètres afin que le programme fonctionne correctement.</value>
   </data>
   <data name="mbx_Helper_WarningNothingInWriteQueue" xml:space="preserve">
-    <value>Il n'y a rien dans votre file d'attente d'écriture.</value>
+    <value>Votre file d'attente d'écriture est vide.</value>
   </data>
   <data name="mbx_Helper_WarningNothingToPaste" xml:space="preserve">
     <value>Rien à coller.</value>
@@ -628,19 +628,19 @@ Les mises à jour seront perdues si vous cliquez Non</value>
     <value>Importer depuis un autre dossier</value>
   </data>
   <data name="rbt_importFromCurrentFolder" xml:space="preserve">
-    <value>Importer depuis le dossier actuel</value>
+    <value>Importer depuis le dossier courant</value>
   </data>
   <data name="rbt_importOneFile" xml:space="preserve">
     <value>Importer depuis un fichier</value>
   </data>
   <data name="rbt_PasteCreateDateActual" xml:space="preserve">
-    <value>Actuel (valeurs fixes)</value>
+    <value>Courante (valeurs fixes)</value>
   </data>
   <data name="rbt_PasteCreateDateShift" xml:space="preserve">
     <value>Décalage horaire</value>
   </data>
   <data name="rbt_PasteTakenDateActual" xml:space="preserve">
-    <value>Actuel (valeurs fixes)</value>
+    <value>Courante (valeurs fixes)</value>
   </data>
   <data name="rbt_PasteTakenDateShift" xml:space="preserve">
     <value>Décalage horaire</value>
@@ -680,7 +680,7 @@ Enregistrez la clé API lorsque vous y êtes invité. Si vous ne le faites pas �
     <value>Copier toutes les données de géolocalisation</value>
   </data>
   <data name="tmi_File_EditFiles" xml:space="preserve">
-    <value>Editer les fichiers</value>
+    <value>Éditer les fichiers</value>
   </data>
   <data name="tmi_File_ImportExportGPX" xml:space="preserve">
     <value>Importer/Exporter des fichiers de suivi GPX/JSON</value>
@@ -722,7 +722,7 @@ Enregistrez la clé API lorsque vous y êtes invité. Si vous ne le faites pas �
     <value>Localisation</value>
   </data>
   <data name="tpg_Map" xml:space="preserve">
-    <value>Map</value>
+    <value>Carte</value>
   </data>
   <data name="tsb_EditFile" xml:space="preserve">
     <value>Modifier le fichier</value>
@@ -755,7 +755,7 @@ Enregistrez la clé API lorsque vous y êtes invité. Si vous ne le faites pas �
     <value>Charger les métadonnées du ou des fichiers sélectionnés dans vos favoris</value>
   </data>
   <data name="ttp_loctToFile" xml:space="preserve">
-    <value>Enregistrer les coordonnées actuelles dans le(s) fichier(s) sélectionné(s)</value>
+    <value>Enregistrer les coordonnées courantes dans le(s) fichier(s) sélectionné(s)</value>
   </data>
   <data name="ttp_NavigateMapGo" xml:space="preserve">
     <value>Placer les coordonnées des fichiers sélectionnés sur la carte</value>
@@ -792,7 +792,7 @@ Certains fichiers HEIC disposent de cet attribut, mais pas la plupart des autres
     <value>Uniquement pour les dates qui tombent entre la première et la dernière date des fichiers sélectionnés</value>
   </data>
   <data name="ckb_ReplaceBlankToponyms" xml:space="preserve">
-    <value>Remplacer les valeurs Ville, État, Lieu vides par : </value>
+    <value>Remplacer les valeurs de Ville, État, Lieu vides par la valeur suivante : </value>
   </data>
   <data name="ckb_UpdateCheckPreRelease" xml:space="preserve">
     <value>Vérifier également les mises à jour de préversion (bêta) ?</value>
@@ -876,10 +876,10 @@ Certains fichiers HEIC disposent de cet attribut, mais pas la plupart des autres
     <value>Appliquer &amp;&amp; Passer au suivant</value>
   </data>
   <data name="btn_PullMostRecentPasteSettings" xml:space="preserve">
-    <value>Obtenir les "derniers" paramètres de copier/coller</value>
+    <value>Derniers paramètres de copier/coller</value>
   </data>
   <data name="btn_PullMostRecentTrackSyncShift" xml:space="preserve">
-    <value>Obtenir les « derniers » paramètres de décalage</value>
+    <value>Derniers paramètres de décalage</value>
   </data>
   <data name="mbx_FrmImportNoStoredShiftValues" xml:space="preserve">
     <value>Aucune valeur de « décalage » n'est enregistrée. Les données restent à 0.</value>
@@ -924,11 +924,11 @@ Certains fichiers HEIC disposent de cet attribut, mais pas la plupart des autres
     <value>Règles personnalisées</value>
   </data>
   <data name="ttp_loctToFileDestination" xml:space="preserve">
-    <value>Enregistrer les coordonnées actuelles dans les fichiers sélectionnés</value>
+    <value>Enregistrer les coordonnées courantes dans les fichiers sélectionnés</value>
   </data>
   <data name="ttp_GPSDataPaste" xml:space="preserve">
-    <value>Appuyez sur CTRL+V pour coller une paire valide de décimales dans les espaces réservés lat/long. 
-Le presse-papiers ne doit contenir qu'une paire de décimales, de préférence en configuration « invariante » (anglaise), c'est-à-dire en nombre entier-point-décimal-virgule-en nombre entier-point-décimal, comme 12.345, 56.897.
+    <value>Appuyez sur CTRL+V pour coller une paire valide de coordonnées latitude/longitude. 
+Le presse-papiers ne doit contenir qu'une paire de coordonnées latitude/longitude, en utilisant le point '.' pour séparer les décimales et la virgule ',' pour séparer les coordonnées. Par exemple : 12.345, 56.897.
 Cela dit, le code devrait être capable de comprendre d'autres présentations. Notez que si le presse-papiers a une autre présentation que celle décrite ci-dessus, l'opération échouera (il ne se passera rien)</value>
   </data>
   <data name="ttp_ManageFavourites" xml:space="preserve">
@@ -991,7 +991,7 @@ Exemple : les données par défaut renvoyées par l'API pour Londres UK sont m�
     <value>Afficher uniquement les données API filtrées sur les « lieux habités » (fcode=PPL) [non recommandé]</value>
   </data>
   <data name="clh_TargetPointNameCustomCityLogic" xml:space="preserve">
-    <value>Lire la ville depuis</value>
+    <value>Lire la ville depuis le champ</value>
   </data>
   <data name="lbl_PleaseWaitBoxActionParsing" xml:space="preserve">
     <value>Analyse des données :</value>
@@ -1030,7 +1030,7 @@ Exemple : les données par défaut renvoyées par l'API pour Londres UK sont m�
     <value>Supprimer</value>
   </data>
   <data name="Generic_Feet" xml:space="preserve">
-    <value>Pied</value>
+    <value>Pieds</value>
   </data>
   <data name="Generic_Feet_Abbr" xml:space="preserve">
     <value>pi</value>
@@ -1054,7 +1054,7 @@ Exemple : les données par défaut renvoyées par l'API pour Londres UK sont m�
     <value>Renommer</value>
   </data>
   <data name="Generic_Save" xml:space="preserve">
-    <value>Sauvegarder les modifications en cours</value>
+    <value>Sauvegarder</value>
   </data>
   <data name="Generic_XMLSubjects" xml:space="preserve">
     <value>Sujets XML</value>
