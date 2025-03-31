@@ -32,17 +32,39 @@
 
 <div id="map" style="height: 400px; width: 600px;"></div>
 <script>
-        var map = L.map('map').fitBounds(
+        
+		
+		var esri_url ='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+        var esri_attribution = '© Esri © OpenStreetMap Contributors';
+
+		var lyr_streets   = L.tileLayer(
+			'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				maxZoom: 18,
+				attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        });
+
+        var lyr_satellite = L.tileLayer(
+            esri_url, {
+                id: 'MapID',
+            maxZoom: 18,
+            tileSize: 512,
+            zoomOffset: -1,
+            attribution: esri_attribution
+        });
+
+        { HTMLSelectDefaultLayer }	
+
+        { HTMLSelectFirstLayer }		
+		
+		map.fitBounds(
             [
                 [replaceMinLat, replaceMinLng],
                 [replaceMaxLat, replaceMaxLng]
             ]
         );
 
-        var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
+
+        L.control.layers(baseMaps).addTo(map);
 
         { HTMLAddMarker }
 		
@@ -55,8 +77,7 @@
 		{ HTMLShowFOVPolygon }
         
         { HTMLShowPolyLine }
-
-
+		
         var popup = L.popup();
         var searchControl = L.esri.Geocoding.geosearch({
             position: 'topright',
@@ -80,6 +101,10 @@
                 window.chrome.webview.postMessage({ "lat": data.results[i].latlng.lat, "lng": data.results[i].latlng.lng });
             }
         });
+		
+		map.on('baselayerchange', function(e) {
+		  window.chrome.webview.postMessage({ "layer": e.name.toString() });
+		});
 
 
         map.on('click', function onMapClick(e) {

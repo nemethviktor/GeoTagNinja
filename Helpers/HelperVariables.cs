@@ -36,6 +36,7 @@ internal static class HelperVariables
     internal static string _sOutputAndErrorMsg = "";
     internal static string HTMLAddMarker;
     internal static string HTMLCreatePoints;
+    internal static string HTMLDefaultLayer = "lyr_streets";
     internal static HashSet<(string strLat, string strLng)> HsMapMarkers = new();
     internal static List<(string strLat, string strLng)> LstTrackPath = new();
     internal static double? MinLat;

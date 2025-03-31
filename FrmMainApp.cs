@@ -36,6 +36,7 @@ using HelperControlAndMessageBoxCustomMessageBoxManager =
 
 namespace GeoTagNinja;
 
+[SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
 public partial class FrmMainApp : Form
 {
 #region Constants / Fields / Variables
@@ -511,12 +512,18 @@ public partial class FrmMainApp : Form
     {
         string jsonString = e.WebMessageAsJson;
 
-        MapWebMessage mapWebMessage =
-            JsonSerializer.Deserialize<MapWebMessage>(json: jsonString);
-        string strLat =
-            mapWebMessage?.lat.ToString(provider: CultureInfo.InvariantCulture);
-        string strLng =
-            mapWebMessage?.lng.ToString(provider: CultureInfo.InvariantCulture);
+        MapWebMessage mapWebMessage = JsonSerializer.Deserialize<MapWebMessage>(json: jsonString);
+
+        string layerName = mapWebMessage?.layer;
+        HelperVariables.HTMLDefaultLayer = layerName switch
+        {
+            "Streets" => "lyr_streets",
+            "Satellite" => "lyr_satellite",
+            _ => HelperVariables.HTMLDefaultLayer
+        };
+
+        string strLat = mapWebMessage?.lat.ToString(provider: CultureInfo.InvariantCulture);
+        string strLng = mapWebMessage?.lng.ToString(provider: CultureInfo.InvariantCulture);
         bool isDragged = mapWebMessage is
         {
             isDragged: true
@@ -592,8 +599,9 @@ public partial class FrmMainApp : Form
     /// </summary>
     /// <param name="sender">Name of the button that has been clicked</param>
     /// <param name="e">Unused</param>
+    [SuppressMessage(category: "ReSharper", checkId: "PossibleNullReferenceException")]
     private async void btn_loctToFile_Click(object sender,
-        EventArgs e)
+                                            EventArgs e)
     {
         // convert selected lat/long to str
         string strGPSLatitudeOnTheMap = nud_lat.Text.Replace(oldChar: ',', newChar: '.');
@@ -791,8 +799,12 @@ public partial class FrmMainApp : Form
         try
         {
             Log.Trace(message: "parseLatLngTextBox");
+            // ReSharper disable once NotAccessedOutParameterVariable
             double parsedLat;
+
+            // ReSharper disable once NotAccessedOutParameterVariable
             double parsedLng;
+
             if (double.TryParse(s: strLatCoordinate, style: NumberStyles.Any,
                     provider: CultureInfo.InvariantCulture,
                     result: out parsedLat) &&
@@ -898,6 +910,24 @@ public partial class FrmMainApp : Form
             htmlReplacements.Add(key: "{ HTMLAddMarker }",
                 value: HelperVariables.HTMLAddMarker);
 
+            htmlReplacements.Add(key: " { HTMLSelectDefaultLayer }",
+                value: "var map = L.map('map', { layers: [" + HelperVariables.HTMLDefaultLayer + "]});");
+
+            htmlReplacements.Add(key: "{ HTMLSelectFirstLayer }",
+                value: HelperVariables.HTMLDefaultLayer == "lyr_streets"
+                    ? """
+                      var baseMaps = {
+                          "Satellite": lyr_satellite,
+                          "Streets": lyr_streets
+                      };
+                      """
+                    : """
+                      var baseMaps = {
+                          "Streets": lyr_streets,
+                          "Satellite": lyr_satellite
+                      };
+                      """);
+
 
             if (HelperVariables.LstTrackPath.Count > 0)
             {
@@ -987,6 +1017,7 @@ public partial class FrmMainApp : Form
         {
             DirectoryElement directoryElement =
                 lvw.SelectedItems[index: 0].Tag as DirectoryElement;
+            // ReSharper disable once PossibleNullReferenceException
             double? imgDirection = directoryElement.GetAttributeValue<double>(
                 attribute: ElementAttribute.GPSImgDirection,
                 version: directoryElement.GetMaxAttributeVersion(
