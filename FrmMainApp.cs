@@ -1696,8 +1696,7 @@ public partial class FrmMainApp : Form
     {
         HelperVariables.OperationAPIReturnedOKResponse = true;
         _StopProcessingRows = false;
-        FrmMainApp frmMainAppInstance =
-            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         if (frmMainAppInstance != null)
         {
             ListView lvw = frmMainAppInstance.lvw_FileList;
@@ -1706,8 +1705,7 @@ public partial class FrmMainApp : Form
                 foreach (ListViewItem lvi in
                          frmMainAppInstance.lvw_FileList.SelectedItems)
                 {
-                    DirectoryElement dirElemFileToModify =
-                        lvi.Tag as DirectoryElement;
+                    DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;
                     // don't do folders...
                     if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
@@ -1719,6 +1717,7 @@ public partial class FrmMainApp : Form
                         while (HelperGenericFileLocking.GenericLockCheckLockFile(
                                    fileNameWithoutPath: fileNameWithoutPath))
                         {
+                            // ReSharper disable once MethodSupportsCancellation
                             await Task.Delay(millisecondsDelay: 10);
                         }
 
@@ -2167,18 +2166,19 @@ public partial class FrmMainApp : Form
                 List<(ElementAttribute attribute, string toponomyOverwriteVal)>
                     toponomyOverwrites = new()
                     {
-                        (ElementAttribute.CountryCode,
-                         dtToponomy.Rows[index: 0][columnName: "CountryCode"]
-                                   .ToString()),
-                        (ElementAttribute.Country,
-                         dtToponomy.Rows[index: 0][columnName: "Country"]
-                                   .ToString())
+                        (ElementAttribute.CountryCode, dtToponomy.Rows[index: 0][columnName: ReturnControlText(
+                             fakeControlType: FakeControlTypes.ColumnHeader,
+                             controlName: "clh_CountryCode")].ToString()),
+                        (ElementAttribute.Country, dtToponomy.Rows[index: 0][columnName: ReturnControlText(
+                             fakeControlType: FakeControlTypes.ColumnHeader,
+                             controlName: "clh_Country")].ToString())
                     };
 
-                foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays
-                            .ToponomyReplaces())
+                foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays.ToponomyReplaces())
                 {
-                    string colName = GetElementAttributesName(attributeToFind: attribute);
+                    string colName = ReturnControlText(
+                        fakeControlType: FakeControlTypes.ColumnHeader,
+                        controlName: $"clh_{attribute}");
                     string settingVal = HelperExifReadExifData.ReplaceBlankToponomy(
                         settingId: attribute,
                         settingValue: dtToponomy.Rows[index: 0][columnName: colName]
@@ -2187,8 +2187,9 @@ public partial class FrmMainApp : Form
                 }
 
                 // timeZone is a bit special but that's just how we all love it....not.
-                string TZ = dtToponomy.Rows[index: 0][columnName: "timeZoneId"]
-                                      .ToString();
+                string TZ = dtToponomy.Rows[index: 0][columnName: ReturnControlText(
+                    fakeControlType: FakeControlTypes.ColumnHeader,
+                    controlName: "clh_timezoneId")].ToString();
 
                 DateTime createDate;
                 bool _ = DateTime.TryParse(s: lvi.SubItems[index: lvw_FileList
@@ -3300,7 +3301,7 @@ public partial class FrmMainApp : Form
                 ? "&fcode=PPL"
                 : "";
             string openAPILink =
-                $"http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&lat={GPSLatStr}&lng={GPSLngStr}&lang={HelperVariables.APILanguageToUse}{SOnlyShowFCodePPL}&style=FULL&radius={HelperVariables.ToponomyRadiusValue}&maxRows={HelperVariables.ToponymaxRows}&username={HelperVariables.UserSettingGeoNamesUserName}&password=any";
+                $"http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&lat={GPSLatStr}&lng={GPSLngStr}&lang={HelperVariables.APILanguageToUse}{SOnlyShowFCodePPL}&style=FULL&radius={HelperVariables.ToponomyRadiusValue}&maxRows={HelperVariables.ToponyMaxRowsChoiceOfferCount}&username={HelperVariables.UserSettingGeoNamesUserName}&password=any";
             Process.Start(fileName: openAPILink);
         }
     }

@@ -48,7 +48,7 @@ internal static class HelperAPIGeoNamesToponomyExtractor
             : "";
 
         RestRequest requestToponomy = new(resource:
-            $"findNearbyPlaceNameJSON?lat={latitude}&lng={longitude}&lang={HelperVariables.APILanguageToUse}{SOnlyShowFCodePPL}&style=FULL&radius={radius}&maxRows={HelperVariables.ToponymaxRows}");
+            $"findNearbyPlaceNameJSON?lat={latitude}&lng={longitude}&lang={HelperVariables.APILanguageToUse}{SOnlyShowFCodePPL}&style=FULL&radius={radius}&maxRows={HelperVariables.ToponyMaxRowsChoiceOfferCount}");
         RestResponse responseToponomy = client.ExecuteGet(request: requestToponomy);
         // check API reponse is OK
         if (responseToponomy.Content != null && responseToponomy.Content.Contains(value: "the hourly limit of "))

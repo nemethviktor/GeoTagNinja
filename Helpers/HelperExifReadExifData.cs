@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -26,20 +27,65 @@ internal static class HelperExifReadExifData
     ///     See summary. Returns the toponomy info either from SQLite if available or the API in DataTable for further
     ///     processing
     /// </returns>
+    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     internal static DataTable DTFromAPIExifGetToponomyFromWebOrSQL(string lat,
                                                                    string lng,
                                                                    string fileNameWithoutPath = "")
     {
         DataTable dtReturn = new();
         dtReturn.Clear();
-        dtReturn.Columns.Add(columnName: "Distance"); // this won't actually be used for data purposes.
-        dtReturn.Columns.Add(columnName: "CountryCode");
-        dtReturn.Columns.Add(columnName: "Country");
-        dtReturn.Columns.Add(columnName: "City");
-        dtReturn.Columns.Add(columnName: "State");
-        dtReturn.Columns.Add(columnName: "Sublocation");
-        dtReturn.Columns.Add(columnName: "GPSAltitude");
-        dtReturn.Columns.Add(columnName: "timezoneId");
+        Dictionary<string, string> columnsToAddList = new()
+        {
+            {
+                "Distance", HelperControlAndMessageBoxHandling.ReturnControlText(
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                    controlName: "clh_Distance")
+            },
+            {
+                "CountryCode", HelperControlAndMessageBoxHandling.ReturnControlText(
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                    controlName: "clh_CountryCode")
+            },
+            {
+                "Country", HelperControlAndMessageBoxHandling.ReturnControlText(
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                    controlName: "clh_Country")
+            },
+            {
+                "City", HelperControlAndMessageBoxHandling.ReturnControlText(
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                    controlName: "clh_City")
+            },
+            {
+                "State", HelperControlAndMessageBoxHandling.ReturnControlText(
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                    controlName: "clh_State")
+            },
+            {
+                "Sublocation", HelperControlAndMessageBoxHandling.ReturnControlText(
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                    controlName: "clh_Sublocation")
+            },
+            {
+                "GPSAltitude", HelperControlAndMessageBoxHandling.ReturnControlText(
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                    controlName: "clh_GPSAltitude")
+            },
+            {
+                "timezoneId", HelperControlAndMessageBoxHandling.ReturnControlText(
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                    controlName: "clh_timezoneId")
+            }
+        };
+
+
+        foreach (KeyValuePair<string, string> s in columnsToAddList)
+        {
+            dtReturn.Columns.Add(columnName: s.Value);
+        }
+        // HelperControlAndMessageBoxHandling.ReturnControlText(
+        //     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Label,
+        //     controlName: "clh_TargetPointOutcomeCustom")
 
         EnumerableRowCollection<DataRow> drDataTableData =
             from DataRow dataRow in FrmMainApp.DTToponomySessionData.AsEnumerable()
@@ -71,6 +117,8 @@ internal static class HelperExifReadExifData
             settingId: "ckb_StopProcessingRules"
         );
 
+    #region Actual value allocation block
+
         // As per https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 (see below comment a few lines down)
 
         // read from SQL
@@ -92,16 +140,11 @@ internal static class HelperExifReadExifData
             timezoneId = lstToponomySessionData[index: 0][columnName: "timezoneId"]
                .ToString();
 
-            string? AdminName1InSQL = lstToponomySessionData[index: 0][columnName: "AdminName1"]
-               .ToString();
-            string? AdminName2InSQL = lstToponomySessionData[index: 0][columnName: "AdminName2"]
-               .ToString();
-            string? AdminName3InSQL = lstToponomySessionData[index: 0][columnName: "AdminName3"]
-               .ToString();
-            string? AdminName4InSQL = lstToponomySessionData[index: 0][columnName: "AdminName4"]
-               .ToString();
-            string? ToponymNameInSQL = lstToponomySessionData[index: 0][columnName: "ToponymName"]
-               .ToString();
+            string? AdminName1InSQL = lstToponomySessionData[index: 0][columnName: "AdminName1"].ToString();
+            string? AdminName2InSQL = lstToponomySessionData[index: 0][columnName: "AdminName2"].ToString();
+            string? AdminName3InSQL = lstToponomySessionData[index: 0][columnName: "AdminName3"].ToString();
+            string? AdminName4InSQL = lstToponomySessionData[index: 0][columnName: "AdminName4"].ToString();
+            string? ToponymNameInSQL = lstToponomySessionData[index: 0][columnName: "ToponymName"].ToString();
 
             // In a country where you know, which admin level the cities belong to (see arrays), use the adminNameX as city name.
             // If the toponymName doesn't match the adminNameX, use the toponymName as sublocation name. toponymNames ...
@@ -153,19 +196,18 @@ internal static class HelperExifReadExifData
                 bool customRuleChangedCity = false;
                 bool customRuleChangedSublocation = false;
 
-                EnumerableRowCollection<DataRow> drCustomRulesData = from DataRow dataRow in HelperVariables.DtCustomRules.AsEnumerable()
-                                                                     where dataRow.Field<string>(columnName: "CountryCode") == CountryCode
-                                                                     select dataRow;
+                EnumerableRowCollection<DataRow> drCustomRulesData =
+                    from DataRow dataRow in HelperVariables.DtCustomRules.AsEnumerable()
+                    where dataRow.Field<string>(columnName: "CountryCode") == CountryCode
+                    select dataRow;
 
                 if (drCustomRulesData.Any())
                 {
                     foreach (DataRow dataRow in drCustomRulesData)
                     {
-                        string DataPointName = dataRow[columnName: "DataPointName"]
-                           .ToString();
+                        string DataPointName = dataRow[columnName: "DataPointName"].ToString();
 
-                        string DataPointConditionType = dataRow[columnName: "DataPointConditionType"]
-                           .ToString();
+                        string DataPointConditionType = dataRow[columnName: "DataPointConditionType"].ToString();
 
                         string DataPointValueInSQL = null;
 
@@ -347,15 +389,18 @@ internal static class HelperExifReadExifData
                 }
             }
 
+        #endregion
+
             DataRow drReturnRow = dtReturn.NewRow();
-            drReturnRow[columnName: "Distance"] = Distance;
-            drReturnRow[columnName: "CountryCode"] = CountryCode;
-            drReturnRow[columnName: "Country"] = Country;
-            drReturnRow[columnName: "City"] = City;
-            drReturnRow[columnName: "State"] = State;
-            drReturnRow[columnName: "Sublocation"] = Sublocation;
-            drReturnRow[columnName: "GPSAltitude"] = Altitude;
-            drReturnRow[columnName: "timezoneId"] = timezoneId;
+
+            drReturnRow[columnName: columnsToAddList[key: "Distance"]] = Distance;
+            drReturnRow[columnName: columnsToAddList[key: "CountryCode"]] = CountryCode;
+            drReturnRow[columnName: columnsToAddList[key: "Country"]] = Country;
+            drReturnRow[columnName: columnsToAddList[key: "City"]] = City;
+            drReturnRow[columnName: columnsToAddList[key: "State"]] = State;
+            drReturnRow[columnName: columnsToAddList[key: "Sublocation"]] = Sublocation;
+            drReturnRow[columnName: columnsToAddList[key: "GPSAltitude"]] = Altitude;
+            drReturnRow[columnName: columnsToAddList[key: "timezoneId"]] = timezoneId;
 
             dtReturn.Rows.Add(row: drReturnRow);
         }
@@ -542,9 +587,10 @@ internal static class HelperExifReadExifData
                             bool customRuleChangedCity = false;
                             bool customRuleChangedSublocation = false;
 
-                            EnumerableRowCollection<DataRow> drCustomRulesData = from DataRow dataRow in HelperVariables.DtCustomRules.AsEnumerable()
-                                                                                 where dataRow.Field<string>(columnName: "CountryCode") == CountryCode
-                                                                                 select dataRow;
+                            EnumerableRowCollection<DataRow> drCustomRulesData =
+                                from DataRow dataRow in HelperVariables.DtCustomRules.AsEnumerable()
+                                where dataRow.Field<string>(columnName: "CountryCode") == CountryCode
+                                select dataRow;
 
                             if (drCustomRulesData.Any())
                             {
@@ -737,14 +783,15 @@ internal static class HelperExifReadExifData
                         }
 
                         // add to return-table to offer to user
-                        drApiToponomyRow[columnName: "Distance"] = Distance;
-                        drApiToponomyRow[columnName: "CountryCode"] = CountryCode;
-                        drApiToponomyRow[columnName: "Country"] = Country;
-                        drApiToponomyRow[columnName: "City"] = City;
-                        drApiToponomyRow[columnName: "State"] = State;
-                        drApiToponomyRow[columnName: "Sublocation"] = Sublocation;
-                        drApiToponomyRow[columnName: "GPSAltitude"] = Altitude;
-                        drApiToponomyRow[columnName: "timezoneId"] = timezoneId;
+                        drApiToponomyRow[columnName: columnsToAddList[key: "Distance"]] = Distance;
+                        drApiToponomyRow[columnName: columnsToAddList[key: "CountryCode"]] = CountryCode;
+                        drApiToponomyRow[columnName: columnsToAddList[key: "Country"]] = Country;
+                        drApiToponomyRow[columnName: columnsToAddList[key: "City"]] = City;
+                        drApiToponomyRow[columnName: columnsToAddList[key: "State"]] = State;
+                        drApiToponomyRow[columnName: columnsToAddList[key: "Sublocation"]] = Sublocation;
+                        drApiToponomyRow[columnName: columnsToAddList[key: "GPSAltitude"]] = Altitude;
+                        drApiToponomyRow[columnName: columnsToAddList[key: "timezoneId"]] = timezoneId;
+
 
                         dtReturn.Rows.Add(row: drApiToponomyRow);
 
@@ -753,15 +800,15 @@ internal static class HelperExifReadExifData
                         drWriteToSqLiteRow[columnName: "lat"] = lat;
                         drWriteToSqLiteRow[columnName: "lng"] = lng;
                         drWriteToSqLiteRow[columnName: "AdminName1"] = readJsonToponomy.Geonames[index]
-                                                                                       .AdminName1;
+                           .AdminName1;
                         drWriteToSqLiteRow[columnName: "AdminName2"] = readJsonToponomy.Geonames[index]
-                                                                                       .AdminName2;
+                           .AdminName2;
                         drWriteToSqLiteRow[columnName: "AdminName3"] = readJsonToponomy.Geonames[index]
-                                                                                       .AdminName3;
+                           .AdminName3;
                         drWriteToSqLiteRow[columnName: "AdminName4"] = readJsonToponomy.Geonames[index]
-                                                                                       .AdminName4;
+                           .AdminName4;
                         drWriteToSqLiteRow[columnName: "ToponymName"] = readJsonToponomy.Geonames[index]
-                                                                                        .ToponymName;
+                           .ToponymName;
                         drWriteToSqLiteRow[columnName: "CountryCode"] = CountryCode;
                         drWriteToSqLiteRow[columnName: "GPSAltitude"] = Altitude;
                         drWriteToSqLiteRow[columnName: "timezoneId"] = timezoneId;
@@ -802,8 +849,10 @@ internal static class HelperExifReadExifData
                         // scroll to the file in question and show the image of it...makes life a lot easier
                         if (!string.IsNullOrEmpty(value: fileNameWithoutPath))
                         {
-                            string fileNameWithPath = Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath);
-                            ListViewItem lvi = frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath);
+                            string fileNameWithPath =
+                                Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath);
+                            ListViewItem lvi =
+                                frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath);
                             frmMainAppInstance.lvw_FileList.FocusedItem = lvi;
                             DirectoryElement directoryElement = lvi.Tag as DirectoryElement;
                             frmMainAppInstance.lvw_FileList.EnsureVisible(index: lvi.Index);
@@ -896,7 +945,7 @@ internal static class HelperExifReadExifData
                                 // make it not-zero based.
                                 ListViewItem lvi = new(text: (dtReturn.Rows.IndexOf(row: drItem) +
                                                               1)
-                                                      .ToString());
+                                   .ToString());
                                 foreach (DataColumn dc in dtIn.Columns)
                                 {
                                     string dataToAdd = drItem[column: dc]
@@ -930,11 +979,11 @@ internal static class HelperExifReadExifData
                             Button btn_Generic_OK = new()
                             {
                                 Text = HelperControlAndMessageBoxHandling.ReturnControlText(
-                                    controlName: "btn_Generic_OK",
+                                    controlName: "Generic_OK",
                                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button)
                             };
                             btn_Generic_OK.Click += (sender,
-                                             e) =>
+                                                     e) =>
                             {
                                 FrmPickDataFromAPIBox.Close();
                             };
@@ -946,7 +995,8 @@ internal static class HelperExifReadExifData
                             panel.AutoSize = true;
 
                             FrmPickDataFromAPIBox.Controls.Add(value: panel);
-                            FrmPickDataFromAPIBox.MinimumSize = new Size(width: lvwDataChoices.Width + 40, height: btn_Generic_OK.Bottom + 20);
+                            FrmPickDataFromAPIBox.MinimumSize = new Size(width: lvwDataChoices.Width + 40,
+                                height: btn_Generic_OK.Bottom + 20);
 
                             FrmPickDataFromAPIBox.ShowDialog();
 
@@ -996,7 +1046,7 @@ internal static class HelperExifReadExifData
     {
         string retStr = settingValue;
         if (HelperGenericAncillaryListsArrays.ToponomyReplaces()
-                .Contains(value: settingId) &&
+                                             .Contains(value: settingId) &&
             HelperVariables.ToponomyReplace &&
             settingValue.Length == 0)
         {

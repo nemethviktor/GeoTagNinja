@@ -48,7 +48,7 @@ internal static class HelperVariables
     internal static decimal CurrentExifToolVersionCloud;
     internal static bool ToponomyReplace = false;
     internal static string ToponomyReplaceWithWhat = null;
-    internal static string ToponymaxRows = "1";
+    internal static string ToponyMaxRowsChoiceOfferCount = "1";
     internal static string ToponomyRadiusValue = "10";
 
     internal static string?

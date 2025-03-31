@@ -1261,4 +1261,10 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>CustomRulesSettings</value>
     <comment>ngs</comment>
   </data>
+  <data name="Generic_TimeZoneID" xml:space="preserve">
+    <value>Time Zone ID</value>
+  </data>
+  <data name="Generic_Distance" xml:space="preserve">
+    <value>Distance</value>
+  </data>
 </root>

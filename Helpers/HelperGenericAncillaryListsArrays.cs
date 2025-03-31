@@ -307,6 +307,8 @@ internal static class HelperGenericAncillaryListsArrays
             { "clh_Sublocation", "Generic_Sublocation" },
             { "clh_TakenDate", "Generic_TakenDate" },
             { "clh_XMLSubjects", "Generic_XMLSubjects" },
+            { "clh_Distance", "Generic_Distance" },
+            { "clh_timezoneId", "Generic_TimeZoneID" },
             { "lbl_City", "Generic_City" },
             { "lbl_Country", "Generic_Country" },
             { "lbl_CountryCode", "Generic_CountryCode" },

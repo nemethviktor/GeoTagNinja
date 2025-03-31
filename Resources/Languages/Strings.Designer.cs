@@ -817,6 +817,15 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Distance.
+        /// </summary>
+        public static string Generic_Distance {
+            get {
+                return ResourceManager.GetString("Generic_Distance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export.
         /// </summary>
         public static string Generic_Export {
@@ -1308,6 +1317,15 @@ namespace GeoTagNinja.Resources.Languages {
         public static string Generic_TakenDate {
             get {
                 return ResourceManager.GetString("Generic_TakenDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time Zone ID.
+        /// </summary>
+        public static string Generic_TimeZoneID {
+            get {
+                return ResourceManager.GetString("Generic_TimeZoneID", resourceCulture);
             }
         }
         
