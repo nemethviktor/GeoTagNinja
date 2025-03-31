@@ -76,10 +76,10 @@ namespace GeoTagNinja
             this.tbx_GeoNames_UserName = new System.Windows.Forms.TextBox();
             this.tbx_ARCGIS_APIKey = new System.Windows.Forms.TextBox();
             this.tpg_FileOptions = new System.Windows.Forms.TabPage();
-            this.ckb_ResetFileDateToCreated = new System.Windows.Forms.CheckBox();
             this.ckb_ProcessOriginalFile = new System.Windows.Forms.CheckBox();
-            this.ckb_OverwriteOriginal = new System.Windows.Forms.CheckBox();
+            this.ckb_ResetFileDateToCreated = new System.Windows.Forms.CheckBox();
             this.ckb_AddXMPSideCar = new System.Windows.Forms.CheckBox();
+            this.ckb_OverwriteOriginal = new System.Windows.Forms.CheckBox();
             this.lbx_fileExtensions = new System.Windows.Forms.ListBox();
             this.tpg_CustomCityLogic = new System.Windows.Forms.TabPage();
             this.rbx_CustomCityLogicExplanationBold = new System.Windows.Forms.RichTextBox();
@@ -479,13 +479,6 @@ namespace GeoTagNinja
             this.tpg_FileOptions.Name = "tpg_FileOptions";
             this.tpg_FileOptions.Enter += new System.EventHandler(this.tpg_FileOptions_Enter);
             // 
-            // ckb_ResetFileDateToCreated
-            // 
-            resources.ApplyResources(this.ckb_ResetFileDateToCreated, "ckb_ResetFileDateToCreated");
-            this.ckb_ResetFileDateToCreated.Name = "ckb_ResetFileDateToCreated";
-            this.ckb_ResetFileDateToCreated.UseVisualStyleBackColor = true;
-            this.ckb_ResetFileDateToCreated.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
-            // 
             // ckb_ProcessOriginalFile
             // 
             resources.ApplyResources(this.ckb_ProcessOriginalFile, "ckb_ProcessOriginalFile");
@@ -493,12 +486,12 @@ namespace GeoTagNinja
             this.ckb_ProcessOriginalFile.UseVisualStyleBackColor = true;
             this.ckb_ProcessOriginalFile.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
-            // ckb_OverwriteOriginal
+            // ckb_ResetFileDateToCreated
             // 
-            resources.ApplyResources(this.ckb_OverwriteOriginal, "ckb_OverwriteOriginal");
-            this.ckb_OverwriteOriginal.Name = "ckb_OverwriteOriginal";
-            this.ckb_OverwriteOriginal.UseVisualStyleBackColor = true;
-            this.ckb_OverwriteOriginal.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            resources.ApplyResources(this.ckb_ResetFileDateToCreated, "ckb_ResetFileDateToCreated");
+            this.ckb_ResetFileDateToCreated.Name = "ckb_ResetFileDateToCreated";
+            this.ckb_ResetFileDateToCreated.UseVisualStyleBackColor = true;
+            this.ckb_ResetFileDateToCreated.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
             // ckb_AddXMPSideCar
             // 
@@ -506,6 +499,13 @@ namespace GeoTagNinja
             this.ckb_AddXMPSideCar.Name = "ckb_AddXMPSideCar";
             this.ckb_AddXMPSideCar.UseVisualStyleBackColor = true;
             this.ckb_AddXMPSideCar.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            // 
+            // ckb_OverwriteOriginal
+            // 
+            resources.ApplyResources(this.ckb_OverwriteOriginal, "ckb_OverwriteOriginal");
+            this.ckb_OverwriteOriginal.Name = "ckb_OverwriteOriginal";
+            this.ckb_OverwriteOriginal.UseVisualStyleBackColor = true;
+            this.ckb_OverwriteOriginal.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
             // lbx_fileExtensions
             // 

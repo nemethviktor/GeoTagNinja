@@ -696,7 +696,7 @@
     <value>True</value>
   </data>
   <data name="lbl_Generic_Miles.Location" type="System.Drawing.Point, System.Drawing">
-    <value>467, 342</value>
+    <value>569, 342</value>
   </data>
   <data name="lbl_Generic_Miles.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 0, 2, 0</value>
@@ -876,7 +876,7 @@
     <value>5</value>
   </data>
   <data name="tbx_ReplaceBlankToponyms.Location" type="System.Drawing.Point, System.Drawing">
-    <value>408, 371</value>
+    <value>510, 371</value>
   </data>
   <data name="tbx_ReplaceBlankToponyms.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
@@ -903,7 +903,7 @@
     <value>True</value>
   </data>
   <data name="lbl_ChoiceRadius.Location" type="System.Drawing.Point, System.Drawing">
-    <value>277, 340</value>
+    <value>379, 340</value>
   </data>
   <data name="lbl_ChoiceRadius.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 0, 2, 0</value>
@@ -960,7 +960,7 @@
     <value>8</value>
   </data>
   <data name="nud_ChoiceRadius.Location" type="System.Drawing.Point, System.Drawing">
-    <value>410, 340</value>
+    <value>512, 340</value>
   </data>
   <data name="nud_ChoiceRadius.Size" type="System.Drawing.Size, System.Drawing">
     <value>43, 20</value>
@@ -981,7 +981,7 @@
     <value>9</value>
   </data>
   <data name="nud_ChoiceOfferCount.Location" type="System.Drawing.Point, System.Drawing">
-    <value>207, 338</value>
+    <value>309, 338</value>
   </data>
   <data name="nud_ChoiceOfferCount.Size" type="System.Drawing.Size, System.Drawing">
     <value>43, 20</value>
@@ -1738,7 +1738,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAABI
-        DQAAAk1TRnQBSQFMAgEBBQEAAegBAQHoAQEBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        DQAAAk1TRnQBSQFMAgEBBQEAAfABAQHwAQEBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABQAMAASADAAEBAQABCAYAAQgYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
         AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
         AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA
