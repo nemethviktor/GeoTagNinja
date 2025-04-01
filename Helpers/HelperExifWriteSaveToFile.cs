@@ -47,7 +47,16 @@ internal static class HelperExifWriteSaveToFile
         FrmMainApp.TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.Indeterminate);
         string exifArgsForOriginalFile = "";
         string exifArgsForSidecar = "";
-        // check there's anything to write.
+
+        // this is a list of junk that we generally want to ignore coming from exiftool's error reporting
+        List<string> ignoreExifToolWarningsList = new()
+        {
+            "requires ExifVersion \\d+ or higher",
+            "is not allowed in JPEG",
+            "MakerNote",
+            "Warning"
+        };
+
         // ReSharper disable once InconsistentNaming
 
         foreach (string GUID in DistinctGUIDs)
@@ -142,10 +151,14 @@ internal static class HelperExifWriteSaveToFile
                         exifArgsForOriginalFile: ref exifArgsForOriginalFile,
                         exifArgsForSidecar: ref exifArgsForSidecar);
 
-                    // "NoWarning=(requires ExifVersion \d+ or higher|is not allowed in JPEG)" [or some such - don't add doublequotes]
+                    string ignoreText = ignoreExifToolWarningsList.Aggregate(seed: string.Empty, func: (current,
+                            s) => current + $"{s}|");
+
+                    ignoreText = ignoreText.TrimEnd('|');
+
                     UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig,
                         whatText:
-                        "NoWarning=(requires ExifVersion \\d+ or higher|is not allowed in JPEG|MakerNote)",
+                        $"NoWarning=({ignoreText})",
                         exifArgsForOriginalFile: ref exifArgsForOriginalFile,
                         exifArgsForSidecar: ref exifArgsForSidecar);
 
