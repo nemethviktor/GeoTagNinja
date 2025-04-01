@@ -30,5 +30,31 @@
             },
         },
     },
+
+	'Image::ExifTool::Composite' => {
+        GTNPreviewThumb => {
+            Groups => { 2 => 'Preview' },
+            Desire => {
+				0 => 'ThumbnailImage',
+                1 => 'PreviewImage',
+				2 => 'JpgFromRaw',
+				3 => 'OtherImage',
+				4 => 'Orientation',
+            },
+            Require => {
+                1 => 'Orientation',
+            },
+            ValueConv => q{
+                if (defined $val[4]) {
+                    my $et = new Image::ExifTool;
+                    $et->SetNewValue('Orientation#', $val[4]);
+                    my $rotatedImage;
+                    my $success = $et->WriteInfo($val[0], \$rotatedImage);
+                    return \$rotatedImage if $success == 1;
+                }
+                return $val[0];
+            },
+        },
+    },
 );
 1; #end

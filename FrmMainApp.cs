@@ -284,6 +284,9 @@ public partial class FrmMainApp : Form
         // Setup the List View
         try
         {
+            lvw_FileList.View = System.Windows.Forms.View.LargeIcon;
+            lvw_FileList.TileSize = new Size(width: 128, height: 128);
+            lvw_FileList.OwnerDraw = true;
             lvw_FileList.ReadAndApplySetting(appLanguage: _AppLanguage);
         }
         catch (Exception ex)
@@ -381,7 +384,7 @@ public partial class FrmMainApp : Form
         PerformAppClosingProcedure();
     }
 
-    internal void PerformAppClosingProcedure(bool extractNewExifTool = true)
+    private void PerformAppClosingProcedure(bool extractNewExifTool = true)
     {
         // Write column widths to db
         Log.Trace(message: "Write column widths to db");
@@ -2612,7 +2615,8 @@ public partial class FrmMainApp : Form
                 if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                 {
                     await HelperExifReadGetImagePreviews.GenericCreateImagePreview(
-                        directoryElement: dirElemFileToModify, initiator: "FrmMainApp");
+                        directoryElement: dirElemFileToModify,
+                        initiator: HelperExifReadGetImagePreviews.Initiator.FrmMainAppPictureBox);
                 }
                 else
                 {

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <defs>
+    <style>.canvas{fill: none; opacity: 0;}.light-defaultgrey-10{fill: #212121; opacity: 0.1;}.light-defaultgrey{fill: #212121; opacity: 1;}</style>
+  </defs>
+  <title>IconLightUSB</title>
+  <g id="canvas">
+    <path class="canvas" d="M16,16H0V0H16Z" />
+  </g>
+  <g id="level-1">
+    <path class="light-defaultgrey-10" d="M10.5,13.5v-2h2v2Z" />
+    <path class="light-defaultgrey-10" d="M11.5,4.5a1,1,0,1,1-1-1A1,1,0,0,1,11.5,4.5Z" />
+    <path class="light-defaultgrey-10" d="M2.5,8.5a1,1,0,1,1-1-1A1,1,0,0,1,2.5,8.5Z" />
+    <path class="light-defaultgrey" d="M13.854,6.146l-.708.708L14.293,8H4.707l3-3H9.092a1.5,1.5,0,1,0,0-1H7.5l-.354.146L3.293,8H2.908a1.5,1.5,0,1,0,0,1H4.293l3.853,3.854L8.5,13H10v.5l.5.5h2l.5-.5v-2l-.5-.5h-2l-.5.5V12H8.707l-3-3h8.586l-1.147,1.146.708.708,2-2V8.146ZM10.5,4a.5.5,0,1,1-.5.5A.5.5,0,0,1,10.5,4ZM12,12v1H11V12ZM1.5,9A.5.5,0,1,1,2,8.5.5.5,0,0,1,1.5,9Z" />
+  </g>
+</svg>

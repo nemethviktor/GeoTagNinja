@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <defs>
+    <style>.canvas{fill: none; opacity: 0;}.light-defaultgrey-10{fill: #212121; opacity: 0.1;}.light-defaultgrey{fill: #212121; opacity: 1;}.light-green{fill: #1f801f; opacity: 1;}.light-blue-10{fill: #005dba; opacity: 0.1;}.light-blue{fill: #005dba; opacity: 1;}.cls-1{opacity:0.75;}</style>
+  </defs>
+  <title>IconLightCDDrive</title>
+  <g id="canvas" class="canvas">
+    <path class="canvas" d="M16,16H0V0H16Z" />
+  </g>
+  <g id="level-1">
+    <path class="light-defaultgrey-10" d="M.5,10.5h10v4H.5Z" />
+    <path class="light-defaultgrey" d="M10.5,10H.5l-.5.5v4l.5.5H2v1H3V15H8v1H9V15h1.5l.5-.5v-4ZM10,14H1V11h9Z" />
+    <path class="light-green" d="M3,13H2V12H3Z" />
+    <g class="cls-1">
+      <path class="light-blue-10" d="M9.722,9a2.04,2.04,0,0,0,.125-.235L10.414,9Zm1.545.353.733.733v2.363c.08-.07.166-.13.243-.206a5.991,5.991,0,0,0,1.3-1.947ZM6.586,6.586a2,2,0,0,1,.649-.433L5.7,2.457A5.99,5.99,0,0,0,2.457,5.7l3.7,1.531A2,2,0,0,1,6.586,6.586Z" />
+      <path class="light-blue" d="M6.8,6.409,5.252,2.671c.147-.075.3-.15.452-.214s.314-.118.472-.168L7.724,6.026a1.8,1.8,0,0,0-.924.383Zm-.648.826A1.979,1.979,0,0,1,6.409,6.8L2.671,5.252c-.075.147-.15.3-.214.452s-.118.314-.168.471L6.026,7.724A1.99,1.99,0,0,1,6.152,7.235ZM9.974,8.276a1.99,1.99,0,0,1-.126.489A1.614,1.614,0,0,1,9.709,9h1.205L12,10.086V10.2l1.329.55c.075-.147.15-.3.214-.452s.118-.314.168-.472Z" />
+    </g>
+    <path class="light-blue-10" d="M14.5,8A6.468,6.468,0,0,1,12,13.1V10.086L10.914,9h-1.8A1.5,1.5,0,1,0,6.889,9H1.58A6.5,6.5,0,1,1,14.5,8Z" />
+    <path class="light-blue" d="M15,8a6.974,6.974,0,0,1-3,5.719V12.446A5.992,5.992,0,1,0,2,8a5.784,5.784,0,0,0,.089,1H1.075A6.873,6.873,0,0,1,1,8,7,7,0,0,1,15,8ZM7,8A1,1,0,1,1,8,9H9.722A1.978,1.978,0,0,0,10,8,2,2,0,0,0,6,8a1.978,1.978,0,0,0,.278,1H8A1,1,0,0,1,7,8Z" />
+  </g>
+</svg>

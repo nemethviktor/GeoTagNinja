@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -10,8 +12,8 @@ using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using NLog;
-using HelperControlAndMessageBoxCustomMessageBoxManager =
-    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
+using Svg;
+using HelperControlAndMessageBoxCustomMessageBoxManager = GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 
 namespace GeoTagNinja.View.ListView;
 /*
@@ -37,6 +39,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     public const string COL_NAME_PREFIX = "clh_";
 
+    internal static int ThumbnailSize = 128;
 
     /// <summary>
     ///     Constructor
@@ -662,12 +665,17 @@ public partial class FileListView : System.Windows.Forms.ListView
                 settingId: settingIdToSend
             );
 
+
             // We only set col width if there actually is a setting for it.
             // New columns thus will have a default size
-            if (colWidth != null &&
-                colWidth.Length > 0)
+            if (colWidth is { Length: > 0 })
             {
                 columnHeader.Width = Convert.ToInt16(value: colWidth);
+            }
+
+            if (View == System.Windows.Forms.View.LargeIcon)
+            {
+                columnHeader.Width = columnHeader.Name == "clh_FileName" ? ThumbnailSize : 0;
             }
 
             Log.Trace(message: $"columnHeader: {columnHeader.Name} - columnHeader.Width: {columnHeader.Width}");
@@ -973,6 +981,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             {
                 Application.DoEvents();
                 _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Text =
+                    // ReSharper disable once LocalizableElement
                     $"{count} / {directoryElementCollectionLength}";
                 count++;
             }
@@ -1061,6 +1070,85 @@ public partial class FileListView : System.Windows.Forms.ListView
             setVisible: FrmMainApp.FlatMode ||
                         Program.CollectionModeEnabled);
 
+        // Add images when required
+        if (View == System.Windows.Forms.View.LargeIcon)
+        {
+            ImageList imgList = new();
+            imgList.ColorDepth = ColorDepth.Depth32Bit;
+            imgList.ImageSize = new Size(width: (int)(ThumbnailSize * 0.9), height: (int)(ThumbnailSize * 0.9));
+            Dictionary<DirectoryElement.ElementType, string> iconLookupDictionary = new();
+
+            iconLookupDictionary.Add(key: DirectoryElement.ElementType.SubDirectory, value: "FolderOpenedNoColor.svg");
+            iconLookupDictionary.Add(key: DirectoryElement.ElementType.MyComputer, value: "Computer.svg");
+            iconLookupDictionary.Add(key: DirectoryElement.ElementType.ParentDirectory, value: "DottedSplitter.svg");
+            iconLookupDictionary.Add(key: DirectoryElement.ElementType.Drive, value: "HardDrive.svg");
+
+
+            List<DirectoryElement> directoryElementListForThumbnails = new();
+            foreach (ListViewItem lvi in Items)
+            {
+                DirectoryElement de = lvi.Tag as DirectoryElement;
+                if (de.Type == DirectoryElement.ElementType.File)
+                {
+                    directoryElementListForThumbnails.Add(item: de);
+                }
+
+                // mass-generate thumbs
+                _ = HelperExifReadGetImagePreviews.GenericCreateImagePreviewForThumbnails(
+                    directoryElementList: directoryElementListForThumbnails,
+                    initiator: HelperExifReadGetImagePreviews.Initiator.FrmMainAppListViewThumbnail);
+
+                string imageListKey = Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                    path2: $"{de.ItemNameWithoutPath}.jpg");
+
+                switch (de.Type)
+                {
+                    case DirectoryElement.ElementType.File:
+                    {
+                        Image myThumbnail =
+                            GenerateFixedSizeImage(directoryElement: de, width: ThumbnailSize, height: ThumbnailSize);
+                        imgList.Images.Add(
+                            key: imageListKey,
+                            image: myThumbnail);
+
+                        break;
+                    }
+                    default:
+                        string iconLookupValue = iconLookupDictionary[key: de.Type];
+                        if (de.Type == DirectoryElement.ElementType.Drive)
+                        {
+                            DriveInfo di = new(driveName: de.FileNameWithPath);
+                            DriveType driveType = di.DriveType;
+                            iconLookupValue = driveType switch
+                            {
+                                DriveType.Removable => "USB.svg",
+                                DriveType.Fixed => "HardDrive.svg",
+                                DriveType.Network => "NetworkNDISDriver.svg",
+                                DriveType.CDRom => "CDDrive.svg",
+                                _ => iconLookupValue
+                            };
+                        }
+
+                        imgList.Images.Add(
+                            key: imageListKey,
+                            image: ConvertSVGToImage(imagePath: Path.Combine(
+                                path1: AppDomain.CurrentDomain.BaseDirectory,
+                                path2: "images",
+                                path3: iconLookupValue)));
+                        break;
+                }
+            }
+
+
+            LargeImageList = imgList;
+            foreach (ListViewItem lvi in Items)
+            {
+                DirectoryElement de = lvi.Tag as DirectoryElement;
+                lvi.ImageKey = Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                    path2: $"{de.ItemNameWithoutPath}.jpg");
+            }
+        }
+
         // Resume sorting...
         Log.Trace(message: "Enable ListViewItemSorter");
         EndUpdate();
@@ -1068,6 +1156,78 @@ public partial class FileListView : System.Windows.Forms.ListView
         Sort();
     }
 
+    /// <summary>
+    ///     Converts svg files to image.
+    /// </summary>
+    /// <param name="imagePath"></param>
+    /// <returns></returns>
+    private Image ConvertSVGToImage(string imagePath)
+    {
+        SvgDocument svgDoc = SvgDocument.Open(path: imagePath);
+        return new Bitmap(original: svgDoc.Draw(rasterWidth: ThumbnailSize, rasterHeight: ThumbnailSize));
+    }
+
+    /// <summary>
+    ///     Via https://stackoverflow.com/a/2001462/3968494
+    /// </summary>
+    /// <param name="directoryElement"></param>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    /// <returns></returns>
+    private static Image GenerateFixedSizeImage(DirectoryElement directoryElement,
+                                                int width,
+                                                int height)
+    {
+        Image imgPhoto = Image.FromFile(filename: Path.Combine(path1: HelperVariables.UserDataFolderPath,
+            path2: $"{directoryElement.ItemNameWithoutPath}.jpg"));
+
+        int sourceWidth = imgPhoto.Width;
+        int sourceHeight = imgPhoto.Height;
+        int sourceX = 0;
+        int sourceY = 0;
+        int destX = 0;
+        int destY = 0;
+
+        float nPercent = 0;
+        float nPercentW = 0;
+        float nPercentH = 0;
+
+        nPercentW = width / (float)sourceWidth;
+        nPercentH = height / (float)sourceHeight;
+        if (nPercentH < nPercentW)
+        {
+            nPercent = nPercentH;
+            destX = Convert.ToInt16(value: (width -
+                                            sourceWidth * nPercent) / 2);
+        }
+        else
+        {
+            nPercent = nPercentW;
+            destY = Convert.ToInt16(value: (height -
+                                            sourceHeight * nPercent) / 2);
+        }
+
+        int destWidth = (int)(sourceWidth * nPercent);
+        int destHeight = (int)(sourceHeight * nPercent);
+
+        Bitmap bmPhoto = new(width: width, height: height,
+            format: PixelFormat.Format24bppRgb);
+        bmPhoto.SetResolution(xDpi: imgPhoto.HorizontalResolution,
+            yDpi: imgPhoto.VerticalResolution);
+
+        Graphics grPhoto = Graphics.FromImage(image: bmPhoto);
+        grPhoto.Clear(color: Color.Transparent);
+        grPhoto.InterpolationMode =
+            InterpolationMode.HighQualityBicubic;
+
+        grPhoto.DrawImage(image: imgPhoto,
+            destRect: new Rectangle(x: destX, y: destY, width: destWidth, height: destHeight),
+            srcRect: new Rectangle(x: sourceX, y: sourceY, width: sourceWidth, height: sourceHeight),
+            srcUnit: GraphicsUnit.Pixel);
+
+        grPhoto.Dispose();
+        return bmPhoto;
+    }
 
     /// <summary>
     ///     Clears the FileListView.
