@@ -910,24 +910,6 @@ public partial class FrmMainApp : Form
             htmlReplacements.Add(key: "{ HTMLAddMarker }",
                 value: HelperVariables.HTMLAddMarker);
 
-            htmlReplacements.Add(key: " { HTMLSelectDefaultLayer }",
-                value: "var map = L.map('map', { layers: [" + HelperVariables.HTMLDefaultLayer + "]});");
-
-            htmlReplacements.Add(key: "{ HTMLSelectFirstLayer }",
-                value: HelperVariables.HTMLDefaultLayer == "lyr_streets"
-                    ? """
-                      var baseMaps = {
-                          "Satellite": lyr_satellite,
-                          "Streets": lyr_streets
-                      };
-                      """
-                    : """
-                      var baseMaps = {
-                          "Streets": lyr_streets,
-                          "Satellite": lyr_satellite
-                      };
-                      """);
-
 
             if (HelperVariables.LstTrackPath.Count > 0)
             {
@@ -952,6 +934,25 @@ public partial class FrmMainApp : Form
             // No markers added
             htmlReplacements.Add(key: "{ HTMLAddMarker }", value: "");
         }
+
+        // anyway....
+        htmlReplacements.Add(key: " { HTMLSelectDefaultLayer }",
+            value: "var map = L.map('map', { layers: [" + HelperVariables.HTMLDefaultLayer + "]});");
+
+        htmlReplacements.Add(key: "{ HTMLSelectFirstLayer }",
+            value: HelperVariables.HTMLDefaultLayer == "lyr_streets"
+                ? """
+                  var baseMaps = {
+                      "Satellite": lyr_satellite,
+                      "Streets": lyr_streets
+                  };
+                  """
+                : """
+                  var baseMaps = {
+                      "Streets": lyr_streets,
+                      "Satellite": lyr_satellite
+                  };
+                  """);
 
         Log.Trace(message: $"Added {HelperVariables.HsMapMarkers.Count} map markers.");
 
