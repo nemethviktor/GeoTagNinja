@@ -747,7 +747,7 @@ public partial class FrmSettings : Form
                                        .GetISO_639_1_Languages()
                                        .Where(predicate: kvp =>
                                             kvp.Value ==
-                                            cbx.SelectedItem.ToString());
+                                            cbx.Text);
 
                                 HelperVariables.APILanguageToUse = result.FirstOrDefault()
                                                                          .Key;

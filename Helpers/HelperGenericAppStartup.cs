@@ -208,7 +208,7 @@ internal static class HelperGenericAppStartup
                                                                                                 .Where(predicate: kvp => kvp.Value == TryUseGeoNamesLanguage);
 
             HelperVariables.APILanguageToUse = result.FirstOrDefault()
-                                                     .Key;
+                                                     .Key ?? TryUseGeoNamesLanguage; // leave as-is if fail
         }
 
         return Task.CompletedTask;
