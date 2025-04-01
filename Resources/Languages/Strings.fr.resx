@@ -822,7 +822,7 @@ Certains fichiers HEIC disposent de cet attribut, mais pas la plupart des autres
     <value>Gérer les favoris</value>
   </data>
   <data name="frm_FrmPickDataFromAPIBox" xml:space="preserve">
-    <value>Choisir les valeurs de la toponymie</value>
+    <value>Choisissez la toponymie</value>
   </data>
   <data name="gbx_AppSettings" xml:space="preserve">
     <value>Paramètres de l'application</value>
@@ -1121,5 +1121,11 @@ Exemple : les données par défaut renvoyées par l'API pour Londres UK sont m�
   </data>
   <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
     <value>Coordonnées ouvertes dans l'API</value>
+  </data>
+  <data name="Generic_TimeZoneID" xml:space="preserve">
+    <value>Id de fuseau horaire</value>
+  </data>
+  <data name="Generic_Distance" xml:space="preserve">
+    <value>Distance</value>
   </data>
 </root>
