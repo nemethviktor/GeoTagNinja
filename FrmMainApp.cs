@@ -384,7 +384,8 @@ public partial class FrmMainApp : Form
         PerformAppClosingProcedure();
     }
 
-    private void PerformAppClosingProcedure(bool extractNewExifTool = true)
+    // ReSharper disable once MemberCanBePrivate.Global
+    internal void PerformAppClosingProcedure(bool extractNewExifTool = true)
     {
         // Write column widths to db
         Log.Trace(message: "Write column widths to db");

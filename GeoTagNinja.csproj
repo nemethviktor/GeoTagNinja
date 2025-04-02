@@ -420,28 +420,33 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="images\Paypal.png" />
+    <None Include="Images\Paypal.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="bin\Release\Resources\AppIcon.ico" />
     <Content Include="AppIcon.ico" />
-    <Content Include="images\CDDrive.svg">
+    <Content Include="Images\Cddrive.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="images\Computer.svg">
+    <Content Include="Images\Computer.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="images\DottedSplitter.svg">
+    <Content Include="Images\Folder.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="images\FolderOpenedNoColor.svg">
+    <Content Include="Images\Harddrive.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="images\HardDrive.svg">
+    <Content Include="Images\Networkdrive.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="images\NetworkNDISDriver.svg">
+    <Content Include="Images\Otherdrive.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="images\USB.svg">
+    <Content Include="Images\ParentFolder.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Removabledrive.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\exiftool.exe">

@@ -13,7 +13,9 @@ using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using NLog;
 using Svg;
-using HelperControlAndMessageBoxCustomMessageBoxManager = GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
+using HelperControlAndMessageBoxCustomMessageBoxManager =
+    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
+using Image = System.Drawing.Image;
 
 namespace GeoTagNinja.View.ListView;
 /*
@@ -39,7 +41,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     public const string COL_NAME_PREFIX = "clh_";
 
-    internal static int ThumbnailSize = 128;
+    internal static readonly int ThumbnailSize = 128;
 
     /// <summary>
     ///     Constructor
@@ -49,6 +51,8 @@ public partial class FileListView : System.Windows.Forms.ListView
         Log.Info(message: "Creating List View ...");
         InitializeComponent();
     }
+
+    private IntPtr _hSysImgList;
 
     /// <summary>
     ///     Class containing native method (shell32, etc) definitions in order
@@ -843,7 +847,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     {
         //https://stackoverflow.com/a/37806517/3968494
         shfi = new NativeMethods.SHFILEINFOW();
-        IntPtr hSysImgList = NativeMethods.SHGetFileInfo(pszPath: "",
+        _hSysImgList = NativeMethods.SHGetFileInfo(pszPath: "",
             dwFileAttributes: 0,
             psfi: ref shfi,
             cbSizeFileInfo: (uint)Marshal
@@ -851,7 +855,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             uFlags: NativeMethods
                        .SHGFI_SYSICONINDEX |
                     NativeMethods.SHGFI_SMALLICON);
-        Debug.Assert(condition: hSysImgList !=
+        Debug.Assert(condition: _hSysImgList !=
                                 IntPtr.Zero); // cross our fingers and hope to succeed!
 
         // Set the ListView control to use that image list.
@@ -859,7 +863,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             msg: NativeMethods
                .LVM_SETIMAGELIST,
             wParam: NativeMethods.LVSIL_SMALL,
-            lParam: hSysImgList);
+            lParam: _hSysImgList);
 
         // If the ListView control already had an image list, delete the old one.
         if (hOldImgList != IntPtr.Zero)
@@ -900,7 +904,10 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         // Finally set style and icons
         SetStyle();
+        //if (View == System.Windows.Forms.View.Details)
+        //{
         InitializeImageList(); // must be here - if called in constructor, it won't work
+        // }
 
         _isInitialized = true;
     }
@@ -911,7 +918,11 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     public void PersistSettings()
     {
-        ColOrderAndWidth_Write();
+        // tile-view only shows the filename column, we don't want that saved.
+        if (View == System.Windows.Forms.View.Details)
+        {
+            ColOrderAndWidth_Write();
+        }
     }
 
 #endregion
@@ -1073,17 +1084,6 @@ public partial class FileListView : System.Windows.Forms.ListView
         // Add images when required
         if (View == System.Windows.Forms.View.LargeIcon)
         {
-            ImageList imgList = new();
-            imgList.ColorDepth = ColorDepth.Depth32Bit;
-            imgList.ImageSize = new Size(width: (int)(ThumbnailSize * 0.9), height: (int)(ThumbnailSize * 0.9));
-            Dictionary<DirectoryElement.ElementType, string> iconLookupDictionary = new();
-
-            iconLookupDictionary.Add(key: DirectoryElement.ElementType.SubDirectory, value: "FolderOpenedNoColor.svg");
-            iconLookupDictionary.Add(key: DirectoryElement.ElementType.MyComputer, value: "Computer.svg");
-            iconLookupDictionary.Add(key: DirectoryElement.ElementType.ParentDirectory, value: "DottedSplitter.svg");
-            iconLookupDictionary.Add(key: DirectoryElement.ElementType.Drive, value: "HardDrive.svg");
-
-
             List<DirectoryElement> directoryElementListForThumbnails = new();
             foreach (ListViewItem lvi in Items)
             {
@@ -1092,12 +1092,27 @@ public partial class FileListView : System.Windows.Forms.ListView
                 {
                     directoryElementListForThumbnails.Add(item: de);
                 }
+            }
 
-                // mass-generate thumbs
-                _ = HelperExifReadGetImagePreviews.GenericCreateImagePreviewForThumbnails(
+            ImageList imgList = new();
+            imgList.ColorDepth = ColorDepth.Depth32Bit;
+            imgList.ImageSize = new Size(width: (int)(ThumbnailSize * 0.9), height: (int)(ThumbnailSize * 0.9));
+            Dictionary<DirectoryElement.ElementType, string> iconLookupDictionary = new();
+
+            iconLookupDictionary.Add(key: DirectoryElement.ElementType.SubDirectory, value: "Folder.png");
+            iconLookupDictionary.Add(key: DirectoryElement.ElementType.MyComputer, value: "Computer.png");
+            iconLookupDictionary.Add(key: DirectoryElement.ElementType.ParentDirectory, value: "Parentfolder.png");
+            iconLookupDictionary.Add(key: DirectoryElement.ElementType.Drive, value: "Harddrive.png");
+
+
+            // mass-generate thumbs
+            _ = HelperExifReadGetImagePreviews.GenericCreateImagePreviewForThumbnails(
                     directoryElementList: directoryElementListForThumbnails,
                     initiator: HelperExifReadGetImagePreviews.Initiator.FrmMainAppListViewThumbnail);
 
+            foreach (ListViewItem lvi in Items)
+            {
+                DirectoryElement de = lvi.Tag as DirectoryElement;
                 string imageListKey = Path.Combine(path1: HelperVariables.UserDataFolderPath,
                     path2: $"{de.ItemNameWithoutPath}.jpg");
 
@@ -1121,17 +1136,20 @@ public partial class FileListView : System.Windows.Forms.ListView
                             DriveType driveType = di.DriveType;
                             iconLookupValue = driveType switch
                             {
-                                DriveType.Removable => "USB.svg",
-                                DriveType.Fixed => "HardDrive.svg",
-                                DriveType.Network => "NetworkNDISDriver.svg",
-                                DriveType.CDRom => "CDDrive.svg",
-                                _ => iconLookupValue
+                                // If I have to fish for these again I'll hang myself.
+                                // Also if someone that knows how to get the icons out of nativeMethods, do shout.
+                                // In the meantime follow this -> https://www.tenforums.com/tutorials/128170-extract-icon-file-windows.html tutorial
+                                DriveType.Removable => "Removabledrive.png",
+                                DriveType.Fixed => "Harddrive.png",
+                                DriveType.Network => "Networkdrive.png",
+                                DriveType.CDRom => "CDdrive.png",
+                                _ => "Otherdrive.png"
                             };
                         }
 
                         imgList.Images.Add(
                             key: imageListKey,
-                            image: ConvertSVGToImage(imagePath: Path.Combine(
+                            image: Image.FromFile(filename: Path.Combine(
                                 path1: AppDomain.CurrentDomain.BaseDirectory,
                                 path2: "images",
                                 path3: iconLookupValue)));

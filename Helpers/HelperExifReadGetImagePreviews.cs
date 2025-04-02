@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -12,6 +13,7 @@ using System.Windows.Forms;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.ListView;
 using ImageMagick;
+using Encoder = System.Drawing.Imaging.Encoder;
 
 namespace GeoTagNinja.Helpers;
 
@@ -278,6 +280,11 @@ internal static class HelperExifReadGetImagePreviews
     }
 
     /// <summary>
+    ///     The whole fuckery with the previews having to have three different branches is down to (speed) or the lack of it.
+    ///     The fastest is Windows's own implementation but it only supports JPGs and basic formats.
+    ///     ET supports most formats but is relatively slow
+    ///     Mick is dreadfully slow but also supports some obscure formats like HEIC
+    ///     Also there's some issue w/ ET and Orientation sometimes not being picked up.
     /// </summary>
     /// <param name="directoryElementList"></param>
     /// <param name="initiator"></param>
@@ -327,11 +334,10 @@ internal static class HelperExifReadGetImagePreviews
                 }
                 else
                 {
-                    // via https://stackoverflow.com/a/6576645/3968494
-                    using FileStream stream = new(path: fileNameWithPath, mode: FileMode.Open,
-                        access: FileAccess.Read);
-                    img = Image.FromStream(stream: stream);
-                    img.Save(filename: generatedFileName, format: ImageFormat.Jpeg);
+                    CreateThumbnail(fileNameIn: fileNameWithPath,
+                        fileNameOut: generatedFileName,
+                        maxWidth: FileListView.ThumbnailSize,
+                        maxHeight: FileListView.ThumbnailSize);
                 }
             }
             catch
@@ -390,6 +396,13 @@ internal static class HelperExifReadGetImagePreviews
         image.Write(fileName: jpegPath);
     }
 
+    /// <summary>
+    ///     Same as <see cref="UseMagickImageToGeneratePreview(string,string)" /> but specific to thumbnail creation.
+    /// </summary>
+    /// <param name="originalImagePath"></param>
+    /// <param name="jpegPath"></param>
+    /// <param name="imgWidth"></param>
+    /// <param name="imgHeight"></param>
     private static void UseMagickImageToGeneratePreview(string originalImagePath,
                                                         string jpegPath,
                                                         int imgWidth,
@@ -401,5 +414,76 @@ internal static class HelperExifReadGetImagePreviews
         image.AutoOrient();
         image.Resize(geometry: size);
         image.Write(fileName: jpegPath);
+    }
+
+
+    /// <summary>
+    ///     Basically used for non-special files' thumb generation.
+    ///     Via https://www.thatsoftwaredude.com/content/11478/how-to-resize-image-files-with-c
+    /// </summary>
+    /// <param name="fileNameIn"></param>
+    /// <param name="fileNameOut"></param>
+    /// <param name="maxWidth"></param>
+    /// <param name="maxHeight"></param>
+    private static void CreateThumbnail(string fileNameIn,
+                                        string fileNameOut,
+                                        int maxWidth,
+                                        int maxHeight)
+    {
+        try
+        {
+            Image img = Bitmap.FromFile(filename: fileNameIn);
+            string strName = string.Format(format: "thumb_{0}", arg0: fileNameOut);
+
+            double newWidth = img.Width;
+            double newHeight = img.Height;
+
+            // finds the small dimensions
+            for (int i = 99; i > 0; i--)
+            {
+                newWidth = i / 100.0 * newWidth;
+                newHeight = i / 100.0 * newHeight;
+
+                if (newWidth <= maxWidth ||
+                    newHeight <= maxHeight)
+                {
+                    break;
+                }
+            }
+
+            Bitmap bmSmall = new(original: img, newSize: new Size(width: (int)newWidth, height: (int)newHeight));
+
+            // via https://learn.microsoft.com/en-us/dotnet/desktop/winforms/advanced/how-to-set-jpeg-compression-level?view=netframeworkdesktop-4.8
+            Encoder myEncoder = Encoder.Quality;
+            ImageCodecInfo jpgEncoder = GetEncoder(format: ImageFormat.Jpeg);
+
+            EncoderParameters encoderParams = new(count: 1);
+            EncoderParameter encoderParameter = new(encoder: myEncoder, value: 90L);
+            encoderParams.Param[0] = encoderParameter;
+
+
+            Image newImg = bmSmall;
+            newImg.Save(filename: fileNameOut, encoder: jpgEncoder, encoderParams: encoderParams);
+            img.Dispose();
+            newImg.Dispose();
+        }
+        catch (Exception ex)
+        {
+            Debug.Print(message: ex.Message);
+        }
+    }
+
+    private static ImageCodecInfo GetEncoder(ImageFormat format)
+    {
+        ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
+        foreach (ImageCodecInfo codec in codecs)
+        {
+            if (codec.FormatID == format.Guid)
+            {
+                return codec;
+            }
+        }
+
+        return null;
     }
 }
