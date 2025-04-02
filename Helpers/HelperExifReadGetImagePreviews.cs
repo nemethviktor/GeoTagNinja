@@ -5,13 +5,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.ListView;
 using ImageMagick;
 using Encoder = System.Drawing.Imaging.Encoder;
 
@@ -93,8 +91,8 @@ internal static class HelperExifReadGetImagePreviews
         FrmMainApp.Log.Debug(message: "Done");
     }
 
-    private static async Task ExifGetImagePreviewsForThumbnails(List<string> fileNamesWithPaths,
-                                                                Initiator initiator)
+    private static async Task<Task> ExifGetImagePreviewsForThumbnails(List<string> fileNamesWithPaths,
+                                                                      Initiator initiator)
     {
         FrmMainApp.Log.Info(message: "Starting");
 
@@ -139,6 +137,7 @@ internal static class HelperExifReadGetImagePreviews
                                              .ExifGetImagePreviews);
         ///////////////
         FrmMainApp.Log.Debug(message: "Done");
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -279,105 +278,6 @@ internal static class HelperExifReadGetImagePreviews
         }
     }
 
-    /// <summary>
-    ///     The whole fuckery with the previews having to have three different branches is down to (speed) or the lack of it.
-    ///     The fastest is Windows's own implementation but it only supports JPGs and basic formats.
-    ///     ET supports most formats but is relatively slow
-    ///     Mick is dreadfully slow but also supports some obscure formats like HEIC
-    ///     Also there's some issue w/ ET and Orientation sometimes not being picked up.
-    /// </summary>
-    /// <param name="directoryElementList"></param>
-    /// <param name="initiator"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
-    internal static async Task GenericCreateImagePreviewForThumbnails(List<DirectoryElement> directoryElementList,
-                                                                      Initiator initiator)
-    {
-        List<string> previewsToBeGeneratedByExifToolList = new();
-        foreach (DirectoryElement directoryElement in directoryElementList)
-        {
-            if (directoryElement.Type != DirectoryElement.ElementType.File)
-            {
-                return;
-            }
-
-            string fileNameWithPath = directoryElement.FileNameWithPath;
-            string fileNameWithoutPath = directoryElement.ItemNameWithoutPath;
-            string generatedFileName = default;
-            Image img = null;
-
-            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-            if (initiator == Initiator.FrmMainAppListViewThumbnail &&
-                frmMainAppInstance != null)
-            {
-                generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                    path2: $"{fileNameWithoutPath}.jpg");
-            }
-            else
-            {
-                throw new Exception(message: "GenericCreateImagePreviewForThumbnails - What are you doing here?");
-                return;
-            }
-
-
-            try
-            {
-                if (MagickExtensionList.Contains(item: directoryElement.Extension.TrimStart('.').ToLower()))
-                {
-                    // actually the reason i'm not using this for _every_ file is that it's just f...ing slow with NEF files(which is what I have plenty of), so it's prohibitive to run on RAW files. 
-                    //  since i don't have a better way to deal with HEIC/WEBP files atm this is as good as it gets.
-                    UseMagickImageToGeneratePreview(
-                        originalImagePath: fileNameWithPath,
-                        jpegPath: generatedFileName,
-                        imgWidth: FileListView.ThumbnailSize,
-                        imgHeight: FileListView.ThumbnailSize);
-                }
-                else
-                {
-                    CreateThumbnail(fileNameIn: fileNameWithPath,
-                        fileNameOut: generatedFileName,
-                        maxWidth: FileListView.ThumbnailSize,
-                        maxHeight: FileListView.ThumbnailSize);
-                }
-            }
-            catch
-            {
-                // nothing.
-            }
-
-            if (img == null &&
-                !File.Exists(path: generatedFileName))
-            {
-                previewsToBeGeneratedByExifToolList.Add(item: fileNameWithPath);
-            }
-
-
-            //if (File.Exists(path: generatedFileName))
-            //{
-            //    try
-            //    {
-            //        // ReSharper disable once AssignNullToNotNullAttribute
-            //        using FileStream stream = new(path: generatedFileName,
-            //            mode: FileMode.Open,
-            //            access: FileAccess.Read);
-            //        img = Image.FromStream(stream: stream);
-            //
-            //        img.ExifRotate();
-            //    }
-            //    catch
-            //    {
-            //        // nothing
-            //    }
-            //}
-
-
-            if (previewsToBeGeneratedByExifToolList.Any())
-            {
-                await ExifGetImagePreviewsForThumbnails(fileNamesWithPaths: previewsToBeGeneratedByExifToolList,
-                    initiator: initiator);
-            }
-        }
-    }
 
     /// <summary>
     ///     Takes a HEIC/WebP/etc file and dumps a JPG. Uses MagickImage. See comment above as to why this isn't being used for
@@ -403,13 +303,13 @@ internal static class HelperExifReadGetImagePreviews
     /// <param name="jpegPath"></param>
     /// <param name="imgWidth"></param>
     /// <param name="imgHeight"></param>
-    private static void UseMagickImageToGeneratePreview(string originalImagePath,
-                                                        string jpegPath,
-                                                        int imgWidth,
-                                                        int imgHeight)
+    internal static void UseMagickImageToGeneratePreview(string originalImagePath,
+                                                         string jpegPath,
+                                                         int imgWidth,
+                                                         int imgHeight)
     {
         using MagickImage image = new(fileName: originalImagePath);
-        MagickGeometry size = new(width: imgWidth, height: imgHeight);
+        MagickGeometry size = new(width: (uint)imgWidth, height: (uint)imgHeight);
 
         image.AutoOrient();
         image.Resize(geometry: size);
@@ -425,10 +325,10 @@ internal static class HelperExifReadGetImagePreviews
     /// <param name="fileNameOut"></param>
     /// <param name="maxWidth"></param>
     /// <param name="maxHeight"></param>
-    private static void CreateThumbnail(string fileNameIn,
-                                        string fileNameOut,
-                                        int maxWidth,
-                                        int maxHeight)
+    internal static void CreateThumbnail(string fileNameIn,
+                                         string fileNameOut,
+                                         int maxWidth,
+                                         int maxHeight)
     {
         try
         {

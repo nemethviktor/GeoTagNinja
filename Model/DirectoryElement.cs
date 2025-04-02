@@ -3,11 +3,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using GeoTagNinja.Helpers;
+using GeoTagNinja.View.ListView;
 using NLog;
 using static GeoTagNinja.Model.SourcesAndAttributes;
+
+#pragma warning disable CS8618, CS9264
 
 namespace GeoTagNinja.Model;
 
@@ -40,8 +44,8 @@ public class DirectoryElement
     /// <param name="type">The ElementType of it</param>
     /// <param name="fileNameWithPath">The fully qualified path incl. its name</param>
     public DirectoryElement(string itemNameWithoutPath,
-        ElementType type,
-        string fileNameWithPath)
+                            ElementType type,
+                            string fileNameWithPath)
     {
         ItemNameWithoutPath = itemNameWithoutPath;
         Type = type;
@@ -49,7 +53,7 @@ public class DirectoryElement
         FileNameWithPath = fileNameWithPath;
         Extension = Path.GetExtension(path: FileNameWithPath)
                         .Replace(oldValue: ".", newValue: "");
-
+        Thumbnail = _Thumbnail;
         _Attributes = new Dictionary<ElementAttribute, AttributeValueContainer>();
     }
 
@@ -157,6 +161,8 @@ public class DirectoryElement
 
     private string _DisplayName;
 
+    private Image _Thumbnail;
+
     private readonly IDictionary<ElementAttribute, AttributeValueContainer> _Attributes;
 
     private readonly List<ElementAttribute> _ignoreElementAttributes = new()
@@ -240,6 +246,105 @@ public class DirectoryElement
     ///     The sidecar file associated with this directory element.
     /// </summary>
     public FileInfo SidecarFile { set; get; }
+
+    public Image Thumbnail
+    {
+        get => _Thumbnail;
+        set
+        {
+            Dictionary<ElementType, string> iconLookupDictionary = new();
+
+            iconLookupDictionary.Add(key: ElementType.SubDirectory, value: "Folder.png");
+            iconLookupDictionary.Add(key: ElementType.MyComputer, value: "Computer.png");
+            iconLookupDictionary.Add(key: ElementType.ParentDirectory, value: "Parentfolder.png");
+            iconLookupDictionary.Add(key: ElementType.Drive, value: "Harddrive.png");
+
+            string generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                path2: $"{ItemNameWithoutPath}.jpg");
+
+
+            if (Type == ElementType.File)
+            {
+                try
+                {
+                    HelperExifReadGetImagePreviews.CreateThumbnail(fileNameIn: FileNameWithPath,
+                        fileNameOut: generatedFileName,
+                        maxWidth: FileListView.ThumbnailSize,
+                        maxHeight: FileListView.ThumbnailSize);
+                }
+                catch
+                {
+                    //
+                }
+
+                if (!File.Exists(path: generatedFileName))
+                {
+                    try
+                    {
+                        HelperExifReadGetImagePreviews.UseMagickImageToGeneratePreview(
+                            originalImagePath: FileNameWithPath,
+                            jpegPath: generatedFileName,
+                            imgWidth: FileListView.ThumbnailSize,
+                            imgHeight: FileListView.ThumbnailSize);
+                    }
+                    catch
+                    {
+                        // nothing.
+                    }
+                }
+
+                if (File.Exists(path: generatedFileName))
+                {
+                    value = Image.FromFile(filename: generatedFileName);
+                }
+            }
+            else
+            {
+                try
+                {
+                    string iconLookupValue = iconLookupDictionary[key: Type];
+
+
+                    if (Type == ElementType.Drive)
+                    {
+                        DriveInfo di = new(driveName: FileNameWithPath);
+                        DriveType driveType = di.DriveType;
+                        iconLookupValue = driveType switch
+                        {
+                            // If I have to fish for these again I'll hang myself.
+                            // Also if someone that knows how to get the icons out of nativeMethods, do shout.
+                            // In the meantime follow this -> https://www.tenforums.com/tutorials/128170-extract-icon-file-windows.html tutorial
+                            DriveType.Removable => "Removabledrive.png",
+                            DriveType.Fixed => "Harddrive.png",
+                            DriveType.Network => "Networkdrive.png",
+                            DriveType.CDRom => "CDdrive.png",
+                            _ => "Otherdrive.png"
+                        };
+                    }
+
+                    value = Image.FromFile(filename: Path.Combine(
+                        path1: AppDomain.CurrentDomain.BaseDirectory,
+                        path2: "images",
+                        path3: iconLookupValue));
+                }
+                catch
+                {
+                    //
+                }
+            }
+            //case DirectoryElement.ElementType.File:
+            //{
+            //    Image myThumbnail =
+            //        GenerateFixedSizeImage(directoryElement: de, width: ThumbnailSize, height: ThumbnailSize);
+            //    imgList.Images.Add(
+            //        key: imageListKey,
+            //        image: myThumbnail);
+
+            //    break;
+            //}
+            _Thumbnail = value;
+        }
+    }
 
 #endregion
 

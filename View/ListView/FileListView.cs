@@ -1077,38 +1077,19 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
 
 
-        ToggleIndividualColumnVisibility(columnHeaderName: COL_NAME_PREFIX + FileListColumns.FOLDER,
-            setVisible: FrmMainApp.FlatMode ||
-                        Program.CollectionModeEnabled);
+        ToggleIndividualColumnVisibility(
+            columnHeaderName: COL_NAME_PREFIX + FileListColumns.FOLDER,
+            setVisible: FrmMainApp.FlatMode || Program.CollectionModeEnabled
+        );
 
         // Add images when required
         if (View == System.Windows.Forms.View.LargeIcon)
         {
-            List<DirectoryElement> directoryElementListForThumbnails = new();
-            foreach (ListViewItem lvi in Items)
-            {
-                DirectoryElement de = lvi.Tag as DirectoryElement;
-                if (de.Type == DirectoryElement.ElementType.File)
-                {
-                    directoryElementListForThumbnails.Add(item: de);
-                }
-            }
-
             ImageList imgList = new();
             imgList.ColorDepth = ColorDepth.Depth32Bit;
             imgList.ImageSize = new Size(width: (int)(ThumbnailSize * 0.9), height: (int)(ThumbnailSize * 0.9));
-            Dictionary<DirectoryElement.ElementType, string> iconLookupDictionary = new();
-
-            iconLookupDictionary.Add(key: DirectoryElement.ElementType.SubDirectory, value: "Folder.png");
-            iconLookupDictionary.Add(key: DirectoryElement.ElementType.MyComputer, value: "Computer.png");
-            iconLookupDictionary.Add(key: DirectoryElement.ElementType.ParentDirectory, value: "Parentfolder.png");
-            iconLookupDictionary.Add(key: DirectoryElement.ElementType.Drive, value: "Harddrive.png");
-
 
             // mass-generate thumbs
-            _ = HelperExifReadGetImagePreviews.GenericCreateImagePreviewForThumbnails(
-                    directoryElementList: directoryElementListForThumbnails,
-                    initiator: HelperExifReadGetImagePreviews.Initiator.FrmMainAppListViewThumbnail);
 
             foreach (ListViewItem lvi in Items)
             {
@@ -1116,45 +1097,10 @@ public partial class FileListView : System.Windows.Forms.ListView
                 string imageListKey = Path.Combine(path1: HelperVariables.UserDataFolderPath,
                     path2: $"{de.ItemNameWithoutPath}.jpg");
 
-                switch (de.Type)
-                {
-                    case DirectoryElement.ElementType.File:
-                    {
-                        Image myThumbnail =
-                            GenerateFixedSizeImage(directoryElement: de, width: ThumbnailSize, height: ThumbnailSize);
-                        imgList.Images.Add(
-                            key: imageListKey,
-                            image: myThumbnail);
 
-                        break;
-                    }
-                    default:
-                        string iconLookupValue = iconLookupDictionary[key: de.Type];
-                        if (de.Type == DirectoryElement.ElementType.Drive)
-                        {
-                            DriveInfo di = new(driveName: de.FileNameWithPath);
-                            DriveType driveType = di.DriveType;
-                            iconLookupValue = driveType switch
-                            {
-                                // If I have to fish for these again I'll hang myself.
-                                // Also if someone that knows how to get the icons out of nativeMethods, do shout.
-                                // In the meantime follow this -> https://www.tenforums.com/tutorials/128170-extract-icon-file-windows.html tutorial
-                                DriveType.Removable => "Removabledrive.png",
-                                DriveType.Fixed => "Harddrive.png",
-                                DriveType.Network => "Networkdrive.png",
-                                DriveType.CDRom => "CDdrive.png",
-                                _ => "Otherdrive.png"
-                            };
-                        }
-
-                        imgList.Images.Add(
-                            key: imageListKey,
-                            image: Image.FromFile(filename: Path.Combine(
-                                path1: AppDomain.CurrentDomain.BaseDirectory,
-                                path2: "images",
-                                path3: iconLookupValue)));
-                        break;
-                }
+                imgList.Images.Add(
+                    key: imageListKey,
+                    image: de.Thumbnail);
             }
 
 

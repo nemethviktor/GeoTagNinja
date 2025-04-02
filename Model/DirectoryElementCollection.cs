@@ -219,8 +219,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     Add(item: new DirectoryElement(
                         itemNameWithoutPath: drive.Name,
                         type: DirectoryElement.ElementType.Drive,
-                        fileNameWithPath: drive.RootDirectory.FullName
-                    ), replaceIfExists: true);
+                        fileNameWithPath: drive.RootDirectory.FullName), replaceIfExists: true);
                 }
 
                 CreateGUIDsForDirectoryElements();
@@ -245,8 +244,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     Add(item: new DirectoryElement(
                         itemNameWithoutPath: FrmMainApp.ParentFolder,
                         type: DirectoryElement.ElementType.ParentDirectory,
-                        fileNameWithPath: tmpStrParent
-                    ), replaceIfExists: true);
+                        fileNameWithPath: tmpStrParent), replaceIfExists: true);
                 }
             }
             catch (Exception ex)
@@ -279,8 +277,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                         Add(item: new DirectoryElement(
                             itemNameWithoutPath: directoryInfo.Name,
                             type: DirectoryElement.ElementType.MyComputer,
-                            fileNameWithPath: directoryInfo.FullName
-                        ), replaceIfExists: true);
+                            fileNameWithPath: directoryInfo.FullName), replaceIfExists: true);
                     }
                     else if (directoryInfo.Attributes.ToString()
                                           .Contains(value: "Directory") &&
@@ -291,8 +288,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                         Add(item: new DirectoryElement(
                             itemNameWithoutPath: directoryInfo.Name,
                             type: DirectoryElement.ElementType.SubDirectory,
-                            fileNameWithPath: directoryInfo.FullName
-                        ), replaceIfExists: true);
+                            fileNameWithPath: directoryInfo.FullName), replaceIfExists: true);
                     }
                 }
             }
@@ -619,8 +615,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 DirectoryElement fileToParseDictionaryElement = new(
                     itemNameWithoutPath: imagefileFileInfoItem.Name,
                     type: DirectoryElement.ElementType.File,
-                    fileNameWithPath: imagefileFileInfoItem.FullName
-                );
+                    fileNameWithPath: imagefileFileInfoItem.FullName);
 
                 // Add sidecar file and data if available
                 IDictionary<string, string> dictProperties = new Dictionary<string, string>();
