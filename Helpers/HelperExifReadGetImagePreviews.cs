@@ -11,7 +11,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GeoTagNinja.Model;
 using ImageMagick;
+using Sdcb.LibRaw;
 using Encoder = System.Drawing.Imaging.Encoder;
+
 
 namespace GeoTagNinja.Helpers;
 
@@ -91,42 +93,25 @@ internal static class HelperExifReadGetImagePreviews
         FrmMainApp.Log.Debug(message: "Done");
     }
 
-    private static async Task<Task> ExifGetImagePreviewsForThumbnails(List<string> fileNamesWithPaths,
-                                                                      Initiator initiator)
+
+    /// <summary>
+    ///     This is a proper mindfuck
+    /// </summary>
+    /// <param name="fileNameWithPath"></param>
+    /// <param name="initiator"></param>
+    /// <returns></returns>
+    internal static async Task ExifGetImagePreviewsForThumbnails(string fileNameWithPath,
+                                                                 Initiator initiator)
     {
         FrmMainApp.Log.Info(message: "Starting");
 
     #region ExifToolConfiguration
 
-        string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-            path2: "exifArgs_getPreviewThumbs.args");
-        File.Delete(path: argsFile);
-
-        foreach (string fileNameWithPath in fileNamesWithPaths)
-        {
-            if (File.Exists(path: fileNameWithPath))
-            {
-                File.AppendAllText(path: argsFile,
-                    contents: fileNameWithPath + Environment.NewLine,
-                    encoding: Encoding.UTF8);
-            }
-        }
-
-
-        //foreach (string fileNameWithPath in fileNamesWithPaths.Where(predicate: File.Exists))
-        //{
-        //    File.AppendAllText(path: argsFile,
-        //        contents: fileNameWithPath + Environment.NewLine,
-        //        encoding: Encoding.UTF8);
-        //}
-
+        // no args file just bash thru this.
         string exiftoolCmd =
-            $@" -charset utf8 -charset filename=utf8 -b -preview:{(initiator == Initiator.FrmMainAppListViewThumbnail ? "GTNPreviewThumb" : "GTNPreview")} -w! {HelperVariables.DoubleQuoteStr}{HelperVariables.UserDataFolderPath}\%F.jpg{HelperVariables.DoubleQuoteStr} -@ {HelperVariables.DoubleQuoteStr}{argsFile}{HelperVariables.DoubleQuoteStr}";
+            $@" -charset utf8 -charset filename=utf8 -b -jpgfromraw -w! {HelperVariables.DoubleQuoteStr}{HelperVariables.UserDataFolderPath}\%F.jpg{HelperVariables.DoubleQuoteStr} {HelperVariables.DoubleQuoteStr}{fileNameWithPath}{HelperVariables.DoubleQuoteStr}";
 
     #endregion
-
-        // add required tags
-        File.AppendAllText(path: argsFile, contents: $"-execute{Environment.NewLine}");
 
         FrmMainApp.Log.Trace(message: "Starting ExifTool");
         ///////////////
@@ -137,7 +122,6 @@ internal static class HelperExifReadGetImagePreviews
                                              .ExifGetImagePreviews);
         ///////////////
         FrmMainApp.Log.Debug(message: "Done");
-        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -199,7 +183,7 @@ internal static class HelperExifReadGetImagePreviews
                 // actually the reason i'm not using this for _every_ file is that it's just f...ing slow with NEF files(which is what I have plenty of), so it's prohibitive to run on RAW files. 
                 //  since i don't have a better way to deal with HEIC/WEBP files atm this is as good as it gets.
                 UseMagickImageToGeneratePreview(originalImagePath: fileNameWithPath,
-                    jpegPath: generatedFileName);
+                    generatedJpegPath: generatedFileName);
             }
             else
             {
@@ -285,26 +269,89 @@ internal static class HelperExifReadGetImagePreviews
     ///     files. (Too slow).
     /// </summary>
     /// <param name="originalImagePath"></param>
-    /// <param name="jpegPath"></param>
+    /// <param name="generatedJpegPath"></param>
     private static void UseMagickImageToGeneratePreview(string originalImagePath,
-                                                        string jpegPath)
+                                                        string generatedJpegPath)
     {
         using MagickImage image = new(fileName: originalImagePath);
         // The AutoOrient() method adjusts the image to respect its orientation.
         image.AutoOrient();
         // Save the image as a JPEG.
-        image.Write(fileName: jpegPath);
+        image.Write(fileName: generatedJpegPath);
+    }
+
+    /// <summary>
+    ///     Use LibRaw to create thumbnail.
+    /// </summary>
+    /// <param name="originalImagePath"></param>
+    /// <param name="generatedJpegPath"></param>
+    /// <param name="thumbnailIndex"></param>
+    internal static void UseLibRawToGeneratePreview(string originalImagePath,
+                                                    string generatedJpegPath,
+                                                    int thumbnailIndex)
+    {
+        try
+        {
+            using RawContext r = RawContext.OpenFile(filePath: originalImagePath);
+            using ProcessedImage image = r.ExportThumbnail(thumbnailIndex: thumbnailIndex);
+
+            using Bitmap bmp =
+                (Bitmap)Image.FromStream(stream: new MemoryStream(buffer: image.AsSpan<byte>().ToArray()));
+            bmp.Save(filename: generatedJpegPath, format: ImageFormat.Jpeg);
+        }
+        catch
+        {
+            // ignored
+        }
+    }
+
+    /// <summary>
+    ///     Use LibRaw to pull the full image.
+    /// </summary>
+    /// <param name="originalImagePath"></param>
+    /// <param name="generatedJpegPath"></param>
+    /// <param name="imgWidth"></param>
+    /// <param name="imgHeight"></param>
+    internal static void UseLibRawToGenerateFullImage(string originalImagePath,
+                                                      string generatedJpegPath,
+                                                      int? imgWidth = null,
+                                                      int? imgHeight = null)
+    {
+        try
+        {
+            using RawContext r = RawContext.OpenFile(filePath: originalImagePath);
+            r.Unpack();
+            r.DcrawProcess();
+            using ProcessedImage image = r.MakeDcrawMemoryImage();
+
+            Bitmap bmp = ProcessedImageToBitmap(rgbImage: image);
+
+            Bitmap ProcessedImageToBitmap(ProcessedImage rgbImage)
+            {
+                rgbImage.SwapRGB();
+                int witdthToUse = imgWidth ?? rgbImage.Width;
+                int heightToUse = imgHeight ?? rgbImage.Height;
+                using Bitmap bmpNewBitmap = new(width: witdthToUse, height: heightToUse, stride: rgbImage.Width * 3,
+                    format: PixelFormat.Format24bppRgb, scan0: rgbImage.DataPointer);
+                bmpNewBitmap.Save(filename: generatedJpegPath, format: ImageFormat.Jpeg);
+                return null;
+            }
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     /// <summary>
     ///     Same as <see cref="UseMagickImageToGeneratePreview(string,string)" /> but specific to thumbnail creation.
     /// </summary>
     /// <param name="originalImagePath"></param>
-    /// <param name="jpegPath"></param>
+    /// <param name="generatedJpegPath"></param>
     /// <param name="imgWidth"></param>
     /// <param name="imgHeight"></param>
     internal static void UseMagickImageToGeneratePreview(string originalImagePath,
-                                                         string jpegPath,
+                                                         string generatedJpegPath,
                                                          int imgWidth,
                                                          int imgHeight)
     {
@@ -313,12 +360,12 @@ internal static class HelperExifReadGetImagePreviews
 
         image.AutoOrient();
         image.Resize(geometry: size);
-        image.Write(fileName: jpegPath);
+        image.Write(fileName: generatedJpegPath);
     }
 
 
     /// <summary>
-    ///     Basically used for non-special files' thumb generation.
+    ///     Basically used for non-special files' thumb generation. (Using Windows's own logic/capabilities.)
     ///     Via https://www.thatsoftwaredude.com/content/11478/how-to-resize-image-files-with-c
     /// </summary>
     /// <param name="fileNameIn"></param>
@@ -332,7 +379,7 @@ internal static class HelperExifReadGetImagePreviews
     {
         try
         {
-            Image img = Bitmap.FromFile(filename: fileNameIn);
+            Image img = Image.FromFile(filename: fileNameIn);
             string strName = string.Format(format: "thumb_{0}", arg0: fileNameOut);
 
             double newWidth = img.Width;

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -1097,10 +1095,12 @@ public partial class FileListView : System.Windows.Forms.ListView
                 string imageListKey = Path.Combine(path1: HelperVariables.UserDataFolderPath,
                     path2: $"{de.ItemNameWithoutPath}.jpg");
 
-
-                imgList.Images.Add(
-                    key: imageListKey,
-                    image: de.Thumbnail);
+                if (de.Thumbnail is not null)
+                {
+                    imgList.Images.Add(
+                        key: imageListKey,
+                        image: de.Thumbnail);
+                }
             }
 
 
@@ -1131,67 +1131,6 @@ public partial class FileListView : System.Windows.Forms.ListView
         return new Bitmap(original: svgDoc.Draw(rasterWidth: ThumbnailSize, rasterHeight: ThumbnailSize));
     }
 
-    /// <summary>
-    ///     Via https://stackoverflow.com/a/2001462/3968494
-    /// </summary>
-    /// <param name="directoryElement"></param>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
-    /// <returns></returns>
-    private static Image GenerateFixedSizeImage(DirectoryElement directoryElement,
-                                                int width,
-                                                int height)
-    {
-        Image imgPhoto = Image.FromFile(filename: Path.Combine(path1: HelperVariables.UserDataFolderPath,
-            path2: $"{directoryElement.ItemNameWithoutPath}.jpg"));
-
-        int sourceWidth = imgPhoto.Width;
-        int sourceHeight = imgPhoto.Height;
-        int sourceX = 0;
-        int sourceY = 0;
-        int destX = 0;
-        int destY = 0;
-
-        float nPercent = 0;
-        float nPercentW = 0;
-        float nPercentH = 0;
-
-        nPercentW = width / (float)sourceWidth;
-        nPercentH = height / (float)sourceHeight;
-        if (nPercentH < nPercentW)
-        {
-            nPercent = nPercentH;
-            destX = Convert.ToInt16(value: (width -
-                                            sourceWidth * nPercent) / 2);
-        }
-        else
-        {
-            nPercent = nPercentW;
-            destY = Convert.ToInt16(value: (height -
-                                            sourceHeight * nPercent) / 2);
-        }
-
-        int destWidth = (int)(sourceWidth * nPercent);
-        int destHeight = (int)(sourceHeight * nPercent);
-
-        Bitmap bmPhoto = new(width: width, height: height,
-            format: PixelFormat.Format24bppRgb);
-        bmPhoto.SetResolution(xDpi: imgPhoto.HorizontalResolution,
-            yDpi: imgPhoto.VerticalResolution);
-
-        Graphics grPhoto = Graphics.FromImage(image: bmPhoto);
-        grPhoto.Clear(color: Color.Transparent);
-        grPhoto.InterpolationMode =
-            InterpolationMode.HighQualityBicubic;
-
-        grPhoto.DrawImage(image: imgPhoto,
-            destRect: new Rectangle(x: destX, y: destY, width: destWidth, height: destHeight),
-            srcRect: new Rectangle(x: sourceX, y: sourceY, width: sourceWidth, height: sourceHeight),
-            srcUnit: GraphicsUnit.Pixel);
-
-        grPhoto.Dispose();
-        return bmPhoto;
-    }
 
     /// <summary>
     ///     Clears the FileListView.

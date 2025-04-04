@@ -1705,19 +1705,24 @@ public partial class FrmMainApp : Form
         }
 
         return;
+    }
 
-        void ShowInvalidFolderMessage(string exceptionMessage = "")
+    private void ShowInvalidFolderMessage(string exceptionMessage = "")
+    {
+        if (!string.IsNullOrEmpty(value: exceptionMessage))
         {
-            DialogResult dialogResult = HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBoxWithResult(
-                controlName: "mbx_FrmMainApp_ErrorInvalidFolder", captionType: MessageBoxCaption.Question,
-                buttons: MessageBoxButtons.YesNo);
+            MessageBox.Show(text: exceptionMessage);
+        }
 
-            if (dialogResult == DialogResult.Yes)
-            {
-                tbx_FolderName.Text = @"C:\";
-                tbx_FolderName.Select();
-                SendKeys.Send(keys: "{ENTER}");
-            }
+        DialogResult dialogResult = HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBoxWithResult(
+            controlName: "mbx_FrmMainApp_ErrorInvalidFolder", captionType: MessageBoxCaption.Question,
+            buttons: MessageBoxButtons.YesNo);
+
+        if (dialogResult == DialogResult.Yes)
+        {
+            tbx_FolderName.Text = @"C:\";
+            tbx_FolderName.Select();
+            SendKeys.Send(keys: "{ENTER}");
         }
     }
 
