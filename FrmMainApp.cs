@@ -92,13 +92,12 @@ public partial class FrmMainApp : Form
 #region Variables
 
     internal static DataTable DTLanguageMapping;
-    internal static DataTable DtFavourites;
+    public static HashSet<Favourite> Favourites = new();
 
     // CustomCityLogic
 
     internal static string FolderName;
     internal static string AppLanguage; // default to english
-    internal static List<string> LstFavourites = new();
 
     private static bool _showLocToMapDialogChoice = true;
     private static bool _rememberLocToMapDialogChoice;
@@ -246,7 +245,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void FrmMainApp_Load(object sender,
-        EventArgs e)
+                                       EventArgs e)
     {
         Log.Info(message: "OnLoad: Starting");
         // icon
@@ -320,7 +319,7 @@ public partial class FrmMainApp : Form
 
         Log.Trace(message: "Assign 'Enter' Key behaviour to tbx_lng");
         nud_lng.KeyPress += (sndr,
-            ev) =>
+                             ev) =>
         {
             if (ev.KeyChar.Equals(obj: (char)13))
             {
@@ -369,7 +368,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void FrmMainApp_FormClosing(object sender,
-        FormClosingEventArgs e)
+                                              FormClosingEventArgs e)
     {
         Log.Debug(message: "OnClose: Starting");
 
@@ -508,7 +507,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void wbv_MapArea_WebMessageReceived(object sender,
-        CoreWebView2WebMessageReceivedEventArgs e)
+                                                CoreWebView2WebMessageReceivedEventArgs e)
     {
         string jsonString = e.WebMessageAsJson;
 
@@ -564,7 +563,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void webView_CoreWebView2InitializationCompleted(object sender,
-        CoreWebView2InitializationCompletedEventArgs e)
+                                                             CoreWebView2InitializationCompletedEventArgs e)
     {
     }
 
@@ -585,7 +584,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void btn_NavigateMapGo_Click(object sender,
-        EventArgs e)
+                                         EventArgs e)
     {
         HelperVariables.LstTrackPath.Clear();
         HelperVariables.HsMapMarkers.Clear();
@@ -1340,7 +1339,8 @@ public partial class FrmMainApp : Form
         }
 
 
-        void AssignViewingRectangle((string strLat, string strLng) locationCoord, bool addMarker)
+        void AssignViewingRectangle((string strLat, string strLng) locationCoord,
+                                    bool addMarker)
         {
             if (addMarker)
             {
@@ -1513,7 +1513,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tmi_File_SaveAll_Click(object sender,
-        EventArgs e)
+                                              EventArgs e)
     {
         // i think having an Item active can cause a lock on it
         while (HelperGenericFileLocking.FileListBeingUpdated ||
@@ -1536,7 +1536,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_File_EditFiles_Click(object sender,
-        EventArgs e)
+                                          EventArgs e)
     {
         filesToEditGUIDStringList.Clear();
 
@@ -1563,7 +1563,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_File_CopyGeoData_Click(object sender,
-        EventArgs e)
+                                            EventArgs e)
     {
         FileListViewCopyPaste.ListViewCopyGeoData();
     }
@@ -1574,7 +1574,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_File_PasteGeoData_Click(object sender,
-        EventArgs e)
+                                             EventArgs e)
     {
         FileListViewCopyPaste.ListViewPasteGeoData();
     }
@@ -1586,7 +1586,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_File_ImportExportGPX_Click(object sender,
-        EventArgs e)
+                                                EventArgs e)
     {
         // warn user that this is a bad idea in flatmode.
         if (!FlatMode ||
@@ -1610,7 +1610,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_File_Quit_Click(object sender,
-        EventArgs e)
+                                     EventArgs e)
     {
         HelperFileSystemOperators.FsoCleanUpUserFolder();
         Application.Exit();
@@ -1629,7 +1629,8 @@ public partial class FrmMainApp : Form
                DialogResult.Yes;
     }
 
-    private void tmiFileFlatModeToolStripMenuItem_Click(object sender, EventArgs e)
+    private void tmiFileFlatModeToolStripMenuItem_Click(object sender,
+                                                        EventArgs e)
     {
         FlatMode = !FlatMode;
         _ignoreFlatMode = true;
@@ -1649,7 +1650,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tsb_Refresh_lvwFileList_Click(object sender,
-        EventArgs e)
+                                                     EventArgs e)
     {
         Log.Info(message: "Starting");
 
@@ -1724,7 +1725,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tsb_GetAllFromWeb_Click(object sender,
-        EventArgs e)
+                                               EventArgs e)
     {
         HelperVariables.OperationAPIReturnedOKResponse = true;
         _StopProcessingRows = false;
@@ -1804,7 +1805,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void btn_ts_Refresh_lvwFileList_Click(object sender,
-        EventArgs e)
+                                                        EventArgs e)
     {
         Log.Info(message: "Starting");
 
@@ -1826,7 +1827,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void btn_OneFolderUp_Click(object sender,
-        EventArgs e)
+                                             EventArgs e)
     {
         Log.Info(message: "Starting");
 
@@ -1878,7 +1879,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tsb_EditFile_Click(object sender,
-        EventArgs e)
+                                    EventArgs e)
     {
         filesToEditGUIDStringList.Clear();
 
@@ -1906,7 +1907,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tsb_RemoveGeoData_Click(object sender,
-        EventArgs e)
+                                               EventArgs e)
     {
         try
         {
@@ -1937,7 +1938,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tsb_ImportExportGPX_Click(object sender,
-        EventArgs e)
+                                           EventArgs e)
     {
         bool validFilesToImport = false;
         foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
@@ -1972,7 +1973,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tbx_FolderName_KeyDown(object sender,
-        KeyEventArgs e)
+                                              KeyEventArgs e)
     {
         if (e.KeyCode == Keys.Enter)
         {
@@ -1992,7 +1993,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tbx_FolderName_Enter(object sender,
-        EventArgs e)
+                                      EventArgs e)
     {
         tbx_FolderName.SelectAll();
     }
@@ -2003,7 +2004,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tsb_SaveFiles_Click(object sender,
-        EventArgs e)
+                                           EventArgs e)
     {
         while (HelperGenericFileLocking.FileListBeingUpdated ||
                HelperGenericFileLocking.FilesAreBeingSaved)
@@ -2026,7 +2027,7 @@ public partial class FrmMainApp : Form
 
     // via https://stackoverflow.com/a/75716080/3968494
     private void ListView_DrawColumnHeader(object sender,
-        DrawListViewColumnHeaderEventArgs e)
+                                           DrawListViewColumnHeaderEventArgs e)
     {
         Color foreColor = HelperVariables.UserSettingUseDarkMode
             ? Color.White
@@ -2070,13 +2071,13 @@ public partial class FrmMainApp : Form
     }
 
     private void ListView_DrawItem(object sender,
-        DrawListViewItemEventArgs e)
+                                   DrawListViewItemEventArgs e)
     {
         e.DrawDefault = true;
     }
 
     private void ListView_DrawSubItem(object sender,
-        DrawListViewSubItemEventArgs e)
+                                      DrawListViewSubItemEventArgs e)
     {
         e.DrawDefault = true;
     }
@@ -2166,8 +2167,8 @@ public partial class FrmMainApp : Form
     /// <param name="strGpsLongitude">Longitude as string</param>
     /// <param name="lvi">ListViewItem in the the main grid</param>
     private void lvw_FileList_UpdateTagsFromWeb(string strGpsLatitude,
-        string strGpsLongitude,
-        ListViewItem lvi)
+                                                string strGpsLongitude,
+                                                ListViewItem lvi)
     {
         if (!_StopProcessingRows)
         {
@@ -2512,7 +2513,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void lvw_FileList_MouseDoubleClick(object sender,
-        MouseEventArgs e)
+                                                     MouseEventArgs e)
     {
         Log.Info(message: "Starting");
 
@@ -2681,7 +2682,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void lvw_FileList_KeyUp(object sender,
-        KeyEventArgs e)
+                                          KeyEventArgs e)
     {
         if (
             e.KeyCode == Keys.PageUp ||
@@ -2702,7 +2703,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">The key pressed</param>
     private async void lvw_FileList_KeyDown(object sender,
-        KeyEventArgs e)
+                                            KeyEventArgs e)
     {
         // control A -> select all
         if (e.Modifiers == Keys.Control &&
@@ -2843,7 +2844,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void lvw_FileList_MouseUp(object sender,
-        MouseEventArgs e)
+                                            MouseEventArgs e)
     {
         await lvw_HandleSelectionChange();
     }
@@ -2855,7 +2856,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_Settings_Settings_Click(object sender,
-        EventArgs e)
+                                             EventArgs e)
     {
         FrmSettings = new FrmSettings();
         FrmSettings.Text = ReturnControlText(
@@ -2871,10 +2872,9 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_Settings_Favourites_Click(object sender,
-        EventArgs e)
+                                               EventArgs e)
     {
-        DtFavourites = HelperGenericAppStartup.AppStartupLoadFavourites();
-        if (DtFavourites.Rows.Count > 0)
+        if (Favourites.Any())
         {
             FrmManageFavourites frmManageFavouritesInstance = new();
             frmManageFavouritesInstance.ShowDialog();
@@ -2893,14 +2893,14 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_Help_About_Click(object sender,
-        EventArgs e)
+                                      EventArgs e)
     {
         FrmAboutBox frmAboutBox = new();
         frmAboutBox.ShowDialog();
     }
 
     private void tmi_Help_FeedbackFeatureRequest_Click(object sender,
-        EventArgs e)
+                                                       EventArgs e)
     {
         Process.Start(
             fileName:
@@ -2908,7 +2908,7 @@ public partial class FrmMainApp : Form
     }
 
     private void tmi_Help_BugReport_Click(object sender,
-        EventArgs e)
+                                          EventArgs e)
     {
         Process.Start(
             fileName:
@@ -2917,7 +2917,7 @@ public partial class FrmMainApp : Form
 
 
     private void tsb_FeedbackFeatureRequest_Click(object sender,
-        EventArgs e)
+                                                  EventArgs e)
     {
         Process.Start(
             fileName:
@@ -2925,7 +2925,7 @@ public partial class FrmMainApp : Form
     }
 
     private void tsb_BugReport_Click(object sender,
-        EventArgs e)
+                                     EventArgs e)
     {
         Process.Start(
             fileName:
@@ -2938,7 +2938,7 @@ public partial class FrmMainApp : Form
     /// <param name="label">The Label Control that needs updating</param>
     /// <param name="text">The Text that will be assigned</param>
     internal static void HandlerUpdateLabelText(Label label,
-        string text)
+                                                string text)
     {
         // If the current thread is not the UI thread, InvokeRequired will be true
         if (label.InvokeRequired)
@@ -2963,31 +2963,36 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void wbv_MapArea_Click(object sender,
-        EventArgs e)
+                                   EventArgs e)
     {
         // note to self: the one you're looking for is called wbv_MapArea_WebMessageReceived
     }
 
     private void FrmMainApp_ResizeBegin(object sender,
-        EventArgs e)
+                                        EventArgs e)
     {
         wbv_MapArea.Hide();
     }
 
     private void FrmMainApp_ResizeEnd(object sender,
-        EventArgs e)
+                                      EventArgs e)
     {
         wbv_MapArea.Show();
     }
 
     private void selectColumnsToolStripMenuItem_Click(object sender,
-        EventArgs e)
+                                                      EventArgs e)
     {
         lvw_FileList.ShowColumnSelectionDialog();
     }
 
+    /// <summary>
+    ///     Save location to a new Favourite or update an existing one
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void btn_SaveLocation_Click(object sender,
-        EventArgs e)
+                                        EventArgs e)
     {
         if (cbx_Favourites.Text.Length > 0)
         {
@@ -2997,43 +3002,51 @@ public partial class FrmMainApp : Form
                 ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
 
                 string favouriteName = cbx_Favourites.Text;
+                Favourite favourite = GetFavouriteByName(favouriteName: favouriteName) ??
+                                      new Favourite { FavouriteName = favouriteName };
 
-                DataTable dtFavourite =
-                    HelperDataFavourites.DataReadSQLiteFavourites(structureOnly: true);
-                dtFavourite.Clear();
-                DataRow drFavourite = dtFavourite.NewRow();
-                drFavourite[columnName: "favouriteName"] = favouriteName;
+                // remove if exists, we'll add it back again
+                RemoveFavouriteByName(favouriteName: favouriteName);
 
-                foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays
-                            .GetFavouriteTags())
-                {
-                    string colName = GetElementAttributesName(attributeToFind: attribute);
-                    string addStr = lvi.SubItems[
-                                            index: lvw
-                                                  .Columns[
-                                                       key:
-                                                       GetElementAttributesColumnHeader(
-                                                           attributeToFind: attribute)]
-                                                  .Index]
-                                       .Text.ToString(
-                                            provider: CultureInfo.InvariantCulture);
+                favourite.GPSLatitude =
+                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
+                        attribute: ElementAttribute.GPSAltitude);
+                favourite.GPSLatitudeRef = GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
+                    attribute: ElementAttribute.GPSLatitudeRef);
+                favourite.GPSLongitude =
+                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
+                        attribute: ElementAttribute.GPSLongitude);
+                favourite.GPSLongitudeRef = GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
+                    attribute: ElementAttribute.GPSLongitudeRef);
+                favourite.GPSAltitude =
+                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
+                        attribute: ElementAttribute.GPSAltitude);
+                favourite.GPSAltitudeRef = GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
+                    attribute: ElementAttribute.GPSAltitudeRef);
+                favourite.Coordinates =
+                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
+                        attribute: ElementAttribute.Coordinates);
+                favourite.City =
+                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi, attribute: ElementAttribute.City);
+                favourite.CountryCode =
+                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
+                        attribute: ElementAttribute.CountryCode);
+                favourite.Country =
+                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi, attribute: ElementAttribute.Country);
+                favourite.State =
+                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi, attribute: ElementAttribute.State);
+                favourite.Sublocation =
+                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
+                        attribute: ElementAttribute.Sublocation);
 
-                    if (addStr == NullStringEquivalentGeneric)
-                    {
-                        addStr = "";
-                    }
+                Favourites.Add(item: favourite);
+                HelperDataFavourites.DataWriteSQLiteClearAndUpdateFavourites();
 
-                    drFavourite[columnName: colName] = addStr;
-                }
+                ClearReloadFavouritesDropDownValues();
 
-                HelperDataFavourites.DataDeleteSQLiteFavourite(
-                    favouriteName: favouriteName);
-                HelperDataFavourites.DataWriteSQLiteAddNewFavourite(
-                    drFavourite: drFavourite);
-
-                DtFavourites = HelperGenericAppStartup.AppStartupLoadFavourites();
                 HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                    controlName: "mbx_FrmMainApp_InfoFavouriteSaved", captionType: MessageBoxCaption.Information,
+                    controlName: "mbx_FrmMainApp_InfoFavouriteSaved",
+                    captionType: MessageBoxCaption.Information,
                     buttons: MessageBoxButtons.OK);
             }
 
@@ -3053,90 +3066,165 @@ public partial class FrmMainApp : Form
     }
 
     private async void btn_LoadFavourite_Click(object sender,
-        EventArgs e)
+                                               EventArgs e)
     {
-        string favouriteToLoad = cbx_Favourites.Text;
-
         // pull favs (this needs doing each time as user may have changed it)
+        ClearReloadFavouritesDropDownValues();
+        Favourite favouriteToLoad = GetFavouriteByName(favouriteName: cbx_Favourites.Text);
 
-        DtFavourites = HelperGenericAppStartup.AppStartupLoadFavourites();
-
-        if (LstFavourites.Contains(item: favouriteToLoad))
-        {
-            EnumerableRowCollection<DataRow> drDataTableData =
-                from DataRow dataRow in DtFavourites.AsEnumerable()
-                where dataRow.Field<string>(columnName: "favouriteName") ==
-                      favouriteToLoad
-                select dataRow;
-
-            DataRow drFavouriteData = drDataTableData.FirstOrDefault();
-
-            bool filesAreSelected = false;
-            if (lvw_FileList.SelectedItems.Count > 0)
-            {
-                foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
-                {
-                    DirectoryElement dirElemFileToModify =
-                        lvi.Tag as DirectoryElement;
-                    if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
-                    {
-                        filesAreSelected = true;
-                        break;
-                    }
-                }
-            }
-
-            if (filesAreSelected && drFavouriteData != null)
-            {
-                foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
-                {
-                    DirectoryElement dirElemFileToModify =
-                        lvi.Tag as DirectoryElement;
-                    if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
-                    {
-                        foreach (ElementAttribute attribute in
-                                 HelperGenericAncillaryListsArrays.GetFavouriteTags())
-                        {
-                            string colName =
-                                GetElementAttributesName(attributeToFind: attribute);
-                            string settingValue = drFavouriteData[columnName: colName]
-                               .ToString();
-
-                            dirElemFileToModify.SetAttributeValueAnyType(
-                                attribute: attribute,
-                                value: settingValue,
-                                version: DirectoryElement.AttributeVersion
-                                                         .Stage3ReadyToWrite,
-                                isMarkedForDeletion: false);
-                        }
-
-                        await FileListViewReadWrite
-                           .ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
-                    }
-                }
-            }
-
-            else
-            {
-                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                    controlName: "mbx_FrmMainApp_WarningNoItemSelected", captionType: MessageBoxCaption.Warning,
-                    buttons: MessageBoxButtons.OK);
-            }
-        }
-        else
+        // exit if selected Fav is no longer a thing
+        if (favouriteToLoad == null)
         {
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                 controlName: "mbx_FrmMainApp_InfoFavouriteNotValid", captionType: MessageBoxCaption.Information,
                 buttons: MessageBoxButtons.OK);
+            return;
+        }
+
+        // check that the items selected in Main are indeed Files
+        bool thereAreFilesSelectedInLvwMain = false;
+        if (lvw_FileList.SelectedItems.Count > 0)
+        {
+            foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
+            {
+                DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;
+                if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
+                {
+                    thereAreFilesSelectedInLvwMain = true;
+                    break;
+                }
+            }
+        }
+
+        if (!thereAreFilesSelectedInLvwMain)
+        {
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_WarningNoItemSelected", captionType: MessageBoxCaption.Warning,
+                buttons: MessageBoxButtons.OK);
+
+            return;
+        }
+
+        // loop through each lvi/de and update from Favourite
+        foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
+        {
+            DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;
+            // don't remove this line
+            if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
+            {
+                UpdateDE(dirElemFileToModify: dirElemFileToModify, attribute: ElementAttribute.GPSAltitude,
+                    settingValue: favouriteToLoad.GPSAltitude);
+                UpdateDE(dirElemFileToModify: dirElemFileToModify, attribute: ElementAttribute.GPSAltitudeRef,
+                    settingValue: favouriteToLoad.GPSAltitudeRef);
+                UpdateDE(dirElemFileToModify: dirElemFileToModify, attribute: ElementAttribute.GPSLatitude,
+                    settingValue: favouriteToLoad.GPSLatitude);
+                UpdateDE(dirElemFileToModify: dirElemFileToModify, attribute: ElementAttribute.GPSLatitudeRef,
+                    settingValue: favouriteToLoad.GPSLatitudeRef);
+                UpdateDE(dirElemFileToModify: dirElemFileToModify, attribute: ElementAttribute.GPSLongitude,
+                    settingValue: favouriteToLoad.GPSLongitude);
+                UpdateDE(dirElemFileToModify: dirElemFileToModify, attribute: ElementAttribute.GPSLongitudeRef,
+                    settingValue: favouriteToLoad.GPSLongitudeRef);
+                UpdateDE(dirElemFileToModify: dirElemFileToModify, attribute: ElementAttribute.Coordinates,
+                    settingValue: favouriteToLoad.Coordinates);
+                UpdateDE(dirElemFileToModify: dirElemFileToModify, attribute: ElementAttribute.City,
+                    settingValue: favouriteToLoad.City);
+                UpdateDE(dirElemFileToModify: dirElemFileToModify, attribute: ElementAttribute.CountryCode,
+                    settingValue: favouriteToLoad.CountryCode);
+                UpdateDE(dirElemFileToModify: dirElemFileToModify, attribute: ElementAttribute.Country,
+                    settingValue: favouriteToLoad.Country);
+                UpdateDE(dirElemFileToModify: dirElemFileToModify, attribute: ElementAttribute.State,
+                    settingValue: favouriteToLoad.State);
+                UpdateDE(dirElemFileToModify: dirElemFileToModify, attribute: ElementAttribute.Sublocation,
+                    settingValue: favouriteToLoad.Sublocation);
+
+
+                await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+            }
+        }
+
+        void UpdateDE(DirectoryElement dirElemFileToModify,
+                      ElementAttribute attribute,
+                      string settingValue)
+        {
+            dirElemFileToModify.SetAttributeValueAnyType(
+                attribute: attribute,
+                value: settingValue,
+                version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                isMarkedForDeletion: false);
         }
     }
+
+
+    private void cbx_Favourites_SelectedValueChanged(object sender,
+                                                     EventArgs e)
+    {
+        // pull favs (this needs doing each time as user may have changed it)
+        ClearReloadFavouritesDropDownValues();
+        Favourite favouriteToLoad = GetFavouriteByName(favouriteName: cbx_Favourites.Text);
+
+        // exit if selected Fav is no longer a thing
+        if (favouriteToLoad == null)
+        {
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_InfoFavouriteNotValid", captionType: MessageBoxCaption.Information,
+                buttons: MessageBoxButtons.OK);
+            return;
+        }
+
+        double favLat = double.Parse(s: favouriteToLoad.GPSLatitude, provider: CultureInfo.InvariantCulture);
+        double favLng = double.Parse(s: favouriteToLoad.GPSLongitude, provider: CultureInfo.InvariantCulture);
+
+        // this may be redundant but lazy to check
+        char favLatRef = Convert.ToChar(value: favouriteToLoad.GPSLatitudeRef[index: 0]);
+        char favLngRef = Convert.ToChar(value: favouriteToLoad.GPSLongitudeRef[index: 0]);
+
+        if (favLatRef == 'S')
+        {
+            favLat = Math.Abs(value: favLat) * -1;
+        }
+
+        if (favLngRef == 'W')
+        {
+            favLng = Math.Abs(value: favLng) * -1;
+        }
+
+        nud_lat.Text = favLat.ToString(provider: CultureInfo.InvariantCulture);
+        nud_lng.Text = favLng.ToString(provider: CultureInfo.InvariantCulture);
+
+        nud_lat.Value = Convert.ToDecimal(value: favLat, provider: CultureInfo.InvariantCulture);
+        nud_lng.Value = Convert.ToDecimal(value: favLng, provider: CultureInfo.InvariantCulture);
+
+        btn_NavigateMapGo_Click(sender: null, e: null);
+    }
+
+
+    /// <summary>
+    ///     Manages Favourites
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void btn_ManageFavourites_Click(object sender,
+                                            EventArgs e)
+    {
+        if (Favourites.Any())
+        {
+            FrmManageFavourites frmManageFavouritesInstance = new();
+            frmManageFavouritesInstance.ShowDialog();
+        }
+        else
+        {
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_NoFavouritesDefined", captionType: MessageBoxCaption.Information,
+                buttons: MessageBoxButtons.OK);
+        }
+    }
+
 
     /// <summary>
     ///     Clears cached data for any selected items if there is any to clear
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    /// <param name="displayMessage"></param>
     private void cmi_removeCachedData_Click(object sender,
                                             EventArgs e)
     {
@@ -3206,90 +3294,9 @@ public partial class FrmMainApp : Form
         }
     }
 
-    private void cbx_Favourites_SelectedValueChanged(object sender,
-                                                     EventArgs e)
-    {
-        string favouriteToLoad = cbx_Favourites.Text;
-
-        // pull favs (this needs doing each time as user may have changed it)
-        DtFavourites =
-            HelperGenericAppStartup.AppStartupLoadFavourites(clearDropDown: false);
-        cbx_Favourites.Text = favouriteToLoad;
-        if (LstFavourites.Contains(item: favouriteToLoad))
-        {
-            EnumerableRowCollection<DataRow> drDataTableData =
-                from DataRow dataRow in DtFavourites.AsEnumerable()
-                where dataRow.Field<string>(columnName: "favouriteName") ==
-                      favouriteToLoad
-                select dataRow;
-
-            DataRow drFavouriteData = drDataTableData.FirstOrDefault();
-
-            if (drFavouriteData != null)
-            {
-                double favLat = double.Parse(s: drFavouriteData[columnName: "GPSLatitude"]
-                       .ToString(),
-                    provider: CultureInfo.InvariantCulture);
-                double favLng = double.Parse(
-                    s: drFavouriteData[columnName: "GPSLongitude"]
-                       .ToString(), provider: CultureInfo.InvariantCulture);
-
-                // this may be redundant but lazy to check
-                char favLatRef = drFavouriteData[columnName: "GPSLatitudeRef"]
-                   .ToString()[index: 0];
-                char favLngRef = drFavouriteData[columnName: "GPSLongitudeRef"]
-                   .ToString()[index: 0];
-
-                if (favLatRef == 'S')
-                {
-                    favLat = Math.Abs(value: favLat) * -1;
-                }
-
-                if (favLngRef == 'W')
-                {
-                    favLng = Math.Abs(value: favLng) * -1;
-                }
-
-                nud_lat.Text = favLat.ToString(provider: CultureInfo.InvariantCulture);
-                nud_lng.Text = favLng.ToString(provider: CultureInfo.InvariantCulture);
-
-                nud_lat.Value =
-                    Convert.ToDecimal(value: favLat,
-                        provider: CultureInfo.InvariantCulture);
-                nud_lng.Value =
-                    Convert.ToDecimal(value: favLng,
-                        provider: CultureInfo.InvariantCulture);
-
-                btn_NavigateMapGo_Click(sender: null, e: null);
-            }
-        }
-    }
-
-    /// <summary>
-    ///     Manages favourites
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void btn_ManageFavourites_Click(object sender,
-        EventArgs e)
-    {
-        DtFavourites = HelperGenericAppStartup.AppStartupLoadFavourites();
-        if (DtFavourites.Rows.Count > 0)
-        {
-            FrmManageFavourites frmManageFavouritesInstance = new();
-            frmManageFavouritesInstance.ShowDialog();
-        }
-        else
-        {
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_NoFavouritesDefined", captionType: MessageBoxCaption.Information,
-                buttons: MessageBoxButtons.OK);
-        }
-    }
-
 
     private void cmi_OpenCoordsInAPI_Click(object sender,
-        EventArgs e)
+                                           EventArgs e)
     {
         bool selectionIsValid = false;
         string GPSLatStr = NullStringEquivalentGeneric;
@@ -3339,13 +3346,13 @@ public partial class FrmMainApp : Form
     }
 
     private void lvw_ExifData_KeyUp(object sender,
-        KeyEventArgs e)
+                                    KeyEventArgs e)
     {
         // unused
     }
 
     private void lvw_ExifData_KeyDown(object sender,
-        KeyEventArgs e)
+                                      KeyEventArgs e)
     {
         if (e.Control &&
             e.KeyCode == Keys.C)
@@ -3370,9 +3377,119 @@ public partial class FrmMainApp : Form
         }
     }
 
-    private void tmi_File_DropDownOpening(object sender, EventArgs e)
+    private void tmi_File_DropDownOpening(object sender,
+                                          EventArgs e)
     {
         tmi_File_FlatMode.Checked = FlatMode;
+    }
+
+    private void tmi_File_ImportFavouritesFromGeoSetter_Click(object sender,
+                                                              EventArgs e)
+    {
+        string? databaseFileToImport = GetDatabaseFileToImport();
+        if (databaseFileToImport is not null)
+        {
+            FileInfo fi = new(fileName: databaseFileToImport);
+            // whoever came up with the logic of having to put a fucking dot in front of Extension here can rot in hell!
+            bool isZipFile = fi.Extension == ".zip";
+            if (isZipFile)
+            {
+                Directory.CreateDirectory(path: Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                    path2: "geosetter_export"));
+                using ZipArchive archive = ZipFile.OpenRead(archiveFileName: databaseFileToImport);
+                foreach (ZipArchiveEntry entry in archive.Entries)
+                {
+                    entry.ExtractToFile(destinationFileName: Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                        path2: "geosetter_export", path3: entry.FullName));
+                }
+            }
+
+            string fileNameToParse = File.Exists(path: Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                path2: "geosetter_export", path3: "favorites.xml"))
+                ? Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                    path2: "geosetter_export", path3: "favorites.xml")
+                : fi.FullName;
+
+            HelperDataFavourites.ParseGeoSetterFavouritesXmlToFavourite(fileNameToParse: fileNameToParse);
+
+            string exifToolFilesDir =
+                Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "geosetter_export");
+            if (Directory.Exists(path: exifToolFilesDir))
+            {
+                Directory.Delete(path: exifToolFilesDir, recursive: true);
+            }
+        }
+
+
+        string GetDatabaseFileToImport()
+        {
+            OpenFileDialog openFileDialog = new()
+            {
+                Filter =
+                    "GeoSetter Export files (geosetter_settings.zip)|geosetter_settings.zip|GeoSetter Export Favourites files (favorites.xml)|favorites.xml", // no need to translate.
+                Title = ReturnControlText(
+                    controlName: "ofd_tmi_File_ImportFavouritesFromGeoSetter_SelectFile",
+                    fakeControlType: FakeControlTypes.OpenFileDialog)
+            };
+            return openFileDialog.ShowDialog() == DialogResult.OK ? openFileDialog.FileName : null;
+        }
+    }
+
+#endregion
+
+#region Methods
+
+    internal Favourite GetFavouriteByName(string favouriteName)
+    {
+        Favourite match = Favourites.FirstOrDefault(predicate: f => f.FavouriteName == favouriteName);
+        return match ??
+               null;
+    }
+
+    internal void RemoveFavouriteByName(string favouriteName)
+    {
+        Favourite itemToRemove = Favourites.FirstOrDefault(predicate: f => f.FavouriteName == favouriteName);
+
+        if (itemToRemove != null)
+        {
+            Favourites.Remove(item: itemToRemove);
+        }
+    }
+
+    private string GetFavouriteColumnValueFromListViewItem(ListView lvw,
+                                                           ListViewItem lvi,
+                                                           ElementAttribute attribute)
+    {
+        string listViewColumnName = GetElementAttributesName(attributeToFind: attribute);
+        string str = lvi.SubItems[
+                             index: lvw
+                                   .Columns[
+                                        key:
+                                        GetElementAttributesColumnHeader(
+                                            attributeToFind: attribute)]
+                                   .Index]
+                        .Text.ToString(
+                             provider: CultureInfo.InvariantCulture);
+
+
+        return str == NullStringEquivalentGeneric ? "" : str;
+    }
+
+    /// <summary>
+    ///     Reloads cbx_Favourites items and autocompletesource from FrmMainApp.Favourites
+    /// </summary>
+    internal void ClearReloadFavouritesDropDownValues()
+    {
+        AutoCompleteStringCollection autoCompleteCustomSource = new();
+        cbx_Favourites.Items.Clear();
+        foreach (Favourite favourite in Favourites)
+        {
+            autoCompleteCustomSource.Add(value: favourite.FavouriteName);
+            cbx_Favourites.Items.Add(item: favourite.FavouriteName);
+        }
+
+        cbx_Favourites.AutoCompleteSource = AutoCompleteSource.CustomSource;
+        cbx_Favourites.AutoCompleteCustomSource = autoCompleteCustomSource;
     }
 }
 
@@ -3391,7 +3508,7 @@ public static class ControlExtensions
     /// <param name="control">The Control that needs the value assigned</param>
     /// <param name="enable">Bool true or false (aka on or off)</param>
     public static void DoubleBuffered(this Control control,
-        bool enable)
+                                      bool enable)
     {
         PropertyInfo doubleBufferPropertyInfo = control.GetType()
                                                        .GetProperty(

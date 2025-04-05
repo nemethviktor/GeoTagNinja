@@ -1873,6 +1873,15 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error during importing Geosetter Favourites..
+        /// </summary>
+        public static string mbx_FrmMainApp_ErrorImportGeoSetterFavourites {
+            get {
+                return ResourceManager.GetString("mbx_FrmMainApp_ErrorImportGeoSetterFavourites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error in FrmMainApp.InitializeComponent (Please file an issue on GitHub): .
         /// </summary>
         public static string mbx_FrmMainApp_ErrorInitializeComponent {
@@ -2053,7 +2062,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You have no favourites defined. Add one using the buttons under the map..
+        ///   Looks up a localized string similar to You have no Favourites defined. Add one using the buttons under the map..
         /// </summary>
         public static string mbx_FrmMainApp_NoFavouritesDefined {
             get {
@@ -2369,6 +2378,24 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select a database file.
+        /// </summary>
+        public static string ofd_Settings_GetDatabaseFileToImport_SelectDatabaseFile {
+            get {
+                return ResourceManager.GetString("ofd_Settings_GetDatabaseFileToImport_SelectDatabaseFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select GS Favourites export file.
+        /// </summary>
+        public static string ofd_tmi_File_ImportFavouritesFromGeoSetter_SelectFile {
+            get {
+                return ResourceManager.GetString("ofd_tmi_File_ImportFavouritesFromGeoSetter_SelectFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Browse for Startup Folder.
         /// </summary>
         public static string pbx_Browse_Startup_Folder {
@@ -2652,7 +2679,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit Files.
+        ///   Looks up a localized string similar to Edit Files....
         /// </summary>
         public static string tmi_File_EditFiles {
             get {
@@ -2670,7 +2697,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Import/Export GPX/JSON Track Files.
+        ///   Looks up a localized string similar to Import/Export GPX/JSON Track Files....
         /// </summary>
         public static string tmi_File_ImportExportGPX {
             get {
@@ -2679,7 +2706,16 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Paste All Geodata.
+        ///   Looks up a localized string similar to Import Favourites from Geosetter....
+        /// </summary>
+        public static string tmi_File_ImportFavouritesFromGS {
+            get {
+                return ResourceManager.GetString("tmi_File_ImportFavouritesFromGS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste All Geodata....
         /// </summary>
         public static string tmi_File_PasteGeoData {
             get {

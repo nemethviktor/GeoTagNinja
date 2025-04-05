@@ -1060,25 +1060,6 @@ internal static class HelperGenericAncillaryListsArrays
         return result;
     }
 
-    internal static ElementAttribute[] GetFavouriteTags()
-    {
-        ElementAttribute[] result =
-        {
-            ElementAttribute.GPSAltitude,
-            ElementAttribute.GPSAltitudeRef,
-            ElementAttribute.GPSLatitude,
-            ElementAttribute.GPSLatitudeRef,
-            ElementAttribute.GPSLongitude,
-            ElementAttribute.GPSLongitudeRef,
-            ElementAttribute.Coordinates,
-            ElementAttribute.City,
-            ElementAttribute.CountryCode,
-            ElementAttribute.Country,
-            ElementAttribute.State,
-            ElementAttribute.Sublocation
-        };
-        return result;
-    }
 
     /// <summary>
     ///     City, State, Sublocation

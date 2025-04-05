@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Windows.Forms;
 using Application = System.Windows.Forms.Application;
@@ -7,6 +8,7 @@ namespace GeoTagNinja.Helpers;
 
 internal static class HelperControlAndMessageBoxHandling
 {
+    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     public enum MessageBoxCaption
     {
         None,
@@ -24,6 +26,7 @@ internal static class HelperControlAndMessageBoxHandling
     ///     This is probably the worst idea ever but I'm creating fake control types for allocating them to the text-reader
     ///     e.g. ColumnHeader isn't a real control type but I use them.
     /// </summary>
+    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     public enum FakeControlTypes
     {
         Button,
@@ -35,6 +38,7 @@ internal static class HelperControlAndMessageBoxHandling
         MessageBoxCaption,
         Generic,
         Label,
+        OpenFileDialog,
         PictureBox,
         RadioButton,
         TabPage,

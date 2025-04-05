@@ -667,13 +667,13 @@ Les mises à jour seront perdues si vous clickez Non</value>
     <value>Copier toutes les Geodatas</value>
   </data>
   <data name="tmi_File_EditFiles" xml:space="preserve">
-    <value>Editer les fichiers</value>
+    <value>Editer les fichiers...</value>
   </data>
   <data name="tmi_File_ImportExportGPX" xml:space="preserve">
-    <value>Importer/Exporter des fichiers de piste GPX/JSON</value>
+    <value>Importer/Exporter des fichiers de piste GPX/JSON...</value>
   </data>
   <data name="tmi_File_PasteGeoData" xml:space="preserve">
-    <value>Coller toutes les Geodatas</value>
+    <value>Coller toutes les Geodatas...</value>
   </data>
   <data name="tmi_File_Quit" xml:space="preserve">
     <value>Quitter</value>
