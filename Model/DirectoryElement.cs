@@ -250,6 +250,10 @@ public class DirectoryElement
     /// </summary>
     public FileInfo SidecarFile { set; get; }
 
+    /// <summary>
+    ///     We attempt to generate a thumbnail through a variety of means. Initially we try Windows's own magic, then LibRaw in
+    ///     a variety of ways, then exiftool, then Magick, then we hang ourselves.
+    /// </summary>
     public Image Thumbnail
     {
         get => _Thumbnail;
@@ -263,14 +267,14 @@ public class DirectoryElement
             iconLookupDictionary.Add(key: ElementType.Drive, value: "Harddrive.png");
 
             string generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                path2: $"{ItemNameWithoutPath}.jpg");
+                path2: $"{ItemNameWithoutPath}_small_thumbnail.jpg");
 
 
             if (Type == ElementType.File)
             {
                 try
                 {
-                    HelperExifReadGetImagePreviews.CreateThumbnail(fileNameIn: FileNameWithPath,
+                    HelperExifReadGetImagePreviews.UseWindowsImageHandlerToCreateThumbnail(fileNameIn: FileNameWithPath,
                         fileNameOut: generatedFileName,
                         maxWidth: FileListView.ThumbnailSize,
                         maxHeight: FileListView.ThumbnailSize);
@@ -287,15 +291,15 @@ public class DirectoryElement
                         // This is so fucking stupid it hurts my brain.
                         // Libraw is the fastest but doesn't work w/ my D5 files
                         // Basically i've found that some files have a zero-index thumbnail but others have a 1-index.
-                        // ... maybe even more. So bumo this to hight heavens. (= 4)
+                        // ... maybe even more. So bump this to hight heavens. (= 4)
                         for (int i = 0; i < 4; i++)
                         {
                             // yes i know this line duplicates the above for 0-index but alas.
                             if (!File.Exists(path: generatedFileName))
                             {
-                                HelperExifReadGetImagePreviews.UseLibRawToGeneratePreview(
+                                HelperExifReadGetImagePreviews.UseLibRawToGenerateThumbnail(
                                     originalImagePath: FileNameWithPath,
-                                    jpegPath: generatedFileName,
+                                    generatedJpegPath: generatedFileName,
                                     thumbnailIndex: i);
                             }
                         }
@@ -332,7 +336,7 @@ public class DirectoryElement
                     {
                         HelperExifReadGetImagePreviews.UseLibRawToGenerateFullImage(
                             originalImagePath: FileNameWithPath,
-                            jpegPath: generatedFileName,
+                            generatedJpegPath: generatedFileName,
                             imgWidth: FileListView.ThumbnailSize,
                             imgHeight: FileListView.ThumbnailSize);
                     }
@@ -351,7 +355,7 @@ public class DirectoryElement
                         HelperExifReadGetImagePreviews.UseMagickImageToGeneratePreview
                         (
                             originalImagePath: FileNameWithPath,
-                            jpegPath: generatedFileName,
+                            generatedJpegPath: generatedFileName,
                             imgWidth: FileListView.ThumbnailSize,
                             imgHeight: FileListView.ThumbnailSize);
                     }
@@ -408,7 +412,8 @@ public class DirectoryElement
 
 
     /// <summary>
-    ///     Via https://stackoverflow.com/a/2001462/3968494
+    ///     Via https://stackoverflow.com/a/2001462/3968494 - plus I added the ExifRotate because the incoming image's
+    ///     rotation appears to be ignored by the original script.
     /// </summary>
     /// <param name="originalPath"></param>
     /// <param name="width"></param>
@@ -421,6 +426,7 @@ public class DirectoryElement
         Bitmap bmPhoto = null;
         using (Image imgPhoto = Image.FromFile(filename: originalPath))
         {
+            imgPhoto.ExifRotate();
             int sourceWidth = imgPhoto.Width;
             int sourceHeight = imgPhoto.Height;
             int sourceX = 0;

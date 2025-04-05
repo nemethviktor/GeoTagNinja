@@ -176,26 +176,42 @@ internal static class HelperExifReadGetImagePreviews
             fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.PictureBox
         );
 
-        try
+        if (!File.Exists(path: generatedFileName))
         {
-            if (MagickExtensionList.Contains(item: directoryElement.Extension.TrimStart('.').ToLower()))
+            try
             {
-                // actually the reason i'm not using this for _every_ file is that it's just f...ing slow with NEF files(which is what I have plenty of), so it's prohibitive to run on RAW files. 
-                //  since i don't have a better way to deal with HEIC/WEBP files atm this is as good as it gets.
-                UseMagickImageToGeneratePreview(originalImagePath: fileNameWithPath,
-                    generatedJpegPath: generatedFileName);
+                UseLibRawToGenerateFullImage(
+                    originalImagePath: directoryElement.FileNameWithPath,
+                    generatedJpegPath: generatedFileName,
+                    imgWidth: frmMainAppInstance.pbx_imagePreview.Width,
+                    imgHeight: frmMainAppInstance.pbx_imagePreview.Height);
             }
-            else
+            catch
             {
-                // via https://stackoverflow.com/a/6576645/3968494
-                using FileStream stream = new(path: fileNameWithPath, mode: FileMode.Open,
-                    access: FileAccess.Read);
-                img = Image.FromStream(stream: stream);
+                //
             }
-        }
-        catch
-        {
-            // nothing.
+
+            try
+            {
+                if (MagickExtensionList.Contains(item: directoryElement.Extension.TrimStart('.').ToLower()))
+                {
+                    // actually the reason i'm not using this for _every_ file is that it's just f...ing slow with NEF files(which is what I have plenty of), so it's prohibitive to run on RAW files. 
+                    //  since i don't have a better way to deal with HEIC/WEBP files atm this is as good as it gets.
+                    UseMagickImageToGeneratePreview(originalImagePath: fileNameWithPath,
+                        generatedJpegPath: generatedFileName);
+                }
+                else
+                {
+                    // via https://stackoverflow.com/a/6576645/3968494
+                    using FileStream stream = new(path: fileNameWithPath, mode: FileMode.Open,
+                        access: FileAccess.Read);
+                    img = Image.FromStream(stream: stream);
+                }
+            }
+            catch
+            {
+                // nothing.
+            }
         }
 
         if (img == null)
@@ -281,14 +297,17 @@ internal static class HelperExifReadGetImagePreviews
     }
 
     /// <summary>
-    ///     Use LibRaw to create thumbnail.
+    ///     Use LibRaw to create thumbnail. Does not always rotate images properly.
     /// </summary>
     /// <param name="originalImagePath"></param>
     /// <param name="generatedJpegPath"></param>
-    /// <param name="thumbnailIndex"></param>
-    internal static void UseLibRawToGeneratePreview(string originalImagePath,
-                                                    string generatedJpegPath,
-                                                    int thumbnailIndex)
+    /// <param name="thumbnailIndex">
+    ///     The idea here is that not all raw images have a 0 index thumbnail so forcing a zero is
+    ///     likely to fail
+    /// </param>
+    internal static void UseLibRawToGenerateThumbnail(string originalImagePath,
+                                                      string generatedJpegPath,
+                                                      int thumbnailIndex)
     {
         try
         {
@@ -372,10 +391,10 @@ internal static class HelperExifReadGetImagePreviews
     /// <param name="fileNameOut"></param>
     /// <param name="maxWidth"></param>
     /// <param name="maxHeight"></param>
-    internal static void CreateThumbnail(string fileNameIn,
-                                         string fileNameOut,
-                                         int maxWidth,
-                                         int maxHeight)
+    internal static void UseWindowsImageHandlerToCreateThumbnail(string fileNameIn,
+                                                                 string fileNameOut,
+                                                                 int maxWidth,
+                                                                 int maxHeight)
     {
         try
         {
