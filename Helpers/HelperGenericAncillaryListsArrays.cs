@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using static GeoTagNinja.Model.SourcesAndAttributes;
@@ -353,6 +354,20 @@ internal static class HelperGenericAncillaryListsArrays
 
         bool isInDictionary = lookupDictionary.TryGetValue(key: controlName, value: out string retValue);
         return isInDictionary ? retValue : HelperVariables.ControlItemNameNotGeneric;
+    }
+
+    /// <summary>
+    ///     This is a bit of a cluserf.k because en-AU (ref #155) seems to be causing issues with the EditForm so it needs to
+    ///     be CurrentCulture rather than Invariant but then it shafts everything else so...
+    /// </summary>
+    /// <returns></returns>
+    internal static List<CultureInfo> CulturesWithCurrentCultureToUse()
+    {
+        List<CultureInfo> result = new()
+        {
+            CultureInfo.GetCultureInfo(name: "en-AU")
+        };
+        return result;
     }
 
 #endregion
@@ -1373,7 +1388,8 @@ internal static class HelperGenericAncillaryListsArrays
         CreateDate
     }
 
-    internal static void GenerateFMTFile(bool includeAltitude, string exportFileFMTTimeBasis)
+    internal static void GenerateFMTFile(bool includeAltitude,
+                                         string exportFileFMTTimeBasis)
     {
         string fmtFileContent = "";
         fmtFileContent +=
