@@ -1287,7 +1287,7 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
   <data name="Generic_Distance" xml:space="preserve">
     <value>Distance</value>
   </data>
-  <data name="tmi_File_ImportFavouritesFromGS" xml:space="preserve">
+  <data name="tmi_File_ImportFavouritesFromGeoSetter" xml:space="preserve">
     <value>Import Favourites from Geosetter...</value>
     <comment>Dropdown to open a Form to import Geosetter Favourites</comment>
   </data>
@@ -1299,6 +1299,10 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>Select GS Favourites export file</value>
   </data>
   <data name="mbx_FrmMainApp_ErrorImportGeoSetterFavourites" xml:space="preserve">
-    <value>Error during importing Geosetter Favourites.</value>
+    <value>Error during importing GeoSetter Favourites.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoImportGeoSetterFavouritesDone" xml:space="preserve">
+    <value>GeoSetter Favourites imported. Items imported: </value>
+    <comment>Displays a success message that items have been imported. The code will stamp a number at the very end. (count of items that is.)</comment>
   </data>
 </root>

@@ -1873,7 +1873,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error during importing Geosetter Favourites..
+        ///   Looks up a localized string similar to Error during importing GeoSetter Favourites..
         /// </summary>
         public static string mbx_FrmMainApp_ErrorImportGeoSetterFavourites {
             get {
@@ -2058,6 +2058,15 @@ namespace GeoTagNinja.Resources.Languages {
         public static string mbx_FrmMainApp_InfoFavouriteSaved {
             get {
                 return ResourceManager.GetString("mbx_FrmMainApp_InfoFavouriteSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GeoSetter Favourites imported. Items imported: .
+        /// </summary>
+        public static string mbx_FrmMainApp_InfoImportGeoSetterFavouritesDone {
+            get {
+                return ResourceManager.GetString("mbx_FrmMainApp_InfoImportGeoSetterFavouritesDone", resourceCulture);
             }
         }
         
@@ -2708,9 +2717,9 @@ namespace GeoTagNinja.Resources.Languages {
         /// <summary>
         ///   Looks up a localized string similar to Import Favourites from Geosetter....
         /// </summary>
-        public static string tmi_File_ImportFavouritesFromGS {
+        public static string tmi_File_ImportFavouritesFromGeoSetter {
             get {
-                return ResourceManager.GetString("tmi_File_ImportFavouritesFromGS", resourceCulture);
+                return ResourceManager.GetString("tmi_File_ImportFavouritesFromGeoSetter", resourceCulture);
             }
         }
         
