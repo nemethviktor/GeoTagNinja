@@ -3,6 +3,8 @@
 **Build 9xxx [2025xxxx]** 
 - NEW & UPDATED:
 	- Added optional Satellite view layer to the map
+	- GPX Import remembers TZ choice
+	- GPX Import TZ dropdown now sorted by STD time rather than TZ name
 - BUGS & FIXES:
 	- Added some logic to ignore certain particular warnings cropping up when saving files #159
 	- Fix Custom Rules not working properly with the `TargetPointName` attribute
