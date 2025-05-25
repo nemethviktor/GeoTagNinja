@@ -48,14 +48,6 @@ internal static class HelperExifWriteSaveToFile
         string exifArgsForOriginalFile = "";
         string exifArgsForSidecar = "";
 
-        // this is a list of junk that we generally want to ignore coming from exiftool's error reporting
-        List<string> ignoreExifToolWarningsList = new()
-        {
-            "requires ExifVersion \\d+ or higher",
-            "is not allowed in JPEG",
-            "MakerNote",
-            "Warning"
-        };
 
         // ReSharper disable once InconsistentNaming
 
@@ -151,16 +143,6 @@ internal static class HelperExifWriteSaveToFile
                         exifArgsForOriginalFile: ref exifArgsForOriginalFile,
                         exifArgsForSidecar: ref exifArgsForSidecar);
 
-                    string ignoreText = ignoreExifToolWarningsList.Aggregate(seed: string.Empty, func: (current,
-                            s) => current + $"{s}|");
-
-                    ignoreText = ignoreText.TrimEnd('|');
-
-                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig,
-                        whatText:
-                        $"NoWarning=({ignoreText})",
-                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
-                        exifArgsForSidecar: ref exifArgsForSidecar);
 
                     UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText: Path.Combine(
                             path1: folderNameToWrite, path2:

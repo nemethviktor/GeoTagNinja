@@ -475,6 +475,60 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open Coordinates in Browser/Maps.
+        /// </summary>
+        public static string cmi_OpenCoordsInBrowser {
+            get {
+                return ResourceManager.GetString("cmi_OpenCoordsInBrowser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bing.
+        /// </summary>
+        public static string cmi_OpenCoordsInBrowserBing {
+            get {
+                return ResourceManager.GetString("cmi_OpenCoordsInBrowserBing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GeoNames (Maps).
+        /// </summary>
+        public static string cmi_OpenCoordsInBrowserGeoNamesMaps {
+            get {
+                return ResourceManager.GetString("cmi_OpenCoordsInBrowserGeoNamesMaps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Google Maps.
+        /// </summary>
+        public static string cmi_OpenCoordsInBrowserGoogle {
+            get {
+                return ResourceManager.GetString("cmi_OpenCoordsInBrowserGoogle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OpenStreetMap.
+        /// </summary>
+        public static string cmi_OpenCoordsInBrowserOpenStreetMap {
+            get {
+                return ResourceManager.GetString("cmi_OpenCoordsInBrowserOpenStreetMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WeGo/Here.
+        /// </summary>
+        public static string cmi_OpenCoordsInBrowserWeGoHere {
+            get {
+                return ResourceManager.GetString("cmi_OpenCoordsInBrowserWeGoHere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove Cached Data.
         /// </summary>
         public static string cmi_removeCachedData {

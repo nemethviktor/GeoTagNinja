@@ -133,6 +133,18 @@ public partial class FrmMainApp : Form
     internal static bool FlatMode;
     private static bool _ignoreFlatMode;
 
+    private enum OpenInBrowserOptions
+    {
+        OpenCoordsInBrowserBing,
+        OpenCoordsInBrowserGeoNamesAPI,
+        OpenCoordsInBrowserGeoNamesMaps,
+        OpenCoordsInBrowserGoogle,
+        OpenCoordsInBrowserWeGoHere,
+        OpenCoordsInBrowserOpenStreetMap
+    }
+
+    private string CurrentFolder;
+
 #endregion
 
 #endregion
@@ -1654,6 +1666,21 @@ public partial class FrmMainApp : Form
     {
         Log.Info(message: "Starting");
 
+        string CurrentFoldersParent = null;
+        try
+        {
+            CurrentFoldersParent =
+                HelperFileSystemOperators.FsoGetParent(path: CurrentFolder);
+        }
+        catch
+        {
+            CurrentFoldersParent = HelperGenericTypeOperations.Coalesce(
+                Directory.GetDirectoryRoot(path: CurrentFolder)
+              , "C:"
+            );
+        }
+
+
         HelperVariables.OperationChangeFolderIsOkay = false;
         if (FlatMode && !_ignoreFlatMode)
         {
@@ -1715,6 +1742,23 @@ public partial class FrmMainApp : Form
                 tbx_FolderName.Text = @"C:\";
                 tbx_FolderName.Select();
                 SendKeys.Send(keys: "{ENTER}");
+            }
+            else
+            {
+                if (Directory.Exists(path: CurrentFolder))
+                {
+                    tbx_FolderName.Text = CurrentFolder;
+                    tbx_FolderName.Select();
+                    SendKeys.Send(keys: "{ENTER}");
+                    tsb_Refresh_lvwFileList_Click(sender: null, e: null);
+                }
+                else if (Directory.Exists(path: CurrentFoldersParent))
+                {
+                    tbx_FolderName.Text = CurrentFoldersParent;
+                    tbx_FolderName.Select();
+                    SendKeys.Send(keys: "{ENTER}");
+                    tsb_Refresh_lvwFileList_Click(sender: null, e: null);
+                }
             }
         }
     }
@@ -2547,6 +2591,7 @@ public partial class FrmMainApp : Form
                 HelperVariables.OperationChangeFolderIsOkay = false;
                 await HelperFileSystemOperators
                    .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
+                CurrentFolder = tbx_FolderName.Text;
                 if (HelperVariables.OperationChangeFolderIsOkay)
                 {
                     if (Directory.Exists(
@@ -2709,23 +2754,7 @@ public partial class FrmMainApp : Form
         if (e.Modifiers == Keys.Control &&
             e.KeyCode == Keys.A)
         {
-            HelperVariables.OperationNowSelectingAllItems = true;
-
-            for (int i = 0; i < lvw_FileList.Items.Count; i++)
-            {
-                lvw_FileList.Items[index: i]
-                            .Selected = true;
-                // so because there is no way to do a proper "select all" w/o looping i only want to run the "navigate" (which is triggered on select-state-change at the end)
-                if (i == lvw_FileList.Items.Count - 1)
-                {
-                    HelperVariables.OperationNowSelectingAllItems = false;
-                    FileListViewMapNavigation.ListViewItemClickNavigate();
-                    Request_Map_NavigateGo();
-                }
-            }
-
-            // just in case...
-            HelperVariables.OperationNowSelectingAllItems = false;
+            SelectAllListViewItems();
         }
 
         // Shift Ctrl C -> copy details
@@ -2834,6 +2863,27 @@ public partial class FrmMainApp : Form
             HelperGenericFileLocking.FilesAreBeingSaved = false;
             //DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
         }
+    }
+
+    internal void SelectAllListViewItems()
+    {
+        HelperVariables.OperationNowSelectingAllItems = true;
+
+        for (int i = 0; i < lvw_FileList.Items.Count; i++)
+        {
+            lvw_FileList.Items[index: i]
+                        .Selected = true;
+            // so because there is no way to do a proper "select all" w/o looping i only want to run the "navigate" (which is triggered on select-state-change at the end)
+            if (i == lvw_FileList.Items.Count - 1)
+            {
+                HelperVariables.OperationNowSelectingAllItems = false;
+                FileListViewMapNavigation.ListViewItemClickNavigate();
+                Request_Map_NavigateGo();
+            }
+        }
+
+        // just in case...
+        HelperVariables.OperationNowSelectingAllItems = false;
     }
 
 
@@ -3298,26 +3348,76 @@ public partial class FrmMainApp : Form
     private void cmi_OpenCoordsInAPI_Click(object sender,
                                            EventArgs e)
     {
+        ListView.SelectedListViewItemCollection lvc = lvw_FileList.SelectedItems;
+        OpenCoordinatesInBrowser(listViewItemCollection: lvc,
+            openInBrowserOption: OpenInBrowserOptions.OpenCoordsInBrowserGeoNamesAPI);
+    }
+
+
+    private void cmi_OpenCoordsInBrowserBing_Click(object sender,
+                                                   EventArgs e)
+    {
+        ListView.SelectedListViewItemCollection lvc = lvw_FileList.SelectedItems;
+        OpenCoordinatesInBrowser(listViewItemCollection: lvc,
+            openInBrowserOption: OpenInBrowserOptions.OpenCoordsInBrowserBing);
+    }
+
+    private void cmi_OpenCoordsInBrowserGeoNamesMaps_Click(object sender,
+                                                           EventArgs e)
+    {
+        ListView.SelectedListViewItemCollection lvc = lvw_FileList.SelectedItems;
+        OpenCoordinatesInBrowser(listViewItemCollection: lvc,
+            openInBrowserOption: OpenInBrowserOptions.OpenCoordsInBrowserGeoNamesMaps);
+    }
+
+    private void cmi_OpenCoordsInBrowserGoogle_Click(object sender,
+                                                     EventArgs e)
+    {
+        ListView.SelectedListViewItemCollection lvc = lvw_FileList.SelectedItems;
+        OpenCoordinatesInBrowser(listViewItemCollection: lvc,
+            openInBrowserOption: OpenInBrowserOptions.OpenCoordsInBrowserGoogle);
+    }
+
+    private void cmi_OpenCoordsInBrowserWeGoHere_Click(object sender,
+                                                       EventArgs e)
+    {
+        ListView.SelectedListViewItemCollection lvc = lvw_FileList.SelectedItems;
+        OpenCoordinatesInBrowser(listViewItemCollection: lvc,
+            openInBrowserOption: OpenInBrowserOptions.OpenCoordsInBrowserWeGoHere);
+    }
+
+    private void cmi_OpenCoordsInBrowserOpenStreetMap_Click(object sender,
+                                                            EventArgs e)
+    {
+        ListView.SelectedListViewItemCollection lvc = lvw_FileList.SelectedItems;
+        OpenCoordinatesInBrowser(listViewItemCollection: lvc,
+            openInBrowserOption: OpenInBrowserOptions.OpenCoordsInBrowserOpenStreetMap);
+    }
+
+    /// <summary>
+    ///     Processes the selected ListViewItem and opens its coordinates (if any) in the API or browser (maps)
+    /// </summary>
+    /// <param name="listViewItemCollection"></param>
+    /// <param name="openInBrowserOption"></param>
+    private static void OpenCoordinatesInBrowser(ListView.SelectedListViewItemCollection listViewItemCollection,
+                                                 OpenInBrowserOptions openInBrowserOption)
+    {
         bool selectionIsValid = false;
         string GPSLatStr = NullStringEquivalentGeneric;
         string GPSLngStr = NullStringEquivalentGeneric;
-        ListView lvw = lvw_FileList;
 
-        if (lvw.SelectedItems.Count == 1)
+
+        if (listViewItemCollection.Count == 1)
         {
-            ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
+            ListViewItem lvi = listViewItemCollection[index: 0];
             DirectoryElement dirElemFileToModify =
                 lvi.Tag as DirectoryElement;
-            if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
+            if (dirElemFileToModify?.Type == DirectoryElement.ElementType.File)
             {
                 try
                 {
-                    GPSLatStr =
-                        dirElemFileToModify.GetAttributeValueString(
-                            attribute: ElementAttribute.GPSLatitude);
-                    GPSLngStr =
-                        dirElemFileToModify.GetAttributeValueString(
-                            attribute: ElementAttribute.GPSLongitude);
+                    GPSLatStr = dirElemFileToModify.GetAttributeValueString(attribute: ElementAttribute.GPSLatitude);
+                    GPSLngStr = dirElemFileToModify.GetAttributeValueString(attribute: ElementAttribute.GPSLongitude);
                     selectionIsValid = true;
                 }
                 catch
@@ -3332,17 +3432,43 @@ public partial class FrmMainApp : Form
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                 controlName: "mbx_FrmMainApp_WarningTooManyFilesSelected", captionType: MessageBoxCaption.Warning,
                 buttons: MessageBoxButtons.OK);
+            return;
         }
-        else
+
+        CultureInfo cIEnUS = new(name: "en-US");
+        string openAPILink = null;
+        switch (openInBrowserOption)
         {
-            CultureInfo cIEnUS = new(name: "en-US");
-            string SOnlyShowFCodePPL = HelperVariables.UserSettingOnlyShowFCodePPL
-                ? "&fcode=PPL"
-                : "";
-            string openAPILink =
-                $"http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&lat={GPSLatStr}&lng={GPSLngStr}&lang={HelperVariables.APILanguageToUse}{SOnlyShowFCodePPL}&style=FULL&radius={HelperVariables.ToponomyRadiusValue}&maxRows={HelperVariables.ToponyMaxRowsChoiceOfferCount}&username={HelperVariables.UserSettingGeoNamesUserName}&password=any";
-            Process.Start(fileName: openAPILink);
+            case OpenInBrowserOptions.OpenCoordsInBrowserGeoNamesAPI:
+                string SOnlyShowFCodePPL = HelperVariables.UserSettingOnlyShowFCodePPL
+                    ? "&fcode=PPL"
+                    : "";
+                openAPILink =
+                    $"http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&lat={GPSLatStr}&lng={GPSLngStr}&lang={HelperVariables.APILanguageToUse}{SOnlyShowFCodePPL}&style=FULL&radius={HelperVariables.ToponomyRadiusValue}&maxRows={HelperVariables.ToponyMaxRowsChoiceOfferCount}&username={HelperVariables.UserSettingGeoNamesUserName}&password=any";
+                break;
+            case OpenInBrowserOptions.OpenCoordsInBrowserBing:
+                openAPILink =
+                    $"https://www.bing.com/maps/default.aspx?cp={GPSLatStr}~{GPSLngStr}&lvl=16&style=r";
+                break;
+            case OpenInBrowserOptions.OpenCoordsInBrowserGeoNamesMaps:
+                openAPILink = $"https://www.geonames.org/maps/google_{GPSLatStr}_{GPSLngStr}.html";
+                break;
+            case OpenInBrowserOptions.OpenCoordsInBrowserGoogle:
+                openAPILink = $"https://www.google.com/maps/search/?api=1&query={GPSLatStr}%2C{GPSLngStr}";
+                break;
+            case OpenInBrowserOptions.OpenCoordsInBrowserWeGoHere:
+                openAPILink = $"https://wego.here.com/location/?map={GPSLatStr},{GPSLngStr},16";
+                break;
+            case OpenInBrowserOptions.OpenCoordsInBrowserOpenStreetMap:
+                openAPILink =
+                    $"https://www.openstreetmap.org/?mlat={GPSLatStr}&mlon={GPSLngStr}#map=16/{GPSLatStr}/{GPSLngStr}";
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(paramName: nameof(openInBrowserOption),
+                    actualValue: openInBrowserOption, message: null);
         }
+
+        Process.Start(fileName: openAPILink);
     }
 
     private void lvw_ExifData_KeyUp(object sender,

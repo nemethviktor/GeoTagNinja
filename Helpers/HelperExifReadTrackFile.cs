@@ -253,13 +253,11 @@ internal static class HelperExifReadTrackFile
                                             HelperExifReadExifData
                                                .DTFromAPIExifGetToponomyFromWebOrSQL(
                                                     lat: strLatInTrackFile.ToString(
-                                                        provider: CultureInfo
-                                                           .InvariantCulture),
+                                                        provider: CultureInfo.InvariantCulture),
                                                     lng: strLngInTrackFile.ToString(
-                                                        provider: CultureInfo
-                                                           .InvariantCulture),
-                                                    fileNameWithoutPath:
-                                                    fileNameWithoutPath
+                                                        provider: CultureInfo.InvariantCulture),
+                                                    fileNameWithoutPath: fileNameWithoutPath,
+                                                    useDefaultHardcodedEnglishValues: true
                                                 );
 
                                         if (HelperVariables

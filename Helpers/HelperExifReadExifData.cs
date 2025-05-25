@@ -22,7 +22,11 @@ internal static class HelperExifReadExifData
     /// </summary>
     /// <param name="lat">latitude/longitude to be queried</param>
     /// <param name="lng">latitude/longitude to be queried</param>
-    /// <param name="fileNameWithoutPath"></param>
+    /// <param name="fileNameWithoutPath">Name of the file</param>
+    /// <param name="useDefaultHardcodedEnglishValues">
+    ///     Whether to use hardcoded column names. Reading track files expects the
+    ///     datatable to have fixed col names, can't have them being ad-hoc...
+    /// </param>
     /// <returns>
     ///     See summary. Returns the toponomy info either from SQLite if available or the API in DataTable for further
     ///     processing
@@ -30,51 +34,68 @@ internal static class HelperExifReadExifData
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     internal static DataTable DTFromAPIExifGetToponomyFromWebOrSQL(string lat,
                                                                    string lng,
-                                                                   string fileNameWithoutPath = "")
+                                                                   string fileNameWithoutPath = "",
+                                                                   bool useDefaultHardcodedEnglishValues = false)
     {
         DataTable dtReturn = new();
         dtReturn.Clear();
         Dictionary<string, string> columnsToAddList = new()
         {
             {
-                "Distance", HelperControlAndMessageBoxHandling.ReturnControlText(
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                    controlName: "clh_Distance")
+                "Distance", useDefaultHardcodedEnglishValues
+                    ? "Distance"
+                    : HelperControlAndMessageBoxHandling.ReturnControlText(
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                        controlName: "clh_Distance")
             },
             {
-                "CountryCode", HelperControlAndMessageBoxHandling.ReturnControlText(
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                    controlName: "clh_CountryCode")
+                "CountryCode", useDefaultHardcodedEnglishValues
+                    ? "CountryCode"
+                    : HelperControlAndMessageBoxHandling.ReturnControlText(
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                        controlName: "clh_CountryCode")
             },
             {
-                "Country", HelperControlAndMessageBoxHandling.ReturnControlText(
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                    controlName: "clh_Country")
+                "Country", useDefaultHardcodedEnglishValues
+                    ? "Country"
+                    : HelperControlAndMessageBoxHandling.ReturnControlText(
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                        controlName: "clh_Country")
             },
             {
-                "City", HelperControlAndMessageBoxHandling.ReturnControlText(
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                    controlName: "clh_City")
+                "City", useDefaultHardcodedEnglishValues
+                    ? "City"
+                    : HelperControlAndMessageBoxHandling.ReturnControlText(
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                        controlName: "clh_City")
             },
             {
-                "State", HelperControlAndMessageBoxHandling.ReturnControlText(
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                    controlName: "clh_State")
+                "State", useDefaultHardcodedEnglishValues
+                    ? "State"
+                    : HelperControlAndMessageBoxHandling.ReturnControlText(
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                        controlName: "clh_State")
             },
             {
-                "Sublocation", HelperControlAndMessageBoxHandling.ReturnControlText(
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                    controlName: "clh_Sublocation")
+                "Sublocation", useDefaultHardcodedEnglishValues
+                    ? "Sublocation"
+                    : HelperControlAndMessageBoxHandling.ReturnControlText(
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                        controlName: "clh_Sublocation")
             },
             {
-                "GPSAltitude", HelperControlAndMessageBoxHandling.ReturnControlText(
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                    controlName: "clh_GPSAltitude")
+                "GPSAltitude", useDefaultHardcodedEnglishValues
+                    ? "Altitude"
+                    : HelperControlAndMessageBoxHandling.ReturnControlText(
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                        controlName: "clh_GPSAltitude")
             },
             {
-                "timezoneId", HelperControlAndMessageBoxHandling.ReturnControlText(
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                    controlName: "clh_timezoneId")
+                "timezoneId", useDefaultHardcodedEnglishValues
+                    ? "timezoneId"
+                    : HelperControlAndMessageBoxHandling.ReturnControlText(
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                        controlName: "clh_timezoneId")
             }
         };
 

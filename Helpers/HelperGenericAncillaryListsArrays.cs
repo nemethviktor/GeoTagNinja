@@ -1019,7 +1019,7 @@ internal static class HelperGenericAncillaryListsArrays
                                   //                 STD = d[stdCol], DST = d[dstCol]
                                   //             })
                                   //.Select(selector: g => g.First())
-                                 .OrderBy(keySelector: d => d[timeZoneCol])
+                                 .OrderBy(keySelector: d => d[stdCol])
                                  .Select(selector: d =>
                                       $"({d[stdCol]}/{d[dstCol]}) # {d[timeZoneCol]}")
                                  .ToList();

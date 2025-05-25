@@ -25,6 +25,8 @@ public partial class FrmImportExportGpx : Form
     private static int _lastShiftMinute;
     private static int _lastShiftHour;
     private static int _lastShiftDay;
+    private static string _lastTimeZoneChoice;
+    private static string _lastCompareAgainstChoice;
     private readonly FrmMainApp _frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
     /// <summary>
@@ -80,33 +82,56 @@ public partial class FrmImportExportGpx : Form
         {
             HelperControlAndMessageBoxHandling.ReturnControlText(cItem: cItem, senderForm: this);
 
-            if (cItem.Name == "cbx_ImportTimeAgainst")
+            switch (cItem.Name)
             {
-                foreach (object importTimeAgainstItem in Enum.GetValues(enumType: typeof(ImportTimeAgainst)))
+                case "cbx_ImportTimeAgainst":
                 {
-                    cbx_ImportTimeAgainst.Items.Add(item: importTimeAgainstItem.ToString());
+                    foreach (object importTimeAgainstItem in Enum.GetValues(enumType: typeof(ImportTimeAgainst)))
+                    {
+                        cbx_ImportTimeAgainst.Items.Add(item: importTimeAgainstItem.ToString());
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(value: _lastCompareAgainstChoice))
+                    {
+                        cbx_ImportTimeAgainst.Text = _lastCompareAgainstChoice;
+                    }
+                    else
+                    {
+                        cbx_ImportTimeAgainst.SelectedIndex = 0;
+                    }
+
+                    break;
                 }
+                case "cbx_ImportUseTimeZone":
+                    if (!string.IsNullOrWhiteSpace(value: _lastTimeZoneChoice))
+                    {
+                        ckb_UseTimeZone.Checked = true;
+                        cbx_ImportUseTimeZone.Enabled = true;
+                        cbx_ImportUseTimeZone.Text = _lastTimeZoneChoice;
+                    }
 
-                cbx_ImportTimeAgainst.SelectedIndex = 0;
-            }
-
-            else if (cItem.Name == "cbx_ExportTrackOrderBy")
-            {
-                foreach (object exportFileOrderItem in Enum.GetValues(enumType: typeof(ExportFileOrder)))
+                    break;
+                case "cbx_ExportTrackOrderBy":
                 {
-                    cbx_ExportTrackOrderBy.Items.Add(item: exportFileOrderItem.ToString());
-                }
+                    foreach (object exportFileOrderItem in Enum.GetValues(enumType: typeof(ExportFileOrder)))
+                    {
+                        cbx_ExportTrackOrderBy.Items.Add(item: exportFileOrderItem.ToString());
+                    }
 
-                cbx_ExportTrackOrderBy.SelectedIndex = 0;
-            }
-            else if (cItem.Name == "cbx_ExportTrackTimeStampType")
-            {
-                foreach (object exportFileFMTTimeBasisItem in Enum.GetValues(enumType: typeof(ExportFileFMTTimeBasis)))
+                    cbx_ExportTrackOrderBy.SelectedIndex = 0;
+                    break;
+                }
+                case "cbx_ExportTrackTimeStampType":
                 {
-                    cbx_ExportTrackTimeStampType.Items.Add(item: exportFileFMTTimeBasisItem.ToString());
-                }
+                    foreach (object exportFileFMTTimeBasisItem in Enum.GetValues(
+                                 enumType: typeof(ExportFileFMTTimeBasis)))
+                    {
+                        cbx_ExportTrackTimeStampType.Items.Add(item: exportFileFMTTimeBasisItem.ToString());
+                    }
 
-                cbx_ExportTrackTimeStampType.SelectedIndex = 0;
+                    cbx_ExportTrackTimeStampType.SelectedIndex = 0;
+                    break;
+                }
             }
         }
 
@@ -321,6 +346,9 @@ public partial class FrmImportExportGpx : Form
                         overlayDateList = GetMinMaxDateTimesFromFrmMainListView();
                     }
 
+                    _lastCompareAgainstChoice = cbx_ImportTimeAgainst.Text;
+                    _lastTimeZoneChoice = ckb_UseTimeZone.Checked ? cbx_ImportUseTimeZone.Text : null;
+
                     await HelperExifReadTrackFile.ExifGetTrackSyncData(
                         trackFileLocationType: trackFileLocationType,
                         trackFileLocationVal: trackFileLocationVal,
@@ -332,6 +360,7 @@ public partial class FrmImportExportGpx : Form
                         getTrackDataOverlay: trackOverlaySetting,
                         overlayDateList: overlayDateList,
                         timeShiftSeconds: timeShiftSeconds);
+                    frmMainAppInstance?.SelectAllListViewItems();
                     Hide();
                 }
                 else
@@ -351,9 +380,9 @@ public partial class FrmImportExportGpx : Form
 
                 ListView lvw = _frmMainAppInstance.lvw_FileList;
                 List<string> exportFileList = (from ListViewItem lvi in lvw.SelectedItems
-                    select lvi.Tag as DirectoryElement
-                    into directoryElement
-                    select directoryElement.FileNameWithPath).ToList();
+                                               select lvi.Tag as DirectoryElement
+                                               into directoryElement
+                                               select directoryElement.FileNameWithPath).ToList();
 
 
                 GenerateFMTFile(includeAltitude: ckb_ExportTrackIncludeAltitude.Checked,
