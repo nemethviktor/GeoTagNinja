@@ -1408,15 +1408,12 @@ public partial class FrmSettings : Form
         {
             OpenFileDialog openFileDialog = new()
             {
-                Filter = "SQLite Database files (*.db)|*.db",
-                Title = "Select a database file"
+                Filter = "SQLite Database files (*.db)|*.db", // no need to translate.
+                Title = HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "ofd_Settings_GetDatabaseFileToImport_SelectDatabaseFile",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.OpenFileDialog)
             };
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                return openFileDialog.FileName;
-            }
-
-            return null;
+            return openFileDialog.ShowDialog() == DialogResult.OK ? openFileDialog.FileName : null;
         }
     }
 

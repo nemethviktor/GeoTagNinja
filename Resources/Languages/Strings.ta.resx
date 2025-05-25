@@ -947,16 +947,16 @@
     <value>அனைத்து சியோடேட்டாவையும் நகலெடுக்கவும்</value>
   </data>
   <data name="tmi_File_EditFiles" xml:space="preserve">
-    <value>கோப்புகளைத் திருத்தவும்</value>
+    <value>கோப்புகளைத் திருத்தவும்...</value>
   </data>
   <data name="tmi_File_FlatMode" xml:space="preserve">
     <value>பிளாட் பயன்முறை (பாகுபடுத்தும் துணை கோப்புறைகள்)</value>
   </data>
   <data name="tmi_File_ImportExportGPX" xml:space="preserve">
-    <value>GPX/JSON மின்தடம் கோப்புகளை இறக்குமதி/ஏற்றுமதி செய்யுங்கள்</value>
+    <value>GPX/JSON மின்தடம் கோப்புகளை இறக்குமதி/ஏற்றுமதி செய்யுங்கள்...</value>
   </data>
   <data name="tmi_File_PasteGeoData" xml:space="preserve">
-    <value>அனைத்து சியோடேட்டாவையும் ஒட்டவும்</value>
+    <value>அனைத்து சியோடேட்டாவையும் ஒட்டவும்...</value>
   </data>
   <data name="tmi_File_Quit" xml:space="preserve">
     <value>வெளியேறு</value>

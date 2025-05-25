@@ -3,6 +3,7 @@
 **Build 9xxx [2025xxxx]** 
 - NEW & UPDATED:
 	- Added optional Satellite view layer to the map
+	- Geosetter favourites import #166 / #163
 	- GPX Import remembers TZ choice
 	- GPX Import TZ dropdown now sorted by STD time rather than TZ name
 	- Added a file-specific dropdown to open coordinates in various maps (Bing, Google, OSM...)

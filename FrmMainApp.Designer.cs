@@ -82,6 +82,7 @@ namespace GeoTagNinja
             this.tmi_File_SaveAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_EditFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_ImportExportGPX = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_File_ImportFavouritesFromGeoSetter = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_CopyGeoData = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_PasteGeoData = new System.Windows.Forms.ToolStripMenuItem();
             this.tss_ToolStripSeparator_Main = new System.Windows.Forms.ToolStripSeparator();
@@ -493,6 +494,7 @@ namespace GeoTagNinja
             this.tmi_File_SaveAll,
             this.tmi_File_EditFiles,
             this.tmi_File_ImportExportGPX,
+            this.tmi_File_ImportFavouritesFromGeoSetter,
             this.tmi_File_CopyGeoData,
             this.tmi_File_PasteGeoData,
             this.tss_ToolStripSeparator_Main,
@@ -520,6 +522,12 @@ namespace GeoTagNinja
             this.tmi_File_ImportExportGPX.Name = "tmi_File_ImportExportGPX";
             resources.ApplyResources(this.tmi_File_ImportExportGPX, "tmi_File_ImportExportGPX");
             this.tmi_File_ImportExportGPX.Click += new System.EventHandler(this.tmi_File_ImportExportGPX_Click);
+            // 
+            // tmi_File_ImportFavouritesFromGeoSetter
+            // 
+            this.tmi_File_ImportFavouritesFromGeoSetter.Name = "tmi_File_ImportFavouritesFromGeoSetter";
+            resources.ApplyResources(this.tmi_File_ImportFavouritesFromGeoSetter, "tmi_File_ImportFavouritesFromGeoSetter");
+            this.tmi_File_ImportFavouritesFromGeoSetter.Click += new System.EventHandler(this.tmi_File_ImportFavouritesFromGeoSetter_Click);
             // 
             // tmi_File_CopyGeoData
             // 
@@ -833,6 +841,7 @@ namespace GeoTagNinja
         private ToolStripMenuItem cmi_OpenCoordsInBrowserGoogle;
         private ToolStripMenuItem cmi_OpenCoordsInBrowserWeGoHere;
         private ToolStripMenuItem cmi_OpenCoordsInBrowserOpenStreetMap;
+        private ToolStripMenuItem tmi_File_ImportFavouritesFromGeoSetter;
     }
 }
 

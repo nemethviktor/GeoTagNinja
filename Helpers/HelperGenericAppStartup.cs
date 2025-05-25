@@ -411,36 +411,19 @@ internal static class HelperGenericAppStartup
     }
 
     /// <summary>
-    ///     Loads existing favourites
+    ///     Loads existing Favourites from SQLite into a Hashset
     /// </summary>
     /// <param name="clearDropDown"></param>
     /// <returns></returns>
-    public static DataTable AppStartupLoadFavourites(bool clearDropDown = true)
+    public static void AppStartupLoadFavourites(bool clearDropDown = true)
     {
         FrmMainApp.Log.Info(message: "Starting");
-        FrmMainApp.DtFavourites = HelperDataFavourites.DataReadSQLiteFavourites();
+
+        FrmMainApp.Favourites.Clear();
+        HelperDataFavourites.DataReadSQLiteFavourites();
+
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-
-        if (frmMainAppInstance != null && clearDropDown)
-        {
-            FrmMainApp.LstFavourites.Clear();
-            AutoCompleteStringCollection autoCompleteCustomSource = new();
-            frmMainAppInstance.cbx_Favourites.Items.Clear();
-            foreach (DataRow drFavourite in FrmMainApp.DtFavourites.Rows)
-            {
-                string favouriteName = drFavourite[columnName: "favouriteName"]
-                   .ToString();
-                FrmMainApp.LstFavourites.Add(item: favouriteName);
-                autoCompleteCustomSource.Add(value: favouriteName);
-
-                frmMainAppInstance.cbx_Favourites.Items.Add(item: favouriteName);
-            }
-
-            frmMainAppInstance.cbx_Favourites.AutoCompleteSource = AutoCompleteSource.CustomSource;
-            frmMainAppInstance.cbx_Favourites.AutoCompleteCustomSource = autoCompleteCustomSource;
-        }
-
-        return FrmMainApp.DtFavourites;
+        frmMainAppInstance.ClearReloadFavouritesDropDownValues();
     }
 
     /// <summary>

@@ -189,6 +189,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="TimeZoneConverter, Version=6.1.0.0, Culture=neutral, PublicKeyToken=e20ab7d0d9479841, processorArchitecture=MSIL">
       <HintPath>packages\TimeZoneConverter.6.1.0\lib\net462\TimeZoneConverter.dll</HintPath>
     </Reference>
@@ -235,6 +236,8 @@
     <Compile Include="Helpers\HelperLocalisationResourceManager.cs" />
     <Compile Include="Helpers\HelperNonStatic.FileOperations.cs" />
     <Compile Include="Model\AppSettingContainer.cs" />
+    <Compile Include="Model\Favourite.cs" />
+    <Compile Include="Model\GeoSetterFavourite.cs" />
     <Compile Include="Model\MapWebMessage.cs" />
     <Compile Include="Helpers\HelperLocalisationLanguageManager.cs" />
     <Compile Include="Resources\Languages\Strings.Designer.cs">
