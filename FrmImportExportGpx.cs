@@ -360,6 +360,7 @@ public partial class FrmImportExportGpx : Form
                         getTrackDataOverlay: trackOverlaySetting,
                         overlayDateList: overlayDateList,
                         timeShiftSeconds: timeShiftSeconds);
+                    frmMainAppInstance?.SelectAllListViewItems();
                     Hide();
                 }
                 else
@@ -379,9 +380,9 @@ public partial class FrmImportExportGpx : Form
 
                 ListView lvw = _frmMainAppInstance.lvw_FileList;
                 List<string> exportFileList = (from ListViewItem lvi in lvw.SelectedItems
-                    select lvi.Tag as DirectoryElement
-                    into directoryElement
-                    select directoryElement.FileNameWithPath).ToList();
+                                               select lvi.Tag as DirectoryElement
+                                               into directoryElement
+                                               select directoryElement.FileNameWithPath).ToList();
 
 
                 GenerateFMTFile(includeAltitude: ckb_ExportTrackIncludeAltitude.Checked,

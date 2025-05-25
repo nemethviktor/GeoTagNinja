@@ -290,7 +290,7 @@
   </data>
   <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
     <value>Open Coordinates in API</value>
-    <comment>Open the file's GPS coords in Browser</comment>
+    <comment>Open the file's GPS coordinates in a browser window (specifically in GeoNames API)</comment>
   </data>
   <data name="cmi_removeCachedData" xml:space="preserve">
     <value>Remove Cached Data</value>
@@ -1266,5 +1266,29 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
   </data>
   <data name="Generic_Distance" xml:space="preserve">
     <value>Distance</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowser" xml:space="preserve">
+    <value>Open Coordinates in Browser/Maps</value>
+    <comment>Open the file's GPS coordinates in a browser windows (maps, not api this time.)</comment>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserBing" xml:space="preserve">
+    <value>Bing</value>
+    <comment>Open coordinates in Bing Maps</comment>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGeoNamesMaps" xml:space="preserve">
+    <value>GeoNames (Maps)</value>
+    <comment>Open coordinates in GeoNames Maps</comment>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGoogle" xml:space="preserve">
+    <value>Google Maps</value>
+    <comment>Open coordinates in Google Maps</comment>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserWeGoHere" xml:space="preserve">
+    <value>WeGo/Here</value>
+    <comment>Open coordinates in WeGo/Here</comment>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserOpenStreetMap" xml:space="preserve">
+    <value>OpenStreetMap</value>
+    <comment>Open coordinates in OpenStreetMap</comment>
   </data>
 </root>

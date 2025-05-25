@@ -134,6 +134,16 @@ public partial class FrmMainApp : Form
     internal static bool FlatMode;
     private static bool _ignoreFlatMode;
 
+    private enum OpenInBrowserOptions
+    {
+        OpenCoordsInBrowserBing,
+        OpenCoordsInBrowserGeoNamesAPI,
+        OpenCoordsInBrowserGeoNamesMaps,
+        OpenCoordsInBrowserGoogle,
+        OpenCoordsInBrowserWeGoHere,
+        OpenCoordsInBrowserOpenStreetMap
+    }
+
 #endregion
 
 #endregion
@@ -246,7 +256,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void FrmMainApp_Load(object sender,
-        EventArgs e)
+                                       EventArgs e)
     {
         Log.Info(message: "OnLoad: Starting");
         // icon
@@ -320,7 +330,7 @@ public partial class FrmMainApp : Form
 
         Log.Trace(message: "Assign 'Enter' Key behaviour to tbx_lng");
         nud_lng.KeyPress += (sndr,
-            ev) =>
+                             ev) =>
         {
             if (ev.KeyChar.Equals(obj: (char)13))
             {
@@ -369,7 +379,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void FrmMainApp_FormClosing(object sender,
-        FormClosingEventArgs e)
+                                              FormClosingEventArgs e)
     {
         Log.Debug(message: "OnClose: Starting");
 
@@ -508,7 +518,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void wbv_MapArea_WebMessageReceived(object sender,
-        CoreWebView2WebMessageReceivedEventArgs e)
+                                                CoreWebView2WebMessageReceivedEventArgs e)
     {
         string jsonString = e.WebMessageAsJson;
 
@@ -564,7 +574,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void webView_CoreWebView2InitializationCompleted(object sender,
-        CoreWebView2InitializationCompletedEventArgs e)
+                                                             CoreWebView2InitializationCompletedEventArgs e)
     {
     }
 
@@ -585,7 +595,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void btn_NavigateMapGo_Click(object sender,
-        EventArgs e)
+                                         EventArgs e)
     {
         HelperVariables.LstTrackPath.Clear();
         HelperVariables.HsMapMarkers.Clear();
@@ -1340,7 +1350,8 @@ public partial class FrmMainApp : Form
         }
 
 
-        void AssignViewingRectangle((string strLat, string strLng) locationCoord, bool addMarker)
+        void AssignViewingRectangle((string strLat, string strLng) locationCoord,
+                                    bool addMarker)
         {
             if (addMarker)
             {
@@ -1513,7 +1524,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tmi_File_SaveAll_Click(object sender,
-        EventArgs e)
+                                              EventArgs e)
     {
         // i think having an Item active can cause a lock on it
         while (HelperGenericFileLocking.FileListBeingUpdated ||
@@ -1536,7 +1547,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_File_EditFiles_Click(object sender,
-        EventArgs e)
+                                          EventArgs e)
     {
         filesToEditGUIDStringList.Clear();
 
@@ -1563,7 +1574,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_File_CopyGeoData_Click(object sender,
-        EventArgs e)
+                                            EventArgs e)
     {
         FileListViewCopyPaste.ListViewCopyGeoData();
     }
@@ -1574,7 +1585,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_File_PasteGeoData_Click(object sender,
-        EventArgs e)
+                                             EventArgs e)
     {
         FileListViewCopyPaste.ListViewPasteGeoData();
     }
@@ -1586,7 +1597,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_File_ImportExportGPX_Click(object sender,
-        EventArgs e)
+                                                EventArgs e)
     {
         // warn user that this is a bad idea in flatmode.
         if (!FlatMode ||
@@ -1610,7 +1621,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_File_Quit_Click(object sender,
-        EventArgs e)
+                                     EventArgs e)
     {
         HelperFileSystemOperators.FsoCleanUpUserFolder();
         Application.Exit();
@@ -1629,7 +1640,8 @@ public partial class FrmMainApp : Form
                DialogResult.Yes;
     }
 
-    private void tmiFileFlatModeToolStripMenuItem_Click(object sender, EventArgs e)
+    private void tmiFileFlatModeToolStripMenuItem_Click(object sender,
+                                                        EventArgs e)
     {
         FlatMode = !FlatMode;
         _ignoreFlatMode = true;
@@ -1649,7 +1661,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tsb_Refresh_lvwFileList_Click(object sender,
-        EventArgs e)
+                                                     EventArgs e)
     {
         Log.Info(message: "Starting");
 
@@ -1724,7 +1736,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tsb_GetAllFromWeb_Click(object sender,
-        EventArgs e)
+                                               EventArgs e)
     {
         HelperVariables.OperationAPIReturnedOKResponse = true;
         _StopProcessingRows = false;
@@ -1804,7 +1816,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void btn_ts_Refresh_lvwFileList_Click(object sender,
-        EventArgs e)
+                                                        EventArgs e)
     {
         Log.Info(message: "Starting");
 
@@ -1826,7 +1838,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void btn_OneFolderUp_Click(object sender,
-        EventArgs e)
+                                             EventArgs e)
     {
         Log.Info(message: "Starting");
 
@@ -1878,7 +1890,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tsb_EditFile_Click(object sender,
-        EventArgs e)
+                                    EventArgs e)
     {
         filesToEditGUIDStringList.Clear();
 
@@ -1906,7 +1918,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tsb_RemoveGeoData_Click(object sender,
-        EventArgs e)
+                                               EventArgs e)
     {
         try
         {
@@ -1937,7 +1949,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tsb_ImportExportGPX_Click(object sender,
-        EventArgs e)
+                                           EventArgs e)
     {
         bool validFilesToImport = false;
         foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
@@ -1972,7 +1984,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tbx_FolderName_KeyDown(object sender,
-        KeyEventArgs e)
+                                              KeyEventArgs e)
     {
         if (e.KeyCode == Keys.Enter)
         {
@@ -1992,7 +2004,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tbx_FolderName_Enter(object sender,
-        EventArgs e)
+                                      EventArgs e)
     {
         tbx_FolderName.SelectAll();
     }
@@ -2003,7 +2015,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tsb_SaveFiles_Click(object sender,
-        EventArgs e)
+                                           EventArgs e)
     {
         while (HelperGenericFileLocking.FileListBeingUpdated ||
                HelperGenericFileLocking.FilesAreBeingSaved)
@@ -2026,7 +2038,7 @@ public partial class FrmMainApp : Form
 
     // via https://stackoverflow.com/a/75716080/3968494
     private void ListView_DrawColumnHeader(object sender,
-        DrawListViewColumnHeaderEventArgs e)
+                                           DrawListViewColumnHeaderEventArgs e)
     {
         Color foreColor = HelperVariables.UserSettingUseDarkMode
             ? Color.White
@@ -2070,13 +2082,13 @@ public partial class FrmMainApp : Form
     }
 
     private void ListView_DrawItem(object sender,
-        DrawListViewItemEventArgs e)
+                                   DrawListViewItemEventArgs e)
     {
         e.DrawDefault = true;
     }
 
     private void ListView_DrawSubItem(object sender,
-        DrawListViewSubItemEventArgs e)
+                                      DrawListViewSubItemEventArgs e)
     {
         e.DrawDefault = true;
     }
@@ -2166,8 +2178,8 @@ public partial class FrmMainApp : Form
     /// <param name="strGpsLongitude">Longitude as string</param>
     /// <param name="lvi">ListViewItem in the the main grid</param>
     private void lvw_FileList_UpdateTagsFromWeb(string strGpsLatitude,
-        string strGpsLongitude,
-        ListViewItem lvi)
+                                                string strGpsLongitude,
+                                                ListViewItem lvi)
     {
         if (!_StopProcessingRows)
         {
@@ -2512,7 +2524,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void lvw_FileList_MouseDoubleClick(object sender,
-        MouseEventArgs e)
+                                                     MouseEventArgs e)
     {
         Log.Info(message: "Starting");
 
@@ -2681,7 +2693,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void lvw_FileList_KeyUp(object sender,
-        KeyEventArgs e)
+                                          KeyEventArgs e)
     {
         if (
             e.KeyCode == Keys.PageUp ||
@@ -2702,29 +2714,13 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">The key pressed</param>
     private async void lvw_FileList_KeyDown(object sender,
-        KeyEventArgs e)
+                                            KeyEventArgs e)
     {
         // control A -> select all
         if (e.Modifiers == Keys.Control &&
             e.KeyCode == Keys.A)
         {
-            HelperVariables.OperationNowSelectingAllItems = true;
-
-            for (int i = 0; i < lvw_FileList.Items.Count; i++)
-            {
-                lvw_FileList.Items[index: i]
-                            .Selected = true;
-                // so because there is no way to do a proper "select all" w/o looping i only want to run the "navigate" (which is triggered on select-state-change at the end)
-                if (i == lvw_FileList.Items.Count - 1)
-                {
-                    HelperVariables.OperationNowSelectingAllItems = false;
-                    FileListViewMapNavigation.ListViewItemClickNavigate();
-                    Request_Map_NavigateGo();
-                }
-            }
-
-            // just in case...
-            HelperVariables.OperationNowSelectingAllItems = false;
+            SelectAllListViewItems();
         }
 
         // Shift Ctrl C -> copy details
@@ -2835,6 +2831,27 @@ public partial class FrmMainApp : Form
         }
     }
 
+    internal void SelectAllListViewItems()
+    {
+        HelperVariables.OperationNowSelectingAllItems = true;
+
+        for (int i = 0; i < lvw_FileList.Items.Count; i++)
+        {
+            lvw_FileList.Items[index: i]
+                        .Selected = true;
+            // so because there is no way to do a proper "select all" w/o looping i only want to run the "navigate" (which is triggered on select-state-change at the end)
+            if (i == lvw_FileList.Items.Count - 1)
+            {
+                HelperVariables.OperationNowSelectingAllItems = false;
+                FileListViewMapNavigation.ListViewItemClickNavigate();
+                Request_Map_NavigateGo();
+            }
+        }
+
+        // just in case...
+        HelperVariables.OperationNowSelectingAllItems = false;
+    }
+
 
     /// <summary>
     ///     Watches for the user to lift the mouse button while over the listview. This will trigger the collection of
@@ -2843,7 +2860,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void lvw_FileList_MouseUp(object sender,
-        MouseEventArgs e)
+                                            MouseEventArgs e)
     {
         await lvw_HandleSelectionChange();
     }
@@ -2855,7 +2872,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_Settings_Settings_Click(object sender,
-        EventArgs e)
+                                             EventArgs e)
     {
         FrmSettings = new FrmSettings();
         FrmSettings.Text = ReturnControlText(
@@ -2871,7 +2888,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_Settings_Favourites_Click(object sender,
-        EventArgs e)
+                                               EventArgs e)
     {
         DtFavourites = HelperGenericAppStartup.AppStartupLoadFavourites();
         if (DtFavourites.Rows.Count > 0)
@@ -2893,14 +2910,14 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void tmi_Help_About_Click(object sender,
-        EventArgs e)
+                                      EventArgs e)
     {
         FrmAboutBox frmAboutBox = new();
         frmAboutBox.ShowDialog();
     }
 
     private void tmi_Help_FeedbackFeatureRequest_Click(object sender,
-        EventArgs e)
+                                                       EventArgs e)
     {
         Process.Start(
             fileName:
@@ -2908,7 +2925,7 @@ public partial class FrmMainApp : Form
     }
 
     private void tmi_Help_BugReport_Click(object sender,
-        EventArgs e)
+                                          EventArgs e)
     {
         Process.Start(
             fileName:
@@ -2917,7 +2934,7 @@ public partial class FrmMainApp : Form
 
 
     private void tsb_FeedbackFeatureRequest_Click(object sender,
-        EventArgs e)
+                                                  EventArgs e)
     {
         Process.Start(
             fileName:
@@ -2925,7 +2942,7 @@ public partial class FrmMainApp : Form
     }
 
     private void tsb_BugReport_Click(object sender,
-        EventArgs e)
+                                     EventArgs e)
     {
         Process.Start(
             fileName:
@@ -2938,7 +2955,7 @@ public partial class FrmMainApp : Form
     /// <param name="label">The Label Control that needs updating</param>
     /// <param name="text">The Text that will be assigned</param>
     internal static void HandlerUpdateLabelText(Label label,
-        string text)
+                                                string text)
     {
         // If the current thread is not the UI thread, InvokeRequired will be true
         if (label.InvokeRequired)
@@ -2963,31 +2980,31 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void wbv_MapArea_Click(object sender,
-        EventArgs e)
+                                   EventArgs e)
     {
         // note to self: the one you're looking for is called wbv_MapArea_WebMessageReceived
     }
 
     private void FrmMainApp_ResizeBegin(object sender,
-        EventArgs e)
+                                        EventArgs e)
     {
         wbv_MapArea.Hide();
     }
 
     private void FrmMainApp_ResizeEnd(object sender,
-        EventArgs e)
+                                      EventArgs e)
     {
         wbv_MapArea.Show();
     }
 
     private void selectColumnsToolStripMenuItem_Click(object sender,
-        EventArgs e)
+                                                      EventArgs e)
     {
         lvw_FileList.ShowColumnSelectionDialog();
     }
 
     private void btn_SaveLocation_Click(object sender,
-        EventArgs e)
+                                        EventArgs e)
     {
         if (cbx_Favourites.Text.Length > 0)
         {
@@ -3053,7 +3070,7 @@ public partial class FrmMainApp : Form
     }
 
     private async void btn_LoadFavourite_Click(object sender,
-        EventArgs e)
+                                               EventArgs e)
     {
         string favouriteToLoad = cbx_Favourites.Text;
 
@@ -3271,7 +3288,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void btn_ManageFavourites_Click(object sender,
-        EventArgs e)
+                                            EventArgs e)
     {
         DtFavourites = HelperGenericAppStartup.AppStartupLoadFavourites();
         if (DtFavourites.Rows.Count > 0)
@@ -3289,28 +3306,78 @@ public partial class FrmMainApp : Form
 
 
     private void cmi_OpenCoordsInAPI_Click(object sender,
-        EventArgs e)
+                                           EventArgs e)
+    {
+        ListView.SelectedListViewItemCollection lvc = lvw_FileList.SelectedItems;
+        OpenCoordinatesInBrowser(listViewItemCollection: lvc,
+            openInBrowserOption: OpenInBrowserOptions.OpenCoordsInBrowserGeoNamesAPI);
+    }
+
+
+    private void cmi_OpenCoordsInBrowserBing_Click(object sender,
+                                                   EventArgs e)
+    {
+        ListView.SelectedListViewItemCollection lvc = lvw_FileList.SelectedItems;
+        OpenCoordinatesInBrowser(listViewItemCollection: lvc,
+            openInBrowserOption: OpenInBrowserOptions.OpenCoordsInBrowserBing);
+    }
+
+    private void cmi_OpenCoordsInBrowserGeoNamesMaps_Click(object sender,
+                                                           EventArgs e)
+    {
+        ListView.SelectedListViewItemCollection lvc = lvw_FileList.SelectedItems;
+        OpenCoordinatesInBrowser(listViewItemCollection: lvc,
+            openInBrowserOption: OpenInBrowserOptions.OpenCoordsInBrowserGeoNamesMaps);
+    }
+
+    private void cmi_OpenCoordsInBrowserGoogle_Click(object sender,
+                                                     EventArgs e)
+    {
+        ListView.SelectedListViewItemCollection lvc = lvw_FileList.SelectedItems;
+        OpenCoordinatesInBrowser(listViewItemCollection: lvc,
+            openInBrowserOption: OpenInBrowserOptions.OpenCoordsInBrowserGoogle);
+    }
+
+    private void cmi_OpenCoordsInBrowserWeGoHere_Click(object sender,
+                                                       EventArgs e)
+    {
+        ListView.SelectedListViewItemCollection lvc = lvw_FileList.SelectedItems;
+        OpenCoordinatesInBrowser(listViewItemCollection: lvc,
+            openInBrowserOption: OpenInBrowserOptions.OpenCoordsInBrowserWeGoHere);
+    }
+
+    private void cmi_OpenCoordsInBrowserOpenStreetMap_Click(object sender,
+                                                            EventArgs e)
+    {
+        ListView.SelectedListViewItemCollection lvc = lvw_FileList.SelectedItems;
+        OpenCoordinatesInBrowser(listViewItemCollection: lvc,
+            openInBrowserOption: OpenInBrowserOptions.OpenCoordsInBrowserOpenStreetMap);
+    }
+
+    /// <summary>
+    ///     Processes the selected ListViewItem and opens its coordinates (if any) in the API or browser (maps)
+    /// </summary>
+    /// <param name="listViewItemCollection"></param>
+    /// <param name="openInBrowserOption"></param>
+    private static void OpenCoordinatesInBrowser(ListView.SelectedListViewItemCollection listViewItemCollection,
+                                                 OpenInBrowserOptions openInBrowserOption)
     {
         bool selectionIsValid = false;
         string GPSLatStr = NullStringEquivalentGeneric;
         string GPSLngStr = NullStringEquivalentGeneric;
-        ListView lvw = lvw_FileList;
 
-        if (lvw.SelectedItems.Count == 1)
+
+        if (listViewItemCollection.Count == 1)
         {
-            ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
+            ListViewItem lvi = listViewItemCollection[index: 0];
             DirectoryElement dirElemFileToModify =
                 lvi.Tag as DirectoryElement;
-            if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
+            if (dirElemFileToModify?.Type == DirectoryElement.ElementType.File)
             {
                 try
                 {
-                    GPSLatStr =
-                        dirElemFileToModify.GetAttributeValueString(
-                            attribute: ElementAttribute.GPSLatitude);
-                    GPSLngStr =
-                        dirElemFileToModify.GetAttributeValueString(
-                            attribute: ElementAttribute.GPSLongitude);
+                    GPSLatStr = dirElemFileToModify.GetAttributeValueString(attribute: ElementAttribute.GPSLatitude);
+                    GPSLngStr = dirElemFileToModify.GetAttributeValueString(attribute: ElementAttribute.GPSLongitude);
                     selectionIsValid = true;
                 }
                 catch
@@ -3325,27 +3392,53 @@ public partial class FrmMainApp : Form
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                 controlName: "mbx_FrmMainApp_WarningTooManyFilesSelected", captionType: MessageBoxCaption.Warning,
                 buttons: MessageBoxButtons.OK);
+            return;
         }
-        else
+
+        CultureInfo cIEnUS = new(name: "en-US");
+        string openAPILink = null;
+        switch (openInBrowserOption)
         {
-            CultureInfo cIEnUS = new(name: "en-US");
-            string SOnlyShowFCodePPL = HelperVariables.UserSettingOnlyShowFCodePPL
-                ? "&fcode=PPL"
-                : "";
-            string openAPILink =
-                $"http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&lat={GPSLatStr}&lng={GPSLngStr}&lang={HelperVariables.APILanguageToUse}{SOnlyShowFCodePPL}&style=FULL&radius={HelperVariables.ToponomyRadiusValue}&maxRows={HelperVariables.ToponyMaxRowsChoiceOfferCount}&username={HelperVariables.UserSettingGeoNamesUserName}&password=any";
-            Process.Start(fileName: openAPILink);
+            case OpenInBrowserOptions.OpenCoordsInBrowserGeoNamesAPI:
+                string SOnlyShowFCodePPL = HelperVariables.UserSettingOnlyShowFCodePPL
+                    ? "&fcode=PPL"
+                    : "";
+                openAPILink =
+                    $"http://api.geonames.org/findNearbyPlaceNameJSON?formatted=true&lat={GPSLatStr}&lng={GPSLngStr}&lang={HelperVariables.APILanguageToUse}{SOnlyShowFCodePPL}&style=FULL&radius={HelperVariables.ToponomyRadiusValue}&maxRows={HelperVariables.ToponyMaxRowsChoiceOfferCount}&username={HelperVariables.UserSettingGeoNamesUserName}&password=any";
+                break;
+            case OpenInBrowserOptions.OpenCoordsInBrowserBing:
+                openAPILink =
+                    $"https://www.bing.com/maps/default.aspx?cp={GPSLatStr}~{GPSLngStr}&lvl=16&style=r";
+                break;
+            case OpenInBrowserOptions.OpenCoordsInBrowserGeoNamesMaps:
+                openAPILink = $"https://www.geonames.org/maps/google_{GPSLatStr}_{GPSLngStr}.html";
+                break;
+            case OpenInBrowserOptions.OpenCoordsInBrowserGoogle:
+                openAPILink = $"https://www.google.com/maps/search/?api=1&query={GPSLatStr}%2C{GPSLngStr}";
+                break;
+            case OpenInBrowserOptions.OpenCoordsInBrowserWeGoHere:
+                openAPILink = $"https://wego.here.com/location/?map={GPSLatStr},{GPSLngStr},16";
+                break;
+            case OpenInBrowserOptions.OpenCoordsInBrowserOpenStreetMap:
+                openAPILink =
+                    $"https://www.openstreetmap.org/?mlat={GPSLatStr}&mlon={GPSLngStr}#map=16/{GPSLatStr}/{GPSLngStr}";
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(paramName: nameof(openInBrowserOption),
+                    actualValue: openInBrowserOption, message: null);
         }
+
+        Process.Start(fileName: openAPILink);
     }
 
     private void lvw_ExifData_KeyUp(object sender,
-        KeyEventArgs e)
+                                    KeyEventArgs e)
     {
         // unused
     }
 
     private void lvw_ExifData_KeyDown(object sender,
-        KeyEventArgs e)
+                                      KeyEventArgs e)
     {
         if (e.Control &&
             e.KeyCode == Keys.C)
@@ -3370,7 +3463,8 @@ public partial class FrmMainApp : Form
         }
     }
 
-    private void tmi_File_DropDownOpening(object sender, EventArgs e)
+    private void tmi_File_DropDownOpening(object sender,
+                                          EventArgs e)
     {
         tmi_File_FlatMode.Checked = FlatMode;
     }
@@ -3391,7 +3485,7 @@ public static class ControlExtensions
     /// <param name="control">The Control that needs the value assigned</param>
     /// <param name="enable">Bool true or false (aka on or off)</param>
     public static void DoubleBuffered(this Control control,
-        bool enable)
+                                      bool enable)
     {
         PropertyInfo doubleBufferPropertyInfo = control.GetType()
                                                        .GetProperty(
