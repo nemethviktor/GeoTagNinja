@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -14,6 +15,17 @@ namespace GeoTagNinja.Helpers;
 
 internal static class HelperExifExifToolOperator
 {
+    // this is a list of junk that we generally want to ignore coming from exiftool's error reporting
+    private static List<string> ignoreExifToolWarningsList = new()
+    {
+        "requires ExifVersion",
+        "is not allowed in JPEG",
+        "MakerNote",
+        "Warning",
+        "files updated",
+        "files created"
+    };
+
     private static int _exifInvokeCounter;
 
     /// <summary>
@@ -133,8 +145,7 @@ internal static class HelperExifExifToolOperator
 
                                     if ((data.Data.Contains(value: "files updated") ||
                                          data.Data.Contains(value: "files created")) &&
-                                        !data.Data.Trim()
-                                             .StartsWith(value: "0"))
+                                        !data.Data.Trim().StartsWith(value: "0"))
                                     {
                                         RemoveDirElementFromDe3AndCopyDataToOriginal(
                                             dirElemToDrop: dirElemFileToDrop,
@@ -169,8 +180,7 @@ internal static class HelperExifExifToolOperator
                                                 string pathOfFile =
                                                     fileNameWithPath.Substring(
                                                         startIndex: 0,
-                                                        length: fileNameWithPath.Length -
-                                                                4);
+                                                        length: fileNameWithPath.Length - 4);
                                                 dirElemFileToDrop =
                                                     FrmMainApp.DirectoryElements
                                                               .FindElementByBelongingToXmpWithPath(
@@ -191,20 +201,22 @@ internal static class HelperExifExifToolOperator
 
                                 lviIndex++;
 
-                                if (!data.Data.Contains(value: "files updated") &&
-                                    !data.Data.Contains(value: "files created") &&
+                                string dataData = data.Data;
+                                bool hideWarning = ignoreExifToolWarningsList.Any(predicate: s =>
+                                    dataData.IndexOf(value: s, comparisonType: StringComparison.OrdinalIgnoreCase) >=
+                                    0);
+
+
+                                if (!hideWarning &&
                                     !data.Data.Contains(
                                         value: fileNameWithoutPath.Substring(
                                             startIndex: 0,
-                                            length: fileNameWithoutPath.LastIndexOf(
-                                                value: '.'))))
+                                            length: fileNameWithoutPath.LastIndexOf(value: '.'))))
                                 {
-                                    bool pathIsLikelyUTF =
-                                        fileNameWithPath.Any(predicate: c => c > 127);
+                                    bool pathIsLikelyUTF = fileNameWithPath.Any(predicate: c => c > 127);
                                     MessageBox.Show(text: data.Data +
                                                           (pathIsLikelyUTF
-                                                              ? Environment.NewLine +
-                                                                Environment.NewLine +
+                                                              ? Environment.NewLine + Environment.NewLine +
                                                                 HelperControlAndMessageBoxHandling
                                                                    .ReturnControlText(
                                                                         controlName:
@@ -222,7 +234,14 @@ internal static class HelperExifExifToolOperator
                     {
                         if (!string.IsNullOrEmpty(value: data.Data))
                         {
-                            MessageBox.Show(text: data.Data);
+                            string dataData = data.Data;
+                            bool hideWarning = ignoreExifToolWarningsList.Any(predicate: s =>
+                                dataData.IndexOf(value: s, comparisonType: StringComparison.OrdinalIgnoreCase) >= 0);
+
+                            if (!hideWarning)
+                            {
+                                MessageBox.Show(text: data.Data);
+                            }
                         }
                     };
                     break;
@@ -252,20 +271,13 @@ internal static class HelperExifExifToolOperator
                     prcExifTool.OutputDataReceived += (_,
                                                        data) =>
                     {
-                        if (data.Data is
-                            {
-                                Length: > 0
-                            } &&
+                        if (data.Data is { Length: > 0 } &&
                             // this piece of info is irrelevant and confusing to the user
                             !data.Data.ToString()
-                                 .EndsWith(
-                                      value:
-                                      ".xmp does not exist") &&
+                                 .EndsWith(value: ".xmp does not exist") &&
                             // this piece of info is irrelevant and confusing to the user
                             !data.Data.ToString()
-                                 .EndsWith(
-                                      value:
-                                      "is not defined")
+                                 .EndsWith(value: "is not defined")
                            )
                         {
                             HelperVariables._sOutputAndErrorMsg +=

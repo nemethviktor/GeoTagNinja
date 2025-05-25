@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using static GeoTagNinja.Model.SourcesAndAttributes;
@@ -354,6 +355,20 @@ internal static class HelperGenericAncillaryListsArrays
 
         bool isInDictionary = lookupDictionary.TryGetValue(key: controlName, value: out string retValue);
         return isInDictionary ? retValue : HelperVariables.ControlItemNameNotGeneric;
+    }
+
+    /// <summary>
+    ///     This is a bit of a cluserf.k because en-AU (ref #155) seems to be causing issues with the EditForm so it needs to
+    ///     be CurrentCulture rather than Invariant but then it shafts everything else so...
+    /// </summary>
+    /// <returns></returns>
+    internal static List<CultureInfo> CulturesWithCurrentCultureToUse()
+    {
+        List<CultureInfo> result = new()
+        {
+            CultureInfo.GetCultureInfo(name: "en-AU")
+        };
+        return result;
     }
 
 #endregion
@@ -1006,7 +1021,7 @@ internal static class HelperGenericAncillaryListsArrays
                                   //                 STD = d[stdCol], DST = d[dstCol]
                                   //             })
                                   //.Select(selector: g => g.First())
-                                 .OrderBy(keySelector: d => d[timeZoneCol])
+                                 .OrderBy(keySelector: d => d[stdCol])
                                  .Select(selector: d =>
                                       $"({d[stdCol]}/{d[dstCol]}) # {d[timeZoneCol]}")
                                  .ToList();
@@ -1062,25 +1077,6 @@ internal static class HelperGenericAncillaryListsArrays
         return result;
     }
 
-    internal static ElementAttribute[] GetFavouriteTags()
-    {
-        ElementAttribute[] result =
-        {
-            ElementAttribute.GPSAltitude,
-            ElementAttribute.GPSAltitudeRef,
-            ElementAttribute.GPSLatitude,
-            ElementAttribute.GPSLatitudeRef,
-            ElementAttribute.GPSLongitude,
-            ElementAttribute.GPSLongitudeRef,
-            ElementAttribute.Coordinates,
-            ElementAttribute.City,
-            ElementAttribute.CountryCode,
-            ElementAttribute.Country,
-            ElementAttribute.State,
-            ElementAttribute.Sublocation
-        };
-        return result;
-    }
 
     /// <summary>
     ///     City, State, Sublocation
@@ -1375,7 +1371,8 @@ internal static class HelperGenericAncillaryListsArrays
         CreateDate
     }
 
-    internal static void GenerateFMTFile(bool includeAltitude, string exportFileFMTTimeBasis)
+    internal static void GenerateFMTFile(bool includeAltitude,
+                                         string exportFileFMTTimeBasis)
     {
         string fmtFileContent = "";
         fmtFileContent +=

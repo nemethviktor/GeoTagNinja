@@ -30,33 +30,34 @@
 </head>
 <body>
 
-<div id="map" style="height: 400px; width: 600px;"></div>
-<script>
-        
-		
-		var esri_url ='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+<div id="map" style="height: 400px; width: 600px";></div>
+
+    <script>
+
+
+        var esri_url = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
         var esri_attribution = '© Esri © OpenStreetMap Contributors';
 
-		var lyr_streets   = L.tileLayer(
-			'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				maxZoom: 18,
-				attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        var lyr_streets = L.tileLayer(
+            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         });
 
         var lyr_satellite = L.tileLayer(
             esri_url, {
-                id: 'MapID',
+            id: 'MapID',
             maxZoom: 18,
             tileSize: 512,
             zoomOffset: -1,
             attribution: esri_attribution
         });
 
-        { HTMLSelectDefaultLayer }	
+        { HTMLSelectDefaultLayer }
 
-        { HTMLSelectFirstLayer }		
-		
-		map.fitBounds(
+        { HTMLSelectFirstLayer }
+
+        map.fitBounds(
             [
                 [replaceMinLat, replaceMinLng],
                 [replaceMaxLat, replaceMaxLng]
@@ -67,17 +68,17 @@
         L.control.layers(baseMaps).addTo(map);
 
         { HTMLAddMarker }
-		
-		{ HTMLCreatePoints }
 
-		{ HTMLShowLines }
+        { HTMLCreatePoints }
 
-		{ HTMLShowPoints }
-		
-		{ HTMLShowFOVPolygon }
-        
+        { HTMLShowLines }
+
+        { HTMLShowPoints }
+
+        { HTMLShowFOVPolygon }
+
         { HTMLShowPolyLine }
-		
+
         var popup = L.popup();
         var searchControl = L.esri.Geocoding.geosearch({
             position: 'topright',
@@ -101,10 +102,10 @@
                 window.chrome.webview.postMessage({ "lat": data.results[i].latlng.lat, "lng": data.results[i].latlng.lng });
             }
         });
-		
-		map.on('baselayerchange', function(e) {
-		  window.chrome.webview.postMessage({ "layer": e.name.toString() });
-		});
+
+        map.on('baselayerchange', function (e) {
+            window.chrome.webview.postMessage({ "layer": e.name.toString() });
+        });
 
 
         map.on('click', function onMapClick(e) {
@@ -119,14 +120,14 @@
             window.chrome.webview.postMessage({ "lat": e.latlng.lat, "lng": e.latlng.lng, "isDragged": false });
 
         });
-        		
-		marker.on("drag", function(e) {
-			var marker = e.target;
-			var position = marker.getLatLng();
-			window.chrome.webview.postMessage({ "lat": e.latlng.lat, "lng": e.latlng.lng, "isDragged": false });
-			//map.panTo(new L.LatLng(position.lat, position.lng));
-		});
-		
+
+        marker.on("drag", function (e) {
+            var marker = e.target;
+            var position = marker.getLatLng();
+            window.chrome.webview.postMessage({ "lat": e.latlng.lat, "lng": e.latlng.lng, "isDragged": false });
+            //map.panTo(new L.LatLng(position.lat, position.lng));
+        });
+
         marker.on("dragend", function (e) {
             var marker = e.target;
             var position = marker.getLatLng();

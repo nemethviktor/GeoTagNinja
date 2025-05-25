@@ -259,6 +259,7 @@
   </data>
   <data name="clh_ExifTag" xml:space="preserve">
     <value>Exif (GTN Internal) Tag</value>
+    <comment>Column header: Exif tag</comment>
   </data>
   <data name="clh_Folder" xml:space="preserve">
     <value>Folder</value>
@@ -290,7 +291,7 @@
   </data>
   <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
     <value>Open Coordinates in API</value>
-    <comment>Open the file's GPS coords in Browser</comment>
+    <comment>Open the file's GPS coordinates in a browser window (specifically in GeoNames API)</comment>
   </data>
   <data name="cmi_removeCachedData" xml:space="preserve">
     <value>Remove Cached Data</value>
@@ -302,27 +303,35 @@
   </data>
   <data name="fbd_StartupFolder" xml:space="preserve">
     <value>Browse for Startup Folder</value>
+    <comment>Folder Browser Window title</comment>
   </data>
   <data name="frm_FrmEditFileData" xml:space="preserve">
     <value>Edit Data</value>
+    <comment>Form name (edit file data)</comment>
   </data>
   <data name="frm_FrmImportExportGpx" xml:space="preserve">
     <value>Import GPX/JSON Data</value>
+    <comment>Form name (import/export gpx)</comment>
   </data>
   <data name="frm_FrmManageFavourites" xml:space="preserve">
     <value>Manage Favourites</value>
+    <comment>Form name (manage favs.)</comment>
   </data>
   <data name="frm_FrmPasteWhat" xml:space="preserve">
     <value>Paste…What?</value>
+    <comment>Form name (paste what exif tags)</comment>
   </data>
   <data name="frm_FrmPickDataFromAPIBox" xml:space="preserve">
     <value>Choose Toponymy Values</value>
+    <comment>Form name (this form shows when the user picks coordinates that have more than 1 nearby relevant value and are asked to pick the right one.)</comment>
   </data>
   <data name="frm_FrmPleaseWaitBox" xml:space="preserve">
     <value>Please wait while the folder loads.</value>
+    <comment>Form name (displays a 'pls wait' notification)</comment>
   </data>
   <data name="frm_FrmSettings" xml:space="preserve">
     <value>Settings</value>
+    <comment>Form name (settings)</comment>
   </data>
   <data name="gbx_AppSettings" xml:space="preserve">
     <value>Application Settings</value>
@@ -886,7 +895,7 @@ If you click 'stop asking' it will take the answer as Yes and won't ask again th
     <comment>Location: Favourites</comment>
   </data>
   <data name="mbx_FrmMainApp_NoFavouritesDefined" xml:space="preserve">
-    <value>You have no favourites defined. Add one using the buttons under the map.</value>
+    <value>You have no Favourites defined. Add one using the buttons under the map.</value>
   </data>
   <data name="mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles" xml:space="preserve">
     <value>Do you want to assign the coordinates to the selected file(s)?</value>
@@ -1110,7 +1119,7 @@ Save the API key when prompted. If you don't do it at the time you'll have to ge
     <comment>Button to copy all geodata from a file (to the clipboard)</comment>
   </data>
   <data name="tmi_File_EditFiles" xml:space="preserve">
-    <value>Edit Files</value>
+    <value>Edit Files...</value>
     <comment>Edit Files Button</comment>
   </data>
   <data name="tmi_File_FlatMode" xml:space="preserve">
@@ -1118,11 +1127,11 @@ Save the API key when prompted. If you don't do it at the time you'll have to ge
     <comment>Toggle Flat Mode. This will trigger parsing subfolders too.</comment>
   </data>
   <data name="tmi_File_ImportExportGPX" xml:space="preserve">
-    <value>Import/Export GPX/JSON Track Files</value>
+    <value>Import/Export GPX/JSON Track Files...</value>
     <comment>Import/Export Track File</comment>
   </data>
   <data name="tmi_File_PasteGeoData" xml:space="preserve">
-    <value>Paste All Geodata</value>
+    <value>Paste All Geodata...</value>
     <comment>Button to paste all geodata from a file (from the clipboard)</comment>
   </data>
   <data name="tmi_File_Quit" xml:space="preserve">
@@ -1163,36 +1172,47 @@ Save the API key when prompted. If you don't do it at the time you'll have to ge
   </data>
   <data name="tpg_Application" xml:space="preserve">
     <value>Application</value>
+    <comment>This is a tabpage header.</comment>
   </data>
   <data name="tpg_CustomCityLogic" xml:space="preserve">
     <value>Custom City Assignment Logic</value>
+    <comment>This is a tabpage header.</comment>
   </data>
   <data name="tpg_CustomRules" xml:space="preserve">
     <value>Custom Rules</value>
+    <comment>This is a tabpage header.</comment>
   </data>
   <data name="tpg_DateTime" xml:space="preserve">
     <value>Date &amp; Time</value>
+    <comment>This is a tabpage header.</comment>
   </data>
   <data name="tpg_Exif" xml:space="preserve">
     <value>Exif</value>
+    <comment>This is a tabpage header.</comment>
   </data>
   <data name="tpg_FileOptions" xml:space="preserve">
     <value>File Options</value>
+    <comment>This is a tabpage header.</comment>
   </data>
   <data name="tpg_GeoNames" xml:space="preserve">
     <value>GeoNames Settings</value>
+    <comment>This is a tabpage header.</comment>
   </data>
   <data name="tpg_ImportExport_Export" xml:space="preserve">
     <value>Export Tracks</value>
+    <comment>This is a tabpage header.</comment>
   </data>
   <data name="tpg_ImportExport_Import" xml:space="preserve">
     <value>Import Tracks</value>
+    <comment>This is a tabpage header.</comment>
   </data>
   <data name="tpg_Location" xml:space="preserve">
     <value>Location</value>
+    <comment>This is a tabpage header.</comment>
   </data>
   <data name="tpg_Map" xml:space="preserve">
     <value>Map</value>
+    <comment>This is a tabpage header.</comment>
   </data>
   <data name="tsb_BugReport" xml:space="preserve">
     <value>File a bug report (requires a GitHub account)</value>
@@ -1259,12 +1279,54 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
   </data>
   <data name="ckb_ImportExport_CustomRulesSettings" xml:space="preserve">
     <value>CustomRulesSettings</value>
-    <comment>ngs</comment>
+    <comment>Location: Settings</comment>
   </data>
   <data name="Generic_TimeZoneID" xml:space="preserve">
     <value>Time Zone ID</value>
   </data>
   <data name="Generic_Distance" xml:space="preserve">
     <value>Distance</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowser" xml:space="preserve">
+    <value>Open Coordinates in Browser/Maps</value>
+    <comment>Open the file's GPS coordinates in a browser windows (maps, not api this time.)</comment>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserBing" xml:space="preserve">
+    <value>Bing</value>
+    <comment>Open coordinates in Bing Maps</comment>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGeoNamesMaps" xml:space="preserve">
+    <value>GeoNames (Maps)</value>
+    <comment>Open coordinates in GeoNames Maps</comment>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGoogle" xml:space="preserve">
+    <value>Google Maps</value>
+    <comment>Open coordinates in Google Maps</comment>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserWeGoHere" xml:space="preserve">
+    <value>WeGo/Here</value>
+    <comment>Open coordinates in WeGo/Here</comment>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserOpenStreetMap" xml:space="preserve">
+    <value>OpenStreetMap</value>
+    <comment>Open coordinates in OpenStreetMap</comment>
+  </data>
+  <data name="tmi_File_ImportFavouritesFromGeoSetter" xml:space="preserve">
+    <value>Import Favourites from Geosetter...</value>
+    <comment>Dropdown to open a Form to import Geosetter Favourites</comment>
+  </data>
+  <data name="ofd_Settings_GetDatabaseFileToImport_SelectDatabaseFile" xml:space="preserve">
+    <value>Select a database file</value>
+    <comment>This is a label (but technically part of an OFD hence the name) that requests the user picks a "database file" (really a sqlite file with a .db extension)</comment>
+  </data>
+  <data name="ofd_tmi_File_ImportFavouritesFromGeoSetter_SelectFile" xml:space="preserve">
+    <value>Select GS Favourites export file</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorImportGeoSetterFavourites" xml:space="preserve">
+    <value>Error during importing GeoSetter Favourites.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoImportGeoSetterFavouritesDone" xml:space="preserve">
+    <value>GeoSetter Favourites imported. Items imported: </value>
+    <comment>Displays a success message that items have been imported. The code will stamp a number at the very end. (count of items that is.)</comment>
   </data>
 </root>

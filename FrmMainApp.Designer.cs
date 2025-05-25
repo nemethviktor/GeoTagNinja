@@ -46,6 +46,12 @@ namespace GeoTagNinja
             this.cmi_ShowHideCols = new System.Windows.Forms.ToolStripMenuItem();
             this.cmi_removeCachedData = new System.Windows.Forms.ToolStripMenuItem();
             this.cmi_OpenCoordsInAPI = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmi_OpenCoordsInBrowser = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmi_OpenCoordsInBrowserBing = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmi_OpenCoordsInBrowserGeoNamesMaps = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmi_OpenCoordsInBrowserGoogle = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmi_OpenCoordsInBrowserWeGoHere = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmi_OpenCoordsInBrowserOpenStreetMap = new System.Windows.Forms.ToolStripMenuItem();
             this.pbx_imagePreview = new GeoTagNinja.View.ImagePreview();
             this.flp_ProcessingInfo = new System.Windows.Forms.FlowLayoutPanel();
             this.lbl_ParseProgress = new System.Windows.Forms.Label();
@@ -76,6 +82,7 @@ namespace GeoTagNinja
             this.tmi_File_SaveAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_EditFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_ImportExportGPX = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_File_ImportFavouritesFromGeoSetter = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_CopyGeoData = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_PasteGeoData = new System.Windows.Forms.ToolStripMenuItem();
             this.tss_ToolStripSeparator_Main = new System.Windows.Forms.ToolStripSeparator();
@@ -197,7 +204,8 @@ namespace GeoTagNinja
             this.cms_FileListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmi_ShowHideCols,
             this.cmi_removeCachedData,
-            this.cmi_OpenCoordsInAPI});
+            this.cmi_OpenCoordsInAPI,
+            this.cmi_OpenCoordsInBrowser});
             this.cms_FileListView.Name = "cms_FileListView";
             resources.ApplyResources(this.cms_FileListView, "cms_FileListView");
             // 
@@ -219,6 +227,47 @@ namespace GeoTagNinja
             this.cmi_OpenCoordsInAPI.Name = "cmi_OpenCoordsInAPI";
             resources.ApplyResources(this.cmi_OpenCoordsInAPI, "cmi_OpenCoordsInAPI");
             this.cmi_OpenCoordsInAPI.Click += new System.EventHandler(this.cmi_OpenCoordsInAPI_Click);
+            // 
+            // cmi_OpenCoordsInBrowser
+            // 
+            this.cmi_OpenCoordsInBrowser.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmi_OpenCoordsInBrowserBing,
+            this.cmi_OpenCoordsInBrowserGeoNamesMaps,
+            this.cmi_OpenCoordsInBrowserGoogle,
+            this.cmi_OpenCoordsInBrowserWeGoHere,
+            this.cmi_OpenCoordsInBrowserOpenStreetMap});
+            this.cmi_OpenCoordsInBrowser.Name = "cmi_OpenCoordsInBrowser";
+            resources.ApplyResources(this.cmi_OpenCoordsInBrowser, "cmi_OpenCoordsInBrowser");
+            // 
+            // cmi_OpenCoordsInBrowserBing
+            // 
+            this.cmi_OpenCoordsInBrowserBing.Name = "cmi_OpenCoordsInBrowserBing";
+            resources.ApplyResources(this.cmi_OpenCoordsInBrowserBing, "cmi_OpenCoordsInBrowserBing");
+            this.cmi_OpenCoordsInBrowserBing.Click += new System.EventHandler(this.cmi_OpenCoordsInBrowserBing_Click);
+            // 
+            // cmi_OpenCoordsInBrowserGeoNamesMaps
+            // 
+            this.cmi_OpenCoordsInBrowserGeoNamesMaps.Name = "cmi_OpenCoordsInBrowserGeoNamesMaps";
+            resources.ApplyResources(this.cmi_OpenCoordsInBrowserGeoNamesMaps, "cmi_OpenCoordsInBrowserGeoNamesMaps");
+            this.cmi_OpenCoordsInBrowserGeoNamesMaps.Click += new System.EventHandler(this.cmi_OpenCoordsInBrowserGeoNamesMaps_Click);
+            // 
+            // cmi_OpenCoordsInBrowserGoogle
+            // 
+            this.cmi_OpenCoordsInBrowserGoogle.Name = "cmi_OpenCoordsInBrowserGoogle";
+            resources.ApplyResources(this.cmi_OpenCoordsInBrowserGoogle, "cmi_OpenCoordsInBrowserGoogle");
+            this.cmi_OpenCoordsInBrowserGoogle.Click += new System.EventHandler(this.cmi_OpenCoordsInBrowserGoogle_Click);
+            // 
+            // cmi_OpenCoordsInBrowserWeGoHere
+            // 
+            this.cmi_OpenCoordsInBrowserWeGoHere.Name = "cmi_OpenCoordsInBrowserWeGoHere";
+            resources.ApplyResources(this.cmi_OpenCoordsInBrowserWeGoHere, "cmi_OpenCoordsInBrowserWeGoHere");
+            this.cmi_OpenCoordsInBrowserWeGoHere.Click += new System.EventHandler(this.cmi_OpenCoordsInBrowserWeGoHere_Click);
+            // 
+            // cmi_OpenCoordsInBrowserOpenStreetMap
+            // 
+            this.cmi_OpenCoordsInBrowserOpenStreetMap.Name = "cmi_OpenCoordsInBrowserOpenStreetMap";
+            resources.ApplyResources(this.cmi_OpenCoordsInBrowserOpenStreetMap, "cmi_OpenCoordsInBrowserOpenStreetMap");
+            this.cmi_OpenCoordsInBrowserOpenStreetMap.Click += new System.EventHandler(this.cmi_OpenCoordsInBrowserOpenStreetMap_Click);
             // 
             // pbx_imagePreview
             // 
@@ -445,6 +494,7 @@ namespace GeoTagNinja
             this.tmi_File_SaveAll,
             this.tmi_File_EditFiles,
             this.tmi_File_ImportExportGPX,
+            this.tmi_File_ImportFavouritesFromGeoSetter,
             this.tmi_File_CopyGeoData,
             this.tmi_File_PasteGeoData,
             this.tss_ToolStripSeparator_Main,
@@ -472,6 +522,12 @@ namespace GeoTagNinja
             this.tmi_File_ImportExportGPX.Name = "tmi_File_ImportExportGPX";
             resources.ApplyResources(this.tmi_File_ImportExportGPX, "tmi_File_ImportExportGPX");
             this.tmi_File_ImportExportGPX.Click += new System.EventHandler(this.tmi_File_ImportExportGPX_Click);
+            // 
+            // tmi_File_ImportFavouritesFromGeoSetter
+            // 
+            this.tmi_File_ImportFavouritesFromGeoSetter.Name = "tmi_File_ImportFavouritesFromGeoSetter";
+            resources.ApplyResources(this.tmi_File_ImportFavouritesFromGeoSetter, "tmi_File_ImportFavouritesFromGeoSetter");
+            this.tmi_File_ImportFavouritesFromGeoSetter.Click += new System.EventHandler(this.tmi_File_ImportFavouritesFromGeoSetter_Click);
             // 
             // tmi_File_CopyGeoData
             // 
@@ -779,6 +835,13 @@ namespace GeoTagNinja
         private ToolTip ttp_BugReport;
         private ToolStripMenuItem tmi_File_FlatMode;
         private ToolStripSeparator toolStripSeparator2;
+        private ToolStripMenuItem cmi_OpenCoordsInBrowser;
+        private ToolStripMenuItem cmi_OpenCoordsInBrowserBing;
+        private ToolStripMenuItem cmi_OpenCoordsInBrowserGeoNamesMaps;
+        private ToolStripMenuItem cmi_OpenCoordsInBrowserGoogle;
+        private ToolStripMenuItem cmi_OpenCoordsInBrowserWeGoHere;
+        private ToolStripMenuItem cmi_OpenCoordsInBrowserOpenStreetMap;
+        private ToolStripMenuItem tmi_File_ImportFavouritesFromGeoSetter;
     }
 }
 

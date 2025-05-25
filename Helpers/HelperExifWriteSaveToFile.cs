@@ -47,7 +47,8 @@ internal static class HelperExifWriteSaveToFile
         FrmMainApp.TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.Indeterminate);
         string exifArgsForOriginalFile = "";
         string exifArgsForSidecar = "";
-        // check there's anything to write.
+
+
         // ReSharper disable once InconsistentNaming
 
         foreach (string GUID in DistinctGUIDs)
@@ -142,12 +143,6 @@ internal static class HelperExifWriteSaveToFile
                         exifArgsForOriginalFile: ref exifArgsForOriginalFile,
                         exifArgsForSidecar: ref exifArgsForSidecar);
 
-                    // "NoWarning=(requires ExifVersion \d+ or higher|is not allowed in JPEG)" [or some such - don't add doublequotes]
-                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig,
-                        whatText:
-                        "NoWarning=(requires ExifVersion \\d+ or higher|is not allowed in JPEG|MakerNote)",
-                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
-                        exifArgsForSidecar: ref exifArgsForSidecar);
 
                     UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText: Path.Combine(
                             path1: folderNameToWrite, path2:

@@ -152,7 +152,7 @@ public partial class FrmPasteWhat : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void FrmPasteWhat_Load(object sender,
-        EventArgs e)
+                                   EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         HelperControlAndMessageBoxHandling.ReturnControlText(
@@ -187,7 +187,7 @@ public partial class FrmPasteWhat : Form
     /// <param name="e">Unused</param>
     /// <exception cref="NotImplementedException">Warn that I did something incorrect.</exception>
     private async void btn_Generic_OK_Click(object sender,
-        EventArgs e)
+                                            EventArgs e)
     {
         // this can't be 'string' because some of the types aren't strings
         Dictionary<ElementAttribute, object> copyPasteDict = new();
@@ -415,6 +415,10 @@ public partial class FrmPasteWhat : Form
                 if (frmEditFileDataInstance != null)
                 {
                     lvw = frmEditFileDataInstance.lvw_FileListEditImages;
+                    CultureInfo cultureInfoToUse = HelperGenericAncillaryListsArrays.CulturesWithCurrentCultureToUse()
+                       .Contains(item: CultureInfo.CurrentCulture)
+                        ? CultureInfo.CurrentCulture
+                        : CultureInfo.InvariantCulture;
 
                     // for each file
                     foreach (ListViewItem lvi in lvw.Items)
@@ -458,8 +462,7 @@ public partial class FrmPasteWhat : Form
                                         attribute: keyValuePair.Key,
                                         value: Convert.ToString(
                                                    value: keyValuePair.Value,
-                                                   provider: CultureInfo
-                                                      .InvariantCulture) ??
+                                                   provider: cultureInfoToUse) ??
                                                string.Empty,
                                         version: DirectoryElement.AttributeVersion
                                                                  .Stage1EditFormIntraTabTransferQueue,
@@ -472,7 +475,7 @@ public partial class FrmPasteWhat : Form
                                         attribute: keyValuePair.Key,
                                         value: Convert.ToString(
                                             value: keyValuePair.Value,
-                                            provider: CultureInfo.CurrentCulture), // this can't be invariant because it breaks Australian dates apparently.
+                                            provider: cultureInfoToUse),
                                         version: DirectoryElement.AttributeVersion
                                                                  .Stage1EditFormIntraTabTransferQueue,
                                         isMarkedForDeletion: false);
@@ -697,8 +700,8 @@ public partial class FrmPasteWhat : Form
         }
 
         bool CheckAdjustCreateTimeShiftActual(DirectoryElement dirElemFileToModify,
-            DirectoryElement.AttributeVersion
-                dirElemVersion)
+                                              DirectoryElement.AttributeVersion
+                                                  dirElemVersion)
         {
             int shiftedDays = 0;
             int shiftedHours = 0;
@@ -751,13 +754,13 @@ public partial class FrmPasteWhat : Form
 
 
     private void btn_Generic_Cancel_Click(object sender,
-        EventArgs e)
+                                          EventArgs e)
     {
         Hide();
     }
 
     private void btn_AllData_All_Click(object sender,
-        EventArgs e)
+                                       EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c =
@@ -770,7 +773,7 @@ public partial class FrmPasteWhat : Form
     }
 
     private void btn_AllData_None_Click(object sender,
-        EventArgs e)
+                                        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c =
@@ -784,7 +787,7 @@ public partial class FrmPasteWhat : Form
 
 
     private void btn_PullMostRecentPasteSettings_Click(object sender,
-        EventArgs e)
+                                                       EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c =
@@ -796,10 +799,10 @@ public partial class FrmPasteWhat : Form
         }
     }
 
-#region GPSData
+    #region GPSData
 
     private void btn_GPSData_All_Click(object sender,
-        EventArgs e)
+                                       EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
@@ -819,7 +822,7 @@ public partial class FrmPasteWhat : Form
     }
 
     private void btn_GPSData_None_Click(object sender,
-        EventArgs e)
+                                        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
@@ -838,12 +841,12 @@ public partial class FrmPasteWhat : Form
         }
     }
 
-#endregion
+    #endregion
 
-#region LocationData
+    #region LocationData
 
     private void btn_LocationData_All_Click(object sender,
-        EventArgs e)
+                                            EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
@@ -864,7 +867,7 @@ public partial class FrmPasteWhat : Form
 
 
     private void btn_LocationData_None_Click(object sender,
-        EventArgs e)
+                                             EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
@@ -883,12 +886,12 @@ public partial class FrmPasteWhat : Form
         }
     }
 
-#endregion
+    #endregion
 
-#region DateTimes
+    #region DateTimes
 
     private void btn_Dates_All_Click(object sender,
-        EventArgs e)
+                                     EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
@@ -908,7 +911,7 @@ public partial class FrmPasteWhat : Form
     }
 
     private void btn_Dates_None_Click(object sender,
-        EventArgs e)
+                                      EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
@@ -929,7 +932,7 @@ public partial class FrmPasteWhat : Form
 
 
     private void ckb_TakenDate_CheckedChanged(object sender,
-        EventArgs e)
+                                              EventArgs e)
     {
         rbt_PasteTakenDateActual.Enabled = ckb_TakenDate.Checked;
         if (ckb_TakenDate.Checked)
@@ -941,7 +944,7 @@ public partial class FrmPasteWhat : Form
     }
 
     private void ckb_CreateDate_CheckedChanged(object sender,
-        EventArgs e)
+                                               EventArgs e)
     {
         rbt_PasteCreateDateActual.Enabled = ckb_CreateDate.Checked;
         if (ckb_CreateDate.Checked)
@@ -954,7 +957,7 @@ public partial class FrmPasteWhat : Form
 
 
     private void rbt_PasteTakenDateShift_CheckedChanged(object sender,
-        EventArgs e)
+                                                        EventArgs e)
     {
         if (rbt_PasteTakenDateShift.Checked)
         {
@@ -1024,7 +1027,7 @@ public partial class FrmPasteWhat : Form
     }
 
     private void rbt_PasteCreateDateShift_CheckedChanged(object sender,
-        EventArgs e)
+                                                         EventArgs e)
     {
         bool createDateShiftDataExists = false;
 
@@ -1087,5 +1090,5 @@ public partial class FrmPasteWhat : Form
         }
     }
 
-#endregion
+    #endregion
 }
