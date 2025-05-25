@@ -10,6 +10,7 @@
 	- Added some logic to ignore certain particular warnings cropping up when saving files #159
 	- Fix Custom Rules not working properly with the `TargetPointName` attribute
 	- Fix API language selection not respected
+	- Added some logic to revert to 'current folder' if user says No to switching to C:\ when chosen folder doesn't exist as to avoid a dead loop.
 
 **Build 9196 [20250306]** 
 - NEW & UPDATED:

@@ -144,6 +144,8 @@ public partial class FrmMainApp : Form
         OpenCoordsInBrowserOpenStreetMap
     }
 
+    private string CurrentFolder;
+
 #endregion
 
 #endregion
@@ -1665,6 +1667,21 @@ public partial class FrmMainApp : Form
     {
         Log.Info(message: "Starting");
 
+        string CurrentFoldersParent = null;
+        try
+        {
+            CurrentFoldersParent =
+                HelperFileSystemOperators.FsoGetParent(path: CurrentFolder);
+        }
+        catch
+        {
+            CurrentFoldersParent = HelperGenericTypeOperations.Coalesce(
+                Directory.GetDirectoryRoot(path: CurrentFolder)
+              , "C:"
+            );
+        }
+
+
         HelperVariables.OperationChangeFolderIsOkay = false;
         if (FlatMode && !_ignoreFlatMode)
         {
@@ -1726,6 +1743,23 @@ public partial class FrmMainApp : Form
                 tbx_FolderName.Text = @"C:\";
                 tbx_FolderName.Select();
                 SendKeys.Send(keys: "{ENTER}");
+            }
+            else
+            {
+                if (Directory.Exists(path: CurrentFolder))
+                {
+                    tbx_FolderName.Text = CurrentFolder;
+                    tbx_FolderName.Select();
+                    SendKeys.Send(keys: "{ENTER}");
+                    tsb_Refresh_lvwFileList_Click(sender: null, e: null);
+                }
+                else if (Directory.Exists(path: CurrentFoldersParent))
+                {
+                    tbx_FolderName.Text = CurrentFoldersParent;
+                    tbx_FolderName.Select();
+                    SendKeys.Send(keys: "{ENTER}");
+                    tsb_Refresh_lvwFileList_Click(sender: null, e: null);
+                }
             }
         }
     }
@@ -2558,6 +2592,7 @@ public partial class FrmMainApp : Form
                 HelperVariables.OperationChangeFolderIsOkay = false;
                 await HelperFileSystemOperators
                    .FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: false);
+                CurrentFolder = tbx_FolderName.Text;
                 if (HelperVariables.OperationChangeFolderIsOkay)
                 {
                     if (Directory.Exists(
