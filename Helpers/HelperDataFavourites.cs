@@ -5,6 +5,7 @@ using System.Data.SQLite;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using GeoTagNinja.Model;
@@ -34,42 +35,57 @@ internal static class HelperDataFavourites
             XDocument doc = XDocument.Parse(text: File.ReadAllText(path: fileNameToParse));
             foreach (XElement item in doc.Descendants(name: "geosetterpositions").Elements())
             {
-                GeoSetterFavourite geoSetterFavourite = new()
+                string utf8_String = null;
+                try
                 {
-                    name = (string)item.Attribute(name: "name"),
-                    lat = double.TryParse(s: (string)item.Attribute(name: "lat"),
-                        style: NumberStyles.Any,
-                        provider: CultureInfo.InvariantCulture, result: out double lat)
-                        ? lat
-                        : 0,
-                    lng = double.TryParse(s: (string)item.Attribute(name: "lng"), style: NumberStyles.Any,
-                        provider: CultureInfo.InvariantCulture, result: out double lng)
-                        ? lng
-                        : 0,
-                    radius = int.TryParse(s: (string)item.Attribute(name: "radius"), style: NumberStyles.Any,
-                        provider: CultureInfo.InvariantCulture, result: out int radius)
-                        ? radius
-                        : 0,
-                    autoassign = int.TryParse(s: (string)item.Attribute(name: "autoassign"), style: NumberStyles.Any,
-                        provider: CultureInfo.InvariantCulture, result: out int autoassign)
-                        ? autoassign
-                        : 0,
-                    snap = int.TryParse(s: (string)item.Attribute(name: "snap"), style: NumberStyles.Any,
-                        provider: CultureInfo.InvariantCulture, result: out int snap)
-                        ? snap
-                        : 0,
-                    alt = int.TryParse(s: (string)item.Attribute(name: "alt"), style: NumberStyles.Any,
-                        provider: CultureInfo.InvariantCulture, result: out int alt)
-                        ? alt
-                        : 0,
-                    tz = (string)item.Attribute(name: "tz"),
-                    ctrycode = (string)item.Attribute(name: "ctrycode"),
-                    ctry = (string)item.Attribute(name: "ctry"),
-                    state = (string)item.Attribute(name: "state"),
-                    city = (string)item.Attribute(name: "city"),
-                    subloc = (string)item.Attribute(name: "subloc")
-                };
-                geoSetterFavourites.Add(item: geoSetterFavourite);
+                    byte[] utf8_Bytes = Encoding.Default.GetBytes(s: (string)item.Attribute(name: "name"));
+                    utf8_String = Encoding.UTF8.GetString(bytes: utf8_Bytes);
+                }
+                catch
+                {
+                    // ignore because we'll ignore this element in a line or two
+                }
+
+                if (!string.IsNullOrWhiteSpace(value: utf8_String))
+                {
+                    GeoSetterFavourite geoSetterFavourite = new()
+                    {
+                        name = utf8_String,
+                        lat = double.TryParse(s: (string)item.Attribute(name: "lat"),
+                            style: NumberStyles.Any,
+                            provider: CultureInfo.InvariantCulture, result: out double lat)
+                            ? lat
+                            : 0,
+                        lng = double.TryParse(s: (string)item.Attribute(name: "lng"), style: NumberStyles.Any,
+                            provider: CultureInfo.InvariantCulture, result: out double lng)
+                            ? lng
+                            : 0,
+                        radius = int.TryParse(s: (string)item.Attribute(name: "radius"), style: NumberStyles.Any,
+                            provider: CultureInfo.InvariantCulture, result: out int radius)
+                            ? radius
+                            : 0,
+                        autoassign = int.TryParse(s: (string)item.Attribute(name: "autoassign"),
+                            style: NumberStyles.Any,
+                            provider: CultureInfo.InvariantCulture, result: out int autoassign)
+                            ? autoassign
+                            : 0,
+                        snap = int.TryParse(s: (string)item.Attribute(name: "snap"), style: NumberStyles.Any,
+                            provider: CultureInfo.InvariantCulture, result: out int snap)
+                            ? snap
+                            : 0,
+                        alt = int.TryParse(s: (string)item.Attribute(name: "alt"), style: NumberStyles.Any,
+                            provider: CultureInfo.InvariantCulture, result: out int alt)
+                            ? alt
+                            : 0,
+                        tz = (string)item.Attribute(name: "tz"),
+                        ctrycode = (string)item.Attribute(name: "ctrycode"),
+                        ctry = (string)item.Attribute(name: "ctry"),
+                        state = (string)item.Attribute(name: "state"),
+                        city = (string)item.Attribute(name: "city"),
+                        subloc = (string)item.Attribute(name: "subloc")
+                    };
+                    geoSetterFavourites.Add(item: geoSetterFavourite);
+                }
             }
         }
         catch (Exception ex)
