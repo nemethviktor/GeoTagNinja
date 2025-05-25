@@ -935,7 +935,7 @@ Cela dit, le code devrait être capable de comprendre d'autres présentations. N
     <value>Gérer les favoris</value>
   </data>
   <data name="mbx_FrmMainApp_NoFavouritesDefined" xml:space="preserve">
-    <value>Vous n'avez pas de favoris définis. Ajoutez-en un à l'aide des boutons situés sous la carte.</value>
+    <value>Vous n'avez pas de favori défini. Ajoutez-en un à l'aide des boutons situés sous la carte.</value>
   </data>
   <data name="rbx_CustomCityLogicExplanation" xml:space="preserve">
     <value>Il s'agit d'une fonctionnalité avancée. AdminName1-4 et ToponymName font référence aux sorties de l'API, donc si vous ne comprenez pas cela, il est préférable de ne pas creuser plus le sujet. 
