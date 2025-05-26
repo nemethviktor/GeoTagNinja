@@ -278,7 +278,9 @@
     <Compile Include="View\ListView\FileListViewReadWrite.cs" />
     <Compile Include="View\EditFileForm\EditFileFormGeneric.cs" />
     <Compile Include="Helpers\HelperAPIGeoNamesToponomyExtractor.cs" />
-    <Compile Include="Helpers\HelperAPIVersionCheckers.cs" />
+    <Compile Include="Helpers\HelperAPIVersionCheckers.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Helpers\HelperDataApplicationSettings.cs" />
     <Compile Include="Helpers\HelperDataCSVFileOperations.cs" />
     <Compile Include="Helpers\HelperDataCustomCityAllocationRules.cs" />
@@ -381,6 +383,7 @@
     <EmbeddedResource Include="Resources\Languages\Strings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="View\FrmColumnSelection.resx">
       <DependentUpon>FrmColumnSelection.cs</DependentUpon>

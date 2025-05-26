@@ -24,6 +24,7 @@ internal static class HelperVariables
     internal static bool UserSettingUseDarkMode;
     internal static bool UserSettingUpdatePreReleaseGTN;
     internal static bool UserSettingOnlyShowFCodePPL = false;
+    internal static bool UserSettingShowThumbnails;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
     internal static string UserSettingMapColourMode; // DarkInverse or DarkPale (could be Normal too but not relevant)
     internal static bool UserSettingUseImperial = false;

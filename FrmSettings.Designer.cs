@@ -35,6 +35,8 @@ namespace GeoTagNinja
             this.tcr_Settings = new System.Windows.Forms.TabControl();
             this.tpg_Application = new System.Windows.Forms.TabPage();
             this.gbx_AppSettings = new System.Windows.Forms.GroupBox();
+            this.pbx_ShowThumbnails = new System.Windows.Forms.PictureBox();
+            this.ckb_ShowThumbnails = new System.Windows.Forms.CheckBox();
             this.ckb_UseDarkMode = new System.Windows.Forms.CheckBox();
             this.gbx_MapColourMode = new System.Windows.Forms.GroupBox();
             this.rbt_MapColourModeDarkPale = new System.Windows.Forms.RadioButton();
@@ -98,9 +100,11 @@ namespace GeoTagNinja
             this.fbd_StartupFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.btn_ExportSettings = new System.Windows.Forms.Button();
             this.btn_ImportSettings = new System.Windows.Forms.Button();
+            this.ttp_ShowThumbnails = new System.Windows.Forms.ToolTip(this.components);
             this.tcr_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             this.gbx_AppSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbx_ShowThumbnails)).BeginInit();
             this.gbx_MapColourMode.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).BeginInit();
             this.tpg_GeoNames.SuspendLayout();
@@ -137,6 +141,8 @@ namespace GeoTagNinja
             // 
             // gbx_AppSettings
             // 
+            this.gbx_AppSettings.Controls.Add(this.pbx_ShowThumbnails);
+            this.gbx_AppSettings.Controls.Add(this.ckb_ShowThumbnails);
             this.gbx_AppSettings.Controls.Add(this.ckb_UseDarkMode);
             this.gbx_AppSettings.Controls.Add(this.gbx_MapColourMode);
             this.gbx_AppSettings.Controls.Add(this.ckb_UpdateCheckPreRelease);
@@ -153,6 +159,20 @@ namespace GeoTagNinja
             resources.ApplyResources(this.gbx_AppSettings, "gbx_AppSettings");
             this.gbx_AppSettings.Name = "gbx_AppSettings";
             this.gbx_AppSettings.TabStop = false;
+            // 
+            // pbx_ShowThumbnails
+            // 
+            resources.ApplyResources(this.pbx_ShowThumbnails, "pbx_ShowThumbnails");
+            this.pbx_ShowThumbnails.Name = "pbx_ShowThumbnails";
+            this.pbx_ShowThumbnails.TabStop = false;
+            this.pbx_ShowThumbnails.MouseHover += new System.EventHandler(this.pbx_ShowThumbnails_MouseHover);
+            // 
+            // ckb_ShowThumbnails
+            // 
+            resources.ApplyResources(this.ckb_ShowThumbnails, "ckb_ShowThumbnails");
+            this.ckb_ShowThumbnails.Name = "ckb_ShowThumbnails";
+            this.ckb_ShowThumbnails.UseVisualStyleBackColor = true;
+            this.ckb_ShowThumbnails.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
             // ckb_UseDarkMode
             // 
@@ -650,6 +670,10 @@ namespace GeoTagNinja
             this.btn_ImportSettings.UseVisualStyleBackColor = true;
             this.btn_ImportSettings.Click += new System.EventHandler(this.btn_ImportSettings_Click);
             // 
+            // ttp_ShowThumbnails
+            // 
+            this.ttp_ShowThumbnails.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            // 
             // FrmSettings
             // 
             this.AcceptButton = this.btn_Generic_OK;
@@ -671,6 +695,7 @@ namespace GeoTagNinja
             this.tpg_Application.ResumeLayout(false);
             this.gbx_AppSettings.ResumeLayout(false);
             this.gbx_AppSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbx_ShowThumbnails)).EndInit();
             this.gbx_MapColourMode.ResumeLayout(false);
             this.gbx_MapColourMode.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).EndInit();
@@ -759,5 +784,8 @@ namespace GeoTagNinja
         private System.Windows.Forms.Button btn_ImportSettings;
         private System.Windows.Forms.CheckBox ckb_ShowPassword_ARCGIS_APIKey;
         private System.Windows.Forms.CheckBox ckb_ShowPassword_GeoNames;
+        private System.Windows.Forms.CheckBox ckb_ShowThumbnails;
+        private System.Windows.Forms.PictureBox pbx_ShowThumbnails;
+        private System.Windows.Forms.ToolTip ttp_ShowThumbnails;
     }
 }

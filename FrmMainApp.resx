@@ -201,7 +201,7 @@
     <value>cmi_OpenCoordsInBrowser</value>
   </data>
   <data name="cms_FileListView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>219, 114</value>
+    <value>219, 92</value>
   </data>
   <data name="&gt;&gt;cms_FileListView.Name" xml:space="preserve">
     <value>cms_FileListView</value>
@@ -229,7 +229,7 @@
     <value>lvw_FileList</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.ListView.FileListView, GeoTagNinja, Version=1.16.9227.21929, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.ListView.FileListView, GeoTagNinja, Version=1.16.9276.29143, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel1</value>
@@ -277,7 +277,7 @@
     <value>pbx_imagePreview</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.ImagePreview, GeoTagNinja, Version=1.16.9227.21929, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.ImagePreview, GeoTagNinja, Version=1.16.9276.29143, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel2</value>
@@ -870,7 +870,7 @@
     <value>wbv_MapArea</value>
   </data>
   <data name="&gt;&gt;wbv_MapArea.Type" xml:space="preserve">
-    <value>Microsoft.Web.WebView2.WinForms.WebView2, Microsoft.Web.WebView2.WinForms, Version=1.0.2535.41, Culture=neutral, PublicKeyToken=2a8ab48044d2601e</value>
+    <value>Microsoft.Web.WebView2.WinForms.WebView2, Microsoft.Web.WebView2.WinForms, Version=1.0.3124.44, Culture=neutral, PublicKeyToken=2a8ab48044d2601e</value>
   </data>
   <data name="&gt;&gt;wbv_MapArea.Parent" xml:space="preserve">
     <value>tpg_Map</value>
@@ -985,7 +985,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAD8
-        CAAAAk1TRnQBSQFMAgEBAgEAAVABAwFQAQMBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        CAAAAk1TRnQBSQFMAgEBAgEAAVgBAwFYAQMBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABQAMAARADAAEBAQABCAYAAQQYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
         AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
         AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA
@@ -1099,7 +1099,7 @@
     <value>CTRL+S</value>
   </data>
   <data name="tmi_File_SaveAll.Size" type="System.Drawing.Size, System.Drawing">
-    <value>276, 22</value>
+    <value>289, 22</value>
   </data>
   <data name="tmi_File_SaveAll.Text" xml:space="preserve">
     <value>tmi_File_SaveAll</value>
@@ -1108,13 +1108,13 @@
     <value>CTLR+Enter</value>
   </data>
   <data name="tmi_File_EditFiles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>276, 22</value>
+    <value>289, 22</value>
   </data>
   <data name="tmi_File_EditFiles.Text" xml:space="preserve">
     <value>tmi_File_EditFiles</value>
   </data>
   <data name="tmi_File_ImportExportGPX.Size" type="System.Drawing.Size, System.Drawing">
-    <value>276, 22</value>
+    <value>289, 22</value>
   </data>
   <data name="tmi_File_ImportExportGPX.Text" xml:space="preserve">
     <value>tmi_File_ImportExportGPX</value>
@@ -1129,7 +1129,7 @@
     <value>Sh + CTRL+C</value>
   </data>
   <data name="tmi_File_CopyGeoData.Size" type="System.Drawing.Size, System.Drawing">
-    <value>275, 22</value>
+    <value>289, 22</value>
   </data>
   <data name="tmi_File_CopyGeoData.Text" xml:space="preserve">
     <value>tmi_File_CopyGeoData</value>
@@ -1138,28 +1138,28 @@
     <value>Sh + CTRL + V</value>
   </data>
   <data name="tmi_File_PasteGeoData.Size" type="System.Drawing.Size, System.Drawing">
-    <value>275, 22</value>
+    <value>289, 22</value>
   </data>
   <data name="tmi_File_PasteGeoData.Text" xml:space="preserve">
     <value>tmi_File_PasteGeoData</value>
   </data>
   <data name="tss_ToolStripSeparator_Main.Size" type="System.Drawing.Size, System.Drawing">
-    <value>272, 6</value>
+    <value>286, 6</value>
   </data>
   <data name="tmi_File_FlatMode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>275, 22</value>
+    <value>289, 22</value>
   </data>
   <data name="tmi_File_FlatMode.Text" xml:space="preserve">
     <value>tmi_File_FlatMode</value>
   </data>
   <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>272, 6</value>
+    <value>286, 6</value>
   </data>
   <data name="tmi_File_Quit.ShortcutKeyDisplayString" xml:space="preserve">
     <value>ALT+F4</value>
   </data>
   <data name="tmi_File_Quit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>275, 22</value>
+    <value>289, 22</value>
   </data>
   <data name="tmi_File_Quit.Text" xml:space="preserve">
     <value>tmi_File_Quit</value>

@@ -9,6 +9,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.View.ListView;
 using NLog;
@@ -259,154 +260,163 @@ public class DirectoryElement
         get => _Thumbnail;
         private set
         {
-            Dictionary<ElementType, string> iconLookupDictionary = new();
+            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
-            iconLookupDictionary.Add(key: ElementType.SubDirectory, value: "Folder.png");
-            iconLookupDictionary.Add(key: ElementType.MyComputer, value: "Computer.png");
-            iconLookupDictionary.Add(key: ElementType.ParentDirectory, value: "Parentfolder.png");
-            iconLookupDictionary.Add(key: ElementType.Drive, value: "Harddrive.png");
-
-            string generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                path2: $"{ItemNameWithoutPath}_small_thumbnail.jpg");
-
-
-            if (Type == ElementType.File)
+            if (frmMainAppInstance.listViewDisplayMode == FrmMainApp.ListViewDisplayMode.LargeIcons)
             {
-                try
-                {
-                    HelperExifReadGetImagePreviews.UseWindowsImageHandlerToCreateThumbnail(fileNameIn: FileNameWithPath,
-                        fileNameOut: generatedFileName,
-                        maxWidth: FileListView.ThumbnailSize,
-                        maxHeight: FileListView.ThumbnailSize);
-                }
-                catch
-                {
-                    //
-                }
+                Dictionary<ElementType, string> iconLookupDictionary = new();
 
-                if (!File.Exists(path: generatedFileName))
+                iconLookupDictionary.Add(key: ElementType.SubDirectory, value: "Folder.png");
+                iconLookupDictionary.Add(key: ElementType.MyComputer, value: "Computer.png");
+                iconLookupDictionary.Add(key: ElementType.ParentDirectory, value: "Parentfolder.png");
+                iconLookupDictionary.Add(key: ElementType.Drive, value: "Harddrive.png");
+
+                string generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                    path2: $"{ItemNameWithoutPath}_small_thumbnail.jpg");
+
+
+                if (Type == ElementType.File)
                 {
                     try
                     {
-                        // This is so fucking stupid it hurts my brain.
-                        // Libraw is the fastest but doesn't work w/ my D5 files
-                        // Basically i've found that some files have a zero-index thumbnail but others have a 1-index.
-                        // ... maybe even more. So bump this to hight heavens. (= 4)
-                        for (int i = 0; i < 4; i++)
+                        // this only works for the basic file types
+                        HelperExifReadGetImagePreviews.UseWindowsImageHandlerToCreateThumbnail(
+                            fileNameIn: FileNameWithPath,
+                            fileNameOut: generatedFileName,
+                            maxWidth: FileListView.ThumbnailSize,
+                            maxHeight: FileListView.ThumbnailSize);
+                    }
+                    catch
+                    {
+                        //
+                    }
+
+
+                    if (!File.Exists(path: generatedFileName))
+                    {
+                        try
                         {
-                            // yes i know this line duplicates the above for 0-index but alas.
-                            if (!File.Exists(path: generatedFileName))
-                            {
-                                HelperExifReadGetImagePreviews.UseLibRawToGenerateThumbnail(
-                                    originalImagePath: FileNameWithPath,
-                                    generatedJpegPath: generatedFileName,
-                                    thumbnailIndex: i);
-                            }
+                            // Exiftool is acceptable speed and works most of the time but outputs a large file
+                            Task task =
+                                HelperExifReadGetImagePreviews.UseExifToolToGeneratePreviewsOrThumbnails(
+                                    fileNameWithPath: FileNameWithPath,
+                                    initiator: HelperExifReadGetImagePreviews.Initiator.FrmMainAppListViewThumbnail,
+                                    addSmallThumbnailToFileName: true
+                                );
+                        }
+
+                        catch
+
+                        {
+                            //
                         }
                     }
-                    catch
-                    {
-                        //
-                    }
-                }
 
-                if (!File.Exists(path: generatedFileName))
-                {
-                    try
+                    if (!File.Exists(path: generatedFileName))
                     {
-                        // Exiftool is acceptable speed and works most of the time but outputs a large file
-                        Task task =
-                            HelperExifReadGetImagePreviews.ExifGetImagePreviewsForThumbnails(
-                                fileNameWithPath: FileNameWithPath,
-                                initiator: HelperExifReadGetImagePreviews.Initiator.FrmMainAppListViewThumbnail
-                            );
-                    }
-
-                    catch
-
-                    {
-                        //
-                    }
-                }
-
-                // This just sucks altogether.
-                if (!File.Exists(path: generatedFileName))
-                {
-                    try
-                    {
-                        HelperExifReadGetImagePreviews.UseLibRawToGenerateFullImage(
-                            originalImagePath: FileNameWithPath,
-                            generatedJpegPath: generatedFileName,
-                            imgWidth: FileListView.ThumbnailSize,
-                            imgHeight: FileListView.ThumbnailSize);
-                    }
-                    catch
-                    {
-                        //
-                    }
-                }
-
-
-                // And if we've still not succeeded try Magick
-                if (!File.Exists(path: generatedFileName))
-                {
-                    try
-                    {
-                        HelperExifReadGetImagePreviews.UseMagickImageToGeneratePreview
-                        (
-                            originalImagePath: FileNameWithPath,
-                            generatedJpegPath: generatedFileName,
-                            imgWidth: FileListView.ThumbnailSize,
-                            imgHeight: FileListView.ThumbnailSize);
-                    }
-                    catch
-                    {
-                        // sod it
-                    }
-                }
-
-
-                if (File.Exists(path: generatedFileName))
-                {
-                    value = GenerateFixedSizeImage(originalPath: generatedFileName,
-                        width: FileListView.ThumbnailSize, height: FileListView.ThumbnailSize);
-                }
-            }
-            else
-            {
-                try
-                {
-                    string iconLookupValue = iconLookupDictionary[key: Type];
-                    if (Type == ElementType.Drive)
-                    {
-                        DriveInfo di = new(driveName: FileNameWithPath);
-                        DriveType driveType = di.DriveType;
-                        iconLookupValue = driveType switch
+                        try
                         {
-                            // If I have to fish for these again I'll hang myself.
-                            // Also if someone that knows how to get the icons out of nativeMethods, do shout.
-                            // In the meantime follow this -> https://www.tenforums.com/tutorials/128170-extract-icon-file-windows.html tutorial
-                            DriveType.Removable => "Removabledrive.png",
-                            DriveType.Fixed => "Harddrive.png",
-                            DriveType.Network => "Networkdrive.png",
-                            DriveType.CDRom => "CDdrive.png",
-                            _ => "Otherdrive.png"
-                        };
+                            // This is so fucking stupid it hurts my brain.
+                            // Libraw is the fastest but doesn't work w/ my D5 files
+                            // Basically i've found that some files have a zero-index thumbnail but others have a 1-index.
+                            // ... maybe even more. So bump this to hight heavens. (= 4)
+                            for (int i = 0; i < 4; i++)
+                            {
+                                // yes i know this line duplicates the above for 0-index but alas.
+                                if (!File.Exists(path: generatedFileName))
+                                {
+                                    HelperExifReadGetImagePreviews.UseLibRawToGenerateThumbnail(
+                                        originalImagePath: FileNameWithPath,
+                                        generatedJpegPath: generatedFileName,
+                                        thumbnailIndex: i);
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            //
+                        }
                     }
 
-                    value = Image.FromFile(filename: Path.Combine(
-                        path1: AppDomain.CurrentDomain.BaseDirectory,
-                        path2: "images",
-                        path3: iconLookupValue));
+                    // This just sucks altogether.
+                    if (!File.Exists(path: generatedFileName))
+                    {
+                        try
+                        {
+                            HelperExifReadGetImagePreviews.UseLibRawToGenerateFullImage(
+                                originalImagePath: FileNameWithPath,
+                                generatedJpegPath: generatedFileName,
+                                imgWidth: FileListView.ThumbnailSize,
+                                imgHeight: FileListView.ThumbnailSize);
+                        }
+                        catch
+                        {
+                            //
+                        }
+                    }
+
+
+                    // And if we've still not succeeded try Magick
+                    if (!File.Exists(path: generatedFileName))
+                    {
+                        try
+                        {
+                            HelperExifReadGetImagePreviews.UseMagickImageToGeneratePreview
+                            (
+                                originalImagePath: FileNameWithPath,
+                                generatedJpegPath: generatedFileName,
+                                imgWidth: FileListView.ThumbnailSize,
+                                imgHeight: FileListView.ThumbnailSize);
+                        }
+                        catch
+                        {
+                            // sod it
+                        }
+                    }
+
+
+                    if (File.Exists(path: generatedFileName))
+                    {
+                        value = GenerateFixedSizeImage(originalPath: generatedFileName,
+                            width: FileListView.ThumbnailSize, height: FileListView.ThumbnailSize);
+                    }
                 }
-                catch
+                else
                 {
-                    //
+                    try
+                    {
+                        string iconLookupValue = iconLookupDictionary[key: Type];
+                        if (Type == ElementType.Drive)
+                        {
+                            DriveInfo di = new(driveName: FileNameWithPath);
+                            DriveType driveType = di.DriveType;
+                            iconLookupValue = driveType switch
+                            {
+                                // If I have to fish for these again I'll hang myself.
+                                // Also if someone that knows how to get the icons out of nativeMethods, do shout.
+                                // In the meantime follow this -> https://www.tenforums.com/tutorials/128170-extract-icon-file-windows.html tutorial
+                                DriveType.Removable => "Removabledrive.png",
+                                DriveType.Fixed => "Harddrive.png",
+                                DriveType.Network => "Networkdrive.png",
+                                DriveType.CDRom => "CDdrive.png",
+                                _ => "Otherdrive.png"
+                            };
+                        }
+
+                        value = Image.FromFile(filename: Path.Combine(
+                            path1: AppDomain.CurrentDomain.BaseDirectory,
+                            path2: "images",
+                            path3: iconLookupValue));
+                    }
+                    catch
+                    {
+                        //
+                    }
                 }
+
+
+                _Thumbnail = value;
             }
-
-
-            _Thumbnail = value;
         }
     }
 

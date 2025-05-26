@@ -12,8 +12,9 @@ using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
-using static System.String;
+using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.View.ListView.FileListView;
+using static System.String;
 using HelperControlAndMessageBoxCustomMessageBoxManager =
     GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 
@@ -31,17 +32,17 @@ public partial class FrmSettings : Form
     private static List<Control> _lstTpgApplicationControls = new(); // do not rename
     private static List<Control> _lstTpgGeoNamesControls = new(); // do not rename
     private static bool _importHasBeenProcessed;
-    private string _languageSavedInSQL;
     private bool _ignoreRestartWarnings;
+    private string _languageSavedInSQL;
     private bool _nowLoadingSettingsData;
 
-    private List<string> _rbtGeoNamesLanguage = new()
+    private readonly List<string> _rbtGeoNamesLanguage = new()
     {
         "rbt_UseGeoNamesLocalLanguage",
         "rbt_TryUseGeoNamesLanguage"
     };
 
-    private List<string> _rbtMapColourOptions = new()
+    private readonly List<string> _rbtMapColourOptions = new()
     {
         "rbt_MapColourModeNormal",
         "rbt_MapColourModeDarkInverse",
@@ -67,7 +68,7 @@ public partial class FrmSettings : Form
     private void AssignControlLabelsAndValues()
     {
         HelperNonStatic helperNonstatic = new();
-        HelperControlAndMessageBoxHandling.ReturnControlText(
+        ReturnControlText(
             cItem: this, senderForm: this);
 
         // Gets the various controls' labels and values (eg "latitude" and "51.002")
@@ -90,13 +91,13 @@ public partial class FrmSettings : Form
 
                 // Part 1: Fill the comboboxes
                 // We want to have something like "Français [French]"
-                if (cItem.Name == "cbx_Language" ||
-                    cItem.Name == "cbx_TryUseGeoNamesLanguage")
+                if (cItem == cbx_Language ||
+                    cItem == cbx_TryUseGeoNamesLanguage)
                 {
                     ComboBox cbx = (ComboBox)cItem;
                     List<string> languageList;
 
-                    if (cItem.Name == "cbx_Language")
+                    if (cItem == cbx_Language)
                     {
                         languageList = HelperLocalisationLanguageManager.GetTranslatedLanguages();
                     }
@@ -171,7 +172,7 @@ public partial class FrmSettings : Form
 
                 else
                 {
-                    HelperControlAndMessageBoxHandling.ReturnControlText(cItem: cItem,
+                    ReturnControlText(cItem: cItem,
                         senderForm: this,
                         parentNameToUse: parentNameToUse);
                 }
@@ -409,9 +410,9 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "CountryCode",
             Name = COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE,
-            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
+            HeaderText = ReturnControlText(
                 controlName: COL_NAME_PREFIX + FileListColumns.COUNTRY,
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader),
+                fakeControlType: FakeControlTypes.ColumnHeader),
             DataSource = clh_CountryCodeOptions.ToList(), // needs to be a list
             ValueMember = "Key",
             DisplayMember = "Value"
@@ -425,8 +426,8 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "DataPointName",
             Name = "clh_DataPointName",
-            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+            HeaderText = ReturnControlText(
+                fakeControlType: FakeControlTypes.ColumnHeader,
                 controlName: "clh_DataPointName")
         };
 
@@ -440,8 +441,8 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "DataPointConditionType",
             Name = "clh_DataPointConditionType",
-            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+            HeaderText = ReturnControlText(
+                fakeControlType: FakeControlTypes.ColumnHeader,
                 controlName: "clh_DataPointConditionType")
         };
 
@@ -458,8 +459,8 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "DataPointConditionValue",
             Name = "clh_DataPointConditionValue",
-            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+            HeaderText = ReturnControlText(
+                fakeControlType: FakeControlTypes.ColumnHeader,
                 controlName: "clh_DataPointConditionValue")
         };
 
@@ -469,8 +470,8 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "TargetPointName",
             Name = "clh_TargetPointName",
-            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+            HeaderText = ReturnControlText(
+                fakeControlType: FakeControlTypes.ColumnHeader,
                 controlName: "clh_TargetPointName")
         };
 
@@ -486,8 +487,8 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "TargetPointOutcome",
             Name = "clh_TargetPointOutcome",
-            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+            HeaderText = ReturnControlText(
+                fakeControlType: FakeControlTypes.ColumnHeader,
                 controlName: "clh_TargetPointOutcome")
         };
 
@@ -501,8 +502,8 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "TargetPointOutcomeCustom",
             Name = "clh_TargetPointOutcomeCustom",
-            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+            HeaderText = ReturnControlText(
+                fakeControlType: FakeControlTypes.ColumnHeader,
                 controlName: "clh_TargetPointOutcomeCustom")
         };
 
@@ -543,8 +544,8 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "CountryCode",
             Name = COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE,
-            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+            HeaderText = ReturnControlText(
+                fakeControlType: FakeControlTypes.ColumnHeader,
                 controlName: COL_NAME_PREFIX + FileListColumns.COUNTRY),
             DataSource = clh_CountryCodeOptions.ToList(), // needs to be a list
             ValueMember = "Key",
@@ -556,8 +557,8 @@ public partial class FrmSettings : Form
         {
             DataPropertyName = "TargetPointNameCustomCityLogic",
             Name = "clh_TargetPointNameCustomCityLogic",
-            HeaderText = HelperControlAndMessageBoxHandling.ReturnControlText(
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+            HeaderText = ReturnControlText(
+                fakeControlType: FakeControlTypes.ColumnHeader,
                 controlName: "clh_TargetPointNameCustomCityLogic")
         };
 
@@ -649,7 +650,7 @@ public partial class FrmSettings : Form
                 e.Cancel = true;
                 HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                     controlName: "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty",
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
+                    captionType: MessageBoxCaption.Warning,
                     buttons: MessageBoxButtons.OK);
             }
         }
@@ -668,7 +669,7 @@ public partial class FrmSettings : Form
         {
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                 controlName: "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty",
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
+                captionType: MessageBoxCaption.Warning,
                 buttons: MessageBoxButtons.OK);
         }
     }
@@ -717,8 +718,10 @@ public partial class FrmSettings : Form
                         if ((ckb.Font.Style & FontStyle.Bold) != 0)
                         {
                             // strictly speaking for ckb_UseDarkMode we don't need to restart the app and the checker could be called here but it'd need another loop.
-                            if (ckb.Name == "ckb_UseImperialNotMetric" ||
-                                ckb.Name == "ckb_UseDarkMode")
+                            if (ckb == ckb_UseImperialNotMetric ||
+                                ckb == ckb_UseDarkMode ||
+                                ckb == ckb_ShowThumbnails
+                               )
                             {
                                 if (!_ignoreRestartWarnings)
                                 {
@@ -733,14 +736,14 @@ public partial class FrmSettings : Form
                         // if modified
                         if ((cbx.Font.Style & FontStyle.Bold) != 0)
                         {
-                            if (cbx.Name == "cbx_Language")
+                            if (cbx == cbx_Language)
                             {
                                 if (!_ignoreRestartWarnings)
                                 {
                                     PromptUserToRestartApp();
                                 }
                             }
-                            else if (cbx.Name == "cbx_TryUseGeoNamesLanguage")
+                            else if (cbx == cbx_TryUseGeoNamesLanguage)
                             {
                                 IEnumerable<KeyValuePair<string, string>> result =
                                     HelperGenericAncillaryListsArrays
@@ -765,12 +768,12 @@ public partial class FrmSettings : Form
                                 rbt.Checked)
                             {
                                 ComboBox cbxLng = cbx_TryUseGeoNamesLanguage;
-                                if (rbt.Name == "rbt_UseGeoNamesLocalLanguage")
+                                if (rbt == rbt_UseGeoNamesLocalLanguage)
                                 {
                                     HelperVariables.APILanguageToUse = "local";
                                     cbxLng.Enabled = false;
                                 }
-                                else if (rbt.Name == "rbt_TryUseGeoNamesLanguage")
+                                else if (rbt == rbt_TryUseGeoNamesLanguage)
                                 {
                                     cbxLng.Enabled = true;
                                     IEnumerable<KeyValuePair<string, string>> result =
@@ -886,11 +889,11 @@ public partial class FrmSettings : Form
                     }
                     catch (InvalidOperationException) // nonesuch
                     {
-                        if (box.Name == "ckb_OverwriteOriginal")
+                        if (box == ckb_OverwriteOriginal)
                         {
                             box.Checked = true;
                         }
-                        else if (box.Name == "ckb_AddXMPSideCar")
+                        else if (box == ckb_AddXMPSideCar)
                         {
                             string tmptmpCtrlName = $"{lbi.ToString()
                                                           .Split('\t')
@@ -977,7 +980,7 @@ public partial class FrmSettings : Form
             switch (actualParentName)
             {
                 case "gbx_GeoNamesLanguageSettings":
-                    if (rbt.Name == "rbt_UseGeoNamesLocalLanguage")
+                    if (rbt == rbt_UseGeoNamesLocalLanguage)
                     {
                         cbx_TryUseGeoNamesLanguage.Enabled = !rbt.Checked;
                     }
@@ -1061,7 +1064,7 @@ public partial class FrmSettings : Form
 
             object lbi = null;
             if (frmSettingsInstance != null &&
-                frmSettingsInstance.tcr_Settings.SelectedTab.Name == "tpg_FileOptions")
+                frmSettingsInstance.tcr_Settings.SelectedTab == tpg_FileOptions)
             {
                 lbi = lbx_fileExtensions.SelectedItem;
             }
@@ -1143,8 +1146,8 @@ public partial class FrmSettings : Form
             cbx.Font = new Font(prototype: cbx.Font, newStyle: FontStyle.Bold);
             string settingValue = cbx.Text;
 
-            if (cbx.Name == "cbx_Language" ||
-                cbx.Name == "cbx_TryUseGeoNamesLanguage")
+            if (cbx == cbx_Language ||
+                cbx == cbx_TryUseGeoNamesLanguage)
             {
                 // convert e.g. "Français [French]" to "fr"
                 // we can't just take the first two characters because for example 
@@ -1189,7 +1192,7 @@ public partial class FrmSettings : Form
                 settingValue: nud.Value.ToString(provider: CultureInfo.InvariantCulture));
         }
 
-        if (nud.Name == "nud_ChoiceRadius")
+        if (nud == nud_ChoiceRadius)
         {
             string tmpLabelText =
                 HelperLocalisationResourceManager.GetResourceValue(control: lbl_Generic_Miles,
@@ -1254,7 +1257,7 @@ public partial class FrmSettings : Form
         dgv_CustomCityLogic.Columns.Clear();
         LoadCustomCityLogicDGV();
         HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(controlName: "mbx_GenericDone",
-            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information,
+            captionType: MessageBoxCaption.Information,
             buttons: MessageBoxButtons.OK);
     }
 
@@ -1273,6 +1276,18 @@ public partial class FrmSettings : Form
                                                           EventArgs e)
     {
         tbx_GeoNames_Pwd.UseSystemPasswordChar = !ckb_ShowPassword_GeoNames.Checked;
+    }
+
+
+    private void pbx_ShowThumbnails_MouseHover(object sender,
+                                               EventArgs e)
+    {
+        ToolTip ttp = new();
+        ttp.SetToolTip(control: pbx_ShowThumbnails,
+            caption: ReturnControlText(
+                fakeControlType: FakeControlTypes.ToolTip,
+                controlName: "ttp_ShowThumbnails"
+            ));
     }
 
 #endregion
@@ -1301,13 +1316,13 @@ public partial class FrmSettings : Form
 
         // ReSharper disable once InconsistentNaming
         List<string> ItemsToExport = DialogWithOrWithoutCheckBox.DisplayAndReturnList(
-            labelText: HelperControlAndMessageBoxHandling.ReturnControlText(
+            labelText: ReturnControlText(
                 controlName: "mbx_FrmSettings_QuestionWhatToExport",
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-            caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question
-                                                               .ToString(),
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
+                fakeControlType: FakeControlTypes.MessageBox),
+            caption: ReturnControlText(
+                controlName: MessageBoxCaption.Question
+                                              .ToString(),
+                fakeControlType: FakeControlTypes.MessageBoxCaption),
             buttonsDictionary: buttonsDictionary,
             orientation: "Vertical",
             checkboxesDictionary: checkboxDictionary);
@@ -1341,7 +1356,7 @@ public partial class FrmSettings : Form
                     {
                         HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                             controlName: "mbx_FrmSettings_ErrorExportFailed",
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
+                            captionType: MessageBoxCaption.Error,
                             buttons: MessageBoxButtons.OK);
                     }
                 }
@@ -1372,13 +1387,13 @@ public partial class FrmSettings : Form
 
             // ReSharper disable once InconsistentNaming
             List<string> ItemsToImport = DialogWithOrWithoutCheckBox.DisplayAndReturnList(
-                labelText: HelperControlAndMessageBoxHandling.ReturnControlText(
+                labelText: ReturnControlText(
                     controlName: "mbx_FrmSettings_QuestionWhatToImport",
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
-                                                                   .Question.ToString(),
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
+                    fakeControlType: FakeControlTypes.MessageBox),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption
+                                .Question.ToString(),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttonsDictionary: buttonsDictionary,
                 orientation: "Vertical",
                 checkboxesDictionary: checkboxDictionary);
@@ -1409,9 +1424,9 @@ public partial class FrmSettings : Form
             OpenFileDialog openFileDialog = new()
             {
                 Filter = "SQLite Database files (*.db)|*.db", // no need to translate.
-                Title = HelperControlAndMessageBoxHandling.ReturnControlText(
+                Title = ReturnControlText(
                     controlName: "ofd_Settings_GetDatabaseFileToImport_SelectDatabaseFile",
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.OpenFileDialog)
+                    fakeControlType: FakeControlTypes.OpenFileDialog)
             };
             return openFileDialog.ShowDialog() == DialogResult.OK ? openFileDialog.FileName : null;
         }
@@ -1492,15 +1507,15 @@ public partial class FrmSettings : Form
         Dictionary<string, string> buttonsDictionary = new()
         {
             {
-                HelperControlAndMessageBoxHandling.ReturnControlText(
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button,
+                ReturnControlText(
+                    fakeControlType: FakeControlTypes.Button,
                     controlName: "Generic_OK"
                 ),
                 "yes" // that's ok
             },
             {
-                HelperControlAndMessageBoxHandling.ReturnControlText(
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button,
+                ReturnControlText(
+                    fakeControlType: FakeControlTypes.Button,
                     controlName: "Generic_Cancel"
                 ),
                 "no" // that's ok
@@ -1523,8 +1538,8 @@ public partial class FrmSettings : Form
                      enumType: typeof(SettingsImportExportOptions)))
         {
             checkboxDictionary.Add(key:
-                HelperControlAndMessageBoxHandling.ReturnControlText(
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.CheckBox,
+                ReturnControlText(
+                    fakeControlType: FakeControlTypes.CheckBox,
                     controlName: $"ckb_ImportExport_{name}"), value: name);
         }
 

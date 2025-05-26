@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using GeoTagNinja.Helpers;
@@ -30,7 +31,7 @@ public class CustomMessageBox : Form
                             MessageBoxIcon icon)
     {
         InitializeComponent();
-        Text = caption;
+        Text = $"GeoTagNinja - {caption}";
         _lblMessage.Text = text;
         // Apply theme
         HelperControlThemeManager.SetThemeColour(
@@ -75,8 +76,10 @@ public class CustomMessageBox : Form
         PositionButtons();
         // Set icon in PictureBox based on MessageBoxIcon value
         SetPictureBox(icon: icon);
+        TopMost = true;
     }
 
+    [Localizable(isLocalizable: false)]
     public sealed override string Text
     {
         get => base.Text;

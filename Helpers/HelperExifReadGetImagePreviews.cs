@@ -38,15 +38,16 @@ internal static class HelperExifReadGetImagePreviews
 
     /// <summary>
     ///     This generates (technically, extracts) the image previews from files for the
-    ///     user when they click on a filename
-    ///     ... in whichever listview.
+    ///     user when they click on a filename in whichever listview.
     /// </summary>
     /// <param name="fileNameWithPath">Path of file for which the preview needs creating</param>
-    /// <param name="initiator"></param>
+    /// <param name="initiator">The source of the caller. This can drives whether we're asking for a preview or a thumbnail</param>
+    /// <param name="addSmallThumbnailToFileName">Whether to add "_small_thumbnail" to the filename. (defaults to false)</param>
     /// <returns>Realistically nothing but the process generates the bitmap if possible</returns>
     [SuppressMessage(category: "ReSharper", checkId: "AssignNullToNotNullAttribute")]
-    private static async Task ExifGetImagePreviews(string fileNameWithPath,
-                                                   Initiator initiator)
+    internal static async Task UseExifToolToGeneratePreviewsOrThumbnails(string fileNameWithPath,
+                                                                         Initiator initiator,
+                                                                         bool addSmallThumbnailToFileName = false)
     {
         FrmMainApp.Log.Info(message: "Starting");
 
@@ -62,7 +63,7 @@ internal static class HelperExifReadGetImagePreviews
         string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath,
             path2: $"exifArgs_getPreview_{fileNameReplaced}.args");
         string exiftoolCmd =
-            $@" -charset utf8 -charset filename=utf8 -b -preview:{(initiator == Initiator.FrmMainAppListViewThumbnail ? "GTNPreviewThumb" : "GTNPreview")} -w! {HelperVariables.DoubleQuoteStr}{HelperVariables.UserDataFolderPath}\%F.jpg{HelperVariables.DoubleQuoteStr} -@ {HelperVariables.DoubleQuoteStr}{argsFile}{HelperVariables.DoubleQuoteStr}";
+            $@" -charset utf8 -charset filename=utf8 -b -preview:{(initiator == Initiator.FrmMainAppListViewThumbnail ? "GTNPreviewThumb" : "GTNPreview")} -w! {HelperVariables.DoubleQuoteStr}{HelperVariables.UserDataFolderPath}\%F{(addSmallThumbnailToFileName ? "_small_thumbnail" : "")}.jpg{HelperVariables.DoubleQuoteStr} -@ {HelperVariables.DoubleQuoteStr}{argsFile}{HelperVariables.DoubleQuoteStr}";
 
         File.Delete(path: argsFile);
 
@@ -76,42 +77,11 @@ internal static class HelperExifReadGetImagePreviews
         if (File.Exists(path: fileNameWithPath))
         {
             File.AppendAllText(path: argsFile,
-                               contents: fileNameWithPath + Environment.NewLine,
-                               encoding: Encoding.UTF8);
+                contents: fileNameWithPath + Environment.NewLine,
+                encoding: Encoding.UTF8);
             File.AppendAllText(path: argsFile,
                 contents: $"-execute{Environment.NewLine}");
         }
-
-        FrmMainApp.Log.Trace(message: "Starting ExifTool");
-        ///////////////
-        await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
-                                                     frmMainAppInstance: null,
-                                                     initiator:
-                                                     HelperGenericAncillaryListsArrays.ExifToolInititators
-                                                        .ExifGetImagePreviews);
-        ///////////////
-        FrmMainApp.Log.Debug(message: "Done");
-    }
-
-
-    /// <summary>
-    ///     This is a proper mindfuck
-    /// </summary>
-    /// <param name="fileNameWithPath"></param>
-    /// <param name="initiator"></param>
-    /// <returns></returns>
-    internal static async Task ExifGetImagePreviewsForThumbnails(string fileNameWithPath,
-                                                                 Initiator initiator)
-    {
-        FrmMainApp.Log.Info(message: "Starting");
-
-    #region ExifToolConfiguration
-
-        // no args file just bash thru this.
-        string exiftoolCmd =
-            $@" -charset utf8 -charset filename=utf8 -b -jpgfromraw -w! {HelperVariables.DoubleQuoteStr}{HelperVariables.UserDataFolderPath}\%F.jpg{HelperVariables.DoubleQuoteStr} {HelperVariables.DoubleQuoteStr}{fileNameWithPath}{HelperVariables.DoubleQuoteStr}";
-
-    #endregion
 
         FrmMainApp.Log.Trace(message: "Starting ExifTool");
         ///////////////
@@ -180,19 +150,6 @@ internal static class HelperExifReadGetImagePreviews
         {
             try
             {
-                UseLibRawToGenerateFullImage(
-                    originalImagePath: directoryElement.FileNameWithPath,
-                    generatedJpegPath: generatedFileName,
-                    imgWidth: frmMainAppInstance.pbx_imagePreview.Width,
-                    imgHeight: frmMainAppInstance.pbx_imagePreview.Height);
-            }
-            catch
-            {
-                //
-            }
-
-            try
-            {
                 if (MagickExtensionList.Contains(item: directoryElement.Extension.TrimStart('.').ToLower()))
                 {
                     // actually the reason i'm not using this for _every_ file is that it's just f...ing slow with NEF files(which is what I have plenty of), so it's prohibitive to run on RAW files. 
@@ -219,7 +176,8 @@ internal static class HelperExifReadGetImagePreviews
             // don't run the thing again if file has already been generated
             if (!File.Exists(path: generatedFileName))
             {
-                await ExifGetImagePreviews(fileNameWithPath: fileNameWithPath, initiator: initiator);
+                await UseExifToolToGeneratePreviewsOrThumbnails(fileNameWithPath: fileNameWithPath,
+                    initiator: initiator);
             }
 
             if (File.Exists(path: generatedFileName))
@@ -253,7 +211,8 @@ internal static class HelperExifReadGetImagePreviews
             {
                 if (!File.Exists(path: generatedFileName))
                 {
-                    await ExifGetImagePreviews(fileNameWithPath: fileNameWithPath, initiator: initiator);
+                    await UseExifToolToGeneratePreviewsOrThumbnails(fileNameWithPath: fileNameWithPath,
+                        initiator: initiator);
                 }
             }
             else if (initiator == Initiator.FrmEditFileData &&
@@ -357,10 +316,12 @@ internal static class HelperExifReadGetImagePreviews
             }
         }
         catch
+
         {
             // ignored
         }
     }
+
 
     /// <summary>
     ///     Same as <see cref="UseMagickImageToGeneratePreview(string,string)" /> but specific to thumbnail creation.

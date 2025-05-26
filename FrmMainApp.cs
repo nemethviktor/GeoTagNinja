@@ -133,6 +133,14 @@ public partial class FrmMainApp : Form
     internal static bool FlatMode;
     private static bool _ignoreFlatMode;
 
+    internal enum ListViewDisplayMode
+    {
+        Details,
+        LargeIcons
+    }
+
+    internal ListViewDisplayMode listViewDisplayMode;
+
     private enum OpenInBrowserOptions
     {
         OpenCoordsInBrowserBing,
@@ -292,22 +300,7 @@ public partial class FrmMainApp : Form
             Log.Error(message: $"Error: {ex.Message}");
         }
 
-        // Setup the List View
-        try
-        {
-            lvw_FileList.View = System.Windows.Forms.View.LargeIcon;
-            lvw_FileList.TileSize = new Size(width: 128, height: 128);
-            lvw_FileList.OwnerDraw = true;
-            lvw_FileList.ReadAndApplySetting(appLanguage: _AppLanguage);
-        }
-        catch (Exception ex)
-        {
-            Log.Error(message: $"Error: {ex.Message}");
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_ErrorResizingColumns", captionType: MessageBoxCaption.Error,
-                buttons: MessageBoxButtons.OK);
-        }
-
+        RecreateLvwFileList();
 
         // can't log inside.
         Log.Debug(message: "Run CoreWebView2InitializationCompleted");
@@ -353,6 +346,37 @@ public partial class FrmMainApp : Form
         await HelperAPIVersionCheckers.CheckForNewVersions();
         LaunchAutoUpdater();
         Log.Info(message: "OnLoad: Done.");
+    }
+
+    private void RecreateLvwFileList()
+    {
+        // Setup the List View
+        listViewDisplayMode = HelperVariables.UserSettingShowThumbnails
+            ? ListViewDisplayMode.LargeIcons
+            : ListViewDisplayMode.Details;
+        try
+        {
+            if (listViewDisplayMode == ListViewDisplayMode.LargeIcons)
+            {
+                lvw_FileList.View = System.Windows.Forms.View.LargeIcon;
+                lvw_FileList.TileSize = new Size(width: 128, height: 128);
+            }
+            else
+            {
+                lvw_FileList.View = System.Windows.Forms.View.Details;
+            }
+
+            lvw_FileList.ReadAndApplySetting(appLanguage: _AppLanguage);
+
+            lvw_FileList.Invalidate();
+        }
+        catch (Exception ex)
+        {
+            Log.Error(message: $"Error: {ex.Message}");
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_ErrorResizingColumns", captionType: MessageBoxCaption.Error,
+                buttons: MessageBoxButtons.OK);
+        }
     }
 
     /// <summary>

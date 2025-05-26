@@ -882,11 +882,11 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </exception>
     public void ReadAndApplySetting(string appLanguage)
     {
-        if (_isInitialized)
-        {
-            throw new InvalidOperationException(
-                message: "Trying to initialize the FileListView more than once.");
-        }
+        //if (_isInitialized)
+        //{
+        //    throw new InvalidOperationException(
+        //        message: "Trying to initialize the FileListView more than once.");
+        //}
 
         Log.Info(message: "Starting");
         _AppLanguage = appLanguage;
@@ -902,10 +902,10 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         // Finally set style and icons
         SetStyle();
-        //if (View == System.Windows.Forms.View.Details)
-        //{
-        InitializeImageList(); // must be here - if called in constructor, it won't work
-        // }
+        if (View == System.Windows.Forms.View.Details)
+        {
+            InitializeImageList(); // must be here - if called in constructor, it won't work
+        }
 
         _isInitialized = true;
     }

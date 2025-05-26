@@ -3,7 +3,7 @@
 **Build 9xxx [2025xxxx]** 
 - NEW & UPDATED:
 	- Added optional Satellite view layer to the map
-	- Thumbnail view #164. Rudimentary and needs testing.
+	- Thumbnail view #164. Rudimentary and needs testing. Enable/Disable within `Settings` (requires app restart).
 - BUGS & FIXES:
 	- Added some logic to ignore certain particular warnings cropping up when saving files #159
 	- Fix Custom Rules not working properly with the `TargetPointName` attribute
