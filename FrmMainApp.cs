@@ -1667,6 +1667,7 @@ public partial class FrmMainApp : Form
         Log.Info(message: "Starting");
 
         string CurrentFoldersParent = null;
+        CurrentFolder ??= Path.GetFullPath(path: tbx_FolderName.Text);
         try
         {
             CurrentFoldersParent =
