@@ -1695,6 +1695,21 @@ public partial class FrmMainApp : Form
         Log.Info(message: "Starting");
 
 
+        string CurrentFoldersParent = null;
+        CurrentFolder ??= Path.GetFullPath(path: tbx_FolderName.Text);
+        try
+        {
+            CurrentFoldersParent =
+                HelperFileSystemOperators.FsoGetParent(path: CurrentFolder);
+        }
+        catch
+        {
+            CurrentFoldersParent = HelperGenericTypeOperations.Coalesce(
+                Directory.GetDirectoryRoot(path: CurrentFolder)
+              , "C:"
+            );
+        }
+
         HelperVariables.OperationChangeFolderIsOkay = false;
         if (FlatMode && !_ignoreFlatMode)
         {
