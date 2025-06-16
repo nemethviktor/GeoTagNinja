@@ -10,8 +10,10 @@ using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using NLog;
+using Svg;
 using HelperControlAndMessageBoxCustomMessageBoxManager =
     GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
+using Image = System.Drawing.Image;
 
 namespace GeoTagNinja.View.ListView;
 /*
@@ -37,6 +39,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     public const string COL_NAME_PREFIX = "clh_";
 
+    internal static readonly int ThumbnailSize = 128;
 
     /// <summary>
     ///     Constructor
@@ -46,6 +49,8 @@ public partial class FileListView : System.Windows.Forms.ListView
         Log.Info(message: "Creating List View ...");
         InitializeComponent();
     }
+
+    private IntPtr _hSysImgList;
 
     /// <summary>
     ///     Class containing native method (shell32, etc) definitions in order
@@ -662,12 +667,17 @@ public partial class FileListView : System.Windows.Forms.ListView
                 settingId: settingIdToSend
             );
 
+
             // We only set col width if there actually is a setting for it.
             // New columns thus will have a default size
-            if (colWidth != null &&
-                colWidth.Length > 0)
+            if (colWidth is { Length: > 0 })
             {
                 columnHeader.Width = Convert.ToInt16(value: colWidth);
+            }
+
+            if (View == System.Windows.Forms.View.LargeIcon)
+            {
+                columnHeader.Width = columnHeader.Name == "clh_FileName" ? ThumbnailSize : 0;
             }
 
             Log.Trace(message: $"columnHeader: {columnHeader.Name} - columnHeader.Width: {columnHeader.Width}");
@@ -835,7 +845,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     {
         //https://stackoverflow.com/a/37806517/3968494
         shfi = new NativeMethods.SHFILEINFOW();
-        IntPtr hSysImgList = NativeMethods.SHGetFileInfo(pszPath: "",
+        _hSysImgList = NativeMethods.SHGetFileInfo(pszPath: "",
             dwFileAttributes: 0,
             psfi: ref shfi,
             cbSizeFileInfo: (uint)Marshal
@@ -843,7 +853,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             uFlags: NativeMethods
                        .SHGFI_SYSICONINDEX |
                     NativeMethods.SHGFI_SMALLICON);
-        Debug.Assert(condition: hSysImgList !=
+        Debug.Assert(condition: _hSysImgList !=
                                 IntPtr.Zero); // cross our fingers and hope to succeed!
 
         // Set the ListView control to use that image list.
@@ -851,7 +861,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             msg: NativeMethods
                .LVM_SETIMAGELIST,
             wParam: NativeMethods.LVSIL_SMALL,
-            lParam: hSysImgList);
+            lParam: _hSysImgList);
 
         // If the ListView control already had an image list, delete the old one.
         if (hOldImgList != IntPtr.Zero)
@@ -872,11 +882,11 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </exception>
     public void ReadAndApplySetting(string appLanguage)
     {
-        if (_isInitialized)
-        {
-            throw new InvalidOperationException(
-                message: "Trying to initialize the FileListView more than once.");
-        }
+        //if (_isInitialized)
+        //{
+        //    throw new InvalidOperationException(
+        //        message: "Trying to initialize the FileListView more than once.");
+        //}
 
         Log.Info(message: "Starting");
         _AppLanguage = appLanguage;
@@ -892,7 +902,10 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         // Finally set style and icons
         SetStyle();
-        InitializeImageList(); // must be here - if called in constructor, it won't work
+        if (View == System.Windows.Forms.View.Details)
+        {
+            InitializeImageList(); // must be here - if called in constructor, it won't work
+        }
 
         _isInitialized = true;
     }
@@ -903,7 +916,11 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     public void PersistSettings()
     {
-        ColOrderAndWidth_Write();
+        // tile-view only shows the filename column, we don't want that saved.
+        if (View == System.Windows.Forms.View.Details)
+        {
+            ColOrderAndWidth_Write();
+        }
     }
 
 #endregion
@@ -973,6 +990,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             {
                 Application.DoEvents();
                 _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Text =
+                    // ReSharper disable once LocalizableElement
                     $"{count} / {directoryElementCollectionLength}";
                 count++;
             }
@@ -1057,15 +1075,60 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
 
 
-        ToggleIndividualColumnVisibility(columnHeaderName: COL_NAME_PREFIX + FileListColumns.FOLDER,
-            setVisible: FrmMainApp.FlatMode ||
-                        Program.CollectionModeEnabled);
+        ToggleIndividualColumnVisibility(
+            columnHeaderName: COL_NAME_PREFIX + FileListColumns.FOLDER,
+            setVisible: FrmMainApp.FlatMode || Program.CollectionModeEnabled
+        );
+
+        // Add images when required
+        if (View == System.Windows.Forms.View.LargeIcon)
+        {
+            ImageList imgList = new();
+            imgList.ColorDepth = ColorDepth.Depth32Bit;
+            imgList.ImageSize = new Size(width: (int)(ThumbnailSize * 0.9), height: (int)(ThumbnailSize * 0.9));
+
+            // mass-generate thumbs
+
+            foreach (ListViewItem lvi in Items)
+            {
+                DirectoryElement de = lvi.Tag as DirectoryElement;
+                string imageListKey = Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                    path2: $"{de.ItemNameWithoutPath}.jpg");
+
+                if (de.Thumbnail is not null)
+                {
+                    imgList.Images.Add(
+                        key: imageListKey,
+                        image: de.Thumbnail);
+                }
+            }
+
+
+            LargeImageList = imgList;
+            foreach (ListViewItem lvi in Items)
+            {
+                DirectoryElement de = lvi.Tag as DirectoryElement;
+                lvi.ImageKey = Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                    path2: $"{de.ItemNameWithoutPath}.jpg");
+            }
+        }
 
         // Resume sorting...
         Log.Trace(message: "Enable ListViewItemSorter");
         EndUpdate();
         ResumeColumnSorting();
         Sort();
+    }
+
+    /// <summary>
+    ///     Converts svg files to image.
+    /// </summary>
+    /// <param name="imagePath"></param>
+    /// <returns></returns>
+    private Image ConvertSVGToImage(string imagePath)
+    {
+        SvgDocument svgDoc = SvgDocument.Open(path: imagePath);
+        return new Bitmap(original: svgDoc.Draw(rasterWidth: ThumbnailSize, rasterHeight: ThumbnailSize));
     }
 
 

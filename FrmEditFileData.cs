@@ -1292,7 +1292,7 @@ public partial class FrmEditFileData : Form
                 pbx_imagePreview.Image = null;
                 await HelperExifReadGetImagePreviews.GenericCreateImagePreview(
                     directoryElement: dirElemFileToModify,
-                    initiator: "FrmEditFileData");
+                    initiator: HelperExifReadGetImagePreviews.Initiator.FrmEditFileData);
             }
             else
             {

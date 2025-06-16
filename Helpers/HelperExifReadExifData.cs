@@ -877,8 +877,9 @@ internal static class HelperExifReadExifData
                             frmMainAppInstance.lvw_FileList.FocusedItem = lvi;
                             DirectoryElement directoryElement = lvi.Tag as DirectoryElement;
                             frmMainAppInstance.lvw_FileList.EnsureVisible(index: lvi.Index);
-                            HelperExifReadGetImagePreviews.GenericCreateImagePreview(
-                                directoryElement: directoryElement, initiator: "FrmMainAppAPIDataSelection"
+                            _ = HelperExifReadGetImagePreviews.GenericCreateImagePreview(
+                                directoryElement: directoryElement,
+                                initiator: HelperExifReadGetImagePreviews.Initiator.FrmMainAppAPIDataSelection
                             );
                             Application.DoEvents();
                         }

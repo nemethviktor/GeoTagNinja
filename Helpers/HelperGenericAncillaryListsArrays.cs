@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -401,6 +402,7 @@ internal static class HelperGenericAncillaryListsArrays
 
 #region ExifTool Initiators
 
+    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     internal enum ExifToolInititators
     {
         ExifWriteExifToFile,

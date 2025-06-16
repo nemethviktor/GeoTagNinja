@@ -231,7 +231,8 @@ internal static class HelperGenericAppStartup
             { "UserSettingUseDarkMode", "ckb_UseDarkMode" },
             { "UserSettingUpdatePreReleaseGTN", "ckb_UpdateCheckPreRelease" },
             { "UserSettingOnlyShowFCodePPL", "ckb_PopulatedPlacesOnly" },
-            { "UserSettingUseImperial", "ckb_UseImperialNotMetric" }
+            { "UserSettingUseImperial", "ckb_UseImperialNotMetric" },
+            { "UserSettingShowThumbnails", "ckb_ShowThumbnails" }
         };
 
         Dictionary<string, List<string>> settingsRadioButtonPairsDictionary = new()

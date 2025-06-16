@@ -72,14 +72,13 @@ internal static class HelperExifExifToolOperator
 
             switch (initiator)
             {
-                case HelperGenericAncillaryListsArrays.ExifToolInititators
-                                                      .ExifWriteExifToFile:
+                case HelperGenericAncillaryListsArrays.ExifToolInititators.ExifWriteExifToFile:
                     string fileNameWithPath = null;
                     string fileNameWithoutPath = null;
                     DirectoryElement dirElemFileToDrop = null;
 
                     prcExifTool.OutputDataReceived += (_,
-                        data) =>
+                                                       data) =>
                     {
                         if (!string.IsNullOrEmpty(value: data.Data))
                         {
@@ -231,7 +230,7 @@ internal static class HelperExifExifToolOperator
                     };
 
                     prcExifTool.ErrorDataReceived += (_,
-                        data) =>
+                                                      data) =>
                     {
                         if (!string.IsNullOrEmpty(value: data.Data))
                         {
@@ -246,10 +245,9 @@ internal static class HelperExifExifToolOperator
                         }
                     };
                     break;
-                case HelperGenericAncillaryListsArrays.ExifToolInititators
-                                                      .GenericCheckForNewVersions:
+                case HelperGenericAncillaryListsArrays.ExifToolInititators.GenericCheckForNewVersions:
                     prcExifTool.OutputDataReceived += (_,
-                        data) =>
+                                                       data) =>
                     {
                         if (data.Data != null &&
                             data.Data.Length > 0)
@@ -269,10 +267,9 @@ internal static class HelperExifExifToolOperator
                     };
 
                     break;
-                case HelperGenericAncillaryListsArrays.ExifToolInititators
-                                                      .ExifGetTrackSyncDataReadSyncPhotos:
+                case HelperGenericAncillaryListsArrays.ExifToolInititators.ExifGetTrackSyncDataReadSyncPhotos:
                     prcExifTool.OutputDataReceived += (_,
-                        data) =>
+                                                       data) =>
                     {
                         if (data.Data is { Length: > 0 } &&
                             // this piece of info is irrelevant and confusing to the user
@@ -288,7 +285,7 @@ internal static class HelperExifExifToolOperator
                         }
                     };
                     prcExifTool.ErrorDataReceived += (_,
-                        data) =>
+                                                      data) =>
                     {
                         if (data.Data != null &&
                             data.Data.Length > 0)
@@ -301,7 +298,7 @@ internal static class HelperExifExifToolOperator
                 case HelperGenericAncillaryListsArrays.ExifToolInititators.ExifGetTrackSyncDataWriteTrackPath:
                 default:
                     prcExifTool.OutputDataReceived += (_,
-                        data) =>
+                                                       data) =>
                     {
                         if (data.Data != null &&
                             data.Data.Length > 0)
@@ -312,7 +309,7 @@ internal static class HelperExifExifToolOperator
                     };
 
                     prcExifTool.ErrorDataReceived += (_,
-                        data) =>
+                                                      data) =>
                     {
                         if (data.Data != null &&
                             data.Data.Length > 0)

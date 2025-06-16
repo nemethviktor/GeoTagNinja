@@ -1329,4 +1329,12 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>GeoSetter Favourites imported. Items imported: </value>
     <comment>Displays a success message that items have been imported. The code will stamp a number at the very end. (count of items that is.)</comment>
   </data>
+  <data name="ckb_ShowThumbnails" xml:space="preserve">
+    <value>Show Image Thumbnails rather than Grid</value>
+    <comment>Location: Settings</comment>
+  </data>
+  <data name="ttp_ShowThumbnails" xml:space="preserve">
+    <value>This causes a very significant performance hit (up to 7x by my measurements) so it's not recommended.</value>
+    <comment>Location: Settings</comment>
+  </data>
 </root>

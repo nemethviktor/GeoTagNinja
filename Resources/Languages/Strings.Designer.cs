@@ -313,6 +313,15 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Image Thumbnails rather than Grid.
+        /// </summary>
+        public static string ckb_ShowThumbnails {
+            get {
+                return ResourceManager.GetString("ckb_ShowThumbnails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stop processing rules after first Country+Target match.
         /// </summary>
         public static string ckb_StopProcessingRules {
@@ -3136,6 +3145,15 @@ namespace GeoTagNinja.Resources.Languages {
         public static string ttp_SaveFavourite {
             get {
                 return ResourceManager.GetString("ttp_SaveFavourite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This causes a very significant performance hit (up to 7x by my measurements) so it&apos;s not recommended..
+        /// </summary>
+        public static string ttp_ShowThumbnails {
+            get {
+                return ResourceManager.GetString("ttp_ShowThumbnails", resourceCulture);
             }
         }
     }

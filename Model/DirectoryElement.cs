@@ -3,11 +3,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using GeoTagNinja.Helpers;
+using GeoTagNinja.View.ListView;
 using NLog;
 using static GeoTagNinja.Model.SourcesAndAttributes;
+
+#pragma warning disable CS8618, CS9264
 
 namespace GeoTagNinja.Model;
 
@@ -40,8 +48,8 @@ public class DirectoryElement
     /// <param name="type">The ElementType of it</param>
     /// <param name="fileNameWithPath">The fully qualified path incl. its name</param>
     public DirectoryElement(string itemNameWithoutPath,
-        ElementType type,
-        string fileNameWithPath)
+                            ElementType type,
+                            string fileNameWithPath)
     {
         ItemNameWithoutPath = itemNameWithoutPath;
         Type = type;
@@ -49,7 +57,7 @@ public class DirectoryElement
         FileNameWithPath = fileNameWithPath;
         Extension = Path.GetExtension(path: FileNameWithPath)
                         .Replace(oldValue: ".", newValue: "");
-
+        Thumbnail = _Thumbnail;
         _Attributes = new Dictionary<ElementAttribute, AttributeValueContainer>();
     }
 
@@ -82,9 +90,9 @@ public class DirectoryElement
     private class AttributeValuesString : AttributeValueContainer
     {
         public AttributeValuesString(string initialValue = null,
-            AttributeVersion initialVersion =
-                AttributeVersion.Original,
-            bool isMarkedForDeletion = false)
+                                     AttributeVersion initialVersion =
+                                         AttributeVersion.Original,
+                                     bool isMarkedForDeletion = false)
         {
             _myValueType = typeof(string);
             _valueDict = new Dictionary<AttributeVersion, Tuple<string, bool>>();
@@ -100,9 +108,9 @@ public class DirectoryElement
     private class AttributeValuesInt : AttributeValueContainer
     {
         public AttributeValuesInt(int? initialValue = null,
-            AttributeVersion initialVersion =
-                AttributeVersion.Original,
-            bool isMarkedForDeletion = false)
+                                  AttributeVersion initialVersion =
+                                      AttributeVersion.Original,
+                                  bool isMarkedForDeletion = false)
         {
             _myValueType = typeof(int);
             _valueDict = new Dictionary<AttributeVersion, Tuple<int, bool>>();
@@ -118,9 +126,9 @@ public class DirectoryElement
     private class AttributeValuesDouble : AttributeValueContainer
     {
         public AttributeValuesDouble(double? initialValue = null,
-            AttributeVersion initialVersion =
-                AttributeVersion.Original,
-            bool isMarkedForDeletion = false)
+                                     AttributeVersion initialVersion =
+                                         AttributeVersion.Original,
+                                     bool isMarkedForDeletion = false)
         {
             _myValueType = typeof(double);
             _valueDict = new Dictionary<AttributeVersion, Tuple<double, bool>>();
@@ -136,9 +144,9 @@ public class DirectoryElement
     private class AttributeValuesDateTime : AttributeValueContainer
     {
         public AttributeValuesDateTime(DateTime? initialValue = null,
-            AttributeVersion initialVersion =
-                AttributeVersion.Original,
-            bool isMarkedForDeletion = false)
+                                       AttributeVersion initialVersion =
+                                           AttributeVersion.Original,
+                                       bool isMarkedForDeletion = false)
         {
             _myValueType = typeof(DateTime);
             _valueDict = new Dictionary<AttributeVersion, Tuple<DateTime, bool>>();
@@ -156,6 +164,8 @@ public class DirectoryElement
 #region Private variables
 
     private string _DisplayName;
+
+    private Image _Thumbnail;
 
     private readonly IDictionary<ElementAttribute, AttributeValueContainer> _Attributes;
 
@@ -241,6 +251,244 @@ public class DirectoryElement
     /// </summary>
     public FileInfo SidecarFile { set; get; }
 
+    /// <summary>
+    ///     We attempt to generate a thumbnail through a variety of means. Initially we try Windows's own magic, then LibRaw in
+    ///     a variety of ways, then exiftool, then Magick, then we hang ourselves.
+    /// </summary>
+    public Image Thumbnail
+    {
+        get => _Thumbnail;
+        private set
+        {
+            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+
+            if (frmMainAppInstance.listViewDisplayMode == FrmMainApp.ListViewDisplayMode.LargeIcons)
+            {
+                Dictionary<ElementType, string> iconLookupDictionary = new();
+
+                iconLookupDictionary.Add(key: ElementType.SubDirectory, value: "Folder.png");
+                iconLookupDictionary.Add(key: ElementType.MyComputer, value: "Computer.png");
+                iconLookupDictionary.Add(key: ElementType.ParentDirectory, value: "Parentfolder.png");
+                iconLookupDictionary.Add(key: ElementType.Drive, value: "Harddrive.png");
+
+                string generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                    path2: $"{ItemNameWithoutPath}_small_thumbnail.jpg");
+
+
+                if (Type == ElementType.File)
+                {
+                    try
+                    {
+                        // this only works for the basic file types
+                        HelperExifReadGetImagePreviews.UseWindowsImageHandlerToCreateThumbnail(
+                            fileNameIn: FileNameWithPath,
+                            fileNameOut: generatedFileName,
+                            maxWidth: FileListView.ThumbnailSize,
+                            maxHeight: FileListView.ThumbnailSize);
+                    }
+                    catch
+                    {
+                        //
+                    }
+
+
+                    if (!File.Exists(path: generatedFileName))
+                    {
+                        try
+                        {
+                            // Exiftool is acceptable speed and works most of the time but outputs a large file
+                            Task task =
+                                HelperExifReadGetImagePreviews.UseExifToolToGeneratePreviewsOrThumbnails(
+                                    fileNameWithPath: FileNameWithPath,
+                                    initiator: HelperExifReadGetImagePreviews.Initiator.FrmMainAppListViewThumbnail,
+                                    addSmallThumbnailToFileName: true
+                                );
+                        }
+
+                        catch
+
+                        {
+                            //
+                        }
+                    }
+
+                    if (!File.Exists(path: generatedFileName))
+                    {
+                        try
+                        {
+                            // This is so fucking stupid it hurts my brain.
+                            // Libraw is the fastest but doesn't work w/ my D5 files
+                            // Basically i've found that some files have a zero-index thumbnail but others have a 1-index.
+                            // ... maybe even more. So bump this to hight heavens. (= 4)
+                            for (int i = 0; i < 4; i++)
+                            {
+                                // yes i know this line duplicates the above for 0-index but alas.
+                                if (!File.Exists(path: generatedFileName))
+                                {
+                                    HelperExifReadGetImagePreviews.UseLibRawToGenerateThumbnail(
+                                        originalImagePath: FileNameWithPath,
+                                        generatedJpegPath: generatedFileName,
+                                        thumbnailIndex: i);
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            //
+                        }
+                    }
+
+                    // This just sucks altogether.
+                    if (!File.Exists(path: generatedFileName))
+                    {
+                        try
+                        {
+                            HelperExifReadGetImagePreviews.UseLibRawToGenerateFullImage(
+                                originalImagePath: FileNameWithPath,
+                                generatedJpegPath: generatedFileName,
+                                imgWidth: FileListView.ThumbnailSize,
+                                imgHeight: FileListView.ThumbnailSize);
+                        }
+                        catch
+                        {
+                            //
+                        }
+                    }
+
+
+                    // And if we've still not succeeded try Magick
+                    if (!File.Exists(path: generatedFileName))
+                    {
+                        try
+                        {
+                            HelperExifReadGetImagePreviews.UseMagickImageToGeneratePreview
+                            (
+                                originalImagePath: FileNameWithPath,
+                                generatedJpegPath: generatedFileName,
+                                imgWidth: FileListView.ThumbnailSize,
+                                imgHeight: FileListView.ThumbnailSize);
+                        }
+                        catch
+                        {
+                            // sod it
+                        }
+                    }
+
+
+                    if (File.Exists(path: generatedFileName))
+                    {
+                        value = GenerateFixedSizeImage(originalPath: generatedFileName,
+                            width: FileListView.ThumbnailSize, height: FileListView.ThumbnailSize);
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        string iconLookupValue = iconLookupDictionary[key: Type];
+                        if (Type == ElementType.Drive)
+                        {
+                            DriveInfo di = new(driveName: FileNameWithPath);
+                            DriveType driveType = di.DriveType;
+                            iconLookupValue = driveType switch
+                            {
+                                // If I have to fish for these again I'll hang myself.
+                                // Also if someone that knows how to get the icons out of nativeMethods, do shout.
+                                // In the meantime follow this -> https://www.tenforums.com/tutorials/128170-extract-icon-file-windows.html tutorial
+                                DriveType.Removable => "Removabledrive.png",
+                                DriveType.Fixed => "Harddrive.png",
+                                DriveType.Network => "Networkdrive.png",
+                                DriveType.CDRom => "CDdrive.png",
+                                _ => "Otherdrive.png"
+                            };
+                        }
+
+                        value = Image.FromFile(filename: Path.Combine(
+                            path1: AppDomain.CurrentDomain.BaseDirectory,
+                            path2: "images",
+                            path3: iconLookupValue));
+                    }
+                    catch
+                    {
+                        //
+                    }
+                }
+
+
+                _Thumbnail = value;
+            }
+        }
+    }
+
+
+    /// <summary>
+    ///     Via https://stackoverflow.com/a/2001462/3968494 - plus I added the ExifRotate because the incoming image's
+    ///     rotation appears to be ignored by the original script.
+    /// </summary>
+    /// <param name="originalPath"></param>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    /// <returns></returns>
+    private static Image GenerateFixedSizeImage(string originalPath,
+                                                int width,
+                                                int height)
+    {
+        Bitmap bmPhoto = null;
+        using (Image imgPhoto = Image.FromFile(filename: originalPath))
+        {
+            imgPhoto.ExifRotate();
+            int sourceWidth = imgPhoto.Width;
+            int sourceHeight = imgPhoto.Height;
+            int sourceX = 0;
+            int sourceY = 0;
+            int destX = 0;
+            int destY = 0;
+
+            float nPercent = 0;
+            float nPercentW = 0;
+            float nPercentH = 0;
+
+            nPercentW = width / (float)sourceWidth;
+            nPercentH = height / (float)sourceHeight;
+            if (nPercentH < nPercentW)
+            {
+                nPercent = nPercentH;
+                destX = Convert.ToInt16(value: (width -
+                                                sourceWidth * nPercent) / 2);
+            }
+            else
+            {
+                nPercent = nPercentW;
+                destY = Convert.ToInt16(value: (height -
+                                                sourceHeight * nPercent) / 2);
+            }
+
+            int destWidth = (int)(sourceWidth * nPercent);
+            int destHeight = (int)(sourceHeight * nPercent);
+
+            bmPhoto = new Bitmap(width: width, height: height,
+                format: PixelFormat.Format24bppRgb);
+            bmPhoto.SetResolution(xDpi: imgPhoto.HorizontalResolution,
+                yDpi: imgPhoto.VerticalResolution);
+
+            Graphics grPhoto = Graphics.FromImage(image: bmPhoto);
+            grPhoto.Clear(color: Color.Transparent);
+            grPhoto.InterpolationMode =
+                InterpolationMode.HighQualityBicubic;
+
+            grPhoto.DrawImage(image: imgPhoto,
+                destRect: new Rectangle(x: destX, y: destY, width: destWidth, height: destHeight),
+                srcRect: new Rectangle(x: sourceX, y: sourceY, width: sourceWidth, height: sourceHeight),
+                srcUnit: GraphicsUnit.Pixel);
+
+            grPhoto.Dispose();
+        }
+
+        File.Delete(path: originalPath);
+        bmPhoto.Save(filename: originalPath);
+        return bmPhoto;
+    }
+
 #endregion
 
 
@@ -252,7 +500,7 @@ public class DirectoryElement
     /// <param name="whichAttributeVersion"></param>
     /// <returns>boolean</returns>
     public bool HasDirtyAttributes(AttributeVersion whichAttributeVersion =
-        AttributeVersion.Stage3ReadyToWrite)
+                                       AttributeVersion.Stage3ReadyToWrite)
     {
         foreach (AttributeValueContainer avc in _Attributes.Values)
         {
@@ -272,7 +520,7 @@ public class DirectoryElement
     ///     depending on the version requested.
     /// </summary>
     private AttributeVersion? CheckWhichVersion(AttributeValueContainer avc,
-        AttributeVersion? versionRequested)
+                                                AttributeVersion? versionRequested)
     {
         // no need for else-if because the 'return' terminates the loop
         if (((versionRequested == null) |
@@ -318,7 +566,7 @@ public class DirectoryElement
     /// <param name="version">The version to look for</param>
     /// <returns></returns>
     private bool HasSpecificAttributeWithVersion(AttributeValueContainer avc,
-        AttributeVersion version)
+                                                 AttributeVersion version)
     {
         Type attributeType = avc.MyValueType;
 
@@ -344,7 +592,7 @@ public class DirectoryElement
     /// <param name="version">The version to look for</param>
     /// <returns></returns>
     public bool HasSpecificAttributeWithVersion(ElementAttribute attribute,
-        AttributeVersion version)
+                                                AttributeVersion version)
     {
         if (!_Attributes.ContainsKey(key: attribute))
         {
@@ -389,7 +637,7 @@ public class DirectoryElement
     /// <param name="version"></param>
     /// <returns></returns>
     public bool IsMarkedForDeletion(ElementAttribute attribute,
-        AttributeVersion version)
+                                    AttributeVersion version)
     {
         // bit unsure of this but the second half is defo needed because if there is no value to a particular attribute (it's been deleted or never existed) then
         // adding a new value on top will trigger this part to run and would break when adding to the Stage1/2 sets
@@ -456,10 +704,9 @@ public class DirectoryElement
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
     public string GetAttributeValueString(ElementAttribute attribute,
-        AttributeVersion? version = null,
-        string? notFoundValue = null,
-        bool nowSavingExif = false
-    )
+                                          AttributeVersion? version = null,
+                                          string? notFoundValue = null,
+                                          bool nowSavingExif = false)
     {
         if (!_Attributes.ContainsKey(key: attribute))
         {
@@ -595,8 +842,8 @@ public class DirectoryElement
     /// <param name="notFoundValue">The value to return if no suitable value was found</param>
     /// <returns></returns>
     public T? GetAttributeValue<T>(ElementAttribute attribute,
-        AttributeVersion? version,
-        T? notFoundValue = null)
+                                   AttributeVersion? version,
+                                   T? notFoundValue = null)
         where T : struct
     {
         if (!_Attributes.ContainsKey(key: attribute))
@@ -677,9 +924,9 @@ public class DirectoryElement
     /// <param name="version">The version to set it with </param>
     /// <param name="isMarkedForDeletion">Whether this attribute is set for deletion/removal</param>
     public void SetAttributeValueAnyType(ElementAttribute attribute,
-        string value,
-        AttributeVersion version,
-        bool isMarkedForDeletion)
+                                         string value,
+                                         AttributeVersion version,
+                                         bool isMarkedForDeletion)
     {
         Type typeOfAttribute = GetElementAttributesType(attributeToFind: attribute);
         IConvertible writeValueConvertible = null;
@@ -736,9 +983,9 @@ public class DirectoryElement
     /// <param name="version">The version to set it with </param>
     /// <param name="isMarkedForDeletion">Whether this attribute is set for deletion/removal</param>
     public void SetAttributeValue(ElementAttribute attribute,
-        IConvertible value,
-        AttributeVersion version,
-        bool isMarkedForDeletion)
+                                  IConvertible value,
+                                  AttributeVersion version,
+                                  bool isMarkedForDeletion)
     {
         Type attributeType = GetElementAttributesType(attributeToFind: attribute);
         if (!isMarkedForDeletion &&
@@ -876,7 +1123,7 @@ public class DirectoryElement
 
 
     public void RemoveAttributeValue(ElementAttribute attribute,
-        AttributeVersion version)
+                                     AttributeVersion version)
     {
         try
         {
@@ -905,7 +1152,7 @@ public class DirectoryElement
     /// <param name="tags">The tag list to parse</param>
     /// <returns>A touple (name of tag chosen, value)</returns>
     private (string, string) GetDataPointFromTags(ElementAttribute attribute,
-        IDictionary<string, string> tags)
+                                                  IDictionary<string, string> tags)
     {
         Log.Trace(message:
             $"Starting to parse dict for attribute: {GetElementAttributesName(attributeToFind: attribute)}");
@@ -951,10 +1198,10 @@ public class DirectoryElement
     /// <param name="callDepth">The recursive call depth to allow for tracking of loops</param>
     /// <returns>True if parsing succeeded (resulting values are put into the passed lists).</returns>
     private bool ParseAttribute(ElementAttribute attribute,
-        IDictionary<ElementAttribute, IConvertible> parsedValues,
-        List<ElementAttribute> parsedFails,
-        IDictionary<string, string> tags,
-        int callDepth)
+                                IDictionary<ElementAttribute, IConvertible> parsedValues,
+                                List<ElementAttribute> parsedFails,
+                                IDictionary<string, string> tags,
+                                int callDepth)
     {
         Log.Trace(
             message:
@@ -1041,8 +1288,7 @@ public class DirectoryElement
                         attribute: attribute,
                         parseResult: parseResult,
                         parsed_Values: parsedValues,
-                        ParseMissingAttribute: delegate(
-                            ElementAttribute atrb)
+                        ParseMissingAttribute: delegate(ElementAttribute atrb)
                         {
                             return ParseAttribute(attribute: atrb,
                                 parsedValues: parsedValues,

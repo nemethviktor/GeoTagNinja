@@ -1,34 +1,71 @@
 # exiftool config file
 %Image::ExifTool::UserDefined::Options = (
-    CoordFormat => '%+.6f',  
-    DateFormat => '%Y-%m-%d %H:%M:%S'
-);  
+    CoordFormat => '%+.6f',
+    DateFormat  => '%Y-%m-%d %H:%M:%S',
+);
+
 %Image::ExifTool::UserDefined = (
     'Image::ExifTool::Composite' => {
+
         GTNPreview => {
-            Groups => { 2 => 'Preview' },
+            Groups  => { 2 => 'Preview' },
             Desire => {
                 0 => 'PreviewImage',
-				1 => 'JpgFromRaw',
-				2 => 'MPImage3',
-				3 => 'OtherImage',
-				4 => 'ThumbnailImage',
+                1 => 'JpgFromRaw',
+                2 => 'MPImage3',
+                3 => 'OtherImage',
+                4 => 'ThumbnailImage',
                 5 => 'Orientation',
             },
             Require => {
-                1 => 'Orientation',
+                5 => 'Orientation',
             },
             ValueConv => q{
-                if (defined $val[5]) {
-                    my $et = new Image::ExifTool;
-                    $et->SetNewValue('Orientation#', $val[5]);
-                    my $rotatedImage;
-                    my $success = $et->WriteInfo($val[0], \$rotatedImage);
-                    return \$rotatedImage if $success == 1;
+                my $orientation = $val[5];
+                for my $i (0..4) {
+                    next unless defined $val[$i];
+                    if (defined $orientation) {
+                        my $et = new Image::ExifTool;
+                        $et->SetNewValue('Orientation#', $orientation);
+                        my $rotatedImage;
+                        my $success = $et->WriteInfo($val[$i], \$rotatedImage);
+                        return \$rotatedImage if $success == 1;
+                    }
+                    return $val[$i];
                 }
-                return $val[0];
+                return undef;
+            },
+        },
+
+        GTNPreviewThumb => {
+            Groups  => { 2 => 'Preview' },
+            Desire => {
+                0 => 'ThumbnailImage',
+                1 => 'PreviewImage',
+                2 => 'JpgFromRaw',
+                3 => 'OtherImage',
+                4 => 'Orientation',
+            },
+            Require => {
+                4 => 'Orientation',
+            },
+            ValueConv => q{
+                my $orientation = $val[4];
+                for my $i (0..3) {
+                    next unless defined $val[$i];
+                    if (defined $orientation) {
+                        my $et = new Image::ExifTool;
+                        $et->SetNewValue('Orientation#', $orientation);
+                        my $rotatedImage;
+                        my $success = $et->WriteInfo($val[$i], \$rotatedImage);
+                        return \$rotatedImage if $success == 1;
+                    }
+                    return $val[$i];
+                }
+                return undef;
             },
         },
     },
 );
-1; #end
+
+1; # end

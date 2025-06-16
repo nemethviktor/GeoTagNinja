@@ -18,6 +18,25 @@ using RestSharp.Authenticators;
 
 namespace GeoTagNinja.Helpers;
 
+public class TimedWebClient : WebClient
+{
+    // via https://stackoverflow.com/a/12879118/3968494
+    // Timeout in milliseconds, default = 600,000 msec
+    public int Timeout { get; set; }
+
+    public TimedWebClient()
+    {
+        Timeout = 600000;
+    }
+
+    protected override WebRequest GetWebRequest(Uri address)
+    {
+        WebRequest objWebRequest = base.GetWebRequest(address: address);
+        objWebRequest.Timeout = Timeout;
+        return objWebRequest;
+    }
+}
+
 internal static class HelperAPIVersionCheckers
 {
     /// <summary>
@@ -29,12 +48,12 @@ internal static class HelperAPIVersionCheckers
         decimal returnVal = 0.0m;
         decimal parsedDecimal = 0.0m;
         string onlineExifToolVer;
-
+        string URL = "http://exiftool.org/ver.txt";
         bool parsedResult;
         try
         {
-            onlineExifToolVer =
-                new WebClient().DownloadString(address: "http://exiftool.org/ver.txt");
+            onlineExifToolVer = new TimedWebClient { Timeout = 2000 }.DownloadString(address: URL);
+
             parsedResult = decimal.TryParse(s: onlineExifToolVer, style: NumberStyles.Any,
                                             provider: CultureInfo.InvariantCulture,
                                             result: out parsedDecimal);
@@ -55,6 +74,7 @@ internal static class HelperAPIVersionCheckers
     ///     Responsible for pulling the latest release of GTN from gitHub
     ///     GitHub doesn't store "build" numbers as such so the easiest is to pull the datediff of the last relevant build and
     ///     2000/1/1 and then compare it to the current version.
+    ///     Client runs on a 2-second timeout.
     /// </summary>
     /// <returns>The version number of the latest GTN release</returns>
     private static int API_GenericGetGTNVersionFromWeb()
@@ -62,7 +82,8 @@ internal static class HelperAPIVersionCheckers
         GTNReleaseAPIResponse returnVal = new();
         RestClientOptions options = new(baseUrl: "https://api.github.com")
         {
-            Authenticator = new HttpBasicAuthenticator(username: "demo", password: "demo")
+            Authenticator = new HttpBasicAuthenticator(username: "demo", password: "demo"),
+            Timeout = TimeSpan.FromSeconds(value: 2)
         };
         RestClient client = new(options: options);
 
@@ -112,14 +133,18 @@ internal static class HelperAPIVersionCheckers
             lastGTNBuildOnline =
                 Math.Max(val1: 0, val2: lastGTNBuildInt);
         }
+        // actually, this is largely irrelevant for most users
+    #if DEBUG
         else
         {
             HelperVariables.OperationAPIReturnedOKResponse = false;
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                 controlName: "mbx_Helper_WarningGTNVerAPIResponse",
                 captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
-                buttons: MessageBoxButtons.OK, extraMessage: response_GTNVersionQuery.StatusCode.ToString());
+                buttons: MessageBoxButtons.OK,
+                extraMessage: response_GTNVersionQuery.StatusCode.ToString());
         }
+    #endif
 
         return lastGTNBuildOnline;
     }

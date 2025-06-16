@@ -133,6 +133,14 @@ public partial class FrmMainApp : Form
     internal static bool FlatMode;
     private static bool _ignoreFlatMode;
 
+    internal enum ListViewDisplayMode
+    {
+        Details,
+        LargeIcons
+    }
+
+    internal ListViewDisplayMode listViewDisplayMode;
+
     private enum OpenInBrowserOptions
     {
         OpenCoordsInBrowserBing,
@@ -292,19 +300,7 @@ public partial class FrmMainApp : Form
             Log.Error(message: $"Error: {ex.Message}");
         }
 
-        // Setup the List View
-        try
-        {
-            lvw_FileList.ReadAndApplySetting(appLanguage: _AppLanguage);
-        }
-        catch (Exception ex)
-        {
-            Log.Error(message: $"Error: {ex.Message}");
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_ErrorResizingColumns", captionType: MessageBoxCaption.Error,
-                buttons: MessageBoxButtons.OK);
-        }
-
+        RecreateLvwFileList();
 
         // can't log inside.
         Log.Debug(message: "Run CoreWebView2InitializationCompleted");
@@ -352,6 +348,37 @@ public partial class FrmMainApp : Form
         Log.Info(message: "OnLoad: Done.");
     }
 
+    private void RecreateLvwFileList()
+    {
+        // Setup the List View
+        listViewDisplayMode = HelperVariables.UserSettingShowThumbnails
+            ? ListViewDisplayMode.LargeIcons
+            : ListViewDisplayMode.Details;
+        try
+        {
+            if (listViewDisplayMode == ListViewDisplayMode.LargeIcons)
+            {
+                lvw_FileList.View = System.Windows.Forms.View.LargeIcon;
+                lvw_FileList.TileSize = new Size(width: 128, height: 128);
+            }
+            else
+            {
+                lvw_FileList.View = System.Windows.Forms.View.Details;
+            }
+
+            lvw_FileList.ReadAndApplySetting(appLanguage: _AppLanguage);
+
+            lvw_FileList.Invalidate();
+        }
+        catch (Exception ex)
+        {
+            Log.Error(message: $"Error: {ex.Message}");
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmMainApp_ErrorResizingColumns", captionType: MessageBoxCaption.Error,
+                buttons: MessageBoxButtons.OK);
+        }
+    }
+
     /// <summary>
     ///     This fires up the autoupdater
     /// </summary>
@@ -392,6 +419,7 @@ public partial class FrmMainApp : Form
         PerformAppClosingProcedure();
     }
 
+    // ReSharper disable once MemberCanBePrivate.Global
     internal void PerformAppClosingProcedure(bool extractNewExifTool = true)
     {
         // Write column widths to db
@@ -1666,6 +1694,7 @@ public partial class FrmMainApp : Form
     {
         Log.Info(message: "Starting");
 
+
         string CurrentFoldersParent = null;
         CurrentFolder ??= Path.GetFullPath(path: tbx_FolderName.Text);
         try
@@ -1680,7 +1709,6 @@ public partial class FrmMainApp : Form
               , "C:"
             );
         }
-
 
         HelperVariables.OperationChangeFolderIsOkay = false;
         if (FlatMode && !_ignoreFlatMode)
@@ -1730,10 +1758,28 @@ public partial class FrmMainApp : Form
             }
         }
 
-        return;
 
         void ShowInvalidFolderMessage(string exceptionMessage = "")
         {
+            if (!string.IsNullOrEmpty(value: exceptionMessage))
+            {
+                MessageBox.Show(text: exceptionMessage);
+            }
+
+            string CurrentFoldersParent = null;
+            try
+            {
+                CurrentFoldersParent =
+                    HelperFileSystemOperators.FsoGetParent(path: CurrentFolder);
+            }
+            catch
+            {
+                CurrentFoldersParent = HelperGenericTypeOperations.Coalesce(
+                    Directory.GetDirectoryRoot(path: CurrentFolder)
+                  , "C:"
+                );
+            }
+
             DialogResult dialogResult = HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBoxWithResult(
                 controlName: "mbx_FrmMainApp_ErrorInvalidFolder", captionType: MessageBoxCaption.Question,
                 buttons: MessageBoxButtons.YesNo);
@@ -2660,7 +2706,8 @@ public partial class FrmMainApp : Form
                 if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                 {
                     await HelperExifReadGetImagePreviews.GenericCreateImagePreview(
-                        directoryElement: dirElemFileToModify, initiator: "FrmMainApp");
+                        directoryElement: dirElemFileToModify,
+                        initiator: HelperExifReadGetImagePreviews.Initiator.FrmMainAppPictureBox);
                 }
                 else
                 {

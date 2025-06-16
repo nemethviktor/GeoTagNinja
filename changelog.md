@@ -3,15 +3,11 @@
 **Build 9xxx [2025xxxx]** 
 - NEW & UPDATED:
 	- Added optional Satellite view layer to the map
-	- Geosetter favourites import #166 / #163
-	- GPX Import remembers TZ choice
-	- GPX Import TZ dropdown now sorted by STD time rather than TZ name
-	- Added a file-specific dropdown to open coordinates in various maps (Bing, Google, OSM...)
+	- Thumbnail view #164. Rudimentary and needs testing. Enable/Disable within `Settings` (requires app restart).
 - BUGS & FIXES:
 	- Added some logic to ignore certain particular warnings cropping up when saving files #159
 	- Fix Custom Rules not working properly with the `TargetPointName` attribute
 	- Fix API language selection not respected
-	- Added some logic to revert to 'current folder' if user says No to switching to C:\ when chosen folder doesn't exist as to avoid a dead loop.
 
 **Build 9196 [20250306]** 
 - NEW & UPDATED:
