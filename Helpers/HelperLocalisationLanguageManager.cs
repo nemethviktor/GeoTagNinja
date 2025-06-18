@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Resources;
 using GeoTagNinja.Resources.Languages;
@@ -8,10 +10,11 @@ namespace GeoTagNinja.Helpers;
 internal static class HelperLocalisationLanguageManager
 {
     /// <summary>
-    ///     Gets the list of languages as TwoLetterISOLanguageName, into which the app has been at least partially translated.
+    ///     Gets the list of languages as TwoLetterISOLanguageName, into which the app has been at least partially translated
+    ///     [length > 0].
     ///     This is called _only_ from within Settings.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A List(string) of TwoLetterISOLanguageNames</returns>
     public static List<string> GetTranslatedLanguages()
     {
         List<string> languages = new();
@@ -30,7 +33,24 @@ internal static class HelperLocalisationLanguageManager
                 if (rs != null &&
                     culture.TwoLetterISOLanguageName != "iv")
                 {
-                    languages.Add(item: culture.TwoLetterISOLanguageName);
+                    // We want to make sure there are > 0 items in there. E.g. someone could do a weblate with an empty set, which is no use. 
+                    IDictionaryEnumerator enumerator = rs.GetEnumerator();
+                    using IDisposable enumerator1 = enumerator as IDisposable;
+                    int length = 0;
+                    while (enumerator.MoveNext())
+                    {
+                        length++;
+                        // tbh we don't need to count it all
+                        if (length > 2)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (length > 0)
+                    {
+                        languages.Add(item: culture.TwoLetterISOLanguageName);
+                    }
                 }
             }
             catch (CultureNotFoundException exc)
@@ -38,7 +58,6 @@ internal static class HelperLocalisationLanguageManager
                 // dont care
             }
         }
-
 
         return languages;
     }

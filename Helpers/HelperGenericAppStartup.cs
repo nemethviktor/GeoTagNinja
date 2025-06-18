@@ -88,7 +88,7 @@ internal static class HelperGenericAppStartup
     }
 
     /// <summary>
-    ///     Reads object names from SQLite
+    ///     Reads setting for the app language selection from SQLite
     /// </summary>
     public static Task AppStartupReadAppLanguage()
     {

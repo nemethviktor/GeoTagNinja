@@ -1,9 +1,10 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 9xxx [2025xxxx]** 
+**Build 9300 [20250616]** 
 - NEW & UPDATED:
 	- Added optional Satellite view layer to the map
 	- Thumbnail view #164. Rudimentary and needs testing. Enable/Disable within `Settings` (requires app restart).
+	- There is now a Russian translation stub (via Weblate) but it's empty. I've changed the code not to show empty languages. 
 - BUGS & FIXES:
 	- Added some logic to ignore certain particular warnings cropping up when saving files #159
 	- Fix Custom Rules not working properly with the `TargetPointName` attribute
