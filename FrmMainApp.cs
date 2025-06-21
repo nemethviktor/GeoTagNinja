@@ -421,6 +421,11 @@ public partial class FrmMainApp : Form
     }
 
     // ReSharper disable once MemberCanBePrivate.Global
+    /// <summary>
+    ///     Writes column widths and app settings to the database, cleans up the image previews saved, kills ExifTool and
+    ///     updates it if necessary
+    /// </summary>
+    /// <param name="extractNewExifTool"></param>
     internal void PerformAppClosingProcedure(bool extractNewExifTool = true)
     {
         // Write column widths to db

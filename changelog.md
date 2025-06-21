@@ -3,8 +3,9 @@
 **Build 9xxx [2025xxxx]** 
 - NEW & UPDATED:
 	- Capability to save certain defaults on the Import GPX Form #174
+	- App version Bump 1.17 - should have done that w/ the last public release.
 - BUGS & FIXES:
-	- TBA
+	- Fix app restart not working...hopefully (ref #175)
 
 **Build 9300 [20250618]** 
 - NEW & UPDATED:
@@ -18,11 +19,11 @@
 
 **Build 9196 [20250306]** 
 - NEW & UPDATED:
-	- Added a CancellationToken to the Parsing of DirectoryElements (aka you can now cancel loading a folder.) #120
+	- Added a `CancellationToken` to the Parsing of `DirectoryElements` (aka you can now cancel loading a folder.) #120
 - BUGS & FIXES:
 	- Changed the Translation/resources logic into a single file. I realised that having 10 different files would yield 20+ PRs if anyone does an update and it's annoying.
 	- Fixed half of the translations not actually working because...not even sure why. My bad nonetheless.
-	- Fixed the time element of the TakenDate/CreateDate not being read properly after modify #147
+	- Fixed the time element of the `TakenDate`/`CreateDate` not being read properly after modify #147
 	- Fixed HEIC previews misbehaving #152
 	- Fixed the "No access to API" error cropping up multiple times #153
 	- Fixed Import (settings) not working due to localisation issues

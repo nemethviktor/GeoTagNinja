@@ -1449,14 +1449,14 @@ public partial class FrmSettings : Form
         Dictionary<string, string> buttonsDictionary = new()
         {
             {
-                HelperControlAndMessageBoxHandling.ReturnControlText(
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button,
+                ReturnControlText(
+                    fakeControlType: FakeControlTypes.Button,
                     controlName: btnRestartNowName),
                 btnRestartNowName
             },
             {
-                HelperControlAndMessageBoxHandling.ReturnControlText(
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button,
+                ReturnControlText(
+                    fakeControlType: FakeControlTypes.Button,
                     controlName: btnRestartLaterName),
                 btnRestartLaterName
             }
@@ -1465,14 +1465,14 @@ public partial class FrmSettings : Form
         // ReSharper disable once InconsistentNaming
         List<string> displayAndReturnList =
             DialogWithOrWithoutCheckBox.DisplayAndReturnList(
-                labelText: HelperControlAndMessageBoxHandling.ReturnControlText(
+                labelText: ReturnControlText(
                     controlName: "mbx_FrmSettings_PleaseRestartApp",
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                caption: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption
+                    fakeControlType: FakeControlTypes.MessageBox),
+                caption: ReturnControlText(
+                    controlName: MessageBoxCaption
                                                                    .Question
                                                                    .ToString(),
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
+                    fakeControlType: FakeControlTypes.MessageBoxCaption),
                 buttonsDictionary: buttonsDictionary,
                 orientation: "Horizontal",
                 checkboxesDictionary: new Dictionary<string, string>());
@@ -1491,11 +1491,31 @@ public partial class FrmSettings : Form
             FrmMainApp frmMainAppInstance =
                 (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
             frmMainAppInstance.PerformAppClosingProcedure(extractNewExifTool: false);
-            Application.Restart();
-            Environment.Exit(exitCode: 0);
+            Relaunch();
         }
     #endif
     }
+
+    /// <summary>
+    ///     Attempts to gracefully restart the app as to avoid Mutex issues.
+    ///     Only executes in Release, not Debug
+    /// </summary>
+    private static void Relaunch()
+    {
+        string exePath = Application.ExecutablePath;
+        string args = Join(separator: " ",
+            values: Environment.GetCommandLineArgs().Skip(count: 1).Select(selector: a => $"\"{a}\""));
+
+        Process.Start(startInfo: new ProcessStartInfo
+        {
+            FileName = exePath,
+            Arguments = args,
+            UseShellExecute = false
+        });
+
+        Application.Exit();
+    }
+
 
     /// <summary>
     ///     Creates and returns a dictionary representing buttons in the diaLog.

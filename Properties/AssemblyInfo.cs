@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration(configuration: "")]
 [assembly: AssemblyCompany(company: "Viktor Nemeth & Contributors")]
 [assembly: AssemblyProduct(product: "GeoTagNinja")]
-[assembly: AssemblyCopyright(copyright: "Viktor Nemeth - GPLv3 - 2022-2024")]
+[assembly: AssemblyCopyright(copyright: "Viktor Nemeth - GPLv3 - 2022+")]
 [assembly: AssemblyTrademark(trademark: "")]
 [assembly: AssemblyCulture(culture: "")]
 
@@ -34,4 +34,4 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
-[assembly: AssemblyVersion(version: "1.16.*")]
+[assembly: AssemblyVersion(version: "1.17.*")]
