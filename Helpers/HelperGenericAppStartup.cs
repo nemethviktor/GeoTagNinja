@@ -68,6 +68,10 @@ internal static class HelperGenericAppStartup
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    ///     This fills the existing SQL data into DataTables in HelperVariables
+    /// </summary>
+    /// <returns></returns>
     public static Task AppStartupReadSQLiteTables()
     {
         try
@@ -215,123 +219,215 @@ internal static class HelperGenericAppStartup
     }
 
     /// <summary>
-    ///     Applies default settings
+    ///     Applies default settings. The way this works is that we assign to each (string) key the name of the relevant
+    ///     Control, which then gets eventually read and written in a variety of places.
+    ///     The way this (hopefully) works is that for each Key there should be a variable equivalent in HelperVariables and
+    ///     each Value (as in KVP) there should be an instruction someplace to save a "value" (non-capital V) in SQLite.
+    ///     Supposedly.
     /// </summary>
-    public static Task AppStartupApplyDefaults()
+    /// <param name="settingTabPage">Which tabPage to affect</param>
+    /// <param name="actuallyRunningAtStartup">Whether we're really running at the startup. If not, certain parts are skipped</param>
+    public static Task AppStartupApplyDefaults(string settingTabPage,
+                                               bool actuallyRunningAtStartup)
     {
-        // get some defaults
         FrmMainApp.Log.Info(message: "Starting");
 
-        Dictionary<string, string> settingsStringBoolPairsDictionary = new()
+        // Define setting maps for different types
+        Dictionary<string, Dictionary<string, string>> stringSettings = new()
         {
-            { "UserSettingArcGisApiKey", "tbx_ARCGIS_APIKey" },
-            { "UserSettingGeoNamesUserName", "tbx_GeoNames_UserName" },
-            { "UserSettingGeoNamesPwd", "tbx_GeoNames_Pwd" },
-            { "UserSettingResetMapToZeroOnMissingValue", "ckb_ResetMapToZero" },
-            { "UserSettingUseDarkMode", "ckb_UseDarkMode" },
-            { "UserSettingUpdatePreReleaseGTN", "ckb_UpdateCheckPreRelease" },
-            { "UserSettingOnlyShowFCodePPL", "ckb_PopulatedPlacesOnly" },
-            { "UserSettingUseImperial", "ckb_UseImperialNotMetric" },
-            { "UserSettingShowThumbnails", "ckb_ShowThumbnails" }
+            [key: "tpg_Application"] = new Dictionary<string, string>
+            {
+                { "UserSettingArcGisApiKey", "tbx_ARCGIS_APIKey" },
+                { "UserSettingGeoNamesUserName", "tbx_GeoNames_UserName" },
+                { "UserSettingGeoNamesPwd", "tbx_GeoNames_Pwd" }
+            },
+            [key: "tpg_ImportExport_Import"] = new Dictionary<string, string>
+            {
+                { "UserSettingImportGPXTimeZoneToUse", "cbx_ImportUseTimeZone" }
+            }
         };
 
-        Dictionary<string, List<string>> settingsRadioButtonPairsDictionary = new()
+        Dictionary<string, Dictionary<string, string>> intSettings = new()
         {
+            [key: "tpg_ImportExport_Import"] = new Dictionary<string, string>
             {
-                "UserSettingMapColourMode", new List<string>
+                { "UserSettingImportGPXMaxInterpolation", "nud_GeoMaxIntSecs" },
+                { "UserSettingImportGPXMaxExtrapolation", "nud_GeoMaxExtSecs" }
+            }
+        };
+
+        Dictionary<string, Dictionary<string, string>> boolSettings = new()
+        {
+            [key: "tpg_Application"] = new Dictionary<string, string>
+            {
+                { "UserSettingResetMapToZeroOnMissingValue", "ckb_ResetMapToZero" },
+                { "UserSettingUseDarkMode", "ckb_UseDarkMode" },
+                { "UserSettingUpdatePreReleaseGTN", "ckb_UpdateCheckPreRelease" },
+                { "UserSettingOnlyShowFCodePPL", "ckb_PopulatedPlacesOnly" },
+                { "UserSettingUseImperial", "ckb_UseImperialNotMetric" },
+                { "UserSettingShowThumbnails", "ckb_ShowThumbnails" }
+            },
+            [key: "tpg_ImportExport_Import"] = new Dictionary<string, string>
+            {
+                { "UserSettingImportGPXUseParticularTimeZone", "ckb_UseTimeZone" },
+                { "UserSettingImportGPXUseDST", "ckb_UseDST" }
+            }
+        };
+
+        Dictionary<string, Dictionary<string, List<string>>> radioSettings = new()
+        {
+            [key: "tpg_Application"] = new Dictionary<string, List<string>>
+            {
+                [key: "UserSettingMapColourMode"] = new()
                 {
                     "rbt_MapColourModeNormal",
                     "rbt_MapColourModeDarkInverse",
                     "rbt_MapColourModeDarkPale"
                 }
+            },
+            [key: "tpg_ImportExport_Import"] = new Dictionary<string, List<string>>
+            {
+                [key: "UserSettingImportGPXImportSource"] = new()
+                {
+                    "rbt_importOneFile",
+                    "rbt_importFromCurrentFolder",
+                    "rbt_importFromAnotherFolder"
+                }
             }
         };
 
-        Dictionary<string, string> settingsRadioButtonReplaceWhatsDictionary = new()
-        {
-            { "UserSettingMapColourMode", "rbt_MapColourMode" }
-        };
+        Type staticType = typeof(HelperVariables);
+        FieldInfo[] fields = staticType.GetFields(bindingAttr: BindingFlags.Static | BindingFlags.NonPublic);
 
-        Type helperVariablesTypes = typeof(HelperVariables);
-        foreach (FieldInfo fieldInfo in helperVariablesTypes.GetFields(bindingAttr: BindingFlags.Static | BindingFlags.NonPublic))
+        foreach (FieldInfo field in fields)
         {
-            try
-            {
-                if (settingsStringBoolPairsDictionary.ContainsKey(key: fieldInfo.Name))
-                {
-                    FrmMainApp.Log.Debug(message: $"Now retrieving: {fieldInfo.Name}");
-                    settingsStringBoolPairsDictionary.TryGetValue(key: fieldInfo.Name, value: out string fieldInfoSettingID);
-                    if (fieldInfo.FieldType == typeof(bool))
-                    {
-                        // In this code, fieldInfo.SetValue(null, true); is used to set the value of the static field to True.
-                        // The first parameter is the object instance for instance fields, for static fields this should be null.
-                        // The second parameter is the value to set.
-                        fieldInfo.SetValue(obj: null,
-                            value: HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-                                dataTable: HelperVariables.DtHelperDataApplicationSettings,
-                                settingTabPage: "tpg_Application",
-                                settingId: fieldInfoSettingID
-                            ));
-                    }
-                    else if (fieldInfo.FieldType == typeof(string))
-                    {
-                        fieldInfo.SetValue(obj: null, value: HelperDataApplicationSettings.DataReadSQLiteSettings(
-                            dataTable: HelperVariables.DtHelperDataApplicationSettings,
-                            settingTabPage: "tpg_Application",
-                            settingId: fieldInfoSettingID,
-                            returnBlankIfNull: true
-                        ));
-                    }
-                }
-                else if (settingsRadioButtonPairsDictionary.ContainsKey(key: fieldInfo.Name))
-                {
-                    settingsRadioButtonPairsDictionary.TryGetValue(key: fieldInfo.Name, value: out List<string> optionList);
-                    settingsRadioButtonReplaceWhatsDictionary.TryGetValue(key: fieldInfo.Name, value: out string replaceWhat);
-                    fieldInfo.SetValue(obj: null, value: HelperDataApplicationSettings
-                                                        .DataReadRadioButtonSettingTrueOrFalse(
-                                                             dataTable: HelperVariables
-                                                                .DtHelperDataApplicationSettings,
-                                                             settingTabPage: "tpg_Application",
-                                                             optionList: optionList
-                                                         )
-                                                        .Replace(oldValue: replaceWhat, newValue: ""));
-                }
-            }
-            catch (Exception ex)
-            {
-                FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
-                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                    controlName: "mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB", captionType: MessageBoxCaption.Error,
-                    buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
-            }
+            FrmMainApp.Log.Debug(message: $"Now retrieving: {field.Name}");
+
+            TrySetStringValue(dict: stringSettings, tab: settingTabPage, field: field);
+            TrySetBoolValue(dict: boolSettings, tab: settingTabPage, field: field);
+            TrySetIntValue(dict: intSettings, tab: settingTabPage, field: field);
+            TrySetRadioValue(dict: radioSettings, tab: settingTabPage, field: field);
         }
 
-        List<SourcesAndAttributes.ElementAttribute> attributesWithValidOrderIDs = Enum
-                                                            .GetValues(enumType: typeof(SourcesAndAttributes.ElementAttribute))
-                                                            .Cast<SourcesAndAttributes.ElementAttribute>()
-                                                            .Where(predicate: attribute =>
-                                                                 SourcesAndAttributes.GetElementAttributesOrderID(
-                                                                     attributeToFind: attribute) >
-                                                                 0)
-                                                            .ToList();
-
-        foreach (SourcesAndAttributes.ElementAttribute attribute in
-                 attributesWithValidOrderIDs.Where(
-                     predicate: attribute =>
-                         !FileListView._cfg_Col_Order_Default.ContainsKey(
-                             key: SourcesAndAttributes.GetElementAttributesName(
-                                 attributeToFind: attribute))))
+        if (actuallyRunningAtStartup)
         {
-            FileListView._cfg_Col_Order_Default.Add(
-                key: SourcesAndAttributes.GetElementAttributesName(
-                    attributeToFind: attribute),
-                value: SourcesAndAttributes.GetElementAttributesOrderID(
-                    attributeToFind: attribute));
+            ApplyDefaultColumnOrders();
+            HelperVariables.UOMAbbreviated = HelperDataDatabaseAndStartup.GetUnitOfMeasureAbbreviated();
         }
 
-        HelperVariables.UOMAbbreviated = HelperDataDatabaseAndStartup.GetUnitOfMeasureAbbreviated();
         return Task.CompletedTask;
     }
+
+    private static void TrySetStringValue(Dictionary<string, Dictionary<string, string>> dict,
+                                          string tab,
+                                          FieldInfo field)
+    {
+        if (dict.TryGetValue(key: tab, value: out Dictionary<string, string> map) &&
+            map.TryGetValue(key: field.Name, value: out string controlId))
+        {
+            if (field.FieldType == typeof(string))
+            {
+                field.SetValue(obj: null, value: HelperDataApplicationSettings.DataReadSQLiteSettings(
+                    dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: tab,
+                    settingId: controlId, returnBlankIfNull: true));
+            }
+            else
+            {
+                throw new ArgumentException(message: $"{field.Name} is not string.");
+            }
+        }
+    }
+
+    private static void TrySetBoolValue(Dictionary<string, Dictionary<string, string>> dict,
+                                        string tab,
+                                        FieldInfo field)
+    {
+        if (dict.TryGetValue(key: tab, value: out Dictionary<string, string> map) &&
+            map.TryGetValue(key: field.Name, value: out string controlId))
+        {
+            if (field.FieldType == typeof(bool))
+            {
+                field.SetValue(obj: null, value: HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
+                    dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: tab,
+                    settingId: controlId));
+            }
+            else
+            {
+                throw new ArgumentException(message: $"{field.Name} is not bool.");
+            }
+        }
+    }
+
+    private static void TrySetIntValue(Dictionary<string, Dictionary<string, string>> dict,
+                                       string tab,
+                                       FieldInfo field)
+    {
+        if (dict.TryGetValue(key: tab, value: out Dictionary<string, string> map) &&
+            map.TryGetValue(key: field.Name, value: out string controlId))
+        {
+            if (field.FieldType == typeof(int))
+            {
+                field.SetValue(obj: null, value: HelperDataApplicationSettings.DataReadIntSetting(
+                    dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: tab,
+                    settingId: controlId));
+            }
+            else
+            {
+                throw new ArgumentException(message: $"{field.Name} is not int.");
+            }
+        }
+    }
+
+    private static void TrySetRadioValue(Dictionary<string, Dictionary<string, List<string>>> dict,
+                                         string tab,
+                                         FieldInfo field)
+    {
+        if (dict.TryGetValue(key: tab, value: out Dictionary<string, List<string>> map) &&
+            map.TryGetValue(key: field.Name, value: out List<string> optionList))
+        {
+            string selected = HelperDataApplicationSettings.DataReadRadioButtonSettingTrueOrFalse(
+                dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: tab,
+                optionList: optionList);
+
+            foreach (string option in optionList)
+            {
+                if (!string.IsNullOrWhiteSpace(value: selected))
+                {
+                    string value = selected.Replace(oldValue: option, newValue: "");
+                    if (!string.IsNullOrWhiteSpace(value: value))
+                    {
+                        field.SetValue(obj: null, value: value);
+                        return;
+                    }
+                }
+            }
+
+            field.SetValue(obj: null, value: selected); // fallback
+        }
+    }
+
+    private static void ApplyDefaultColumnOrders()
+    {
+        IEnumerable<SourcesAndAttributes.ElementAttribute> attributes = Enum
+                                                                       .GetValues(
+                                                                            enumType: typeof(SourcesAndAttributes.ElementAttribute))
+                                                                       .Cast<SourcesAndAttributes.ElementAttribute>()
+                                                                       .Where(predicate: attr =>
+                                                                            SourcesAndAttributes
+                                                                               .GetElementAttributesOrderID(
+                                                                                    attributeToFind: attr) > 0);
+
+        foreach (SourcesAndAttributes.ElementAttribute attr in attributes)
+        {
+            string key = SourcesAndAttributes.GetElementAttributesName(attributeToFind: attr);
+            if (!FileListView._cfg_Col_Order_Default.ContainsKey(key: key))
+            {
+                FileListView._cfg_Col_Order_Default.Add(key: key,
+                    value: SourcesAndAttributes.GetElementAttributesOrderID(attributeToFind: attr));
+            }
+        }
+    }
+
 
     /// <summary>
     ///     Makes sure there is webview2 installed and working

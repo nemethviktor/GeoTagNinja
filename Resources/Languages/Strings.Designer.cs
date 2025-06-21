@@ -889,6 +889,15 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Done..
+        /// </summary>
+        public static string Generic_Done {
+            get {
+                return ResourceManager.GetString("Generic_Done", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export.
         /// </summary>
         public static string Generic_Export {
@@ -1335,6 +1344,15 @@ namespace GeoTagNinja.Resources.Languages {
         public static string Generic_Save {
             get {
                 return ResourceManager.GetString("Generic_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Defaults.
+        /// </summary>
+        public static string Generic_SaveDefaults {
+            get {
+                return ResourceManager.GetString("Generic_SaveDefaults", resourceCulture);
             }
         }
         
@@ -2278,15 +2296,6 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Done..
-        /// </summary>
-        public static string mbx_GenericDone {
-            get {
-                return ResourceManager.GetString("mbx_GenericDone", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Done - you will probably want to restart the app..
         /// </summary>
         public static string mbx_GenericDoneRestartApp {
@@ -3071,6 +3080,15 @@ namespace GeoTagNinja.Resources.Languages {
         public static string tsr_MainAppToolStrip {
             get {
                 return ResourceManager.GetString("tsr_MainAppToolStrip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saves certain defaults. Currently: import source location, TZ &amp; DST settings, max inter/extrapolation..
+        /// </summary>
+        public static string ttp_FrmImportExport_SaveDefaults {
+            get {
+                return ResourceManager.GetString("ttp_FrmImportExport_SaveDefaults", resourceCulture);
             }
         }
         

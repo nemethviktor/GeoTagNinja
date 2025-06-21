@@ -130,7 +130,9 @@ internal static class HelperDataDatabaseAndStartup
     {
         FrmMainApp.Log.Info(message: "Starting");
 
-        string[] extensionSpecificControlNamesToAdd =
+        // note to self. for any keys, use the Control name, not the Variable name.
+
+        string[] booleanTypeApplicationSettingsExtensionSpecificControlNames =
         [
             "ckb_AddXMPSideCar",
             "ckb_OverwriteOriginal",
@@ -138,7 +140,7 @@ internal static class HelperDataDatabaseAndStartup
             "ckb_ResetFileDateToCreated"
         ];
 
-        Dictionary<string, List<string>> notExtensionSpecificControlNamesToAdd = new()
+        Dictionary<string, List<string>> booleanTypeSettingsNonExtensionSpecificControlNames = new()
         {
             {
                 "tpg_Application", new List<string>
@@ -146,26 +148,40 @@ internal static class HelperDataDatabaseAndStartup
                     "rbt_UseGeoNamesLocalLanguage",
                     "rbt_MapColourModeNormal"
                 }
+            },
+            {
+                "tpg_ImportExport_Import", new List<string>
+                {
+                    // leave this as-is (don't include the other options. this is setting a default value.)
+                    "rbt_importOneFile"
+                }
             }
         };
 
+        Dictionary<string, Dictionary<string, string>> stringTypeSettingsControlNames =
+            new()
+            {
+                {
+                    "tpg_ImportExport_Import", new Dictionary<string, string>
+                    {
+                        { "nud_GeoMaxIntSecs", "1800" },
+                        { "nud_GeoMaxExtSecs", "1800" }
+                    }
+                }
+            };
 
-        // extension-specific
+
         List<AppSettingContainer> settingsToWriteTmp = new();
 
-        foreach (string controlName in extensionSpecificControlNamesToAdd)
+        foreach (string controlName in booleanTypeApplicationSettingsExtensionSpecificControlNames)
         {
             string settingTabPage = "tpg_FileOptions";
             foreach (string ext in HelperGenericAncillaryListsArrays.AllCompatibleExtensions())
             {
-                string fileExtension = ext.Split('\t')
-                                          .FirstOrDefault();
-                string tmptmpCtrlName = $"{ext.Split('\t')
-                                              .FirstOrDefault()}_"; // 'tis ok as is
+                string fileExtension = ext.Split('\t').FirstOrDefault();
+                string tmptmpCtrlName = $"{ext.Split('\t').FirstOrDefault()}_"; // 'tis ok as is
                 string tmpCtrlName = tmptmpCtrlName + controlName;
-                string tmpCtrlGroup = ext.Split('\t')
-                                         .Last()
-                                         .ToLower();
+                string tmpCtrlGroup = ext.Split('\t').Last().ToLower();
                 string controlDefaultValue = "false";
 
                 if (controlName == "ckb_AddXMPSideCar")
@@ -218,16 +234,35 @@ internal static class HelperDataDatabaseAndStartup
         }
 
         foreach (string settingTabPage in
-                 notExtensionSpecificControlNamesToAdd.Select(selector: keyValuePair => keyValuePair.Key))
+                 booleanTypeSettingsNonExtensionSpecificControlNames.Select(selector: keyValuePair =>
+                     keyValuePair.Key))
         {
-            notExtensionSpecificControlNamesToAdd.TryGetValue(key: settingTabPage,
-                value: out List<string> controlNameList);
+            booleanTypeSettingsNonExtensionSpecificControlNames.TryGetValue(key: settingTabPage,
+                value: out List<string> booleanTypeControlNameList);
 
-            settingsToWriteTmp.AddRange(collection: controlNameList.Select(selector: controlName =>
+            settingsToWriteTmp.AddRange(collection: booleanTypeControlNameList.Select(selector: controlName =>
                 new AppSettingContainer
                 {
-                    TableName = "settings", SettingTabPage = settingTabPage, SettingId = controlName,
+                    TableName = "settings",
+                    SettingTabPage = settingTabPage,
+                    SettingId = controlName,
                     SettingValue = "true"
+                }));
+        }
+
+        foreach (string settingTabPage in stringTypeSettingsControlNames.Select(selector: keyValuePair =>
+                     keyValuePair.Key))
+        {
+            stringTypeSettingsControlNames.TryGetValue(key: settingTabPage,
+                value: out Dictionary<string, string> booleanTypeControlNameList);
+
+            settingsToWriteTmp.AddRange(collection: booleanTypeControlNameList.Select(selector: controlName =>
+                new AppSettingContainer
+                {
+                    TableName = "settings",
+                    SettingTabPage = settingTabPage,
+                    SettingId = controlName.Key,
+                    SettingValue = controlName.Value
                 }));
         }
 

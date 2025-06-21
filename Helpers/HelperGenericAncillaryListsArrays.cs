@@ -215,7 +215,7 @@ internal static class HelperGenericAncillaryListsArrays
     /// <summary>
     ///     This is part of a messy and obsolete code logic whereby I was using separate buttons and lables and whatnots for
     ///     ultimately identical purposes (e.g. "OK" or "None" etc). These have now been merged more-or-less and this
-    ///     dictionary provides a translation vessel between the old and new because I haven't actually changed everything I'd
+    ///     dictionary provides a translation vehicle between the old and new because I haven't actually changed everything I'd
     ///     hazard.
     ///     The other part of the logic is that there is some code that's dependent on the name of the object, for example the
     ///     code dealing with Taken Date vs Create Date (amongst others) needs to know what button was pressed but the
@@ -251,6 +251,7 @@ internal static class HelperGenericAncillaryListsArrays
             { "btn_PleaseWait", "Generic_PleaseWait" },
             { "btn_Rename", "Generic_Rename" },
             { "btn_Save", "Generic_Save" },
+            { "btn_SaveDefaults", "Generic_SaveDefaults" },
             { "btn_Yes", "Generic_Yes" },
             { "ckb_City", "Generic_City" },
             { "ckb_Country", "Generic_Country" },

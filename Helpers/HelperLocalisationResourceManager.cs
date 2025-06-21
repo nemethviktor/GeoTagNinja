@@ -89,6 +89,11 @@ internal static class HelperLocalisationResourceManager
             location == HelperVariables.ResourceNameForGenericControlItems)
         {
             resourceKey = $"Generic_{resourceKey.Substring(startIndex: resourceKey.IndexOf(value: '_') + 1)}";
+            // no idea how this comes along but alas.
+            if (resourceKey.StartsWith(value: "Generic_Generic"))
+            {
+                resourceKey = resourceKey.Replace(oldValue: "Generic_Generic", newValue: "Generic_");
+            }
         }
         // Alternatively if it's not been designated as Generic but is nonetheless then we use the lookup dict
         else if (resourceKeyInGenericMapping != HelperVariables.ControlItemNameNotGeneric)

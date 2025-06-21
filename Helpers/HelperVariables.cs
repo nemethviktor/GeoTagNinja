@@ -4,6 +4,8 @@ using System.Data;
 using System.IO;
 using static System.Environment;
 
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
+
 namespace GeoTagNinja.Helpers;
 
 internal static class HelperVariables
@@ -15,22 +17,49 @@ internal static class HelperVariables
     internal const string ControlItemNameNotGeneric = "Not Generic";
     internal const string ResourceNameForGenericControlItems = "Generic_Strings";
 
-    // user-defined settings updateable via Reflection
+#region User Defined (via Reflection)
+
+#region strings
+
     internal static string UserSettingArcGisApiKey;
     internal static string UserSettingGeoNamesUserName;
     internal static string UserSettingGeoNamesPwd;
-#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
+    internal static string UserSettingMapColourMode; // DarkInverse or DarkPale (could be Normal too but not relevant)
+    internal static string UserSettingImportGPXImportSource;
+    internal static string UserSettingImportGPXTimeZoneToUse;
+
+#endregion
+
+#region bools
+
     internal static bool UserSettingResetMapToZeroOnMissingValue;
     internal static bool UserSettingUseDarkMode;
     internal static bool UserSettingUpdatePreReleaseGTN;
+
+    // ReSharper disable once FieldCanBeMadeReadOnly.Global
     internal static bool UserSettingOnlyShowFCodePPL = false;
     internal static bool UserSettingShowThumbnails;
-#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
-    internal static string UserSettingMapColourMode; // DarkInverse or DarkPale (could be Normal too but not relevant)
+
+    // ReSharper disable once FieldCanBeMadeReadOnly.Global
     internal static bool UserSettingUseImperial = false;
+
+    internal static bool UserSettingImportGPXUseParticularTimeZone;
+    internal static bool UserSettingImportGPXUseDST;
+
+#endregion
+
+#region integers
+
+    internal static int UserSettingImportGPXMaxInterpolation;
+    internal static int UserSettingImportGPXMaxExtrapolation;
+
+#endregion
+
+#endregion
 
     internal static bool OperationChangeFolderIsOkay;
     internal static bool OperationAPIReturnedOKResponse = true;
+
     internal static bool OperationNowSelectingAllItems = false;
 
     //internal static string _sErrorMsg = "";

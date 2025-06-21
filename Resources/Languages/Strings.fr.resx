@@ -1110,7 +1110,7 @@ Exemple : les données par défaut renvoyées par l'API pour Londres UK sont m�
   <data name="mbx_GenericDoneRestartApp" xml:space="preserve">
     <value>Terminé - vous devrez probablement redémarrer l'application.</value>
   </data>
-  <data name="mbx_GenericDone" xml:space="preserve">
+  <data name="Generic_Done" xml:space="preserve">
     <value>Terminé .</value>
   </data>
   <data name="mbx_HelperStaticExifNoAPI" xml:space="preserve">

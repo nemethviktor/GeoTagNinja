@@ -1,6 +1,12 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 9300 [20250616]** 
+**Build 9xxx [2025xxxx]** 
+- NEW & UPDATED:
+	- Capability to save certain defaults on the Import GPX Form #174
+- BUGS & FIXES:
+	- TBA
+
+**Build 9300 [20250618]** 
 - NEW & UPDATED:
 	- Added optional Satellite view layer to the map
 	- Thumbnail view #164. Rudimentary and needs testing. Enable/Disable within `Settings` (requires app restart).

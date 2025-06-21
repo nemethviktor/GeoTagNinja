@@ -950,7 +950,7 @@ If you click 'stop asking' it will take the answer as Yes and won't ask again th
     <value>Choose what to Import. Please note that upon successful completion of the Import process the relevant bits of the database will be overwritten. If something fails there will be a backup file of your db in your AppData folder.</value>
     <comment>Location: Settings</comment>
   </data>
-  <data name="mbx_GenericDone" xml:space="preserve">
+  <data name="Generic_Done" xml:space="preserve">
     <value>Done.</value>
   </data>
   <data name="mbx_GenericDoneRestartApp" xml:space="preserve">
@@ -1336,5 +1336,12 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
   <data name="ttp_ShowThumbnails" xml:space="preserve">
     <value>This causes a very significant performance hit (up to 7x by my measurements) so it's not recommended.</value>
     <comment>Location: Settings</comment>
+  </data>
+  <data name="Generic_SaveDefaults" xml:space="preserve">
+    <value>Save Defaults</value>
+  </data>
+  <data name="ttp_FrmImportExport_SaveDefaults" xml:space="preserve">
+    <value>Saves certain defaults. Currently: import source location, TZ &amp; DST settings, max inter/extrapolation.</value>
+    <comment>Location: GPX Import-Export. Not having it as a 'Generic' as the button associated doesn't really save all values' defaults and I don't know how I might change that later.</comment>
   </data>
 </root>

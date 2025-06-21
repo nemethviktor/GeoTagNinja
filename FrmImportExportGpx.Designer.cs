@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmImportExportGpx));
             this.tcr_ImportExport = new System.Windows.Forms.TabControl();
             this.tpg_ImportExport_Import = new System.Windows.Forms.TabPage();
@@ -86,6 +87,9 @@
             this.ofd_SaveTrackTo = new System.Windows.Forms.OpenFileDialog();
             this.btn_Generic_Cancel = new System.Windows.Forms.Button();
             this.btn_Generic_OK = new System.Windows.Forms.Button();
+            this.btn_SaveDefaults = new System.Windows.Forms.Button();
+            this.pbx_SaveDefaults = new System.Windows.Forms.PictureBox();
+            this.ttp_FrmImportExport_SaveDefaults = new System.Windows.Forms.ToolTip(this.components);
             this.tcr_ImportExport.SuspendLayout();
             this.tpg_ImportExport_Import.SuspendLayout();
             this.gbx_OtherSettings.SuspendLayout();
@@ -103,6 +107,7 @@
             this.gbx_SaveTrackOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_GPSDataPaste)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_SaveTo_Folder)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbx_SaveDefaults)).BeginInit();
             this.SuspendLayout();
             // 
             // tcr_ImportExport
@@ -113,6 +118,7 @@
             resources.ApplyResources(this.tcr_ImportExport, "tcr_ImportExport");
             this.tcr_ImportExport.Name = "tcr_ImportExport";
             this.tcr_ImportExport.SelectedIndex = 0;
+            this.tcr_ImportExport.SelectedIndexChanged += new System.EventHandler(this.tcr_ImportExport_SelectedIndexChanged);
             // 
             // tpg_ImportExport_Import
             // 
@@ -545,11 +551,27 @@
             this.btn_Generic_OK.UseVisualStyleBackColor = true;
             this.btn_Generic_OK.Click += new System.EventHandler(this.btn_Generic_OK_Click);
             // 
+            // btn_SaveDefaults
+            // 
+            resources.ApplyResources(this.btn_SaveDefaults, "btn_SaveDefaults");
+            this.btn_SaveDefaults.Name = "btn_SaveDefaults";
+            this.btn_SaveDefaults.UseVisualStyleBackColor = true;
+            this.btn_SaveDefaults.Click += new System.EventHandler(this.btn_SaveDefaults_Click);
+            // 
+            // pbx_SaveDefaults
+            // 
+            resources.ApplyResources(this.pbx_SaveDefaults, "pbx_SaveDefaults");
+            this.pbx_SaveDefaults.Name = "pbx_SaveDefaults";
+            this.pbx_SaveDefaults.TabStop = false;
+            this.pbx_SaveDefaults.MouseHover += new System.EventHandler(this.pbx_SaveDefaults_MouseHover);
+            // 
             // FrmImportExportGpx
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ControlBox = false;
+            this.Controls.Add(this.pbx_SaveDefaults);
+            this.Controls.Add(this.btn_SaveDefaults);
             this.Controls.Add(this.btn_Generic_Cancel);
             this.Controls.Add(this.btn_Generic_OK);
             this.Controls.Add(this.tcr_ImportExport);
@@ -579,6 +601,7 @@
             this.gbx_SaveTrackOptions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_GPSDataPaste)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_SaveTo_Folder)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbx_SaveDefaults)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -642,5 +665,8 @@
         private System.Windows.Forms.Label lbl_ExportTrackTimeStampType;
         private System.Windows.Forms.Label lbl_ExportTrackTimeStampTypeNote;
         private System.Windows.Forms.PictureBox pbx_GPSDataPaste;
+        private System.Windows.Forms.Button btn_SaveDefaults;
+        private System.Windows.Forms.PictureBox pbx_SaveDefaults;
+        private System.Windows.Forms.ToolTip ttp_FrmImportExport_SaveDefaults;
     }
 }

@@ -811,7 +811,8 @@ public partial class FrmSettings : Form
         HelperVariables.DtHelperDataApplicationSettingsPreQueue.Clear();
 
         // refresh user data
-        HelperGenericAppStartup.AppStartupApplyDefaults();
+        HelperGenericAppStartup.AppStartupApplyDefaults(settingTabPage: "tpg_Application",
+            actuallyRunningAtStartup: false);
 
         HelperGenericAppStartup.AppStartupGetOverwriteBlankToponomy();
         HelperGenericAppStartup.AppStartupGetToponomyRadiusAndMaxRows();

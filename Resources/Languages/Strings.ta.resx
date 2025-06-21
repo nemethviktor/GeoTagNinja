@@ -780,7 +780,7 @@
   <data name="mbx_FrmSettings_QuestionWhatToImport" xml:space="preserve">
     <value>இறக்குமதி செய்ய என்ன என்பதைத் தேர்வுசெய்க. இறக்குமதி செயல்முறை வெற்றிகரமாக முடிந்ததும் தரவுத்தளத்தின் தொடர்புடைய பிட்கள் மேலெழுதப்படும் என்பதை நினைவில் கொள்க. ஏதேனும் தோல்வியுற்றால், உங்கள் AppData கோப்புறையில் உங்கள் DB இன் காப்பு கோப்பு இருக்கும்.</value>
   </data>
-  <data name="mbx_GenericDone" xml:space="preserve">
+  <data name="Generic_Done" xml:space="preserve">
     <value>முடிந்தது.</value>
   </data>
   <data name="mbx_GenericDoneRestartApp" xml:space="preserve">

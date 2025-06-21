@@ -1510,7 +1510,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;tcr_ImportExport.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <metadata name="ofd_importOneFile.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -1543,7 +1543,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btn_Generic_Cancel.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <data name="btn_Generic_OK.Location" type="System.Drawing.Point, System.Drawing">
     <value>608, 439</value>
@@ -1567,8 +1567,74 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btn_Generic_OK.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="btn_SaveDefaults.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btn_SaveDefaults.Location" type="System.Drawing.Point, System.Drawing">
+    <value>37, 439</value>
+  </data>
+  <data name="btn_SaveDefaults.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 23</value>
+  </data>
+  <data name="btn_SaveDefaults.TabIndex" type="System.Int32, mscorlib">
+    <value>34</value>
+  </data>
+  <data name="btn_SaveDefaults.Text" xml:space="preserve">
+    <value>btn_SaveDefaults</value>
+  </data>
+  <data name="&gt;&gt;btn_SaveDefaults.Name" xml:space="preserve">
+    <value>btn_SaveDefaults</value>
+  </data>
+  <data name="&gt;&gt;btn_SaveDefaults.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_SaveDefaults.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btn_SaveDefaults.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="pbx_SaveDefaults.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAABJ0lE
+        QVQ4T2OgPojebssQs2sFQ+zOpwyxu34yxOx8AqSXM8TutoGqwAHs97MAFU8HKv6PE8fsmgpWhxWgaeZI
+        2vNfu+IYmEYWBxuCAeJ22iErUik58v/6sy//t154/f/qky//lYoPoxoSv9MaqhMKYneuRFYwfe/j/xFT
+        L4HZIZMu/p+65xFCMxjvXAbVCQWQAENTBMEZ86/9n7jzIbr4Y6hOKACFNqoCMLZoPPn/ypPP/yVyDqDK
+        xez6AdUJBThccOrux//qZUcxxIEYwwXAeMZQ9D9t3jUMMSheAtUJBdG7LICu+IeuUK30CAofjjFiAQRA
+        8YukCKQZBFQxDNk5GaoDDYBTIqohWDXjTIkwAHIeKJ5BAQWJncfAVLqUIWaHFVTFoAIMDAB/jDfo8dUu
+        dQAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="pbx_SaveDefaults.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="pbx_SaveDefaults.Location" type="System.Drawing.Point, System.Drawing">
+    <value>177, 444</value>
+  </data>
+  <data name="pbx_SaveDefaults.Size" type="System.Drawing.Size, System.Drawing">
+    <value>16, 16</value>
+  </data>
+  <data name="pbx_SaveDefaults.TabIndex" type="System.Int32, mscorlib">
+    <value>35</value>
+  </data>
+  <data name="&gt;&gt;pbx_SaveDefaults.Name" xml:space="preserve">
+    <value>pbx_SaveDefaults</value>
+  </data>
+  <data name="&gt;&gt;pbx_SaveDefaults.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pbx_SaveDefaults.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;pbx_SaveDefaults.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="ttp_FrmImportExport_SaveDefaults.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>527, 17</value>
+  </metadata>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -4503,6 +4569,12 @@
   </data>
   <data name="&gt;&gt;ofd_SaveTrackTo.Type" xml:space="preserve">
     <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ttp_FrmImportExport_SaveDefaults.Name" xml:space="preserve">
+    <value>ttp_FrmImportExport_SaveDefaults</value>
+  </data>
+  <data name="&gt;&gt;ttp_FrmImportExport_SaveDefaults.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>FrmImportExportGpx</value>

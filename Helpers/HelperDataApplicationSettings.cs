@@ -34,6 +34,36 @@ internal static class HelperDataApplicationSettings
     }
 
     /// <summary>
+    ///     Checks the SQLite database for integer settings
+    /// </summary>
+    /// <param name="dataTable">The DataTable form which the data is read</param>
+    /// <param name="settingTabPage">TabPage of the above</param>
+    /// <param name="settingId">The Control's name itself</param>
+    /// <returns>Integer-converted value or 0 if fails</returns>
+    internal static int DataReadIntSetting(DataTable dataTable,
+                                           string settingTabPage,
+                                           string settingId)
+    {
+        EnumerableRowCollection<DataRow> drDataTableData =
+            from DataRow dataRow in dataTable.AsEnumerable()
+            where dataRow.Field<string>(columnName: "settingTabPage") == settingTabPage &&
+                  dataRow.Field<string>(columnName: "settingId") ==
+                  settingId
+            select dataRow;
+
+        DataRow dataRows = drDataTableData.FirstOrDefault();
+        int retVal = 0;
+        if (dataRows != null)
+        {
+            string strVal = dataRows[columnName: "settingValue"].ToString();
+            bool _ = int.TryParse(s: strVal,
+                result: out retVal);
+        }
+
+        return retVal;
+    }
+
+    /// <summary>
     ///     Checks the SQLite database for radio button settings and returns the selected option.
     /// </summary>
     /// <param name="dataTable">The DataTable form which the data is read</param>
@@ -41,8 +71,8 @@ internal static class HelperDataApplicationSettings
     /// <param name="optionList">The list of options for the radio button.</param>
     /// <returns>The selected option from the radio button setting.</returns>
     internal static string DataReadRadioButtonSettingTrueOrFalse(DataTable dataTable,
-        string settingTabPage,
-        List<string> optionList)
+                                                                 string settingTabPage,
+                                                                 List<string> optionList)
     {
         string whichValueIsTrue = "";
         foreach (string optionValue in optionList)

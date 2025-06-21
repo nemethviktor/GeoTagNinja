@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using TimeZoneConverter;
+using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
 using HelperControlAndMessageBoxCustomMessageBoxManager =
     GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
@@ -47,16 +48,8 @@ public partial class FrmImportExportGpx : Form
                 : ThemeColour.Light, parentControl: this);
 
 
-        // set defaults
-        rbt_importOneFile.Checked = true;
-        pbx_importFromAnotherFolder.Enabled = false;
-        lbl_importOneFile.Enabled = true;
-        lbl_importFromAnotherFolder.Enabled = false;
-        ckb_OverlayGPXForSelectedDatesOnly.Enabled = false;
+        ReturnControlText(cItem: this, senderForm: this);
 
-        rbt_importFromCurrentFolder.Enabled = !Program.CollectionModeEnabled;
-
-        HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
 
         // load TZ-CBX
         FillTZComboBox(cbxToFill: cbx_ImportUseTimeZone);
@@ -71,7 +64,7 @@ public partial class FrmImportExportGpx : Form
         string gpxExtensionsFilter = GpxExtensions()
            .Aggregate(seed: "Track Files|",
                 func: (current,
-                        extension) => $"{current}*.{extension};");
+                       extension) => $"{current}*.{extension};");
 
         ofd_importOneFile.Filter = gpxExtensionsFilter;
 
@@ -80,7 +73,7 @@ public partial class FrmImportExportGpx : Form
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
-            HelperControlAndMessageBoxHandling.ReturnControlText(cItem: cItem, senderForm: this);
+            ReturnControlText(cItem: cItem, senderForm: this);
 
             switch (cItem.Name)
             {
@@ -135,12 +128,71 @@ public partial class FrmImportExportGpx : Form
             }
         }
 
+        GetDefaultUserSettings();
+
         // trigger timer for datetime-update
         FormTimer.Enabled = true;
         FormTimer.Interval = 1000;
         FormTimer.Start();
 
         FormTimer.Tick += TimerEventProcessor;
+    }
+
+    /// <summary>
+    ///     Reads the track source, TZ value and DST, and max inter/extrapolation values from SQLite
+    /// </summary>
+    private async void GetDefaultUserSettings()
+    {
+        await HelperGenericAppStartup.AppStartupApplyDefaults(settingTabPage: "tpg_ImportExport_Import",
+            actuallyRunningAtStartup: false);
+        nud_GeoMaxIntSecs.Value = HelperVariables.UserSettingImportGPXMaxInterpolation;
+        nud_GeoMaxExtSecs.Value = HelperVariables.UserSettingImportGPXMaxExtrapolation;
+
+        ckb_UseDST.Checked = HelperVariables.UserSettingImportGPXUseDST;
+        ckb_UseTimeZone.Checked = HelperVariables.UserSettingImportGPXUseParticularTimeZone;
+        if (ckb_UseTimeZone.Checked)
+        {
+            cbx_ImportUseTimeZone.Text =
+                HelperVariables.UserSettingImportGPXTimeZoneToUse.Replace(oldValue: ") # ", newValue: "\r) # ");
+        }
+
+        switch (HelperVariables.UserSettingImportGPXImportSource)
+        {
+            case "rbt_importOneFile":
+                rbt_importOneFile.Checked = true;
+                lbl_importOneFile.Text = GetStoredUserSettingValue(settingID: "lbl_importOneFile");
+                break;
+            case "rbt_importFromCurrentFolder":
+                rbt_importFromCurrentFolder.Checked = true;
+                break;
+            case "rbt_importFromAnotherFolder":
+                rbt_importFromAnotherFolder.Checked = true;
+                lbl_importFromAnotherFolder.Text = GetStoredUserSettingValue(settingID: "lbl_importFromAnotherFolder");
+                break;
+            default:
+                rbt_importOneFile.Checked = true;
+                break;
+        }
+
+        pbx_importOneFile.Enabled = rbt_importOneFile.Checked;
+        lbl_importOneFile.Enabled = rbt_importOneFile.Checked;
+
+        pbx_importFromAnotherFolder.Enabled = rbt_importFromAnotherFolder.Checked;
+        lbl_importFromAnotherFolder.Enabled = rbt_importFromAnotherFolder.Checked;
+
+        ckb_OverlayGPXForSelectedDatesOnly.Enabled = false;
+
+        rbt_importFromCurrentFolder.Enabled = !Program.CollectionModeEnabled;
+
+        static string GetStoredUserSettingValue(string settingID)
+        {
+            return HelperDataApplicationSettings.DataReadSQLiteSettings(
+                dataTable: HelperVariables.DtHelperDataApplicationSettings,
+                settingTabPage: "tpg_ImportExport_Import",
+                settingId: settingID,
+                returnBlankIfNull: true
+            );
+        }
     }
 
     private void FillTZComboBox(ComboBox cbxToFill)
@@ -208,7 +260,7 @@ public partial class FrmImportExportGpx : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void TimerEventProcessor(object sender,
-        EventArgs e)
+                                     EventArgs e)
     {
         lbl_CameraTimeData.Text = DateTime.Now.AddDays(value: (int)nud_Days.Value)
                                           .AddHours(value: (int)nud_Hours.Value)
@@ -281,7 +333,7 @@ public partial class FrmImportExportGpx : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void btn_Generic_OK_Click(object sender,
-        EventArgs e)
+                                            EventArgs e)
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         switch (tcr_ImportExport.SelectedTab.Name)
@@ -323,9 +375,9 @@ public partial class FrmImportExportGpx : Form
                     (trackFileLocationType == "folder" && Directory.Exists(path: trackFileLocationVal)))
                 {
                     // indicate that something is going on
-                    btn_Generic_OK.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
+                    btn_Generic_OK.Text = ReturnControlText(
                         controlName: "Generic_PleaseWait",
-                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Generic);
+                        fakeControlType: FakeControlTypes.Generic);
                     btn_Generic_OK.AutoSize = true;
                     btn_Generic_OK.Enabled = false;
                     btn_Generic_Cancel.Enabled = false;
@@ -367,7 +419,7 @@ public partial class FrmImportExportGpx : Form
                 {
                     HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                         controlName: "mbx_FrmImportExportGpx_FileOrFolderDoesntExist",
-                        captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
+                        captionType: MessageBoxCaption.Error,
                         buttons: MessageBoxButtons.OK);
                 }
 
@@ -400,9 +452,126 @@ public partial class FrmImportExportGpx : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void btn_Generic_Cancel_Click(object sender,
-        EventArgs e)
+                                          EventArgs e)
     {
         Hide();
+    }
+
+    private void btn_SaveDefaults_Click(object sender,
+                                        EventArgs e)
+    {
+        List<AppSettingContainer> settingsToWrite = new();
+        string tableName = "settings";
+        string tabName = tcr_ImportExport.SelectedTab.Name;
+
+        // Define radio button group
+        var importSourceRadios = new[]
+        {
+            new
+            {
+                Radio = rbt_importOneFile, Id = "rbt_importOneFile",
+                Label = lbl_importOneFile
+            },
+            new
+            {
+                Radio = rbt_importFromCurrentFolder, Id = "rbt_importFromCurrentFolder",
+                Label = (Label)null
+            },
+            new
+            {
+                Radio = rbt_importFromAnotherFolder, Id = "rbt_importFromAnotherFolder",
+                Label = lbl_importFromAnotherFolder
+            }
+        };
+
+        // Add all radio button states (true for checked, false for unchecked)
+        foreach (var rbt in importSourceRadios)
+        {
+            settingsToWrite.Add(item: new AppSettingContainer
+            {
+                TableName = tableName,
+                SettingTabPage = tabName,
+                SettingId = rbt.Id,
+                SettingValue = rbt.Radio.Checked.ToString().ToLower()
+            });
+
+            // If it has an associated label and it's selected, store the label text too
+            if (rbt.Radio.Checked &&
+                rbt.Label != null)
+            {
+                settingsToWrite.Add(item: new AppSettingContainer
+                {
+                    TableName = tableName,
+                    SettingTabPage = tabName,
+                    SettingId = rbt.Label.Name,
+                    SettingValue = rbt.Label.Text
+                });
+            }
+        }
+
+        // Numeric values
+        settingsToWrite.AddRange(collection: new[]
+        {
+            new AppSettingContainer
+            {
+                TableName = tableName,
+                SettingTabPage = tabName,
+                SettingId = "nud_GeoMaxIntSecs",
+                SettingValue = nud_GeoMaxIntSecs.Text
+            },
+            new AppSettingContainer
+            {
+                TableName = tableName,
+                SettingTabPage = tabName,
+                SettingId = "nud_GeoMaxExtSecs",
+                SettingValue = nud_GeoMaxExtSecs.Text
+            }
+        });
+
+        // Strings
+        if (ckb_UseTimeZone.Checked)
+        {
+            settingsToWrite.AddRange(collection: new[]
+            {
+                new AppSettingContainer
+                {
+                    TableName = tableName,
+                    SettingTabPage = tabName,
+                    SettingId = "cbx_ImportUseTimeZone",
+                    SettingValue = cbx_ImportUseTimeZone.Text.Replace(oldValue: "\r", newValue: "")
+                }
+            });
+        }
+
+        // Booleans
+        settingsToWrite.AddRange(collection: new[]
+        {
+            new AppSettingContainer
+            {
+                TableName = tableName,
+                SettingTabPage = tabName,
+                SettingId = "ckb_UseTimeZone",
+                SettingValue = ckb_UseTimeZone.Checked.ToString().ToLower()
+            },
+            new AppSettingContainer
+            {
+                TableName = tableName,
+                SettingTabPage = tabName,
+                SettingId = "ckb_UseDST",
+                SettingValue = ckb_UseDST.Checked.ToString().ToLower()
+            }
+        });
+
+        if (settingsToWrite.Count > 0)
+        {
+            HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
+        }
+
+
+        HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+            controlName: "mbx_GenericDone",
+            captionType: MessageBoxCaption.Information,
+            buttons: MessageBoxButtons.OK);
     }
 
 
@@ -414,7 +583,7 @@ public partial class FrmImportExportGpx : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void pbx_importOneFile_Click(object sender,
-        EventArgs e)
+                                         EventArgs e)
     {
         if (ofd_importOneFile.ShowDialog() == DialogResult.OK)
         {
@@ -428,7 +597,7 @@ public partial class FrmImportExportGpx : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private void pbx_importFromAnotherFolder_Click(object sender,
-        EventArgs e)
+                                                   EventArgs e)
     {
         if (fbd_importFromAnotherFolder.ShowDialog() == DialogResult.OK)
         {
@@ -437,7 +606,7 @@ public partial class FrmImportExportGpx : Form
     }
 
     private void rbt_importOneFile_CheckedChanged(object sender,
-        EventArgs e)
+                                                  EventArgs e)
     {
         pbx_importOneFile.Enabled = rbt_importOneFile.Checked;
         lbl_importOneFile.Enabled = rbt_importOneFile.Checked;
@@ -445,7 +614,7 @@ public partial class FrmImportExportGpx : Form
     }
 
     private void rbt_importFromCurrentFolder_CheckedChanged(object sender,
-        EventArgs e)
+                                                            EventArgs e)
     {
         pbx_importOneFile.Enabled = false;
         pbx_importFromAnotherFolder.Enabled = false;
@@ -454,7 +623,7 @@ public partial class FrmImportExportGpx : Form
     }
 
     private void rbt_importFromAnotherFolder_CheckedChanged(object sender,
-        EventArgs e)
+                                                            EventArgs e)
     {
         pbx_importFromAnotherFolder.Enabled = rbt_importFromAnotherFolder.Checked;
         lbl_importFromAnotherFolder.Enabled = rbt_importFromAnotherFolder.Checked;
@@ -472,7 +641,7 @@ public partial class FrmImportExportGpx : Form
 
 
     private void ckb_UseTimeZone_CheckedChanged(object sender,
-        EventArgs e)
+                                                EventArgs e)
     {
         ckb_UseDST.Enabled = ckb_UseTimeZone.Checked;
         cbx_ImportUseTimeZone.Enabled = ckb_UseTimeZone.Checked;
@@ -480,13 +649,13 @@ public partial class FrmImportExportGpx : Form
     }
 
     private void ckb_UseDST_CheckedChanged(object sender,
-        EventArgs e)
+                                           EventArgs e)
     {
         lbl_TZValue.Text = updatelbl_TZValue();
     }
 
     private void cbx_UseTimeZone_SelectedIndexChanged(object sender,
-        EventArgs e)
+                                                      EventArgs e)
     {
         SelectedIanatzName = cbx_ImportUseTimeZone.Text.Split('#')[1]
                                                   .TrimStart(' ')
@@ -495,7 +664,8 @@ public partial class FrmImportExportGpx : Form
     }
 
 
-    private void ckb_LoadTrackOntoMap_CheckedChanged(object sender, EventArgs e)
+    private void ckb_LoadTrackOntoMap_CheckedChanged(object sender,
+                                                     EventArgs e)
     {
         ckb_OverlayGPXForSelectedDatesOnly.Enabled = ckb_LoadTrackOntoMap.Checked;
     }
@@ -507,7 +677,7 @@ public partial class FrmImportExportGpx : Form
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void btn_PullMostRecentTrackSyncShift_Click(object sender,
-        EventArgs e)
+                                                        EventArgs e)
     {
         if (_lastShiftSecond == 0 &&
             _lastShiftMinute == 0 &&
@@ -516,7 +686,7 @@ public partial class FrmImportExportGpx : Form
         {
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                 controlName: "mbx_FrmImportNoStoredShiftValues",
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error, buttons: MessageBoxButtons.OK);
+                captionType: MessageBoxCaption.Error, buttons: MessageBoxButtons.OK);
         }
 
         if (_lastShiftSecond != 0)
@@ -548,15 +718,37 @@ public partial class FrmImportExportGpx : Form
 
 #region Export
 
-    private void pbx_Browse_SaveTo_Folder_Click(object sender, EventArgs e)
+    private void pbx_Browse_SaveTo_Folder_Click(object sender,
+                                                EventArgs e)
     {
         if (ofd_SaveTrackTo.ShowDialog() == DialogResult.OK)
         {
             tbx_SaveTrackTo.Text = ofd_SaveTrackTo.FileName;
         }
     }
-}
 
 #endregion
+
+#region Unspecified
+
+    private void tcr_ImportExport_SelectedIndexChanged(object sender,
+                                                       EventArgs e)
+    {
+        btn_SaveDefaults.Enabled = tcr_ImportExport.SelectedTab.Name == "tpg_ImportExport_Import";
+    }
+
+    private void pbx_SaveDefaults_MouseHover(object sender,
+                                             EventArgs e)
+    {
+        ToolTip ttp = new();
+        ttp.SetToolTip(control: pbx_SaveDefaults,
+            caption: ReturnControlText(
+                fakeControlType: FakeControlTypes.ToolTip,
+                controlName: "ttp_FrmImportExport_SaveDefaults"
+            ));
+    }
+
+#endregion
+}
 
 #endregion
