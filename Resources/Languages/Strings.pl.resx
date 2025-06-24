@@ -119,10 +119,10 @@
     <value>Co</value>
   </data>
   <data name="clh_ExifTag" xml:space="preserve">
-    <value>Exif (wewnętrzny GTN)</value>
+    <value>Tag EXIF (wewnętrzny GTN)</value>
   </data>
   <data name="clh_ModifiedValue" xml:space="preserve">
-    <value>Zmieniona (niezapisana) wartość</value>
+    <value>Wartość zmieniona (niezapisana)</value>
   </data>
   <data name="clh_OriginalValue" xml:space="preserve">
     <value>Wartość oryginalna (zapisana)</value>
@@ -176,7 +176,7 @@
     <value>Pobierz dane wysokości</value>
   </data>
   <data name="gbx_GetToponomy" xml:space="preserve">
-    <value>Pobierz dane geograficzne</value>
+    <value>Pobierz dane Toponimii</value>
   </data>
   <data name="gbx_GeoNamesLanguageSettings" xml:space="preserve">
     <value>Ustawienia języka GeoNames</value>
@@ -257,13 +257,13 @@
     <value>Kierunek</value>
   </data>
   <data name="Generic_GPSImgDirectionRef" xml:space="preserve">
-    <value>Kierunek Ref</value>
+    <value>Kierunek skierowania aparatu</value>
   </data>
   <data name="Generic_GPSLatitude" xml:space="preserve">
-    <value>Szerokość geograficzna</value>
+    <value>Szerokość</value>
   </data>
   <data name="Generic_GPSLongitude" xml:space="preserve">
-    <value>Długości geograficzna</value>
+    <value>Długość</value>
   </data>
   <data name="Generic_GPSSpeed" xml:space="preserve">
     <value>Prędkość</value>
@@ -293,7 +293,7 @@
     <value>Docelowa szerokość geograficzna</value>
   </data>
   <data name="Generic_GPSDestLongitudeRef" xml:space="preserve">
-    <value>Docelowy kierunek długości geograficznej</value>
+    <value>Kierunek długości geograficznej</value>
   </data>
   <data name="Generic_GPSLongitudeRef" xml:space="preserve">
     <value>Kierunek długości geograficznej</value>
@@ -414,7 +414,7 @@ Niektóre pliki HEIC mają ten atrybut, większość innych formatów go nie ma.
     <value>Nie udało się zaimportować rejestru śladu – nie znaleziono żadnych danych wyglądających na odpowiednie.</value>
   </data>
   <data name="mbx_FrmImportNoStoredShiftValues" xml:space="preserve">
-    <value>Brak zapisanych wartości „przesunięcia”. Dane pozostaną równe 0.</value>
+    <value>Brak zapisanych wartości "przesunięcia". Dane pozostaną równe 0.</value>
   </data>
   <data name="mbx_FrmMainApp_ErrorCantCreateSQLiteDB" xml:space="preserve">
     <value>Nie można utworzyć bazy danych SQLite (proszę zgłosić problem na GitHubie): </value>
@@ -480,7 +480,7 @@ Niektóre pliki HEIC mają ten atrybut, większość innych formatów go nie ma.
     <value>Tryb płaski jest włączony. Czy chcesz go wyłączyć?</value>
   </data>
   <data name="mbx_FrmMainApp_QuestionNoRowsFromAPI" xml:space="preserve">
-    <value>Zapytanie API zwróciło nieprawidłowe informacje. Czy chcesz wyczyścić wartości danych geograficznych?</value>
+    <value>Zapytanie API zwróciło nieprawidłowe informacje. Czy chcesz wyczyścić wartości Toponimii?</value>
   </data>
   <data name="mbx_FrmMainApp_WarningMultipleImageFilesForXMP" xml:space="preserve">
     <value>Ostrzeżenie: poniższe pliki sidecar dzielą nazwy z wieloma plikami obrazów - dane mogły zostać błędnie odczytane:</value>
@@ -492,7 +492,7 @@ Niektóre pliki HEIC mają ten atrybut, większość innych formatów go nie ma.
     <value>Musi zostać wybrany dokładnie 1 plik.</value>
   </data>
   <data name="mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty" xml:space="preserve">
-    <value>Wszystkie kolumny rozwijane muszą mieć wpisaną wartość, a także wartość warunku „jeśli” nie może być pusta.</value>
+    <value>Wszystkie kolumny rozwijane muszą mieć wpisaną wartość, a także wartość warunku "jeśli" nie może być pusta.</value>
   </data>
   <data name="mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty" xml:space="preserve">
     <value>Jeśli wybierzesz "Niestandardowy" w polu Wynik, kolumna Niestandardowy Wynik nie może być pusta. Jeśli zamkniesz formularz ustawień i tego nie poprawisz, Twój wiersz zostanie usunięty.</value>
@@ -525,7 +525,7 @@ Niektóre pliki HEIC mają ten atrybut, większość innych formatów go nie ma.
     <value>Gotowe — prawdopodobnie będziesz musiał ponownie uruchomić aplikację.</value>
   </data>
   <data name="mbx_GenericPathLikelyUTF" xml:space="preserve">
-    <value>Ścieżka do pliku prawdopodobnie zawiera znaki UTF (niestandardowe, np. azjatyckie, cyrylica itp.), co może powodować błąd. Upewnij się, że masz włączoną funkcję „Używaj Unicode UTF-8 dla wsparcia języków na całym świecie”. (Aby uzyskać więcej informacji, zobacz sekcję 'Znane problemy' w pliku Readme.)</value>
+    <value>Ścieżka do pliku prawdopodobnie zawiera znaki UTF (niestandardowe, np. azjatyckie, cyrylica itp.), co może powodować błąd. Upewnij się, że masz włączoną funkcję "Używaj Unicode UTF-8 dla wsparcia języków na całym świecie" (Aby uzyskać więcej informacji, zobacz sekcję 'Znane problemy' w pliku Readme.)</value>
   </data>
   <data name="mbx_HelperStaticExifNoAPI" xml:space="preserve">
     <value>Nie udało się nawiązać połączenia z API. Sprawdź czy nie jesteś offline?</value>
@@ -655,7 +655,7 @@ Dane zostaną odrzucone, jeśli klikniesz Nie</value>
     <value>Zgłoś błąd (GitHub)</value>
   </data>
   <data name="tmi_Help_About" xml:space="preserve">
-    <value>O</value>
+    <value>O programie</value>
   </data>
   <data name="tmi_Settings_Favourites" xml:space="preserve">
     <value>Zarządzanie ulubionymi</value>
@@ -757,9 +757,9 @@ Dane zostaną odrzucone, jeśli klikniesz Nie</value>
     <value>Uruchom ponownie</value>
   </data>
   <data name="lbl_QuestionAddToponomy" xml:space="preserve">
-    <value>Czy chcesz również przypisać wartości wysokości i danych geograficznych?
-Jeśli wybierzesz Nie, Twoje dane szerokości/długości geograficznej mogą stać się niezsynchronizowane z osadzonymi danymi geograficznymi.
-Jeśli klikniesz „przestań pytać”, odpowiedź zostanie uznana za Tak i nie będzie więcej zapytań w tej sesji. Uruchom ponownie, aby zresetować.</value>
+    <value>Czy chcesz również przypisać wartości wysokości i Toponimii?
+Jeśli wybierzesz Nie, Twoje dane szerokości/długości geograficznej mogą stać się niezsynchronizowane z osadzonymi danymi Toponimii.
+Jeśli klikniesz "przestań pytać", odpowiedź zostanie uznana za Tak i nie będzie więcej zapytań w tej sesji. Uruchom ponownie, aby zresetować.</value>
   </data>
   <data name="mbx_FrmImportExportGpx_FileOrFolderDoesntExist" xml:space="preserve">
     <value>Wybrany plik lub folder jest nieprawidłowy.</value>
@@ -786,10 +786,10 @@ Jeśli klikniesz „przestań pytać”, odpowiedź zostanie uznana za Tak i nie
     <value>NIE twórz kopii zapasowych xxx_original</value>
   </data>
   <data name="ckb_PopulatedPlacesOnly" xml:space="preserve">
-    <value>Wyświetlaj tylko dane API przefiltrowane do „Miejsc zamieszkanych” (fcode=PPL) [niezalecane]</value>
+    <value>Wyświetlaj tylko dane API przefiltrowane do "Miejsc zamieszkanych" (fcode=PPL) [niezalecane]</value>
   </data>
   <data name="ckb_RemoveGeoDataRemovesTimeOffset" xml:space="preserve">
-    <value>Funkcja „Usuń dane geograficzne” usuwa również strefę czasową</value>
+    <value>Funkcja "Usuń Geodane" usuwa również strefę czasową</value>
   </data>
   <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
     <value>Otwarte współrzędne w API</value>
@@ -798,7 +798,7 @@ Jeśli klikniesz „przestań pytać”, odpowiedź zostanie uznana za Tak i nie
     <value>Zatrzymanie przetwarzania reguł po pierwszym dopasowaniu Kraj+Cel</value>
   </data>
   <data name="ckb_IncludePredeterminedCountries" xml:space="preserve">
-    <value>Uwzględnić „z góry wskazane” kraje? (patrz link powyżej + zastrzeżenie/ostrzeżenie)</value>
+    <value>Uwzględnić "ustalone" kraje? (patrz link powyżej + zastrzeżenie/ostrzeżenie)</value>
   </data>
   <data name="clh_DataPointConditionType" xml:space="preserve">
     <value>Jeśli</value>
@@ -810,7 +810,7 @@ Jeśli klikniesz „przestań pytać”, odpowiedź zostanie uznana za Tak i nie
     <value>Wybieraj nazwy geograficzne</value>
   </data>
   <data name="Generic_FocalLength" xml:space="preserve">
-    <value>Długość ogniskowej</value>
+    <value>Ogniskowa</value>
   </data>
   <data name="clh_Folder" xml:space="preserve">
     <value>Filder</value>
@@ -870,7 +870,7 @@ Jeśli klikniesz „przestań pytać”, odpowiedź zostanie uznana za Tak i nie
     <value>m</value>
   </data>
   <data name="Generic_GPSDestLatitudeRef" xml:space="preserve">
-    <value>Docelowy kierunek szerokości geograficznej</value>
+    <value>Kierunek szerokości geograficznej</value>
   </data>
   <data name="Generic_None" xml:space="preserve">
     <value>Brak</value>
@@ -942,7 +942,7 @@ Jeśli klikniesz „przestań pytać”, odpowiedź zostanie uznana za Tak i nie
     <value>Aplikacja napotkała błąd komunikacji z interfejsem API. Jeśli pojawił się błąd autoryzacji, ustaw w ustawieniach swoją nazwę użytkownika jako hasło.</value>
   </data>
   <data name="mbx_FrmEditFileData_ErrorInvalidSender" xml:space="preserve">
-    <value>To prawdopodobnie błąd.   Proszę zgłoś problem na GitHubie i podaj, że „nadawcą” był: </value>
+    <value>To prawdopodobnie błąd.   Proszę zgłoś problem na GitHubie i podaj, że "nadawcą" był: </value>
   </data>
   <data name="mbx_FrmEditFileData_WarningFileDisappeared" xml:space="preserve">
     <value>Wygląda na to, że Twoje pliki zniknęły.</value>
@@ -997,7 +997,7 @@ Jeśli klikniesz „przestań pytać”, odpowiedź zostanie uznana za Tak i nie
   </data>
   <data name="ttp_GPSDataPaste" xml:space="preserve">
     <value>Naciśnij CTRL+V, aby wkleić prawidłową parę liczb dziesiętnych do pól szerokości/długości geograficznej.
-Schowek powinien zawierać wyłącznie parę liczb dziesiętnych, najlepiej w formacie „niezmiennym” (angielskim), czyli liczba-kropka-część dziesiętna, przecinek, liczba-kropka-część dziesiętna, na przykład: 12.345, 56.897
+Schowek powinien zawierać wyłącznie parę liczb dziesiętnych, najlepiej w formacie "niezmiennym" (angielskim), czyli liczba-kropka-część dziesiętna, przecinek, liczba-kropka-część dziesiętna, na przykład: 12.345, 56.897
 Kod powinien być w stanie zrozumieć też inne formaty. Należy jednak pamiętać, że jeśli w schowku znajduje się cokolwiek innego niż powyższy układ, operacja się nie powiedzie (nie stanie się nic.)</value>
   </data>
   <data name="lbl_OffsetTime" xml:space="preserve">
@@ -1023,9 +1023,9 @@ Kod powinien być w stanie zrozumieć też inne formaty. Należy jednak pamięta
   </data>
   <data name="rbx_CustomRulesExplanation" xml:space="preserve">
     <value>To zaawansowana funkcja. AdminName1-4 i nazwy geograficzne odnoszą się do wyników API, więc jeśli tego nie rozumiesz, prawdopodobnie w ogóle tego nie dotykaj.
-Re: „Wstępnie określone kraje” (pole wyboru poniżej): Przeczytaj o nich tutaj: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 + sprawdź inną zakładkę - Uwaga, jeśli wyłączysz to ustawienie, to komórki z kodem kraju, które nie mieszczą się w odpowiedniej grupie, zostaną puste, ale nie zostaną usunięte te wiersze.
+Re: "Wstępnie określone kraje" (pole wyboru poniżej): Przeczytaj o nich tutaj: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 + sprawdź inną zakładkę - Uwaga, jeśli wyłączysz to ustawienie, to komórki z kodem kraju, które nie mieszczą się w odpowiedniej grupie, zostaną puste, ale nie zostaną usunięte te wiersze.
 Wszystkie kolumny są obowiązkowe, z wyjątkiem „Niestandardowych”, ale jeśli ustawisz Wynik na „Niestandardowy” i pozostawisz kolumnę „Niestandardowy” pustą, wiersz zostanie zignorowany. Dane nie są rozróżniane wielkością liter. Dla każdego punktu danych (np. Miasto, Stan) ostatni wiersz nadpisuje poprzednie. Zasadniczo bądź rozsądny. Im więcej wierszy dodasz, tym wolniej będzie.
-Przykład: domyślne dane zwracane przez API dla London UK są słabe, ponieważ dla tego konkretnego regionu adminName2 = "Greater London" i zostałyby odrzucone jako takie (miasta są zwykle z "nazwy geograficzne"). -&gt; ustaw: "what" = "adminName2", "jeśli" = "jest", "Condition Value" = "Greater London", "then" = "City", "becomes" = "adminName2". Powtórz całość w drugim wierszu, ale "then" = "Sub_Loction" i "becomes" = "ToponymName".</value>
+Przykład: domyślne dane zwracane przez API dla London UK są słabe, ponieważ dla tego konkretnego regionu adminName2 = "Greater London" i zostałyby odrzucone jako takie (miasta są zwykle z "Nazwy topograficznej"). -&gt; ustaw: "what" = "adminName2", "jeśli" = "jest", "Condition Value" = "Greater London", "then" = "City", "becomes" = "adminName2". Powtórz całość w drugim wierszu, ale "then" = "Sub_Loction" i "becomes" = "ToponymName".</value>
   </data>
   <data name="ttp_FrmImportExport_SaveDefaults" xml:space="preserve">
     <value>Zapisuje niektóre ustawienia domyślne. Obecnie: lokalizacja źródła importu, ustawienia TZ i DST, maksymalna interpolacja/ekstrapolacja.</value>
@@ -1072,7 +1072,7 @@ To ustawienie pozwala dodać własne wybrane kraje, z których wartość "Miasto
     <value>Ustawienia reguł niestandardowych</value>
   </data>
   <data name="tsb_GetAllFromWeb" xml:space="preserve">
-    <value>Pobierz dane geograficzne oraz wysokość dla wszystkich wybranych plików</value>
+    <value>Pobierz dane Toponimii oraz wysokość dla wszystkich wybranych plików</value>
   </data>
   <data name="tsb_Refresh_lvwFileList" xml:space="preserve">
     <value>Odśwież listę plików</value>
@@ -1087,13 +1087,13 @@ To ustawienie pozwala dodać własne wybrane kraje, z których wartość "Miasto
     <value>GeoNames (Maps)</value>
   </data>
   <data name="ttp_OffsetTime" xml:space="preserve">
-    <value>Strefy czasowe są pozostawiane puste przy otwieraniu pliku, niezależnie od zapisanej wcześniej wartości. Nie istnieje znacznik Exif dla strefy czasowej (TZ), a jedynie „Offset”, np. „+01:00”. Ponieważ nie ma żadnej informacji ani o strefie czasowej, ani o czasie letnim (DST), nie mogę jednoznacznie stwierdzić, czy „+01:00” oznaczało na przykład BST (czas letni w Wielkiej Brytanii), czy CET (czas środkowoeuropejski), z których jeden uwzględnia DST, a drugi nie. Dostosuj ręcznie lub pobierz z internetu – połączenie współrzędnych i daty utworzenia (utwórz datę) pozwoli programowi jednoznacznie określić prawdziwą strefę czasową. Wartość w polu tekstowym (tylko do odczytu) zostanie zapisana do pliku.</value>
+    <value>Strefy czasowe są pozostawiane puste przy otwieraniu pliku, niezależnie od zapisanej wcześniej wartości. Nie istnieje znacznik Exif dla strefy czasowej (TZ), a jedynie "Offset", np. "+01:00". Ponieważ nie ma żadnej informacji ani o strefie czasowej, ani o czasie letnim (DST), nie mogę jednoznacznie stwierdzić, czy „+01:00” oznaczało na przykład BST (czas letni w Wielkiej Brytanii), czy CET (czas środkowoeuropejski), z których jeden uwzględnia DST, a drugi nie. Dostosuj ręcznie lub pobierz z internetu – połączenie współrzędnych i daty utworzenia (utwórz datę) pozwoli programowi jednoznacznie określić prawdziwą strefę czasową. Wartość w polu tekstowym (tylko do odczytu) zostanie zapisana do pliku.</value>
   </data>
   <data name="mbx_FrmMainApp_ErrorImportGeoSetterFavourites" xml:space="preserve">
     <value>Błąd podczas importowania Ulubionych z GeoSetter.</value>
   </data>
   <data name="rbx_Register_GeoNames" xml:space="preserve">
-    <value>Będziesz potrzebować konta GeoNames, aby korzystać z funkcji odwrotnego geokodowania/wyszukiwania (szerokość/długość geograficzna → kraj/miasto/...). Załóż konto tutaj: http://www.geonames.org/login, a następnie włącz dostęp do „Free Web Services” tutaj: https://www.geonames.org/manageaccount</value>
+    <value>Będziesz potrzebować konta GeoNames, aby korzystać z funkcji odwrotnego geokodowania/wyszukiwania (szerokość/długość geograficzna → kraj/miasto/...). Załóż konto tutaj: http://www.geonames.org/login, a następnie włącz dostęp do "Free Web Services" tutaj: https://www.geonames.org/manageaccount</value>
   </data>
   <data name="ckb_DoNotQueryAPI" xml:space="preserve">
     <value>NIE wykonuj odwrotnego geokodowania (pobierz tylko współrzędne, a nie miasto/stan/itp.)</value>
