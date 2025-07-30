@@ -7,8 +7,9 @@
 	- Added Polish Translations
 	- Added some basic feedback to the completion of the GPX Export. (aka "Files exported successfully")
 - BUGS & FIXES:
-	- Fix app restart not working...hopefully (ref #175)
+	- Fixed app restart not working...hopefully (ref #175)
 	- Fixed that the Installer forgot to add a relevant DLL file and so Magick wasn't working.
+	- Fixed GPX Export not working properly when the desination path contained spaces. #179
 
 **Build 9300 [20250618]** 
 - NEW & UPDATED:

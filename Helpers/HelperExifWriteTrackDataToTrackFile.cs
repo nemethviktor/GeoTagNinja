@@ -42,7 +42,7 @@ internal class HelperExifWriteTrackDataToTrackFile
             }
 
             string exiftoolCmd =
-                $" -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 -W+ {outFilePath}  -@ {HelperVariables.DoubleQuoteStr}{argsFile}{HelperVariables.DoubleQuoteStr}";
+                $" -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 -W+ {HelperVariables.DoubleQuoteStr}{outFilePath}{HelperVariables.DoubleQuoteStr}  -@ {HelperVariables.DoubleQuoteStr}{argsFile}{HelperVariables.DoubleQuoteStr}";
 
             FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
