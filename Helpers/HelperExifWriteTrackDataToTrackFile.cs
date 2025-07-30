@@ -14,9 +14,11 @@ internal class HelperExifWriteTrackDataToTrackFile
     /// <summary>
     ///     Writes the gpx file based on the settings.
     /// </summary>
+    /// <param name="fileList">List (string) of files to be parsed/written data for.</param>
+    /// <param name="outFilePath">Location of the GPX file to save to.</param>
+    /// <returns></returns>
     internal static async Task ExifWriteTrackDataToTrackFile(List<string> fileList,
-        string outFilePath
-    )
+                                                             string outFilePath)
     {
         // ensure path is valid
         if (!string.IsNullOrWhiteSpace(value: outFilePath) &&
@@ -80,12 +82,19 @@ internal class HelperExifWriteTrackDataToTrackFile
                                                  .ExifGetTrackSyncDataWriteTrackPath);
 
             ///////////////
+
+            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                controlName: "mbx_FrmImportExportGpx_ExportCompleted",
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information,
+                buttons: MessageBoxButtons.OK,
+                extraMessage: outFilePath);
         }
         else
         {
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                 controlName: "mbx_FrmImportExportGpx_FileOrFolderDoesntExist",
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error, buttons: MessageBoxButtons.OK);
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error, buttons: 
+                MessageBoxButtons.OK);
         }
     }
 }

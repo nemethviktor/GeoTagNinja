@@ -1846,6 +1846,15 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GPX File Export Completed.
+        /// </summary>
+        public static string mbx_FrmImportExportGpx_ExportCompleted {
+            get {
+                return ResourceManager.GetString("mbx_FrmImportExportGpx_ExportCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The file or folder you picked is invalid..
         /// </summary>
         public static string mbx_FrmImportExportGpx_FileOrFolderDoesntExist {

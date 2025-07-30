@@ -4,8 +4,11 @@
 - NEW & UPDATED:
 	- Capability to save certain defaults on the Import GPX Form #174
 	- App version Bump 1.17 - should have done that w/ the last public release.
+	- Added Polish Translations
+	- Added some basic feedback to the completion of the GPX Export. (aka "Files exported successfully")
 - BUGS & FIXES:
 	- Fix app restart not working...hopefully (ref #175)
+	- Fixed that the Installer forgot to add a relevant DLL file and so Magick wasn't working.
 
 **Build 9300 [20250618]** 
 - NEW & UPDATED:

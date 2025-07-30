@@ -1344,4 +1344,8 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>Saves certain defaults. Currently: import source location, TZ &amp; DST settings, max inter/extrapolation.</value>
     <comment>Location: GPX Import-Export. Not having it as a 'Generic' as the button associated doesn't really save all values' defaults and I don't know how I might change that later.</comment>
   </data>
+  <data name="mbx_FrmImportExportGpx_ExportCompleted" xml:space="preserve">
+    <value>GPX File Export Completed</value>
+    <comment>Location: Import/Export GPX</comment>
+  </data>
 </root>
