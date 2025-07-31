@@ -1114,4 +1114,7 @@ Na następnej stronie wpisz dowolny tytuł
 Na koniec kliknij Wygeneruj klucz API i przejdź do strony szczegółów elementu`. Jestem gotów, aby skopiować i zapisać klucz
 Zapisz klucz API, gdy zostaniesz o to poproszony. Jeśli tego nie zrobisz od razu, będziesz musiał wygenerować nowy.</value>
   </data>
+  <data name="mbx_FrmImportExportGpx_ExportCompleted" xml:space="preserve">
+    <value>Zakończono eksport pliku GPX</value>
+  </data>
 </root>
