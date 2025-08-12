@@ -351,7 +351,11 @@ internal static class HelperGenericAncillaryListsArrays
             { "lbl_TakenDateDaysShift", "Generic_Days" },
             { "lbl_TakenDateHoursShift", "Generic_Hours" },
             { "lbl_TakenDateMinutesShift", "Generic_Minutes" },
-            { "lbl_TakenDateSecondsShift", "Generic_Seconds" }
+            { "lbl_TakenDateSecondsShift", "Generic_Seconds" },
+            { "lbl_ImportGPXDays", "Generic_Days" },
+            { "lbl_ImportGPXHours", "Generic_Hours" },
+            { "lbl_ImportGPXMinutes", "Generic_Minutes" },
+            { "lbl_ImportGPXSeconds", "Generic_Seconds" }
         };
 
         bool isInDictionary = lookupDictionary.TryGetValue(key: controlName, value: out string retValue);
