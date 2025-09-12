@@ -160,6 +160,7 @@ public partial class FrmMainApp : Form
 #region Form/App Related
 
     internal static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private FrmSplashScreen frmSplashScreen = new();
 
     /// <summary>
     ///     This is the main Form for the app. This particular section handles the initialisation of the form and loading
@@ -167,6 +168,7 @@ public partial class FrmMainApp : Form
     /// </summary>
     public FrmMainApp()
     {
+        frmSplashScreen.Show();
         _ = InitialiseApplication();
 
     #region Define Logging Config
@@ -250,12 +252,22 @@ public partial class FrmMainApp : Form
             AppStartupEnableDoubleBuffering()
         ];
 
+        List<Task> remainingTasks = new(collection: tasks);
+        int eachTasksPointValue = 100 / remainingTasks.Count;
+        frmSplashScreen.UpdateProgress(amount: eachTasksPointValue, close: false);
+        while (remainingTasks.Count > 0)
+        {
+            Task completedTask = await Task.WhenAny(tasks: remainingTasks);
+            remainingTasks.Remove(item: completedTask);
+            frmSplashScreen.UpdateProgress(
+                amount: eachTasksPointValue,
+                close: remainingTasks.Count == 0);
+        }
+
         FormClosing += FrmMainApp_FormClosing;
-        //AppStartupApplyVisualStyleDefaults();
         ResumeLayout();
         Visible = true;
 
-        await Task.WhenAll(tasks: tasks);
         return Task.CompletedTask;
     }
 

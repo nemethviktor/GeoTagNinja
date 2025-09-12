@@ -62,5 +62,22 @@ internal partial class HelperNonStatic
         }
     }
 
-    #endregion
+    public void CenterForm(Form frm)
+    {
+        int multiplier = getScreenMultiplier(frm: frm);
+
+        frm.SetBounds(x: (Screen.GetBounds(ctl: frm).Width / 2 - frm.Width / 2) / multiplier,
+            y: Screen.GetBounds(ctl: frm).Height / 2 - frm.Height / 2,
+            width: frm.Width,
+            height: frm.Height,
+            specified: BoundsSpecified.Location);
+        ;
+    }
+
+    private static int getScreenMultiplier(Form frm)
+    {
+        return Screen.GetBounds(ctl: frm).Width > 2000 ? 2 : 1;
+    }
+
+#endregion
 }

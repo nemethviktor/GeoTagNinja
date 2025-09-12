@@ -224,6 +224,12 @@
     <Compile Include="FrmPleaseWaitBox.Designer.cs">
       <DependentUpon>FrmPleaseWaitBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmSplashScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmSplashScreen.Designer.cs">
+      <DependentUpon>FrmSplashScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\HelperControlAndMessageBoxCustomMessageBoxManager.cs" />
     <Compile Include="Helpers\HelperControlThemeManager.cs" />
     <Compile Include="Helpers\HelperDataSettingsExport.cs" />
@@ -371,6 +377,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmPleaseWaitBox.resx">
       <DependentUpon>FrmPleaseWaitBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmSplashScreen.resx">
+      <DependentUpon>FrmSplashScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
