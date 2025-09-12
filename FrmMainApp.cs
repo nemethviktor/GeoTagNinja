@@ -160,7 +160,6 @@ public partial class FrmMainApp : Form
 #region Form/App Related
 
     internal static readonly Logger Log = LogManager.GetCurrentClassLogger();
-    private Stopwatch frmSplashScreenStopWatch = new();
     private FrmSplashScreen frmSplashScreen = new();
 
     /// <summary>
@@ -169,7 +168,6 @@ public partial class FrmMainApp : Form
     /// </summary>
     public FrmMainApp()
     {
-        frmSplashScreenStopWatch.Start();
         frmSplashScreen.Show();
         _ = InitialiseApplication();
 
