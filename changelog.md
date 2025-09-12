@@ -6,6 +6,7 @@
 	- App version Bump 1.17 - should have done that w/ the last public release.
 	- Added Polish Translations
 	- Added some basic feedback to the completion of the GPX Export. (aka "Files exported successfully")
+	- Added a Splash Screen. Bit of a gimmick but on slower computers it may be of some use.
 - BUGS & FIXES:
 	- Fixed app restart not working...hopefully (ref #175)
 	- Fixed that the Installer forgot to add a relevant DLL file and so Magick wasn't working.
