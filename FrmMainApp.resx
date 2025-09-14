@@ -229,7 +229,7 @@
     <value>lvw_FileList</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.ListView.FileListView, GeoTagNinja, Version=1.16.9276.29143, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.ListView.FileListView, GeoTagNinja, Version=1.17.9388.40346, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel1</value>
@@ -277,7 +277,7 @@
     <value>pbx_imagePreview</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.ImagePreview, GeoTagNinja, Version=1.16.9276.29143, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.ImagePreview, GeoTagNinja, Version=1.17.9388.40346, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel2</value>
@@ -400,6 +400,33 @@
     <value>splitContainerMain</value>
   </data>
   <data name="&gt;&gt;splitContainerMain.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="wbv_MapArea.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="wbv_MapArea.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 2</value>
+  </data>
+  <data name="wbv_MapArea.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>1, 1, 1, 1</value>
+  </data>
+  <data name="wbv_MapArea.Size" type="System.Drawing.Size, System.Drawing">
+    <value>407, 334</value>
+  </data>
+  <data name="wbv_MapArea.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;wbv_MapArea.Name" xml:space="preserve">
+    <value>wbv_MapArea</value>
+  </data>
+  <data name="&gt;&gt;wbv_MapArea.Type" xml:space="preserve">
+    <value>Microsoft.Web.WebView2.WinForms.WebView2, Microsoft.Web.WebView2.WinForms, Version=1.0.3485.44, Culture=neutral, PublicKeyToken=2a8ab48044d2601e</value>
+  </data>
+  <data name="&gt;&gt;wbv_MapArea.Parent" xml:space="preserve">
+    <value>tpg_Map</value>
+  </data>
+  <data name="&gt;&gt;wbv_MapArea.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <data name="lbl_lat.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
@@ -849,33 +876,6 @@
     <value>tpg_Map</value>
   </data>
   <data name="&gt;&gt;flp_GeoCoords.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="wbv_MapArea.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="wbv_MapArea.Location" type="System.Drawing.Point, System.Drawing">
-    <value>2, 2</value>
-  </data>
-  <data name="wbv_MapArea.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>1, 1, 1, 1</value>
-  </data>
-  <data name="wbv_MapArea.Size" type="System.Drawing.Size, System.Drawing">
-    <value>407, 380</value>
-  </data>
-  <data name="wbv_MapArea.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;wbv_MapArea.Name" xml:space="preserve">
-    <value>wbv_MapArea</value>
-  </data>
-  <data name="&gt;&gt;wbv_MapArea.Type" xml:space="preserve">
-    <value>Microsoft.Web.WebView2.WinForms.WebView2, Microsoft.Web.WebView2.WinForms, Version=1.0.3124.44, Culture=neutral, PublicKeyToken=2a8ab48044d2601e</value>
-  </data>
-  <data name="&gt;&gt;wbv_MapArea.Parent" xml:space="preserve">
-    <value>tpg_Map</value>
-  </data>
-  <data name="&gt;&gt;wbv_MapArea.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="tpg_Map.ImageKey" xml:space="preserve">
@@ -985,7 +985,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAD8
-        CAAAAk1TRnQBSQFMAgEBAgEAAVgBAwFYAQMBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        CAAAAk1TRnQBSQFMAgEBAgEAAWABAwFgAQMBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABQAMAARADAAEBAQABCAYAAQQYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
         AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
         AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA

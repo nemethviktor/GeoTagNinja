@@ -3,6 +3,8 @@
 **Build 9xxx [2025xxxx]** 
 - NEW & UPDATED:
 	- Slightly changed "Dark Mode" colours to match the real ones.
+	- Added German translations (via Weblate)
+	- Added a new layer to the map ("Streets ARCGIS") - I've had problems with OSM lately; possibly a Leaflet issue but this is a reasonable fallback.
 - BUGS & FIXES:
 	- TBA
 

@@ -300,8 +300,8 @@ namespace GeoTagNinja
             // 
             // tpg_Map
             // 
-            this.tpg_Map.Controls.Add(this.flp_GeoCoords);
             this.tpg_Map.Controls.Add(this.wbv_MapArea);
+            this.tpg_Map.Controls.Add(this.flp_GeoCoords);
             resources.ApplyResources(this.tpg_Map, "tpg_Map");
             this.tpg_Map.Name = "tpg_Map";
             this.tpg_Map.UseVisualStyleBackColor = true;
