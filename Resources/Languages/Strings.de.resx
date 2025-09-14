@@ -65,10 +65,10 @@
     <value>Aufnahmedatum verwenden</value>
   </data>
   <data name="btn_PullMostRecentPasteSettings" xml:space="preserve">
-    <value>Die „neuesten” Einfügeeinstellungen abrufen</value>
+    <value>Anwenden &amp;&amp; Weiter</value>
   </data>
   <data name="btn_PullMostRecentTrackSyncShift" xml:space="preserve">
-    <value>„Neueste” Schiftt-Einstellungen abrufen</value>
+    <value>„Neueste” Schicht-Einstellungen abrufen</value>
   </data>
   <data name="btn_RemoveGeoData" xml:space="preserve">
     <value>GPS- und Standortdaten entfernen</value>
@@ -113,7 +113,7 @@
     <value>Nur für Daten, die innerhalb des ersten und letzten Datums der ausgewählten Dateien liegen</value>
   </data>
   <data name="ckb_OverwriteOriginal" xml:space="preserve">
-    <value>KEINE xxx_original-Sicherung erstellen</value>
+    <value>KEINE "xxx_original" Sicherungsdatei erstellen</value>
   </data>
   <data name="ckb_PopulatedPlacesOnly" xml:space="preserve">
     <value>Nur API-Daten anzeigen, die nach „Bevölkerte Orte” (fcode=PPL) gefiltert wurden [nicht empfohlen]</value>
@@ -128,7 +128,7 @@
     <value>Die Funktion „Geodaten entfernen” entfernt auch den Zeitzonen-Offset.</value>
   </data>
   <data name="ckb_ReplaceBlankToponyms" xml:space="preserve">
-    <value>Leere Werte für Stadt, Bundesstaat und Unterort ersetzen durch: </value>
+    <value>Leere Werte für Stadt, Bundesstaat und Region ersetzen durch: </value>
   </data>
   <data name="ckb_ResetFileDateToCreated" xml:space="preserve">
     <value>Bilddatei-Datum/Uhrzeit auf Erstellungsdatum zurücksetzen</value>
@@ -248,7 +248,7 @@
     <value>GPS-Daten</value>
   </data>
   <data name="gbx_ImportExportGpxSource" xml:space="preserve">
-    <value>GPX/JSON-Daten importieren</value>
+    <value>Quelle</value>
   </data>
   <data name="gbx_ImportExportGpxTimeSetting" xml:space="preserve">
     <value>Zeiteinstellung</value>
@@ -521,10 +521,10 @@
     <value>GeoNames-Benutzername</value>
   </data>
   <data name="lbl_importFromAnotherFolder" xml:space="preserve">
-    <value>&lt;-- Klicken Sie hier, um den Importquellordner festzulegen.</value>
+    <value>&lt;-- Klicken Sie hier, um den Importquellordner festzulegen</value>
   </data>
   <data name="lbl_importOneFile" xml:space="preserve">
-    <value>&lt;-- Klicken Sie hier, um die Importquelldatei festzulegen.</value>
+    <value>&lt;-- Klicken Sie hier, um die Importquelldatei festzulegen</value>
   </data>
   <data name="lbl_ImportTimeAgainst" xml:space="preserve">
     <value>Vergleichen Sie den Zeitstempel in den Track-Dateien mit:</value>
@@ -776,7 +776,8 @@
     <value>Das Lesen der Standardwerte aus SQL ist fehlgeschlagen </value>
   </data>
   <data name="mbx_Helper_QuestionFileQIsNotEmpty" xml:space="preserve">
-    <value>„Einige Daten wurden geändert – möchten Sie speichern? Die Daten werden verworfen, wenn Sie auf „Nein” klicken.”</value>
+    <value>Einige Daten wurden geändert – möchten Sie speichern?
+Die Daten werden verworfen, wenn Sie auf „Nein” klicken.</value>
   </data>
   <data name="mbx_Helper_WarningExifToolVerAPIResponse" xml:space="preserve">
     <value>Die ExifToolVerAPIResponse-API hat die folgende Antwort zurückgegeben: </value>
@@ -875,7 +876,7 @@
     <value>Versuchen Sie, diese Sprache beim Abrufen von Ortsnamen zu verwenden:</value>
   </data>
   <data name="rbt_UseGeoNamesLocalLanguage" xml:space="preserve">
-    <value>Versuchen Sie, beim Abrufen von Ortsnamen die „lokale Sprache” zu verwenden.</value>
+    <value>Versuchen Sie, beim Abrufen von Ortsnamen die „lokale Sprache” zu verwenden</value>
   </data>
   <data name="rbx_CustomCityLogicExplanation" xml:space="preserve">
     <value>„Dies ist eine erweiterte Funktion. AdminName1-4 &amp; ToponymName beziehen sich auf die API-Ausgaben. Wenn Sie diese nicht verstehen, sollten Sie diese Funktion besser nicht verwenden. Eine allgemeine Übersicht finden Sie unter: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 . Mit dieser Einstellung können Sie Ihre eigenen Länder auswählen, um den Wert „City” aus einem der spezifischen AdminNames zu erhalten.</value>
@@ -884,13 +885,35 @@
     <value>Beachten Sie, dass Änderungen an der folgenden Tabelle sofort wirksam werden und die Schaltfläche „OK/Abbrechen” an sich keine Auswirkungen auf sie hat. Sie müssen außerdem mit der rechten Maustaste klicken und „Zwischengespeicherte Daten zurücksetzen” für alle Dateien auswählen, die von Ihren Änderungen betroffen sein könnten, wenn Sie Daten innerhalb dieser Sitzung abrufen möchten (oder starten Sie einfach die App neu).</value>
   </data>
   <data name="rbx_CustomRulesExplanation" xml:space="preserve">
-    <value>„Dies ist eine erweiterte Funktion. AdminName1-4 &amp; ToponymName beziehen sich auf die API-Ausgaben. Wenn Sie diese nicht verstehen, sollten Sie diese Option besser nicht anklicken. Betreff: „Vorgegebene Länder“ (Kontrollkästchen unten): Lesen Sie hier mehr darüber: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 + überprüfen Sie die andere Registerkarte – Beachten Sie, dass durch Deaktivieren dieser Einstellung die CountryCode-Zellen, die außerhalb der relevanten Gruppierung liegen, leer bleiben, diese Zeilen jedoch nicht tatsächlich gelöscht werden. Alle Spalten sind obligatorisch, außer „Benutzerdefiniert”. Wenn Sie jedoch das Ergebnis auf „Benutzerdefiniert” setzen und die Spalte „Benutzerdefiniert” leer lassen, wird die Zeile ignoriert. Bei den Daten wird nicht zwischen Groß- und Kleinschreibung unterschieden. Für jeden Datenpunkt (z. B. Stadt, Bundesstaat) überschreibt die letzte Zeile die vorherigen. Seien Sie grundsätzlich vernünftig. Je mehr Zeilen Sie hinzufügen, desto langsamer wird es. Beispiel: Die Standarddaten, die von der API für London, Großbritannien, zurückgegeben werden, sind unzureichend, da für diese bestimmte Region adminName2 = „Greater London“ lautet und daher verworfen würde (Städte stammen in der Regel aus „ToponymName“). -&gt; Setzen Sie: „what“ = „adminName2“, „if“ = „is“, „Condition Value“ = „Greater London“, „then“ = „City“, „becomes“ = „adminName2“. Wiederholen Sie den gesamten Vorgang in einer zweiten Zeile, aber „dann“ = „Sub_Loction“ und „wird“ = „ToponymName“.“</value>
+    <value>„Dies ist eine erweiterte Funktion. AdminName1-4 &amp; ToponymName beziehen sich auf die API-Ausgaben. Wenn Sie diese nicht verstehen, sollten Sie diese Option besser nicht anklicken.
+Betreff: „Vorgegebene Länder“ (Kontrollkästchen unten): Lesen Sie hier mehr darüber: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 + überprüfen Sie die andere Registerkarte – Beachten Sie, dass durch Deaktivieren dieser Einstellung die CountryCode-Zellen,
+die außerhalb der relevanten Gruppierung liegen, leer bleiben, diese Zeilen jedoch nicht tatsächlich gelöscht werden. Alle Spalten sind obligatorisch, außer „Benutzerdefiniert”. Wenn Sie jedoch das Ergebnis auf „Benutzerdefiniert” setzen und die Spalte „Benutzerdefiniert” leer lassen, wird die Zeile ignoriert.
+Bei den Daten wird nicht zwischen Groß- und Kleinschreibung unterschieden. Für jeden Datenpunkt (z. B. Stadt, Bundesstaat) überschreibt die letzte Zeile die vorherigen. Seien Sie grundsätzlich vernünftig.
+Je mehr Zeilen Sie hinzufügen, desto langsamer wird es.
+Beispiel: Die Standarddaten, die von der API für London, Großbritannien, zurückgegeben werden, sind unzureichend,
+da für diese bestimmte Region adminName2 = „Greater London“ lautet und daher verworfen würde
+(Städte stammen in der Regel aus „ToponymName“). -&gt; Setzen Sie: „what“ = „adminName2“, „if“ = „is“, „Condition Value“ = „Greater London“, „then“ = „City“, „becomes“ = „adminName2“. Wiederholen Sie den gesamten Vorgang in einer zweiten Zeile, aber „dann“ = „Sub_Loction“ und „wird“ = „ToponymName“.“</value>
   </data>
   <data name="rbx_CustomRulesExplanationBold" xml:space="preserve">
     <value>Beachten Sie, dass Änderungen an der folgenden Tabelle sofort wirksam werden und die Schaltfläche „OK/Abbrechen“ an sich keine Auswirkungen auf sie hat. Sie müssen außerdem mit der rechten Maustaste klicken und „Zwischengespeicherte Daten zurücksetzen“ für alle Dateien auswählen, die von Ihren Änderungen betroffen sein könnten, wenn Sie Daten innerhalb dieser Sitzung abrufen möchten (oder starten Sie einfach die App neu).</value>
   </data>
   <data name="rbx_Register_ArcGIS" xml:space="preserve">
-    <value>„Sie benötigen einen ArcGIS-API-Schlüssel, um die Kartensuchfunktion nutzen zu können. ArcGIS hat seinen Registrierungsprozess im Juni 2024 geändert. Registrieren Sie sich [hier](https://location.arcgis.com/sign-up/). Sie müssen nun eine Portal-URL angeben. Geben Sie einfach eine beliebige URL ein. Scrollen Sie zu „Developer credential creator“ (Entwickler-Anmeldeinformationen erstellen). Wählen Sie dann „New Item“ (Neues Element). Wählen Sie dann „Developer Credentials“ (Entwickler-Anmeldeinformationen). Wählen Sie „API Key“ (API-Schlüssel) (nicht OAUth). Legen Sie das Ablaufdatum so weit wie möglich in der Zukunft fest (1 Jahr). Lassen Sie „Referrer“ leer. Wählen Sie auf der nächsten Seite „Geocoding (nicht gespeichert)“. Überspringen Sie auf der nächsten Seite „Elementzugriff“. Fügen Sie auf der nächsten Seite einen beliebigen Titel hinzu. Klicken Sie schließlich auf „API-Schlüssel generieren und zur Elementdetailseite gehen. Ich bin bereit, den Schlüssel zu kopieren und zu speichern.“ Speichern Sie den API-Schlüssel, wenn Sie dazu aufgefordert werden. Wenn Sie dies nicht sofort tun, müssen Sie einen neuen Schlüssel generieren.</value>
+    <value>„Sie benötigen einen ArcGIS-API-Schlüssel, um die Kartensuchfunktion nutzen zu können.
+ArcGIS hat seinen Registrierungsprozess im Juni 2024 geändert. Registrieren Sie sich [hier](https://location.arcgis.com/sign-up/).
+Sie müssen nun eine Portal-URL angeben. Geben Sie einfach eine beliebige URL ein.
+Scrollen Sie zu „Developer credential creator“ (Entwickler-Anmeldeinformationen erstellen).
+Wählen Sie dann „New Item“ (Neues Element).
+Wählen Sie dann „Developer Credentials“ (Entwickler-Anmeldeinformationen).
+Wählen Sie „API Key“ (API-Schlüssel) (nicht OAUth).
+Legen Sie das Ablaufdatum so weit wie möglich in der Zukunft fest (1 Jahr).
+Lassen Sie „Referrer“ leer.
+Wählen Sie auf der nächsten Seite „Geocoding (nicht gespeichert)“.
+Überspringen Sie auf der nächsten Seite „Elementzugriff“.
+Fügen Sie auf der nächsten Seite einen beliebigen Titel hinzu.
+Klicken Sie schließlich auf „API-Schlüssel generieren und zur Elementdetailseite gehen.
+Ich bin bereit, den Schlüssel zu kopieren und zu speichern.“
+Speichern Sie den API-Schlüssel, wenn Sie dazu aufgefordert werden.
+Wenn Sie dies nicht sofort tun, müssen Sie einen neuen Schlüssel generieren.</value>
   </data>
   <data name="rbx_Register_GeoNames" xml:space="preserve">
     <value>Sie benötigen ein GeoNames-Konto, um die Reverse-Geocoding-/Suchfunktion (Breitengrad/Längengrad --&gt; Land/Stadt/... ) nutzen zu können. Erstellen Sie hier ein Konto: http://www.geonames.org/login und aktivieren Sie dann den Zugriff auf „Free Web Services“ hier: https://www.geonames.org/manageaccount</value>
@@ -1010,7 +1033,9 @@
     <value>Hauptmenü</value>
   </data>
   <data name="ttp_GPSDataPaste" xml:space="preserve">
-    <value>„Drücken Sie STRG+V, um ein gültiges Dezimalpaar in die Platzhalter für Breiten- und Längengrad einzufügen. Die Zwischenablage sollte nur ein Dezimalpaar enthalten, vorzugsweise im „invarianten” (englischen) Format, also als ganze Zahl-Punkt-Dezimalstelle-Komma-ganze Zahl-Punkt-Dezimalstelle, z. B. 12,345, 56,897. Der Code sollte jedoch auch andere Formate verstehen können. Beachten Sie, dass der Vorgang fehlschlägt (nichts passiert), wenn die Zwischenablage etwas anderes als das oben Genannte enthält.”</value>
+    <value>„Drücken Sie STRG+V, um ein gültiges Dezimalpaar in die Platzhalter für Breiten- und Längengrad einzufügen.
+Die Zwischenablage sollte nur ein Dezimalpaar enthalten, vorzugsweise im „invarianten” (englischen) Format, also als ganze Zahl-Punkt-Dezimalstelle-Komma-ganze Zahl-Punkt-Dezimalstelle, z. B. 12,345, 56,897.
+Der Code sollte jedoch auch andere Formate verstehen können. Beachten Sie, dass der Vorgang fehlschlägt (nichts passiert), wenn die Zwischenablage etwas anderes als das oben Genannte enthält.”</value>
   </data>
   <data name="ttp_LoadFavourite" xml:space="preserve">
     <value>Laden Sie Metadaten für die ausgewählten Dateien aus Ihren Favoriten.</value>
