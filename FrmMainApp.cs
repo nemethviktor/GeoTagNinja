@@ -574,7 +574,8 @@ public partial class FrmMainApp : Form
         string layerName = mapWebMessage?.layer;
         HelperVariables.HTMLDefaultLayer = layerName switch
         {
-            "Streets" => "lyr_streets",
+            "Streets (OSM)" => "lyr_streets_OSM",
+            "Streets (ARCGIS)" => "lyr_streets",
             "Satellite" => "lyr_satellite",
             _ => HelperVariables.HTMLDefaultLayer
         };
@@ -1001,12 +1002,14 @@ public partial class FrmMainApp : Form
                 ? """
                   var baseMaps = {
                       "Satellite": lyr_satellite,
-                      "Streets": lyr_streets
+                      "Streets (ARCGIS)": lyr_streets,
+                      "Streets (OSM)": lyr_streets_OSM
                   };
                   """
                 : """
                   var baseMaps = {
-                      "Streets": lyr_streets,
+                      "Streets (ARCGIS)": lyr_streets,
+                      "Streets (OSM)": lyr_streets_OSM,
                       "Satellite": lyr_satellite
                   };
                   """);
