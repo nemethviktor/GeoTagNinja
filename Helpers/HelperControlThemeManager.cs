@@ -25,10 +25,10 @@ internal enum ThemeColour
 internal static class HelperControlThemeManager
 {
     private static readonly Color darkColor =
-        ColorTranslator.FromHtml(htmlColor: "#404040");
+        ColorTranslator.FromHtml(htmlColor: "#1C1D23");
 
     private static readonly Color lessDarkColor =
-        ColorTranslator.FromHtml(htmlColor: "#5F5D5B");
+        ColorTranslator.FromHtml(htmlColor: "#2B2D31");
 
 
     private const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;

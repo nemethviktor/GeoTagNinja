@@ -2,6 +2,12 @@
 
 **Build 9xxx [2025xxxx]** 
 - NEW & UPDATED:
+	- Slightly changed "Dark Mode" colours to match the real ones.
+- BUGS & FIXES:
+	- TBA
+
+**Build 9387 [20250913]** 
+- NEW & UPDATED:
 	- Capability to save certain defaults on the Import GPX Form #174
 	- App version Bump 1.17 - should have done that w/ the last public release.
 	- Added Polish Translations

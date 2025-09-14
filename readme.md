@@ -23,6 +23,8 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 - Ability to define custom rules/logic wrt naming of places at country level
 
 ## Parameters
+
+The app works without parameters, however you may add:
 - `-f` or `--folder` (e.g. `geotagninja.exe -f "g:\My Drive\DigiPics_4K_JPG"`) will launch gtn into a specified folder assuming it exists. Trailing backslash char will be auto-removed.
 - `-c` or `--collection` will launch collectionMode; read about this further down. `-f` and `-c` are mutually exclusive.
 
@@ -51,7 +53,7 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 	- I coded this in a relatively foolproof way but try not to outsmart it.
 - `Build 8831 [20240306]`+: ExifTool should now auto-update into the Roaming folder upon app shutdown. (that's c:\Users\username\AppData\Roaming\GeoTagNinja\)
 - `Build 9095 [20241125]`+: There is now an option for `Flat Mode` that can be triggered from within the `File` menu. This will parse and load all subfolders within the currently selected folder. It's a little experimental although should work.
-- `Build 9276 [20250526]`+: There is now an option for `Thumbnail View` within `Settings`. It incurs a very heavy performance hit on RAW-type files and so I dont't particularly recommend it but it works. Currently there's no option to customise the thumbnail size.
+- `Build 9276 [20250526]`+: There is now an option for `Thumbnail View` within `Settings`. It incurs a very heavy performance hit on RAW-type files and so I don't particularly recommend it but it works. Currently there's no option to customise the thumbnail size.
 
 ### A Particular Note on Working with Adobe Bridge (ACR) and RAW files > Saving as JPGs or Other Formats.
 
@@ -154,7 +156,7 @@ Longer: Hypothetically the idea with Destinations is that if there are groups of
 ## Roadmap
 
 I'm hoping to eventually move away from WinForms to something visually more pleasing. Currently there's no Visual Designer for WinUI3 and I don't want to build a WPF app that is almost similarly outdated (as WinForms) just more complicated to code due to XAML. I don't want to do a "Microsoft Store" -style package either so no UWP (plus that's deprecated now).
-At the same time the current .NET Framework 4.8 is a little obsolete. I haven't switched to 4.8.1 because that doesn't work on Win 7 and also offers nothing that's relevant for this app, however it's likely that eventually the codebase will move to some more current version of .NET (8+ that is, somewhat subject to WinUI designer updates or if .NET9 would include Dark Mode proper for WinForms or not [afaik it's more like .NET10 for that at the moment]) so support for older OSs will eventually be dropped. I don't have a timeframe for this but I'd hazard sometime late 2025.
+At the same time the current .NET Framework 4.8 is a little obsolete. I haven't switched to 4.8.1 because that doesn't work on Win 7 and also offers nothing that's relevant for this app, however it's likely that eventually the codebase will move to some more current version of .NET (10+ that is, once they sort out native Dark Mode issues) so support for Windows 7 will eventually be dropped.
 
 ## When reporting bugs please specify
 
@@ -181,4 +183,5 @@ At the same time the current .NET Framework 4.8 is a little obsolete. I haven't 
 	- Eventually click `Generate the API key and go to item details page. I am ready to copy and save the key.`
 	- Save the API key when prompted. If you don't do it at the time you'll have to generate another one.
 - You'll need a geoNames username and password to use toponomy search. Register for free [here](https://www.geonames.org/)
+    - Copypaste from above: I've been told that by default the geoNames API usage is disabled for (some?) new accounts. In that case you have to activate the free web service ---> After registering and clicking the link in the activation email, you still need to activate your account for using web services. To do so, go to your "Manage Account" page [ [http://www.geonames.org/manageaccount](http://www.geonames.org/manageaccount) ] make sure your email shows up correctly. From here, click the "Free Webservice" activation link.
 - WebView2 is required but should come with your OS most likely. If not, get it from [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703)
