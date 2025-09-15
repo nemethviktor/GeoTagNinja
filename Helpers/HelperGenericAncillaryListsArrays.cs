@@ -1462,4 +1462,24 @@ internal static class HelperGenericAncillaryListsArrays
     ];
 
 #endregion
+
+#region Map
+
+    /// <summary>
+    ///     Returns the KVP combination of map layer options
+    /// </summary>
+    /// <returns></returns>
+    internal static Dictionary<string, string> GetMapLayers()
+    {
+        Dictionary<string, string> result = new()
+        {
+            { "lyr_streets_osm", "Streets (OSM)" },
+            { "lyr_streets_esri", "Streets (ESRI)" },
+            { "lyr_satellite_esri", "Satellite (ESRI)" }
+        };
+
+        return result;
+    }
+
+#endregion
 }

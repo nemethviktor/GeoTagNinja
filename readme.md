@@ -130,11 +130,14 @@ Longer: Hypothetically the idea with Destinations is that if there are groups of
 
 ## Possible Issues & Solutions
 
-- Read/Save file process fails semi-randomly: (yes this is a copy-paste from above but it seems not everyone's reading the _known issues_ section)
+- *Read/Save file process fails semi-randomly*: (yes this is a copy-paste from above but it seems not everyone's reading the _known issues_ section)
 	- If your files are kept in folders with accent marks (umlauts, non-standard English, Asian, Russian, Unicode, etc. characters) in the path and/or filename. This is a limitation of ExifTool + cmd. If you encounter a problem, move your files to something like "C:\temp" and see if it works better.
 	- On top of that above ExifTool has a hard limit of 260 characters for file names including paths. Anything beyond that will fail. Again, rename your files or temporarily move them to C:\temp if this is an issue. Unicode (e.g. most Chinese and other Asian) characters have an up to 4-byte size per character. This is to say you'll run into errors with these files more often than not.
 	- Alternatively, you can enable [this](https://stackoverflow.com/questions/56419639/what-does-beta-use-unicode-utf-8-for-worldwide-language-support-actually-do) feature if you're running v1903 Windows 10 or later but it may have some unwanted effects so keep an eye out for changes caused by it.
-- You get an "unauthorized" error when pulling data from the GeoNames API:
+- *OSM Street Map tiles say something like "Unauthorized"* (ie the actual map isn't showing properly but gives an ugly error): 
+    - This is usually down to an attribution issue but GTN isn't directly using that services but instead via `Leaflet` so it's not something I can do much about
+	- Change the map layer to something else, the issue should be transient hopefully - there is at least one other street-type maps that should work (in theory...)
+- *You get an "unauthorized" error when pulling data from the GeoNames API*:
 	- I've been told that by default the API usage is disabled for (some?) new accounts. In that case you have to activate the free web service ---> After registering and clicking the link in the activation email, you still need to activate your account for using web services. To do so, go to your "Manage Account" page [ [http://www.geonames.org/manageaccount](http://www.geonames.org/manageaccount) ] make sure your email shows up correctly. From here, click the "Free Webservice" activation link.
 	- Make sure you have provided a valid username and password for GeoNames in the `Settings`. For username _do not_ use your email address but just the username itself. If you think you've done everything correctly, do the following:
 		- If you need screenshots for the below visit [this](https://github.com/nemethviktor/GeoTagNinja/issues/13#issuecomment-1305805110) ticket reply.

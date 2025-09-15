@@ -27,10 +27,8 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using TimeZoneConverter;
-using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.Model.SourcesAndAttributes;
-using HelperControlAndMessageBoxCustomMessageBoxManager =
-    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
+using HelperControlAndMessageBoxCustomMessageBoxManager = GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
@@ -299,7 +297,7 @@ public partial class FrmMainApp : Form
         {
             Log.Fatal(message: $"Error: {ex.Message}");
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_ErrorClearingFileDataQTables", captionType: MessageBoxCaption.Error,
+                controlName: "mbx_FrmMainApp_ErrorClearingFileDataQTables", captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
                 buttons: MessageBoxButtons.OK);
         }
 
@@ -387,7 +385,7 @@ public partial class FrmMainApp : Form
         {
             Log.Error(message: $"Error: {ex.Message}");
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_ErrorResizingColumns", captionType: MessageBoxCaption.Error,
+                controlName: "mbx_FrmMainApp_ErrorResizingColumns", captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
                 buttons: MessageBoxButtons.OK);
         }
     }
@@ -543,7 +541,7 @@ public partial class FrmMainApp : Form
     private void PipeCmd_ShowMessage(string text)
     {
         HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(controlName: "",
-            captionType: MessageBoxCaption.Information,
+            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information,
             buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Information,
             extraMessage: $"Pipe Server has this message:\n{text}",
             textSource: HelperControlAndMessageBoxCustomMessageBoxManager.MessageBoxTextSource.MANUAL);
@@ -572,13 +570,10 @@ public partial class FrmMainApp : Form
         MapWebMessage mapWebMessage = JsonSerializer.Deserialize<MapWebMessage>(json: jsonString);
 
         string layerName = mapWebMessage?.layer;
-        HelperVariables.HTMLDefaultLayer = layerName switch
-        {
-            "Streets (OSM)" => "lyr_streets_OSM",
-            "Streets (ARCGIS)" => "lyr_streets",
-            "Satellite" => "lyr_satellite",
-            _ => HelperVariables.HTMLDefaultLayer
-        };
+        HelperVariables.HTMLDefaultLayer =
+            HelperGenericAncillaryListsArrays.GetMapLayers().FirstOrDefault(predicate: x => x.Value == layerName).Key ??
+            HelperVariables.HTMLDefaultLayer;
+
 
         string strLat = mapWebMessage?.lat.ToString(provider: CultureInfo.InvariantCulture);
         string strLng = mapWebMessage?.lng.ToString(provider: CultureInfo.InvariantCulture);
@@ -633,7 +628,7 @@ public partial class FrmMainApp : Form
     private bool AskIfUserWantsToSaveDraggedMapData()
     {
         return HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBoxWithResult(
-            controlName: "mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles", captionType: MessageBoxCaption.Question,
+            controlName: "mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles", captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question,
             buttons: MessageBoxButtons.YesNo) == DialogResult.Yes;
     }
 
@@ -789,21 +784,21 @@ public partial class FrmMainApp : Form
             Dictionary<string, string> checkboxDictionary = new()
             {
                 {
-                    ReturnControlText(controlName: "ckb_QuestionDontAskAgain",
-                        fakeControlType: FakeControlTypes.CheckBox),
+                    HelperControlAndMessageBoxHandling.ReturnControlText(controlName: "ckb_QuestionDontAskAgain",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.CheckBox),
                     "_remember"
                 }
             };
             Dictionary<string, string> buttonsDictionary = new()
             {
                 {
-                    ReturnControlText(controlName: "btn_Yes",
-                        fakeControlType: FakeControlTypes.Button),
+                    HelperControlAndMessageBoxHandling.ReturnControlText(controlName: "btn_Yes",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button),
                     "yes"
                 },
                 {
-                    ReturnControlText(controlName: "btn_No",
-                        fakeControlType: FakeControlTypes.Button),
+                    HelperControlAndMessageBoxHandling.ReturnControlText(controlName: "btn_No",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button),
                     "no"
                 }
             };
@@ -811,11 +806,11 @@ public partial class FrmMainApp : Form
             // via https://stackoverflow.com/a/17385937/3968494
             List<string> getLocToMapDialogChoice =
                 DialogWithOrWithoutCheckBox.DisplayAndReturnList(
-                    labelText: ReturnControlText(controlName: "lbl_QuestionAddToponomy",
-                        fakeControlType: FakeControlTypes.Label),
-                    caption: ReturnControlText(
-                        controlName: MessageBoxCaption.Question.ToString(),
-                        fakeControlType: FakeControlTypes.MessageBoxCaption),
+                    labelText: HelperControlAndMessageBoxHandling.ReturnControlText(controlName: "lbl_QuestionAddToponomy",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Label),
+                    caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question.ToString(),
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                     buttonsDictionary: buttonsDictionary,
                     orientation: "Horizontal", checkboxesDictionary: checkboxDictionary);
 
@@ -881,7 +876,7 @@ public partial class FrmMainApp : Form
             Log.Fatal(message: $"Error: {ex.Message}");
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                 controlName: "mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode",
-                captionType: MessageBoxCaption.Error,
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
                 buttons: MessageBoxButtons.OK,
                 extraMessage: ex.Message);
         }
@@ -926,7 +921,7 @@ public partial class FrmMainApp : Form
             Log.Fatal(message: $"Error: {ex.Message}");
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                 controlName: "mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile",
-                captionType: MessageBoxCaption.Error, buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error, buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
         }
     }
 
@@ -951,6 +946,7 @@ public partial class FrmMainApp : Form
         double dblMinLng = 180;
         double dblMaxLat = -180;
         double dblMaxLng = -180;
+        string layerInfo = string.Empty;
 
         // Add markers on map for every marker-item and
         // find viewing rect. for map (min / max of all markers to enclose all of them)
@@ -997,22 +993,16 @@ public partial class FrmMainApp : Form
         htmlReplacements.Add(key: " { HTMLSelectDefaultLayer }",
             value: "var map = L.map('map', { layers: [" + HelperVariables.HTMLDefaultLayer + "]});");
 
+        layerInfo = "var baseMaps = {" + Environment.NewLine;
+        layerInfo = HelperGenericAncillaryListsArrays.GetMapLayers()
+                                                     .Aggregate(seed: layerInfo, func: (current,
+                                                              mapLayer) =>
+                                                          current +
+                                                          $"{DoubleQuote}{mapLayer.Value}{DoubleQuote}: {mapLayer.Key},{Environment.NewLine}");
+
+        layerInfo += " };";
         htmlReplacements.Add(key: "{ HTMLSelectFirstLayer }",
-            value: HelperVariables.HTMLDefaultLayer == "lyr_streets"
-                ? """
-                  var baseMaps = {
-                      "Satellite": lyr_satellite,
-                      "Streets (ARCGIS)": lyr_streets,
-                      "Streets (OSM)": lyr_streets_OSM
-                  };
-                  """
-                : """
-                  var baseMaps = {
-                      "Streets (ARCGIS)": lyr_streets,
-                      "Streets (OSM)": lyr_streets_OSM,
-                      "Satellite": lyr_satellite
-                  };
-                  """);
+            value: layerInfo);
 
         Log.Trace(message: $"Added {HelperVariables.HsMapMarkers.Count} map markers.");
 
@@ -1484,7 +1474,7 @@ public partial class FrmMainApp : Form
             Log.Fatal(message: $"Error: {ex.Message}");
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                 controlName: "mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async",
-                captionType: MessageBoxCaption.Error, buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error, buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
         }
 
         // Initialize WebView
@@ -1501,7 +1491,7 @@ public partial class FrmMainApp : Form
             Log.Fatal(message: $"Error: {ex.Message}");
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                 controlName: "mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled",
-                captionType: MessageBoxCaption.Error, buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error, buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
         }
 
         // read the "map.html" file.
@@ -1517,7 +1507,7 @@ public partial class FrmMainApp : Form
         {
             Log.Fatal(message: $"Read map.html file - Error: {ex.Message}");
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile", captionType: MessageBoxCaption.Error,
+                controlName: "mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile", captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
                 buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
         }
 
@@ -1560,7 +1550,7 @@ public partial class FrmMainApp : Form
             Log.Fatal(message: $"Error:{ex.Message}");
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                 controlName: "mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived",
-                captionType: MessageBoxCaption.Error, buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error, buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
         }
     }
 
@@ -1653,12 +1643,12 @@ public partial class FrmMainApp : Form
         if (!FlatMode ||
             (FlatMode && HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBoxWithResult(
                 controlName: "mbx_FrmMainApp_QuestionRunImportExportInFlatMode",
-                captionType: MessageBoxCaption.Question,
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question,
                 buttons: MessageBoxButtons.YesNo) == DialogResult.Yes))
         {
             FrmImportExportGpx = new FrmImportExportGpx();
-            FrmImportExportGpx.Text = ReturnControlText(
-                fakeControlType: FakeControlTypes.Form,
+            FrmImportExportGpx.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Form,
                 controlName: "FrmImportExportGpx"
             );
             FrmImportExportGpx.ShowDialog();
@@ -1685,7 +1675,7 @@ public partial class FrmMainApp : Form
     private bool AskIfUserWantsToDisableFlatMode()
     {
         return HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBoxWithResult(
-                   controlName: "mbx_FrmMainApp_QuestionDisableFlatMode", captionType: MessageBoxCaption.Question,
+                   controlName: "mbx_FrmMainApp_QuestionDisableFlatMode", captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question,
                    buttons: MessageBoxButtons.YesNo) ==
                DialogResult.Yes;
     }
@@ -1802,7 +1792,7 @@ public partial class FrmMainApp : Form
             }
 
             DialogResult dialogResult = HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBoxWithResult(
-                controlName: "mbx_FrmMainApp_ErrorInvalidFolder", captionType: MessageBoxCaption.Question,
+                controlName: "mbx_FrmMainApp_ErrorInvalidFolder", captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question,
                 buttons: MessageBoxButtons.YesNo);
 
             if (dialogResult == DialogResult.Yes)
@@ -2038,7 +2028,7 @@ public partial class FrmMainApp : Form
         {
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                 controlName: "mbx_FrmMainApp_ErrorRemoveGeoDataFailed",
-                captionType: MessageBoxCaption.Error,
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
                 buttons: MessageBoxButtons.OK,
                 extraMessage: ex.Message);
         }
@@ -2073,7 +2063,7 @@ public partial class FrmMainApp : Form
         else
         {
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmImportExportGpx_NoFileSelected", captionType: MessageBoxCaption.Warning,
+                controlName: "mbx_FrmImportExportGpx_NoFileSelected", captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
                 buttons: MessageBoxButtons.OK);
         }
     }
@@ -2311,18 +2301,18 @@ public partial class FrmMainApp : Form
                 List<(ElementAttribute attribute, string toponomyOverwriteVal)>
                     toponomyOverwrites = new()
                     {
-                        (ElementAttribute.CountryCode, dtToponomy.Rows[index: 0][columnName: ReturnControlText(
-                             fakeControlType: FakeControlTypes.ColumnHeader,
+                        (ElementAttribute.CountryCode, dtToponomy.Rows[index: 0][columnName: HelperControlAndMessageBoxHandling.ReturnControlText(
+                             fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
                              controlName: "clh_CountryCode")].ToString()),
-                        (ElementAttribute.Country, dtToponomy.Rows[index: 0][columnName: ReturnControlText(
-                             fakeControlType: FakeControlTypes.ColumnHeader,
+                        (ElementAttribute.Country, dtToponomy.Rows[index: 0][columnName: HelperControlAndMessageBoxHandling.ReturnControlText(
+                             fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
                              controlName: "clh_Country")].ToString())
                     };
 
                 foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays.ToponomyReplaces())
                 {
-                    string colName = ReturnControlText(
-                        fakeControlType: FakeControlTypes.ColumnHeader,
+                    string colName = HelperControlAndMessageBoxHandling.ReturnControlText(
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
                         controlName: $"clh_{attribute}");
                     string settingVal = HelperExifReadExifData.ReplaceBlankToponomy(
                         settingId: attribute,
@@ -2332,8 +2322,8 @@ public partial class FrmMainApp : Form
                 }
 
                 // timeZone is a bit special but that's just how we all love it....not.
-                string TZ = dtToponomy.Rows[index: 0][columnName: ReturnControlText(
-                    fakeControlType: FakeControlTypes.ColumnHeader,
+                string TZ = dtToponomy.Rows[index: 0][columnName: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
                     controlName: "clh_timezoneId")].ToString();
 
                 DateTime createDate;
@@ -2406,8 +2396,8 @@ public partial class FrmMainApp : Form
                 Dictionary<string, string> checkboxDictionary = new()
                 {
                     {
-                        ReturnControlText(
-                            fakeControlType: FakeControlTypes.CheckBox,
+                        HelperControlAndMessageBoxHandling.ReturnControlText(
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.CheckBox,
                             controlName: "ckb_QuestionStopProcessingRows"
                         ),
                         "_stopprocessing"
@@ -2416,15 +2406,15 @@ public partial class FrmMainApp : Form
                 Dictionary<string, string> buttonsDictionary = new()
                 {
                     {
-                        ReturnControlText(
-                            fakeControlType: FakeControlTypes.Button,
+                        HelperControlAndMessageBoxHandling.ReturnControlText(
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button,
                             controlName: "btn_Yes"
                         ),
                         "yes"
                     },
                     {
-                        ReturnControlText(
-                            fakeControlType: FakeControlTypes.Button,
+                        HelperControlAndMessageBoxHandling.ReturnControlText(
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button,
                             controlName: "btn_No"
                         ),
                         "no"
@@ -2434,12 +2424,12 @@ public partial class FrmMainApp : Form
                 // ReSharper disable once InconsistentNaming
                 List<string> APIHandlingChoice =
                     DialogWithOrWithoutCheckBox.DisplayAndReturnList(
-                        labelText: ReturnControlText(
+                        labelText: HelperControlAndMessageBoxHandling.ReturnControlText(
                             controlName: "mbx_FrmMainApp_QuestionNoRowsFromAPI",
-                            fakeControlType: FakeControlTypes.MessageBox),
-                        caption: ReturnControlText(
-                            controlName: MessageBoxCaption.Question.ToString(),
-                            fakeControlType: FakeControlTypes.MessageBoxCaption),
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                        caption: HelperControlAndMessageBoxHandling.ReturnControlText(
+                            controlName: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question.ToString(),
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBoxCaption),
                         buttonsDictionary: buttonsDictionary,
                         orientation: "Horizontal",
                         checkboxesDictionary: checkboxDictionary);
@@ -2636,7 +2626,7 @@ public partial class FrmMainApp : Form
         {
             lvw_FileList.SelectedItems.Clear();
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_WarningNoItemSelected", captionType: MessageBoxCaption.Warning,
+                controlName: "mbx_FrmMainApp_WarningNoItemSelected", captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
                 buttons: MessageBoxButtons.OK);
             return;
         }
@@ -2978,8 +2968,8 @@ public partial class FrmMainApp : Form
                                              EventArgs e)
     {
         FrmSettings = new FrmSettings();
-        FrmSettings.Text = ReturnControlText(
-            fakeControlType: FakeControlTypes.Form,
+        FrmSettings.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
+            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Form,
             controlName: "FrmSettings"
         );
         FrmSettings.ShowDialog();
@@ -3001,7 +2991,7 @@ public partial class FrmMainApp : Form
         else
         {
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_NoFavouritesDefined", captionType: MessageBoxCaption.Information,
+                controlName: "mbx_FrmMainApp_NoFavouritesDefined", captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information,
                 buttons: MessageBoxButtons.OK);
         }
     }
@@ -3165,21 +3155,21 @@ public partial class FrmMainApp : Form
 
                 HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                     controlName: "mbx_FrmMainApp_InfoFavouriteSaved",
-                    captionType: MessageBoxCaption.Information,
+                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information,
                     buttons: MessageBoxButtons.OK);
             }
 
             else
             {
                 HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                    controlName: "mbx_FrmMainApp_WarningNoItemSelected", captionType: MessageBoxCaption.Warning,
+                    controlName: "mbx_FrmMainApp_WarningNoItemSelected", captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
                     buttons: MessageBoxButtons.OK);
             }
         }
         else
         {
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank", captionType: MessageBoxCaption.Warning,
+                controlName: "mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank", captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
                 buttons: MessageBoxButtons.OK);
         }
     }
@@ -3195,7 +3185,7 @@ public partial class FrmMainApp : Form
         if (favouriteToLoad == null)
         {
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_InfoFavouriteNotValid", captionType: MessageBoxCaption.Information,
+                controlName: "mbx_FrmMainApp_InfoFavouriteNotValid", captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information,
                 buttons: MessageBoxButtons.OK);
             return;
         }
@@ -3218,7 +3208,7 @@ public partial class FrmMainApp : Form
         if (!thereAreFilesSelectedInLvwMain)
         {
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_WarningNoItemSelected", captionType: MessageBoxCaption.Warning,
+                controlName: "mbx_FrmMainApp_WarningNoItemSelected", captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
                 buttons: MessageBoxButtons.OK);
 
             return;
@@ -3285,7 +3275,7 @@ public partial class FrmMainApp : Form
         if (favouriteToLoad == null)
         {
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_InfoFavouriteNotValid", captionType: MessageBoxCaption.Information,
+                controlName: "mbx_FrmMainApp_InfoFavouriteNotValid", captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information,
                 buttons: MessageBoxButtons.OK);
             return;
         }
@@ -3333,7 +3323,7 @@ public partial class FrmMainApp : Form
         else
         {
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_NoFavouritesDefined", captionType: MessageBoxCaption.Information,
+                controlName: "mbx_FrmMainApp_NoFavouritesDefined", captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information,
                 buttons: MessageBoxButtons.OK);
         }
     }
@@ -3408,7 +3398,7 @@ public partial class FrmMainApp : Form
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                 controlName: dataHasBeenRemoved
                     ? "mbx_FrmMainApp_InfoCachedDataRemoved"
-                    : "mbx_FrmMainApp_InfoCachedDataNotRemoved", captionType: MessageBoxCaption.Information,
+                    : "mbx_FrmMainApp_InfoCachedDataNotRemoved", captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information,
                 buttons: MessageBoxButtons.OK);
         }
     }
@@ -3499,7 +3489,7 @@ public partial class FrmMainApp : Form
         if (!selectionIsValid)
         {
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_WarningTooManyFilesSelected", captionType: MessageBoxCaption.Warning,
+                controlName: "mbx_FrmMainApp_WarningTooManyFilesSelected", captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
                 buttons: MessageBoxButtons.OK);
             return;
         }
@@ -3622,9 +3612,9 @@ public partial class FrmMainApp : Form
             {
                 Filter =
                     "GeoSetter Export files (geosetter_settings.zip)|geosetter_settings.zip|GeoSetter Export Favourites files (favorites.xml)|favorites.xml", // no need to translate.
-                Title = ReturnControlText(
+                Title = HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "ofd_tmi_File_ImportFavouritesFromGeoSetter_SelectFile",
-                    fakeControlType: FakeControlTypes.OpenFileDialog)
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.OpenFileDialog)
             };
             return openFileDialog.ShowDialog() == DialogResult.OK ? openFileDialog.FileName : null;
         }
