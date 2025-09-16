@@ -3119,7 +3119,7 @@ public partial class FrmMainApp : Form
 
                 favourite.GPSLatitude =
                     GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
-                        attribute: ElementAttribute.GPSAltitude);
+                        attribute: ElementAttribute.GPSLatitude);
                 favourite.GPSLatitudeRef = GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
                     attribute: ElementAttribute.GPSLatitudeRef);
                 favourite.GPSLongitude =

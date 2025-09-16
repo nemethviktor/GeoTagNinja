@@ -1,12 +1,14 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 9xxx [2025xxxx]** 
+**Build 9xxx [2025xxxx]** (upcoming release)
 - NEW & UPDATED:
 	- Slightly changed "Dark Mode" colours to match the real ones.
-	- Added German translations (via Weblate)
+	- Added German translations (via Weblate).
 	- Added a new layer to the map ("Streets ESRI") - I've had problems with OSM lately; possibly a Leaflet issue but this is a reasonable fallback.
 - BUGS & FIXES:
-	- TBA
+	- Fixed #186 Favourites being saved with wrong Latitude info.
+	- Fixed map attribution not showing.
+	- Fixed packages.config being totally wrong. No clue what had happened there. 
 
 **Build 9387 [20250912]** 
 - NEW & UPDATED:

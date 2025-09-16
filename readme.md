@@ -26,15 +26,16 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 
 The app works without parameters, however you may add:
 - `-f` or `--folder` (e.g. `geotagninja.exe -f "g:\My Drive\DigiPics_4K_JPG"`) will launch gtn into a specified folder assuming it exists. Trailing backslash char will be auto-removed.
-- `-c` or `--collection` will launch collectionMode; read about this further down. `-f` and `-c` are mutually exclusive.
+- `-c` or `--collection` will launch collectionMode; read about this further down. 
+`-f` and `-c` are mutually exclusive.
 
 ## Quirks and Things to Note
 
 - `Build 8361 [20221122]`+: There is now a hold when the user enters a folder - it is kept on until the folder completes load. This is a bit annoying perhaps but is needed because otherwise people can start issuing write-commands before the read-process finishes and that can result in files being written the wrong info.
-- This is mentioned in Known Issues briefly but just to reiterate: if you have issues with file data not showing please try renaming/moving your files to a "simple" folder like "C:\temp" and make sure your file names don't contain umlauts, special characters and anything "odd". This is a limitation of ExifTool.
+- This is mentioned in Known Issues briefly but just to reiterate: if you have issues with file data not showing please try renaming/moving your files to a "simple" folder like `C:\temp` and make sure your file names don't contain umlauts, special characters and anything "odd". This is a limitation of ExifTool.
 - I have tried to test reasonably thoroughly but bugs probably remain. Do make backups of your files if you feel that's the right thing to do.
 - As per usual I don't accept any liability for damage and/or any other inconvenience you may suffer while/from using this app, no warranties and/or guarantees. The script is open source, and everyone is welcome to read it.
-- I'm kind of hoping this won't come up a problem but don't bash me about country names please. I'm thinking disputed country names and areas here. They are ISO standards, the API returns those values, that's it. Being from the UK I do think that the long name of `United Kingdom of Great Britain and Northern Ireland (the)` is a bit of a mouthful but it is what it is (and it's relatively rarely disputed but for example Crimea does return Ukraine as a value, regardless of what's been going on there since 2014; again, this isn't a statement either way, it's the API reply).
+- I'm kind of hoping this won't come up a problem but don't bash me about country names please. I'm thinking disputed country names and areas here. They are ISO standards, the API returns those values, that's it. Being from the UK I do think that the long name of `United Kingdom of Great Britain and Northern Ireland (the)` is a bit of a mouthful but it is what it is (and it's relatively rarely disputed but for example Crimea does return `Ukraine` as a value, regardless of what's been going on there since 2014; again, this isn't a statement either way, it's the API reply).
 	- On this particular note above --> the script won't change existing country details in files unless you explicitly edit them. So, it may happen that your existing file has the `CountryCode` GBR and the `Country` "United Kingdom", that won't be changed unless you do a `Get From Web` because the CountryCode-to-Country matching only runs in that case. That's a feature, not a bug.
 - Altitude: in some cases, the API returns `32K` or `-32K` as an altitude. Those are being blanked out.
 - Pressing `Get From Web` in Edit mode will always query the lat/long data for the file as in the main listview (the main page, in less geeky terms.). This is a feature. The assumption is that you aren't going to change coordinates manually by typing stuff in and _then_ query data. It's a lot more likely you'll change stuff using the map.
@@ -51,7 +52,7 @@ The app works without parameters, however you may add:
 - `Build 8829 [20240304]`+: Added a feature to Paste coordinate pairs into the GPSData (Lat/Long) of the Edit File. 
 	- The logic is that a Clipboard of _only_ a pair of coordinates separated by (preferably) the Culture-invariant [aka comma] ListSeparator would be pasted into the Edit Form when pressing CTRL+V (e.g.: `56.1234, 12.5678`) <-- and nothing else. 
 	- I coded this in a relatively foolproof way but try not to outsmart it.
-- `Build 8831 [20240306]`+: ExifTool should now auto-update into the Roaming folder upon app shutdown. (that's c:\Users\username\AppData\Roaming\GeoTagNinja\)
+- `Build 8831 [20240306]`+: ExifTool should now auto-update into the Roaming folder upon app shutdown. (that's `c:\Users\username\AppData\Roaming\GeoTagNinja\`)
 - `Build 9095 [20241125]`+: There is now an option for `Flat Mode` that can be triggered from within the `File` menu. This will parse and load all subfolders within the currently selected folder. It's a little experimental although should work.
 - `Build 9276 [20250526]`+: There is now an option for `Thumbnail View` within `Settings`. It incurs a very heavy performance hit on RAW-type files and so I don't particularly recommend it but it works. Currently there's no option to customise the thumbnail size.
 
@@ -59,7 +60,7 @@ The app works without parameters, however you may add:
 
 Basically, there appear to be two schools of thoughts, one propagating that RAW files themselves shouldn't ever be edited, whereas the other is less specific on this matter.
 GTN allows to set a "Process the original image" on a per-extension basis. If set so then the updates will go into the RAW files as well as (subject to further settings) an XMP file. When not set then only the XMP file will be edited, leaving the RAW file intact. This latter (do-not-process-the-raw-file) can cause some issues:
-- Current versions of GTN are coded so that data in XMP files take precedence over RAW files when there is conflicting information. The logic is that discrepancies should only happen if the user does not overwrite the RAW file and therefore whatever is in the XMP is created (and has been modified) on purpose and thus is the will of the user.
+- GTN is coded so that data in XMP files take precedence over RAW files when there is conflicting information. The logic is that discrepancies should only happen if the user does not overwrite the RAW file and therefore whatever is in the XMP is created (and has been modified) on purpose and thus is the will of the user.
 - When using Bridge (and/or ACR) as a workflow tool, it has its own quirks, one being that GPS coordinates are read from the RAW file, not the XMP file, even if there is a discrepancy. To make matters worse, any updates to the GPS coords within Bridge are saved in the XMP file but upon refresh (F5) the values revert to those in the RAW file. One can say that is a feature of sorts.
 	- This becomes a particular problem because if a user has the following workflow: download RAW from Camera > process & change coords in GTN (only write XMP) > save as JPG in Bridge then the JPG files will likely contain the wrong coordinates (those from the RAW file). _There is nothing I can do about this_. FWIW I checked and GeoSetter has the same thing, which is sensible given that this is ultimately an external factor. Amusingly enough a quick googling shows that users have reported this issue as early as 2017 but, while acknowledged, it's been ignored by Adobe, certainly as late as Bridge v2022 (haven't tried newer ones).
 	- The only way to get around this is to process the RAW image (edit/overwrite as above) within GTN
@@ -101,8 +102,8 @@ As for code updates, I'm generally happy for anyone competent to add pull reques
 
 ## Known Issues
 
-- There is a likelihood that the app will struggle to read file data if your files are kept in folders with accent marks (umlauts, non-standard English, Asian, Russian, Unicode, etc. characters) in the path and/or filename. This is a limitation of ExifTool + cmd. If you encounter a problem, move your files to something like "C:\temp" and see if it works better.
-	- On top of that above ExifTool has a hard limit of 260 characters for file names including paths. Anything beyond that will fail. Again, rename your files or temporarily move them to C:\temp if this is an issue. Unicode (e.g. most Chinese and other Asian) characters have an up to 4-byte size per character. This is to say you'll run into errors with these files more often than not.
+- There is a likelihood that the app will struggle to read file data if your files are kept in folders with accent marks (umlauts, non-standard English, Asian, Russian, Unicode, etc. characters) in the path and/or filename. This is a limitation of ExifTool + cmd. If you encounter a problem, move your files to something like `C:\temp` and see if it works better.
+	- On top of that above ExifTool has a hard limit of 260 characters for file names including paths. Anything beyond that will fail. Again, rename your files or temporarily move them to `C:\temp` if this is an issue. Unicode (e.g. most Chinese and other Asian) characters have an up to 4-byte size per character. This is to say you'll run into errors with these files more often than not.
 	- Alternatively, you can enable [this](https://stackoverflow.com/questions/56419639/what-does-beta-use-unicode-utf-8-for-worldwide-language-support-actually-do) feature if you're running v1903 Windows 10 or later but it may have some unwanted effects so keep an eye out for changes caused by it.
 - The API has its rather odd ways of dealing with the "City" tag [not the least because there isn't such a tag in the API].
 	- For a detailed rundown on the above see the code if interested + an overall discussion [here](https://github.com/nemethviktor/GeoTagNinja/issues/38)
@@ -131,8 +132,8 @@ Longer: Hypothetically the idea with Destinations is that if there are groups of
 ## Possible Issues & Solutions
 
 - *Read/Save file process fails semi-randomly*: (yes this is a copy-paste from above but it seems not everyone's reading the _known issues_ section)
-	- If your files are kept in folders with accent marks (umlauts, non-standard English, Asian, Russian, Unicode, etc. characters) in the path and/or filename. This is a limitation of ExifTool + cmd. If you encounter a problem, move your files to something like "C:\temp" and see if it works better.
-	- On top of that above ExifTool has a hard limit of 260 characters for file names including paths. Anything beyond that will fail. Again, rename your files or temporarily move them to C:\temp if this is an issue. Unicode (e.g. most Chinese and other Asian) characters have an up to 4-byte size per character. This is to say you'll run into errors with these files more often than not.
+	- If your files are kept in folders with accent marks (umlauts, non-standard English, Asian, Russian, Unicode, etc. characters) in the path and/or filename. This is a limitation of ExifTool + cmd. If you encounter a problem, move your files to something like `C:\temp` and see if it works better.
+	- On top of that above ExifTool has a hard limit of 260 characters for file names including paths. Anything beyond that will fail. Again, rename your files or temporarily move them to `C:\temp` if this is an issue. Unicode (e.g. most Chinese and other Asian) characters have an up to 4-byte size per character. This is to say you'll run into errors with these files more often than not.
 	- Alternatively, you can enable [this](https://stackoverflow.com/questions/56419639/what-does-beta-use-unicode-utf-8-for-worldwide-language-support-actually-do) feature if you're running v1903 Windows 10 or later but it may have some unwanted effects so keep an eye out for changes caused by it.
 - *OSM Street Map tiles say something like "Unauthorized"* (ie the actual map isn't showing properly but gives an ugly error): 
     - This is usually down to an attribution issue but GTN isn't directly using that services but instead via `Leaflet` so it's not something I can do much about
@@ -158,8 +159,8 @@ Longer: Hypothetically the idea with Destinations is that if there are groups of
 
 ## Roadmap
 
-I'm hoping to eventually move away from WinForms to something visually more pleasing. Currently there's no Visual Designer for WinUI3 and I don't want to build a WPF app that is almost similarly outdated (as WinForms) just more complicated to code due to XAML. I don't want to do a "Microsoft Store" -style package either so no UWP (plus that's deprecated now).
-At the same time the current .NET Framework 4.8 is a little obsolete. I haven't switched to 4.8.1 because that doesn't work on Win 7 and also offers nothing that's relevant for this app, however it's likely that eventually the codebase will move to some more current version of .NET (10+ that is, once they sort out native Dark Mode issues) so support for Windows 7 will eventually be dropped.
+I'm hoping to eventually move away from WinForms to something visually more pleasing. Currently there's no Visual Designer for WinUI3Well the original plan was to eventually move to something nicer (like WinUI3) but Microsoft keeps killing off their newer platforms and I don't want to learn an entirely different language just for the sake of this so WinForms it will be till the time protons decay. However...
+The current .NET Framework 4.8 is a little obsolete. I haven't switched to 4.8.1 because that doesn't work on Win 7 and also offers nothing that's relevant for this app, but it's likely that eventually the codebase will move to some more current version of .NET (10+ that is, once they sort out native Dark Mode issues) so support for Windows 7 will eventually be dropped.
 
 ## When reporting bugs please specify
 
