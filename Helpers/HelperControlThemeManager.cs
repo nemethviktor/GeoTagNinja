@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using static GeoTagNinja.Helpers.ThemeColour;
@@ -138,8 +139,8 @@ internal static class HelperControlThemeManager
     ///     It iterates through all the TabPages in the TabControl, drawing each tab and its text with the appropriate colors.
     ///     via https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.tabcontrol.drawitem?view=netframework-4.8.1
     /// </remarks>
-    internal static void TabControl_DrawItem(object sender,
-                                             DrawItemEventArgs e)
+    private static void TabControl_DrawItem(object sender,
+                                            DrawItemEventArgs e)
     {
         Color foreColor = HelperVariables.UserSettingUseDarkMode
             ? Color.White
@@ -190,6 +191,13 @@ internal static class HelperControlThemeManager
                 button.FlatStyle = FlatStyle.Flat;
                 button.FlatAppearance.BorderColor =
                     ColorTranslator.FromHtml(htmlColor: "#BAB9B9");
+
+                if (button.BackgroundImage != null)
+                {
+                    button.FlatAppearance.BorderSize = 0;
+                    button.BackgroundImage =
+                        MakeGrayscaleAndAdjustBrightness(originalImage: (Bitmap)button.BackgroundImage, brightness: 1);
+                }
             }
             else if (cItem is CheckBox checkBox)
             {
@@ -245,11 +253,64 @@ internal static class HelperControlThemeManager
                     }
                 }
             }
+            else if (cItem is ToolStrip ts)
+            {
+                // https://www.codeproject.com/Messages/3329190/How-to-convert-a-Control-into-a-ToolStripButton.aspx
+                foreach (ToolStripItem toolStripItem
+                         in ts.Items)
+                {
+                    if (toolStripItem is ToolStripButton { Image: not null } toolStripButton)
+                    {
+                        toolStripButton.Image =
+                            MakeGrayscaleAndAdjustBrightness(originalImage: (Bitmap)toolStripButton.Image,
+                                brightness: 1);
+                    }
+                }
+            }
             else
             {
                 cItem.BackColor = darkColor;
                 cItem.ForeColor = Color.White;
             }
         }
+    }
+
+    private static Bitmap MakeGrayscaleAndAdjustBrightness(Image originalImage,
+                                                           float brightness)
+    {
+        // Ensure the brightness value is within a reasonable range, e.g., -1.0 to 1.0.
+        // Values outside this range can cause color clipping (pure black or pure white).
+        brightness = Math.Max(val1: -1.0f, val2: Math.Min(val1: 1.0f, val2: brightness));
+
+        // Create a new bitmap with the same dimensions and a 32bpp ARGB pixel format.
+        Bitmap adjustedImage = new(width: originalImage.Width, height: originalImage.Height,
+            format: PixelFormat.Format32bppArgb);
+
+        using (Graphics g = Graphics.FromImage(image: adjustedImage))
+        {
+            // Define a combined grayscale and brightness color matrix.
+            ColorMatrix colorMatrix = new(
+                newColorMatrix: new[]
+                {
+                    // Red, Green, and Blue columns are now the sum of the grayscale and brightness.
+                    new[] { 0.3f, 0.3f, 0.3f, 0, 0 },
+                    new[] { 0.59f, 0.59f, 0.59f, 0, 0 },
+                    new[] { 0.11f, 0.11f, 0.11f, 0, 0 },
+                    new float[] { 0, 0, 0, 1, 0 }, // Preserve the original alpha value.
+                    new[] { brightness, brightness, brightness, 0, 1 } // Add brightness offset.
+                });
+
+            using (ImageAttributes attributes = new())
+            {
+                attributes.SetColorMatrix(newColorMatrix: colorMatrix);
+                g.DrawImage(image: originalImage,
+                    destRect: new Rectangle(x: 0, y: 0, width: originalImage.Width, height: originalImage.Height),
+                    srcX: 0, srcY: 0, srcWidth: originalImage.Width, srcHeight: originalImage.Height,
+                    srcUnit: GraphicsUnit.Pixel,
+                    imageAttr: attributes);
+            }
+        }
+
+        return adjustedImage;
     }
 }
