@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeoTagNinja.Model;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
@@ -8,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using GeoTagNinja.Model;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 
 // ReSharper disable InconsistentNaming
@@ -29,7 +29,7 @@ internal static class HelperDataFavourites
         int itemsImported = 0;
 
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        HashSet<GeoSetterFavourite> geoSetterFavourites = new();
+        HashSet<GeoSetterFavourite> geoSetterFavourites = [];
         try
         {
             XDocument doc = XDocument.Parse(text: File.ReadAllText(path: fileNameToParse));

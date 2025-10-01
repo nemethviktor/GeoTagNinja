@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -6,7 +7,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GeoTagNinja.Helpers;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using HelperControlAndMessageBoxCustomMessageBoxManager =
     GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
@@ -95,7 +95,7 @@ public partial class FrmMainApp
                 cItem.GetType() == typeof(TabPage) ||
                 cItem.GetType() == typeof(ToolStripButton) ||
                 (cItem.GetType() == typeof(ListView) && cItem.Name != "lvw_FileView")
-                // cItem.GetType() == typeof(ToolTip) // tooltips are not controls.
+            // cItem.GetType() == typeof(ToolTip) // tooltips are not controls.
             )
             {
                 if (cItem.Name == "lbl_ParseProgress")
@@ -152,7 +152,7 @@ public partial class FrmMainApp
             fakeControlType: FakeControlTypes.PictureBox);
 
         // The MenuStrip logic above is not working
-        List<ToolStripItem> allMenuItems = new();
+        List<ToolStripItem> allMenuItems = [];
         foreach (ToolStripItem toolItem in mns_MenuStrip.Items)
         {
             allMenuItems.Add(item: toolItem);
@@ -180,15 +180,15 @@ public partial class FrmMainApp
 
 
         Log.Trace(message: "Setting Tooltips");
-        List<(ToolTip, Control, string)> ttpLabelsList = new()
-        {
+        List<(ToolTip, Control, string)> ttpLabelsList =
+        [
             (ttp_loctToFile, btn_loctToFile, "ttp_loctToFile"),
             (ttp_loctToFileDestination, btn_loctToFileDestination, "ttp_loctToFileDestination"),
             (ttp_NavigateMapGo, btn_NavigateMapGo, "ttp_NavigateMapGo"),
             (ttp_SaveFavourite, btn_SaveFavourite, "ttp_SaveFavourite"),
             (ttp_LoadFavourite, btn_LoadFavourite, "ttp_LoadFavourite"),
             (ttp_ManageFavourites, btn_ManageFavourites, "ttp_ManageFavourites")
-        };
+        ];
         foreach ((ToolTip, Control, string) valueTuple in ttpLabelsList)
         {
             ToolTip ttp = valueTuple.Item1;
@@ -233,7 +233,7 @@ public partial class FrmMainApp
             // ignored
         }
 
-        if (nud_lat.Text == "" || nud_lat.Text == "0")
+        if (nud_lat.Text is "" or "0")
         {
             // NASA HQ
             string defaultLat = "38.883056";

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using GeoTagNinja.Model;
+using System;
 using System.Collections;
 using System.Windows.Forms;
-using GeoTagNinja.Model;
 
 namespace GeoTagNinja.View.ListView;
 
@@ -20,14 +20,9 @@ internal class ListViewColumnSorter : IComparer
     /// </summary>
     private SortOrder ColumnSortOrder;
 
-    /// <summary>
-    ///     Column to be sorted (inited to to 0, no validation on setting)
-    /// </summary>
-    private int ColumnToSortIdx;
-
     public ListViewColumnSorter()
     {
-        ColumnToSortIdx = 0;
+        SortColumn = 0;
         ColumnSortOrder = SortOrder.Ascending;
         Comparer = new CaseInsensitiveComparer();
     }
@@ -35,28 +30,15 @@ internal class ListViewColumnSorter : IComparer
     /// <summary>
     ///     The column (sub item index) by which to sort (default 0)
     /// </summary>
-    public int SortColumn
-    {
-        set => ColumnToSortIdx = value;
-        get => ColumnToSortIdx;
-    }
+    public int SortColumn { set; get; }
 
     /// <summary>
     ///     The sort order is either SortOrder.Ascending or SortOrder.Descending (default ascending)
     /// </summary>
     public SortOrder SortOrder
-    {
-        set
-        {
-            if (value == SortOrder.Ascending || value == SortOrder.Descending)
-            {
-                ColumnSortOrder = value;
-            }
-            else
-            {
-                throw new ArgumentException(message: "Sort order must either by ascending or descending.");
-            }
-        }
+    { set => ColumnSortOrder = value is SortOrder.Ascending or SortOrder.Descending
+              ? value
+              : throw new ArgumentException(message: "Sort order must either by ascending or descending.");
         get => ColumnSortOrder;
     }
 
@@ -94,19 +76,14 @@ internal class ListViewColumnSorter : IComparer
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         System.Windows.Forms.ListView lvw_FileList = frmMainAppInstance.lvw_FileList;
 
-        string colName = lvw_FileList.Columns[index: ColumnToSortIdx]
+        string colName = lvw_FileList.Columns[index: SortColumn]
                                      .Name.Substring(startIndex: FileListView.COL_NAME_PREFIX.Length); // no "clh_"
 
         // If items not in same group, group rules
         // This only applies to fileNames (as in the column FileName...Type in this sense/case is/are...Drive, Folder, File etc)
         if (lviElementTypeX != lviElementTypeY)
         {
-            if (lviElementTypeX < lviElementTypeY)
-            {
-                return -1;
-            }
-
-            return 1;
+            return lviElementTypeX < lviElementTypeY ? -1 : 1;
         }
 
         // Item of same group - compare their values in clicked column...
@@ -115,9 +92,9 @@ internal class ListViewColumnSorter : IComparer
             // FileName is always string and has no versions
             if (colName == "FileName")
             {
-                string compareWhat = lviX.SubItems[index: ColumnToSortIdx]
+                string compareWhat = lviX.SubItems[index: SortColumn]
                     .Text;
-                string compareToWhat = lviY.SubItems[index: ColumnToSortIdx]
+                string compareToWhat = lviY.SubItems[index: SortColumn]
                     .Text;
 
                 result = Comparer.Compare(a: compareWhat, b: compareToWhat);
@@ -198,35 +175,19 @@ internal class ListViewColumnSorter : IComparer
         }
 
         // Inverse if descending - doesn't affect folders.
-        if (ColumnSortOrder == SortOrder.Ascending)
-        {
-            return result;
-        }
-
-        return -result;
+        return ColumnSortOrder == SortOrder.Ascending ? result : -result;
     }
 
     private int GetSortGroup(DirectoryElement de)
     {
-        switch (de.Type)
+        return de.Type switch
         {
-            case DirectoryElement.ElementType.ParentDirectory:
-                return 0;
-
-            case DirectoryElement.ElementType.MyComputer:
-                return 1;
-
-            case DirectoryElement.ElementType.Drive:
-                return 2;
-
-            case DirectoryElement.ElementType.SubDirectory:
-                return 3;
-
-            case DirectoryElement.ElementType.Unknown:
-                return 4;
-
-            default:
-                return 5;
-        }
+            DirectoryElement.ElementType.ParentDirectory => 0,
+            DirectoryElement.ElementType.MyComputer => 1,
+            DirectoryElement.ElementType.Drive => 2,
+            DirectoryElement.ElementType.SubDirectory => 3,
+            DirectoryElement.ElementType.Unknown => 4,
+            _ => 5,
+        };
     }
 }

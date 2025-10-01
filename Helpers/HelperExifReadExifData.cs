@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GeoTagNinja;
+using GeoTagNinja.Model;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
@@ -8,8 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using geoTagNinja;
-using GeoTagNinja.Model;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers;
@@ -138,7 +138,7 @@ internal static class HelperExifReadExifData
             settingId: "ckb_StopProcessingRules"
         );
 
-    #region Actual value allocation block
+        #region Actual value allocation block
 
         // As per https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 (see below comment a few lines down)
 
@@ -410,7 +410,7 @@ internal static class HelperExifReadExifData
                 }
             }
 
-        #endregion
+            #endregion
 
             DataRow drReturnRow = dtReturn.NewRow();
 
@@ -1296,16 +1296,11 @@ internal static class HelperExifReadExifData
 
                 break;
             case "GPSAltitudeRef":
-                if (tryDataValue.ToLower()
+                tryDataValue = tryDataValue.ToLower()
                                 .Contains(value: "below") ||
-                    tryDataValue.Contains(value: "1"))
-                {
-                    tryDataValue = "Below Sea Level";
-                }
-                else
-                {
-                    tryDataValue = "Above Sea Level";
-                }
+                    tryDataValue.Contains(value: "1")
+                    ? "Below Sea Level"
+                    : "Above Sea Level";
 
                 break;
             case "GPSDOP":
@@ -1371,15 +1366,15 @@ internal static class HelperExifReadExifData
 
                 break;
             case /*"FileModifyDate" or */"TakenDate" or "CreateDate":
-            {
-                tryDataValue =
-                    DateTime.TryParse(s: tryDataValue, result: out DateTime outDateTime)
-                        ? HelperGenericTypeOperations.ConvertStringToDateTimeBackToString(
-                            dateTimeToConvert: tryDataValue)
-                        : FrmMainApp.NullStringEquivalentGeneric;
+                {
+                    tryDataValue =
+                        DateTime.TryParse(s: tryDataValue, result: out DateTime outDateTime)
+                            ? HelperGenericTypeOperations.ConvertStringToDateTimeBackToString(
+                                dateTimeToConvert: tryDataValue)
+                            : FrmMainApp.NullStringEquivalentGeneric;
 
-                break;
-            }
+                    break;
+                }
         }
 
         FrmMainApp.Log.Trace(message: $"Done - dataPoint:{dataPoint}: {tryDataValue}");

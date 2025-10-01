@@ -1,4 +1,7 @@
 ﻿#nullable enable
+using GeoTagNinja.Helpers;
+using GeoTagNinja.View.ListView;
+using NLog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,9 +13,6 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GeoTagNinja.Helpers;
-using GeoTagNinja.View.ListView;
-using NLog;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 #pragma warning disable CS8618, CS9264
@@ -57,11 +57,11 @@ public class DirectoryElement
         FileNameWithPath = fileNameWithPath;
         Extension = Path.GetExtension(path: FileNameWithPath)
                         .Replace(oldValue: ".", newValue: "");
-        Thumbnail = _Thumbnail;
+        Thumbnail = Thumbnail;
         _Attributes = new Dictionary<ElementAttribute, AttributeValueContainer>();
     }
 
-#region Attribute Values Support
+    #region Attribute Values Support
 
     /// <summary>
     ///     Possible versions of an element. Initial loads receive the
@@ -159,18 +159,14 @@ public class DirectoryElement
         }
     }
 
-#endregion
+    #endregion
 
-#region Private variables
-
-    private string _DisplayName;
-
-    private Image _Thumbnail;
+    #region Private variables
 
     private readonly IDictionary<ElementAttribute, AttributeValueContainer> _Attributes;
 
-    private readonly List<ElementAttribute> _ignoreElementAttributes = new()
-    {
+    private readonly List<ElementAttribute> _ignoreElementAttributes =
+    [
         ElementAttribute.Coordinates,
         ElementAttribute.DestCoordinates,
         ElementAttribute.TakenDateDaysShift,
@@ -184,13 +180,13 @@ public class DirectoryElement
         ElementAttribute.RemoveAllGPS,
         ElementAttribute.GUID,
         ElementAttribute.Folder
-    };
+    ];
 
     private string _Folder;
 
-#endregion
+    #endregion
 
-#region Properties
+    #region Properties
 
     /// <summary>
     ///     The element type (get only)
@@ -200,16 +196,7 @@ public class DirectoryElement
     public string FileNameWithPath { get; }
 
     public string Folder
-    {
-        get
-        {
-            if (Type == ElementType.File)
-            {
-                return Path.GetDirectoryName(path: FileNameWithPath) ?? string.Empty;
-            }
-
-            return string.Empty;
-        }
+    { get => Type == ElementType.File ? Path.GetDirectoryName(path: FileNameWithPath) ?? string.Empty : string.Empty;
         set => _Folder = value;
     }
 
@@ -226,19 +213,14 @@ public class DirectoryElement
     {
         get
         {
-            if (_DisplayName == null)
+            if (field == null)
             {
                 return ItemNameWithoutPath;
             }
 
-            if (Type == ElementType.ParentDirectory)
-            {
-                return "..";
-            }
-
-            return _DisplayName;
+            return Type == ElementType.ParentDirectory ? ".." : (field);
         }
-        set => _DisplayName = value;
+        set;
     }
 
     /// <summary>
@@ -257,14 +239,14 @@ public class DirectoryElement
     /// </summary>
     public Image Thumbnail
     {
-        get => _Thumbnail;
+        get;
         private set
         {
             FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
             if (frmMainAppInstance.listViewDisplayMode == FrmMainApp.ListViewDisplayMode.LargeIcons)
             {
-                Dictionary<ElementType, string> iconLookupDictionary = new();
+                Dictionary<ElementType, string> iconLookupDictionary = [];
 
                 iconLookupDictionary.Add(key: ElementType.SubDirectory, value: "Folder.png");
                 iconLookupDictionary.Add(key: ElementType.MyComputer, value: "Computer.png");
@@ -415,7 +397,7 @@ public class DirectoryElement
                 }
 
 
-                _Thumbnail = value;
+                field = value;
             }
         }
     }
@@ -454,13 +436,13 @@ public class DirectoryElement
             {
                 nPercent = nPercentH;
                 destX = Convert.ToInt16(value: (width -
-                                                sourceWidth * nPercent) / 2);
+                                                (sourceWidth * nPercent)) / 2);
             }
             else
             {
                 nPercent = nPercentW;
                 destY = Convert.ToInt16(value: (height -
-                                                sourceHeight * nPercent) / 2);
+                                                (sourceHeight * nPercent)) / 2);
             }
 
             int destWidth = (int)(sourceWidth * nPercent);
@@ -489,10 +471,10 @@ public class DirectoryElement
         return bmPhoto;
     }
 
-#endregion
+    #endregion
 
 
-#region Members for attribute setting and retrieval
+    #region Members for attribute setting and retrieval
 
     /// <summary>
     ///     Checks if this DE has changed attributes that should be saved.
@@ -736,13 +718,10 @@ public class DirectoryElement
             IDictionary<AttributeVersion, Tuple<string, bool>> strDict =
                 (IDictionary<AttributeVersion, Tuple<string, bool>>)avc.ValueDict;
             Tuple<string, bool> intValue = strDict[key: versionToReturn];
-            if (strDict[key: versionToReturn]
-               .Item2)
-            {
-                return FrmMainApp.NullStringEquivalentGeneric;
-            }
-
-            return intValue.Item1;
+            return strDict[key: versionToReturn]
+               .Item2
+                ? FrmMainApp.NullStringEquivalentGeneric
+                : intValue.Item1;
         }
 
         if (attributeType == typeof(int))
@@ -750,13 +729,10 @@ public class DirectoryElement
             IDictionary<AttributeVersion, Tuple<int, bool>> intDict =
                 (IDictionary<AttributeVersion, Tuple<int, bool>>)avc.ValueDict;
             Tuple<int, bool> intValue = intDict[key: versionToReturn];
-            if (intDict[key: versionToReturn]
-               .Item2)
-            {
-                return FrmMainApp.NullStringEquivalentGeneric;
-            }
-
-            return intValue.Item1.ToString(provider: CultureInfo.InvariantCulture);
+            return intDict[key: versionToReturn]
+               .Item2
+                ? FrmMainApp.NullStringEquivalentGeneric
+                : intValue.Item1.ToString(provider: CultureInfo.InvariantCulture);
         }
 
         if (attributeType == typeof(double))
@@ -764,13 +740,10 @@ public class DirectoryElement
             IDictionary<AttributeVersion, Tuple<double, bool>> doubleDict =
                 (IDictionary<AttributeVersion, Tuple<double, bool>>)avc.ValueDict;
             Tuple<double, bool> doubleValue = doubleDict[key: versionToReturn];
-            if (doubleDict[key: versionToReturn]
-               .Item2)
-            {
-                return FrmMainApp.NullStringEquivalentGeneric;
-            }
-
-            return doubleValue.Item1.ToString(provider: CultureInfo.InvariantCulture);
+            return doubleDict[key: versionToReturn]
+               .Item2
+                ? FrmMainApp.NullStringEquivalentGeneric
+                : doubleValue.Item1.ToString(provider: CultureInfo.InvariantCulture);
         }
 
         if (attributeType == typeof(DateTime))
@@ -802,14 +775,14 @@ public class DirectoryElement
     public AttributeVersion? GetMaxAttributeVersion(ElementAttribute attribute)
 
     {
-        List<AttributeVersion> relevantAttributeVersions = new()
-        {
+        List<AttributeVersion> relevantAttributeVersions =
+        [
             // DO NOT reorder!
             AttributeVersion.Stage3ReadyToWrite,
             AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue,
             AttributeVersion.Stage1EditFormIntraTabTransferQueue,
             AttributeVersion.Original
-        };
+        ];
         foreach (AttributeVersion attributeVersion in relevantAttributeVersions)
         {
             if (HasSpecificAttributeWithVersion(attribute: attribute,
@@ -1008,70 +981,42 @@ public class DirectoryElement
 
             if (attributeType == typeof(double))
             {
-                if (setMarkedForDeletion)
-                {
-                    _Attributes[key: attribute]
-                       .ValueDict[key: version] = new Tuple<double, bool>(
+                _Attributes[key: attribute]
+                       .ValueDict[key: version] = setMarkedForDeletion
+                    ? new Tuple<double, bool>(
                         item1: FrmMainApp.NullDoubleEquivalent,
-                        item2: isMarkedForDeletion);
-                }
-                else
-                {
-                    _Attributes[key: attribute]
-                           .ValueDict[key: version] =
-                        new Tuple<double, bool>(item1: (double)value,
+                        item2: isMarkedForDeletion)
+                    : new Tuple<double, bool>(item1: (double)value,
                             item2: isMarkedForDeletion);
-                }
             }
             else if (attributeType == typeof(int))
             {
-                if (setMarkedForDeletion)
-                {
-                    _Attributes[key: attribute]
-                       .ValueDict[key: version] = new Tuple<int, bool>(
-                        item1: FrmMainApp.NullIntEquivalent, item2: isMarkedForDeletion);
-                }
-                else
-                {
-                    _Attributes[key: attribute]
-                           .ValueDict[key: version] =
-                        new Tuple<int, bool>(item1: (int)value,
+                _Attributes[key: attribute]
+                       .ValueDict[key: version] = setMarkedForDeletion
+                    ? new Tuple<int, bool>(
+                        item1: FrmMainApp.NullIntEquivalent, item2: isMarkedForDeletion)
+                    : new Tuple<int, bool>(item1: (int)value,
                             item2: isMarkedForDeletion);
-                }
             }
             else if (attributeType == typeof(DateTime))
             {
-                if (setMarkedForDeletion)
-                {
-                    _Attributes[key: attribute]
-                       .ValueDict[key: version] = new Tuple<DateTime, bool>(
+                _Attributes[key: attribute]
+                       .ValueDict[key: version] = setMarkedForDeletion
+                    ? new Tuple<DateTime, bool>(
                         item1: FrmMainApp.NullDateTimeEquivalent,
-                        item2: isMarkedForDeletion);
-                }
-                else
-                {
-                    _Attributes[key: attribute]
-                           .ValueDict[key: version] =
-                        new Tuple<DateTime, bool>(item1: (DateTime)value,
+                        item2: isMarkedForDeletion)
+                    : new Tuple<DateTime, bool>(item1: (DateTime)value,
                             item2: isMarkedForDeletion);
-                }
             }
             else if (attributeType == typeof(string))
             {
-                if (setMarkedForDeletion)
-                {
-                    _Attributes[key: attribute]
-                       .ValueDict[key: version] = new Tuple<string, bool>(
+                _Attributes[key: attribute]
+                       .ValueDict[key: version] = setMarkedForDeletion
+                    ? new Tuple<string, bool>(
                         item1: FrmMainApp.NullStringEquivalentGeneric,
-                        item2: isMarkedForDeletion);
-                }
-                else
-                {
-                    _Attributes[key: attribute]
-                           .ValueDict[key: version] =
-                        new Tuple<string, bool>(item1: value.ToString(),
+                        item2: isMarkedForDeletion)
+                    : new Tuple<string, bool>(item1: value.ToString(),
                             item2: isMarkedForDeletion);
-                }
             }
             else
             {
@@ -1139,9 +1084,9 @@ public class DirectoryElement
         }
     }
 
-#endregion
+    #endregion
 
-#region Members for Parsing attribute values out of a tag list
+    #region Members for Parsing attribute values out of a tag list
 
     /// <summary>
     ///     Searches the given tag list to yield the value for the given attribute.
@@ -1205,7 +1150,7 @@ public class DirectoryElement
     {
         Log.Trace(
             message:
-            $"Parse attribute '{GetElementAttributesName(attributeToFind: attribute)}' at depth {callDepth.ToString()}...");
+            $"Parse attribute '{GetElementAttributesName(attributeToFind: attribute)}' at depth {callDepth}...");
         if (parsedFails.Contains(item: attribute))
         {
             return false;
@@ -1215,14 +1160,14 @@ public class DirectoryElement
         {
             throw new InvalidOperationException(
                 message:
-                $"Reached max call depth of '{callDepth.ToString()}' while parsing attribute '{GetElementAttributesName(attributeToFind: attribute)}'.");
+                $"Reached max call depth of '{callDepth}' while parsing attribute '{GetElementAttributesName(attributeToFind: attribute)}'.");
         }
 
         callDepth++;
         (string chosenTag, string parseResult) =
             GetDataPointFromTags(attribute: attribute, tags: tags);
 
-    #region Create a history
+        #region Create a history
 
         // TakenDate & CreateDate have to be sent into their
         // respective tables for querying later if user chooses time-shift.
@@ -1256,11 +1201,11 @@ public class DirectoryElement
         {
             Log.Error(
                 message:
-                $"Parse attribute failed '{GetElementAttributesName(attributeToFind: attribute)}' at depth {callDepth.ToString()}...");
+                $"Parse attribute failed '{GetElementAttributesName(attributeToFind: attribute)}' at depth {callDepth}...");
             return false; // be triple sure here.
         }
 
-    #endregion
+        #endregion
 
         // If needed, transform the attribute
         IConvertible resTyped = null;
@@ -1288,7 +1233,7 @@ public class DirectoryElement
                         attribute: attribute,
                         parseResult: parseResult,
                         parsed_Values: parsedValues,
-                        ParseMissingAttribute: delegate(ElementAttribute atrb)
+                        ParseMissingAttribute: delegate (ElementAttribute atrb)
                         {
                             return ParseAttribute(attribute: atrb,
                                 parsedValues: parsedValues,
@@ -1358,16 +1303,13 @@ public class DirectoryElement
                                .TryParseNullableInt(val: parseResult) ??
                             FrmMainApp.NullIntEquivalent;
                     }
-                    else if (typeOfAttribute == typeof(DateTime))
-                    {
-                        resTyped =
-                            HelperGenericTypeOperations.TryParseNullableDateTime(
-                                val: parseResult) ??
-                            FrmMainApp.NullDateTimeEquivalent;
-                    }
                     else
                     {
-                        throw new ArgumentException(
+                        resTyped = typeOfAttribute == typeof(DateTime)
+                            ? (IConvertible)(HelperGenericTypeOperations.TryParseNullableDateTime(
+                                val: parseResult) ??
+                            FrmMainApp.NullDateTimeEquivalent)
+                            : throw new ArgumentException(
                             message:
                             $"Trying to get attribute name of unknown attribute with value {attribute}");
                     }
@@ -1425,7 +1367,7 @@ public class DirectoryElement
             new Dictionary<ElementAttribute, IConvertible>();
         // List of missing attributes (must be separate, as IConvertible
         // is not nullable
-        List<ElementAttribute> parsedFails = new();
+        List<ElementAttribute> parsedFails = [];
 
         // Parse values into temp. store
         foreach (ElementAttribute attribute in possibleAttributes)
@@ -1453,5 +1395,5 @@ public class DirectoryElement
         Log.Trace(message: $"Parse dict for item '{ItemNameWithoutPath}' - OK");
     }
 
-#endregion
+    #endregion
 }

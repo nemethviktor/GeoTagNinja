@@ -1,6 +1,6 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers;
+using System;
 using System.Windows.Forms;
-using GeoTagNinja.Helpers;
 
 namespace GeoTagNinja.View;
 

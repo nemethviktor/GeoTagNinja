@@ -1,8 +1,8 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
-using GeoTagNinja.Helpers;
 
 namespace GeoTagNinja;
 
@@ -55,12 +55,12 @@ public partial class FrmPleaseWaitBox : Form
         foreach (Control cItem in c)
         {
             if (
-                cItem is Button ||
-                cItem is CheckBox ||
-                cItem is GroupBox ||
-                cItem is Label ||
-                cItem is RadioButton ||
-                cItem is TabPage
+                cItem is Button or
+                CheckBox or
+                GroupBox or
+                Label or
+                RadioButton or
+                TabPage
             )
             {
                 // gets logged inside.

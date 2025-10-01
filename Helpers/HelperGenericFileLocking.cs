@@ -5,7 +5,7 @@ namespace GeoTagNinja.Helpers;
 internal static class HelperGenericFileLocking
 {
     internal static readonly object TableLock = new();
-    internal static HashSet<string> FilesBeingProcessed = new();
+    internal static HashSet<string> FilesBeingProcessed = [];
     internal static bool FileListBeingUpdated;
     internal static bool FilesAreBeingSaved;
 

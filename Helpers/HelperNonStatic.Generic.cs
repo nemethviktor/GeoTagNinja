@@ -28,7 +28,7 @@ internal partial class HelperNonStatic
     {
         IEnumerable<Control> controls = control.Controls.Cast<Control>();
 
-        return controls.SelectMany(selector: ctrl => GetAllControls(control: ctrl))
+        return controls.SelectMany(selector: GetAllControls)
             .Concat(second: controls);
     }
 
@@ -66,8 +66,8 @@ internal partial class HelperNonStatic
     {
         int multiplier = getScreenMultiplier(frm: frm);
 
-        frm.SetBounds(x: (Screen.GetBounds(ctl: frm).Width / 2 - frm.Width / 2) / multiplier,
-            y: Screen.GetBounds(ctl: frm).Height / 2 - frm.Height / 2,
+        frm.SetBounds(x: ((Screen.GetBounds(ctl: frm).Width / 2) - (frm.Width / 2)) / multiplier,
+            y: (Screen.GetBounds(ctl: frm).Height / 2) - (frm.Height / 2),
             width: frm.Width,
             height: frm.Height,
             specified: BoundsSpecified.Location);
@@ -79,5 +79,5 @@ internal partial class HelperNonStatic
         return Screen.GetBounds(ctl: frm).Width > 2000 ? 2 : 1;
     }
 
-#endregion
+    #endregion
 }

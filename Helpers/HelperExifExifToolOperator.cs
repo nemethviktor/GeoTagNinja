@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeoTagNinja.Model;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -8,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GeoTagNinja.Model;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers;
@@ -16,15 +16,15 @@ namespace GeoTagNinja.Helpers;
 internal static class HelperExifExifToolOperator
 {
     // this is a list of junk that we generally want to ignore coming from exiftool's error reporting
-    private static List<string> ignoreExifToolWarningsList = new()
-    {
+    private static List<string> ignoreExifToolWarningsList =
+    [
         "requires ExifVersion",
         "is not allowed in JPEG",
         "MakerNote",
         "Warning",
         "files updated",
         "files created"
-    };
+    ];
 
     private static int _exifInvokeCounter;
 

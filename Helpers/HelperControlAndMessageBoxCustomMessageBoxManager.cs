@@ -1,6 +1,6 @@
-﻿using System;
+﻿using GeoTagNinja.View.DialogAndMessageBoxes;
+using System;
 using System.Windows.Forms;
-using GeoTagNinja.View.DialogAndMessageBoxes;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 
 namespace GeoTagNinja.Helpers;
@@ -97,7 +97,7 @@ internal class HelperControlAndMessageBoxCustomMessageBoxManager
         CustomMessageBox customMessageBox = new(
             text:
             $"{(textSource == MessageBoxTextSource.CONTROLTYPE ? ReturnControlText(controlName: controlName, fakeControlType: FakeControlTypes.MessageBox) : string.Empty)}{extraMessage}",
-            caption: ReturnControlText(controlName: $"mbc_{captionType.ToString()}",
+            caption: ReturnControlText(controlName: $"mbc_{captionType}",
                 fakeControlType: FakeControlTypes.MessageBoxCaption),
             buttons: buttons,
             icon: icon);

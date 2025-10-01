@@ -35,7 +35,7 @@ namespace GeoTagNinja.Helpers
                 throw new Exception(message: "Invalid SQLite database file path.");
             }
 
-            List<string> settingsTablesToBeImportedList = new();
+            List<string> settingsTablesToBeImportedList = [];
 
             foreach (string settingName in Enum.GetNames(enumType: typeof(SettingsImportExportOptions)))
             {
@@ -49,50 +49,46 @@ namespace GeoTagNinja.Helpers
             // Open connections to both databases
             using (SQLiteConnection importConnection = new(connectionString: $"Data Source={importFilePath};Version=3;"))
             {
-                using (SQLiteConnection settingsConnection = new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath};Version=3;"))
+                using SQLiteConnection settingsConnection = new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath};Version=3;");
+                importConnection.Open();
+                settingsConnection.Open();
+                // Backup the settings database
+                File.Copy(sourceFileName: HelperVariables.SettingsDatabaseFilePath, destFileName:
+                    $"{HelperVariables.SettingsDatabaseFilePath}.bak", overwrite: true);
+                foreach (string tableName in settingsTablesToBeImportedList)
                 {
-                    importConnection.Open();
-                    settingsConnection.Open();
-                    // Backup the settings database
-                    File.Copy(sourceFileName: HelperVariables.SettingsDatabaseFilePath, destFileName:
-                        $"{HelperVariables.SettingsDatabaseFilePath}.bak", overwrite: true);
-                    foreach (string tableName in settingsTablesToBeImportedList)
+                    // Check if the table exists in the import database
+                    using SQLiteCommand cmd = new(commandText: $"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}';", connection: importConnection);
+                    object result = cmd.ExecuteScalar();
+                    if (result != null && result.ToString() == tableName)
                     {
-                        // Check if the table exists in the import database
-                        using (SQLiteCommand cmd = new(commandText: $"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}';", connection: importConnection))
+                        // Delete the table from the settings database
+                        using (SQLiteCommand deleteCmd = new(commandText: $"DROP TABLE IF EXISTS {tableName};", connection: settingsConnection))
                         {
-                            object result = cmd.ExecuteScalar();
-                            if (result != null && result.ToString() == tableName)
-                            {
-                                // Delete the table from the settings database
-                                using (SQLiteCommand deleteCmd = new(commandText: $"DROP TABLE IF EXISTS {tableName};", connection: settingsConnection))
-                                {
-                                    deleteCmd.ExecuteNonQuery();
-                                }
+                            deleteCmd.ExecuteNonQuery();
+                        }
 
-                                // Copy the table from the import database to the settings database
-                                lock (importConnection)
-                                {
-                                    using SQLiteCommand copyCmd = new(
-                                        commandText:
-                                        $"ATTACH DATABASE '{HelperVariables.SettingsDatabaseFilePath}' AS toDb; CREATE TABLE toDb.{tableName} AS SELECT * FROM main.{tableName};",
-                                        connection: importConnection);
-                                    copyCmd.ExecuteNonQuery();
-                                }
-                            }
-
-                            using SQLiteCommand detachCmd = new(
+                        // Copy the table from the import database to the settings database
+                        lock (importConnection)
+                        {
+                            using SQLiteCommand copyCmd = new(
                                 commandText:
-                                $"DETACH DATABASE 'toDb';",
+                                $"ATTACH DATABASE '{HelperVariables.SettingsDatabaseFilePath}' AS toDb; CREATE TABLE toDb.{tableName} AS SELECT * FROM main.{tableName};",
                                 connection: importConnection);
-                            detachCmd.ExecuteNonQuery();
+                            copyCmd.ExecuteNonQuery();
                         }
                     }
 
-                    // Close connections
-                    importConnection.Close();
-                    settingsConnection.Close();
+                    using SQLiteCommand detachCmd = new(
+                        commandText:
+                        $"DETACH DATABASE 'toDb';",
+                        connection: importConnection);
+                    detachCmd.ExecuteNonQuery();
                 }
+
+                // Close connections
+                importConnection.Close();
+                settingsConnection.Close();
             }
 
             // Delete the backup if no errors occurred
@@ -117,16 +113,14 @@ namespace GeoTagNinja.Helpers
         {
             try
             {
-                using (SQLiteConnection connection = new(connectionString: $"Data Source={filePath};Version=3;"))
+                using SQLiteConnection connection = new(connectionString: $"Data Source={filePath};Version=3;");
+                connection.Open();
+                using (SQLiteCommand command = new(commandText: "SELECT 1", connection: connection))
                 {
-                    connection.Open();
-                    using (SQLiteCommand command = new(commandText: "SELECT 1", connection: connection))
-                    {
-                        command.ExecuteNonQuery();
-                    }
-
-                    connection.Close();
+                    command.ExecuteNonQuery();
                 }
+
+                connection.Close();
 
                 return true;
             }

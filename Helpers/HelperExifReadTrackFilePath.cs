@@ -202,16 +202,7 @@ internal class HelperExifReadTrackFilePath
         try
         {
             int pos1 = str.IndexOf(value: firstString) + firstString.Length;
-            int pos2 = 0;
-            if (lastString == Environment.NewLine)
-            {
-                pos2 = str.Length;
-            }
-            else
-            {
-                pos2 = str.IndexOf(value: lastString, startIndex: pos1);
-            }
-
+            int pos2 = lastString == Environment.NewLine ? str.Length : str.IndexOf(value: lastString, startIndex: pos1);
             finalString = str.Substring(startIndex: pos1, length: pos2 - pos1);
         }
         catch

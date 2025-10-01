@@ -51,12 +51,12 @@ internal static class HelperGenericCalculations
         double bearingRad = ToRadians(degrees: gpsImgDirection);
 
         // Calculate the target latitude and longitude
-        double targetLatitudeRad = Math.Asin(d: Math.Sin(a: startLatitudeRad) * Math.Cos(d: distance / earthRadius) +
-                                                Math.Cos(d: startLatitudeRad) * Math.Sin(a: distance / earthRadius) * Math.Cos(d: bearingRad));
+        double targetLatitudeRad = Math.Asin(d: (Math.Sin(a: startLatitudeRad) * Math.Cos(d: distance / earthRadius)) +
+                                                (Math.Cos(d: startLatitudeRad) * Math.Sin(a: distance / earthRadius) * Math.Cos(d: bearingRad)));
 
         double targetLongitudeRad = startLongitudeRad +
                                     Math.Atan2(y: Math.Sin(a: bearingRad) * Math.Sin(a: distance / earthRadius) * Math.Cos(d: startLatitudeRad),
-                                               x: Math.Cos(d: distance / earthRadius) - Math.Sin(a: startLatitudeRad) * Math.Sin(a: targetLatitudeRad));
+                                               x: Math.Cos(d: distance / earthRadius) - (Math.Sin(a: startLatitudeRad) * Math.Sin(a: targetLatitudeRad)));
 
         // Convert the target latitude and longitude from radians back to degrees
         double targetLatitude = ToDegrees(radians: targetLatitudeRad);
@@ -97,32 +97,32 @@ internal static class HelperGenericCalculations
         double leftBearingRad = bearingRad - halfFovRad;
         double rightBearingRad = bearingRad + halfFovRad;
 
-        double leftLatitudeRad = Math.Asin(d: Math.Sin(a: startLatitudeRad) * Math.Cos(d: distance / earthRadius) +
-                                              Math.Cos(d: startLatitudeRad) * Math.Sin(a: distance / earthRadius) * Math.Cos(d: leftBearingRad));
+        double leftLatitudeRad = Math.Asin(d: (Math.Sin(a: startLatitudeRad) * Math.Cos(d: distance / earthRadius)) +
+                                              (Math.Cos(d: startLatitudeRad) * Math.Sin(a: distance / earthRadius) * Math.Cos(d: leftBearingRad)));
         double leftLongitudeRad = startLongitudeRad +
                                   Math.Atan2(y: Math.Sin(a: leftBearingRad) * Math.Sin(a: distance / earthRadius) * Math.Cos(d: startLatitudeRad),
-                                             x: Math.Cos(d: distance / earthRadius) - Math.Sin(a: startLatitudeRad) * Math.Sin(a: leftLatitudeRad));
+                                             x: Math.Cos(d: distance / earthRadius) - (Math.Sin(a: startLatitudeRad) * Math.Sin(a: leftLatitudeRad)));
 
-        double rightLatitudeRad = Math.Asin(d: Math.Sin(a: startLatitudeRad) * Math.Cos(d: distance / earthRadius) +
-                                               Math.Cos(d: startLatitudeRad) * Math.Sin(a: distance / earthRadius) * Math.Cos(d: rightBearingRad));
+        double rightLatitudeRad = Math.Asin(d: (Math.Sin(a: startLatitudeRad) * Math.Cos(d: distance / earthRadius)) +
+                                               (Math.Cos(d: startLatitudeRad) * Math.Sin(a: distance / earthRadius) * Math.Cos(d: rightBearingRad)));
         double rightLongitudeRad = startLongitudeRad +
                                    Math.Atan2(y: Math.Sin(a: rightBearingRad) * Math.Sin(a: distance / earthRadius) * Math.Cos(d: startLatitudeRad),
-                                              x: Math.Cos(d: distance / earthRadius) - Math.Sin(a: startLatitudeRad) * Math.Sin(a: rightLatitudeRad));
+                                              x: Math.Cos(d: distance / earthRadius) - (Math.Sin(a: startLatitudeRad) * Math.Sin(a: rightLatitudeRad)));
 
         // Convert the FOV coordinates from radians back to degrees
         double leftLatitude = ToDegrees(radians: leftLatitudeRad);
         double leftLongitude = ToDegrees(radians: leftLongitudeRad);
-        List<(double, double)> leftCoords = new()
-        {
+        List<(double, double)> leftCoords =
+        [
             (leftLatitude, leftLongitude)
-        };
+        ];
 
         double rightLatitude = ToDegrees(radians: rightLatitudeRad);
         double rightLongitude = ToDegrees(radians: rightLongitudeRad);
-        List<(double, double)> rightCoords = new()
-        {
+        List<(double, double)> rightCoords =
+        [
             (rightLatitude, rightLongitude)
-        };
+        ];
 
         return (leftCoords, rightCoords);
     }

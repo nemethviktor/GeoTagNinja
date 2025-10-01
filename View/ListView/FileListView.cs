@@ -1,4 +1,8 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Model;
+using NLog;
+using Svg;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -7,10 +11,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using GeoTagNinja.Helpers;
-using GeoTagNinja.Model;
-using NLog;
-using Svg;
 using HelperControlAndMessageBoxCustomMessageBoxManager =
     GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 using Image = System.Drawing.Image;
@@ -119,7 +119,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
 
         [StructLayout(layoutKind: LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct Shfileinfow
+        public readonly struct Shfileinfow
         {
             public readonly IntPtr hIcon;
             public readonly int iIcon;
@@ -182,7 +182,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         public const string XML_SUBJECTS = "XMLSubjects";
     }
 
-#region Internal Variables
+    #region Internal Variables
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -194,12 +194,12 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <summary>
     ///     The list of columns to show (without prefix)
     /// </summary>
-    internal List<string> _cfg_Col_Names = new();
+    internal List<string> _cfg_Col_Names = [];
 
     /// <summary>
     ///     The default order of the columns to show (without prefix)
     /// </summary>
-    internal static Dictionary<string, int> _cfg_Col_Order_Default = new();
+    internal static Dictionary<string, int> _cfg_Col_Order_Default = [];
 
     /// <summary>
     ///     The used sorter
@@ -210,11 +210,6 @@ public partial class FileListView : System.Windows.Forms.ListView
     ///     Tracks if the initializer ReadAndApplySetting was called.
     /// </summary>
     private bool _isInitialized;
-
-    /// <summary>
-    ///     Counter for files in the list - incremented in addListItem method.
-    /// </summary>
-    private int _fileCount = -1;
 
     /// <summary>
     ///     Pointer to the SHFILEINFO Structure that is initialized to be
@@ -368,26 +363,26 @@ public partial class FileListView : System.Windows.Forms.ListView
             }
         };
 
-#endregion
+    #endregion
 
 
-#region External Visible Properties
+    #region External Visible Properties
 
     /// <summary>
     ///     The list of directory elements to display.
     /// </summary>
-    private DirectoryElementCollection DirectoryElements { get; set; } = new();
+    private DirectoryElementCollection DirectoryElements { get; set; } = [];
 
     /// <summary>
     ///     The number of elements of type file in the view as
     ///     loaded.
     /// </summary>
-    public int FileCount => _fileCount;
+    public int FileCount { get; private set; } = -1;
 
-#endregion
+    #endregion
 
 
-#region Internal Update Logic
+    #region Internal Update Logic
 
     /// <summary>
     ///     Retrieves the value for the given column from the given
@@ -430,19 +425,16 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
 
         // Handle special cases.
-        switch (columnHeader.Name.Substring(startIndex: 4))
+        return columnHeader.Name.Substring(startIndex: 4) switch
         {
-            case FileListColumns.COORDINATES:
-                return ModelToColumnValueTransformations.M2C_CoordinatesInclDest(
-                    column: FileListColumns.COORDINATES, item: directoryElement,
-                    nfVal: nfVal);
-            case FileListColumns.DEST_COORDINATES:
-                return ModelToColumnValueTransformations.M2C_CoordinatesInclDest(
-                    column: FileListColumns.DEST_COORDINATES, item: directoryElement,
-                    nfVal: nfVal);
-            default:
-                return nfVal;
-        }
+            FileListColumns.COORDINATES => ModelToColumnValueTransformations.M2C_CoordinatesInclDest(
+                                column: FileListColumns.COORDINATES, item: directoryElement,
+                                nfVal: nfVal),
+            FileListColumns.DEST_COORDINATES => ModelToColumnValueTransformations.M2C_CoordinatesInclDest(
+                                column: FileListColumns.DEST_COORDINATES, item: directoryElement,
+                                nfVal: nfVal),
+            _ => nfVal,
+        };
     }
 
 
@@ -452,28 +444,22 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <param name="directoryElement">New DE to add</param>
     private void AddListItem(DirectoryElement directoryElement)
     {
-    #region icon handlers
+        #region icon handlers
 
         //https://stackoverflow.com/a/37806517/3968494
         // Get the items from the file system, and add each of them to the ListView,
         // complete with their corresponding name and icon indices.
 
-        IntPtr himl;
-
-        if (directoryElement.Type != DirectoryElement.ElementType.MyComputer)
-        {
-            himl = NativeMethods.SHGetFileInfo(pszPath: directoryElement.FileNameWithPath,
+        IntPtr himl = directoryElement.Type != DirectoryElement.ElementType.MyComputer
+            ? NativeMethods.SHGetFileInfo(pszPath: directoryElement.FileNameWithPath,
                 dwFileAttributes: 0,
                 psfi: ref shfi,
                 cbSizeFileInfo: (uint)Marshal.SizeOf(
                     structure: shfi),
                 uFlags: NativeMethods.SHGFI_DISPLAYNAME |
                         NativeMethods.SHGFI_SYSICONINDEX |
-                        NativeMethods.SHGFI_SMALLICON);
-        }
-        else
-        {
-            himl = NativeMethods.SHGetFileInfo(
+                        NativeMethods.SHGFI_SMALLICON)
+            : NativeMethods.SHGetFileInfo(
                 pszPath: directoryElement.ItemNameWithoutPath,
                 dwFileAttributes: 0,
                 psfi: ref shfi,
@@ -481,17 +467,16 @@ public partial class FileListView : System.Windows.Forms.ListView
                 uFlags: NativeMethods.SHGFI_DISPLAYNAME |
                         NativeMethods.SHGFI_SYSICONINDEX |
                         NativeMethods.SHGFI_SMALLICON);
-        }
 
         //Debug.Assert(himl == hSysImgList); // should be the same imagelist as the one we set
 
-    #endregion
+        #endregion
 
         ListViewItem lvi = new();
 
         directoryElement.DisplayName = shfi.szDisplayName;
 
-    #region Set LVI Text depending on whether displayname is usable for FS operations
+        #region Set LVI Text depending on whether displayname is usable for FS operations
 
         // dev comment --> https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow
         // SHGFI_DISPLAYNAME (0x000000200)
@@ -506,15 +491,10 @@ public partial class FileListView : System.Windows.Forms.ListView
         // With that in mind if we're missing the extension then we'll force it back on.
         if (!string.IsNullOrEmpty(value: directoryElement.Extension))
         {
-            if (shfi.szDisplayName.ToLower()
-                    .Contains(value: directoryElement.Extension.ToLower()))
-            {
-                lvi.Text = shfi.szDisplayName;
-            }
-            else
-            {
-                lvi.Text = $"{shfi.szDisplayName}.{directoryElement.Extension}";
-            }
+            lvi.Text = shfi.szDisplayName.ToLower()
+                    .Contains(value: directoryElement.Extension.ToLower())
+                ? shfi.szDisplayName
+                : $"{shfi.szDisplayName}.{directoryElement.Extension}";
         }
         else
         {
@@ -525,25 +505,20 @@ public partial class FileListView : System.Windows.Forms.ListView
             // same for non-English places. E.g. "Documents and Settings" in HU
             // would be displayed as "Felhasználók" but that folder is still
             // actually called Documents and Settings, but the label is "fake".
-            if (directoryElement.Type == DirectoryElement.ElementType.SubDirectory ||
-                directoryElement.Type == DirectoryElement.ElementType.MyComputer ||
-                directoryElement.Type == DirectoryElement.ElementType.ParentDirectory)
-            {
-                lvi.Text = directoryElement.ItemNameWithoutPath;
-            }
-            else
-            {
-                lvi.Text = shfi.szDisplayName;
-            }
+            lvi.Text = directoryElement.Type is DirectoryElement.ElementType.SubDirectory or
+                DirectoryElement.ElementType.MyComputer or
+                DirectoryElement.ElementType.ParentDirectory
+                ? directoryElement.ItemNameWithoutPath
+                : shfi.szDisplayName;
         }
 
-    #endregion
+        #endregion
 
         // Set the icon to use out of the explorer icons
         lvi.ImageIndex = shfi.iIcon;
 
         // Set the values for the columns
-        List<string> subItemList = new();
+        List<string> subItemList = [];
         if (directoryElement.Type == DirectoryElement.ElementType.File)
         {
             foreach (ColumnHeader columnHeader in Columns)
@@ -599,10 +574,10 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
     }
 
-#endregion
+    #endregion
 
 
-#region Column Size and Order
+    #region Column Size and Order
 
     /// <summary>
     ///     Reads the widths of individual CLHs from SQL
@@ -615,8 +590,8 @@ public partial class FileListView : System.Windows.Forms.ListView
         BeginUpdate(); // stop drawing
 
         // While reading col widths, gather order data
-        List<int> colOrderIndex = new();
-        List<string> colOrderHeadername = new();
+        List<int> colOrderIndex = [];
+        List<string> colOrderHeadername = [];
 
         string settingIdToSend;
         string colWidth = null;
@@ -733,7 +708,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     private void ColOrderAndWidth_Write()
     {
-        List<AppSettingContainer> settingsToWrite = new();
+        List<AppSettingContainer> settingsToWrite = [];
 
         string settingIdToSend;
         foreach (ColumnHeader columnHeader in Columns)
@@ -775,10 +750,10 @@ public partial class FileListView : System.Windows.Forms.ListView
         frm_ColSel.ShowDialog(owner: this);
     }
 
-#endregion
+    #endregion
 
 
-#region Further Settings Stuff
+    #region Further Settings Stuff
 
     /// <summary>
     ///     Setup the columns as read from the data table.
@@ -923,10 +898,10 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
     }
 
-#endregion
+    #endregion
 
 
-#region Modes
+    #region Modes
 
     /// <summary>
     ///     Suspends sorting the list view
@@ -944,10 +919,10 @@ public partial class FileListView : System.Windows.Forms.ListView
         ListViewItemSorter = LvwColumnSorter;
     }
 
-#endregion
+    #endregion
 
 
-#region Updating
+    #region Updating
 
     /// <summary>
     ///     Reloads the listview's items with data from the DirectoryElementCollection
@@ -962,24 +937,21 @@ public partial class FileListView : System.Windows.Forms.ListView
         FrmPleaseWaitBox _frmPleaseWaitBoxInstance =
             (FrmPleaseWaitBox)Application.OpenForms[name: "FrmPleaseWaitBox"];
 
-        if (_frmPleaseWaitBoxInstance != null)
-        {
-            _frmPleaseWaitBoxInstance.UpdateLabels(stage: FrmPleaseWaitBox.ActionStages.POPULATING_LISTVIEW);
-        }
+        _frmPleaseWaitBoxInstance?.UpdateLabels(stage: FrmPleaseWaitBox.ActionStages.POPULATING_LISTVIEW);
 
         // Temp. disable sorting of the list view
         Log.Trace(message: "Disable ListViewItemSorter");
         SuspendColumnSorting();
 
         DirectoryElements = directoryElements;
-        _fileCount = 0;
+        FileCount = 0;
         bool dotDotAdded = false;
 
         // don't parse the subfolders if we're not in Flat mode, it can be very time-consuming.
         List<string> subFolders = FrmMainApp.FlatMode
             ? HelperFileSystemOperators.GetDirectories(path: FrmMainApp.FolderName, searchPattern: "*",
                 searchOption: SearchOption.AllDirectories)
-            : new List<string>();
+            : [];
 
         int count = 1;
         int directoryElementCollectionLength = DirectoryElements.Count;
@@ -1069,7 +1041,7 @@ public partial class FileListView : System.Windows.Forms.ListView
                     aFileAndWeAreNotInFlatModeButFileIsWithinMainFolder ||
                     aFileAndWeAreInFlatModeAndItsInARelevantSubfolder)
                 {
-                    _fileCount++;
+                    FileCount++;
                 }
             }
         }
@@ -1083,9 +1055,11 @@ public partial class FileListView : System.Windows.Forms.ListView
         // Add images when required
         if (View == System.Windows.Forms.View.LargeIcon)
         {
-            ImageList imgList = new();
-            imgList.ColorDepth = ColorDepth.Depth32Bit;
-            imgList.ImageSize = new Size(width: (int)(ThumbnailSize * 0.9), height: (int)(ThumbnailSize * 0.9));
+            ImageList imgList = new()
+            {
+                ColorDepth = ColorDepth.Depth32Bit,
+                ImageSize = new Size(width: (int)(ThumbnailSize * 0.9), height: (int)(ThumbnailSize * 0.9))
+            };
 
             // mass-generate thumbs
 
@@ -1182,10 +1156,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
 
         ListViewItem itemToModify = FindItemByDirectoryElement(directoryElement: directoryElement);
-        if (itemToModify != null)
-        {
-            itemToModify.ForeColor = color;
-        }
+        itemToModify?.ForeColor = color;
     }
 
     /// <summary>
@@ -1199,10 +1170,10 @@ public partial class FileListView : System.Windows.Forms.ListView
         return Items.Cast<ListViewItem>().FirstOrDefault(predicate: item => item.Tag == directoryElement);
     }
 
-#endregion
+    #endregion
 
 
-#region Handlers
+    #region Handlers
 
     /// <summary>
     ///     Handles the sorting and reordering.
@@ -1252,5 +1223,5 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
     }
 
-#endregion
+    #endregion
 }

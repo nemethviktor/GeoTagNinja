@@ -33,7 +33,7 @@ internal partial class HelperNonStatic
             (FrmPleaseWaitBox)Application.OpenForms[name: "FrmPleaseWaitBox"];
         Debug.Assert(condition: _frmPleaseWaitBoxInstance != null,
             message: $"{nameof(_frmPleaseWaitBoxInstance)} != null");
-        IEnumerable<string> found = new List<string>();
+        IEnumerable<string> found = [];
         try
         {
             found = Directory.GetFiles(path: folder)
@@ -67,7 +67,7 @@ internal partial class HelperNonStatic
 
         if (recursive)
         {
-            IEnumerable<string> directories = new List<string>();
+            IEnumerable<string> directories = [];
             try
             {
                 directories = Directory.GetDirectories(path: folder);

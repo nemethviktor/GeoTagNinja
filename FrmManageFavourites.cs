@@ -1,10 +1,10 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Model;
+using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using GeoTagNinja.Helpers;
-using GeoTagNinja.Model;
-using Microsoft.VisualBasic;
 using HelperControlAndMessageBoxCustomMessageBoxManager =
     GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 
@@ -32,12 +32,12 @@ public partial class FrmManageFavourites : Form
         foreach (Control cItem in c)
         {
             if (
-                cItem is Button ||
-                cItem is CheckBox ||
-                cItem is GroupBox ||
-                cItem is Label ||
-                cItem is RadioButton ||
-                cItem is TabPage
+                cItem is Button or
+                CheckBox or
+                GroupBox or
+                Label or
+                RadioButton or
+                TabPage
             )
             {
                 // gets logged inside.
@@ -274,10 +274,10 @@ public partial class FrmManageFavourites : Form
         }
     }
 
-#region Variables
+    #region Variables
 
     private static bool _frmNowLoadingFavouriteData;
-    private readonly Dictionary<string, string> _originalFavouritesPresented = new();
+    private readonly Dictionary<string, string> _originalFavouritesPresented = [];
 
-#endregion
+    #endregion
 }

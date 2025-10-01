@@ -1,13 +1,13 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers;
+using Microsoft.WindowsAPICodePack.Taskbar;
+using NLog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GeoTagNinja.Helpers;
-using Microsoft.WindowsAPICodePack.Taskbar;
-using NLog;
 using static System.Environment;
 using HelperControlAndMessageBoxCustomMessageBoxManager =
     GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
@@ -27,10 +27,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         get => _ExifTool;
         set
         {
-            if (_ExifTool != null)
-            {
-                _ExifTool.Dispose();
-            }
+            _ExifTool?.Dispose();
 
             _ExifTool = value;
         }
@@ -86,7 +83,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
     /// <returns>A HashSet of UIDs of dirty elements. Empty if there are none.</returns>
     public HashSet<string> FindDirtyElements()
     {
-        HashSet<string> uids = new();
+        HashSet<string> uids = [];
         foreach (DirectoryElement directoryElement in this)
         {
             if (directoryElement.HasDirtyAttributes())
@@ -201,11 +198,11 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 $"Cannot scan a folder (currently '{folderOrCollectionFileName}') when the EXIF Tool was not set for the DirectoryElementCollection.");
         }
 
-    #region Normal Mode Non-Files
+        #region Normal Mode Non-Files
 
         if (!collectionModeEnabled)
         {
-        #region MyComputer
+            #region MyComputer
 
             // ******************************
             // Special Case is "MyComputer"...
@@ -227,9 +224,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 return;
             }
 
-        #endregion
+            #endregion
 
-        #region DotDot
+            #region DotDot
 
             // ******************************
             // first, add a parent folder. "dot dot"
@@ -256,15 +253,15 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     buttons: MessageBoxButtons.OK);
             }
 
-        #endregion
+            #endregion
 
-        #region Folders
+            #region Folders
 
             // ******************************
             // list folders, ReparsePoint means these are links.
             updateProgressHandler(obj: "Scanning folder: processing directories ...");
             Log.Trace(message: "Listing Folders");
-            List<string> dirs = new();
+            List<string> dirs = [];
             try
             {
                 DirectoryInfo di = new(path: folderOrCollectionFileName);
@@ -304,11 +301,11 @@ public class DirectoryElementCollection : List<DirectoryElement>
             Log.Trace(message: "Listing Folders - OK");
         }
 
-    #endregion
+        #endregion
 
-    #endregion
+        #endregion
 
-    #region Any Mode Files
+        #region Any Mode Files
 
         Log.Trace(message: "Loading allowedExtensions");
         string[] allowedImageExtensions = HelperGenericAncillaryListsArrays.AllCompatibleExtensionsExt();
@@ -325,12 +322,12 @@ public class DirectoryElementCollection : List<DirectoryElement>
         IEnumerable<FileInfo> filesInDir = null;
         int filesThatExistWithinCollection = 0;
 
-    #region Collection Mode
+        #region Collection Mode
 
         // if we're in collection-mode...
         if (collectionModeEnabled)
         {
-            List<FileInfo> filesInCollection = new();
+            List<FileInfo> filesInCollection = [];
             foreach (string collectItemWithPath in File.ReadLines(path: Program.CollectionFileLocation))
             {
                 if (File.Exists(path: collectItemWithPath))
@@ -347,9 +344,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
             }
         }
 
-    #endregion
+        #endregion
 
-    #region Normal Mode
+        #region Normal Mode
 
         // if we're in normal mode or failed to gather any valid files...
         if (!collectionModeEnabled ||
@@ -358,10 +355,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
             _frmPleaseWaitBoxInstance =
                 (FrmPleaseWaitBox)Application.OpenForms[name: "FrmPleaseWaitBox"];
 
-            if (_frmPleaseWaitBoxInstance != null)
-            {
-                _frmPleaseWaitBoxInstance.UpdateLabels(stage: FrmPleaseWaitBox.ActionStages.SCANNING);
-            }
+            _frmPleaseWaitBoxInstance?.UpdateLabels(stage: FrmPleaseWaitBox.ActionStages.SCANNING);
 
             try
             {
@@ -494,11 +488,8 @@ public class DirectoryElementCollection : List<DirectoryElement>
         int fileCount = 0;
         _ExifTool ??= new ExifTool();
 
-        if (_frmPleaseWaitBoxInstance != null)
-        {
-            _frmPleaseWaitBoxInstance.UpdateLabels(stage: FrmPleaseWaitBox.ActionStages
+        _frmPleaseWaitBoxInstance?.UpdateLabels(stage: FrmPleaseWaitBox.ActionStages
                                                                           .PARSING);
-        }
 
         await Task.Run(action: () =>
         {
@@ -515,9 +506,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
         Log.Info(message: "Files: Extracting File Data - OK");
 
-    #endregion
+        #endregion
 
-    #endregion
+        #endregion
     }
 
     /// <summary>
@@ -691,8 +682,8 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 !properties.ContainsKey(key: "EXIF:GPSLongitudeRef"))
             {
                 tmpLatLongValStr = (from x in propertiesRead
-                    where x.Key == "XMP:GPSLongitude"
-                    select x.Value).FirstOrDefault();
+                                    where x.Key == "XMP:GPSLongitude"
+                                    select x.Value).FirstOrDefault();
                 tmpLonLongValDbl = HelperExifDataPointInteractions.AdjustLatLongNegative(point: tmpLatLongValStr);
                 tmpLatLongRefValStr = tmpLonLongValDbl < 0.0
                     ? "West"
@@ -705,8 +696,8 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 !properties.ContainsKey(key: "EXIF:GPSLatitudeRef"))
             {
                 tmpLatLongValStr = (from x in propertiesRead
-                    where x.Key == "XMP:GPSLatitude"
-                    select x.Value).FirstOrDefault();
+                                    where x.Key == "XMP:GPSLatitude"
+                                    select x.Value).FirstOrDefault();
                 tmpLonLongValDbl = HelperExifDataPointInteractions.AdjustLatLongNegative(point: tmpLatLongValStr);
                 tmpLatLongRefValStr = tmpLonLongValDbl < 0.0
                     ? "South"

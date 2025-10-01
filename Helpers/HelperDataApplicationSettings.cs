@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using GeoTagNinja.Model;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Linq;
-using GeoTagNinja.Model;
 
 // ReSharper disable InconsistentNaming
 
@@ -10,7 +10,7 @@ namespace GeoTagNinja.Helpers;
 
 internal static class HelperDataApplicationSettings
 {
-#region Read
+    #region Read
 
     /// <summary>
     ///     Checks the SQLite database for checkbox-settings and returns true/false accordingly
@@ -110,18 +110,15 @@ internal static class HelperDataApplicationSettings
             select dataRow;
 
         DataRow dataRows = drDataTableData.FirstOrDefault();
-        if (dataRows != null &&
-            !string.IsNullOrWhiteSpace(value: dataRows[columnName: "settingValue"].ToString()))
-        {
-            return dataRows[columnName: "settingValue"].ToString();
-        }
-
-        return returnBlankIfNull ? "" : null;
+        return dataRows != null &&
+            !string.IsNullOrWhiteSpace(value: dataRows[columnName: "settingValue"].ToString())
+            ? dataRows[columnName: "settingValue"].ToString()
+            : returnBlankIfNull ? "" : null;
     }
 
-#endregion
+    #endregion
 
-#region Write
+    #region Write
 
     /// <summary>
     ///     Similar to the one above (which reads the data) - this one writes it.
@@ -129,7 +126,7 @@ internal static class HelperDataApplicationSettings
     /// <param name="settingsToWrite">List of settings to be written/overwritten</param>
     internal static void DataWriteSQLiteSettings(List<AppSettingContainer> settingsToWrite)
     {
-        List<KeyValuePair<string, string>> settingsToDelete = new();
+        List<KeyValuePair<string, string>> settingsToDelete = [];
         using SQLiteConnection sqliteDB =
             new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
         sqliteDB.Open();
@@ -167,9 +164,9 @@ internal static class HelperDataApplicationSettings
         HelperGenericAppStartup.AppStartupReadSQLiteTables();
     }
 
-#endregion
+    #endregion
 
-#region Transfer
+    #region Transfer
 
     /// <summary>
     ///     Transfers data from the "write queue" to the actual table. This is executed when the user presses the OK button in
@@ -179,19 +176,20 @@ internal static class HelperDataApplicationSettings
     {
         List<AppSettingContainer> preQueueAppSettingContainer =
             (from DataRow dataRow in HelperVariables.DtHelperDataApplicationSettingsPreQueue.Rows
-                select new AppSettingContainer
-                {
-                    TableName = "settings", SettingTabPage = dataRow[columnName: "settingTabPage"].ToString(),
-                    SettingId = dataRow[columnName: "settingId"].ToString(),
-                    SettingValue = dataRow[columnName: "settingValue"].ToString()
-                }).ToList();
+             select new AppSettingContainer
+             {
+                 TableName = "settings",
+                 SettingTabPage = dataRow[columnName: "settingTabPage"].ToString(),
+                 SettingId = dataRow[columnName: "settingId"].ToString(),
+                 SettingValue = dataRow[columnName: "settingValue"].ToString()
+             }).ToList();
 
         DataWriteSQLiteSettings(settingsToWrite: preQueueAppSettingContainer);
     }
 
-#endregion
+    #endregion
 
-#region Delete & Cleanup
+    #region Delete & Cleanup
 
     /// <summary>
     ///     This is largely me being a derp and doing a manual cleanup. My original SQL script was a bit buggy and so we have a
@@ -235,5 +233,5 @@ internal static class HelperDataApplicationSettings
         sqlToRun.ExecuteNonQuery();
     }
 
-#endregion
+    #endregion
 }

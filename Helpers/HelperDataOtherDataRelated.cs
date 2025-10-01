@@ -60,8 +60,8 @@ internal static class HelperDataOtherDataRelated
         string keyEqualsWhat)
     {
         EnumerableRowCollection<DataRow> res = from row in dataTableIn.AsEnumerable()
-            where row.Field<string>(columnName: dataColumnFilter) == keyEqualsWhat
-            select row;
+                                               where row.Field<string>(columnName: dataColumnFilter) == keyEqualsWhat
+                                               select row;
 
         return res.ToList()[index: 0][columnName: dataColumnReturn].ToString();
     }

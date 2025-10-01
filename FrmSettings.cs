@@ -1,4 +1,7 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Model;
+using GeoTagNinja.View.DialogAndMessageBoxes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,9 +12,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using GeoTagNinja.Helpers;
-using GeoTagNinja.Model;
-using GeoTagNinja.View.DialogAndMessageBoxes;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.View.ListView.FileListView;
 using static System.String;
@@ -29,25 +29,25 @@ internal enum SettingsImportExportOptions
 
 public partial class FrmSettings : Form
 {
-    private static List<Control> _lstTpgApplicationControls = new(); // do not rename
-    private static List<Control> _lstTpgGeoNamesControls = new(); // do not rename
+    private static List<Control> _lstTpgApplicationControls = []; // do not rename
+    private static List<Control> _lstTpgGeoNamesControls = []; // do not rename
     private static bool _importHasBeenProcessed;
     private bool _ignoreRestartWarnings;
     private string _languageSavedInSQL;
     private bool _nowLoadingSettingsData;
 
-    private readonly List<string> _rbtGeoNamesLanguage = new()
-    {
+    private readonly List<string> _rbtGeoNamesLanguage =
+    [
         "rbt_UseGeoNamesLocalLanguage",
         "rbt_TryUseGeoNamesLanguage"
-    };
+    ];
 
-    private readonly List<string> _rbtMapColourOptions = new()
-    {
+    private readonly List<string> _rbtMapColourOptions =
+    [
         "rbt_MapColourModeNormal",
         "rbt_MapColourModeDarkInverse",
         "rbt_MapColourModeDarkPale"
-    };
+    ];
 
     /// <summary>
     ///     This Form provides an interface for the user to edit various app and file-specific settings.
@@ -95,19 +95,11 @@ public partial class FrmSettings : Form
                     cItem == cbx_TryUseGeoNamesLanguage)
                 {
                     ComboBox cbx = (ComboBox)cItem;
-                    List<string> languageList;
-
-                    if (cItem == cbx_Language)
-                    {
-                        languageList = HelperLocalisationLanguageManager.GetTranslatedLanguages();
-                    }
-                    else
-                    {
-                        languageList = FrmMainApp.DTLanguageMapping.AsEnumerable()
+                    List<string> languageList = cItem == cbx_Language
+                        ? HelperLocalisationLanguageManager.GetTranslatedLanguages()
+                        : FrmMainApp.DTLanguageMapping.AsEnumerable()
                                                  .Select(selector: r => r.Field<string>(columnName: "languageCode"))
                                                  .ToList();
-                    }
-
                     DataTable dt = new();
                     string native;
                     string english;
@@ -329,9 +321,7 @@ public partial class FrmSettings : Form
                                     dataTable: HelperVariables.DtHelperDataApplicationSettings,
                                     settingTabPage: parentNameToUse,
                                     settingId: rbt.Name
-                                )
-                                ? true
-                                : false;
+                                );
                         }
                         catch (InvalidOperationException) // nonesuch
                         {
@@ -390,7 +380,7 @@ public partial class FrmSettings : Form
         dgv_CustomRules.AutoGenerateColumns = false;
 
         // Bind data
-        BindingSource source = new();
+        BindingSource source = [];
         source.DataSource = HelperVariables.DtCustomRules;
         dgv_CustomRules.DataSource = source;
 
@@ -534,7 +524,7 @@ public partial class FrmSettings : Form
            .DataReadSQLiteCustomCityAllocationLogic();
         dgv_CustomCityLogic.AutoGenerateColumns = false;
 
-        BindingSource source = new();
+        BindingSource source = [];
         source.DataSource = HelperVariables.DtCustomCityLogic;
         dgv_CustomCityLogic.DataSource = source;
 
@@ -583,7 +573,7 @@ public partial class FrmSettings : Form
     // ReSharper disable once InconsistentNaming
     private static Dictionary<string, string> refreshClh_CountryCodeOptions(bool ckb_IncludePredeterminedCountries)
     {
-        Dictionary<string, string> clh_CountryCodeOptions = new();
+        Dictionary<string, string> clh_CountryCodeOptions = [];
         // e.g. "GBR//United Kingdom of...."
         foreach (DataRow dataRow in HelperVariables.DtIsoCountryCodeMapping.Rows)
         {
@@ -612,7 +602,7 @@ public partial class FrmSettings : Form
         return clh_CountryCodeOptions;
     }
 
-#region DGVs
+    #region DGVs
 
     /// <summary>
     ///     Handles the RowValidating event of the dgv_CustomRules DataGridView.
@@ -674,9 +664,9 @@ public partial class FrmSettings : Form
         }
     }
 
-#endregion
+    #endregion
 
-#region Events
+    #region Events
 
     /// <summary>
     ///     Handles the event where user clicks Cancel. Clears pre-Q and hides form.
@@ -904,16 +894,9 @@ public partial class FrmSettings : Form
                                                      .Last()
                                                      .ToLower();
 
-                            if (tmpCtrlGroup.Contains(value: "raw") ||
+                            box.Checked = tmpCtrlGroup.Contains(value: "raw") ||
                                 tmpCtrlGroup.Contains(value: "tiff") ||
-                                tmpCtrlGroup.Contains(value: "dng"))
-                            {
-                                box.Checked = true;
-                            }
-                            else
-                            {
-                                box.Checked = false;
-                            }
+                                tmpCtrlGroup.Contains(value: "dng");
                         }
                         else // shouldn't be any at this point
                         {
@@ -923,8 +906,8 @@ public partial class FrmSettings : Form
                         tmpCtrlVal = box.Checked.ToString()
                                         .ToLower();
 
-                        List<AppSettingContainer> settingsToWrite = new()
-                        {
+                        List<AppSettingContainer> settingsToWrite =
+                        [
                             new AppSettingContainer
                             {
                                 TableName = "settings",
@@ -932,7 +915,7 @@ public partial class FrmSettings : Form
                                 SettingId = "onlineVersionCheckDate",
                                 SettingValue = tmpCtrlVal
                             }
-                        };
+                        ];
                         HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
                     }
                 }
@@ -1070,16 +1053,11 @@ public partial class FrmSettings : Form
                 lbi = lbx_fileExtensions.SelectedItem;
             }
 
-            if (lbi != null)
-            {
-                cItemName = $"{lbi.ToString()
+            cItemName = lbi != null
+                ? $"{lbi.ToString()
                                   .Split('\t')
-                                  .FirstOrDefault()}_{ckb.Name}";
-            }
-            else
-            {
-                cItemName = ckb.Name;
-            }
+                                  .FirstOrDefault()}_{ckb.Name}"
+                : ckb.Name;
 
             if (cItemName == "ckb_ReplaceBlankToponyms")
             {
@@ -1291,9 +1269,9 @@ public partial class FrmSettings : Form
             ));
     }
 
-#endregion
+    #endregion
 
-#region Import-export
+    #region Import-export
 
     /// <summary>
     ///     Handles the Click event of the ExportSettings button.
@@ -1333,33 +1311,31 @@ public partial class FrmSettings : Form
         if (!ItemsToExport.Contains(item: "no") &&
             ItemsToExport.Contains(item: "yes"))
         {
-            using (SaveFileDialog exportFileDialog = new())
-            {
-                exportFileDialog.Filter = "SQLite Databasee|*.db";
-                exportFileDialog.Title = "Save a SQLite File";
-                exportFileDialog.FileName = $"GeoTagNinja_Settings_Export_{DateTime.Now:yyyyMMdd_HHmm}";
-                exportFileDialog.ShowDialog();
+            using SaveFileDialog exportFileDialog = new();
+            exportFileDialog.Filter = "SQLite Databasee|*.db";
+            exportFileDialog.Title = "Save a SQLite File";
+            exportFileDialog.FileName = $"GeoTagNinja_Settings_Export_{DateTime.Now:yyyyMMdd_HHmm}";
+            exportFileDialog.ShowDialog();
 
-                // If the file name is not an empty string open it for saving.
-                if (exportFileDialog.FileName != "")
+            // If the file name is not an empty string open it for saving.
+            if (exportFileDialog.FileName != "")
+            {
+                try
                 {
-                    try
-                    {
-                        File.Copy(
-                            sourceFileName: HelperVariables.SettingsDatabaseFilePath,
-                            destFileName: Path.Combine(exportFileDialog.FileName),
-                            overwrite: true);
-                        HelperDataSettingsExport.DataExportSettings(
-                            settingsToExportList: ItemsToExport,
-                            exportFilePath: Path.Combine(exportFileDialog.FileName));
-                    }
-                    catch (Exception ex)
-                    {
-                        HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                            controlName: "mbx_FrmSettings_ErrorExportFailed",
-                            captionType: MessageBoxCaption.Error,
-                            buttons: MessageBoxButtons.OK);
-                    }
+                    File.Copy(
+                        sourceFileName: HelperVariables.SettingsDatabaseFilePath,
+                        destFileName: Path.Combine(exportFileDialog.FileName),
+                        overwrite: true);
+                    HelperDataSettingsExport.DataExportSettings(
+                        settingsToExportList: ItemsToExport,
+                        exportFilePath: Path.Combine(exportFileDialog.FileName));
+                }
+                catch (Exception ex)
+                {
+                    HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
+                        controlName: "mbx_FrmSettings_ErrorExportFailed",
+                        captionType: MessageBoxCaption.Error,
+                        buttons: MessageBoxButtons.OK);
                 }
             }
         }
@@ -1420,7 +1396,7 @@ public partial class FrmSettings : Form
 
         return;
 
-        string GetDatabaseFileToImport()
+        static string GetDatabaseFileToImport()
         {
             OpenFileDialog openFileDialog = new()
             {
@@ -1443,7 +1419,7 @@ public partial class FrmSettings : Form
     /// </remarks>
     private void PromptUserToRestartApp()
     {
-    #if !DEBUG
+#if !DEBUG
         string btnRestartNowName = "btn_RestartNow";
         string btnRestartLaterName = "btn_RestartLater";
         Dictionary<string, string> buttonsDictionary = new()
@@ -1493,7 +1469,7 @@ public partial class FrmSettings : Form
             frmMainAppInstance.PerformAppClosingProcedure(extractNewExifTool: false);
             Relaunch();
         }
-    #endif
+#endif
     }
 
     /// <summary>
@@ -1554,7 +1530,7 @@ public partial class FrmSettings : Form
     /// <returns>A dictionary of string pairs representing the checkboxes in the settings import/export diaLog.</returns>
     private static Dictionary<string, string> GetCheckboxDictionary()
     {
-        Dictionary<string, string> checkboxDictionary = new();
+        Dictionary<string, string> checkboxDictionary = [];
         foreach (string name in Enum.GetNames(
                      enumType: typeof(SettingsImportExportOptions)))
         {
@@ -1567,5 +1543,5 @@ public partial class FrmSettings : Form
         return checkboxDictionary;
     }
 
-#endregion
+    #endregion
 }

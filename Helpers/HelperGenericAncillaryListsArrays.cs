@@ -11,10 +11,10 @@ namespace GeoTagNinja.Helpers;
 
 internal static class HelperGenericAncillaryListsArrays
 {
-#region Languages
+    #region Languages
 
     // this stores the kvp for language tags and values (ie the label and whatnots + their human-readable counterparts).
-    internal static Dictionary<string, string> LanguageStringsDict = new();
+    internal static Dictionary<string, string> LanguageStringsDict = [];
 
 
     internal static Dictionary<string, string> GetISO_639_1_Languages()
@@ -369,16 +369,16 @@ internal static class HelperGenericAncillaryListsArrays
     /// <returns></returns>
     internal static List<CultureInfo> CulturesWithCurrentCultureToUse()
     {
-        List<CultureInfo> result = new()
-        {
+        List<CultureInfo> result =
+        [
             CultureInfo.GetCultureInfo(name: "en-AU")
-        };
+        ];
         return result;
     }
 
-#endregion
+    #endregion
 
-#region Settings Import/Export
+    #region Settings Import/Export
 
     /// <summary>
     ///     Retrieves the table name associated with a given setting name for import/export operations.
@@ -403,9 +403,9 @@ internal static class HelperGenericAncillaryListsArrays
             : null;
     }
 
-#endregion
+    #endregion
 
-#region ExifTool Initiators
+    #region ExifTool Initiators
 
     [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     internal enum ExifToolInititators
@@ -419,9 +419,9 @@ internal static class HelperGenericAncillaryListsArrays
         Unspecified
     }
 
-#endregion
+    #endregion
 
-#region Time shift & zones
+    #region Time shift & zones
 
     internal enum TimeShiftTypes
     {
@@ -1006,7 +1006,7 @@ internal static class HelperGenericAncillaryListsArrays
         // wikipedia has some odd dashes.
         string[] lines = tzData.Replace(oldValue: "\u2212", newValue: "-")
                                .Split('\n');
-        List<string[]> data = new();
+        List<string[]> data = [];
         foreach (string line in lines)
         {
             string[] columns = line.Split('\t');
@@ -1020,12 +1020,12 @@ internal static class HelperGenericAncillaryListsArrays
                                  .Where(predicate: d =>
                                       d[stdCol].Length > 1 &&
                                       char.IsDigit(c: d[stdCol][index: 1]))
-                                  //.GroupBy(keySelector: d =>
-                                  //             new
-                                  //             {
-                                  //                 STD = d[stdCol], DST = d[dstCol]
-                                  //             })
-                                  //.Select(selector: g => g.First())
+                                 //.GroupBy(keySelector: d =>
+                                 //             new
+                                 //             {
+                                 //                 STD = d[stdCol], DST = d[dstCol]
+                                 //             })
+                                 //.Select(selector: g => g.First())
                                  .OrderBy(keySelector: d => d[stdCol])
                                  .Select(selector: d =>
                                       $"({d[stdCol]}/{d[dstCol]}) # {d[timeZoneCol]}")
@@ -1066,9 +1066,9 @@ internal static class HelperGenericAncillaryListsArrays
         return null;
     }
 
-#endregion
+    #endregion
 
-#region Columns
+    #region Columns
 
     internal static ElementAttribute[] ToponomyReplaces()
     {
@@ -1148,13 +1148,13 @@ internal static class HelperGenericAncillaryListsArrays
         return result;
     }
 
-#endregion
+    #endregion
 
-#region Countries & Country Codes
+    #region Countries & Country Codes
 
     internal static string[] GetCountries()
     {
-        List<string> retList = new();
+        List<string> retList = [];
 
         retList.Add(item: "");
         foreach (DataRow dataRow in HelperVariables.DtIsoCountryCodeMapping.Rows)
@@ -1168,7 +1168,7 @@ internal static class HelperGenericAncillaryListsArrays
 
     internal static string[] GetCountryCodes()
     {
-        List<string> retList = new();
+        List<string> retList = [];
         retList.Add(item: "");
         if (HelperVariables.DtIsoCountryCodeMapping == null)
         {
@@ -1184,9 +1184,9 @@ internal static class HelperGenericAncillaryListsArrays
         return retList.ToArray();
     }
 
-#endregion
+    #endregion
 
-#region Extensions
+    #region Extensions
 
     /// <summary>
     ///     this one basically handles what extensions we work with.
@@ -1254,7 +1254,7 @@ internal static class HelperGenericAncillaryListsArrays
     /// </summary>
     internal static string[] FileExtensionsThatUseXMP()
     {
-        List<string> retList = new();
+        List<string> retList = [];
         foreach (string extension in AllCompatibleExtensions())
         {
             if (extension.ToLower()
@@ -1340,9 +1340,9 @@ internal static class HelperGenericAncillaryListsArrays
         return result;
     }
 
-#endregion
+    #endregion
 
-#region GPX Import
+    #region GPX Import
 
     internal enum ImportTimeAgainst
     {
@@ -1357,9 +1357,9 @@ internal static class HelperGenericAncillaryListsArrays
         OverlayForOverlappingDates
     }
 
-#endregion
+    #endregion
 
-#region GPX Export
+    #region GPX Export
 
     internal enum ExportFileOrder
     {
@@ -1421,9 +1421,9 @@ internal static class HelperGenericAncillaryListsArrays
         File.WriteAllText(path: fmtFilePath, contents: fmtFileContent);
     }
 
-#endregion
+    #endregion
 
-#region Copy-Paste
+    #region Copy-Paste
 
     internal static readonly List<ElementAttribute> TagsToCopy =
     [
@@ -1461,9 +1461,9 @@ internal static class HelperGenericAncillaryListsArrays
         ElementAttribute.CreateDateDaysShift
     ];
 
-#endregion
+    #endregion
 
-#region Map
+    #region Map
 
     /// <summary>
     ///     Returns the KVP combination of map layer options
@@ -1481,5 +1481,5 @@ internal static class HelperGenericAncillaryListsArrays
         return result;
     }
 
-#endregion
+    #endregion
 }

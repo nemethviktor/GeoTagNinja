@@ -1,14 +1,14 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Model;
+using GeoTagNinja.View.ListView;
+using Microsoft.WindowsAPICodePack.Taskbar;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GeoTagNinja.Helpers;
-using GeoTagNinja.Model;
-using GeoTagNinja.View.ListView;
-using Microsoft.WindowsAPICodePack.Taskbar;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using HelperControlAndMessageBoxCustomMessageBoxManager =
     GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
@@ -18,7 +18,7 @@ namespace GeoTagNinja;
 public partial class FrmPasteWhat : Form
 {
     private static string _initiatorName;
-    private static readonly List<string> LastCheckedCheckBoxes = new();
+    private static readonly List<string> LastCheckedCheckBoxes = [];
     internal static string FileDateCopySourceFileNameWithoutPath;
 
     /// <summary>
@@ -40,7 +40,7 @@ public partial class FrmPasteWhat : Form
                 : ThemeColour.Light, parentControl: this);
 
         ListView lvw;
-        List<ElementAttribute> tagsToPasteAttributeList = new();
+        List<ElementAttribute> tagsToPasteAttributeList = [];
 
         // get the name of the file we're pasting FROM.
         // in this case this will be used to pre-fill/check the checkboxes
@@ -161,12 +161,12 @@ public partial class FrmPasteWhat : Form
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
         {
-            if (cItem is Label ||
-                cItem is GroupBox ||
-                cItem is Button ||
-                cItem is CheckBox ||
-                cItem is TabPage ||
-                cItem is RadioButton
+            if (cItem is Label or
+                GroupBox or
+                Button or
+                CheckBox or
+                TabPage or
+                RadioButton
                )
 
             {
@@ -190,11 +190,11 @@ public partial class FrmPasteWhat : Form
                                             EventArgs e)
     {
         // this can't be 'string' because some of the types aren't strings
-        Dictionary<ElementAttribute, object> copyPasteDict = new();
+        Dictionary<ElementAttribute, object> copyPasteDict = [];
 
         // create a list of tags that also have a Ref version
-        List<string> tagsWithRefList = new()
-        {
+        List<string> tagsWithRefList =
+        [
             "GPSAltitude",
             "GPSDestLatitude",
             "GPSDestLongitude",
@@ -202,7 +202,7 @@ public partial class FrmPasteWhat : Form
             "GPSLatitude",
             "GPSLongitude",
             "GPSSpeed"
-        };
+        ];
 
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
@@ -234,7 +234,7 @@ public partial class FrmPasteWhat : Form
         }
 
         // get a list of tag names to paste based on what is checked on the checkboxes in the Form
-        List<ElementAttribute> tagsToPaste = new();
+        List<ElementAttribute> tagsToPaste = [];
         LastCheckedCheckBoxes.Clear();
 
         foreach (Control cItem in c)
@@ -251,8 +251,8 @@ public partial class FrmPasteWhat : Form
                     LastCheckedCheckBoxes.Add(item: cItem.Name);
 
                     // "EndsWith" doesn't work here because the CheckBox.Name never ends with "Shift".
-                    if (attributeString == "TakenDate" ||
-                        attributeString == "CreateDate")
+                    if (attributeString is "TakenDate" or
+                        "CreateDate")
                     {
                         string pasteWhichDate =
                             attributeString.Replace(oldValue: "Date", newValue: "");
@@ -326,8 +326,6 @@ public partial class FrmPasteWhat : Form
                 lvw = frmEditFileDataInstance.lvw_FileListEditImages;
                 ListViewItem lviFE = lvw.SelectedItems[index: 0];
                 // do paste into the tables + grid as req'd
-                DirectoryElement dirElemFileToCopyFrom =
-                    lviFE.Tag as DirectoryElement;
 
                 foreach (ElementAttribute attribute in tagsToPaste)
                 {
@@ -349,16 +347,15 @@ public partial class FrmPasteWhat : Form
                     bool dataExistsSomewhere = false;
 
                     List<DirectoryElement.AttributeVersion> relevantAttributeVersions =
-                        new()
-                        {
+                        [
                             // DO NOT reorder!
                             DirectoryElement.AttributeVersion
                                             .Stage1EditFormIntraTabTransferQueue,
                             DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
                             DirectoryElement.AttributeVersion.Original
-                        };
+                        ];
 
-                    if (dirElemFileToCopyFrom != null)
+                    if (lviFE.Tag is DirectoryElement dirElemFileToCopyFrom)
                     {
                         //
                         foreach (DirectoryElement.AttributeVersion
@@ -423,9 +420,7 @@ public partial class FrmPasteWhat : Form
                     // for each file
                     foreach (ListViewItem lvi in lvw.Items)
                     {
-                        DirectoryElement dirElemFileToModify =
-                            lvi.Tag as DirectoryElement;
-                        if (dirElemFileToModify != null)
+                        if (lvi.Tag is DirectoryElement dirElemFileToModify)
                         {
                             bool takenShiftCopyPasteRequired = false;
                             bool createShiftCopyPasteRequired = false;
@@ -677,9 +672,9 @@ public partial class FrmPasteWhat : Form
                 notFoundValue: 0);
 
             int totalShiftedSeconds = shiftedSeconds +
-                                      shiftedMinutes * 60 +
-                                      shiftedHours * 60 * 60 +
-                                      shiftedDays * 60 * 60 * 24;
+                                      (shiftedMinutes * 60) +
+                                      (shiftedHours * 60 * 60) +
+                                      (shiftedDays * 60 * 60 * 24);
 
             DateTime originalTakenDateTime =
                 (DateTime)dirElemFileToModify.GetAttributeValue<DateTime>(
@@ -729,9 +724,9 @@ public partial class FrmPasteWhat : Form
                 notFoundValue: 0);
 
             int totalShiftedSeconds = shiftedSeconds +
-                                      shiftedMinutes * 60 +
-                                      shiftedHours * 60 * 60 +
-                                      shiftedDays * 60 * 60 * 24;
+                                      (shiftedMinutes * 60) +
+                                      (shiftedHours * 60 * 60) +
+                                      (shiftedDays * 60 * 60 * 24);
 
             DateTime originalCreateDateTime =
                 (DateTime)dirElemFileToModify.GetAttributeValue<DateTime>(
@@ -963,13 +958,13 @@ public partial class FrmPasteWhat : Form
         {
             bool takenDateShiftDataExists = false;
 
-            List<ElementAttribute> listOfTagsToCopyTimeShifts = new()
-            {
+            List<ElementAttribute> listOfTagsToCopyTimeShifts =
+            [
                 ElementAttribute.TakenDateSecondsShift,
                 ElementAttribute.TakenDateMinutesShift,
                 ElementAttribute.TakenDateHoursShift,
                 ElementAttribute.TakenDateDaysShift
-            };
+            ];
 
             if (_initiatorName == "FrmEditFileData")
             {
@@ -1031,13 +1026,13 @@ public partial class FrmPasteWhat : Form
     {
         bool createDateShiftDataExists = false;
 
-        List<ElementAttribute> listOfTagsToCopyTimeShifts = new()
-        {
+        List<ElementAttribute> listOfTagsToCopyTimeShifts =
+        [
             ElementAttribute.CreateDateSecondsShift,
             ElementAttribute.CreateDateMinutesShift,
             ElementAttribute.CreateDateHoursShift,
             ElementAttribute.CreateDateDaysShift
-        };
+        ];
 
         FrmEditFileData frmEditFileDataInstance =
             (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];

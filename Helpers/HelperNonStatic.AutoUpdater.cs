@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
-using AutoUpdaterDotNET;
+﻿using AutoUpdaterDotNET;
 using Newtonsoft.Json;
+using System;
+using System.Windows.Forms;
 
 namespace GeoTagNinja.Helpers;
 

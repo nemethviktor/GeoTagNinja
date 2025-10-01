@@ -10,7 +10,6 @@ namespace GeoTagNinja.View;
 /// </summary>
 public partial class ImagePreview : PictureBox
 {
-    private Font _font = new(familyName: "Arial", emSize: 14);
     private string _textToShow;
 
     public ImagePreview()
@@ -43,17 +42,12 @@ public partial class ImagePreview : PictureBox
     /// </summary>
     public new Font Font
     {
-        get => _font;
+        get;
         set
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException(paramName: "The font set may not be empty");
-            }
-
-            _font = value;
+            field = value ?? throw new ArgumentNullException(paramName: "The font set may not be empty");
         }
-    }
+    } = new(familyName: "Arial", emSize: 14);
 
     /// <summary>
     ///     Instead of an image or the default message, show a specific (error)
@@ -73,12 +67,12 @@ public partial class ImagePreview : PictureBox
         if (Image == null && !string.IsNullOrEmpty(value: _textToShow))
         {
             // Place in the middle
-            SizeF sz = e.Graphics.MeasureString(text: _textToShow, font: _font);
+            SizeF sz = e.Graphics.MeasureString(text: _textToShow, font: Font);
             Point loc = new(
                 x: (Width - (int)Math.Round(a: sz.Width)) / 2,
                 y: (Height - (int)Math.Round(a: sz.Height)) / 2
             );
-            e.Graphics.DrawString(s: _textToShow, font: _font, brush: Brushes.DarkGray, point: loc);
+            e.Graphics.DrawString(s: _textToShow, font: Font, brush: Brushes.DarkGray, point: loc);
         }
     }
 }

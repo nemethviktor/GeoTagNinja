@@ -1,9 +1,9 @@
-﻿using System;
+﻿using GeoTagNinja.Resources.Languages;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Resources;
-using GeoTagNinja.Resources.Languages;
 
 namespace GeoTagNinja.Helpers;
 
@@ -17,7 +17,7 @@ internal static class HelperLocalisationLanguageManager
     /// <returns>A List(string) of TwoLetterISOLanguageNames</returns>
     public static List<string> GetTranslatedLanguages()
     {
-        List<string> languages = new();
+        List<string> languages = [];
 
         languages.Add(item: "en");
 

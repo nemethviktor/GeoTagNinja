@@ -300,15 +300,13 @@ internal static class HelperControlThemeManager
                     new[] { brightness, brightness, brightness, 0, 1 } // Add brightness offset.
                 });
 
-            using (ImageAttributes attributes = new())
-            {
-                attributes.SetColorMatrix(newColorMatrix: colorMatrix);
-                g.DrawImage(image: originalImage,
-                    destRect: new Rectangle(x: 0, y: 0, width: originalImage.Width, height: originalImage.Height),
-                    srcX: 0, srcY: 0, srcWidth: originalImage.Width, srcHeight: originalImage.Height,
-                    srcUnit: GraphicsUnit.Pixel,
-                    imageAttr: attributes);
-            }
+            using ImageAttributes attributes = new();
+            attributes.SetColorMatrix(newColorMatrix: colorMatrix);
+            g.DrawImage(image: originalImage,
+                destRect: new Rectangle(x: 0, y: 0, width: originalImage.Width, height: originalImage.Height),
+                srcX: 0, srcY: 0, srcWidth: originalImage.Width, srcHeight: originalImage.Height,
+                srcUnit: GraphicsUnit.Pixel,
+                imageAttr: attributes);
         }
 
         return adjustedImage;

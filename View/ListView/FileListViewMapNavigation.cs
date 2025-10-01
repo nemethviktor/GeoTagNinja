@@ -1,9 +1,9 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Model;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Windows.Forms;
-using GeoTagNinja.Helpers;
-using GeoTagNinja.Model;
 
 namespace GeoTagNinja.View.ListView;
 
@@ -40,7 +40,7 @@ internal static class FileListViewMapNavigation
         return;
 
         [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
-        (double, double) getCoordinateValues(DirectoryElement directoryElement)
+        static (double, double) getCoordinateValues(DirectoryElement directoryElement)
         {
             double dataInDELat = (double)directoryElement.GetAttributeValue<double>(
                 attribute: SourcesAndAttributes.ElementAttribute.GPSLatitude,

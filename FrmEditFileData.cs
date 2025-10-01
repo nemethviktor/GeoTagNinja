@@ -1,4 +1,9 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Model;
+using GeoTagNinja.View.ListView;
+using Microsoft.WindowsAPICodePack.Taskbar;
+using NLog;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
@@ -8,11 +13,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using GeoTagNinja.Helpers;
-using GeoTagNinja.Model;
-using GeoTagNinja.View.ListView;
-using Microsoft.WindowsAPICodePack.Taskbar;
-using NLog;
 using TimeZoneConverter;
 using static GeoTagNinja.FrmMainApp;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
@@ -28,11 +28,11 @@ public partial class FrmEditFileData : Form
 {
     private static bool _tzChangedByApi;
 
-#region Variables
+    #region Variables
 
     private static bool _frmEditFileDataNowLoadingFileData;
 
-#endregion
+    #endregion
 
 
     /// <summary>
@@ -201,22 +201,22 @@ public partial class FrmEditFileData : Form
 
         Log.Trace(message: "Assinging Labels Start");
         HelperNonStatic helperNonstatic = new();
-        List<Type> lstControlTypesNoDEValue = new()
-        {
+        List<Type> lstControlTypesNoDEValue =
+        [
             typeof(Label),
             typeof(GroupBox),
             typeof(Button),
             typeof(CheckBox),
             typeof(TabPage),
             typeof(RadioButton)
-        };
-        List<Type> lstControlTypesWithDEValue = new()
-        {
+        ];
+        List<Type> lstControlTypesWithDEValue =
+        [
             typeof(TextBox),
             typeof(ComboBox),
             typeof(DateTimePicker),
             typeof(NumericUpDown)
-        };
+        ];
 
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         foreach (Control cItem in c)
@@ -442,8 +442,7 @@ public partial class FrmEditFileData : Form
                     {
                         EnableSpecificControlAndDisableOthers(
                             parentControl: gbx_TakenDate,
-                            controlsToEnable: new List<Control>
-                                { btn_InsertTakenDate },
+                            controlsToEnable: [btn_InsertTakenDate],
                             controlsToDisable: helperNonstatic
                                               .GetAllControls(control: gbx_TakenDate)
                                               .Where(predicate: c =>
@@ -454,8 +453,7 @@ public partial class FrmEditFileData : Form
                     {
                         EnableSpecificControlAndDisableOthers(
                             parentControl: gbx_CreateDate,
-                            controlsToEnable: new List<Control>
-                                { btn_InsertCreateDate },
+                            controlsToEnable: [btn_InsertCreateDate],
                             controlsToDisable: helperNonstatic
                                               .GetAllControls(control: gbx_CreateDate)
                                               .Where(predicate: c =>
@@ -485,9 +483,8 @@ public partial class FrmEditFileData : Form
                     IEnumerable<Control> cGbx_TakenDate =
                         helperNonstatic.GetAllControls(
                             control: gbx_TakenDate);
-                    List<Control> controlsToEnable = new();
-                    List<Control> controlsToDisable = new()
-                        { btn_InsertTakenDate };
+                    List<Control> controlsToEnable = [];
+                    List<Control> controlsToDisable = [btn_InsertTakenDate];
                     foreach (Control cItemGbx_TakenDate in cGbx_TakenDate)
                     {
                         if (cItemGbx_TakenDate != btn_InsertTakenDate)
@@ -507,9 +504,8 @@ public partial class FrmEditFileData : Form
                     IEnumerable<Control> cGbx_CreateDate =
                         helperNonstatic.GetAllControls(
                             control: gbx_CreateDate);
-                    List<Control> controlsToEnable = new();
-                    List<Control> controlsToDisable = new()
-                        { btn_InsertCreateDate };
+                    List<Control> controlsToEnable = [];
+                    List<Control> controlsToDisable = [btn_InsertCreateDate];
                     foreach (Control cItemGbx_CreateDate in
                              cGbx_CreateDate)
                     {
@@ -750,9 +746,9 @@ public partial class FrmEditFileData : Form
             version: attributeVersion,
             notFoundValue: 0);
         int totalShiftedSeconds = shiftedSeconds +
-                                  shiftedMinutes * 60 +
-                                  shiftedHours * 60 * 60 +
-                                  shiftedDays * 60 * 60 * 24;
+                                  (shiftedMinutes * 60) +
+                                  (shiftedHours * 60 * 60) +
+                                  (shiftedDays * 60 * 60 * 24);
         return totalShiftedSeconds;
     }
 
@@ -772,13 +768,13 @@ public partial class FrmEditFileData : Form
         DirectoryElement directoryElement,
         ElementAttribute attribute)
     {
-        List<DirectoryElement.AttributeVersion> relevantAttributeVersions = new()
-        {
+        List<DirectoryElement.AttributeVersion> relevantAttributeVersions =
+        [
             // DO NOT reorder!
             DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
             DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
             DirectoryElement.AttributeVersion.Original
-        };
+        ];
 
         DirectoryElement.AttributeVersion maxAttributeVersion =
             relevantAttributeVersions.FirstOrDefault(
@@ -788,7 +784,7 @@ public partial class FrmEditFileData : Form
         return maxAttributeVersion;
     }
 
-#region Themeing
+    #region Themeing
 
     // this is entirely the same as in FrmMainApp.
 
@@ -816,16 +812,14 @@ public partial class FrmEditFileData : Form
             e.Graphics.DrawRectangle(pen: foreColorPen, rect: e.Bounds);
         }
 
-        using (SolidBrush foreColorBrush = new(color: foreColor))
-        {
-            StringFormat stringFormat = GetStringFormat();
+        using SolidBrush foreColorBrush = new(color: foreColor);
+        StringFormat stringFormat = GetStringFormat();
 
-            //Do some padding, since these draws right up next to the border for Left/Near.  Will need to change this if you use Right/Far
-            Rectangle rect = e.Bounds;
-            rect.X += 2;
-            e.Graphics.DrawString(s: e.Header.Text, font: e.Font, brush: foreColorBrush,
-                layoutRectangle: rect, format: stringFormat);
-        }
+        //Do some padding, since these draws right up next to the border for Left/Near.  Will need to change this if you use Right/Far
+        Rectangle rect = e.Bounds;
+        rect.X += 2;
+        e.Graphics.DrawString(s: e.Header.Text, font: e.Font, brush: foreColorBrush,
+            layoutRectangle: rect, format: stringFormat);
     }
 
     private StringFormat GetStringFormat()
@@ -849,9 +843,9 @@ public partial class FrmEditFileData : Form
         e.DrawDefault = true;
     }
 
-#endregion
+    #endregion
 
-#region object events
+    #region object events
 
     /// <summary>
     ///     Pulls data for the various "Get (All) From Web" buttons depending which actual button has been pressed.
@@ -926,8 +920,6 @@ public partial class FrmEditFileData : Form
     {
         FrmMainApp frmMainAppInstance =
             (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        double parsedLat;
-        double parsedLng;
         DateTime
             createDate =
                 NullDateTimeEquivalent; // can't leave it null because it's updated in various IFs and C# perceives it as uninitialised.
@@ -1014,11 +1006,11 @@ public partial class FrmEditFileData : Form
             if (double.TryParse(s: strGpsLatitude,
                     style: NumberStyles.Any,
                     provider: CultureInfo.InvariantCulture,
-                    result: out parsedLat) &&
+                    result: out double parsedLat) &&
                 double.TryParse(s: strGpsLongitude,
                     style: NumberStyles.Any,
                     provider: CultureInfo.InvariantCulture,
-                    result: out parsedLng))
+                    result: out double parsedLng))
             {
                 dtToponomy = HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(
                     lat: strGpsLatitude, lng: strGpsLongitude,
@@ -1028,7 +1020,7 @@ public partial class FrmEditFileData : Form
 
         // Pull the data from the web regardless.
         List<(ElementAttribute attribute, string toponomyOverwriteVal)>
-            toponomyOverwrites = new();
+            toponomyOverwrites = [];
         if (dtToponomy != null &&
             dtToponomy.Rows.Count > 0)
         {
@@ -1130,38 +1122,38 @@ public partial class FrmEditFileData : Form
 
                 // send it back to the Form + store
                 foreach ((ElementAttribute attribute, string toponomyOverwriteVal)
-                         toponomyDetail in toponomyOverwrites)
+in toponomyOverwrites)
                 {
-                    if (toponomyDetail.attribute is ElementAttribute.CountryCode)
+                    if (attribute is ElementAttribute.CountryCode)
                     {
-                        cbx_CountryCode.Text = toponomyDetail.toponomyOverwriteVal;
+                        cbx_CountryCode.Text = toponomyOverwriteVal;
                     }
-                    else if (toponomyDetail.attribute is ElementAttribute.Country)
+                    else if (attribute is ElementAttribute.Country)
                     {
-                        cbx_Country.Text = toponomyDetail.toponomyOverwriteVal;
+                        cbx_Country.Text = toponomyOverwriteVal;
                     }
-                    else if (toponomyDetail.attribute is ElementAttribute.City)
+                    else if (attribute is ElementAttribute.City)
                     {
-                        tbx_City.Text = toponomyDetail.toponomyOverwriteVal;
+                        tbx_City.Text = toponomyOverwriteVal;
                     }
-                    else if (toponomyDetail.attribute is ElementAttribute.State)
+                    else if (attribute is ElementAttribute.State)
                     {
-                        tbx_State.Text = toponomyDetail.toponomyOverwriteVal;
+                        tbx_State.Text = toponomyOverwriteVal;
                     }
-                    else if (toponomyDetail.attribute == ElementAttribute.Sublocation)
+                    else if (attribute == ElementAttribute.Sublocation)
                     {
-                        tbx_Sublocation.Text = toponomyDetail.toponomyOverwriteVal;
+                        tbx_Sublocation.Text = toponomyOverwriteVal;
                     }
-                    else if (toponomyDetail.attribute is ElementAttribute.GPSAltitude)
+                    else if (attribute is ElementAttribute.GPSAltitude)
                     {
-                        nud_GPSAltitude.Text = toponomyDetail.toponomyOverwriteVal;
+                        nud_GPSAltitude.Text = toponomyOverwriteVal;
                         nud_GPSAltitude.Value = Convert.ToDecimal(
-                            value: toponomyDetail.toponomyOverwriteVal,
+                            value: toponomyOverwriteVal,
                             provider: CultureInfo.InvariantCulture);
                     }
-                    else if (toponomyDetail.attribute is ElementAttribute.OffsetTime)
+                    else if (attribute is ElementAttribute.OffsetTime)
                     {
-                        tbx_OffsetTime.Text = toponomyDetail.toponomyOverwriteVal;
+                        tbx_OffsetTime.Text = toponomyOverwriteVal;
                     }
                 }
             }
@@ -1202,17 +1194,14 @@ public partial class FrmEditFileData : Form
                 DirectoryElement dirElemFileToModify =
                     lvi.Tag as DirectoryElement;
                 foreach ((ElementAttribute attribute, string toponomyOverwriteVal)
-                         toponomyDetail in toponomyOverwrites)
+in toponomyOverwrites)
                 {
-                    if (dirElemFileToModify != null)
-                    {
-                        dirElemFileToModify.SetAttributeValueAnyType(
-                            attribute: toponomyDetail.attribute,
-                            value: toponomyDetail.toponomyOverwriteVal,
+                    dirElemFileToModify?.SetAttributeValueAnyType(
+                            attribute: attribute,
+                            value: toponomyOverwriteVal,
                             version: DirectoryElement.AttributeVersion
                                                      .Stage1EditFormIntraTabTransferQueue,
                             isMarkedForDeletion: false);
-                    }
                 }
             }
         }
@@ -1251,14 +1240,11 @@ public partial class FrmEditFileData : Form
                         GetElementAttributesElementAttribute(
                             attributeToFind: dtp.Name.Substring(startIndex: 4));
 
-                    if (dirElemFileToModify != null)
-                    {
-                        dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
+                    dirElemFileToModify?.SetAttributeValueAnyType(attribute: attribute,
                             value: dtp.Text,
                             version: DirectoryElement.AttributeVersion
                                                      .Stage1EditFormIntraTabTransferQueue,
                             isMarkedForDeletion: false);
-                    }
                 }
             }
         }
@@ -1490,7 +1476,7 @@ public partial class FrmEditFileData : Form
             senderName: "FrmEditFileData");
     }
 
-#region object text change handlers
+    #region object text change handlers
 
     /// <summary>
     ///     Handles changes in textboxes and dropdowns. Compares "old" and "new" data and if they mismatch formats Control as
@@ -1706,7 +1692,7 @@ public partial class FrmEditFileData : Form
         tbx_OffsetTime.Text = strOffsetTime;
     }
 
-#endregion
+    #endregion
 
 
     /// <summary>
@@ -1867,8 +1853,6 @@ public partial class FrmEditFileData : Form
         ListView lvw = lvw_FileListEditImages;
         ListViewItem lvi = lvw.SelectedItems[index: 0];
 
-        DirectoryElement dirElemFileToModify =
-            lvi.Tag as DirectoryElement;
 
         IEnumerable<Control> cGbx_CreateDate =
             helperNonstatic.GetAllControls(control: gbx_CreateDate);
@@ -1882,7 +1866,7 @@ public partial class FrmEditFileData : Form
                 if (cItemGbx_CreateDate is DateTimePicker dtp)
                 {
                     dtp.Font = new Font(prototype: dtp.Font, newStyle: FontStyle.Bold);
-                    if (dirElemFileToModify != null)
+                    if (lvi.Tag is DirectoryElement dirElemFileToModify)
                     {
                         ElementAttribute attribute =
                             GetElementAttributesElementAttribute(
@@ -1976,17 +1960,17 @@ public partial class FrmEditFileData : Form
             {
                 string clipboardText = Clipboard.GetText();
 
-                List<string> listSeparators = new()
-                {
+                List<string> listSeparators =
+                [
                     CultureInfo.CurrentCulture.TextInfo.ListSeparator,
                     CultureInfo.InvariantCulture.TextInfo.ListSeparator
-                };
+                ];
 
-                List<CultureInfo> cultureInfos = new()
-                {
+                List<CultureInfo> cultureInfos =
+                [
                     CultureInfo.CurrentCulture,
                     CultureInfo.InvariantCulture
-                };
+                ];
 
                 decimal parsedLat = 0;
                 decimal parsedLng = 0;
@@ -2039,5 +2023,5 @@ public partial class FrmEditFileData : Form
         }
     }
 
-#endregion
+    #endregion
 }

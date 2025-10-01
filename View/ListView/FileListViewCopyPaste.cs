@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
-using GeoTagNinja.Helpers;
+﻿using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
+using System;
+using System.Windows.Forms;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using HelperControlAndMessageBoxCustomMessageBoxManager =
@@ -86,8 +86,10 @@ internal static class FileListViewCopyPaste
         if (FrmMainApp.CopyPoolDict.Count > 0 &&
             frmMainAppInstance != null)
         {
-            FrmPasteWhat frmPasteWhat = new(initiator: frmMainAppInstance.Name);
-            frmPasteWhat.StartPosition = FormStartPosition.CenterScreen;
+            FrmPasteWhat frmPasteWhat = new(initiator: frmMainAppInstance.Name)
+            {
+                StartPosition = FormStartPosition.CenterScreen
+            };
             frmPasteWhat.ShowDialog();
         }
         else

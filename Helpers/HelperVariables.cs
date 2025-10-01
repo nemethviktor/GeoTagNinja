@@ -17,9 +17,9 @@ internal static class HelperVariables
     internal const string ControlItemNameNotGeneric = "Not Generic";
     internal const string ResourceNameForGenericControlItems = "Generic_Strings";
 
-#region User Defined (via Reflection)
+    #region User Defined (via Reflection)
 
-#region strings
+    #region strings
 
     internal static string UserSettingArcGisApiKey;
     internal static string UserSettingGeoNamesUserName;
@@ -28,9 +28,9 @@ internal static class HelperVariables
     internal static string UserSettingImportGPXImportSource;
     internal static string UserSettingImportGPXTimeZoneToUse;
 
-#endregion
+    #endregion
 
-#region bools
+    #region bools
 
     internal static bool UserSettingResetMapToZeroOnMissingValue;
     internal static bool UserSettingUseDarkMode;
@@ -46,16 +46,16 @@ internal static class HelperVariables
     internal static bool UserSettingImportGPXUseParticularTimeZone;
     internal static bool UserSettingImportGPXUseDST;
 
-#endregion
+    #endregion
 
-#region integers
+    #region integers
 
     internal static int UserSettingImportGPXMaxInterpolation;
     internal static int UserSettingImportGPXMaxExtrapolation;
 
-#endregion
+    #endregion
 
-#endregion
+    #endregion
 
     internal static bool OperationChangeFolderIsOkay;
     internal static bool OperationAPIReturnedOKResponse = true;
@@ -67,8 +67,8 @@ internal static class HelperVariables
     internal static string HTMLAddMarker;
     internal static string HTMLCreatePoints;
     internal static string HTMLDefaultLayer = "lyr_streets_osm";
-    internal static HashSet<(string strLat, string strLng)> HsMapMarkers = new();
-    internal static List<(string strLat, string strLng)> LstTrackPath = new();
+    internal static HashSet<(string strLat, string strLng)> HsMapMarkers = [];
+    internal static List<(string strLat, string strLng)> LstTrackPath = [];
     internal static double? MinLat;
     internal static double? MinLng;
     internal static double? MaxLat;
@@ -102,11 +102,11 @@ internal static class HelperVariables
         GetSettingsDatabaseFilePath();
 
     internal static DataTable DtIsoCountryCodeMapping;
-    internal static List<string> LstCityNameIsAdminName1 = new();
-    internal static List<string> LstCityNameIsAdminName2 = new();
-    internal static List<string> LstCityNameIsAdminName3 = new();
-    internal static List<string> LstCityNameIsAdminName4 = new();
-    internal static List<string> LstCityNameIsUndefined = new();
+    internal static List<string> LstCityNameIsAdminName1 = [];
+    internal static List<string> LstCityNameIsAdminName2 = [];
+    internal static List<string> LstCityNameIsAdminName3 = [];
+    internal static List<string> LstCityNameIsAdminName4 = [];
+    internal static List<string> LstCityNameIsUndefined = [];
 
     internal static string ExifToolExePathRoamingTemp = string.Empty;
 
@@ -120,9 +120,9 @@ internal static class HelperVariables
     internal static readonly string ExifToolExePathToUse = GetExifToolExePathToUse();
 
     internal static string UOMAbbreviated = "";
-    internal static Dictionary<string, string> FileChecksumDictionary = new();
+    internal static Dictionary<string, string> FileChecksumDictionary = [];
 
-    internal static HashSet<string> errorsAlreadyShownHashSet = new();
+    internal static HashSet<string> errorsAlreadyShownHashSet = [];
 
 
     // this is a bug where, upon closing the app the "do you want to write the queue?" question comes up twice but i can't seem to track it properly so this is to avoid that happening.

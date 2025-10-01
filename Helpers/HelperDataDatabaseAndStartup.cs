@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeoTagNinja.Model;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
@@ -6,7 +7,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using GeoTagNinja.Model;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 
 namespace GeoTagNinja.Helpers;
@@ -171,7 +171,7 @@ internal static class HelperDataDatabaseAndStartup
             };
 
 
-        List<AppSettingContainer> settingsToWriteTmp = new();
+        List<AppSettingContainer> settingsToWriteTmp = [];
 
         foreach (string controlName in booleanTypeApplicationSettingsExtensionSpecificControlNames)
         {
@@ -194,28 +194,18 @@ internal static class HelperDataDatabaseAndStartup
                 }
                 else if (controlName == "ckb_ProcessOriginalFile")
                 {
-                    if (tmpCtrlGroup.Contains(value: "raw") ||
-                        tmpCtrlGroup.Contains(value: "tiff"))
-                    {
-                        controlDefaultValue = "false";
-                    }
-                    else
-                    {
-                        controlDefaultValue = "true";
-                    }
+                    controlDefaultValue = tmpCtrlGroup.Contains(value: "raw") ||
+                        tmpCtrlGroup.Contains(value: "tiff")
+                        ? "false"
+                        : "true";
                 }
 
                 else if (controlName == "ckb_ResetFileDateToCreated")
                 {
-                    if (tmpCtrlGroup.Contains(value: "raw") ||
-                        tmpCtrlGroup.Contains(value: "tiff"))
-                    {
-                        controlDefaultValue = "true";
-                    }
-                    else
-                    {
-                        controlDefaultValue = "false";
-                    }
+                    controlDefaultValue = tmpCtrlGroup.Contains(value: "raw") ||
+                        tmpCtrlGroup.Contains(value: "tiff")
+                        ? "true"
+                        : "false";
                 }
 
                 else if (controlName == "ckb_OverwriteOriginal")
@@ -272,8 +262,8 @@ internal static class HelperDataDatabaseAndStartup
             dataTable: HelperVariables.DtHelperDataApplicationSettings,
             settingTabPage: "tpg_Application",
             settingId: "cbx_Language");
-        if (existingSQLVal == "" ||
-            existingSQLVal is null)
+        if (existingSQLVal is "" or
+            null)
         {
             settingsToWriteTmp.Add(item: new AppSettingContainer
             {
@@ -286,11 +276,11 @@ internal static class HelperDataDatabaseAndStartup
 
         // just make sure we don't overwrite existing data with what's supposed to be a "default".
         List<AppSettingContainer> settingsToWrite = (from appSettingContainerTmp in settingsToWriteTmp
-            let contains = HelperVariables.DtHelperDataApplicationSettings.AsEnumerable().Any(predicate: row =>
-                row[columnName: "settingTabPage"].ToString() == appSettingContainerTmp.SettingTabPage &&
-                row[columnName: "settingId"].ToString() == appSettingContainerTmp.SettingId)
-            where !contains
-            select appSettingContainerTmp).ToList();
+                                                     let contains = HelperVariables.DtHelperDataApplicationSettings.AsEnumerable().Any(predicate: row =>
+                                                         row[columnName: "settingTabPage"].ToString() == appSettingContainerTmp.SettingTabPage &&
+                                                         row[columnName: "settingId"].ToString() == appSettingContainerTmp.SettingId)
+                                                     where !contains
+                                                     select appSettingContainerTmp).ToList();
 
         if (settingsToWrite.Count > 0)
         {

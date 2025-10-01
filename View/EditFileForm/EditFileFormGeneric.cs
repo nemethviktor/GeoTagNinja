@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
-using GeoTagNinja.Helpers;
+﻿using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
+using System;
+using System.Windows.Forms;
 using static GeoTagNinja.View.ListView.FileListView;
 using HelperControlAndMessageBoxCustomMessageBoxManager =
     GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
@@ -24,9 +24,11 @@ internal static class EditFileFormGeneric
         lvw.Columns.Clear();
         lvw.Items.Clear();
 
-        ColumnHeader clh_fileName = new();
-        clh_fileName.Name = COL_NAME_PREFIX + FileListColumns.FILENAME;
-        clh_fileName.Width = lvw.Width;
+        ColumnHeader clh_fileName = new()
+        {
+            Name = COL_NAME_PREFIX + FileListColumns.FILENAME,
+            Width = lvw.Width
+        };
         lvw.Columns.Add(value: clh_fileName);
 
         //ColumnHeader clh_GUID = new();

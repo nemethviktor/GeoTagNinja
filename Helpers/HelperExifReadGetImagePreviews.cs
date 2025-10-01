@@ -1,4 +1,7 @@
-﻿using System;
+﻿using GeoTagNinja.Model;
+using ImageMagick;
+using Sdcb.LibRaw;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -9,9 +12,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GeoTagNinja.Model;
-using ImageMagick;
-using Sdcb.LibRaw;
 using Encoder = System.Drawing.Imaging.Encoder;
 
 
@@ -51,7 +51,7 @@ internal static class HelperExifReadGetImagePreviews
     {
         FrmMainApp.Log.Info(message: "Starting");
 
-    #region ExifToolConfiguration
+        #region ExifToolConfiguration
 
         // want to give this a different name from the usual exifArgs.args just in case that's still being accessed (as much as it shouldn't be)
         Regex rgx = new(pattern: "[^a-zA-Z0-9]");
@@ -67,7 +67,7 @@ internal static class HelperExifReadGetImagePreviews
 
         File.Delete(path: argsFile);
 
-    #endregion
+        #endregion
 
         // add required tags
 

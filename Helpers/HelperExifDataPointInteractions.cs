@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GeoTagNinja.Model;
+using GeoTagNinja.View.ListView;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -7,8 +9,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GeoTagNinja.Model;
-using GeoTagNinja.View.ListView;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers;
@@ -41,7 +41,7 @@ internal static class HelperExifDataPointInteractions
                 style: NumberStyles.Any,
                 provider: CultureInfo.InvariantCulture,
                 result: out double minute);
-            minute = minute / 60;
+            minute /= 60;
             pointVal = degree + minute;
         }
         else
@@ -75,9 +75,7 @@ internal static class HelperExifDataPointInteractions
                                                   .GetValues(
                                                        enumType: typeof(ElementAttribute))
                                                   .Cast<ElementAttribute>()
-                                                  .Where(predicate: attr =>
-                                                             GetElementAttributesIsGeoData(
-                                                                 attributeToFind: attr))
+                                                  .Where(predicate: GetElementAttributesIsGeoData)
                                                   .ToList();
 
         geoDataAttributes.Add(item: ElementAttribute.RemoveAllGPS); //"gps*"
@@ -101,8 +99,6 @@ internal static class HelperExifDataPointInteractions
                     frmEditFileDataInstance.lvw_FileListEditImages
                                            .SelectedItems[index: 0];
 
-                DirectoryElement dirElemFileToModify =
-                    lvi.Tag as DirectoryElement;
 
                 HelperNonStatic helperNonstatic = new();
                 IEnumerable<Control> cGbx_GPSData =
@@ -145,7 +141,7 @@ internal static class HelperExifDataPointInteractions
                     }
                 }
 
-                if (dirElemFileToModify != null)
+                if (lvi.Tag is DirectoryElement dirElemFileToModify)
                 {
                     foreach (ElementAttribute toponomyDetail in geoDataAttributes)
                     {
@@ -249,26 +245,26 @@ internal static class HelperExifDataPointInteractions
         int val = BitConverter.ToUInt16(value: prop.Value, startIndex: 0);
         RotateFlipType rot = RotateFlipType.RotateNoneFlipNone;
 
-        if (val == 3 ||
-            val == 4)
+        if (val is 3 or
+            4)
         {
             rot = RotateFlipType.Rotate180FlipNone;
         }
-        else if (val == 5 ||
-                 val == 6)
+        else if (val is 5 or
+                 6)
         {
             rot = RotateFlipType.Rotate90FlipNone;
         }
-        else if (val == 7 ||
-                 val == 8)
+        else if (val is 7 or
+                 8)
         {
             rot = RotateFlipType.Rotate270FlipNone;
         }
 
-        if (val == 2 ||
-            val == 4 ||
-            val == 5 ||
-            val == 7)
+        if (val is 2 or
+            4 or
+            5 or
+            7)
         {
             rot |= RotateFlipType.RotateNoneFlipX;
         }
@@ -290,7 +286,7 @@ internal static class HelperExifDataPointInteractions
     {
         if (coordHalfPair < -180)
         {
-            coordHalfPair = 180 - Math.Abs(value: coordHalfPair) % 180;
+            coordHalfPair = 180 - (Math.Abs(value: coordHalfPair) % 180);
         }
         else if (coordHalfPair > 180)
         {

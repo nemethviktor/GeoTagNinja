@@ -1,4 +1,16 @@
-﻿using System;
+﻿using AutoUpdaterDotNET;
+using GeoTagNinja;
+using GeoTagNinja.Helpers;
+using GeoTagNinja.Model;
+using GeoTagNinja.View.DialogAndMessageBoxes;
+using GeoTagNinja.View.EditFileForm;
+using GeoTagNinja.View.ListView;
+using Microsoft.Web.WebView2.Core;
+using Microsoft.WindowsAPICodePack.Taskbar;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -14,18 +26,6 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AutoUpdaterDotNET;
-using geoTagNinja;
-using GeoTagNinja.Helpers;
-using GeoTagNinja.Model;
-using GeoTagNinja.View.DialogAndMessageBoxes;
-using GeoTagNinja.View.EditFileForm;
-using GeoTagNinja.View.ListView;
-using Microsoft.Web.WebView2.Core;
-using Microsoft.WindowsAPICodePack.Taskbar;
-using NLog;
-using NLog.Config;
-using NLog.Targets;
 using TimeZoneConverter;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using HelperControlAndMessageBoxCustomMessageBoxManager = GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
@@ -37,9 +37,9 @@ namespace GeoTagNinja;
 [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
 public partial class FrmMainApp : Form
 {
-#region Constants / Fields / Variables
+    #region Constants / Fields / Variables
 
-#region Constants
+    #region Constants
 
     internal const string DoubleQuote = "\"";
 
@@ -53,9 +53,9 @@ public partial class FrmMainApp : Form
     internal static readonly DateTime NullDateTimeEquivalent =
         new(year: 1, month: 1, day: 1, hour: 0, minute: 0, second: 0);
 
-#endregion
+    #endregion
 
-#region Fields
+    #region Fields
 
     /// <summary>
     ///     The EXIFTool used in this application.
@@ -83,14 +83,14 @@ public partial class FrmMainApp : Form
     /// <summary>
     ///     Returns the list of elements in the currently opened directory.
     /// </summary>
-    public static DirectoryElementCollection DirectoryElements { get; } = new();
+    public static DirectoryElementCollection DirectoryElements { get; } = [];
 
-#endregion
+    #endregion
 
-#region Variables
+    #region Variables
 
     internal static DataTable DTLanguageMapping;
-    public static HashSet<Favourite> Favourites = new();
+    public static HashSet<Favourite> Favourites = [];
 
     // CustomCityLogic
 
@@ -116,12 +116,12 @@ public partial class FrmMainApp : Form
 
     // this is for copy-paste
     // the elements are: EA, Value, Changed?
-    internal static Dictionary<ElementAttribute, Tuple<string, bool>> CopyPoolDict = new();
+    internal static Dictionary<ElementAttribute, Tuple<string, bool>> CopyPoolDict = [];
 
     // this is for checking if files need to be re-parsed.
     internal static DataTable DTToponomySessionData;
 
-    internal static List<string> filesToEditGUIDStringList = new();
+    internal static List<string> filesToEditGUIDStringList = [];
 
     internal static readonly TaskbarManager TaskbarManagerInstance =
         TaskbarManager.Instance;
@@ -151,11 +151,11 @@ public partial class FrmMainApp : Form
 
     private string CurrentFolder;
 
-#endregion
+    #endregion
 
-#endregion
+    #endregion
 
-#region Form/App Related
+    #region Form/App Related
 
     internal static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private FrmSplashScreen frmSplashScreen = new();
@@ -169,7 +169,7 @@ public partial class FrmMainApp : Form
         frmSplashScreen.Show();
         _ = InitialiseApplication();
 
-    #region Define Logging Config
+        #region Define Logging Config
 
         // Set up logging
         LoggingConfiguration config = new();
@@ -182,12 +182,12 @@ public partial class FrmMainApp : Form
         }
 
         FileTarget logfile = new(name: "logfile") { FileName = logFileLocation };
-    #if DEBUG
+#if DEBUG
         config.AddRule(minLevel: LogLevel.Trace, maxLevel: LogLevel.Fatal,
             target: logfile);
-    #else
+#else
         config.AddRule(minLevel: LogLevel.Info, maxLevel: LogLevel.Fatal, target: logfile);
-    #endif
+#endif
 
         logfile.Layout =
             @"${longdate}|${level:uppercase=true}|${callsite:includeNamespace=false:includeSourcePath=false:methodName=true}|${message:withexception=true}";
@@ -199,7 +199,7 @@ public partial class FrmMainApp : Form
         // Apply config           
         LogManager.Configuration = config;
 
-    #endregion
+        #endregion
 
         int procID = Process.GetCurrentProcess()
                             .Id;
@@ -250,7 +250,7 @@ public partial class FrmMainApp : Form
             AppStartupEnableDoubleBuffering()
         ];
 
-        List<Task> remainingTasks = new(collection: tasks);
+        List<Task> remainingTasks = [.. tasks];
         int eachTasksPointValue = 100 / remainingTasks.Count;
         frmSplashScreen.UpdateProgress(amount: eachTasksPointValue, close: false);
         while (remainingTasks.Count > 0)
@@ -396,9 +396,9 @@ public partial class FrmMainApp : Form
     private static void LaunchAutoUpdater()
     {
         HelperNonStatic updateHelper = new();
-    #if DEBUG
+#if DEBUG
         //AutoUpdater.InstalledVersion = new Version(version: "1.2"); // here for testing only.
-    #endif
+#endif
         AutoUpdater.Synchronous =
             true; // needs to be true otherwise the single pipe instance crashes. (well, I think _that_ crashes, something does.)
         AutoUpdater.ParseUpdateInfoEvent += updateHelper.AutoUpdaterOnParseUpdateInfoEvent;
@@ -510,20 +510,22 @@ public partial class FrmMainApp : Form
     {
         // Write lat/long + visual settings for future reference to db
         Log.Debug(message: "Write lat/long + visual settings for future reference to db");
-        List<AppSettingContainer> settingsToWrite = new();
-        List<KeyValuePair<string, string>> persistDataSettingsList = new()
-        {
+        List<AppSettingContainer> settingsToWrite = [];
+        List<KeyValuePair<string, string>> persistDataSettingsList =
+        [
             new KeyValuePair<string, string>(key: "lastLat", value: nud_lat.Text),
             new KeyValuePair<string, string>(key: "lastLng", value: nud_lng.Text),
             new KeyValuePair<string, string>(key: "splitContainerMainSplitterDistance",
                 value: splitContainerMain.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture)),
             new KeyValuePair<string, string>(key: "splitContainerLeftTopSplitterDistance",
                 value: splitContainerLeftTop.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture))
-        };
+        ];
         settingsToWrite.AddRange(collection: persistDataSettingsList.Select(selector: persistDataSetting =>
             new AppSettingContainer
             {
-                TableName = "settings", SettingTabPage = "generic", SettingId = persistDataSetting.Key,
+                TableName = "settings",
+                SettingTabPage = "generic",
+                SettingId = persistDataSetting.Key,
                 SettingValue = persistDataSetting.Value
             }));
         HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
@@ -547,9 +549,9 @@ public partial class FrmMainApp : Form
             textSource: HelperControlAndMessageBoxCustomMessageBoxManager.MessageBoxTextSource.MANUAL);
     }
 
-#endregion
+    #endregion
 
-#region Map Stuff
+    #region Map Stuff
 
     /// <summary>
     ///     Provides an interaction layer between the map and the app. The reason why we're using string instead of proper
@@ -704,14 +706,13 @@ public partial class FrmMainApp : Form
                                     : "";
 
                             List<(ElementAttribute attribute, string value)> attributes =
-                                new()
-                                {
+                                [
                                     (ElementAttribute.GPSLatitude,
                                      strGPSLatitudeOnTheMap),
                                     (ElementAttribute.GPSLongitude,
                                      strGPSLongitudeOnTheMap),
                                     (ElementAttribute.Coordinates, tmpCoords)
-                                };
+                                ];
                             foreach ((ElementAttribute attribute, string value) in
                                      attributes)
                             {
@@ -746,14 +747,14 @@ public partial class FrmMainApp : Form
                                     : "";
 
                             List<(ElementAttribute attribute, string value)>
-                                attributesAndValues = new()
-                                {
+                                attributesAndValues =
+                                [
                                     (ElementAttribute.GPSDestLatitude,
                                      strGPSLatitudeOnTheMap),
                                     (ElementAttribute.GPSDestLongitude,
                                      strGPSLongitudeOnTheMap),
                                     (ElementAttribute.DestCoordinates, tmpCoords)
-                                };
+                                ];
                             foreach ((ElementAttribute attribute, string value) in
                                      attributesAndValues)
                             {
@@ -853,17 +854,15 @@ public partial class FrmMainApp : Form
         {
             Log.Trace(message: "parseLatLngTextBox");
             // ReSharper disable once NotAccessedOutParameterVariable
-            double parsedLat;
 
             // ReSharper disable once NotAccessedOutParameterVariable
-            double parsedLng;
 
             if (double.TryParse(s: strLatCoordinate, style: NumberStyles.Any,
                     provider: CultureInfo.InvariantCulture,
-                    result: out parsedLat) &&
+                    result: out double parsedLat) &&
                 double.TryParse(s: strLngCoordinate, style: NumberStyles.Any,
                     provider: CultureInfo.InvariantCulture,
-                    result: out parsedLng))
+                    result: out double parsedLng))
             {
                 LatCoordinate = strLatCoordinate;
                 LngCoordinate = strLngCoordinate;
@@ -1060,7 +1059,7 @@ public partial class FrmMainApp : Form
 
         Dictionary<string, HashSet<string>>
             dictDestinations =
-                new(); // we use a HashSet here because i want to avoid unnecessary duplication
+                []; // we use a HashSet here because i want to avoid unnecessary duplication
 
         AddTrackPathDataToDictDestinations(dictDestinations: dictDestinations);
 
@@ -1290,7 +1289,7 @@ public partial class FrmMainApp : Form
                     string gpsCoords = $"[{GPSLatitudeStr},{GPSLongitudeStr}]";
                     if (!dictDestinations.ContainsKey(key: destCoords))
                     {
-                        dictDestinations[key: destCoords] = new HashSet<string>();
+                        dictDestinations[key: destCoords] = [];
                     }
 
                     dictDestinations[key: destCoords]
@@ -1311,8 +1310,8 @@ public partial class FrmMainApp : Form
         }
 
 
-        List<(string key, string value)> replacements = new()
-        {
+        List<(string key, string value)> replacements =
+        [
             ("replaceLat", HelperVariables.LastLat.ToString()
                                           .Replace(oldChar: ',', newChar: '.')),
             ("replaceLng", HelperVariables.LastLng.ToString()
@@ -1331,7 +1330,7 @@ public partial class FrmMainApp : Form
             ("{ HTMLShowPoints }", showPointsStr),
             ("{ HTMLShowFOVPolygon }", showFOVStr),
             ("{ HTMLShowPolyLine }", showDestinationPolyLineStr)
-        };
+        ];
         foreach ((string key, string value) in replacements)
         {
             htmlReplacements.Add(key: key, value: value);
@@ -1356,7 +1355,7 @@ public partial class FrmMainApp : Form
                     $"[{HelperVariables.LstTrackPath.Last().strLat},{HelperVariables.LstTrackPath.Last().strLng}]";
                 if (!dictDestinations.ContainsKey(key: destCoords))
                 {
-                    dictDestinations[key: destCoords] = new HashSet<string>();
+                    dictDestinations[key: destCoords] = [];
                 }
 
                 for (int i = 0; i < HelperVariables.LstTrackPath.Count; i++)
@@ -1554,9 +1553,9 @@ public partial class FrmMainApp : Form
         }
     }
 
-#endregion
+    #endregion
 
-#region File (that is, the "File" menu tree)
+    #region File (that is, the "File" menu tree)
 
     /// <summary>
     ///     Handles the tmi_File_SaveAll_Click event -> triggers the file-save process
@@ -1646,11 +1645,13 @@ public partial class FrmMainApp : Form
                 captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question,
                 buttons: MessageBoxButtons.YesNo) == DialogResult.Yes))
         {
-            FrmImportExportGpx = new FrmImportExportGpx();
-            FrmImportExportGpx.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Form,
-                controlName: "FrmImportExportGpx"
-            );
+            FrmImportExportGpx = new FrmImportExportGpx
+            {
+                Text = HelperControlAndMessageBoxHandling.ReturnControlText(
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Form,
+                    controlName: "FrmImportExportGpx"
+                )
+            };
             FrmImportExportGpx.ShowDialog();
         }
     }
@@ -1689,9 +1690,9 @@ public partial class FrmMainApp : Form
         _ignoreFlatMode = false;
     }
 
-#endregion
+    #endregion
 
-#region FrmMainApp's TaskBar Stuff
+    #region FrmMainApp's TaskBar Stuff
 
     /// <summary>
     ///     Handles the tsb_Refresh_lvwFileList_Click event -> checks if there is anything in the write-Q
@@ -1876,16 +1877,14 @@ public partial class FrmMainApp : Form
                                                     .Text.ToString(
                                                          provider: CultureInfo
                                                             .InvariantCulture);
-                        double parsedLat = 0.0;
-                        double parsedLng = 0.0;
                         if (double.TryParse(s: strGpsLatitude,
                                 style: NumberStyles.Any,
                                 provider: CultureInfo.InvariantCulture,
-                                result: out parsedLat) &&
+                                result: out double parsedLat) &&
                             double.TryParse(s: strGpsLongitude,
                                 style: NumberStyles.Any,
                                 provider: CultureInfo.InvariantCulture,
-                                result: out parsedLng))
+                                result: out double parsedLng))
                         {
                             lvw_FileList_UpdateTagsFromWeb(
                                 strGpsLatitude: strGpsLatitude,
@@ -2056,8 +2055,10 @@ public partial class FrmMainApp : Form
 
         if (validFilesToImport)
         {
-            FrmImportExportGpx frmImportGpx = new();
-            frmImportGpx.StartPosition = FormStartPosition.CenterScreen;
+            FrmImportExportGpx frmImportGpx = new()
+            {
+                StartPosition = FormStartPosition.CenterScreen
+            };
             frmImportGpx.ShowDialog();
         }
         else
@@ -2123,9 +2124,9 @@ public partial class FrmMainApp : Form
         //DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
     }
 
-#endregion
+    #endregion
 
-#region Themeing
+    #region Themeing
 
     // via https://stackoverflow.com/a/75716080/3968494
     private void ListView_DrawColumnHeader(object sender,
@@ -2151,16 +2152,14 @@ public partial class FrmMainApp : Form
             e.Graphics.DrawRectangle(pen: foreColorPen, rect: e.Bounds);
         }
 
-        using (SolidBrush foreColorBrush = new(color: foreColor))
-        {
-            StringFormat stringFormat = GetStringFormat();
+        using SolidBrush foreColorBrush = new(color: foreColor);
+        StringFormat stringFormat = GetStringFormat();
 
-            //Do some padding, since these draws right up next to the border for Left/Near.  Will need to change this if you use Right/Far
-            Rectangle rect = e.Bounds;
-            rect.X += 2;
-            e.Graphics.DrawString(s: e.Header.Text, font: e.Font, brush: foreColorBrush,
-                layoutRectangle: rect, format: stringFormat);
-        }
+        //Do some padding, since these draws right up next to the border for Left/Near.  Will need to change this if you use Right/Far
+        Rectangle rect = e.Bounds;
+        rect.X += 2;
+        e.Graphics.DrawString(s: e.Header.Text, font: e.Font, brush: foreColorBrush,
+            layoutRectangle: rect, format: stringFormat);
     }
 
     private StringFormat GetStringFormat()
@@ -2258,9 +2257,9 @@ public partial class FrmMainApp : Form
             ColorTranslator.FromHtml(htmlColor: "#404040");
     }
 
-#endregion
+    #endregion
 
-#region lvw_FileList Interaction
+    #region lvw_FileList Interaction
 
     /// <summary>
     ///     Pulls data from the various APIs and fills up the listView
@@ -2299,15 +2298,15 @@ public partial class FrmMainApp : Form
             {
                 // Send off to SQL
                 List<(ElementAttribute attribute, string toponomyOverwriteVal)>
-                    toponomyOverwrites = new()
-                    {
+                    toponomyOverwrites =
+                    [
                         (ElementAttribute.CountryCode, dtToponomy.Rows[index: 0][columnName: HelperControlAndMessageBoxHandling.ReturnControlText(
                              fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
                              controlName: "clh_CountryCode")].ToString()),
                         (ElementAttribute.Country, dtToponomy.Rows[index: 0][columnName: HelperControlAndMessageBoxHandling.ReturnControlText(
                              fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
                              controlName: "clh_Country")].ToString())
-                    };
+                    ];
 
                 foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays.ToponomyReplaces())
                 {
@@ -2326,7 +2325,6 @@ public partial class FrmMainApp : Form
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
                     controlName: "clh_timezoneId")].ToString();
 
-                DateTime createDate;
                 bool _ = DateTime.TryParse(s: lvi.SubItems[index: lvw_FileList
                                                                  .Columns[
                                                                       key: FileListView.COL_NAME_PREFIX +
@@ -2336,7 +2334,7 @@ public partial class FrmMainApp : Form
                                                  .Text.ToString(
                                                       provider: CultureInfo
                                                          .InvariantCulture),
-                    result: out createDate);
+                    result: out DateTime createDate);
 
                 try
                 {
@@ -2362,11 +2360,11 @@ public partial class FrmMainApp : Form
                 }
 
                 foreach ((ElementAttribute attribute, string toponomyOverwriteVal)
-                         toponomyDetail in toponomyOverwrites)
+in toponomyOverwrites)
                 {
                     dirElemFileToModify.SetAttributeValueAnyType(
-                        attribute: toponomyDetail.attribute,
-                        value: toponomyDetail.toponomyOverwriteVal,
+                        attribute: attribute,
+                        value: toponomyOverwriteVal,
                         version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
                         isMarkedForDeletion: false);
 
@@ -2374,9 +2372,9 @@ public partial class FrmMainApp : Form
                                        .Columns[
                                             key: GetElementAttributesColumnHeader(
                                                 attributeToFind:
-                                                toponomyDetail.attribute)]
+                                                attribute)]
                                        .Index]
-                       .Text = toponomyDetail.toponomyOverwriteVal;
+                       .Text = toponomyOverwriteVal;
                 }
 
                 if (lvi.Index % 10 == 0)
@@ -2437,7 +2435,7 @@ public partial class FrmMainApp : Form
                 if (APIHandlingChoice.Contains(value: "yes"))
                 {
                     List<(ElementAttribute attribute, string toponomyOverwriteVal)>
-                        toponomyOverwrites = new();
+                        toponomyOverwrites = [];
                     toponomyOverwrites.Add(item: (ElementAttribute.CountryCode, null));
                     toponomyOverwrites.Add(item: (ElementAttribute.Country, null));
 
@@ -2448,21 +2446,20 @@ public partial class FrmMainApp : Form
                     }
 
                     foreach ((ElementAttribute attribute, string toponomyOverwriteVal)
-                             toponomyDetail in toponomyOverwrites)
+in toponomyOverwrites)
                     {
                         dirElemFileToModify.SetAttributeValueAnyType(
-                            attribute: toponomyDetail.attribute,
-                            value: toponomyDetail.toponomyOverwriteVal,
+                            attribute: attribute,
+                            value: toponomyOverwriteVal,
                             version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
                             isMarkedForDeletion: false);
 
                         lvi.SubItems[index: lvw_FileList
                                            .Columns[
                                                 key: GetElementAttributesColumnHeader(
-                                                    attributeToFind: toponomyDetail
-                                                       .attribute)]
+                                                    attributeToFind: attribute)]
                                            .Index]
-                           .Text = toponomyDetail.toponomyOverwriteVal;
+                           .Text = toponomyOverwriteVal;
                     }
                 }
 
@@ -2497,13 +2494,13 @@ public partial class FrmMainApp : Form
         RemoveGeoDataIsRunning = false;
 
 
-    #region FrmPleaseWaitBox
+        #region FrmPleaseWaitBox
 
         FrmPleaseWaitBox frmPleaseWaitBox = new();
         Enabled = false;
         frmPleaseWaitBox.Show();
 
-    #endregion
+        #endregion
 
         // Clear Tables that keep track of the current folder...
         Log.Trace(message: "Clear OriginalTakenDateDict and OriginalCreateDateDict");
@@ -2522,7 +2519,7 @@ public partial class FrmMainApp : Form
                 await DirectoryElements.ParseFolderOrFileListToDEsAsync(
                     folderOrCollectionFileName: Program.CollectionFileLocation,
                     processSubFolders: false,
-                    updateProgressHandler: delegate(string statusText)
+                    updateProgressHandler: delegate (string statusText)
                     {
                         Invoke(method: new Action(() =>
                             HandlerUpdateLabelText(label: lbl_ParseProgress, text: statusText)));
@@ -2569,7 +2566,7 @@ public partial class FrmMainApp : Form
                     await DirectoryElements.ParseFolderOrFileListToDEsAsync(
                         folderOrCollectionFileName: FolderName,
                         processSubFolders: FlatMode,
-                        updateProgressHandler: delegate(string statusText)
+                        updateProgressHandler: delegate (string statusText)
                         {
                             Invoke(method: new Action(() =>
                                 HandlerUpdateLabelText(label: lbl_ParseProgress, text: statusText)));
@@ -2604,9 +2601,9 @@ public partial class FrmMainApp : Form
         FileListViewReadWrite.ListViewCountItemsWithGeoData();
     }
 
-#endregion
+    #endregion
 
-#region Events
+    #region Events
 
     /// <summary>
     ///     Handles the lvw_FileList_MouseDoubleClick event -> if user clicked on a folder then enter, if a file then edit
@@ -2789,12 +2786,12 @@ public partial class FrmMainApp : Form
                                           KeyEventArgs e)
     {
         if (
-            e.KeyCode == Keys.PageUp ||
-            e.KeyCode == Keys.PageDown ||
-            e.KeyCode == Keys.Up ||
-            e.KeyCode == Keys.Down ||
-            e.KeyCode == Keys.Home ||
-            e.KeyCode == Keys.End
+            e.KeyCode is Keys.PageUp or
+            Keys.PageDown or
+            Keys.Up or
+            Keys.Down or
+            Keys.Home or
+            Keys.End
         )
         {
             await lvw_HandleSelectionChange();
@@ -2967,11 +2964,13 @@ public partial class FrmMainApp : Form
     private void tmi_Settings_Settings_Click(object sender,
                                              EventArgs e)
     {
-        FrmSettings = new FrmSettings();
-        FrmSettings.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
-            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Form,
-            controlName: "FrmSettings"
-        );
+        FrmSettings = new FrmSettings
+        {
+            Text = HelperControlAndMessageBoxHandling.ReturnControlText(
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Form,
+                controlName: "FrmSettings"
+            )
+        };
         FrmSettings.ShowDialog();
     }
 
@@ -3251,7 +3250,7 @@ public partial class FrmMainApp : Form
             }
         }
 
-        void UpdateDE(DirectoryElement dirElemFileToModify,
+        static void UpdateDE(DirectoryElement dirElemFileToModify,
                       ElementAttribute attribute,
                       string settingValue)
         {
@@ -3606,7 +3605,7 @@ public partial class FrmMainApp : Form
         }
 
 
-        string GetDatabaseFileToImport()
+        static string GetDatabaseFileToImport()
         {
             OpenFileDialog openFileDialog = new()
             {
@@ -3620,9 +3619,9 @@ public partial class FrmMainApp : Form
         }
     }
 
-#endregion
+    #endregion
 
-#region Methods
+    #region Methods
 
     internal Favourite GetFavouriteByName(string favouriteName)
     {
@@ -3665,7 +3664,7 @@ public partial class FrmMainApp : Form
     /// </summary>
     internal void ClearReloadFavouritesDropDownValues()
     {
-        AutoCompleteStringCollection autoCompleteCustomSource = new();
+        AutoCompleteStringCollection autoCompleteCustomSource = [];
         cbx_Favourites.Items.Clear();
         foreach (Favourite favourite in Favourites)
         {

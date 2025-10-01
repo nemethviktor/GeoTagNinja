@@ -1,10 +1,10 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.IO;
 using System.IO.Pipes;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading;
-using NLog;
 
 namespace GeoTagNinja;
 
@@ -48,7 +48,8 @@ internal class SingleInstance_PipeServer
     /// </summary>
     /// <param name="messageCallback">Set a method that receives the message
     /// from the other end of the pipe</param>
-    public SingleInstance_PipeServer( Action<string> messageCallback) {
+    public SingleInstance_PipeServer(Action<string> messageCallback)
+    {
         msgCallback = messageCallback;
         myUserName = WindowsIdentity.GetCurrent().Name;
 
@@ -87,7 +88,7 @@ internal class SingleInstance_PipeServer
         cTokenSource = new CancellationTokenSource();
 
         // Security:
-        PipeSecurity npSec = new PipeSecurity();
+        PipeSecurity npSec = new();
         // Deny all
         npSec.AddAccessRule(
             rule: new PipeAccessRule(
@@ -112,7 +113,7 @@ internal class SingleInstance_PipeServer
                 pipeSecurity: npSec);
 
             int threadID = Thread.CurrentThread.ManagedThreadId;
-            Log.Info(message: $"Server: started with Thread ID {threadID.ToString()}");
+            Log.Info(message: $"Server: started with Thread ID {threadID}");
 
             // Async wait for connection that can be canceled
             IAsyncResult npConnectionResult =
@@ -128,9 +129,9 @@ internal class SingleInstance_PipeServer
                 npServer.Close();
             }
 
-            if ((cTokenSource == null) || (cTokenSource.IsCancellationRequested))
+            if ((cTokenSource == null) || cTokenSource.IsCancellationRequested)
             {
-                Log.Info(message: $"Server ({threadID.ToString()}): cancellation requested.");
+                Log.Info(message: $"Server ({threadID}): cancellation requested.");
                 return;
             }
         }
@@ -216,14 +217,14 @@ internal class SingleInstance_PipeServer
     {
         try
         {
-            StreamReader streamer = new StreamReader(stream: npServer);
+            StreamReader streamer = new(stream: npServer);
             // We only read one line...
             string inputLine = streamer.ReadLine();
 
             // Username only available after reading from pipe
             // But access is limited to current user only ...
             string sendingUser = npServer.GetImpersonationUserName();
-            Log.Info(message: $"Server ({threadID.ToString()}): connected to user {sendingUser}");
+            Log.Info(message: $"Server ({threadID}): connected to user {sendingUser}");
 
             msgCallback.Invoke(obj: $"Message from user '{sendingUser}': {inputLine}");
             Console.WriteLine(value: inputLine);
@@ -231,7 +232,7 @@ internal class SingleInstance_PipeServer
         catch (IOException e)
         {
             // IOException raised if pipe is broken / disconnected...
-            Log.Info(message: $"Server ({threadID.ToString()}): Server session ended - {e.Message}");
+            Log.Info(message: $"Server ({threadID}): Server session ended - {e.Message}");
         }
     }
 

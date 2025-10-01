@@ -1,9 +1,9 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using GeoTagNinja.Helpers;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Model;
@@ -27,29 +27,19 @@ internal class TagsToModelValueTransformations
         // Get the Ref Attribute for the corresponding data point and thereof the first character
         // (Should be N of North, etc.)
         // If this character is not contained in the data point value, add it before it
-        ElementAttribute refAttrib;
-        switch (attribute)
+        var refAttrib = attribute switch
         {
-            case ElementAttribute.GPSLatitude:
-                refAttrib = ElementAttribute.GPSLatitudeRef;
-                break;
-            case ElementAttribute.GPSDestLatitude:
-                refAttrib = ElementAttribute.GPSDestLatitudeRef;
-                break;
-            case ElementAttribute.GPSLongitude:
-                refAttrib = ElementAttribute.GPSLongitudeRef;
-                break;
-            case ElementAttribute.GPSDestLongitude:
-                refAttrib = ElementAttribute.GPSDestLongitudeRef;
-                break;
-            default:
-                throw new ArgumentException(message: $"T2M_GPSLatLong does not support attribute '{GetElementAttributesName(attributeToFind: attribute)}'");
-        }
+            ElementAttribute.GPSLatitude => ElementAttribute.GPSLatitudeRef,
+            ElementAttribute.GPSDestLatitude => ElementAttribute.GPSDestLatitudeRef,
+            ElementAttribute.GPSLongitude => ElementAttribute.GPSLongitudeRef,
+            ElementAttribute.GPSDestLongitude => ElementAttribute.GPSDestLongitudeRef,
+            _ => throw new ArgumentException(message: $"T2M_GPSLatLong does not support attribute '{GetElementAttributesName(attributeToFind: attribute)}'"),
+        };
 
         // If reference is set, concat if needed
         string tmpLatLongRefVal = ""; // this will be something like "N" or "North" etc.
         if (parsed_Values.ContainsKey(key: refAttrib))
-            // Was parsed already
+        // Was parsed already
         {
             tmpLatLongRefVal = (string)parsed_Values[key: refAttrib];
         }
@@ -135,14 +125,11 @@ internal class TagsToModelValueTransformations
         try
         {
             bool parseBool = double.TryParse(s: parseResult, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double tmpAltitude);
-            if (parseBool)
-            {
-                return HelperVariables.UserSettingUseImperial
+            return parseBool
+                ? HelperVariables.UserSettingUseImperial
                     ? Math.Round(value: tmpAltitude * HelperVariables.MetreToFeet, digits: 2)
-                    : tmpAltitude;
-            }
-
-            return null;
+                    : tmpAltitude
+                : null;
         }
         catch
         {
@@ -162,14 +149,11 @@ internal class TagsToModelValueTransformations
             return null; // not set
         }
 
-        if (parseResult.ToLower()
+        return parseResult.ToLower()
                 .Contains(value: "below") ||
-            parseResult.Contains(value: "1"))
-        {
-            return "Below Sea Level";
-        }
-
-        return "Above Sea Level";
+            parseResult.Contains(value: "1")
+            ? "Below Sea Level"
+            : "Above Sea Level";
     }
 
     /// <summary>
@@ -228,17 +212,14 @@ internal class TagsToModelValueTransformations
             return null; // not set
         }
 
-        if (parseResult.ToLower()
+        return parseResult.ToLower()
                        .Contains(value: "true") ||
             parseResult.ToLower()
                        .Contains(value: "geo") ||
             parseResult.ToUpper()
-                       .StartsWith("T"))
-        {
-            return "Geographic North";
-        }
-
-        return "Magnetic North";
+                       .StartsWith("T")
+            ? "Geographic North"
+            : "Magnetic North";
     }
 
 

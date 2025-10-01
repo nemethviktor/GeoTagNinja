@@ -1,9 +1,9 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using GeoTagNinja.Helpers;
 
 namespace GeoTagNinja.View.DialogAndMessageBoxes;
 
@@ -126,13 +126,11 @@ public class CustomMessageBox : Form
         {
             _pictureBox.Image = SystemIcons.Hand.ToBitmap();
         }
-        else if (icon == MessageBoxIcon.Asterisk)
-        {
-            _pictureBox.Image = SystemIcons.Asterisk.ToBitmap();
-        }
         else
         {
-            throw new ArgumentOutOfRangeException(paramName: nameof(icon),
+            _pictureBox.Image = icon == MessageBoxIcon.Asterisk
+                ? (Image)SystemIcons.Asterisk.ToBitmap()
+                : throw new ArgumentOutOfRangeException(paramName: nameof(icon),
                                                   actualValue: icon, message: null);
         }
     }
@@ -149,19 +147,23 @@ public class CustomMessageBox : Form
     private void InitializeComponent()
     {
         // Initialize Label
-        _lblMessage = new Label();
-        _lblMessage.AutoSize = true;
-        _lblMessage.Location = new Point(x: 63, y: 13);
-        _lblMessage.Name = "_lblMessage";
-        _lblMessage.MinimumSize = new Size(width: 20, height: 13);
-        _lblMessage.MaximumSize = new Size(width: 250, height: 300);
-        _lblMessage.TabIndex = 0;
+        _lblMessage = new Label
+        {
+            AutoSize = true,
+            Location = new Point(x: 63, y: 13),
+            Name = "_lblMessage",
+            MinimumSize = new Size(width: 20, height: 13),
+            MaximumSize = new Size(width: 250, height: 300),
+            TabIndex = 0
+        };
         // Initialize PictureBox
-        _pictureBox = new PictureBox();
-        _pictureBox.Location = new Point(x: 13, y: 13);
-        _pictureBox.Name = "_pictureBox";
-        _pictureBox.Size = new Size(width: 50, height: 50);
-        _pictureBox.TabIndex = 1;
+        _pictureBox = new PictureBox
+        {
+            Location = new Point(x: 13, y: 13),
+            Name = "_pictureBox",
+            Size = new Size(width: 50, height: 50),
+            TabIndex = 1
+        };
         // Add controls to the form
         Controls.Add(value: _lblMessage);
         Controls.Add(value: _pictureBox);
@@ -186,14 +188,16 @@ public class CustomMessageBox : Form
     private const int ButtonWidth = 75;
     private const int ButtonHeight = 25;
     private const int ButtonSpacing = 10;
-    private readonly List<Button> _buttons = new();
+    private readonly List<Button> _buttons = [];
 
     private void CreateButton(string text,
                               DialogResult result)
     {
-        Button button = new();
-        button.Text = text;
-        button.DialogResult = result;
+        Button button = new()
+        {
+            Text = text,
+            DialogResult = result
+        };
         button.Click += (sender,
                          e) => DialogResult = result;
         button.Size = new Size(width: ButtonWidth, height: ButtonHeight);
@@ -214,12 +218,12 @@ public class CustomMessageBox : Form
 
     private void PositionButtons()
     {
-        int totalWidth = _buttonCount * ButtonWidth + (_buttonCount - 1) * ButtonSpacing;
+        int totalWidth = (_buttonCount * ButtonWidth) + ((_buttonCount - 1) * ButtonSpacing);
         int startX = (Width - totalWidth) / 2;
         for (int i = 0; i < _buttonCount; i++)
         {
             _buttons[index: i].Location = new Point(
-                x: startX + i * (ButtonWidth + ButtonSpacing),
+                x: startX + (i * (ButtonWidth + ButtonSpacing)),
                 y: Math.Max(val1: _lblMessage.Bottom, val2: _pictureBox.Bottom) + 10);
             Controls.Add(value: _buttons[index: i]);
         }

@@ -59,7 +59,7 @@ internal class HelperExifWriteTrackDataToTrackFile
              */
 
             string exifArgsForOriginalFile = fileList
-                                            .Where(predicate: trackFilePath => File.Exists(path: trackFilePath))
+                                            .Where(predicate: File.Exists)
                                             .Aggregate(seed: "",
                                                  func: (current,
                                                         trackFilePath) =>
@@ -93,7 +93,7 @@ internal class HelperExifWriteTrackDataToTrackFile
         {
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                 controlName: "mbx_FrmImportExportGpx_FileOrFolderDoesntExist",
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error, buttons: 
+                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error, buttons:
                 MessageBoxButtons.OK);
         }
     }

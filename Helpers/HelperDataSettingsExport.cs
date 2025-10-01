@@ -24,7 +24,7 @@ internal static class HelperDataSettingsExport
         // exportFilePath must exist already because it's been called in a way that this is ensured
         // so we loop through foreach (SettingsImportExportOptions) and see if everyone's there
 
-        List<string> settingsTablesToBeKeptList = new();
+        List<string> settingsTablesToBeKeptList = [];
 
         foreach (string settingName in Enum.GetNames(enumType: typeof(SettingsImportExportOptions)))
         {
@@ -47,23 +47,19 @@ internal static class HelperDataSettingsExport
         static void KeepSQLiteTables(List<string> tablesToKeep,
                                      string exportFilePath)
         {
-            List<string> systemTables = new() { "sqlite_sequence" };
-            List<string> tablesToDelete = new();
+            List<string> systemTables = ["sqlite_sequence"];
+            List<string> tablesToDelete = [];
             using (SQLiteConnection connection = new(connectionString: $"Data Source={exportFilePath};"))
             {
                 connection.Open();
-                using (SQLiteCommand command = new(commandText: "SELECT name FROM sqlite_master WHERE type='table'", connection: connection))
+                using SQLiteCommand command = new(commandText: "SELECT name FROM sqlite_master WHERE type='table'", connection: connection);
+                using SQLiteDataReader reader = command.ExecuteReader();
+                while (reader.Read())
                 {
-                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    string tableName = reader.GetString(i: 0);
+                    if (!tablesToKeep.Contains(item: tableName) && !systemTables.Contains(item: tableName))
                     {
-                        while (reader.Read())
-                        {
-                            string tableName = reader.GetString(i: 0);
-                            if (!tablesToKeep.Contains(item: tableName) && !systemTables.Contains(item: tableName))
-                            {
-                                tablesToDelete.Add(item: tableName);
-                            }
-                        }
+                        tablesToDelete.Add(item: tableName);
                     }
                 }
             }
@@ -83,14 +79,10 @@ internal static class HelperDataSettingsExport
     private static void DeleteSQLiteTable(string tableName,
                                           string exportFilePath)
     {
-        using (SQLiteConnection connection = new(connectionString: $"Data Source={exportFilePath};"))
-        {
-            connection.Open();
-            using (SQLiteCommand command = new(connection: connection))
-            {
-                command.CommandText = $"DROP TABLE IF EXISTS {tableName};";
-                command.ExecuteNonQuery();
-            }
-        }
+        using SQLiteConnection connection = new(connectionString: $"Data Source={exportFilePath};");
+        connection.Open();
+        using SQLiteCommand command = new(connection: connection);
+        command.CommandText = $"DROP TABLE IF EXISTS {tableName};";
+        command.ExecuteNonQuery();
     }
 }

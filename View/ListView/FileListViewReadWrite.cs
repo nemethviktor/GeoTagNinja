@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeoTagNinja.Model;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
@@ -6,7 +7,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GeoTagNinja.Model;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using static GeoTagNinja.View.ListView.FileListView;
 
@@ -200,7 +200,7 @@ internal static class FileListViewReadWrite
 
         return Task.CompletedTask;
 
-        int GetTotalShiftedSeconds(DirectoryElement dirElemFileToModify,
+        static int GetTotalShiftedSeconds(DirectoryElement dirElemFileToModify,
                                    TakenOrCreated takenOrCreated)
         {
             ElementAttribute attributeShiftedDays = takenOrCreated == TakenOrCreated.Taken
@@ -240,9 +240,9 @@ internal static class FileListViewReadWrite
                 notFoundValue: 0);
 
             int totalShiftedSeconds = shiftedSeconds +
-                                      shiftedMinutes * 60 +
-                                      shiftedHours * 60 * 60 +
-                                      shiftedDays * 60 * 60 * 24;
+                                      (shiftedMinutes * 60) +
+                                      (shiftedHours * 60 * 60) +
+                                      (shiftedDays * 60 * 60 * 24);
             return totalShiftedSeconds;
         }
     }

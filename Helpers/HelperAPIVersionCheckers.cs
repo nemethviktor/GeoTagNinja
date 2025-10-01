@@ -1,4 +1,10 @@
-﻿using System;
+﻿using GeoTagNinja;
+using GeoTagNinja.Model;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using RestSharp;
+using RestSharp.Authenticators;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -9,12 +15,6 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using geoTagNinja;
-using GeoTagNinja.Model;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using RestSharp;
-using RestSharp.Authenticators;
 
 namespace GeoTagNinja.Helpers;
 
@@ -134,7 +134,7 @@ internal static class HelperAPIVersionCheckers
                 Math.Max(val1: 0, val2: lastGTNBuildInt);
         }
         // actually, this is largely irrelevant for most users
-    #if DEBUG
+#if DEBUG
         else
         {
             HelperVariables.OperationAPIReturnedOKResponse = false;
@@ -144,7 +144,7 @@ internal static class HelperAPIVersionCheckers
                 buttons: MessageBoxButtons.OK,
                 extraMessage: response_GTNVersionQuery.StatusCode.ToString());
         }
-    #endif
+#endif
 
         return lastGTNBuildOnline;
     }
@@ -173,8 +173,8 @@ internal static class HelperAPIVersionCheckers
         {
             lastCheckUnixTime = nowUnixTime;
             // write back to SQL so it doesn't remain blank
-            List<AppSettingContainer> settingsToWrite = new()
-            {
+            List<AppSettingContainer> settingsToWrite =
+            [
                 new AppSettingContainer
                 {
                     TableName = "settings",
@@ -182,7 +182,7 @@ internal static class HelperAPIVersionCheckers
                     SettingId = "onlineVersionCheckDate",
                     SettingValue = nowUnixTime.ToString(provider: CultureInfo.InvariantCulture)
                 }
-            };
+            ];
             HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
         }
         else
@@ -192,10 +192,10 @@ internal static class HelperAPIVersionCheckers
 
         FrmMainApp.Log.Trace(message: $"nowUnixTime > lastCheckUnixTime:{nowUnixTime - lastCheckUnixTime}");
         int checkUpdateVal = 604800; //604800 is a week's worth of seconds
-    #if DEBUG
+#if DEBUG
         //checkUpdateVal = 86400; // 86400 is a day's worth of seconds
         checkUpdateVal = 1;
-    #endif
+#endif
 
         // this needs to run each time the app runs because it's part of the info in the About box.
         // get current exiftool version
@@ -277,8 +277,8 @@ internal static class HelperAPIVersionCheckers
                     provider: CultureInfo.InvariantCulture));
 
             // write back to SQL
-            List<AppSettingContainer> settingsToWrite = new()
-            {
+            List<AppSettingContainer> settingsToWrite =
+            [
                 new AppSettingContainer
                 {
                     TableName = "settings",
@@ -286,7 +286,7 @@ internal static class HelperAPIVersionCheckers
                     SettingId = "onlineVersionCheckDate",
                     SettingValue = nowUnixTime.ToString(provider: CultureInfo.InvariantCulture)
                 }
-            };
+            ];
             HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
         }
         else

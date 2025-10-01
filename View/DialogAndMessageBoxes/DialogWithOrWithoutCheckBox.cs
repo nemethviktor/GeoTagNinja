@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using GeoTagNinja.Helpers;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using GeoTagNinja.Helpers;
 
 namespace GeoTagNinja.View.DialogAndMessageBoxes;
 
@@ -34,7 +34,7 @@ internal class DialogWithOrWithoutCheckBox
                                                       Dictionary<string, string>
                                                           checkboxesDictionary)
     {
-        List<string> returnChoicesList = new();
+        List<string> returnChoicesList = [];
         Form promptBoxForm = new()
         {
             Text = caption,
@@ -56,10 +56,12 @@ internal class DialogWithOrWithoutCheckBox
                 ? ThemeColour.Dark
                 : ThemeColour.Light, parentControl: promptBoxForm);
 
-        Label lblText = new();
-        lblText.Text = labelText;
-        lblText.MaximumSize = new Size(width: 300, height: 0);
-        lblText.AutoSize = true;
+        Label lblText = new()
+        {
+            Text = labelText,
+            MaximumSize = new Size(width: 300, height: 0),
+            AutoSize = true
+        };
         flowLayoutPanel.SetFlowBreak(control: lblText, value: true);
         flowLayoutPanel.Controls.Add(value: lblText);
 
@@ -166,9 +168,11 @@ internal class DialogWithOrWithoutCheckBox
                 {
                     KeyValuePair<string, string> keyValuePair =
                         checkboxesDictionary.ElementAt(index: i);
-                    CheckBox chk = new();
-                    chk.Text = keyValuePair.Key;
-                    chk.AutoSize = true;
+                    CheckBox chk = new()
+                    {
+                        Text = keyValuePair.Key,
+                        AutoSize = true
+                    };
 
                     flowLayoutPanel.Controls.Add(value: chk);
 
@@ -183,7 +187,7 @@ internal class DialogWithOrWithoutCheckBox
 
         List<string> ProcessCheckBoxes()
         {
-            List<string> s = new();
+            List<string> s = [];
             // see if user added any checkbox choices
             foreach (CheckBox chk in flowLayoutPanel.Controls.OfType<CheckBox>())
             {

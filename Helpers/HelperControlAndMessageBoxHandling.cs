@@ -72,15 +72,15 @@ internal static class HelperControlAndMessageBoxHandling
         // Note to self: do not add TextBoxes and ComboBoxes.
         // Also cannot add ColumnHeader because it's not a Control
         if (
-            cItem is Label ||
-            cItem is GroupBox ||
-            cItem is Button ||
-            cItem is CheckBox ||
-            cItem is TabPage ||
-            cItem is RichTextBox ||
-            cItem is RadioButton ||
-            cItem is Form
-            //||
+            cItem is Label or
+            GroupBox or
+            Button or
+            CheckBox or
+            TabPage or
+            RichTextBox or
+            RadioButton or
+            Form
+        //||
         )
         {
             FrmMainApp.Log.Trace(message: $"Starting - cItem: {cItem.Name}");

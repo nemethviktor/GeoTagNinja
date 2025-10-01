@@ -1,3 +1,6 @@
+using GeoTagNinja.Model;
+using GeoTagNinja.View.ListView;
+using Microsoft.Web.WebView2.Core;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,9 +11,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GeoTagNinja.Model;
-using GeoTagNinja.View.ListView;
-using Microsoft.Web.WebView2.Core;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 
 namespace GeoTagNinja.Helpers;
@@ -278,21 +278,21 @@ internal static class HelperGenericAppStartup
         {
             [key: "tpg_Application"] = new Dictionary<string, List<string>>
             {
-                [key: "UserSettingMapColourMode"] = new()
-                {
+                [key: "UserSettingMapColourMode"] =
+                [
                     "rbt_MapColourModeNormal",
                     "rbt_MapColourModeDarkInverse",
                     "rbt_MapColourModeDarkPale"
-                }
+                ]
             },
             [key: "tpg_ImportExport_Import"] = new Dictionary<string, List<string>>
             {
-                [key: "UserSettingImportGPXImportSource"] = new()
-                {
+                [key: "UserSettingImportGPXImportSource"] =
+                [
                     "rbt_importOneFile",
                     "rbt_importFromCurrentFolder",
                     "rbt_importFromAnotherFolder"
-                }
+                ]
             }
         };
 

@@ -1,8 +1,8 @@
-﻿using System.Globalization;
+﻿using GeoTagNinja.Resources.Languages;
+using System.Globalization;
 using System.Resources;
 using System.Threading;
 using System.Windows.Forms;
-using GeoTagNinja.Resources.Languages;
 
 namespace GeoTagNinja.Helpers;
 
@@ -22,22 +22,13 @@ internal static class HelperLocalisationResourceManager
 
         // Attempt to get the resource value based on the control's name
         // This has been done a little oddly because items like btn_OK became btn_Generic_Ok and lbl_Generic_OK so we're taking whatever comes after the first underscore.
-        string resourceKey;
-        if (control.Name.Contains(value: "Generic"))
-        {
-            resourceKey = control.Name.Substring(startIndex: control.Name.IndexOf(value: '_') + 1);
-        }
-        // Alternatively if it's not been designated as Generic but is nonetheless then we use the lookup dict
-        else if (resourceKeyInGenericMapping != HelperVariables.ControlItemNameNotGeneric)
-        {
-            resourceKey = resourceKeyInGenericMapping;
-        }
-        // Still alternatively we just take the name of the item
-        else
-        {
-            resourceKey = control.Name;
-        }
-
+        string resourceKey = control.Name.Contains(value: "Generic")
+            ? control.Name.Substring(startIndex: control.Name.IndexOf(value: '_') + 1)
+            // Alternatively if it's not been designated as Generic but is nonetheless then we use the lookup dict
+            : resourceKeyInGenericMapping != HelperVariables.ControlItemNameNotGeneric
+                ? resourceKeyInGenericMapping
+                // Still alternatively we just take the name of the item
+                : control.Name;
         if (control is Form &&
             !resourceKey.StartsWith(value: "frm_"))
         {

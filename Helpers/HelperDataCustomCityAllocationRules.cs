@@ -85,17 +85,11 @@ internal static class HelperDataCustomCityAllocationRules
                     {
                         countryCodeAllocation = "AdminName2";
                     }
-                    else if (defaultCityNameIsAdminName3Arr.Contains(value: countryCode))
-                    {
-                        countryCodeAllocation = "AdminName3";
-                    }
-                    else if (defaultCityNameIsAdminName4Arr.Contains(value: countryCode))
-                    {
-                        countryCodeAllocation = "AdminName4";
-                    }
                     else
                     {
-                        countryCodeAllocation = "Undefined";
+                        countryCodeAllocation = defaultCityNameIsAdminName3Arr.Contains(value: countryCode)
+                            ? "AdminName3"
+                            : defaultCityNameIsAdminName4Arr.Contains(value: countryCode) ? "AdminName4" : "Undefined";
                     }
 
                     defaultCiltyAllocationLogic +=

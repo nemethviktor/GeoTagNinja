@@ -39,6 +39,7 @@ For more information, please refer to <http://unlicense.org/>
 */
 //#define EXIF_TRACE
 
+using GeoTagNinja.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -46,7 +47,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using GeoTagNinja.Helpers;
 
 namespace GeoTagNinja.Model;
 
@@ -108,16 +108,16 @@ public class ExifTool : IDisposable
         m_in.Write(value: filename);
         m_in.Write(value: "\n-execute\n");
         m_in.Flush();
-        #if EXIF_TRACE
+#if EXIF_TRACE
             Debug.WriteLine(filename);
             Debug.WriteLine("-execute");
-        #endif
-        for (;;)
+#endif
+        for (; ; )
         {
             string line = m_out.ReadLine();
-            #if EXIF_TRACE
+#if EXIF_TRACE
                 Debug.WriteLine(line);
-            #endif
+#endif
             if (line.StartsWith(value: "{ready"))
             {
                 break;
@@ -160,9 +160,8 @@ public class ExifTool : IDisposable
                                     out DateTime date)
     {
         date = DateTime.MinValue;
-        int year, month, day, hour, minute, second;
         s = s.Trim();
-        if (!int.TryParse(s: s.Substring(startIndex: 0, length: 4), result: out year))
+        if (!int.TryParse(s: s.Substring(startIndex: 0, length: 4), result: out int year))
         {
             return false;
         }
@@ -172,7 +171,7 @@ public class ExifTool : IDisposable
             return false;
         }
 
-        if (!int.TryParse(s: s.Substring(startIndex: 5, length: 2), result: out month))
+        if (!int.TryParse(s: s.Substring(startIndex: 5, length: 2), result: out int month))
         {
             return false;
         }
@@ -182,7 +181,7 @@ public class ExifTool : IDisposable
             return false;
         }
 
-        if (!int.TryParse(s: s.Substring(startIndex: 8, length: 2), result: out day))
+        if (!int.TryParse(s: s.Substring(startIndex: 8, length: 2), result: out int day))
         {
             return false;
         }
@@ -192,7 +191,7 @@ public class ExifTool : IDisposable
             return false;
         }
 
-        if (!int.TryParse(s: s.Substring(startIndex: 11, length: 2), result: out hour))
+        if (!int.TryParse(s: s.Substring(startIndex: 11, length: 2), result: out int hour))
         {
             return false;
         }
@@ -202,7 +201,7 @@ public class ExifTool : IDisposable
             return false;
         }
 
-        if (!int.TryParse(s: s.Substring(startIndex: 14, length: 2), result: out minute))
+        if (!int.TryParse(s: s.Substring(startIndex: 14, length: 2), result: out int minute))
         {
             return false;
         }
@@ -212,37 +211,37 @@ public class ExifTool : IDisposable
             return false;
         }
 
-        if (!int.TryParse(s: s.Substring(startIndex: 17, length: 2), result: out second))
+        if (!int.TryParse(s: s.Substring(startIndex: 17, length: 2), result: out int second))
         {
             return false;
         }
 
-        if (year < 1900 || year > 2200)
+        if (year is < 1900 or > 2200)
         {
             return false;
         }
 
-        if (month < 1 || month > 12)
+        if (month is < 1 or > 12)
         {
             return false;
         }
 
-        if (day < 1 || day > 31)
+        if (day is < 1 or > 31)
         {
             return false;
         }
 
-        if (hour < 0 || hour > 23)
+        if (hour is < 0 or > 23)
         {
             return false;
         }
 
-        if (minute < 0 || minute > 59)
+        if (minute is < 0 or > 59)
         {
             return false;
         }
 
-        if (second < 0 || second > 59)
+        if (second is < 0 or > 59)
         {
             return false;
         }
@@ -283,25 +282,18 @@ public class ExifTool : IDisposable
                     m_exifTool.Kill();
                     Debug.Fail(message: "Timed out waiting for exiftool to exit.");
                 }
-                #if EXIF_TRACE
+#if EXIF_TRACE
                     else
                     {
                         Debug.WriteLine("ExifTool exited cleanly.");
                     }
-                #endif
+#endif
             }
 
-            if (m_out != null)
-            {
-                m_out.Dispose();
-                m_out = null;
-            }
-
-            if (m_in != null)
-            {
-                m_in.Dispose();
-                m_in = null;
-            }
+            m_out?.Dispose();
+            m_out = null;
+            m_in?.Dispose();
+            m_in = null;
 
             m_exifTool.Dispose();
             m_exifTool = null;

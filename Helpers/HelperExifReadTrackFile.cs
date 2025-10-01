@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GeoTagNinja.Model;
+using GeoTagNinja.View.ListView;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -9,8 +11,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using GeoTagNinja.Model;
-using GeoTagNinja.View.ListView;
 using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
@@ -50,8 +50,8 @@ internal static class HelperExifReadTrackFile
             (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         Directory.CreateDirectory(path: $@"{HelperVariables.UserDataFolderPath}\tmpLocFiles");
-        List<string> trackFileList = new();
-        List<string> imageFileList = new();
+        List<string> trackFileList = [];
+        List<string> imageFileList = [];
         ListView lvw = frmMainAppInstance.lvw_FileList;
 
         if (frmMainAppInstance != null)
@@ -265,8 +265,8 @@ internal static class HelperExifReadTrackFile
                                         {
                                             List<(ElementAttribute attribute, string
                                                     toponomyOverwriteVal)>
-                                                toponomyOverwrites = new()
-                                                {
+                                                toponomyOverwrites =
+                                                [
                                                     (ElementAttribute.CountryCode,
                                                      dtToponomy.Rows[index: 0][columnName: "CountryCode"].ToString()),
                                                     (ElementAttribute.Country,
@@ -277,19 +277,16 @@ internal static class HelperExifReadTrackFile
                                                      dtToponomy.Rows[index: 0][columnName: "State"].ToString()),
                                                     (ElementAttribute.Sublocation,
                                                      dtToponomy.Rows[index: 0][columnName: "Sublocation"].ToString())
-                                                };
+                                                ];
 
                                             foreach ((ElementAttribute attribute, string
-                                                     toponomyOverwriteVal) toponomyDetail
-                                                     in toponomyOverwrites)
+                                                     toponomyOverwriteVal) in toponomyOverwrites)
                                             {
                                                 // these are all strings
                                                 dirElemFileToModify
                                                    .SetAttributeValueAnyType(
-                                                        attribute: toponomyDetail
-                                                           .attribute,
-                                                        value: toponomyDetail
-                                                           .toponomyOverwriteVal,
+                                                        attribute: attribute,
+                                                        value: toponomyOverwriteVal,
                                                         version: DirectoryElement.AttributeVersion
                                                            .Stage3ReadyToWrite,
                                                         isMarkedForDeletion: false);
@@ -308,18 +305,18 @@ internal static class HelperExifReadTrackFile
                     {
                         // nothing. errors should have already come up
                     }
-                #if !DEBUG
+#if !DEBUG
                     finally
                     {
                         File.Delete(path: exifFileIn.FullName); // clean up
                     }
-                #endif
+#endif
                 }
             }
 
             // this triggers ExifTool
-            if (getTrackDataOverlay == TrackOverlaySetting.OverlayForAllDates ||
-                getTrackDataOverlay == TrackOverlaySetting.OverlayForOverlappingDates)
+            if (getTrackDataOverlay is TrackOverlaySetting.OverlayForAllDates or
+                TrackOverlaySetting.OverlayForOverlappingDates)
             {
                 await HelperExifReadTrackFilePath.ExifReadTrackFileForMapping(trackFileList: trackFileList,
                     overlayDateSetting: getTrackDataOverlay, overlayDateList: overlayDateList, TZVal: TZVal);
@@ -334,27 +331,30 @@ internal static class HelperExifReadTrackFile
 
         if (dialogResult == DialogResult.Yes)
         {
-            Form reportBox = new();
-
-            reportBox.ControlBox = false;
+            Form reportBox = new()
+            {
+                ControlBox = false
+            };
             FlowLayoutPanel panel = new();
 
-            TextBox tbxText = new();
-            tbxText.Size = new Size(width: 700, height: 400);
+            TextBox tbxText = new()
+            {
+                Size = new Size(width: 700, height: 400),
 
-            tbxText.Text = HelperVariables._sOutputAndErrorMsg;
-            tbxText.ScrollBars = ScrollBars.Vertical;
-            tbxText.Multiline = true;
-            tbxText.WordWrap = true;
-            tbxText.ReadOnly = true;
-            tbxText.SelectionStart = 1;
-            tbxText.SelectionLength = 0;
+                Text = HelperVariables._sOutputAndErrorMsg,
+                ScrollBars = ScrollBars.Vertical,
+                Multiline = true,
+                WordWrap = true,
+                ReadOnly = true,
+                SelectionStart = 1,
+                SelectionLength = 0
+            };
 
             panel.SetFlowBreak(control: tbxText, value: true);
             panel.Controls.Add(value: tbxText);
 
             Button btnOk = new()
-                { Text = "OK" };
+            { Text = "OK" };
             btnOk.Click += (sender,
                             e) =>
             {

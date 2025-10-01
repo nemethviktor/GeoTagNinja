@@ -99,18 +99,18 @@ public static class SourcesAndAttributes
                         Name = "GPSAltitude",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_ALTITUDE,
                         TypeOfElement = typeof(double),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:GPSAltitude",
                             "EXIF:GPSAltitude",
                             "GPS:GPSAltitude"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "GPS:GPSAltitude",
                             "exif:GPSAltitude",
                             "XMP:GPSAltitude"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSAltitude,
                         isGeoData = true
                     }
@@ -121,18 +121,18 @@ public static class SourcesAndAttributes
                         Name = "GPSAltitudeRef",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_ALTITUDE_REF,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:GPSAltitudeRef",
                             "EXIF:GPSAltitudeRef",
                             "GPS:GPSAltitudeRef"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "GPS:GPSAltitudeRef",
                             "exif:GPSAltitudeRef",
                             "XMP:GPSAltitudeRef"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSAltitudeRef,
                         isGeoData = true
                     }
@@ -144,18 +144,18 @@ public static class SourcesAndAttributes
                         ColumnHeader =
                             COL_NAME_PREFIX + FileListColumns.GPS_DEST_LATITUDE,
                         TypeOfElement = typeof(double),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:GPSDestLatitude",
                             "EXIF:GPSDestLatitude",
                             "GPS:GPSDestLatitude"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "GPS:GPSDestLatitude",
                             "exif:GPSDestLatitude",
                             "XMP:GPSDestLatitude"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSDestLatitude,
                         isGeoData = true
                     }
@@ -167,16 +167,16 @@ public static class SourcesAndAttributes
                         ColumnHeader = COL_NAME_PREFIX +
                                        FileListColumns.GPS_DEST_LATITUDE_REF,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "EXIF:GPSDestLatitudeRef",
                             "GPS:GPSDestLatitudeRef"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "GPS:GPSDestLatitudeRef",
                             "exif:GPSDestLatitudeRef"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSDestLatitudeRef,
                         isGeoData = true
                     }
@@ -188,18 +188,18 @@ public static class SourcesAndAttributes
                         ColumnHeader =
                             COL_NAME_PREFIX + FileListColumns.GPS_DEST_LONGITUDE,
                         TypeOfElement = typeof(double),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:GPSDestLongitude",
                             "EXIF:GPSDestLongitude",
                             "GPS:GPSDestLongitude"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "GPS:GPSDestLongitude",
                             "exif:GPSDestLongitude",
                             "XMP:GPSDestLongitude"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSDestLongitude,
                         isGeoData = true
                     }
@@ -211,16 +211,16 @@ public static class SourcesAndAttributes
                         ColumnHeader = COL_NAME_PREFIX +
                                        FileListColumns.GPS_DEST_LONGITUDE_REF,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "EXIF:GPSDestLongitudeRef",
                             "GPS:GPSDestLongitudeRef"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "GPS:GPSDestLongitudeRef",
                             "exif:GPSDestLongitudeRef"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSDestLongitudeRef,
                         isGeoData = true
                     }
@@ -231,16 +231,12 @@ public static class SourcesAndAttributes
                         Name = "GPSImgDirection",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_IMGDIRECTION,
                         TypeOfElement = typeof(double),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:GPSImgDirection",
                             "EXIF:GPSImgDirection"
-                        },
-                        OutAttributes = new List<string>
-                        {
-                            //        "XMP:GPSImgDirection",
-                            //        "EXIF:GPSImgDirection"
-                        },
+                        ],
+                        OutAttributes = [],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSImgDirection
                     }
                 },
@@ -251,16 +247,12 @@ public static class SourcesAndAttributes
                         ColumnHeader = COL_NAME_PREFIX +
                                        FileListColumns.GPS_IMGDIRECTION_REF,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:GPSImgDirectionRef",
                             "EXIF:GPSImgDirectionRef"
-                        },
-                        OutAttributes = new List<string>
-                        {
-                            //        "XMP:GPSImgDirectionRef",
-                            //        "EXIF:GPSImgDirectionRef"
-                        },
+                        ],
+                        OutAttributes = [],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSImgDirectionRef
                     }
                 },
@@ -270,18 +262,18 @@ public static class SourcesAndAttributes
                         Name = "GPSLatitude",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_LATITUDE,
                         TypeOfElement = typeof(double),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:GPSLatitude",
                             "EXIF:GPSLatitude",
                             "GPS:GPSLatitude"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "GPS:GPSLatitude",
                             "exif:GPSLatitude",
                             "XMP:GPSLatitude"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSLatitude,
                         isGeoData = true
                     }
@@ -292,16 +284,16 @@ public static class SourcesAndAttributes
                         Name = "GPSLatitudeRef",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_LATITUDE_REF,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "EXIF:GPSLatitudeRef",
                             "GPS:GPSLatitudeRef"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "GPS:GPSLatitudeRef",
                             "exif:GPSLatitudeRef"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSLatitudeRef,
                         isGeoData = true
                     }
@@ -312,18 +304,18 @@ public static class SourcesAndAttributes
                         Name = "GPSLongitude",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_LONGITUDE,
                         TypeOfElement = typeof(double),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:GPSLongitude",
                             "EXIF:GPSLongitude",
                             "GPS:GPSLongitude"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "GPS:GPSLongitude",
                             "exif:GPSLongitude",
                             "XMP:GPSLongitude"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSLongitude,
                         isGeoData = true
                     }
@@ -335,16 +327,16 @@ public static class SourcesAndAttributes
                         ColumnHeader =
                             COL_NAME_PREFIX + FileListColumns.GPS_LONGITUDE_REF,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "EXIF:GPSLongitudeRef",
                             "GPS:GPSLongitudeRef"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "GPS:GPSLongitudeRef",
                             "exif:GPSLongitudeRef"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSLongitudeRef,
                         isGeoData = true
                     }
@@ -355,16 +347,16 @@ public static class SourcesAndAttributes
                         Name = "GPSSpeed",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_SPEED,
                         TypeOfElement = typeof(double),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:GPSSpeed",
                             "EXIF:GPSSpeed"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "GPS:GPSSpeed",
                             "exif:GPSSpeed"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSSpeed
                     }
                 },
@@ -374,16 +366,16 @@ public static class SourcesAndAttributes
                         Name = "GPSSpeedRef",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_SPEED_REF,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:GPSSpeedRef",
                             "EXIF:GPSSpeedRef"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "GPS:GPSSpeedRef",
                             "exif:GPSSpeedRef"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSSpeedRef
                     }
                 },
@@ -393,8 +385,8 @@ public static class SourcesAndAttributes
                         Name = "Coordinates",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.COORDINATES,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>(),
-                        OutAttributes = new List<string>(),
+                        InAttributes = [],
+                        OutAttributes = [],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.Coordinates
                     }
                 },
@@ -404,8 +396,8 @@ public static class SourcesAndAttributes
                         Name = "DestCoordinates",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.DEST_COORDINATES,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>(),
-                        OutAttributes = new List<string>(),
+                        InAttributes = [],
+                        OutAttributes = [],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.DestCoordinates
                     }
                 },
@@ -415,16 +407,16 @@ public static class SourcesAndAttributes
                         Name = "City",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.CITY,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:City",
                             "IPTC:City"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "City",
                             "XMP-photoshop:City"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.City,
                         isGeoData = true
                     }
@@ -435,17 +427,17 @@ public static class SourcesAndAttributes
                         Name = "CountryCode",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:CountryCode",
                             "IPTC:Country-PrimaryLocationCode"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "CountryCode",
                             "XMP-iptcCore:CountryCode",
                             "IPTC:Country-PrimaryLocationCode"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.CountryCode,
                         isGeoData = true
                     }
@@ -456,17 +448,17 @@ public static class SourcesAndAttributes
                         Name = "Country",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.COUNTRY,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:Country",
                             "IPTC:Country-PrimaryLocationName"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "Country",
                             "XMP-photoshop:Country",
                             "IPTC:Country-PrimaryLocationName"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.Country,
                         isGeoData = true
                     }
@@ -477,17 +469,17 @@ public static class SourcesAndAttributes
                         Name = "State",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.STATE,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:State",
                             "IPTC:Province-State"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "State",
                             "XMP-photoshop:State",
                             "IPTC:Province-State"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.State,
                         isGeoData = true
                     }
@@ -498,16 +490,16 @@ public static class SourcesAndAttributes
                         Name = "Sublocation",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.Sublocation,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:Location",
                             "IPTC:Sub-location"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "Sub-location",
                             "XMP-iptcCore:Location"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.Sublocation,
                         isGeoData = true
                     }
@@ -518,12 +510,12 @@ public static class SourcesAndAttributes
                         Name = "Make",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.MAKE,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:Make",
                             "EXIF:Make"
-                        },
-                        OutAttributes = new List<string>(),
+                        ],
+                        OutAttributes = [],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.Make
                     }
                 },
@@ -533,12 +525,12 @@ public static class SourcesAndAttributes
                         Name = "Model",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.MODEL,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:Model",
                             "EXIF:Model"
-                        },
-                        OutAttributes = new List<string>(),
+                        ],
+                        OutAttributes = [],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.Model
                     }
                 },
@@ -548,16 +540,16 @@ public static class SourcesAndAttributes
                         Name = "Rating",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.RATING,
                         TypeOfElement = typeof(int),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:Rating",
                             "EXIF:Rating"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "XMP:Rating",
                             "EXIF:Rating"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.Rating
                     }
                 },
@@ -567,12 +559,12 @@ public static class SourcesAndAttributes
                         Name = "ExposureTime",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.EXPOSURETIME,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:ExposureTime",
                             "EXIF:ExposureTime"
-                        },
-                        OutAttributes = new List<string>(),
+                        ],
+                        OutAttributes = [],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.ExposureTime
                     }
                 },
@@ -582,12 +574,12 @@ public static class SourcesAndAttributes
                         Name = "Fnumber",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.FNUMBER,
                         TypeOfElement = typeof(double),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:FNumber",
                             "EXIF:FNumber"
-                        },
-                        OutAttributes = new List<string>(),
+                        ],
+                        OutAttributes = [],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.Fnumber
                     }
                 },
@@ -597,12 +589,12 @@ public static class SourcesAndAttributes
                         Name = "FocalLength",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.FOCAL_LENGTH,
                         TypeOfElement = typeof(double),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:FocalLength",
                             "EXIF:FocalLength"
-                        },
-                        OutAttributes = new List<string>(),
+                        ],
+                        OutAttributes = [],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.FocalLength
                     }
                 },
@@ -613,13 +605,13 @@ public static class SourcesAndAttributes
                         ColumnHeader = COL_NAME_PREFIX +
                                        FileListColumns.FOCAL_LENGTH_IN_35MM_FORMAT,
                         TypeOfElement = typeof(double),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:FocalLengthIn35mmFormat",
                             "EXIF:FocalLengthIn35mmFormat",
                             "Composite:FocalLength35efl"
-                        },
-                        OutAttributes = new List<string>(),
+                        ],
+                        OutAttributes = [],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.FocalLengthIn35mmFormat
                     }
                 },
@@ -629,13 +621,13 @@ public static class SourcesAndAttributes
                         Name = "ISO",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.ISO,
                         TypeOfElement = typeof(int),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:ISO",
                             "EXIF:ISO",
                             "Composite:ISO"
-                        },
-                        OutAttributes = new List<string>(),
+                        ],
+                        OutAttributes = [],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.ISO
                     }
                 },
@@ -645,13 +637,13 @@ public static class SourcesAndAttributes
                         Name = "LensSpec",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.LENS_SPEC,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:LensInfo",
                             "EXIF:LensModel",
                             "Composite:Lens"
-                        },
-                        OutAttributes = new List<string>(),
+                        ],
+                        OutAttributes = [],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.LensSpec
                     }
                 },
@@ -661,16 +653,16 @@ public static class SourcesAndAttributes
                         Name = "TakenDate",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.TAKEN_DATE,
                         TypeOfElement = typeof(DateTime),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:DateTimeOriginal",
                             "EXIF:DateTimeOriginal"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "XMP:DateTimeOriginal",
                             "EXIF:DateTimeOriginal"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.TakenDate
                     }
                 },
@@ -680,16 +672,16 @@ public static class SourcesAndAttributes
                         Name = "CreateDate",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.CREATE_DATE,
                         TypeOfElement = typeof(DateTime),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "XMP:CreateDate",
                             "EXIF:CreateDate"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "XMP:CreateDate",
                             "EXIF:CreateDate"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.CreateDate
                     }
                 },
@@ -699,11 +691,11 @@ public static class SourcesAndAttributes
                         Name = "GPSDateTime",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_DATETIME,
                         TypeOfElement = typeof(DateTime),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "Composite:GPSDateTime"
-                        },
-                        OutAttributes = new List<string>(),
+                        ],
+                        OutAttributes = [],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSDateTime
                     }
                 },
@@ -713,8 +705,8 @@ public static class SourcesAndAttributes
                         Name = "TakenDateDaysShift",
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
-                        InAttributes = new List<string>(),
-                        OutAttributes = new List<string>()
+                        InAttributes = [],
+                        OutAttributes = []
                     }
                 },
                 {
@@ -723,8 +715,8 @@ public static class SourcesAndAttributes
                         Name = "TakenDateHoursShift",
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
-                        InAttributes = new List<string>(),
-                        OutAttributes = new List<string>()
+                        InAttributes = [],
+                        OutAttributes = []
                     }
                 },
                 {
@@ -733,8 +725,8 @@ public static class SourcesAndAttributes
                         Name = "TakenDateMinutesShift",
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
-                        InAttributes = new List<string>(),
-                        OutAttributes = new List<string>()
+                        InAttributes = [],
+                        OutAttributes = []
                     }
                 },
                 {
@@ -743,8 +735,8 @@ public static class SourcesAndAttributes
                         Name = "TakenDateSecondsShift",
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
-                        InAttributes = new List<string>(),
-                        OutAttributes = new List<string>()
+                        InAttributes = [],
+                        OutAttributes = []
                     }
                 },
                 {
@@ -753,8 +745,8 @@ public static class SourcesAndAttributes
                         Name = "CreateDateDaysShift",
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
-                        InAttributes = new List<string>(),
-                        OutAttributes = new List<string>()
+                        InAttributes = [],
+                        OutAttributes = []
                     }
                 },
                 {
@@ -763,8 +755,8 @@ public static class SourcesAndAttributes
                         Name = "CreateDateHoursShift",
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
-                        InAttributes = new List<string>(),
-                        OutAttributes = new List<string>()
+                        InAttributes = [],
+                        OutAttributes = []
                     }
                 },
                 {
@@ -773,8 +765,8 @@ public static class SourcesAndAttributes
                         Name = "CreateDateMinutesShift",
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
-                        InAttributes = new List<string>(),
-                        OutAttributes = new List<string>()
+                        InAttributes = [],
+                        OutAttributes = []
                     }
                 },
                 {
@@ -783,8 +775,8 @@ public static class SourcesAndAttributes
                         Name = "CreateDateSecondsShift",
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
-                        InAttributes = new List<string>(),
-                        OutAttributes = new List<string>()
+                        InAttributes = [],
+                        OutAttributes = []
                     }
                 },
                 {
@@ -793,16 +785,16 @@ public static class SourcesAndAttributes
                         Name = "OffsetTime",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.OFFSET_TIME,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                        {
+                        InAttributes =
+                        [
                             "EXIF:OffsetTimeOriginal",
                             "EXIF:OffsetTime"
-                        },
-                        OutAttributes = new List<string>
-                        {
+                        ],
+                        OutAttributes =
+                        [
                             "EXIF:OffsetTimeOriginal",
                             "EXIF:OffsetTime"
-                        },
+                        ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.OffsetTime
                     }
                 },
@@ -812,8 +804,8 @@ public static class SourcesAndAttributes
                         Name = "Folder",
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>(),
-                        OutAttributes = new List<string>(),
+                        InAttributes = [],
+                        OutAttributes = [],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.Folder
                     }
                 },
@@ -823,8 +815,8 @@ public static class SourcesAndAttributes
                         Name = "gps*",
                         // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>(),
-                        OutAttributes = new List<string>()
+                        InAttributes = [],
+                        OutAttributes = []
                     }
                 },
                 {
@@ -833,10 +825,8 @@ public static class SourcesAndAttributes
                         Name = "IPTCKeywords",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.IPTC_KEYWORDS,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                            { "IPTC:Keywords" },
-                        OutAttributes = new List<string>
-                            { "IPTC:Keywords" },
+                        InAttributes = ["IPTC:Keywords"],
+                        OutAttributes = ["IPTC:Keywords"],
                         OrderID = 35
                     }
                 },
@@ -846,10 +836,8 @@ public static class SourcesAndAttributes
                         Name = "XMLSubjects",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.XML_SUBJECTS,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>
-                            { "XMP:Subject" },
-                        OutAttributes = new List<string>
-                            { "XMP:Subject" },
+                        InAttributes = ["XMP:Subject"],
+                        OutAttributes = ["XMP:Subject"],
                         OrderID = 36
                     }
                 },
@@ -859,8 +847,8 @@ public static class SourcesAndAttributes
                         Name = "GUID",
                         ColumnHeader = COL_NAME_PREFIX + FileListColumns.GUID,
                         TypeOfElement = typeof(string),
-                        InAttributes = new List<string>(),
-                        OutAttributes = new List<string>()
+                        InAttributes = [],
+                        OutAttributes = []
                     }
                 },
                 {
@@ -868,13 +856,12 @@ public static class SourcesAndAttributes
                     {
                         Name = "GPSDOP",
                         TypeOfElement = typeof(double),
-                        InAttributes = new List<string>
-                            { "EXIF:GPSDOP" },
-                        OutAttributes = new List<string>
-                        {
+                        InAttributes = ["EXIF:GPSDOP"],
+                        OutAttributes =
+                        [
                             "EXIF:GPSDOP",
                             "XMP:GPSDOP"
-                        }
+                        ]
                     }
                 }
             };
@@ -936,13 +923,10 @@ public static class SourcesAndAttributes
     /// <returns>The order ID of the specified attributeToFind attribute if found; otherwise, null.</returns>
     public static int GetElementAttributesOrderID(ElementAttribute attributeToFind)
     {
-        if (TagsToAttributes.TryGetValue(key: attributeToFind,
-                value: out ElementAttributeMapping mapping))
-        {
-            return mapping.OrderID;
-        }
-
-        return -1;
+        return TagsToAttributes.TryGetValue(key: attributeToFind,
+                value: out ElementAttributeMapping mapping)
+            ? mapping.OrderID
+            : -1;
     }
 
     /// <summary>
@@ -1020,13 +1004,10 @@ public static class SourcesAndAttributes
     /// <exception cref="ArgumentException">Thrown when the specified ElementAttribute does not exist.</exception>
     public static Type GetElementAttributesType(ElementAttribute attributeToFind)
     {
-        if (TagsToAttributes.TryGetValue(key: attributeToFind,
-                                         value: out ElementAttributeMapping mapping))
-        {
-            return mapping.TypeOfElement;
-        }
-
-        throw new ArgumentException(
+        return TagsToAttributes.TryGetValue(key: attributeToFind,
+                                         value: out ElementAttributeMapping mapping)
+            ? mapping.TypeOfElement
+            : throw new ArgumentException(
             message: $"Element attribute '{attributeToFind}' does not exist.");
     }
 

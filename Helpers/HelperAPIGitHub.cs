@@ -6,7 +6,7 @@
 //
 //    var gtnReleasesApiResponse = GtnReleasesApiResponse.FromJson(jsonString);
 
-namespace geoTagNinja
+namespace GeoTagNinja
 {
     using System;
     using System.Collections.Generic;
@@ -173,7 +173,7 @@ namespace geoTagNinja
 
     public partial class GTNReleaseAPIResponse
     {
-        public static GTNReleaseAPIResponse[] FromJson(string json) => JsonConvert.DeserializeObject<GTNReleaseAPIResponse[]>(json, geoTagNinja.Converter.Settings);
+        public static GTNReleaseAPIResponse[] FromJson(string json) => JsonConvert.DeserializeObject<GTNReleaseAPIResponse[]>(json, GeoTagNinja.Converter.Settings);
     }
 
     //public static class Serialize

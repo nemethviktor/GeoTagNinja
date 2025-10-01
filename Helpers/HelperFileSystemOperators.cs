@@ -1,12 +1,12 @@
-﻿using System;
+﻿using GeoTagNinja.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GeoTagNinja.Model;
-using static System.Environment;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
+using static System.Environment;
 
 namespace GeoTagNinja.Helpers;
 
@@ -152,20 +152,7 @@ internal static class HelperFileSystemOperators
     internal static string FsoGetParent(string path)
     {
         DirectoryInfo dir = new(path: path);
-        string parentName;
-        if (dir.ToString() == Path.GetPathRoot(path: dir.ToString()))
-        {
-            parentName = SpecialFolder.MyComputer.ToString();
-        }
-        else if (dir.Parent == null)
-        {
-            parentName = null;
-        }
-        else
-        {
-            parentName = dir.Parent.FullName;
-        }
-
+        string parentName = dir.ToString() == Path.GetPathRoot(path: dir.ToString()) ? SpecialFolder.MyComputer.ToString() : (dir.Parent?.FullName);
         return parentName;
     }
 
@@ -187,7 +174,7 @@ internal static class HelperFileSystemOperators
         }
 
         List<string> directories =
-            new List<string>(collection: GetDirectories(path: path, searchPattern: searchPattern));
+            [.. GetDirectories(path: path, searchPattern: searchPattern)];
 
         for (int i = 0; i < directories.Count; i++)
         {
@@ -205,7 +192,7 @@ internal static class HelperFileSystemOperators
         }
         catch (UnauthorizedAccessException)
         {
-            return new List<string>();
+            return [];
         }
     }
 }

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using GeoTagNinja.Helpers;
 
 namespace GeoTagNinja;
 
@@ -34,9 +34,9 @@ internal partial class FrmAboutBox : Form
                                   .GetName()
                                   .Version;
         DateTime buildDateTime = new DateTime(year: 2000, month: 1, day: 1).Add(value: new TimeSpan(
-            ticks: TimeSpan.TicksPerDay * version.Build + // days since 1 January 2000
-                   TimeSpan.TicksPerSecond * 2 *
-                   version.Revision)); // seconds since midnight, (multiply by 2 to get original)
+            ticks: (TimeSpan.TicksPerDay * version.Build) + // days since 1 January 2000
+                   (TimeSpan.TicksPerSecond * 2 *
+                   version.Revision))); // seconds since midnight, (multiply by 2 to get original)
 
         Text = AssemblyTitle;
 
@@ -88,7 +88,7 @@ internal partial class FrmAboutBox : Form
     }
 
 
-#region Assembly Attribute Accessors
+    #region Assembly Attribute Accessors
 
     /// <summary>
     ///     Gets the title of the assembly currently executing.
@@ -188,5 +188,5 @@ internal partial class FrmAboutBox : Form
         }
     }
 
-#endregion
+    #endregion
 }

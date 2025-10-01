@@ -1,11 +1,11 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Model;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using GeoTagNinja.Helpers;
-using GeoTagNinja.Model;
 using TimeZoneConverter;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
@@ -78,23 +78,23 @@ public partial class FrmImportExportGpx : Form
             switch (cItem.Name)
             {
                 case "cbx_ImportTimeAgainst":
-                {
-                    foreach (object importTimeAgainstItem in Enum.GetValues(enumType: typeof(ImportTimeAgainst)))
                     {
-                        cbx_ImportTimeAgainst.Items.Add(item: importTimeAgainstItem.ToString());
-                    }
+                        foreach (object importTimeAgainstItem in Enum.GetValues(enumType: typeof(ImportTimeAgainst)))
+                        {
+                            cbx_ImportTimeAgainst.Items.Add(item: importTimeAgainstItem.ToString());
+                        }
 
-                    if (!string.IsNullOrWhiteSpace(value: _lastCompareAgainstChoice))
-                    {
-                        cbx_ImportTimeAgainst.Text = _lastCompareAgainstChoice;
-                    }
-                    else
-                    {
-                        cbx_ImportTimeAgainst.SelectedIndex = 0;
-                    }
+                        if (!string.IsNullOrWhiteSpace(value: _lastCompareAgainstChoice))
+                        {
+                            cbx_ImportTimeAgainst.Text = _lastCompareAgainstChoice;
+                        }
+                        else
+                        {
+                            cbx_ImportTimeAgainst.SelectedIndex = 0;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case "cbx_ImportUseTimeZone":
                     if (!string.IsNullOrWhiteSpace(value: _lastTimeZoneChoice))
                     {
@@ -105,26 +105,26 @@ public partial class FrmImportExportGpx : Form
 
                     break;
                 case "cbx_ExportTrackOrderBy":
-                {
-                    foreach (object exportFileOrderItem in Enum.GetValues(enumType: typeof(ExportFileOrder)))
                     {
-                        cbx_ExportTrackOrderBy.Items.Add(item: exportFileOrderItem.ToString());
-                    }
+                        foreach (object exportFileOrderItem in Enum.GetValues(enumType: typeof(ExportFileOrder)))
+                        {
+                            cbx_ExportTrackOrderBy.Items.Add(item: exportFileOrderItem.ToString());
+                        }
 
-                    cbx_ExportTrackOrderBy.SelectedIndex = 0;
-                    break;
-                }
+                        cbx_ExportTrackOrderBy.SelectedIndex = 0;
+                        break;
+                    }
                 case "cbx_ExportTrackTimeStampType":
-                {
-                    foreach (object exportFileFMTTimeBasisItem in Enum.GetValues(
-                                 enumType: typeof(ExportFileFMTTimeBasis)))
                     {
-                        cbx_ExportTrackTimeStampType.Items.Add(item: exportFileFMTTimeBasisItem.ToString());
-                    }
+                        foreach (object exportFileFMTTimeBasisItem in Enum.GetValues(
+                                     enumType: typeof(ExportFileFMTTimeBasis)))
+                        {
+                            cbx_ExportTrackTimeStampType.Items.Add(item: exportFileFMTTimeBasisItem.ToString());
+                        }
 
-                    cbx_ExportTrackTimeStampType.SelectedIndex = 0;
-                    break;
-                }
+                        cbx_ExportTrackTimeStampType.SelectedIndex = 0;
+                        break;
+                    }
             }
         }
 
@@ -291,7 +291,7 @@ public partial class FrmImportExportGpx : Form
     {
         DateTime minTakenDateTime = DateTime.MaxValue; // yes these are backwards on purpose
         DateTime maxTakenDateTime = DateTime.MinValue; // yes these are backwards on purpose
-        List<DateTime> retList = new();
+        List<DateTime> retList = [];
         ListView lvw = _frmMainAppInstance.lvw_FileList;
         foreach (ListViewItem lvi in lvw.SelectedItems)
         {
@@ -325,7 +325,7 @@ public partial class FrmImportExportGpx : Form
         return retList;
     }
 
-#region Events
+    #region Events
 
     /// <summary>
     ///     Collects the settings for track-parse and sends to the data collector; then closes the Form.
@@ -381,7 +381,7 @@ public partial class FrmImportExportGpx : Form
                     btn_Generic_OK.AutoSize = true;
                     btn_Generic_OK.Enabled = false;
                     btn_Generic_Cancel.Enabled = false;
-                    List<DateTime> overlayDateList = new();
+                    List<DateTime> overlayDateList = [];
 
                     TrackOverlaySetting trackOverlaySetting = new();
                     if (!ckb_LoadTrackOntoMap.Checked)
@@ -460,7 +460,7 @@ public partial class FrmImportExportGpx : Form
     private void btn_SaveDefaults_Click(object sender,
                                         EventArgs e)
     {
-        List<AppSettingContainer> settingsToWrite = new();
+        List<AppSettingContainer> settingsToWrite = [];
         string tableName = "settings";
         string tabName = tcr_ImportExport.SelectedTab.Name;
 
@@ -575,7 +575,7 @@ public partial class FrmImportExportGpx : Form
     }
 
 
-#region Import
+    #region Import
 
     /// <summary>
     ///     Opens a file browser for track files
@@ -714,9 +714,9 @@ public partial class FrmImportExportGpx : Form
         }
     }
 
-#endregion
+    #endregion
 
-#region Export
+    #region Export
 
     private void pbx_Browse_SaveTo_Folder_Click(object sender,
                                                 EventArgs e)
@@ -727,9 +727,9 @@ public partial class FrmImportExportGpx : Form
         }
     }
 
-#endregion
+    #endregion
 
-#region Unspecified
+    #region Unspecified
 
     private void tcr_ImportExport_SelectedIndexChanged(object sender,
                                                        EventArgs e)
@@ -748,7 +748,7 @@ public partial class FrmImportExportGpx : Form
             ));
     }
 
-#endregion
+    #endregion
 }
 
 #endregion

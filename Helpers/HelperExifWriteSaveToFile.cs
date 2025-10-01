@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GeoTagNinja.Model;
+using Microsoft.WindowsAPICodePack.Taskbar;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -8,8 +10,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GeoTagNinja.Model;
-using Microsoft.WindowsAPICodePack.Taskbar;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers;
@@ -190,22 +190,16 @@ internal static class HelperExifWriteSaveToFile
                             DataRow drFileDataRow = dtFileWriteQueue.NewRow();
                             drFileDataRow[columnName: "ItemNameWithoutPath"] = dirElemFileToModify.ItemNameWithoutPath;
                             drFileDataRow[columnName: "settingId"] = GetElementAttributesName(attributeToFind: attribute);
-                            if (!dirElemFileToModify.IsMarkedForDeletion(
+                            drFileDataRow[columnName: "settingValue"] = !dirElemFileToModify.IsMarkedForDeletion(
                                     attribute: attribute,
                                     version: DirectoryElement.AttributeVersion
-                                                             .Stage3ReadyToWrite))
-                            {
-                                drFileDataRow[columnName: "settingValue"] =
-                                    dirElemFileToModify.GetAttributeValueString(
+                                                             .Stage3ReadyToWrite)
+                                ? dirElemFileToModify.GetAttributeValueString(
                                         attribute: attribute,
                                         version: DirectoryElement.AttributeVersion
                                                                  .Stage3ReadyToWrite,
-                                        nowSavingExif: true);
-                            }
-                            else
-                            {
-                                drFileDataRow[columnName: "settingValue"] = "";
-                            }
+                                        nowSavingExif: true)
+                                : "";
 
                             dtFileWriteQueue.Rows.Add(row: drFileDataRow);
                         }
@@ -232,7 +226,7 @@ internal static class HelperExifWriteSaveToFile
                                .ToString();
 
                             ElementAttribute attribute = GetElementAttributesElementAttribute(attributeToFind: settingId);
-                            List<string> orderedTags = new();
+                            List<string> orderedTags = [];
                             try
                             {
                                 orderedTags =
@@ -417,7 +411,7 @@ internal static class HelperExifWriteSaveToFile
                                         {
                                             updateExifVal = DateTime
                                                .Parse(s: settingValue)
-                                               .ToString(format: "yyyy-MM-dd HH:mm:ss", 
+                                               .ToString(format: "yyyy-MM-dd HH:mm:ss",
                                                provider: CultureInfo.InvariantCulture);
                                         }
                                         catch
@@ -559,8 +553,8 @@ internal static class HelperExifWriteSaveToFile
                                        ref string exifArgsForSidecar,
                                        bool addNewLine = true)
     {
-        if (argfileToUpdate == ArgfileToUpdate.Orig ||
-            argfileToUpdate == ArgfileToUpdate.Both)
+        if (argfileToUpdate is ArgfileToUpdate.Orig or
+            ArgfileToUpdate.Both)
         {
             if (!exifArgsForOriginalFile.Contains(value: whatText))
             {
@@ -573,8 +567,8 @@ internal static class HelperExifWriteSaveToFile
 
         ;
 
-        if (argfileToUpdate == ArgfileToUpdate.SideCar ||
-            argfileToUpdate == ArgfileToUpdate.Both)
+        if (argfileToUpdate is ArgfileToUpdate.SideCar or
+            ArgfileToUpdate.Both)
         {
             if (!exifArgsForSidecar.Contains(value: whatText))
             {

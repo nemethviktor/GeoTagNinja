@@ -6,7 +6,7 @@
 //
 //    var geoResponse = GeoResponse.FromJson(JsonString);
 
-namespace geoTagNinja
+namespace GeoTagNinja
 {
     using System;
     using System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace geoTagNinja
     }
     public partial class GeoResponseToponomy
     {
-        public static GeoResponseToponomy FromJson(string Json) => JsonConvert.DeserializeObject<GeoResponseToponomy>(Json, geoTagNinja.Converter.Settings);
+        public static GeoResponseToponomy FromJson(string Json) => JsonConvert.DeserializeObject<GeoResponseToponomy>(Json, GeoTagNinja.Converter.Settings);
     }
     public partial class Geoname
     {
@@ -143,11 +143,11 @@ namespace geoTagNinja
     }
     public partial class GeoResponseTimeZone
     {
-        public static GeoResponseTimeZone FromJson(string Json) => JsonConvert.DeserializeObject<GeoResponseTimeZone>(Json, geoTagNinja.Converter.Settings);
+        public static GeoResponseTimeZone FromJson(string Json) => JsonConvert.DeserializeObject<GeoResponseTimeZone>(Json, GeoTagNinja.Converter.Settings);
     }
     public static class Serialize
     {
-        public static string ToJson(this GeoResponseToponomy self) => JsonConvert.SerializeObject(self, geoTagNinja.Converter.Settings);
+        public static string ToJson(this GeoResponseToponomy self) => JsonConvert.SerializeObject(self, GeoTagNinja.Converter.Settings);
     }
     internal static class Converter
     {

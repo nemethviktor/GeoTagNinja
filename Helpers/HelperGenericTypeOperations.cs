@@ -45,12 +45,7 @@ internal static class HelperGenericTypeOperations
     internal static DateTime? ConvertStringToDateTime(string dateTimeToConvert)
     {
         bool isDT = DateTime.TryParse(s: dateTimeToConvert, result: out DateTime tryDataValueDT);
-        if (isDT)
-        {
-            return tryDataValueDT;
-        }
-
-        return null;
+        return isDT ? tryDataValueDT : null;
     }
 
     internal static string ConvertStringToDateTimeBackToString(string dateTimeToConvert)
@@ -58,11 +53,6 @@ internal static class HelperGenericTypeOperations
         bool isDT = DateTime.TryParse(s: dateTimeToConvert, result: out DateTime tryDataValueDT);
         string tryDataValueStr = tryDataValueDT.ToString(format:
             $"{CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern} {CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern}");
-        if (isDT)
-        {
-            return tryDataValueStr;
-        }
-
-        return FrmMainApp.NullStringEquivalentGeneric;
+        return isDT ? tryDataValueStr : FrmMainApp.NullStringEquivalentGeneric;
     }
 }

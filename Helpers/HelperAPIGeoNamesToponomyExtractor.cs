@@ -1,10 +1,10 @@
-﻿using System;
-using System.Windows.Forms;
-using geoTagNinja;
+﻿using GeoTagNinja;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Authenticators;
+using System;
+using System.Windows.Forms;
 
 namespace GeoTagNinja.Helpers;
 
