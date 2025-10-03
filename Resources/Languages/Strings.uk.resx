@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -58,4 +58,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="btn_ApplyAndNext" xml:space="preserve">
+    <value>Застосувати та перейти до наступного</value>
+  </data>
+  <data name="btn_InsertFromTakenDate" xml:space="preserve">
+    <value>Використовувати дату зняття</value>
+  </data>
+  <data name="btn_PullMostRecentPasteSettings" xml:space="preserve">
+    <value>Отримайте «найновіші» налаштування вставки</value>
+  </data>
+  <data name="btn_PullMostRecentTrackSyncShift" xml:space="preserve">
+    <value>Отримайте «найновіші» налаштування Shift</value>
+  </data>
+  <data name="btn_RemoveGeoData" xml:space="preserve">
+    <value>Видалити дані GPS та місцезнаходження</value>
+  </data>
+  <data name="btn_ResetToDefaults" xml:space="preserve">
+    <value>Скинути до налаштувань за замовчуванням</value>
+  </data>
+  <data name="btn_RestartLater" xml:space="preserve">
+    <value>Перезавантажити пізніше</value>
+  </data>
+  <data name="btn_RestartNow" xml:space="preserve">
+    <value>Перезавантажити зараз</value>
+  </data>
+  <data name="btn_SetCurrentValues" xml:space="preserve">
+    <value>Встановити поточні значення для всіх зображень, вибраних для редагування...</value>
+  </data>
+  <data name="ckb_AddXMPSideCar" xml:space="preserve">
+    <value>Додати/Перезаписати XMP Sidecar</value>
+  </data>
+  <data name="ckb_DeSelectAll" xml:space="preserve">
+    <value>(Зняти) всі позначки</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI" xml:space="preserve">
+    <value>НЕ виконуйте зворотне геокодування (отримуйте лише координати, але не місто/штат/тощо)</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude" xml:space="preserve">
+    <value>Включити дані про висоту в експорт</value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries" xml:space="preserve">
+    <value>Включити "попередньо визначені" країни? (див. посилання вище + застереження/попередження)</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap" xml:space="preserve">
+    <value>Накладання файлу треку на карту</value>
+  </data>
 </root>
