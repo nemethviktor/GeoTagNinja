@@ -49,6 +49,7 @@ public static class SourcesAndAttributes
         GPSDestLongitudeRef,
         GPSImgDirection,
         GPSImgDirectionRef,
+        GPSDOP,
         Make,
         Model,
         Rating,
@@ -77,7 +78,6 @@ public static class SourcesAndAttributes
         CreateDateSecondsShift,
         RemoveAllGPS,
         GUID,
-        GPSDOP
     }
 
     /// <summary>
@@ -827,7 +827,7 @@ public static class SourcesAndAttributes
                         TypeOfElement = typeof(string),
                         InAttributes = ["IPTC:Keywords"],
                         OutAttributes = ["IPTC:Keywords"],
-                        OrderID = 35
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.IPTCKeywords
                     }
                 },
                 {
@@ -838,7 +838,7 @@ public static class SourcesAndAttributes
                         TypeOfElement = typeof(string),
                         InAttributes = ["XMP:Subject"],
                         OutAttributes = ["XMP:Subject"],
-                        OrderID = 36
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.XMLSubjects
                     }
                 },
                 {
@@ -861,7 +861,8 @@ public static class SourcesAndAttributes
                         [
                             "EXIF:GPSDOP",
                             "XMP:GPSDOP"
-                        ]
+                        ],
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSDOP
                     }
                 }
             };

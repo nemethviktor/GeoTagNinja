@@ -180,6 +180,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         public const string OFFSET_TIME = "OffsetTime";
         public const string IPTC_KEYWORDS = "IPTCKeywords";
         public const string XML_SUBJECTS = "XMLSubjects";
+        public const string GPSDOP = "GPSDOP";
     }
 
     #region Internal Variables
@@ -360,7 +361,11 @@ public partial class FileListView : System.Windows.Forms.ListView
             {
                 FileListColumns.XML_SUBJECTS,
                 SourcesAndAttributes.ElementAttribute.XMLSubjects
-            }
+            },
+            {
+                FileListColumns.GPSDOP,
+                SourcesAndAttributes.ElementAttribute.GPSDOP
+            },
         };
 
     #endregion

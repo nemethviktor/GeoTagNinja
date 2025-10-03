@@ -310,6 +310,7 @@ internal static class HelperGenericAncillaryListsArrays
             { "clh_Sublocation", "Generic_Sublocation" },
             { "clh_TakenDate", "Generic_TakenDate" },
             { "clh_XMLSubjects", "Generic_XMLSubjects" },
+            { "clh_GPSDOP", "Generic_GPSDOP" },
             { "clh_Distance", "Generic_Distance" },
             { "clh_timezoneId", "Generic_TimeZoneID" },
             { "lbl_City", "Generic_City" },

@@ -6,6 +6,7 @@
 	- Added German translations (via Weblate).
 	- Added a new layer to the map ("Streets ESRI") - I've had problems with OSM lately; possibly a Leaflet issue but this is a reasonable fallback.
 	- My free Resharper licence has run out and they are no longer renewing small projects like mine so I have switched to Visual Studio 2026 and applied auto-reformatting of files. Rather in one go than bit-by-bit but I think it's for the better.
+	- Added GPSDOP as new column ref #187
 - BUGS & FIXES:
 	- Fixed #186 Favourites being saved with wrong Latitude info.
 	- Fixed map attribution not showing.
