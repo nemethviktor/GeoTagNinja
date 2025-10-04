@@ -1351,4 +1351,7 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
   <data name="Generic_GPSDOP" xml:space="preserve">
     <value>Dilution of precision (DOP)</value>
   </data>
+  <data name="Generic_GPSHPositioningError" xml:space="preserve">
+    <value>GPS Horizontal Positioning Error</value>
+  </data>
 </root>

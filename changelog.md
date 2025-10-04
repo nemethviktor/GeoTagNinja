@@ -4,9 +4,10 @@
 - NEW & UPDATED:
 	- Slightly changed "Dark Mode" colours to match the real ones.
 	- Added German translations (via Weblate).
+	- There's now also a Ukranian translation stub on Weblate but it's empty.
 	- Added a new layer to the map ("Streets ESRI") - I've had problems with OSM lately; possibly a Leaflet issue but this is a reasonable fallback.
 	- My free Resharper licence has run out and they are no longer renewing small projects like mine so I have switched to Visual Studio 2026 and applied auto-reformatting of files. Rather in one go than bit-by-bit but I think it's for the better.
-	- Added GPSDOP as new column ref #187
+	- Added GPS Dilution Of Precision (`GPSDOP`) as new column and GPS Horizontal Positioning Error calc (no column representation) ref #187
 - BUGS & FIXES:
 	- Fixed #186 Favourites being saved with wrong Latitude info.
 	- Fixed map attribution not showing.
@@ -16,7 +17,7 @@
 - NEW & UPDATED:
 	- Capability to save certain defaults on the Import GPX Form #174
 	- App version Bump 1.17 - should have done that w/ the last public release.
-	- Added Polish Translations
+	- Added Polish Translations (via Weblate).
 	- Added some basic feedback to the completion of the GPX Export. (aka "Files exported successfully")
 	- Added a Splash Screen. Bit of a gimmick but on slower computers it may be of some use.
 - BUGS & FIXES:

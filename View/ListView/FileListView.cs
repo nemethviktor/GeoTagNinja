@@ -5,7 +5,6 @@ using Svg;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -58,12 +57,6 @@ public partial class FileListView : System.Windows.Forms.ListView
     ///     This is to deal with the icons in listview
     ///     from https://stackoverflow.com/a/37806517/3968494
     /// </summary>
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
-    [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local")]
-    [SuppressMessage(category: "ReSharper", checkId: "IdentifierTypo")]
-    [SuppressMessage(category: "ReSharper", checkId: "StringLiteralTypo")]
-    [SuppressMessage(category: "ReSharper", checkId: "MemberCanBePrivate.Local")]
-    [SuppressMessage(category: "ReSharper", checkId: "FieldCanBeMadeReadOnly.Local")]
     private static class NativeMethods
     {
         public const uint LVM_FIRST = 0x1000;
@@ -138,7 +131,6 @@ public partial class FileListView : System.Windows.Forms.ListView
     ///     Class containing all the relevant column names to be used
     ///     when e.g. querying for information.
     /// </summary>
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     public static class FileListColumns
     {
         public const string FILENAME = "FileName";
@@ -181,6 +173,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         public const string IPTC_KEYWORDS = "IPTCKeywords";
         public const string XML_SUBJECTS = "XMLSubjects";
         public const string GPSDOP = "GPSDOP";
+        public const string GPSHPOSITIONINGERROR = "GPSHPositioningError";
     }
 
     #region Internal Variables
@@ -365,6 +358,10 @@ public partial class FileListView : System.Windows.Forms.ListView
             {
                 FileListColumns.GPSDOP,
                 SourcesAndAttributes.ElementAttribute.GPSDOP
+            },
+            {
+                FileListColumns.GPSHPOSITIONINGERROR,
+                SourcesAndAttributes.ElementAttribute.GPSHPositioningError
             },
         };
 
@@ -599,7 +596,6 @@ public partial class FileListView : System.Windows.Forms.ListView
         List<string> colOrderHeadername = [];
 
         string settingIdToSend;
-        string colWidth = null;
         // logic: see if it's in SQL first...if not then set to Auto
         foreach (ColumnHeader columnHeader in Columns)
         {
@@ -641,11 +637,11 @@ public partial class FileListView : System.Windows.Forms.ListView
 
             // Read and process width
             settingIdToSend = $"{Name}_{columnHeader.Name}_width";
-            colWidth = HelperDataApplicationSettings.DataReadSQLiteSettings(
-                dataTable: HelperVariables.DtHelperDataApplicationLayout,
-                settingTabPage: "lvw_FileList",
-                settingId: settingIdToSend
-            );
+            string colWidth = HelperDataApplicationSettings.DataReadSQLiteSettings(
+        dataTable: HelperVariables.DtHelperDataApplicationLayout,
+        settingTabPage: "lvw_FileList",
+        settingId: settingIdToSend
+    );
 
 
             // We only set col width if there actually is a setting for it.
@@ -752,7 +748,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         Point lvwLoc = PointToScreen(p: new Point(x: 0, y: 0));
         lvwLoc.Offset(dx: 20, dy: 10); // Relative to list view top left
         frm_ColSel.Location = lvwLoc; // in screen coords...
-        frm_ColSel.ShowDialog(owner: this);
+        _ = frm_ColSel.ShowDialog(owner: this);
     }
 
     #endregion
@@ -785,7 +781,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             {
                 Name = COL_NAME_PREFIX + clhName
             };
-            Columns.Add(value: clh);
+            _ = Columns.Add(value: clh);
             Log.Trace(message: $"Added column: {clhName}");
         }
 
@@ -817,7 +813,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     {
         // Set up the ListView control's basic properties.
         // Set its theme so it will look like the one used by Explorer.
-        NativeMethods.SetWindowTheme(hWnd: Handle, pszSubAppName: "Explorer",
+        _ = NativeMethods.SetWindowTheme(hWnd: Handle, pszSubAppName: "Explorer",
             pszSubIdList: null);
     }
 
@@ -846,7 +842,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         // If the ListView control already had an image list, delete the old one.
         if (hOldImgList != IntPtr.Zero)
         {
-            NativeMethods.ImageList_Destroy(hImageList: hOldImgList);
+            _ = NativeMethods.ImageList_Destroy(hImageList: hOldImgList);
         }
     }
 
@@ -1131,7 +1127,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         // If the current thread is not the UI thread, InvokeRequired will be true
         if (InvokeRequired)
         {
-            Invoke(method: (Action)(() => ScrollToDataPoint(itemText: itemText)));
+            _ = Invoke(method: (Action)(() => ScrollToDataPoint(itemText: itemText)));
             return;
         }
 
@@ -1155,13 +1151,13 @@ public partial class FileListView : System.Windows.Forms.ListView
         // If the current thread is not the UI thread, InvokeRequired will be true
         if (InvokeRequired)
         {
-            Invoke(method: (Action)(() =>
+            _ = Invoke(method: (Action)(() =>
                 UpdateItemColour(directoryElement: directoryElement, color: color)));
             return;
         }
 
         ListViewItem itemToModify = FindItemByDirectoryElement(directoryElement: directoryElement);
-        itemToModify?.ForeColor = color;
+        _ = (itemToModify?.ForeColor = color);
     }
 
     /// <summary>

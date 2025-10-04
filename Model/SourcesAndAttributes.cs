@@ -50,6 +50,7 @@ public static class SourcesAndAttributes
         GPSImgDirection,
         GPSImgDirectionRef,
         GPSDOP,
+        GPSHPositioningError,
         Make,
         Model,
         Rating,
@@ -855,6 +856,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.GPSDOP, new ElementAttributeMapping
                     {
                         Name = "GPSDOP",
+                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPSDOP,
                         TypeOfElement = typeof(double),
                         InAttributes = ["EXIF:GPSDOP"],
                         OutAttributes =
@@ -863,6 +865,21 @@ public static class SourcesAndAttributes
                             "XMP:GPSDOP"
                         ],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSDOP
+                    }
+                },
+                {
+                    ElementAttribute.GPSHPositioningError, new ElementAttributeMapping
+                    {
+                        Name = "GPSHPositioningError",
+                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPSHPOSITIONINGERROR,
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["EXIF:GPSHPositioningError"],
+                        OutAttributes =
+                        [
+                            "EXIF:GPSHPositioningError",
+                            "XMP:GPSHPositioningError"
+                        ],
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSHPositioningError
                     }
                 }
             };

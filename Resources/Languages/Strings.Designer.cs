@@ -1087,6 +1087,15 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GPS Horizontal Positioning Error.
+        /// </summary>
+        public static string Generic_GPSHPositioningError {
+            get {
+                return ResourceManager.GetString("Generic_GPSHPositioningError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Img Direction.
         /// </summary>
         public static string Generic_GPSImgDirection {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -311,6 +310,7 @@ internal static class HelperGenericAncillaryListsArrays
             { "clh_TakenDate", "Generic_TakenDate" },
             { "clh_XMLSubjects", "Generic_XMLSubjects" },
             { "clh_GPSDOP", "Generic_GPSDOP" },
+            { "clh_GPSHPositioningError", "Generic_GPSHPositioningError" },
             { "clh_Distance", "Generic_Distance" },
             { "clh_timezoneId", "Generic_TimeZoneID" },
             { "lbl_City", "Generic_City" },
@@ -408,7 +408,6 @@ internal static class HelperGenericAncillaryListsArrays
 
     #region ExifTool Initiators
 
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     internal enum ExifToolInititators
     {
         ExifWriteExifToFile,
@@ -1173,7 +1172,7 @@ internal static class HelperGenericAncillaryListsArrays
         retList.Add(item: "");
         if (HelperVariables.DtIsoCountryCodeMapping == null)
         {
-            HelperDataLanguageTZ.DataReadCountryCodeDataFromCSV();
+            _ = HelperDataLanguageTZ.DataReadCountryCodeDataFromCSV();
         }
 
         foreach (DataRow dataRow in HelperVariables.DtIsoCountryCodeMapping.Rows)

@@ -201,7 +201,9 @@ internal static class HelperExifReadTrackFile
                                 string gpsDOPInTrackFile = GetValueInTrackFile(
                                     dtDistinctFileExifTable: dtDistinctFileExifTable,
                                     attribute: ElementAttribute.GPSDOP);
-
+                                string gpsHPositioningErrorInTrackFile = GetValueInTrackFile(
+                                    dtDistinctFileExifTable: dtDistinctFileExifTable,
+                                    attribute: ElementAttribute.GPSHPositioningError);
 
                                 bool coordinatesHaveChanged =
                                     !(currentLat == strLatInTrackFile &&
@@ -226,10 +228,13 @@ internal static class HelperExifReadTrackFile
                                         version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
                                         isMarkedForDeletion: false);
                                     dirElemFileToModify.SetAttributeValueAnyType(
-                                        attribute: ElementAttribute.GPSDOP, value: HelperExifReadExifData
-                                           .ExifGetStandardisedDataPointFromExif(dtFileExif: dtDistinctFileExifTable,
-                                                dataPoint: GetElementAttributesName(
-                                                    attributeToFind: ElementAttribute.GPSDOP)),
+                                        attribute: ElementAttribute.GPSDOP,
+                                        value: gpsDOPInTrackFile,
+                                        version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                                        isMarkedForDeletion: false);
+                                    dirElemFileToModify.SetAttributeValueAnyType(
+                                        attribute: ElementAttribute.GPSHPositioningError,
+                                        value: gpsHPositioningErrorInTrackFile,
                                         version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
                                         isMarkedForDeletion: false);
 
@@ -401,7 +406,7 @@ internal static class HelperExifReadTrackFile
             string apiValue = FrmMainApp.NullStringEquivalentGeneric;
             try
             {
-                apiValue = HelperExifReadExifData.ExifGetStandardisedDataPointFromExif(
+                apiValue = HelperExifReadExifData.ExifGetStandardisedDataPointFromExifAsString(
                     dtFileExif: dtDistinctFileExifTable,
                     dataPoint: GetElementAttributesName(
                         attributeToFind: attribute));
