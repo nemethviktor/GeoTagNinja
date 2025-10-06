@@ -1117,4 +1117,10 @@ Zapisz klucz API, gdy zostaniesz o to poproszony. Jeśli tego nie zrobisz od raz
   <data name="mbx_FrmImportExportGpx_ExportCompleted" xml:space="preserve">
     <value>Zakończono eksport pliku GPX</value>
   </data>
+  <data name="Generic_GPSDOP" xml:space="preserve">
+    <value>Współczynnik degradacji dokładności (DOP)</value>
+  </data>
+  <data name="Generic_GPSHPositioningError" xml:space="preserve">
+    <value>błąd pozycjonowania GPS w poziomie</value>
+  </data>
 </root>
