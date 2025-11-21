@@ -2,12 +2,18 @@
 
 **Build 9xxx [2025xxxx]** (upcoming release)
 - NEW & UPDATED:
+	- TBA
+- BUGS & FIXES:
+	- TBA
+
+**Build 9456 [20251121]**
+- NEW & UPDATED:
 	- Slightly changed "Dark Mode" colours to match the real ones.
 	- Added German translations (via Weblate).
 	- There's now also a Ukranian translation stub on Weblate but it's empty.
 	- Added a new layer to the map ("Streets ESRI") - I've had problems with OSM lately; possibly a Leaflet issue but this is a reasonable fallback.
 	- My free Resharper licence has run out and they are no longer renewing small projects like mine so I have switched to Visual Studio 2026 and applied auto-reformatting of files. Rather in one go than bit-by-bit but I think it's for the better.
-	- Added GPS Dilution Of Precision (`GPSDOP`) as new column and GPS Horizontal Positioning Error calc (no column representation) ref #187
+	- Added GPS Dilution Of Precision (`GPSDOP`) and GPS Horizontal Positioning Error calc (`GPSHPositioningError`) as new columns #187
 - BUGS & FIXES:
 	- Fixed #186 Favourites being saved with wrong Latitude info.
 	- Fixed map attribution not showing.

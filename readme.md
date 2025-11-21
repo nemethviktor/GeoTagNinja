@@ -160,8 +160,8 @@ Longer: Hypothetically the idea with Destinations is that if there are groups of
 
 ## Roadmap
 
-I'm hoping to eventually move away from WinForms to something visually more pleasing. Currently there's no Visual Designer for WinUI3Well the original plan was to eventually move to something nicer (like WinUI3) but Microsoft keeps killing off their newer platforms and I don't want to learn an entirely different language just for the sake of this so WinForms it will be till the time protons decay. However...
-The current .NET Framework 4.8 is a little obsolete. I haven't switched to 4.8.1 because that doesn't work on Win 7 and also offers nothing that's relevant for this app, but it's likely that eventually the codebase will move to some more current version of .NET (10+ that is, once they sort out native Dark Mode issues) so support for Windows 7 will eventually be dropped.
+~~I'm hoping to eventually move away from WinForms to something visually more pleasing. Currently there's no Visual Designer for WinUI3~~ Well the original plan was to eventually move to something nicer (like WinUI3) but Microsoft keeps killing off their newer platforms and I don't want to learn an entirely different language just for the sake of this so WinForms it will be till the time protons decay. However...
+The current .NET Framework 4.8 is a little obsolete. I haven't switched to 4.8.1 because that doesn't work on Win 7 and also offers nothing that's relevant for this app, but it's likely that eventually the codebase will move to some more current version of .NET.
 
 ## When reporting bugs please specify
 
@@ -172,7 +172,7 @@ The current .NET Framework 4.8 is a little obsolete. I haven't switched to 4.8.1
 
 ## System Requirements
 
-- Windows 7+ x64 is needed. As I mentioned in the Roadmap it's likely that support for pre-Win10 OSs will remain till some point 2025 but possibly not beyond that.
+- Windows 7+ x64 is needed. As I mentioned in the Roadmap it's likely that support for pre-Win10 OSs will eventually be dropped.
 - You'll need an ArcGIS API key to use the map search functionality. 
 	- ArcGIS have changed their registration process as of June 2024. Register [here](https://location.arcgis.com/sign-up/)
 	- You now need to specify a portal url. Just input anything you want.
