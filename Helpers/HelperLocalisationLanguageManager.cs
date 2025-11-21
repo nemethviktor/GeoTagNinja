@@ -53,7 +53,7 @@ internal static class HelperLocalisationLanguageManager
                     }
                 }
             }
-            catch (CultureNotFoundException exc)
+            catch (CultureNotFoundException)
             {
                 // dont care
             }

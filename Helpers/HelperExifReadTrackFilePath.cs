@@ -108,7 +108,7 @@ internal class HelperExifReadTrackFilePath
                             ))
                         {
                             // I still can't quite fathom why we'd have a year:month:day format so in case the rest of the world agrees with me we retry it sensibly
-                            DateTime.TryParseExact(
+                            _ = DateTime.TryParseExact(
                                 s: inputLineDateTimeStrVal.Substring(startIndex: 0, length: 19),
                                 format: "yyyy-MM-dd HH:mm:ss",
                                 provider: CultureInfo.InvariantCulture,

@@ -1,7 +1,6 @@
 ﻿using GeoTagNinja.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -246,7 +245,7 @@ public partial class FrmMainApp
         }
 
         HelperVariables.HsMapMarkers.Clear();
-        HelperVariables.HsMapMarkers.Add(item: (nud_lat.Text.Replace(oldChar: ',', newChar: '.'),
+        _ = HelperVariables.HsMapMarkers.Add(item: (nud_lat.Text.Replace(oldChar: ',', newChar: '.'),
                                                 nud_lng.Text.Replace(oldChar: ',', newChar: '.')));
         HelperVariables.LastLat = double.Parse(s: nud_lat.Text.Replace(oldChar: ',', newChar: '.'),
             provider: CultureInfo.InvariantCulture);
@@ -291,7 +290,6 @@ public partial class FrmMainApp
     /// <summary>
     ///     Reads the data in SQLite for panel widths/heights/sizes and applies them if available.
     /// </summary>
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     private void AppStartupApplyVisualStyleDefaults()
     {
         Log.Info(message: "Starting");

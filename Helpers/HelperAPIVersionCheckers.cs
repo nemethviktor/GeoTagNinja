@@ -1,12 +1,10 @@
-﻿using GeoTagNinja;
-using GeoTagNinja.Model;
+﻿using GeoTagNinja.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Authenticators;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -45,18 +43,16 @@ internal static class HelperAPIVersionCheckers
     /// <returns>The version number of the currently newest exifTool uploaded to exiftool.org or 0.0m if that fails.</returns>
     private static decimal API_ExifGetExifToolVersionFromWeb()
     {
-        decimal returnVal = 0.0m;
-        decimal parsedDecimal = 0.0m;
         string onlineExifToolVer;
         string URL = "http://exiftool.org/ver.txt";
         bool parsedResult;
+        decimal returnVal;
         try
         {
             onlineExifToolVer = new TimedWebClient { Timeout = 2000 }.DownloadString(address: URL);
-
             parsedResult = decimal.TryParse(s: onlineExifToolVer, style: NumberStyles.Any,
                                             provider: CultureInfo.InvariantCulture,
-                                            result: out parsedDecimal);
+                                            result: out decimal parsedDecimal);
             returnVal = parsedResult
                 ? parsedDecimal
                 : 0.0m;
@@ -153,7 +149,6 @@ internal static class HelperAPIVersionCheckers
     /// <summary>
     ///     Checks for new versions of GTN and ExifTool.
     /// </summary>
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     internal static async Task CheckForNewVersions()
     {
         FrmMainApp.Log.Info(message: "Starting");

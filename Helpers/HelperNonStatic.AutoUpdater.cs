@@ -47,7 +47,7 @@ internal partial class HelperNonStatic
                     }
                     catch (Exception exception)
                     {
-                        MessageBox.Show(text: exception.Message, caption: exception
+                        _ = MessageBox.Show(text: exception.Message, caption: exception
                                                                          .GetType()
                                                                          .ToString(), buttons: MessageBoxButtons.OK,
                             icon: MessageBoxIcon.Error);

@@ -214,7 +214,7 @@ internal static class HelperExifExifToolOperator
                                             length: fileNameWithoutPath.LastIndexOf(value: '.'))))
                                 {
                                     bool pathIsLikelyUTF = fileNameWithPath.Any(predicate: c => c > 127);
-                                    MessageBox.Show(text: data.Data +
+                                    _ = MessageBox.Show(text: data.Data +
                                                           (pathIsLikelyUTF
                                                               ? Environment.NewLine + Environment.NewLine +
                                                                 HelperControlAndMessageBoxHandling
@@ -240,7 +240,7 @@ internal static class HelperExifExifToolOperator
 
                             if (!hideWarning)
                             {
-                                MessageBox.Show(text: data.Data);
+                                _ = MessageBox.Show(text: data.Data);
                             }
                         }
                     };
@@ -256,7 +256,7 @@ internal static class HelperExifExifToolOperator
                                 data.Data.ToString() + Environment.NewLine;
                         }
 
-                        decimal.TryParse(s: HelperVariables._sOutputAndErrorMsg
+                        _ = decimal.TryParse(s: HelperVariables._sOutputAndErrorMsg
                                                            .Replace(oldValue: "\r", newValue: "")
                                                            .Replace(oldValue: "\n", newValue: ""),
                             provider: CultureInfo.InvariantCulture,
@@ -321,7 +321,7 @@ internal static class HelperExifExifToolOperator
             }
 
             FrmMainApp.Log.Trace(message: $"EXIF number {_exifInvokeCounter}: Start");
-            prcExifTool.Start();
+            _ = prcExifTool.Start();
             prcExifTool.BeginOutputReadLine();
             prcExifTool.BeginErrorReadLine();
             FrmMainApp.Log.Trace(message: $"EXIF number {_exifInvokeCounter}: Wait for Exit");

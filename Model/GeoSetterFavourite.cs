@@ -1,8 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace GeoTagNinja.Model
+﻿namespace GeoTagNinja.Model
 {
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     public class GeoSetterFavourite
     {
         public string name { get; set; }

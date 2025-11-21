@@ -6,6 +6,7 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
@@ -40,7 +41,6 @@ public partial class FrmEditFileData : Form
     /// </summary>
     public FrmEditFileData()
     {
-        Logger log = Log;
         Log.Info(message: "Starting");
         KeyPreview = true; // send keypress to the Form first
 
@@ -70,7 +70,6 @@ public partial class FrmEditFileData : Form
     private void FrmEditFileData_Load(object sender,
         EventArgs e)
     {
-        Logger log = Log;
         Log.Info(message: "Starting");
         Log.Trace(message: "Defaults Starting");
         _frmEditFileDataNowLoadingFileData = true;
@@ -132,20 +131,20 @@ public partial class FrmEditFileData : Form
 
         foreach (string country in GetCountries())
         {
-            cbx_Country.Items.Add(item: country);
+            _ = cbx_Country.Items.Add(item: country);
         }
 
         // fills the country codes box
         foreach (string countryCode in
                  GetCountryCodes())
         {
-            cbx_CountryCode.Items.Add(item: countryCode);
+            _ = cbx_CountryCode.Items.Add(item: countryCode);
         }
 
         // load TZ-CBX
         foreach (string timezone in GetTimeZones())
         {
-            cbx_OffsetTime.Items.Add(item: timezone);
+            _ = cbx_OffsetTime.Items.Add(item: timezone);
         }
 
         Log.Trace(message: "Setting Dropdown defaults - Done");
@@ -714,7 +713,6 @@ public partial class FrmEditFileData : Form
     /// <param name="whatToShift">Specifies whether the CreateDate or TakenDate should be shifted.</param>
     /// <param name="dirElemFileToModify">The DirectoryElement object that contains the attribute values for the time shift.</param>
     /// <returns>Returns the total time shift in seconds.</returns>
-    [SuppressMessage(category: "ReSharper", checkId: "PossibleInvalidOperationException")]
     private static int ShiftTimeForDateTimePicker(TimeShiftTypes whatToShift,
         DirectoryElement dirElemFileToModify)
     {
@@ -857,8 +855,8 @@ public partial class FrmEditFileData : Form
     private void btn_getFromWeb_Click(object sender,
         EventArgs e)
     {
-        DataTable dtToponomy = new();
-        FrmMainApp frmMainAppInstance =
+        _ = new DataTable();
+        _ =
             (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         //reset this just in case.
@@ -998,19 +996,19 @@ public partial class FrmEditFileData : Form
                                                                     .Index]
                                       .Text.ToString(
                                            provider: CultureInfo.InvariantCulture);
-                bool _ = DateTime.TryParse(
-                    s: strCreateDate.ToString(provider: CultureInfo.InvariantCulture),
-                    result: out createDate);
+                _ = DateTime.TryParse(
+                   s: strCreateDate.ToString(provider: CultureInfo.InvariantCulture),
+                   result: out createDate);
             }
 
             if (double.TryParse(s: strGpsLatitude,
                     style: NumberStyles.Any,
                     provider: CultureInfo.InvariantCulture,
-                    result: out double parsedLat) &&
+                    result: out _) &&
                 double.TryParse(s: strGpsLongitude,
                     style: NumberStyles.Any,
                     provider: CultureInfo.InvariantCulture,
-                    result: out double parsedLng))
+                    result: out _))
             {
                 dtToponomy = HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(
                     lat: strGpsLatitude, lng: strGpsLongitude,
@@ -1054,9 +1052,9 @@ public partial class FrmEditFileData : Form
             {
                 const int tzStartInt = 18;
 
-                bool _ = DateTime.TryParse(
-                    s: tbx_CreateDate.Text.ToString(
-                        provider: CultureInfo.InvariantCulture), result: out createDate);
+                _ = DateTime.TryParse(
+                   s: tbx_CreateDate.Text.ToString(
+                       provider: CultureInfo.InvariantCulture), result: out createDate);
 
                 // cbx_OffsetTime.FindString(TZ, 18) doesn't seem to work so....
                 for (int i = 0; i <= cbx_OffsetTime.Items.Count; i++)
@@ -1218,7 +1216,7 @@ in toponomyOverwrites)
         HelperNonStatic helperNonstatic = new();
         IEnumerable<Control> cGbx_TakenDate =
             helperNonstatic.GetAllControls(control: gbx_TakenDate);
-        string fileNameWithoutPath = lvw_FileListEditImages.SelectedItems[index: 0]
+        _ = lvw_FileListEditImages.SelectedItems[index: 0]
                                                            .Text;
         foreach (Control cItemGbx_TakenDate in cGbx_TakenDate)
         {
@@ -1260,7 +1258,6 @@ in toponomyOverwrites)
     private async void lvw_FileListEditImages_SelectedIndexChanged(object sender,
         EventArgs e)
     {
-        Logger log = Log;
         Log.Info(message: "Starting");
         if (lvw_FileListEditImages.SelectedItems.Count > 0)
         {
@@ -1309,7 +1306,7 @@ in toponomyOverwrites)
         try
         {
             ListView lvwEditImages = lvw_FileListEditImages;
-            lvwEditImages.Focus();
+            _ = lvwEditImages.Focus();
 
             if (index < lvwEditImages.Items.Count)
             {
@@ -1321,7 +1318,7 @@ in toponomyOverwrites)
         }
         catch (Exception ex)
         {
-            // nothing
+            Debug.Print(ex.Message);
         }
     }
 
@@ -1461,7 +1458,7 @@ in toponomyOverwrites)
         EventArgs e)
     {
         FrmPasteWhat frmPasteWhat = new(initiator: Name);
-        frmPasteWhat.ShowDialog();
+        _ = frmPasteWhat.ShowDialog();
     }
 
     /// <summary>
@@ -1494,8 +1491,7 @@ in toponomyOverwrites)
 
             string previousText = "herp-derp";
             string newText = "";
-
-            string fileNameWithoutPath = lvw_FileListEditImages.SelectedItems[index: 0]
+            _ = lvw_FileListEditImages.SelectedItems[index: 0]
                                                                .Text;
 
             string exifTagStr = sndr.Name.Substring(startIndex: 4);

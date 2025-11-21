@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
@@ -22,7 +21,6 @@ internal enum ThemeColour
 ///     This class includes methods for applying the immersive dark mode to a window,
 ///     setting the theme color of the application during startup, and changing the theme of a specific control.
 /// </remarks>
-[SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
 internal static class HelperControlThemeManager
 {
     private static readonly Color darkColor =
@@ -94,7 +92,7 @@ internal static class HelperControlThemeManager
         // for Dark we set it to the job, for Light, ignore.
         if (themeColour == Dark)
         {
-            UseImmersiveDarkMode(handle: parentControl.Handle, enabled: true);
+            _ = UseImmersiveDarkMode(handle: parentControl.Handle, enabled: true);
 
             HelperNonStatic helperNonstatic = new();
             if (parentControl is Form)

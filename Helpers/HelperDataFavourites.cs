@@ -11,7 +11,6 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 
-// ReSharper disable InconsistentNaming
 
 namespace GeoTagNinja.Helpers;
 
@@ -84,7 +83,7 @@ internal static class HelperDataFavourites
                         city = (string)item.Attribute(name: "city"),
                         subloc = (string)item.Attribute(name: "subloc")
                     };
-                    geoSetterFavourites.Add(item: geoSetterFavourite);
+                    _ = geoSetterFavourites.Add(item: geoSetterFavourite);
                 }
             }
         }
@@ -135,7 +134,7 @@ internal static class HelperDataFavourites
                             favouriteName: existingFavouriteWithThisName.FavouriteName);
                     }
 
-                    FrmMainApp.Favourites.Add(item: favourite);
+                    _ = FrmMainApp.Favourites.Add(item: favourite);
                     itemsImported++;
                 }
                 catch (Exception e)
@@ -216,7 +215,7 @@ internal static class HelperDataFavourites
                 Sublocation = row[columnName: "Sublocation"]?.ToString()
             };
 
-            FrmMainApp.Favourites.Add(item: fav);
+            _ = FrmMainApp.Favourites.Add(item: fav);
         }
     }
 
@@ -242,10 +241,10 @@ internal static class HelperDataFavourites
             ;
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@oldName", value: oldName);
-        sqlToRun.Parameters.AddWithValue(parameterName: "@newName", value: newName);
+        _ = sqlToRun.Parameters.AddWithValue(parameterName: "@oldName", value: oldName);
+        _ = sqlToRun.Parameters.AddWithValue(parameterName: "@newName", value: newName);
 
-        sqlToRun.ExecuteNonQuery();
+        _ = sqlToRun.ExecuteNonQuery();
     }
 
     /// <summary>
@@ -268,7 +267,7 @@ internal static class HelperDataFavourites
             using (SQLiteCommand deleteCommand = new(commandText: "DELETE FROM Favourites;", connection: sqliteDB,
                        transaction: transaction))
             {
-                deleteCommand.ExecuteNonQuery();
+                _ = deleteCommand.ExecuteNonQuery();
             }
 
             // Prepare the INSERT command once and reuse it
@@ -304,19 +303,19 @@ internal static class HelperDataFavourites
             );", connection: sqliteDB, transaction: transaction))
             {
                 // Add parameters once — values will be updated inside the loop
-                insertCommand.Parameters.Add(parameterName: "@favouriteName", parameterType: DbType.String);
-                insertCommand.Parameters.Add(parameterName: "@GPSLatitude", parameterType: DbType.String);
-                insertCommand.Parameters.Add(parameterName: "@GPSLatitudeRef", parameterType: DbType.String);
-                insertCommand.Parameters.Add(parameterName: "@GPSLongitude", parameterType: DbType.String);
-                insertCommand.Parameters.Add(parameterName: "@GPSLongitudeRef", parameterType: DbType.String);
-                insertCommand.Parameters.Add(parameterName: "@GPSAltitude", parameterType: DbType.String);
-                insertCommand.Parameters.Add(parameterName: "@GPSAltitudeRef", parameterType: DbType.String);
-                insertCommand.Parameters.Add(parameterName: "@Coordinates", parameterType: DbType.String);
-                insertCommand.Parameters.Add(parameterName: "@City", parameterType: DbType.String);
-                insertCommand.Parameters.Add(parameterName: "@CountryCode", parameterType: DbType.String);
-                insertCommand.Parameters.Add(parameterName: "@Country", parameterType: DbType.String);
-                insertCommand.Parameters.Add(parameterName: "@State", parameterType: DbType.String);
-                insertCommand.Parameters.Add(parameterName: "@Sublocation", parameterType: DbType.String);
+                _ = insertCommand.Parameters.Add(parameterName: "@favouriteName", parameterType: DbType.String);
+                _ = insertCommand.Parameters.Add(parameterName: "@GPSLatitude", parameterType: DbType.String);
+                _ = insertCommand.Parameters.Add(parameterName: "@GPSLatitudeRef", parameterType: DbType.String);
+                _ = insertCommand.Parameters.Add(parameterName: "@GPSLongitude", parameterType: DbType.String);
+                _ = insertCommand.Parameters.Add(parameterName: "@GPSLongitudeRef", parameterType: DbType.String);
+                _ = insertCommand.Parameters.Add(parameterName: "@GPSAltitude", parameterType: DbType.String);
+                _ = insertCommand.Parameters.Add(parameterName: "@GPSAltitudeRef", parameterType: DbType.String);
+                _ = insertCommand.Parameters.Add(parameterName: "@Coordinates", parameterType: DbType.String);
+                _ = insertCommand.Parameters.Add(parameterName: "@City", parameterType: DbType.String);
+                _ = insertCommand.Parameters.Add(parameterName: "@CountryCode", parameterType: DbType.String);
+                _ = insertCommand.Parameters.Add(parameterName: "@Country", parameterType: DbType.String);
+                _ = insertCommand.Parameters.Add(parameterName: "@State", parameterType: DbType.String);
+                _ = insertCommand.Parameters.Add(parameterName: "@Sublocation", parameterType: DbType.String);
 
                 foreach (Favourite favourite in FrmMainApp.Favourites)
                 {
@@ -334,7 +333,7 @@ internal static class HelperDataFavourites
                     insertCommand.Parameters[parameterName: "@State"].Value = favourite.State;
                     insertCommand.Parameters[parameterName: "@Sublocation"].Value = favourite.Sublocation;
 
-                    insertCommand.ExecuteNonQuery();
+                    _ = insertCommand.ExecuteNonQuery();
                 }
             }
 
@@ -385,6 +384,6 @@ internal static class HelperDataFavourites
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
 
-        sqlToRun.ExecuteNonQuery();
+        _ = sqlToRun.ExecuteNonQuery();
     }
 }

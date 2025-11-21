@@ -120,7 +120,7 @@ internal class SingleInstance_PipeServer
                 npServer.WaitForConnectionAsync(cancellationToken: cTokenSource.Token);
 
             // Wait for either connection or cancelation
-            int res =
+            _ =
                 WaitHandle.WaitAny(waitHandles: new[]
                                        { npConnectionResult.AsyncWaitHandle });
             if (npServer.IsConnected)

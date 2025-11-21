@@ -1,5 +1,4 @@
-﻿using GeoTagNinja;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Authenticators;
@@ -27,7 +26,7 @@ internal static class HelperAPIGeoNamesToponomyExtractor
                 HelperVariables.UserSettingGeoNamesUserName = HelperDataApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_UserName");
                 HelperVariables.UserSettingGeoNamesPwd = HelperDataApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_Pwd");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                     controlName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB",

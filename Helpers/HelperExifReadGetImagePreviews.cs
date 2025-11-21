@@ -4,7 +4,6 @@ using Sdcb.LibRaw;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -14,12 +13,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Encoder = System.Drawing.Imaging.Encoder;
 
-
 namespace GeoTagNinja.Helpers;
 
 internal static class HelperExifReadGetImagePreviews
 {
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     internal enum Initiator
     {
         FrmMainAppPictureBox,
@@ -44,7 +41,6 @@ internal static class HelperExifReadGetImagePreviews
     /// <param name="initiator">The source of the caller. This can drives whether we're asking for a preview or a thumbnail</param>
     /// <param name="addSmallThumbnailToFileName">Whether to add "_small_thumbnail" to the filename. (defaults to false)</param>
     /// <returns>Realistically nothing but the process generates the bitmap if possible</returns>
-    [SuppressMessage(category: "ReSharper", checkId: "AssignNullToNotNullAttribute")]
     internal static async Task UseExifToolToGeneratePreviewsOrThumbnails(string fileNameWithPath,
                                                                          Initiator initiator,
                                                                          bool addSmallThumbnailToFileName = false)
@@ -70,9 +66,6 @@ internal static class HelperExifReadGetImagePreviews
         #endregion
 
         // add required tags
-
-        FrmMainApp frmMainAppInstance =
-            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         if (File.Exists(path: fileNameWithPath))
         {

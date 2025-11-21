@@ -84,7 +84,7 @@ internal partial class FrmAboutBox : Form
     private void rtb_AboutBox_LinkClicked(object sender,
         LinkClickedEventArgs e)
     {
-        Process.Start(fileName: e.LinkText);
+        _ = Process.Start(fileName: e.LinkText);
     }
 
 

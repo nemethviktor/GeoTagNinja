@@ -83,6 +83,6 @@ internal static class HelperDataSettingsExport
         connection.Open();
         using SQLiteCommand command = new(connection: connection);
         command.CommandText = $"DROP TABLE IF EXISTS {tableName};";
-        command.ExecuteNonQuery();
+        _ = command.ExecuteNonQuery();
     }
 }

@@ -140,7 +140,7 @@ internal static class HelperVariables
 
         if (!Directory.Exists(path: userDataFolderPath))
         {
-            Directory.CreateDirectory(path: userDataFolderPath);
+            _ = Directory.CreateDirectory(path: userDataFolderPath);
         }
 
         return userDataFolderPath;
@@ -216,13 +216,13 @@ internal static class HelperVariables
         {
             if (sourceConfigFileFi.LastWriteTime > destConfigFileFi.LastWriteTime)
             {
-                sourceConfigFileFi.CopyTo(destFileName: destConfigFileFi.FullName,
+                _ = sourceConfigFileFi.CopyTo(destFileName: destConfigFileFi.FullName,
                     overwrite: true);
             }
         }
         else
         {
-            sourceConfigFileFi.CopyTo(destFileName: destConfigFileFi.FullName,
+            _ = sourceConfigFileFi.CopyTo(destFileName: destConfigFileFi.FullName,
                 overwrite: true);
         }
     }

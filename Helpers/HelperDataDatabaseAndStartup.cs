@@ -93,13 +93,13 @@ internal static class HelperDataDatabaseAndStartup
                                  ;
                                  """;
                     SQLiteCommand sqlCommandStr = new(commandText: sql, connection: sqliteDB);
-                    sqlCommandStr.ExecuteNonQuery();
+                    _ = sqlCommandStr.ExecuteNonQuery();
                     sqliteDB.Close();
                 }
                 catch (Exception ex)
                 {
                     FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
-                    MessageBox.Show(text: ex.Message);
+                    _ = MessageBox.Show(text: ex.Message);
                 }
             }
             else
@@ -119,7 +119,7 @@ internal static class HelperDataDatabaseAndStartup
         catch (Exception ex)
         {
             FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
-            MessageBox.Show(text: ex.Message);
+            _ = MessageBox.Show(text: ex.Message);
         }
     }
 
@@ -227,7 +227,7 @@ internal static class HelperDataDatabaseAndStartup
                  booleanTypeSettingsNonExtensionSpecificControlNames.Select(selector: keyValuePair =>
                      keyValuePair.Key))
         {
-            booleanTypeSettingsNonExtensionSpecificControlNames.TryGetValue(key: settingTabPage,
+            _ = booleanTypeSettingsNonExtensionSpecificControlNames.TryGetValue(key: settingTabPage,
                 value: out List<string> booleanTypeControlNameList);
 
             settingsToWriteTmp.AddRange(collection: booleanTypeControlNameList.Select(selector: controlName =>
@@ -243,7 +243,7 @@ internal static class HelperDataDatabaseAndStartup
         foreach (string settingTabPage in stringTypeSettingsControlNames.Select(selector: keyValuePair =>
                      keyValuePair.Key))
         {
-            stringTypeSettingsControlNames.TryGetValue(key: settingTabPage,
+            _ = stringTypeSettingsControlNames.TryGetValue(key: settingTabPage,
                 value: out Dictionary<string, string> booleanTypeControlNameList);
 
             settingsToWriteTmp.AddRange(collection: booleanTypeControlNameList.Select(selector: controlName =>
@@ -348,7 +348,7 @@ internal static class HelperDataDatabaseAndStartup
 
                 SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
 
-                sqlToRun.ExecuteNonQuery();
+                _ = sqlToRun.ExecuteNonQuery();
             }
 
             sqliteDB.Close();
@@ -387,7 +387,7 @@ internal static class HelperDataDatabaseAndStartup
 
             SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
 
-            sqlToRun.ExecuteNonQuery();
+            _ = sqlToRun.ExecuteNonQuery();
 
             sqliteDB.Close();
         }

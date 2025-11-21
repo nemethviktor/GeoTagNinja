@@ -33,7 +33,7 @@ internal static class FileListViewMapNavigation
             {
                 frmMainAppInstance.nud_lat.Value = Convert.ToDecimal(value: deCoords.Item1, provider: CultureInfo.InvariantCulture);
                 frmMainAppInstance.nud_lng.Value = Convert.ToDecimal(value: deCoords.Item2, provider: CultureInfo.InvariantCulture);
-                HelperVariables.HsMapMarkers.Add(item: (deCoords.Item1.ToString(provider: CultureInfo.InvariantCulture), deCoords.Item2.ToString(provider: CultureInfo.InvariantCulture)));
+                _ = HelperVariables.HsMapMarkers.Add(item: (deCoords.Item1.ToString(provider: CultureInfo.InvariantCulture), deCoords.Item2.ToString(provider: CultureInfo.InvariantCulture)));
             }
         }
 

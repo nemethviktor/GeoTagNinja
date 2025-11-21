@@ -26,7 +26,7 @@ internal static class HelperGenericFileLocking
     /// <param name="fileNameWithoutPath">The file name without the path.</param>
     internal static void GenericLockLockFile(string fileNameWithoutPath)
     {
-        FilesBeingProcessed.Add(item: fileNameWithoutPath);
+        _ = FilesBeingProcessed.Add(item: fileNameWithoutPath);
     }
 
     /// <summary>
@@ -35,6 +35,6 @@ internal static class HelperGenericFileLocking
     /// <param name="fileNameWithoutPath">The file name without the path.</param>
     internal static void GenericLockUnLockFile(string fileNameWithoutPath)
     {
-        FilesBeingProcessed.Remove(item: fileNameWithoutPath);
+        _ = FilesBeingProcessed.Remove(item: fileNameWithoutPath);
     }
 }

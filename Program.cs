@@ -42,7 +42,7 @@ internal static class Program
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(defaultValue: false);
 
-        Parser.Default.ParseArguments<OptionsMutuallyExclusive>(args: args)
+        _ = Parser.Default.ParseArguments<OptionsMutuallyExclusive>(args: args)
               .WithParsed(action: o =>
                {
                    if (File.Exists(path: o.Collection))
@@ -78,7 +78,7 @@ internal static class Program
         catch (AbandonedMutexException)
         {
             // Other application did not release Mutex properly
-            MessageBox.Show(text: PipeErrorAbandonedMutexException);
+            _ = MessageBox.Show(text: PipeErrorAbandonedMutexException);
         }
 
         if (!SingleInstanceHighlander)
@@ -109,29 +109,29 @@ internal static class Program
         }
         catch (TimeoutException ex)
         {
-            MessageBox.Show(text: PipeErrorConnectionTimeout + ex.Message);
+            _ = MessageBox.Show(text: PipeErrorConnectionTimeout + ex.Message);
             return;
         }
         catch (IOException ex)
         {
-            MessageBox.Show(text: PipeErrorIoError + ex.Message);
+            _ = MessageBox.Show(text: PipeErrorIoError + ex.Message);
             return;
         }
         catch (UnauthorizedAccessException ex)
         {
-            MessageBox.Show(text: PipeErrorAccessDenied + ex.Message);
+            _ = MessageBox.Show(text: PipeErrorAccessDenied + ex.Message);
             return;
         }
         catch (Exception ex)
         {
-            MessageBox.Show(text: PipeErrorUnexpectedError + ex.Message);
+            _ = MessageBox.Show(text: PipeErrorUnexpectedError + ex.Message);
             return;
         }
 
         // Could not get hold of server - abort
         if (!pipeClient.IsConnected)
         {
-            MessageBox.Show(text: PipeErrorCouldNotConnect);
+            _ = MessageBox.Show(text: PipeErrorCouldNotConnect);
             return;
         }
 
@@ -144,11 +144,11 @@ internal static class Program
         }
         catch (IOException ex)
         {
-            MessageBox.Show(text: PipeErrorIoError + ex.Message);
+            _ = MessageBox.Show(text: PipeErrorIoError + ex.Message);
         }
         catch (Exception ex)
         {
-            MessageBox.Show(text: PipeErrorUnexpectedError + ex.Message);
+            _ = MessageBox.Show(text: PipeErrorUnexpectedError + ex.Message);
         }
         finally
         {

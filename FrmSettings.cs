@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -103,8 +102,8 @@ public partial class FrmSettings : Form
                     DataTable dt = new();
                     string native;
                     string english;
-                    dt.Columns.Add(columnName: "id");
-                    dt.Columns.Add(columnName: "displayValue");
+                    _ = dt.Columns.Add(columnName: "id");
+                    _ = dt.Columns.Add(columnName: "displayValue");
                     foreach (string alreadyTranslatedLanguage in languageList)
                     {
                         DataRow dr = dt.NewRow();
@@ -233,7 +232,7 @@ public partial class FrmSettings : Form
         foreach (string ext in
                  HelperGenericAncillaryListsArrays.AllCompatibleExtensions())
         {
-            lbx_fileExtensions.Items.Add(item: ext);
+            _ = lbx_fileExtensions.Items.Add(item: ext);
         }
 
         // get values by name
@@ -372,7 +371,6 @@ public partial class FrmSettings : Form
     ///     Some of the columns are dropdowns (technically DataGridViewComboBoxColumn) so they need to have a few extra
     ///     settings loaded.
     /// </summary>
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     private void LoadCustomRulesDGV()
     {
         // Read the SQL
@@ -423,7 +421,7 @@ public partial class FrmSettings : Form
 
         foreach (string itemName in HelperGenericAncillaryListsArrays.CustomRulesDataSources())
         {
-            clh_DataPointName.Items.Add(item: itemName);
+            _ = clh_DataPointName.Items.Add(item: itemName);
         }
 
         // 03a get values
@@ -440,7 +438,7 @@ public partial class FrmSettings : Form
         // If (e.g.: "Is", "Contains")
         foreach (string itemName in HelperGenericAncillaryListsArrays.CustomRulesDataConditions())
         {
-            clh_DataPointConditionType.Items.Add(item: itemName);
+            _ = clh_DataPointConditionType.Items.Add(item: itemName);
         }
 
         // 04
@@ -468,7 +466,7 @@ public partial class FrmSettings : Form
         foreach (SourcesAndAttributes.ElementAttribute itemName in
                  HelperGenericAncillaryListsArrays.CustomRulesDataTargets())
         {
-            clh_TargetPointName.Items.Add(item: itemName.ToString());
+            _ = clh_TargetPointName.Items.Add(item: itemName.ToString());
         }
 
         // 06
@@ -484,7 +482,7 @@ public partial class FrmSettings : Form
 
         foreach (string itemName in HelperGenericAncillaryListsArrays.CustomRulesDataSources(isOutcome: true))
         {
-            clh_TargetPointOutcome.Items.Add(item: itemName);
+            _ = clh_TargetPointOutcome.Items.Add(item: itemName);
         }
 
         // 07 Becomes (custom value)
@@ -517,7 +515,6 @@ public partial class FrmSettings : Form
     ///     The 'CountryCode' column is populated with a list of country codes and countries, and is read-only.
     ///     The 'TargetPointNameCustomCityLogic' column is populated with a list of items from the CustomCityLogicDataSources.
     /// </summary>
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     private void LoadCustomCityLogicDGV()
     {
         HelperVariables.DtCustomCityLogic = HelperDataCustomCityAllocationRules
@@ -556,7 +553,7 @@ public partial class FrmSettings : Form
         foreach (string itemName in HelperGenericAncillaryListsArrays
                     .CustomCityLogicDataSources())
         {
-            clh_TargetPointNameCustomCityLogic.Items.Add(item: itemName);
+            _ = clh_TargetPointNameCustomCityLogic.Items.Add(item: itemName);
         }
 
         dgv_CustomCityLogic.Columns.AddRange(
@@ -592,7 +589,7 @@ public partial class FrmSettings : Form
                    .ToString();
                 if (!HelperVariables.LstCityNameIsUndefined.Contains(item: countryCode))
                 {
-                    clh_CountryCodeOptions.Remove(key: dataRow[columnName: "ISO_3166_1A3"]
+                    _ = clh_CountryCodeOptions.Remove(key: dataRow[columnName: "ISO_3166_1A3"]
                        .ToString()
                     );
                 }
@@ -616,7 +613,6 @@ public partial class FrmSettings : Form
     ///     it cancels the event, preventing the user from leaving the cell until a valid value is entered, and displays a
     ///     warning message.
     /// </remarks>
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     private void dgv_CustomRules_RowValidating(object sender,
                                                DataGridViewCellCancelEventArgs e)
     {
@@ -801,7 +797,7 @@ public partial class FrmSettings : Form
         HelperVariables.DtHelperDataApplicationSettingsPreQueue.Clear();
 
         // refresh user data
-        HelperGenericAppStartup.AppStartupApplyDefaults(settingTabPage: "tpg_Application",
+        _ = HelperGenericAppStartup.AppStartupApplyDefaults(settingTabPage: "tpg_Application",
             actuallyRunningAtStartup: false);
 
         HelperGenericAppStartup.AppStartupGetOverwriteBlankToponomy();
@@ -809,7 +805,7 @@ public partial class FrmSettings : Form
         HelperDataCustomRules.DataWriteSQLiteCustomRules();
         HelperDataCustomCityAllocationRules.DataWriteSQLiteCustomCityAllocationLogic();
         // read back/refresh lists.
-        HelperGenericAppStartup.AppStartupReadCustomCityLogic();
+        _ = HelperGenericAppStartup.AppStartupReadCustomCityLogic();
 
         // in case it changed or something.
         HelperVariables.DtCustomRules = HelperDataCustomRules.DataReadSQLiteCustomRules();
@@ -886,9 +882,6 @@ public partial class FrmSettings : Form
                         }
                         else if (box == ckb_AddXMPSideCar)
                         {
-                            string tmptmpCtrlName = $"{lbi.ToString()
-                                                          .Split('\t')
-                                                          .FirstOrDefault()}_"; // 'tis ok as is
                             string tmpCtrlGroup = lbi.ToString()
                                                      .Split('\t')
                                                      .Last()
@@ -1033,7 +1026,6 @@ public partial class FrmSettings : Form
     /// </summary>
     /// <param name="sender">The Control in question</param>
     /// <param name="e">Unused</param>
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     private void Any_ckb_CheckStateChanged(object sender,
                                            EventArgs e)
     {
@@ -1044,8 +1036,6 @@ public partial class FrmSettings : Form
 
             CheckBox ckb = (CheckBox)sender;
             ckb.Font = new Font(prototype: ckb.Font, newStyle: FontStyle.Bold);
-            string cItemName = "";
-
             object lbi = null;
             if (frmSettingsInstance != null &&
                 frmSettingsInstance.tcr_Settings.SelectedTab == tpg_FileOptions)
@@ -1053,12 +1043,11 @@ public partial class FrmSettings : Form
                 lbi = lbx_fileExtensions.SelectedItem;
             }
 
-            cItemName = lbi != null
-                ? $"{lbi.ToString()
-                                  .Split('\t')
-                                  .FirstOrDefault()}_{ckb.Name}"
-                : ckb.Name;
-
+            string cItemName = lbi != null
+    ? $"{lbi.ToString()
+                      .Split('\t')
+                      .FirstOrDefault()}_{ckb.Name}"
+    : ckb.Name;
             if (cItemName == "ckb_ReplaceBlankToponyms")
             {
                 tbx_ReplaceBlankToponyms.Enabled = ckb.Checked;
@@ -1214,7 +1203,7 @@ public partial class FrmSettings : Form
     private void rbx_CustomRulesExplanation_LinkClicked(object sender,
                                                         LinkClickedEventArgs e)
     {
-        Process.Start(fileName: e.LinkText);
+        _ = Process.Start(fileName: e.LinkText);
     }
 
 
@@ -1315,7 +1304,7 @@ public partial class FrmSettings : Form
             exportFileDialog.Filter = "SQLite Databasee|*.db";
             exportFileDialog.Title = "Save a SQLite File";
             exportFileDialog.FileName = $"GeoTagNinja_Settings_Export_{DateTime.Now:yyyyMMdd_HHmm}";
-            exportFileDialog.ShowDialog();
+            _ = exportFileDialog.ShowDialog();
 
             // If the file name is not an empty string open it for saving.
             if (exportFileDialog.FileName != "")
@@ -1330,7 +1319,7 @@ public partial class FrmSettings : Form
                         settingsToExportList: ItemsToExport,
                         exportFilePath: Path.Combine(exportFileDialog.FileName));
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                         controlName: "mbx_FrmSettings_ErrorExportFailed",
@@ -1482,7 +1471,7 @@ public partial class FrmSettings : Form
         string args = Join(separator: " ",
             values: Environment.GetCommandLineArgs().Skip(count: 1).Select(selector: a => $"\"{a}\""));
 
-        Process.Start(startInfo: new ProcessStartInfo
+        _ = Process.Start(startInfo: new ProcessStartInfo
         {
             FileName = exePath,
             Arguments = args,

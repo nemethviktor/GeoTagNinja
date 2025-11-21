@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -7,7 +6,6 @@ using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 
 namespace GeoTagNinja.Helpers;
 
-[SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
 public enum LanguageMappingQueryOrReturnWhat
 {
     Country,
@@ -30,7 +28,7 @@ internal static class HelperDataLanguageTZ
         if (!File.Exists(path: countryCodeCsvFilePath))
         {
             FrmMainApp.Log.Fatal(message: "Error: isoCountryCodeMapping.csv missing");
-            HelperControlAndMessageBoxCustomMessageBoxManager helperControlAndMessageBoxCustomMessageBoxManager = new();
+
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                 controlName: "mbx_FrmMainApp_ErrorIsoCountryCodeMappingMissing",
                 captionType: MessageBoxCaption.Error,
@@ -63,7 +61,7 @@ internal static class HelperDataLanguageTZ
             select dataRow;
 
         string returnString = "";
-        Parallel.ForEach(source: drDataTableData, body: dataRow =>
+        _ = Parallel.ForEach(source: drDataTableData, body: dataRow =>
             {
                 returnString = dataRow[columnName: returnWhat.ToString()]
                    .ToString();

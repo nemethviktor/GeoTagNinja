@@ -4,6 +4,7 @@ using Microsoft.Web.WebView2.Core;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -28,7 +29,7 @@ internal static class HelperGenericAppStartup
         {
             FrmMainApp.Log.Debug(message: "applicationDataGeoTagNinjaFolder");
             string applicationDataGeoTagNinjaFolder = Path.Combine(path1: Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationData), path2: "GeoTagNinja");
-            Directory.CreateDirectory(path: applicationDataGeoTagNinjaFolder);
+            _ = Directory.CreateDirectory(path: applicationDataGeoTagNinjaFolder);
             HelperDataDatabaseAndStartup.DataCreateSQLiteDB();
         }
         catch (Exception ex)
@@ -53,7 +54,7 @@ internal static class HelperGenericAppStartup
         // write settings for combobox defaults etc
         try
         {
-            AppStartupReadSQLiteTables();
+            _ = AppStartupReadSQLiteTables();
             HelperDataDatabaseAndStartup.DataWriteSQLiteSettingsDefaultSettings();
         }
         catch (Exception ex)
@@ -203,6 +204,7 @@ internal static class HelperGenericAppStartup
         }
         catch (Exception ex)
         {
+            Debug.Print(ex.Message);
             TryUseGeoNamesLanguage = HelperVariables.DefaultEnglishString;
         }
 
@@ -464,7 +466,7 @@ internal static class HelperGenericAppStartup
     /// </summary>
     internal static void AppStartupGetOverwriteBlankToponomy()
     {
-        bool.TryParse(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
+        _ = bool.TryParse(value: HelperDataApplicationSettings.DataReadSQLiteSettings(
             dataTable: HelperVariables.DtHelperDataApplicationSettings,
             settingTabPage: "tpg_Application",
             settingId: "ckb_ReplaceBlankToponyms"), result: out HelperVariables.ToponomyReplace);

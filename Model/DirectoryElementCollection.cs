@@ -88,7 +88,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         {
             if (directoryElement.HasDirtyAttributes())
             {
-                uids.Add(
+                _ = uids.Add(
                     item: directoryElement.GetAttributeValueString(
                         attribute: SourcesAndAttributes.ElementAttribute.GUID, nowSavingExif: false));
             }
@@ -135,7 +135,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         DirectoryElement exstgElement = FindElementByFileNameWithPath(FileNameWithPath: item.FileNameWithPath);
         if (exstgElement != null && replaceIfExists)
         {
-            Remove(item: exstgElement);
+            _ = Remove(item: exstgElement);
             base.Add(item: item);
         }
         else if (exstgElement == null)
@@ -390,7 +390,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                         value: fileInfoItem.Extension.Replace(oldValue: ".", newValue: ""),
                         comparer: StringComparer.InvariantCultureIgnoreCase))
                 {
-                    sidecarFiles.Add(item: fileInfoItem);
+                    _ = sidecarFiles.Add(item: fileInfoItem);
                 }
 
                 // Image file
@@ -398,7 +398,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                              value: fileInfoItem.Extension.Replace(oldValue: ".", newValue: ""),
                              comparer: StringComparer.InvariantCultureIgnoreCase))
                 {
-                    imageFiles.Add(item: fileInfoItem);
+                    _ = imageFiles.Add(item: fileInfoItem);
 
                     // collection mode throws a slight problem with sidecar files: 
                     // if an xmp (or other, currently undefined) file is not explicitly on the collection-mode-list then it gets ignored.
@@ -414,7 +414,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                             FileInfo fiSidecarFileInfoItem = new(fileName: Path.Combine(
                                 path1: fileInfoItem.DirectoryName,
                                 path2: imaginarySidecarFileNameWithPath));
-                            sidecarFiles.Add(item: fiSidecarFileInfoItem);
+                            _ = sidecarFiles.Add(item: fiSidecarFileInfoItem);
                         }
                     }
                 }
@@ -457,7 +457,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 {
                     if (sidecarFileAlreadyAdded)
                     {
-                        overlappingXMPFileList.Add(item: sideCarFileInfoItem);
+                        _ = overlappingXMPFileList.Add(item: sideCarFileInfoItem);
                         Log.Warn(message: $"Sidecar file '{sideCarFileInfoItem}' matches multiple image files!");
                     }
 
@@ -537,7 +537,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
             if (_frmPleaseWaitBoxInstance != null)
             {
                 Application.DoEvents();
-                _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Invoke(method: (MethodInvoker)delegate
+                _ = _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Invoke(method: (MethodInvoker)delegate
                 {
                     // Running on the UI thread
                     _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Text = imagefileFileInfoItem.FullName;
@@ -551,7 +551,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
             // this is a bit complex but in _this_ loop we're not looking at sidecar files at _this_ stage whereas ...
             // I need to know if an xmp has changed or not
             bool fileNeedsReDEing = false;
-            imageToSidecarFileMapping.TryGetValue(key: imagefileFileInfoItem, value: out FileInfo sidecarFileInfoItem);
+            _ = imageToSidecarFileMapping.TryGetValue(key: imagefileFileInfoItem, value: out FileInfo sidecarFileInfoItem);
             // so first we check the details of the image file then those of the xmp's
             for (int i = 0; i <= 1; i++)
             {
@@ -598,7 +598,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     FindElementByFileNameWithPath(FileNameWithPath: imagefileFileInfoItem.FullName);
                 if (directoryElementToRemove is not null)
                 {
-                    Remove(item: directoryElementToRemove);
+                    _ = Remove(item: directoryElementToRemove);
                 }
 
                 // Regular (image) files are added to the list of
@@ -659,7 +659,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         IDictionary<string, string> properties)
     {
         // Gather EXIF data for the image file
-        ICollection<KeyValuePair<string, string>> propertiesRead = new Dictionary<string, string>();
+        ICollection<KeyValuePair<string, string>> propertiesRead = [];
         _ExifTool.GetProperties(filename: fileinfoItem.FullName, propertiesRead: propertiesRead);
 
         // EXIF Tool can return duplicate properties - handle, but ignore these...

@@ -21,7 +21,6 @@ public partial class FrmImportExportGpx : Form
     private static string LocalIanatZname;
     private static string SelectedIanatzName;
     private static string SelectedTzAdjustment;
-    private static string ISO639Lang;
     private static int _lastShiftSecond;
     private static int _lastShiftMinute;
     private static int _lastShiftHour;
@@ -81,7 +80,7 @@ public partial class FrmImportExportGpx : Form
                     {
                         foreach (object importTimeAgainstItem in Enum.GetValues(enumType: typeof(ImportTimeAgainst)))
                         {
-                            cbx_ImportTimeAgainst.Items.Add(item: importTimeAgainstItem.ToString());
+                            _ = cbx_ImportTimeAgainst.Items.Add(item: importTimeAgainstItem.ToString());
                         }
 
                         if (!string.IsNullOrWhiteSpace(value: _lastCompareAgainstChoice))
@@ -108,7 +107,7 @@ public partial class FrmImportExportGpx : Form
                     {
                         foreach (object exportFileOrderItem in Enum.GetValues(enumType: typeof(ExportFileOrder)))
                         {
-                            cbx_ExportTrackOrderBy.Items.Add(item: exportFileOrderItem.ToString());
+                            _ = cbx_ExportTrackOrderBy.Items.Add(item: exportFileOrderItem.ToString());
                         }
 
                         cbx_ExportTrackOrderBy.SelectedIndex = 0;
@@ -119,7 +118,7 @@ public partial class FrmImportExportGpx : Form
                         foreach (object exportFileFMTTimeBasisItem in Enum.GetValues(
                                      enumType: typeof(ExportFileFMTTimeBasis)))
                         {
-                            cbx_ExportTrackTimeStampType.Items.Add(item: exportFileFMTTimeBasisItem.ToString());
+                            _ = cbx_ExportTrackTimeStampType.Items.Add(item: exportFileFMTTimeBasisItem.ToString());
                         }
 
                         cbx_ExportTrackTimeStampType.SelectedIndex = 0;
@@ -199,7 +198,7 @@ public partial class FrmImportExportGpx : Form
     {
         foreach (string timezone in GetTimeZones())
         {
-            cbxToFill.Items.Add(item: timezone);
+            _ = cbxToFill.Items.Add(item: timezone);
         }
 
         try

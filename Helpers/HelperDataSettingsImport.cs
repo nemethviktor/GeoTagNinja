@@ -65,7 +65,7 @@ namespace GeoTagNinja.Helpers
                         // Delete the table from the settings database
                         using (SQLiteCommand deleteCmd = new(commandText: $"DROP TABLE IF EXISTS {tableName};", connection: settingsConnection))
                         {
-                            deleteCmd.ExecuteNonQuery();
+                            _ = deleteCmd.ExecuteNonQuery();
                         }
 
                         // Copy the table from the import database to the settings database
@@ -75,7 +75,7 @@ namespace GeoTagNinja.Helpers
                                 commandText:
                                 $"ATTACH DATABASE '{HelperVariables.SettingsDatabaseFilePath}' AS toDb; CREATE TABLE toDb.{tableName} AS SELECT * FROM main.{tableName};",
                                 connection: importConnection);
-                            copyCmd.ExecuteNonQuery();
+                            _ = copyCmd.ExecuteNonQuery();
                         }
                     }
 
@@ -83,7 +83,7 @@ namespace GeoTagNinja.Helpers
                         commandText:
                         $"DETACH DATABASE 'toDb';",
                         connection: importConnection);
-                    detachCmd.ExecuteNonQuery();
+                    _ = detachCmd.ExecuteNonQuery();
                 }
 
                 // Close connections
@@ -117,7 +117,7 @@ namespace GeoTagNinja.Helpers
                 connection.Open();
                 using (SQLiteCommand command = new(commandText: "SELECT 1", connection: connection))
                 {
-                    command.ExecuteNonQuery();
+                    _ = command.ExecuteNonQuery();
                 }
 
                 connection.Close();

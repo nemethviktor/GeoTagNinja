@@ -89,7 +89,7 @@ internal static class HelperGenericCalculations
         double bearingRad = ToRadians(degrees: gpsImgDirection);
 
         // Calculate the target latitude and longitude
-        (double targetLatitude, double targetLongitude) = CalculateTargetCoordinates(startLatitude: startLatitude, startLongitude: startLongitude, gpsImgDirection: gpsImgDirection, distance: distance);
+        // (double targetLatitude, double targetLongitude) = CalculateTargetCoordinates(startLatitude: startLatitude, startLongitude: startLongitude, gpsImgDirection: gpsImgDirection, distance: distance);
 
         // Calculate the FOV coordinates
         double halfFovRad = ToRadians(degrees: fovAngle / 2.0);

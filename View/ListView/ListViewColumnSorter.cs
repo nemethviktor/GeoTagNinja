@@ -36,7 +36,8 @@ internal class ListViewColumnSorter : IComparer
     ///     The sort order is either SortOrder.Ascending or SortOrder.Descending (default ascending)
     /// </summary>
     public SortOrder SortOrder
-    { set => ColumnSortOrder = value is SortOrder.Ascending or SortOrder.Descending
+    {
+        set => ColumnSortOrder = value is SortOrder.Ascending or SortOrder.Descending
               ? value
               : throw new ArgumentException(message: "Sort order must either by ascending or descending.");
         get => ColumnSortOrder;
@@ -60,7 +61,6 @@ internal class ListViewColumnSorter : IComparer
             return 0;
         }
 
-        int result = 0;
         ListViewItem lviX = (ListViewItem)x;
         ListViewItem lviY = (ListViewItem)y;
         DirectoryElement deX = (DirectoryElement)lviX.Tag;
@@ -86,6 +86,8 @@ internal class ListViewColumnSorter : IComparer
             return lviElementTypeX < lviElementTypeY ? -1 : 1;
         }
 
+
+        int result;
         // Item of same group - compare their values in clicked column...
         try
         {

@@ -29,7 +29,7 @@ internal static class EditFileFormGeneric
             Name = COL_NAME_PREFIX + FileListColumns.FILENAME,
             Width = lvw.Width
         };
-        lvw.Columns.Add(value: clh_fileName);
+        _ = lvw.Columns.Add(value: clh_fileName);
 
         //ColumnHeader clh_GUID = new();
         //clh_GUID.Name = COL_NAME_PREFIX + FileListColumns.GUID;
@@ -52,7 +52,7 @@ internal static class EditFileFormGeneric
                     Tag = dirElemFileToModify
                 };
                 //lvi.SubItems.Add(text: fileToEditGUID);
-                FrmEditFileData.lvw_FileListEditImages.Items.Add(value: lvi);
+                _ = FrmEditFileData.lvw_FileListEditImages.Items.Add(value: lvi);
                 fileCount++;
             }
             else if (dirElemFileToModify.Type ==
@@ -68,7 +68,7 @@ internal static class EditFileFormGeneric
             FrmEditFileData.StartPosition = FormStartPosition.CenterScreen;
             try
             {
-                FrmEditFileData.ShowDialog();
+                _ = FrmEditFileData.ShowDialog();
             }
             catch (AccessViolationException)
             {

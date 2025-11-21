@@ -166,7 +166,7 @@ public class HelperControlAndMessageBoxCustomMessageBoxManager
     {
         if (hHook != IntPtr.Zero)
         {
-            UnhookWindowsHookEx(idHook: hHook);
+            _ = UnhookWindowsHookEx(idHook: hHook);
             hHook = IntPtr.Zero;
         }
     }
@@ -187,17 +187,17 @@ public class HelperControlAndMessageBoxCustomMessageBoxManager
         {
             int nLength = GetWindowTextLength(hWnd: msg.hwnd);
             StringBuilder className = new(capacity: 10);
-            GetClassName(hWnd: msg.hwnd, lpClassName: className, nMaxCount: className.Capacity);
+            _ = GetClassName(hWnd: msg.hwnd, lpClassName: className, nMaxCount: className.Capacity);
             if (className.ToString() == "#32770")
             {
                 nButton = 0;
-                EnumChildWindows(hWndParent: msg.hwnd, lpEnumFunc: enumProc, lParam: IntPtr.Zero);
+                _ = EnumChildWindows(hWndParent: msg.hwnd, lpEnumFunc: enumProc, lParam: IntPtr.Zero);
                 if (nButton == 1)
                 {
                     IntPtr hButton = GetDlgItem(hDlg: msg.hwnd, nIDDlgItem: MBCancel);
                     if (hButton != IntPtr.Zero)
                     {
-                        SetWindowText(hWnd: hButton, lpString: OK);
+                        _ = SetWindowText(hWnd: hButton, lpString: OK);
                     }
                 }
             }
@@ -210,32 +210,32 @@ public class HelperControlAndMessageBoxCustomMessageBoxManager
         IntPtr lParam)
     {
         StringBuilder className = new(capacity: 10);
-        GetClassName(hWnd: hWnd, lpClassName: className, nMaxCount: className.Capacity);
+        _ = GetClassName(hWnd: hWnd, lpClassName: className, nMaxCount: className.Capacity);
         if (className.ToString() == "Button")
         {
             int ctlId = GetDlgCtrlID(hwndCtl: hWnd);
             switch (ctlId)
             {
                 case MBOK:
-                    SetWindowText(hWnd: hWnd, lpString: OK);
+                    _ = SetWindowText(hWnd: hWnd, lpString: OK);
                     break;
                 case MBCancel:
-                    SetWindowText(hWnd: hWnd, lpString: Cancel);
+                    _ = SetWindowText(hWnd: hWnd, lpString: Cancel);
                     break;
                 case MBAbort:
-                    SetWindowText(hWnd: hWnd, lpString: Abort);
+                    _ = SetWindowText(hWnd: hWnd, lpString: Abort);
                     break;
                 case MBRetry:
-                    SetWindowText(hWnd: hWnd, lpString: Retry);
+                    _ = SetWindowText(hWnd: hWnd, lpString: Retry);
                     break;
                 case MBIgnore:
-                    SetWindowText(hWnd: hWnd, lpString: Ignore);
+                    _ = SetWindowText(hWnd: hWnd, lpString: Ignore);
                     break;
                 case MBYes:
-                    SetWindowText(hWnd: hWnd, lpString: Yes);
+                    _ = SetWindowText(hWnd: hWnd, lpString: Yes);
                     break;
                 case MBNo:
-                    SetWindowText(hWnd: hWnd, lpString: No);
+                    _ = SetWindowText(hWnd: hWnd, lpString: No);
                     break;
             }
 

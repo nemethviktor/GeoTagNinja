@@ -126,7 +126,6 @@ internal static class HelperDataApplicationSettings
     /// <param name="settingsToWrite">List of settings to be written/overwritten</param>
     internal static void DataWriteSQLiteSettings(List<AppSettingContainer> settingsToWrite)
     {
-        List<KeyValuePair<string, string>> settingsToDelete = [];
         using SQLiteConnection sqliteDB =
             new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
         sqliteDB.Open();
@@ -138,10 +137,10 @@ internal static class HelperDataApplicationSettings
                                         DELETE FROM {appSettingContainer.TableName} WHERE settingTabPage = @settingTabPage AND settingId = @settingId;"
                 ;
 
-            sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingTabPage",
+            _ = sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingTabPage",
                 value: appSettingContainer.SettingTabPage);
-            sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingId", value: appSettingContainer.SettingId);
-            sqlCommandStr.ExecuteNonQuery();
+            _ = sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingId", value: appSettingContainer.SettingId);
+            _ = sqlCommandStr.ExecuteNonQuery();
         }
 
         foreach (AppSettingContainer appSettingContainer in settingsToWrite)
@@ -150,18 +149,18 @@ internal static class HelperDataApplicationSettings
                 $@"
                 INSERT INTO {appSettingContainer.TableName}  (settingTabPage, settingId, settingValue) VALUES (@settingTabPage, @settingId, @settingValue);";
 
-            sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingTabPage",
+            _ = sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingTabPage",
                 value: appSettingContainer.SettingTabPage);
-            sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingId", value: appSettingContainer.SettingId);
-            sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingValue",
+            _ = sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingId", value: appSettingContainer.SettingId);
+            _ = sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingValue",
                 value: appSettingContainer.SettingValue);
-            sqlCommandStr.ExecuteNonQuery();
+            _ = sqlCommandStr.ExecuteNonQuery();
         }
 
         transaction.Commit();
 
         // refresh main datatables
-        HelperGenericAppStartup.AppStartupReadSQLiteTables();
+        _ = HelperGenericAppStartup.AppStartupReadSQLiteTables();
     }
 
     #endregion
@@ -213,7 +212,7 @@ internal static class HelperDataApplicationSettings
             ;
         sqlCommandStr += ";";
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.ExecuteNonQuery();
+        _ = sqlToRun.ExecuteNonQuery();
     }
 
     /// <summary>
@@ -230,7 +229,7 @@ internal static class HelperDataApplicationSettings
             ;
         sqlCommandStr += ";";
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        sqlToRun.ExecuteNonQuery();
+        _ = sqlToRun.ExecuteNonQuery();
     }
 
     #endregion

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Windows.Forms;
-using Application = System.Windows.Forms.Application;
 
 namespace GeoTagNinja.Helpers;
 
 internal static class HelperControlAndMessageBoxHandling
 {
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     public enum MessageBoxCaption
     {
         None,
@@ -26,7 +23,6 @@ internal static class HelperControlAndMessageBoxHandling
     ///     This is probably the worst idea ever but I'm creating fake control types for allocating them to the text-reader
     ///     e.g. ColumnHeader isn't a real control type but I use them.
     /// </summary>
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     public enum FakeControlTypes
     {
         Button,
@@ -54,20 +50,13 @@ internal static class HelperControlAndMessageBoxHandling
     /// <param name="cItem">The Control whose details need adjusting</param>
     /// <param name="senderForm">Name of the Form on which the Control appears. Only relevant for NUDs on the Settings Form</param>
     /// <param name="parentNameToUse">Obsolete most likely at this stage.</param>
-    internal static void ReturnControlText(Control cItem,
-        Form senderForm = null,
-        string parentNameToUse = null)
+    internal static void ReturnControlText(Control cItem, Form senderForm = null, string parentNameToUse = null)
     {
         if (parentNameToUse == null &&
             cItem is not Form)
         {
             parentNameToUse = cItem.Parent.Name;
         }
-
-
-        FrmMainApp frmMainAppInstance =
-            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-
 
         // Note to self: do not add TextBoxes and ComboBoxes.
         // Also cannot add ColumnHeader because it's not a Control

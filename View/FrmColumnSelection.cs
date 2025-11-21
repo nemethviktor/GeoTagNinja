@@ -35,10 +35,10 @@ public partial class FrmColumnSelection : Form
 
         foreach (ColumnHeader col in _colList)
         {
-            clb_ColList.Items.Add(item: col.Text, isChecked: col.Width > 0);
+            _ = clb_ColList.Items.Add(item: col.Text, isChecked: col.Width > 0);
         }
 
-        clb_ColList.Focus();
+        _ = clb_ColList.Focus();
     }
 
     /// <summary>

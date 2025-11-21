@@ -22,7 +22,7 @@ internal static class HelperGenericTypeOperations
 
     public static DateTime? TryParseNullableDateTime(string val)
     {
-        DateTime.TryParse(
+        _ = DateTime.TryParse(
             s: val,
             provider: CultureInfo.CurrentCulture,
             styles: DateTimeStyles.None,

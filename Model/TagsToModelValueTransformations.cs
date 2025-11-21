@@ -27,7 +27,7 @@ internal class TagsToModelValueTransformations
         // Get the Ref Attribute for the corresponding data point and thereof the first character
         // (Should be N of North, etc.)
         // If this character is not contained in the data point value, add it before it
-        var refAttrib = attribute switch
+        ElementAttribute refAttrib = attribute switch
         {
             ElementAttribute.GPSLatitude => ElementAttribute.GPSLatitudeRef,
             ElementAttribute.GPSDestLatitude => ElementAttribute.GPSDestLatitudeRef,

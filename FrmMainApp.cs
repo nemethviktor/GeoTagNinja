@@ -1,5 +1,4 @@
 ﻿using AutoUpdaterDotNET;
-using GeoTagNinja;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.DialogAndMessageBoxes;
@@ -256,7 +255,7 @@ public partial class FrmMainApp : Form
         while (remainingTasks.Count > 0)
         {
             Task completedTask = await Task.WhenAny(tasks: remainingTasks);
-            remainingTasks.Remove(item: completedTask);
+            _ = remainingTasks.Remove(item: completedTask);
             frmSplashScreen.UpdateProgress(
                 amount: eachTasksPointValue,
                 close: remainingTasks.Count == 0);
@@ -331,7 +330,7 @@ public partial class FrmMainApp : Form
         AppStartupAssignLabelsToObjects();
 
         // load lvwFileList
-        lvw_FileList_LoadOrUpdate();
+        _ = lvw_FileList_LoadOrUpdate();
 
         splitContainerMain.Paint += splitContainerControl_Paint;
         splitContainerMain.Invalidate();
@@ -583,11 +582,11 @@ public partial class FrmMainApp : Form
         {
             isDragged: true
         };
-        double.TryParse(s: strLat, style: NumberStyles.Any,
+        _ = double.TryParse(s: strLat, style: NumberStyles.Any,
             provider: CultureInfo.InvariantCulture,
             result: out
             double dblLat); // trust me i hate this f...king culture thing as much as possible...
-        double.TryParse(s: strLng, style: NumberStyles.Any,
+        _ = double.TryParse(s: strLng, style: NumberStyles.Any,
             provider: CultureInfo.InvariantCulture,
             result: out
             double dblLng); // trust me i hate this f...king culture thing as much as possible...
@@ -644,7 +643,7 @@ public partial class FrmMainApp : Form
     {
         HelperVariables.LstTrackPath.Clear();
         HelperVariables.HsMapMarkers.Clear();
-        HelperVariables.HsMapMarkers.Add(item: ParseLatLngTextBox());
+        _ = HelperVariables.HsMapMarkers.Add(item: ParseLatLngTextBox());
         Request_Map_NavigateGo();
     }
 
@@ -654,7 +653,6 @@ public partial class FrmMainApp : Form
     /// </summary>
     /// <param name="sender">Name of the button that has been clicked</param>
     /// <param name="e">Unused</param>
-    [SuppressMessage(category: "ReSharper", checkId: "PossibleNullReferenceException")]
     private async void btn_loctToFile_Click(object sender,
                                             EventArgs e)
     {
@@ -662,7 +660,6 @@ public partial class FrmMainApp : Form
         string strGPSLatitudeOnTheMap = nud_lat.Text.Replace(oldChar: ',', newChar: '.');
         string strGPSLongitudeOnTheMap = nud_lng.Text.Replace(oldChar: ',', newChar: '.');
         _StopProcessingRows = false;
-        GeoResponseToponomy readJsonToponomy = new();
 
         Button btn = (Button)sender;
         string senderName = btn.Name;
@@ -929,7 +926,6 @@ public partial class FrmMainApp : Form
     ///     Handles the navigation to a coordinate on the map. Replaces hard-coded values w/ user-provided ones
     ///     ... and executes the navigation action.
     /// </summary>
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     internal void Request_Map_NavigateGo()
     {
         Log.Info(message: "Starting");
@@ -1292,7 +1288,7 @@ public partial class FrmMainApp : Form
                         dictDestinations[key: destCoords] = [];
                     }
 
-                    dictDestinations[key: destCoords]
+                    _ = dictDestinations[key: destCoords]
                        .Add(item: gpsCoords);
                 }
             }
@@ -1362,7 +1358,7 @@ public partial class FrmMainApp : Form
                 {
                     string gpsCoords =
                         $"[{HelperVariables.LstTrackPath[index: i].strLat},{HelperVariables.LstTrackPath[index: i].strLng}]";
-                    dictDestinations[key: destCoords]
+                    _ = dictDestinations[key: destCoords]
                        .Add(item: gpsCoords);
                 }
             }
@@ -1652,7 +1648,7 @@ public partial class FrmMainApp : Form
                     controlName: "FrmImportExportGpx"
                 )
             };
-            FrmImportExportGpx.ShowDialog();
+            _ = FrmImportExportGpx.ShowDialog();
         }
     }
 
@@ -1705,18 +1701,15 @@ public partial class FrmMainApp : Form
                                                      EventArgs e)
     {
         Log.Info(message: "Starting");
-
-
-        string CurrentFoldersParent = null;
         CurrentFolder ??= Path.GetFullPath(path: tbx_FolderName.Text);
         try
         {
-            CurrentFoldersParent =
-                HelperFileSystemOperators.FsoGetParent(path: CurrentFolder);
+            string CurrentFoldersParent =
+        HelperFileSystemOperators.FsoGetParent(path: CurrentFolder);
         }
         catch
         {
-            CurrentFoldersParent = HelperGenericTypeOperations.Coalesce(
+            _ = HelperGenericTypeOperations.Coalesce(
                 Directory.GetDirectoryRoot(path: CurrentFolder)
               , "C:"
             );
@@ -1775,10 +1768,10 @@ public partial class FrmMainApp : Form
         {
             if (!string.IsNullOrEmpty(value: exceptionMessage))
             {
-                MessageBox.Show(text: exceptionMessage);
+                _ = MessageBox.Show(text: exceptionMessage);
             }
 
-            string CurrentFoldersParent = null;
+            string CurrentFoldersParent;
             try
             {
                 CurrentFoldersParent =
@@ -1845,7 +1838,6 @@ public partial class FrmMainApp : Form
                     // don't do folders...
                     if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
-                        string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
                         string fileNameWithoutPath =
                             dirElemFileToModify.ItemNameWithoutPath;
 
@@ -1880,11 +1872,11 @@ public partial class FrmMainApp : Form
                         if (double.TryParse(s: strGpsLatitude,
                                 style: NumberStyles.Any,
                                 provider: CultureInfo.InvariantCulture,
-                                result: out double parsedLat) &&
+                                result: out double _) &&
                             double.TryParse(s: strGpsLongitude,
                                 style: NumberStyles.Any,
                                 provider: CultureInfo.InvariantCulture,
-                                result: out double parsedLng))
+                                result: out double _))
                         {
                             lvw_FileList_UpdateTagsFromWeb(
                                 strGpsLatitude: strGpsLatitude,
@@ -1939,11 +1931,10 @@ public partial class FrmMainApp : Form
 
         if (HelperVariables.OperationChangeFolderIsOkay)
         {
-            string? tmpStrParent = null;
-            string? tmpStrRoot = null;
             // this is a bit derp but alas
             if (tbx_FolderName.Text.EndsWith(value: "\\"))
             {
+                string tmpStrParent;
                 try
                 {
                     tmpStrParent =
@@ -1957,10 +1948,10 @@ public partial class FrmMainApp : Form
                     );
                 }
 
-                tmpStrRoot = HelperGenericTypeOperations.Coalesce(
-                    Directory.GetDirectoryRoot(path: tbx_FolderName.Text),
-                    "C:"
-                );
+                string tmpStrRoot = HelperGenericTypeOperations.Coalesce(
+        Directory.GetDirectoryRoot(path: tbx_FolderName.Text),
+        "C:"
+    );
                 tbx_FolderName.Text =
                     HelperGenericTypeOperations.Coalesce(tmpStrParent, tmpStrRoot);
             }
@@ -2059,7 +2050,7 @@ public partial class FrmMainApp : Form
             {
                 StartPosition = FormStartPosition.CenterScreen
             };
-            frmImportGpx.ShowDialog();
+            _ = frmImportGpx.ShowDialog();
         }
         else
         {
@@ -2445,8 +2436,7 @@ in toponomyOverwrites)
                         toponomyOverwrites.Add(item: (attribute, null));
                     }
 
-                    foreach ((ElementAttribute attribute, string toponomyOverwriteVal)
-in toponomyOverwrites)
+                    foreach ((ElementAttribute attribute, string toponomyOverwriteVal) in toponomyOverwrites)
                     {
                         dirElemFileToModify.SetAttributeValueAnyType(
                             attribute: attribute,
@@ -2521,7 +2511,7 @@ in toponomyOverwrites)
                     processSubFolders: false,
                     updateProgressHandler: delegate (string statusText)
                     {
-                        Invoke(method: new Action(() =>
+                        _ = Invoke(method: new Action(() =>
                             HandlerUpdateLabelText(label: lbl_ParseProgress, text: statusText)));
                     },
                     collectionModeEnabled: Program.CollectionModeEnabled,
@@ -2568,7 +2558,7 @@ in toponomyOverwrites)
                         processSubFolders: FlatMode,
                         updateProgressHandler: delegate (string statusText)
                         {
-                            Invoke(method: new Action(() =>
+                            _ = Invoke(method: new Action(() =>
                                 HandlerUpdateLabelText(label: lbl_ParseProgress, text: statusText)));
                         },
                         collectionModeEnabled: Program.CollectionModeEnabled,
@@ -2704,12 +2694,12 @@ in toponomyOverwrites)
             // also we'll push the DE/Exif data into lvw_ExifData here.
             if (lvw_FileList.SelectedItems.Count > 0)
             {
-                ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
+                _ = lvw_FileList.SelectedItems[index: 0];
                 DirectoryElement dirElemFileToModify =
                     lvw_FileList.SelectedItems[index: 0].Tag as DirectoryElement;
 
                 await UpdateLvwExifDataItems(directoryElement: dirElemFileToModify);
-                string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
+                _ = dirElemFileToModify.FileNameWithPath;
 
                 if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                 {
@@ -2756,16 +2746,16 @@ in toponomyOverwrites)
                 {
                     Text = GetElementAttributesName(attributeToFind: attribute)
                 };
-                lvi.SubItems.Add(text: directoryElement.GetAttributeValueString(
+                _ = lvi.SubItems.Add(text: directoryElement.GetAttributeValueString(
                     attribute: attribute,
                     version: DirectoryElement.AttributeVersion.Original,
                     notFoundValue: null, nowSavingExif: false));
-                lvi.SubItems.Add(text: directoryElement.GetAttributeValueString(
+                _ = lvi.SubItems.Add(text: directoryElement.GetAttributeValueString(
                     attribute: attribute,
                     version: DirectoryElement.AttributeVersion
                                              .Stage3ReadyToWrite,
                     notFoundValue: null, nowSavingExif: false));
-                lvw_ExifData.Items.Add(value: lvi);
+                _ = lvw_ExifData.Items.Add(value: lvi);
             }
         }
 
@@ -2971,7 +2961,7 @@ in toponomyOverwrites)
                 controlName: "FrmSettings"
             )
         };
-        FrmSettings.ShowDialog();
+        _ = FrmSettings.ShowDialog();
     }
 
     /// <summary>
@@ -2985,7 +2975,7 @@ in toponomyOverwrites)
         if (Favourites.Any())
         {
             FrmManageFavourites frmManageFavouritesInstance = new();
-            frmManageFavouritesInstance.ShowDialog();
+            _ = frmManageFavouritesInstance.ShowDialog();
         }
         else
         {
@@ -3004,13 +2994,13 @@ in toponomyOverwrites)
                                       EventArgs e)
     {
         FrmAboutBox frmAboutBox = new();
-        frmAboutBox.ShowDialog();
+        _ = frmAboutBox.ShowDialog();
     }
 
     private void tmi_Help_FeedbackFeatureRequest_Click(object sender,
                                                        EventArgs e)
     {
-        Process.Start(
+        _ = Process.Start(
             fileName:
             "https://github.com/nemethviktor/GeoTagNinja/issues/new?template=feature_request.md");
     }
@@ -3018,7 +3008,7 @@ in toponomyOverwrites)
     private void tmi_Help_BugReport_Click(object sender,
                                           EventArgs e)
     {
-        Process.Start(
+        _ = Process.Start(
             fileName:
             "https://github.com/nemethviktor/GeoTagNinja/issues/new?template=bug_report.md");
     }
@@ -3027,7 +3017,7 @@ in toponomyOverwrites)
     private void tsb_FeedbackFeatureRequest_Click(object sender,
                                                   EventArgs e)
     {
-        Process.Start(
+        _ = Process.Start(
             fileName:
             "https://github.com/nemethviktor/GeoTagNinja/issues/new?template=feature_request.md");
     }
@@ -3035,7 +3025,7 @@ in toponomyOverwrites)
     private void tsb_BugReport_Click(object sender,
                                      EventArgs e)
     {
-        Process.Start(
+        _ = Process.Start(
             fileName:
             "https://github.com/nemethviktor/GeoTagNinja/issues/new?template=bug_report.md");
     }
@@ -3053,7 +3043,7 @@ in toponomyOverwrites)
         {
             // If so, call Invoke, passing it a lambda expression which calls
             // UpdateText with the same label and text, but on the UI thread instead.
-            label.Invoke(method: (Action)(() =>
+            _ = label.Invoke(method: (Action)(() =>
                 HandlerUpdateLabelText(label: label, text: text)));
             return;
         }
@@ -3147,7 +3137,7 @@ in toponomyOverwrites)
                     GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
                         attribute: ElementAttribute.Sublocation);
 
-                Favourites.Add(item: favourite);
+                _ = Favourites.Add(item: favourite);
                 HelperDataFavourites.DataWriteSQLiteClearAndUpdateFavourites();
 
                 ClearReloadFavouritesDropDownValues();
@@ -3317,7 +3307,7 @@ in toponomyOverwrites)
         if (Favourites.Any())
         {
             FrmManageFavourites frmManageFavouritesInstance = new();
-            frmManageFavouritesInstance.ShowDialog();
+            _ = frmManageFavouritesInstance.ShowDialog();
         }
         else
         {
@@ -3382,7 +3372,7 @@ in toponomyOverwrites)
 
                     // also remove from hash dictionary
 
-                    HelperVariables.FileChecksumDictionary.Remove(key: directoryElement.FileNameWithPath);
+                    _ = HelperVariables.FileChecksumDictionary.Remove(key: directoryElement.FileNameWithPath);
                 }
 
                 catch
@@ -3493,8 +3483,8 @@ in toponomyOverwrites)
             return;
         }
 
-        CultureInfo cIEnUS = new(name: "en-US");
-        string openAPILink = null;
+        _ = new CultureInfo(name: "en-US");
+        string openAPILink;
         switch (openInBrowserOption)
         {
             case OpenInBrowserOptions.OpenCoordsInBrowserGeoNamesAPI:
@@ -3526,7 +3516,7 @@ in toponomyOverwrites)
                     actualValue: openInBrowserOption, message: null);
         }
 
-        Process.Start(fileName: openAPILink);
+        _ = Process.Start(fileName: openAPILink);
     }
 
     private void lvw_ExifData_KeyUp(object sender,
@@ -3553,7 +3543,7 @@ in toponomyOverwrites)
             {
                 for (int i = 0; i < lvi.SubItems.Count; i++)
                 {
-                    builder.AppendLine(value: lvi.SubItems[index: i].Text);
+                    _ = builder.AppendLine(value: lvi.SubItems[index: i].Text);
                 }
             }
 
@@ -3578,7 +3568,7 @@ in toponomyOverwrites)
             bool isZipFile = fi.Extension == ".zip";
             if (isZipFile)
             {
-                Directory.CreateDirectory(path: Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                _ = Directory.CreateDirectory(path: Path.Combine(path1: HelperVariables.UserDataFolderPath,
                     path2: "geosetter_export"));
                 using ZipArchive archive = ZipFile.OpenRead(archiveFileName: databaseFileToImport);
                 foreach (ZipArchiveEntry entry in archive.Entries)
@@ -3636,7 +3626,7 @@ in toponomyOverwrites)
 
         if (itemToRemove != null)
         {
-            Favourites.Remove(item: itemToRemove);
+            _ = Favourites.Remove(item: itemToRemove);
         }
     }
 
@@ -3644,17 +3634,8 @@ in toponomyOverwrites)
                                                            ListViewItem lvi,
                                                            ElementAttribute attribute)
     {
-        string listViewColumnName = GetElementAttributesName(attributeToFind: attribute);
-        string str = lvi.SubItems[
-                             index: lvw
-                                   .Columns[
-                                        key:
-                                        GetElementAttributesColumnHeader(
-                                            attributeToFind: attribute)]
-                                   .Index]
-                        .Text.ToString(
-                             provider: CultureInfo.InvariantCulture);
-
+        string str = lvi.SubItems[index: lvw.Columns[key:
+            GetElementAttributesColumnHeader(attributeToFind: attribute)].Index].Text.ToString(provider: CultureInfo.InvariantCulture);
 
         return str == NullStringEquivalentGeneric ? "" : str;
     }
@@ -3668,8 +3649,8 @@ in toponomyOverwrites)
         cbx_Favourites.Items.Clear();
         foreach (Favourite favourite in Favourites)
         {
-            autoCompleteCustomSource.Add(value: favourite.FavouriteName);
-            cbx_Favourites.Items.Add(item: favourite.FavouriteName);
+            _ = autoCompleteCustomSource.Add(value: favourite.FavouriteName);
+            _ = cbx_Favourites.Items.Add(item: favourite.FavouriteName);
         }
 
         cbx_Favourites.AutoCompleteSource = AutoCompleteSource.CustomSource;

@@ -122,13 +122,11 @@ public class CustomMessageBox : Form
         {
             _pictureBox.Image = SystemIcons.Error.ToBitmap();
         }
-        else if (icon == MessageBoxIcon.Hand)
-        {
-            _pictureBox.Image = SystemIcons.Hand.ToBitmap();
-        }
         else
         {
-            _pictureBox.Image = icon == MessageBoxIcon.Asterisk
+            _pictureBox.Image = icon == MessageBoxIcon.Hand
+                ? SystemIcons.Hand.ToBitmap()
+                : icon == MessageBoxIcon.Asterisk
                 ? (Image)SystemIcons.Asterisk.ToBitmap()
                 : throw new ArgumentOutOfRangeException(paramName: nameof(icon),
                                                   actualValue: icon, message: null);

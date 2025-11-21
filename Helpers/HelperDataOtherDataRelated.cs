@@ -20,25 +20,25 @@ internal static class HelperDataOtherDataRelated
         FrmMainApp.DTLanguageMapping = new DataTable();
         FrmMainApp.DTLanguageMapping.Clear();
         //  "ab", "аҧсуа бызшәа [Abkhaz]" 
-        FrmMainApp.DTLanguageMapping.Columns.Add(columnName: "languageCode");
-        FrmMainApp.DTLanguageMapping.Columns.Add(columnName: "languageNative");
-        FrmMainApp.DTLanguageMapping.Columns.Add(columnName: "languageEnglish");
+        _ = FrmMainApp.DTLanguageMapping.Columns.Add(columnName: "languageCode");
+        _ = FrmMainApp.DTLanguageMapping.Columns.Add(columnName: "languageNative");
+        _ = FrmMainApp.DTLanguageMapping.Columns.Add(columnName: "languageEnglish");
 
         FillDTLanguageMapping();
 
         // DTToponomySessionData;
         FrmMainApp.DTToponomySessionData = new DataTable();
         FrmMainApp.DTToponomySessionData.Clear();
-        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "lat");
-        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "lng");
-        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "AdminName1");
-        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "AdminName2");
-        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "AdminName3");
-        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "AdminName4");
-        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "ToponymName");
-        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "CountryCode");
-        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "GPSAltitude");
-        FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "timezoneId");
+        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "lat");
+        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "lng");
+        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "AdminName1");
+        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "AdminName2");
+        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "AdminName3");
+        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "AdminName4");
+        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "ToponymName");
+        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "CountryCode");
+        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "GPSAltitude");
+        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "timezoneId");
         return Task.CompletedTask;
     }
 

@@ -88,16 +88,16 @@ internal static class HelperExifWriteSaveToFile
                         {
                             if (line.Contains(value: "xmp:Rating="))
                             {
-                                bool _ = int.TryParse(s: line.Replace(oldValue: "xmp:Rating=", newValue: "")
-                                                             .Replace(oldValue: "\"", newValue: ""), result: out ratingInXmp);
+                                _ = int.TryParse(s: line.Replace(oldValue: "xmp:Rating=", newValue: "")
+                                                            .Replace(oldValue: "\"", newValue: ""), result: out ratingInXmp);
                                 break;
                             }
 
                             if (line.Contains(value: "<xmp:Rating>"))
                             {
-                                bool _ = int.TryParse(s: line.Replace(oldValue: "<xmp:Rating>", newValue: "")
-                                                             .Replace(oldValue: "</xmp:Rating>", newValue: "")
-                                                             .Replace(oldValue: " ", newValue: ""), result: out ratingInXmp);
+                                _ = int.TryParse(s: line.Replace(oldValue: "<xmp:Rating>", newValue: "")
+                                                            .Replace(oldValue: "</xmp:Rating>", newValue: "")
+                                                            .Replace(oldValue: " ", newValue: ""), result: out ratingInXmp);
                                 break;
                             }
                         }
@@ -179,9 +179,9 @@ internal static class HelperExifWriteSaveToFile
 
                     DataTable dtFileWriteQueue = new();
                     dtFileWriteQueue.Clear();
-                    dtFileWriteQueue.Columns.Add(columnName: "ItemNameWithoutPath");
-                    dtFileWriteQueue.Columns.Add(columnName: "settingId");
-                    dtFileWriteQueue.Columns.Add(columnName: "settingValue");
+                    _ = dtFileWriteQueue.Columns.Add(columnName: "ItemNameWithoutPath");
+                    _ = dtFileWriteQueue.Columns.Add(columnName: "settingId");
+                    _ = dtFileWriteQueue.Columns.Add(columnName: "settingValue");
 
                     foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
                     {
@@ -329,7 +329,7 @@ internal static class HelperExifWriteSaveToFile
                                             }
                                             else if (exifToolAttribute.EndsWith(value: "GPSAltitude"))
                                             {
-                                                double.TryParse(
+                                                _ = double.TryParse(
                                                     s: updateExifVal,
                                                     style: NumberStyles.AllowDecimalPoint,
                                                     provider: CultureInfo

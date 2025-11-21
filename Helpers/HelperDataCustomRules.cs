@@ -60,7 +60,7 @@ internal static class HelperDataCustomRules
 
         using SQLiteDataAdapter sqliteAdapter = new(commandText: @"select * from customRules", connection: sqliteDB);
         SQLiteCommandBuilder commandBuilder = new(adp: sqliteAdapter);
-        sqliteAdapter.Update(dataTable: HelperVariables.DtCustomRules);
+        _ = sqliteAdapter.Update(dataTable: HelperVariables.DtCustomRules);
 
         // this is stupid but Update doesn't seem to work with a delete/AcceptChange so...
         string sqlCommandStr = @"
@@ -79,7 +79,7 @@ internal static class HelperDataCustomRules
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
 
-        sqlToRun.ExecuteNonQuery();
+        _ = sqlToRun.ExecuteNonQuery();
     }
 
     /// <summary>
@@ -115,6 +115,6 @@ internal static class HelperDataCustomRules
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
 
-        sqlToRun.ExecuteNonQuery();
+        _ = sqlToRun.ExecuteNonQuery();
     }
 }

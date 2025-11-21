@@ -1,7 +1,6 @@
 ﻿using GeoTagNinja.Model;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -250,7 +249,6 @@ internal static class FileListViewReadWrite
     /// <summary>
     ///     This updates the lbl_ParseProgress with count of items with geodata.
     /// </summary>
-    [SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
     internal static void ListViewCountItemsWithGeoData()
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];

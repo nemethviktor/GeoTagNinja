@@ -90,7 +90,7 @@ internal static class FileListViewCopyPaste
             {
                 StartPosition = FormStartPosition.CenterScreen
             };
-            frmPasteWhat.ShowDialog();
+            _ = frmPasteWhat.ShowDialog();
         }
         else
         {

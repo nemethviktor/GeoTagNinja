@@ -38,7 +38,7 @@ internal static class HelperDataCustomCityAllocationRules
 
         using SQLiteDataAdapter sqliteAdapter = new(commandText: @"select * from customCityAllocationLogic", connection: sqliteDB);
         SQLiteCommandBuilder commandBuilder = new(adp: sqliteAdapter);
-        sqliteAdapter.Update(dataTable: HelperVariables.DtCustomCityLogic);
+        _ = sqliteAdapter.Update(dataTable: HelperVariables.DtCustomCityLogic);
     }
 
     internal static void DataWriteSQLiteCustomCityAllocationLogicDefaults(bool resetToDefaults = false)
@@ -61,7 +61,7 @@ internal static class HelperDataCustomCityAllocationRules
             // "SQLite does not have an explicit TRUNCATE TABLE command like other databases" -- what a bunch of idiots.
             sqlCommandStr = "DELETE FROM customCityAllocationLogic;";
             sqlToRun = new SQLiteCommand(commandText: sqlCommandStr, connection: sqliteDB);
-            sqlToRun.ExecuteNonQuery();
+            _ = sqlToRun.ExecuteNonQuery();
         }
 
         sqlCommandStr = "SELECT COUNT(*) FROM customCityAllocationLogic;";
@@ -76,22 +76,11 @@ internal static class HelperDataCustomCityAllocationRules
             {
                 if (!string.IsNullOrEmpty(value: countryCode))
                 {
-                    string countryCodeAllocation;
-                    if (defaultCityNameIsAdminName1Arr.Contains(value: countryCode))
-                    {
-                        countryCodeAllocation = "AdminName1";
-                    }
-                    else if (defaultCityNameIsAdminName2Arr.Contains(value: countryCode))
-                    {
-                        countryCodeAllocation = "AdminName2";
-                    }
-                    else
-                    {
-                        countryCodeAllocation = defaultCityNameIsAdminName3Arr.Contains(value: countryCode)
-                            ? "AdminName3"
-                            : defaultCityNameIsAdminName4Arr.Contains(value: countryCode) ? "AdminName4" : "Undefined";
-                    }
-
+                    string countryCodeAllocation = defaultCityNameIsAdminName1Arr.Contains(value: countryCode)
+                        ? "AdminName1"
+                        : defaultCityNameIsAdminName2Arr.Contains(value: countryCode)
+                            ? "AdminName2" : defaultCityNameIsAdminName3Arr.Contains(value: countryCode)
+                            ? "AdminName3" : defaultCityNameIsAdminName4Arr.Contains(value: countryCode) ? "AdminName4" : "Undefined";
                     defaultCiltyAllocationLogic +=
                         $"({HelperVariables.DoubleQuoteStr}{countryCode}{HelperVariables.DoubleQuoteStr},{HelperVariables.DoubleQuoteStr}{countryCodeAllocation}{HelperVariables.DoubleQuoteStr}),{Environment.NewLine}";
                 }
@@ -108,7 +97,7 @@ internal static class HelperDataCustomCityAllocationRules
 
             sqlToRun = new SQLiteCommand(commandText: sqlCommandStr, connection: sqliteDB);
 
-            sqlToRun.ExecuteNonQuery();
+            _ = sqlToRun.ExecuteNonQuery();
         }
     }
 
@@ -132,7 +121,7 @@ internal static class HelperDataCustomCityAllocationRules
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
 
-        sqlToRun.ExecuteNonQuery();
+        _ = sqlToRun.ExecuteNonQuery();
         sqliteDB.Close();
 
         DataWriteSQLiteCustomCityAllocationLogicDefaults();

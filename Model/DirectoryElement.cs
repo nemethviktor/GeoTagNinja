@@ -5,7 +5,6 @@ using NLog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -22,7 +21,6 @@ namespace GeoTagNinja.Model;
 /// <summary>
 ///     An element in a folder/directory.
 /// </summary>
-[SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
 public class DirectoryElement
 {
     /// <summary>
@@ -196,7 +194,8 @@ public class DirectoryElement
     public string FileNameWithPath { get; }
 
     public string Folder
-    { get => Type == ElementType.File ? Path.GetDirectoryName(path: FileNameWithPath) ?? string.Empty : string.Empty;
+    {
+        get => Type == ElementType.File ? Path.GetDirectoryName(path: FileNameWithPath) ?? string.Empty : string.Empty;
         set => _Folder = value;
     }
 
@@ -211,15 +210,7 @@ public class DirectoryElement
     /// </summary>
     public string DisplayName
     {
-        get
-        {
-            if (field == null)
-            {
-                return ItemNameWithoutPath;
-            }
-
-            return Type == ElementType.ParentDirectory ? ".." : (field);
-        }
+        get => field == null ? ItemNameWithoutPath : Type == ElementType.ParentDirectory ? ".." : (field);
         set;
     }
 
@@ -550,8 +541,6 @@ public class DirectoryElement
     private bool HasSpecificAttributeWithVersion(AttributeValueContainer avc,
                                                  AttributeVersion version)
     {
-        Type attributeType = avc.MyValueType;
-
         AttributeVersion? versionCheck =
             CheckWhichVersion(avc: avc, versionRequested: version);
         if (versionCheck == null)
@@ -559,7 +548,6 @@ public class DirectoryElement
             return false;
         }
 
-        AttributeVersion versionToReturn = (AttributeVersion)versionCheck;
 
         // Retrieve and return value
 
@@ -636,7 +624,7 @@ public class DirectoryElement
         {
             IDictionary<AttributeVersion, Tuple<string, bool>> strDict =
                 (IDictionary<AttributeVersion, Tuple<string, bool>>)avc.ValueDict;
-            Tuple<string, bool> intValue = strDict[key: version];
+
             return strDict[key: version]
                .Item2;
         }
@@ -645,7 +633,6 @@ public class DirectoryElement
         {
             IDictionary<AttributeVersion, Tuple<int, bool>> intDict =
                 (IDictionary<AttributeVersion, Tuple<int, bool>>)avc.ValueDict;
-            Tuple<int, bool> intValue = intDict[key: version];
             return intDict[key: version]
                .Item2;
         }
@@ -654,7 +641,7 @@ public class DirectoryElement
         {
             IDictionary<AttributeVersion, Tuple<double, bool>> doubleDict =
                 (IDictionary<AttributeVersion, Tuple<double, bool>>)avc.ValueDict;
-            Tuple<double, bool> doubleValue = doubleDict[key: version];
+
             return doubleDict[key: version]
                .Item2;
         }
@@ -663,7 +650,7 @@ public class DirectoryElement
         {
             IDictionary<AttributeVersion, Tuple<DateTime, bool>> DateTimeDict =
                 (IDictionary<AttributeVersion, Tuple<DateTime, bool>>)avc.ValueDict;
-            Tuple<DateTime, bool> doubleValue = DateTimeDict[key: version];
+
             return DateTimeDict[key: version]
                .Item2;
         }
@@ -902,8 +889,7 @@ public class DirectoryElement
                                          bool isMarkedForDeletion)
     {
         Type typeOfAttribute = GetElementAttributesType(attributeToFind: attribute);
-        IConvertible writeValueConvertible = null;
-
+        IConvertible writeValueConvertible;
         if (typeOfAttribute == typeof(string))
         {
             SetAttributeValue(attribute: attribute,
@@ -979,51 +965,37 @@ public class DirectoryElement
                                         string.IsNullOrWhiteSpace(
                                             value: value.ToString());
 
-            if (attributeType == typeof(double))
-            {
-                _Attributes[key: attribute]
-                       .ValueDict[key: version] = setMarkedForDeletion
+            _Attributes[key: attribute]
+                       .ValueDict[key: version] = attributeType == typeof(double)
+                ? setMarkedForDeletion
                     ? new Tuple<double, bool>(
                         item1: FrmMainApp.NullDoubleEquivalent,
                         item2: isMarkedForDeletion)
                     : new Tuple<double, bool>(item1: (double)value,
-                            item2: isMarkedForDeletion);
-            }
-            else if (attributeType == typeof(int))
-            {
-                _Attributes[key: attribute]
-                       .ValueDict[key: version] = setMarkedForDeletion
+                            item2: isMarkedForDeletion)
+                : attributeType == typeof(int)
+                    ? setMarkedForDeletion
                     ? new Tuple<int, bool>(
                         item1: FrmMainApp.NullIntEquivalent, item2: isMarkedForDeletion)
                     : new Tuple<int, bool>(item1: (int)value,
-                            item2: isMarkedForDeletion);
-            }
-            else if (attributeType == typeof(DateTime))
-            {
-                _Attributes[key: attribute]
-                       .ValueDict[key: version] = setMarkedForDeletion
+                            item2: isMarkedForDeletion)
+                    : attributeType == typeof(DateTime)
+                    ? setMarkedForDeletion
                     ? new Tuple<DateTime, bool>(
                         item1: FrmMainApp.NullDateTimeEquivalent,
                         item2: isMarkedForDeletion)
                     : new Tuple<DateTime, bool>(item1: (DateTime)value,
-                            item2: isMarkedForDeletion);
-            }
-            else if (attributeType == typeof(string))
-            {
-                _Attributes[key: attribute]
-                       .ValueDict[key: version] = setMarkedForDeletion
+                            item2: isMarkedForDeletion)
+                    : attributeType == typeof(string)
+                    ? (object)(setMarkedForDeletion
                     ? new Tuple<string, bool>(
                         item1: FrmMainApp.NullStringEquivalentGeneric,
                         item2: isMarkedForDeletion)
                     : new Tuple<string, bool>(item1: value.ToString(),
-                            item2: isMarkedForDeletion);
-            }
-            else
-            {
-                throw new ArgumentException(
+                            item2: isMarkedForDeletion))
+                    : throw new ArgumentException(
                     message:
                     $"Trying to get attribute name of unknown attribute with value {attribute}");
-            }
 
             return;
         }
@@ -1078,7 +1050,7 @@ public class DirectoryElement
                    .ValueDict.Remove(key: version);
             }
         }
-        catch (Exception e)
+        catch (Exception)
         {
             // ignore
         }
@@ -1285,34 +1257,23 @@ public class DirectoryElement
 
                     Type typeOfAttribute =
                         GetElementAttributesType(attributeToFind: attribute);
-                    if (typeOfAttribute == typeof(string))
-                    {
-                        resTyped = parseResult;
-                    }
-                    else if (typeOfAttribute == typeof(double))
-                    {
-                        resTyped =
-                            HelperGenericTypeOperations.TryParseNullableDouble(
+                    resTyped = typeOfAttribute == typeof(string)
+                        ? parseResult
+                        : typeOfAttribute == typeof(double)
+                            ? HelperGenericTypeOperations.TryParseNullableDouble(
                                 val: parseResult) ??
-                            FrmMainApp.NullDoubleEquivalent;
-                    }
-                    else if (typeOfAttribute == typeof(int))
-                    {
-                        resTyped =
-                            HelperGenericTypeOperations
+                            FrmMainApp.NullDoubleEquivalent
+                            : typeOfAttribute == typeof(int)
+                            ? HelperGenericTypeOperations
                                .TryParseNullableInt(val: parseResult) ??
-                            FrmMainApp.NullIntEquivalent;
-                    }
-                    else
-                    {
-                        resTyped = typeOfAttribute == typeof(DateTime)
+                            FrmMainApp.NullIntEquivalent
+                            : typeOfAttribute == typeof(DateTime)
                             ? (IConvertible)(HelperGenericTypeOperations.TryParseNullableDateTime(
                                 val: parseResult) ??
                             FrmMainApp.NullDateTimeEquivalent)
                             : throw new ArgumentException(
                             message:
                             $"Trying to get attribute name of unknown attribute with value {attribute}");
-                    }
 
                     break;
             }
@@ -1375,7 +1336,7 @@ public class DirectoryElement
             // If it was already parsed due to another attrib needing it, do not parse again
             if (!parsedValues.ContainsKey(key: attribute))
             {
-                ParseAttribute(attribute: attribute,
+                _ = ParseAttribute(attribute: attribute,
                     parsedValues: parsedValues,
                     parsedFails: parsedFails,
                     tags: tags,

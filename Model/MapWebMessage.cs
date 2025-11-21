@@ -1,9 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿namespace GeoTagNinja.Model;
 
-namespace GeoTagNinja.Model;
-
-#pragma warning disable CS8632
-[SuppressMessage(category: "ReSharper", checkId: "InconsistentNaming")]
 public class MapWebMessage
 {
 #pragma warning disable IDE1006 // Naming Styles

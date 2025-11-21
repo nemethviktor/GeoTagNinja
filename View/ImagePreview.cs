@@ -42,11 +42,7 @@ public partial class ImagePreview : PictureBox
     /// </summary>
     public new Font Font
     {
-        get;
-        set
-        {
-            field = value ?? throw new ArgumentNullException(paramName: "The font set may not be empty");
-        }
+        get; set => field = value ?? throw new ArgumentNullException(paramName: "The font set may not be empty");
     } = new(familyName: "Arial", emSize: 14);
 
     /// <summary>
