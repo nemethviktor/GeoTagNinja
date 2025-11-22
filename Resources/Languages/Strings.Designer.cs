@@ -484,6 +484,15 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invert Selection.
+        /// </summary>
+        public static string cmi_InvertSelection {
+            get {
+                return ResourceManager.GetString("cmi_InvertSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Coordinates in API.
         /// </summary>
         public static string cmi_OpenCoordsInAPI {
@@ -561,6 +570,24 @@ namespace GeoTagNinja.Resources.Languages {
         public static string cmi_RemoveCachedData {
             get {
                 return ResourceManager.GetString("cmi_RemoveCachedData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select All.
+        /// </summary>
+        public static string cmi_SelectAll {
+            get {
+                return ResourceManager.GetString("cmi_SelectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select None.
+        /// </summary>
+        public static string cmi_SelectNone {
+            get {
+                return ResourceManager.GetString("cmi_SelectNone", resourceCulture);
             }
         }
         
@@ -2783,6 +2810,42 @@ namespace GeoTagNinja.Resources.Languages {
         public static string tcr_EditData {
             get {
                 return ResourceManager.GetString("tcr_EditData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        public static string tmi_Edit {
+            get {
+                return ResourceManager.GetString("tmi_Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invert Selection.
+        /// </summary>
+        public static string tmi_Edit_InvertSelection {
+            get {
+                return ResourceManager.GetString("tmi_Edit_InvertSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select All.
+        /// </summary>
+        public static string tmi_Edit_SelectAll {
+            get {
+                return ResourceManager.GetString("tmi_Edit_SelectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select None.
+        /// </summary>
+        public static string tmi_Edit_UnselectAll {
+            get {
+                return ResourceManager.GetString("tmi_Edit_UnselectAll", resourceCulture);
             }
         }
         

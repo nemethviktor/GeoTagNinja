@@ -1688,6 +1688,41 @@ public partial class FrmMainApp : Form
 
     #endregion
 
+    #region Edit (that is, the "Edit" menu item)
+
+    /// <summary>
+    /// Handles the Select All command from the Edit menu, selecting all items in the file list view.
+    /// </summary>
+    /// <param name="sender">The source of the event, typically the Edit menu item that was clicked.</param>
+    /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
+    private void tmi_Edit_SelectAll_Click(object sender, EventArgs e)
+    {
+        lvw_FileList.SelectAllItems();
+    }
+
+    /// <summary>
+    /// Handles the Click event for the 'Select None' menu item, clearing any selection in the file list view.
+    /// </summary>
+    /// <param name="sender">The source of the event, typically the 'Select None' menu item.</param>
+    /// <param name="e">An EventArgs instance containing event data.</param>
+    private void tmi_Edit_SelectNone_Click(object sender, EventArgs e)
+    {
+        lvw_FileList.SelectNoItems();
+    }
+
+    /// <summary>
+    /// Handles the click event for the Invert Selection menu item, inverting the selection of items in the file list
+    /// view.
+    /// </summary>
+    /// <param name="sender">The source of the event, typically the Invert Selection menu item.</param>
+    /// <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
+    private void tmi_Edit_InvertSelection_Click(object sender, EventArgs e)
+    {
+        lvw_FileList.SelectInverseItems();
+    }
+
+    #endregion
+
     #region FrmMainApp's TaskBar Stuff
 
     /// <summary>
@@ -2819,6 +2854,13 @@ in toponomyOverwrites)
             FileListViewCopyPaste.ListViewPasteGeoData();
         }
 
+        // Shift A -> select all (file) items
+        else if (e.Shift &&
+                 e.KeyCode == Keys.A)
+        {
+            lvw_FileList.SelectAllItems();
+        }
+
         // Ctrl Enter -> Edit File
         else if (e.Modifiers == Keys.Control &&
                  e.KeyCode == Keys.Enter)
@@ -3347,6 +3389,36 @@ in toponomyOverwrites)
                                             EventArgs e)
     {
         RemoveCachedData(displayMessage: true);
+    }
+
+    /// <summary>
+    /// Handles the Select All menu item click event by selecting all items in the file list view.
+    /// </summary>
+    /// <param name="sender">The source of the event, typically the Select All menu item.</param>
+    /// <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
+    private void cmi_SelectAll_Click(object sender, EventArgs e)
+    {
+        lvw_FileList.SelectAllItems();
+    }
+
+    /// <summary>
+    /// Handles the Select None menu item click event by clearing any selection in the file list view.
+    /// </summary>
+    /// <param name="sender">The source of the event, typically the Select None menu item.</param>
+    /// <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
+    private void cmi_SelectNone_Click(object sender, EventArgs e)
+    {
+        lvw_FileList.SelectNoItems();
+    }
+
+    /// <summary>
+    /// Handles the Invert Selection menu item click event by inverting the selection of items in the file list view.
+    /// </summary>
+    /// <param name="sender">The source of the event, typically the menu item that was clicked.</param>
+    /// <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
+    private void cmi_InvertSelection_Click(object sender, EventArgs e)
+    {
+        lvw_FileList.SelectInverseItems();
     }
 
     /// <summary>

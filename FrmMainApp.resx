@@ -152,6 +152,9 @@
   <data name="cmi_ShowHideCols.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
   </data>
+  <data name="tss_Cms_1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>252, 6</value>
+  </data>
   <data name="cmi_RemoveCachedData.Size" type="System.Drawing.Size, System.Drawing">
     <value>255, 22</value>
   </data>
@@ -218,8 +221,32 @@
   <data name="cmi_PasteGeoData.Text" xml:space="preserve">
     <value>cmi_PasteGeoData</value>
   </data>
+  <data name="tss_Cms_2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>252, 6</value>
+  </data>
+  <data name="cmi_SelectAll.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
+    <value>Ctrl+A</value>
+  </data>
+  <data name="cmi_SelectAll.Size" type="System.Drawing.Size, System.Drawing">
+    <value>255, 22</value>
+  </data>
+  <data name="cmi_SelectAll.Text" xml:space="preserve">
+    <value>cmi_SelectAll</value>
+  </data>
+  <data name="cmi_SelectNone.Size" type="System.Drawing.Size, System.Drawing">
+    <value>255, 22</value>
+  </data>
+  <data name="cmi_SelectNone.Text" xml:space="preserve">
+    <value>cmi_SelectNone</value>
+  </data>
+  <data name="cmi_InvertSelection.Size" type="System.Drawing.Size, System.Drawing">
+    <value>255, 22</value>
+  </data>
+  <data name="cmi_InvertSelection.Text" xml:space="preserve">
+    <value>cmi_InvertSelection</value>
+  </data>
   <data name="cms_FileListView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>256, 158</value>
+    <value>256, 236</value>
   </data>
   <data name="&gt;&gt;cms_FileListView.Name" xml:space="preserve">
     <value>cms_FileListView</value>
@@ -247,7 +274,7 @@
     <value>lvw_FileList</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.ListView.FileListView, GeoTagNinja, Version=1.17.9457.17638, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.ListView.FileListView, GeoTagNinja, Version=1.17.9457.19429, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel1</value>
@@ -295,7 +322,7 @@
     <value>pbx_imagePreview</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.ImagePreview, GeoTagNinja, Version=1.17.9457.17638, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.ImagePreview, GeoTagNinja, Version=1.17.9457.19429, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel2</value>
@@ -1003,7 +1030,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAD8
-        CAAAAk1TRnQBSQFMAgEBAgEAAZABAwGQAQMBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        CAAAAk1TRnQBSQFMAgEBAgEAAagBAwGoAQMBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABQAMAARADAAEBAQABCAYAAQQYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
         AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
         AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA
@@ -1161,7 +1188,7 @@
   <data name="tmi_File_PasteGeoData.Text" xml:space="preserve">
     <value>tmi_File_PasteGeoData</value>
   </data>
-  <data name="tss_ToolStripSeparator_Main.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="tss_File_1.Size" type="System.Drawing.Size, System.Drawing">
     <value>286, 6</value>
   </data>
   <data name="tmi_File_FlatMode.Size" type="System.Drawing.Size, System.Drawing">
@@ -1170,7 +1197,7 @@
   <data name="tmi_File_FlatMode.Text" xml:space="preserve">
     <value>tmi_File_FlatMode</value>
   </data>
-  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="tss_File_2.Size" type="System.Drawing.Size, System.Drawing">
     <value>286, 6</value>
   </data>
   <data name="tmi_File_Quit.ShortcutKeyDisplayString" xml:space="preserve">
@@ -1187,6 +1214,33 @@
   </data>
   <data name="tmi_File.Text" xml:space="preserve">
     <value>tmi_File</value>
+  </data>
+  <data name="tmi_Edit_SelectAll.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
+    <value>Ctrl+A</value>
+  </data>
+  <data name="tmi_Edit_SelectAll.Size" type="System.Drawing.Size, System.Drawing">
+    <value>209, 22</value>
+  </data>
+  <data name="tmi_Edit_SelectAll.Text" xml:space="preserve">
+    <value>tmi_Edit_SelectAll</value>
+  </data>
+  <data name="tmi_Edit_SelectNone.Size" type="System.Drawing.Size, System.Drawing">
+    <value>209, 22</value>
+  </data>
+  <data name="tmi_Edit_SelectNone.Text" xml:space="preserve">
+    <value>tmi_Edit_SelectNone</value>
+  </data>
+  <data name="tmi_Edit_InvertSelection.Size" type="System.Drawing.Size, System.Drawing">
+    <value>209, 22</value>
+  </data>
+  <data name="tmi_Edit_InvertSelection.Text" xml:space="preserve">
+    <value>tmi_Edit_InvertSelection</value>
+  </data>
+  <data name="tmi_Edit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>62, 22</value>
+  </data>
+  <data name="tmi_Edit.Text" xml:space="preserve">
+    <value>tmi_Edit</value>
   </data>
   <data name="tmi_Settings_Settings.Size" type="System.Drawing.Size, System.Drawing">
     <value>198, 22</value>
@@ -1401,7 +1455,7 @@
   <data name="tsb_ImportExportGPX.Text" xml:space="preserve">
     <value>tsb_ImportExportGPX</value>
   </data>
-  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="tss_tsr_Main_1.Size" type="System.Drawing.Size, System.Drawing">
     <value>6, 25</value>
   </data>
   <data name="tsb_FeedbackFeatureRequest.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -4498,6 +4552,12 @@
   <data name="&gt;&gt;cmi_ShowHideCols.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;tss_Cms_1.Name" xml:space="preserve">
+    <value>tss_Cms_1</value>
+  </data>
+  <data name="&gt;&gt;tss_Cms_1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;cmi_RemoveCachedData.Name" xml:space="preserve">
     <value>cmi_RemoveCachedData</value>
   </data>
@@ -4556,6 +4616,30 @@
     <value>cmi_PasteGeoData</value>
   </data>
   <data name="&gt;&gt;cmi_PasteGeoData.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tss_Cms_2.Name" xml:space="preserve">
+    <value>tss_Cms_2</value>
+  </data>
+  <data name="&gt;&gt;tss_Cms_2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cmi_SelectAll.Name" xml:space="preserve">
+    <value>cmi_SelectAll</value>
+  </data>
+  <data name="&gt;&gt;cmi_SelectAll.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cmi_SelectNone.Name" xml:space="preserve">
+    <value>cmi_SelectNone</value>
+  </data>
+  <data name="&gt;&gt;cmi_SelectNone.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cmi_InvertSelection.Name" xml:space="preserve">
+    <value>cmi_InvertSelection</value>
+  </data>
+  <data name="&gt;&gt;cmi_InvertSelection.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;clh_ExifTag.Name" xml:space="preserve">
@@ -4624,10 +4708,10 @@
   <data name="&gt;&gt;tmi_File_PasteGeoData.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;tss_ToolStripSeparator_Main.Name" xml:space="preserve">
-    <value>tss_ToolStripSeparator_Main</value>
+  <data name="&gt;&gt;tss_File_1.Name" xml:space="preserve">
+    <value>tss_File_1</value>
   </data>
-  <data name="&gt;&gt;tss_ToolStripSeparator_Main.Type" xml:space="preserve">
+  <data name="&gt;&gt;tss_File_1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tmi_File_FlatMode.Name" xml:space="preserve">
@@ -4636,16 +4720,40 @@
   <data name="&gt;&gt;tmi_File_FlatMode.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
-    <value>toolStripSeparator2</value>
+  <data name="&gt;&gt;tss_File_2.Name" xml:space="preserve">
+    <value>tss_File_2</value>
   </data>
-  <data name="&gt;&gt;toolStripSeparator2.Type" xml:space="preserve">
+  <data name="&gt;&gt;tss_File_2.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tmi_File_Quit.Name" xml:space="preserve">
     <value>tmi_File_Quit</value>
   </data>
   <data name="&gt;&gt;tmi_File_Quit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tmi_Edit.Name" xml:space="preserve">
+    <value>tmi_Edit</value>
+  </data>
+  <data name="&gt;&gt;tmi_Edit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tmi_Edit_SelectAll.Name" xml:space="preserve">
+    <value>tmi_Edit_SelectAll</value>
+  </data>
+  <data name="&gt;&gt;tmi_Edit_SelectAll.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tmi_Edit_SelectNone.Name" xml:space="preserve">
+    <value>tmi_Edit_SelectNone</value>
+  </data>
+  <data name="&gt;&gt;tmi_Edit_SelectNone.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tmi_Edit_InvertSelection.Name" xml:space="preserve">
+    <value>tmi_Edit_InvertSelection</value>
+  </data>
+  <data name="&gt;&gt;tmi_Edit_InvertSelection.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tmi_Settings.Name" xml:space="preserve">
@@ -4726,10 +4834,10 @@
   <data name="&gt;&gt;tsb_ImportExportGPX.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;toolStripSeparator1.Name" xml:space="preserve">
-    <value>toolStripSeparator1</value>
+  <data name="&gt;&gt;tss_tsr_Main_1.Name" xml:space="preserve">
+    <value>tss_tsr_Main_1</value>
   </data>
-  <data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
+  <data name="&gt;&gt;tss_tsr_Main_1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tsb_FeedbackFeatureRequest.Name" xml:space="preserve">

@@ -753,6 +753,61 @@ public partial class FileListView : System.Windows.Forms.ListView
 
     #endregion
 
+    #region Selection 
+
+    /// <summary>
+    /// Selects all items in the list that represent files.
+    /// </summary>
+    /// <remarks>Only items associated with a file are selected; items representing directories or other types
+    /// remain unselected. This method does not affect the current selection state of non-file items.</remarks>
+    public void SelectAllItems()
+    {
+        foreach (ListViewItem lvi in Items)
+        {
+            if (lvi.Tag is DirectoryElement directoryElement && directoryElement.Type == DirectoryElement.ElementType.File)
+            {
+                lvi.Selected = true;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Clears the selection state of all items representing files in the list view.
+    /// </summary>
+    /// <remarks>This method deselects only items associated with files, leaving the selection state of other
+    /// item types unchanged. Use this method to ensure that no file items are selected, for example, before performing
+    /// operations that require an empty file selection.</remarks>
+    public void SelectNoItems()
+    {
+        foreach (ListViewItem lvi in Items)
+        {
+            if (lvi.Tag is DirectoryElement directoryElement && directoryElement.Type == DirectoryElement.ElementType.File)
+            {
+                lvi.Selected = false;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Toggles the selection state of all file items in the list, selecting unselected files and deselecting selected
+    /// files.
+    /// </summary>
+    /// <remarks>Only items representing files are affected; items representing other types, such as folders, remain
+    /// unchanged. This method is useful for quickly inverting the selection of files when performing batch
+    /// operations.</remarks>
+    public void SelectInverseItems()
+    {
+        foreach (ListViewItem lvi in Items)
+        {
+            if (lvi.Tag is DirectoryElement directoryElement && directoryElement.Type == DirectoryElement.ElementType.File)
+            {
+                lvi.Selected = !lvi.Selected;
+            }
+        }
+    }
+
+    #endregion
+
 
     #region Further Settings Stuff
 

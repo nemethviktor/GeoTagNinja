@@ -2,7 +2,7 @@
 
 **Build 9xxx [2025xxxx]** (upcoming release)
 - NEW & UPDATED:
-	- TBA
+	- Added some context menus, `Select All/None/Invert`, `CopyPaste`...
 - BUGS & FIXES:
 	- TBA
 

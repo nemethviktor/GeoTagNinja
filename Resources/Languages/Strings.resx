@@ -1362,4 +1362,32 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>Copy All Geodata</value>
     <comment>Button to copy all geodata from a file (to the clipboard)</comment>
   </data>
+  <data name="tmi_Edit_SelectAll" xml:space="preserve">
+    <value>Select All</value>
+    <comment>Select All (items in the listview)</comment>
+  </data>
+  <data name="cmi_SelectAll" xml:space="preserve">
+    <value>Select All</value>
+    <comment>Select All (items in the listview)</comment>
+  </data>
+  <data name="tmi_Edit_SelectNone" xml:space="preserve">
+    <value>Select None</value>
+    <comment>Select None (items in the listview)</comment>
+  </data>
+  <data name="cmi_SelectNone" xml:space="preserve">
+    <value>Select None</value>
+    <comment>Select None (items in the listview)</comment>
+  </data>
+  <data name="tmi_Edit_InvertSelection" xml:space="preserve">
+    <value>Invert Selection</value>
+    <comment>Invert Selection (items in the listview)</comment>
+  </data>
+  <data name="cmi_InvertSelection" xml:space="preserve">
+    <value>Invert Selection</value>
+    <comment>Invert Selection (items in the listview)</comment>
+  </data>
+  <data name="tmi_Edit" xml:space="preserve">
+    <value>Edit</value>
+    <comment>The "Edit" menu item</comment>
+  </data>
 </root>

@@ -680,13 +680,13 @@ Enregistrez la clé API lorsque vous y êtes invité. Si vous ne le faites pas �
     <value>Copier toutes les données de géolocalisation</value>
   </data>
   <data name="tmi_File_EditFiles" xml:space="preserve">
-    <value>Éditer les fichiers</value>
+    <value>Éditer les fichiers...</value>
   </data>
   <data name="tmi_File_ImportExportGPX" xml:space="preserve">
-    <value>Importer/Exporter des fichiers de suivi GPX/JSON</value>
+    <value>Importer/Exporter des fichiers de suivi GPX/JSON...</value>
   </data>
   <data name="tmi_File_PasteGeoData" xml:space="preserve">
-    <value>Coller toutes les données de géolocalisation</value>
+    <value>Coller toutes les données de géolocalisation...</value>
   </data>
   <data name="tmi_File_Quit" xml:space="preserve">
     <value>Quitter</value>
@@ -1132,6 +1132,6 @@ Exemple : les données par défaut renvoyées par l'API pour Londres UK sont m�
     <value>Copier toutes les données de géolocalisation</value>
   </data>
   <data name="cmi_PasteGeoData" xml:space="preserve">
-    <value>Coller toutes les données de géolocalisation</value>
+    <value>Coller toutes les données de géolocalisation...</value>
   </data>
 </root>

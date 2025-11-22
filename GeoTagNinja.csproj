@@ -410,7 +410,6 @@
     <EmbeddedResource Include="Resources\Languages\Strings.*.resx" />
     <EmbeddedResource Include="Resources\Languages\Strings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="View\FrmColumnSelection.resx">

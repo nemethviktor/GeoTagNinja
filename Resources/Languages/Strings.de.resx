@@ -125,7 +125,7 @@
     <value>Weiterverarbeitung weiterer Zeilen stoppen?</value>
   </data>
   <data name="ckb_RemoveGeoDataRemovesTimeOffset" xml:space="preserve">
-    <value>Die Funktion „Geodaten entfernen” entfernt auch den Zeitzonen-Offset.</value>
+    <value>Die Funktion „Geodaten entfernen” entfernt auch den Zeitzonen-Offset</value>
   </data>
   <data name="ckb_ReplaceBlankToponyms" xml:space="preserve">
     <value>Leere Werte für Stadt, Bundesstaat und Region ersetzen durch: </value>
@@ -506,7 +506,7 @@
     <value>Zeitstempelwert</value>
   </data>
   <data name="lbl_ExportTrackTimeStampTypeNote" xml:space="preserve">
-    <value>„Wenn Sie GPSDateTime auswählen und Ihre Datei kein solches Attribut enthält, schlägt der Export fehl. Einige HEIC-Dateien verfügen darüber, die meisten anderen Formate jedoch nicht.“</value>
+    <value>Wenn Sie GPSDateTime auswählen und Ihre Datei kein solches Attribut enthält, schlägt der Export fehl. Einige HEIC-Dateien verfügen darüber, die meisten anderen Formate jedoch nicht.</value>
   </data>
   <data name="lbl_GeoMaxExtSecs" xml:space="preserve">
     <value>Maximale Extrapolation (Zeitunterschied zwischen aufgenommenem Zeitstempel und Trackpoint TS) in Sekunden.</value>
@@ -560,7 +560,7 @@
     <value>Zum Beenden auf „Abbrechen” klicken.</value>
   </data>
   <data name="lbl_QuestionAddToponomy" xml:space="preserve">
-    <value>„Möchten Sie auch Höhen- und Toponomie-Werte zuweisen? Wenn Sie „Nein” wählen, können Ihre Längen- und Breitengraddaten möglicherweise nicht mehr mit den eingebetteten Toponomiedaten synchronisiert werden. Wenn Sie auf „Nicht mehr fragen” klicken, wird die Antwort als „Ja” gewertet und in dieser Sitzung nicht erneut gefragt. Starten Sie neu, um zurückzusetzen.”</value>
+    <value>Möchten Sie auch Höhen- und Toponomie-Werte zuweisen? Wenn Sie „Nein” wählen, können Ihre Längen- und Breitengraddaten möglicherweise nicht mehr mit den eingebetteten Toponomiedaten synchronisiert werden. Wenn Sie auf „Nicht mehr fragen” klicken, wird die Antwort als „Ja” gewertet und in dieser Sitzung nicht erneut gefragt. Starten Sie neu, um zurückzusetzen.</value>
   </data>
   <data name="lbl_SaveTrackTo" xml:space="preserve">
     <value>Ausgabe speichern unter</value>
@@ -701,13 +701,13 @@
     <value>Falls vorhanden, wurden die zwischengespeicherten Daten für die ausgewählten Elemente entfernt.</value>
   </data>
   <data name="mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank" xml:space="preserve">
-    <value>Der Name darf nicht leer/unausgefüllt sein.</value>
+    <value>Der Name darf nicht leer/unausgefüllt sein</value>
   </data>
   <data name="mbx_FrmMainApp_InfoFavouriteNotValid" xml:space="preserve">
-    <value>Das von Ihnen ausgewählte gespeicherte Element ist ungültig.</value>
+    <value>Das von Ihnen ausgewählte gespeicherte Element ist ungültig</value>
   </data>
   <data name="mbx_FrmMainApp_InfoFavouriteSaved" xml:space="preserve">
-    <value>Favorit erfolgreich gespeichert.</value>
+    <value>Favorit erfolgreich gespeichert</value>
   </data>
   <data name="mbx_FrmMainApp_NoFavouritesDefined" xml:space="preserve">
     <value>Sie haben keine Favoriten definiert. Fügen Sie einen über die Schaltflächen unter der Karte hinzu.</value>
@@ -773,11 +773,11 @@
     <value>asyncExifTool.ExecuteAsync fehlgeschlagen (Bitte melden Sie das Problem auf GitHub): </value>
   </data>
   <data name="mbx_Helper_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
-    <value>Das Lesen der Standardwerte aus SQL ist fehlgeschlagen </value>
+    <value>Das Lesen der Standardwerte aus SQL ist fehlgeschlagen: </value>
   </data>
   <data name="mbx_Helper_QuestionFileQIsNotEmpty" xml:space="preserve">
     <value>Einige Daten wurden geändert – möchten Sie speichern?
-Die Daten werden verworfen, wenn Sie auf „Nein” klicken.</value>
+Die Daten werden verworfen, wenn Sie auf „Nein” klicken</value>
   </data>
   <data name="mbx_Helper_WarningExifToolVerAPIResponse" xml:space="preserve">
     <value>Die ExifToolVerAPIResponse-API hat die folgende Antwort zurückgegeben: </value>
@@ -882,20 +882,20 @@ Die Daten werden verworfen, wenn Sie auf „Nein” klicken.</value>
     <value>„Dies ist eine erweiterte Funktion. AdminName1-4 &amp; ToponymName beziehen sich auf die API-Ausgaben. Wenn Sie diese nicht verstehen, sollten Sie diese Funktion besser nicht verwenden. Eine allgemeine Übersicht finden Sie unter: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 . Mit dieser Einstellung können Sie Ihre eigenen Länder auswählen, um den Wert „City” aus einem der spezifischen AdminNames zu erhalten.</value>
   </data>
   <data name="rbx_CustomCityLogicExplanationBold" xml:space="preserve">
-    <value>Beachten Sie, dass Änderungen an der folgenden Tabelle sofort wirksam werden und die Schaltfläche „OK/Abbrechen” an sich keine Auswirkungen auf sie hat. Sie müssen außerdem mit der rechten Maustaste klicken und „Zwischengespeicherte Daten zurücksetzen” für alle Dateien auswählen, die von Ihren Änderungen betroffen sein könnten, wenn Sie Daten innerhalb dieser Sitzung abrufen möchten (oder starten Sie einfach die App neu).</value>
+    <value>Beachten Sie, dass Änderungen an der folgenden Tabelle sofort wirksam werden und die Schaltfläche „OK/Abbrechen” an sich keine Auswirkungen auf sie hat. Sie müssen außerdem mit der rechten Maustaste klicken und „Zwischengespeicherte Daten zurücksetzen” für alle Dateien auswählen, die von Ihren Änderungen betroffen sein könnten, wenn Sie Daten innerhalb dieser Sitzung abrufen möchten (oder starten Sie einfach die App neu)</value>
   </data>
   <data name="rbx_CustomRulesExplanation" xml:space="preserve">
     <value>„Dies ist eine erweiterte Funktion. AdminName1-4 &amp; ToponymName beziehen sich auf die API-Ausgaben. Wenn Sie diese nicht verstehen, sollten Sie diese Option besser nicht anklicken.
 Betreff: „Vorgegebene Länder“ (Kontrollkästchen unten): Lesen Sie hier mehr darüber: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 + überprüfen Sie die andere Registerkarte – Beachten Sie, dass durch Deaktivieren dieser Einstellung die CountryCode-Zellen,
-die außerhalb der relevanten Gruppierung liegen, leer bleiben, diese Zeilen jedoch nicht tatsächlich gelöscht werden. Alle Spalten sind obligatorisch, außer „Benutzerdefiniert”. Wenn Sie jedoch das Ergebnis auf „Benutzerdefiniert” setzen und die Spalte „Benutzerdefiniert” leer lassen, wird die Zeile ignoriert.
+die außerhalb der relevanten Gruppierung liegen, leer bleiben, diese Zeilen jedoch nicht tatsächlich gelöscht werden. Alle Spalten sind obligatorisch, außer „Benutzerdefiniert”. Wenn Sie jedoch das Ergebnis auf „Benutzerdefiniert” setzen und die Spalte „Benutzerdefiniert” leer lassen, wird die Zeile ignoriert
 Bei den Daten wird nicht zwischen Groß- und Kleinschreibung unterschieden. Für jeden Datenpunkt (z. B. Stadt, Bundesstaat) überschreibt die letzte Zeile die vorherigen. Seien Sie grundsätzlich vernünftig.
 Je mehr Zeilen Sie hinzufügen, desto langsamer wird es.
 Beispiel: Die Standarddaten, die von der API für London, Großbritannien, zurückgegeben werden, sind unzureichend,
 da für diese bestimmte Region adminName2 = „Greater London“ lautet und daher verworfen würde
-(Städte stammen in der Regel aus „ToponymName“). -&gt; Setzen Sie: „what“ = „adminName2“, „if“ = „is“, „Condition Value“ = „Greater London“, „then“ = „City“, „becomes“ = „adminName2“. Wiederholen Sie den gesamten Vorgang in einer zweiten Zeile, aber „dann“ = „Sub_Loction“ und „wird“ = „ToponymName“.“</value>
+(Städte stammen in der Regel aus „ToponymName“). -&gt; Setzen Sie: „what“ = „adminName2“, „if“ = „is“, „Condition Value“ = „Greater London“, „then“ = „City“, „becomes“ = „adminName2“. Wiederholen Sie den gesamten Vorgang in einer zweiten Zeile, aber „dann“ = „Sub_Loction“ und „wird“ = „ToponymName“.“.</value>
   </data>
   <data name="rbx_CustomRulesExplanationBold" xml:space="preserve">
-    <value>Beachten Sie, dass Änderungen an der folgenden Tabelle sofort wirksam werden und die Schaltfläche „OK/Abbrechen“ an sich keine Auswirkungen auf sie hat. Sie müssen außerdem mit der rechten Maustaste klicken und „Zwischengespeicherte Daten zurücksetzen“ für alle Dateien auswählen, die von Ihren Änderungen betroffen sein könnten, wenn Sie Daten innerhalb dieser Sitzung abrufen möchten (oder starten Sie einfach die App neu).</value>
+    <value>Beachten Sie, dass Änderungen an der folgenden Tabelle sofort wirksam werden und die Schaltfläche „OK/Abbrechen“ an sich keine Auswirkungen auf sie hat. Sie müssen außerdem mit der rechten Maustaste klicken und „Zwischengespeicherte Daten zurücksetzen“ für alle Dateien auswählen, die von Ihren Änderungen betroffen sein könnten, wenn Sie Daten innerhalb dieser Sitzung abrufen möchten (oder starten Sie einfach die App neu)</value>
   </data>
   <data name="rbx_Register_ArcGIS" xml:space="preserve">
     <value>„Sie benötigen einen ArcGIS-API-Schlüssel, um die Kartensuchfunktion nutzen zu können.
@@ -1038,13 +1038,13 @@ Die Zwischenablage sollte nur ein Dezimalpaar enthalten, vorzugsweise im „inva
 Der Code sollte jedoch auch andere Formate verstehen können. Beachten Sie, dass der Vorgang fehlschlägt (nichts passiert), wenn die Zwischenablage etwas anderes als das oben Genannte enthält.”</value>
   </data>
   <data name="ttp_LoadFavourite" xml:space="preserve">
-    <value>Laden Sie Metadaten für die ausgewählten Dateien aus Ihren Favoriten.</value>
+    <value>Laden Sie Metadaten für die ausgewählten Dateien aus Ihren Favoriten</value>
   </data>
   <data name="ttp_loctToFile" xml:space="preserve">
-    <value>Speichern Sie die aktuellen Koordinaten in den ausgewählten Dateien.</value>
+    <value>Speichern Sie die aktuellen Koordinaten in den ausgewählten Dateien</value>
   </data>
   <data name="ttp_loctToFileDestination" xml:space="preserve">
-    <value>Speichern Sie die aktuellen Koordinaten im Ziel der ausgewählten Dateien.</value>
+    <value>Speichern Sie die aktuellen Koordinaten im Ziel der ausgewählten Dateien</value>
   </data>
   <data name="ttp_ManageFavourites" xml:space="preserve">
     <value>Favoriten verwalten</value>
@@ -1056,7 +1056,7 @@ Der Code sollte jedoch auch andere Formate verstehen können. Beachten Sie, dass
     <value>Zeitzonen bleiben beim Öffnen leer, unabhängig davon, welcher Wert gespeichert ist. Es gibt keinen Exif-Tag für TZ, sondern nur „Offset”, was in etwa „+01:00” entspricht. Da es weder für TZ noch für DST an sich einen Hinweis gibt, kann ich nicht mit Sicherheit sagen, dass „+01:00” tatsächlich BST und nicht CET war, wobei das eine DST ist und das andere nicht. Entweder manuell anpassen oder aus dem Internet abrufen – die Kombination aus Koordinaten + createDate würde dem Programm den tatsächlichen TZ-Wert eindeutig mitteilen. Der Wert im schreibgeschützten Textfeld wird in der Datei gespeichert.</value>
   </data>
   <data name="ttp_SaveFavourite" xml:space="preserve">
-    <value>Speichern (oder überschreiben) Sie die Metadaten der aktuell ausgewählten Datei in Ihren Favoriten.</value>
+    <value>Speichern (oder überschreiben) Sie die Metadaten der aktuell ausgewählten Datei in Ihren Favoriten</value>
   </data>
   <data name="ckb_ImportExport_ApplicationSettings" xml:space="preserve">
     <value>Anwendungseinstellungen</value>

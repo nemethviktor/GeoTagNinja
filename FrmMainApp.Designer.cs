@@ -44,6 +44,7 @@ namespace GeoTagNinja
             this.clh_FileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cms_FileListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmi_ShowHideCols = new System.Windows.Forms.ToolStripMenuItem();
+            this.tss_Cms_1 = new System.Windows.Forms.ToolStripSeparator();
             this.cmi_RemoveCachedData = new System.Windows.Forms.ToolStripMenuItem();
             this.cmi_OpenCoordsInAPI = new System.Windows.Forms.ToolStripMenuItem();
             this.cmi_OpenCoordsInBrowser = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,6 +55,10 @@ namespace GeoTagNinja
             this.cmi_OpenCoordsInBrowserOpenStreetMap = new System.Windows.Forms.ToolStripMenuItem();
             this.cmi_CopyGeoData = new System.Windows.Forms.ToolStripMenuItem();
             this.cmi_PasteGeoData = new System.Windows.Forms.ToolStripMenuItem();
+            this.tss_Cms_2 = new System.Windows.Forms.ToolStripSeparator();
+            this.cmi_SelectAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmi_SelectNone = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmi_InvertSelection = new System.Windows.Forms.ToolStripMenuItem();
             this.pbx_imagePreview = new GeoTagNinja.View.ImagePreview();
             this.flp_ProcessingInfo = new System.Windows.Forms.FlowLayoutPanel();
             this.lbl_ParseProgress = new System.Windows.Forms.Label();
@@ -87,10 +92,14 @@ namespace GeoTagNinja
             this.tmi_File_ImportFavouritesFromGeoSetter = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_CopyGeoData = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_PasteGeoData = new System.Windows.Forms.ToolStripMenuItem();
-            this.tss_ToolStripSeparator_Main = new System.Windows.Forms.ToolStripSeparator();
+            this.tss_File_1 = new System.Windows.Forms.ToolStripSeparator();
             this.tmi_File_FlatMode = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tss_File_2 = new System.Windows.Forms.ToolStripSeparator();
             this.tmi_File_Quit = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Edit = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Edit_SelectAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Edit_SelectNone = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Edit_InvertSelection = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_Settings = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_Settings_Settings = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_Settings_Favourites = new System.Windows.Forms.ToolStripMenuItem();
@@ -105,7 +114,7 @@ namespace GeoTagNinja
             this.tsb_GetAllFromWeb = new System.Windows.Forms.ToolStripButton();
             this.tsb_RemoveGeoData = new System.Windows.Forms.ToolStripButton();
             this.tsb_ImportExportGPX = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tss_tsr_Main_1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsb_FeedbackFeatureRequest = new System.Windows.Forms.ToolStripButton();
             this.tsb_BugReport = new System.Windows.Forms.ToolStripButton();
             this.tsr_FolderControl = new System.Windows.Forms.ToolStrip();
@@ -205,11 +214,16 @@ namespace GeoTagNinja
             this.cms_FileListView.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cms_FileListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmi_ShowHideCols,
+            this.tss_Cms_1,
             this.cmi_RemoveCachedData,
             this.cmi_OpenCoordsInAPI,
             this.cmi_OpenCoordsInBrowser,
             this.cmi_CopyGeoData,
-            this.cmi_PasteGeoData});
+            this.cmi_PasteGeoData,
+            this.tss_Cms_2,
+            this.cmi_SelectAll,
+            this.cmi_SelectNone,
+            this.cmi_InvertSelection});
             this.cms_FileListView.Name = "cms_FileListView";
             resources.ApplyResources(this.cms_FileListView, "cms_FileListView");
             // 
@@ -219,6 +233,11 @@ namespace GeoTagNinja
             this.cmi_ShowHideCols.Name = "cmi_ShowHideCols";
             resources.ApplyResources(this.cmi_ShowHideCols, "cmi_ShowHideCols");
             this.cmi_ShowHideCols.Click += new System.EventHandler(this.selectColumnsToolStripMenuItem_Click);
+            // 
+            // tss_Cms_1
+            // 
+            this.tss_Cms_1.Name = "tss_Cms_1";
+            resources.ApplyResources(this.tss_Cms_1, "tss_Cms_1");
             // 
             // cmi_RemoveCachedData
             // 
@@ -284,6 +303,29 @@ namespace GeoTagNinja
             this.cmi_PasteGeoData.Name = "cmi_PasteGeoData";
             resources.ApplyResources(this.cmi_PasteGeoData, "cmi_PasteGeoData");
             this.cmi_PasteGeoData.Click += new System.EventHandler(this.cmi_PasteGeoData_Click);
+            // 
+            // tss_Cms_2
+            // 
+            this.tss_Cms_2.Name = "tss_Cms_2";
+            resources.ApplyResources(this.tss_Cms_2, "tss_Cms_2");
+            // 
+            // cmi_SelectAll
+            // 
+            this.cmi_SelectAll.Name = "cmi_SelectAll";
+            resources.ApplyResources(this.cmi_SelectAll, "cmi_SelectAll");
+            this.cmi_SelectAll.Click += new System.EventHandler(this.cmi_SelectAll_Click);
+            // 
+            // cmi_SelectNone
+            // 
+            this.cmi_SelectNone.Name = "cmi_SelectNone";
+            resources.ApplyResources(this.cmi_SelectNone, "cmi_SelectNone");
+            this.cmi_SelectNone.Click += new System.EventHandler(this.cmi_SelectNone_Click);
+            // 
+            // cmi_InvertSelection
+            // 
+            this.cmi_InvertSelection.Name = "cmi_InvertSelection";
+            resources.ApplyResources(this.cmi_InvertSelection, "cmi_InvertSelection");
+            this.cmi_InvertSelection.Click += new System.EventHandler(this.cmi_InvertSelection_Click);
             // 
             // pbx_imagePreview
             // 
@@ -499,6 +541,7 @@ namespace GeoTagNinja
             this.mns_MenuStrip.ImageScalingSize = new System.Drawing.Size(28, 28);
             this.mns_MenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tmi_File,
+            this.tmi_Edit,
             this.tmi_Settings,
             this.tmi_Help});
             resources.ApplyResources(this.mns_MenuStrip, "mns_MenuStrip");
@@ -513,9 +556,9 @@ namespace GeoTagNinja
             this.tmi_File_ImportFavouritesFromGeoSetter,
             this.tmi_File_CopyGeoData,
             this.tmi_File_PasteGeoData,
-            this.tss_ToolStripSeparator_Main,
+            this.tss_File_1,
             this.tmi_File_FlatMode,
-            this.toolStripSeparator2,
+            this.tss_File_2,
             this.tmi_File_Quit});
             this.tmi_File.Name = "tmi_File";
             resources.ApplyResources(this.tmi_File, "tmi_File");
@@ -557,10 +600,10 @@ namespace GeoTagNinja
             resources.ApplyResources(this.tmi_File_PasteGeoData, "tmi_File_PasteGeoData");
             this.tmi_File_PasteGeoData.Click += new System.EventHandler(this.tmi_File_PasteGeoData_Click);
             // 
-            // tss_ToolStripSeparator_Main
+            // tss_File_1
             // 
-            this.tss_ToolStripSeparator_Main.Name = "tss_ToolStripSeparator_Main";
-            resources.ApplyResources(this.tss_ToolStripSeparator_Main, "tss_ToolStripSeparator_Main");
+            this.tss_File_1.Name = "tss_File_1";
+            resources.ApplyResources(this.tss_File_1, "tss_File_1");
             // 
             // tmi_File_FlatMode
             // 
@@ -569,16 +612,43 @@ namespace GeoTagNinja
             resources.ApplyResources(this.tmi_File_FlatMode, "tmi_File_FlatMode");
             this.tmi_File_FlatMode.Click += new System.EventHandler(this.tmiFileFlatModeToolStripMenuItem_Click);
             // 
-            // toolStripSeparator2
+            // tss_File_2
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
+            this.tss_File_2.Name = "tss_File_2";
+            resources.ApplyResources(this.tss_File_2, "tss_File_2");
             // 
             // tmi_File_Quit
             // 
             this.tmi_File_Quit.Name = "tmi_File_Quit";
             resources.ApplyResources(this.tmi_File_Quit, "tmi_File_Quit");
             this.tmi_File_Quit.Click += new System.EventHandler(this.tmi_File_Quit_Click);
+            // 
+            // tmi_Edit
+            // 
+            this.tmi_Edit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tmi_Edit_SelectAll,
+            this.tmi_Edit_SelectNone,
+            this.tmi_Edit_InvertSelection});
+            this.tmi_Edit.Name = "tmi_Edit";
+            resources.ApplyResources(this.tmi_Edit, "tmi_Edit");
+            // 
+            // tmi_Edit_SelectAll
+            // 
+            this.tmi_Edit_SelectAll.Name = "tmi_Edit_SelectAll";
+            resources.ApplyResources(this.tmi_Edit_SelectAll, "tmi_Edit_SelectAll");
+            this.tmi_Edit_SelectAll.Click += new System.EventHandler(this.tmi_Edit_SelectAll_Click);
+            // 
+            // tmi_Edit_SelectNone
+            // 
+            this.tmi_Edit_SelectNone.Name = "tmi_Edit_SelectNone";
+            resources.ApplyResources(this.tmi_Edit_SelectNone, "tmi_Edit_SelectNone");
+            this.tmi_Edit_SelectNone.Click += new System.EventHandler(this.tmi_Edit_SelectNone_Click);
+            // 
+            // tmi_Edit_InvertSelection
+            // 
+            this.tmi_Edit_InvertSelection.Name = "tmi_Edit_InvertSelection";
+            resources.ApplyResources(this.tmi_Edit_InvertSelection, "tmi_Edit_InvertSelection");
+            this.tmi_Edit_InvertSelection.Click += new System.EventHandler(this.tmi_Edit_InvertSelection_Click);
             // 
             // tmi_Settings
             // 
@@ -638,7 +708,7 @@ namespace GeoTagNinja
             this.tsb_GetAllFromWeb,
             this.tsb_RemoveGeoData,
             this.tsb_ImportExportGPX,
-            this.toolStripSeparator1,
+            this.tss_tsr_Main_1,
             this.tsb_FeedbackFeatureRequest,
             this.tsb_BugReport});
             resources.ApplyResources(this.tsr_MainAppToolStrip, "tsr_MainAppToolStrip");
@@ -686,10 +756,10 @@ namespace GeoTagNinja
             this.tsb_ImportExportGPX.Name = "tsb_ImportExportGPX";
             this.tsb_ImportExportGPX.Click += new System.EventHandler(this.tsb_ImportExportGPX_Click);
             // 
-            // toolStripSeparator1
+            // tss_tsr_Main_1
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
+            this.tss_tsr_Main_1.Name = "tss_tsr_Main_1";
+            resources.ApplyResources(this.tss_tsr_Main_1, "tss_tsr_Main_1");
             // 
             // tsb_FeedbackFeatureRequest
             // 
@@ -782,7 +852,7 @@ namespace GeoTagNinja
         private System.Windows.Forms.MenuStrip mns_MenuStrip;
         private System.Windows.Forms.ToolStripMenuItem tmi_File;
         private System.Windows.Forms.ToolStripMenuItem tmi_File_SaveAll;
-        private System.Windows.Forms.ToolStripSeparator tss_ToolStripSeparator_Main;
+        private System.Windows.Forms.ToolStripSeparator tss_File_1;
         private System.Windows.Forms.ToolStripMenuItem tmi_File_Quit;
         private ToolStripMenuItem tmi_Settings;
         private ToolStripMenuItem tmi_Settings_Settings;
@@ -844,13 +914,13 @@ namespace GeoTagNinja
         internal ColumnHeader clh_ModifiedValue;
         private ToolStripMenuItem tmi_Help_FeedbackFeatureRequest;
         private ToolStripMenuItem tmi_Help_BugReport;
-        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripSeparator tss_tsr_Main_1;
         private ToolStripButton tsb_FeedbackFeatureRequest;
         private ToolStripButton tsb_BugReport;
         private ToolTip ttp_FeedbackFeatureRequest;
         private ToolTip ttp_BugReport;
         private ToolStripMenuItem tmi_File_FlatMode;
-        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripSeparator tss_File_2;
         private ToolStripMenuItem cmi_OpenCoordsInBrowser;
         private ToolStripMenuItem cmi_OpenCoordsInBrowserBing;
         private ToolStripMenuItem cmi_OpenCoordsInBrowserGeoNamesMaps;
@@ -860,6 +930,15 @@ namespace GeoTagNinja
         private ToolStripMenuItem tmi_File_ImportFavouritesFromGeoSetter;
         private ToolStripMenuItem cmi_CopyGeoData;
         private ToolStripMenuItem cmi_PasteGeoData;
+        private ToolStripSeparator tss_Cms_1;
+        private ToolStripSeparator tss_Cms_2;
+        private ToolStripMenuItem cmi_SelectAll;
+        private ToolStripMenuItem cmi_SelectNone;
+        private ToolStripMenuItem cmi_InvertSelection;
+        private ToolStripMenuItem tmi_Edit;
+        private ToolStripMenuItem tmi_Edit_SelectAll;
+        private ToolStripMenuItem tmi_Edit_SelectNone;
+        private ToolStripMenuItem tmi_Edit_InvertSelection;
     }
 }
 
