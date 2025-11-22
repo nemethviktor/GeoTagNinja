@@ -70,7 +70,9 @@ internal static class HelperFileSystemOperators
                     await Task.Delay(millisecondsDelay: 10);
                 }
 
-                await HelperExifWriteSaveToFile.ExifWriteExifToFile();
+                HashSet<string> distinctGUIDs = FrmMainApp.DirectoryElements.FindDirtyElements();
+                await HelperExifWriteSaveToFile.ExifWriteExifToFile(distinctGUIDs: distinctGUIDs);
+
                 HelperVariables.OperationChangeFolderIsOkay = true;
             }
             else if (dialogResult == DialogResult.No)

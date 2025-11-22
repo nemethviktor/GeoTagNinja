@@ -1554,10 +1554,13 @@ public partial class FrmMainApp : Form
     #region File (that is, the "File" menu tree)
 
     /// <summary>
-    ///     Handles the tmi_File_SaveAll_Click event -> triggers the file-save process
+    /// Handles the Save All command from the File menu, saving all modified files asynchronously.
     /// </summary>
-    /// <param name="sender">Unused</param>
-    /// <param name="e">Unused</param>
+    /// <remarks>This method waits for any ongoing file updates or save operations to complete before
+    /// proceeding. All modified files are saved, and any current selections in the file list are cleared. The operation
+    /// is performed asynchronously to avoid blocking the UI thread.</remarks>
+    /// <param name="sender">The source of the event, typically the menu item that was clicked.</param>
+    /// <param name="e">An EventArgs instance containing event data.</param>
     private async void tmi_File_SaveAll_Click(object sender,
                                               EventArgs e)
     {
@@ -1571,9 +1574,49 @@ public partial class FrmMainApp : Form
         lvw_FileList.SelectedItems.Clear();
         // also the problem here is that the exiftoolAsync can still be running and locking the file.
 
-        await HelperExifWriteSaveToFile.ExifWriteExifToFile();
+        HashSet<string> distinctGUIDs = FrmMainApp.DirectoryElements.FindDirtyElements();
+        await HelperExifWriteSaveToFile.ExifWriteExifToFile(distinctGUIDs: distinctGUIDs);
+
         HelperGenericFileLocking.FilesAreBeingSaved = false;
-        //DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
+    }
+
+    /// <summary>
+    /// Handles the click event for saving selected files in the file list. Initiates the process to write updated
+    /// metadata to the selected files after ensuring no conflicting file operations are in progress.
+    /// </summary>
+    /// <remarks>This method waits for any ongoing file updates or save operations to complete before
+    /// proceeding. Only files represented by selected items in the file list are processed. If external processes are
+    /// locking files, saving may be delayed until those locks are released.</remarks>
+    /// <param name="sender">The source of the event, typically the menu item that was clicked.</param>
+    /// <param name="e">An EventArgs instance containing event data.</param>
+    private async void tmi_File_SaveSelected_Click(object sender, EventArgs e)
+    {
+        while (HelperGenericFileLocking.FileListBeingUpdated ||
+               HelperGenericFileLocking.FilesAreBeingSaved)
+        {
+            await Task.Delay(millisecondsDelay: 10);
+        }
+
+        // also the problem here is that the exiftoolAsync can still be running and locking the file.
+
+        List<DirectoryElement> directoryElements = [];
+        foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
+        {
+            if ((lvi.Tag as DirectoryElement) == null)
+            {
+                continue;
+            }
+
+            DirectoryElement itemDe = (DirectoryElement)lvi.Tag;
+            if (itemDe.Type == DirectoryElement.ElementType.File)
+            {
+                directoryElements.Add(itemDe);
+            }
+        }
+        HashSet<string> distinctGUIDs = FrmMainApp.DirectoryElements.FindDirtyElements(optionalListOfDEs: directoryElements);
+        await HelperExifWriteSaveToFile.ExifWriteExifToFile(distinctGUIDs: distinctGUIDs);
+
+        HelperGenericFileLocking.FilesAreBeingSaved = false;
     }
 
     /// <summary>
@@ -2145,7 +2188,9 @@ public partial class FrmMainApp : Form
         lvw_FileList.SelectedItems.Clear();
         // also the problem here is that the exiftoolAsync can still be running and locking the file.
 
-        await HelperExifWriteSaveToFile.ExifWriteExifToFile();
+        HashSet<string> distinctGUIDs = FrmMainApp.DirectoryElements.FindDirtyElements();
+        await HelperExifWriteSaveToFile.ExifWriteExifToFile(distinctGUIDs: distinctGUIDs);
+
         HelperGenericFileLocking.FilesAreBeingSaved = false;
         //DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
     }
@@ -2947,7 +2992,9 @@ in toponomyOverwrites)
             // i think having an Item active can cause a lock on it
             lvw_FileList.SelectedItems.Clear();
 
-            await HelperExifWriteSaveToFile.ExifWriteExifToFile();
+            HashSet<string> distinctGUIDs = FrmMainApp.DirectoryElements.FindDirtyElements();
+            await HelperExifWriteSaveToFile.ExifWriteExifToFile(distinctGUIDs: distinctGUIDs);
+
             HelperGenericFileLocking.FilesAreBeingSaved = false;
             //DtFileDataToWriteStage3ReadyToWrite.Rows.Clear();
         }

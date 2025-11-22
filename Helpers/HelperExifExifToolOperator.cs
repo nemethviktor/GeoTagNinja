@@ -152,8 +152,7 @@ internal static class HelperExifExifToolOperator
                                             frmMainAppInstance: frmMainAppInstance);
                                     }
 
-                                    if (Path.GetExtension(path: fileNameWithoutPath) ==
-                                        ".xmp")
+                                    if (Path.GetExtension(path: fileNameWithoutPath) == ".xmp")
                                     {
                                         if (lviIndex % 10 == 0)
                                         {
@@ -167,10 +166,8 @@ internal static class HelperExifExifToolOperator
                                         }
 
                                         if ((data.Data.Contains(value: "files updated") ||
-                                             data.Data.Contains(
-                                                 value: "files created")) &&
-                                            !data.Data.Trim()
-                                                 .StartsWith(value: "0"))
+                                             data.Data.Contains(value: "files created")) &&
+                                            !data.Data.Trim().StartsWith(value: "0"))
                                         {
                                             RemoveDirElementFromDe3AndCopyDataToOriginal(
                                                 dirElemToDrop: dirElemFileToDrop,

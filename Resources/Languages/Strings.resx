@@ -1406,4 +1406,8 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>BuyMeACoffee...</value>
     <comment>This is under "donate"</comment>
   </data>
+  <data name="tmi_File_SaveSelected" xml:space="preserve">
+    <value>Save Selected</value>
+    <comment>File Menu -&gt; Save selected items</comment>
+  </data>
 </root>

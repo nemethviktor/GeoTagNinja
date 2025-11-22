@@ -81,10 +81,12 @@ public class DirectoryElementCollection : List<DirectoryElement>
     ///     collection and for every element every attribute... Need a cache...?
     /// </summary>
     /// <returns>A HashSet of UIDs of dirty elements. Empty if there are none.</returns>
-    public HashSet<string> FindDirtyElements()
+    /// <param name="optionalListOfDEs">An optional list of DEs to check (in case we only want to save some of the items.)</param>
+    public HashSet<string> FindDirtyElements(List<DirectoryElement> optionalListOfDEs = null)
     {
+        List<DirectoryElement> directoryElements = optionalListOfDEs ?? this;
         HashSet<string> uids = [];
-        foreach (DirectoryElement directoryElement in this)
+        foreach (DirectoryElement directoryElement in directoryElements)
         {
             if (directoryElement.HasDirtyAttributes())
             {

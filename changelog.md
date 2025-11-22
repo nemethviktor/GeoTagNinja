@@ -2,8 +2,9 @@
 
 **Build 9xxx [2025xxxx]** (upcoming release)
 - NEW & UPDATED:
-	- Added some context menus, `Select All/None/Invert`, `CopyPaste`...
+	- Added some context menus, `Select All/None/Invert`, `CopyPaste` etc
 	- Added a `Donate` dropdown in case anybody feels like...
+	- Added a `Save Selected` item to the `File` menu
 - BUGS & FIXES:
 	- TBA
 

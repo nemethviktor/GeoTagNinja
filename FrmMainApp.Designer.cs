@@ -92,9 +92,9 @@ namespace GeoTagNinja
             this.tmi_File_ImportFavouritesFromGeoSetter = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_CopyGeoData = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_PasteGeoData = new System.Windows.Forms.ToolStripMenuItem();
-            this.tss_File_1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tss_File_4 = new System.Windows.Forms.ToolStripSeparator();
             this.tmi_File_FlatMode = new System.Windows.Forms.ToolStripMenuItem();
-            this.tss_File_2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tss_File_5 = new System.Windows.Forms.ToolStripSeparator();
             this.tmi_File_Quit = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_Edit = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_Edit_SelectAll = new System.Windows.Forms.ToolStripMenuItem();
@@ -105,6 +105,12 @@ namespace GeoTagNinja
             this.tmi_Settings_Favourites = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_Help = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_Help_About = new System.Windows.Forms.ToolStripMenuItem();
+            this.tss_Help_1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tmi_Help_Donate = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Help_Donate_PayPal = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Help_Donate_Revolut = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Help_Donate_BuyMeCoffee = new System.Windows.Forms.ToolStripMenuItem();
+            this.tss_Help_2 = new System.Windows.Forms.ToolStripSeparator();
             this.tmi_Help_FeedbackFeatureRequest = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_Help_BugReport = new System.Windows.Forms.ToolStripMenuItem();
             this.tsr_MainAppToolStrip = new System.Windows.Forms.ToolStrip();
@@ -128,12 +134,10 @@ namespace GeoTagNinja
             this.ttp_loctToFileDestination = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_FeedbackFeatureRequest = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_BugReport = new System.Windows.Forms.ToolTip(this.components);
-            this.tss_Help_1 = new System.Windows.Forms.ToolStripSeparator();
-            this.tss_Help_2 = new System.Windows.Forms.ToolStripSeparator();
-            this.tmi_Help_Donate = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_Help_Donate_PayPal = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_Help_Donate_Revolut = new System.Windows.Forms.ToolStripMenuItem();
-            this.tmi_Help_Donate_BuyMeCoffee = new System.Windows.Forms.ToolStripMenuItem();
+            this.tss_File_1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tss_File_3 = new System.Windows.Forms.ToolStripSeparator();
+            this.tss_File_2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tmi_File_SaveSelected = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
@@ -557,14 +561,18 @@ namespace GeoTagNinja
             // 
             this.tmi_File.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tmi_File_SaveAll,
+            this.tmi_File_SaveSelected,
+            this.tss_File_1,
             this.tmi_File_EditFiles,
+            this.tss_File_2,
             this.tmi_File_ImportExportGPX,
             this.tmi_File_ImportFavouritesFromGeoSetter,
+            this.tss_File_3,
             this.tmi_File_CopyGeoData,
             this.tmi_File_PasteGeoData,
-            this.tss_File_1,
+            this.tss_File_4,
             this.tmi_File_FlatMode,
-            this.tss_File_2,
+            this.tss_File_5,
             this.tmi_File_Quit});
             this.tmi_File.Name = "tmi_File";
             resources.ApplyResources(this.tmi_File, "tmi_File");
@@ -606,10 +614,10 @@ namespace GeoTagNinja
             resources.ApplyResources(this.tmi_File_PasteGeoData, "tmi_File_PasteGeoData");
             this.tmi_File_PasteGeoData.Click += new System.EventHandler(this.tmi_File_PasteGeoData_Click);
             // 
-            // tss_File_1
+            // tss_File_4
             // 
-            this.tss_File_1.Name = "tss_File_1";
-            resources.ApplyResources(this.tss_File_1, "tss_File_1");
+            this.tss_File_4.Name = "tss_File_4";
+            resources.ApplyResources(this.tss_File_4, "tss_File_4");
             // 
             // tmi_File_FlatMode
             // 
@@ -618,10 +626,10 @@ namespace GeoTagNinja
             resources.ApplyResources(this.tmi_File_FlatMode, "tmi_File_FlatMode");
             this.tmi_File_FlatMode.Click += new System.EventHandler(this.tmiFileFlatModeToolStripMenuItem_Click);
             // 
-            // tss_File_2
+            // tss_File_5
             // 
-            this.tss_File_2.Name = "tss_File_2";
-            resources.ApplyResources(this.tss_File_2, "tss_File_2");
+            this.tss_File_5.Name = "tss_File_5";
+            resources.ApplyResources(this.tss_File_5, "tss_File_5");
             // 
             // tmi_File_Quit
             // 
@@ -693,6 +701,43 @@ namespace GeoTagNinja
             this.tmi_Help_About.Name = "tmi_Help_About";
             resources.ApplyResources(this.tmi_Help_About, "tmi_Help_About");
             this.tmi_Help_About.Click += new System.EventHandler(this.tmi_Help_About_Click);
+            // 
+            // tss_Help_1
+            // 
+            this.tss_Help_1.Name = "tss_Help_1";
+            resources.ApplyResources(this.tss_Help_1, "tss_Help_1");
+            // 
+            // tmi_Help_Donate
+            // 
+            this.tmi_Help_Donate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tmi_Help_Donate_PayPal,
+            this.tmi_Help_Donate_Revolut,
+            this.tmi_Help_Donate_BuyMeCoffee});
+            this.tmi_Help_Donate.Name = "tmi_Help_Donate";
+            resources.ApplyResources(this.tmi_Help_Donate, "tmi_Help_Donate");
+            // 
+            // tmi_Help_Donate_PayPal
+            // 
+            this.tmi_Help_Donate_PayPal.Name = "tmi_Help_Donate_PayPal";
+            resources.ApplyResources(this.tmi_Help_Donate_PayPal, "tmi_Help_Donate_PayPal");
+            this.tmi_Help_Donate_PayPal.Click += new System.EventHandler(this.tmi_Help_Donate_PayPal_Click);
+            // 
+            // tmi_Help_Donate_Revolut
+            // 
+            this.tmi_Help_Donate_Revolut.Name = "tmi_Help_Donate_Revolut";
+            resources.ApplyResources(this.tmi_Help_Donate_Revolut, "tmi_Help_Donate_Revolut");
+            this.tmi_Help_Donate_Revolut.Click += new System.EventHandler(this.tmi_Help_Donate_Revolut_Click);
+            // 
+            // tmi_Help_Donate_BuyMeCoffee
+            // 
+            this.tmi_Help_Donate_BuyMeCoffee.Name = "tmi_Help_Donate_BuyMeCoffee";
+            resources.ApplyResources(this.tmi_Help_Donate_BuyMeCoffee, "tmi_Help_Donate_BuyMeCoffee");
+            this.tmi_Help_Donate_BuyMeCoffee.Click += new System.EventHandler(this.tmi_Help_Donate_BuyMeCoffee_Click);
+            // 
+            // tss_Help_2
+            // 
+            this.tss_Help_2.Name = "tss_Help_2";
+            resources.ApplyResources(this.tss_Help_2, "tss_Help_2");
             // 
             // tmi_Help_FeedbackFeatureRequest
             // 
@@ -811,42 +856,26 @@ namespace GeoTagNinja
             this.tsb_OneFolderUp.Name = "tsb_OneFolderUp";
             this.tsb_OneFolderUp.Click += new System.EventHandler(this.btn_OneFolderUp_Click);
             // 
-            // tss_Help_1
+            // tss_File_1
             // 
-            this.tss_Help_1.Name = "tss_Help_1";
-            resources.ApplyResources(this.tss_Help_1, "tss_Help_1");
+            this.tss_File_1.Name = "tss_File_1";
+            resources.ApplyResources(this.tss_File_1, "tss_File_1");
             // 
-            // tss_Help_2
+            // tss_File_3
             // 
-            this.tss_Help_2.Name = "tss_Help_2";
-            resources.ApplyResources(this.tss_Help_2, "tss_Help_2");
+            this.tss_File_3.Name = "tss_File_3";
+            resources.ApplyResources(this.tss_File_3, "tss_File_3");
             // 
-            // tmi_Help_Donate
+            // tss_File_2
             // 
-            this.tmi_Help_Donate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tmi_Help_Donate_PayPal,
-            this.tmi_Help_Donate_Revolut,
-            this.tmi_Help_Donate_BuyMeCoffee});
-            this.tmi_Help_Donate.Name = "tmi_Help_Donate";
-            resources.ApplyResources(this.tmi_Help_Donate, "tmi_Help_Donate");
+            this.tss_File_2.Name = "tss_File_2";
+            resources.ApplyResources(this.tss_File_2, "tss_File_2");
             // 
-            // tmi_Help_Donate_PayPal
+            // tmi_File_SaveSelected
             // 
-            this.tmi_Help_Donate_PayPal.Name = "tmi_Help_Donate_PayPal";
-            resources.ApplyResources(this.tmi_Help_Donate_PayPal, "tmi_Help_Donate_PayPal");
-            this.tmi_Help_Donate_PayPal.Click += new System.EventHandler(this.tmi_Help_Donate_PayPal_Click);
-            // 
-            // tmi_Help_Donate_Revolut
-            // 
-            this.tmi_Help_Donate_Revolut.Name = "tmi_Help_Donate_Revolut";
-            resources.ApplyResources(this.tmi_Help_Donate_Revolut, "tmi_Help_Donate_Revolut");
-            this.tmi_Help_Donate_Revolut.Click += new System.EventHandler(this.tmi_Help_Donate_Revolut_Click);
-            // 
-            // tmi_Help_Donate_BuyMeCoffee
-            // 
-            this.tmi_Help_Donate_BuyMeCoffee.Name = "tmi_Help_Donate_BuyMeCoffee";
-            resources.ApplyResources(this.tmi_Help_Donate_BuyMeCoffee, "tmi_Help_Donate_BuyMeCoffee");
-            this.tmi_Help_Donate_BuyMeCoffee.Click += new System.EventHandler(this.tmi_Help_Donate_BuyMeCoffee_Click);
+            this.tmi_File_SaveSelected.Name = "tmi_File_SaveSelected";
+            resources.ApplyResources(this.tmi_File_SaveSelected, "tmi_File_SaveSelected");
+            this.tmi_File_SaveSelected.Click += new System.EventHandler(this.tmi_File_SaveSelected_Click);
             // 
             // FrmMainApp
             // 
@@ -898,7 +927,7 @@ namespace GeoTagNinja
         private System.Windows.Forms.MenuStrip mns_MenuStrip;
         private System.Windows.Forms.ToolStripMenuItem tmi_File;
         private System.Windows.Forms.ToolStripMenuItem tmi_File_SaveAll;
-        private System.Windows.Forms.ToolStripSeparator tss_File_1;
+        private System.Windows.Forms.ToolStripSeparator tss_File_4;
         private System.Windows.Forms.ToolStripMenuItem tmi_File_Quit;
         private ToolStripMenuItem tmi_Settings;
         private ToolStripMenuItem tmi_Settings_Settings;
@@ -966,7 +995,7 @@ namespace GeoTagNinja
         private ToolTip ttp_FeedbackFeatureRequest;
         private ToolTip ttp_BugReport;
         private ToolStripMenuItem tmi_File_FlatMode;
-        private ToolStripSeparator tss_File_2;
+        private ToolStripSeparator tss_File_5;
         private ToolStripMenuItem cmi_OpenCoordsInBrowser;
         private ToolStripMenuItem cmi_OpenCoordsInBrowserBing;
         private ToolStripMenuItem cmi_OpenCoordsInBrowserGeoNamesMaps;
@@ -991,6 +1020,10 @@ namespace GeoTagNinja
         private ToolStripMenuItem tmi_Help_Donate_Revolut;
         private ToolStripMenuItem tmi_Help_Donate_BuyMeCoffee;
         private ToolStripSeparator tss_Help_2;
+        private ToolStripSeparator tss_File_1;
+        private ToolStripSeparator tss_File_2;
+        private ToolStripSeparator tss_File_3;
+        private ToolStripMenuItem tmi_File_SaveSelected;
     }
 }
 

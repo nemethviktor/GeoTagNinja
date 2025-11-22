@@ -16,7 +16,7 @@ namespace GeoTagNinja.Helpers;
 
 internal static class HelperExifWriteSaveToFile
 {
-    internal static async Task ExifWriteExifToFile()
+    internal static async Task ExifWriteExifToFile(HashSet<string> distinctGUIDs)
     {
         FrmMainApp.Log.Info(message: "Starting");
 
@@ -40,18 +40,11 @@ internal static class HelperExifWriteSaveToFile
         bool failWriteNothingEnabled = false;
         bool queueWasEmpty = true;
 
-        // Get items that need saving...
-        // ReSharper disable once InconsistentNaming
-        HashSet<string> DistinctGUIDs = FrmMainApp.DirectoryElements.FindDirtyElements();
-
         FrmMainApp.TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.Indeterminate);
         string exifArgsForOriginalFile = "";
         string exifArgsForSidecar = "";
 
-
-        // ReSharper disable once InconsistentNaming
-
-        foreach (string GUID in DistinctGUIDs)
+        foreach (string GUID in distinctGUIDs)
         {
             DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: GUID);
             FrmMainApp.Log.Trace(message: dirElemFileToModify.FileNameWithPath);
@@ -504,15 +497,10 @@ internal static class HelperExifWriteSaveToFile
             FrmMainApp.Log.Info(message: "Starting ExifTool.");
             ///////////////
 
-            ;
             await HelperExifExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
-                                                         frmMainAppInstance:
-                                                         frmMainAppInstance,
-                                                         initiator:
-                                                         HelperGenericAncillaryListsArrays.ExifToolInititators
-                                                            .ExifWriteExifToFile,
-                                                         processOriginalFile:
-                                                         processOriginalFile,
+                                                         frmMainAppInstance: frmMainAppInstance,
+                                                         initiator: HelperGenericAncillaryListsArrays.ExifToolInititators.ExifWriteExifToFile,
+                                                         processOriginalFile: processOriginalFile,
                                                          writeXmpSideCar: writeXMPSideCar
             );
         }

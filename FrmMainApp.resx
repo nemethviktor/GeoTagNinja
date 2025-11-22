@@ -140,9 +140,9 @@
   <data name="clh_FileName.Text" xml:space="preserve">
     <value>clh_FileName</value>
   </data>
-  <data name="cms_FileListView.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  <metadata name="cms_FileListView.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>750, 17</value>
-  </data>
+  </metadata>
   <data name="cms_FileListView.Size" type="System.Drawing.Size, System.Drawing">
     <value>256, 214</value>
   </data>
@@ -172,7 +172,7 @@
     <value>lvw_FileList</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.ListView.FileListView, GeoTagNinja, Version=1.17.9457.19547, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.ListView.FileListView, GeoTagNinja, Version=1.17.9457.22098, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel1</value>
@@ -220,7 +220,7 @@
     <value>pbx_imagePreview</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.ImagePreview, GeoTagNinja, Version=1.17.9457.19547, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.ImagePreview, GeoTagNinja, Version=1.17.9457.22098, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel2</value>
@@ -429,15 +429,15 @@
   <data name="tcr_Main.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="igl_RightHandSide.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  <metadata name="igl_RightHandSide.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>484, 54</value>
-  </data>
+  </metadata>
   <data name="igl_RightHandSide.ImageStream" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAD8
-        CAAAAk1TRnQBSQFMAgEBAgEAAbABAwG4AQMBEAEAARABAAT/AQkBEAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        CAAAAk1TRnQBSQFMAgEBAgEAAcABAwHAAQMBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABQAMAARADAAEBAQABCAYAAQQYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
         AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
         AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA
@@ -475,7 +475,7 @@
         ArQBGTkAAfMB2wGyAQYB2wHzdwABQgFNAT4HAAE+AwABKAMAAUADAAEQAwABAQEAAQEFAAGAFwAD/wEA
         Af8B+AL/BAAB/wHxAv8EAAH/AfAB/wHnBAAB/wHwAf8BwwQAAf8B8QGAAUMEAAHgATEB/wHzBAABwAET
         AZABAwQAAYABlwGAAQ8EAAGAAREBhAEPBAABgAGDAcQBDwQAAYABAQHEAQMEAAGAASsC/wQAAYABHwGA
-        AQMEAAHAAT8C/wQAAeABfwL/BAAE/xoACw==
+        AQMEAAHAAT8C/wQAAeABfwL/BAAE/wQACw==
 </value>
   </data>
   <data name="tcr_Main.Location" type="System.Drawing.Point, System.Drawing">
@@ -664,6 +664,18 @@
   <data name="lbl_ParseProgress.Text" xml:space="preserve">
     <value>lbl_ParseProgress</value>
   </data>
+  <data name="&gt;&gt;lbl_ParseProgress.Name" xml:space="preserve">
+    <value>lbl_ParseProgress</value>
+  </data>
+  <data name="&gt;&gt;lbl_ParseProgress.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_ParseProgress.Parent" xml:space="preserve">
+    <value>flp_ProcessingInfo</value>
+  </data>
+  <data name="&gt;&gt;lbl_ParseProgress.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="wbv_MapArea.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
@@ -678,6 +690,18 @@
   </data>
   <data name="wbv_MapArea.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
+  </data>
+  <data name="&gt;&gt;wbv_MapArea.Name" xml:space="preserve">
+    <value>wbv_MapArea</value>
+  </data>
+  <data name="&gt;&gt;wbv_MapArea.Type" xml:space="preserve">
+    <value>Microsoft.Web.WebView2.WinForms.WebView2, Microsoft.Web.WebView2.WinForms, Version=1.0.3485.44, Culture=neutral, PublicKeyToken=2a8ab48044d2601e</value>
+  </data>
+  <data name="&gt;&gt;wbv_MapArea.Parent" xml:space="preserve">
+    <value>tpg_Map</value>
+  </data>
+  <data name="&gt;&gt;wbv_MapArea.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="&gt;&gt;lbl_lat.Name" xml:space="preserve">
     <value>lbl_lat</value>
@@ -838,6 +862,18 @@
   <data name="flp_GeoCoords.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
   </data>
+  <data name="&gt;&gt;flp_GeoCoords.Name" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;flp_GeoCoords.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;flp_GeoCoords.Parent" xml:space="preserve">
+    <value>tpg_Map</value>
+  </data>
+  <data name="&gt;&gt;flp_GeoCoords.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <data name="lbl_lat.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>None</value>
   </data>
@@ -859,6 +895,18 @@
   <data name="lbl_lat.Text" xml:space="preserve">
     <value>lbl_lat</value>
   </data>
+  <data name="&gt;&gt;lbl_lat.Name" xml:space="preserve">
+    <value>lbl_lat</value>
+  </data>
+  <data name="&gt;&gt;lbl_lat.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_lat.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;lbl_lat.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="nud_lat.Location" type="System.Drawing.Point, System.Drawing">
     <value>49, 3</value>
   </data>
@@ -867,6 +915,18 @@
   </data>
   <data name="nud_lat.TabIndex" type="System.Int32, mscorlib">
     <value>17</value>
+  </data>
+  <data name="&gt;&gt;nud_lat.Name" xml:space="preserve">
+    <value>nud_lat</value>
+  </data>
+  <data name="&gt;&gt;nud_lat.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nud_lat.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;nud_lat.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="lbl_lng.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>None</value>
@@ -889,6 +949,18 @@
   <data name="lbl_lng.Text" xml:space="preserve">
     <value>lbl_lng</value>
   </data>
+  <data name="&gt;&gt;lbl_lng.Name" xml:space="preserve">
+    <value>lbl_lng</value>
+  </data>
+  <data name="&gt;&gt;lbl_lng.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_lng.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;lbl_lng.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
   <data name="nud_lng.Location" type="System.Drawing.Point, System.Drawing">
     <value>204, 3</value>
   </data>
@@ -897,6 +969,18 @@
   </data>
   <data name="nud_lng.TabIndex" type="System.Int32, mscorlib">
     <value>18</value>
+  </data>
+  <data name="&gt;&gt;nud_lng.Name" xml:space="preserve">
+    <value>nud_lng</value>
+  </data>
+  <data name="&gt;&gt;nud_lng.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nud_lng.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;nud_lng.ZOrder" xml:space="preserve">
+    <value>3</value>
   </data>
   <data name="btn_NavigateMapGo.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -929,6 +1013,18 @@
   <data name="btn_NavigateMapGo.Text" xml:space="preserve">
     <value>btn_NavigateMapGo</value>
   </data>
+  <data name="&gt;&gt;btn_NavigateMapGo.Name" xml:space="preserve">
+    <value>btn_NavigateMapGo</value>
+  </data>
+  <data name="&gt;&gt;btn_NavigateMapGo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_NavigateMapGo.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_NavigateMapGo.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
   <data name="btn_loctToFile.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
@@ -960,6 +1056,18 @@
   </data>
   <data name="btn_loctToFile.Text" xml:space="preserve">
     <value>btn_loctToFile</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFile.Name" xml:space="preserve">
+    <value>btn_loctToFile</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFile.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFile.ZOrder" xml:space="preserve">
+    <value>5</value>
   </data>
   <data name="btn_loctToFileDestination.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -997,6 +1105,18 @@
   <data name="btn_loctToFileDestination.Text" xml:space="preserve">
     <value>btn_loctToFileDestination</value>
   </data>
+  <data name="&gt;&gt;btn_loctToFileDestination.Name" xml:space="preserve">
+    <value>btn_loctToFileDestination</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFileDestination.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFileDestination.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFileDestination.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
   <data name="lbl_Favourites.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>None</value>
   </data>
@@ -1018,6 +1138,18 @@
   <data name="lbl_Favourites.Text" xml:space="preserve">
     <value>lbl_Favourites</value>
   </data>
+  <data name="&gt;&gt;lbl_Favourites.Name" xml:space="preserve">
+    <value>lbl_Favourites</value>
+  </data>
+  <data name="&gt;&gt;lbl_Favourites.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_Favourites.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;lbl_Favourites.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
   <data name="cbx_Favourites.Location" type="System.Drawing.Point, System.Drawing">
     <value>87, 31</value>
   </data>
@@ -1026,6 +1158,18 @@
   </data>
   <data name="cbx_Favourites.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
+  </data>
+  <data name="&gt;&gt;cbx_Favourites.Name" xml:space="preserve">
+    <value>cbx_Favourites</value>
+  </data>
+  <data name="&gt;&gt;cbx_Favourites.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbx_Favourites.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;cbx_Favourites.ZOrder" xml:space="preserve">
+    <value>8</value>
   </data>
   <data name="btn_SaveFavourite.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1054,6 +1198,18 @@
   </data>
   <data name="btn_SaveFavourite.Text" xml:space="preserve">
     <value>btn_SaveFavourite</value>
+  </data>
+  <data name="&gt;&gt;btn_SaveFavourite.Name" xml:space="preserve">
+    <value>btn_SaveFavourite</value>
+  </data>
+  <data name="&gt;&gt;btn_SaveFavourite.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_SaveFavourite.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_SaveFavourite.ZOrder" xml:space="preserve">
+    <value>9</value>
   </data>
   <data name="btn_LoadFavourite.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1087,6 +1243,18 @@
   <data name="btn_LoadFavourite.Text" xml:space="preserve">
     <value>btn_LoadFavourite</value>
   </data>
+  <data name="&gt;&gt;btn_LoadFavourite.Name" xml:space="preserve">
+    <value>btn_LoadFavourite</value>
+  </data>
+  <data name="&gt;&gt;btn_LoadFavourite.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_LoadFavourite.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_LoadFavourite.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
   <data name="btn_ManageFavourites.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
@@ -1116,6 +1284,18 @@
   <data name="btn_ManageFavourites.Text" xml:space="preserve">
     <value>btn_ManageFavourites</value>
   </data>
+  <data name="&gt;&gt;btn_ManageFavourites.Name" xml:space="preserve">
+    <value>btn_ManageFavourites</value>
+  </data>
+  <data name="&gt;&gt;btn_ManageFavourites.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_ManageFavourites.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_ManageFavourites.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
   <data name="lvw_ExifData.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
@@ -1128,6 +1308,18 @@
   <data name="lvw_ExifData.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
+  <data name="&gt;&gt;lvw_ExifData.Name" xml:space="preserve">
+    <value>lvw_ExifData</value>
+  </data>
+  <data name="&gt;&gt;lvw_ExifData.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lvw_ExifData.Parent" xml:space="preserve">
+    <value>tpg_Exif</value>
+  </data>
+  <data name="&gt;&gt;lvw_ExifData.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="clh_ExifTag.Text" xml:space="preserve">
     <value>clh_ExifTag</value>
   </data>
@@ -1137,8 +1329,95 @@
   <data name="clh_ModifiedValue.Text" xml:space="preserve">
     <value>clh_ModifiedValue</value>
   </data>
-  <data name="mns_MenuStrip.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  <metadata name="mns_MenuStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>613, 17</value>
+  </metadata>
+  <data name="tmi_File_SaveAll.ShortcutKeyDisplayString" xml:space="preserve">
+    <value>CTRL+S</value>
+  </data>
+  <data name="tmi_File_SaveAll.Size" type="System.Drawing.Size, System.Drawing">
+    <value>289, 22</value>
+  </data>
+  <data name="tmi_File_SaveAll.Text" xml:space="preserve">
+    <value>tmi_File_SaveAll</value>
+  </data>
+  <data name="tmi_File_SaveSelected.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
+    <value>Ctrl+Shift+S</value>
+  </data>
+  <data name="tmi_File_SaveSelected.Size" type="System.Drawing.Size, System.Drawing">
+    <value>289, 22</value>
+  </data>
+  <data name="tmi_File_SaveSelected.Text" xml:space="preserve">
+    <value>tmi_File_SaveSelected</value>
+  </data>
+  <data name="tss_File_1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>286, 6</value>
+  </data>
+  <data name="tmi_File_EditFiles.ShortcutKeyDisplayString" xml:space="preserve">
+    <value>CTLR+Enter</value>
+  </data>
+  <data name="tmi_File_EditFiles.Size" type="System.Drawing.Size, System.Drawing">
+    <value>289, 22</value>
+  </data>
+  <data name="tmi_File_EditFiles.Text" xml:space="preserve">
+    <value>tmi_File_EditFiles</value>
+  </data>
+  <data name="tss_File_2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>286, 6</value>
+  </data>
+  <data name="tmi_File_ImportExportGPX.Size" type="System.Drawing.Size, System.Drawing">
+    <value>289, 22</value>
+  </data>
+  <data name="tmi_File_ImportExportGPX.Text" xml:space="preserve">
+    <value>tmi_File_ImportExportGPX</value>
+  </data>
+  <data name="tmi_File_ImportFavouritesFromGeoSetter.Size" type="System.Drawing.Size, System.Drawing">
+    <value>289, 22</value>
+  </data>
+  <data name="tmi_File_ImportFavouritesFromGeoSetter.Text" xml:space="preserve">
+    <value>tmi_File_ImportFavouritesFromGeoSetter</value>
+  </data>
+  <data name="tss_File_3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>286, 6</value>
+  </data>
+  <data name="tmi_File_CopyGeoData.ShortcutKeyDisplayString" xml:space="preserve">
+    <value>Sh + CTRL+C</value>
+  </data>
+  <data name="tmi_File_CopyGeoData.Size" type="System.Drawing.Size, System.Drawing">
+    <value>289, 22</value>
+  </data>
+  <data name="tmi_File_CopyGeoData.Text" xml:space="preserve">
+    <value>tmi_File_CopyGeoData</value>
+  </data>
+  <data name="tmi_File_PasteGeoData.ShortcutKeyDisplayString" xml:space="preserve">
+    <value>Sh + CTRL + V</value>
+  </data>
+  <data name="tmi_File_PasteGeoData.Size" type="System.Drawing.Size, System.Drawing">
+    <value>289, 22</value>
+  </data>
+  <data name="tmi_File_PasteGeoData.Text" xml:space="preserve">
+    <value>tmi_File_PasteGeoData</value>
+  </data>
+  <data name="tss_File_4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>286, 6</value>
+  </data>
+  <data name="tmi_File_FlatMode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>289, 22</value>
+  </data>
+  <data name="tmi_File_FlatMode.Text" xml:space="preserve">
+    <value>tmi_File_FlatMode</value>
+  </data>
+  <data name="tss_File_5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>286, 6</value>
+  </data>
+  <data name="tmi_File_Quit.ShortcutKeyDisplayString" xml:space="preserve">
+    <value>ALT+F4</value>
+  </data>
+  <data name="tmi_File_Quit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>289, 22</value>
+  </data>
+  <data name="tmi_File_Quit.Text" xml:space="preserve">
+    <value>tmi_File_Quit</value>
   </data>
   <data name="tmi_File.Size" type="System.Drawing.Size, System.Drawing">
     <value>60, 22</value>
@@ -1157,54 +1436,6 @@
   </data>
   <data name="tmi_Settings.Text" xml:space="preserve">
     <value>tmi_Settings</value>
-  </data>
-  <data name="tmi_Help_About.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 22</value>
-  </data>
-  <data name="tmi_Help_About.Text" xml:space="preserve">
-    <value>tmi_Help_About</value>
-  </data>
-  <data name="tss_Help_1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 6</value>
-  </data>
-  <data name="tmi_Help_Donate_PayPal.Size" type="System.Drawing.Size, System.Drawing">
-    <value>242, 22</value>
-  </data>
-  <data name="tmi_Help_Donate_PayPal.Text" xml:space="preserve">
-    <value>tmi_Help_Donate_PayPal</value>
-  </data>
-  <data name="tmi_Help_Donate_Revolut.Size" type="System.Drawing.Size, System.Drawing">
-    <value>242, 22</value>
-  </data>
-  <data name="tmi_Help_Donate_Revolut.Text" xml:space="preserve">
-    <value>tmi_Help_Donate_Revolut</value>
-  </data>
-  <data name="tmi_Help_Donate_BuyMeCoffee.Size" type="System.Drawing.Size, System.Drawing">
-    <value>242, 22</value>
-  </data>
-  <data name="tmi_Help_Donate_BuyMeCoffee.Text" xml:space="preserve">
-    <value>tmi_Help_Donate_BuyMeCoffee</value>
-  </data>
-  <data name="tmi_Help_Donate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 22</value>
-  </data>
-  <data name="tmi_Help_Donate.Text" xml:space="preserve">
-    <value>tmi_Help_Donate</value>
-  </data>
-  <data name="tss_Help_2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 6</value>
-  </data>
-  <data name="tmi_Help_FeedbackFeatureRequest.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 22</value>
-  </data>
-  <data name="tmi_Help_FeedbackFeatureRequest.Text" xml:space="preserve">
-    <value>tmi_Help_Feedback</value>
-  </data>
-  <data name="tmi_Help_BugReport.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 22</value>
-  </data>
-  <data name="tmi_Help_BugReport.Text" xml:space="preserve">
-    <value>tmi_Help_BugReport</value>
   </data>
   <data name="tmi_Help.Size" type="System.Drawing.Size, System.Drawing">
     <value>67, 22</value>
@@ -1239,75 +1470,6 @@
   <data name="&gt;&gt;mns_MenuStrip.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
-  <data name="tmi_File_SaveAll.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>CTRL+S</value>
-  </data>
-  <data name="tmi_File_SaveAll.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 22</value>
-  </data>
-  <data name="tmi_File_SaveAll.Text" xml:space="preserve">
-    <value>tmi_File_SaveAll</value>
-  </data>
-  <data name="tmi_File_EditFiles.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>CTLR+Enter</value>
-  </data>
-  <data name="tmi_File_EditFiles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 22</value>
-  </data>
-  <data name="tmi_File_EditFiles.Text" xml:space="preserve">
-    <value>tmi_File_EditFiles</value>
-  </data>
-  <data name="tmi_File_ImportExportGPX.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 22</value>
-  </data>
-  <data name="tmi_File_ImportExportGPX.Text" xml:space="preserve">
-    <value>tmi_File_ImportExportGPX</value>
-  </data>
-  <data name="tmi_File_ImportFavouritesFromGeoSetter.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 22</value>
-  </data>
-  <data name="tmi_File_ImportFavouritesFromGeoSetter.Text" xml:space="preserve">
-    <value>tmi_File_ImportFavouritesFromGeoSetter</value>
-  </data>
-  <data name="tmi_File_CopyGeoData.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Sh + CTRL+C</value>
-  </data>
-  <data name="tmi_File_CopyGeoData.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 22</value>
-  </data>
-  <data name="tmi_File_CopyGeoData.Text" xml:space="preserve">
-    <value>tmi_File_CopyGeoData</value>
-  </data>
-  <data name="tmi_File_PasteGeoData.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Sh + CTRL + V</value>
-  </data>
-  <data name="tmi_File_PasteGeoData.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 22</value>
-  </data>
-  <data name="tmi_File_PasteGeoData.Text" xml:space="preserve">
-    <value>tmi_File_PasteGeoData</value>
-  </data>
-  <data name="tss_File_1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>286, 6</value>
-  </data>
-  <data name="tmi_File_FlatMode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 22</value>
-  </data>
-  <data name="tmi_File_FlatMode.Text" xml:space="preserve">
-    <value>tmi_File_FlatMode</value>
-  </data>
-  <data name="tss_File_2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>286, 6</value>
-  </data>
-  <data name="tmi_File_Quit.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>ALT+F4</value>
-  </data>
-  <data name="tmi_File_Quit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 22</value>
-  </data>
-  <data name="tmi_File_Quit.Text" xml:space="preserve">
-    <value>tmi_File_Quit</value>
-  </data>
   <data name="tmi_Edit_SelectAll.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
     <value>Ctrl+A</value>
   </data>
@@ -1341,9 +1503,57 @@
   <data name="tmi_Settings_Favourites.Text" xml:space="preserve">
     <value>tmi_Settings_Favourites</value>
   </data>
-  <data name="tsr_MainAppToolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing">
-    <value>17, 17</value>
+  <data name="tmi_Help_About.Size" type="System.Drawing.Size, System.Drawing">
+    <value>183, 22</value>
   </data>
+  <data name="tmi_Help_About.Text" xml:space="preserve">
+    <value>tmi_Help_About</value>
+  </data>
+  <data name="tss_Help_1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 6</value>
+  </data>
+  <data name="tmi_Help_Donate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>183, 22</value>
+  </data>
+  <data name="tmi_Help_Donate.Text" xml:space="preserve">
+    <value>tmi_Help_Donate</value>
+  </data>
+  <data name="tmi_Help_Donate_PayPal.Size" type="System.Drawing.Size, System.Drawing">
+    <value>242, 22</value>
+  </data>
+  <data name="tmi_Help_Donate_PayPal.Text" xml:space="preserve">
+    <value>tmi_Help_Donate_PayPal</value>
+  </data>
+  <data name="tmi_Help_Donate_Revolut.Size" type="System.Drawing.Size, System.Drawing">
+    <value>242, 22</value>
+  </data>
+  <data name="tmi_Help_Donate_Revolut.Text" xml:space="preserve">
+    <value>tmi_Help_Donate_Revolut</value>
+  </data>
+  <data name="tmi_Help_Donate_BuyMeCoffee.Size" type="System.Drawing.Size, System.Drawing">
+    <value>242, 22</value>
+  </data>
+  <data name="tmi_Help_Donate_BuyMeCoffee.Text" xml:space="preserve">
+    <value>tmi_Help_Donate_BuyMeCoffee</value>
+  </data>
+  <data name="tss_Help_2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 6</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest.Size" type="System.Drawing.Size, System.Drawing">
+    <value>183, 22</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest.Text" xml:space="preserve">
+    <value>tmi_Help_Feedback</value>
+  </data>
+  <data name="tmi_Help_BugReport.Size" type="System.Drawing.Size, System.Drawing">
+    <value>183, 22</value>
+  </data>
+  <data name="tmi_Help_BugReport.Text" xml:space="preserve">
+    <value>tmi_Help_BugReport</value>
+  </data>
+  <metadata name="tsr_MainAppToolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
   <data name="tsr_MainAppToolStrip.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 24</value>
   </data>
@@ -1376,11 +1586,11 @@
   </data>
   <data name="tsb_SaveFiles.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAJpJREFUOE9jYKAqiN21nCF2536COGZXPYP9fhZ07cQBkMaYnS1gQ+AgZucDhthd
-        /wniqJ1rGNLOsIINAbkEDkCS0dslwRiZjSwWu1uOIWbXNrAhYD2kGgCmd8uB2WQbAGPjNSBm1yMMv4PE
-        iDaAEMZvwM4NDLG7jmLFIDmCBoAVYrEVWW4QGbBrOWUGoABsUYcLR++6j66dIgAA4VARVH+p4lkAAAAA
-        SUVORK5CYII=
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACaSURBVDhPY2CgKojdtZwhdud+gjhmVz2D/X4WdO3EAZDG
+        mJ0tYEPgIGbnA4bYXf8J4qidaxjSzrCCDQG5BA5AktHbJcEYmY0sFrtbjiFm1zawIWA9pBoApnfLgdlk
+        GwBj4zUgZtcjDL+DxIg2gBDGb8DODQyxu45ixSA5ggaAFWKxFVluEBmwazllBqAAbFGHC0fvuo+unSIA
+        AOFQEVR/qeJZAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="tsb_SaveFiles.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
@@ -1397,13 +1607,14 @@
   </data>
   <data name="tsb_Refresh_lvwFileList.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAUFJREFUOE+tkjtLA0EUhU9lZeGjUNT/IIgogo/OThAh5DH3bgp/hK0WilqKIOo/
-        sM5j7k0gnW3AxlIQgoqKhShYKTOL2cmSbKMfDOycc+5hhlngX2DZBet3dxm9S0eQuxoCN8bTci9kN8G1
-        R1+ShhtLIL0HyUbaimHdAlc7YJ3vW+AgO+tPF8l6r1FoToD1yQ87BhU4XInLllsjgSh7YD3v7lkOE7MP
-        JCcg3QkEbcPUV8JMJiSLMHKdCEX9QKkyGmYyybWGka++JALbT2zbsTCTiSvgynsisL0B61qYycRdwV27
-        C+sB2F6GmUxYT8F2PxEKOoV8/Q2RXQhzfTH1ObB9Rrk12WuQNSjJQ2aJH652YLSYtmIiIX8SkgtEsur/
-        ffc63FiGkTOQvg4e/sXUZkB6DNJbsH75FX8fIWpOp+N/5gckcIOTawo7SwAAAABJRU5ErkJggg==
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFBSURBVDhPrZI7SwNBFIVPZWXho1DU/yCIKIKPzk4QIeQx
+        924Kf4StFopaiiDqP7DOY+5NIJ1twMZSEIKKioUoWCkzi9nJkmyjHwzsnHPuYYZZ4F9g2QXrd3cZvUtH
+        kLsaAjfG03IvZDfBtUdfkoYbSyC9B8lG2oph3QJXO2Cd71vgIDvrTxfJeq9RaE6A9ckPOwYVOFyJy5Zb
+        I4Eoe2A97+5ZDhOzDyQnIN0JBG3D1FfCTCYkizBynQhF/UCpMhpmMsm1hpGvviQC209s27Ewk4kr4Mp7
+        IrC9AetamMnEXcFduwvrAdhehplMWE/Bdj8RCjqFfP0NkV0Ic30x9TmwfUa5NdlrkDUoyUNmiR+udmC0
+        mLZiIiF/EpILRLLq/333OtxYhpEzkL4OHv7F1GZAegzSW7B++RV/HyFqTqfjf+YHJHCDk2sKO0sAAAAA
+        SUVORK5CYII=
 </value>
   </data>
   <data name="tsb_Refresh_lvwFileList.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
@@ -1423,13 +1634,13 @@
   </data>
   <data name="tsb_EditFile.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAR1JREFUOE+tkz9OwzAYR38LrEiwRVEcR0GgwADKBBNULBwAlSb+0gkxcBY2Fm7A
-        BUpsRxUSOysX4E9vgMQEiluVxjTBA0/6pvi92JYM/Bec8zvO+cOyCcNwxBjbs50G9ULP8zaWzSwk4zje
-        t705DoHuiGPAHMd2DV2BxWGMVbZrcAn4vr/OGDsAVScgeYOhSp0DtZwkySpI9pGpCYS+htAvToFfciaP
-        IdQVsvL5z0Atp2m60pALdQnS7yjKnc7Aj6zPjHyueiB5YWShdudyW2C6bUsWo7fGn9sCURStQSgOIT8g
-        xj2z7YF8xVBu267BfgtBEByC9C1If4HUo7nxvNyyvXbyex+kP6cBPcZAb9pLusmrI5B+QqFO7U+LfAMh
-        qpRFwqZsGgAAAABJRU5ErkJggg==
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEdSURBVDhPrZM/TsMwGEd/C6xIsEVRHEdBoMAAygQTVCwc
+        AJUm/tIJMXAWNhZuwAVKbEcVEjsrF+BPb4DEBIpblcY0wQNP+qb4vdiWDPwXnPM7zvnDsgnDcMQY27Od
+        BvVCz/M2ls0sJOM43re9OQ6B7ohjwBzHdg1dgcVhjFW2a3AJ+L6/zhg7AFUnIHmDoUqdA7WcJMkqSPaR
+        qQmEvobQL06BX3ImjyHUFbLy+c9ALadputKQC3UJ0u8oyp3OwI+sz4x8rnogeWFkoXbncltgum1LFqO3
+        xp/bAlEUrUEoDiE/IMY9s+2BfMVQbtuuwX4LQRAcgvQtSH+B1KO58bzcsr128nsfpD+nAT3GQG/aS7rJ
+        qyOQfkKhTu1Pi3wDIaqURcKmbBoAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="tsb_EditFile.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
@@ -1446,13 +1657,14 @@
   </data>
   <data name="tsb_GetAllFromWeb.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAUFJREFUOE+1kT1LA0EQhl/BytZKUEyhjY22qQyCv0DEIn50AStFb282KqbwX6i3
-        M7nTQss0QiwsJH8giKJ2FhYBbSwsT/bMecmdSiL4wDDs7rxPMQv8C5WrQZAQSB6wIe8gcwslpfRYllJt
-        CPo4D1UN4PA1yv48tD8BzYtQ3j1cPkhH2oQDIN7HpvcKR5og7wa7J+PYCUaS4hkQv2DLjKXTgCvrIGmg
-        HEx1h1KlpAYSH3v+dLfA4Sb0aT4TSJcjqyA5hDLP0GYpEWxLC24wmgl00nlPZg4OPyaPdmHEC98KVuph
-        RmD3Y/f1hfJm4coTNBdR4dyvAmUm4fIRyJwlAgtxAcSNz3+XMKpOQXzn8Bu0nENXh7sFPxEL+mbtIhf1
-        WBCfe8IOF+stFC8LkcB2e+5LEociQVvWNza0XL/7W7hHPgCiJbQHcLoCGQAAAABJRU5ErkJggg==
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFBSURBVDhPtZE9SwNBEIZfwcrWSlBMoY2NtqkMgr9AxCJ+
+        dAErRW9vNiqm8F+otzO500LLNEIsLCR/IIiidhYWAW0sLE/2zHnJnUoi+MAw7O68TzEL/AuVq0GQEEge
+        sCHvIHMLJaX0WJZSbQj6OA9VDeDwNcr+PLQ/Ac2LUN49XD5IR9qEAyDex6b3CkeaIO8Guyfj2AlGkuIZ
+        EL9gy4yl04Ar6yBpoBxMdYdSpaQGEh97/nS3wOEm9Gk+E0iXI6sgOYQyz9BmKRFsSwtuMJoJdNJ5T2YO
+        Dj8mj3ZhxAvfClbqYUZg92P39YXyZuHKEzQXUeHcrwJlJuHyEcicJQILcQHEjc9/lzCqTkF85/AbtJxD
+        V4e7BT8RC/pm7SIX9VgQn3vCDhfrLRQvC5HAdnvuSxKHIkFb1jc2tFy/+1u4Rz4AoiW0B3C6AhkAAAAA
+        SUVORK5CYII=
 </value>
   </data>
   <data name="tsb_GetAllFromWeb.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
@@ -1469,15 +1681,15 @@
   </data>
   <data name="tsb_RemoveGeoData.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAZdJREFUOE+NkTtLA0EURr+k0dbSItkZkkIUEtMpBh+VwVYElVhZKdkZ34IIqewC
-        EiHZWU1WEBsbjQiCNiJY+g+Mgq1aiJAUNsrdPFjGGD0wDMyd83HvDNCCkZHDztig80S7XgPg55zvcc4r
-        jLEdvYj+oWK0P+6cxOLOV20/iHjKfsZYkXN+axjGWCAQ+KgdJ683kbza+COgKYfD4V7aOedZuOLM5bO7
-        6iHUejReKHtG8HHOLcbYXSgU6mOM3TDGHAptGaDRRm5AokcuLMJQEtuWibVIT9BpL3vImuggUc2jagvc
-        ZRd8F7vz/upcomuCZqY3+FVWJhLKxENa4lMJHO2l8JoXmFQSKxQS6Qkct5SpXcvEmUrhUQnMkkSyJZFp
-        hGQXfefKxKbuuiiBe1uiVFiFoZbQTUsPoXGUQFp3XSyJ0Wa79QBvCI2TEahQp7rbpF1I/U22dOcHtkDc
-        EnixJabyyxhQEuu2wHROoEy/o99vCXViC7zZAu8FieGcRHlfYly/15bGOLZASaVwqtf/BYW4vyMQ1Gs6
-        36CXxVfLNTDKAAAAAElFTkSuQmCC
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGXSURBVDhPjZE7SwNBFEa/pNHW0iLZGZJCFBLTKQYflcFW
+        BJVYWSnZGd+CCKnsAhIh2VlNVhAbG40IgjYiWPoPjIKtWoiQFDbK3TxYxhg9MAzMnfNx7wzQgpGRw87Y
+        oPNEu14D4Oec73HOK4yxHb2I/qFitD/unMTizldtP4h4yn7GWJFzfmsYxlggEPioHSevN5G82vgjoCmH
+        w+Fe2jnnWbjizOWzu+oh1Ho0Xih7RvBxzi3G2F0oFOpjjN0wxhwKbRmg0UZuQKJHLizCUBLblom1SE/Q
+        aS97yJroIFHNo2oL3GUXfBe78/7qXKJrgmamN/hVViYSysRDWuJTCRztpfCaF5hUEisUEukJHLeUqV3L
+        xJlK4VEJzJJEsiWRaYRkF33nysSm7roogXtbolRYhaGW0E1LD6FxlEBad10sidFmu/UAbwiNkxGoUKe6
+        26RdSP1NtnTnB7ZA3BJ4sSWm8ssYUBLrtsB0TqBMv6Pfbwl1Ygu82QLvBYnhnER5X2Jcv9eWxji2QEml
+        cKrX/wWFuL8jENRrOt+gl8VXyzUwygAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="tsb_RemoveGeoData.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
@@ -1494,11 +1706,11 @@
   </data>
   <data name="tsb_ImportExportGPX.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAALlJREFUOE9jYBg8IG0TF0PMriaG6J13GGJ31qJL4wcgzbE7jjPE7NrMEL3blCF0
-        FRu6EvwAZDNIM9kA7OxdJujCxIPYXT8ZkjbwogujgPjtCuhCCEDIBSDN0bteMUTvdkCXgoCYnY0EwwCk
-        GachIcc4GaJ3HmOI3bmFIW6HGc5YIGhI7M4Ghthdtxlid/1hiN31HzfeeRVdO3EgdrcNQ+yulwwxO53Q
-        pQiD6O225GsmGAvEALzpgAIAANDzWj7wTDBsAAAAAElFTkSuQmCC
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC5SURBVDhPY2AYPCBtExdDzK4mhuiddxhid9aiS+MHIM2x
+        O44zxOzazBC925QhdBUbuhL8AGQzSDPZAOzsXSbowsSD2F0/GZI28KILo4D47QroQghAyAUgzdG7XjFE
+        73ZAl4KAmJ2NBMMApBmnISHHOBmidx5jiN25hSFuhxnOWCBoSOzOBobYXbcZYnf9YYjd9R833nkVXTtx
+        IHa3DUPsrpcMMTud0KUIg+jttuRrJhgLxAC86YACAADQ81o+8EwwbAAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="tsb_ImportExportGPX.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
@@ -1518,13 +1730,13 @@
   </data>
   <data name="tsb_FeedbackFeatureRequest.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAARFJREFUOE/Fkb1KxFAUhFP5ApIiIdyZyY2iqVwtBbvF5xDEt3A7CzvBl9BKGwtF
-        2Qex1M4fbK2Us+Yu5kjYZsGBgXDPfHPPJVm2bEm6IDldZMt5diZJ07IsVxfZcp6d6X8L2rZdAXBXFMWH
-        GcB5CKHw8GCBpDMrADCKMW6TvLcSDw8WkHw10G41xxh3JL1buPOlwVVV7ZG88XwG4MUX2FmaW0kIYVfS
-        VdM0oz79Ezi1ta3EYJIPdvZrbltcA9jqk50kjfM8/5T0Ze6+x2lO8mQQJjkh+SzpsK7rNTOAAwCPJI99
-        vieS+wCeAGym9ycD2OiK55v8kb3bbvZwMskjSbeem0vSm63swWRJ6/aLPbcUfQPixGpwgoXUvAAAAABJ
-        RU5ErkJggg==
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAERSURBVDhPxZG9SsRQFIRT+QKSIiHcmcmNoqlcLQW7xecQ
+        xLdwOws7wZfQShsLRdkHsdTOH2ytlLPmLuZI2GbBgYFwz3xzzyVZtmxJuiA5XWTLeXYmSdOyLFcX2XKe
+        nel/C9q2XQFwVxTFhxnAeQih8PBggaQzKwAwijFuk7y3Eg8PFpB8NdBuNccYdyS9W7jzpcFVVe2RvPF8
+        BuDFF9hZmltJCGFX0lXTNKM+/RM4tbWtxGCSD3b2a25bXAPY6pOdJI3zPP+U9GXuvsdpTvJkECY5Ifks
+        6bCu6zUzgAMAjySPfb4nkvsAngBspvcnA9joiueb/JG92272cDLJI0m3nptL0put7MFkSev2iz23FH0D
+        4sRqcIKF1LwAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="tsb_FeedbackFeatureRequest.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
@@ -1541,10 +1753,10 @@
   </data>
   <data name="tsb_BugReport.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAHdJREFUOE9jYKAWUFRUXKGoqLgfG1ZQUNgqLy9vgK4HBYAUSklJCWPDUIN2qKio
-        GKLrgwMiDMBvCJEGgL2DrhcM8BmAbhi6XjDAZoCiouJ/LGKjBpBogBkWMeIMAGkGuUBRUdGULAOgilE0
-        EzIAZ2ZCwyvQ9VIEALTgZURNBcjSAAAAAElFTkSuQmCC
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB3SURBVDhPY2CgFlBUVFyhqKi4HxtWUFDYKi8vb4CuBwWA
+        FEpJSQljw1CDdqioqBii64MDIgzAbwiRBoC9g64XDPAZgG4Yul4wwGaAoqLifyxiowaQaIAZFjHiDABp
+        BrlAUVHRlCwDoIpRNBMyAGdmQsMr0PVSBAC04GVETQXI0gAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="tsb_BugReport.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
@@ -1559,9 +1771,9 @@
   <data name="tsb_BugReport.Text" xml:space="preserve">
     <value>tsb_BugReport</value>
   </data>
-  <data name="tsr_FolderControl.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  <metadata name="tsr_FolderControl.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>184, 17</value>
-  </data>
+  </metadata>
   <data name="tsr_FolderControl.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 49</value>
   </data>
@@ -1597,10 +1809,10 @@
   </data>
   <data name="tsb_OneFolderUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAAG9JREFUOE9jYKAVkJeXd1BUVLwOotHlCAKQJjk5uVeKior/QTRJhigqKtrKyMi8
-        VFJScgIZoKSkZAPjo6vFAMiaofz/IJooQ9A1Q8XABoAAQUMUFBRK0f2KbAAIgORB6pDF8AJ0A0gGowYM
-        BgPoAgAJcSjX/ja9fAAAAABJRU5ErkJggg==
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABvSURBVDhPY2CgFZCXl3dQVFS8DqLR5QgCkCY5OblXioqK
+        /0E0SYYoKiraysjIvFRSUnICGaCkpGQD46OrxQDImqH8/yCaKEPQNUPFwAaAAEFDFBQUStH9imwACIDk
+        QeqQxfACdANIBqMGDAYD6AIACXEo1/42vXwAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="tsb_OneFolderUp.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
@@ -1618,36 +1830,36 @@
   <data name="tsb_OneFolderUp.ToolTipText" xml:space="preserve">
     <value>tsb_OneFolderUp</value>
   </data>
-  <data name="ttp_NavigateMapGo.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  <metadata name="ttp_NavigateMapGo.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>329, 17</value>
-  </data>
-  <data name="ttp_loctToFile.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  </metadata>
+  <metadata name="ttp_loctToFile.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>489, 17</value>
-  </data>
-  <data name="ttp_SaveFavourite.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  </metadata>
+  <metadata name="ttp_SaveFavourite.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 54</value>
-  </data>
-  <data name="ttp_LoadFavourite.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  </metadata>
+  <metadata name="ttp_LoadFavourite.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>164, 54</value>
-  </data>
-  <data name="ttp_ManageFavourites.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  </metadata>
+  <metadata name="ttp_ManageFavourites.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>313, 54</value>
-  </data>
-  <data name="ttp_loctToFileDestination.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  </metadata>
+  <metadata name="ttp_loctToFileDestination.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>635, 54</value>
-  </data>
-  <data name="ttp_FeedbackFeatureRequest.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  </metadata>
+  <metadata name="ttp_FeedbackFeatureRequest.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 91</value>
-  </data>
-  <data name="ttp_BugReport.TrayLocation" type="System.Drawing.Point, System.Drawing">
+  </metadata>
+  <metadata name="ttp_BugReport.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>222, 91</value>
-  </data>
-  <data name="$this.Localizable" type="System.Boolean, mscorlib">
+  </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
-  </data>
-  <data name="$this.TrayHeight" type="System.Int32, mscorlib">
+  </metadata>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>123</value>
-  </data>
+  </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>6, 13</value>
   </data>
@@ -4736,10 +4948,10 @@
   <data name="&gt;&gt;tmi_File_PasteGeoData.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;tss_File_1.Name" xml:space="preserve">
-    <value>tss_File_1</value>
+  <data name="&gt;&gt;tss_File_4.Name" xml:space="preserve">
+    <value>tss_File_4</value>
   </data>
-  <data name="&gt;&gt;tss_File_1.Type" xml:space="preserve">
+  <data name="&gt;&gt;tss_File_4.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tmi_File_FlatMode.Name" xml:space="preserve">
@@ -4748,10 +4960,10 @@
   <data name="&gt;&gt;tmi_File_FlatMode.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;tss_File_2.Name" xml:space="preserve">
-    <value>tss_File_2</value>
+  <data name="&gt;&gt;tss_File_5.Name" xml:space="preserve">
+    <value>tss_File_5</value>
   </data>
-  <data name="&gt;&gt;tss_File_2.Type" xml:space="preserve">
+  <data name="&gt;&gt;tss_File_5.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tmi_File_Quit.Name" xml:space="preserve">
@@ -4813,6 +5025,42 @@
   </data>
   <data name="&gt;&gt;tmi_Help_About.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tss_Help_1.Name" xml:space="preserve">
+    <value>tss_Help_1</value>
+  </data>
+  <data name="&gt;&gt;tss_Help_1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tmi_Help_Donate.Name" xml:space="preserve">
+    <value>tmi_Help_Donate</value>
+  </data>
+  <data name="&gt;&gt;tmi_Help_Donate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tmi_Help_Donate_PayPal.Name" xml:space="preserve">
+    <value>tmi_Help_Donate_PayPal</value>
+  </data>
+  <data name="&gt;&gt;tmi_Help_Donate_PayPal.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tmi_Help_Donate_Revolut.Name" xml:space="preserve">
+    <value>tmi_Help_Donate_Revolut</value>
+  </data>
+  <data name="&gt;&gt;tmi_Help_Donate_Revolut.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tmi_Help_Donate_BuyMeCoffee.Name" xml:space="preserve">
+    <value>tmi_Help_Donate_BuyMeCoffee</value>
+  </data>
+  <data name="&gt;&gt;tmi_Help_Donate_BuyMeCoffee.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tss_Help_2.Name" xml:space="preserve">
+    <value>tss_Help_2</value>
+  </data>
+  <data name="&gt;&gt;tss_Help_2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tmi_Help_FeedbackFeatureRequest.Name" xml:space="preserve">
     <value>tmi_Help_FeedbackFeatureRequest</value>
@@ -4940,40 +5188,28 @@
   <data name="&gt;&gt;ttp_BugReport.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;tss_Help_1.Name" xml:space="preserve">
-    <value>tss_Help_1</value>
+  <data name="&gt;&gt;tss_File_1.Name" xml:space="preserve">
+    <value>tss_File_1</value>
   </data>
-  <data name="&gt;&gt;tss_Help_1.Type" xml:space="preserve">
+  <data name="&gt;&gt;tss_File_1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;tss_Help_2.Name" xml:space="preserve">
-    <value>tss_Help_2</value>
+  <data name="&gt;&gt;tss_File_3.Name" xml:space="preserve">
+    <value>tss_File_3</value>
   </data>
-  <data name="&gt;&gt;tss_Help_2.Type" xml:space="preserve">
+  <data name="&gt;&gt;tss_File_3.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;tmi_Help_Donate.Name" xml:space="preserve">
-    <value>tmi_Help_Donate</value>
+  <data name="&gt;&gt;tss_File_2.Name" xml:space="preserve">
+    <value>tss_File_2</value>
   </data>
-  <data name="&gt;&gt;tmi_Help_Donate.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;tss_File_2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;tmi_Help_Donate_PayPal.Name" xml:space="preserve">
-    <value>tmi_Help_Donate_PayPal</value>
+  <data name="&gt;&gt;tmi_File_SaveSelected.Name" xml:space="preserve">
+    <value>tmi_File_SaveSelected</value>
   </data>
-  <data name="&gt;&gt;tmi_Help_Donate_PayPal.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tmi_Help_Donate_Revolut.Name" xml:space="preserve">
-    <value>tmi_Help_Donate_Revolut</value>
-  </data>
-  <data name="&gt;&gt;tmi_Help_Donate_Revolut.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tmi_Help_Donate_BuyMeCoffee.Name" xml:space="preserve">
-    <value>tmi_Help_Donate_BuyMeCoffee</value>
-  </data>
-  <data name="&gt;&gt;tmi_Help_Donate_BuyMeCoffee.Type" xml:space="preserve">
+  <data name="&gt;&gt;tmi_File_SaveSelected.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
