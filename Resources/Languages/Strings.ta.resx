@@ -968,7 +968,7 @@
     <value>உதவி</value>
   </data>
   <data name="tmi_Help_About" xml:space="preserve">
-    <value>பற்றி</value>
+    <value>பற்றி...</value>
   </data>
   <data name="tmi_Help_BugReport" xml:space="preserve">
     <value>பிழை அறிக்கையை (கிதுப்) தாக்கல் செய்யுங்கள்</value>

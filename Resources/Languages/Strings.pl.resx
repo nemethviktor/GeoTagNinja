@@ -655,7 +655,7 @@ Dane zostaną odrzucone, jeśli klikniesz Nie</value>
     <value>Zgłoś błąd (GitHub)</value>
   </data>
   <data name="tmi_Help_About" xml:space="preserve">
-    <value>O programie</value>
+    <value>O programie...</value>
   </data>
   <data name="tmi_Settings_Favourites" xml:space="preserve">
     <value>Zarządzanie ulubionymi</value>

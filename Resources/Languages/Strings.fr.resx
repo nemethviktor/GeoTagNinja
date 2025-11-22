@@ -698,7 +698,7 @@ Enregistrez la clé API lorsque vous y êtes invité. Si vous ne le faites pas �
     <value>Aide</value>
   </data>
   <data name="tmi_Help_About" xml:space="preserve">
-    <value>À propos</value>
+    <value>À propos...</value>
   </data>
   <data name="tmi_Settings" xml:space="preserve">
     <value>Paramètres</value>

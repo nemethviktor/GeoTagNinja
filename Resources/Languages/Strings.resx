@@ -1147,7 +1147,7 @@ Save the API key when prompted. If you don't do it at the time you'll have to ge
     <comment>Help Menu</comment>
   </data>
   <data name="tmi_Help_About" xml:space="preserve">
-    <value>About</value>
+    <value>About...</value>
     <comment>Open About Box</comment>
   </data>
   <data name="tmi_Help_BugReport" xml:space="preserve">

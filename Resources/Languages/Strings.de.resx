@@ -949,7 +949,7 @@ Wenn Sie dies nicht sofort tun, müssen Sie einen neuen Schlüssel generieren.</
     <value>Hilfe</value>
   </data>
   <data name="tmi_Help_About" xml:space="preserve">
-    <value>Über</value>
+    <value>Über...</value>
   </data>
   <data name="tmi_Help_BugReport" xml:space="preserve">
     <value>Fehler melden (GitHub)</value>
