@@ -818,7 +818,7 @@ Jeśli klikniesz "przestań pytać", odpowiedź zostanie uznana za Tak i nie bę
   <data name="gbx_LocationData" xml:space="preserve">
     <value>Dane lokalizacji</value>
   </data>
-  <data name="cmi_removeCachedData" xml:space="preserve">
+  <data name="cmi_RemoveCachedData" xml:space="preserve">
     <value>Usuń dane z pamięci podręcznej</value>
   </data>
   <data name="fbd_StartupFolder" xml:space="preserve">
@@ -1122,5 +1122,11 @@ Zapisz klucz API, gdy zostaniesz o to poproszony. Jeśli tego nie zrobisz od raz
   </data>
   <data name="Generic_GPSHPositioningError" xml:space="preserve">
     <value>błąd pozycjonowania GPS w poziomie</value>
+  </data>
+  <data name="cmi_CopyGeoData" xml:space="preserve">
+    <value>Kopiuj wszystkie geodane</value>
+  </data>
+  <data name="cmi_PasteGeoData" xml:space="preserve">
+    <value>Wklej wszystkie geodane...</value>
   </data>
 </root>

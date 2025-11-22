@@ -153,7 +153,7 @@
   <data name="ckb_UseTimeZone" xml:space="preserve">
     <value>Utilisez ce fuseau horaire :</value>
   </data>
-  <data name="cmi_removeCachedData" xml:space="preserve">
+  <data name="cmi_RemoveCachedData" xml:space="preserve">
     <value>Supprimer le cache</value>
   </data>
   <data name="cmi_ShowHideCols" xml:space="preserve">
@@ -1127,5 +1127,11 @@ Exemple : les données par défaut renvoyées par l'API pour Londres UK sont m�
   </data>
   <data name="Generic_Distance" xml:space="preserve">
     <value>Distance</value>
+  </data>
+  <data name="cmi_CopyGeoData" xml:space="preserve">
+    <value>Copier toutes les données de géolocalisation</value>
+  </data>
+  <data name="cmi_PasteGeoData" xml:space="preserve">
+    <value>Coller toutes les données de géolocalisation</value>
   </data>
 </root>

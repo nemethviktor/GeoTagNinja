@@ -475,6 +475,15 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy All Geodata.
+        /// </summary>
+        public static string cmi_CopyGeoData {
+            get {
+                return ResourceManager.GetString("cmi_CopyGeoData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Coordinates in API.
         /// </summary>
         public static string cmi_OpenCoordsInAPI {
@@ -538,11 +547,20 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Paste All Geodata....
+        /// </summary>
+        public static string cmi_PasteGeoData {
+            get {
+                return ResourceManager.GetString("cmi_PasteGeoData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove Cached Data.
         /// </summary>
-        public static string cmi_removeCachedData {
+        public static string cmi_RemoveCachedData {
             get {
-                return ResourceManager.GetString("cmi_removeCachedData", resourceCulture);
+                return ResourceManager.GetString("cmi_RemoveCachedData", resourceCulture);
             }
         }
         

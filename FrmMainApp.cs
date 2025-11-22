@@ -1604,7 +1604,7 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    ///     Handles the tmi_File_CopyGeoData_Click event -> triggers LwvCopyGeoData
+    ///     Handles the tmi_File_CopyGeoData_Click event -> triggers ListViewCopyGeoData
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
@@ -1615,7 +1615,7 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    ///     Handles the tmi_File_PasteGeoData_Click event -> triggers LwvPasteGeoData
+    ///     Handles the tmi_File_PasteGeoData_Click event -> triggers ListViewPasteGeoData
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
@@ -3317,6 +3317,26 @@ in toponomyOverwrites)
         }
     }
 
+
+    /// <summary>
+    ///     Handles the cmi_CopyGeoData_Click event -> triggers ListViewCopyGeoData
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void cmi_CopyGeoData_Click(object sender, EventArgs e)
+    {
+        FileListViewCopyPaste.ListViewCopyGeoData();
+    }
+
+    /// <summary>
+    ///     Handles the cmi_PasteGeoData_Click event -> triggers ListViewPasteGeoData
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void cmi_PasteGeoData_Click(object sender, EventArgs e)
+    {
+        FileListViewCopyPaste.ListViewPasteGeoData();
+    }
 
     /// <summary>
     ///     Clears cached data for any selected items if there is any to clear

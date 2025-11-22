@@ -222,7 +222,7 @@
   <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
     <value>பநிஇ இல் திறந்த ஒருங்கிணைப்புகள்</value>
   </data>
-  <data name="cmi_removeCachedData" xml:space="preserve">
+  <data name="cmi_RemoveCachedData" xml:space="preserve">
     <value>தற்காலிக சேமிப்பு தரவை அகற்று</value>
   </data>
   <data name="cmi_ShowHideCols" xml:space="preserve">
@@ -1076,5 +1076,11 @@
   </data>
   <data name="ttp_SaveFavourite" xml:space="preserve">
     <value>தற்போது தேர்ந்தெடுக்கப்பட்ட கோப்பின் மெட்டாடேட்டாவை உங்களுக்கு பிடித்தவைகளில் சேமிக்கவும் (அல்லது மேலெழுதவும்)</value>
+  </data>
+  <data name="cmi_CopyGeoData" xml:space="preserve">
+    <value>அனைத்து சியோடேட்டாவையும் நகலெடுக்கவும்</value>
+  </data>
+  <data name="cmi_PasteGeoData" xml:space="preserve">
+    <value>அனைத்து சியோடேட்டாவையும் ஒட்டவும்...</value>
   </data>
 </root>

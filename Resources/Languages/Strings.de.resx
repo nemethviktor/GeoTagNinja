@@ -190,7 +190,7 @@
   <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
     <value>Koordinaten in API öffnen</value>
   </data>
-  <data name="cmi_removeCachedData" xml:space="preserve">
+  <data name="cmi_RemoveCachedData" xml:space="preserve">
     <value>Zwischengespeicherte Daten entfernen</value>
   </data>
   <data name="cmi_ShowHideCols" xml:space="preserve">
@@ -1117,5 +1117,11 @@ Der Code sollte jedoch auch andere Formate verstehen können. Beachten Sie, dass
   </data>
   <data name="mbx_FrmImportExportGpx_ExportCompleted" xml:space="preserve">
     <value>GPX-Dateiexport abgeschlossen</value>
+  </data>
+  <data name="cmi_CopyGeoData" xml:space="preserve">
+    <value>Alle Geodaten kopieren</value>
+  </data>
+  <data name="cmi_PasteGeoData" xml:space="preserve">
+    <value>Alle Geodaten einfügen...</value>
   </data>
 </root>

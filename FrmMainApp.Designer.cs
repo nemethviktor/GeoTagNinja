@@ -44,7 +44,7 @@ namespace GeoTagNinja
             this.clh_FileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cms_FileListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmi_ShowHideCols = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmi_removeCachedData = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmi_RemoveCachedData = new System.Windows.Forms.ToolStripMenuItem();
             this.cmi_OpenCoordsInAPI = new System.Windows.Forms.ToolStripMenuItem();
             this.cmi_OpenCoordsInBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.cmi_OpenCoordsInBrowserBing = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,11 +52,14 @@ namespace GeoTagNinja
             this.cmi_OpenCoordsInBrowserGoogle = new System.Windows.Forms.ToolStripMenuItem();
             this.cmi_OpenCoordsInBrowserWeGoHere = new System.Windows.Forms.ToolStripMenuItem();
             this.cmi_OpenCoordsInBrowserOpenStreetMap = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmi_CopyGeoData = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmi_PasteGeoData = new System.Windows.Forms.ToolStripMenuItem();
             this.pbx_imagePreview = new GeoTagNinja.View.ImagePreview();
             this.flp_ProcessingInfo = new System.Windows.Forms.FlowLayoutPanel();
             this.lbl_ParseProgress = new System.Windows.Forms.Label();
             this.tcr_Main = new System.Windows.Forms.TabControl();
             this.tpg_Map = new System.Windows.Forms.TabPage();
+            this.wbv_MapArea = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.flp_GeoCoords = new System.Windows.Forms.FlowLayoutPanel();
             this.lbl_lat = new System.Windows.Forms.Label();
             this.nud_lat = new System.Windows.Forms.NumericUpDown();
@@ -70,7 +73,6 @@ namespace GeoTagNinja
             this.btn_SaveFavourite = new System.Windows.Forms.Button();
             this.btn_LoadFavourite = new System.Windows.Forms.Button();
             this.btn_ManageFavourites = new System.Windows.Forms.Button();
-            this.wbv_MapArea = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.tpg_Exif = new System.Windows.Forms.TabPage();
             this.lvw_ExifData = new System.Windows.Forms.ListView();
             this.clh_ExifTag = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -130,10 +132,10 @@ namespace GeoTagNinja
             this.flp_ProcessingInfo.SuspendLayout();
             this.tcr_Main.SuspendLayout();
             this.tpg_Map.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.wbv_MapArea)).BeginInit();
             this.flp_GeoCoords.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nud_lat)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_lng)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.wbv_MapArea)).BeginInit();
             this.tpg_Exif.SuspendLayout();
             this.mns_MenuStrip.SuspendLayout();
             this.tsr_MainAppToolStrip.SuspendLayout();
@@ -203,9 +205,11 @@ namespace GeoTagNinja
             this.cms_FileListView.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cms_FileListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmi_ShowHideCols,
-            this.cmi_removeCachedData,
+            this.cmi_RemoveCachedData,
             this.cmi_OpenCoordsInAPI,
-            this.cmi_OpenCoordsInBrowser});
+            this.cmi_OpenCoordsInBrowser,
+            this.cmi_CopyGeoData,
+            this.cmi_PasteGeoData});
             this.cms_FileListView.Name = "cms_FileListView";
             resources.ApplyResources(this.cms_FileListView, "cms_FileListView");
             // 
@@ -216,11 +220,11 @@ namespace GeoTagNinja
             resources.ApplyResources(this.cmi_ShowHideCols, "cmi_ShowHideCols");
             this.cmi_ShowHideCols.Click += new System.EventHandler(this.selectColumnsToolStripMenuItem_Click);
             // 
-            // cmi_removeCachedData
+            // cmi_RemoveCachedData
             // 
-            this.cmi_removeCachedData.Name = "cmi_removeCachedData";
-            resources.ApplyResources(this.cmi_removeCachedData, "cmi_removeCachedData");
-            this.cmi_removeCachedData.Click += new System.EventHandler(this.cmi_removeCachedData_Click);
+            this.cmi_RemoveCachedData.Name = "cmi_RemoveCachedData";
+            resources.ApplyResources(this.cmi_RemoveCachedData, "cmi_RemoveCachedData");
+            this.cmi_RemoveCachedData.Click += new System.EventHandler(this.cmi_removeCachedData_Click);
             // 
             // cmi_OpenCoordsInAPI
             // 
@@ -269,6 +273,18 @@ namespace GeoTagNinja
             resources.ApplyResources(this.cmi_OpenCoordsInBrowserOpenStreetMap, "cmi_OpenCoordsInBrowserOpenStreetMap");
             this.cmi_OpenCoordsInBrowserOpenStreetMap.Click += new System.EventHandler(this.cmi_OpenCoordsInBrowserOpenStreetMap_Click);
             // 
+            // cmi_CopyGeoData
+            // 
+            this.cmi_CopyGeoData.Name = "cmi_CopyGeoData";
+            resources.ApplyResources(this.cmi_CopyGeoData, "cmi_CopyGeoData");
+            this.cmi_CopyGeoData.Click += new System.EventHandler(this.cmi_CopyGeoData_Click);
+            // 
+            // cmi_PasteGeoData
+            // 
+            this.cmi_PasteGeoData.Name = "cmi_PasteGeoData";
+            resources.ApplyResources(this.cmi_PasteGeoData, "cmi_PasteGeoData");
+            this.cmi_PasteGeoData.Click += new System.EventHandler(this.cmi_PasteGeoData_Click);
+            // 
             // pbx_imagePreview
             // 
             this.pbx_imagePreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -305,6 +321,16 @@ namespace GeoTagNinja
             resources.ApplyResources(this.tpg_Map, "tpg_Map");
             this.tpg_Map.Name = "tpg_Map";
             this.tpg_Map.UseVisualStyleBackColor = true;
+            // 
+            // wbv_MapArea
+            // 
+            this.wbv_MapArea.AllowExternalDrop = true;
+            this.wbv_MapArea.CreationProperties = null;
+            this.wbv_MapArea.DefaultBackgroundColor = System.Drawing.Color.White;
+            resources.ApplyResources(this.wbv_MapArea, "wbv_MapArea");
+            this.wbv_MapArea.Name = "wbv_MapArea";
+            this.wbv_MapArea.ZoomFactor = 1D;
+            this.wbv_MapArea.Click += new System.EventHandler(this.wbv_MapArea_Click);
             // 
             // flp_GeoCoords
             // 
@@ -419,16 +445,6 @@ namespace GeoTagNinja
             this.btn_ManageFavourites.Name = "btn_ManageFavourites";
             this.btn_ManageFavourites.UseVisualStyleBackColor = true;
             this.btn_ManageFavourites.Click += new System.EventHandler(this.btn_ManageFavourites_Click);
-            // 
-            // wbv_MapArea
-            // 
-            this.wbv_MapArea.AllowExternalDrop = true;
-            this.wbv_MapArea.CreationProperties = null;
-            this.wbv_MapArea.DefaultBackgroundColor = System.Drawing.Color.White;
-            resources.ApplyResources(this.wbv_MapArea, "wbv_MapArea");
-            this.wbv_MapArea.Name = "wbv_MapArea";
-            this.wbv_MapArea.ZoomFactor = 1D;
-            this.wbv_MapArea.Click += new System.EventHandler(this.wbv_MapArea_Click);
             // 
             // tpg_Exif
             // 
@@ -745,11 +761,11 @@ namespace GeoTagNinja
             this.flp_ProcessingInfo.PerformLayout();
             this.tcr_Main.ResumeLayout(false);
             this.tpg_Map.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.wbv_MapArea)).EndInit();
             this.flp_GeoCoords.ResumeLayout(false);
             this.flp_GeoCoords.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nud_lat)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_lng)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.wbv_MapArea)).EndInit();
             this.tpg_Exif.ResumeLayout(false);
             this.mns_MenuStrip.ResumeLayout(false);
             this.mns_MenuStrip.PerformLayout();
@@ -803,7 +819,7 @@ namespace GeoTagNinja
         private ToolStripMenuItem cmi_ShowHideCols;
         private ToolTip ttp_SaveFavourite;
         private ToolTip ttp_LoadFavourite;
-        private ToolStripMenuItem cmi_removeCachedData;
+        private ToolStripMenuItem cmi_RemoveCachedData;
         private ToolStripMenuItem tmi_Settings_Favourites;
         private ToolTip ttp_ManageFavourites;
         private ToolStripMenuItem cmi_OpenCoordsInAPI;
@@ -842,6 +858,8 @@ namespace GeoTagNinja
         private ToolStripMenuItem cmi_OpenCoordsInBrowserWeGoHere;
         private ToolStripMenuItem cmi_OpenCoordsInBrowserOpenStreetMap;
         private ToolStripMenuItem tmi_File_ImportFavouritesFromGeoSetter;
+        private ToolStripMenuItem cmi_CopyGeoData;
+        private ToolStripMenuItem cmi_PasteGeoData;
     }
 }
 

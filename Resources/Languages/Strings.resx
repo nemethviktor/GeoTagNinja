@@ -293,7 +293,7 @@
     <value>Open Coordinates in API</value>
     <comment>Open the file's GPS coordinates in a browser window (specifically in GeoNames API)</comment>
   </data>
-  <data name="cmi_removeCachedData" xml:space="preserve">
+  <data name="cmi_RemoveCachedData" xml:space="preserve">
     <value>Remove Cached Data</value>
     <comment>Remove all cached data for a selected file</comment>
   </data>
@@ -1353,5 +1353,13 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
   </data>
   <data name="Generic_GPSHPositioningError" xml:space="preserve">
     <value>GPS Horizontal Positioning Error</value>
+  </data>
+  <data name="cmi_PasteGeoData" xml:space="preserve">
+    <value>Paste All Geodata...</value>
+    <comment>Button to paste all geodata from a file (from the clipboard)</comment>
+  </data>
+  <data name="cmi_CopyGeoData" xml:space="preserve">
+    <value>Copy All Geodata</value>
+    <comment>Button to copy all geodata from a file (to the clipboard)</comment>
   </data>
 </root>
