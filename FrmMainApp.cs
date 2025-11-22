@@ -634,10 +634,13 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    ///     Handles the clicking on Go button
+    /// Handles the click event for the Navigate Map Go button, initiating navigation to the location specified in the
+    /// input field.
     /// </summary>
-    /// <param name="sender">Unused</param>
-    /// <param name="e">Unused</param>
+    /// <remarks>Clears any existing track paths and map markers before adding a new marker based on the
+    /// current input. This ensures navigation starts with a fresh state each time the button is clicked.</remarks>
+    /// <param name="sender">The source of the event, typically the Navigate Map Go button.</param>
+    /// <param name="e">An EventArgs instance containing event data.</param>
     private void btn_NavigateMapGo_Click(object sender,
                                          EventArgs e)
     {

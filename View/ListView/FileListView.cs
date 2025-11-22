@@ -756,10 +756,12 @@ public partial class FileListView : System.Windows.Forms.ListView
     #region Selection 
 
     /// <summary>
-    /// Selects all items in the list that represent files.
+    /// Selects all items in the list that represent files and triggers navigation to the selected items.
     /// </summary>
-    /// <remarks>Only items associated with a file are selected; items representing directories or other types
-    /// remain unselected. This method does not affect the current selection state of non-file items.</remarks>
+    /// <remarks>This method marks all file items as selected within the list view and initiates navigation
+    /// actions in the associated application forms. Only items corresponding to files are affected; directory items
+    /// remain unselected. Calling this method may result in changes to the current navigation state of the
+    /// application.</remarks>
     public void SelectAllItems()
     {
         foreach (ListViewItem lvi in Items)
@@ -769,14 +771,21 @@ public partial class FileListView : System.Windows.Forms.ListView
                 lvi.Selected = true;
             }
         }
+
+        FileListViewMapNavigation.ListViewItemClickNavigate();
+        FrmMainApp _frmMainApp =
+            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        _frmMainApp.Request_Map_NavigateGo();
+
     }
 
     /// <summary>
-    /// Clears the selection state of all items representing files in the list view.
+    /// Clears the selection of all file items in the list view and updates navigation to reflect the change.
     /// </summary>
-    /// <remarks>This method deselects only items associated with files, leaving the selection state of other
-    /// item types unchanged. Use this method to ensure that no file items are selected, for example, before performing
-    /// operations that require an empty file selection.</remarks>
+    /// <remarks>This method deselects only items representing files, leaving other item types unaffected.
+    /// After clearing the selection, it triggers navigation updates to ensure the user interface reflects the current
+    /// selection state. This method is typically used to reset the selection before performing navigation or other
+    /// actions that require no files to be selected.</remarks>
     public void SelectNoItems()
     {
         foreach (ListViewItem lvi in Items)
@@ -786,15 +795,20 @@ public partial class FileListView : System.Windows.Forms.ListView
                 lvi.Selected = false;
             }
         }
+
+        FileListViewMapNavigation.ListViewItemClickNavigate();
+        FrmMainApp _frmMainApp =
+            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        _frmMainApp.Request_Map_NavigateGo();
     }
 
     /// <summary>
-    /// Toggles the selection state of all file items in the list, selecting unselected files and deselecting selected
-    /// files.
+    /// Selects all file items in the list view that are currently unselected and deselects those that are selected,
+    /// effectively inverting the selection state of file items.
     /// </summary>
-    /// <remarks>Only items representing files are affected; items representing other types, such as folders, remain
-    /// unchanged. This method is useful for quickly inverting the selection of files when performing batch
-    /// operations.</remarks>
+    /// <remarks>This method only affects items representing files; directory items remain unchanged. After
+    /// inverting the selection, the method triggers navigation updates to reflect the new selection state in related UI
+    /// components.</remarks>
     public void SelectInverseItems()
     {
         foreach (ListViewItem lvi in Items)
@@ -804,6 +818,11 @@ public partial class FileListView : System.Windows.Forms.ListView
                 lvi.Selected = !lvi.Selected;
             }
         }
+
+        FileListViewMapNavigation.ListViewItemClickNavigate();
+        FrmMainApp _frmMainApp =
+            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        _frmMainApp.Request_Map_NavigateGo();
     }
 
     #endregion
