@@ -1129,4 +1129,40 @@ Zapisz klucz API, gdy zostaniesz o to poproszony. Jeśli tego nie zrobisz od raz
   <data name="cmi_PasteGeoData" xml:space="preserve">
     <value>Wklej wszystkie geodane...</value>
   </data>
+  <data name="tmi_Edit_SelectAll" xml:space="preserve">
+    <value>Zaznacz wszystko</value>
+  </data>
+  <data name="cmi_SelectAll" xml:space="preserve">
+    <value>Zaznacz wszystko</value>
+  </data>
+  <data name="tmi_Edit_SelectNone" xml:space="preserve">
+    <value>Brak zaznaczenia</value>
+  </data>
+  <data name="cmi_SelectNone" xml:space="preserve">
+    <value>Brak zaznaczenia</value>
+  </data>
+  <data name="tmi_Edit_InvertSelection" xml:space="preserve">
+    <value>Odwróć zaznaczenie</value>
+  </data>
+  <data name="cmi_InvertSelection" xml:space="preserve">
+    <value>Odwróć zaznaczenie</value>
+  </data>
+  <data name="tmi_Edit" xml:space="preserve">
+    <value>Edycja</value>
+  </data>
+  <data name="tmi_Help_Donate" xml:space="preserve">
+    <value>Darowizna</value>
+  </data>
+  <data name="tmi_Help_Donate_PayPal" xml:space="preserve">
+    <value>PayPal...</value>
+  </data>
+  <data name="tmi_Help_Donate_Revolut" xml:space="preserve">
+    <value>Revolut (QR)...</value>
+  </data>
+  <data name="tmi_Help_Donate_BuyMeCoffee" xml:space="preserve">
+    <value>Postaw mi kawę...</value>
+  </data>
+  <data name="tmi_File_SaveSelected" xml:space="preserve">
+    <value>Zapisz zaznaczone</value>
+  </data>
 </root>
