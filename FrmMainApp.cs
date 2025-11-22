@@ -3072,6 +3072,26 @@ in toponomyOverwrites)
             "https://github.com/nemethviktor/GeoTagNinja/issues/new?template=bug_report.md");
     }
 
+    private void tmi_Help_Donate_BuyMeCoffee_Click(object sender, EventArgs e)
+    {
+        _ = Process.Start(
+           fileName:
+           "https://buymeacoffee.com/nemethv");
+    }
+
+    private void tmi_Help_Donate_Revolut_Click(object sender, EventArgs e)
+    {
+        RevolutQRBox revolutQRBox = new();
+        _ = revolutQRBox.ShowDialog();
+    }
+
+    private void tmi_Help_Donate_PayPal_Click(object sender, EventArgs e)
+    {
+        _ = Process.Start(
+            fileName:
+            "https://www.paypal.com/donate/?hosted_button_id=R5GSBXW8A5NNN");
+    }
+
     /// <summary>
     ///     Updates the Text of any Label from outside the thread.
     /// </summary>
@@ -3748,6 +3768,7 @@ in toponomyOverwrites)
         cbx_Favourites.AutoCompleteSource = AutoCompleteSource.CustomSource;
         cbx_Favourites.AutoCompleteCustomSource = autoCompleteCustomSource;
     }
+
 }
 
 #endregion

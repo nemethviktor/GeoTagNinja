@@ -128,6 +128,12 @@ namespace GeoTagNinja
             this.ttp_loctToFileDestination = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_FeedbackFeatureRequest = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_BugReport = new System.Windows.Forms.ToolTip(this.components);
+            this.tss_Help_1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tss_Help_2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tmi_Help_Donate = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Help_Donate_PayPal = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Help_Donate_Revolut = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Help_Donate_BuyMeCoffee = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
@@ -674,6 +680,9 @@ namespace GeoTagNinja
             // 
             this.tmi_Help.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tmi_Help_About,
+            this.tss_Help_1,
+            this.tmi_Help_Donate,
+            this.tss_Help_2,
             this.tmi_Help_FeedbackFeatureRequest,
             this.tmi_Help_BugReport});
             this.tmi_Help.Name = "tmi_Help";
@@ -801,6 +810,43 @@ namespace GeoTagNinja
             resources.ApplyResources(this.tsb_OneFolderUp, "tsb_OneFolderUp");
             this.tsb_OneFolderUp.Name = "tsb_OneFolderUp";
             this.tsb_OneFolderUp.Click += new System.EventHandler(this.btn_OneFolderUp_Click);
+            // 
+            // tss_Help_1
+            // 
+            this.tss_Help_1.Name = "tss_Help_1";
+            resources.ApplyResources(this.tss_Help_1, "tss_Help_1");
+            // 
+            // tss_Help_2
+            // 
+            this.tss_Help_2.Name = "tss_Help_2";
+            resources.ApplyResources(this.tss_Help_2, "tss_Help_2");
+            // 
+            // tmi_Help_Donate
+            // 
+            this.tmi_Help_Donate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tmi_Help_Donate_PayPal,
+            this.tmi_Help_Donate_Revolut,
+            this.tmi_Help_Donate_BuyMeCoffee});
+            this.tmi_Help_Donate.Name = "tmi_Help_Donate";
+            resources.ApplyResources(this.tmi_Help_Donate, "tmi_Help_Donate");
+            // 
+            // tmi_Help_Donate_PayPal
+            // 
+            this.tmi_Help_Donate_PayPal.Name = "tmi_Help_Donate_PayPal";
+            resources.ApplyResources(this.tmi_Help_Donate_PayPal, "tmi_Help_Donate_PayPal");
+            this.tmi_Help_Donate_PayPal.Click += new System.EventHandler(this.tmi_Help_Donate_PayPal_Click);
+            // 
+            // tmi_Help_Donate_Revolut
+            // 
+            this.tmi_Help_Donate_Revolut.Name = "tmi_Help_Donate_Revolut";
+            resources.ApplyResources(this.tmi_Help_Donate_Revolut, "tmi_Help_Donate_Revolut");
+            this.tmi_Help_Donate_Revolut.Click += new System.EventHandler(this.tmi_Help_Donate_Revolut_Click);
+            // 
+            // tmi_Help_Donate_BuyMeCoffee
+            // 
+            this.tmi_Help_Donate_BuyMeCoffee.Name = "tmi_Help_Donate_BuyMeCoffee";
+            resources.ApplyResources(this.tmi_Help_Donate_BuyMeCoffee, "tmi_Help_Donate_BuyMeCoffee");
+            this.tmi_Help_Donate_BuyMeCoffee.Click += new System.EventHandler(this.tmi_Help_Donate_BuyMeCoffee_Click);
             // 
             // FrmMainApp
             // 
@@ -939,6 +985,12 @@ namespace GeoTagNinja
         private ToolStripMenuItem tmi_Edit_SelectAll;
         private ToolStripMenuItem tmi_Edit_SelectNone;
         private ToolStripMenuItem tmi_Edit_InvertSelection;
+        private ToolStripSeparator tss_Help_1;
+        private ToolStripMenuItem tmi_Help_Donate;
+        private ToolStripMenuItem tmi_Help_Donate_PayPal;
+        private ToolStripMenuItem tmi_Help_Donate_Revolut;
+        private ToolStripMenuItem tmi_Help_Donate_BuyMeCoffee;
+        private ToolStripSeparator tss_Help_2;
     }
 }
 

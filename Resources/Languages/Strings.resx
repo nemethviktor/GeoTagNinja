@@ -1390,4 +1390,20 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>Edit</value>
     <comment>The "Edit" menu item</comment>
   </data>
+  <data name="tmi_Help_Donate" xml:space="preserve">
+    <value>Donate</value>
+    <comment>"Donate" button</comment>
+  </data>
+  <data name="tmi_Help_Donate_PayPal" xml:space="preserve">
+    <value>PayPal...</value>
+    <comment>This is under "donate"</comment>
+  </data>
+  <data name="tmi_Help_Donate_Revolut" xml:space="preserve">
+    <value>Revolut (QR)...</value>
+    <comment>This is under "donate"</comment>
+  </data>
+  <data name="tmi_Help_Donate_BuyMeCoffee" xml:space="preserve">
+    <value>BuyMeACoffee...</value>
+    <comment>This is under "donate"</comment>
+  </data>
 </root>
