@@ -1,6 +1,5 @@
 ﻿using GeoTagNinja.Model;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Authenticators;
 using System;
@@ -13,6 +12,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static GeoTagNinja.GTNReleaseAPIResponse;
 
 namespace GeoTagNinja.Helpers;
 
@@ -85,44 +85,28 @@ internal static class HelperAPIVersionCheckers
 
         // ReSharper disable once InconsistentNaming
         RestRequest request_GTNVersionQuery =
-            new(resource: "repos/nemethviktor/GeoTagNinja/releases");
+            new(resource: "repos/nemethviktor/GeoTagNinja/releases/latest");
 
         // ReSharper disable once InconsistentNaming
-        RestResponse response_GTNVersionQuery =
-            client.ExecuteGet(request: request_GTNVersionQuery);
+        RestResponse response_GTNVersionQuery = client.ExecuteGet(request: request_GTNVersionQuery);
 
         // ReSharper disable once InconsistentNaming
         int lastGTNBuildOnline = 0;
         if (response_GTNVersionQuery.StatusCode.ToString() == "OK")
         {
             HelperVariables.OperationAPIReturnedOKResponse = true;
-            JArray data =
-                (JArray)JsonConvert.DeserializeObject(
-                    value: response_GTNVersionQuery.Content);
-            GTNReleaseAPIResponse[] gtnReleasesApiResponse =
-                GTNReleaseAPIResponse.FromJson(json: data.ToString());
+            Root gtnReleasesApiResponse = JsonConvert.DeserializeObject<Root>(response_GTNVersionQuery.Content);
 
             // ReSharper disable once InconsistentNaming
             int lastGTNBuildInt = 0;
             Regex rgx = new(pattern: "[^0-9]");
 
-            if (HelperVariables.UserSettingUpdatePreReleaseGTN)
+            if (
+                (!HelperVariables.UserSettingUpdatePreReleaseGTN && !gtnReleasesApiResponse.prerelease) ||
+                HelperVariables.UserSettingUpdatePreReleaseGTN)
             {
-                bool _ = int.TryParse(s: rgx.Replace(input: gtnReleasesApiResponse[0].attribute, replacement: ""),
+                bool _ = int.TryParse(s: rgx.Replace(input: gtnReleasesApiResponse.tag_name, replacement: ""),
                     result: out lastGTNBuildInt);
-            }
-            else
-            {
-                for (int i = 0; i < gtnReleasesApiResponse.Length; i++)
-                {
-                    if ((bool)!gtnReleasesApiResponse[i].Prerelease)
-                    {
-                        bool _ = int.TryParse(
-                            s: rgx.Replace(input: gtnReleasesApiResponse[i].attribute, replacement: ""),
-                            result: out lastGTNBuildInt);
-                        ;
-                    }
-                }
             }
 
             // Add some logic to return 0 for build number if there's no result. While negative 73k isn't likely to be a problem I don't feel like experimenting.
@@ -184,8 +168,17 @@ internal static class HelperAPIVersionCheckers
         {
             lastCheckUnixTime = long.Parse(s: strLastOnlineVersionCheck);
         }
+        DateTimeOffset dateTimelastCheckUnixTime = DateTimeOffset.FromUnixTimeSeconds(lastCheckUnixTime);
+        DateTimeOffset dateTimenowUnixTime = DateTimeOffset.FromUnixTimeSeconds(nowUnixTime);
 
-        FrmMainApp.Log.Trace(message: $"nowUnixTime > lastCheckUnixTime:{nowUnixTime - lastCheckUnixTime}");
+        FrmMainApp.Log.Info(message: $"strLastOnlineVersionCheck: {strLastOnlineVersionCheck}");
+
+        FrmMainApp.Log.Info(message: $"dateTimelastCheckUnixTime: {dateTimelastCheckUnixTime.DateTime}");
+        FrmMainApp.Log.Info(message: $"dateTimenowUnixTime: {dateTimenowUnixTime.DateTime}");
+
+        FrmMainApp.Log.Info(message: $"nowUnixTime: {nowUnixTime}");
+        FrmMainApp.Log.Info(message: $"nowUnixTime > lastCheckUnixTime: {nowUnixTime - lastCheckUnixTime}");
+
         int checkUpdateVal = 604800; //604800 is a week's worth of seconds
 #if DEBUG
         //checkUpdateVal = 86400; // 86400 is a day's worth of seconds
@@ -204,15 +197,14 @@ internal static class HelperAPIVersionCheckers
         if (nowUnixTime > lastCheckUnixTime + checkUpdateVal ||
             strLastOnlineVersionCheck == null)
         {
-            FrmMainApp.Log.Trace(message: "Checking for new versions.");
+            FrmMainApp.Log.Info(message: "Checking for new ExifTool versions.");
             // get the newest exiftool version -- do this here at the end so it doesn't hold up the process
             /////////////////
 
             int CPUBitness = Environment.Is64BitOperatingSystem ? 64 : 32;
-            HelperVariables.CurrentExifToolVersionCloud =
-                API_ExifGetExifToolVersionFromWeb();
+            HelperVariables.CurrentExifToolVersionCloud = API_ExifGetExifToolVersionFromWeb();
 
-            FrmMainApp.Log.Trace(message: $"currentExifToolVersionLocal: {HelperVariables
+            FrmMainApp.Log.Info(message: $"currentExifToolVersionLocal: {HelperVariables
                .CurrentExifToolVersionLocal} / newestExifToolVersionOnline: {HelperVariables.CurrentExifToolVersionCloud}");
 
             // if cloud version is newer and there isn't an identically named file in Roaming then download
@@ -222,7 +214,7 @@ internal static class HelperAPIVersionCheckers
                     path2:
                     $"exiftool-{HelperVariables.CurrentExifToolVersionCloud}_{CPUBitness}.zip")))
             {
-                FrmMainApp.Log.Trace(
+                FrmMainApp.Log.Info(
                     message:
                     $"Downloading newest exifTool version from the cloud. {HelperVariables.CurrentExifToolVersionCloud.ToString(
                         provider: CultureInfo
@@ -234,6 +226,8 @@ internal static class HelperAPIVersionCheckers
                         provider: CultureInfo.InvariantCulture));
             }
 
+
+            FrmMainApp.Log.Info(message: "Checking for new GTN versions.");
             // Done w ExifTool and move on to checking GTN stuff
             // current version may be something like "0.5.8251.40825"
             // Assembly.GetExecutingAssembly().GetName().Version.Build is just "8251"
@@ -266,6 +260,8 @@ internal static class HelperAPIVersionCheckers
                 // ignore
             }
 
+            FrmMainApp.Log.Info($"Remotebuild is {newestOnlineGTNVersion}");
+
             CreateJsonForUpdate(localMajor: currentGTNVersionBuildMajor,
                 localMinor: currentGTNVersionBuildMinor,
                 remoteBuild: newestOnlineGTNVersion.ToString(
@@ -286,7 +282,7 @@ internal static class HelperAPIVersionCheckers
         }
         else
         {
-            FrmMainApp.Log.Trace(message: "Not checking for new versions.");
+            FrmMainApp.Log.Info(message: "Not checking for new versions.");
         }
     }
 
@@ -323,6 +319,7 @@ internal static class HelperAPIVersionCheckers
                                             string localMinor,
                                             string remoteBuild)
     {
+
         // Create JSON object
         var jsonObject = new
         {

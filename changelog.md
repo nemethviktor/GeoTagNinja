@@ -6,7 +6,7 @@
 	- Added a `Donate` dropdown in case anybody feels like...
 	- Added a `Save Selected` item to the `File` menu
 - BUGS & FIXES:
-	- TBA
+	- Fixed Auto-Updater possibly misbehaving
 
 **Build 9456 [20251121]**
 - NEW & UPDATED:

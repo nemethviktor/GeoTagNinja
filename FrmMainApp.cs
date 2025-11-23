@@ -353,7 +353,12 @@ public partial class FrmMainApp : Form
         HelperGenericAppStartup.AppStartupGetToponomyRadiusAndMaxRows();
         Request_Map_NavigateGo();
 
+        while (await CheckFormIsOpen("FrmPleaseWaitbox"))
+        {
+            await Task.Delay(500);
+        }
         await HelperAPIVersionCheckers.CheckForNewVersions();
+
         LaunchAutoUpdater();
         Log.Info(message: "OnLoad: Done.");
     }
@@ -390,16 +395,43 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    ///     This fires up the autoupdater
+    /// Determines whether a form with the specified name is currently open in the application.
     /// </summary>
+    /// <remarks>This method searches all open forms in the application by their Name property. The comparison
+    /// is case-sensitive. If multiple forms share the same name, the method returns <see langword="true"/> as soon as a
+    /// match is found.</remarks>
+    /// <param name="formName">The name of the form to check for. This value is compared to the Name property of each open form. Cannot be
+    /// null.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if a form with the
+    /// specified name is open; otherwise, <see langword="false"/>.</returns>
+    private async Task<bool> CheckFormIsOpen(string formName)
+    {
+        FormCollection fc = Application.OpenForms;
+
+        foreach (Form frm in fc)
+        {
+            //iterate through
+            if (frm.Name == formName)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Initializes and starts the application's automatic update process using the configured update information file.
+    /// </summary>
+    /// <remarks>This method sets up event handlers for update parsing and update checking, then launches the
+    /// auto-updater with the update information located in the user's data folder. It should be called during
+    /// application startup to enable automatic update functionality.</remarks>
     private static void LaunchAutoUpdater()
     {
         HelperNonStatic updateHelper = new();
 #if DEBUG
-        //AutoUpdater.InstalledVersion = new Version(version: "1.2"); // here for testing only.
+        // AutoUpdater.InstalledVersion = new Version(version: "1.17.8646"); // here for testing only.
 #endif
-        AutoUpdater.Synchronous =
-            true; // needs to be true otherwise the single pipe instance crashes. (well, I think _that_ crashes, something does.)
+        AutoUpdater.Synchronous = true;
         AutoUpdater.ParseUpdateInfoEvent += updateHelper.AutoUpdaterOnParseUpdateInfoEvent;
         AutoUpdater.CheckForUpdateEvent += updateHelper.AutoUpdaterOnCheckForUpdateEvent;
 

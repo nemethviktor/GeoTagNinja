@@ -31,9 +31,20 @@ internal static class HelperVariables
     #endregion
 
     #region bools
-
+    
+    /// <summary>
+    /// Whether to use Zero values where coords are missing
+    /// </summary>
     internal static bool UserSettingResetMapToZeroOnMissingValue;
+
+    /// <summary>
+    /// Whether to use dark mode
+    /// </summary>
     internal static bool UserSettingUseDarkMode;
+    
+    /// <summary>
+    /// Whether to check for pre-release GTN versions
+    /// </summary>
     internal static bool UserSettingUpdatePreReleaseGTN;
 
     // ReSharper disable once FieldCanBeMadeReadOnly.Global
