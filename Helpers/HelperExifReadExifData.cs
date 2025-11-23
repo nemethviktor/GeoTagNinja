@@ -96,7 +96,6 @@ internal static class HelperExifReadExifData
             }
         };
 
-
         foreach (KeyValuePair<string, string> s in columnsToAddList)
         {
             _ = dtReturn.Columns.Add(columnName: s.Value);
@@ -810,7 +809,6 @@ internal static class HelperExifReadExifData
                         drApiToponomyRow[columnName: columnsToAddList[key: "GPSAltitude"]] = Altitude;
                         drApiToponomyRow[columnName: columnsToAddList[key: "timezoneId"]] = timezoneId;
 
-
                         dtReturn.Rows.Add(row: drApiToponomyRow);
 
                         // write back the new stuff to sql
@@ -1052,7 +1050,6 @@ internal static class HelperExifReadExifData
 
         return dtReturn;
     }
-
 
     /// <summary>
     ///     Checks and replaces blank toponomy values as required

@@ -136,7 +136,6 @@ internal static class HelperExifWriteSaveToFile
                         exifArgsForOriginalFile: ref exifArgsForOriginalFile,
                         exifArgsForSidecar: ref exifArgsForSidecar);
 
-
                     UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText: Path.Combine(
                             path1: folderNameToWrite, path2:
                             $"{Path.GetFileNameWithoutExtension(path: Path.Combine(path1: folderNameToWrite, path2: fileNameWithoutPath))}.xmp"),

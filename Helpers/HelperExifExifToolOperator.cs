@@ -203,7 +203,6 @@ internal static class HelperExifExifToolOperator
                                     dataData.IndexOf(value: s, comparisonType: StringComparison.OrdinalIgnoreCase) >=
                                     0);
 
-
                                 if (!hideWarning &&
                                     !data.Data.Contains(
                                         value: fileNameWithoutPath.Substring(
@@ -347,7 +346,7 @@ internal static class HelperExifExifToolOperator
     /// </summary>
     /// <param name="dirElemToDrop">The DirectoryElement to be removed from the DE3 collection.</param>
     /// <param name="frmMainAppInstance">An instance of the FrmMainApp form.</param>
-    // ReSharper disable once InconsistentNaming
+    
     private static void RemoveDirElementFromDe3AndCopyDataToOriginal(
         DirectoryElement dirElemToDrop,
         FrmMainApp frmMainAppInstance)

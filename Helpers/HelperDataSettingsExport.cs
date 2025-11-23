@@ -43,7 +43,7 @@ internal static class HelperDataSettingsExport
             buttons: MessageBoxButtons.OK);
         return;
 
-        // ReSharper disable once InconsistentNaming
+        
         static void KeepSQLiteTables(List<string> tablesToKeep,
                                      string exportFilePath)
         {

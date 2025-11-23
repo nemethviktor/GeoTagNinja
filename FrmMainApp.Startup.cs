@@ -26,7 +26,6 @@ public partial class FrmMainApp
         {
             InitializeComponent();
 
-
             Text = $"{((AssemblyTitleAttribute)Assembly.GetExecutingAssembly()
                                                        .GetCustomAttributes(attributeType: typeof(AssemblyTitleAttribute),
                                                             inherit: false)[0]).Title} [b{Assembly.GetExecutingAssembly()
@@ -66,7 +65,6 @@ public partial class FrmMainApp
         return Task.CompletedTask;
     }
 
-
     /// <summary>
     ///     Assigns labels to various objects in the application during startup. This includes buttons, labels, checkboxes, and
     ///     other UI elements.
@@ -81,7 +79,6 @@ public partial class FrmMainApp
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         string objectName;
         string objectText;
-
 
         foreach (Control cItem in c)
         {
@@ -177,7 +174,6 @@ public partial class FrmMainApp
             Log.Trace(message: $"{objectName}: {objectText}");
         }
 
-
         Log.Trace(message: "Setting Tooltips");
         List<(ToolTip, Control, string)> ttpLabelsList =
         [
@@ -196,7 +192,6 @@ public partial class FrmMainApp
                     fakeControlType: FakeControlTypes.ToolTip));
         }
     }
-
 
     /// <summary>
     ///     Pulls the last lat/lng combo from Settings if available, otherwise points to NASA's HQ
@@ -252,7 +247,6 @@ public partial class FrmMainApp
         HelperVariables.LastLng = double.Parse(s: nud_lng.Text.Replace(oldChar: ',', newChar: '.'),
             provider: CultureInfo.InvariantCulture);
     }
-
 
     /// <summary>
     ///     Sets the application theme at startup based on the user's settings.
@@ -317,7 +311,6 @@ public partial class FrmMainApp
             Log.Debug(
                 message:
                 $"Reading settingsApplicationDesignValue {settingsApplicationDesignValue}, dataInSQL {dataInSQL}.");
-
 
             bool parsedDataInSQLSuccessfully = int.TryParse(s: dataInSQL,
                 style: NumberStyles.Any,

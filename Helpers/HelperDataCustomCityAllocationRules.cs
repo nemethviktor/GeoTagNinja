@@ -101,7 +101,6 @@ internal static class HelperDataCustomCityAllocationRules
         }
     }
 
-
     internal static void DataCreateSQLiteCustomCityAllocationLogic()
     {
         FrmMainApp.Log.Info(message: "Starting");

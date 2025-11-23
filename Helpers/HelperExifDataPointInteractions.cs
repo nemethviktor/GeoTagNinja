@@ -99,7 +99,6 @@ internal static class HelperExifDataPointInteractions
                     frmEditFileDataInstance.lvw_FileListEditImages
                                            .SelectedItems[index: 0];
 
-
                 HelperNonStatic helperNonstatic = new();
                 IEnumerable<Control> cGbx_GPSData =
                     helperNonstatic.GetAllControls(
@@ -230,7 +229,6 @@ internal static class HelperExifDataPointInteractions
             }
         }
     }
-
 
     internal static void ExifRotate(this Image img)
     {

@@ -86,7 +86,6 @@ public class CustomMessageBox : Form
         set => base.Text = value;
     }
 
-
     /// <summary>
     ///     Sets the picture box (icon) for the Form
     /// </summary>
@@ -132,7 +131,6 @@ public class CustomMessageBox : Form
                                                   actualValue: icon, message: null);
         }
     }
-
 
     /// <summary>
     ///     Initializes the components of the CustomMessageBox form.

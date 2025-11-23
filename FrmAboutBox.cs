@@ -61,7 +61,6 @@ internal partial class FrmAboutBox : Form
         }
     }
 
-
     public sealed override string Text
     {
         get => base.Text;
@@ -86,7 +85,6 @@ internal partial class FrmAboutBox : Form
     {
         _ = Process.Start(fileName: e.LinkText);
     }
-
 
     #region Assembly Attribute Accessors
 
@@ -116,7 +114,6 @@ internal partial class FrmAboutBox : Form
                                                                   .CodeBase);
         }
     }
-
 
     /// <summary>
     ///     Gets the assembly description of the executing assembly.

@@ -15,7 +15,6 @@ internal static class HelperGenericAncillaryListsArrays
     // this stores the kvp for language tags and values (ie the label and whatnots + their human-readable counterparts).
     internal static Dictionary<string, string> LanguageStringsDict = [];
 
-
     internal static Dictionary<string, string> GetISO_639_1_Languages()
     {
         Dictionary<string, string> result = new()
@@ -1082,7 +1081,6 @@ internal static class HelperGenericAncillaryListsArrays
         return result;
     }
 
-
     /// <summary>
     ///     City, State, Sublocation
     /// </summary>
@@ -1271,7 +1269,6 @@ internal static class HelperGenericAncillaryListsArrays
         return retList.ToArray();
     }
 
-
     /// <summary>
     ///     Extracts only the file name extensions from the list of
     ///     AllCompatibleExtensions. The returned array is a copy and
@@ -1296,7 +1293,6 @@ internal static class HelperGenericAncillaryListsArrays
         return allowedExtensions;
     }
 
-
     /// <summary>
     ///     List of supported sidecar file extensions.
     ///     The extension must be in lower case due to its use in comparisons!
@@ -1310,7 +1306,6 @@ internal static class HelperGenericAncillaryListsArrays
         };
         return result;
     }
-
 
     /// <summary>
     ///     Returns an array of extensions (string) of compatible sidecar files.

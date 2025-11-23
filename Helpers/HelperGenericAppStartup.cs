@@ -430,7 +430,6 @@ internal static class HelperGenericAppStartup
         }
     }
 
-
     /// <summary>
     ///     Makes sure there is webview2 installed and working
     /// </summary>
@@ -453,7 +452,6 @@ internal static class HelperGenericAppStartup
             HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
                 controlName: "mbx_FrmMainApp_ErrorCantLoadWebView2", captionType: MessageBoxCaption.Error,
                 buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
-
 
             Application.Exit();
         }

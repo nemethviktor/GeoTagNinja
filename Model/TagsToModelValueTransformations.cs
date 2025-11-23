@@ -74,7 +74,6 @@ internal class TagsToModelValueTransformations
         return HelperExifDataPointInteractions.AdjustLatLongNegative(point: parseResult);
     }
 
-
     /// <summary>
     ///     Extract altitude from given string that also contains text
     ///     Supports ###/### m 
@@ -136,7 +135,6 @@ internal class TagsToModelValueTransformations
             return null;
         }
     }
-
 
     /// <summary>
     ///     Standardize string to "Below Sea Level" or
@@ -200,7 +198,6 @@ internal class TagsToModelValueTransformations
         }
     }
 
-
     /// <summary>
     ///     Standardize string to "Geographic North" or
     ///     "Magnetic North" (default).
@@ -221,7 +218,6 @@ internal class TagsToModelValueTransformations
             ? "Geographic North"
             : "Magnetic North";
     }
-
 
     /// <summary>
     ///     Standardize the exposure time value - removing "sec" and

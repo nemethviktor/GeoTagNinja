@@ -99,13 +99,10 @@ public partial class FrmMainApp : Form
     private static bool _showLocToMapDialogChoice = true;
     private static bool _rememberLocToMapDialogChoice;
 
-    // ReSharper disable once InconsistentNaming
     private FrmSettings FrmSettings;
 
-    // ReSharper disable once InconsistentNaming
     internal FrmEditFileData FrmEditFileData;
 
-    // ReSharper disable once InconsistentNaming
     private FrmImportExportGpx FrmImportExportGpx;
 
     private string _mapHtmlTemplateCode = "";
@@ -217,7 +214,6 @@ public partial class FrmMainApp : Form
 
         DirectoryElements.ExifTool = _ExifTool;
 
-
         Log.Info(message: "Constructor: Done");
     }
 
@@ -267,7 +263,6 @@ public partial class FrmMainApp : Form
 
         return Task.CompletedTask;
     }
-
 
     /// <summary>
     ///     Handles the initial loading - adds various elements and ensures the app functions.
@@ -441,7 +436,6 @@ public partial class FrmMainApp : Form
         AutoUpdater.Start(appCast: Path.Combine(updateJsonPath));
     }
 
-
     /// <summary>
     ///     When the app closes we want to make sure there's nothing in the write-queue.
     ///     ...once that's dealt with we write the details of the app layout (e.g. column widths) to sqlite.
@@ -570,7 +564,6 @@ public partial class FrmMainApp : Form
         }
     }
 
-
     private void PipeCmd_ShowMessage(string text)
     {
         HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(controlName: "",
@@ -606,7 +599,6 @@ public partial class FrmMainApp : Form
         HelperVariables.HTMLDefaultLayer =
             HelperGenericAncillaryListsArrays.GetMapLayers().FirstOrDefault(predicate: x => x.Value == layerName).Key ??
             HelperVariables.HTMLDefaultLayer;
-
 
         string strLat = mapWebMessage?.lat.ToString(provider: CultureInfo.InvariantCulture);
         string strLng = mapWebMessage?.lng.ToString(provider: CultureInfo.InvariantCulture);
@@ -853,7 +845,6 @@ public partial class FrmMainApp : Form
         }
     }
 
-
     /// <summary>
     ///     Parses the tbx_lat and tbx_lng text boxes.
     ///     If the contents is a valid double, returns touple (lat, lng)
@@ -915,7 +906,6 @@ public partial class FrmMainApp : Form
         return (LatCoordinate, LngCoordinate);
     }
 
-
     private void UpdateWebView(IDictionary<string, string> replacements)
     {
         string htmlCode = _mapHtmlTemplateCode;
@@ -956,7 +946,6 @@ public partial class FrmMainApp : Form
         }
     }
 
-
     /// <summary>
     ///     Handles the navigation to a coordinate on the map. Replaces hard-coded values w/ user-provided ones
     ///     ... and executes the navigation action.
@@ -993,7 +982,6 @@ public partial class FrmMainApp : Form
 
             htmlReplacements.Add(key: "{ HTMLAddMarker }",
                 value: HelperVariables.HTMLAddMarker);
-
 
             if (HelperVariables.LstTrackPath.Count > 0)
             {
@@ -1340,7 +1328,6 @@ public partial class FrmMainApp : Form
             showDestinationPolyLineStr = BuildDestinationPolyLineStr(multiCoordsDefaultStr: multiCoordsDefaultStr);
         }
 
-
         List<(string key, string value)> replacements =
         [
             ("replaceLat", HelperVariables.LastLat.ToString()
@@ -1419,7 +1406,6 @@ public partial class FrmMainApp : Form
             return Math.Max(val1: dblMaxLng, val2: dLng);
         }
 
-
         void AssignViewingRectangle((string strLat, string strLng) locationCoord,
                                     bool addMarker)
         {
@@ -1476,7 +1462,6 @@ public partial class FrmMainApp : Form
             return showDestinationPolyLineStr;
         }
     }
-
 
     /// <summary>
     ///     Initialises the map in the app and browses to the default or last-used location.
@@ -1742,7 +1727,6 @@ public partial class FrmMainApp : Form
         Application.Exit();
     }
 
-
     /// <summary>
     ///     Fires if FlatMode is on and the folder is being changed/refreshed.
     /// </summary>
@@ -1876,7 +1860,6 @@ public partial class FrmMainApp : Form
             }
         }
 
-
         void ShowInvalidFolderMessage(string exceptionMessage = "")
         {
             if (!string.IsNullOrEmpty(value: exceptionMessage))
@@ -2003,7 +1986,6 @@ public partial class FrmMainApp : Form
         //done
         HandlerUpdateLabelText(label: lbl_ParseProgress, text: "");
     }
-
 
     /// <summary>
     ///     Generally similar to the above.(btn_Refresh_lvwFileList_Click)
@@ -2289,7 +2271,6 @@ public partial class FrmMainApp : Form
         e.DrawDefault = true;
     }
 
-
     // via https://stackoverflow.com/questions/9260303/how-to-change-menu-hover-color
     private class DarkMenuStripRenderer : ToolStripProfessionalRenderer
     {
@@ -2304,7 +2285,6 @@ public partial class FrmMainApp : Form
             base.OnRenderItemText(e: e);
         }
     }
-
 
     private class DarkColours : ProfessionalColorTable
     {
@@ -2525,7 +2505,6 @@ in toponomyOverwrites)
                     }
                 };
 
-                // ReSharper disable once InconsistentNaming
                 List<string> APIHandlingChoice =
                     DialogWithOrWithoutCheckBox.DisplayAndReturnList(
                         labelText: HelperControlAndMessageBoxHandling.ReturnControlText(
@@ -2597,7 +2576,6 @@ in toponomyOverwrites)
         Application.DoEvents();
         HelperGenericFileLocking.FilesBeingProcessed.Clear();
         RemoveGeoDataIsRunning = false;
-
 
         #region FrmPleaseWaitBox
 
@@ -3056,7 +3034,6 @@ in toponomyOverwrites)
         HelperVariables.OperationNowSelectingAllItems = false;
     }
 
-
     /// <summary>
     ///     Watches for the user to lift the mouse button while over the listview. This will trigger the collection of
     ///     coordinates and map them.
@@ -3068,7 +3045,6 @@ in toponomyOverwrites)
     {
         await lvw_HandleSelectionChange();
     }
-
 
     /// <summary>
     ///     Handles the tmi_Settings_Settings_Click event -> brings up the Settings Form
@@ -3137,7 +3113,6 @@ in toponomyOverwrites)
             "https://github.com/nemethviktor/GeoTagNinja/issues/new?template=bug_report.md");
     }
 
-
     private void tsb_FeedbackFeatureRequest_Click(object sender,
                                                   EventArgs e)
     {
@@ -3197,7 +3172,6 @@ in toponomyOverwrites)
         label.Text = text;
         label.Refresh();
     }
-
 
     /// <summary>
     ///     This is a dummy. It's here to help me find where things go wrong when clicked on the map. Doesn't do anything.
@@ -3379,7 +3353,6 @@ in toponomyOverwrites)
                 UpdateDE(dirElemFileToModify: dirElemFileToModify, attribute: ElementAttribute.Sublocation,
                     settingValue: favouriteToLoad.Sublocation);
 
-
                 await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
             }
         }
@@ -3395,7 +3368,6 @@ in toponomyOverwrites)
                 isMarkedForDeletion: false);
         }
     }
-
 
     private void cbx_Favourites_SelectedValueChanged(object sender,
                                                      EventArgs e)
@@ -3439,7 +3411,6 @@ in toponomyOverwrites)
         btn_NavigateMapGo_Click(sender: null, e: null);
     }
 
-
     /// <summary>
     ///     Manages Favourites
     /// </summary>
@@ -3460,7 +3431,6 @@ in toponomyOverwrites)
                 buttons: MessageBoxButtons.OK);
         }
     }
-
 
     /// <summary>
     ///     Handles the cmi_CopyGeoData_Click event -> triggers ListViewCopyGeoData
@@ -3586,7 +3556,6 @@ in toponomyOverwrites)
         }
     }
 
-
     private void cmi_OpenCoordsInAPI_Click(object sender,
                                            EventArgs e)
     {
@@ -3594,7 +3563,6 @@ in toponomyOverwrites)
         OpenCoordinatesInBrowser(listViewItemCollection: lvc,
             openInBrowserOption: OpenInBrowserOptions.OpenCoordsInBrowserGeoNamesAPI);
     }
-
 
     private void cmi_OpenCoordsInBrowserBing_Click(object sender,
                                                    EventArgs e)
@@ -3647,7 +3615,6 @@ in toponomyOverwrites)
         bool selectionIsValid = false;
         string GPSLatStr = NullStringEquivalentGeneric;
         string GPSLngStr = NullStringEquivalentGeneric;
-
 
         if (listViewItemCollection.Count == 1)
         {
@@ -3787,7 +3754,6 @@ in toponomyOverwrites)
                 Directory.Delete(path: exifToolFilesDir, recursive: true);
             }
         }
-
 
         static string GetDatabaseFileToImport()
         {

@@ -170,7 +170,6 @@ internal static class HelperDataDatabaseAndStartup
                 }
             };
 
-
         List<AppSettingContainer> settingsToWriteTmp = [];
 
         foreach (string controlName in booleanTypeApplicationSettingsExtensionSpecificControlNames)
@@ -256,7 +255,6 @@ internal static class HelperDataDatabaseAndStartup
                 }));
         }
 
-
         // language -> Add "English" as default if there isn't one defined.
         string existingSQLVal = HelperDataApplicationSettings.DataReadSQLiteSettings(
             dataTable: HelperVariables.DtHelperDataApplicationSettings,
@@ -287,7 +285,6 @@ internal static class HelperDataDatabaseAndStartup
             HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
         }
     }
-
 
     /// <summary>
     ///     Generic method to read a SQLite table into a DataTable
@@ -380,10 +377,8 @@ internal static class HelperDataDatabaseAndStartup
             // Get the schema for the columns in the database.
             DataTable colsTable = sqliteDB.GetSchema(collectionName: "Columns");
 
-
             string sqlCommandStr =
                 $"""UPDATE {tableName} SET {columnName} = "{dataTo}" WHERE {columnName} = "{dataFrom}" """;
-
 
             SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
 
@@ -396,7 +391,6 @@ internal static class HelperDataDatabaseAndStartup
             Debug.Print(message: ex.Message);
         }
     }
-
 
     /// <summary>
     ///     Gets the Unit of Measure abbreviation (ie 'ft' or 'm')

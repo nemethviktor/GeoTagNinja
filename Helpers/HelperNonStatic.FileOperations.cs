@@ -12,7 +12,6 @@ internal partial class HelperNonStatic
 {
     private FrmPleaseWaitBox _frmPleaseWaitBoxInstance;
 
-
     /// <summary>
     ///     Loops a given folder while ignoring access and other errors.
     ///     via https://stackoverflow.com/a/33172145/3968494

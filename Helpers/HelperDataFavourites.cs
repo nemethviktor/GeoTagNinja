@@ -11,7 +11,6 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 
-
 namespace GeoTagNinja.Helpers;
 
 internal static class HelperDataFavourites
@@ -125,7 +124,6 @@ internal static class HelperDataFavourites
                         Sublocation = geoSetterFavourite.subloc
                     };
 
-
                     Favourite existingFavouriteWithThisName =
                         frmMainAppInstance.GetFavouriteByName(favouriteName: favourite.FavouriteName);
                     if (existingFavouriteWithThisName != null)
@@ -169,7 +167,6 @@ internal static class HelperDataFavourites
 
     #endregion
 
-
     /// <summary>
     ///     Reads the Favourites table from SQLite.
     /// </summary>
@@ -187,7 +184,6 @@ internal static class HelperDataFavourites
 
 								"
             ;
-
 
         SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
 
@@ -347,7 +343,6 @@ internal static class HelperDataFavourites
             throw;
         }
     }
-
 
     /// <summary>
     ///     Creates a table for the user's "Favourites".

@@ -38,7 +38,6 @@ public class DirectoryElement
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-
     /// <summary>
     ///     Constructor
     /// </summary>
@@ -247,7 +246,6 @@ public class DirectoryElement
                 string generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath,
                     path2: $"{ItemNameWithoutPath}_small_thumbnail.jpg");
 
-
                 if (Type == ElementType.File)
                 {
                     try
@@ -263,7 +261,6 @@ public class DirectoryElement
                     {
                         //
                     }
-
 
                     if (!File.Exists(path: generatedFileName))
                     {
@@ -328,7 +325,6 @@ public class DirectoryElement
                         }
                     }
 
-
                     // And if we've still not succeeded try Magick
                     if (!File.Exists(path: generatedFileName))
                     {
@@ -346,7 +342,6 @@ public class DirectoryElement
                             // sod it
                         }
                     }
-
 
                     if (File.Exists(path: generatedFileName))
                     {
@@ -387,12 +382,10 @@ public class DirectoryElement
                     }
                 }
 
-
                 field = value;
             }
         }
     }
-
 
     /// <summary>
     ///     Via https://stackoverflow.com/a/2001462/3968494 - plus I added the ExifRotate because the incoming image's
@@ -464,7 +457,6 @@ public class DirectoryElement
 
     #endregion
 
-
     #region Members for attribute setting and retrieval
 
     /// <summary>
@@ -486,7 +478,6 @@ public class DirectoryElement
 
         return false;
     }
-
 
     /// <summary>
     ///     Checks the given value container for which version to return
@@ -531,7 +522,6 @@ public class DirectoryElement
         return null;
     }
 
-
     /// <summary>
     ///     Checks if a value exists for a particular AttributeValueContainer & version combination
     /// </summary>
@@ -548,12 +538,10 @@ public class DirectoryElement
             return false;
         }
 
-
         // Retrieve and return value
 
         return true;
     }
-
 
     /// <summary>
     ///     Checks if a value exists for a particular attrib & version combination
@@ -1038,7 +1026,6 @@ public class DirectoryElement
         _Attributes[key: attribute] = avc;
     }
 
-
     public void RemoveAttributeValue(ElementAttribute attribute,
                                      AttributeVersion version)
     {
@@ -1073,7 +1060,6 @@ public class DirectoryElement
     {
         Log.Trace(message:
             $"Starting to parse dict for attribute: {GetElementAttributesName(attributeToFind: attribute)}");
-
 
         if (!_ignoreElementAttributes.Contains(item: attribute))
         {
@@ -1295,7 +1281,6 @@ public class DirectoryElement
         parsedValues[key: attribute] = resTyped;
         return true;
     }
-
 
     /// <summary>
     ///     Parses all attrbites of this DirectoryElement from the given tag list.

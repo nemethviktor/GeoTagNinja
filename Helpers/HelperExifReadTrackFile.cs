@@ -176,7 +176,6 @@ internal static class HelperExifReadTrackFile
                                 DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;
                                 string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
 
-
                                 // get the current stuff, either from DE3 or Orig or just blank if none.
                                 // we're doing this so we can compare if the data received from the track parse is different from the one in the file
                                 // if so then later we'll trigger the store-to-Stage3-process
@@ -187,7 +186,6 @@ internal static class HelperExifReadTrackFile
                                     attribute: ElementAttribute.GPSLongitude);
                                 string currentAltitude = GetCurrentValue(dirElemFileToModify: dirElemFileToModify,
                                     attribute: ElementAttribute.GPSAltitude);
-
 
                                 string strLatInTrackFile = GetValueInTrackFile(
                                     dtDistinctFileExifTable: dtDistinctFileExifTable,
@@ -237,7 +235,6 @@ internal static class HelperExifReadTrackFile
                                         value: gpsHPositioningErrorInTrackFile,
                                         version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
                                         isMarkedForDeletion: false);
-
 
                                     // clear city, state etc
                                     foreach (ElementAttribute attribute in

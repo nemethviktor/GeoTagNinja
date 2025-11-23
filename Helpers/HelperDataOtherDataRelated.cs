@@ -15,7 +15,6 @@ internal static class HelperDataOtherDataRelated
     {
         FrmMainApp.Log.Info(message: "Starting");
 
-
         // DTLanguageMapping
         FrmMainApp.DTLanguageMapping = new DataTable();
         FrmMainApp.DTLanguageMapping.Clear();

@@ -100,7 +100,6 @@ public partial class FrmManageFavourites : Form
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
-
                 _originalFavouritesPresented.Add(key: cItem.Name, value: cItem.Text);
             }
             // there is only one dropdown atm.
@@ -141,7 +140,6 @@ public partial class FrmManageFavourites : Form
             inputVal: cbx_Country.Text,
             returnWhat: LanguageMappingQueryOrReturnWhat.ISO_3166_1A3);
 
-
         // no need to delete existing one
         Favourite favourite = _frmMainAppInstance.GetFavouriteByName(favouriteName: oldName);
         if (favourite != null)
@@ -178,7 +176,6 @@ public partial class FrmManageFavourites : Form
         cbx_Favourites.Text = oldName;
         _frmNowLoadingFavouriteData = false;
     }
-
 
     private void btn_Close_Click(object sender,
         EventArgs e)

@@ -884,7 +884,6 @@ public static class SourcesAndAttributes
                 }
             };
 
-
     /// <summary>
     ///     Retrieves the list of attributes associated with a given attributeToFind.
     /// </summary>

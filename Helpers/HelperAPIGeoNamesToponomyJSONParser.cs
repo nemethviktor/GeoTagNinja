@@ -31,7 +31,6 @@ namespace GeoTagNinja
         [JsonProperty("timezone", NullValueHandling = NullValueHandling.Ignore)]
         public Timezone Timezone { get; set; }
 
-
         [JsonProperty("adminCode1", NullValueHandling = NullValueHandling.Ignore)]
         public string AdminCode1 { get; set; }
 

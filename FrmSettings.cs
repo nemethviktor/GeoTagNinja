@@ -77,7 +77,6 @@ public partial class FrmSettings : Form
         _lstTpgGeoNamesControls = helperNonstatic.GetAllControls(control: tpg_GeoNames)
                                                  .ToList();
 
-
         IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
         if (c != null)
         {
@@ -86,7 +85,6 @@ public partial class FrmSettings : Form
                 // Note to self: do not remove this block. 
                 // The two comboboxes work differently than other items.
                 string parentNameToUse = GetParentNameToUse(cItem: cItem);
-
 
                 // Part 1: Fill the comboboxes
                 // We want to have something like "Français [French]"
@@ -108,7 +106,6 @@ public partial class FrmSettings : Form
                     {
                         DataRow dr = dt.NewRow();
                         dr[columnName: "id"] = alreadyTranslatedLanguage; // "en"
-
 
                         native =
                             HelperDataOtherDataRelated.DataGetFirstOrDefaultFromDataTable(
@@ -137,7 +134,6 @@ public partial class FrmSettings : Form
                             settingTabPage: parentNameToUse,
                             settingId: cbx.Name
                         ) ?? HelperVariables.DefaultEnglishString).ToLower().Substring(startIndex: 0, length: 2);
-
 
                     native =
                         HelperDataOtherDataRelated.DataGetFirstOrDefaultFromDataTable(
@@ -391,7 +387,6 @@ public partial class FrmSettings : Form
                     settingId: "ckb_IncludePredeterminedCountries"
                 ));
 
-
         // 01b transfer to screen 
         // Country (e.g. United Kingdom)
         DataGridViewComboBoxColumn clh_CountryCode = new()
@@ -405,7 +400,6 @@ public partial class FrmSettings : Form
             ValueMember = "Key",
             DisplayMember = "Value"
         };
-
 
         // 02a fill dropdown 
         // 02b transfer to screen 
@@ -507,7 +501,6 @@ public partial class FrmSettings : Form
         );
     }
 
-
     /// <summary>
     ///     Loads the custom city logic data into the DataGridView (dgv_CustomCityLogic) from the SQLite database.
     ///     The method first reads the data from the SQLite database into a DataTable (DtCustomCityLogic).
@@ -567,7 +560,7 @@ public partial class FrmSettings : Form
     ///     checkbox changes.
     /// </summary>
     /// <returns>KVP list of country codes and countries</returns>
-    // ReSharper disable once InconsistentNaming
+    
     private static Dictionary<string, string> refreshClh_CountryCodeOptions(bool ckb_IncludePredeterminedCountries)
     {
         Dictionary<string, string> clh_CountryCodeOptions = [];
@@ -938,7 +931,6 @@ public partial class FrmSettings : Form
         }
     }
 
-
     /// <summary>
     ///     Handles the event where any rbt's checkstate changed.
     /// </summary>
@@ -989,7 +981,6 @@ public partial class FrmSettings : Form
         }
     }
 
-
     /// <summary>
     ///     Deletes rows from <see cref="HelperVariables.DtHelperDataApplicationSettingsPreQueue" /> and adds new data.
     /// </summary>
@@ -1015,7 +1006,6 @@ public partial class FrmSettings : Form
         drPreQueue[columnName: "settingTabPage"] = settingTabPage;
         drPreQueue[columnName: "settingId"] = settingId;
         drPreQueue[columnName: "settingValue"] = settingValue;
-
 
         HelperVariables.DtHelperDataApplicationSettingsPreQueue.Rows.Add(row: drPreQueue);
     }
@@ -1206,7 +1196,6 @@ public partial class FrmSettings : Form
         _ = Process.Start(fileName: e.LinkText);
     }
 
-
     /// <summary>
     ///     Handles the Click event of the btn_ResetToDefaults control.
     /// </summary>
@@ -1246,7 +1235,6 @@ public partial class FrmSettings : Form
         tbx_GeoNames_Pwd.UseSystemPasswordChar = !ckb_ShowPassword_GeoNames.Checked;
     }
 
-
     private void pbx_ShowThumbnails_MouseHover(object sender,
                                                EventArgs e)
     {
@@ -1282,7 +1270,7 @@ public partial class FrmSettings : Form
 
         Dictionary<string, string> buttonsDictionary = GetButtonsDictionary();
 
-        // ReSharper disable once InconsistentNaming
+        
         List<string> ItemsToExport = DialogWithOrWithoutCheckBox.DisplayAndReturnList(
             labelText: ReturnControlText(
                 controlName: "mbx_FrmSettings_QuestionWhatToExport",
@@ -1351,7 +1339,7 @@ public partial class FrmSettings : Form
 
             Dictionary<string, string> buttonsDictionary = GetButtonsDictionary();
 
-            // ReSharper disable once InconsistentNaming
+            
             List<string> ItemsToImport = DialogWithOrWithoutCheckBox.DisplayAndReturnList(
                 labelText: ReturnControlText(
                     controlName: "mbx_FrmSettings_QuestionWhatToImport",
@@ -1427,7 +1415,7 @@ public partial class FrmSettings : Form
             }
         };
 
-        // ReSharper disable once InconsistentNaming
+        
         List<string> displayAndReturnList =
             DialogWithOrWithoutCheckBox.DisplayAndReturnList(
                 labelText: ReturnControlText(
@@ -1441,7 +1429,6 @@ public partial class FrmSettings : Form
                 buttonsDictionary: buttonsDictionary,
                 orientation: "Horizontal",
                 checkboxesDictionary: new Dictionary<string, string>());
-
 
         if (displayAndReturnList.Contains(item: btnRestartNowName))
         {
@@ -1480,7 +1467,6 @@ public partial class FrmSettings : Form
 
         Application.Exit();
     }
-
 
     /// <summary>
     ///     Creates and returns a dictionary representing buttons in the diaLog.

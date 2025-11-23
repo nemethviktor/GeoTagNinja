@@ -35,7 +35,6 @@ public partial class FrmEditFileData : Form
 
     #endregion
 
-
     /// <summary>
     ///     This Form provides an interface for the user to edit various bits of Exif data in images.
     /// </summary>
@@ -582,7 +581,6 @@ public partial class FrmEditFileData : Form
         }
     }
 
-
     /// <summary>
     ///     Retrieves the value of a specified attribute from a given directory element.
     /// </summary>
@@ -594,7 +592,7 @@ public partial class FrmEditFileData : Form
     ///     attribute value is equivalent to the null equivalent for its type.
     /// </returns>
 
-    // ReSharper disable once InconsistentNaming
+    
     private static IConvertible GetDataInDEForAttribute(DirectoryElement directoryElement,
         ElementAttribute attribute,
         DirectoryElement.AttributeVersion
@@ -675,7 +673,6 @@ public partial class FrmEditFileData : Form
         return returnDataInDirectoryElement;
     }
 
-
     /// <summary>
     ///     Enables specific controls and disables others within a given parent control.
     /// </summary>
@@ -750,7 +747,6 @@ public partial class FrmEditFileData : Form
         return totalShiftedSeconds;
     }
 
-
     /// <summary>
     ///     Retrieves the highest version of a specific attribute in a given directory element.
     /// </summary>
@@ -761,7 +757,7 @@ public partial class FrmEditFileData : Form
     ///     attribute is found.
     /// </returns>
 
-    // ReSharper disable once InconsistentNaming
+    
     private static DirectoryElement.AttributeVersion GetDEAttributeMaxAttributeVersion(
         DirectoryElement directoryElement,
         ElementAttribute attribute)
@@ -1417,7 +1413,6 @@ in toponomyOverwrites)
         }
     }
 
-
     /// <summary>
     ///     Handles when user clicks Cancel. Clears holding tables 1 & 2.
     /// </summary>
@@ -1672,7 +1667,7 @@ in toponomyOverwrites)
     private void GetTimeZoneOffset()
     {
         string strOffsetTime = "";
-        // ReSharper disable once InconsistentNaming
+        
         bool useDST = ckb_UseDST.Checked;
         try
         {
@@ -1689,7 +1684,6 @@ in toponomyOverwrites)
     }
 
     #endregion
-
 
     /// <summary>
     ///     This kills off the AcceptButton - problem is that if user was to type in an invalid number (say 7 rather than 07
@@ -1848,7 +1842,6 @@ in toponomyOverwrites)
 
         ListView lvw = lvw_FileListEditImages;
         ListViewItem lvi = lvw.SelectedItems[index: 0];
-
 
         IEnumerable<Control> cGbx_CreateDate =
             helperNonstatic.GetAllControls(control: gbx_CreateDate);

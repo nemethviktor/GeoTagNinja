@@ -92,7 +92,6 @@ internal static class Program
         }
     }
 
-
     /// <summary>
     ///     Passes information to the already running first instance of
     ///     GTN using a named pipe.

@@ -65,7 +65,6 @@ internal static class HelperAPIVersionCheckers
         return returnVal;
     }
 
-
     /// <summary>
     ///     Responsible for pulling the latest release of GTN from gitHub
     ///     GitHub doesn't store "build" numbers as such so the easiest is to pull the datediff of the last relevant build and
@@ -83,21 +82,17 @@ internal static class HelperAPIVersionCheckers
         };
         RestClient client = new(options: options);
 
-        // ReSharper disable once InconsistentNaming
         RestRequest request_GTNVersionQuery =
             new(resource: "repos/nemethviktor/GeoTagNinja/releases/latest");
 
-        // ReSharper disable once InconsistentNaming
         RestResponse response_GTNVersionQuery = client.ExecuteGet(request: request_GTNVersionQuery);
 
-        // ReSharper disable once InconsistentNaming
         int lastGTNBuildOnline = 0;
         if (response_GTNVersionQuery.StatusCode.ToString() == "OK")
         {
             HelperVariables.OperationAPIReturnedOKResponse = true;
             Root gtnReleasesApiResponse = JsonConvert.DeserializeObject<Root>(response_GTNVersionQuery.Content);
 
-            // ReSharper disable once InconsistentNaming
             int lastGTNBuildInt = 0;
             Regex rgx = new(pattern: "[^0-9]");
 
@@ -128,7 +123,6 @@ internal static class HelperAPIVersionCheckers
 
         return lastGTNBuildOnline;
     }
-
 
     /// <summary>
     ///     Checks for new versions of GTN and ExifTool.
@@ -226,7 +220,6 @@ internal static class HelperAPIVersionCheckers
                         provider: CultureInfo.InvariantCulture));
             }
 
-
             FrmMainApp.Log.Info(message: "Checking for new GTN versions.");
             // Done w ExifTool and move on to checking GTN stuff
             // current version may be something like "0.5.8251.40825"
@@ -294,7 +287,7 @@ internal static class HelperAPIVersionCheckers
     /// <see cref="FrmMainApp.FrmMainApp_FormClosing" />
     private static async Task DownloadCurrentExifToolVersion(string version)
     {
-        // ReSharper disable once InconsistentNaming
+
         int CPUBitness = Environment.Is64BitOperatingSystem ? 64 : 32;
         string remoteUri = $"https://exiftool.org/exiftool-{version}_{CPUBitness}.zip";
         string zipPath = Path.Combine(path1: HelperVariables.UserDataFolderPath,

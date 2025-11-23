@@ -83,7 +83,6 @@ public class HelperControlAndMessageBoxCustomMessageBoxManager
         hHook = IntPtr.Zero;
     }
 
-
     [DllImport(dllName: "user32.dll")]
     private static extern IntPtr SendMessage(IntPtr hWnd,
         int Msg,
@@ -251,7 +250,6 @@ public class HelperControlAndMessageBoxCustomMessageBoxManager
 
     private delegate bool EnumChildProc(IntPtr hWnd,
         IntPtr lParam);
-
 
     [StructLayout(layoutKind: LayoutKind.Sequential)]
     public struct CWPRETSTRUCT

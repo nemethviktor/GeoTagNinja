@@ -158,7 +158,6 @@ internal static class HelperFileSystemOperators
         return parentName;
     }
 
-
     /// <summary>
     ///     Mimics the normal GetDirectories but handles Unauthorized errors efficiently
     ///     from/via https://stackoverflow.com/a/7296968/3968494

@@ -747,7 +747,6 @@ public partial class FrmPasteWhat : Form
         }
     }
 
-
     private void btn_Generic_Cancel_Click(object sender,
                                           EventArgs e)
     {
@@ -779,7 +778,6 @@ public partial class FrmPasteWhat : Form
             thisCheckBox.Checked = false;
         }
     }
-
 
     private void btn_PullMostRecentPasteSettings_Click(object sender,
                                                        EventArgs e)
@@ -860,7 +858,6 @@ public partial class FrmPasteWhat : Form
         }
     }
 
-
     private void btn_LocationData_None_Click(object sender,
                                              EventArgs e)
     {
@@ -925,7 +922,6 @@ public partial class FrmPasteWhat : Form
         }
     }
 
-
     private void ckb_TakenDate_CheckedChanged(object sender,
                                               EventArgs e)
     {
@@ -949,7 +945,6 @@ public partial class FrmPasteWhat : Form
 
         rbt_PasteCreateDateShift.Enabled = ckb_CreateDate.Checked;
     }
-
 
     private void rbt_PasteTakenDateShift_CheckedChanged(object sender,
                                                         EventArgs e)

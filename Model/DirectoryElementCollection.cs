@@ -73,7 +73,6 @@ public class DirectoryElementCollection : List<DirectoryElement>
         return null;
     }
 
-
     /// <summary>
     ///     Searches through all the DEs in this collection for elements
     ///     with dirty (to be saved) attributes.
@@ -98,7 +97,6 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
         return uids;
     }
-
 
     /// <summary>
     ///     Attempts to find the first DE that matches an XMP file's logic. (ie.
@@ -571,7 +569,6 @@ public class DirectoryElementCollection : List<DirectoryElement>
                         storedChecksum = value;
                     }
 
-
                     // before anyone points out, yes we could store/check filesizes and match those two but the problem is that particularly
                     // xmp files can be modified within a single byte and then saved and have their datetime stamp changed to takendatetime
                     // so basically we could have two files that look identical on the surface but differ in content. 
@@ -591,7 +588,6 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     HelperVariables.FileChecksumDictionary[key: fileNameWithPathToCheck.FullName] = thisCheckSum;
                 }
             }
-
 
             if (fileNeedsReDEing)
             {
@@ -622,7 +618,6 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     InitiateEXIFParsing(fileinfoItem: sidecarFileInfoItem, properties: dictProperties);
                 }
 
-
                 // Parse EXIF properties for the image.
                 InitiateEXIFParsing(fileinfoItem: imagefileFileInfoItem, properties: dictProperties);
 
@@ -641,7 +636,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
     /// <summary>
     ///     Assigns a GUID for the DEs in the DECollection
     /// </summary>
-    // ReSharper disable once InconsistentNaming
+    
     private static void CreateGUIDsForDirectoryElements()
     {
         foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
@@ -656,7 +651,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
     ///     Parses the given file using the given EXIF Tool object into the given
     ///     dictionary. Thereby, ignoring duplicate tags.
     /// </summary>
-    // ReSharper disable once InconsistentNaming
+    
     private void InitiateEXIFParsing(FileInfo fileinfoItem,
         IDictionary<string, string> properties)
     {

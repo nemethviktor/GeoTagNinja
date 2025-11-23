@@ -204,4 +204,3 @@ internal class DialogWithOrWithoutCheckBox
     }
 }
 
-

@@ -43,7 +43,6 @@ internal class ListViewColumnSorter : IComparer
         get => ColumnSortOrder;
     }
 
-
     /// <summary>
     ///     Compare two objects of type ListViewItem by looking at the set SortColumn.
     ///     If descending sort order is set, the inverse result is returned.
@@ -85,7 +84,6 @@ internal class ListViewColumnSorter : IComparer
         {
             return lviElementTypeX < lviElementTypeY ? -1 : 1;
         }
-
 
         int result;
         // Item of same group - compare their values in clicked column...

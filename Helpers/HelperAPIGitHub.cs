@@ -246,8 +246,6 @@ namespace GeoTagNinja
             public bool site_admin { get; set; }
         }
 
-
-
     }
 
     public partial class GTNReleaseAPIResponse

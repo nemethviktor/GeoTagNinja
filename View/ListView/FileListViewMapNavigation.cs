@@ -23,7 +23,7 @@ internal static class FileListViewMapNavigation
         // and it becomes impossible to select that fav's original coords again, which is illogical.
         frmMainAppInstance.cbx_Favourites.SelectedItem = null;
 
-        // ReSharper disable once InconsistentNaming
+        
         foreach (ListViewItem lvw_FileListItem in frmMainAppInstance.lvw_FileList.SelectedItems)
         {
             DirectoryElement de = lvw_FileListItem.Tag as DirectoryElement;

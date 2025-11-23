@@ -95,7 +95,6 @@ public partial class FileListView : System.Windows.Forms.ListView
             string pszSubAppName,
             string pszSubIdList);
 
-
         [StructLayout(layoutKind: LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct SHFILEINFOW
         {
@@ -109,7 +108,6 @@ public partial class FileListView : System.Windows.Forms.ListView
             [MarshalAs(unmanagedType: UnmanagedType.ByValTStr, SizeConst = 80 * 2)]
             public string szTypeName;
         }
-
 
         [StructLayout(layoutKind: LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public readonly struct Shfileinfow
@@ -125,7 +123,6 @@ public partial class FileListView : System.Windows.Forms.ListView
             public readonly string szTypeName;
         }
     }
-
 
     /// <summary>
     ///     Class containing all the relevant column names to be used
@@ -367,7 +364,6 @@ public partial class FileListView : System.Windows.Forms.ListView
 
     #endregion
 
-
     #region External Visible Properties
 
     /// <summary>
@@ -382,7 +378,6 @@ public partial class FileListView : System.Windows.Forms.ListView
     public int FileCount { get; private set; } = -1;
 
     #endregion
-
 
     #region Internal Update Logic
 
@@ -438,7 +433,6 @@ public partial class FileListView : System.Windows.Forms.ListView
             _ => nfVal,
         };
     }
-
 
     /// <summary>
     ///     Adds a new listitem to lvw_FileList listview
@@ -578,7 +572,6 @@ public partial class FileListView : System.Windows.Forms.ListView
 
     #endregion
 
-
     #region Column Size and Order
 
     /// <summary>
@@ -643,7 +636,6 @@ public partial class FileListView : System.Windows.Forms.ListView
         settingId: settingIdToSend
     );
 
-
             // We only set col width if there actually is a setting for it.
             // New columns thus will have a default size
             if (colWidth is { Length: > 0 })
@@ -681,7 +673,6 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         EndUpdate(); // continue drawing
     }
-
 
     private void ToggleIndividualColumnVisibility(string columnHeaderName, bool setVisible)
     {
@@ -736,7 +727,6 @@ public partial class FileListView : System.Windows.Forms.ListView
         HelperDataApplicationSettings.DataWriteSQLiteSettings(
             settingsToWrite: settingsToWrite);
     }
-
 
     /// <summary>
     ///     Shows the dialog to selection which columns to show.
@@ -827,7 +817,6 @@ public partial class FileListView : System.Windows.Forms.ListView
 
     #endregion
 
-
     #region Further Settings Stuff
 
     /// <summary>
@@ -844,7 +833,6 @@ public partial class FileListView : System.Windows.Forms.ListView
                                                                      attributeToFind: attribute) >
                                                                  0)
                                                             .ToList();
-
 
         foreach (SourcesAndAttributes.ElementAttribute attribute in
                  attributesWithValidOrderIDs)
@@ -882,7 +870,6 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
     }
 
-
     private void SetStyle()
     {
         // Set up the ListView control's basic properties.
@@ -919,7 +906,6 @@ public partial class FileListView : System.Windows.Forms.ListView
             _ = NativeMethods.ImageList_Destroy(hImageList: hOldImgList);
         }
     }
-
 
     /// <summary>
     ///     Initialize the list view.
@@ -975,7 +961,6 @@ public partial class FileListView : System.Windows.Forms.ListView
 
     #endregion
 
-
     #region Modes
 
     /// <summary>
@@ -995,7 +980,6 @@ public partial class FileListView : System.Windows.Forms.ListView
     }
 
     #endregion
-
 
     #region Updating
 
@@ -1121,7 +1105,6 @@ public partial class FileListView : System.Windows.Forms.ListView
             }
         }
 
-
         ToggleIndividualColumnVisibility(
             columnHeaderName: COL_NAME_PREFIX + FileListColumns.FOLDER,
             setVisible: FrmMainApp.FlatMode || Program.CollectionModeEnabled
@@ -1152,7 +1135,6 @@ public partial class FileListView : System.Windows.Forms.ListView
                 }
             }
 
-
             LargeImageList = imgList;
             foreach (ListViewItem lvi in Items)
             {
@@ -1180,7 +1162,6 @@ public partial class FileListView : System.Windows.Forms.ListView
         return new Bitmap(original: svgDoc.Draw(rasterWidth: ThumbnailSize, rasterHeight: ThumbnailSize));
     }
 
-
     /// <summary>
     ///     Clears the FileListView.
     ///     Should be used instead Items.Clear, etc.
@@ -1190,7 +1171,6 @@ public partial class FileListView : System.Windows.Forms.ListView
         Items.Clear();
         // DirectoryElements.Clear();
     }
-
 
     /// <summary>
     ///     Scrolls to the relevant line of the listview
@@ -1211,7 +1191,6 @@ public partial class FileListView : System.Windows.Forms.ListView
             EnsureVisible(index: itemToModify.Index);
         }
     }
-
 
     /// <summary>
     ///     Deals with invoking the listview (from outside the thread) and updating the colour of a particular row (Item) to
@@ -1246,7 +1225,6 @@ public partial class FileListView : System.Windows.Forms.ListView
     }
 
     #endregion
-
 
     #region Handlers
 

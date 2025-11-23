@@ -32,7 +32,6 @@ internal static class HelperExifReadGetImagePreviews
         "webp"
     ];
 
-
     /// <summary>
     ///     This generates (technically, extracts) the image previews from files for the
     ///     user when they click on a filename in whichever listview.
@@ -230,7 +229,6 @@ internal static class HelperExifReadGetImagePreviews
         }
     }
 
-
     /// <summary>
     ///     Takes a HEIC/WebP/etc file and dumps a JPG. Uses MagickImage. See comment above as to why this isn't being used for
     ///     all RAW
@@ -315,7 +313,6 @@ internal static class HelperExifReadGetImagePreviews
         }
     }
 
-
     /// <summary>
     ///     Same as <see cref="UseMagickImageToGeneratePreview(string,string)" /> but specific to thumbnail creation.
     /// </summary>
@@ -335,7 +332,6 @@ internal static class HelperExifReadGetImagePreviews
         image.Resize(geometry: size);
         image.Write(fileName: generatedJpegPath);
     }
-
 
     /// <summary>
     ///     Basically used for non-special files' thumb generation. (Using Windows's own logic/capabilities.)
@@ -380,7 +376,6 @@ internal static class HelperExifReadGetImagePreviews
             EncoderParameters encoderParams = new(count: 1);
             EncoderParameter encoderParameter = new(encoder: myEncoder, value: 90L);
             encoderParams.Param[0] = encoderParameter;
-
 
             Image newImg = bmSmall;
             newImg.Save(filename: fileNameOut, encoder: jpgEncoder, encoderParams: encoderParams);

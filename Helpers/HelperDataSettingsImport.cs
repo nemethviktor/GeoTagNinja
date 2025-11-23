@@ -108,7 +108,7 @@ namespace GeoTagNinja.Helpers
         ///     the file is not a valid SQLite database and returns false.
         /// </remarks>
 
-        // ReSharper disable once InconsistentNaming
+        
         private static bool IsValidSQLite(string filePath)
         {
             try

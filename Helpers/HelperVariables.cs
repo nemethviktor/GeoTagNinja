@@ -105,7 +105,6 @@ internal static class HelperVariables
     internal static DataTable DtHelperDataApplicationSettings = new();
     internal static DataTable DtHelperDataApplicationLayout = new();
 
-
     internal static readonly string ResourcesFolderPath = GetResourcesFolderString();
     internal static readonly string UserDataFolderPath = GetRoamingFolderString();
 
@@ -134,7 +133,6 @@ internal static class HelperVariables
     internal static Dictionary<string, string> FileChecksumDictionary = [];
 
     internal static HashSet<string> errorsAlreadyShownHashSet = [];
-
 
     // this is a bug where, upon closing the app the "do you want to write the queue?" question comes up twice but i can't seem to track it properly so this is to avoid that happening.
     internal static bool AppIsClosingAndWriteFileQuestionHasBeenAsked = false;
@@ -178,7 +176,6 @@ internal static class HelperVariables
             path1: UserDataFolderPath, path2: "database.sqlite");
     }
 
-
     /// <summary>
     ///     Path name of the "normal" exiftool - file doesn't have to exist as such.
     /// </summary>
@@ -190,7 +187,6 @@ internal static class HelperVariables
             path2:
             "exiftool.exe");
     }
-
 
     /// <summary>
     ///     Establish what exiftool to use.

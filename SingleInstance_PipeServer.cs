@@ -36,7 +36,6 @@ internal class SingleInstance_PipeServer
     /// </summary>
     internal CancellationTokenSource cTokenSource = null;
 
-
     /// <summary>
     /// The user name this GTN instance runs as
     /// </summary>
@@ -57,7 +56,6 @@ internal class SingleInstance_PipeServer
         serverThread.Start();
     }
 
-
     /// <summary>
     /// Signal the server to stop serving. Asynchronously stops the server.
     /// </summary>
@@ -71,7 +69,6 @@ internal class SingleInstance_PipeServer
             cTokenSource = null;
         }
     }
-
 
     /// <summary>
     /// Single threaded server that continuously provides one

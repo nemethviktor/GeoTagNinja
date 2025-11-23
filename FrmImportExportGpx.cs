@@ -46,9 +46,7 @@ public partial class FrmImportExportGpx : Form
                 ? ThemeColour.Dark
                 : ThemeColour.Light, parentControl: this);
 
-
         ReturnControlText(cItem: this, senderForm: this);
-
 
         // load TZ-CBX
         FillTZComboBox(cbxToFill: cbx_ImportUseTimeZone);
@@ -281,7 +279,6 @@ public partial class FrmImportExportGpx : Form
         return SelectedTzAdjustment;
     }
 
-
     /// <summary>
     ///     Gets the min and max 'takenDate' values for the items selected in frmMain's lvw.
     /// </summary>
@@ -435,7 +432,6 @@ public partial class FrmImportExportGpx : Form
                                                into directoryElement
                                                select directoryElement.FileNameWithPath).ToList();
 
-
                 GenerateFMTFile(includeAltitude: ckb_ExportTrackIncludeAltitude.Checked,
                     exportFileFMTTimeBasis: cbx_ExportTrackTimeStampType.Text);
                 await HelperExifWriteTrackDataToTrackFile.ExifWriteTrackDataToTrackFile(fileList: exportFileList,
@@ -566,13 +562,11 @@ public partial class FrmImportExportGpx : Form
             HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
         }
 
-
         HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
             controlName: "mbx_GenericDone",
             captionType: MessageBoxCaption.Information,
             buttons: MessageBoxButtons.OK);
     }
-
 
     #region Import
 
@@ -638,7 +632,6 @@ public partial class FrmImportExportGpx : Form
         }
     }
 
-
     private void ckb_UseTimeZone_CheckedChanged(object sender,
                                                 EventArgs e)
     {
@@ -662,13 +655,11 @@ public partial class FrmImportExportGpx : Form
         lbl_TZValue.Text = updatelbl_TZValue();
     }
 
-
     private void ckb_LoadTrackOntoMap_CheckedChanged(object sender,
                                                      EventArgs e)
     {
         ckb_OverlayGPXForSelectedDatesOnly.Enabled = ckb_LoadTrackOntoMap.Checked;
     }
-
 
     /// <summary>
     ///     Handles the loading of "most recent" time-shift settings
