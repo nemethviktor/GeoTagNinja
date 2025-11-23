@@ -28,7 +28,7 @@ internal partial class HelperNonStatic
                 {
                     dialogResult = HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBoxWithResult(
                         controlName: "", // i want to leave this blank, otherwise it duplicates info with the 'extramessage' below.
-                        extraMessage: $@"There is new version {args.CurrentVersion} available. You are using version {args.InstalledVersion}. Do you want to update the application now?",
+                        extraMessage: $@"There is a new version ({args.CurrentVersion}) available. You are using version {args.InstalledVersion}.{Environment.NewLine}Do you want to update the application now?",
                         captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question,
                         buttons: MessageBoxButtons.YesNo);
                 }

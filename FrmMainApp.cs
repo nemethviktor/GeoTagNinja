@@ -348,7 +348,7 @@ public partial class FrmMainApp : Form
         HelperGenericAppStartup.AppStartupGetToponomyRadiusAndMaxRows();
         Request_Map_NavigateGo();
 
-        while (await CheckFormIsOpen("FrmPleaseWaitbox"))
+        while (await CheckFormIsOpen("FrmPleaseWaitBox"))
         {
             await Task.Delay(500);
         }
@@ -390,13 +390,12 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    /// Determines whether a form with the specified name is currently open in the application.
+    /// Determines asynchronously whether a form with the specified name is currently open in the application.
     /// </summary>
-    /// <remarks>This method searches all open forms in the application by their Name property. The comparison
-    /// is case-sensitive. If multiple forms share the same name, the method returns <see langword="true"/> as soon as a
-    /// match is found.</remarks>
-    /// <param name="formName">The name of the form to check for. This value is compared to the Name property of each open form. Cannot be
-    /// null.</param>
+    /// <remarks>This method searches all open forms in the application by their <see cref="Form.Name"/>
+    /// property. It performs a case-insensitive comparison. If multiple forms share the same name, the method returns
+    /// <see langword="true"/> as soon as a match is found.</remarks>
+    /// <param name="formName">The name of the form to check for. Comparison is case-insensitive.</param>
     /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if a form with the
     /// specified name is open; otherwise, <see langword="false"/>.</returns>
     private async Task<bool> CheckFormIsOpen(string formName)
@@ -406,7 +405,7 @@ public partial class FrmMainApp : Form
         foreach (Form frm in fc)
         {
             //iterate through
-            if (frm.Name == formName)
+            if (frm.Name.ToLower() == formName.ToLower())
             {
                 return true;
             }
