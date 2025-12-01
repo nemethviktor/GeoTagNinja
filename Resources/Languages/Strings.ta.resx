@@ -606,7 +606,7 @@
   <data name="lbl_ShiftTrackTimeBy" xml:space="preserve">
     <value>டிராக் கோப்பு நேரத்தை மாற்றவும்:</value>
   </data>
-  <data name="lbl_Startup_Folder" xml:space="preserve">
+  <data name="gbx_Startup_Folder" xml:space="preserve">
     <value>தொடக்க கோப்புறை</value>
   </data>
   <data name="lbl_TZNote" xml:space="preserve">

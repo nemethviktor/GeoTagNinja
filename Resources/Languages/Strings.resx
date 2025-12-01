@@ -335,51 +335,67 @@
   </data>
   <data name="gbx_AppSettings" xml:space="preserve">
     <value>Application Settings</value>
+    <comment>This is a label. Refer to the English for translation pls.</comment>
   </data>
   <data name="gbx_CreateDate" xml:space="preserve">
     <value>Created Date</value>
+    <comment>This is a label. Refer to the English for translation pls.</comment>
   </data>
   <data name="gbx_Dates" xml:space="preserve">
     <value>Dates</value>
+    <comment>This is a label. Refer to the English for translation pls.</comment>
   </data>
   <data name="gbx_EditImageList" xml:space="preserve">
     <value>Images selected for editing</value>
+    <comment>This is a label. Refer to the English for translation pls.</comment>
   </data>
   <data name="gbx_GeoNamesLanguageSettings" xml:space="preserve">
     <value>GeoNames Language Settings</value>
+    <comment>This is a label. Refer to the English for translation pls.</comment>
   </data>
   <data name="gbx_GeoNamesSettings" xml:space="preserve">
     <value>GeoNames Settings</value>
+    <comment>This is a label. Refer to the English for translation pls.</comment>
   </data>
   <data name="gbx_GetAltitude" xml:space="preserve">
     <value>Get Altitude data</value>
+    <comment>This is a label. Refer to the English for translation pls.</comment>
   </data>
   <data name="gbx_GetToponomy" xml:space="preserve">
     <value>Get Toponomy data</value>
+    <comment>This is a label. Refer to the English for translation pls.</comment>
   </data>
   <data name="gbx_GPSData" xml:space="preserve">
     <value>GPS Data</value>
+    <comment>This is a label. Refer to the English for translation pls.</comment>
   </data>
   <data name="gbx_ImportExportGpxSource" xml:space="preserve">
     <value>Source</value>
+    <comment>This is a label. Refer to the English for translation pls.</comment>
   </data>
   <data name="gbx_ImportExportGpxTimeSetting" xml:space="preserve">
     <value>Time Setting</value>
+    <comment>This is a label. Refer to the English for translation pls.</comment>
   </data>
   <data name="gbx_LocationData" xml:space="preserve">
     <value>Location Data</value>
+    <comment>This is a label. Refer to the English for translation pls.</comment>
   </data>
   <data name="gbx_MapColourMode" xml:space="preserve">
     <value>Map Colour Mode</value>
+    <comment>This is a label. Refer to the English for translation pls.</comment>
   </data>
   <data name="gbx_OtherSettings" xml:space="preserve">
     <value>Other Settings</value>
+    <comment>This is a label. Refer to the English for translation pls.</comment>
   </data>
   <data name="gbx_SaveTrackTo" xml:space="preserve">
     <value>Save Track (Options)</value>
+    <comment>This is a label. Refer to the English for translation pls.</comment>
   </data>
   <data name="gbx_TakenDate" xml:space="preserve">
     <value>Date (Image) Taken</value>
+    <comment>This is a label. Refer to the English for translation pls.</comment>
   </data>
   <data name="Generic_All" xml:space="preserve">
     <value>All</value>
@@ -392,6 +408,7 @@
   </data>
   <data name="Generic_Close" xml:space="preserve">
     <value>Close</value>
+    <comment>Close (as in don't leave open)</comment>
   </data>
   <data name="Generic_Coordinates" xml:space="preserve">
     <value>Coordinates</value>
@@ -431,9 +448,11 @@
   </data>
   <data name="Generic_Feet" xml:space="preserve">
     <value>Feet</value>
+    <comment>Feet (as in unit of measure, ~31cm)</comment>
   </data>
   <data name="Generic_Feet_Abbr" xml:space="preserve">
     <value>ft</value>
+    <comment>The abbreviation of feet (as in unit of measure)</comment>
   </data>
   <data name="Generic_FileModifyDate" xml:space="preserve">
     <value>File Date</value>
@@ -443,6 +462,7 @@
   </data>
   <data name="Generic_Fnumber" xml:space="preserve">
     <value>Aperture</value>
+    <comment>F-value (photography term)</comment>
   </data>
   <data name="Generic_FocalLength" xml:space="preserve">
     <value>Focal Length</value>
@@ -461,45 +481,54 @@
   </data>
   <data name="Generic_GPSAltitudeRef" xml:space="preserve">
     <value>Altitude Ref</value>
+    <comment>Ref as in reference (ultimately meters or feet)</comment>
   </data>
   <data name="Generic_GPSDateTime" xml:space="preserve">
     <value>GPS DateTime</value>
   </data>
   <data name="Generic_GPSDestLatitude" xml:space="preserve">
     <value>Dest Latitude</value>
+    <comment>Dest as in destination (abbr.)</comment>
   </data>
   <data name="Generic_GPSDestLatitudeRef" xml:space="preserve">
     <value>Dest Latitude Ref</value>
+    <comment>Dest as in destination (abbr.)</comment>
   </data>
   <data name="Generic_GPSDestLongitude" xml:space="preserve">
     <value>Dest Longitude</value>
+    <comment>Dest as in destination (abbr.)</comment>
   </data>
   <data name="Generic_GPSDestLongitudeRef" xml:space="preserve">
     <value>Dest Longitude Ref</value>
+    <comment>Dest as in destination (abbr.)</comment>
   </data>
   <data name="Generic_GPSImgDirection" xml:space="preserve">
     <value>Img Direction</value>
   </data>
   <data name="Generic_GPSImgDirectionRef" xml:space="preserve">
     <value>Img Direction Ref</value>
+    <comment>Ref as in reference (ultimately N/S/E/W)</comment>
   </data>
   <data name="Generic_GPSLatitude" xml:space="preserve">
     <value>Latitude</value>
   </data>
   <data name="Generic_GPSLatitudeRef" xml:space="preserve">
     <value>Latitude Ref</value>
+    <comment>Ref as in reference (ultimately N/S/E/W)</comment>
   </data>
   <data name="Generic_GPSLongitude" xml:space="preserve">
     <value>Longitude</value>
   </data>
   <data name="Generic_GPSLongitudeRef" xml:space="preserve">
     <value>Longitude Ref</value>
+    <comment>Ref as in reference (ultimately N/S/E/W)</comment>
   </data>
   <data name="Generic_GPSSpeed" xml:space="preserve">
     <value>Speed</value>
   </data>
   <data name="Generic_GPSSpeedRef" xml:space="preserve">
     <value>Speed Ref</value>
+    <comment>Ref as in reference (as in kmh)</comment>
   </data>
   <data name="Generic_GUID" xml:space="preserve">
     <value>GUID</value>
@@ -515,9 +544,11 @@
   </data>
   <data name="Generic_IPTCKeywords" xml:space="preserve">
     <value>IPTC Keywords</value>
+    <comment>IPTC is just an abbreviation, it doesn't translate i think.</comment>
   </data>
   <data name="Generic_ISO" xml:space="preserve">
     <value>ISO Speed</value>
+    <comment>ISO as in ISO Speed (exif tag)</comment>
   </data>
   <data name="Generic_LensSpec" xml:space="preserve">
     <value>Lens</value>
@@ -587,9 +618,11 @@
   </data>
   <data name="Generic_UseDST" xml:space="preserve">
     <value>Use DST?</value>
+    <comment>DST as in daylight saving time(zone)</comment>
   </data>
   <data name="Generic_XMLSubjects" xml:space="preserve">
     <value>XML Subjects</value>
+    <comment>XML subjects is an exif tag, it's just called so.</comment>
   </data>
   <data name="Generic_Yes" xml:space="preserve">
     <value>Yes</value>
@@ -717,7 +750,7 @@ If you click 'stop asking' it will take the answer as Yes and won't ask again th
     <value>Shift Track File Time by:</value>
     <comment>Location: Import/Export GPX</comment>
   </data>
-  <data name="lbl_Startup_Folder" xml:space="preserve">
+  <data name="gbx_Startup_Folder" xml:space="preserve">
     <value>Startup Folder</value>
     <comment>Location: Settings</comment>
   </data>
@@ -731,15 +764,19 @@ If you click 'stop asking' it will take the answer as Yes and won't ask again th
   </data>
   <data name="mbc_Error" xml:space="preserve">
     <value>Error</value>
+    <comment>These are messagebox captions/titles. Just refer to the English for translation pls.</comment>
   </data>
   <data name="mbc_Information" xml:space="preserve">
     <value>Information</value>
+    <comment>These are messagebox captions/titles. Just refer to the English for translation pls.</comment>
   </data>
   <data name="mbc_Question" xml:space="preserve">
     <value>Question</value>
+    <comment>These are messagebox captions/titles. Just refer to the English for translation pls.</comment>
   </data>
   <data name="mbc_Warning" xml:space="preserve">
     <value>Warning</value>
+    <comment>These are messagebox captions/titles. Just refer to the English for translation pls.</comment>
   </data>
   <data name="mbx_DirectoryElementCollection_ErrorParsing" xml:space="preserve">
     <value>Error while parsing folder to DirectoryElements</value>
@@ -1025,68 +1062,88 @@ Data will be discarded if you click No</value>
   </data>
   <data name="rbt_CreateDateSetToFixedDate" xml:space="preserve">
     <value>Set to Fixed Date</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbt_CreateDateTimeShift" xml:space="preserve">
     <value>Time Shift</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbt_importFromAnotherFolder" xml:space="preserve">
     <value>Import from another folder</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbt_importFromCurrentFolder" xml:space="preserve">
     <value>Import from the current folder</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbt_importOneFile" xml:space="preserve">
     <value>Import from a chosen file</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbt_MapColourModeDarkInverse" xml:space="preserve">
     <value>Dark (Inverse)</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbt_MapColourModeDarkPale" xml:space="preserve">
     <value>Dark (Pale)</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbt_MapColourModeNormal" xml:space="preserve">
     <value>Normal</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbt_PasteCreateDateActual" xml:space="preserve">
     <value>Actual (Fixed values)</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbt_PasteCreateDateShift" xml:space="preserve">
     <value>Time Shift</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbt_PasteTakenDateActual" xml:space="preserve">
     <value>Actual (Fixed values)</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbt_PasteTakenDateShift" xml:space="preserve">
     <value>Time Shift</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbt_TakenDateSetToFixedDate" xml:space="preserve">
     <value>Set to Fixed Date</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbt_TakenDateTimeShift" xml:space="preserve">
     <value>Time Shift</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbt_TryUseGeoNamesLanguage" xml:space="preserve">
     <value>Try to use this language when retrieving location names:</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbt_UseGeoNamesLocalLanguage" xml:space="preserve">
     <value>Try to use the "local language" when retrieving location names</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbx_CustomCityLogicExplanation" xml:space="preserve">
     <value>This is an advanced feature. AdminName1-4 &amp; ToponymName refer to the API outputs so if you don't understand that, probably don't poke this at all. 
 For an overall rundown, check: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 .
 What this Setting does is that you can add your own choices of countries to get the "City" value from one of the specific AdminNames.</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbx_CustomCityLogicExplanationBold" xml:space="preserve">
     <value>Note that changes to the table below are immediately affected and the OK/Cancel button has no effect per se on them. You also need to right-click and click Reset Cached Data for any files that may be affected by your changes if you want to pull data within this session (or just restart the app.)</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbx_CustomRulesExplanation" xml:space="preserve">
     <value>This is an advanced feature. AdminName1-4 &amp; ToponymName refer to the API outputs so if you don't understand that, probably don't poke this at all. 
 Re: "Predetermined countries" (checkbox below): Read about those here: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 + check the other tab - Note if you disable that setting it then will blank CountryCode cells that fall outside the relevant grouping but won't actually drop those rows.
 All columns are compulsory exc for "Custom" but if you set the Outcome to "Custom" and leave the "Custom" col empty the row will be ignored. Data is not-case-sensitive. For each datapoint (e.g. City, State) the last row overwrites the previous ones. Basically be sensible. The more rows you add the slower it will get.
 Example: the default data return from the API for London UK is poor because for that particular region adminName2 = "Greater London", and it'd be discarded as such (cities are usually from "ToponymName"). -&gt; set: "what" = "adminName2", "if" = "is", "Condition Value" = "Greater London", "then" = "City", "becomes" = "adminName2". Repeat the whole thing in a 2nd row but "then" = "Sub_Loction" and "becomes" = "ToponymName".</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbx_CustomRulesExplanationBold" xml:space="preserve">
     <value>Note that changes to the table below are immediately affected and the OK/Cancel button has no effect per se on them. You also need to right-click and click Reset Cached Data for any files that may be affected by your changes if you want to pull data within this session (or just restart the app.)</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbx_Register_ArcGIS" xml:space="preserve">
     <value>You'll need an ArcGIS API key to use the map search functionality. 
@@ -1103,9 +1160,11 @@ On the next page skip `Item Access`
 On the next page add any title
 Eventually click `Generate the API key and go to item details page. I am ready to copy and save the key.`
 Save the API key when prompted. If you don't do it at the time you'll have to generate another one.</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="rbx_Register_GeoNames" xml:space="preserve">
     <value>You'll need a GeoNames Account to use the reverse geocoding/search function (lat/long --&gt; country/city/...). Get one here: http://www.geonames.org/login and then enable "Free Web Services" access here: https://www.geonames.org/manageaccount</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="tcr_EditData" xml:space="preserve">
     <value>Edit Data</value>
@@ -1246,32 +1305,41 @@ Save the API key when prompted. If you don't do it at the time you'll have to ge
   </data>
   <data name="tsr_MainAppToolStrip" xml:space="preserve">
     <value>Main</value>
+    <comment>"Main" as in the menu item (Main menu)</comment>
   </data>
   <data name="ttp_GPSDataPaste" xml:space="preserve">
     <value>Press CTRL+V to paste a valid pair of decimals to the lat/long placeholders. 
 The clipboard should contain only a pair of decimals, preferably in "invariant" (English) setup, which is integer-dot-decimal-comma-integer-dot-decimal, such as 12.345, 56.897
 That said the code _should_ be able to comprehend other layouts. Note if the clipboard has anything apart from the above the operation will fail (nothing will happen.)</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="ttp_LoadFavourite" xml:space="preserve">
     <value>Load metadata for the selected file(s) from your Favourites</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="ttp_loctToFile" xml:space="preserve">
     <value>Save the Current Coordinate to the Selected File(s)</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="ttp_loctToFileDestination" xml:space="preserve">
     <value>Save the Current Coordinate to the Selected Files' Destination</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="ttp_ManageFavourites" xml:space="preserve">
     <value>Manage Favourites</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="ttp_NavigateMapGo" xml:space="preserve">
     <value>Put Coordinates of Selected Files onto the Map</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="ttp_OffsetTime" xml:space="preserve">
     <value>Time Zones are left as blank on open regardless of what the stored value is. There is no Exif Tag for TZ but only 'Offset', which is something like '+01:00'. As there is no indication for neither TZ nor DST per se I can't ascertain that  '+01:00' was in fact say BST rather than CET, one being DST the other not. Either adjust manually or pull from web - the combination of coordinates + createDate would decisively inform the program of the real TZ value. The value in the read-only textbox will be saved in the file.</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="ttp_SaveFavourite" xml:space="preserve">
     <value>Save (or overwrite) the currently selected file's metadata to your Favourites</value>
+    <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
   <data name="ckb_ImportExport_ApplicationSettings" xml:space="preserve">
     <value>ApplicationSettings</value>
@@ -1409,5 +1477,13 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
   <data name="tmi_File_SaveSelected" xml:space="preserve">
     <value>Save Selected</value>
     <comment>File Menu -&gt; Save selected items</comment>
+  </data>
+  <data name="rbt_SetStartup_Folder" xml:space="preserve">
+    <value>Set Startup Folder</value>
+    <comment>Location: Settings (this allows the user to hard-set a startup folder)</comment>
+  </data>
+  <data name="rbt_UseLastUsedFolder" xml:space="preserve">
+    <value>Use Last-Used Folder</value>
+    <comment>Location: Settings (this will set the app to use the last-used (entered) folder as startup folder on the next launch)</comment>
   </data>
 </root>

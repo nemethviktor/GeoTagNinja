@@ -1,8 +1,8 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 9xxx [2025xxxx]** (upcoming release)
+**Build 9xxx [2026xxxx]** (upcoming release)
 - NEW & UPDATED:
-	- TBA
+	- Add `Use Last Used Folder` (for startup purposes) #191
 - BUGS & FIXES:
 	- TBA
 
@@ -16,10 +16,10 @@
 
 **Build 9456 [20251121]**
 - NEW & UPDATED:
-	- Slightly changed "Dark Mode" colours to match the real ones.
+	- Slightly changed `Dark Mode` colours to match the real ones.
 	- Added German translations (via Weblate).
 	- There's now also a Ukranian translation stub on Weblate but it's empty.
-	- Added a new layer to the map ("Streets ESRI") - I've had problems with OSM lately; possibly a Leaflet issue but this is a reasonable fallback.
+	- Added a new layer to the map (`Streets ESRI`) - I've had problems with OSM lately; possibly a Leaflet issue but this is a reasonable fallback.
 	- My free Resharper licence has run out and they are no longer renewing small projects like mine so I have switched to Visual Studio 2026 and applied auto-reformatting of files. Rather in one go than bit-by-bit but I think it's for the better.
 	- Added GPS Dilution Of Precision (`GPSDOP`) and GPS Horizontal Positioning Error calc (`GPSHPositioningError`) as new columns #187
 - BUGS & FIXES:
@@ -32,7 +32,7 @@
 	- Capability to save certain defaults on the Import GPX Form #174
 	- App version Bump 1.17 - should have done that w/ the last public release.
 	- Added Polish Translations (via Weblate).
-	- Added some basic feedback to the completion of the GPX Export. (aka "Files exported successfully")
+	- Added some basic feedback to the completion of the GPX Export. (aka `Files exported successfully`)
 	- Added a Splash Screen. Bit of a gimmick but on slower computers it may be of some use.
 - BUGS & FIXES:
 	- Fixed app restart not working...hopefully (ref #175)
@@ -57,7 +57,7 @@
 	- Fixed half of the translations not actually working because...not even sure why. My bad nonetheless.
 	- Fixed the time element of the `TakenDate`/`CreateDate` not being read properly after modify #147
 	- Fixed HEIC previews misbehaving #152
-	- Fixed the "No access to API" error cropping up multiple times #153
+	- Fixed the `No access to API` error cropping up multiple times #153
 	- Fixed Import (settings) not working due to localisation issues
 	- Fixed DateTime copypaste not working and  not being handled properly on some Cultures [eg en-AU] #155
 
@@ -70,7 +70,7 @@
 	- Added the build number to the `Text` of `FrmMain`. I know this is a bit gimmicky but I like it.
 	- App version Bump 1.16
 - BUGS & FIXES:
-	- I've moved the startup methods to be async/awaited. Hopefully this will hide random occurrences of stuff like "tmi_Help". 
+	- I've moved the startup methods to be async/awaited. Hopefully this will hide random occurrences of stuff like `tmi_Help`. 
 	- Also revamped how column orders are handled internally.
 	- _Hopefully_ fixed the f....ing SQL Interop issues that occasionally crop up post-installation. It's a bug in VS Installer/Project config and is mighty annoying because it doesn't come up much in debug.
 	- Updated the icon naming on the Desktop. For some obscure reason I had it coded with an extraneous space.
@@ -82,8 +82,8 @@
 - BUGS & FIXES:
 	- Application should no longer crash when encountering an invalid piece of Exif data #118
 	- Added some logic to enable returning to `C:\` if the user enters a 'fake' folder name.
-	- "Restart Now" (within Settings) should hopefully work as expected #119
-	- Kinda fixed the "Do you want to save the write-Q?" box cropping up twice upon app-close.
+	- `Restart Now` (within Settings) should hopefully work as expected #119
+	- Kinda fixed the `Do you want to save the write-Q?` box cropping up twice upon app-close.
 
 **Build 8973 [20240726]** 
 - NEW & UPDATED:
@@ -131,7 +131,7 @@
 	- Long-pressing a point on the map will now offer the user to save the map location to the image so that there's no need for extra click #91
 	- Added functionality as per #92 to drag the map marker and allow the user to add the new value to the selected image(s).
 	- Added toponomymName to the options within Custom City Allocation Rules
-	- Changed how file names with "[]" chars are handled for saving.
+	- Changed how file names with `[]` chars are handled for saving.
 	- Bumped exifTool to v12.72
 - BUGS & FIXES:
 	- Fixed an issue re #93 Open Coords in API misbehaving. 
@@ -161,11 +161,11 @@
 	- `GPSDestinationLat/Long` ...
 		- is now being displayed in certain cases (when there is a series of images subject to a set of conditions. See the readme on how this works.),
 		- can be modified via a new button below the map,
-	- has been added to the list/function of "remove all geodata"
+	- has been added to the list/function of `remove all geodata`
 	- Added a new tab for the Exif info - this lists the values as they are held by GTN internally.
 	- Added 2 new buttons for filing feature requests and bugs (both require a GitHub acct.)
 	- Added Dark Mode support. Refer to the readme but it's very ugly and there's little I can do about that as WinForms doesn't support the rich capabilities Windows 10/11 can offer for the time being.
-	- Added various options for "Dark Mode Map"
+	- Added various options for `Dark Mode Map`
 - BUGS & FIXES:
 	- Fixed an error when data in MyComputer wasn't properly recorded and this caused a crash
 	- Reverted a change introduced earlier re: webView2 initialisation after it randomly failed on one of my VMs
@@ -176,7 +176,7 @@
 	- Graduated the app to version 1 [technically 1.10 because it's been edging up on the minor versions ever since initial release] - yayy. It now has all the features I initially wanted.
 		- Added some support for reading and displaying ImgDirection/Ref.
 		- Added a TaskbarProgressBarState indicator
-		- Update the "update" logic -> there's now a Setting that enables the user to update to pre-release [dev] releases or master-only. Master releases will no longer be marked as pre-release on github.
+		- Update the update logic -> there's now a Setting that enables the user to update to pre-release [dev] releases or master-only. Master releases will no longer be marked as pre-release on github.
 	- Bumped exifTool to v12.65
 	- Changed the internal logic as to how the ListView coordinates get put on the map. Trying to fully move away from reading data from the ListView rather than from the DirectoryElement
 	- Changed internal logic re: (not) defaulting values to strings in certain cases
@@ -204,7 +204,7 @@
 **Build 8556 [20230605]**
 - NEW & UPDATED:
 	- App Version Bump: 0.9 
-	- Added a "Collections Mode", in particular to work with Jeffrey Frield's LightRoom Classic Plugin "Run Any Command". Details on how to use this are in the readme.
+	- Added a `Collections Mode`, in particular to work with Jeffrey Frield's LightRoom Classic Plugin `Run Any Command`. Details on how to use this are in the readme.
 	- Rewrote the sorting logic to account for the data type of the column being sorted (i.e. date, number, text etc)
 	- Added Country to Favourites
 	- Bumped exifTool to v12.62
@@ -220,26 +220,26 @@
 	- App Version Bump: 0.8
 	- Entirely rewrote the code to work off DirectoryElements rather than DataTables. This is techy so I won't get into it here, for anyone cares read the code or discussion #62
 	- Added functionality to auto-navigate to a selected Favourite in the dropdown.
-	- Added a "recall last Track Sync Shift" option.
+	- Added a `recall last Track Sync Shift` option.
 	- Added logic for the pick-from-API-choices Form to accept doubleClick and (keyboard) Enter (key)
 	- Added a button in the Paste Form for generic All/None
 	- Added a button in the Paste Form for recalling the last Paste settings
 	- Added an option to halt further API pulls if one failed
 	- Changed certain numeric TextBoxes to NumericUpDowns.
 	- Added logic to replace hard-coded City-definition logic with user choices.
-	- Changed versioning logic. Will use simple build numbers from now on in the "public facing" element of the app. Windows & Visual Studio still require the ##.##.#### logic rather than just a build number but the About section won't show it..
+	- Changed versioning logic. Will use simple build numbers from now on in the public facing element of the app. Windows & Visual Studio still require the ##.##.#### logic rather than just a build number but the About section won't show it..
 - BUGS & FIXES:
 	- Fixed a bug where NumericUpDown changes didn't trigger setting fonts to Bold
 	- Fixed the map zooming way too far out when negative lat/long values are present
 	- Changed the pick-from-API-choices Form to be 1-based-index rather than 0-based
-	- Fixed MessageBox captions always saying "Error" as output
+	- Fixed MessageBox captions always saying `Error` as output
 	- Fixed a bug where one or two Settings were ignored on load
 	- Fixed a variety of random bugs relating to time-shift copypastes not entirely behaving
 	- Further fixed a variety of bugs that yet again I don't entirely remember
 
 **Build 8421 [20230121]**
 - NEW & UPDATED:
-	- Added a "Manage Favourites" element to the Settings area.
+	- Added a `Manage Favourites` element to the Settings area.
 	- Added Custom Rules. This is experimental for now. Wiki [here](https://github.com/nemethviktor/GeoTagNinja/wiki/Settings-&-Custom-Rules).
 	- Updated CountryCode ISO SQLite logic with CSV
 	- Updated Altitude-pull (from Web) logic. At the same time removed the separate button(s) to do that as it's now part of the Toponomy pull.
@@ -281,14 +281,14 @@
 
 **Build 8370 [20221201]**
 - NEW & UPDATED:
-	- Added Modify TakenDate & CreateDate (it's in the Edit File section - and no the time-shift cannot be copy-pasted yet -> shift works in terms of modifying the literal DateTime at the moment not as in a proper copyable "shift" value.)
+	- Added Modify TakenDate & CreateDate (it's in the Edit File section - and no the time-shift cannot be copy-pasted yet -> shift works in terms of modifying the literal DateTime at the moment not as in a proper copyable `shift` value.)
 	- Added a hold/blocker on entering a folder until the folder loads. This is annoying but is needed to prevent users from starting operations before the files are processed.
 	- Added some logic to locally store (for the length of the session) each file's data. This is so that if the actual image/xmp files don't change then there's no need to re-parse everything _again_. It's slow and pointless.
-	- Added functionality to "Get Data from Other File" in the Edit File section.
+	- Added functionality to `Get Data from Other File` in the Edit File section.
 	- Changed logic around the addition of sidecar XMP files and (possibly) overwriting the source image file.
 	- Added this changeLog.md file to the project outputs. I don't expect anyone to read it locally but at least now it's possible.
 	- Bumped exifTool to v12.51
-	- Added some logic to the above to allow for "Original Files DateTime" to be reset to CreateDateTime by default for RAW images. (These can all be changed in Settings/File Specific)
+	- Added some logic to the above to allow for `Original Files DateTime` to be reset to CreateDateTime by default for RAW images. (These can all be changed in Settings/File Specific)
 	- Rewrote the Excel macro that deals with exporting languages. It can now also import. (less relevant for the users but makes my life easier.)
 - BUGS & FIXES:
 	- Fixed Copy-Paste properly. Users can now pick what to paste. It's faster too now.
@@ -302,19 +302,19 @@
 - NEW & UPDATED:
 	- App Version Bump: 0.6
 	- Finally managed to get hold of ReSharper so the code has been refactored in totality. Famous last words but it shouldn't affect usage.
-	- Added a ".." to the main grid (listView) where applicable (parent folder).
+	- Added a `..` to the main grid (listView) where applicable (parent folder).
 	- Added the capability to navigate to the top of the folder structure. (e.g. MyComputer and then list the drives.)
 - BUGS & FIXES:
 	- Changed how the previews get created. This will hopefully result in faster preview-creation. The orientation-problem is still unsolved but it's likely to remain so for the time being.
 	- If a user's "Pictures" (or any other "Special") folder had been moved and renamed the would break because Windows treats special folders in odd ways. (e.g. if the Pics folder is called "Pics" Windows would still show "Pictures", which doesn't per se exist.)
-	- If the user had chosen "Delete All GPS Data" and subsequently added GPS data the addition would not have gone through upon save. This is now fixed.
+	- If the user had chosen `Delete All GPS Data` and subsequently added GPS data the addition would not have gone through upon save. This is now fixed.
 	- Rewrote the logic of (re)creating sidecar XMP files as the original logic would pull data from the RAW file (only), possibly overwriting Adobe-specific stuff that had been stored in an already-existing XMP.
 
 **Build 8350 [20221111]**
 - NEW & UPDATED:
 	- Added sync/import GPS Track Files.
 	- Added the capability to resize the main elements. Their positions aren't saved for now.
-	- Added a button to the ToolStrip to "get all from the web" (toponomy & altitude for selected items)
+	- Added a button to the ToolStrip to _get all from the web_ (toponomy & altitude for selected items)
 	- Bumped exifTool to v12.50
 	- Updated the logic of language file creation
 	- Code refactoring
@@ -340,7 +340,7 @@
 
 **Build 8314 [20221006] + Build 8318 [20221010]**
 - NEW & UPDATED:
-	- Added a "don't ask again" button for the "loc-to-file" dialogbox. This is session specific (if you close/restart the app, it will come back again). [Updated this logic in the Build 8318 release]
+	- Added a `Don't ask again` button for the `loc-to-file` dialogbox. This is session specific (if you close/restart the app, it will come back again). [Updated this logic in the Build 8318 release]
 - BUGS & FIXES:
 	- Minor code cleanup
 
@@ -366,7 +366,7 @@
 
 **Build 8251 [20220804]**
 - NEW & UPDATED:
-	- Added "Remove GeoData" to main form as well as Edit form
+	- Added `Remove GeoData` to main form as well as Edit form
 	- Added this changeLog.md file
 	- Added a readme to the ExtraFiles folder
 	- Added handling to MessageBox texts being read from SQLite

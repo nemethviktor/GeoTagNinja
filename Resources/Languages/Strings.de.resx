@@ -571,7 +571,7 @@
   <data name="lbl_ShiftTrackTimeBy" xml:space="preserve">
     <value>Track-Datei-Zeit verschieben um:</value>
   </data>
-  <data name="lbl_Startup_Folder" xml:space="preserve">
+  <data name="gbx_Startup_Folder" xml:space="preserve">
     <value>Startordner</value>
   </data>
   <data name="lbl_TZNote" xml:space="preserve">

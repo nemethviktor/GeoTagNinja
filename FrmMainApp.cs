@@ -535,7 +535,7 @@ public partial class FrmMainApp : Form
         // Write lat/long + visual settings for future reference to db
         Log.Debug(message: "Write lat/long + visual settings for future reference to db");
         List<AppSettingContainer> settingsToWrite = [];
-        List<KeyValuePair<string, string>> persistDataSettingsList =
+        List<KeyValuePair<string, string>> persistDataSettingsListGeneric =
         [
             new KeyValuePair<string, string>(key: "lastLat", value: nud_lat.Text),
             new KeyValuePair<string, string>(key: "lastLng", value: nud_lng.Text),
@@ -544,7 +544,18 @@ public partial class FrmMainApp : Form
             new KeyValuePair<string, string>(key: "splitContainerLeftTopSplitterDistance",
                 value: splitContainerLeftTop.SplitterDistance.ToString(provider: CultureInfo.InvariantCulture))
         ];
-        settingsToWrite.AddRange(collection: persistDataSettingsList.Select(selector: persistDataSetting =>
+
+        List<KeyValuePair<string, string>> persistDataSettingsListApplication = [];
+
+        if (HelperVariables.UserSettingUseLastUsedFolderAsStartup && !Program.CollectionModeEnabled)
+        {
+            persistDataSettingsListApplication.Add
+            (
+                new KeyValuePair<string, string>(key: "tbx_LastUsed_Folder", value: tbx_FolderName.Text)
+            );
+        }
+
+        settingsToWrite.AddRange(collection: persistDataSettingsListGeneric.Select(selector: persistDataSetting =>
             new AppSettingContainer
             {
                 TableName = "settings",
@@ -552,10 +563,22 @@ public partial class FrmMainApp : Form
                 SettingId = persistDataSetting.Key,
                 SettingValue = persistDataSetting.Value
             }));
+
+        if (persistDataSettingsListApplication.Count > 0)
+        {
+            settingsToWrite.AddRange(collection: persistDataSettingsListApplication.Select(selector: persistDataSetting =>
+                new AppSettingContainer
+                {
+                    TableName = "settings",
+                    SettingTabPage = "tpg_Application",
+                    SettingId = persistDataSetting.Key,
+                    SettingValue = persistDataSetting.Value
+                }));
+        }
         HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
 
         // Log stuff
-        foreach (KeyValuePair<string, string> keyValuePair in persistDataSettingsList)
+        foreach (KeyValuePair<string, string> keyValuePair in persistDataSettingsListGeneric)
         {
             Log.Debug(
                 message:

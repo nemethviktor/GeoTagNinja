@@ -280,6 +280,12 @@ internal static class HelperGenericAppStartup
         {
             [key: "tpg_Application"] = new Dictionary<string, List<string>>
             {
+                [key: "StartupFolderSelection"] =
+                [
+                    "rbt_SetStartup_Folder",
+                    "rbt_UseLastUsedFolder"
+                ],
+
                 [key: "UserSettingMapColourMode"] =
                 [
                     "rbt_MapColourModeNormal",
@@ -541,6 +547,7 @@ internal static class HelperGenericAppStartup
     {
         FrmMainApp.Log.Info(message: "Starting");
 
+        // we first try to check if there is a parameter supplied with the application launch (command-line)
         string startupFolder = string.Empty;
         if (!string.IsNullOrEmpty(value: Program.FolderToLaunchIn))
         {
@@ -549,16 +556,36 @@ internal static class HelperGenericAppStartup
                 startupFolder = Program.FolderToLaunchIn;
             }
         }
+
+        // if not then we check the database
         else
         {
             try
             {
-                startupFolder = HelperDataApplicationSettings.DataReadSQLiteSettings(
+                bool useLastUsedFolder = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
                     dataTable: HelperVariables.DtHelperDataApplicationSettings,
                     settingTabPage: "tpg_Application",
-                    settingId: "tbx_Startup_Folder"
-                );
-                FrmMainApp.Log.Trace(message: $"Startup Folder is: {startupFolder}");
+                    settingId: "rbt_UseLastUsedFolder");
+                HelperVariables.UserSettingUseLastUsedFolderAsStartup = useLastUsedFolder;
+
+                if (useLastUsedFolder)
+                {
+                    startupFolder = HelperDataApplicationSettings.DataReadSQLiteSettings(
+                        dataTable: HelperVariables.DtHelperDataApplicationSettings,
+                        settingTabPage: "tpg_Application",
+                        settingId: "tbx_LastUsed_Folder" // technially there is no such tbx but it's easier this way.
+                    );
+                    FrmMainApp.Log.Trace(message: $"Startup Folder is: {startupFolder} (via last-used folder)");
+                }
+                else
+                {
+                    startupFolder = HelperDataApplicationSettings.DataReadSQLiteSettings(
+                        dataTable: HelperVariables.DtHelperDataApplicationSettings,
+                        settingTabPage: "tpg_Application",
+                        settingId: "tbx_Startup_Folder"
+                    );
+                    FrmMainApp.Log.Trace(message: $"Startup Folder is: {startupFolder}");
+                }
             }
             catch (Exception ex)
             {

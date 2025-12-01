@@ -35,6 +35,11 @@ namespace GeoTagNinja
             this.tcr_Settings = new System.Windows.Forms.TabControl();
             this.tpg_Application = new System.Windows.Forms.TabPage();
             this.gbx_AppSettings = new System.Windows.Forms.GroupBox();
+            this.gbx_Startup_Folder = new System.Windows.Forms.GroupBox();
+            this.rbt_UseLastUsedFolder = new System.Windows.Forms.RadioButton();
+            this.rbt_SetStartup_Folder = new System.Windows.Forms.RadioButton();
+            this.tbx_Startup_Folder = new System.Windows.Forms.TextBox();
+            this.pbx_Browse_Startup_Folder = new System.Windows.Forms.PictureBox();
             this.pbx_ShowThumbnails = new System.Windows.Forms.PictureBox();
             this.ckb_ShowThumbnails = new System.Windows.Forms.CheckBox();
             this.ckb_UseDarkMode = new System.Windows.Forms.CheckBox();
@@ -50,9 +55,6 @@ namespace GeoTagNinja
             this.ckb_ResetMapToZero = new System.Windows.Forms.CheckBox();
             this.cbx_Language = new System.Windows.Forms.ComboBox();
             this.lbl_Language = new System.Windows.Forms.Label();
-            this.pbx_Browse_Startup_Folder = new System.Windows.Forms.PictureBox();
-            this.lbl_Startup_Folder = new System.Windows.Forms.Label();
-            this.tbx_Startup_Folder = new System.Windows.Forms.TextBox();
             this.tpg_GeoNames = new System.Windows.Forms.TabPage();
             this.gbx_GeoNamesSettings = new System.Windows.Forms.GroupBox();
             this.ckb_ShowPassword_GeoNames = new System.Windows.Forms.CheckBox();
@@ -104,9 +106,10 @@ namespace GeoTagNinja
             this.tcr_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             this.gbx_AppSettings.SuspendLayout();
+            this.gbx_Startup_Folder.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_ShowThumbnails)).BeginInit();
             this.gbx_MapColourMode.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).BeginInit();
             this.tpg_GeoNames.SuspendLayout();
             this.gbx_GeoNamesSettings.SuspendLayout();
             this.gbx_GeoNamesLanguageSettings.SuspendLayout();
@@ -141,6 +144,7 @@ namespace GeoTagNinja
             // 
             // gbx_AppSettings
             // 
+            this.gbx_AppSettings.Controls.Add(this.gbx_Startup_Folder);
             this.gbx_AppSettings.Controls.Add(this.pbx_ShowThumbnails);
             this.gbx_AppSettings.Controls.Add(this.ckb_ShowThumbnails);
             this.gbx_AppSettings.Controls.Add(this.ckb_UseDarkMode);
@@ -153,12 +157,47 @@ namespace GeoTagNinja
             this.gbx_AppSettings.Controls.Add(this.ckb_ResetMapToZero);
             this.gbx_AppSettings.Controls.Add(this.cbx_Language);
             this.gbx_AppSettings.Controls.Add(this.lbl_Language);
-            this.gbx_AppSettings.Controls.Add(this.pbx_Browse_Startup_Folder);
-            this.gbx_AppSettings.Controls.Add(this.lbl_Startup_Folder);
-            this.gbx_AppSettings.Controls.Add(this.tbx_Startup_Folder);
             resources.ApplyResources(this.gbx_AppSettings, "gbx_AppSettings");
             this.gbx_AppSettings.Name = "gbx_AppSettings";
             this.gbx_AppSettings.TabStop = false;
+            // 
+            // gbx_Startup_Folder
+            // 
+            this.gbx_Startup_Folder.Controls.Add(this.rbt_UseLastUsedFolder);
+            this.gbx_Startup_Folder.Controls.Add(this.rbt_SetStartup_Folder);
+            this.gbx_Startup_Folder.Controls.Add(this.tbx_Startup_Folder);
+            this.gbx_Startup_Folder.Controls.Add(this.pbx_Browse_Startup_Folder);
+            resources.ApplyResources(this.gbx_Startup_Folder, "gbx_Startup_Folder");
+            this.gbx_Startup_Folder.Name = "gbx_Startup_Folder";
+            this.gbx_Startup_Folder.TabStop = false;
+            // 
+            // rbt_UseLastUsedFolder
+            // 
+            resources.ApplyResources(this.rbt_UseLastUsedFolder, "rbt_UseLastUsedFolder");
+            this.rbt_UseLastUsedFolder.Name = "rbt_UseLastUsedFolder";
+            this.rbt_UseLastUsedFolder.UseVisualStyleBackColor = true;
+            this.rbt_UseLastUsedFolder.CheckedChanged += new System.EventHandler(this.Any_rbt_CheckedChanged);
+            // 
+            // rbt_SetStartup_Folder
+            // 
+            resources.ApplyResources(this.rbt_SetStartup_Folder, "rbt_SetStartup_Folder");
+            this.rbt_SetStartup_Folder.Name = "rbt_SetStartup_Folder";
+            this.rbt_SetStartup_Folder.UseVisualStyleBackColor = true;
+            this.rbt_SetStartup_Folder.CheckedChanged += new System.EventHandler(this.Any_rbt_CheckedChanged);
+            // 
+            // tbx_Startup_Folder
+            // 
+            resources.ApplyResources(this.tbx_Startup_Folder, "tbx_Startup_Folder");
+            this.tbx_Startup_Folder.Name = "tbx_Startup_Folder";
+            this.tbx_Startup_Folder.ReadOnly = true;
+            this.tbx_Startup_Folder.TextChanged += new System.EventHandler(this.Any_tbx_TextChanged);
+            // 
+            // pbx_Browse_Startup_Folder
+            // 
+            resources.ApplyResources(this.pbx_Browse_Startup_Folder, "pbx_Browse_Startup_Folder");
+            this.pbx_Browse_Startup_Folder.Name = "pbx_Browse_Startup_Folder";
+            this.pbx_Browse_Startup_Folder.TabStop = false;
+            this.pbx_Browse_Startup_Folder.Click += new System.EventHandler(this.Pbx_Browse_Startup_Folder_Click);
             // 
             // pbx_ShowThumbnails
             // 
@@ -264,25 +303,6 @@ namespace GeoTagNinja
             // 
             resources.ApplyResources(this.lbl_Language, "lbl_Language");
             this.lbl_Language.Name = "lbl_Language";
-            // 
-            // pbx_Browse_Startup_Folder
-            // 
-            resources.ApplyResources(this.pbx_Browse_Startup_Folder, "pbx_Browse_Startup_Folder");
-            this.pbx_Browse_Startup_Folder.Name = "pbx_Browse_Startup_Folder";
-            this.pbx_Browse_Startup_Folder.TabStop = false;
-            this.pbx_Browse_Startup_Folder.Click += new System.EventHandler(this.Pbx_Browse_Startup_Folder_Click);
-            // 
-            // lbl_Startup_Folder
-            // 
-            resources.ApplyResources(this.lbl_Startup_Folder, "lbl_Startup_Folder");
-            this.lbl_Startup_Folder.Name = "lbl_Startup_Folder";
-            // 
-            // tbx_Startup_Folder
-            // 
-            resources.ApplyResources(this.tbx_Startup_Folder, "tbx_Startup_Folder");
-            this.tbx_Startup_Folder.Name = "tbx_Startup_Folder";
-            this.tbx_Startup_Folder.ReadOnly = true;
-            this.tbx_Startup_Folder.TextChanged += new System.EventHandler(this.Any_tbx_TextChanged);
             // 
             // tpg_GeoNames
             // 
@@ -695,10 +715,12 @@ namespace GeoTagNinja
             this.tpg_Application.ResumeLayout(false);
             this.gbx_AppSettings.ResumeLayout(false);
             this.gbx_AppSettings.PerformLayout();
+            this.gbx_Startup_Folder.ResumeLayout(false);
+            this.gbx_Startup_Folder.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_ShowThumbnails)).EndInit();
             this.gbx_MapColourMode.ResumeLayout(false);
             this.gbx_MapColourMode.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).EndInit();
             this.tpg_GeoNames.ResumeLayout(false);
             this.gbx_GeoNamesSettings.ResumeLayout(false);
             this.gbx_GeoNamesSettings.PerformLayout();
@@ -741,7 +763,6 @@ namespace GeoTagNinja
         private System.Windows.Forms.ComboBox cbx_Language;
         private System.Windows.Forms.Label lbl_Language;
         private System.Windows.Forms.PictureBox pbx_Browse_Startup_Folder;
-        private System.Windows.Forms.Label lbl_Startup_Folder;
         public System.Windows.Forms.TextBox tbx_Startup_Folder;
         private System.Windows.Forms.TabPage tpg_CustomCityLogic;
         private System.Windows.Forms.DataGridView dgv_CustomCityLogic;
@@ -787,5 +808,8 @@ namespace GeoTagNinja
         private System.Windows.Forms.CheckBox ckb_ShowThumbnails;
         private System.Windows.Forms.PictureBox pbx_ShowThumbnails;
         private System.Windows.Forms.ToolTip ttp_ShowThumbnails;
+        private System.Windows.Forms.GroupBox gbx_Startup_Folder;
+        private System.Windows.Forms.RadioButton rbt_UseLastUsedFolder;
+        private System.Windows.Forms.RadioButton rbt_SetStartup_Folder;
     }
 }

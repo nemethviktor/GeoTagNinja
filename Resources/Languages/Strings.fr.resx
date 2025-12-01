@@ -440,7 +440,7 @@ Si vous cliquez sur 'Arrêter de demander', la réponse sera 'Oui' et ne redeman
   <data name="lbl_ShiftTrackTimeBy" xml:space="preserve">
     <value>Décaler l'heure du fichier de suivi GPS de :</value>
   </data>
-  <data name="lbl_Startup_Folder" xml:space="preserve">
+  <data name="gbx_Startup_Folder" xml:space="preserve">
     <value>Dossier de démarrage</value>
   </data>
   <data name="lbl_TZNote" xml:space="preserve">

@@ -31,7 +31,7 @@ internal static class HelperVariables
     #endregion
 
     #region bools
-    
+
     /// <summary>
     /// Whether to use Zero values where coords are missing
     /// </summary>
@@ -41,7 +41,7 @@ internal static class HelperVariables
     /// Whether to use dark mode
     /// </summary>
     internal static bool UserSettingUseDarkMode;
-    
+
     /// <summary>
     /// Whether to check for pre-release GTN versions
     /// </summary>
@@ -56,6 +56,8 @@ internal static class HelperVariables
 
     internal static bool UserSettingImportGPXUseParticularTimeZone;
     internal static bool UserSettingImportGPXUseDST;
+
+    internal static bool UserSettingUseLastUsedFolderAsStartup;
 
     #endregion
 

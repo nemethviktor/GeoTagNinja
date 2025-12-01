@@ -48,6 +48,12 @@ public partial class FrmSettings : Form
         "rbt_MapColourModeDarkPale"
     ];
 
+    private readonly List<string> _rbtStartupFolderOptions =
+    [
+        "rbt_SetStartup_Folder",
+        "rbt_UseLastUsedFolder"
+    ];
+
     /// <summary>
     ///     This Form provides an interface for the user to edit various app and file-specific settings.
     /// </summary>
@@ -64,6 +70,14 @@ public partial class FrmSettings : Form
         _nowLoadingSettingsData = false;
     }
 
+    /// <summary>
+    /// Initializes and assigns labels and values to controls within the form, including populating language selection
+    /// ComboBoxes and restoring saved user preferences.
+    /// </summary>
+    /// <remarks>This method retrieves all relevant controls from the various tab pages,
+    /// populates language selection ComboBoxes with both native and English names, and selects the previously saved
+    /// language if available. It also assigns text values to other controls as needed. This method should be called
+    /// during form initialization to ensure controls are properly configured for user interaction.</remarks>
     private void AssignControlLabelsAndValues()
     {
         HelperNonStatic helperNonstatic = new();
@@ -209,10 +223,15 @@ public partial class FrmSettings : Form
     }
 
     /// <summary>
-    ///     Handles loading the basic values into Settings when the user opens the Form
+    /// Handles the Load event of the settings form, initializing controls and loading user preferences from application
+    /// settings.
     /// </summary>
-    /// <param name="sender">Unused</param>
-    /// <param name="e">Unused</param>
+    /// <remarks>This method populates form controls with values from persisted settings, sets up file
+    /// extension lists, and configures UI elements based on user preferences. It is called automatically when the form
+    /// is loaded. Changes made during this event ensure that the form reflects the current application state and user
+    /// configuration.</remarks>
+    /// <param name="sender">The source of the event, typically the settings form instance.</param>
+    /// <param name="e">An EventArgs object containing event data.</param>
     private void FrmSettings_Load(object sender,
                                   EventArgs e)
     {
@@ -351,6 +370,13 @@ public partial class FrmSettings : Form
         {
             HelperVariables.UserSettingMapColourMode =
                 "Normal"; // technically we could just ignore this
+        }
+
+        // ensure that there _is_ a setting for UserSettingUseLastUsedFolderAsStartup
+        // this could be a situation when the user updates to the app version newly containing this feature
+        if (!rbt_SetStartup_Folder.Checked && !rbt_UseLastUsedFolder.Checked)
+        {
+            rbt_SetStartup_Folder.Checked = true;
         }
 
         _nowLoadingSettingsData = false;
@@ -560,7 +586,6 @@ public partial class FrmSettings : Form
     ///     checkbox changes.
     /// </summary>
     /// <returns>KVP list of country codes and countries</returns>
-    
     private static Dictionary<string, string> refreshClh_CountryCodeOptions(bool ckb_IncludePredeterminedCountries)
     {
         Dictionary<string, string> clh_CountryCodeOptions = [];
@@ -780,6 +805,11 @@ public partial class FrmSettings : Form
                                         newValue: "");
                             }
                         }
+
+                        else if (_rbtStartupFolderOptions.Contains(item: rbt.Name))
+                        {
+                            HelperVariables.UserSettingUseLastUsedFolderAsStartup = rbt_UseLastUsedFolder.Checked;
+                        }
                     }
                 }
             }
@@ -813,6 +843,11 @@ public partial class FrmSettings : Form
     private void Pbx_Browse_Startup_Folder_Click(object sender,
                                                  EventArgs e)
     {
+        fbd_StartupFolder.Description = ReturnControlText(
+                fakeControlType: FakeControlTypes.RadioButton,
+                controlName: "rbt_SetStartup_Folder"
+            );
+
         if (fbd_StartupFolder.ShowDialog() == DialogResult.OK)
         {
             tbx_Startup_Folder.Text = fbd_StartupFolder.SelectedPath;
@@ -954,6 +989,9 @@ public partial class FrmSettings : Form
                         cbx_TryUseGeoNamesLanguage.Enabled = !rbt.Checked;
                     }
 
+                    break;
+                case "gbx_Startup_Folder":
+                    pbx_Browse_Startup_Folder.Enabled = rbt_SetStartup_Folder.Checked;
                     break;
                 case "gbx_MapColourMode":
                     // also set the other values to False
@@ -1270,7 +1308,7 @@ public partial class FrmSettings : Form
 
         Dictionary<string, string> buttonsDictionary = GetButtonsDictionary();
 
-        
+
         List<string> ItemsToExport = DialogWithOrWithoutCheckBox.DisplayAndReturnList(
             labelText: ReturnControlText(
                 controlName: "mbx_FrmSettings_QuestionWhatToExport",
@@ -1339,7 +1377,7 @@ public partial class FrmSettings : Form
 
             Dictionary<string, string> buttonsDictionary = GetButtonsDictionary();
 
-            
+
             List<string> ItemsToImport = DialogWithOrWithoutCheckBox.DisplayAndReturnList(
                 labelText: ReturnControlText(
                     controlName: "mbx_FrmSettings_QuestionWhatToImport",
@@ -1519,4 +1557,5 @@ public partial class FrmSettings : Form
     }
 
     #endregion
+
 }
