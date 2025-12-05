@@ -1165,4 +1165,10 @@ Zapisz klucz API, gdy zostaniesz o to poproszony. Jeśli tego nie zrobisz od raz
   <data name="tmi_File_SaveSelected" xml:space="preserve">
     <value>Zapisz zaznaczone</value>
   </data>
+  <data name="rbt_SetStartup_Folder" xml:space="preserve">
+    <value>Ustaw folder startowy</value>
+  </data>
+  <data name="rbt_UseLastUsedFolder" xml:space="preserve">
+    <value>Użyj ostatnio używanego folderu</value>
+  </data>
 </root>
