@@ -110,11 +110,11 @@
     <Reference Include="ExCSS, Version=4.3.1.0, Culture=neutral, PublicKeyToken=bdbe16be9b936b9a, processorArchitecture=MSIL">
       <HintPath>packages\ExCSS.4.3.1\lib\net48\ExCSS.dll</HintPath>
     </Reference>
-    <Reference Include="Magick.NET-Q16-OpenMP-x64, Version=14.9.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=AMD64">
-      <HintPath>packages\Magick.NET-Q16-OpenMP-x64.14.9.1\lib\netstandard20\Magick.NET-Q16-OpenMP-x64.dll</HintPath>
+    <Reference Include="Magick.NET-Q16-OpenMP-x64, Version=14.10.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=AMD64">
+      <HintPath>packages\Magick.NET-Q16-OpenMP-x64.14.10.0\lib\netstandard20\Magick.NET-Q16-OpenMP-x64.dll</HintPath>
     </Reference>
-    <Reference Include="Magick.NET.Core, Version=14.9.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
-      <HintPath>packages\Magick.NET.Core.14.9.1\lib\netstandard20\Magick.NET.Core.dll</HintPath>
+    <Reference Include="Magick.NET.Core, Version=14.10.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
+      <HintPath>packages\Magick.NET.Core.14.10.0\lib\netstandard20\Magick.NET.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.10.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -254,6 +254,12 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FrmCustomiseFormControls.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmCustomiseFormControls.Designer.cs">
+      <DependentUpon>FrmCustomiseFormControls.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmMainApp.Startup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -416,6 +422,9 @@
       <DependentUpon>FrmAboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="FrmCustomiseFormControls.resx">
+      <DependentUpon>FrmCustomiseFormControls.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmManageFavourites.resx">
       <DependentUpon>FrmManageFavourites.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -567,12 +576,12 @@
     <Error Condition="!Exists('packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets'))" />
     <Error Condition="!Exists('packages\Sdcb.LibRaw.runtime.win64.0.21.1\build\net\Sdcb.LibRaw.runtime.win64.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Sdcb.LibRaw.runtime.win64.0.21.1\build\net\Sdcb.LibRaw.runtime.win64.props'))" />
     <Error Condition="!Exists('packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
-    <Error Condition="!Exists('packages\Magick.NET-Q16-OpenMP-x64.14.9.1\build\netstandard20\Magick.NET-Q16-OpenMP-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Magick.NET-Q16-OpenMP-x64.14.9.1\build\netstandard20\Magick.NET-Q16-OpenMP-x64.targets'))" />
     <Error Condition="!Exists('packages\Microsoft.Web.WebView2.1.0.3595.46\build\Microsoft.Web.WebView2.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Web.WebView2.1.0.3595.46\build\Microsoft.Web.WebView2.targets'))" />
+    <Error Condition="!Exists('packages\Magick.NET-Q16-OpenMP-x64.14.10.0\build\netstandard20\Magick.NET-Q16-OpenMP-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Magick.NET-Q16-OpenMP-x64.14.10.0\build\netstandard20\Magick.NET-Q16-OpenMP-x64.targets'))" />
   </Target>
   <Import Project="packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
   <Import Project="packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets" Condition="Exists('packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets')" />
   <Import Project="packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
-  <Import Project="packages\Magick.NET-Q16-OpenMP-x64.14.9.1\build\netstandard20\Magick.NET-Q16-OpenMP-x64.targets" Condition="Exists('packages\Magick.NET-Q16-OpenMP-x64.14.9.1\build\netstandard20\Magick.NET-Q16-OpenMP-x64.targets')" />
   <Import Project="packages\Microsoft.Web.WebView2.1.0.3595.46\build\Microsoft.Web.WebView2.targets" Condition="Exists('packages\Microsoft.Web.WebView2.1.0.3595.46\build\Microsoft.Web.WebView2.targets')" />
+  <Import Project="packages\Magick.NET-Q16-OpenMP-x64.14.10.0\build\netstandard20\Magick.NET-Q16-OpenMP-x64.targets" Condition="Exists('packages\Magick.NET-Q16-OpenMP-x64.14.10.0\build\netstandard20\Magick.NET-Q16-OpenMP-x64.targets')" />
 </Project>

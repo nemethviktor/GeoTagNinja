@@ -250,6 +250,11 @@ internal static class HelperControlThemeManager
                     }
                 }
             }
+            else if (cItem is ComboBox cbx)
+            {
+                cbx.FlatStyle = FlatStyle.Flat;
+                cbx.ForeColor = Color.White;
+            }
             else if (cItem is ToolStrip ts)
             {
                 // https://www.codeproject.com/Messages/3329190/How-to-convert-a-Control-into-a-ToolStripButton.aspx

@@ -214,6 +214,9 @@ public partial class FrmMainApp : Form
 
         DirectoryElements.ExifTool = _ExifTool;
 
+#if !DEBUG
+            this.tmi_Debug.Visible = false;
+#endif
         Log.Info(message: "Constructor: Done");
     }
 
@@ -1805,6 +1808,15 @@ public partial class FrmMainApp : Form
         lvw_FileList.SelectInverseItems();
     }
 
+    #endregion
+
+    #region Debug (that is, the "Debug" menu item)
+    private void tmi_Debug_CustomiseWinformControls_Click(object sender, EventArgs e)
+    {
+        FrmCustomiseFormControls frmCustomiseFormControls = new();
+        frmCustomiseFormControls.SetCustomiseControls(Controls);
+        frmCustomiseFormControls.Show();
+    }
     #endregion
 
     #region FrmMainApp's TaskBar Stuff
@@ -3838,6 +3850,7 @@ in toponomyOverwrites)
         cbx_Favourites.AutoCompleteSource = AutoCompleteSource.CustomSource;
         cbx_Favourites.AutoCompleteCustomSource = autoCompleteCustomSource;
     }
+
 
 }
 

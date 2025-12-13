@@ -172,7 +172,7 @@
     <value>lvw_FileList</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.ListView.FileListView, GeoTagNinja, Version=1.17.9457.22098, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.ListView.FileListView, GeoTagNinja, Version=1.17.9478.19396, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel1</value>
@@ -220,7 +220,7 @@
     <value>pbx_imagePreview</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.ImagePreview, GeoTagNinja, Version=1.17.9457.22098, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.ImagePreview, GeoTagNinja, Version=1.17.9478.19396, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel2</value>
@@ -331,7 +331,7 @@
     <value>wbv_MapArea</value>
   </data>
   <data name="&gt;&gt;wbv_MapArea.Type" xml:space="preserve">
-    <value>Microsoft.Web.WebView2.WinForms.WebView2, Microsoft.Web.WebView2.WinForms, Version=1.0.3485.44, Culture=neutral, PublicKeyToken=2a8ab48044d2601e</value>
+    <value>Microsoft.Web.WebView2.WinForms.WebView2, Microsoft.Web.WebView2.WinForms, Version=1.0.3595.46, Culture=neutral, PublicKeyToken=2a8ab48044d2601e</value>
   </data>
   <data name="&gt;&gt;wbv_MapArea.Parent" xml:space="preserve">
     <value>tpg_Map</value>
@@ -437,7 +437,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAD8
-        CAAAAk1TRnQBSQFMAgEBAgEAAcABAwHAAQMBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        CAAAAk1TRnQBSQFMAgEBAgEAAdgBAwHYAQMBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABQAMAARADAAEBAQABCAYAAQQYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
         AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
         AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA
@@ -695,7 +695,7 @@
     <value>wbv_MapArea</value>
   </data>
   <data name="&gt;&gt;wbv_MapArea.Type" xml:space="preserve">
-    <value>Microsoft.Web.WebView2.WinForms.WebView2, Microsoft.Web.WebView2.WinForms, Version=1.0.3485.44, Culture=neutral, PublicKeyToken=2a8ab48044d2601e</value>
+    <value>Microsoft.Web.WebView2.WinForms.WebView2, Microsoft.Web.WebView2.WinForms, Version=1.0.3595.46, Culture=neutral, PublicKeyToken=2a8ab48044d2601e</value>
   </data>
   <data name="&gt;&gt;wbv_MapArea.Parent" xml:space="preserve">
     <value>tpg_Map</value>
@@ -1332,6 +1332,69 @@
   <metadata name="mns_MenuStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>613, 17</value>
   </metadata>
+  <data name="tmi_File.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 22</value>
+  </data>
+  <data name="tmi_File.Text" xml:space="preserve">
+    <value>tmi_File</value>
+  </data>
+  <data name="tmi_Debug_CustomiseWinformControls.Size" type="System.Drawing.Size, System.Drawing">
+    <value>285, 22</value>
+  </data>
+  <data name="tmi_Debug_CustomiseWinformControls.Text" xml:space="preserve">
+    <value>tmi_Debug_CustomiseWinformControls</value>
+  </data>
+  <data name="tmi_Debug.Size" type="System.Drawing.Size, System.Drawing">
+    <value>77, 22</value>
+  </data>
+  <data name="tmi_Debug.Text" xml:space="preserve">
+    <value>tmi_Debug</value>
+  </data>
+  <data name="tmi_Edit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>62, 22</value>
+  </data>
+  <data name="tmi_Edit.Text" xml:space="preserve">
+    <value>tmi_Edit</value>
+  </data>
+  <data name="tmi_Settings.Size" type="System.Drawing.Size, System.Drawing">
+    <value>84, 22</value>
+  </data>
+  <data name="tmi_Settings.Text" xml:space="preserve">
+    <value>tmi_Settings</value>
+  </data>
+  <data name="tmi_Help.Size" type="System.Drawing.Size, System.Drawing">
+    <value>67, 22</value>
+  </data>
+  <data name="tmi_Help.Text" xml:space="preserve">
+    <value>tmi_Help</value>
+  </data>
+  <data name="mns_MenuStrip.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="mns_MenuStrip.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 1, 0, 1</value>
+  </data>
+  <data name="mns_MenuStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>730, 24</value>
+  </data>
+  <data name="mns_MenuStrip.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="mns_MenuStrip.Text" xml:space="preserve">
+    <value>mns_MenuStrip</value>
+  </data>
+  <data name="&gt;&gt;mns_MenuStrip.Name" xml:space="preserve">
+    <value>mns_MenuStrip</value>
+  </data>
+  <data name="&gt;&gt;mns_MenuStrip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mns_MenuStrip.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;mns_MenuStrip.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
   <data name="tmi_File_SaveAll.ShortcutKeyDisplayString" xml:space="preserve">
     <value>CTRL+S</value>
   </data>
@@ -1418,57 +1481,6 @@
   </data>
   <data name="tmi_File_Quit.Text" xml:space="preserve">
     <value>tmi_File_Quit</value>
-  </data>
-  <data name="tmi_File.Size" type="System.Drawing.Size, System.Drawing">
-    <value>60, 22</value>
-  </data>
-  <data name="tmi_File.Text" xml:space="preserve">
-    <value>tmi_File</value>
-  </data>
-  <data name="tmi_Edit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>62, 22</value>
-  </data>
-  <data name="tmi_Edit.Text" xml:space="preserve">
-    <value>tmi_Edit</value>
-  </data>
-  <data name="tmi_Settings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>84, 22</value>
-  </data>
-  <data name="tmi_Settings.Text" xml:space="preserve">
-    <value>tmi_Settings</value>
-  </data>
-  <data name="tmi_Help.Size" type="System.Drawing.Size, System.Drawing">
-    <value>67, 22</value>
-  </data>
-  <data name="tmi_Help.Text" xml:space="preserve">
-    <value>tmi_Help</value>
-  </data>
-  <data name="mns_MenuStrip.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="mns_MenuStrip.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 1, 0, 1</value>
-  </data>
-  <data name="mns_MenuStrip.Size" type="System.Drawing.Size, System.Drawing">
-    <value>730, 24</value>
-  </data>
-  <data name="mns_MenuStrip.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="mns_MenuStrip.Text" xml:space="preserve">
-    <value>mns_MenuStrip</value>
-  </data>
-  <data name="&gt;&gt;mns_MenuStrip.Name" xml:space="preserve">
-    <value>mns_MenuStrip</value>
-  </data>
-  <data name="&gt;&gt;mns_MenuStrip.Type" xml:space="preserve">
-    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mns_MenuStrip.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;mns_MenuStrip.ZOrder" xml:space="preserve">
-    <value>4</value>
   </data>
   <data name="tmi_Edit_SelectAll.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
     <value>Ctrl+A</value>
@@ -4918,11 +4930,29 @@
   <data name="&gt;&gt;tmi_File_SaveAll.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;tmi_File_SaveSelected.Name" xml:space="preserve">
+    <value>tmi_File_SaveSelected</value>
+  </data>
+  <data name="&gt;&gt;tmi_File_SaveSelected.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tss_File_1.Name" xml:space="preserve">
+    <value>tss_File_1</value>
+  </data>
+  <data name="&gt;&gt;tss_File_1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;tmi_File_EditFiles.Name" xml:space="preserve">
     <value>tmi_File_EditFiles</value>
   </data>
   <data name="&gt;&gt;tmi_File_EditFiles.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tss_File_2.Name" xml:space="preserve">
+    <value>tss_File_2</value>
+  </data>
+  <data name="&gt;&gt;tss_File_2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tmi_File_ImportExportGPX.Name" xml:space="preserve">
     <value>tmi_File_ImportExportGPX</value>
@@ -4935,6 +4965,12 @@
   </data>
   <data name="&gt;&gt;tmi_File_ImportFavouritesFromGeoSetter.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tss_File_3.Name" xml:space="preserve">
+    <value>tss_File_3</value>
+  </data>
+  <data name="&gt;&gt;tss_File_3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tmi_File_CopyGeoData.Name" xml:space="preserve">
     <value>tmi_File_CopyGeoData</value>
@@ -4970,6 +5006,18 @@
     <value>tmi_File_Quit</value>
   </data>
   <data name="&gt;&gt;tmi_File_Quit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tmi_Debug.Name" xml:space="preserve">
+    <value>tmi_Debug</value>
+  </data>
+  <data name="&gt;&gt;tmi_Debug.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tmi_Debug_CustomiseWinformControls.Name" xml:space="preserve">
+    <value>tmi_Debug_CustomiseWinformControls</value>
+  </data>
+  <data name="&gt;&gt;tmi_Debug_CustomiseWinformControls.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tmi_Edit.Name" xml:space="preserve">
@@ -5187,30 +5235,6 @@
   </data>
   <data name="&gt;&gt;ttp_BugReport.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tss_File_1.Name" xml:space="preserve">
-    <value>tss_File_1</value>
-  </data>
-  <data name="&gt;&gt;tss_File_1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tss_File_3.Name" xml:space="preserve">
-    <value>tss_File_3</value>
-  </data>
-  <data name="&gt;&gt;tss_File_3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tss_File_2.Name" xml:space="preserve">
-    <value>tss_File_2</value>
-  </data>
-  <data name="&gt;&gt;tss_File_2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tmi_File_SaveSelected.Name" xml:space="preserve">
-    <value>tmi_File_SaveSelected</value>
-  </data>
-  <data name="&gt;&gt;tmi_File_SaveSelected.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>FrmMainApp</value>

@@ -87,15 +87,21 @@ namespace GeoTagNinja
             this.mns_MenuStrip = new System.Windows.Forms.MenuStrip();
             this.tmi_File = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_SaveAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_File_SaveSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.tss_File_1 = new System.Windows.Forms.ToolStripSeparator();
             this.tmi_File_EditFiles = new System.Windows.Forms.ToolStripMenuItem();
+            this.tss_File_2 = new System.Windows.Forms.ToolStripSeparator();
             this.tmi_File_ImportExportGPX = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_ImportFavouritesFromGeoSetter = new System.Windows.Forms.ToolStripMenuItem();
+            this.tss_File_3 = new System.Windows.Forms.ToolStripSeparator();
             this.tmi_File_CopyGeoData = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_File_PasteGeoData = new System.Windows.Forms.ToolStripMenuItem();
             this.tss_File_4 = new System.Windows.Forms.ToolStripSeparator();
             this.tmi_File_FlatMode = new System.Windows.Forms.ToolStripMenuItem();
             this.tss_File_5 = new System.Windows.Forms.ToolStripSeparator();
             this.tmi_File_Quit = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Debug = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmi_Debug_CustomiseWinformControls = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_Edit = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_Edit_SelectAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tmi_Edit_SelectNone = new System.Windows.Forms.ToolStripMenuItem();
@@ -134,10 +140,6 @@ namespace GeoTagNinja
             this.ttp_loctToFileDestination = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_FeedbackFeatureRequest = new System.Windows.Forms.ToolTip(this.components);
             this.ttp_BugReport = new System.Windows.Forms.ToolTip(this.components);
-            this.tss_File_1 = new System.Windows.Forms.ToolStripSeparator();
-            this.tss_File_3 = new System.Windows.Forms.ToolStripSeparator();
-            this.tss_File_2 = new System.Windows.Forms.ToolStripSeparator();
-            this.tmi_File_SaveSelected = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
@@ -551,6 +553,7 @@ namespace GeoTagNinja
             this.mns_MenuStrip.ImageScalingSize = new System.Drawing.Size(28, 28);
             this.mns_MenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tmi_File,
+            this.tmi_Debug,
             this.tmi_Edit,
             this.tmi_Settings,
             this.tmi_Help});
@@ -584,11 +587,27 @@ namespace GeoTagNinja
             resources.ApplyResources(this.tmi_File_SaveAll, "tmi_File_SaveAll");
             this.tmi_File_SaveAll.Click += new System.EventHandler(this.tmi_File_SaveAll_Click);
             // 
+            // tmi_File_SaveSelected
+            // 
+            this.tmi_File_SaveSelected.Name = "tmi_File_SaveSelected";
+            resources.ApplyResources(this.tmi_File_SaveSelected, "tmi_File_SaveSelected");
+            this.tmi_File_SaveSelected.Click += new System.EventHandler(this.tmi_File_SaveSelected_Click);
+            // 
+            // tss_File_1
+            // 
+            this.tss_File_1.Name = "tss_File_1";
+            resources.ApplyResources(this.tss_File_1, "tss_File_1");
+            // 
             // tmi_File_EditFiles
             // 
             this.tmi_File_EditFiles.Name = "tmi_File_EditFiles";
             resources.ApplyResources(this.tmi_File_EditFiles, "tmi_File_EditFiles");
             this.tmi_File_EditFiles.Click += new System.EventHandler(this.tmi_File_EditFiles_Click);
+            // 
+            // tss_File_2
+            // 
+            this.tss_File_2.Name = "tss_File_2";
+            resources.ApplyResources(this.tss_File_2, "tss_File_2");
             // 
             // tmi_File_ImportExportGPX
             // 
@@ -601,6 +620,11 @@ namespace GeoTagNinja
             this.tmi_File_ImportFavouritesFromGeoSetter.Name = "tmi_File_ImportFavouritesFromGeoSetter";
             resources.ApplyResources(this.tmi_File_ImportFavouritesFromGeoSetter, "tmi_File_ImportFavouritesFromGeoSetter");
             this.tmi_File_ImportFavouritesFromGeoSetter.Click += new System.EventHandler(this.tmi_File_ImportFavouritesFromGeoSetter_Click);
+            // 
+            // tss_File_3
+            // 
+            this.tss_File_3.Name = "tss_File_3";
+            resources.ApplyResources(this.tss_File_3, "tss_File_3");
             // 
             // tmi_File_CopyGeoData
             // 
@@ -636,6 +660,19 @@ namespace GeoTagNinja
             this.tmi_File_Quit.Name = "tmi_File_Quit";
             resources.ApplyResources(this.tmi_File_Quit, "tmi_File_Quit");
             this.tmi_File_Quit.Click += new System.EventHandler(this.tmi_File_Quit_Click);
+            // 
+            // tmi_Debug
+            // 
+            this.tmi_Debug.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tmi_Debug_CustomiseWinformControls});
+            this.tmi_Debug.Name = "tmi_Debug";
+            resources.ApplyResources(this.tmi_Debug, "tmi_Debug");
+            // 
+            // tmi_Debug_CustomiseWinformControls
+            // 
+            this.tmi_Debug_CustomiseWinformControls.Name = "tmi_Debug_CustomiseWinformControls";
+            resources.ApplyResources(this.tmi_Debug_CustomiseWinformControls, "tmi_Debug_CustomiseWinformControls");
+            this.tmi_Debug_CustomiseWinformControls.Click += new System.EventHandler(this.tmi_Debug_CustomiseWinformControls_Click);
             // 
             // tmi_Edit
             // 
@@ -856,27 +893,6 @@ namespace GeoTagNinja
             this.tsb_OneFolderUp.Name = "tsb_OneFolderUp";
             this.tsb_OneFolderUp.Click += new System.EventHandler(this.btn_OneFolderUp_Click);
             // 
-            // tss_File_1
-            // 
-            this.tss_File_1.Name = "tss_File_1";
-            resources.ApplyResources(this.tss_File_1, "tss_File_1");
-            // 
-            // tss_File_3
-            // 
-            this.tss_File_3.Name = "tss_File_3";
-            resources.ApplyResources(this.tss_File_3, "tss_File_3");
-            // 
-            // tss_File_2
-            // 
-            this.tss_File_2.Name = "tss_File_2";
-            resources.ApplyResources(this.tss_File_2, "tss_File_2");
-            // 
-            // tmi_File_SaveSelected
-            // 
-            this.tmi_File_SaveSelected.Name = "tmi_File_SaveSelected";
-            resources.ApplyResources(this.tmi_File_SaveSelected, "tmi_File_SaveSelected");
-            this.tmi_File_SaveSelected.Click += new System.EventHandler(this.tmi_File_SaveSelected_Click);
-            // 
             // FrmMainApp
             // 
             resources.ApplyResources(this, "$this");
@@ -1024,6 +1040,8 @@ namespace GeoTagNinja
         private ToolStripSeparator tss_File_2;
         private ToolStripSeparator tss_File_3;
         private ToolStripMenuItem tmi_File_SaveSelected;
+        private ToolStripMenuItem tmi_Debug;
+        private ToolStripMenuItem tmi_Debug_CustomiseWinformControls;
     }
 }
 

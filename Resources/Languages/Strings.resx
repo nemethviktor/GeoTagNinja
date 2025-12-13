@@ -1486,4 +1486,15 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>Use Last-Used Folder</value>
     <comment>Location: Settings (this will set the app to use the last-used (entered) folder as startup folder on the next launch)</comment>
   </data>
+  <data name="tmi_Debug" xml:space="preserve">
+    <value>Debug</value>
+    <comment>The "debug" menu option. Actually this is hidden outside Visual Studio environment so users won't see it</comment>
+  </data>
+  <data name="tmi_Debug_CustomiseWinformControls" xml:space="preserve">
+    <value>Customise Winform Controls</value>
+    <comment>The "debug" menu option. Actually this is hidden outside Visual Studio environment so users won't see it</comment>
+  </data>
+  <data name="frm_FrmCustomiseFormControls" xml:space="preserve">
+    <value>Customise Winform Controls</value>
+  </data>
 </root>
