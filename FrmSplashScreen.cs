@@ -27,7 +27,7 @@ public partial class FrmSplashScreen : Form
     {
         HelperNonStatic helperNonStatic = new();
         helperNonStatic.CenterForm(frm: this);
-        SetForegroundWindow(hWnd: Handle);
+        _ = SetForegroundWindow(hWnd: Handle);
         stopWatch.Start();
     }
 
@@ -40,7 +40,7 @@ public partial class FrmSplashScreen : Form
     internal void UpdateProgress(int amount,
                                  bool close)
     {
-        BeginInvoke(method: new MethodInvoker(delegate
+        _ = BeginInvoke(method: new MethodInvoker(delegate
         {
             pbr_Splash.Increment(value: amount);
             if (close)

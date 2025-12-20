@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja
 {
@@ -11,10 +12,12 @@ namespace GeoTagNinja
         public FrmCustomiseFormControls()
         {
             InitializeComponent();
-            HelperControlThemeManager.SetThemeColour(
-            themeColour: HelperVariables.UserSettingUseDarkMode
-                ? ThemeColour.Dark
-                : ThemeColour.Light, parentControl: this);
+            Themer.ApplyThemeToControl(
+                control: this,
+                themeStyle: HelperVariables.UserSettingUseDarkMode ?
+                Themer.ThemeStyle.Custom :
+                Themer.ThemeStyle.Default
+                );
         }
 
         public void SetCustomiseControl(Control control)

@@ -2,10 +2,8 @@
 using GeoTagNinja.Model;
 using System;
 using System.Windows.Forms;
-using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
+using WinFormsDarkThemerNinja;
 using static GeoTagNinja.Model.SourcesAndAttributes;
-using HelperControlAndMessageBoxCustomMessageBoxManager =
-    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 
 namespace GeoTagNinja.View.ListView;
 
@@ -68,9 +66,13 @@ internal static class FileListViewCopyPaste
         }
         else
         {
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_Helper_WarningTooManyFilesSelected", captionType: MessageBoxCaption.Warning,
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_Helper_WarningTooManyFilesSelected",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Warning,
                 buttons: MessageBoxButtons.OK);
+
         }
     }
 
@@ -94,8 +96,11 @@ internal static class FileListViewCopyPaste
         }
         else
         {
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_Helper_WarningNothingToPaste", captionType: MessageBoxCaption.Warning,
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_Helper_WarningNothingToPaste",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Warning,
                 buttons: MessageBoxButtons.OK);
         }
     }

@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Windows.Forms;
+using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.Helpers;
 
@@ -26,10 +27,9 @@ internal partial class HelperNonStatic
             {
                 DialogResult dialogResult;
                 {
-                    dialogResult = HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBoxWithResult(
-                        controlName: "", // i want to leave this blank, otherwise it duplicates info with the 'extramessage' below.
-                        extraMessage: $@"There is a new version ({args.CurrentVersion}) available. You are using version {args.InstalledVersion}.{Environment.NewLine}Do you want to update the application now?",
-                        captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question,
+                    dialogResult = Themer.ShowMessageBoxWithResult(
+                        message: $@"There is a new version ({args.CurrentVersion}) available. You are using version {args.InstalledVersion}.{Environment.NewLine}Do you want to update the application now?",
+                        icon: MessageBoxIcon.Question,
                         buttons: MessageBoxButtons.YesNo);
                 }
 

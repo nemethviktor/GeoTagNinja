@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.Helpers;
 
@@ -183,9 +184,12 @@ internal class HelperExifReadTrackFilePath
 
         static void ShowTrackImportFailedMessageBox()
         {
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmImportExportGpx_TrackContainsNoData",
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error, buttons: MessageBoxButtons.OK);
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmImportExportGpx_TrackContainsNoData",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Error,
+                buttons: MessageBoxButtons.OK);
         }
     }
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
+using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja;
 
@@ -16,9 +17,6 @@ public partial class FrmPleaseWaitBox : Form
         InitializeComponent();
         Debug.Assert(condition: _frmMainAppInstance != null, message: $"{nameof(_frmMainAppInstance)} != null");
         lbl_CancelPressed.Visible = false;
-        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
-            ? ThemeColour.Dark
-            : ThemeColour.Light, parentControl: this);
 
         lbl_PleaseWaitBoxActionScanning.Visible = false;
         lbl_PleaseWaitBoxActionParsing.Visible = false;
@@ -46,6 +44,13 @@ public partial class FrmPleaseWaitBox : Form
         HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
         _frmMainAppInstance.Enabled = false;
         GetControlNames();
+
+        Themer.ApplyThemeToControl(
+            control: this,
+            themeStyle: HelperVariables.UserSettingUseDarkMode ?
+            Themer.ThemeStyle.Custom :
+            Themer.ThemeStyle.Default
+            );
     }
 
     private void GetControlNames()

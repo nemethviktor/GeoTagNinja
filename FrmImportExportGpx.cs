@@ -9,8 +9,8 @@ using System.Windows.Forms;
 using TimeZoneConverter;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
-using HelperControlAndMessageBoxCustomMessageBoxManager =
-    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
+using Themer = WinFormsDarkThemerNinja.Themer;
+
 
 namespace GeoTagNinja;
 
@@ -40,11 +40,6 @@ public partial class FrmImportExportGpx : Form
         {
             tcr_ImportExport.DrawMode = TabDrawMode.Normal;
         }
-
-        HelperControlThemeManager.SetThemeColour(
-            themeColour: HelperVariables.UserSettingUseDarkMode
-                ? ThemeColour.Dark
-                : ThemeColour.Light, parentControl: this);
 
         ReturnControlText(cItem: this, senderForm: this);
 
@@ -323,6 +318,17 @@ public partial class FrmImportExportGpx : Form
 
     #region Events
 
+    private void FrmImportExportGpx_Load(object sender, EventArgs e)
+    {
+
+        Themer.ApplyThemeToControl(
+            control: this,
+            themeStyle: HelperVariables.UserSettingUseDarkMode ?
+            Themer.ThemeStyle.Custom :
+            Themer.ThemeStyle.Default
+            );
+    }
+
     /// <summary>
     ///     Collects the settings for track-parse and sends to the data collector; then closes the Form.
     /// </summary>
@@ -413,9 +419,11 @@ public partial class FrmImportExportGpx : Form
                 }
                 else
                 {
-                    HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                        controlName: "mbx_FrmImportExportGpx_FileOrFolderDoesntExist",
-                        captionType: MessageBoxCaption.Error,
+                    Themer.ShowMessageBox(
+                        message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                            controlName: "mbx_FrmImportExportGpx_FileOrFolderDoesntExist",
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                        icon: MessageBoxIcon.Error,
                         buttons: MessageBoxButtons.OK);
                 }
 
@@ -562,9 +570,11 @@ public partial class FrmImportExportGpx : Form
             HelperDataApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
         }
 
-        HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-            controlName: "mbx_GenericDone",
-            captionType: MessageBoxCaption.Information,
+        Themer.ShowMessageBox(message:
+            HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: "mbx_GenericDone",
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+            icon: MessageBoxIcon.Information,
             buttons: MessageBoxButtons.OK);
     }
 
@@ -674,9 +684,13 @@ public partial class FrmImportExportGpx : Form
             _lastShiftHour == 0 &&
             _lastShiftDay == 0)
         {
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmImportNoStoredShiftValues",
-                captionType: MessageBoxCaption.Error, buttons: MessageBoxButtons.OK);
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmImportNoStoredShiftValues",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Error,
+                buttons: MessageBoxButtons.OK);
+
         }
 
         if (_lastShiftSecond != 0)
@@ -739,6 +753,8 @@ public partial class FrmImportExportGpx : Form
     }
 
     #endregion
+
 }
 
-#endregion
+    #endregion
+

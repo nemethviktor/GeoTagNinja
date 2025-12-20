@@ -757,10 +757,7 @@ namespace GeoTagNinja
             this.lvw_FileListEditImages.OwnerDraw = true;
             this.lvw_FileListEditImages.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvw_FileListEditImages.UseCompatibleStateImageBehavior = false;
-            this.lvw_FileListEditImages.View = System.Windows.Forms.View.Details;
-            this.lvw_FileListEditImages.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
-            this.lvw_FileListEditImages.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
-            this.lvw_FileListEditImages.DrawSubItem += new System.Windows.Forms.DrawListViewSubItemEventHandler(this.ListView_DrawSubItem);
+            this.lvw_FileListEditImages.View = System.Windows.Forms.View.Details; 
             this.lvw_FileListEditImages.SelectedIndexChanged += new System.EventHandler(this.lvw_FileListEditImages_SelectedIndexChanged);
             // 
             // ttp_GPSDataPaste

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WinFormsDarkThemerNinja;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers;
@@ -481,9 +482,11 @@ internal static class HelperExifWriteSaveToFile
                     {
                         failWriteNothingEnabled = true;
                         FrmMainApp.Log.Info(message: "Both file-writes disabled. Nothing Written.");
-                        HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                            controlName: "mbx_Helper_WarningNoWriteSettingEnabled",
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
+                        Themer.ShowMessageBox(
+                            message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                                controlName: "mbx_Helper_WarningNoWriteSettingEnabled",
+                                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                            icon: MessageBoxIcon.Warning,
                             buttons: MessageBoxButtons.OK);
                     }
                 }
@@ -506,17 +509,21 @@ internal static class HelperExifWriteSaveToFile
         else if (!queueWasEmpty)
         {
             FrmMainApp.Log.Info(message: "Both file-writes disabled. Nothing Written.");
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_Helper_WarningNoWriteSettingEnabled",
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_Helper_WarningNoWriteSettingEnabled",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Warning,
                 buttons: MessageBoxButtons.OK);
         }
         else
         {
             FrmMainApp.Log.Info(message: "Queue was empty. Nothing Written.");
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_Helper_WarningNothingInWriteQueue",
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_Helper_WarningNothingInWriteQueue",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Warning,
                 buttons: MessageBoxButtons.OK);
         }
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.Helpers;
 
@@ -83,18 +84,21 @@ internal class HelperExifWriteTrackDataToTrackFile
 
             ///////////////
 
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmImportExportGpx_ExportCompleted",
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information,
-                buttons: MessageBoxButtons.OK,
-                extraMessage: outFilePath);
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmImportExportGpx_ExportCompleted",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Information,
+                buttons: MessageBoxButtons.OK);
         }
         else
         {
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmImportExportGpx_FileOrFolderDoesntExist",
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error, buttons:
-                MessageBoxButtons.OK);
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmImportExportGpx_FileOrFolderDoesntExist",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Error,
+                buttons: MessageBoxButtons.OK);
         }
     }
 }

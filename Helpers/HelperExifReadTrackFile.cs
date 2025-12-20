@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using WinFormsDarkThemerNinja;
 using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
@@ -326,10 +327,13 @@ internal static class HelperExifReadTrackFile
             }
         }
 
-        DialogResult dialogResult = HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBoxWithResult(
-            controlName: "mbx_FrmImportExportGpx_AskUserWantsReport",
-            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Question,
-            buttons: MessageBoxButtons.YesNo);
+        DialogResult dialogResult =
+            Themer.ShowMessageBoxWithResult(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmImportExportGpx_AskUserWantsReport",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Question,
+                buttons: MessageBoxButtons.YesNo);
 
         if (dialogResult == DialogResult.Yes)
         {
@@ -375,11 +379,12 @@ internal static class HelperExifReadTrackFile
             reportBox.ShowInTaskbar = false;
 
             reportBox.StartPosition = FormStartPosition.CenterScreen;
-            HelperControlThemeManager.SetThemeColour(
-                themeColour: HelperVariables.UserSettingUseDarkMode
-                    ? ThemeColour.Dark
-                    : ThemeColour.Light,
-                parentControl: reportBox);
+            Themer.ApplyThemeToControl(
+                control: reportBox,
+                themeStyle: HelperVariables.UserSettingUseDarkMode ?
+                Themer.ThemeStyle.Custom :
+                Themer.ThemeStyle.Default
+                );
             reportBox.ShowDialog();
         }
 

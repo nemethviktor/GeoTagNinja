@@ -9,9 +9,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WinFormsDarkThemerNinja;
 using static GeoTagNinja.Model.SourcesAndAttributes;
-using HelperControlAndMessageBoxCustomMessageBoxManager =
-    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 
 namespace GeoTagNinja;
 
@@ -34,10 +33,6 @@ public partial class FrmPasteWhat : Form
     {
         _initiatorName = initiator;
         InitializeComponent();
-        HelperControlThemeManager.SetThemeColour(
-            themeColour: HelperVariables.UserSettingUseDarkMode
-                ? ThemeColour.Dark
-                : ThemeColour.Light, parentControl: this);
 
         ListView lvw;
         List<ElementAttribute> tagsToPasteAttributeList = [];
@@ -176,6 +171,13 @@ public partial class FrmPasteWhat : Form
         }
 
         btn_PullMostRecentPasteSettings.Enabled = LastCheckedCheckBoxes.Count > 0;
+
+        Themer.ApplyThemeToControl(
+            control: this,
+            themeStyle: HelperVariables.UserSettingUseDarkMode ?
+            Themer.ThemeStyle.Custom :
+            Themer.ThemeStyle.Default
+            );
     }
 
     /// <summary>
@@ -1008,9 +1010,11 @@ public partial class FrmPasteWhat : Form
             if (!takenDateShiftDataExists)
             {
                 rbt_PasteTakenDateActual.Checked = true;
-                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                    controlName: "mbx_FrmPasteWhat_NoDateShiftToPaste",
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information,
+                Themer.ShowMessageBox(
+                    message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: "mbx_FrmPasteWhat_NoDateShiftToPaste",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                    icon: MessageBoxIcon.Information,
                     buttons: MessageBoxButtons.OK);
             }
         }
@@ -1073,9 +1077,11 @@ public partial class FrmPasteWhat : Form
         if (!createDateShiftDataExists)
         {
             rbt_PasteCreateDateActual.Checked = true;
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmPasteWhat_NoDateShiftToPaste",
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information,
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmPasteWhat_NoDateShiftToPaste",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Information,
                 buttons: MessageBoxButtons.OK);
         }
     }

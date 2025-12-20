@@ -7,8 +7,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
-using HelperControlAndMessageBoxCustomMessageBoxManager =
-    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
+using Themer = WinFormsDarkThemerNinja.Themer;
+
 
 namespace GeoTagNinja;
 
@@ -35,9 +35,14 @@ public partial class FrmMainApp
         catch (Exception ex)
         {
             Log.Fatal(message: $"Error: {ex.Message}");
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_ErrorInitializeComponent", captionType: MessageBoxCaption.Error,
-                buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmMainApp_ErrorInitializeComponent",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
+                    ) +
+                    Environment.NewLine + $"{ex.Message}",
+                icon: MessageBoxIcon.Error,
+                buttons: MessageBoxButtons.OK);
         }
 
         return Task.CompletedTask;
@@ -57,9 +62,12 @@ public partial class FrmMainApp
         catch (Exception ex)
         {
             Log.Fatal(message: $"Error: {ex.Message}");
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_ErrorDoubleBuffer", captionType: MessageBoxCaption.Error,
-                buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
+            Themer.ShowMessageBox(message:
+                HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmMainApp_ErrorDoubleBuffer",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Error,
+                buttons: MessageBoxButtons.OK);
         }
 
         return Task.CompletedTask;
@@ -259,24 +267,12 @@ public partial class FrmMainApp
     /// </remarks>
     private Task AppStartupSetAppTheme()
     {
-        // the custom logic is ugly af so no need to be pushy about it in light mode.
-        if (!HelperVariables.UserSettingUseDarkMode)
-        {
-            tcr_Main.DrawMode = TabDrawMode.Normal;
-            lvw_FileList.OwnerDraw = false;
-            lvw_ExifData.OwnerDraw = false;
-        }
-        else
-        {
-            mns_MenuStrip.Renderer = new DarkMenuStripRenderer();
-        }
-
-        // adds colour/theme
-
-        HelperControlThemeManager.SetThemeColour(
-            themeColour: HelperVariables.UserSettingUseDarkMode
-                ? ThemeColour.Dark
-                : ThemeColour.Light, parentControl: this);
+        Themer.ApplyThemeToControl(
+            control: this,
+            themeStyle: HelperVariables.UserSettingUseDarkMode ?
+            Themer.ThemeStyle.Custom :
+            Themer.ThemeStyle.Default
+            );
 
         return Task.CompletedTask;
     }

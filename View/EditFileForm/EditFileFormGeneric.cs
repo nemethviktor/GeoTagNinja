@@ -2,9 +2,8 @@
 using GeoTagNinja.Model;
 using System;
 using System.Windows.Forms;
+using WinFormsDarkThemerNinja;
 using static GeoTagNinja.View.ListView.FileListView;
-using HelperControlAndMessageBoxCustomMessageBoxManager =
-    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 
 namespace GeoTagNinja.View.EditFileForm;
 
@@ -83,9 +82,11 @@ internal static class EditFileFormGeneric
         // we appear to have lost a file or two.
         else
         {
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_Helper_WarningFileDisappeared",
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_Helper_WarningFileDisappeared",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Warning,
                 buttons: MessageBoxButtons.OK);
         }
     }

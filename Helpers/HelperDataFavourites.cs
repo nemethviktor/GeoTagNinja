@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
+using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.Helpers;
 
@@ -88,11 +88,14 @@ internal static class HelperDataFavourites
         }
         catch (Exception ex)
         {
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_ErrorImportGeoSetterFavourites",
-                captionType: MessageBoxCaption.Error,
-                buttons: MessageBoxButtons.OK,
-                extraMessage: ex.Message);
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmMainApp_ErrorImportGeoSetterFavourites",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
+                    ) +
+                    Environment.NewLine + $"{ex.Message}",
+                icon: MessageBoxIcon.Error,
+                buttons: MessageBoxButtons.OK);
 
             updateFavouritesInSQLiteAtTheEnd = false;
         }
@@ -135,13 +138,16 @@ internal static class HelperDataFavourites
                     _ = FrmMainApp.Favourites.Add(item: favourite);
                     itemsImported++;
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                        controlName: "mbx_FrmMainApp_ErrorImportGeoSetterFavourites",
-                        captionType: MessageBoxCaption.Error,
-                        buttons: MessageBoxButtons.OK,
-                        extraMessage: e.Message);
+                    Themer.ShowMessageBox(
+                        message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                            controlName: "mbx_FrmMainApp_ErrorImportGeoSetterFavourites",
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
+                            ) +
+                            Environment.NewLine + $"{ex.Message}",
+                        icon: MessageBoxIcon.Error,
+                        buttons: MessageBoxButtons.OK);
 
                     updateFavouritesInSQLiteAtTheEnd = false;
                 }
@@ -155,11 +161,14 @@ internal static class HelperDataFavourites
         if (updateFavouritesInSQLiteAtTheEnd)
         {
             DataWriteSQLiteClearAndUpdateFavourites();
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_InfoImportGeoSetterFavouritesDone",
-                captionType: MessageBoxCaption.Information,
-                buttons: MessageBoxButtons.OK,
-                extraMessage: itemsImported.ToString());
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmMainApp_InfoImportGeoSetterFavouritesDone",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
+                    ) +
+                    Environment.NewLine + $"{itemsImported}",
+                icon: MessageBoxIcon.Information,
+                buttons: MessageBoxButtons.OK);
 
             frmMainAppInstance.ClearReloadFavouritesDropDownValues();
         }

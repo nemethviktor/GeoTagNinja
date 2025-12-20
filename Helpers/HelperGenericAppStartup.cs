@@ -12,7 +12,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
+using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.Helpers;
 
@@ -34,9 +34,14 @@ internal static class HelperGenericAppStartup
         }
         catch (Exception ex)
         {
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_ErrorCantCreateSQLiteDB", captionType: MessageBoxCaption.Error,
-                buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmMainApp_ErrorCantCreateSQLiteDB",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
+                    ) +
+                    Environment.NewLine + $"{ex.Message}",
+                icon: MessageBoxIcon.Error,
+                buttons: MessageBoxButtons.OK);
 
             Application.Exit();
         }
@@ -59,9 +64,14 @@ internal static class HelperGenericAppStartup
         }
         catch (Exception ex)
         {
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_ErrorCantWriteSQLiteDB", captionType: MessageBoxCaption.Error,
-                buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmMainApp_ErrorCantWriteSQLiteDB",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
+                    ) +
+                    Environment.NewLine + $"{ex.Message}",
+                icon: MessageBoxIcon.Error,
+                buttons: MessageBoxButtons.OK);
 
             Application.Exit();
         }
@@ -126,9 +136,14 @@ internal static class HelperGenericAppStartup
         catch (Exception ex)
         {
             FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_ErrorCantLoadSQLiteDB", captionType: MessageBoxCaption.Error,
-                buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmMainApp_ErrorCantLoadSQLiteDB",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
+                    ) +
+                    Environment.NewLine + $"{ex.Message}",
+                icon: MessageBoxIcon.Error,
+                buttons: MessageBoxButtons.OK);
 
             Application.Exit();
         }
@@ -455,9 +470,14 @@ internal static class HelperGenericAppStartup
         catch (Exception ex)
         {
             FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_ErrorCantLoadWebView2", captionType: MessageBoxCaption.Error,
-                buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmMainApp_ErrorCantLoadWebView2",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
+                    ) +
+                    Environment.NewLine + $"{ex.Message}",
+                icon: MessageBoxIcon.Error,
+                buttons: MessageBoxButtons.OK);
 
             Application.Exit();
         }
@@ -590,9 +610,14 @@ internal static class HelperGenericAppStartup
             catch (Exception ex)
             {
                 FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
-                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                    controlName: "mbx_FrmMainApp_ErrorSettingStartupFolder", captionType: MessageBoxCaption.Error,
-                    buttons: MessageBoxButtons.OK, extraMessage: ex.Message);
+                Themer.ShowMessageBox(
+                    message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: "mbx_FrmMainApp_ErrorSettingStartupFolder",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
+                        ) +
+                        Environment.NewLine + $"{ex.Message}",
+                    icon: MessageBoxIcon.Error,
+                    buttons: MessageBoxButtons.OK);
             }
         }
 

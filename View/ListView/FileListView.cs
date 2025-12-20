@@ -10,8 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using HelperControlAndMessageBoxCustomMessageBoxManager =
-    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
+using WinFormsDarkThemerNinja;
 using Image = System.Drawing.Image;
 
 namespace GeoTagNinja.View.ListView;
@@ -863,10 +862,12 @@ public partial class FileListView : System.Windows.Forms.ListView
         catch (Exception ex)
         {
             Log.Fatal(message: $"Error: {ex.Message}");
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_ErrorLanguageFileColumnHeaders",
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error, buttons: MessageBoxButtons.OK,
-                extraMessage: ex.Message);
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmMainApp_ErrorLanguageFileColumnHeaders",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Error,
+                buttons: MessageBoxButtons.OK);
         }
     }
 

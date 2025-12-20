@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using Themer = WinFormsDarkThemerNinja.Themer;
 
 namespace GeoTagNinja;
 
@@ -23,9 +24,7 @@ internal partial class FrmAboutBox : Form
         rtb_AboutBox.Text = string.Empty;
 
         rtb_AboutBox.LinkClicked += rtb_AboutBox_LinkClicked;
-        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
-            ? ThemeColour.Dark
-            : ThemeColour.Light, parentControl: this);
+
         HelperNonStatic helperNonstatic = new();
         HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
 
@@ -186,4 +185,15 @@ internal partial class FrmAboutBox : Form
     }
 
     #endregion
+
+    private void FrmAboutBox_Load(object sender, EventArgs e)
+    {
+
+        Themer.ApplyThemeToControl(
+            control: this,
+            themeStyle: HelperVariables.UserSettingUseDarkMode ?
+            Themer.ThemeStyle.Custom :
+            Themer.ThemeStyle.Default
+            );
+    }
 }

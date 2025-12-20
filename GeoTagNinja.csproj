@@ -252,6 +252,9 @@
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="WinFormsDarkThemerNinja, Version=1.0.1.0, Culture=neutral, PublicKeyToken=ee327da898767e76, processorArchitecture=MSIL">
+      <HintPath>packages\WinFormsDarkThemerNinja.Official.1.0.1\lib\net462\WinFormsDarkThemerNinja.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FrmCustomiseFormControls.cs">
@@ -275,8 +278,7 @@
     <Compile Include="FrmSplashScreen.Designer.cs">
       <DependentUpon>FrmSplashScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\HelperControlAndMessageBoxCustomMessageBoxManager.cs" />
-    <Compile Include="Helpers\HelperControlThemeManager.cs" />
+    <Compile Include="Helpers\HelperControlAndMessageBoxHandling.cs" />
     <Compile Include="Helpers\HelperDataSettingsExport.cs" />
     <Compile Include="Helpers\HelperDataSettingsImport.cs" />
     <Compile Include="Helpers\HelperExifReadTrackFilePath.cs" />
@@ -318,9 +320,6 @@
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
     <Compile Include="SingleInstance_PipeServer.cs" />
-    <Compile Include="View\DialogAndMessageBoxes\CustomMessageBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="View\DialogAndMessageBoxes\RevolutQRBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -352,7 +351,6 @@
     <Compile Include="Helpers\HelperFileSystemOperators.cs" />
     <Compile Include="Helpers\HelperGenericFileLocking.cs" />
     <Compile Include="Helpers\HelperGenericTypeOperations.cs" />
-    <Compile Include="Helpers\HelperControlAndMessageBoxHandling.cs" />
     <Compile Include="Model\DirectoryElementCollection.cs" />
     <Compile Include="Model\DirectoryElement.cs" />
     <Compile Include="Model\ExifToolWrapper.cs" />
@@ -400,7 +398,6 @@
     </Compile>
     <Compile Include="Helpers\HelperAPIGeoNamesGeoTagXMLParser.cs" />
     <Compile Include="Helpers\HelperAPIGitHub.cs" />
-    <Compile Include="Helpers\HelperControlAndMessageBoxManager.cs" />
     <Compile Include="View\ListView\ListViewColumnSorter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

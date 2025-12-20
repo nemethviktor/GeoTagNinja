@@ -4,6 +4,7 @@ using RestSharp;
 using RestSharp.Authenticators;
 using System;
 using System.Windows.Forms;
+using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.Helpers;
 
@@ -28,9 +29,11 @@ internal static class HelperAPIGeoNamesToponomyExtractor
             }
             catch (Exception)
             {
-                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                    controlName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB",
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
+                Themer.ShowMessageBox(
+                    message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                    icon: MessageBoxIcon.Error,
                     buttons: MessageBoxButtons.OK);
             }
         }
@@ -53,9 +56,11 @@ internal static class HelperAPIGeoNamesToponomyExtractor
         if (responseToponomy.Content != null && responseToponomy.Content.Contains(value: "the hourly limit of "))
         {
             HelperVariables.OperationAPIReturnedOKResponse = false;
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_Helper_WarningGeoNamesAPIResponse",
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_Helper_WarningGeoNamesAPIResponse",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Warning,
                 buttons: MessageBoxButtons.OK);
         }
         else if (responseToponomy.StatusCode.ToString() == "OK")
@@ -68,9 +73,11 @@ internal static class HelperAPIGeoNamesToponomyExtractor
         else
         {
             HelperVariables.OperationAPIReturnedOKResponse = false;
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_Helper_WarningGeoNamesAPIResponse",
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_Helper_WarningGeoNamesAPIResponse",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Warning,
                 buttons: MessageBoxButtons.OK);
         }
 

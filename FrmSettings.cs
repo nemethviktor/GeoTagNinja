@@ -11,11 +11,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using WinFormsDarkThemerNinja;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.View.ListView.FileListView;
 using static System.String;
-using HelperControlAndMessageBoxCustomMessageBoxManager =
-    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 
 namespace GeoTagNinja;
 
@@ -187,11 +186,6 @@ public partial class FrmSettings : Form
         {
             tcr_Settings.DrawMode = TabDrawMode.Normal;
         }
-
-        HelperControlThemeManager.SetThemeColour(
-            themeColour: HelperVariables.UserSettingUseDarkMode
-                ? ThemeColour.Dark
-                : ThemeColour.Light, parentControl: this);
     }
 
     /// <summary>
@@ -386,6 +380,13 @@ public partial class FrmSettings : Form
 
         tbx_ARCGIS_APIKey.UseSystemPasswordChar = !ckb_ShowPassword_ARCGIS_APIKey.Checked;
         tbx_GeoNames_Pwd.UseSystemPasswordChar = !ckb_ShowPassword_GeoNames.Checked;
+
+        Themer.ApplyThemeToControl(
+            control: this,
+            themeStyle: HelperVariables.UserSettingUseDarkMode ?
+            Themer.ThemeStyle.Custom :
+            Themer.ThemeStyle.Default
+            );
     }
 
     /// <summary>
@@ -652,9 +653,11 @@ public partial class FrmSettings : Form
                 IsNullOrEmpty(value: clh_TargetPointOutcomeCustomValue))
             {
                 e.Cancel = true;
-                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                    controlName: "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty",
-                    captionType: MessageBoxCaption.Warning,
+                Themer.ShowMessageBox(
+                    message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: "mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                    icon: MessageBoxIcon.Warning,
                     buttons: MessageBoxButtons.OK);
             }
         }
@@ -671,9 +674,11 @@ public partial class FrmSettings : Form
         if (e.Exception != null &&
             e.Context == DataGridViewDataErrorContexts.Commit)
         {
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty",
-                captionType: MessageBoxCaption.Warning,
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Warning,
                 buttons: MessageBoxButtons.OK);
         }
     }
@@ -1251,8 +1256,11 @@ public partial class FrmSettings : Form
         // reload
         dgv_CustomCityLogic.Columns.Clear();
         LoadCustomCityLogicDGV();
-        HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(controlName: "mbx_GenericDone",
-            captionType: MessageBoxCaption.Information,
+        Themer.ShowMessageBox(
+            message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: "mbx_GenericDone",
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+            icon: MessageBoxIcon.Information,
             buttons: MessageBoxButtons.OK);
     }
 
@@ -1347,9 +1355,11 @@ public partial class FrmSettings : Form
                 }
                 catch (Exception)
                 {
-                    HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                        controlName: "mbx_FrmSettings_ErrorExportFailed",
-                        captionType: MessageBoxCaption.Error,
+                    Themer.ShowMessageBox(
+                        message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                            controlName: "mbx_FrmSettings_ErrorExportFailed",
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                        icon: MessageBoxIcon.Error,
                         buttons: MessageBoxButtons.OK);
                 }
             }

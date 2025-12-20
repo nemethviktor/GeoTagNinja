@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.View.DialogAndMessageBoxes;
 
@@ -51,10 +52,12 @@ internal class DialogWithOrWithoutCheckBox
         }
 
         // apply theme
-        HelperControlThemeManager.SetThemeColour(
-            themeColour: HelperVariables.UserSettingUseDarkMode
-                ? ThemeColour.Dark
-                : ThemeColour.Light, parentControl: promptBoxForm);
+        Themer.ApplyThemeToControl(
+            control: promptBoxForm,
+            themeStyle: HelperVariables.UserSettingUseDarkMode ?
+            Themer.ThemeStyle.Custom :
+            Themer.ThemeStyle.Default
+            );
 
         Label lblText = new()
         {
@@ -88,7 +91,7 @@ internal class DialogWithOrWithoutCheckBox
         promptBoxForm.ShowInTaskbar = false;
 
         promptBoxForm.StartPosition = FormStartPosition.CenterScreen;
-        promptBoxForm.ShowDialog();
+        _ = promptBoxForm.ShowDialog();
 
         // in case of idiots break glass -- basically if someone ALT+F4s then we reset stuff to "no".
         if (!returnChoicesList.Contains(value: acceptButtonReturnText) &&
@@ -193,7 +196,7 @@ internal class DialogWithOrWithoutCheckBox
             {
                 if (chk.Checked)
                 {
-                    checkboxesDictionary.TryGetValue(key: chk.Text,
+                    _ = checkboxesDictionary.TryGetValue(key: chk.Text,
                                                      value: out string chkstr);
                     s.Add(item: chkstr);
                 }

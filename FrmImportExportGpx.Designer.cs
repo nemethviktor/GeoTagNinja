@@ -580,6 +580,7 @@
             this.MinimizeBox = false;
             this.Name = "FrmImportExportGpx";
             this.ShowInTaskbar = false;
+            this.Load += new System.EventHandler(this.FrmImportExportGpx_Load);
             this.tcr_ImportExport.ResumeLayout(false);
             this.tpg_ImportExport_Import.ResumeLayout(false);
             this.gbx_OtherSettings.ResumeLayout(false);

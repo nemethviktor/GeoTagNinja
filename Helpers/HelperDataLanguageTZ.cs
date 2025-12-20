@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
+using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.Helpers;
 
@@ -29,11 +29,12 @@ internal static class HelperDataLanguageTZ
         {
             FrmMainApp.Log.Fatal(message: "Error: isoCountryCodeMapping.csv missing");
 
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_ErrorIsoCountryCodeMappingMissing",
-                captionType: MessageBoxCaption.Error,
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Error);
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmMainApp_ErrorIsoCountryCodeMappingMissing",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Error,
+                buttons: MessageBoxButtons.OK);
             Application.Exit();
         }
 

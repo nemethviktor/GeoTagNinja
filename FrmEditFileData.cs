@@ -19,9 +19,8 @@ using static GeoTagNinja.FrmMainApp;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
 using static GeoTagNinja.Model.SourcesAndAttributes;
-using HelperControlAndMessageBoxCustomMessageBoxManager =
-    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
+using Themer = WinFormsDarkThemerNinja.Themer;
 
 namespace GeoTagNinja;
 
@@ -52,10 +51,7 @@ public partial class FrmEditFileData : Form
         }
 
         Log.Trace(message: "InitializeComponent OK");
-        HelperControlThemeManager.SetThemeColour(
-            themeColour: HelperVariables.UserSettingUseDarkMode
-                ? ThemeColour.Dark
-                : ThemeColour.Light, parentControl: this);
+
     }
 
     /// <summary>
@@ -167,6 +163,13 @@ public partial class FrmEditFileData : Form
 
             Log.Trace(message: "ListViewSelect Done");
         }
+
+        Themer.ApplyThemeToControl(
+            control: this,
+            themeStyle: HelperVariables.UserSettingUseDarkMode ?
+            Themer.ThemeStyle.Custom :
+            Themer.ThemeStyle.Default
+            );
 
         _frmEditFileDataNowLoadingFileData = false; // techinically this is redundant here
         Log.Info(message: "Done");
@@ -592,7 +595,7 @@ public partial class FrmEditFileData : Form
     ///     attribute value is equivalent to the null equivalent for its type.
     /// </returns>
 
-    
+
     private static IConvertible GetDataInDEForAttribute(DirectoryElement directoryElement,
         ElementAttribute attribute,
         DirectoryElement.AttributeVersion
@@ -757,7 +760,7 @@ public partial class FrmEditFileData : Form
     ///     attribute is found.
     /// </returns>
 
-    
+
     private static DirectoryElement.AttributeVersion GetDEAttributeMaxAttributeVersion(
         DirectoryElement directoryElement,
         ElementAttribute attribute)
@@ -778,66 +781,6 @@ public partial class FrmEditFileData : Form
         return maxAttributeVersion;
     }
 
-    #region Themeing
-
-    // this is entirely the same as in FrmMainApp.
-
-    // via https://stackoverflow.com/a/75716080/3968494
-    private void ListView_DrawColumnHeader(object sender,
-        DrawListViewColumnHeaderEventArgs e)
-    {
-        Color foreColor = HelperVariables.UserSettingUseDarkMode
-            ? Color.FromArgb(red: 241, green: 241, blue: 241)
-            : Color.Black;
-
-        Color backColor = HelperVariables.UserSettingUseDarkMode
-            ? Color.FromArgb(red: 101, green: 151, blue: 151)
-            : SystemColors.Control;
-
-        //Fills one solid background for each cell.
-        using (SolidBrush backColorkBrush = new(color: backColor))
-        {
-            e.Graphics.FillRectangle(brush: backColorkBrush, rect: e.Bounds);
-        }
-
-        //Draw the borders for the header around each cell.
-        using (Pen foreColorPen = new(color: foreColor))
-        {
-            e.Graphics.DrawRectangle(pen: foreColorPen, rect: e.Bounds);
-        }
-
-        using SolidBrush foreColorBrush = new(color: foreColor);
-        StringFormat stringFormat = GetStringFormat();
-
-        //Do some padding, since these draws right up next to the border for Left/Near.  Will need to change this if you use Right/Far
-        Rectangle rect = e.Bounds;
-        rect.X += 2;
-        e.Graphics.DrawString(s: e.Header.Text, font: e.Font, brush: foreColorBrush,
-            layoutRectangle: rect, format: stringFormat);
-    }
-
-    private StringFormat GetStringFormat()
-    {
-        return new StringFormat
-        {
-            Alignment = StringAlignment.Near,
-            LineAlignment = StringAlignment.Center
-        };
-    }
-
-    private void ListView_DrawItem(object sender,
-        DrawListViewItemEventArgs e)
-    {
-        e.DrawDefault = true;
-    }
-
-    private void ListView_DrawSubItem(object sender,
-        DrawListViewSubItemEventArgs e)
-    {
-        e.DrawDefault = true;
-    }
-
-    #endregion
 
     #region object events
 
@@ -886,24 +829,32 @@ public partial class FrmEditFileData : Form
                 break;
             default:
                 // took me a while to understand my own code. what we are doing here is that we are trying to tell the user (and by proxy, the developer) that something other than the two buttons defined above have been pressed.
-                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                    controlName: "mbx_FrmEditFileData_ErrorInvalidSender",
-                    captionType: MessageBoxCaption.Error,
-                    buttons: MessageBoxButtons.OK,
-                    extraMessage: ((Button)sender).Name);
+                Themer.ShowMessageBox(
+                    message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: "mbx_FrmEditFileData_ErrorInvalidSender",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
+                        ) +
+                        Environment.NewLine + $"{((Button)sender).Name}",
+                    icon: MessageBoxIcon.Error,
+                    buttons: MessageBoxButtons.OK);
                 break;
         }
 
         string messageBoxName = HelperVariables.OperationAPIReturnedOKResponse
             ? "mbx_FrmEditFileData_InfoDataUpdated"
             : "mbx_FrmEditFileData_ErrorAPIError";
-        MessageBoxCaption messageBoxCaption = HelperVariables.OperationAPIReturnedOKResponse
-            ? MessageBoxCaption.Information
-            : MessageBoxCaption.Error;
 
-        HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(controlName: messageBoxName,
-            captionType: messageBoxCaption,
+        MessageBoxIcon messageBoxIcon = HelperVariables.OperationAPIReturnedOKResponse
+            ? MessageBoxIcon.Information
+            : MessageBoxIcon.Error;
+
+        Themer.ShowMessageBox(
+            message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: messageBoxName,
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+            icon: messageBoxIcon,
             buttons: MessageBoxButtons.OK);
+
     }
 
     /// <summary>
@@ -1276,9 +1227,12 @@ in toponomyOverwrites)
             else
             {
                 Log.Debug(message: $"File disappeared: {fileNameWithPath}");
-                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                    controlName: "mbx_FrmEditFileData_WarningFileDisappeared", captionType: MessageBoxCaption.Error,
-                    buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Warning);
+                Themer.ShowMessageBox(
+                    message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: "mbx_FrmEditFileData_WarningFileDisappeared",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                    icon: MessageBoxIcon.Warning,
+                    buttons: MessageBoxButtons.OK);
             }
         }
 
@@ -1667,7 +1621,7 @@ in toponomyOverwrites)
     private void GetTimeZoneOffset()
     {
         string strOffsetTime = "";
-        
+
         bool useDST = ckb_UseDST.Checked;
         try
         {

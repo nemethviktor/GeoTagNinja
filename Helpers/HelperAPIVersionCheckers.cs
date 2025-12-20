@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WinFormsDarkThemerNinja;
 using static GeoTagNinja.GTNReleaseAPIResponse;
 
 namespace GeoTagNinja.Helpers;
@@ -113,11 +114,14 @@ internal static class HelperAPIVersionCheckers
         else
         {
             HelperVariables.OperationAPIReturnedOKResponse = false;
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_Helper_WarningGTNVerAPIResponse",
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
-                buttons: MessageBoxButtons.OK,
-                extraMessage: response_GTNVersionQuery.StatusCode.ToString());
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_Helper_WarningGTNVerAPIResponse",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
+                    ) +
+                    Environment.NewLine + $"{response_GTNVersionQuery.StatusCode}",
+                icon: MessageBoxIcon.Warning,
+                buttons: MessageBoxButtons.OK);
         }
 #endif
 

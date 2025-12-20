@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
+using WinFormsDarkThemerNinja;
 using static System.Environment;
 
 namespace GeoTagNinja.Helpers;
@@ -59,8 +59,11 @@ internal static class HelperFileSystemOperators
                 HelperVariables.AppIsClosingAndWriteFileQuestionHasBeenAsked = true;
             }
 
-            DialogResult dialogResult = HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBoxWithResult(
-                controlName: "mbx_Helper_QuestionFileQIsNotEmpty", captionType: MessageBoxCaption.Question,
+            DialogResult dialogResult = Themer.ShowMessageBoxWithResult(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_Helper_QuestionFileQIsNotEmpty",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Question,
                 buttons: MessageBoxButtons.YesNoCancel);
 
             if (dialogResult == DialogResult.Yes)

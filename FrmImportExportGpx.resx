@@ -233,12 +233,12 @@
   <data name="pbx_importOneFile.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAABFklE
-        QVQ4T2MgGcTsKmGI3u0A5ZEBYnfbMMTueskQs9MJKkIECF3FBtTUCcTPgPg/BO+8CpUlAsTu7ADiLQxx
-        e6TBzo/Z9QrFGzPyGB7MzGf4j4Q/Ts9nQCiI3fmUIXqbDJiNLQzAmgoYJGF4Wh5D8PQ8hq8gcbACkJNB
-        6vIY7oP56ADdAJwYZiA6oIoBs0oYDID0B7BhxOA8hp1Q7RADgAHZBqRXggIPF56Wz1AAooGuWQg0YApU
-        O9QLeQyPZuUzJKBrQsYgA6YUMTgD1b6cVcCgDdUONSCf4Rw2TcgY7IJchupZeQwnoFohAOyFAoY2bJqQ
-        McgAoFePAl0QD9UKATPyGe5BXUEQA9U+7i1k4IRqHXDAwAAANSDaAOvc+eMAAAAASUVORK5CYII=
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAABDUlE
+        QVQ4T8WQsUoEMRRFTyX4CaJ/YOMHWIh+gljtRv0BX0bZzn7Rwm7ZTaaz1FqEZG0FKztbFUVhrbSwXplZ
+        Rs3TgILghUNCJveQefDbtGOH1nBJH/88ZriIiSPaYVl/ymfteAoT9zHxERPHE8KVvpaPCXuYcML62Wz9
+        /HZ8Sn7DCbfeMv7Ey8DyccGEB1qnc/X+uxnUpYKZhr6wOhBeq/OJINarF26SYhMtyNIIdf5EUHZY8JZn
+        NYs8QkgETuh6y1E1vBx9S1GtvuDQC71E4IW70rKpS1rQ22HFC6OyYD4VWC51QVO/YIvdUrh4LzcCV9DV
+        BU0lcMK5FzYSgbNcfxlSBme5P9hmOhH8a94ANSDaAJQg0nQAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="pbx_importOneFile.Location" type="System.Drawing.Point, System.Drawing">
@@ -272,12 +272,12 @@
   <data name="pbx_importFromAnotherFolder.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAABFklE
-        QVQ4T2MgGcTsKmGI3u0A5ZEBYnfbMMTueskQs9MJKkIECF3FBtTUCcTPgPg/BO+8CpUlAsTu7ADiLQxx
-        e6TBzo/Z9QrFGzPyGB7MzGf4j4Q/Ts9nQCiI3fmUIXqbDJiNLQzAmgoYJGF4Wh5D8PQ8hq8gcbACkJNB
-        6vIY7oP56ADdAJwYZiA6oIoBs0oYDID0B7BhxOA8hp1Q7RADgAHZBqRXggIPF56Wz1AAooGuWQg0YApU
-        O9QLeQyPZuUzJKBrQsYgA6YUMTgD1b6cVcCgDdUONSCf4Rw2TcgY7IJchupZeQwnoFohAOyFAoY2bJqQ
-        McgAoFePAl0QD9UKATPyGe5BXUEQA9U+7i1k4IRqHXDAwAAANSDaAOvc+eMAAAAASUVORK5CYII=
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAABDUlE
+        QVQ4T8WQsUoEMRRFTyX4CaJ/YOMHWIh+gljtRv0BX0bZzn7Rwm7ZTaaz1FqEZG0FKztbFUVhrbSwXplZ
+        Rs3TgILghUNCJveQefDbtGOH1nBJH/88ZriIiSPaYVl/ymfteAoT9zHxERPHE8KVvpaPCXuYcML62Wz9
+        /HZ8Sn7DCbfeMv7Ey8DyccGEB1qnc/X+uxnUpYKZhr6wOhBeq/OJINarF26SYhMtyNIIdf5EUHZY8JZn
+        NYs8QkgETuh6y1E1vBx9S1GtvuDQC71E4IW70rKpS1rQ22HFC6OyYD4VWC51QVO/YIvdUrh4LzcCV9DV
+        BU0lcMK5FzYSgbNcfxlSBme5P9hmOhH8a94ANSDaAJQg0nQAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="pbx_importFromAnotherFolder.Location" type="System.Drawing.Point, System.Drawing">
@@ -1168,13 +1168,13 @@
   <data name="pbx_GPSDataPaste.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAABJ0lE
-        QVQ4T2OgPojebssQs2sFQ+zOpwyxu34yxOx8AqSXM8TutoGqwAHs97MAFU8HKv6PE8fsmgpWhxWgaeZI
-        2vNfu+IYmEYWBxuCAeJ22iErUik58v/6sy//t154/f/qky//lYoPoxoSv9MaqhMKYneuRFYwfe/j/xFT
-        L4HZIZMu/p+65xFCMxjvXAbVCQWQAENTBMEZ86/9n7jzIbr4Y6hOKACFNqoCMLZoPPn/ypPP/yVyDqDK
-        xez6AdUJBThccOrux//qZUcxxIEYwwXAeMZQ9D9t3jUMMSheAtUJBdG7LICu+IeuUK30CAofjjFiAQRA
-        8YukCKQZBFQxDNk5GaoDDYBTIqohWDXjTIkwAHIeKJ5BAQWJncfAVLqUIWaHFVTFoAIMDAB/jDfo8dUu
-        dQAAAABJRU5ErkJggg==
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAABH0lE
+        QVQ4T2NgoDqI3m7LELNrBUPszqcMsbt+MsTsfMIQu2s5Q+xuG3SlqMB+PwtDzM7pDLG7/uPEMbumgtVh
+        BWiaOZL2/NeuOAamMQzBAHE77ZAVqZQc+X/92Zf/Wy+8/n/1yZf/SsWHUQ2J32mNakDszpXICqbvffw/
+        YuolMDtk0sX/U/c8QjUgducydANAAYamCIIz5l/7P3HnQ3Txx2gG7PqJrhGELRpP/r/y5PN/iZwDqHIx
+        u36gGYDdBafufvyvXnYUQxybC5ZjUfQ/bd41DDEoXoJqQPQuC4bYnf/QFaqVHkHXCMEYsQACoPhF0wwC
+        qhiG7JyMrhUCwCkR1RCsmnGmRBgAOQ8Uz6CAgsTOY4aYnUsZYnZYoSsdHAAAf4w36PElpjAAAAAASUVO
+        RK5CYII=
 </value>
   </data>
   <data name="pbx_GPSDataPaste.Location" type="System.Drawing.Point, System.Drawing">
@@ -1351,12 +1351,12 @@
   <data name="pbx_Browse_SaveTo_Folder.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAABFklE
-        QVQ4T2MgGcTsKmGI3u0A5ZEBYnfbMMTueskQs9MJKkIECF3FBtTUCcTPgPg/BO+8CpUlAsTu7ADiLQxx
-        e6TBzo/Z9QrFGzPyGB7MzGf4j4Q/Ts9nQCiI3fmUIXqbDJiNLQzAmgoYJGF4Wh5D8PQ8hq8gcbACkJNB
-        6vIY7oP56ADdAJwYZiA6oIoBs0oYDID0B7BhxOA8hp1Q7RADgAHZBqRXggIPF56Wz1AAooGuWQg0YApU
-        O9QLeQyPZuUzJKBrQsYgA6YUMTgD1b6cVcCgDdUONSCf4Rw2TcgY7IJchupZeQwnoFohAOyFAoY2bJqQ
-        McgAoFePAl0QD9UKATPyGe5BXUEQA9U+7i1k4IRqHXDAwAAANSDaAOvc+eMAAAAASUVORK5CYII=
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAABDUlE
+        QVQ4T8WQsUoEMRRFTyX4CaJ/YOMHWIh+gljtRv0BX0bZzn7Rwm7ZTaaz1FqEZG0FKztbFUVhrbSwXplZ
+        Rs3TgILghUNCJveQefDbtGOH1nBJH/88ZriIiSPaYVl/ymfteAoT9zHxERPHE8KVvpaPCXuYcML62Wz9
+        /HZ8Sn7DCbfeMv7Ey8DyccGEB1qnc/X+uxnUpYKZhr6wOhBeq/OJINarF26SYhMtyNIIdf5EUHZY8JZn
+        NYs8QkgETuh6y1E1vBx9S1GtvuDQC71E4IW70rKpS1rQ22HFC6OyYD4VWC51QVO/YIvdUrh4LzcCV9DV
+        BU0lcMK5FzYSgbNcfxlSBme5P9hmOhH8a94ANSDaAJQg0nQAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="pbx_Browse_SaveTo_Folder.Location" type="System.Drawing.Point, System.Drawing">
@@ -1599,13 +1599,13 @@
   <data name="pbx_SaveDefaults.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAABJ0lE
-        QVQ4T2OgPojebssQs2sFQ+zOpwyxu34yxOx8AqSXM8TutoGqwAHs97MAFU8HKv6PE8fsmgpWhxWgaeZI
-        2vNfu+IYmEYWBxuCAeJ22iErUik58v/6sy//t154/f/qky//lYoPoxoSv9MaqhMKYneuRFYwfe/j/xFT
-        L4HZIZMu/p+65xFCMxjvXAbVCQWQAENTBMEZ86/9n7jzIbr4Y6hOKACFNqoCMLZoPPn/ypPP/yVyDqDK
-        xez6AdUJBThccOrux//qZUcxxIEYwwXAeMZQ9D9t3jUMMSheAtUJBdG7LICu+IeuUK30CAofjjFiAQRA
-        8YukCKQZBFQxDNk5GaoDDYBTIqohWDXjTIkwAHIeKJ5BAQWJncfAVLqUIWaHFVTFoAIMDAB/jDfo8dUu
-        dQAAAABJRU5ErkJggg==
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAABH0lE
+        QVQ4T2NgoDqI3m7LELNrBUPszqcMsbt+MsTsfMIQu2s5Q+xuG3SlqMB+PwtDzM7pDLG7/uPEMbumgtVh
+        BWiaOZL2/NeuOAamMQzBAHE77ZAVqZQc+X/92Zf/Wy+8/n/1yZf/SsWHUQ2J32mNakDszpXICqbvffw/
+        YuolMDtk0sX/U/c8QjUgducydANAAYamCIIz5l/7P3HnQ3Txx2gG7PqJrhGELRpP/r/y5PN/iZwDqHIx
+        u36gGYDdBafufvyvXnYUQxybC5ZjUfQ/bd41DDEoXoJqQPQuC4bYnf/QFaqVHkHXCMEYsQACoPhF0wwC
+        qhiG7JyMrhUCwCkR1RCsmnGmRBgAOQ8Uz6CAgsTOY4aYnUsZYnZYoSsdHAAAf4w36PElpjAAAAAASUVO
+        RK5CYII=
 </value>
   </data>
   <data name="pbx_SaveDefaults.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">

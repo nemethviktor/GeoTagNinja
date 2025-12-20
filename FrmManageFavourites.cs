@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using HelperControlAndMessageBoxCustomMessageBoxManager =
-    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
+using Themer = WinFormsDarkThemerNinja.Themer;
+
 
 namespace GeoTagNinja;
 
@@ -17,9 +17,7 @@ public partial class FrmManageFavourites : Form
     public FrmManageFavourites()
     {
         InitializeComponent();
-        HelperControlThemeManager.SetThemeColour(themeColour: HelperVariables.UserSettingUseDarkMode
-            ? ThemeColour.Dark
-            : ThemeColour.Light, parentControl: this);
+
     }
 
     private void FrmManageFavourites_Load(object sender,
@@ -64,6 +62,13 @@ public partial class FrmManageFavourites : Form
 
         RefreshCbxFavouritesItems();
         cbx_Favourites.SelectedIndex = 0;
+
+        Themer.ApplyThemeToControl(
+            control: this,
+            themeStyle: HelperVariables.UserSettingUseDarkMode ?
+            Themer.ThemeStyle.Custom :
+            Themer.ThemeStyle.Default
+            );
     }
 
     private void cbx_favouriteName_SelectedIndexChanged(object sender,
@@ -151,10 +156,11 @@ public partial class FrmManageFavourites : Form
         }
 
         HelperDataFavourites.DataWriteSQLiteClearAndUpdateFavourites();
-
-        HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-            controlName: "mbx_FrmMainApp_InfoFavouriteSaved",
-            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Information,
+        Themer.ShowMessageBox(message:
+            HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: "mbx_FrmMainApp_InfoFavouriteSaved",
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+            icon: MessageBoxIcon.Information,
             buttons: MessageBoxButtons.OK);
 
         _frmNowLoadingFavouriteData = true;
@@ -255,7 +261,7 @@ public partial class FrmManageFavourites : Form
         cbx_Favourites.Items.Clear();
         foreach (Favourite favourite in FrmMainApp.Favourites)
         {
-            cbx_Favourites.Items.Add(item: favourite.FavouriteName);
+            _ = cbx_Favourites.Items.Add(item: favourite.FavouriteName);
         }
     }
 
@@ -267,7 +273,7 @@ public partial class FrmManageFavourites : Form
         cbx_Country.Items.Clear();
         foreach (string country in HelperGenericAncillaryListsArrays.GetCountries())
         {
-            cbx_Country.Items.Add(item: country);
+            _ = cbx_Country.Items.Add(item: country);
         }
     }
 

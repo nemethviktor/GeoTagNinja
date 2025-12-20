@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using WinFormsDarkThemerNinja;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers;
@@ -451,10 +452,13 @@ internal static class HelperExifReadExifData
                 {
                     if (!HelperVariables.errorsAlreadyShownHashSet.Contains(item: ctrlNameForLocalError))
                     {
-                        HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                            controlName: ctrlNameForLocalError,
-                            captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
+                        Themer.ShowMessageBox(
+                            message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                                controlName: ctrlNameForLocalError,
+                                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                            icon: MessageBoxIcon.Error,
                             buttons: MessageBoxButtons.OK);
+
                         _ = HelperVariables.errorsAlreadyShownHashSet.Add(item: ctrlNameForLocalError);
                     }
                 }
@@ -463,10 +467,13 @@ internal static class HelperExifReadExifData
             {
                 if (!HelperVariables.errorsAlreadyShownHashSet.Contains(item: ctrlNameForLocalError))
                 {
-                    HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                        controlName: ctrlNameForLocalError,
-                        captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
+                    Themer.ShowMessageBox(
+                        message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                            controlName: ctrlNameForLocalError,
+                            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                        icon: MessageBoxIcon.Error,
                         buttons: MessageBoxButtons.OK);
+
                     _ = HelperVariables.errorsAlreadyShownHashSet.Add(item: ctrlNameForLocalError);
                 }
             }

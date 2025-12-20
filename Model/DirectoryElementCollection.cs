@@ -8,9 +8,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WinFormsDarkThemerNinja;
 using static System.Environment;
-using HelperControlAndMessageBoxCustomMessageBoxManager =
-    GeoTagNinja.Helpers.HelperControlAndMessageBoxCustomMessageBoxManager;
 
 namespace GeoTagNinja.Model;
 
@@ -247,9 +246,11 @@ public class DirectoryElementCollection : List<DirectoryElement>
             catch (Exception ex)
             {
                 Log.Error(message: $"Could not add parent. Error: {ex.Message}");
-                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                    controlName: "mbx_DirectoryElementCollection_ErrorParsing",
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
+                Themer.ShowMessageBox(
+                    message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: "mbx_DirectoryElementCollection_ErrorParsing",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                    icon: MessageBoxIcon.Error,
                     buttons: MessageBoxButtons.OK);
             }
 
@@ -292,9 +293,11 @@ public class DirectoryElementCollection : List<DirectoryElement>
             catch (Exception ex)
             {
                 Log.Error(message: $"Error: {ex.Message}");
-                HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                    controlName: "mbx_DirectoryElementCollection_ErrorParsing",
-                    captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Error,
+                Themer.ShowMessageBox(
+                    message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: "mbx_DirectoryElementCollection_ErrorParsing",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                    icon: MessageBoxIcon.Error,
                     buttons: MessageBoxButtons.OK);
             }
 
@@ -476,10 +479,14 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 overlappingXmpFileStr += fi.FullName + NewLine;
             }
 
-            HelperControlAndMessageBoxCustomMessageBoxManager.ShowMessageBox(
-                controlName: "mbx_FrmMainApp_WarningMultipleImageFilesForXMP",
-                captionType: HelperControlAndMessageBoxHandling.MessageBoxCaption.Warning,
-                buttons: MessageBoxButtons.OK, extraMessage: overlappingXmpFileStr);
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmMainApp_WarningMultipleImageFilesForXMP",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
+                    ) +
+                    Environment.NewLine + $"{overlappingXmpFileStr}",
+                icon: MessageBoxIcon.Warning,
+                buttons: MessageBoxButtons.OK);
         }
 
         // ******************************
@@ -636,7 +643,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
     /// <summary>
     ///     Assigns a GUID for the DEs in the DECollection
     /// </summary>
-    
+
     private static void CreateGUIDsForDirectoryElements()
     {
         foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
@@ -651,7 +658,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
     ///     Parses the given file using the given EXIF Tool object into the given
     ///     dictionary. Thereby, ignoring duplicate tags.
     /// </summary>
-    
+
     private void InitiateEXIFParsing(FileInfo fileinfoItem,
         IDictionary<string, string> properties)
     {
