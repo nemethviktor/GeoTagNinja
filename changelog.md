@@ -2,9 +2,10 @@
 
 **Build 9xxx [2026xxxx]** (upcoming release)
 - NEW & UPDATED:
-	- Add `Use Last Used Folder` (for startup purposes) #191
+	- Added `Use Last Used Folder` (for startup purposes) #191
+	- Added `Carto` as map layer option ref #192 partial solution for "always English" map
 - BUGS & FIXES:
-	- TBA
+	- Revamped theming internally
 
 **Build 9458 [20251123]**
 - NEW & UPDATED:

@@ -1470,6 +1470,7 @@ internal static class HelperGenericAncillaryListsArrays
         {
             { "lyr_streets_osm", "Streets (OSM)" },
             { "lyr_streets_esri", "Streets (ESRI)" },
+            { "lyr_streets_carto", "Streets (Carto)" },
             { "lyr_satellite_esri", "Satellite (ESRI)" }
         };
 

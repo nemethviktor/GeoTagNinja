@@ -35,10 +35,12 @@
 
         const street_url_esri = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
         const street_url_osm = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        const street_url_carto = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png';
         const satellite_url_esri = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
 
         const attribution_osm = '© OpenStreetMap contributors';
         const attribution_esri = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+        const attribution_carto = '&copy; <a href="https://carto.com/">carto.com</a> contributors';
 
         var lyr_streets_esri = L.tileLayer(
             street_url_esri, {
@@ -62,6 +64,13 @@
                 tileSize: 512,
                 zoomOffset: -1,
                 attribution: attribution_esri
+        });
+		
+        var lyr_streets_carto = L.tileLayer(
+            street_url_carto, {
+                minZoom: 3,
+                maxZoom: 17,
+                attribution: attribution_carto
         });
 
         { HTMLSelectDefaultLayer }
