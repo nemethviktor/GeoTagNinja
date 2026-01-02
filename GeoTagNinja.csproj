@@ -252,8 +252,8 @@
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
-    <Reference Include="WinFormsDarkThemerNinja, Version=1.0.1.0, Culture=neutral, PublicKeyToken=ee327da898767e76, processorArchitecture=MSIL">
-      <HintPath>packages\WinFormsDarkThemerNinja.Official.1.0.1\lib\net462\WinFormsDarkThemerNinja.dll</HintPath>
+    <Reference Include="WinFormsDarkThemerNinja, Version=1.0.2.0, Culture=neutral, PublicKeyToken=ee327da898767e76, processorArchitecture=MSIL">
+      <HintPath>packages\WinFormsDarkThemerNinja.Official.1.0.2\lib\net462\WinFormsDarkThemerNinja.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
