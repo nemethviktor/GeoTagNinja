@@ -4,6 +4,7 @@
 - NEW & UPDATED:
 	- Added `Use Last Used Folder` (for startup purposes) #191
 	- Added `Carto` as map layer option ref #192 partial solution for "always English" map
+	- Added a TOC to the readme. (via [this tool](https://www.docstomarkdown.pro/markdown-table-of-contents-generator-free/))
 - BUGS & FIXES:
 	- Revamped theming internally
 

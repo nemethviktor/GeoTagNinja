@@ -1,11 +1,30 @@
 [![Translation status](https://hosted.weblate.org/widget/geotagninja/svg-badge.svg)](https://hosted.weblate.org/engage/geotagninja/) [![Github All Releases](https://img.shields.io/github/downloads/nemethviktor/geotagninja/total.svg)]()
 
-
 # Welcome to GeoTagNinja
 
 GeoTagNinja is an open-source photo geotagger GUI for Windows. GTN uses [ExifTool](https://ExifTool.org/) to read and write EXIF info. This also sets the limitations and capabilities. If ExifTool can read/write a file, chances are so can GTN.
 
 There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if you feel like watching it. It's from the original (Aug 2022) release but it still covers the main features more or less. It's only gotten better since...
+
+## Table of Contents
+
+- [Welcome to GeoTagNinja](#welcome-to-geotagninja)
+  - [Download & Install (Windows 7+ x64 only)](#download-&-install-(windows-7+-x64-only))
+  - [Features at-a-glance](#features-at-a-glance)
+  - [Parameters](#parameters)
+  - [Quirks and Things to Note](#quirks-and-things-to-note)
+    - [A Particular Note on Working with Adobe Bridge (ACR) and RAW files > Saving as JPGs or Other Formats.](#a-particular-note-on-working-with-adobe-bridge-(acr)-and-raw-files->-saving-as-jpgs-or-other-formats.)
+    - [Collection Mode - Hooking up GTN with Jeffrey Frield's LightRoom Classic Plugin "Run Any Command"](#collection-mode---hooking-up-gtn-with-jeffrey-frield's-lightroom-classic-plugin-"run-any-command")
+  - [Building & Testing](#building-&-testing)
+  - [Translations, Contributions & Pull Requests](#translations,-contributions-&-pull-requests)
+    - [Translation Progress](#translation-progress)
+  - [Known Issues](#known-issues)
+    - [Destinations/Possible Bug in WebView2](#destinations/possible-bug-in-webview2)
+  - [Possible Issues & Solutions](#possible-issues-&-solutions)
+  - [ToDos](#todos)
+  - [Roadmap](#roadmap)
+  - [When reporting bugs please specify](#when-reporting-bugs-please-specify)
+  - [System Requirements](#system-requirements)
 
 ## Download & Install (Windows 7+ x64 only)
 
@@ -67,7 +86,7 @@ GTN allows to set a "Process the original image" on a per-extension basis. If se
 	- This becomes a particular problem because if a user has the following workflow: download RAW from Camera > process & change coords in GTN (only write XMP) > save as JPG in Bridge then the JPG files will likely contain the wrong coordinates (those from the RAW file). _There is nothing I can do about this_. FWIW I checked and GeoSetter has the same thing, which is sensible given that this is ultimately an external factor. Amusingly enough a quick googling shows that users have reported this issue as early as 2017 but, while acknowledged, it's been ignored by Adobe, certainly as late as Bridge v2022 (haven't tried newer ones).
 	- The only way to get around this is to process the RAW image (edit/overwrite as above) within GTN
 
-### Collection Mode (Hooking up GTN with Jeffrey Frield's LightRoom Classic Plugin "Run Any Command"
+### Collection Mode - Hooking up GTN with Jeffrey Frield's LightRoom Classic Plugin "Run Any Command"
 
 As of `Build 8475 [20230316]` onwards we now have a `CollectionMode`. The initial logic/usage is as follows:
 
