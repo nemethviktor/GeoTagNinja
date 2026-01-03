@@ -242,7 +242,7 @@ public partial class FrmMainApp : Form
             HelperGenericAppStartup.AppStartupReadAPILanguage(),
             HelperGenericAppStartup.AppStartupApplyDefaults(settingTabPage: "tpg_Application",
                 actuallyRunningAtStartup: true),
-            HelperDataLanguageTZ.DataReadCountryCodeDataFromCSV(),
+            HelperDataLanguageTZ.DataReadCountryCodeDataFromWikipediaData(),
             HelperGenericAppStartup.AppStartupCheckWebView2(),
             AppStartupInitializeComponentFrmMainApp(),
             AppStartupSetAppTheme(),

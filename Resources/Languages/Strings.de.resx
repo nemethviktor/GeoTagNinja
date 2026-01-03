@@ -676,9 +676,6 @@
   <data name="mbx_FrmMainApp_ErrorInvalidFolder" xml:space="preserve">
     <value>Der von Ihnen eingegebene Ordner scheint ungültig zu sein. Zurück zu C:\?</value>
   </data>
-  <data name="mbx_FrmMainApp_ErrorIsoCountryCodeMappingMissing" xml:space="preserve">
-    <value>Die Datei isoCountryCodeMapping.csv fehlt im Ordner „Resources”. Ohne diese Datei kann die App nicht geladen werden.</value>
-  </data>
   <data name="mbx_FrmMainApp_ErrorLanguageFileColumnHeaders" xml:space="preserve">
     <value>Beim Lesen der Sprachdatei und beim Zuweisen von Spaltenüberschriften ist ein Fehler aufgetreten (bitte melden Sie das Problem auf GitHub): </value>
   </data>

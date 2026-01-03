@@ -436,10 +436,18 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\Strings.*.resx" />
+    <EmbeddedResource Include="Resources\Languages\Strings.de.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Languages\Strings.fr.resx" />
+    <EmbeddedResource Include="Resources\Languages\Strings.pl.resx" />
+    <EmbeddedResource Include="Resources\Languages\Strings.ru.resx" />
+    <EmbeddedResource Include="Resources\Languages\Strings.ta.resx" />
+    <EmbeddedResource Include="Resources\Languages\Strings.uk.resx" />
     <EmbeddedResource Include="Resources\Languages\Strings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
+      <LastGenOutput>Strings1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="View\DialogAndMessageBoxes\RevolutQRBox.resx">
       <DependentUpon>RevolutQRBox.cs</DependentUpon>
@@ -497,9 +505,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\gpl-3.0.rtf" />
-    <None Include="Resources\isoCountryCodeMapping.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

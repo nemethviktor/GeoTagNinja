@@ -446,9 +446,6 @@ Niektóre pliki HEIC mają ten atrybut, większość innych formatów go nie ma.
   <data name="mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived" xml:space="preserve">
     <value>Błąd podczas wykonywania wbv_MapArea_WebMessageReceived (zgłoś problem na GitHub): </value>
   </data>
-  <data name="mbx_FrmMainApp_ErrorIsoCountryCodeMappingMissing" xml:space="preserve">
-    <value>W folderze Resources brakuje pliku isoCountryCodeMapping.csv. Bez niego aplikacja nie może się załadować.</value>
-  </data>
   <data name="mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode" xml:space="preserve">
     <value>Błąd w FrmMainApp.NavigateMapGo (ciąg HTMLCode) (zgłoś problem na GitHub): </value>
   </data>

@@ -1,4 +1,5 @@
-[![Translation status](https://hosted.weblate.org/widget/geotagninja/svg-badge.svg)](https://hosted.weblate.org/engage/geotagninja/)
+[![Translation status](https://hosted.weblate.org/widget/geotagninja/svg-badge.svg)](https://hosted.weblate.org/engage/geotagninja/) [![Github All Releases](https://img.shields.io/github/downloads/nemethviktor/geotagninja/total.svg)]()
+
 
 # Welcome to GeoTagNinja
 

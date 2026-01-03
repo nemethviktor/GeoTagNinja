@@ -884,9 +884,6 @@ Certains fichiers HEIC disposent de cet attribut, mais pas la plupart des autres
   <data name="mbx_FrmImportNoStoredShiftValues" xml:space="preserve">
     <value>Aucune valeur de « décalage » n'est enregistrée. Les données restent à 0.</value>
   </data>
-  <data name="mbx_FrmMainApp_ErrorIsoCountryCodeMappingMissing" xml:space="preserve">
-    <value>Le fichier isoCountryCodeMapping.csv est manquant dans le dossier "Resources". Sans ce fichier, l'application ne peut pas se charger.</value>
-  </data>
   <data name="mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles" xml:space="preserve">
     <value>Voulez-vous attribuer les coordonnées au(x) fichier(s) sélectionné(s) ?</value>
   </data>

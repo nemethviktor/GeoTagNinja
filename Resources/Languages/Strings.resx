@@ -887,10 +887,6 @@ If you click 'stop asking' it will take the answer as Yes and won't ask again th
   <data name="mbx_FrmMainApp_ErrorInvalidFolder" xml:space="preserve">
     <value>The folder you entered doesn't seem valid. Revert to C:\?</value>
   </data>
-  <data name="mbx_FrmMainApp_ErrorIsoCountryCodeMappingMissing" xml:space="preserve">
-    <value>The file isoCountryCodeMapping.csv is missing from the Resources folder. Without it the app can't load.</value>
-    <comment>CSV file is missing and it's required to load the app</comment>
-  </data>
   <data name="mbx_FrmMainApp_ErrorLanguageFileColumnHeaders" xml:space="preserve">
     <value>There was an error reading the language file and assigning columnheaders (Please file an issue on github): </value>
     <comment>This is a possible app-start error.</comment>

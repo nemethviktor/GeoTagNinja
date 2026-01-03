@@ -699,9 +699,6 @@
   <data name="mbx_FrmMainApp_ErrorInvalidFolder" xml:space="preserve">
     <value>நீங்கள் உள்ளிட்ட கோப்புறை செல்லுபடியாகாது. C க்கு திரும்பவும்: \?</value>
   </data>
-  <data name="mbx_FrmMainApp_ErrorIsoCountryCodeMappingMissing" xml:space="preserve">
-    <value>ISOCOUNTRYCODEMAPPING.CSV கோப்பு வளங்கள் கோப்புறையிலிருந்து காணவில்லை. இது இல்லாமல் பயன்பாட்டை ஏற்ற முடியாது.</value>
-  </data>
   <data name="mbx_FrmMainApp_ErrorLanguageFileColumnHeaders" xml:space="preserve">
     <value>மொழி கோப்பைப் படித்து நெடுவரிசைஎடர்களை ஒதுக்குவதில் பிழை ஏற்பட்டது (தயவுசெய்து கிதுபில் ஒரு சிக்கலை தாக்கல் செய்யுங்கள்): </value>
   </data>

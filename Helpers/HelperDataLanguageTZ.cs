@@ -1,13 +1,17 @@
 ﻿using System.Data;
-using System.IO;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.Helpers;
 
+/// <summary>
+/// Specifies the fields that can be queried or returned when mapping country information to language codes or
+/// identifiers.
+/// </summary>
+/// <remarks>The order of the enumeration values is significant and must not be changed, as it is required for
+/// correct parsing into a DataTable from Wikipedia sources.</remarks>
 public enum LanguageMappingQueryOrReturnWhat
 {
+    // DO NOT REORDER (Specific order needed for parsing into DataTable from Wikipedia)
     Country,
     ISO_3166_1A2,
     ISO_3166_1A3,
@@ -17,30 +21,13 @@ public enum LanguageMappingQueryOrReturnWhat
 internal static class HelperDataLanguageTZ
 {
     /// <summary>
-    ///     Reads the CountryCodes/Country data from the CSV file into a DT
+    ///     Reads the CountryCodes/Country data from the Wikipedia string into a DT
+    ///     This is a legacy method that I left here as it was originally reading a CSV file.
     /// </summary>
-    internal static Task DataReadCountryCodeDataFromCSV()
+    internal static Task DataReadCountryCodeDataFromWikipediaData()
     {
-        string countryCodeCsvFilePath = Path.Combine(
-            path1: HelperVariables.ResourcesFolderPath,
-            path2: "isoCountryCodeMapping.csv");
-
-        if (!File.Exists(path: countryCodeCsvFilePath))
-        {
-            FrmMainApp.Log.Fatal(message: "Error: isoCountryCodeMapping.csv missing");
-
-            Themer.ShowMessageBox(
-                message: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: "mbx_FrmMainApp_ErrorIsoCountryCodeMappingMissing",
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                icon: MessageBoxIcon.Error,
-                buttons: MessageBoxButtons.OK);
-            Application.Exit();
-        }
-
         HelperVariables.DtIsoCountryCodeMapping =
-            HelperDataCSVFileOperations.GetDataTableFromCsv(
-                fileNameWithPath: countryCodeCsvFilePath, isUTF: true);
+            HelperGenericAncillaryListsArrays.GetCountryDetailsToTable();
 
         return Task.CompletedTask;
     }

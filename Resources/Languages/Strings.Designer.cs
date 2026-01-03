@@ -2115,14 +2115,7 @@ namespace GeoTagNinja.Resources.Languages {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to The file isoCountryCodeMapping.csv is missing from the Resources folder. Without it the app can&apos;t load..
-        /// </summary>
-        public static string mbx_FrmMainApp_ErrorIsoCountryCodeMappingMissing {
-            get {
-                return ResourceManager.GetString("mbx_FrmMainApp_ErrorIsoCountryCodeMappingMissing", resourceCulture);
-            }
-        }
+        
         
         /// <summary>
         ///   Looks up a localized string similar to There was an error reading the language file and assigning columnheaders (Please file an issue on github): .
