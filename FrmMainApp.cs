@@ -2636,6 +2636,10 @@ in toponomyOverwrites)
         // Show Form
         lvw_FileList.ReloadFromDEs(directoryElements: DirectoryElements);
 
+        // This is a draft caller for caching. Disabled for now because it is experimental but I don't
+        // .. want to redo the whole thing if I ever figure I want caching.
+        // HelperDataCacheManager.WriteToJsonFile<List<DirectoryElement>>("C:\\myObjects.txt", DirectoryElements);
+
         HelperGenericFileLocking.FileListBeingUpdated = false;
         HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Ready.");
         Log.Trace(message: "Enable FrmMainApp");
