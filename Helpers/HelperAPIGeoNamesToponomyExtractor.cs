@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Authenticators;
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using WinFormsDarkThemerNinja;
 
@@ -52,18 +53,9 @@ internal static class HelperAPIGeoNamesToponomyExtractor
         RestRequest requestToponomy = new(resource:
             $"findNearbyPlaceNameJSON?lat={latitude}&lng={longitude}&lang={HelperVariables.APILanguageToUse}{SOnlyShowFCodePPL}&style=FULL&radius={radius}&maxRows={HelperVariables.ToponyMaxRowsChoiceOfferCount}");
         RestResponse responseToponomy = client.ExecuteGet(request: requestToponomy);
-        // check API reponse is OK
-        if (responseToponomy.Content != null && responseToponomy.Content.Contains(value: "the hourly limit of "))
-        {
-            HelperVariables.OperationAPIReturnedOKResponse = false;
-            Themer.ShowMessageBox(
-                message: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: "mbx_Helper_WarningGeoNamesAPIResponse",
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                icon: MessageBoxIcon.Warning,
-                buttons: MessageBoxButtons.OK);
-        }
-        else if (responseToponomy.StatusCode.ToString() == "OK")
+        // check API reponse is OK and isn't telling us that we're out of our allocated limit
+        if (responseToponomy.Content != null & !
+            responseToponomy.Content.Contains(value: "the hourly limit of "))
         {
             HelperVariables.OperationAPIReturnedOKResponse = true;
             JObject data = (JObject)JsonConvert.DeserializeObject(value: responseToponomy.Content);
@@ -72,11 +64,26 @@ internal static class HelperAPIGeoNamesToponomyExtractor
         }
         else
         {
+            string apiMessage = string.Empty;
+            try
+            {
+                // Parse the string into a JObject
+                JObject apiContentDetails = JObject.Parse(responseToponomy.Content);
+
+                // Access the nested "message" field
+                apiMessage = apiContentDetails["status"]["message"].ToString();
+            }
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+            }
             HelperVariables.OperationAPIReturnedOKResponse = false;
             Themer.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_Helper_WarningGeoNamesAPIResponse",
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox)
+                    + Environment.NewLine
+                    + apiMessage,
                 icon: MessageBoxIcon.Warning,
                 buttons: MessageBoxButtons.OK);
         }

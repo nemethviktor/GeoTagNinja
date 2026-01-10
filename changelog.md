@@ -8,6 +8,7 @@
 	- There's now also a Spanish translation stub via Weblate but it's empty.
 - BUGS & FIXES:
 	- Revamped theming internally
+	- Fixed GeoNames API warnings not being relayed to the user
 
 **Build 9458 [20251123]**
 - NEW & UPDATED:
