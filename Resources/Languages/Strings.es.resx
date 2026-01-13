@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -58,4 +58,43 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="btn_ApplyAndNext" xml:space="preserve">
+    <value>Aplicar y avanzar a siguiente</value>
+  </data>
+  <data name="btn_InsertFromTakenDate" xml:space="preserve">
+    <value>Usar fecha de captura</value>
+  </data>
+  <data name="btn_RemoveGeoData" xml:space="preserve">
+    <value>Eliminar datos de GPS y ubicación</value>
+  </data>
+  <data name="btn_ResetToDefaults" xml:space="preserve">
+    <value>Restablecer valores predeterminados</value>
+  </data>
+  <data name="btn_RestartLater" xml:space="preserve">
+    <value>Reiniciar más tarde</value>
+  </data>
+  <data name="btn_RestartNow" xml:space="preserve">
+    <value>Reiniciar ahora</value>
+  </data>
+  <data name="btn_SetCurrentValues" xml:space="preserve">
+    <value>Establecer valores actuales para todas las imágenes seleccionadas para editar...</value>
+  </data>
+  <data name="ckb_AddXMPSideCar" xml:space="preserve">
+    <value>Agregar/Sobrescribir Sidecar XMP</value>
+  </data>
+  <data name="ckb_DeSelectAll" xml:space="preserve">
+    <value>(Des)Marcar todo</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI" xml:space="preserve">
+    <value>NO realizar geocodificación inversa (solo obtener las coordenadas, pero no la ciudad/estado/etc.)</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude" xml:space="preserve">
+    <value>Incluir datos de altitud en la exportación</value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries" xml:space="preserve">
+    <value>¿Incluir países "predeterminados"? (ver enlace arriba + advertencia)</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap" xml:space="preserve">
+    <value>Superponer archivo de ruta en el mapa</value>
+  </data>
 </root>
