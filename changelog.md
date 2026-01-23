@@ -2,6 +2,12 @@
 
 **Build 9xxx [2026xxxx]** (upcoming release)
 - NEW & UPDATED:
+ 	- TBA
+- BUGS & FIXES:
+ 	- TBA
+
+**Build 9519 [20260123]**
+- NEW & UPDATED:
 	- Added `Use Last Used Folder` (for startup purposes) #191
 	- Added `Carto` as map layer option ref #192 partial solution for "always English" map
 	- Added a TOC to the readme. (via [this tool](https://www.docstomarkdown.pro/markdown-table-of-contents-generator-free/))
