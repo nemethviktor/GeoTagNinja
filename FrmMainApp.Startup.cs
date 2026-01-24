@@ -274,6 +274,14 @@ public partial class FrmMainApp
             Themer.ThemeStyle.Default
             );
 
+        // Since we are setting these to True in the Designer when not-themed these would look off.
+        if (!HelperVariables.UserSettingUseDarkMode)
+        {
+            lvw_FileList.OwnerDraw = false;
+            lvw_ExifData.OwnerDraw = false;
+            tcr_Main.DrawMode = System.Windows.Forms.TabDrawMode.Normal;
+        }
+
         return Task.CompletedTask;
     }
 

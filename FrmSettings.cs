@@ -387,6 +387,12 @@ public partial class FrmSettings : Form
             Themer.ThemeStyle.Custom :
             Themer.ThemeStyle.Default
             );
+
+        // Since we are setting these to True in the Designer when not-themed these would look off.
+        if (!HelperVariables.UserSettingUseDarkMode)
+        {
+            tcr_Settings.DrawMode = System.Windows.Forms.TabDrawMode.Normal;
+        }
     }
 
     /// <summary>

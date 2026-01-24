@@ -6,7 +6,7 @@
 - BUGS & FIXES:
  	- TBA
 
-**Build 9519 [20260123]**
+**Build 9519 [20260123] // Build 9520 [20260124]**
 - NEW & UPDATED:
 	- Added `Use Last Used Folder` (for startup purposes) #191
 	- Added `Carto` as map layer option ref #192 partial solution for "always English" map
@@ -15,6 +15,7 @@
 - BUGS & FIXES:
 	- Revamped theming internally
 	- Fixed GeoNames API warnings not being relayed to the user
+	- Build 9520 fixes a theming error introduced in Build 9519
 
 **Build 9458 [20251123]**
 - NEW & UPDATED:

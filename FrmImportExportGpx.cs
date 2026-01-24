@@ -327,6 +327,12 @@ public partial class FrmImportExportGpx : Form
             Themer.ThemeStyle.Custom :
             Themer.ThemeStyle.Default
             );
+
+        // Since we are setting these to True in the Designer when not-themed these would look off.
+        if (!HelperVariables.UserSettingUseDarkMode)
+        {
+            tcr_ImportExport.DrawMode = System.Windows.Forms.TabDrawMode.Normal;
+        }
     }
 
     /// <summary>
