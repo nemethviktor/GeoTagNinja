@@ -26,6 +26,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TimeZoneConverter;
+using static GeoTagNinja.Helpers.HelperExifReadExifData;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using Application = System.Windows.Forms.Application;
 using Themer = WinFormsDarkThemerNinja.Themer;
@@ -2344,23 +2345,27 @@ public partial class FrmMainApp : Form
                     fileNameWithoutPath: fileNameWithoutPath);
             if (dtToponomy.Rows.Count > 0)
             {
-                // Send off to SQL
+                // Send off to the local datatable
+                // since we _are_ reading from dtTopoomy the columns should be standardised
                 List<(ElementAttribute attribute, string toponomyOverwriteVal)>
                     toponomyOverwrites =
                     [
-                        (ElementAttribute.CountryCode, dtToponomy.Rows[index: 0][columnName: HelperControlAndMessageBoxHandling.ReturnControlText(
-                             fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                             controlName: "clh_CountryCode")].ToString()),
-                        (ElementAttribute.Country, dtToponomy.Rows[index: 0][columnName: HelperControlAndMessageBoxHandling.ReturnControlText(
-                             fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                             controlName: "clh_Country")].ToString())
+                        (ElementAttribute.CountryCode, dtToponomy.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]].ToString()),
+                        (ElementAttribute.Country, dtToponomy.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]].ToString())
                     ];
 
+                // there's only four in there.
                 foreach (ElementAttribute attribute in HelperGenericAncillaryListsArrays.ToponomyReplaces())
                 {
-                    string colName = HelperControlAndMessageBoxHandling.ReturnControlText(
-                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                        controlName: $"clh_{attribute}");
+                    string colName = attribute switch
+                    {
+                        ElementAttribute.City => "clh_City",
+                        ElementAttribute.State => "clh_State",
+                        ElementAttribute.Sublocation => "clh_Sublocation",
+                        ElementAttribute.GPSAltitude => "clh_GPSAltitude",
+                        _ => throw new NotImplementedException(),
+                    };
+
                     string settingVal = HelperExifReadExifData.ReplaceBlankToponomy(
                         settingId: attribute,
                         settingValue: dtToponomy.Rows[index: 0][columnName: colName]
@@ -2369,9 +2374,7 @@ public partial class FrmMainApp : Form
                 }
 
                 // timeZone is a bit special but that's just how we all love it....not.
-                string TZ = dtToponomy.Rows[index: 0][columnName: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                    controlName: "clh_timezoneId")].ToString();
+                string TZ = dtToponomy.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]].ToString();
 
                 bool _ = DateTime.TryParse(s: lvi.SubItems[index: lvw_FileList
                                                                  .Columns[
@@ -2407,8 +2410,7 @@ public partial class FrmMainApp : Form
                     // don't do anything.
                 }
 
-                foreach ((ElementAttribute attribute, string toponomyOverwriteVal)
-in toponomyOverwrites)
+                foreach ((ElementAttribute attribute, string toponomyOverwriteVal) in toponomyOverwrites)
                 {
                     dirElemFileToModify.SetAttributeValueAnyType(
                         attribute: attribute,

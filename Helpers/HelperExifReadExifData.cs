@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Model;
+﻿using ExCSS;
+using GeoTagNinja.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,17 +11,38 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using WinFormsDarkThemerNinja;
 using static GeoTagNinja.Model.SourcesAndAttributes;
+using Point = System.Drawing.Point;
 
 namespace GeoTagNinja.Helpers;
 
 internal static class HelperExifReadExifData
 {
+
+
+    /// <summary>
+    /// Provides the default mapping of English item names to their corresponding database column headers.
+    /// </summary>
+    /// <remarks>This dictionary is used to translate standardized item names into database column headers,
+    /// enabling consistent data retrieval and manipulation. The mapping is initialized with a predefined set of item
+    /// names and their associated column header strings.</remarks>
+    internal static Dictionary<string, string> DefaultEnglishNamesToColumnHeaders = new()
+    {
+        { nameof(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Distance), "clh_Distance" },
+        { nameof(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode), "clh_CountryCode" },
+        { nameof(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country), "clh_Country" },
+        { nameof(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.City), "clh_City" },
+        { nameof(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.State), "clh_State" },
+        { nameof(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation), "clh_Sublocation" },
+        { nameof(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude), "clh_GPSAltitude" },
+        { nameof(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId), "clh_timezoneId" },
+    };
+
     /// <summary>
     ///     Performs a search in the local SQLite database for cached toponomy info and if finds it, returns that, else queries
     ///     the API
     /// </summary>
-    /// <param name="lat">latitude/longitude to be queried</param>
-    /// <param name="lng">latitude/longitude to be queried</param>
+    /// <param name="lat">latitude to be queried</param>
+    /// <param name="lng">longitude to be queried</param>
     /// <param name="fileNameWithoutPath">Name of the file</param>
     /// <param name="useDefaultHardcodedEnglishValues">
     ///     Whether to use hardcoded column names. Reading track files expects the
@@ -35,75 +57,8 @@ internal static class HelperExifReadExifData
                                                                    string fileNameWithoutPath = "",
                                                                    bool useDefaultHardcodedEnglishValues = false)
     {
-        DataTable dtReturn = new();
-        dtReturn.Clear();
-        Dictionary<string, string> columnsToAddList = new()
-        {
-            {
-                "Distance", useDefaultHardcodedEnglishValues
-                    ? "Distance"
-                    : HelperControlAndMessageBoxHandling.ReturnControlText(
-                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                        controlName: "clh_Distance")
-            },
-            {
-                "CountryCode", useDefaultHardcodedEnglishValues
-                    ? "CountryCode"
-                    : HelperControlAndMessageBoxHandling.ReturnControlText(
-                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                        controlName: "clh_CountryCode")
-            },
-            {
-                "Country", useDefaultHardcodedEnglishValues
-                    ? "Country"
-                    : HelperControlAndMessageBoxHandling.ReturnControlText(
-                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                        controlName: "clh_Country")
-            },
-            {
-                "City", useDefaultHardcodedEnglishValues
-                    ? "City"
-                    : HelperControlAndMessageBoxHandling.ReturnControlText(
-                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                        controlName: "clh_City")
-            },
-            {
-                "State", useDefaultHardcodedEnglishValues
-                    ? "State"
-                    : HelperControlAndMessageBoxHandling.ReturnControlText(
-                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                        controlName: "clh_State")
-            },
-            {
-                "Sublocation", useDefaultHardcodedEnglishValues
-                    ? "Sublocation"
-                    : HelperControlAndMessageBoxHandling.ReturnControlText(
-                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                        controlName: "clh_Sublocation")
-            },
-            {
-                "GPSAltitude", useDefaultHardcodedEnglishValues
-                    ? "Altitude"
-                    : HelperControlAndMessageBoxHandling.ReturnControlText(
-                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                        controlName: "clh_GPSAltitude")
-            },
-            {
-                "timezoneId", useDefaultHardcodedEnglishValues
-                    ? "timezoneId"
-                    : HelperControlAndMessageBoxHandling.ReturnControlText(
-                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                        controlName: "clh_timezoneId")
-            }
-        };
-
-        foreach (KeyValuePair<string, string> s in columnsToAddList)
-        {
-            _ = dtReturn.Columns.Add(columnName: s.Value);
-        }
-        // HelperControlAndMessageBoxHandling.ReturnControlText(
-        //     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Label,
-        //     controlName: "clh_TargetPointOutcomeCustom")
+        DataTable dtSQLToponomyData = new();
+        AddColumnsToToponomyDataTable(dtSQLToponomyData);
 
         EnumerableRowCollection<DataRow> drDataTableData =
             from DataRow dataRow in FrmMainApp.DTToponomySessionData.AsEnumerable()
@@ -143,26 +98,23 @@ internal static class HelperExifReadExifData
         if (lstToponomySessionData.Count > 0)
         {
             bool isPredeterminedCountry = false;
-
-            CountryCode = lstToponomySessionData[index: 0][columnName: "CountryCode"]
-               .ToString();
+            // CountryCode etc does not need changing to hardcoded english or "clh_" style here.
+            CountryCode = $"{lstToponomySessionData[index: 0][columnName: "CountryCode"]}";
             Country = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
                     queryWhat: LanguageMappingQueryOrReturnWhat.ISO_3166_1A3,
                     inputVal: CountryCode,
                     returnWhat: LanguageMappingQueryOrReturnWhat.Country)
                 ;
 
-            Altitude = lstToponomySessionData[index: 0][columnName: "GPSAltitude"]
-               .ToString();
+            Altitude = $"{lstToponomySessionData[index: 0][columnName: "GPSAltitude"]}";
 
-            timezoneId = lstToponomySessionData[index: 0][columnName: "timezoneId"]
-               .ToString();
+            timezoneId = $"{lstToponomySessionData[index: 0][columnName: "timezoneId"]}";
 
-            string? AdminName1InSQL = lstToponomySessionData[index: 0][columnName: "AdminName1"].ToString();
-            string? AdminName2InSQL = lstToponomySessionData[index: 0][columnName: "AdminName2"].ToString();
-            string? AdminName3InSQL = lstToponomySessionData[index: 0][columnName: "AdminName3"].ToString();
-            string? AdminName4InSQL = lstToponomySessionData[index: 0][columnName: "AdminName4"].ToString();
-            string? ToponymNameInSQL = lstToponomySessionData[index: 0][columnName: "ToponymName"].ToString();
+            string? AdminName1InSQL = $"{lstToponomySessionData[index: 0][columnName: "AdminName1"]}";
+            string? AdminName2InSQL = $"{lstToponomySessionData[index: 0][columnName: "AdminName2"]}";
+            string? AdminName3InSQL = $"{lstToponomySessionData[index: 0][columnName: "AdminName3"]}";
+            string? AdminName4InSQL = $"{lstToponomySessionData[index: 0][columnName: "AdminName4"]}";
+            string? ToponymNameInSQL = $"{lstToponomySessionData[index: 0][columnName: "ToponymName"]}";
 
             // In a country where you know, which admin level the cities belong to (see arrays), use the adminNameX as city name.
             // If the toponymName doesn't match the adminNameX, use the toponymName as sublocation name. toponymNames ...
@@ -223,9 +175,9 @@ internal static class HelperExifReadExifData
                 {
                     foreach (DataRow dataRow in drCustomRulesData)
                     {
-                        string DataPointName = dataRow[columnName: "DataPointName"].ToString();
+                        string DataPointName = $"{dataRow[columnName: "DataPointName"]}";
 
-                        string DataPointConditionType = dataRow[columnName: "DataPointConditionType"].ToString();
+                        string DataPointConditionType = $"{dataRow[columnName: "DataPointConditionType"]}";
 
                         string DataPointValueInSQL = null;
 
@@ -251,8 +203,7 @@ internal static class HelperExifReadExifData
                         // don't bother if null
                         if (!string.IsNullOrEmpty(value: DataPointValueInSQL))
                         {
-                            string? DataPointConditionValue = dataRow[columnName: "DataPointConditionValue"]
-                               .ToString();
+                            string? DataPointConditionValue = $"{dataRow[columnName: "DataPointConditionValue"]}";
                             string? DataPointValueInSQLLC = DataPointValueInSQL.ToLower();
                             string? DataPointConditionValueLC = DataPointConditionValue.ToLower();
                             bool comparisonIsTrue = false;
@@ -291,12 +242,9 @@ internal static class HelperExifReadExifData
                             if (comparisonIsTrue && ((stopProcessingRules && !customRuleChangedSublocation) ||
                                                      !stopProcessingRules))
                             {
-                                string? TargetPointName = dataRow[columnName: "TargetPointName"]
-                                   .ToString();
-                                string? TargetPointOutcome = dataRow[columnName: "TargetPointOutcome"]
-                                   .ToString();
-                                string? TargetPointOutcomeCustom = dataRow[columnName: "TargetPointOutcomeCustom"]
-                                   .ToString();
+                                string? TargetPointName = $"{dataRow[columnName: "TargetPointName"]}";
+                                string? TargetPointOutcome = $"{dataRow[columnName: "TargetPointOutcome"]}";
+                                string? TargetPointOutcomeCustom = $"{dataRow[columnName: "TargetPointOutcomeCustom"]}";
 
                                 switch (TargetPointName)
                                 {
@@ -407,20 +355,19 @@ internal static class HelperExifReadExifData
                 }
             }
 
-            #endregion
+        #endregion
+            DataRow drSQLToponomyRow = dtSQLToponomyData.NewRow();
 
-            DataRow drReturnRow = dtReturn.NewRow();
+            drSQLToponomyRow[columnName: DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Distance, true)]] = Distance;
+            drSQLToponomyRow[columnName: DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]] = CountryCode;
+            drSQLToponomyRow[columnName: DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]] = Country;
+            drSQLToponomyRow[columnName: DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]] = City;
+            drSQLToponomyRow[columnName: DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]] = State;
+            drSQLToponomyRow[columnName: DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]] = Sublocation;
+            drSQLToponomyRow[columnName: DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude, true)]] = Altitude;
+            drSQLToponomyRow[columnName: DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]] = timezoneId;
 
-            drReturnRow[columnName: columnsToAddList[key: "Distance"]] = Distance;
-            drReturnRow[columnName: columnsToAddList[key: "CountryCode"]] = CountryCode;
-            drReturnRow[columnName: columnsToAddList[key: "Country"]] = Country;
-            drReturnRow[columnName: columnsToAddList[key: "City"]] = City;
-            drReturnRow[columnName: columnsToAddList[key: "State"]] = State;
-            drReturnRow[columnName: columnsToAddList[key: "Sublocation"]] = Sublocation;
-            drReturnRow[columnName: columnsToAddList[key: "GPSAltitude"]] = Altitude;
-            drReturnRow[columnName: columnsToAddList[key: "timezoneId"]] = timezoneId;
-
-            dtReturn.Rows.Add(row: drReturnRow);
+            dtSQLToponomyData.Rows.Add(row: drSQLToponomyRow);
         }
         // read from API
         else if (HelperVariables.OperationAPIReturnedOKResponse)
@@ -483,24 +430,18 @@ internal static class HelperExifReadExifData
             {
                 if (readJsonToponomy.Geonames.Length > 0)
                 {
-                    // this is to pseudo-replicate the dtReturn table but for SQL, which has a different logic. (of course it does.)
+                    // this is to pseudo-replicate the dataTable table but for SQL, which has a different logic. (of course it does.)
                     DataTable dtWriteToSQLite = new();
                     dtWriteToSQLite.Clear();
-                    _ = dtWriteToSQLite.Columns.Add(columnName: "lat");
-                    _ = dtWriteToSQLite.Columns.Add(columnName: "lng");
-                    _ = dtWriteToSQLite.Columns.Add(columnName: "AdminName1");
-                    _ = dtWriteToSQLite.Columns.Add(columnName: "AdminName2");
-                    _ = dtWriteToSQLite.Columns.Add(columnName: "AdminName3");
-                    _ = dtWriteToSQLite.Columns.Add(columnName: "AdminName4");
-                    _ = dtWriteToSQLite.Columns.Add(columnName: "ToponymName");
-                    _ = dtWriteToSQLite.Columns.Add(columnName: "CountryCode");
-                    _ = dtWriteToSQLite.Columns.Add(columnName: "GPSAltitude");
-                    _ = dtWriteToSQLite.Columns.Add(columnName: "timezoneId");
+                    foreach (string column in (List<string>)["lat", "lng", "AdminName1", "AdminName2", "AdminName3", "AdminName4", "ToponymName", "CountryCode", "GPSAltitude", "timezoneId"])
+                    {
+                        _ = dtWriteToSQLite.Columns.Add(columnName: column);
+                    }
 
                     for (int index = 0; index < readJsonToponomy.Geonames.Length; index++)
                     {
-                        DataRow drApiToponomyRow = dtReturn.NewRow();
-                        DataRow drWriteToSqLiteRow = dtWriteToSQLite.NewRow();
+                        DataRow drAPIToponomyRow = dtSQLToponomyData.NewRow();
+                        DataRow drWriteToSQLiteRow = dtWriteToSQLite.NewRow();
 
                         string APICountryCode = readJsonToponomy.Geonames[index]
                                                                 .CountryCode;
@@ -540,7 +481,7 @@ internal static class HelperExifReadExifData
                             tmpAlt = 0.0;
                         }
 
-                        Altitude = tmpAlt.ToString();
+                        Altitude = $"{tmpAlt}";
 
                         // this is already String.
                         timezoneId = readJsonToponomy.Geonames[index]
@@ -549,16 +490,11 @@ internal static class HelperExifReadExifData
                         Distance = readJsonToponomy.Geonames[index]
                                                    .Distance;
 
-                        string? AdminName1InAPI = readJsonToponomy.Geonames[index]
-                                                                  .AdminName1;
-                        string? AdminName2InAPI = readJsonToponomy.Geonames[index]
-                                                                  .AdminName2;
-                        string? AdminName3InAPI = readJsonToponomy.Geonames[index]
-                                                                  .AdminName3;
-                        string? AdminName4InAPI = readJsonToponomy.Geonames[index]
-                                                                  .AdminName4;
-                        string? ToponymNameInAPI = readJsonToponomy.Geonames[index]
-                                                                   .ToponymName;
+                        string? AdminName1InAPI = readJsonToponomy.Geonames[index].AdminName1;
+                        string? AdminName2InAPI = readJsonToponomy.Geonames[index].AdminName2;
+                        string? AdminName3InAPI = readJsonToponomy.Geonames[index].AdminName3;
+                        string? AdminName4InAPI = readJsonToponomy.Geonames[index].AdminName4;
+                        string? ToponymNameInAPI = readJsonToponomy.Geonames[index].ToponymName;
 
                         // Comments are copied from above.
                         // In a country where you know, which admin level the cities belong to (see arrays), use the adminNameX as city name.
@@ -620,11 +556,9 @@ internal static class HelperExifReadExifData
                             {
                                 foreach (DataRow dataRow in drCustomRulesData)
                                 {
-                                    string? DataPointName = dataRow[columnName: "DataPointName"]
-                                       .ToString();
+                                    string? DataPointName = $"{dataRow[columnName: "DataPointName"]}";
 
-                                    string? DataPointConditionType = dataRow[columnName: "DataPointConditionType"]
-                                       .ToString();
+                                    string? DataPointConditionType = $"{dataRow[columnName: "DataPointConditionType"]}";
 
                                     string? DataPointValueInAPI = null;
                                     switch (DataPointName)
@@ -649,8 +583,7 @@ internal static class HelperExifReadExifData
                                     // don't bother if null
                                     if (!string.IsNullOrEmpty(value: DataPointValueInAPI))
                                     {
-                                        string? DataPointConditionValue = dataRow[columnName: "DataPointConditionValue"]
-                                           .ToString();
+                                        string? DataPointConditionValue = $"{dataRow[columnName: "DataPointConditionValue"]}";
                                         string? DataPointValueInAPILC = DataPointValueInAPI?.ToLower();
                                         string? DataPointConditionValueLC = DataPointConditionValue.ToLower();
                                         bool comparisonIsTrue = false;
@@ -690,13 +623,9 @@ internal static class HelperExifReadExifData
                                             ((stopProcessingRules && !customRuleChangedSublocation) ||
                                              !stopProcessingRules))
                                         {
-                                            string? TargetPointName = dataRow[columnName: "TargetPointName"]
-                                               .ToString();
-                                            string? TargetPointOutcome = dataRow[columnName: "TargetPointOutcome"]
-                                               .ToString();
-                                            string? TargetPointOutcomeCustom =
-                                                dataRow[columnName: "TargetPointOutcomeCustom"]
-                                                   .ToString();
+                                            string? TargetPointName = $"{dataRow[columnName: "TargetPointName"]}";
+                                            string? TargetPointOutcome = $"{dataRow[columnName: "TargetPointOutcome"]}";
+                                            string? TargetPointOutcomeCustom = $"{dataRow[columnName: "TargetPointOutcomeCustom"]}";
 
                                             switch (TargetPointName)
                                             {
@@ -807,63 +736,54 @@ internal static class HelperExifReadExifData
                         }
 
                         // add to return-table to offer to user
-                        drApiToponomyRow[columnName: columnsToAddList[key: "Distance"]] = Distance;
-                        drApiToponomyRow[columnName: columnsToAddList[key: "CountryCode"]] = CountryCode;
-                        drApiToponomyRow[columnName: columnsToAddList[key: "Country"]] = Country;
-                        drApiToponomyRow[columnName: columnsToAddList[key: "City"]] = City;
-                        drApiToponomyRow[columnName: columnsToAddList[key: "State"]] = State;
-                        drApiToponomyRow[columnName: columnsToAddList[key: "Sublocation"]] = Sublocation;
-                        drApiToponomyRow[columnName: columnsToAddList[key: "GPSAltitude"]] = Altitude;
-                        drApiToponomyRow[columnName: columnsToAddList[key: "timezoneId"]] = timezoneId;
 
-                        dtReturn.Rows.Add(row: drApiToponomyRow);
+                        drAPIToponomyRow[columnName: DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Distance, true)]] = Distance;
+                        drAPIToponomyRow[columnName: DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]] = CountryCode;
+                        drAPIToponomyRow[columnName: DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]] = Country;
+                        drAPIToponomyRow[columnName: DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]] = City;
+                        drAPIToponomyRow[columnName: DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]] = State;
+                        drAPIToponomyRow[columnName: DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]] = Sublocation;
+                        drAPIToponomyRow[columnName: DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude, true)]] = Altitude;
+                        drAPIToponomyRow[columnName: DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]] = timezoneId;
+
+                        dtSQLToponomyData.Rows.Add(row: drAPIToponomyRow);
 
                         // write back the new stuff to sql
 
-                        drWriteToSqLiteRow[columnName: "lat"] = lat;
-                        drWriteToSqLiteRow[columnName: "lng"] = lng;
-                        drWriteToSqLiteRow[columnName: "AdminName1"] = readJsonToponomy.Geonames[index]
+                        drWriteToSQLiteRow[columnName: "lat"] = lat;
+                        drWriteToSQLiteRow[columnName: "lng"] = lng;
+                        drWriteToSQLiteRow[columnName: "AdminName1"] = readJsonToponomy.Geonames[index]
                            .AdminName1;
-                        drWriteToSqLiteRow[columnName: "AdminName2"] = readJsonToponomy.Geonames[index]
+                        drWriteToSQLiteRow[columnName: "AdminName2"] = readJsonToponomy.Geonames[index]
                            .AdminName2;
-                        drWriteToSqLiteRow[columnName: "AdminName3"] = readJsonToponomy.Geonames[index]
+                        drWriteToSQLiteRow[columnName: "AdminName3"] = readJsonToponomy.Geonames[index]
                            .AdminName3;
-                        drWriteToSqLiteRow[columnName: "AdminName4"] = readJsonToponomy.Geonames[index]
+                        drWriteToSQLiteRow[columnName: "AdminName4"] = readJsonToponomy.Geonames[index]
                            .AdminName4;
-                        drWriteToSqLiteRow[columnName: "ToponymName"] = readJsonToponomy.Geonames[index]
+                        drWriteToSQLiteRow[columnName: "ToponymName"] = readJsonToponomy.Geonames[index]
                            .ToponymName;
-                        drWriteToSqLiteRow[columnName: "CountryCode"] = CountryCode;
-                        drWriteToSqLiteRow[columnName: "GPSAltitude"] = Altitude;
-                        drWriteToSqLiteRow[columnName: "timezoneId"] = timezoneId;
+                        drWriteToSQLiteRow[columnName: "CountryCode"] = CountryCode;
+                        drWriteToSQLiteRow[columnName: "GPSAltitude"] = Altitude;
+                        drWriteToSQLiteRow[columnName: "timezoneId"] = timezoneId;
 
-                        dtWriteToSQLite.Rows.Add(row: drWriteToSqLiteRow);
+                        dtWriteToSQLite.Rows.Add(row: drWriteToSQLiteRow);
                     }
 
-                    if (dtReturn.Rows.Count == 1)
+                    if (dtSQLToponomyData.Rows.Count == 1)
                     {
-                        // not adding anything to dtReturn because it has 1 row, and that's the one that will be returned.
+                        // not adding anything to dataTable because it has 1 row, and that's the one that will be returned.
 
                         HelperDataOtherDataRelated.UpdateAddToDataTableTopopnomy(
-                            lat: dtWriteToSQLite.Rows[index: 0][columnName: "lat"]
-                                                .ToString(),
-                            lng: dtWriteToSQLite.Rows[index: 0][columnName: "lng"]
-                                                .ToString(),
-                            adminName1: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName1"]
-                                                       .ToString(),
-                            adminName2: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName2"]
-                                                       .ToString(),
-                            adminName3: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName3"]
-                                                       .ToString(),
-                            adminName4: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName4"]
-                                                       .ToString(),
-                            toponymName: dtWriteToSQLite.Rows[index: 0][columnName: "ToponymName"]
-                                                        .ToString(),
-                            countryCode: dtWriteToSQLite.Rows[index: 0][columnName: "CountryCode"]
-                                                        .ToString(),
-                            altitude: dtWriteToSQLite.Rows[index: 0][columnName: "GPSAltitude"]
-                                                     .ToString(),
-                            timezoneId: dtWriteToSQLite.Rows[index: 0][columnName: "timezoneId"]
-                                                       .ToString()
+                            lat: $"{dtWriteToSQLite.Rows[index: 0][columnName: "lat"]}",
+                            lng: $"{dtWriteToSQLite.Rows[index: 0][columnName: "lng"]}",
+                            adminName1: $"{dtWriteToSQLite.Rows[index: 0][columnName: "AdminName1"]}",
+                            adminName2: $"{dtWriteToSQLite.Rows[index: 0][columnName: "AdminName2"]}",
+                            adminName3: $"{dtWriteToSQLite.Rows[index: 0][columnName: "AdminName3"]}",
+                            adminName4: $"{dtWriteToSQLite.Rows[index: 0][columnName: "AdminName4"]}",
+                            toponymName: $"{dtWriteToSQLite.Rows[index: 0][columnName: "ToponymName"]}",
+                            countryCode: $"{dtWriteToSQLite.Rows[index: 0][columnName: "CountryCode"]}",
+                            altitude: $"{dtWriteToSQLite.Rows[index: 0][columnName: "GPSAltitude"]}",
+                            timezoneId: $"{dtWriteToSQLite.Rows[index: 0][columnName: "timezoneId"]}"
                         );
                     }
                     else
@@ -886,8 +806,8 @@ internal static class HelperExifReadExifData
                             Application.DoEvents();
                         }
 
-                        int useDr = showDataFromAPIPicker(dtIn: dtReturn);
-                        dtReturn = dtReturn.AsEnumerable()
+                        int useDr = showDataFromAPIPicker(dtIn: dtSQLToponomyData);
+                        dtSQLToponomyData = dtSQLToponomyData.AsEnumerable()
                                            .Where(predicate: (row,
                                                               index) => index == useDr)
                                            .CopyToDataTable();
@@ -899,26 +819,16 @@ internal static class HelperExifReadExifData
 
                         // [0] because we just killed off the other rows above.
                         HelperDataOtherDataRelated.UpdateAddToDataTableTopopnomy(
-                            lat: dtWriteToSQLite.Rows[index: 0][columnName: "lat"]
-                                                .ToString(),
-                            lng: dtWriteToSQLite.Rows[index: 0][columnName: "lng"]
-                                                .ToString(),
-                            adminName1: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName1"]
-                                                       .ToString(),
-                            adminName2: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName2"]
-                                                       .ToString(),
-                            adminName3: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName3"]
-                                                       .ToString(),
-                            adminName4: dtWriteToSQLite.Rows[index: 0][columnName: "AdminName4"]
-                                                       .ToString(),
-                            toponymName: dtWriteToSQLite.Rows[index: 0][columnName: "ToponymName"]
-                                                        .ToString(),
-                            countryCode: dtWriteToSQLite.Rows[index: 0][columnName: "CountryCode"]
-                                                        .ToString(),
-                            altitude: dtWriteToSQLite.Rows[index: 0][columnName: "GPSAltitude"]
-                                                     .ToString(),
-                            timezoneId: dtWriteToSQLite.Rows[index: 0][columnName: "timezoneId"]
-                                                       .ToString()
+                            lat: $"{dtWriteToSQLite.Rows[index: 0][columnName: "lat"]}",
+                            lng: $"{dtWriteToSQLite.Rows[index: 0][columnName: "lng"]}",
+                            adminName1: $"{dtWriteToSQLite.Rows[index: 0][columnName: "AdminName1"]}",
+                            adminName2: $"{dtWriteToSQLite.Rows[index: 0][columnName: "AdminName2"]}",
+                            adminName3: $"{dtWriteToSQLite.Rows[index: 0][columnName: "AdminName3"]}",
+                            adminName4: $"{dtWriteToSQLite.Rows[index: 0][columnName: "AdminName4"]}",
+                            toponymName: $"{dtWriteToSQLite.Rows[index: 0][columnName: "ToponymName"]}",
+                            countryCode: $"{dtWriteToSQLite.Rows[index: 0][columnName: "CountryCode"]}",
+                            altitude: $"{dtWriteToSQLite.Rows[index: 0][columnName: "GPSAltitude"]}",
+                            timezoneId: $"{dtWriteToSQLite.Rows[index: 0][columnName: "timezoneId"]}"
                         );
 
                         int showDataFromAPIPicker(DataTable dtIn)
@@ -964,16 +874,15 @@ internal static class HelperExifReadExifData
                                 }
                             };
 
-                            foreach (DataRow drItem in dtReturn.Rows)
+                            foreach (DataRow drItem in dtSQLToponomyData.Rows)
                             {
                                 // make it not-zero based.
-                                ListViewItem lvi = new(text: (dtReturn.Rows.IndexOf(row: drItem) +
+                                ListViewItem lvi = new(text: (dtSQLToponomyData.Rows.IndexOf(row: drItem) +
                                                               1)
                                    .ToString());
                                 foreach (DataColumn dc in dtIn.Columns)
                                 {
-                                    string dataToAdd = drItem[column: dc]
-                                       .ToString();
+                                    string dataToAdd = $"{drItem[column: dc]}";
 
                                     _ = lvi.SubItems.Add(text: dataToAdd);
                                 }
@@ -1055,7 +964,100 @@ internal static class HelperExifReadExifData
             }
         }
 
-        return dtReturn;
+        return dtSQLToponomyData;
+    }
+
+    /// <summary>
+    /// Adds the required columns for toponomy data to the specified <see cref="DataTable"/> instance.
+    /// </summary>
+    /// <remarks>This method retrieves the necessary column names for toponomy data and appends them to the
+    /// provided <see cref="DataTable"/>. If the table already contains columns with the same names, duplicate columns
+    /// may be created. It is recommended to ensure the table's schema is appropriate before invoking this
+    /// method.</remarks>
+    /// <param name="dataTable">The <see cref="DataTable"/> to which the toponomy columns will be added. This parameter must be initialized and
+    /// not null before calling the method.</param>
+    private static void AddColumnsToToponomyDataTable(DataTable dataTable)
+    {
+        Dictionary<string, string> columnsToAddList = GetToponomyDataTableColumnNames(dataTable);
+
+        foreach (KeyValuePair<string, string> s in columnsToAddList)
+        {
+            _ = dataTable.Columns.Add(columnName: s.Value);
+        }
+    }
+
+    /// <summary>
+    /// Creates a dictionary that maps toponomy data column names to their corresponding database column headers, and
+    /// clears the specified DataTable prior to population.
+    /// </summary>
+    /// <remarks>This method ensures that the DataTable is cleared before constructing the mapping dictionary.
+    /// The returned dictionary uses predefined mappings to maintain consistency with the expected database
+    /// schema.</remarks>
+    /// <param name="dtReturn">The DataTable to be cleared and prepared for toponomy data column name mappings. Must not be null.</param>
+    /// <returns>A dictionary where each key is a toponomy data column name and each value is the corresponding database column
+    /// header.</returns>
+    private static Dictionary<string, string> GetToponomyDataTableColumnNames(DataTable dtReturn)
+    {
+        dtReturn.Clear();
+        // what we want here is {"Distance", "clh_Distance"} etc.
+        // but it's a little more foolproof hopefully
+        Dictionary<string, string> columnsToAddList = new()
+        {
+            {
+                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Distance, true),
+                DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Distance, true)]
+            },
+            {
+                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true),
+                DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]
+            },
+            {
+                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true),
+                DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]
+            },
+            {
+                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.City, true),
+                DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]
+            },
+            {
+                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.State, true),
+                DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]
+            },
+            {
+                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true),
+                DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]
+            },
+            {
+                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude, true),
+                DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude, true)]
+            },
+            {
+                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true),
+                DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]
+            },
+        };
+        return columnsToAddList;
+    }
+
+    /// <summary>
+    /// Retrieves the column name associated with the specified item name, optionally using default hardcoded English
+    /// values.
+    /// </summary>
+    /// <remarks>The result of this method depends on the value of useDefaultHardcodedEnglishValues. When set
+    /// to true, the method returns the item name directly as a string, which may be useful for scenarios where
+    /// localization is not required.</remarks>
+    /// <param name="itemName">The item name for which to obtain the corresponding column name.</param>
+    /// <param name="useDefaultHardcodedEnglishValues">true to return the default hardcoded English value for the column name; false to retrieve the column name from
+    /// the localized mapping.</param>
+    /// <returns>A string containing the column name associated with the specified item name. If useDefaultHardcodedEnglishValues
+    /// is true, the item name is returned as a string; otherwise, the localized column name is returned.</returns>
+    internal static string GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing itemName, bool useDefaultHardcodedEnglishValues)
+    {
+        return useDefaultHardcodedEnglishValues
+                            ? $"{itemName}"
+                            : HelperControlAndMessageBoxHandling.ReturnControlText(
+                                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
+                                controlName: DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(itemName, true)]);
     }
 
     /// <summary>
@@ -1105,8 +1107,7 @@ internal static class HelperExifReadExifData
                                                  .FirstOrDefault();
                 if (filteredRows != null)
                 {
-                    tryDataValue = filteredRows[columnIndex: 1]
-                      ?.ToString();
+                    tryDataValue = filteredRows[columnIndex: 1]?.ToString();
                     if (!string.IsNullOrEmpty(value: tryDataValue))
                     {
                         FrmMainApp.Log.Trace(message: $"dataPoint:{dataPoint} -> {tagWanted}: {tryDataValue}");

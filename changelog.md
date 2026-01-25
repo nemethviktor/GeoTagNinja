@@ -4,7 +4,7 @@
 - NEW & UPDATED:
  	- TBA
 - BUGS & FIXES:
- 	- TBA
+ 	- Fix #197 column name mismatches in internal datatables
 
 **Build 9519 [20260123] // Build 9520 [20260124]**
 - NEW & UPDATED:
@@ -15,7 +15,7 @@
 - BUGS & FIXES:
 	- Revamped theming internally
 	- Fixed GeoNames API warnings not being relayed to the user
-	- Build 9520 fixes a theming error introduced in Build 9519
+	- Build 9520 fixes a theming error introduced in Build 9519 - Ref #196
 
 **Build 9458 [20251123]**
 - NEW & UPDATED:

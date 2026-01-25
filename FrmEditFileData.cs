@@ -17,6 +17,7 @@ using System.Windows.Forms;
 using TimeZoneConverter;
 using static GeoTagNinja.FrmMainApp;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
+using static GeoTagNinja.Helpers.HelperExifReadExifData;
 using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
@@ -194,10 +195,8 @@ public partial class FrmEditFileData : Form
            .Width = lvw.Width;
 
         string fileNameWithoutPath = lvi.Text;
-        DirectoryElement dirElemFileToModify =
-            lvi.Tag as DirectoryElement;
-        FrmMainApp frmMainAppInstance =
-            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;
+        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         btn_InsertFromTakenDate.Enabled = false;
 
         Log.Trace(message: "Assinging Labels Start");
@@ -225,9 +224,8 @@ public partial class FrmEditFileData : Form
             if (lstControlTypesNoDEValue.Contains(item: cItem.GetType()) ||
                 lstControlTypesWithDEValue.Contains(item: cItem.GetType()))
             {
-                string
-                    debugItemName =
-                        cItem.Name; // this is for debugging only (particularly here, that is.)
+                // this is for debugging only (particularly here, that is.)
+                string debugItemName = cItem.Name;
                 string controlNameWithoutTypeIdentifier;
 
                 try
@@ -358,8 +356,7 @@ public partial class FrmEditFileData : Form
                             }
 
                             // these don't have a "simple" text solution
-                            if (cItem.Name ==
-                                "cbx_CountryCode") // this will also fill in Country
+                            if (cItem.Name == "cbx_CountryCode") // this will also fill in Country
                             {
                                 string countryCodeInDirectoryElement =
                                     stringValueOfCItem;
@@ -380,6 +377,12 @@ public partial class FrmEditFileData : Form
                                             returnWhat: LanguageMappingQueryOrReturnWhat.Country);
                                     cbx_Country.Text = sqliteText;
                                 }
+                            }
+                            else if (cItem.Name == "cbx_OffsetTime")
+                            {
+                                // don't select anything in this case. see longer comment below.
+                                ComboBox cbx = cItem as ComboBox;
+                                cbx.SelectedIndex = -1;
                             }
 
                             // Leaving this commented out on purpose...
@@ -406,8 +409,7 @@ public partial class FrmEditFileData : Form
                             //}
                         }
 
-                        if (maxAttributeVersion !=
-                            DirectoryElement.AttributeVersion.Original)
+                        if (maxAttributeVersion != DirectoryElement.AttributeVersion.Original)
                         {
                             cItem.Font =
                                 new Font(prototype: cItem.Font,
@@ -804,7 +806,7 @@ public partial class FrmEditFileData : Form
         switch (((Button)sender).Name)
         {
             case "btn_getFromWeb_Toponomy":
-                getFromWeb_Toponomy(fileNameWithoutPath: "");
+                GetFromWeb_Toponomy(fileNameWithoutPath: "");
                 break;
             case "btn_getAllFromWeb_Toponomy":
                 foreach (ListViewItem lvi in lvw_FileListEditImages.Items)
@@ -815,12 +817,12 @@ public partial class FrmEditFileData : Form
                         lvw_FileListEditImages.SelectedItems[index: 0]
                                               .Text)
                     {
-                        getFromWeb_Toponomy(fileNameWithoutPath: "");
+                        GetFromWeb_Toponomy(fileNameWithoutPath: "");
                         // no need to write back to sql because it's done automatically on textboxChange
                     }
                     else
                     {
-                        getFromWeb_Toponomy(fileNameWithoutPath: lvi.Text);
+                        GetFromWeb_Toponomy(fileNameWithoutPath: lvi.Text);
                         // get lat/long from main listview
                         lvi.ForeColor = Color.Red;
                     }
@@ -861,7 +863,7 @@ public partial class FrmEditFileData : Form
     ///     Pulls data from the various APIs and fills up the listView and fills the TextBoxes and/or SQLite.
     /// </summary>
     /// <param name="fileNameWithoutPath">Blank if used as "pull one file" otherwise the name of the file w/o Path</param>
-    private void getFromWeb_Toponomy(string fileNameWithoutPath = "")
+    private void GetFromWeb_Toponomy(string fileNameWithoutPath = "")
     {
         FrmMainApp frmMainAppInstance =
             (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
@@ -872,7 +874,8 @@ public partial class FrmEditFileData : Form
         string strGpsLatitude = null;
         string strGpsLongitude = null;
 
-        DataTable dtToponomy = new();
+        // this is a datatable to store all existing toponomy data either pulled from sql or the web for the session
+        DataTable dtLocallyStoredToponomyData = new();
 
         // this is "current file"
         if (fileNameWithoutPath == "")
@@ -891,10 +894,12 @@ public partial class FrmEditFileData : Form
                 HelperVariables.CurrentAltitude =
                     nud_GPSAltitude.Text.ToString(provider: CultureInfo.InvariantCulture);
 
-                dtToponomy = HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(
-                    lat: strGpsLatitude,
-                    lng: strGpsLongitude,
-                    fileNameWithoutPath: fileNameWithoutPath);
+                dtLocallyStoredToponomyData =
+                    HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(
+                        lat: strGpsLatitude,
+                        lng: strGpsLongitude,
+                        fileNameWithoutPath: fileNameWithoutPath,
+                        useDefaultHardcodedEnglishValues: true);
             }
         }
 
@@ -948,6 +953,7 @@ public partial class FrmEditFileData : Form
                    result: out createDate);
             }
 
+            // if there is a lag + long we try to read the toponomy data belonging to it from sql and web
             if (double.TryParse(s: strGpsLatitude,
                     style: NumberStyles.Any,
                     provider: CultureInfo.InvariantCulture,
@@ -957,44 +963,55 @@ public partial class FrmEditFileData : Form
                     provider: CultureInfo.InvariantCulture,
                     result: out _))
             {
-                dtToponomy = HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(
-                    lat: strGpsLatitude, lng: strGpsLongitude,
-                    fileNameWithoutPath: fileNameWithoutPath);
+                dtLocallyStoredToponomyData =
+                    HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(
+                        lat: strGpsLatitude,
+                        lng: strGpsLongitude,
+                        fileNameWithoutPath: fileNameWithoutPath,
+                        useDefaultHardcodedEnglishValues: true);
             }
         }
 
-        // Pull the data from the web regardless.
+        // for debugging's sake, the "all other files" ends here/above.
+
         List<(ElementAttribute attribute, string toponomyOverwriteVal)>
             toponomyOverwrites = [];
-        if (dtToponomy != null &&
-            dtToponomy.Rows.Count > 0)
+        if (dtLocallyStoredToponomyData != null &&
+            dtLocallyStoredToponomyData.Rows.Count > 0)
         {
-            toponomyOverwrites.Add(item: (ElementAttribute.CountryCode,
-                                          dtToponomy.Rows[index: 0][
-                                                         columnName: "CountryCode"]
-                                                    .ToString()));
-            toponomyOverwrites.Add(item: (ElementAttribute.Country,
-                                          dtToponomy.Rows[index: 0][columnName: "Country"]
-                                                    .ToString()));
-            toponomyOverwrites.Add(item: (ElementAttribute.City,
-                                          dtToponomy.Rows[index: 0][columnName: "City"]
-                                                    .ToString()));
-            toponomyOverwrites.Add(item: (ElementAttribute.State,
-                                          dtToponomy.Rows[index: 0][columnName: "State"]
-                                                    .ToString()));
-            toponomyOverwrites.Add(item: (ElementAttribute.Sublocation,
-                                          dtToponomy.Rows[index: 0][
-                                                         columnName: "Sublocation"]
-                                                    .ToString()));
-            toponomyOverwrites.Add(item: (ElementAttribute.GPSAltitude,
-                                          dtToponomy.Rows[index: 0][
-                                                         columnName: "GPSAltitude"]
-                                                    .ToString()));
+            string TZ = string.Empty; // had to move this out of the try/catch block
+            try
+            {
+                toponomyOverwrites.Add(item: (
+                    ElementAttribute.CountryCode,
+                    $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]]}"));
+                toponomyOverwrites.Add(item: (
+                    ElementAttribute.Country,
+                    $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]]}"));
+                toponomyOverwrites.Add(item: (
+                    ElementAttribute.City,
+                    $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]]}"));
+                toponomyOverwrites.Add(item: (
+                    ElementAttribute.State,
+                    $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]]}"));
+                toponomyOverwrites.Add(item: (
+                    ElementAttribute.Sublocation,
+                    $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]]}"));
+                toponomyOverwrites.Add(item: (
+                    ElementAttribute.GPSAltitude,
+                    $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude, true)]]}"));
 
-            string TZ = dtToponomy.Rows[index: 0][columnName: "timeZoneId"]
-                                  .ToString();
+                TZ = $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]]}";
+            }
 
-            // multiple files...i think. fml.
+            catch (Exception ex)
+            {
+                // If we get here tbh I f..d up the naming of the table cols but the app shouldn't crash
+                // Ref ticket #197
+                Debug.Print(ex.Message);
+            }
+
+            // if this is blank we're on the "current" file regardless of having multiple files or not.
             if (fileNameWithoutPath == "")
             {
                 const int tzStartInt = 18;
@@ -1056,7 +1073,7 @@ public partial class FrmEditFileData : Form
                             {
                                 // add a zero
                                 toponomyOverwrites.Add(
-                                    item: (ElementAttribute.OffsetTime, "+00:00"));
+                                    item: (ElementAttribute.OffsetTime, " +00:00"));
                             }
 
                             _tzChangedByApi = false;
@@ -1066,8 +1083,7 @@ public partial class FrmEditFileData : Form
                 }
 
                 // send it back to the Form + store
-                foreach ((ElementAttribute attribute, string toponomyOverwriteVal)
-in toponomyOverwrites)
+                foreach ((ElementAttribute attribute, string toponomyOverwriteVal) in toponomyOverwrites)
                 {
                     if (attribute is ElementAttribute.CountryCode)
                     {
@@ -1102,21 +1118,22 @@ in toponomyOverwrites)
                     }
                 }
             }
-            // one file
+            // another file
             else
             {
+                // this is about TZ only. scroll down for the rest
                 try
                 {
                     if (TZ != null)
                     {
                         string IANATZ = TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
                         string TZOffset;
-                        TimeZoneInfo tst =
+                        TimeZoneInfo timeZoneInfo =
                             TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
 
-                        TZOffset = tst.GetUtcOffset(dateTime: createDate)
+                        TZOffset = timeZoneInfo.GetUtcOffset(dateTime: createDate)
                                       .ToString()
-                                      .Substring(startIndex: 0, length: tst
+                                      .Substring(startIndex: 0, length: timeZoneInfo
                                                                        .GetUtcOffset(dateTime: createDate)
                                                                        .ToString()
                                                                        .Length -
@@ -1134,12 +1151,18 @@ in toponomyOverwrites)
                 }
 
                 ListView lvw = lvw_FileListEditImages;
-                ListViewItem lvi = lvw.SelectedItems[index: 0];
+                DirectoryElement dirElemFileToModify = default;
+                foreach (ListViewItem lvi in lvw.Items)
+                {
+                    dirElemFileToModify = lvi.Tag as DirectoryElement;
+                    if (dirElemFileToModify.ItemNameWithoutPath != fileNameWithoutPath)
+                    {
+                        continue;
+                    }
+                }
 
-                DirectoryElement dirElemFileToModify =
-                    lvi.Tag as DirectoryElement;
                 foreach ((ElementAttribute attribute, string toponomyOverwriteVal)
-in toponomyOverwrites)
+                    in toponomyOverwrites)
                 {
                     dirElemFileToModify?.SetAttributeValueAnyType(
                             attribute: attribute,
@@ -1206,6 +1229,7 @@ in toponomyOverwrites)
         EventArgs e)
     {
         Log.Info(message: "Starting");
+        // Check/enforce there is _some_ data...
         if (lvw_FileListEditImages.SelectedItems.Count > 0)
         {
             ListView lvwEditImages = lvw_FileListEditImages;
@@ -1618,6 +1642,11 @@ in toponomyOverwrites)
         }
     }
 
+    /// <summary>
+    /// Retrieves the time zone offset based on the user's selection and updates the corresponding text box.
+    /// </summary>
+    /// <remarks>This method checks whether Daylight Saving Time (DST) is in use and extracts the appropriate
+    /// offset from the combo box. If an error occurs during the extraction, the offset is left blank.</remarks>
     private void GetTimeZoneOffset()
     {
         string strOffsetTime = "";

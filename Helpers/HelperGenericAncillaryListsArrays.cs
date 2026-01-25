@@ -1069,6 +1069,28 @@ internal static class HelperGenericAncillaryListsArrays
 
     #region Columns
 
+    /// <summary>
+    /// This is a hardcoded list of strings enforced as enums for making sure that column names
+    /// don't get mixed up with various localised names.
+    /// We just use them to return as string, as-is. 
+    /// Don't change the capitalisation unless there's a very good reason to do so.
+    /// </summary>
+    internal enum DefaultColumnNamesFromElementAttributesForFileEditing
+    {
+        Distance,
+        CountryCode,
+        Country,
+        City,
+        State,
+        Sublocation,
+        GPSAltitude,
+        timezoneId,
+    }
+
+    /// <summary>
+    /// Gets an array of element attributes that represent geographical locations.
+    /// </summary>
+    /// <returns>An array of <see cref="ElementAttribute"/> values, including City, State, Sublocation, and GPSAltitude.</returns>
     internal static ElementAttribute[] ToponomyReplaces()
     {
         ElementAttribute[] result =
@@ -1110,7 +1132,6 @@ internal static class HelperGenericAncillaryListsArrays
         };
 
         return result;
-        ;
     }
 
     internal static string[] CustomRulesDataSources(bool isOutcome = false)
