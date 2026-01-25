@@ -58,7 +58,7 @@ internal static class FileListViewReadWrite
                         try
                         {
                             // Theoretically we want to update the columns for each tag but for example when removing all data
-                            // his becomes tricky bcs we're also firing a "-gps*=" tag.
+                            // this becomes tricky bcs we're also firing a "-gps*=" tag.
                             string columnHeaderName = GetElementAttributesColumnHeader(attribute);
                             string itemValue = dirElemFileToModify.GetAttributeValueAsString(
                                 attribute: attribute,
@@ -155,39 +155,19 @@ internal static class FileListViewReadWrite
 
                             if (attribute is ElementAttribute.GPSLatitude or ElementAttribute.GPSLongitude)
                             {
-                                string tmpLat = dirElemFileToModify.GetAttributeValueAsString(
-                                    attribute: ElementAttribute.GPSLatitude,
-                                    version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSLatitude),
-                                    notFoundValue: "", nowSavingExif: false);
-                                string tmpLng = dirElemFileToModify.GetAttributeValueAsString(
-                                    attribute: ElementAttribute.GPSLongitude,
-                                    version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSLongitude),
-                                    notFoundValue: "", nowSavingExif: false);
-                                string tmpCoords = $"{tmpLat};{tmpLng}" != ";"
-                                    ? $"{tmpLat};{tmpLng}"
-                                    : "";
-
-                                lvi.SubItems[index: lvchs[key: GetElementAttributesColumnHeader(ElementAttribute.Coordinates)]
-                                                .Index]
-                                   .Text = tmpCoords;
+                                GetCoordinatesAttributeUpdated(
+                                    dirElemFileToModify: dirElemFileToModify,
+                                    lvi: lvi,
+                                    lvchs: lvchs,
+                                    destination: false);
                             }
                             else if (attribute is ElementAttribute.GPSDestLatitude or ElementAttribute.GPSDestLongitude)
                             {
-                                string tmpLat = dirElemFileToModify.GetAttributeValueAsString(
-                                    attribute: ElementAttribute.GPSDestLatitude,
-                                    version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSDestLatitude),
-                                    notFoundValue: "", nowSavingExif: false);
-                                string tmpLng = dirElemFileToModify.GetAttributeValueAsString(
-                                    attribute: ElementAttribute.GPSDestLongitude,
-                                    version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSDestLongitude),
-                                    notFoundValue: "", nowSavingExif: false);
-                                string tmpCoords = $"{tmpLat};{tmpLng}" != ";"
-                                    ? $"{tmpLat};{tmpLng}"
-                                    : "";
-
-                                lvi.SubItems[index: lvchs[key: GetElementAttributesColumnHeader(ElementAttribute.DestCoordinates)]
-                                                .Index]
-                                   .Text = tmpCoords;
+                                GetCoordinatesAttributeUpdated(
+                                    dirElemFileToModify: dirElemFileToModify,
+                                    lvi: lvi,
+                                    lvchs: lvchs,
+                                    destination: true);
                             }
                         }
                         catch
@@ -252,6 +232,44 @@ internal static class FileListViewReadWrite
                                       (shiftedDays * 60 * 60 * 24);
             return totalShiftedSeconds;
         }
+    }
+
+    /// <summary>
+    /// Updates the (destination) coordinates subitem of a specified ListViewItem with latitude and longitude values retrieved from a
+    /// DirectoryElement.
+    /// </summary>
+    /// <remarks>If either the latitude or longitude attribute is missing, the coordinates subitem will be set
+    /// to an empty string.</remarks>
+    /// <param name="dirElemFileToModify">The DirectoryElement from which to retrieve the latitude and longitude attribute values.</param>
+    /// <param name="lvi">The ListViewItem whose coordinates subitem will be updated.</param>
+    /// <param name="lvchs">The collection of column headers for the ListView, used to identify the correct subitem to update.</param>
+    /// <param name="destination">true to update the destination coordinates; false to update the regular coordinates.</param>
+    private static void GetCoordinatesAttributeUpdated(
+        DirectoryElement dirElemFileToModify,
+        ListViewItem lvi,
+        System.Windows.Forms.ListView.ColumnHeaderCollection lvchs,
+        bool destination)
+    {
+        string tmpLat = dirElemFileToModify.GetAttributeValueAsString(
+            attribute: destination ? ElementAttribute.GPSDestLatitude : ElementAttribute.GPSLatitude,
+            version: dirElemFileToModify.GetMaxAttributeVersion(destination ? ElementAttribute.GPSDestLatitude : ElementAttribute.GPSLatitude),
+            notFoundValue: "",
+            nowSavingExif: false);
+
+        string tmpLng = dirElemFileToModify.GetAttributeValueAsString(
+            attribute: destination ? ElementAttribute.GPSDestLongitude : ElementAttribute.GPSLongitude,
+            version: dirElemFileToModify.GetMaxAttributeVersion(destination ? ElementAttribute.GPSDestLongitude : ElementAttribute.GPSLongitude),
+            notFoundValue: "",
+            nowSavingExif: false);
+
+        string tmpCoords = $"{tmpLat};{tmpLng}" != ";"
+            ? $"{tmpLat};{tmpLng}"
+            : "";
+
+        lvi.SubItems[index: lvchs[key:
+            GetElementAttributesColumnHeader(destination ? ElementAttribute.DestCoordinates : ElementAttribute.Coordinates)]
+            .Index]
+            .Text = tmpCoords;
     }
 
     /// <summary>
