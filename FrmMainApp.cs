@@ -26,7 +26,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TimeZoneConverter;
-using static GeoTagNinja.Helpers.HelperExifReadExifData;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using Application = System.Windows.Forms.Application;
 using Themer = WinFormsDarkThemerNinja.Themer;
@@ -2365,8 +2364,12 @@ public partial class FrmMainApp : Form
                 List<(ElementAttribute attribute, string toponomyOverwriteVal)>
                     toponomyOverwrites =
                     [
-                        (ElementAttribute.CountryCode, dtToponomy.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]].ToString()),
-                        (ElementAttribute.Country, dtToponomy.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]].ToString())
+                        (ElementAttribute.CountryCode, dtToponomy.Rows[index: 0][
+                            columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
+                                HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]].ToString()),
+                        (ElementAttribute.Country, dtToponomy.Rows[index: 0][
+                            columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
+                                HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]].ToString())
                     ];
 
                 // there's only four in there.
@@ -2389,7 +2392,9 @@ public partial class FrmMainApp : Form
                 }
 
                 // timeZone is a bit special but that's just how we all love it....not.
-                string TZ = dtToponomy.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]].ToString();
+                string TZ = dtToponomy.Rows[index: 0][columnName:
+                    HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
+                        HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]].ToString();
 
                 bool _ = DateTime.TryParse(s: lvi.SubItems[index: lvw_FileList
                                                                  .Columns[

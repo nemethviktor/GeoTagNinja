@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Model;
+﻿using ExCSS;
+using GeoTagNinja.Model;
 using GeoTagNinja.View.ListView;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ using System.Xml.Serialization;
 using WinFormsDarkThemerNinja;
 using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
 using static GeoTagNinja.Model.SourcesAndAttributes;
+using Color = System.Drawing.Color;
+using Point = System.Drawing.Point;
 
 namespace GeoTagNinja.Helpers;
 
@@ -274,15 +277,25 @@ internal static class HelperExifReadTrackFile
                                                 toponomyOverwrites =
                                                 [
                                                     (ElementAttribute.CountryCode,
-                                                     dtToponomy.Rows[index: 0][columnName: "CountryCode"].ToString()),
+                                                     dtToponomy.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[
+                                                         HelperExifReadExifData.GetToponomyDataColumnName(
+                                                             HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]].ToString()),
                                                     (ElementAttribute.Country,
-                                                     dtToponomy.Rows[index: 0][columnName: "Country"].ToString()),
+                                                     dtToponomy.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[
+                                                         HelperExifReadExifData.GetToponomyDataColumnName(
+                                                             HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]].ToString()),
                                                     (ElementAttribute.City,
-                                                     dtToponomy.Rows[index: 0][columnName: "City"].ToString()),
+                                                     dtToponomy.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[
+                                                         HelperExifReadExifData.GetToponomyDataColumnName(
+                                                             HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]].ToString()),
                                                     (ElementAttribute.State,
-                                                     dtToponomy.Rows[index: 0][columnName: "State"].ToString()),
+                                                     dtToponomy.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[
+                                                         HelperExifReadExifData.GetToponomyDataColumnName(
+                                                             HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]].ToString()),
                                                     (ElementAttribute.Sublocation,
-                                                     dtToponomy.Rows[index: 0][columnName: "Sublocation"].ToString())
+                                                     dtToponomy.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[
+                                                         HelperExifReadExifData.GetToponomyDataColumnName(
+                                                             HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]].ToString()),
                                                 ];
 
                                             foreach ((ElementAttribute attribute, string

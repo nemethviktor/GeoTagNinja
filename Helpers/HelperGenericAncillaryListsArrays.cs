@@ -1070,6 +1070,24 @@ internal static class HelperGenericAncillaryListsArrays
     #region Columns
 
     /// <summary>
+    /// Provides the default mapping of English item names to their corresponding database column headers.
+    /// </summary>
+    /// <remarks>This dictionary is used to translate standardized item names into database column headers,
+    /// enabling consistent data retrieval and manipulation. The mapping is initialized with a predefined set of item
+    /// names and their associated column header strings.</remarks>
+    internal static Dictionary<string, string> DefaultEnglishNamesToColumnHeaders = new()
+    {
+        { nameof(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Distance), "clh_Distance" },
+        { nameof(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode), "clh_CountryCode" },
+        { nameof(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country), "clh_Country" },
+        { nameof(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.City), "clh_City" },
+        { nameof(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.State), "clh_State" },
+        { nameof(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation), "clh_Sublocation" },
+        { nameof(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude), "clh_GPSAltitude" },
+        { nameof(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId), "clh_timezoneId" },
+    };
+
+    /// <summary>
     /// This is a hardcoded list of strings enforced as enums for making sure that column names
     /// don't get mixed up with various localised names.
     /// We just use them to return as string, as-is. 
