@@ -32,11 +32,6 @@ public partial class FileListView : System.Windows.Forms.ListView
     // but replace did not take ""
     private const string UNKNOWN_VALUE_DIR = "";
 
-    /// <summary>
-    ///     Every column has this prefix for its name when it is created.
-    /// </summary>
-    public const string COL_NAME_PREFIX = "clh_";
-
     internal static readonly int ThumbnailSize = 128;
 
     /// <summary>
@@ -393,7 +388,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     {
         // The displayed file name has to be derived using shell32.dll,
         // which is done in the actual addListItem method.
-        if (columnHeader.Name == COL_NAME_PREFIX + FileListColumns.FILENAME)
+        if (columnHeader.Name == HelperVariables.COL_NAME_PREFIX + FileListColumns.FILENAME)
         {
             throw new ArgumentException(
                 message:
@@ -414,14 +409,14 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
 
         if (ColumnToAttributeMap.TryGetValue(
-                key: columnHeader.Name.Substring(startIndex: 4),
+                key: columnHeader.Name.Substring(HelperVariables.COL_NAME_PREFIX.Length),
                 value: out SourcesAndAttributes.ElementAttribute attribute))
         {
             return DefaultStrGetter(atrb: attribute);
         }
 
         // Handle special cases.
-        return columnHeader.Name.Substring(startIndex: 4) switch
+        return columnHeader.Name.Substring(HelperVariables.COL_NAME_PREFIX.Length) switch
         {
             FileListColumns.COORDINATES => ModelToColumnValueTransformations.M2C_CoordinatesInclDest(
                                 column: FileListColumns.COORDINATES, item: directoryElement,
@@ -518,12 +513,12 @@ public partial class FileListView : System.Windows.Forms.ListView
         {
             foreach (ColumnHeader columnHeader in Columns)
             {
-                if (columnHeader.Name == COL_NAME_PREFIX + FileListColumns.FILENAME)
+                if (columnHeader.Name == HelperVariables.COL_NAME_PREFIX + FileListColumns.FILENAME)
                 {
                     continue;
                 }
 
-                if (columnHeader.Name == COL_NAME_PREFIX + FileListColumns.FOLDER)
+                if (columnHeader.Name == HelperVariables.COL_NAME_PREFIX + FileListColumns.FOLDER)
                 {
                     subItemList.Add(item: directoryElement.Folder);
                     continue;
@@ -540,11 +535,11 @@ public partial class FileListView : System.Windows.Forms.ListView
         {
             foreach (ColumnHeader columnHeader in Columns)
             {
-                if (columnHeader.Name == COL_NAME_PREFIX + FileListColumns.FILENAME)
+                if (columnHeader.Name == HelperVariables.COL_NAME_PREFIX + FileListColumns.FILENAME)
                 {
                     // nothing
                 }
-                else if (columnHeader.Name == COL_NAME_PREFIX + FileListColumns.GUID)
+                else if (columnHeader.Name == HelperVariables.COL_NAME_PREFIX + FileListColumns.GUID)
                 {
                     subItemList.Add(item: PickModelValueForColumn(
                         directoryElement: directoryElement,
@@ -615,11 +610,11 @@ public partial class FileListView : System.Windows.Forms.ListView
             if (colOrderIndexInt == 0)
             {
                 if (_cfg_Col_Order_Default.ContainsKey(
-                        key: columnHeader.Name.Substring(startIndex: 4)))
+                        key: columnHeader.Name.Substring(HelperVariables.COL_NAME_PREFIX.Length)))
                 {
                     colOrderIndexInt =
                         _cfg_Col_Order_Default[
-                            key: columnHeader.Name.Substring(startIndex: 4)];
+                            key: columnHeader.Name.Substring(HelperVariables.COL_NAME_PREFIX.Length)];
                 }
             }
 
@@ -840,7 +835,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
             ColumnHeader clh = new()
             {
-                Name = COL_NAME_PREFIX + clhName
+                Name = HelperVariables.COL_NAME_PREFIX + clhName
             };
             _ = Columns.Add(value: clh);
             Log.Trace(message: $"Added column: {clhName}");
@@ -1107,7 +1102,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
 
         ToggleIndividualColumnVisibility(
-            columnHeaderName: COL_NAME_PREFIX + FileListColumns.FOLDER,
+            columnHeaderName: HelperVariables.COL_NAME_PREFIX + FileListColumns.FOLDER,
             setVisible: FrmMainApp.FlatMode || Program.CollectionModeEnabled
         );
 
@@ -1199,19 +1194,19 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     /// <param name="directoryElement">The particular ListViewItem (by directoryElement/Tag) that needs updating</param>
     /// <param name="color">Parameter to assign a particular colour (prob red or black) to the whole row</param>
-    public void UpdateItemColour(DirectoryElement directoryElement,
+    public void UpdateDirectoryElementItemColour(DirectoryElement directoryElement,
         Color color)
     {
         // If the current thread is not the UI thread, InvokeRequired will be true
         if (InvokeRequired)
         {
             _ = Invoke(method: (Action)(() =>
-                UpdateItemColour(directoryElement: directoryElement, color: color)));
+                UpdateDirectoryElementItemColour(directoryElement: directoryElement, color: color)));
             return;
         }
 
-        ListViewItem itemToModify = FindItemByDirectoryElement(directoryElement: directoryElement);
-        _ = (itemToModify?.ForeColor = color);
+        ListViewItem lvi = FindItemByDirectoryElement(directoryElement: directoryElement);
+        _ = (lvi?.ForeColor = color);
     }
 
     /// <summary>
@@ -1220,7 +1215,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     /// <param name="directoryElement"></param>
     /// <returns></returns>
-    private ListViewItem FindItemByDirectoryElement(DirectoryElement directoryElement)
+    public ListViewItem FindItemByDirectoryElement(DirectoryElement directoryElement)
     {
         return Items.Cast<ListViewItem>().FirstOrDefault(predicate: item => item.Tag == directoryElement);
     }

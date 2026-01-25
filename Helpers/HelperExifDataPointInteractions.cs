@@ -214,7 +214,7 @@ internal static class HelperExifDataPointInteractions
                             // then remove lock
 
                             await FileListViewReadWrite
-                               .ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                               .ListViewUpdateRowFromDEStage3ReadyToWrite(dirElemFileToModify: dirElemFileToModify);
                             HelperGenericFileLocking.GenericLockUnLockFile(
                                 fileNameWithoutPath: fileNameWithoutPath);
                             // no need to remove the xmp here because it hasn't been added in the first place.

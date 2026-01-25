@@ -129,14 +129,14 @@ internal class HelperExifReadTrackFilePath
                                         value: double.Parse(s: TZVal.Substring(startIndex: 1, length: 2)));
                                 lineDateTime =
                                     lineDateTime.AddMinutes(
-                                        value: double.Parse(s: TZVal.Substring(startIndex: 4, length: 2)));
+                                        value: double.Parse(s: TZVal.Substring(HelperVariables.COL_NAME_PREFIX.Length, length: 2)));
                             }
                             else if (TZVal.StartsWith(value: "-"))
                             {
                                 lineDateTime = lineDateTime.AddHours(
                                     value: double.Parse(s: TZVal.Substring(startIndex: 1, length: 2)) * -1);
                                 lineDateTime = lineDateTime.AddMinutes(
-                                    value: double.Parse(s: TZVal.Substring(startIndex: 4, length: 2)) * -1);
+                                    value: double.Parse(s: TZVal.Substring(HelperVariables.COL_NAME_PREFIX.Length, length: 2)) * -1);
                             }
                         }
 

@@ -14,6 +14,11 @@ internal static class HelperVariables
     internal const double MetreToFeet = 3.28084;
     internal const string DoubleQuoteStr = "\"";
 
+    /// <summary>
+    ///     Every column has this prefix for its name when it is created.
+    /// </summary>
+    public const string COL_NAME_PREFIX = "clh_";
+
     internal const string ControlItemNameNotGeneric = "Not Generic";
     internal const string ResourceNameForGenericControlItems = "Generic_Strings";
 

@@ -389,7 +389,7 @@ internal static class HelperExifExifToolOperator
             }
         }
 
-        frmMainAppInstance.lvw_FileList.UpdateItemColour(
+        frmMainAppInstance.lvw_FileList.UpdateDirectoryElementItemColour(
             directoryElement: dirElemToDrop, color: Color.Black);
     }
 }

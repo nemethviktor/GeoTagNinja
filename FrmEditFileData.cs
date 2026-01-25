@@ -250,7 +250,7 @@ public partial class FrmEditFileData : Form
                     {
                         // this gets the name of the Control without the type
                         // (e.g. tbx_SomethingAttrib becomes SomethingAttrib)
-                        controlNameWithoutTypeIdentifier = control.Name.Substring(startIndex: 4);
+                        controlNameWithoutTypeIdentifier = control.Name.Substring(HelperVariables.COL_NAME_PREFIX.Length);
 
                         // get the ElementAttribute
                         ElementAttribute attribute =
@@ -337,13 +337,13 @@ public partial class FrmEditFileData : Form
                                 if (nud.Name.EndsWith(value: "Shift") &&
                                     nud.Value != 0)
                                 {
-                                    if (nud.Name.Substring(startIndex: 4)
+                                    if (nud.Name.Substring(HelperVariables.COL_NAME_PREFIX.Length)
                                            .StartsWith(
                                                 value: TakenOrCreated.Taken.ToString()))
                                     {
                                         rbt_TakenDateTimeShift.Checked = true;
                                     }
-                                    else if (nud.Name.Substring(startIndex: 4)
+                                    else if (nud.Name.Substring(HelperVariables.COL_NAME_PREFIX.Length)
                                                 .StartsWith(
                                                      value: TakenOrCreated.Created
                                                                           .ToString()))
@@ -1025,7 +1025,7 @@ public partial class FrmEditFileData : Form
 
                     TZOffset = timeZoneInfo.GetUtcOffset(dateTime: createDate)
                                   .ToString()
-                                  .Substring(startIndex: 0, length: timeZoneInfo
+                                  .Substring(0, length: timeZoneInfo
                                                                    .GetUtcOffset(dateTime: createDate)
                                                                    .ToString()
                                                                    .Length -
@@ -1082,7 +1082,7 @@ public partial class FrmEditFileData : Form
             if (cbxText.Length >= tzStartInt)
             {
                 if (cbxText
-                   .Substring(startIndex: tzStartInt)
+                   .Substring(tzStartInt)
                    .Contains(value: TZ))
                 {
                     // this controls the logic that the ckb_UseDST should not be re-parsed again manually on the Change event that would otherwise fire.
@@ -1167,7 +1167,7 @@ public partial class FrmEditFileData : Form
 
                     ElementAttribute attribute =
                         GetElementAttributesElementAttribute(
-                            attributeToFind: dtp.Name.Substring(startIndex: 4));
+                            attributeToFind: dtp.Name.Substring(HelperVariables.COL_NAME_PREFIX.Length));
 
                     dirElemFileToModify?.SetAttributeValueAnyType(attribute: attribute,
                             value: dtp.Text,
@@ -1268,88 +1268,72 @@ public partial class FrmEditFileData : Form
     private async void btn_Generic_OK_Click(object sender,
         EventArgs e)
     {
-        FrmMainApp frmMainAppInstance =
-            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        if (frmMainAppInstance != null)
+        // This is to show what % of writes we're at in the taskbar. Gimmick.
+        int fileCounter = 0;
+        foreach (ListViewItem lvi in lvw_FileListEditImages.Items)
         {
-            int directoryElementsCount = DirectoryElements.Count;
-            // move data from temp-queue to write-queue
-            for (int fileCounter = 0; fileCounter < directoryElementsCount; fileCounter++)
+            DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;
+
+
+            // this is to prevent code from looping through _all_ the files in a folder pointlessly.
+            if (dirElemFileToModify.HasDirtyAttributes(
+                    whichAttributeVersion: DirectoryElement.AttributeVersion
+                                                           .Stage1EditFormIntraTabTransferQueue))
             {
-                DirectoryElement dirElemFileToModify =
-                    DirectoryElements[index: fileCounter];
-                // this is to prevent code from looping through _all_ the files in a folder pointlessly.
-                if (dirElemFileToModify.HasDirtyAttributes(
-                        whichAttributeVersion: DirectoryElement.AttributeVersion
-                                                               .Stage1EditFormIntraTabTransferQueue))
+                foreach (ElementAttribute attribute in (ElementAttribute[])
+                         Enum.GetValues(enumType: typeof(ElementAttribute)))
                 {
-                    foreach (ElementAttribute attribute in (ElementAttribute[])
-                             Enum.GetValues(enumType: typeof(ElementAttribute)))
+                    if (dirElemFileToModify.HasSpecificAttributeWithVersion(
+                            attribute: attribute,
+                            version: DirectoryElement.AttributeVersion
+                                                     .Stage1EditFormIntraTabTransferQueue))
                     {
-                        if (dirElemFileToModify.HasSpecificAttributeWithVersion(
+                        dirElemFileToModify.SetAttributeValueAnyType(
+                            attribute: attribute,
+                            value: dirElemFileToModify.GetAttributeValueAsString(
                                 attribute: attribute,
                                 version: DirectoryElement.AttributeVersion
-                                                         .Stage1EditFormIntraTabTransferQueue))
-                        {
-                            dirElemFileToModify.SetAttributeValueAnyType(
-                                attribute: attribute,
-                                value: dirElemFileToModify.GetAttributeValueAsString(
-                                    attribute: attribute,
+                                                         .Stage1EditFormIntraTabTransferQueue,
+                                nowSavingExif: false),
+                            version: DirectoryElement.AttributeVersion
+                                                     .Stage3ReadyToWrite,
+                            isMarkedForDeletion: dirElemFileToModify
+                               .IsMarkedForDeletion(attribute: attribute,
                                     version: DirectoryElement.AttributeVersion
-                                                             .Stage1EditFormIntraTabTransferQueue,
-                                    nowSavingExif: false),
-                                version: DirectoryElement.AttributeVersion
-                                                         .Stage3ReadyToWrite,
-                                isMarkedForDeletion: dirElemFileToModify
-                                   .IsMarkedForDeletion(attribute: attribute,
-                                        version: DirectoryElement.AttributeVersion
-                                                                 .Stage1EditFormIntraTabTransferQueue));
+                                                             .Stage1EditFormIntraTabTransferQueue));
 
-                            // remove from Stage1EditFormIntraTabTransferQueue
-                            dirElemFileToModify.RemoveAttributeValue(
-                                attribute: attribute,
-                                version: DirectoryElement.AttributeVersion
-                                                         .Stage1EditFormIntraTabTransferQueue);
-                        }
-
-                        // remove from Stage2EditFormReadyToSaveAndMoveToWriteQueue
-
+                        // remove from Stage1EditFormIntraTabTransferQueue
                         dirElemFileToModify.RemoveAttributeValue(
                             attribute: attribute,
                             version: DirectoryElement.AttributeVersion
-                                                     .Stage2EditFormReadyToSaveAndMoveToWriteQueue);
+                                                     .Stage1EditFormIntraTabTransferQueue);
                     }
 
-                    ListViewItem lvi = null;
-                    try
-                    {
-                        lvi = frmMainAppInstance.lvw_FileList.FindItemWithText(
-                            text: dirElemFileToModify.ItemNameWithoutPath);
-                    }
-                    catch
-                    {
-                        // shouldn't happen
-                    }
+                    // remove from Stage2EditFormReadyToSaveAndMoveToWriteQueue
 
-                    if (lvi != null)
-                    {
-                        HelperGenericFileLocking.FileListBeingUpdated = true;
-                        await FileListViewReadWrite
-                           .ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
-                        TaskbarManagerInstance.SetProgressValue(
-                            currentValue: fileCounter + 1,
-                            maximumValue: directoryElementsCount);
-                        Thread.Sleep(millisecondsTimeout: 1);
-                        HelperGenericFileLocking.FileListBeingUpdated = false;
-                    }
+                    dirElemFileToModify.RemoveAttributeValue(
+                        attribute: attribute,
+                        version: DirectoryElement.AttributeVersion
+                                                 .Stage2EditFormReadyToSaveAndMoveToWriteQueue);
                 }
-            }
 
-            TaskbarManagerInstance.SetProgressState(
-                state: TaskbarProgressBarState.NoProgress);
-            // re-center map on new data.
-            FileListViewMapNavigation.ListViewItemClickNavigate();
+
+                HelperGenericFileLocking.FileListBeingUpdated = true;
+                await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(dirElemFileToModify: dirElemFileToModify);
+                TaskbarManagerInstance.SetProgressValue(
+                    currentValue: fileCounter + 1,
+                    maximumValue: lvw_FileListEditImages.Items.Count);
+                Thread.Sleep(millisecondsTimeout: 1);
+                HelperGenericFileLocking.FileListBeingUpdated = false;
+
+            }
         }
+
+        TaskbarManagerInstance.SetProgressState(
+            state: TaskbarProgressBarState.NoProgress);
+        // re-center map on new data.
+        FileListViewMapNavigation.ListViewItemClickNavigate();
+
     }
 
     /// <summary>
@@ -1428,7 +1412,7 @@ public partial class FrmEditFileData : Form
             _ = lvw_FileListEditImages.SelectedItems[index: 0]
                                                                .Text;
 
-            string exifTagStr = sndr.Name.Substring(startIndex: 4);
+            string exifTagStr = sndr.Name.Substring(HelperVariables.COL_NAME_PREFIX.Length);
             ElementAttribute attribute =
                 GetElementAttributesElementAttribute(attributeToFind: exifTagStr);
             ListView lvw = lvw_FileListEditImages;
@@ -1615,7 +1599,7 @@ public partial class FrmEditFileData : Form
         bool useDST = ckb_UseDST.Checked;
         try
         {
-            strOffsetTime = cbx_OffsetTime.Text.Substring(startIndex: !useDST
+            strOffsetTime = cbx_OffsetTime.Text.Substring(!useDST
                 ? 1
                 : 8, length: 6);
         }
@@ -1803,7 +1787,7 @@ public partial class FrmEditFileData : Form
                     {
                         ElementAttribute attribute =
                             GetElementAttributesElementAttribute(
-                                attributeToFind: dtp.Name.Substring(startIndex: 4));
+                                attributeToFind: dtp.Name.Substring(HelperVariables.COL_NAME_PREFIX.Length));
                         dirElemFileToModify.SetAttributeValueAnyType(attribute: attribute,
                             value: dtp.Text,
                             version: DirectoryElement.AttributeVersion

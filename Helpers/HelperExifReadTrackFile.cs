@@ -212,7 +212,7 @@ internal static class HelperExifReadTrackFile
                                 {
                                     FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress,
                                         text: $"Processing: {fileNameWithoutPath}");
-                                    frmMainAppInstance.lvw_FileList.UpdateItemColour(
+                                    frmMainAppInstance.lvw_FileList.UpdateDirectoryElementItemColour(
                                         directoryElement: dirElemFileToModify, color: Color.Red);
                                     dirElemFileToModify.SetAttributeValueAnyType(
                                         attribute: ElementAttribute.GPSLatitude, value: strLatInTrackFile,
@@ -297,7 +297,7 @@ internal static class HelperExifReadTrackFile
 
                                     await FileListViewReadWrite
                                        .ListViewUpdateRowFromDEStage3ReadyToWrite(
-                                            lvi: lvi);
+                                            dirElemFileToModify: dirElemFileToModify);
                                 }
                             }
                         }

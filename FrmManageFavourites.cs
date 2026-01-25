@@ -92,7 +92,7 @@ public partial class FrmManageFavourites : Form
             {
                 // reset font to normal
                 control.Font = new Font(prototype: control.Font, newStyle: FontStyle.Regular);
-                _ = control.Name.Substring(startIndex: 4);
+                _ = control.Name.Substring(HelperVariables.COL_NAME_PREFIX.Length);
 
                 control.Text = control.Name switch
                 {

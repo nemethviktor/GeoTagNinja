@@ -246,7 +246,7 @@ public partial class FrmPasteWhat : Form
                 CheckBox thisCheckBox = (CheckBox)control;
                 if (thisCheckBox.Checked)
                 {
-                    string attributeString = control.Name.Substring(startIndex: 4);
+                    string attributeString = control.Name.Substring(HelperVariables.COL_NAME_PREFIX.Length);
                     ElementAttribute attribute =
                         GetElementAttributesElementAttribute(
                             attributeToFind: attributeString);
@@ -622,7 +622,7 @@ public partial class FrmPasteWhat : Form
 
                         HelperGenericFileLocking.FileListBeingUpdated = true;
                         await FileListViewReadWrite
-                           .ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                           .ListViewUpdateRowFromDEStage3ReadyToWrite(dirElemFileToModify: dirElemFileToModify);
                         FrmMainApp.HandlerUpdateLabelText(
                             label: frmMainAppInstance.lbl_ParseProgress,
                             text: $"Processing: {dirElemFileToModify.ItemNameWithoutPath}");

@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Model;
+﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Model;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -23,26 +24,29 @@ internal static class FileListViewReadWrite
     ///     Updates the data sitting in the main listview if there is anything outstanding in
     ///     dt_fileDataToWriteStage3ReadyToWrite for the file
     /// </summary>
-    /// <param name="lvi"></param>
-    internal static Task ListViewUpdateRowFromDEStage3ReadyToWrite(ListViewItem lvi)
+    /// <param name="dirElemFileToModify">The DE to modify</param>
+    internal static Task ListViewUpdateRowFromDEStage3ReadyToWrite(DirectoryElement dirElemFileToModify)
     {
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
 
         if (frmMainAppInstance != null)
         {
             System.Windows.Forms.ListView lvw = frmMainAppInstance.lvw_FileList;
+            ListViewItem lvi = frmMainAppInstance.lvw_FileList.FindItemByDirectoryElement(directoryElement: dirElemFileToModify);
+            int lviIndex = lvi.Index;
+
             System.Windows.Forms.ListView.ColumnHeaderCollection lvchs =
                 frmMainAppInstance.ListViewColumnHeaders;
 
-            int d = lvi.Index;
-            if (lvi.Tag is DirectoryElement dirElemFileToModify && dirElemFileToModify.HasDirtyAttributes())
+            if (dirElemFileToModify.HasDirtyAttributes())
             {
-                frmMainAppInstance.lvw_FileList.UpdateItemColour(directoryElement: dirElemFileToModify,
+                frmMainAppInstance.lvw_FileList.UpdateDirectoryElementItemColour(directoryElement: dirElemFileToModify,
                     color: Color.Red);
                 bool takenAlreadyShifted = false;
                 bool createAlreadyShifted = false;
                 lvw.BeginUpdate();
-                foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
+                foreach (ElementAttribute attribute in
+                    (ElementAttribute[])Enum.GetValues(enumType: typeof(ElementAttribute)))
                 {
                     if (dirElemFileToModify.HasSpecificAttributeWithVersion(attribute: attribute,
                                                                             version: DirectoryElement.AttributeVersion
@@ -50,20 +54,21 @@ internal static class FileListViewReadWrite
                     {
                         try
                         {
-                            // theoretically we'd want to update the columns for each tag but for example when removing all data
-                            // this becomes tricky bcs we're also firing a "-gps*=" tag.
-                            string settingId = GetElementAttributesColumnHeader(attribute);
-                            string settingVal = dirElemFileToModify.GetAttributeValueAsString(attribute: attribute,
-                                                                                            version: DirectoryElement.AttributeVersion
-                                                                                               .Stage3ReadyToWrite, nowSavingExif: false);
+                            // Theoretically we want to update the columns for each tag but for example when removing all data
+                            // his becomes tricky bcs we're also firing a "-gps*=" tag.
+                            string columnHeaderName = GetElementAttributesColumnHeader(attribute);
+                            string itemValue = dirElemFileToModify.GetAttributeValueAsString(
+                                attribute: attribute,
+                                version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                                nowSavingExif: false);
 
-                            if (lvchs[key: settingId] != null)
+                            // ElementAttribute has a column assigned (ie it's not Shift or some such) 
+                            if (lvchs[key: columnHeaderName] != null)
                             {
                                 try
                                 {
-                                    lvi.SubItems[index: lvchs[key: settingId]
-                                                    .Index]
-                                       .Text = settingVal;
+                                    lvi.SubItems[index: lvchs[key: columnHeaderName].Index]
+                                       .Text = itemValue;
                                     //break;
                                 }
                                 catch
@@ -71,9 +76,9 @@ internal static class FileListViewReadWrite
                                     // nothing - basically this could happen if user navigates out of the folder
                                 }
                             }
-                            else if (settingId.EndsWith(value: "Shift"))
+                            else if (columnHeaderName.EndsWith(value: "Shift"))
                             {
-                                if (settingId.Substring(startIndex: 4)
+                                if (columnHeaderName.Substring(HelperVariables.COL_NAME_PREFIX.Length)
                                              .StartsWith(value: "Taken") &&
                                     !takenAlreadyShifted)
                                 {
@@ -95,7 +100,7 @@ internal static class FileListViewReadWrite
                                     {
                                         lvi.SubItems[
                                                 index: lvchs[
-                                                        key: COL_NAME_PREFIX +
+                                                        key: HelperVariables.COL_NAME_PREFIX +
                                                         FileListColumns.TAKEN_DATE]
                                                    .Index]
                                            .Text = modifiedTakenDateTime.ToString(
@@ -108,7 +113,7 @@ internal static class FileListViewReadWrite
 
                                     takenAlreadyShifted = true;
                                 }
-                                else if (settingId.Substring(startIndex: 4)
+                                else if (columnHeaderName.Substring(HelperVariables.COL_NAME_PREFIX.Length)
                                                   .StartsWith(value: "Create") &&
                                          !createAlreadyShifted)
                                 {
@@ -130,7 +135,7 @@ internal static class FileListViewReadWrite
                                     {
                                         lvi.SubItems[
                                                 index: lvchs[
-                                                        key: COL_NAME_PREFIX +
+                                                        key: HelperVariables.COL_NAME_PREFIX +
                                                         FileListColumns.CREATE_DATE]
                                                    .Index]
                                            .Text = modifiedCreateDateTime.ToString(
@@ -191,7 +196,7 @@ internal static class FileListViewReadWrite
             }
 
             lvw.EndUpdate();
-            if (d % 10 == 0)
+            if (lviIndex % 10 == 0)
             {
                 Application.DoEvents();
             }

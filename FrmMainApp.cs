@@ -833,7 +833,7 @@ public partial class FrmMainApp : Form
                         }
 
                         await FileListViewReadWrite
-                           .ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                           .ListViewUpdateRowFromDEStage3ReadyToWrite(dirElemFileToModify: dirElemFileToModify);
                     }
                 }
 
@@ -2034,7 +2034,7 @@ public partial class FrmMainApp : Form
                         string strGpsLatitude = lvi.SubItems[
                                                         index: lvw
                                                               .Columns[
-                                                                   key: FileListView.COL_NAME_PREFIX +
+                                                                   key: HelperVariables.COL_NAME_PREFIX +
                                                                         FileListView.FileListColumns
                                                                            .GPS_LATITUDE]
                                                               .Index]
@@ -2044,7 +2044,7 @@ public partial class FrmMainApp : Form
                         string strGpsLongitude = lvi.SubItems[
                                                          index: lvw
                                                                .Columns[
-                                                                    key: FileListView.COL_NAME_PREFIX +
+                                                                    key: HelperVariables.COL_NAME_PREFIX +
                                                                          FileListView.FileListColumns
                                                                             .GPS_LONGITUDE]
                                                                .Index]
@@ -2332,7 +2332,7 @@ public partial class FrmMainApp : Form
                                              .SubItems[
                                                   index: lvw_FileList
                                                         .Columns[
-                                                             key: FileListView.COL_NAME_PREFIX +
+                                                             key: HelperVariables.COL_NAME_PREFIX +
                                                                   FileListView.FileListColumns.GPS_ALTITUDE]
                                                         .Index]
                                              .Text.ToString(
@@ -2378,7 +2378,7 @@ public partial class FrmMainApp : Form
 
                 bool _ = DateTime.TryParse(s: lvi.SubItems[index: lvw_FileList
                                                                  .Columns[
-                                                                      key: FileListView.COL_NAME_PREFIX +
+                                                                      key: HelperVariables.COL_NAME_PREFIX +
                                                                            FileListView.FileListColumns
                                                                               .CREATE_DATE]
                                                                  .Index]
@@ -2437,7 +2437,7 @@ public partial class FrmMainApp : Form
 
                 HandlerUpdateLabelText(label: lbl_ParseProgress,
                     text: $"Processing: {fileNameWithoutPath}");
-                lvw_FileList.UpdateItemColour(directoryElement: dirElemFileToModify, color: Color.Red);
+                lvw_FileList.UpdateDirectoryElementItemColour(directoryElement: dirElemFileToModify, color: Color.Red);
             }
             else
             {
@@ -3340,7 +3340,7 @@ public partial class FrmMainApp : Form
                 UpdateDE(dirElemFileToModify: dirElemFileToModify, attribute: ElementAttribute.Sublocation,
                     settingValue: favouriteToLoad.Sublocation);
 
-                await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(lvi: lvi);
+                await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(dirElemFileToModify: dirElemFileToModify);
             }
         }
 
@@ -3503,13 +3503,13 @@ public partial class FrmMainApp : Form
                                 .SubItems[
                                      index: lvw_FileList
                                            .Columns[
-                                                key: FileListView.COL_NAME_PREFIX +
+                                                key: HelperVariables.COL_NAME_PREFIX +
                                                      FileListView.FileListColumns.GPS_LATITUDE].Index].Text;
                     string lng = lvi
                                 .SubItems[
                                      index: lvw_FileList
                                            .Columns[
-                                                key: FileListView.COL_NAME_PREFIX +
+                                                key: HelperVariables.COL_NAME_PREFIX +
                                                      FileListView.FileListColumns.GPS_LONGITUDE].Index].Text;
 
                     for (int i = DTToponomySessionData.Rows.Count - 1; i >= 0; i--)

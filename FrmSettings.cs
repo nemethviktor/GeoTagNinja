@@ -425,9 +425,9 @@ public partial class FrmSettings : Form
         DataGridViewComboBoxColumn clh_CountryCode = new()
         {
             DataPropertyName = "CountryCode",
-            Name = COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE,
+            Name = HelperVariables.COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE,
             HeaderText = ReturnControlText(
-                controlName: COL_NAME_PREFIX + FileListColumns.COUNTRY,
+                controlName: HelperVariables.COL_NAME_PREFIX + FileListColumns.COUNTRY,
                 fakeControlType: FakeControlTypes.ColumnHeader),
             DataSource = clh_CountryCodeOptions.ToList(), // needs to be a list
             ValueMember = "Key",
@@ -556,10 +556,10 @@ public partial class FrmSettings : Form
         DataGridViewComboBoxColumn clh_CountryCode = new()
         {
             DataPropertyName = "CountryCode",
-            Name = COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE,
+            Name = HelperVariables.COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE,
             HeaderText = ReturnControlText(
                 fakeControlType: FakeControlTypes.ColumnHeader,
-                controlName: COL_NAME_PREFIX + FileListColumns.COUNTRY),
+                controlName: HelperVariables.COL_NAME_PREFIX + FileListColumns.COUNTRY),
             DataSource = clh_CountryCodeOptions.ToList(), // needs to be a list
             ValueMember = "Key",
             DisplayMember = "Value",

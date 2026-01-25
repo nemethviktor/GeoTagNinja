@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers;
+using System;
 using System.Collections.Generic;
 using static GeoTagNinja.View.ListView.FileListView;
 
@@ -98,7 +99,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.GPSAltitude, new ElementAttributeMapping
                     {
                         Name = "GPSAltitude",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_ALTITUDE,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.GPS_ALTITUDE,
                         TypeOfElement = typeof(double),
                         InAttributes =
                         [
@@ -120,7 +121,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.GPSAltitudeRef, new ElementAttributeMapping
                     {
                         Name = "GPSAltitudeRef",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_ALTITUDE_REF,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.GPS_ALTITUDE_REF,
                         TypeOfElement = typeof(string),
                         InAttributes =
                         [
@@ -143,7 +144,7 @@ public static class SourcesAndAttributes
                     {
                         Name = "GPSDestLatitude",
                         ColumnHeader =
-                            COL_NAME_PREFIX + FileListColumns.GPS_DEST_LATITUDE,
+                            HelperVariables.COL_NAME_PREFIX + FileListColumns.GPS_DEST_LATITUDE,
                         TypeOfElement = typeof(double),
                         InAttributes =
                         [
@@ -165,7 +166,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.GPSDestLatitudeRef, new ElementAttributeMapping
                     {
                         Name = "GPSDestLatitudeRef",
-                        ColumnHeader = COL_NAME_PREFIX +
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX +
                                        FileListColumns.GPS_DEST_LATITUDE_REF,
                         TypeOfElement = typeof(string),
                         InAttributes =
@@ -187,7 +188,7 @@ public static class SourcesAndAttributes
                     {
                         Name = "GPSDestLongitude",
                         ColumnHeader =
-                            COL_NAME_PREFIX + FileListColumns.GPS_DEST_LONGITUDE,
+                            HelperVariables.COL_NAME_PREFIX + FileListColumns.GPS_DEST_LONGITUDE,
                         TypeOfElement = typeof(double),
                         InAttributes =
                         [
@@ -209,7 +210,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.GPSDestLongitudeRef, new ElementAttributeMapping
                     {
                         Name = "GPSDestLongitudeRef",
-                        ColumnHeader = COL_NAME_PREFIX +
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX +
                                        FileListColumns.GPS_DEST_LONGITUDE_REF,
                         TypeOfElement = typeof(string),
                         InAttributes =
@@ -230,7 +231,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.GPSImgDirection, new ElementAttributeMapping
                     {
                         Name = "GPSImgDirection",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_IMGDIRECTION,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.GPS_IMGDIRECTION,
                         TypeOfElement = typeof(double),
                         InAttributes =
                         [
@@ -245,7 +246,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.GPSImgDirectionRef, new ElementAttributeMapping
                     {
                         Name = "GPSImgDirectionRef",
-                        ColumnHeader = COL_NAME_PREFIX +
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX +
                                        FileListColumns.GPS_IMGDIRECTION_REF,
                         TypeOfElement = typeof(string),
                         InAttributes =
@@ -261,7 +262,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.GPSLatitude, new ElementAttributeMapping
                     {
                         Name = "GPSLatitude",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_LATITUDE,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.GPS_LATITUDE,
                         TypeOfElement = typeof(double),
                         InAttributes =
                         [
@@ -283,7 +284,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.GPSLatitudeRef, new ElementAttributeMapping
                     {
                         Name = "GPSLatitudeRef",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_LATITUDE_REF,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.GPS_LATITUDE_REF,
                         TypeOfElement = typeof(string),
                         InAttributes =
                         [
@@ -303,7 +304,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.GPSLongitude, new ElementAttributeMapping
                     {
                         Name = "GPSLongitude",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_LONGITUDE,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.GPS_LONGITUDE,
                         TypeOfElement = typeof(double),
                         InAttributes =
                         [
@@ -326,7 +327,7 @@ public static class SourcesAndAttributes
                     {
                         Name = "GPSLongitudeRef",
                         ColumnHeader =
-                            COL_NAME_PREFIX + FileListColumns.GPS_LONGITUDE_REF,
+                            HelperVariables.COL_NAME_PREFIX + FileListColumns.GPS_LONGITUDE_REF,
                         TypeOfElement = typeof(string),
                         InAttributes =
                         [
@@ -346,7 +347,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.GPSSpeed, new ElementAttributeMapping
                     {
                         Name = "GPSSpeed",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_SPEED,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.GPS_SPEED,
                         TypeOfElement = typeof(double),
                         InAttributes =
                         [
@@ -365,7 +366,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.GPSSpeedRef, new ElementAttributeMapping
                     {
                         Name = "GPSSpeedRef",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_SPEED_REF,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.GPS_SPEED_REF,
                         TypeOfElement = typeof(string),
                         InAttributes =
                         [
@@ -384,7 +385,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.Coordinates, new ElementAttributeMapping
                     {
                         Name = "Coordinates",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.COORDINATES,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.COORDINATES,
                         TypeOfElement = typeof(string),
                         InAttributes = [],
                         OutAttributes = [],
@@ -395,7 +396,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.DestCoordinates, new ElementAttributeMapping
                     {
                         Name = "DestCoordinates",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.DEST_COORDINATES,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.DEST_COORDINATES,
                         TypeOfElement = typeof(string),
                         InAttributes = [],
                         OutAttributes = [],
@@ -406,7 +407,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.City, new ElementAttributeMapping
                     {
                         Name = "City",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.CITY,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.CITY,
                         TypeOfElement = typeof(string),
                         InAttributes =
                         [
@@ -426,7 +427,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.CountryCode, new ElementAttributeMapping
                     {
                         Name = "CountryCode",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.COUNTRY_CODE,
                         TypeOfElement = typeof(string),
                         InAttributes =
                         [
@@ -447,7 +448,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.Country, new ElementAttributeMapping
                     {
                         Name = "Country",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.COUNTRY,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.COUNTRY,
                         TypeOfElement = typeof(string),
                         InAttributes =
                         [
@@ -468,7 +469,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.State, new ElementAttributeMapping
                     {
                         Name = "State",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.STATE,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.STATE,
                         TypeOfElement = typeof(string),
                         InAttributes =
                         [
@@ -489,7 +490,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.Sublocation, new ElementAttributeMapping
                     {
                         Name = "Sublocation",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.Sublocation,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.Sublocation,
                         TypeOfElement = typeof(string),
                         InAttributes =
                         [
@@ -509,7 +510,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.Make, new ElementAttributeMapping
                     {
                         Name = "Make",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.MAKE,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.MAKE,
                         TypeOfElement = typeof(string),
                         InAttributes =
                         [
@@ -524,7 +525,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.Model, new ElementAttributeMapping
                     {
                         Name = "Model",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.MODEL,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.MODEL,
                         TypeOfElement = typeof(string),
                         InAttributes =
                         [
@@ -539,7 +540,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.Rating, new ElementAttributeMapping
                     {
                         Name = "Rating",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.RATING,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.RATING,
                         TypeOfElement = typeof(int),
                         InAttributes =
                         [
@@ -558,7 +559,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.ExposureTime, new ElementAttributeMapping
                     {
                         Name = "ExposureTime",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.EXPOSURETIME,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.EXPOSURETIME,
                         TypeOfElement = typeof(string),
                         InAttributes =
                         [
@@ -573,7 +574,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.Fnumber, new ElementAttributeMapping
                     {
                         Name = "Fnumber",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.FNUMBER,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.FNUMBER,
                         TypeOfElement = typeof(double),
                         InAttributes =
                         [
@@ -588,7 +589,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.FocalLength, new ElementAttributeMapping
                     {
                         Name = "FocalLength",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.FOCAL_LENGTH,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.FOCAL_LENGTH,
                         TypeOfElement = typeof(double),
                         InAttributes =
                         [
@@ -603,7 +604,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.FocalLengthIn35mmFormat, new ElementAttributeMapping
                     {
                         Name = "FocalLengthIn35mmFormat",
-                        ColumnHeader = COL_NAME_PREFIX +
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX +
                                        FileListColumns.FOCAL_LENGTH_IN_35MM_FORMAT,
                         TypeOfElement = typeof(double),
                         InAttributes =
@@ -620,7 +621,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.ISO, new ElementAttributeMapping
                     {
                         Name = "ISO",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.ISO,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.ISO,
                         TypeOfElement = typeof(int),
                         InAttributes =
                         [
@@ -636,7 +637,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.LensSpec, new ElementAttributeMapping
                     {
                         Name = "LensSpec",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.LENS_SPEC,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.LENS_SPEC,
                         TypeOfElement = typeof(string),
                         InAttributes =
                         [
@@ -652,7 +653,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.TakenDate, new ElementAttributeMapping
                     {
                         Name = "TakenDate",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.TAKEN_DATE,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.TAKEN_DATE,
                         TypeOfElement = typeof(DateTime),
                         InAttributes =
                         [
@@ -671,7 +672,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.CreateDate, new ElementAttributeMapping
                     {
                         Name = "CreateDate",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.CREATE_DATE,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.CREATE_DATE,
                         TypeOfElement = typeof(DateTime),
                         InAttributes =
                         [
@@ -690,7 +691,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.GPSDateTime, new ElementAttributeMapping
                     {
                         Name = "GPSDateTime",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPS_DATETIME,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.GPS_DATETIME,
                         TypeOfElement = typeof(DateTime),
                         InAttributes =
                         [
@@ -704,7 +705,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.TakenDateDaysShift, new ElementAttributeMapping
                     {
                         Name = "TakenDateDaysShift",
-                        // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
+                        // ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
                         InAttributes = [],
                         OutAttributes = []
@@ -714,7 +715,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.TakenDateHoursShift, new ElementAttributeMapping
                     {
                         Name = "TakenDateHoursShift",
-                        // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
+                        // ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
                         InAttributes = [],
                         OutAttributes = []
@@ -724,7 +725,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.TakenDateMinutesShift, new ElementAttributeMapping
                     {
                         Name = "TakenDateMinutesShift",
-                        // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
+                        // ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
                         InAttributes = [],
                         OutAttributes = []
@@ -734,7 +735,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.TakenDateSecondsShift, new ElementAttributeMapping
                     {
                         Name = "TakenDateSecondsShift",
-                        // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
+                        // ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
                         InAttributes = [],
                         OutAttributes = []
@@ -744,7 +745,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.CreateDateDaysShift, new ElementAttributeMapping
                     {
                         Name = "CreateDateDaysShift",
-                        // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
+                        // ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
                         InAttributes = [],
                         OutAttributes = []
@@ -754,7 +755,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.CreateDateHoursShift, new ElementAttributeMapping
                     {
                         Name = "CreateDateHoursShift",
-                        // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
+                        // ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
                         InAttributes = [],
                         OutAttributes = []
@@ -764,7 +765,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.CreateDateMinutesShift, new ElementAttributeMapping
                     {
                         Name = "CreateDateMinutesShift",
-                        // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
+                        // ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
                         InAttributes = [],
                         OutAttributes = []
@@ -774,7 +775,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.CreateDateSecondsShift, new ElementAttributeMapping
                     {
                         Name = "CreateDateSecondsShift",
-                        // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
+                        // ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(int),
                         InAttributes = [],
                         OutAttributes = []
@@ -784,7 +785,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.OffsetTime, new ElementAttributeMapping
                     {
                         Name = "OffsetTime",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.OFFSET_TIME,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.OFFSET_TIME,
                         TypeOfElement = typeof(string),
                         InAttributes =
                         [
@@ -803,7 +804,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.Folder, new ElementAttributeMapping
                     {
                         Name = "Folder",
-                        // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
+                        // ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(string),
                         InAttributes = [],
                         OutAttributes = [],
@@ -814,7 +815,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.RemoveAllGPS, new ElementAttributeMapping
                     {
                         Name = "gps*",
-                        // ColumnHeader = COL_NAME_PREFIX + FileListColumns. , 
+                        // ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns. , 
                         TypeOfElement = typeof(string),
                         InAttributes = [],
                         OutAttributes = []
@@ -824,7 +825,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.IPTCKeywords, new ElementAttributeMapping
                     {
                         Name = "IPTCKeywords",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.IPTC_KEYWORDS,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.IPTC_KEYWORDS,
                         TypeOfElement = typeof(string),
                         InAttributes = ["IPTC:Keywords"],
                         OutAttributes = ["IPTC:Keywords"],
@@ -835,7 +836,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.XMLSubjects, new ElementAttributeMapping
                     {
                         Name = "XMLSubjects",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.XML_SUBJECTS,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.XML_SUBJECTS,
                         TypeOfElement = typeof(string),
                         InAttributes = ["XMP:Subject"],
                         OutAttributes = ["XMP:Subject"],
@@ -846,7 +847,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.GUID, new ElementAttributeMapping
                     {
                         Name = "GUID",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.GUID,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.GUID,
                         TypeOfElement = typeof(string),
                         InAttributes = [],
                         OutAttributes = []
@@ -856,7 +857,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.GPSDOP, new ElementAttributeMapping
                     {
                         Name = "GPSDOP",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPSDOP,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.GPSDOP,
                         TypeOfElement = typeof(double),
                         InAttributes = ["EXIF:GPSDOP"],
                         OutAttributes =
@@ -871,7 +872,7 @@ public static class SourcesAndAttributes
                     ElementAttribute.GPSHPositioningError, new ElementAttributeMapping
                     {
                         Name = "GPSHPositioningError",
-                        ColumnHeader = COL_NAME_PREFIX + FileListColumns.GPSHPOSITIONINGERROR,
+                        ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.GPSHPOSITIONINGERROR,
                         TypeOfElement = typeof(string),
                         InAttributes = ["EXIF:GPSHPositioningError"],
                         OutAttributes =
@@ -984,7 +985,7 @@ public static class SourcesAndAttributes
         {
             if (!string.IsNullOrWhiteSpace(value: mapping.ColumnHeader))
             {
-                return COL_NAME_PREFIX + mapping.Name;
+                return HelperVariables.COL_NAME_PREFIX + mapping.Name;
             }
         }
 

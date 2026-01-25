@@ -25,7 +25,7 @@ internal static class EditFileFormGeneric
 
         ColumnHeader clh_fileName = new()
         {
-            Name = COL_NAME_PREFIX + FileListColumns.FILENAME,
+            Name = HelperVariables.COL_NAME_PREFIX + FileListColumns.FILENAME,
             Width = lvw.Width
         };
         _ = lvw.Columns.Add(value: clh_fileName);
