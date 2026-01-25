@@ -306,12 +306,12 @@ public partial class FrmEditFileData : Form
                                 // what we also need to do here is account for any copy-paste shifts.
                                 if (control is DateTimePicker dtp)
                                 {
-                                    HandleDateTimePickerTimeShift(dtp: dtp,
+                                    HandleDateTimePickerTimeShift(
+                                        dtp: dtp,
                                         directoryElement:
                                         dirElemFileToModify,
                                         control: control,
-                                        maxAttributeVersion:
-                                        maxAttributeVersion);
+                                        maxAttributeVersion: maxAttributeVersion);
                                 }
                                 else
                                 {
@@ -378,12 +378,12 @@ public partial class FrmEditFileData : Form
                                             provider: CultureInfo
                                                .InvariantCulture);
 
-                                    string sqliteText = HelperDataLanguageTZ
+                                    string mappedCountryName = HelperDataLanguageTZ
                                        .DataReadDTCountryCodesNames(
                                             queryWhat: LanguageMappingQueryOrReturnWhat.ISO_3166_1A3,
                                             inputVal: cbx_CountryCode.Text,
                                             returnWhat: LanguageMappingQueryOrReturnWhat.Country);
-                                    cbx_Country.Text = sqliteText;
+                                    cbx_Country.Text = mappedCountryName;
                                 }
                             }
                             else if (control.Name == "cbx_OffsetTime")
@@ -603,10 +603,10 @@ public partial class FrmEditFileData : Form
     ///     The value of the specified attribute from the given directory element as an IConvertible, or null if the
     ///     attribute value is equivalent to the null equivalent for its type.
     /// </returns>
-    private static IConvertible GetDataInDEForAttribute(DirectoryElement directoryElement,
+    private static IConvertible GetDataInDEForAttribute(
+        DirectoryElement directoryElement,
         ElementAttribute attribute,
-        DirectoryElement.AttributeVersion
-            maxAttributeVersion)
+        DirectoryElement.AttributeVersion maxAttributeVersion)
     {
         IConvertible returnDataInDirectoryElement = null;
 
@@ -615,7 +615,8 @@ public partial class FrmEditFileData : Form
         {
             returnDataInDirectoryElement = directoryElement.GetAttributeValueAsString(
                 attribute: attribute,
-                version: maxAttributeVersion, nowSavingExif: false);
+                version: maxAttributeVersion,
+                nowSavingExif: false);
 
             if (returnDataInDirectoryElement != null &&
                 string.IsNullOrEmpty(value: returnDataInDirectoryElement.ToString()))

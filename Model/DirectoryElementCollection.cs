@@ -90,7 +90,8 @@ public class DirectoryElementCollection : List<DirectoryElement>
             {
                 _ = uids.Add(
                     item: directoryElement.GetAttributeValueAsString(
-                        attribute: SourcesAndAttributes.ElementAttribute.GUID, nowSavingExif: false));
+                        attribute: SourcesAndAttributes.ElementAttribute.GUID,
+                        nowSavingExif: false));
             }
         }
 
@@ -555,8 +556,8 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     $"Scanning folder {100 * fileCount / imageFiles.Count:0}%: processing file '{fileNameWithoutPath}'");
             }
 
-            // this is a bit complex but in _this_ loop we're not looking at sidecar files at _this_ stage whereas ...
-            // I need to know if an xmp has changed or not
+            // This is a bit complex but in _this_ loop we're not looking at sidecar files at _this_ stage whereas ...
+            // I need to know if an XMP has changed or not
             bool fileNeedsReDEing = false;
             _ = imageToSidecarFileMapping.TryGetValue(key: imagefileFileInfoItem, value: out FileInfo sidecarFileInfoItem);
             // so first we check the details of the image file then those of the xmp's

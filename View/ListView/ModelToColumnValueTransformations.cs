@@ -10,7 +10,7 @@ internal class ModelToColumnValueTransformations
     /// </summary>
     public static string M2C_CoordinatesInclDest(string column,
                                                  DirectoryElement item,
-                                                 string nfVal)
+                                                 string notFoundValue)
     {
         // Pick the right attribs depending on which column
         SourcesAndAttributes.ElementAttribute latAttrib = SourcesAndAttributes.ElementAttribute.GPSLatitude;
@@ -23,10 +23,12 @@ internal class ModelToColumnValueTransformations
 
         string latValue = item.GetAttributeValueAsString(
             attribute: latAttrib,
-            notFoundValue: nfVal, nowSavingExif: false);
+            notFoundValue: notFoundValue,
+            nowSavingExif: false);
         string longValue = item.GetAttributeValueAsString(
             attribute: longAttrib,
-            notFoundValue: nfVal, nowSavingExif: false);
+            notFoundValue: notFoundValue,
+            nowSavingExif: false);
 
         return $"{latValue};{longValue}";
     }

@@ -241,7 +241,8 @@ public partial class FrmMainApp : Form
             HelperGenericAppStartup.AppStartupReadAppLanguage(),
             HelperGenericAppStartup.AppStartupReadCustomCityLogic(),
             HelperGenericAppStartup.AppStartupReadAPILanguage(),
-            HelperGenericAppStartup.AppStartupApplyDefaults(settingTabPage: "tpg_Application",
+            HelperGenericAppStartup.AppStartupApplyDefaults(
+                settingTabPage: "tpg_Application",
                 actuallyRunningAtStartup: true),
             HelperDataLanguageTZ.DataReadCountryCodeDataFromWikipediaData(),
             HelperGenericAppStartup.AppStartupCheckWebView2(),
@@ -257,6 +258,7 @@ public partial class FrmMainApp : Form
         {
             Task completedTask = await Task.WhenAny(tasks: remainingTasks);
             _ = remainingTasks.Remove(item: completedTask);
+
             frmSplashScreen.UpdateProgress(
                 amount: eachTasksPointValue,
                 close: remainingTasks.Count == 0);
@@ -278,31 +280,6 @@ public partial class FrmMainApp : Form
                                        EventArgs e)
     {
         Log.Info(message: "OnLoad: Starting");
-        // icon
-
-        Log.Trace(message: "Setting Icon");
-
-        // clear both tables, just in case + generic cleanup
-        try
-        {
-            Log.Debug(message: "Remove Stage 1 AttributeValues");
-            DirectoryElements.CleanupAllDataInStage(
-                attributeVersion: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
-            Log.Debug(message: "Remove Stage 3 AttributeValues");
-            DirectoryElements.CleanupAllDataInStage(
-                attributeVersion: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
-        }
-        catch (Exception ex)
-        {
-            Log.Fatal(message: $"Error: {ex.Message}");
-
-            Themer.ShowMessageBox(
-                message: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: "mbx_FrmMainApp_ErrorClearingFileDataQTables",
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                icon: MessageBoxIcon.Error,
-                buttons: MessageBoxButtons.OK);
-        }
 
         try
         {
@@ -310,16 +287,14 @@ public partial class FrmMainApp : Form
         }
         catch (Exception ex)
         {
-            // not really fatal
             Log.Error(message: $"Error: {ex.Message}");
         }
 
-        RecreateLvwFileList();
+        SetUpLvwFileList();
 
         // can't log inside.
         Log.Debug(message: "Run CoreWebView2InitializationCompleted");
-        wbv_MapArea.CoreWebView2InitializationCompleted +=
-            webView_CoreWebView2InitializationCompleted;
+        wbv_MapArea.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
 
         if (!Program.CollectionModeEnabled)
         {
@@ -367,7 +342,15 @@ public partial class FrmMainApp : Form
         Log.Info(message: "OnLoad: Done.");
     }
 
-    private void RecreateLvwFileList()
+    /// <summary>
+    /// Configures the file list view control according to the current user preferences for display mode and language
+    /// settings.
+    /// </summary>
+    /// <remarks>If the user preference is set to show thumbnails, the file list view is displayed with large
+    /// icons and a predefined tile size; otherwise, it is shown in details view. Applies language-specific settings and
+    /// refreshes the control. Any errors encountered during setup are logged, and an error message is displayed to the
+    /// user.</remarks>
+    private void SetUpLvwFileList()
     {
         // Setup the List View
         listViewDisplayMode = HelperVariables.UserSettingShowThumbnails
@@ -747,13 +730,11 @@ public partial class FrmMainApp : Form
                 HelperGenericFileLocking.FileListBeingUpdated = true;
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
-                    DirectoryElement dirElemFileToModify =
-                        lvi.Tag as DirectoryElement;
+                    DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;
                     // don't do folders...
                     if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
                     {
-                        string fileNameWithoutPath =
-                            dirElemFileToModify.ItemNameWithoutPath;
+                        string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
 
                         // check it's not in the read-queue.
                         while (HelperGenericFileLocking.GenericLockCheckLockFile(
@@ -764,19 +745,13 @@ public partial class FrmMainApp : Form
 
                         if (senderName == "btn_loctToFile")
                         {
-                            string tmpCoords =
-                                $"{strGPSLatitudeOnTheMap};{strGPSLongitudeOnTheMap}" !=
-                                ";"
-                                    ? $"{strGPSLatitudeOnTheMap};{strGPSLongitudeOnTheMap}"
-                                    : "";
+                            string coordinatesToSet = GetCoordinatesFromValuesOnTheMap(strGPSLatitudeOnTheMap, strGPSLongitudeOnTheMap);
 
                             List<(ElementAttribute attribute, string value)> attributes =
                                 [
-                                    (ElementAttribute.GPSLatitude,
-                                     strGPSLatitudeOnTheMap),
-                                    (ElementAttribute.GPSLongitude,
-                                     strGPSLongitudeOnTheMap),
-                                    (ElementAttribute.Coordinates, tmpCoords)
+                                    (ElementAttribute.GPSLatitude, strGPSLatitudeOnTheMap),
+                                    (ElementAttribute.GPSLongitude, strGPSLongitudeOnTheMap),
+                                    (ElementAttribute.Coordinates, coordinatesToSet)
                                 ];
                             foreach ((ElementAttribute attribute, string value) in
                                      attributes)
@@ -799,26 +774,21 @@ public partial class FrmMainApp : Form
                             if (_showLocToMapDialogChoice)
                             {
                                 lvw_FileList_UpdateTagsFromWeb(
-                                    strGpsLatitude: strGPSLatitudeOnTheMap,
-                                    strGpsLongitude: strGPSLongitudeOnTheMap, lvi: lvi);
+                                    strGPSLatitude: strGPSLatitudeOnTheMap,
+                                    strGPSLongitude: strGPSLongitudeOnTheMap,
+                                    lvi: lvi);
                             }
                         }
                         else if (senderName == "btn_loctToFileDestination")
                         {
-                            string tmpCoords =
-                                $"{strGPSLatitudeOnTheMap};{strGPSLongitudeOnTheMap}" !=
-                                ";"
-                                    ? $"{strGPSLatitudeOnTheMap};{strGPSLongitudeOnTheMap}"
-                                    : "";
+                            string destCoordinatesToSet = GetCoordinatesFromValuesOnTheMap(strGPSLatitudeOnTheMap, strGPSLongitudeOnTheMap);
 
                             List<(ElementAttribute attribute, string value)>
                                 attributesAndValues =
                                 [
-                                    (ElementAttribute.GPSDestLatitude,
-                                     strGPSLatitudeOnTheMap),
-                                    (ElementAttribute.GPSDestLongitude,
-                                     strGPSLongitudeOnTheMap),
-                                    (ElementAttribute.DestCoordinates, tmpCoords)
+                                    (ElementAttribute.GPSDestLatitude, strGPSLatitudeOnTheMap),
+                                    (ElementAttribute.GPSDestLongitude, strGPSLongitudeOnTheMap),
+                                    (ElementAttribute.DestCoordinates, destCoordinatesToSet)
                                 ];
                             foreach ((ElementAttribute attribute, string value) in
                                      attributesAndValues)
@@ -883,6 +853,15 @@ public partial class FrmMainApp : Form
             _showLocToMapDialogChoice = getLocToMapDialogChoice.Contains(item: "yes");
             _rememberLocToMapDialogChoice =
                 getLocToMapDialogChoice.Contains(item: "_remember");
+        }
+
+        /// Combines lat and lng to {lat};{lng}
+        static string GetCoordinatesFromValuesOnTheMap(string lat, string lng)
+        {
+            return $"{lat};{lng}" !=
+                ";"
+                    ? $"{lat};{lng}"
+                    : "";
         }
     }
 
@@ -1151,151 +1130,16 @@ public partial class FrmMainApp : Form
                 imgDirection = null;
             }
 
-            double? GPSLatitude = directoryElement.GetAttributeValue<double>(
-                attribute: ElementAttribute.GPSLatitude,
-                version: directoryElement.GetMaxAttributeVersion(
-                    attribute: ElementAttribute.GPSLatitude),
-                notFoundValue: null);
-
-            double? GPSLongitude = directoryElement.GetAttributeValue<double>(
-                attribute: ElementAttribute.GPSLongitude,
-                version: directoryElement.GetMaxAttributeVersion(
-                    attribute: ElementAttribute.GPSLongitude),
-                notFoundValue: null);
-
-            string GPSLatitudeStr = directoryElement.GetAttributeValueAsString(
-                attribute: ElementAttribute.GPSLatitude,
-                version: directoryElement.GetMaxAttributeVersion(
-                    attribute: ElementAttribute.GPSLatitude),
-                notFoundValue: null, nowSavingExif: false);
-
-            string? GPSLongitudeStr = directoryElement.GetAttributeValueAsString(
-                attribute: ElementAttribute.GPSLongitude,
-                version: directoryElement.GetMaxAttributeVersion(
-                    attribute: ElementAttribute.GPSLongitude),
-                notFoundValue: null, nowSavingExif: false);
-
-            double? FocalLength = directoryElement.GetAttributeValue<double>(
-                attribute: ElementAttribute.FocalLength,
-                version: directoryElement.GetMaxAttributeVersion(
-                    attribute: ElementAttribute.FocalLength),
-                notFoundValue: 50);
-
-            double? FocalLengthIn35mmFormat = directoryElement.GetAttributeValue<double>(
-                attribute: ElementAttribute.FocalLengthIn35mmFormat,
-                version: directoryElement.GetMaxAttributeVersion(
-                    attribute: ElementAttribute.FocalLengthIn35mmFormat),
-                notFoundValue: 50);
-
-            if (imgDirection != null &&
-                GPSLatitude != null &&
-                GPSLongitude != null)
-            {
-                // this is for the line
-                (double, double) targetCoordinates =
-                        HelperGenericCalculations.CalculateTargetCoordinates(
-                            startLatitude: (double)GPSLatitude,
-                            startLongitude: (double)GPSLongitude,
-                            gpsImgDirection: (double)imgDirection,
-                            distance: 10)
-                    ;
-
-                // this is for the FOV cone
-                createPointsStr = string.Format(format: """
-                                                        /* Create points */
-                                                        let points = [
-                                                            {{
-                                                                type: 'point',
-                                                                coordinates: L.latLng({0}),
-                                                                color: '#27ae60',
-                                                                priority: 1,
-                                                            }},
-                                                            {{
-                                                                type: 'point',
-                                                                coordinates: L.latLng({1}),
-                                                                color: '#f44334',
-                                                                priority: 2,
-                                                            }},
-                                                        ];
-                                                        """,
-                    arg0: $"{GPSLatitudeStr},{GPSLongitudeStr}",
-                    arg1: $"{targetCoordinates.Item1
-                                              .ToString(
-                                                   provider: CultureInfo
-                                                      .InvariantCulture)
-                                              .Replace(
-                                                   oldChar: ',',
-                                                   newChar: '.')},{targetCoordinates.Item2
-                                                  .ToString(
-                                                       provider: CultureInfo
-                                                          .InvariantCulture)
-                                                  .Replace(
-                                                       oldChar: ',',
-                                                       newChar: '.')}");
-
-                showLinesStr = """
-                               /* Show lines */
-                               const line = points.map(point => point.coordinates);
-                               L.polyline(line, {color: '#178a00'}).addTo(map);
-                               """;
-
-                showPointsStr = """
-                                /* Show points */
-                                points.sort((a, b) => a.priority - b.priority);
-
-                                points.forEach(point => {
-                                	switch (point.type) {
-                                		case 'point':
-                                			L.circleMarker(point.coordinates, {
-                                				radius: 8,
-                                				fillColor: point.color,
-                                				fillOpacity: 1,
-                                				color: '#fff',
-                                				weight: 3,
-                                			}).addTo(map);
-                                			break;
-                                
-                                	}
-                                });
-                                """;
-
-                if (FocalLength != null &&
-                    FocalLengthIn35mmFormat != null)
-                {
-                    (List<(double, double)>, List<(double, double)>) FOVCoordinates =
-                            HelperGenericCalculations
-                               .CalculateFovCoordinatesFromSensorSize(
-                                    startLatitude: (double)GPSLatitude,
-                                    startLongitude: (double)GPSLongitude,
-                                    gpsImgDirection: (double)imgDirection,
-                                    sensorSize: HelperGenericCalculations
-                                       .EstimateSensorSize(
-                                            focalLength: (double)FocalLength,
-                                            focalLengthIn35mmFilm:
-                                            (double)FocalLengthIn35mmFormat),
-                                    focalLength: (double)FocalLength,
-                                    distance: 1)
-                        ;
-                    showFOVStr = string.Format(format: """
-                                                       /* Show polygon/triangle */
-                                                       var polygon = L.polygon([
-                                                           [{0}],
-                                                           [{1}],
-                                                           [{2}]
-                                                       ]).addTo(map);
-                                                       """,
-                        arg0: $"{GPSLatitudeStr},{GPSLongitudeStr}",
-                        arg1: HelperGenericCalculations
-                           .ConvertFOVCoordListsToString(
-                                sourceList: FOVCoordinates.Item1),
-                        arg2: HelperGenericCalculations
-                           .ConvertFOVCoordListsToString(
-                                sourceList: FOVCoordinates.Item2));
-                }
-            }
+            CalculateFOVLineAndCone(
+                createPointsStr: ref createPointsStr,
+                showLinesStr: ref showLinesStr,
+                showPointsStr: ref showPointsStr,
+                showFOVStr: ref showFOVStr,
+                directoryElement: directoryElement,
+                imgDirection: imgDirection);
         }
 
-        // if we have more than one, check if there are any w/ Destination coords
+        // if we have more than one ListViewItem selected, check if there are any w/ Destination coords
         else
         {
             foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
@@ -1306,19 +1150,22 @@ public partial class FrmMainApp : Form
                     attribute: ElementAttribute.GPSLatitude,
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSLatitude),
-                    notFoundValue: null, nowSavingExif: false);
+                    notFoundValue: null,
+                    nowSavingExif: false);
 
                 string? GPSLongitudeStr = directoryElement.GetAttributeValueAsString(
                     attribute: ElementAttribute.GPSLongitude,
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSLongitude),
-                    notFoundValue: null, nowSavingExif: false);
+                    notFoundValue: null,
+                    nowSavingExif: false);
 
                 string GPSDestLatitudeStr = directoryElement.GetAttributeValueAsString(
                     attribute: ElementAttribute.GPSDestLatitude,
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSDestLatitude),
-                    notFoundValue: null, nowSavingExif: false);
+                    notFoundValue: null,
+                    nowSavingExif: false);
 
                 // If the data is copy-pasted then the value itself could be 0 with a mark-for-delete
                 // GetMaxAttributeVersion returns null if IsMarkedForDeletion
@@ -1334,7 +1181,8 @@ public partial class FrmMainApp : Form
                     attribute: ElementAttribute.GPSDestLongitude,
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSDestLongitude),
-                    notFoundValue: null, nowSavingExif: false);
+                    notFoundValue: null,
+                    nowSavingExif: false);
 
                 // If the data is copy-pasted then the value itself could be 0 with a mark-for-delete
                 // GetMaxAttributeVersion returns null if IsMarkedForDeletion
@@ -1508,6 +1356,171 @@ public partial class FrmMainApp : Form
             }
 
             return showDestinationPolyLineStr;
+        }
+    }
+
+    /// <summary>
+    /// Calculates the field of view (FOV) line and cone based on the provided GPS coordinates, image direction, and
+    /// focal length information, and generates JavaScript code snippets for visualizing these elements on a map.
+    /// </summary>
+    /// <param name="createPointsStr">A reference to a string that will be populated with JavaScript code for creating map points representing the FOV
+    /// origin and target.</param>
+    /// <param name="showLinesStr">A reference to a string that will be populated with JavaScript code for displaying a line between the FOV origin
+    /// and target points on the map.</param>
+    /// <param name="showPointsStr">A reference to a string that will be populated with JavaScript code for rendering the FOV points on the map.</param>
+    /// <param name="showFOVStr">A reference to a string that will be populated with JavaScript code for displaying the FOV polygon or triangle
+    /// on the map, if sufficient focal length information is available.</param>
+    /// <param name="directoryElement">An instance of DirectoryElement containing the GPS coordinates, focal length, and other metadata required for
+    /// FOV calculation.</param>
+    /// <param name="imgDirection">The image direction in degrees, representing the compass heading of the image. If null, FOV calculation is not
+    /// performed.</param>
+    private static void CalculateFOVLineAndCone(
+        ref string createPointsStr,
+        ref string showLinesStr,
+        ref string showPointsStr,
+        ref string showFOVStr,
+        DirectoryElement directoryElement,
+        double? imgDirection)
+    {
+        double? GPSLatitude = directoryElement.GetAttributeValue<double>(
+            attribute: ElementAttribute.GPSLatitude,
+            version: directoryElement.GetMaxAttributeVersion(
+                attribute: ElementAttribute.GPSLatitude),
+            notFoundValue: null);
+
+        double? GPSLongitude = directoryElement.GetAttributeValue<double>(
+            attribute: ElementAttribute.GPSLongitude,
+            version: directoryElement.GetMaxAttributeVersion(
+                attribute: ElementAttribute.GPSLongitude),
+            notFoundValue: null);
+
+        string GPSLatitudeStr = directoryElement.GetAttributeValueAsString(
+            attribute: ElementAttribute.GPSLatitude,
+            version: directoryElement.GetMaxAttributeVersion(
+                attribute: ElementAttribute.GPSLatitude),
+            notFoundValue: null);
+
+        string? GPSLongitudeStr = directoryElement.GetAttributeValueAsString(
+            attribute: ElementAttribute.GPSLongitude,
+            version: directoryElement.GetMaxAttributeVersion(
+                attribute: ElementAttribute.GPSLongitude),
+            notFoundValue: null);
+
+        double? FocalLength = directoryElement.GetAttributeValue<double>(
+            attribute: ElementAttribute.FocalLength,
+            version: directoryElement.GetMaxAttributeVersion(
+                attribute: ElementAttribute.FocalLength),
+            notFoundValue: 50);
+
+        double? FocalLengthIn35mmFormat = directoryElement.GetAttributeValue<double>(
+            attribute: ElementAttribute.FocalLengthIn35mmFormat,
+            version: directoryElement.GetMaxAttributeVersion(
+                attribute: ElementAttribute.FocalLengthIn35mmFormat),
+            notFoundValue: 50);
+
+        if (imgDirection != null
+            && GPSLatitude != null
+            && GPSLongitude != null)
+        {
+            // this is for the line
+            (double, double) targetCoordinates =
+                    HelperGenericCalculations.CalculateTargetCoordinates(
+                        startLatitude: (double)GPSLatitude,
+                        startLongitude: (double)GPSLongitude,
+                        gpsImgDirection: (double)imgDirection,
+                        distance: 10)
+                ;
+
+            // this is for the FOV cone
+            createPointsStr = string.Format(format: """
+                                                        /* Create points */
+                                                        let points = [
+                                                            {{
+                                                                type: 'point',
+                                                                coordinates: L.latLng({0}),
+                                                                color: '#27ae60',
+                                                                priority: 1,
+                                                            }},
+                                                            {{
+                                                                type: 'point',
+                                                                coordinates: L.latLng({1}),
+                                                                color: '#f44334',
+                                                                priority: 2,
+                                                            }},
+                                                        ];
+                                                        """,
+                arg0: $"{GPSLatitudeStr},{GPSLongitudeStr}",
+                arg1: $"{targetCoordinates.Item1
+                                          .ToString(
+                                               provider: CultureInfo
+                                                  .InvariantCulture)
+                                          .Replace(
+                                               oldChar: ',',
+                                               newChar: '.')},{targetCoordinates.Item2
+                                              .ToString(
+                                                   provider: CultureInfo
+                                                      .InvariantCulture)
+                                              .Replace(
+                                                   oldChar: ',',
+                                                   newChar: '.')}");
+
+            showLinesStr = """
+                               /* Show lines */
+                               const line = points.map(point => point.coordinates);
+                               L.polyline(line, {color: '#178a00'}).addTo(map);
+                               """;
+
+            showPointsStr = """
+                                /* Show points */
+                                points.sort((a, b) => a.priority - b.priority);
+
+                                points.forEach(point => {
+                                	switch (point.type) {
+                                		case 'point':
+                                			L.circleMarker(point.coordinates, {
+                                				radius: 8,
+                                				fillColor: point.color,
+                                				fillOpacity: 1,
+                                				color: '#fff',
+                                				weight: 3,
+                                			}).addTo(map);
+                                			break;
+                                
+                                	}
+                                });
+                                """;
+
+            if (FocalLength != null &&
+                FocalLengthIn35mmFormat != null)
+            {
+                (List<(double, double)>, List<(double, double)>) FOVCoordinates =
+                        HelperGenericCalculations
+                           .CalculateFovCoordinatesFromSensorSize(
+                                startLatitude: (double)GPSLatitude,
+                                startLongitude: (double)GPSLongitude,
+                                gpsImgDirection: (double)imgDirection,
+                                sensorSize: HelperGenericCalculations
+                                   .EstimateSensorSize(
+                                        focalLength: (double)FocalLength,
+                                        focalLengthIn35mmFilm:
+                                        (double)FocalLengthIn35mmFormat),
+                                focalLength: (double)FocalLength,
+                                distance: 1)
+                    ;
+                showFOVStr = string.Format(format: """
+                                                       /* Show polygon/triangle */
+                                                       var polygon = L.polygon([
+                                                           [{0}],
+                                                           [{1}],
+                                                           [{2}]
+                                                       ]).addTo(map);
+                                                       """,
+                    arg0: $"{GPSLatitudeStr},{GPSLongitudeStr}",
+                    arg1: HelperGenericCalculations
+                       .ConvertFOVCoordListsToString(sourceList: FOVCoordinates.Item1),
+                    arg2: HelperGenericCalculations
+                       .ConvertFOVCoordListsToString(sourceList: FOVCoordinates.Item2));
+            }
         }
     }
 
@@ -1726,7 +1739,8 @@ public partial class FrmMainApp : Form
                     attribute: ElementAttribute.GUID,
                     version: DirectoryElement.AttributeVersion
                                              .Original, // GUIDs don't change
-                    notFoundValue: null, nowSavingExif: false));
+                    notFoundValue: null,
+                    nowSavingExif: false));
         }
 
         EditFileFormGeneric.ShowFrmEditFileData();
@@ -2061,8 +2075,8 @@ public partial class FrmMainApp : Form
                                 result: out double _))
                         {
                             lvw_FileList_UpdateTagsFromWeb(
-                                strGpsLatitude: strGpsLatitude,
-                                strGpsLongitude: strGpsLongitude, lvi: lvi);
+                                strGPSLatitude: strGpsLatitude,
+                                strGPSLongitude: strGpsLongitude, lvi: lvi);
                         }
                     }
                 }
@@ -2167,7 +2181,8 @@ public partial class FrmMainApp : Form
                     attribute: ElementAttribute.GUID,
                     version: DirectoryElement.AttributeVersion
                                              .Original, // GUIDs don't change
-                    notFoundValue: null, nowSavingExif: false));
+                    notFoundValue: null,
+                    nowSavingExif: false));
         }
 
         EditFileFormGeneric.ShowFrmEditFileData();
@@ -2313,11 +2328,11 @@ public partial class FrmMainApp : Form
     /// <summary>
     ///     Pulls data from the various APIs and fills up the listView
     /// </summary>
-    /// <param name="strGpsLatitude">Latitude as string</param>
-    /// <param name="strGpsLongitude">Longitude as string</param>
+    /// <param name="strGPSLatitude">Latitude as string</param>
+    /// <param name="strGPSLongitude">Longitude as string</param>
     /// <param name="lvi">ListViewItem in the the main grid</param>
-    private void lvw_FileList_UpdateTagsFromWeb(string strGpsLatitude,
-                                                string strGpsLongitude,
+    private void lvw_FileList_UpdateTagsFromWeb(string strGPSLatitude,
+                                                string strGPSLongitude,
                                                 ListViewItem lvi)
     {
         if (!_StopProcessingRows)
@@ -2340,8 +2355,8 @@ public partial class FrmMainApp : Form
 
             DataTable dtToponomy =
                 HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(
-                    lat: strGpsLatitude,
-                    lng: strGpsLongitude,
+                    lat: strGPSLatitude,
+                    lng: strGPSLongitude,
                     fileNameWithoutPath: fileNameWithoutPath);
             if (dtToponomy.Rows.Count > 0)
             {
@@ -2735,7 +2750,8 @@ public partial class FrmMainApp : Form
                         attribute: ElementAttribute.GUID,
                         version: DirectoryElement.AttributeVersion
                                                  .Original, // GUIDs don't change
-                        notFoundValue: null, nowSavingExif: false));
+                        notFoundValue: null,
+nowSavingExif: false));
 
                 Log.Trace(message: "Add File To lvw_FileListEditImages");
                 EditFileFormGeneric.ShowFrmEditFileData();
@@ -2813,12 +2829,14 @@ public partial class FrmMainApp : Form
                 _ = lvi.SubItems.Add(text: directoryElement.GetAttributeValueAsString(
                     attribute: attribute,
                     version: DirectoryElement.AttributeVersion.Original,
-                    notFoundValue: null, nowSavingExif: false));
+                    notFoundValue: null,
+                    nowSavingExif: false));
                 _ = lvi.SubItems.Add(text: directoryElement.GetAttributeValueAsString(
                     attribute: attribute,
                     version: DirectoryElement.AttributeVersion
                                              .Stage3ReadyToWrite,
-                    notFoundValue: null, nowSavingExif: false));
+                    notFoundValue: null,
+                    nowSavingExif: false));
                 _ = lvw_ExifData.Items.Add(value: lvi);
             }
         }
@@ -2907,7 +2925,8 @@ public partial class FrmMainApp : Form
                         attribute: ElementAttribute.GUID,
                         version: DirectoryElement.AttributeVersion
                                                  .Original, // GUIDs don't change
-                        notFoundValue: null, nowSavingExif: false));
+                        notFoundValue: null,
+                        nowSavingExif: false));
             }
 
             EditFileFormGeneric.ShowFrmEditFileData();
@@ -3181,15 +3200,15 @@ public partial class FrmMainApp : Form
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void btn_SaveLocation_Click(object sender,
+    private void btn_SaveFavourite_Click(object sender,
                                         EventArgs e)
     {
         if (cbx_Favourites.Text.Length > 0)
         {
-            ListView lvw = lvw_FileList;
             if (lvw_FileList.SelectedItems.Count > 0)
             {
                 ListViewItem lvi = lvw_FileList.SelectedItems[index: 0];
+                DirectoryElement directoryElement = lvi.Tag as DirectoryElement;
 
                 string favouriteName = cbx_Favourites.Text;
                 Favourite favourite = GetFavouriteByName(favouriteName: favouriteName) ??
@@ -3198,36 +3217,18 @@ public partial class FrmMainApp : Form
                 // remove if exists, we'll add it back again
                 RemoveFavouriteByName(favouriteName: favouriteName);
 
-                favourite.GPSLatitude =
-                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
-                        attribute: ElementAttribute.GPSLatitude);
-                favourite.GPSLatitudeRef = GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
-                    attribute: ElementAttribute.GPSLatitudeRef);
-                favourite.GPSLongitude =
-                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
-                        attribute: ElementAttribute.GPSLongitude);
-                favourite.GPSLongitudeRef = GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
-                    attribute: ElementAttribute.GPSLongitudeRef);
-                favourite.GPSAltitude =
-                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
-                        attribute: ElementAttribute.GPSAltitude);
-                favourite.GPSAltitudeRef = GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
-                    attribute: ElementAttribute.GPSAltitudeRef);
-                favourite.Coordinates =
-                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
-                        attribute: ElementAttribute.Coordinates);
-                favourite.City =
-                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi, attribute: ElementAttribute.City);
-                favourite.CountryCode =
-                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
-                        attribute: ElementAttribute.CountryCode);
-                favourite.Country =
-                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi, attribute: ElementAttribute.Country);
-                favourite.State =
-                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi, attribute: ElementAttribute.State);
-                favourite.Sublocation =
-                    GetFavouriteColumnValueFromListViewItem(lvw: lvw, lvi: lvi,
-                        attribute: ElementAttribute.Sublocation);
+                favourite.GPSLatitude = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.GPSLatitude, notFoundValue: "");
+                favourite.GPSLatitudeRef = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.GPSLatitudeRef, notFoundValue: "");
+                favourite.GPSLongitude = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.GPSLongitude, notFoundValue: "");
+                favourite.GPSLongitudeRef = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.GPSLongitudeRef, notFoundValue: "");
+                favourite.GPSAltitude = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.GPSAltitude, notFoundValue: "");
+                favourite.GPSAltitudeRef = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.GPSAltitudeRef, notFoundValue: "");
+                favourite.Coordinates = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.Coordinates, notFoundValue: "");
+                favourite.City = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.City, notFoundValue: "");
+                favourite.CountryCode = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.CountryCode, notFoundValue: "");
+                favourite.Country = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.Country, notFoundValue: "");
+                favourite.State = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.State, notFoundValue: "");
+                favourite.Sublocation = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.Sublocation, notFoundValue: "");
 
                 _ = Favourites.Add(item: favourite);
                 HelperDataFavourites.DataWriteSQLiteClearAndUpdateFavourites();
@@ -3499,18 +3500,8 @@ public partial class FrmMainApp : Form
             {
                 try
                 {
-                    string lat = lvi
-                                .SubItems[
-                                     index: lvw_FileList
-                                           .Columns[
-                                                key: HelperVariables.COL_NAME_PREFIX +
-                                                     FileListView.FileListColumns.GPS_LATITUDE].Index].Text;
-                    string lng = lvi
-                                .SubItems[
-                                     index: lvw_FileList
-                                           .Columns[
-                                                key: HelperVariables.COL_NAME_PREFIX +
-                                                     FileListView.FileListColumns.GPS_LONGITUDE].Index].Text;
+                    string lat = directoryElement.GetAttributeValueAsString(ElementAttribute.GPSLatitude);
+                    string lng = directoryElement.GetAttributeValueAsString(ElementAttribute.GPSLongitude);
 
                     for (int i = DTToponomySessionData.Rows.Count - 1; i >= 0; i--)
                     {
@@ -3788,15 +3779,6 @@ public partial class FrmMainApp : Form
         }
     }
 
-    private string GetFavouriteColumnValueFromListViewItem(ListView lvw,
-                                                           ListViewItem lvi,
-                                                           ElementAttribute attribute)
-    {
-        string str = lvi.SubItems[index: lvw.Columns[key:
-            GetElementAttributesColumnHeader(attributeToFind: attribute)].Index].Text.ToString(provider: CultureInfo.InvariantCulture);
-
-        return str == NullStringEquivalentGeneric ? "" : str;
-    }
 
     /// <summary>
     ///     Reloads cbx_Favourites items and autocompletesource from FrmMainApp.Favourites

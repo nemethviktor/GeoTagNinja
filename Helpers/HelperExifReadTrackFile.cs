@@ -182,7 +182,7 @@ internal static class HelperExifReadTrackFile
                                 // if so then later we'll trigger the store-to-Stage3-process
 
                                 string currentLat = GetCurrentValue(dirElemFileToModify: dirElemFileToModify,
-                                    attribute: ElementAttribute.GPSDestLatitude);
+                                    attribute: ElementAttribute.GPSLatitude);
                                 string currentLng = GetCurrentValue(dirElemFileToModify: dirElemFileToModify,
                                     attribute: ElementAttribute.GPSLongitude);
                                 string currentAltitude = GetCurrentValue(dirElemFileToModify: dirElemFileToModify,
@@ -212,25 +212,31 @@ internal static class HelperExifReadTrackFile
                                 {
                                     FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress,
                                         text: $"Processing: {fileNameWithoutPath}");
+
                                     frmMainAppInstance.lvw_FileList.UpdateDirectoryElementItemColour(
                                         directoryElement: dirElemFileToModify, color: Color.Red);
+
                                     dirElemFileToModify.SetAttributeValueAnyType(
                                         attribute: ElementAttribute.GPSLatitude, value: strLatInTrackFile,
                                         version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
                                         isMarkedForDeletion: false);
+
                                     dirElemFileToModify.SetAttributeValueAnyType(
                                         attribute: ElementAttribute.GPSLongitude, value: strLngInTrackFile,
                                         version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
                                         isMarkedForDeletion: false);
+
                                     dirElemFileToModify.SetAttributeValueAnyType(
                                         attribute: ElementAttribute.GPSAltitude, value: altitudeInTrackFile,
                                         version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
                                         isMarkedForDeletion: false);
+
                                     dirElemFileToModify.SetAttributeValueAnyType(
                                         attribute: ElementAttribute.GPSDOP,
                                         value: gpsDOPInTrackFile,
                                         version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
                                         isMarkedForDeletion: false);
+
                                     dirElemFileToModify.SetAttributeValueAnyType(
                                         attribute: ElementAttribute.GPSHPositioningError,
                                         value: gpsHPositioningErrorInTrackFile,
@@ -264,8 +270,7 @@ internal static class HelperExifReadTrackFile
                                         if (HelperVariables
                                            .OperationAPIReturnedOKResponse)
                                         {
-                                            List<(ElementAttribute attribute, string
-                                                    toponomyOverwriteVal)>
+                                            List<(ElementAttribute attribute, string toponomyOverwriteVal)>
                                                 toponomyOverwrites =
                                                 [
                                                     (ElementAttribute.CountryCode,
@@ -395,7 +400,8 @@ internal static class HelperExifReadTrackFile
                 notFoundValue: dirElemFileToModify.GetAttributeValueAsString(
                     attribute: attribute,
                     version: DirectoryElement.AttributeVersion.Original,
-                    notFoundValue: FrmMainApp.NullStringEquivalentGeneric, nowSavingExif: false),
+                    notFoundValue: FrmMainApp.NullStringEquivalentGeneric,
+                    nowSavingExif: false),
                 nowSavingExif: false);
             return currentValue;
         }

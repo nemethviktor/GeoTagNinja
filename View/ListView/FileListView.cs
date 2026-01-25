@@ -405,12 +405,14 @@ public partial class FileListView : System.Windows.Forms.ListView
         string DefaultStrGetter(SourcesAndAttributes.ElementAttribute atrb)
         {
             return directoryElement.GetAttributeValueAsString(
-                attribute: atrb, notFoundValue: nfVal, nowSavingExif: false);
+                attribute: atrb,
+                notFoundValue: nfVal,
+                nowSavingExif: false);
         }
 
         if (ColumnToAttributeMap.TryGetValue(
-                key: columnHeader.Name.Substring(HelperVariables.COL_NAME_PREFIX.Length),
-                value: out SourcesAndAttributes.ElementAttribute attribute))
+            key: columnHeader.Name.Substring(HelperVariables.COL_NAME_PREFIX.Length),
+            value: out SourcesAndAttributes.ElementAttribute attribute))
         {
             return DefaultStrGetter(atrb: attribute);
         }
@@ -419,11 +421,13 @@ public partial class FileListView : System.Windows.Forms.ListView
         return columnHeader.Name.Substring(HelperVariables.COL_NAME_PREFIX.Length) switch
         {
             FileListColumns.COORDINATES => ModelToColumnValueTransformations.M2C_CoordinatesInclDest(
-                                column: FileListColumns.COORDINATES, item: directoryElement,
-                                nfVal: nfVal),
+                column: FileListColumns.COORDINATES,
+                item: directoryElement,
+                notFoundValue: nfVal),
             FileListColumns.DEST_COORDINATES => ModelToColumnValueTransformations.M2C_CoordinatesInclDest(
-                                column: FileListColumns.DEST_COORDINATES, item: directoryElement,
-                                nfVal: nfVal),
+                column: FileListColumns.DEST_COORDINATES,
+                item: directoryElement,
+                notFoundValue: nfVal),
             _ => nfVal,
         };
     }

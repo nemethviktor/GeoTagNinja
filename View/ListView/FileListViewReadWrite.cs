@@ -12,6 +12,9 @@ using static GeoTagNinja.View.ListView.FileListView;
 
 namespace GeoTagNinja.View.ListView;
 
+/// <summary>
+/// An enumerable list of two items "Taken" and "Created", used for TakenDate and CreatedDate
+/// </summary>
 internal enum TakenOrCreated
 {
     Taken,

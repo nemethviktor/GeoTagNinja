@@ -481,7 +481,7 @@ namespace GeoTagNinja
             resources.ApplyResources(this.btn_SaveFavourite, "btn_SaveFavourite");
             this.btn_SaveFavourite.Name = "btn_SaveFavourite";
             this.btn_SaveFavourite.UseVisualStyleBackColor = true;
-            this.btn_SaveFavourite.Click += new System.EventHandler(this.btn_SaveLocation_Click);
+            this.btn_SaveFavourite.Click += new System.EventHandler(this.btn_SaveFavourite_Click);
             // 
             // btn_LoadFavourite
             // 
