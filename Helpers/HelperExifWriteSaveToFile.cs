@@ -187,7 +187,7 @@ internal static class HelperExifWriteSaveToFile
                                     attribute: attribute,
                                     version: DirectoryElement.AttributeVersion
                                                              .Stage3ReadyToWrite)
-                                ? dirElemFileToModify.GetAttributeValueString(
+                                ? dirElemFileToModify.GetAttributeValueAsString(
                                         attribute: attribute,
                                         version: DirectoryElement.AttributeVersion
                                                                  .Stage3ReadyToWrite,

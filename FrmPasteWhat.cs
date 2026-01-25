@@ -151,12 +151,12 @@ public partial class FrmPasteWhat : Form
     {
         HelperNonStatic helperNonstatic = new();
         HelperControlAndMessageBoxHandling.ReturnControlText(
-            cItem: this, senderForm: this);
+            control: this, senderForm: this);
 
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        foreach (Control cItem in c)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+        foreach (Control control in controls)
         {
-            if (cItem is Label or
+            if (control is Label or
                 GroupBox or
                 Button or
                 CheckBox or
@@ -166,7 +166,7 @@ public partial class FrmPasteWhat : Form
 
             {
                 HelperControlAndMessageBoxHandling.ReturnControlText(
-                    cItem: cItem, senderForm: this);
+                    control: control, senderForm: this);
             }
         }
 
@@ -207,7 +207,7 @@ public partial class FrmPasteWhat : Form
         ];
 
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
 
         ListView lvw;
 
@@ -239,18 +239,18 @@ public partial class FrmPasteWhat : Form
         List<ElementAttribute> tagsToPaste = [];
         LastCheckedCheckBoxes.Clear();
 
-        foreach (Control cItem in c)
+        foreach (Control control in controls)
         {
-            if (cItem.GetType() == typeof(CheckBox))
+            if (control.GetType() == typeof(CheckBox))
             {
-                CheckBox thisCheckBox = (CheckBox)cItem;
+                CheckBox thisCheckBox = (CheckBox)control;
                 if (thisCheckBox.Checked)
                 {
-                    string attributeString = cItem.Name.Substring(startIndex: 4);
+                    string attributeString = control.Name.Substring(startIndex: 4);
                     ElementAttribute attribute =
                         GetElementAttributesElementAttribute(
                             attributeToFind: attributeString);
-                    LastCheckedCheckBoxes.Add(item: cItem.Name);
+                    LastCheckedCheckBoxes.Add(item: control.Name);
 
                     // "EndsWith" doesn't work here because the CheckBox.Name never ends with "Shift".
                     if (attributeString is "TakenDate" or
@@ -379,7 +379,7 @@ public partial class FrmPasteWhat : Form
                             if (typeOfAttribute == typeof(string))
                             {
                                 pasteConvertible =
-                                    dirElemFileToCopyFrom.GetAttributeValueString(
+                                    dirElemFileToCopyFrom.GetAttributeValueAsString(
                                         attribute: attribute,
                                         version: maxAttributeVersion,
                                         nowSavingExif: false);
@@ -759,11 +759,10 @@ public partial class FrmPasteWhat : Form
                                        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c =
-            helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
-        foreach (Control cItem in c)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
+        foreach (Control control in controls)
         {
-            CheckBox thisCheckBox = (CheckBox)cItem;
+            CheckBox thisCheckBox = (CheckBox)control;
             thisCheckBox.Checked = true;
         }
     }
@@ -772,11 +771,10 @@ public partial class FrmPasteWhat : Form
                                         EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c =
-            helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
-        foreach (Control cItem in c)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
+        foreach (Control control in controls)
         {
-            CheckBox thisCheckBox = (CheckBox)cItem;
+            CheckBox thisCheckBox = (CheckBox)control;
             thisCheckBox.Checked = false;
         }
     }
@@ -785,12 +783,11 @@ public partial class FrmPasteWhat : Form
                                                        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c =
-            helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
-        foreach (Control cItem in c)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this, type: typeof(CheckBox));
+        foreach (Control control in controls)
         {
-            CheckBox thisCheckBox = (CheckBox)cItem;
-            thisCheckBox.Checked = LastCheckedCheckBoxes.Contains(item: cItem.Name);
+            CheckBox thisCheckBox = (CheckBox)control;
+            thisCheckBox.Checked = LastCheckedCheckBoxes.Contains(item: control.Name);
         }
     }
 
@@ -800,16 +797,16 @@ public partial class FrmPasteWhat : Form
                                        EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        foreach (Control cItem in c)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+        foreach (Control control in controls)
         {
-            if (cItem.GetType() == typeof(GroupBox) ||
-                cItem.GetType() == typeof(CheckBox))
+            if (control.GetType() == typeof(GroupBox) ||
+                control.GetType() == typeof(CheckBox))
             {
-                if (cItem.Parent.Name == "gbx_GPSData" &&
-                    cItem.GetType() == typeof(CheckBox))
+                if (control.Parent.Name == "gbx_GPSData" &&
+                    control.GetType() == typeof(CheckBox))
                 {
-                    CheckBox thisCheckBox = (CheckBox)cItem;
+                    CheckBox thisCheckBox = (CheckBox)control;
                     thisCheckBox.Checked = true;
                 }
             }
@@ -820,16 +817,16 @@ public partial class FrmPasteWhat : Form
                                         EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        foreach (Control cItem in c)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+        foreach (Control control in controls)
         {
-            if (cItem.GetType() == typeof(GroupBox) ||
-                cItem.GetType() == typeof(CheckBox))
+            if (control.GetType() == typeof(GroupBox) ||
+                control.GetType() == typeof(CheckBox))
             {
-                if (cItem.Parent.Name == "gbx_GPSData" &&
-                    cItem.GetType() == typeof(CheckBox))
+                if (control.Parent.Name == "gbx_GPSData" &&
+                    control.GetType() == typeof(CheckBox))
                 {
-                    CheckBox thisCheckBox = (CheckBox)cItem;
+                    CheckBox thisCheckBox = (CheckBox)control;
                     thisCheckBox.Checked = false;
                 }
             }
@@ -844,16 +841,16 @@ public partial class FrmPasteWhat : Form
                                             EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        foreach (Control cItem in c)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+        foreach (Control control in controls)
         {
-            if (cItem.GetType() == typeof(GroupBox) ||
-                cItem.GetType() == typeof(CheckBox))
+            if (control.GetType() == typeof(GroupBox) ||
+                control.GetType() == typeof(CheckBox))
             {
-                if (cItem.Parent.Name == "gbx_LocationData" &&
-                    cItem.GetType() == typeof(CheckBox))
+                if (control.Parent.Name == "gbx_LocationData" &&
+                    control.GetType() == typeof(CheckBox))
                 {
-                    CheckBox thisCheckBox = (CheckBox)cItem;
+                    CheckBox thisCheckBox = (CheckBox)control;
                     thisCheckBox.Checked = true;
                 }
             }
@@ -864,16 +861,16 @@ public partial class FrmPasteWhat : Form
                                              EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        foreach (Control cItem in c)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+        foreach (Control control in controls)
         {
-            if (cItem.GetType() == typeof(GroupBox) ||
-                cItem.GetType() == typeof(CheckBox))
+            if (control.GetType() == typeof(GroupBox) ||
+                control.GetType() == typeof(CheckBox))
             {
-                if (cItem.Parent.Name == "gbx_LocationData" &&
-                    cItem.GetType() == typeof(CheckBox))
+                if (control.Parent.Name == "gbx_LocationData" &&
+                    control.GetType() == typeof(CheckBox))
                 {
-                    CheckBox thisCheckBox = (CheckBox)cItem;
+                    CheckBox thisCheckBox = (CheckBox)control;
                     thisCheckBox.Checked = false;
                 }
             }
@@ -888,16 +885,16 @@ public partial class FrmPasteWhat : Form
                                      EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        foreach (Control cItem in c)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+        foreach (Control control in controls)
         {
-            if (cItem.GetType() == typeof(GroupBox) ||
-                cItem.GetType() == typeof(CheckBox))
+            if (control.GetType() == typeof(GroupBox) ||
+                control.GetType() == typeof(CheckBox))
             {
-                if (cItem.Parent.Name.Contains(value: "Date") &&
-                    cItem.GetType() == typeof(CheckBox))
+                if (control.Parent.Name.Contains(value: "Date") &&
+                    control.GetType() == typeof(CheckBox))
                 {
-                    CheckBox thisCheckBox = (CheckBox)cItem;
+                    CheckBox thisCheckBox = (CheckBox)control;
                     thisCheckBox.Checked = true;
                 }
             }
@@ -908,16 +905,16 @@ public partial class FrmPasteWhat : Form
                                       EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        foreach (Control cItem in c)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+        foreach (Control control in controls)
         {
-            if (cItem.GetType() == typeof(GroupBox) ||
-                cItem.GetType() == typeof(CheckBox))
+            if (control.GetType() == typeof(GroupBox) ||
+                control.GetType() == typeof(CheckBox))
             {
-                if (cItem.Parent.Name.Contains(value: "Date") &&
-                    cItem.GetType() == typeof(CheckBox))
+                if (control.Parent.Name.Contains(value: "Date") &&
+                    control.GetType() == typeof(CheckBox))
                 {
-                    CheckBox thisCheckBox = (CheckBox)cItem;
+                    CheckBox thisCheckBox = (CheckBox)control;
                     thisCheckBox.Checked = false;
                 }
             }

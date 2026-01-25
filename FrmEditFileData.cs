@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -70,83 +69,10 @@ public partial class FrmEditFileData : Form
         Log.Trace(message: "Defaults Starting");
         _frmEditFileDataNowLoadingFileData = true;
 
-        Log.Trace(
-            message:
-            "Emptying FrmMainApp.Stage1EditFormIntraTabTransferQueue + Stage2EditFormReadyToSaveAndMoveToWriteQueue");
-        foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
-        {
-            {
-                foreach (ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(
-                             enumType: typeof(ElementAttribute)))
-                {
-                    // empty queue
+        ClearDirectoryElementsTemporaryData();
+        EnableDateControlsAndSetDropdownDefaultValues();
 
-                    dirElemFileToModify.RemoveAttributeValue(
-                        attribute: attribute,
-                        version: DirectoryElement.AttributeVersion
-                                                 .Stage1EditFormIntraTabTransferQueue);
-
-                    // also empty the "original data" table
-
-                    dirElemFileToModify.RemoveAttributeValue(
-                        attribute: attribute,
-                        version: DirectoryElement.AttributeVersion
-                                                 .Stage2EditFormReadyToSaveAndMoveToWriteQueue);
-                }
-            }
-        }
-
-        Log.Trace(
-            message:
-            "Emptying FrmMainApp.Stage1EditFormIntraTabTransferQueue + Stage2EditFormReadyToSaveAndMoveToWriteQueue - Done");
-
-        Log.Trace(message: "Setting Dropdown defaults");
-        // Deal with Dates
-        // TakenDate
-        dtp_TakenDate.Enabled = true;
-        nud_TakenDateDaysShift.Enabled = false;
-        nud_TakenDateHoursShift.Enabled = false;
-        nud_TakenDateMinutesShift.Enabled = false;
-        nud_TakenDateSecondsShift.Enabled = false;
-
-        dtp_TakenDate.CustomFormat =
-            $"{CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern} {CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern}";
-
-        // CreateDate
-        dtp_CreateDate.Enabled = true;
-        nud_CreateDateDaysShift.Enabled = false;
-        nud_CreateDateHoursShift.Enabled = false;
-        nud_CreateDateMinutesShift.Enabled = false;
-        nud_CreateDateSecondsShift.Enabled = false;
-        dtp_CreateDate.CustomFormat =
-            $"{CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern} {CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern}";
-        ReturnControlText(
-            cItem: this, senderForm: this);
-
-        // fills the countries box
-
-        foreach (string country in GetCountries())
-        {
-            _ = cbx_Country.Items.Add(item: country);
-        }
-
-        // fills the country codes box
-        foreach (string countryCode in
-                 GetCountryCodes())
-        {
-            _ = cbx_CountryCode.Items.Add(item: countryCode);
-        }
-
-        // load TZ-CBX
-        foreach (string timezone in GetTimeZones())
-        {
-            _ = cbx_OffsetTime.Items.Add(item: timezone);
-        }
-
-        Log.Trace(message: "Setting Dropdown defaults - Done");
-
-        // this updates the listview itself
-
+        // we select the first item in the listview (while ensuring there is _something_ in the lvw.)
         if (lvw_FileListEditImages.Items.Count > 0)
         {
             Log.Trace(message: "ListViewSelect Start");
@@ -177,30 +103,108 @@ public partial class FrmEditFileData : Form
     }
 
     /// <summary>
+    /// We set various controls to enabled/disabled upon loading this Form
+    /// </summary>
+    private void EnableDateControlsAndSetDropdownDefaultValues()
+    {
+        Log.Trace(message: "Setting Dropdown defaults");
+        // Deal with Dates
+        // TakenDate
+        dtp_TakenDate.Enabled = true;
+        nud_TakenDateDaysShift.Enabled = false;
+        nud_TakenDateHoursShift.Enabled = false;
+        nud_TakenDateMinutesShift.Enabled = false;
+        nud_TakenDateSecondsShift.Enabled = false;
+
+        dtp_TakenDate.CustomFormat =
+            $"{CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern} {CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern}";
+
+        // CreateDate
+        dtp_CreateDate.Enabled = true;
+        nud_CreateDateDaysShift.Enabled = false;
+        nud_CreateDateHoursShift.Enabled = false;
+        nud_CreateDateMinutesShift.Enabled = false;
+        nud_CreateDateSecondsShift.Enabled = false;
+        dtp_CreateDate.CustomFormat =
+            $"{CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern} {CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern}";
+        ReturnControlText(
+            control: this, senderForm: this);
+
+        // fills the countries box
+
+        foreach (string country in GetCountries())
+        {
+            _ = cbx_Country.Items.Add(item: country);
+        }
+
+        // fills the country codes box
+        foreach (string countryCode in
+                 GetCountryCodes())
+        {
+            _ = cbx_CountryCode.Items.Add(item: countryCode);
+        }
+
+        // load TZ-CBX
+        foreach (string timezone in GetTimeZones())
+        {
+            _ = cbx_OffsetTime.Items.Add(item: timezone);
+        }
+
+        Log.Trace(message: "Setting Dropdown defaults - Done");
+    }
+
+    /// <summary>
+    /// Clears all the temporary ("stage 1" and "stage 2" data) for all the DEs
+    /// </summary>
+    private static void ClearDirectoryElementsTemporaryData()
+    {
+        Log.Trace(
+            message:
+            "Emptying FrmMainApp.Stage1EditFormIntraTabTransferQueue + Stage2EditFormReadyToSaveAndMoveToWriteQueue");
+
+        foreach ((DirectoryElement dirElemFileToModify, ElementAttribute attribute) in from DirectoryElement dirElemFileToModify in DirectoryElements
+                                                                                       from ElementAttribute attribute in (ElementAttribute[])Enum.GetValues(
+                                                                   enumType: typeof(ElementAttribute))
+                                                                                       select (dirElemFileToModify, attribute))
+        {
+            dirElemFileToModify.RemoveAttributeValue(
+                attribute: attribute,
+                version: DirectoryElement.AttributeVersion
+                                         .Stage1EditFormIntraTabTransferQueue);
+
+            // also empty the "original data" table
+
+            dirElemFileToModify.RemoveAttributeValue(
+                attribute: attribute,
+                version: DirectoryElement.AttributeVersion
+                                         .Stage2EditFormReadyToSaveAndMoveToWriteQueue);
+        }
+
+        Log.Trace(
+           message:
+           "Emptying FrmMainApp.Stage1EditFormIntraTabTransferQueue + Stage2EditFormReadyToSaveAndMoveToWriteQueue - Done");
+
+    }
+
+    /// <summary>
     ///     This method is responsible for retrieving the text values for the Controls in the Form.
     ///     For labels, buttons, etc., this is their "language" label (e.g., "Latitude").
     ///     For textboxes and similar controls, this is the value (e.g., "51.002").
     ///     The method also handles the assignment of these values to the corresponding controls.
     /// </summary>
-    private void lvw_EditorFileListImagesGetData()
+    private void ShowDEDataInRelevantControls(DirectoryElement dirElemFileToModify)
     {
         Logger log = Log;
         Log.Info(message: "Starting");
 
         _frmEditFileDataNowLoadingFileData = true;
 
-        ListView lvw = lvw_FileListEditImages;
-        ListViewItem lvi = lvw.SelectedItems[index: 0];
-        lvw.Columns[index: 0]
-           .Width = lvw.Width;
-
-        string fileNameWithoutPath = lvi.Text;
-        DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
         btn_InsertFromTakenDate.Enabled = false;
 
         Log.Trace(message: "Assinging Labels Start");
         HelperNonStatic helperNonstatic = new();
+
+        /// The types of Controls for which values _do not_ come from the selected DE
         List<Type> lstControlTypesNoDEValue =
         [
             typeof(Label),
@@ -210,6 +214,8 @@ public partial class FrmEditFileData : Form
             typeof(TabPage),
             typeof(RadioButton)
         ];
+
+        /// The types of Controls for which values _do_ come from the selected DE
         List<Type> lstControlTypesWithDEValue =
         [
             typeof(TextBox),
@@ -218,31 +224,33 @@ public partial class FrmEditFileData : Form
             typeof(NumericUpDown)
         ];
 
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        foreach (Control cItem in c)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+
+        /// For each control we attempt to get their values
+        foreach (Control control in controls)
         {
-            if (lstControlTypesNoDEValue.Contains(item: cItem.GetType()) ||
-                lstControlTypesWithDEValue.Contains(item: cItem.GetType()))
+            if (lstControlTypesNoDEValue.Contains(item: control.GetType()) ||
+                lstControlTypesWithDEValue.Contains(item: control.GetType()))
             {
                 // this is for debugging only (particularly here, that is.)
-                string debugItemName = cItem.Name;
+                string debugItemName = control.Name;
                 string controlNameWithoutTypeIdentifier;
 
                 try
                 {
-                    Log.Trace(message: $"cItem: {debugItemName} (Type: {cItem.GetType().Name}) - Starting.");
+                    Log.Trace(message: $"control: {debugItemName} (Type: {control.GetType().Name}) - Starting.");
 
-                    if (lstControlTypesNoDEValue.Contains(item: cItem.GetType()))
+                    if (lstControlTypesNoDEValue.Contains(item: control.GetType()))
                     {
                         // gets logged inside.
-                        ReturnControlText(cItem: cItem, senderForm: this);
+                        ReturnControlText(control: control, senderForm: this);
                     }
 
-                    else if (lstControlTypesWithDEValue.Contains(item: cItem.GetType()))
+                    else if (lstControlTypesWithDEValue.Contains(item: control.GetType()))
                     {
-                        // this gets the name of the Control without the type (e.g. tbx_SomethingAttrib becomes SomethingAttrib)
-                        controlNameWithoutTypeIdentifier =
-                            cItem.Name.Substring(startIndex: 4);
+                        // this gets the name of the Control without the type
+                        // (e.g. tbx_SomethingAttrib becomes SomethingAttrib)
+                        controlNameWithoutTypeIdentifier = control.Name.Substring(startIndex: 4);
 
                         // get the ElementAttribute
                         ElementAttribute attribute =
@@ -250,7 +258,7 @@ public partial class FrmEditFileData : Form
                                 attributeToFind: controlNameWithoutTypeIdentifier);
 
                         // get the AttributeVersion maxAttributeVersion
-                        string stringValueOfCItem = NullStringEquivalentBlank;
+                        string stringValueOfControl = NullStringEquivalentBlank;
                         DirectoryElement.AttributeVersion maxAttributeVersion =
                             GetDEAttributeMaxAttributeVersion(
                                 directoryElement: dirElemFileToModify,
@@ -267,24 +275,24 @@ public partial class FrmEditFileData : Form
                             !string.IsNullOrWhiteSpace(
                                 value: dataInDirectoryElement.ToString()))
                         {
-                            stringValueOfCItem =
+                            stringValueOfControl =
                                 dataInDirectoryElement.ToString(
                                     provider: CultureInfo.InvariantCulture);
-                            cItem.Font = new Font(prototype: cItem.Font,
+                            control.Font = new Font(prototype: control.Font,
                                 newStyle: FontStyle.Regular);
 
                             // technically this doesn't belong here as an overall-enabler but the code inside checks for details
-                            EnableDateTimeItems(cItem: cItem);
+                            EnableDateTimeItems(control: control);
                         }
                         else
                         {
-                            // if it's none of the further below then make the cItem be just blank.
-                            cItem.Text = NullStringEquivalentBlank;
+                            // if it's none of the further below then make the control be just blank.
+                            control.Text = NullStringEquivalentBlank;
 
                             // okay for gbx_*Date && !NUD -> those are DateTimePickers.
                             // If they are NULL then there is either no TakenDate or no CreateDate so the actual controls will have to be disabled.
                             // technically this doesn't belong here as an overall-enabler but the code inside checks for details
-                            DisableDateTimeItems(cItem: cItem);
+                            DisableDateTimeItems(control: control);
                         }
 
                         // wrangle the data
@@ -292,38 +300,38 @@ public partial class FrmEditFileData : Form
                         {
                             // stick into DE2 ("pending save") - this is to see if the data has changed later.
 
-                            if (cItem is not NumericUpDown nud)
+                            if (control is not NumericUpDown nud)
                             {
                                 // this is related to storing the default DateTimes for TakenDate and CreateDate
                                 // what we also need to do here is account for any copy-paste shifts.
-                                if (cItem is DateTimePicker dtp)
+                                if (control is DateTimePicker dtp)
                                 {
                                     HandleDateTimePickerTimeShift(dtp: dtp,
                                         directoryElement:
                                         dirElemFileToModify,
-                                        cItem: cItem,
+                                        control: control,
                                         maxAttributeVersion:
                                         maxAttributeVersion);
                                 }
                                 else
                                 {
-                                    cItem.Text = stringValueOfCItem;
+                                    control.Text = stringValueOfControl;
                                 }
 
                                 Log.Trace(message:
-                                    $"cItem: {cItem.Name} - Adding to Stage2EditFormReadyToSaveAndMoveToWriteQueue");
+                                    $"control: {control.Name} - Adding to Stage2EditFormReadyToSaveAndMoveToWriteQueue");
 
                                 dirElemFileToModify.SetAttributeValueAnyType(
                                     attribute: attribute,
-                                    value: stringValueOfCItem,
+                                    value: stringValueOfControl,
                                     version: DirectoryElement.AttributeVersion
                                                              .Stage2EditFormReadyToSaveAndMoveToWriteQueue,
                                     isMarkedForDeletion: false);
                             }
-                            else // if (cItem is NumericUpDown nud)
+                            else // if (control is NumericUpDown nud)
                             {
                                 nud.Value = Convert.ToDecimal(
-                                    value: stringValueOfCItem,
+                                    value: stringValueOfControl,
                                     provider: CultureInfo.InvariantCulture);
 
                                 if (nud.Name.EndsWith(value: "Shift") &&
@@ -356,10 +364,10 @@ public partial class FrmEditFileData : Form
                             }
 
                             // these don't have a "simple" text solution
-                            if (cItem.Name == "cbx_CountryCode") // this will also fill in Country
+                            if (control.Name == "cbx_CountryCode") // this will also fill in Country
                             {
                                 string countryCodeInDirectoryElement =
-                                    stringValueOfCItem;
+                                    stringValueOfControl;
                                 if (countryCodeInDirectoryElement != null &&
                                     !string.IsNullOrEmpty(
                                         value: countryCodeInDirectoryElement.ToString(
@@ -378,10 +386,10 @@ public partial class FrmEditFileData : Form
                                     cbx_Country.Text = sqliteText;
                                 }
                             }
-                            else if (cItem.Name == "cbx_OffsetTime")
+                            else if (control.Name == "cbx_OffsetTime")
                             {
                                 // don't select anything in this case. see longer comment below.
-                                ComboBox cbx = cItem as ComboBox;
+                                ComboBox cbx = control as ComboBox;
                                 cbx.SelectedIndex = -1;
                             }
 
@@ -389,11 +397,11 @@ public partial class FrmEditFileData : Form
                             // While the code works fine it's a source of confusion as Uses-DST isn't currently stored...
                             // anywhere and so upon reopening the Form this could lead to undesired results. ...
                             // I'll ponder on some reasonable ways to handle it if there's interest.
-                            //else if (cItem.Name == "cbx_OffsetTime")
+                            //else if (control.Name == "cbx_OffsetTime")
                             //{
                             //    // attempt to convert offset to a member of the list
                             //    string offsetTimeInDirectoryElement =
-                            //        dirElemFileToModify.GetAttributeValueString(
+                            //        dirElemFileToModify.GetAttributeValueAsString(
                             //            attribute: ElementAttribute.OffsetTime,
                             //            version: maxAttributeVersion);
                             //    if (offsetTimeInDirectoryElement != null &&
@@ -411,8 +419,8 @@ public partial class FrmEditFileData : Form
 
                         if (maxAttributeVersion != DirectoryElement.AttributeVersion.Original)
                         {
-                            cItem.Font =
-                                new Font(prototype: cItem.Font,
+                            control.Font =
+                                new Font(prototype: control.Font,
                                     newStyle: FontStyle.Bold);
                         }
                     }
@@ -422,7 +430,7 @@ public partial class FrmEditFileData : Form
                     // ignored
                 }
 
-                Log.Trace(message: $"cItem: {cItem.Name} (Type: {cItem.GetType()
+                Log.Trace(message: $"control: {control.Name} (Type: {control.GetType()
                                                                       .Name}) - Done.");
             }
         }
@@ -434,14 +442,14 @@ public partial class FrmEditFileData : Form
         _frmEditFileDataNowLoadingFileData = false;
         return;
 
-        void DisableDateTimeItems(Control cItem)
+        void DisableDateTimeItems(Control control)
         {
-            if (cItem.Parent.Name.StartsWith(value: "gbx_") &&
-                cItem.Parent.Name.EndsWith(value: "Date"))
+            if (control.Parent.Name.StartsWith(value: "gbx_") &&
+                control.Parent.Name.EndsWith(value: "Date"))
             {
-                if (cItem is not NumericUpDown nud)
+                if (control is not NumericUpDown nud)
                 {
-                    if (cItem.Parent.Name == "gbx_TakenDate")
+                    if (control.Parent.Name == "gbx_TakenDate")
                     {
                         EnableSpecificControlAndDisableOthers(
                             parentControl: gbx_TakenDate,
@@ -452,7 +460,7 @@ public partial class FrmEditFileData : Form
                                                    c != btn_InsertTakenDate)
                                               .ToList());
                     }
-                    else if (cItem.Parent.Name == "gbx_CreateDate")
+                    else if (control.Parent.Name == "gbx_CreateDate")
                     {
                         EnableSpecificControlAndDisableOthers(
                             parentControl: gbx_CreateDate,
@@ -465,7 +473,7 @@ public partial class FrmEditFileData : Form
                     }
                 }
 
-                else // cItem is nud
+                else // control is nud
                 {
                     nud.Value = NullIntEquivalent;
                     nud.Text = NullStringEquivalentZero;
@@ -473,27 +481,27 @@ public partial class FrmEditFileData : Form
             }
         }
 
-        void EnableDateTimeItems(Control cItem)
+        void EnableDateTimeItems(Control control)
         {
             // if this is a TakenDate or CreateDate -related
-            if (cItem.Parent.Name.StartsWith(value: "gbx_") &&
-                cItem.Parent.Name.EndsWith(value: "Date") &&
-                cItem is not NumericUpDown)
+            if (control.Parent.Name.StartsWith(value: "gbx_") &&
+                control.Parent.Name.EndsWith(value: "Date") &&
+                control is not NumericUpDown)
             {
                 // this code block deals with enabling and disabling the Controls on whether there is data behind.
-                if (cItem.Parent.Name == "gbx_TakenDate")
+                if (control.Parent.Name == "gbx_TakenDate")
                 {
-                    IEnumerable<Control> cGbx_TakenDate =
+                    IEnumerable<Control> controlsInsideGbx_TakenDate =
                         helperNonstatic.GetAllControls(
                             control: gbx_TakenDate);
                     List<Control> controlsToEnable = [];
                     List<Control> controlsToDisable = [btn_InsertTakenDate];
-                    foreach (Control cItemGbx_TakenDate in cGbx_TakenDate)
+                    foreach (Control controlInsideGbx_TakenDate in controlsInsideGbx_TakenDate)
                     {
-                        if (cItemGbx_TakenDate != btn_InsertTakenDate)
+                        if (controlInsideGbx_TakenDate != btn_InsertTakenDate)
                         {
                             controlsToEnable.Add(
-                                item: cItemGbx_TakenDate);
+                                item: controlInsideGbx_TakenDate);
                         }
                     }
 
@@ -502,20 +510,20 @@ public partial class FrmEditFileData : Form
                         controlsToEnable: controlsToEnable,
                         controlsToDisable: controlsToDisable);
                 }
-                else if (cItem.Parent.Name == "gbx_CreateDate")
+                else if (control.Parent.Name == "gbx_CreateDate")
                 {
-                    IEnumerable<Control> cGbx_CreateDate =
+                    IEnumerable<Control> controlsInsideGbx_CreateDate =
                         helperNonstatic.GetAllControls(
                             control: gbx_CreateDate);
                     List<Control> controlsToEnable = [];
                     List<Control> controlsToDisable = [btn_InsertCreateDate];
-                    foreach (Control cItemGbx_CreateDate in
-                             cGbx_CreateDate)
+                    foreach (Control controlInsideGbx_CreateDate in
+                             controlsInsideGbx_CreateDate)
                     {
-                        if (cItemGbx_CreateDate != btn_InsertCreateDate)
+                        if (controlInsideGbx_CreateDate != btn_InsertCreateDate)
                         {
                             controlsToEnable.Add(
-                                item: cItemGbx_CreateDate);
+                                item: controlInsideGbx_CreateDate);
                         }
                     }
 
@@ -527,10 +535,9 @@ public partial class FrmEditFileData : Form
             }
         }
 
-        [SuppressMessage(category: "ReSharper", checkId: "PossibleInvalidOperationException")]
         void HandleDateTimePickerTimeShift(DateTimePicker dtp,
                                            DirectoryElement directoryElement,
-                                           Control cItem,
+                                           Control control,
                                            DirectoryElement.AttributeVersion
                                                maxAttributeVersion)
         {
@@ -574,7 +581,7 @@ public partial class FrmEditFileData : Form
                     : directoryElementDateTimeMaxVersion;
             }
 
-            Log.Trace(message: $"cItem: {cItem.Name} - Updating DateTimePicker");
+            Log.Trace(message: $"control: {control.Name} - Updating DateTimePicker");
             if (maxAttributeVersion !=
                 DirectoryElement.AttributeVersion.Original ||
                 totalShiftedSeconds != 0)
@@ -596,8 +603,6 @@ public partial class FrmEditFileData : Form
     ///     The value of the specified attribute from the given directory element as an IConvertible, or null if the
     ///     attribute value is equivalent to the null equivalent for its type.
     /// </returns>
-
-
     private static IConvertible GetDataInDEForAttribute(DirectoryElement directoryElement,
         ElementAttribute attribute,
         DirectoryElement.AttributeVersion
@@ -608,7 +613,7 @@ public partial class FrmEditFileData : Form
         Type typeOfAttribute = GetElementAttributesType(attributeToFind: attribute);
         if (typeOfAttribute == typeof(string))
         {
-            returnDataInDirectoryElement = directoryElement.GetAttributeValueString(
+            returnDataInDirectoryElement = directoryElement.GetAttributeValueAsString(
                 attribute: attribute,
                 version: maxAttributeVersion, nowSavingExif: false);
 
@@ -761,8 +766,6 @@ public partial class FrmEditFileData : Form
     ///     The highest version of the specified attribute in the directory element. Returns null if no version of the
     ///     attribute is found.
     /// </returns>
-
-
     private static DirectoryElement.AttributeVersion GetDEAttributeMaxAttributeVersion(
         DirectoryElement directoryElement,
         ElementAttribute attribute)
@@ -784,7 +787,7 @@ public partial class FrmEditFileData : Form
     }
 
 
-    #region object events
+    #region Object events
 
     /// <summary>
     ///     Pulls data for the various "Get (All) From Web" buttons depending which actual button has been pressed.
@@ -793,383 +796,341 @@ public partial class FrmEditFileData : Form
     /// </summary>
     /// <param name="sender">The object that has been interacted with</param>
     /// <param name="e">Unused</param>
-    private void btn_getFromWeb_Click(object sender,
-        EventArgs e)
+    private void btn_getFromWeb_Click(object sender, EventArgs e)
     {
-        _ = new DataTable();
-        _ =
-            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-
-        //reset this just in case.
+        // reset OperationAPIReturnedOKResponse just in case.
         HelperVariables.OperationAPIReturnedOKResponse = true;
-
         switch (((Button)sender).Name)
         {
             case "btn_getFromWeb_Toponomy":
-                GetFromWeb_Toponomy(fileNameWithoutPath: "");
+                GetToponomyDataFromLocalStorage(
+                    dirElemFileToModify: lvw_FileListEditImages.SelectedItems[0].Tag as DirectoryElement,
+                    dirElementIsTheCurrentlySelectedDE: true
+                    );
                 break;
             case "btn_getAllFromWeb_Toponomy":
-                foreach (ListViewItem lvi in lvw_FileListEditImages.Items)
+                foreach (ListViewItem lvi in from ListViewItem lvi in lvw_FileListEditImages.Items
+                                             let directoryElement = lvi.Tag as DirectoryElement
+                                             select lvi)
                 {
-                    string fileName = lvi.Text;
-                    // for "this" file do the same as "normal" getfromweb
-                    if (fileName ==
-                        lvw_FileListEditImages.SelectedItems[index: 0]
-                                              .Text)
-                    {
-                        GetFromWeb_Toponomy(fileNameWithoutPath: "");
-                        // no need to write back to sql because it's done automatically on textboxChange
-                    }
-                    else
-                    {
-                        GetFromWeb_Toponomy(fileNameWithoutPath: lvi.Text);
-                        // get lat/long from main listview
-                        lvi.ForeColor = Color.Red;
-                    }
+                    GetToponomyDataFromLocalStorage(
+                        dirElemFileToModify: lvi.Tag as DirectoryElement,
+                        dirElementIsTheCurrentlySelectedDE: lvi == lvw_FileListEditImages.SelectedItems[0]
+                        );
+
+                    lvi.ForeColor = Color.Red;
                 }
 
                 break;
             default:
-                // took me a while to understand my own code. what we are doing here is that we are trying to tell the user (and by proxy, the developer) that something other than the two buttons defined above have been pressed.
+                // took me a while to understand my own code.
+                // what we are doing here is that we are trying to tell the user (and by proxy, the developer)
+                // that something other than the two buttons defined above have been pressed.
                 Themer.ShowMessageBox(
                     message: HelperControlAndMessageBoxHandling.ReturnControlText(
                         controlName: "mbx_FrmEditFileData_ErrorInvalidSender",
-                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
-                        ) +
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox) +
                         Environment.NewLine + $"{((Button)sender).Name}",
                     icon: MessageBoxIcon.Error,
                     buttons: MessageBoxButtons.OK);
                 break;
         }
 
+        // show a messagebox to inform if things have been okay
         string messageBoxName = HelperVariables.OperationAPIReturnedOKResponse
-            ? "mbx_FrmEditFileData_InfoDataUpdated"
-            : "mbx_FrmEditFileData_ErrorAPIError";
+               ? "mbx_FrmEditFileData_InfoDataUpdated"
+               : "mbx_FrmEditFileData_ErrorAPIError";
 
         MessageBoxIcon messageBoxIcon = HelperVariables.OperationAPIReturnedOKResponse
-            ? MessageBoxIcon.Information
-            : MessageBoxIcon.Error;
+               ? MessageBoxIcon.Information
+               : MessageBoxIcon.Error;
 
         Themer.ShowMessageBox(
             message: HelperControlAndMessageBoxHandling.ReturnControlText(
                 controlName: messageBoxName,
-                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-            icon: messageBoxIcon,
-            buttons: MessageBoxButtons.OK);
-
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                    icon: messageBoxIcon,
+                    buttons: MessageBoxButtons.OK);
     }
 
+
     /// <summary>
-    ///     Pulls data from the various APIs and fills up the listView and fills the TextBoxes and/or SQLite.
+    ///     Pulls data from local storage and fills up the listView and fills the Controls and DataTable.
     /// </summary>
-    /// <param name="fileNameWithoutPath">Blank if used as "pull one file" otherwise the name of the file w/o Path</param>
-    private void GetFromWeb_Toponomy(string fileNameWithoutPath = "")
+    /// <param name="dirElemFileToModify">The DirectoryElement for which we want to pull the data</param>
+    /// <param name="dirElementIsTheCurrentlySelectedDE">Whether this is the currently selected ListViewItem</param>
+    /// <remarks>dirElementIsTheCurrentlySelectedDE matters because we don't want to update the various controls for items not
+    /// curently selected so we keep a tally of that</remarks>
+    private void GetToponomyDataFromLocalStorage(
+        DirectoryElement dirElemFileToModify,
+        bool dirElementIsTheCurrentlySelectedDE)
     {
-        FrmMainApp frmMainAppInstance =
-            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        DateTime
-            createDate =
-                NullDateTimeEquivalent; // can't leave it null because it's updated in various IFs and C# perceives it as uninitialised.
+        // Can't leave it null because it's updated in various IFs and C# perceives it as uninitialised.
+        DateTime createDate = NullDateTimeEquivalent;
 
-        string strGpsLatitude = null;
-        string strGpsLongitude = null;
-
-        // this is a datatable to store all existing toponomy data either pulled from sql or the web for the session
+        // This is a datatable to store all existing toponomy data either pulled from sql or
+        // the web for the session
         DataTable dtLocallyStoredToponomyData = new();
 
-        // this is "current file"
-        if (fileNameWithoutPath == "")
+        string strGPSLatitude = NullStringEquivalentBlank;
+        string strGPSLongitude = NullStringEquivalentBlank;
+        HelperVariables.CurrentAltitudeAsString = NullStringEquivalentBlank;
+
+        // we attempt to ensure there is lat/long value (+ altitude)
+        if (dirElementIsTheCurrentlySelectedDE)
         {
-            if (nud_GPSLatitude.Text != "" &&
-                nud_GPSLongitude.Text != "")
+            if (nud_GPSLatitude.Text != "" && nud_GPSLongitude.Text != "")
             {
-                strGpsLatitude =
-                    nud_GPSLatitude.Value.ToString(
-                        provider: CultureInfo.InvariantCulture);
-                strGpsLongitude =
-                    nud_GPSLongitude.Value.ToString(
-                        provider: CultureInfo.InvariantCulture);
+                strGPSLatitude = nud_GPSLatitude.Value.ToString(provider: CultureInfo.InvariantCulture);
+                strGPSLongitude = nud_GPSLongitude.Value.ToString(provider: CultureInfo.InvariantCulture);
 
-                HelperVariables.CurrentAltitude = null;
-                HelperVariables.CurrentAltitude =
-                    nud_GPSAltitude.Text.ToString(provider: CultureInfo.InvariantCulture);
-
-                dtLocallyStoredToponomyData =
-                    HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(
-                        lat: strGpsLatitude,
-                        lng: strGpsLongitude,
-                        fileNameWithoutPath: fileNameWithoutPath,
-                        useDefaultHardcodedEnglishValues: true);
+                HelperVariables.CurrentAltitudeAsString = nud_GPSAltitude.Text.ToString(provider: CultureInfo.InvariantCulture);
             }
         }
-
-        // this is all the other files
         else
         {
-            if (frmMainAppInstance != null)
-            {
-                HelperVariables.CurrentAltitude = null;
-                HelperVariables.CurrentAltitude = frmMainAppInstance.lvw_FileList
-                                                                    .FindItemWithText(text: fileNameWithoutPath)
-                                                                    .SubItems[index: frmMainAppInstance
-                                                                        .lvw_FileList
-                                                                        .Columns[
-                                                                             key: FileListView.COL_NAME_PREFIX +
-                                                                             FileListView.FileListColumns.GPS_ALTITUDE]
-                                                                        .Index]
-                                                                    .Text.ToString(
-                                                                         provider: CultureInfo.InvariantCulture);
+            strGPSLatitude = dirElemFileToModify.GetAttributeValueAsString(
+                attribute: ElementAttribute.GPSLatitude,
+                version: dirElemFileToModify.GetMaxAttributeVersion(
+                    attribute: ElementAttribute.GPSLatitude),
+                notFoundValue: null);
 
-                strGpsLatitude = frmMainAppInstance
-                                .lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
-                                .SubItems[index: frmMainAppInstance.lvw_FileList
-                                                                   .Columns[
-                                                                        key: FileListView.COL_NAME_PREFIX +
-                                                                             FileListView.FileListColumns.GPS_LATITUDE]
-                                                                   .Index]
-                                .Text.ToString(provider: CultureInfo.InvariantCulture);
-                strGpsLongitude = frmMainAppInstance
-                                 .lvw_FileList.FindItemWithText(text: fileNameWithoutPath)
-                                 .SubItems[index: frmMainAppInstance.lvw_FileList
-                                                                    .Columns[
-                                                                         key: FileListView.COL_NAME_PREFIX +
-                                                                              FileListView.FileListColumns
-                                                                                 .GPS_LONGITUDE]
-                                                                    .Index]
-                                 .Text.ToString(provider: CultureInfo.InvariantCulture);
-                string strCreateDate = frmMainAppInstance
-                                      .lvw_FileList
-                                      .FindItemWithText(text: fileNameWithoutPath)
-                                      .SubItems[
-                                           index: frmMainAppInstance.lvw_FileList
-                                                                    .Columns[
-                                                                         key: FileListView.COL_NAME_PREFIX +
-                                                                              FileListView.FileListColumns.CREATE_DATE]
-                                                                    .Index]
-                                      .Text.ToString(
-                                           provider: CultureInfo.InvariantCulture);
-                _ = DateTime.TryParse(
-                   s: strCreateDate.ToString(provider: CultureInfo.InvariantCulture),
-                   result: out createDate);
-            }
+            strGPSLongitude = dirElemFileToModify.GetAttributeValueAsString(
+                attribute: ElementAttribute.GPSLongitude,
+                version: dirElemFileToModify.GetMaxAttributeVersion(
+                    attribute: ElementAttribute.GPSLongitude),
+                notFoundValue: null);
 
-            // if there is a lag + long we try to read the toponomy data belonging to it from sql and web
-            if (double.TryParse(s: strGpsLatitude,
-                    style: NumberStyles.Any,
-                    provider: CultureInfo.InvariantCulture,
-                    result: out _) &&
-                double.TryParse(s: strGpsLongitude,
-                    style: NumberStyles.Any,
-                    provider: CultureInfo.InvariantCulture,
-                    result: out _))
+            HelperVariables.CurrentAltitudeAsString = dirElemFileToModify.GetAttributeValueAsString(
+                attribute: ElementAttribute.GPSAltitude,
+                version: dirElemFileToModify.GetMaxAttributeVersion(
+                    attribute: ElementAttribute.GPSAltitude),
+                notFoundValue: null);
+
+            string strCreateDate = dirElemFileToModify.GetAttributeValueAsString(
+                attribute: ElementAttribute.CreateDate,
+                version: dirElemFileToModify.GetMaxAttributeVersion(
+                    attribute: ElementAttribute.CreateDate),
+                notFoundValue: null);
+
+            _ = DateTime.TryParse(
+               s: strCreateDate.ToString(provider: CultureInfo.InvariantCulture),
+               result: out createDate);
+        }
+
+        // if there is a lat + long we try to read the toponomy data belonging to it from sql and web
+        if (!string.IsNullOrEmpty(strGPSLatitude) && !string.IsNullOrEmpty(strGPSLongitude))
+        {
+            dtLocallyStoredToponomyData =
+                HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(
+                    lat: strGPSLatitude,
+                    lng: strGPSLongitude,
+                    fileNameWithoutPath: dirElemFileToModify.ItemNameWithoutPath);
+        }
+        // for debugging's sake, the "all other files" ends here/above.
+
+        /// A list (should be dict) of values that belong to the selected lat/lng combination (ie country code, country etc.)
+        List<(ElementAttribute attribute, string toponomyOverwriteVal)>
+            locallyStoredToponomyDataForLatLng = [];
+
+        /// Value of the TimeZone as string. 
+        string TZ = string.Empty;
+
+        // Exit if no valid data.
+        if (dtLocallyStoredToponomyData == null || dtLocallyStoredToponomyData.Rows.Count <= 0)
+        {
+            return;
+        }
+
+
+        try
+        {
+            locallyStoredToponomyDataForLatLng.Add(item: (
+                ElementAttribute.CountryCode,
+                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]]}"));
+            locallyStoredToponomyDataForLatLng.Add(item: (
+                ElementAttribute.Country,
+                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]]}"));
+            locallyStoredToponomyDataForLatLng.Add(item: (
+                ElementAttribute.City,
+                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]]}"));
+            locallyStoredToponomyDataForLatLng.Add(item: (
+                ElementAttribute.State,
+                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]]}"));
+            locallyStoredToponomyDataForLatLng.Add(item: (
+                ElementAttribute.Sublocation,
+                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]]}"));
+            locallyStoredToponomyDataForLatLng.Add(item: (
+                ElementAttribute.GPSAltitude,
+                $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude, true)]]}"));
+
+            TZ = $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]]}";
+        }
+
+        catch (Exception ex)
+        {
+            // If we get here tbh I f..d up the naming of the table cols but the app shouldn't crash
+            // Ref ticket #197
+            Debug.Print(ex.Message);
+        }
+
+        // If this is dirElementIsTheCurrentlySelectedDE we update the relevant Controls
+        if (dirElementIsTheCurrentlySelectedDE)
+        {
+            _ = DateTime.TryParse(
+               s: tbx_CreateDate.Text.ToString(
+                   provider: CultureInfo.InvariantCulture), result: out createDate);
+
+            SetTimeZoneComboBoxForCurrentlySelectedDE(
+                createDate: createDate,
+                toponomyOverwrites: locallyStoredToponomyDataForLatLng,
+                TZ: TZ,
+                tzStartInt: 18);
+
+            Dictionary<ElementAttribute, Control> controlPairs = new() {
+                    { ElementAttribute.CountryCode, cbx_CountryCode },
+                    { ElementAttribute.Country, cbx_Country},
+                    { ElementAttribute.City, tbx_City },
+                    { ElementAttribute.State, tbx_State },
+                    { ElementAttribute.Sublocation, tbx_Sublocation },
+                    { ElementAttribute.GPSAltitude, nud_GPSAltitude },
+                    { ElementAttribute.OffsetTime, tbx_OffsetTime }
+                };
+
+            foreach ((ElementAttribute attribute, string toponomyOverwriteVal) in locallyStoredToponomyDataForLatLng)
             {
-                dtLocallyStoredToponomyData =
-                    HelperExifReadExifData.DTFromAPIExifGetToponomyFromWebOrSQL(
-                        lat: strGpsLatitude,
-                        lng: strGpsLongitude,
-                        fileNameWithoutPath: fileNameWithoutPath,
-                        useDefaultHardcodedEnglishValues: true);
+                Control control = controlPairs[attribute];
+                control.Text = toponomyOverwriteVal;
+                if (control is NumericUpDown nud)
+                {
+                    nud.Value = Convert.ToDecimal(
+                                value: toponomyOverwriteVal,
+                                provider: CultureInfo.InvariantCulture);
+                }
             }
         }
 
-        // for debugging's sake, the "all other files" ends here/above.
-
-        List<(ElementAttribute attribute, string toponomyOverwriteVal)>
-            toponomyOverwrites = [];
-        if (dtLocallyStoredToponomyData != null &&
-            dtLocallyStoredToponomyData.Rows.Count > 0)
+        // Another file; we don't care about Controls
+        else
         {
-            string TZ = string.Empty; // had to move this out of the try/catch block
+            // this is about TZ only. scroll down for the rest
             try
             {
-                toponomyOverwrites.Add(item: (
-                    ElementAttribute.CountryCode,
-                    $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]]}"));
-                toponomyOverwrites.Add(item: (
-                    ElementAttribute.Country,
-                    $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]]}"));
-                toponomyOverwrites.Add(item: (
-                    ElementAttribute.City,
-                    $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]]}"));
-                toponomyOverwrites.Add(item: (
-                    ElementAttribute.State,
-                    $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]]}"));
-                toponomyOverwrites.Add(item: (
-                    ElementAttribute.Sublocation,
-                    $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]]}"));
-                toponomyOverwrites.Add(item: (
-                    ElementAttribute.GPSAltitude,
-                    $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude, true)]]}"));
-
-                TZ = $"{dtLocallyStoredToponomyData.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[HelperExifReadExifData.GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]]}";
-            }
-
-            catch (Exception ex)
-            {
-                // If we get here tbh I f..d up the naming of the table cols but the app shouldn't crash
-                // Ref ticket #197
-                Debug.Print(ex.Message);
-            }
-
-            // if this is blank we're on the "current" file regardless of having multiple files or not.
-            if (fileNameWithoutPath == "")
-            {
-                const int tzStartInt = 18;
-
-                _ = DateTime.TryParse(
-                   s: tbx_CreateDate.Text.ToString(
-                       provider: CultureInfo.InvariantCulture), result: out createDate);
-
-                // cbx_OffsetTime.FindString(TZ, 18) doesn't seem to work so....
-                for (int i = 0; i <= cbx_OffsetTime.Items.Count; i++)
+                if (!string.IsNullOrEmpty(TZ))
                 {
-                    string cbxText = cbx_OffsetTime.Items[index: i]
-                                                   .ToString();
-                    if (cbxText.Length >= tzStartInt)
-                    {
-                        if (cbxText
-                           .Substring(startIndex: tzStartInt)
-                           .Contains(value: TZ))
-                        {
-                            // this controls the logic that the ckb_UseDST should not be re-parsed again manually on the Change event that would otherwise fire.
-                            _tzChangedByApi = true;
-                            cbx_OffsetTime.SelectedIndex = i;
-                            try
-                            {
-                                if (TZ != null)
-                                {
-                                    string IANATZ =
-                                        TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
-                                    string TZOffset;
-                                    TimeZoneInfo tst =
-                                        TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
-                                    ckb_UseDST.Checked =
-                                        tst.IsDaylightSavingTime(dateTime: createDate);
-                                    TZOffset = tst.GetUtcOffset(dateTime: createDate)
-                                                  .ToString()
-                                                  .Substring(
-                                                       startIndex: 0, length: tst
-                                                                             .GetUtcOffset(
-                                                                                  dateTime: createDate)
-                                                                             .ToString()
-                                                                             .Length -
-                                                                              3);
-                                    if (!TZOffset.StartsWith(
-                                            value: NullStringEquivalentGeneric))
-                                    {
-                                        toponomyOverwrites.Add(
-                                            item: (ElementAttribute.OffsetTime,
-                                                   $"+{TZOffset}"));
-                                    }
-                                    else
-                                    {
-                                        toponomyOverwrites.Add(
-                                            item: (ElementAttribute.OffsetTime,
-                                                   TZOffset));
-                                    }
-                                }
-                            }
-                            catch
-                            {
-                                // add a zero
-                                toponomyOverwrites.Add(
-                                    item: (ElementAttribute.OffsetTime, " +00:00"));
-                            }
+                    string IANATZ = TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
+                    string TZOffset;
+                    TimeZoneInfo timeZoneInfo =
+                        TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
 
-                            _tzChangedByApi = false;
-                            break;
+                    TZOffset = timeZoneInfo.GetUtcOffset(dateTime: createDate)
+                                  .ToString()
+                                  .Substring(startIndex: 0, length: timeZoneInfo
+                                                                   .GetUtcOffset(dateTime: createDate)
+                                                                   .ToString()
+                                                                   .Length -
+                                                                    3);
+                    locallyStoredToponomyDataForLatLng.Add(
+                        item: !TZOffset.StartsWith(value: NullStringEquivalentGeneric)
+                            ? (ElementAttribute.OffsetTime, $"+{TZOffset}")
+                            : (ElementAttribute.OffsetTime, TZOffset));
+                }
+            }
+            catch
+            {
+                // add a "+00:00" value to locallyStoredToponomyDataForLatLng
+                locallyStoredToponomyDataForLatLng.Add(item: (ElementAttribute.OffsetTime, "+00:00"));
+            }
+
+            foreach ((ElementAttribute attribute, string toponomyOverwriteVal)
+                in locallyStoredToponomyDataForLatLng)
+            {
+                dirElemFileToModify?.SetAttributeValueAnyType(
+                        attribute: attribute,
+                        value: toponomyOverwriteVal,
+                        version: DirectoryElement.AttributeVersion
+                                                 .Stage1EditFormIntraTabTransferQueue,
+                        isMarkedForDeletion: false);
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// Sets the selected time zone in the combo box based on the specified time zone identifier and date, and updates
+    /// the provided list with the corresponding UTC offset information.
+    /// </summary>
+    /// <remarks>If the specified time zone cannot be found or an error occurs while retrieving time zone
+    /// information, the method adds a default UTC offset of "+00:00" to the list. The method also manages the state of
+    /// the combo box and related controls to prevent unintended event handling during the update.</remarks>
+    /// <param name="createDate">The date and time used to determine the daylight saving time status and UTC offset for the selected time zone.</param>
+    /// <param name="toponomyOverwrites">A list that is updated with the offset time information for the selected time zone. The method adds a tuple
+    /// containing the offset attribute and its value.</param>
+    /// <param name="TZ">The time zone identifier used to locate and select the corresponding time zone in the combo box.</param>
+    /// <param name="tzStartInt">The starting index within the combo box item text from which to search for the specified time zone identifier.</param>
+    private void SetTimeZoneComboBoxForCurrentlySelectedDE(
+        DateTime createDate,
+        List<(ElementAttribute attribute, string toponomyOverwriteVal)> toponomyOverwrites,
+        string TZ,
+        int tzStartInt)
+    {
+        // cbx_OffsetTime.FindString(TZ, 18) doesn't seem to work so....
+        for (int i = 0; i <= cbx_OffsetTime.Items.Count; i++)
+        {
+            string cbxText = cbx_OffsetTime.Items[index: i]
+                                           .ToString();
+            if (cbxText.Length >= tzStartInt)
+            {
+                if (cbxText
+                   .Substring(startIndex: tzStartInt)
+                   .Contains(value: TZ))
+                {
+                    // this controls the logic that the ckb_UseDST should not be re-parsed again manually on the Change event that would otherwise fire.
+                    _tzChangedByApi = true;
+                    cbx_OffsetTime.SelectedIndex = i;
+                    try
+                    {
+                        if (TZ != null)
+                        {
+                            string IANATZ =
+                                TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
+                            string TZOffset;
+                            TimeZoneInfo timeZoneInfo =
+                                TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
+                            ckb_UseDST.Checked =
+                                timeZoneInfo.IsDaylightSavingTime(dateTime: createDate);
+                            TZOffset = timeZoneInfo.GetUtcOffset(dateTime: createDate)
+                                          .ToString()
+                                          .Substring(
+                                               startIndex: 0, length: timeZoneInfo
+                                                                     .GetUtcOffset(
+                                                                          dateTime: createDate)
+                                                                     .ToString()
+                                                                     .Length -
+                                                                      3);
+                            if (!TZOffset.StartsWith(value: NullStringEquivalentGeneric))
+                            {
+                                toponomyOverwrites.Add(
+                                    item: (ElementAttribute.OffsetTime,
+                                           $"+{TZOffset}"));
+                            }
+                            else
+                            {
+                                toponomyOverwrites.Add(
+                                    item: (ElementAttribute.OffsetTime,
+                                           TZOffset));
+                            }
                         }
                     }
-                }
-
-                // send it back to the Form + store
-                foreach ((ElementAttribute attribute, string toponomyOverwriteVal) in toponomyOverwrites)
-                {
-                    if (attribute is ElementAttribute.CountryCode)
+                    catch
                     {
-                        cbx_CountryCode.Text = toponomyOverwriteVal;
-                    }
-                    else if (attribute is ElementAttribute.Country)
-                    {
-                        cbx_Country.Text = toponomyOverwriteVal;
-                    }
-                    else if (attribute is ElementAttribute.City)
-                    {
-                        tbx_City.Text = toponomyOverwriteVal;
-                    }
-                    else if (attribute is ElementAttribute.State)
-                    {
-                        tbx_State.Text = toponomyOverwriteVal;
-                    }
-                    else if (attribute == ElementAttribute.Sublocation)
-                    {
-                        tbx_Sublocation.Text = toponomyOverwriteVal;
-                    }
-                    else if (attribute is ElementAttribute.GPSAltitude)
-                    {
-                        nud_GPSAltitude.Text = toponomyOverwriteVal;
-                        nud_GPSAltitude.Value = Convert.ToDecimal(
-                            value: toponomyOverwriteVal,
-                            provider: CultureInfo.InvariantCulture);
-                    }
-                    else if (attribute is ElementAttribute.OffsetTime)
-                    {
-                        tbx_OffsetTime.Text = toponomyOverwriteVal;
-                    }
-                }
-            }
-            // another file
-            else
-            {
-                // this is about TZ only. scroll down for the rest
-                try
-                {
-                    if (TZ != null)
-                    {
-                        string IANATZ = TZConvert.IanaToWindows(ianaTimeZoneName: TZ);
-                        string TZOffset;
-                        TimeZoneInfo timeZoneInfo =
-                            TimeZoneInfo.FindSystemTimeZoneById(id: IANATZ);
-
-                        TZOffset = timeZoneInfo.GetUtcOffset(dateTime: createDate)
-                                      .ToString()
-                                      .Substring(startIndex: 0, length: timeZoneInfo
-                                                                       .GetUtcOffset(dateTime: createDate)
-                                                                       .ToString()
-                                                                       .Length -
-                                                                        3);
+                        // add a zero
                         toponomyOverwrites.Add(
-                            item: !TZOffset.StartsWith(value: NullStringEquivalentGeneric)
-                                ? (ElementAttribute.OffsetTime, $"+{TZOffset}")
-                                : (ElementAttribute.OffsetTime, TZOffset));
+                            item: (ElementAttribute.OffsetTime, " +00:00"));
                     }
-                }
-                catch
-                {
-                    // add a zero
-                    toponomyOverwrites.Add(item: (ElementAttribute.OffsetTime, "+00:00"));
-                }
 
-                ListView lvw = lvw_FileListEditImages;
-                DirectoryElement dirElemFileToModify = default;
-                foreach (ListViewItem lvi in lvw.Items)
-                {
-                    dirElemFileToModify = lvi.Tag as DirectoryElement;
-                    if (dirElemFileToModify.ItemNameWithoutPath != fileNameWithoutPath)
-                    {
-                        continue;
-                    }
-                }
-
-                foreach ((ElementAttribute attribute, string toponomyOverwriteVal)
-                    in toponomyOverwrites)
-                {
-                    dirElemFileToModify?.SetAttributeValueAnyType(
-                            attribute: attribute,
-                            value: toponomyOverwriteVal,
-                            version: DirectoryElement.AttributeVersion
-                                                     .Stage1EditFormIntraTabTransferQueue,
-                            isMarkedForDeletion: false);
+                    _tzChangedByApi = false;
+                    break;
                 }
             }
         }
@@ -1184,18 +1145,18 @@ public partial class FrmEditFileData : Form
         EventArgs e)
     {
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> cGbx_TakenDate =
+        IEnumerable<Control> controlsInsideGbx_TakenDate =
             helperNonstatic.GetAllControls(control: gbx_TakenDate);
         _ = lvw_FileListEditImages.SelectedItems[index: 0]
                                                            .Text;
-        foreach (Control cItemGbx_TakenDate in cGbx_TakenDate)
+        foreach (Control controlInsideGbx_TakenDate in controlsInsideGbx_TakenDate)
         {
-            if (cItemGbx_TakenDate != btn_InsertTakenDate)
+            if (controlInsideGbx_TakenDate != btn_InsertTakenDate)
             {
-                cItemGbx_TakenDate.Enabled = Enabled;
+                controlInsideGbx_TakenDate.Enabled = Enabled;
 
                 // set font to bold for these two - that will get picked up later.
-                if (cItemGbx_TakenDate is DateTimePicker dtp)
+                if (controlInsideGbx_TakenDate is DateTimePicker dtp)
                 {
                     dtp.Font = new Font(prototype: dtp.Font, newStyle: FontStyle.Bold);
                     ListView lvw = lvw_FileListEditImages;
@@ -1235,13 +1196,13 @@ public partial class FrmEditFileData : Form
             ListView lvwEditImages = lvw_FileListEditImages;
             ListViewItem lvi = lvwEditImages.SelectedItems[index: 0];
 
-            DirectoryElement dirElemFileToModify =
-                lvi.Tag as DirectoryElement;
+            DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;
             string fileNameWithPath = dirElemFileToModify.FileNameWithPath;
 
+            // ensure file still exists (not deleted or gone AWOL etc.)
             if (File.Exists(path: fileNameWithPath))
             {
-                lvw_EditorFileListImagesGetData();
+                ShowDEDataInRelevantControls(dirElemFileToModify: dirElemFileToModify);
 
                 pbx_imagePreview.Image = null;
                 await HelperExifReadGetImagePreviews.GenericCreateImagePreview(
@@ -1332,7 +1293,7 @@ public partial class FrmEditFileData : Form
                         {
                             dirElemFileToModify.SetAttributeValueAnyType(
                                 attribute: attribute,
-                                value: dirElemFileToModify.GetAttributeValueString(
+                                value: dirElemFileToModify.GetAttributeValueAsString(
                                     attribute: attribute,
                                     version: DirectoryElement.AttributeVersion
                                                              .Stage1EditFormIntraTabTransferQueue,
@@ -1481,7 +1442,7 @@ public partial class FrmEditFileData : Form
                     version: DirectoryElement.AttributeVersion
                                              .Stage2EditFormReadyToSaveAndMoveToWriteQueue))
             {
-                previousText = dirElemFileToModify.GetAttributeValueString(
+                previousText = dirElemFileToModify.GetAttributeValueAsString(
                     attribute: attribute,
                     version: DirectoryElement.AttributeVersion
                                              .Stage2EditFormReadyToSaveAndMoveToWriteQueue,
@@ -1826,16 +1787,16 @@ public partial class FrmEditFileData : Form
         ListView lvw = lvw_FileListEditImages;
         ListViewItem lvi = lvw.SelectedItems[index: 0];
 
-        IEnumerable<Control> cGbx_CreateDate =
+        IEnumerable<Control> controlsInsideGbx_CreateDate =
             helperNonstatic.GetAllControls(control: gbx_CreateDate);
-        foreach (Control cItemGbx_CreateDate in cGbx_CreateDate)
+        foreach (Control controlInsideGbx_CreateDate in controlsInsideGbx_CreateDate)
         {
-            if (cItemGbx_CreateDate != btn_InsertCreateDate)
+            if (controlInsideGbx_CreateDate != btn_InsertCreateDate)
             {
-                cItemGbx_CreateDate.Enabled = Enabled;
+                controlInsideGbx_CreateDate.Enabled = Enabled;
 
                 // set font to bold for these two - that will get picked up later.
-                if (cItemGbx_CreateDate is DateTimePicker dtp)
+                if (controlInsideGbx_CreateDate is DateTimePicker dtp)
                 {
                     dtp.Font = new Font(prototype: dtp.Font, newStyle: FontStyle.Bold);
                     if (lvi.Tag is DirectoryElement dirElemFileToModify)

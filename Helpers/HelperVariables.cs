@@ -95,8 +95,8 @@ internal static class HelperVariables
     internal static string ToponyMaxRowsChoiceOfferCount = "1";
     internal static string ToponomyRadiusValue = "10";
 
-    internal static string?
-        CurrentAltitude; // this is needed bcs it can happen that a file has altitude, the api returns -32k and then we'd end up with something worse than what it was originally.
+    // this is needed bcs it can happen that a file has altitude, the api returns -32k and then we'd end up with something worse than what it was originally.
+    internal static string? CurrentAltitudeAsString;
 
     internal static readonly string DefaultEnglishString = "en";
     internal static string APILanguageToUse;

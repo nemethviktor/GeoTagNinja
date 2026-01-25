@@ -40,7 +40,7 @@ internal static class FileListViewCopyPaste
                         FrmMainApp.CopyPoolDict.Add(key: attribute,
                             value: new Tuple<string, bool>(
                                 item1: dirElemFileToCopyFrom
-                                   .GetAttributeValueString(
+                                   .GetAttributeValueAsString(
                                         attribute: attribute,
                                         version: DirectoryElement.AttributeVersion
                                                                  .Stage3ReadyToWrite,
@@ -54,7 +54,7 @@ internal static class FileListViewCopyPaste
                         FrmMainApp.CopyPoolDict.Add(key: attribute,
                             value: new Tuple<string, bool>(
                                 item1: dirElemFileToCopyFrom
-                                   .GetAttributeValueString(
+                                   .GetAttributeValueAsString(
                                         attribute: attribute,
                                         version: DirectoryElement.AttributeVersion
                                                                  .Original,

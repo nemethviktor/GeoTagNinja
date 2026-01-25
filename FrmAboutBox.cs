@@ -26,7 +26,7 @@ internal partial class FrmAboutBox : Form
         rtb_AboutBox.LinkClicked += rtb_AboutBox_LinkClicked;
 
         HelperNonStatic helperNonstatic = new();
-        HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
+        HelperControlAndMessageBoxHandling.ReturnControlText(control: this, senderForm: this);
 
         // via https://stackoverflow.com/a/1601079/3968494
         Version version = Assembly.GetEntryAssembly()

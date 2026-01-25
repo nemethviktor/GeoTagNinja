@@ -81,7 +81,7 @@ public partial class FrmSettings : Form
     {
         HelperNonStatic helperNonstatic = new();
         ReturnControlText(
-            cItem: this, senderForm: this);
+            control: this, senderForm: this);
 
         // Gets the various controls' labels and values (eg "latitude" and "51.002")
         _lstTpgApplicationControls = helperNonstatic
@@ -90,22 +90,22 @@ public partial class FrmSettings : Form
         _lstTpgGeoNamesControls = helperNonstatic.GetAllControls(control: tpg_GeoNames)
                                                  .ToList();
 
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        if (c != null)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+        if (controls != null)
         {
-            foreach (Control cItem in c)
+            foreach (Control control in controls)
             {
                 // Note to self: do not remove this block. 
                 // The two comboboxes work differently than other items.
-                string parentNameToUse = GetParentNameToUse(cItem: cItem);
+                string parentNameToUse = GetParentNameToUse(control: control);
 
                 // Part 1: Fill the comboboxes
                 // We want to have something like "Français [French]"
-                if (cItem == cbx_Language ||
-                    cItem == cbx_TryUseGeoNamesLanguage)
+                if (control == cbx_Language ||
+                    control == cbx_TryUseGeoNamesLanguage)
                 {
-                    ComboBox cbx = (ComboBox)cItem;
-                    List<string> languageList = cItem == cbx_Language
+                    ComboBox cbx = (ComboBox)control;
+                    List<string> languageList = control == cbx_Language
                         ? HelperLocalisationLanguageManager.GetTranslatedLanguages()
                         : FrmMainApp.DTLanguageMapping.AsEnumerable()
                                                  .Select(selector: r => r.Field<string>(columnName: "languageCode"))
@@ -172,7 +172,7 @@ public partial class FrmSettings : Form
 
                 else
                 {
-                    ReturnControlText(cItem: cItem,
+                    ReturnControlText(control: control,
                         senderForm: this,
                         parentNameToUse: parentNameToUse);
                 }
@@ -191,22 +191,22 @@ public partial class FrmSettings : Form
     /// <summary>
     ///     The groupboxes on tpg_Application interfere with the Parent Name logic so this corrects/fakes that.
     /// </summary>
-    /// <param name="cItem">The Control to check if it sits in tpg_Application</param>
+    /// <param name="control">The Control to check if it sits in tpg_Application</param>
     /// <returns>The actual Parent Name if tpg_Application isn't a parent or string literal "tpg_Application" if it is.</returns>
-    private static string GetParentNameToUse(Control cItem)
+    private static string GetParentNameToUse(Control control)
     {
         string parentNameToUse = null;
         try
         {
-            parentNameToUse = cItem.Parent.Name;
+            parentNameToUse = control.Parent.Name;
         }
         catch
         {
             // nothing
         }
 
-        if (_lstTpgApplicationControls.Contains(item: cItem) ||
-            _lstTpgGeoNamesControls.Contains(item: cItem))
+        if (_lstTpgApplicationControls.Contains(item: control) ||
+            _lstTpgGeoNamesControls.Contains(item: control))
         {
             // yeah this is parentNameToUse = "tpg_Application" on purpose.
             // Bad planning to be fair but i split the tpg_Application into two tpgs at some point by which time users' sqlite databases would have tpg_Application as a value for these keys
@@ -246,15 +246,15 @@ public partial class FrmSettings : Form
 
         // get values by name
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        if (c != null)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+        if (controls != null)
         {
-            foreach (Control cItem in c)
+            foreach (Control control in controls)
             {
-                string parentNameToUse = GetParentNameToUse(cItem: cItem);
+                string parentNameToUse = GetParentNameToUse(control: control);
 
                 {
-                    if (cItem is TextBox tbx)
+                    if (control is TextBox tbx)
                     {
                         try
                         {
@@ -262,7 +262,7 @@ public partial class FrmSettings : Form
                                .DataReadSQLiteSettings(
                                     dataTable: HelperVariables.DtHelperDataApplicationSettings,
                                     settingTabPage: parentNameToUse,
-                                    settingId: cItem.Name
+                                    settingId: control.Name
                                 );
                         }
                         catch (InvalidOperationException) // nonesuch
@@ -270,7 +270,7 @@ public partial class FrmSettings : Form
                             tbx.Text = "";
                         }
                     }
-                    else if (cItem is CheckBox ckb)
+                    else if (control is CheckBox ckb)
                     {
                         try
                         {
@@ -288,13 +288,13 @@ public partial class FrmSettings : Form
                             ckb.CheckState = CheckState.Unchecked;
                         }
                     }
-                    else if (cItem is NumericUpDown nud)
+                    else if (control is NumericUpDown nud)
                     {
                         string nudTempValue =
                             HelperDataApplicationSettings.DataReadSQLiteSettings(
                                 dataTable: HelperVariables.DtHelperDataApplicationSettings,
                                 settingTabPage: parentNameToUse,
-                                settingId: cItem.Name
+                                settingId: control.Name
                             );
 
                         if (nudTempValue != null)
@@ -320,7 +320,7 @@ public partial class FrmSettings : Form
                             }
                         }
                     }
-                    else if (cItem is RadioButton rbt)
+                    else if (control is RadioButton rbt)
                     {
                         try
                         {
@@ -723,12 +723,12 @@ public partial class FrmSettings : Form
         if (!_importHasBeenProcessed)
         {
             HelperNonStatic helperNonstatic = new();
-            IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-            if (c != null)
+            IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+            if (controls != null)
             {
-                foreach (Control cItem in c)
+                foreach (Control control in controls)
                 {
-                    if (cItem is CheckBox ckb)
+                    if (control is CheckBox ckb)
                     {
                         if ((ckb.Font.Style & FontStyle.Bold) != 0)
                         {
@@ -746,7 +746,7 @@ public partial class FrmSettings : Form
                         }
                     }
 
-                    if (cItem is ComboBox cbx)
+                    if (control is ComboBox cbx)
                     {
                         // if modified
                         if ((cbx.Font.Style & FontStyle.Bold) != 0)
@@ -773,7 +773,7 @@ public partial class FrmSettings : Form
                         }
                     }
 
-                    if (cItem is RadioButton rbt)
+                    if (control is RadioButton rbt)
                     {
                         // this needs to be an IF rather than an ELSE IF
                         if (_rbtGeoNamesLanguage.Contains(item: rbt.Name))
@@ -1007,10 +1007,10 @@ public partial class FrmSettings : Form
                 case "gbx_MapColourMode":
                     // also set the other values to False
                     HelperNonStatic helperNonstatic = new();
-                    IEnumerable<Control> c = helperNonstatic.GetAllControls(control: gbx_MapColourMode);
-                    foreach (Control cntrControl in c)
+                    IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: gbx_MapColourMode);
+                    foreach (Control control in controls)
                     {
-                        RadioButton rbtTest = (RadioButton)cntrControl;
+                        RadioButton rbtTest = (RadioButton)control;
                         if (!rbtTest.Checked)
                         {
                             DeleteAndWriteToDtPreQueue(settingTabPage: "tpg_Application",
@@ -1024,7 +1024,7 @@ public partial class FrmSettings : Form
 
             // stick it into settings-Q
 
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
+            string parentNameToUse = GetParentNameToUse(control: (Control)sender);
             DeleteAndWriteToDtPreQueue(settingTabPage: parentNameToUse, settingId: rbt.Name,
                 settingValue: rbt.Checked.ToString().ToLower());
         }
@@ -1082,17 +1082,17 @@ public partial class FrmSettings : Form
                 lbi = lbx_fileExtensions.SelectedItem;
             }
 
-            string cItemName = lbi != null
+            string controlName = lbi != null
     ? $"{lbi.ToString()
                       .Split('\t')
                       .FirstOrDefault()}_{ckb.Name}"
     : ckb.Name;
-            if (cItemName == "ckb_ReplaceBlankToponyms")
+            if (controlName == "ckb_ReplaceBlankToponyms")
             {
                 tbx_ReplaceBlankToponyms.Enabled = ckb.Checked;
             }
 
-            if (cItemName == "ckb_IncludePredeterminedCountries")
+            if (controlName == "ckb_IncludePredeterminedCountries")
             {
                 Dictionary<string, string> clh_CountryCodeOptions =
                     refreshClh_CountryCodeOptions(
@@ -1113,8 +1113,8 @@ public partial class FrmSettings : Form
             }
 
             // stick it into settings-Q 
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
-            DeleteAndWriteToDtPreQueue(settingTabPage: parentNameToUse, settingId: cItemName,
+            string parentNameToUse = GetParentNameToUse(control: (Control)sender);
+            DeleteAndWriteToDtPreQueue(settingTabPage: parentNameToUse, settingId: controlName,
                 settingValue: ckb.Checked.ToString().ToLower());
         }
     }
@@ -1133,7 +1133,7 @@ public partial class FrmSettings : Form
             tbx.Font = new Font(prototype: tbx.Font, newStyle: FontStyle.Bold);
 
             // stick it into settings-Q 
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
+            string parentNameToUse = GetParentNameToUse(control: (Control)sender);
             DeleteAndWriteToDtPreQueue(settingTabPage: parentNameToUse, settingId: tbx.Name,
                 settingValue: tbx.Text);
         }
@@ -1174,7 +1174,7 @@ public partial class FrmSettings : Form
             }
 
             // stick it into settings-Q
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
+            string parentNameToUse = GetParentNameToUse(control: (Control)sender);
             DeleteAndWriteToDtPreQueue(settingTabPage: parentNameToUse, settingId: cbx.Name,
                 settingValue: settingValue);
         }
@@ -1194,7 +1194,7 @@ public partial class FrmSettings : Form
             nud.Font = new Font(prototype: nud.Font, newStyle: FontStyle.Bold);
 
             // stick it into settings-Q 
-            string parentNameToUse = GetParentNameToUse(cItem: (Control)sender);
+            string parentNameToUse = GetParentNameToUse(control: (Control)sender);
             DeleteAndWriteToDtPreQueue(settingTabPage: parentNameToUse, settingId: nud.Name,
                 settingValue: nud.Value.ToString(provider: CultureInfo.InvariantCulture));
         }

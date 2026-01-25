@@ -41,7 +41,7 @@ public partial class FrmPleaseWaitBox : Form
 
     private void FrmPleaseWaitBox_Load(object sender, EventArgs e)
     {
-        HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
+        HelperControlAndMessageBoxHandling.ReturnControlText(control: this, senderForm: this);
         _frmMainAppInstance.Enabled = false;
         GetControlNames();
 
@@ -56,11 +56,11 @@ public partial class FrmPleaseWaitBox : Form
     private void GetControlNames()
     {
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        foreach (Control cItem in c)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+        foreach (Control control in controls)
         {
             if (
-                cItem is Button or
+                control is Button or
                 CheckBox or
                 GroupBox or
                 Label or
@@ -69,7 +69,7 @@ public partial class FrmPleaseWaitBox : Form
             )
             {
                 // gets logged inside.
-                HelperControlAndMessageBoxHandling.FakeControlTypes fakeControlType = cItem switch
+                HelperControlAndMessageBoxHandling.FakeControlTypes fakeControlType = control switch
                 {
                     Button => HelperControlAndMessageBoxHandling.FakeControlTypes.Button,
                     CheckBox => HelperControlAndMessageBoxHandling.FakeControlTypes.CheckBox,
@@ -80,7 +80,8 @@ public partial class FrmPleaseWaitBox : Form
                     _ => HelperControlAndMessageBoxHandling.FakeControlTypes.Undefined
                 };
 
-                cItem.Text = HelperControlAndMessageBoxHandling.ReturnControlText(controlName: cItem.Name,
+                control.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: control.Name,
                     fakeControlType: fakeControlType);
             }
         }

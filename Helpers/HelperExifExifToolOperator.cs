@@ -370,7 +370,7 @@ internal static class HelperExifExifToolOperator
                         dirElemToDrop.SetAttributeValueAnyType(
                             attribute: attribute,
                             value:
-                            dirElemToDrop.GetAttributeValueString(
+                            dirElemToDrop.GetAttributeValueAsString(
                                 attribute: attribute,
                                 version: DirectoryElement.AttributeVersion
                                                          .Stage3ReadyToWrite,

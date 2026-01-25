@@ -56,12 +56,12 @@ namespace GeoTagNinja
         {
             HelperNonStatic helperNonstatic = new();
             HelperControlAndMessageBoxHandling.ReturnControlText(
-                cItem: this, senderForm: this);
+                control: this, senderForm: this);
 
-            IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-            foreach (Control cItem in c)
+            IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+            foreach (Control control in controls)
             {
-                if (cItem is Label or
+                if (control is Label or
                     GroupBox or
                     Button or
                     CheckBox or
@@ -71,7 +71,7 @@ namespace GeoTagNinja
 
                 {
                     HelperControlAndMessageBoxHandling.ReturnControlText(
-                        cItem: cItem, senderForm: this);
+                        control: control, senderForm: this);
                 }
             }
         }

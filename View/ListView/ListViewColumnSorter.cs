@@ -120,10 +120,10 @@ internal class ListViewColumnSorter : IComparer
 
                 if (attributeType == typeof(string))
                 {
-                    string? compareWhat = deX.GetAttributeValueString(
+                    string? compareWhat = deX.GetAttributeValueAsString(
                         attribute: attribute, version: deXHighestAttributeVersion,
                         nowSavingExif: false);
-                    string? compareToWhat = deY.GetAttributeValueString(
+                    string? compareToWhat = deY.GetAttributeValueAsString(
                         attribute: attribute, version: deYHighestAttributeVersion,
                         nowSavingExif: false);
 

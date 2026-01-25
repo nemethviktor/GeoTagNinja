@@ -86,7 +86,7 @@ public class DirectoryElement
 
     private class AttributeValuesString : AttributeValueContainer
     {
-        public AttributeValuesString(string initialValue = null,
+        public AttributeValuesString(string? initialValue = null,
                                      AttributeVersion initialVersion =
                                          AttributeVersion.Original,
                                      bool isMarkedForDeletion = false)
@@ -399,7 +399,7 @@ public class DirectoryElement
                                                 int width,
                                                 int height)
     {
-        Bitmap bmPhoto = null;
+        Bitmap? bmPhoto = null;
         using (Image imgPhoto = Image.FromFile(filename: originalPath))
         {
             imgPhoto.ExifRotate();
@@ -660,14 +660,16 @@ public class DirectoryElement
     /// <param name="nowSavingExif">Indicates whether this is when the file is being saved.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public string GetAttributeValueString(ElementAttribute attribute,
+    public string GetAttributeValueAsString(ElementAttribute attribute,
                                           AttributeVersion? version = null,
                                           string? notFoundValue = null,
                                           bool nowSavingExif = false)
     {
         if (!_Attributes.ContainsKey(key: attribute))
         {
+#pragma warning disable CS8603 // Possible null reference return.
             return notFoundValue;
+
         }
 
         AttributeValueContainer avc = _Attributes[key: attribute];
@@ -679,6 +681,7 @@ public class DirectoryElement
         {
             return notFoundValue;
         }
+#pragma warning restore CS8603 // Possible null reference return.
 
         AttributeVersion versionToReturn = (AttributeVersion)versionCheck;
 
@@ -1166,7 +1169,7 @@ public class DirectoryElement
         #endregion
 
         // If needed, transform the attribute
-        IConvertible resTyped = null;
+        IConvertible? resTyped = null;
         try
         {
             switch (attribute)

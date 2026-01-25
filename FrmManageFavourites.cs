@@ -23,14 +23,14 @@ public partial class FrmManageFavourites : Form
     private void FrmManageFavourites_Load(object sender,
         EventArgs e)
     {
-        HelperControlAndMessageBoxHandling.ReturnControlText(cItem: this, senderForm: this);
+        HelperControlAndMessageBoxHandling.ReturnControlText(control: this, senderForm: this);
 
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        foreach (Control cItem in c)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+        foreach (Control control in controls)
         {
             if (
-                cItem is Button or
+                control is Button or
                 CheckBox or
                 GroupBox or
                 Label or
@@ -39,7 +39,7 @@ public partial class FrmManageFavourites : Form
             )
             {
                 // gets logged inside.
-                HelperControlAndMessageBoxHandling.FakeControlTypes fakeControlType = cItem switch
+                HelperControlAndMessageBoxHandling.FakeControlTypes fakeControlType = control switch
                 {
                     Button => HelperControlAndMessageBoxHandling.FakeControlTypes.Button,
                     CheckBox => HelperControlAndMessageBoxHandling.FakeControlTypes.CheckBox,
@@ -50,11 +50,11 @@ public partial class FrmManageFavourites : Form
                     _ => HelperControlAndMessageBoxHandling.FakeControlTypes.Undefined
                 };
 
-                cItem.Text = HelperControlAndMessageBoxHandling.ReturnControlText(controlName: cItem.Name,
+                control.Text = HelperControlAndMessageBoxHandling.ReturnControlText(controlName: control.Name,
                     fakeControlType: fakeControlType);
             }
             // there is only one dropdown atm.
-            else if (cItem.Name == "cbx_Country")
+            else if (control.Name == "cbx_Country")
             {
                 FillCountryDropDown();
             }
@@ -85,16 +85,16 @@ public partial class FrmManageFavourites : Form
         }
 
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        foreach (Control cItem in c)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+        foreach (Control control in controls)
         {
-            if (cItem is TextBox)
+            if (control is TextBox)
             {
                 // reset font to normal
-                cItem.Font = new Font(prototype: cItem.Font, newStyle: FontStyle.Regular);
-                string exifTag = cItem.Name.Substring(startIndex: 4);
+                control.Font = new Font(prototype: control.Font, newStyle: FontStyle.Regular);
+                _ = control.Name.Substring(startIndex: 4);
 
-                cItem.Text = cItem.Name switch
+                control.Text = control.Name switch
                 {
                     "tbx_GPSAltitude" => favourite.GPSAltitude,
                     "tbx_GPSLongitude" => favourite.GPSLongitude,
@@ -105,10 +105,10 @@ public partial class FrmManageFavourites : Form
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
-                _originalFavouritesPresented.Add(key: cItem.Name, value: cItem.Text);
+                _originalFavouritesPresented.Add(key: control.Name, value: control.Text);
             }
             // there is only one dropdown atm.
-            else if (cItem.Name == "cbx_Country")
+            else if (control.Name == "cbx_Country")
             {
                 string countryCode = favourite.CountryCode;
                 string sqliteText = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
@@ -170,10 +170,10 @@ public partial class FrmManageFavourites : Form
 
         // reset labels
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        foreach (Control cItem in c)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+        foreach (Control control in controls)
         {
-            if (cItem is TextBox txt)
+            if (control is TextBox txt)
             {
                 txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Regular);
             }
@@ -199,15 +199,15 @@ public partial class FrmManageFavourites : Form
         if (!_frmNowLoadingFavouriteData)
         {
             HelperNonStatic helperNonstatic = new();
-            IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-            foreach (Control cItem in c)
+            IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+            foreach (Control control in controls)
             {
-                if (cItem is TextBox txt)
+                if (control is TextBox txt)
                 {
                     string oldText =
                         HelperDataOtherDataRelated.DataGetFirstOrDefaultFromKVPList(
                             kvpListIn: _originalFavouritesPresented,
-                            keyEqualsWhat: cItem.Name);
+                            keyEqualsWhat: control.Name);
                     txt.Font = oldText != txt.Text
                         ? new Font(prototype: txt.Font, newStyle: FontStyle.Bold)
                         : new Font(prototype: txt.Font, newStyle: FontStyle.Regular);

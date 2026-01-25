@@ -1163,13 +1163,13 @@ public partial class FrmMainApp : Form
                     attribute: ElementAttribute.GPSLongitude),
                 notFoundValue: null);
 
-            string GPSLatitudeStr = directoryElement.GetAttributeValueString(
+            string GPSLatitudeStr = directoryElement.GetAttributeValueAsString(
                 attribute: ElementAttribute.GPSLatitude,
                 version: directoryElement.GetMaxAttributeVersion(
                     attribute: ElementAttribute.GPSLatitude),
                 notFoundValue: null, nowSavingExif: false);
 
-            string? GPSLongitudeStr = directoryElement.GetAttributeValueString(
+            string? GPSLongitudeStr = directoryElement.GetAttributeValueAsString(
                 attribute: ElementAttribute.GPSLongitude,
                 version: directoryElement.GetMaxAttributeVersion(
                     attribute: ElementAttribute.GPSLongitude),
@@ -1302,19 +1302,19 @@ public partial class FrmMainApp : Form
             {
                 DirectoryElement directoryElement = (DirectoryElement)lvi.Tag;
                 // probably needs checking but de.Coordinates and de.DestCoordinates don't return anything here, so we're splitting it into four.
-                string GPSLatitudeStr = directoryElement.GetAttributeValueString(
+                string GPSLatitudeStr = directoryElement.GetAttributeValueAsString(
                     attribute: ElementAttribute.GPSLatitude,
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSLatitude),
                     notFoundValue: null, nowSavingExif: false);
 
-                string? GPSLongitudeStr = directoryElement.GetAttributeValueString(
+                string? GPSLongitudeStr = directoryElement.GetAttributeValueAsString(
                     attribute: ElementAttribute.GPSLongitude,
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSLongitude),
                     notFoundValue: null, nowSavingExif: false);
 
-                string GPSDestLatitudeStr = directoryElement.GetAttributeValueString(
+                string GPSDestLatitudeStr = directoryElement.GetAttributeValueAsString(
                     attribute: ElementAttribute.GPSDestLatitude,
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSDestLatitude),
@@ -1330,7 +1330,7 @@ public partial class FrmMainApp : Form
                     GPSDestLatitudeStr = null;
                 }
 
-                string? GPSDestLongitudeStr = directoryElement.GetAttributeValueString(
+                string? GPSDestLongitudeStr = directoryElement.GetAttributeValueAsString(
                     attribute: ElementAttribute.GPSDestLongitude,
                     version: directoryElement.GetMaxAttributeVersion(
                         attribute: ElementAttribute.GPSDestLongitude),
@@ -1722,7 +1722,7 @@ public partial class FrmMainApp : Form
                 lvi.Tag as DirectoryElement;
 
             filesToEditGUIDStringList.Add(
-                item: directoryElement.GetAttributeValueString(
+                item: directoryElement.GetAttributeValueAsString(
                     attribute: ElementAttribute.GUID,
                     version: DirectoryElement.AttributeVersion
                                              .Original, // GUIDs don't change
@@ -2163,7 +2163,7 @@ public partial class FrmMainApp : Form
                 lvi.Tag as DirectoryElement;
 
             filesToEditGUIDStringList.Add(
-                item: directoryElement.GetAttributeValueString(
+                item: directoryElement.GetAttributeValueAsString(
                     attribute: ElementAttribute.GUID,
                     version: DirectoryElement.AttributeVersion
                                              .Original, // GUIDs don't change
@@ -2326,8 +2326,8 @@ public partial class FrmMainApp : Form
                 lvi.Tag as DirectoryElement;
             string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
 
-            HelperVariables.CurrentAltitude = null;
-            HelperVariables.CurrentAltitude = lvw_FileList
+            HelperVariables.CurrentAltitudeAsString = null;
+            HelperVariables.CurrentAltitudeAsString = lvw_FileList
                                              .FindItemWithText(text: fileNameWithoutPath)
                                              .SubItems[
                                                   index: lvw_FileList
@@ -2731,7 +2731,7 @@ public partial class FrmMainApp : Form
                 filesToEditGUIDStringList.Clear();
 
                 filesToEditGUIDStringList.Add(
-                    item: directoryElement.GetAttributeValueString(
+                    item: directoryElement.GetAttributeValueAsString(
                         attribute: ElementAttribute.GUID,
                         version: DirectoryElement.AttributeVersion
                                                  .Original, // GUIDs don't change
@@ -2810,11 +2810,11 @@ public partial class FrmMainApp : Form
                 {
                     Text = GetElementAttributesName(attributeToFind: attribute)
                 };
-                _ = lvi.SubItems.Add(text: directoryElement.GetAttributeValueString(
+                _ = lvi.SubItems.Add(text: directoryElement.GetAttributeValueAsString(
                     attribute: attribute,
                     version: DirectoryElement.AttributeVersion.Original,
                     notFoundValue: null, nowSavingExif: false));
-                _ = lvi.SubItems.Add(text: directoryElement.GetAttributeValueString(
+                _ = lvi.SubItems.Add(text: directoryElement.GetAttributeValueAsString(
                     attribute: attribute,
                     version: DirectoryElement.AttributeVersion
                                              .Stage3ReadyToWrite,
@@ -2903,7 +2903,7 @@ public partial class FrmMainApp : Form
                     lvi.Tag as DirectoryElement;
 
                 filesToEditGUIDStringList.Add(
-                    item: directoryElement.GetAttributeValueString(
+                    item: directoryElement.GetAttributeValueAsString(
                         attribute: ElementAttribute.GUID,
                         version: DirectoryElement.AttributeVersion
                                                  .Original, // GUIDs don't change
@@ -3620,8 +3620,8 @@ public partial class FrmMainApp : Form
             {
                 try
                 {
-                    GPSLatStr = dirElemFileToModify.GetAttributeValueString(attribute: ElementAttribute.GPSLatitude);
-                    GPSLngStr = dirElemFileToModify.GetAttributeValueString(attribute: ElementAttribute.GPSLongitude);
+                    GPSLatStr = dirElemFileToModify.GetAttributeValueAsString(attribute: ElementAttribute.GPSLatitude);
+                    GPSLngStr = dirElemFileToModify.GetAttributeValueAsString(attribute: ElementAttribute.GPSLongitude);
                     selectionIsValid = true;
                 }
                 catch

@@ -409,7 +409,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         string DefaultStrGetter(SourcesAndAttributes.ElementAttribute atrb)
         {
-            return directoryElement.GetAttributeValueString(
+            return directoryElement.GetAttributeValueAsString(
                 attribute: atrb, notFoundValue: nfVal, nowSavingExif: false);
         }
 

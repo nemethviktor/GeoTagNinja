@@ -43,7 +43,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
     {
         foreach (DirectoryElement item in this)
         {
-            if (item.GetAttributeValueString(attribute: SourcesAndAttributes.ElementAttribute.GUID,
+            if (item.GetAttributeValueAsString(attribute: SourcesAndAttributes.ElementAttribute.GUID,
                     nowSavingExif: false) ==
                 GUID)
             {
@@ -89,7 +89,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
             if (directoryElement.HasDirtyAttributes())
             {
                 _ = uids.Add(
-                    item: directoryElement.GetAttributeValueString(
+                    item: directoryElement.GetAttributeValueAsString(
                         attribute: SourcesAndAttributes.ElementAttribute.GUID, nowSavingExif: false));
             }
         }

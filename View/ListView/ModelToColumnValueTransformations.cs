@@ -21,10 +21,10 @@ internal class ModelToColumnValueTransformations
             longAttrib = SourcesAndAttributes.ElementAttribute.GPSDestLongitude;
         }
 
-        string latValue = item.GetAttributeValueString(
+        string latValue = item.GetAttributeValueAsString(
             attribute: latAttrib,
             notFoundValue: nfVal, nowSavingExif: false);
-        string longValue = item.GetAttributeValueString(
+        string longValue = item.GetAttributeValueAsString(
             attribute: longAttrib,
             notFoundValue: nfVal, nowSavingExif: false);
 

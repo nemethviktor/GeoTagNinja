@@ -47,21 +47,21 @@ internal static class HelperControlAndMessageBoxHandling
     /// <summary>
     ///     This (mostly) sets the various texts for most Controls in various forms, especially labels and buttons/boxes.
     /// </summary>
-    /// <param name="cItem">The Control whose details need adjusting</param>
+    /// <param name="control">The Control whose details need adjusting</param>
     /// <param name="senderForm">Name of the Form on which the Control appears. Only relevant for NUDs on the Settings Form</param>
     /// <param name="parentNameToUse">Obsolete most likely at this stage.</param>
-    internal static void ReturnControlText(Control cItem, Form senderForm = null, string parentNameToUse = null)
+    internal static void ReturnControlText(Control control, Form senderForm = null, string parentNameToUse = null)
     {
         if (parentNameToUse == null &&
-            cItem is not Form)
+            control is not Form)
         {
-            parentNameToUse = cItem.Parent.Name;
+            parentNameToUse = control.Parent.Name;
         }
 
         // Note to self: do not add TextBoxes and ComboBoxes.
         // Also cannot add ColumnHeader because it's not a Control
         if (
-            cItem is Label or
+            control is Label or
             GroupBox or
             Button or
             CheckBox or
@@ -72,17 +72,17 @@ internal static class HelperControlAndMessageBoxHandling
         //||
         )
         {
-            FrmMainApp.Log.Trace(message: $"Starting - cItem: {cItem.Name}");
+            FrmMainApp.Log.Trace(message: $"Starting - control: {control.Name}");
 
-            cItem.Text = HelperLocalisationResourceManager.GetResourceValue(control: cItem, location: "Strings");
+            control.Text = HelperLocalisationResourceManager.GetResourceValue(control: control, location: "Strings");
         }
 
-        else if (cItem is NumericUpDown nud)
+        else if (control is NumericUpDown nud)
         {
             if (senderForm != null &&
                 senderForm.Name == "FrmSettings")
             {
-                FrmMainApp.Log.Trace(message: $"Starting - cItem: {nud.Name}");
+                FrmMainApp.Log.Trace(message: $"Starting - control: {nud.Name}");
                 _ = decimal.TryParse(
                     s: HelperDataApplicationSettings.DataReadSQLiteSettings(
                         dataTable: HelperVariables.DtHelperDataApplicationSettings,
@@ -105,7 +105,7 @@ internal static class HelperControlAndMessageBoxHandling
     /// <returns></returns>
     internal static string ReturnControlText(string controlName, FakeControlTypes fakeControlType)
     {
-        FrmMainApp.Log.Trace(message: $"Starting - cItem: {controlName}");
+        FrmMainApp.Log.Trace(message: $"Starting - control: {controlName}");
 
         if (fakeControlType == FakeControlTypes.Form)
         {

@@ -259,9 +259,7 @@ internal static class HelperExifReadTrackFile
                                                         provider: CultureInfo.InvariantCulture),
                                                     lng: strLngInTrackFile.ToString(
                                                         provider: CultureInfo.InvariantCulture),
-                                                    fileNameWithoutPath: fileNameWithoutPath,
-                                                    useDefaultHardcodedEnglishValues: true
-                                                );
+                                                    fileNameWithoutPath: fileNameWithoutPath);
 
                                         if (HelperVariables
                                            .OperationAPIReturnedOKResponse)
@@ -391,10 +389,10 @@ internal static class HelperExifReadTrackFile
         string GetCurrentValue(DirectoryElement dirElemFileToModify,
                                ElementAttribute attribute)
         {
-            string currentValue = dirElemFileToModify.GetAttributeValueString(
+            string currentValue = dirElemFileToModify.GetAttributeValueAsString(
                 attribute: attribute,
                 version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                notFoundValue: dirElemFileToModify.GetAttributeValueString(
+                notFoundValue: dirElemFileToModify.GetAttributeValueAsString(
                     attribute: attribute,
                     version: DirectoryElement.AttributeVersion.Original,
                     notFoundValue: FrmMainApp.NullStringEquivalentGeneric, nowSavingExif: false),

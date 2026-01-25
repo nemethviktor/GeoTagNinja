@@ -84,69 +84,69 @@ public partial class FrmMainApp
         Log.Info(message: "Starting");
 
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        string objectName;
-        string objectText;
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+        string toolStripMenuItemName;
+        string toolStripMenuItemText;
 
-        foreach (Control cItem in c)
+        foreach (Control control in controls)
         {
             if (
-                cItem.GetType() == typeof(MenuStrip) ||
-                cItem.GetType() == typeof(ToolStrip) ||
-                cItem.GetType() == typeof(Label) ||
-                cItem.GetType() == typeof(Button) ||
-                cItem.GetType() == typeof(CheckBox) ||
-                cItem.GetType() == typeof(TabPage) ||
-                cItem.GetType() == typeof(ToolStripButton) ||
-                (cItem.GetType() == typeof(ListView) && cItem.Name != "lvw_FileView")
-            // cItem.GetType() == typeof(ToolTip) // tooltips are not controls.
+                control.GetType() == typeof(MenuStrip) ||
+                control.GetType() == typeof(ToolStrip) ||
+                control.GetType() == typeof(Label) ||
+                control.GetType() == typeof(Button) ||
+                control.GetType() == typeof(CheckBox) ||
+                control.GetType() == typeof(TabPage) ||
+                control.GetType() == typeof(ToolStripButton) ||
+                (control.GetType() == typeof(ListView) && control.Name != "lvw_FileView")
+            // control.GetType() == typeof(ToolTip) // tooltips are not controls.
             )
             {
-                if (cItem.Name == "lbl_ParseProgress")
+                if (control.Name == "lbl_ParseProgress")
                 {
-                    objectName = cItem.Name;
-                    objectText = ReturnControlText(controlName: "lbl_ParseProgress_Normal",
+                    toolStripMenuItemName = control.Name;
+                    toolStripMenuItemText = ReturnControlText(controlName: "lbl_ParseProgress_Normal",
                             fakeControlType: FakeControlTypes.Label)
                         ;
-                    cItem.Text = objectText;
-                    Log.Trace(message: $"{objectName}: {objectText}");
+                    control.Text = toolStripMenuItemText;
+                    Log.Trace(message: $"{toolStripMenuItemName}: {toolStripMenuItemText}");
                 }
-                else if (cItem is ToolStrip ts)
+                else if (control is ToolStrip ts)
                 {
                     // https://www.codeproject.com/Messages/3329190/How-to-convert-a-Control-into-a-ToolStripButton.aspx
                     foreach (ToolStripItem tsi in ts.Items)
                     {
                         if (tsi is ToolStripButton tsb)
                         {
-                            objectName = tsb.Name;
-                            objectText = ReturnControlText(controlName: objectName,
+                            toolStripMenuItemName = tsb.Name;
+                            toolStripMenuItemText = ReturnControlText(controlName: toolStripMenuItemName,
                                 fakeControlType: FakeControlTypes.ToolStripButton);
 
-                            tsb.ToolTipText = objectText;
-                            Log.Trace(message: $"{objectName}: {objectText}");
+                            tsb.ToolTipText = toolStripMenuItemText;
+                            Log.Trace(message: $"{toolStripMenuItemName}: {toolStripMenuItemText}");
                         }
                     }
                 }
-                else if (cItem is ListView lvw)
+                else if (control is ListView lvw)
                 {
                     foreach (ColumnHeader columnHeader in lvw.Columns)
                     {
                         // this is entirely stupid but .Name in this case returns nothing of use even though it's hard-coded in the Designer.
                         // alas .Text works -- fml.
-                        objectName = columnHeader.Text;
-                        objectText = ReturnControlText(controlName: objectName,
+                        toolStripMenuItemName = columnHeader.Text;
+                        toolStripMenuItemText = ReturnControlText(controlName: toolStripMenuItemName,
                             fakeControlType: FakeControlTypes.ColumnHeader);
-                        columnHeader.Text = objectText;
+                        columnHeader.Text = toolStripMenuItemText;
                         columnHeader.Width = 120; // arbitrary
-                        Log.Trace(message: $"{objectName}: {objectText}");
+                        Log.Trace(message: $"{toolStripMenuItemName}: {toolStripMenuItemText}");
                     }
                 }
                 else
                 {
-                    objectName = cItem.Name;
-                    ReturnControlText(cItem: cItem, senderForm: this);
+                    toolStripMenuItemName = control.Name;
+                    ReturnControlText(control: control, senderForm: this);
 
-                    Log.Trace(message: $"{objectName}: {cItem.Text}");
+                    Log.Trace(message: $"{toolStripMenuItemName}: {control.Text}");
                 }
             }
         }
@@ -172,14 +172,14 @@ public partial class FrmMainApp
             allMenuItems.AddRange(collection: helperNonstatic.GetMenuItems(item: toolItem));
         }
 
-        foreach (ToolStripMenuItem cItem in allMenuItems.OfType<ToolStripMenuItem>())
+        foreach (ToolStripMenuItem toolStripMenuItem in allMenuItems.OfType<ToolStripMenuItem>())
         {
-            objectName = cItem.Name;
-            objectText = ReturnControlText(controlName: objectName,
+            toolStripMenuItemName = toolStripMenuItem.Name;
+            toolStripMenuItemText = ReturnControlText(controlName: toolStripMenuItemName,
                 fakeControlType: FakeControlTypes.ToolStripMenuItem);
 
-            cItem.Text = objectText;
-            Log.Trace(message: $"{objectName}: {objectText}");
+            toolStripMenuItem.Text = toolStripMenuItemText;
+            Log.Trace(message: $"{toolStripMenuItemName}: {toolStripMenuItemText}");
         }
 
         Log.Trace(message: "Setting Tooltips");
@@ -350,13 +350,6 @@ public partial class FrmMainApp
                         break;
                 }
             }
-        }
-
-        string TrimEnd(string source, string value)
-        {
-            return !source.EndsWith(value: value)
-                ? source
-                : source.Remove(startIndex: source.LastIndexOf(value: value));
         }
 
         Log.Debug(message: "Done");

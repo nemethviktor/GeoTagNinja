@@ -44,18 +44,15 @@ internal static class HelperExifReadExifData
     /// <param name="lat">latitude to be queried</param>
     /// <param name="lng">longitude to be queried</param>
     /// <param name="fileNameWithoutPath">Name of the file</param>
-    /// <param name="useDefaultHardcodedEnglishValues">
-    ///     Whether to use hardcoded column names. Reading track files expects the
-    ///     datatable to have fixed col names, can't have them being ad-hoc...
-    /// </param>
+    /// 
     /// <returns>
     ///     See summary. Returns the toponomy info either from SQLite if available or the API in DataTable for further
     ///     processing
     /// </returns>
-    internal static DataTable DTFromAPIExifGetToponomyFromWebOrSQL(string lat,
-                                                                   string lng,
-                                                                   string fileNameWithoutPath = "",
-                                                                   bool useDefaultHardcodedEnglishValues = false)
+    internal static DataTable DTFromAPIExifGetToponomyFromWebOrSQL(
+        string lat,
+        string lng,
+        string fileNameWithoutPath = "")
     {
         DataTable dtSQLToponomyData = new();
         AddColumnsToToponomyDataTable(dtSQLToponomyData);
@@ -466,9 +463,9 @@ internal static class HelperExifReadExifData
                             // can return 32768 or -32768 in some cases. this is the API's "fault" (not that of the code.)
                             if (Math.Abs(value: tmpAlt) > 32000.0)
                             {
-                                if (!string.IsNullOrEmpty(value: HelperVariables.CurrentAltitude))
+                                if (!string.IsNullOrEmpty(value: HelperVariables.CurrentAltitudeAsString))
                                 {
-                                    _ = double.TryParse(s: HelperVariables.CurrentAltitude, result: out tmpAlt);
+                                    _ = double.TryParse(s: HelperVariables.CurrentAltitudeAsString, result: out tmpAlt);
                                 }
                                 else
                                 {

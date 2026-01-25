@@ -53,7 +53,7 @@ internal static class FileListViewReadWrite
                             // theoretically we'd want to update the columns for each tag but for example when removing all data
                             // this becomes tricky bcs we're also firing a "-gps*=" tag.
                             string settingId = GetElementAttributesColumnHeader(attribute);
-                            string settingVal = dirElemFileToModify.GetAttributeValueString(attribute: attribute,
+                            string settingVal = dirElemFileToModify.GetAttributeValueAsString(attribute: attribute,
                                                                                             version: DirectoryElement.AttributeVersion
                                                                                                .Stage3ReadyToWrite, nowSavingExif: false);
 
@@ -147,11 +147,11 @@ internal static class FileListViewReadWrite
 
                             if (attribute is ElementAttribute.GPSLatitude or ElementAttribute.GPSLongitude)
                             {
-                                string tmpLat = dirElemFileToModify.GetAttributeValueString(
+                                string tmpLat = dirElemFileToModify.GetAttributeValueAsString(
                                     attribute: ElementAttribute.GPSLatitude,
                                     version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSLatitude),
                                     notFoundValue: "", nowSavingExif: false);
-                                string tmpLng = dirElemFileToModify.GetAttributeValueString(
+                                string tmpLng = dirElemFileToModify.GetAttributeValueAsString(
                                     attribute: ElementAttribute.GPSLongitude,
                                     version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSLongitude),
                                     notFoundValue: "", nowSavingExif: false);
@@ -165,11 +165,11 @@ internal static class FileListViewReadWrite
                             }
                             else if (attribute is ElementAttribute.GPSDestLatitude or ElementAttribute.GPSDestLongitude)
                             {
-                                string tmpLat = dirElemFileToModify.GetAttributeValueString(
+                                string tmpLat = dirElemFileToModify.GetAttributeValueAsString(
                                     attribute: ElementAttribute.GPSDestLatitude,
                                     version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSDestLatitude),
                                     notFoundValue: "", nowSavingExif: false);
-                                string tmpLng = dirElemFileToModify.GetAttributeValueString(
+                                string tmpLng = dirElemFileToModify.GetAttributeValueAsString(
                                     attribute: ElementAttribute.GPSDestLongitude,
                                     version: dirElemFileToModify.GetMaxAttributeVersion(ElementAttribute.GPSDestLongitude),
                                     notFoundValue: "", nowSavingExif: false);

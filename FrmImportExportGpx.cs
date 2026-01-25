@@ -41,7 +41,7 @@ public partial class FrmImportExportGpx : Form
             tcr_ImportExport.DrawMode = TabDrawMode.Normal;
         }
 
-        ReturnControlText(cItem: this, senderForm: this);
+        ReturnControlText(control: this, senderForm: this);
 
         // load TZ-CBX
         FillTZComboBox(cbxToFill: cbx_ImportUseTimeZone);
@@ -62,12 +62,12 @@ public partial class FrmImportExportGpx : Form
 
         // set label texts and combobox items
         HelperNonStatic helperNonstatic = new();
-        IEnumerable<Control> c = helperNonstatic.GetAllControls(control: this);
-        foreach (Control cItem in c)
+        IEnumerable<Control> controls = helperNonstatic.GetAllControls(control: this);
+        foreach (Control control in controls)
         {
-            ReturnControlText(cItem: cItem, senderForm: this);
+            ReturnControlText(control: control, senderForm: this);
 
-            switch (cItem.Name)
+            switch (control.Name)
             {
                 case "cbx_ImportTimeAgainst":
                     {
@@ -351,7 +351,7 @@ public partial class FrmImportExportGpx : Form
                 string trackFileLocationVal = "";
 
                 // one source:
-                // exiftool -geotag "c:\gps logs\track.log" x.jpg
+                // exiftool -geotag "controls:\gps logs\track.log" x.jpg
                 if (rbt_importOneFile.Checked)
                 {
                     trackFileLocationType = "file";
