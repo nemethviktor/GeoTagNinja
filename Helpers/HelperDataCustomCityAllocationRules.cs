@@ -9,11 +9,11 @@ internal static class HelperDataCustomCityAllocationRules
 {
     internal static DataTable DataReadSQLiteCustomCityAllocationLogic()
     {
-        using SQLiteConnection sqliteDB = new(connectionString:
+        using SQLiteConnection SQLiteDB = new(connectionString:
             $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        sqliteDB.Open();
+        SQLiteDB.Open();
 
-        string sqlCommandStr = @"
+        string commandText = @"
                                 SELECT *
                                 FROM customCityAllocationLogic
                                 WHERE 1=1
@@ -21,9 +21,9 @@ internal static class HelperDataCustomCityAllocationRules
 								"
             ;
 
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
 
-        SQLiteDataReader reader = sqlToRun.ExecuteReader();
+        SQLiteDataReader reader = SQLiteCommand.ExecuteReader();
         DataTable dataTable = new();
         dataTable.Load(reader: reader);
         return dataTable;
@@ -32,13 +32,13 @@ internal static class HelperDataCustomCityAllocationRules
     internal static void DataWriteSQLiteCustomCityAllocationLogic()
     {
         // write back
-        using SQLiteConnection sqliteDB = new(connectionString:
+        using SQLiteConnection SQLiteDB = new(connectionString:
             $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        sqliteDB.Open();
+        SQLiteDB.Open();
 
-        using SQLiteDataAdapter sqliteAdapter = new(commandText: @"select * from customCityAllocationLogic", connection: sqliteDB);
-        SQLiteCommandBuilder commandBuilder = new(adp: sqliteAdapter);
-        _ = sqliteAdapter.Update(dataTable: HelperVariables.DtCustomCityLogic);
+        using SQLiteDataAdapter SQLiteAdapter = new(commandText: @"select * from customCityAllocationLogic", connection: SQLiteDB);
+        SQLiteCommandBuilder commandBuilder = new(adp: SQLiteAdapter);
+        _ = SQLiteAdapter.Update(dataTable: HelperVariables.DtCustomCityLogic);
     }
 
     internal static void DataWriteSQLiteCustomCityAllocationLogicDefaults(bool resetToDefaults = false)
@@ -49,27 +49,27 @@ internal static class HelperDataCustomCityAllocationRules
         string[] defaultCityNameIsAdminName3Arr = { "AUT", "CHE", "CHL", "CZE", "EST", "ESP", "FIN", "GRC", "ITA", "PAN", "PER", "POL", "SRB", "SVK", "USA", "ZAF" };
         string[] defaultCityNameIsAdminName4Arr = { "BEL", "DEU", "FRA", "GUF", "GLP", "MTQ" };
 
-        using SQLiteConnection sqliteDB = new(connectionString:
+        using SQLiteConnection SQLiteDB = new(connectionString:
             $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        sqliteDB.Open();
+        SQLiteDB.Open();
 
-        string sqlCommandStr = null;
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr);
+        string commandText = null;
+        SQLiteCommand SQLiteCommand = new(commandText: commandText);
 
         if (resetToDefaults)
         {
             // "SQLite does not have an explicit TRUNCATE TABLE command like other databases" -- what a bunch of idiots.
-            sqlCommandStr = "DELETE FROM customCityAllocationLogic;";
-            sqlToRun = new SQLiteCommand(commandText: sqlCommandStr, connection: sqliteDB);
-            _ = sqlToRun.ExecuteNonQuery();
+            commandText = "DELETE FROM customCityAllocationLogic;";
+            SQLiteCommand = new SQLiteCommand(commandText: commandText, connection: SQLiteDB);
+            _ = SQLiteCommand.ExecuteNonQuery();
         }
 
-        sqlCommandStr = "SELECT COUNT(*) FROM customCityAllocationLogic;";
+        commandText = "SELECT COUNT(*) FROM customCityAllocationLogic;";
 
-        sqlToRun = new SQLiteCommand(commandText: sqlCommandStr, connection: sqliteDB);
+        SQLiteCommand = new SQLiteCommand(commandText: commandText, connection: SQLiteDB);
 
         // fill w defaults if empty
-        if (!(Convert.ToInt32(value: sqlToRun.ExecuteScalar()) > 0))
+        if (!(Convert.ToInt32(value: SQLiteCommand.ExecuteScalar()) > 0))
         {
             string defaultCiltyAllocationLogic = "";
             foreach (string countryCode in HelperGenericAncillaryListsArrays.GetCountryCodes())
@@ -89,15 +89,15 @@ internal static class HelperDataCustomCityAllocationRules
             // remove last ","
             defaultCiltyAllocationLogic = defaultCiltyAllocationLogic.Substring(startIndex: 0, length: defaultCiltyAllocationLogic.LastIndexOf(value: ','));
 
-            sqlCommandStr = $@"
+            commandText = $@"
                                 INSERT INTO customCityAllocationLogic
                                         (CountryCode,TargetPointNameCustomCityLogic)
                                         VALUES{Environment.NewLine}{defaultCiltyAllocationLogic}{Environment.NewLine};"
                 ;
 
-            sqlToRun = new SQLiteCommand(commandText: sqlCommandStr, connection: sqliteDB);
+            SQLiteCommand = new SQLiteCommand(commandText: commandText, connection: SQLiteDB);
 
-            _ = sqlToRun.ExecuteNonQuery();
+            _ = SQLiteCommand.ExecuteNonQuery();
         }
     }
 
@@ -105,11 +105,11 @@ internal static class HelperDataCustomCityAllocationRules
     {
         FrmMainApp.Log.Info(message: "Starting");
 
-        using SQLiteConnection sqliteDB = new(connectionString:
+        using SQLiteConnection SQLiteDB = new(connectionString:
             $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        sqliteDB.Open();
+        SQLiteDB.Open();
 
-        string sqlCommandStr = """
+        string commandText = """
                                     CREATE TABLE IF NOT EXISTS customCityAllocationLogic(
                                         CountryCode TEXT(3) NOT NULL,
                                         TargetPointNameCustomCityLogic TEXT(100) NOT NULL,
@@ -118,10 +118,10 @@ internal static class HelperDataCustomCityAllocationRules
                                 """
             ;
 
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
 
-        _ = sqlToRun.ExecuteNonQuery();
-        sqliteDB.Close();
+        _ = SQLiteCommand.ExecuteNonQuery();
+        SQLiteDB.Close();
 
         DataWriteSQLiteCustomCityAllocationLogicDefaults();
     }

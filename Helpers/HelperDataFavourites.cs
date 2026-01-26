@@ -181,11 +181,11 @@ internal static class HelperDataFavourites
     /// </summary>
     internal static void DataReadSQLiteFavourites()
     {
-        using SQLiteConnection sqliteDB = new(connectionString:
+        using SQLiteConnection SQLiteDB = new(connectionString:
             $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        sqliteDB.Open();
+        SQLiteDB.Open();
 
-        string sqlCommandStr = @"
+        string commandText = @"
                                 SELECT *
                                 FROM Favourites
                                 WHERE 1=1
@@ -194,16 +194,16 @@ internal static class HelperDataFavourites
 								"
             ;
 
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
 
-        SQLiteDataReader reader = sqlToRun.ExecuteReader();
+        SQLiteDataReader reader = SQLiteCommand.ExecuteReader();
         DataTable dataTable = new();
         dataTable.Load(reader: reader);
         FrmMainApp.Favourites.Clear();
 
         foreach (DataRow row in dataTable.Rows)
         {
-            Favourite fav = new()
+            Favourite favourite = new()
             {
                 FavouriteName = row[columnName: "favouriteName"]?.ToString(),
                 GPSLatitude = row[columnName: "GPSLatitude"]?.ToString(),
@@ -220,7 +220,7 @@ internal static class HelperDataFavourites
                 Sublocation = row[columnName: "Sublocation"]?.ToString()
             };
 
-            _ = FrmMainApp.Favourites.Add(item: fav);
+            _ = FrmMainApp.Favourites.Add(item: favourite);
         }
     }
 
@@ -234,22 +234,22 @@ internal static class HelperDataFavourites
     {
         FrmMainApp.Log.Info(message: "Starting");
 
-        using SQLiteConnection sqliteDB = new(connectionString:
+        using SQLiteConnection SQLiteDB = new(connectionString:
             $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        sqliteDB.Open();
+        SQLiteDB.Open();
 
-        string sqlCommandStr = @"
+        string commandText = @"
                                 UPDATE Favourites
                                 SET favouriteName = @newName
                                 WHERE favouriteName = @oldName
                                 ;"
             ;
 
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        _ = sqlToRun.Parameters.AddWithValue(parameterName: "@oldName", value: oldName);
-        _ = sqlToRun.Parameters.AddWithValue(parameterName: "@newName", value: newName);
+        SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
+        _ = SQLiteCommand.Parameters.AddWithValue(parameterName: "@oldName", value: oldName);
+        _ = SQLiteCommand.Parameters.AddWithValue(parameterName: "@newName", value: newName);
 
-        _ = sqlToRun.ExecuteNonQuery();
+        _ = SQLiteCommand.ExecuteNonQuery();
     }
 
     /// <summary>
@@ -260,17 +260,17 @@ internal static class HelperDataFavourites
     {
         FrmMainApp.Log.Info(message: "Starting");
 
-        using SQLiteConnection sqliteDB =
+        using SQLiteConnection SQLiteDB =
             new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        sqliteDB.Open();
+        SQLiteDB.Open();
 
-        using SQLiteTransaction transaction = sqliteDB.BeginTransaction();
+        using SQLiteTransaction SQLiteTransaction = SQLiteDB.BeginTransaction();
 
         try
         {
             // Clear the table first
-            using (SQLiteCommand deleteCommand = new(commandText: "DELETE FROM Favourites;", connection: sqliteDB,
-                       transaction: transaction))
+            using (SQLiteCommand deleteCommand = new(commandText: "DELETE FROM Favourites;", connection: SQLiteDB,
+                       transaction: SQLiteTransaction))
             {
                 _ = deleteCommand.ExecuteNonQuery();
             }
@@ -305,7 +305,7 @@ internal static class HelperDataFavourites
                 @Country,
                 @State,
                 @Sublocation
-            );", connection: sqliteDB, transaction: transaction))
+            );", connection: SQLiteDB, transaction: SQLiteTransaction))
             {
                 // Add parameters once — values will be updated inside the loop
                 _ = insertCommand.Parameters.Add(parameterName: "@favouriteName", parameterType: DbType.String);
@@ -342,13 +342,13 @@ internal static class HelperDataFavourites
                 }
             }
 
-            transaction.Commit();
+            SQLiteTransaction.Commit();
             FrmMainApp.Log.Info(message: "Favourites successfully saved.");
         }
         catch (Exception ex)
         {
             FrmMainApp.Log.Error(message: "Error saving favourites", argument: ex);
-            transaction.Rollback();
+            SQLiteTransaction.Rollback();
             throw;
         }
     }
@@ -362,11 +362,11 @@ internal static class HelperDataFavourites
     {
         FrmMainApp.Log.Info(message: "Starting");
 
-        using SQLiteConnection sqliteDB = new(connectionString:
+        using SQLiteConnection SQLiteDB = new(connectionString:
             $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        sqliteDB.Open();
+        SQLiteDB.Open();
 
-        string sqlCommandStr = @"
+        string commandText = @"
                                 CREATE TABLE IF NOT EXISTS Favourites(
                                         favouriteName NTEXT NOT NULL PRIMARY KEY,
                                         GPSLatitude NTEXT NOT NULL,
@@ -386,8 +386,8 @@ internal static class HelperDataFavourites
                                 "
             ;
 
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
 
-        _ = sqlToRun.ExecuteNonQuery();
+        _ = SQLiteCommand.ExecuteNonQuery();
     }
 }

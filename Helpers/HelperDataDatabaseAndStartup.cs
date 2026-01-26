@@ -41,11 +41,11 @@ internal static class HelperDataDatabaseAndStartup
                 try
                 {
                     SQLiteConnection.CreateFile(databaseFileName: Path.Combine(HelperVariables.SettingsDatabaseFilePath));
-                    SQLiteConnection sqliteDB = new(connectionString:
+                    SQLiteConnection SQLiteDB = new(connectionString:
                         $@"Data Source={Path.Combine(HelperVariables.SettingsDatabaseFilePath)}; Version=3");
-                    sqliteDB.Open();
+                    SQLiteDB.Open();
 
-                    string sql = """
+                    string commandText = """
                                  CREATE TABLE settings(
                                      settingTabPage TEXT(255)    NOT NULL,
                                      settingId TEXT(255)         NOT NULL, 
@@ -92,9 +92,10 @@ internal static class HelperDataDatabaseAndStartup
                                              )
                                  ;
                                  """;
-                    SQLiteCommand sqlCommandStr = new(commandText: sql, connection: sqliteDB);
-                    _ = sqlCommandStr.ExecuteNonQuery();
-                    sqliteDB.Close();
+
+                    SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
+                    _ = SQLiteCommand.ExecuteNonQuery();
+                    SQLiteDB.Close();
                 }
                 catch (Exception ex)
                 {
@@ -293,18 +294,18 @@ internal static class HelperDataDatabaseAndStartup
     /// <returns></returns>
     internal static DataTable DataReadSQLiteTable(string tableName)
     {
-        using SQLiteConnection sqliteDB =
+        using SQLiteConnection SQLiteDB =
             new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        sqliteDB.Open();
+        SQLiteDB.Open();
 
-        string sqlCommandStr = $@"
+        string commandText = $@"
                                 SELECT *
                                 FROM {tableName};"
             ;
 
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
 
-        SQLiteDataReader reader = sqlToRun.ExecuteReader();
+        SQLiteDataReader reader = SQLiteCommand.ExecuteReader();
         DataTable dataTable = new();
         dataTable.Load(reader: reader);
         return dataTable;
@@ -322,20 +323,20 @@ internal static class HelperDataDatabaseAndStartup
     {
         try
         {
-            using SQLiteConnection sqliteDB =
+            using SQLiteConnection SQLiteDB =
                 new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-            sqliteDB.Open();
+            SQLiteDB.Open();
 
             // Get the schema for the columns in the database.
-            DataTable colsTable = sqliteDB.GetSchema(collectionName: "Columns");
+            DataTable colsTable = SQLiteDB.GetSchema(collectionName: "Columns");
 
-            // Query the columns schema using SQL statements to work out if the required columns exist.
+            // Query the columns schema using commandText statements to work out if the required columns exist.
             bool locationNameExists =
                 colsTable.Select(filterExpression: $"COLUMN_NAME='{columnNameFrom}' AND TABLE_NAME='{tableName}'")
                          .Length != 0;
             if (locationNameExists)
             {
-                string sqlCommandStr = $@"
+                string commandText = $@"
                                 ALTER TABLE {tableName}
                                 RENAME COLUMN {columnNameFrom} TO {columnNameTo}
 
@@ -343,12 +344,12 @@ internal static class HelperDataDatabaseAndStartup
                                 "
                     ;
 
-                SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+                SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
 
-                _ = sqlToRun.ExecuteNonQuery();
+                _ = SQLiteCommand.ExecuteNonQuery();
             }
 
-            sqliteDB.Close();
+            SQLiteDB.Close();
         }
         catch
         {
@@ -370,21 +371,21 @@ internal static class HelperDataDatabaseAndStartup
     {
         try
         {
-            using SQLiteConnection sqliteDB =
+            using SQLiteConnection SQLiteDB =
                 new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-            sqliteDB.Open();
+            SQLiteDB.Open();
 
             // Get the schema for the columns in the database.
-            DataTable colsTable = sqliteDB.GetSchema(collectionName: "Columns");
+            DataTable colsTable = SQLiteDB.GetSchema(collectionName: "Columns");
 
-            string sqlCommandStr =
+            string commandText =
                 $"""UPDATE {tableName} SET {columnName} = "{dataTo}" WHERE {columnName} = "{dataFrom}" """;
 
-            SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+            SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
 
-            _ = sqlToRun.ExecuteNonQuery();
+            _ = SQLiteCommand.ExecuteNonQuery();
 
-            sqliteDB.Close();
+            SQLiteDB.Close();
         }
         catch (Exception ex)
         {

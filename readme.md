@@ -105,7 +105,7 @@ Things to note:
 
 ## Building & Testing
 
-If you want to build the project, probably use Visual Studio - I used v2022 Community. Instead of downloading the source code as zip please pull from Git, you can do that via VS if you want.
+If you want to build the project, probably use Visual Studio - I used v2026 Community. Instead of downloading the source code as zip please pull from Git, you can do that via VS if you want.
 There are 2 parts to the project. One is the "main" the other is the installer. You'll generally have problems w/ the installer bcs it hasn't been pushed to git so it's going to be missing that half.
 For the "main" project you should be okay without anything separate. It has worked ok for me on a blank VM when pulled from Git. Just build and F5/run.
 

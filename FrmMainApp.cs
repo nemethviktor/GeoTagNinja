@@ -431,7 +431,7 @@ public partial class FrmMainApp : Form
 
     /// <summary>
     ///     When the app closes we want to make sure there's nothing in the write-queue.
-    ///     ...once that's dealt with we write the details of the app layout (e.g. column widths) to sqlite.
+    ///     ...once that's dealt with we write the details of the app layout (e.g. column widths) to SQLite.
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
@@ -465,7 +465,7 @@ public partial class FrmMainApp : Form
         // Clean up
         Log.Trace(message: "Set pbx_imagePreview.Image = null");
         pbx_imagePreview.Image = null; // unlocks files. theoretically.
-        HelperDataApplicationSettings.DataDeleteSQLitesettingsCleanup();
+        HelperDataApplicationSettings.DataDeleteSQLiteSettingsCleanup();
         HelperDataApplicationSettings.DataVacuumDatabase();
 
         // Shut down ExifTool

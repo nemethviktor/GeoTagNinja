@@ -209,7 +209,8 @@ public partial class FrmSettings : Form
             _lstTpgGeoNamesControls.Contains(item: control))
         {
             // yeah this is parentNameToUse = "tpg_Application" on purpose.
-            // Bad planning to be fair but i split the tpg_Application into two tpgs at some point by which time users' sqlite databases would have tpg_Application as a value for these keys
+            // Bad planning to be fair but i split the tpg_Application into two tpgs at some point by which time users'
+            // SQLite databases would have tpg_Application as a value for these keys
             parentNameToUse = "tpg_Application";
         }
 
@@ -396,7 +397,7 @@ public partial class FrmSettings : Form
     }
 
     /// <summary>
-    ///     Loads up the datagridview from sqlite.
+    ///     Loads up the datagridview from SQLite.
     ///     Some of the columns are dropdowns (technically DataGridViewComboBoxColumn) so they need to have a few extra
     ///     settings loaded.
     /// </summary>

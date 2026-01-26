@@ -874,7 +874,7 @@ public partial class FrmEditFileData : Form
         // Can't leave it null because it's updated in various IFs and C# perceives it as uninitialised.
         DateTime createDate = NullDateTimeEquivalent;
 
-        // This is a datatable to store all existing toponomy data either pulled from sql or
+        // This is a datatable to store all existing toponomy data either pulled from SQL or
         // the web for the session
         DataTable dtLocallyStoredToponomyData = new();
 
@@ -924,7 +924,7 @@ public partial class FrmEditFileData : Form
                result: out createDate);
         }
 
-        // if there is a lat + long we try to read the toponomy data belonging to it from sql and web
+        // if there is a lat + long we try to read the toponomy data belonging to it from SQL and web
         if (!string.IsNullOrEmpty(strGPSLatitude) && !string.IsNullOrEmpty(strGPSLongitude))
         {
             dtLocallyStoredToponomyData =

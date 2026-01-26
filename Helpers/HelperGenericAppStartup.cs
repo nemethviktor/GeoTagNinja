@@ -19,7 +19,7 @@ namespace GeoTagNinja.Helpers;
 internal static class HelperGenericAppStartup
 {
     /// <summary>
-    ///     Creates the database sqlite file
+    ///     Creates the database SQLite file
     /// </summary>
     public static Task AppStartupCreateDatabaseFile()
     {
@@ -50,7 +50,7 @@ internal static class HelperGenericAppStartup
     }
 
     /// <summary>
-    ///     Writes defaults to sqlite if they don't exist
+    ///     Writes defaults to SQLite if they don't exist
     /// </summary>
     public static Task AppStartupWriteDefaultSettings()
     {

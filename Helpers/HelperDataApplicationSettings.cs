@@ -126,38 +126,38 @@ internal static class HelperDataApplicationSettings
     /// <param name="settingsToWrite">List of settings to be written/overwritten</param>
     internal static void DataWriteSQLiteSettings(List<AppSettingContainer> settingsToWrite)
     {
-        using SQLiteConnection sqliteDB =
+        using SQLiteConnection SQLiteDB =
             new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        sqliteDB.Open();
-        using SQLiteCommand sqlCommandStr = new(connection: sqliteDB);
-        using SQLiteTransaction transaction = sqliteDB.BeginTransaction();
+        SQLiteDB.Open();
+        using SQLiteCommand commandText = new(connection: SQLiteDB);
+        using SQLiteTransaction SQLiteTransaction = SQLiteDB.BeginTransaction();
         foreach (AppSettingContainer appSettingContainer in settingsToWrite)
         {
-            sqlCommandStr.CommandText = $@"
+            commandText.CommandText = $@"
                                         DELETE FROM {appSettingContainer.TableName} WHERE settingTabPage = @settingTabPage AND settingId = @settingId;"
                 ;
 
-            _ = sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingTabPage",
+            _ = commandText.Parameters.AddWithValue(parameterName: "@settingTabPage",
                 value: appSettingContainer.SettingTabPage);
-            _ = sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingId", value: appSettingContainer.SettingId);
-            _ = sqlCommandStr.ExecuteNonQuery();
+            _ = commandText.Parameters.AddWithValue(parameterName: "@settingId", value: appSettingContainer.SettingId);
+            _ = commandText.ExecuteNonQuery();
         }
 
         foreach (AppSettingContainer appSettingContainer in settingsToWrite)
         {
-            sqlCommandStr.CommandText =
+            commandText.CommandText =
                 $@"
                 INSERT INTO {appSettingContainer.TableName}  (settingTabPage, settingId, settingValue) VALUES (@settingTabPage, @settingId, @settingValue);";
 
-            _ = sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingTabPage",
+            _ = commandText.Parameters.AddWithValue(parameterName: "@settingTabPage",
                 value: appSettingContainer.SettingTabPage);
-            _ = sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingId", value: appSettingContainer.SettingId);
-            _ = sqlCommandStr.Parameters.AddWithValue(parameterName: "@settingValue",
+            _ = commandText.Parameters.AddWithValue(parameterName: "@settingId", value: appSettingContainer.SettingId);
+            _ = commandText.Parameters.AddWithValue(parameterName: "@settingValue",
                 value: appSettingContainer.SettingValue);
-            _ = sqlCommandStr.ExecuteNonQuery();
+            _ = commandText.ExecuteNonQuery();
         }
 
-        transaction.Commit();
+        SQLiteTransaction.Commit();
 
         // refresh main datatables
         _ = HelperGenericAppStartup.AppStartupReadSQLiteTables();
@@ -194,13 +194,13 @@ internal static class HelperDataApplicationSettings
     ///     This is largely me being a derp and doing a manual cleanup. My original SQL script was a bit buggy and so we have a
     ///     potential plethora of unused and possibly errouneous setting tokens.
     /// </summary>
-    internal static void DataDeleteSQLitesettingsCleanup()
+    internal static void DataDeleteSQLiteSettingsCleanup()
     {
-        using SQLiteConnection sqliteDB =
+        using SQLiteConnection SQLiteDB =
             new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        sqliteDB.Open();
+        SQLiteDB.Open();
 
-        string sqlCommandStr = @"
+        string commandText = @"
                                 DELETE 
                                 FROM   [settings]
                                 WHERE  [rowid] NOT IN (SELECT MAX ([rowid])
@@ -210,9 +210,9 @@ internal static class HelperDataApplicationSettings
                                                  [settingId]);
                                 "
             ;
-        sqlCommandStr += ";";
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        _ = sqlToRun.ExecuteNonQuery();
+        commandText += ";";
+        SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
+        _ = SQLiteCommand.ExecuteNonQuery();
     }
 
     /// <summary>
@@ -221,15 +221,16 @@ internal static class HelperDataApplicationSettings
     /// </summary>
     internal static void DataVacuumDatabase()
     {
-        using SQLiteConnection sqliteDB =
+        using SQLiteConnection SQLiteDB =
             new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        sqliteDB.Open();
+        SQLiteDB.Open();
 
-        string sqlCommandStr = @"VACUUM;"
+        string commandText = @"VACUUM;"
             ;
-        sqlCommandStr += ";";
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
-        _ = sqlToRun.ExecuteNonQuery();
+        commandText += ";";
+        SQLiteCommand SQLiteCommand
+            = new(commandText: commandText, connection: SQLiteDB);
+        _ = SQLiteCommand.ExecuteNonQuery();
     }
 
     #endregion

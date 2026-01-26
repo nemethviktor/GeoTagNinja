@@ -174,9 +174,9 @@ internal static class HelperVariables
     }
 
     /// <summary>
-    ///     Gets the sqlite file location containing the database info.
+    ///     Gets the SQLite file location containing the database info.
     /// </summary>
-    /// <returns>The sqlite file location containing the database info</returns>
+    /// <returns>The SQLite file location containing the database info</returns>
     private static string GetSettingsDatabaseFilePath()
     {
         return Path.Combine(

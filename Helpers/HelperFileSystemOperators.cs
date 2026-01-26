@@ -104,7 +104,7 @@ internal static class HelperFileSystemOperators
 
     /// <summary>
     ///     This is called mostly on app exit and start - delete any remaining files such as image previews, txt files and
-    ///     ... anything else that isn't an sqlite file.
+    ///     ... anything else that isn't an SQLite file.
     /// </summary>
     internal static void FsoCleanUpUserFolder()
     {

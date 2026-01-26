@@ -111,7 +111,7 @@ public partial class FrmManageFavourites : Form
             else if (control.Name == "cbx_Country")
             {
                 string countryCode = favourite.CountryCode;
-                string sqliteText = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
+                string countryNameMappingResult = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
                     queryWhat: LanguageMappingQueryOrReturnWhat.ISO_3166_1A3,
                     inputVal: countryCode,
                     returnWhat: LanguageMappingQueryOrReturnWhat.Country);
@@ -123,7 +123,7 @@ public partial class FrmManageFavourites : Form
 
                 try
                 {
-                    cbx_Country.SelectedIndex = cbx_Country.Items.IndexOf(value: sqliteText);
+                    cbx_Country.SelectedIndex = cbx_Country.Items.IndexOf(value: countryNameMappingResult);
                 }
                 catch
                 {

@@ -753,7 +753,7 @@ internal static class HelperExifReadExifData
 
                         dtSQLToponomyData.Rows.Add(row: drAPIToponomyRow);
 
-                        // write back the new stuff to sql
+                        // write back the new stuff to SQL
 
                         drWriteToSQLiteRow[columnName: "lat"] = lat;
                         drWriteToSQLiteRow[columnName: "lng"] = lng;

@@ -21,11 +21,11 @@ internal static class HelperDataCustomRules
     /// </returns>
     internal static DataTable DataReadSQLiteCustomRules()
     {
-        using SQLiteConnection sqliteDB = new(connectionString:
+        using SQLiteConnection SQLiteDB = new(connectionString:
             $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        sqliteDB.Open();
+        SQLiteDB.Open();
 
-        string sqlCommandStr = @"
+        string commandText = @"
                                 SELECT *
                                 FROM CustomRules
                                 WHERE 1=1
@@ -33,9 +33,9 @@ internal static class HelperDataCustomRules
 								"
             ;
 
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
 
-        SQLiteDataReader reader = sqlToRun.ExecuteReader();
+        SQLiteDataReader reader = SQLiteCommand.ExecuteReader();
         DataTable dataTable = new();
         dataTable.Load(reader: reader);
         return dataTable;
@@ -54,16 +54,16 @@ internal static class HelperDataCustomRules
     internal static void DataWriteSQLiteCustomRules()
     {
         // write back
-        using SQLiteConnection sqliteDB = new(connectionString:
+        using SQLiteConnection SQLiteDB = new(connectionString:
             $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        sqliteDB.Open();
+        SQLiteDB.Open();
 
-        using SQLiteDataAdapter sqliteAdapter = new(commandText: @"select * from customRules", connection: sqliteDB);
-        SQLiteCommandBuilder commandBuilder = new(adp: sqliteAdapter);
-        _ = sqliteAdapter.Update(dataTable: HelperVariables.DtCustomRules);
+        using SQLiteDataAdapter SQLiteAdapter = new(commandText: @"SELECT * FROM customRules", connection: SQLiteDB);
+        SQLiteCommandBuilder commandBuilder = new(adp: SQLiteAdapter);
+        _ = SQLiteAdapter.Update(dataTable: HelperVariables.DtCustomRules);
 
         // this is stupid but Update doesn't seem to work with a delete/AcceptChange so...
-        string sqlCommandStr = @"
+        string commandText = @"
                                 DELETE FROM customRules
                                 WHERE 1=1
                                     AND TargetPointOutcome = 'Custom'
@@ -77,9 +77,9 @@ internal static class HelperDataCustomRules
                                 "
             ;
 
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
 
-        _ = sqlToRun.ExecuteNonQuery();
+        _ = SQLiteCommand.ExecuteNonQuery();
     }
 
     /// <summary>
@@ -94,11 +94,11 @@ internal static class HelperDataCustomRules
     {
         FrmMainApp.Log.Info(message: "Starting");
 
-        using SQLiteConnection sqliteDB = new(connectionString:
+        using SQLiteConnection SQLiteDB = new(connectionString:
             $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        sqliteDB.Open();
+        SQLiteDB.Open();
 
-        string sqlCommandStr = @"
+        string commandText = @"
                                 CREATE TABLE IF NOT EXISTS customRules(
                                         ruleId INTEGER PRIMARY KEY AUTOINCREMENT,
                                         CountryCode NTEXT NOT NULL,
@@ -113,8 +113,8 @@ internal static class HelperDataCustomRules
                                 "
             ;
 
-        SQLiteCommand sqlToRun = new(commandText: sqlCommandStr, connection: sqliteDB);
+        SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
 
-        _ = sqlToRun.ExecuteNonQuery();
+        _ = SQLiteCommand.ExecuteNonQuery();
     }
 }
