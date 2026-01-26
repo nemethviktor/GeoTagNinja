@@ -740,7 +740,7 @@ public partial class FrmSettings : Form
                             {
                                 if (!_ignoreRestartWarnings)
                                 {
-                                    PromptUserToRestartApp();
+                                    WarnUserToRestartApp();
                                 }
                             }
                         }
@@ -755,7 +755,7 @@ public partial class FrmSettings : Form
                             {
                                 if (!_ignoreRestartWarnings)
                                 {
-                                    PromptUserToRestartApp();
+                                    WarnUserToRestartApp();
                                 }
                             }
                             else if (cbx == cbx_TryUseGeoNamesLanguage)
@@ -1419,7 +1419,7 @@ public partial class FrmSettings : Form
                 // Cancel clears the write queue but since the database would have been overwritten that's a reasonable logical path to take.
                 if (_importHasBeenProcessed)
                 {
-                    PromptUserToRestartApp();
+                    WarnUserToRestartApp();
                     btn_Generic_Cancel.PerformClick();
                 }
             }
@@ -1443,83 +1443,17 @@ public partial class FrmSettings : Form
     /// <summary>
     ///     Prompts the user to restart the application.
     /// </summary>
-    /// <remarks>
-    ///     This method displays a dialog box with options to restart the application now or later.
-    ///     If the user chooses to restart now, the application is restarted immediately.
-    ///     If the user chooses to restart later, a warning message box is displayed.
-    /// </remarks>
-    private void PromptUserToRestartApp()
+    private void WarnUserToRestartApp()
     {
 #if !DEBUG
-        string btnRestartNowName = "btn_RestartNow";
-        string btnRestartLaterName = "btn_RestartLater";
-        Dictionary<string, string> buttonsDictionary = new()
-        {
-            {
-                ReturnControlText(
-                    fakeControlType: FakeControlTypes.Button,
-                    controlName: btnRestartNowName),
-                btnRestartNowName
-            },
-            {
-                ReturnControlText(
-                    fakeControlType: FakeControlTypes.Button,
-                    controlName: btnRestartLaterName),
-                btnRestartLaterName
-            }
-        };
+        Themer.ShowMessageBox(
+            message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: "mbx_FrmSettings_PleaseRestartApp",
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+            icon: MessageBoxIcon.Warning,
+            buttons: MessageBoxButtons.OK);
 
-        
-        List<string> displayAndReturnList =
-            DialogWithOrWithoutCheckBox.DisplayAndReturnList(
-                labelText: ReturnControlText(
-                    controlName: "mbx_FrmSettings_PleaseRestartApp",
-                    fakeControlType: FakeControlTypes.MessageBox),
-                caption: ReturnControlText(
-                    controlName: MessageBoxCaption
-                                                                   .Question
-                                                                   .ToString(),
-                    fakeControlType: FakeControlTypes.MessageBoxCaption),
-                buttonsDictionary: buttonsDictionary,
-                orientation: "Horizontal",
-                checkboxesDictionary: new Dictionary<string, string>());
-
-        if (displayAndReturnList.Contains(item: btnRestartNowName))
-        {
-            _ignoreRestartWarnings = true;
-
-            // the logic here is that "OK"-press triggers the moving from one DataTable to another
-            // but the PromptUserToRestartApp technically precedes that so if user clicks "Now",
-            // we restart the app w/o having written anything to the settings, obvs useless.
-            // ...so we trigger "OK" again but mute the warnings.
-            btn_Generic_OK.PerformClick();
-            // Restart doesn't actually save the settings to the DB
-            FrmMainApp frmMainAppInstance =
-                (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-            frmMainAppInstance.PerformAppClosingProcedure(extractNewExifTool: false);
-            Relaunch();
-        }
 #endif
-    }
-
-    /// <summary>
-    ///     Attempts to gracefully restart the app as to avoid Mutex issues.
-    ///     Only executes in Release, not Debug
-    /// </summary>
-    private static void Relaunch()
-    {
-        string exePath = Application.ExecutablePath;
-        string args = Join(separator: " ",
-            values: Environment.GetCommandLineArgs().Skip(count: 1).Select(selector: a => $"\"{a}\""));
-
-        _ = Process.Start(startInfo: new ProcessStartInfo
-        {
-            FileName = exePath,
-            Arguments = args,
-            UseShellExecute = false
-        });
-
-        Application.Exit();
     }
 
     /// <summary>

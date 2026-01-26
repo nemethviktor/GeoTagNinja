@@ -5,6 +5,7 @@
  	- TBA
 - BUGS & FIXES:
  	- Fix #197 column name mismatches in internal datatables
+	- Removed the ability to restart the app from within the app as it was causing continued headaches.
 
 **Build 9519 [20260123] // Build 9520 [20260124]**
 - NEW & UPDATED:
