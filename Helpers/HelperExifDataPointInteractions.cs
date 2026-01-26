@@ -1,5 +1,4 @@
 ﻿using GeoTagNinja.Model;
-using GeoTagNinja.View.ListView;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,7 +7,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers;
@@ -68,8 +66,15 @@ internal static class HelperExifDataPointInteractions
     ///     files.
     /// </summary>
     /// <param name="senderName">At this point this can either be the main listview or the one from Edit (file) data</param>
-    internal static async Task ExifRemoveLocationData(string senderName)
+    internal static async Task ExifRemoveLocationData(
+        DirectoryElement dirElemFileToModify,
+        DirectoryElement.AttributeVersion attributeVersion)
     {
+        if (dirElemFileToModify.Type != DirectoryElement.ElementType.File)
+        {
+            return;
+        }
+
         // GeoDataAttributes is a readonly and I don't want to modify it for the rest of the code.
         List<ElementAttribute> geoDataAttributes = Enum
                                                   .GetValues(
@@ -89,147 +94,103 @@ internal static class HelperExifDataPointInteractions
             geoDataAttributes.Add(item: ElementAttribute.OffsetTime);
         }
 
-        if (senderName == "FrmEditFileData")
+        //if (senderName == "FrmEditFileData")
+        //{
+        //    FrmEditFileData frmEditFileDataInstance =
+        //        (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
+        //    if (frmEditFileDataInstance != null)
+        //    {
+        //        ListViewItem lvi =
+        //            frmEditFileDataInstance.lvw_FileListEditImages
+        //                                   .SelectedItems[index: 0];
+
+        //        HelperNonStatic helperNonstatic = new();
+        //        IEnumerable<Control> cGbx_GPSData =
+        //            helperNonstatic.GetAllControls(
+        //                control: frmEditFileDataInstance.gbx_GPSData);
+        //        foreach (Control cItem_cGbx_GPSData in cGbx_GPSData)
+        //        {
+        //            if (cItem_cGbx_GPSData is NumericUpDown nud)
+        //            {
+        //                nud.Value = 0;
+        //                nud.Text = "";
+        //            }
+
+        //            // no textboxes here but just in case
+        //            else if (cItem_cGbx_GPSData is TextBox txt)
+        //            {
+        //                txt.Text = "";
+        //            }
+        //        }
+
+        //        IEnumerable<Control> cGbx_LocationData =
+        //            helperNonstatic.GetAllControls(
+        //                control: frmEditFileDataInstance.gbx_LocationData);
+        //        foreach (Control cItem_cGbx_LocationData in cGbx_LocationData)
+        //        {
+        //            // no nuds here but just in case
+        //            if (cItem_cGbx_LocationData is NumericUpDown nud)
+        //            {
+        //                nud.Value = 0;
+        //                nud.Text = "";
+        //            }
+
+        //            else if (cItem_cGbx_LocationData is TextBox txt)
+        //            {
+        //                txt.Text = "";
+        //            }
+        //            else if (cItem_cGbx_LocationData is ComboBox cbx)
+        //            {
+        //                cbx.Text = "";
+        //            }
+        //        }
+
+
+        foreach (ElementAttribute toponomyDetail in geoDataAttributes)
         {
-            FrmEditFileData frmEditFileDataInstance =
-                (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
-            if (frmEditFileDataInstance != null)
-            {
-                ListViewItem lvi =
-                    frmEditFileDataInstance.lvw_FileListEditImages
-                                           .SelectedItems[index: 0];
-
-                HelperNonStatic helperNonstatic = new();
-                IEnumerable<Control> cGbx_GPSData =
-                    helperNonstatic.GetAllControls(
-                        control: frmEditFileDataInstance.gbx_GPSData);
-                foreach (Control cItem_cGbx_GPSData in cGbx_GPSData)
-                {
-                    if (cItem_cGbx_GPSData is NumericUpDown nud)
-                    {
-                        nud.Value = 0;
-                        nud.Text = "";
-                    }
-
-                    // no textboxes here but just in case
-                    else if (cItem_cGbx_GPSData is TextBox txt)
-                    {
-                        txt.Text = "";
-                    }
-                }
-
-                IEnumerable<Control> cGbx_LocationData =
-                    helperNonstatic.GetAllControls(
-                        control: frmEditFileDataInstance.gbx_LocationData);
-                foreach (Control cItem_cGbx_LocationData in cGbx_LocationData)
-                {
-                    // no nuds here but just in case
-                    if (cItem_cGbx_LocationData is NumericUpDown nud)
-                    {
-                        nud.Value = 0;
-                        nud.Text = "";
-                    }
-
-                    else if (cItem_cGbx_LocationData is TextBox txt)
-                    {
-                        txt.Text = "";
-                    }
-                    else if (cItem_cGbx_LocationData is ComboBox cbx)
-                    {
-                        cbx.Text = "";
-                    }
-                }
-
-                if (lvi.Tag is DirectoryElement dirElemFileToModify)
-                {
-                    foreach (ElementAttribute toponomyDetail in geoDataAttributes)
-                    {
-                        dirElemFileToModify.SetAttributeValueAnyType(
-                            attribute: toponomyDetail,
-                            value: "",
-                            version: DirectoryElement.AttributeVersion
-                                                     .Stage1EditFormIntraTabTransferQueue,
-                            isMarkedForDeletion: true);
-                    }
-
-                    dirElemFileToModify.SetAttributeValueAnyType(
-                        attribute: ElementAttribute.RemoveAllGPS,
-                        value: "",
-                        version: DirectoryElement.AttributeVersion
-                                                 .Stage1EditFormIntraTabTransferQueue,
-                        isMarkedForDeletion: true);
-                }
-            }
+            dirElemFileToModify.SetAttributeValueAnyType(
+                attribute: toponomyDetail,
+                value: "",
+                version: attributeVersion,
+                isMarkedForDeletion: true);
         }
-        else if (senderName == "FrmMainApp")
-        {
-            FrmMainApp frmMainAppInstance =
-                (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-            if (frmMainAppInstance != null)
-            {
-                ListView lvw = frmMainAppInstance.lvw_FileList;
-                if (lvw.SelectedItems.Count > 0)
-                {
-                    HelperGenericFileLocking.FileListBeingUpdated = true;
-                    foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList
-                                .SelectedItems)
-                    {
-                        DirectoryElement dirElemFileToModify =
-                            lvi.Tag as DirectoryElement;
-                        // don't do folders...
-                        if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
-                        {
-                            string fileNameWithPath =
-                                dirElemFileToModify.FileNameWithPath;
-                            string fileNameWithoutPath =
-                                dirElemFileToModify.ItemNameWithoutPath;
 
-                            // check it's not in the read-queue.
-                            while (HelperGenericFileLocking.GenericLockCheckLockFile(
-                                       fileNameWithoutPath: fileNameWithoutPath))
-                            {
-                                await Task.Delay(millisecondsDelay: 10);
-                            }
-
-                            // then put a blocker on
-                            HelperGenericFileLocking.GenericLockLockFile(
-                                fileNameWithoutPath: fileNameWithoutPath);
-                            foreach (ElementAttribute toponomyDetail in geoDataAttributes)
-                            {
-                                dirElemFileToModify.SetAttributeValueAnyType(
-                                    attribute: toponomyDetail,
-                                    value: "",
-                                    version: DirectoryElement.AttributeVersion
-                                                             .Stage3ReadyToWrite,
-                                    isMarkedForDeletion: true);
-                            }
-
-                            dirElemFileToModify.SetAttributeValueAnyType(
-                                attribute: ElementAttribute.RemoveAllGPS,
-                                value: "",
-                                version: DirectoryElement.AttributeVersion
-                                                         .Stage3ReadyToWrite,
-                                isMarkedForDeletion: true);
-
-                            // then remove lock
-
-                            await FileListViewReadWrite
-                               .ListViewUpdateRowFromDEStage3ReadyToWrite(dirElemFileToModify: dirElemFileToModify);
-                            HelperGenericFileLocking.GenericLockUnLockFile(
-                                fileNameWithoutPath: fileNameWithoutPath);
-                            // no need to remove the xmp here because it hasn't been added in the first place.
-                        }
-
-                        //lvw.EndUpdate();
-                    }
-
-                    HelperGenericFileLocking.FileListBeingUpdated = false;
-                    FrmMainApp.RemoveGeoDataIsRunning = false;
-                }
-            }
-        }
+        dirElemFileToModify.SetAttributeValueAnyType(
+            attribute: ElementAttribute.RemoveAllGPS,
+            value: "",
+            version: attributeVersion,
+            isMarkedForDeletion: true);
     }
 
+    /// <summary>
+    ///     Corrects the half-coordinate to be a valid one (in case over/under 180, which can happen if the map is
+    ///     misbehaving.)
+    /// </summary>
+    /// <param name="coordHalfPair">Lat or Long</param>
+    /// <returns>Rounded to 6, corrected Lat or Long</returns>
+    internal static double GenericCorrectInvalidCoordinate(double coordHalfPair)
+    {
+        if (coordHalfPair < -180)
+        {
+            coordHalfPair = 180 - (Math.Abs(value: coordHalfPair) % 180);
+        }
+        else if (coordHalfPair > 180)
+        {
+            coordHalfPair = Math.Abs(value: coordHalfPair) % 180;
+        }
+
+
+        coordHalfPair = Math.Round(value: coordHalfPair, digits: 6);
+        return coordHalfPair;
+    }
+
+    /// <summary>
+    /// Corrects the orientation of the specified image based on its EXIF orientation data.
+    /// </summary>
+    /// <remarks>If the image does not contain EXIF orientation data, no changes are made. The method modifies
+    /// the image in place and removes the EXIF orientation property after rotation.</remarks>
+    /// <param name="img">The image to be rotated. This parameter must not be null and should contain EXIF orientation data for the method
+    /// to perform any rotation.</param>
     internal static void ExifRotate(this Image img)
     {
         // via https://stackoverflow.com/a/48347653/3968494
@@ -272,26 +233,5 @@ internal static class HelperExifDataPointInteractions
             img.RotateFlip(rotateFlipType: rot);
             img.RemovePropertyItem(propid: HelperVariables.exifOrientationID);
         }
-    }
-
-    /// <summary>
-    ///     Corrects the half-coordinate to be a valid one (in case over/under 180, which can happen if the map is
-    ///     misbehaving.)
-    /// </summary>
-    /// <param name="coordHalfPair">Lat or Long</param>
-    /// <returns>Rounded to 6, corrected Lat or Long</returns>
-    internal static double GenericCorrectInvalidCoordinate(double coordHalfPair)
-    {
-        if (coordHalfPair < -180)
-        {
-            coordHalfPair = 180 - (Math.Abs(value: coordHalfPair) % 180);
-        }
-        else if (coordHalfPair > 180)
-        {
-            coordHalfPair = Math.Abs(value: coordHalfPair) % 180;
-        }
-
-        coordHalfPair = Math.Round(value: coordHalfPair, digits: 6);
-        return coordHalfPair;
     }
 }

@@ -2194,7 +2194,7 @@ public partial class FrmMainApp : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void tsb_RemoveGeoData_Click(object sender,
-                                               EventArgs e)
+                                           EventArgs e)
     {
         try
         {
@@ -2202,8 +2202,36 @@ public partial class FrmMainApp : Form
             if (!RemoveGeoDataIsRunning)
             {
                 RemoveGeoDataIsRunning = true;
-                await HelperExifDataPointInteractions.ExifRemoveLocationData(
-                    senderName: "FrmMainApp");
+
+                List<DirectoryElement> directoryElements = [];
+                HelperGenericFileLocking.FileListBeingUpdated = true;
+                FrmMainApp.RemoveGeoDataIsRunning = true;
+
+                foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
+                {
+                    DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;
+
+                    while (HelperGenericFileLocking.GenericLockCheckLockFile(
+                                       fileNameWithoutPath: dirElemFileToModify.ItemNameWithoutPath))
+                    {
+                        await Task.Delay(millisecondsDelay: 10);
+                    }
+
+                    // then put a blocker on
+                    HelperGenericFileLocking.GenericLockLockFile(
+                        fileNameWithoutPath: dirElemFileToModify.ItemNameWithoutPath);
+
+                    await HelperExifDataPointInteractions.ExifRemoveLocationData(
+                     dirElemFileToModify: dirElemFileToModify,
+                     attributeVersion: DirectoryElement.AttributeVersion.Stage3ReadyToWrite);
+
+                    HelperGenericFileLocking.GenericLockUnLockFile(
+                               fileNameWithoutPath: dirElemFileToModify.ItemNameWithoutPath);
+
+                    await FileListViewReadWrite
+                              .ListViewUpdateRowFromDEStage3ReadyToWrite(dirElemFileToModify: dirElemFileToModify);
+                }
+                HelperGenericFileLocking.FileListBeingUpdated = false;
                 RemoveGeoDataIsRunning = false;
                 RemoveCachedData(displayMessage: false); // remove cache. otherwise the app will report silly things.
                 FileListViewReadWrite.ListViewCountItemsWithGeoData();
@@ -2221,7 +2249,6 @@ public partial class FrmMainApp : Form
                 buttons: MessageBoxButtons.OK);
         }
     }
-
     /// <summary>
     ///     Handles the tsb_ImportExportGPX_Click event -> shows the FrmImportExportGpx Form
     /// </summary>

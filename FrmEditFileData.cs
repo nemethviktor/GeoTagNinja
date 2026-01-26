@@ -16,7 +16,6 @@ using System.Windows.Forms;
 using TimeZoneConverter;
 using static GeoTagNinja.FrmMainApp;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
-using static GeoTagNinja.Helpers.HelperExifReadExifData;
 using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
@@ -366,10 +365,16 @@ public partial class FrmEditFileData : Form
                             // these don't have a "simple" text solution
                             if (control.Name == "cbx_CountryCode") // this will also fill in Country
                             {
-                                string countryCodeInDirectoryElement =
-                                    stringValueOfControl;
-                                if (countryCodeInDirectoryElement != null &&
-                                    !string.IsNullOrEmpty(
+                                // RemoveGeoData has been executed
+                                if (stringValueOfControl == NullStringEquivalentGeneric)
+                                {
+                                    stringValueOfControl = null;
+                                    cbx_Country.SelectedIndex = -1;
+                                    cbx_CountryCode.SelectedIndex = -1;
+                                }
+
+                                string countryCodeInDirectoryElement = stringValueOfControl;
+                                if (countryCodeInDirectoryElement != null && !string.IsNullOrEmpty(
                                         value: countryCodeInDirectoryElement.ToString(
                                             provider: CultureInfo.InvariantCulture)))
                                 {
@@ -1386,10 +1391,21 @@ public partial class FrmEditFileData : Form
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
     private async void btn_RemoveGeoData_Click(object sender,
-        EventArgs e)
+     EventArgs e)
     {
-        await HelperExifDataPointInteractions.ExifRemoveLocationData(
-            senderName: "FrmEditFileData");
+        _frmEditFileDataNowLoadingFileData = true;
+        foreach (ListViewItem lvi in lvw_FileListEditImages.SelectedItems)
+        {
+            DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;
+
+            await HelperExifDataPointInteractions.ExifRemoveLocationData(
+             dirElemFileToModify: dirElemFileToModify,
+             attributeVersion: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
+        }
+
+        ShowDEDataInRelevantControls(
+            dirElemFileToModify: lvw_FileListEditImages.SelectedItems[0].Tag as DirectoryElement);
+        _frmEditFileDataNowLoadingFileData = false;
     }
 
     #region object text change handlers
@@ -1536,29 +1552,29 @@ public partial class FrmEditFileData : Form
                 else
                 {
                     // marry up countrycodes and countrynames
-                    string sqliteText;
+                    string countryNameMappingResult;
                     if (senderName == "cbx_CountryCode")
                     {
-                        sqliteText = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
+                        countryNameMappingResult = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
                             queryWhat: LanguageMappingQueryOrReturnWhat.ISO_3166_1A3,
                             inputVal: sndr.Text,
                             returnWhat: LanguageMappingQueryOrReturnWhat.Country
                         );
-                        if (cbx_Country.Text != sqliteText)
+                        if (cbx_Country.Text != countryNameMappingResult)
                         {
-                            cbx_Country.Text = sqliteText;
+                            cbx_Country.Text = countryNameMappingResult;
                         }
                     }
                     else if (senderName == "cbx_Country")
                     {
-                        sqliteText = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
+                        countryNameMappingResult = HelperDataLanguageTZ.DataReadDTCountryCodesNames(
                             queryWhat: LanguageMappingQueryOrReturnWhat.Country,
                             inputVal: sndr.Text,
                             returnWhat: LanguageMappingQueryOrReturnWhat.ISO_3166_1A3
                         );
-                        if (cbx_CountryCode.Text != sqliteText)
+                        if (cbx_CountryCode.Text != countryNameMappingResult)
                         {
-                            cbx_CountryCode.Text = sqliteText;
+                            cbx_CountryCode.Text = countryNameMappingResult;
                         }
                     }
 
