@@ -553,7 +553,7 @@ Dane zostaną odrzucone, jeśli klikniesz Nie</value>
     <value>Nic do wklejenia.</value>
   </data>
   <data name="mbx_Helper_WarningTooManyFilesSelected" xml:space="preserve">
-    <value>To zadziała tylko wtedy, gdy masz zaznaczony TYLKO jeden plik.</value>
+    <value>Ta opcja zadziała tylko wtedy, gdy wybierzesz jeden i tylko jeden plik.</value>
   </data>
   <data name="mns_File" xml:space="preserve">
     <value>Plik</value>
