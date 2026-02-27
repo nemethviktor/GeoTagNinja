@@ -1105,8 +1105,8 @@ public partial class FrmSettings : Form
                 if (clh_CountryCode != null) // shouldn't really be null but just in case.
                 {
                     BindingList<KeyValuePair<string, string>> bindingList =
-                        new(
-                            list: clh_CountryCodeOptions.ToList());
+                        [with(
+                            list: clh_CountryCodeOptions.ToList())];
                     clh_CountryCode.DataSource = bindingList;
                     clh_CountryCode.DisplayMember = "Value";
                     clh_CountryCode.ValueMember = "Key";

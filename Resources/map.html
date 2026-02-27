@@ -84,6 +84,10 @@
             ]
         );
 
+
+        { HTMLSetZoom }
+        //map.setZoom(15);
+
         L.control.layers(baseMaps).addTo(map);
 
         { HTMLAddMarker }
@@ -124,6 +128,10 @@
 
         map.on('baselayerchange', function (e) {
             window.chrome.webview.postMessage({ "layer": e.name.toString() });
+        });
+
+        map.on('zoomend', function (e) {
+            window.chrome.webview.postMessage({ "zoomLevel": map.getZoom() });
         });
 
         map.on('click', function onMapClick(e) {

@@ -99,6 +99,7 @@ public partial class FrmMainApp : Form
 
     private static bool _showLocToMapDialogChoice = true;
     private static bool _rememberLocToMapDialogChoice;
+    private static int? _lastZoomLevel;
 
     private FrmSettings FrmSettings;
 
@@ -614,6 +615,13 @@ public partial class FrmMainApp : Form
 
         MapWebMessage mapWebMessage = JsonSerializer.Deserialize<MapWebMessage>(json: jsonString);
 
+        int? zoomLevel = mapWebMessage?.zoomLevel; // apparently defaults to zero
+        // don't merge with the above -> this is only non-null when the user has zoomed. 
+        if (zoomLevel > 0)
+        {
+            _lastZoomLevel = zoomLevel;
+        }
+
         string layerName = mapWebMessage?.layer;
         HelperVariables.HTMLDefaultLayer =
             HelperGenericAncillaryListsArrays.GetMapLayers().FirstOrDefault(predicate: x => x.Value == layerName).Key ??
@@ -625,14 +633,16 @@ public partial class FrmMainApp : Form
         {
             isDragged: true
         };
-        _ = double.TryParse(s: strLat, style: NumberStyles.Any,
+        _ = double.TryParse(
+            s: strLat,
+            style: NumberStyles.Any,
             provider: CultureInfo.InvariantCulture,
-            result: out
-            double dblLat); // trust me i hate this f...king culture thing as much as possible...
-        _ = double.TryParse(s: strLng, style: NumberStyles.Any,
+            result: out double dblLat); // trust me i hate this f...king culture thing as much as possible...
+        _ = double.TryParse(
+            s: strLng,
+            style: NumberStyles.Any,
             provider: CultureInfo.InvariantCulture,
-            result: out
-            double dblLng); // trust me i hate this f...king culture thing as much as possible...
+            result: out double dblLng); // trust me i hate this f...king culture thing as much as possible...
         // if the user zooms out too much they can encounter an "unreal" coordinate.
 
         double correctedDblLat =
@@ -1223,6 +1233,8 @@ public partial class FrmMainApp : Form
             showDestinationPolyLineStr = BuildDestinationPolyLineStr(multiCoordsDefaultStr: multiCoordsDefaultStr);
         }
 
+        string setZoom = $"map.setZoom({_lastZoomLevel ?? 0});";
+
         List<(string key, string value)> replacements =
         [
             ("replaceLat", HelperVariables.LastLat.ToString()
@@ -1242,7 +1254,8 @@ public partial class FrmMainApp : Form
             ("{ HTMLShowLines }", showLinesStr),
             ("{ HTMLShowPoints }", showPointsStr),
             ("{ HTMLShowFOVPolygon }", showFOVStr),
-            ("{ HTMLShowPolyLine }", showDestinationPolyLineStr)
+            ("{ HTMLShowPolyLine }", showDestinationPolyLineStr),
+            ("{ HTMLSetZoom }", _lastZoomLevel > 0 && HelperVariables.UserSettingRetainMapZoom ? setZoom : string.Empty)
         ];
         foreach ((string key, string value) in replacements)
         {

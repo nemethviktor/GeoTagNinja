@@ -282,7 +282,8 @@ internal static class HelperGenericAppStartup
                 { "UserSettingUpdatePreReleaseGTN", "ckb_UpdateCheckPreRelease" },
                 { "UserSettingOnlyShowFCodePPL", "ckb_PopulatedPlacesOnly" },
                 { "UserSettingUseImperial", "ckb_UseImperialNotMetric" },
-                { "UserSettingShowThumbnails", "ckb_ShowThumbnails" }
+                { "UserSettingShowThumbnails", "ckb_ShowThumbnails" },
+                { "UserSettingRetainMapZoom", "ckb_RetainMapZoom" }
             },
             [key: "tpg_ImportExport_Import"] = new Dictionary<string, string>
             {

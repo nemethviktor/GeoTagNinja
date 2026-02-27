@@ -1493,4 +1493,8 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
   <data name="frm_FrmCustomiseFormControls" xml:space="preserve">
     <value>Customise Winform Controls</value>
   </data>
+  <data name="ckb_RetainMapZoom" xml:space="preserve">
+    <value>Retain map zoom level between clicks</value>
+    <comment>This is in Settings. Allows the user to retain the map zoom level between clicks within one session rather than zoom resetting to some pre-defined logic</comment>
+  </data>
 </root>
