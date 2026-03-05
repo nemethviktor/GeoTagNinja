@@ -1177,4 +1177,7 @@ Zapisz klucz API, gdy zostaniesz o to poproszony. Jeśli tego nie zrobisz od raz
   <data name="frm_FrmCustomiseFormControls" xml:space="preserve">
     <value>Konfiguruj kontrolki Winform</value>
   </data>
+  <data name="ckb_RetainMapZoom" xml:space="preserve">
+    <value>Zachowaj poziom powiększenia mapy między kliknięciami</value>
+  </data>
 </root>
