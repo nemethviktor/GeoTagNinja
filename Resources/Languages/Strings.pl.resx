@@ -553,7 +553,7 @@ Dane zostaną odrzucone, jeśli klikniesz Nie</value>
     <value>Nic do wklejenia.</value>
   </data>
   <data name="mbx_Helper_WarningTooManyFilesSelected" xml:space="preserve">
-    <value>To zadziała tylko wtedy, gdy masz zaznaczony TYLKO jeden plik.</value>
+    <value>Ta opcja zadziała tylko wtedy, gdy wybierzesz jeden i tylko jeden plik.</value>
   </data>
   <data name="mns_File" xml:space="preserve">
     <value>Plik</value>
@@ -1176,5 +1176,8 @@ Zapisz klucz API, gdy zostaniesz o to poproszony. Jeśli tego nie zrobisz od raz
   </data>
   <data name="frm_FrmCustomiseFormControls" xml:space="preserve">
     <value>Konfiguruj kontrolki Winform</value>
+  </data>
+  <data name="ckb_RetainMapZoom" xml:space="preserve">
+    <value>Zachowaj poziom powiększenia mapy między kliknięciami</value>
   </data>
 </root>
