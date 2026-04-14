@@ -980,6 +980,11 @@ public partial class FrmMainApp : Form
                     buttons: MessageBoxButtons.OK);
 
         }
+#if DEBUG
+        File.WriteAllText(
+            path: Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "htmlCode.html"),
+            contents: htmlCode);
+#endif
     }
 
     /// <summary>
@@ -1556,6 +1561,23 @@ public partial class FrmMainApp : Form
                 options: new CoreWebView2EnvironmentOptions(
                     additionalBrowserArguments: null, language: "en"));
             await wbv_MapArea.EnsureCoreWebView2Async(environment: c2Wv);
+            // Inside your Form_Load or after InitializeAsync
+
+            // 1. Set a filter so we only intercept OSM tile requests (saves performance)
+            wbv_MapArea.CoreWebView2.AddWebResourceRequestedFilter(
+                "https://*.tile.openstreetmap.org/*",
+                Microsoft.Web.WebView2.Core.CoreWebView2WebResourceContext.Image
+            );
+
+            // 2. Handle the request
+            wbv_MapArea.CoreWebView2.WebResourceRequested += (sender, args) =>
+            {
+                // Check if the header already exists; if so, remove it to avoid duplicates
+                CoreWebView2HttpRequestHeaders headers = args.Request.Headers;
+
+                // Force the Referer header
+                headers.SetHeader("Referer", "https://www.geotagninja.com/");
+            };
         }
         catch (Exception ex)
         {

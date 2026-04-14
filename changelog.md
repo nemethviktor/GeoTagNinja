@@ -2,10 +2,17 @@
 
 **Build 9xxx [2026xxxx]** (upcoming release)
 - NEW & UPDATED:
+	- TBA
+- BUGS & FIXES:
+	- TBA
+	- 
+**Build 9600 [20260414]**
+- NEW & UPDATED:
  	- Add option for user to set whether to remember map zoom level within a session ref #199
 - BUGS & FIXES:
  	- Fix #197 column name mismatches in internal datatables
 	- Removed the ability to restart the app from within the app as it was causing continued headaches.
+	- Hopefully fix issues with OSM Referrers. #200, #201, #202
 
 **Build 9519 [20260123] // Build 9520 [20260124]**
 - NEW & UPDATED:
