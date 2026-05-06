@@ -521,8 +521,7 @@ public partial class FrmEditFileData : Form
                     {
                         if (controlInsideGbx_TakenDate != btn_InsertTakenDate && DateValTakenDateOriginalNullable != null)
                         {
-                            controlsToEnable.Add(
-                                item: controlInsideGbx_TakenDate);
+                            controlsToEnable.Add(item: controlInsideGbx_TakenDate);
                         }
                     }
 
@@ -543,8 +542,7 @@ public partial class FrmEditFileData : Form
                     {
                         if (controlInsideGbx_CreateDate != btn_InsertCreateDate && DateValCreateDateOriginalNullable != null)
                         {
-                            controlsToEnable.Add(
-                                item: controlInsideGbx_CreateDate);
+                            controlsToEnable.Add(item: controlInsideGbx_CreateDate);
                         }
                     }
 
@@ -562,12 +560,7 @@ public partial class FrmEditFileData : Form
                                            DirectoryElement.AttributeVersion maxAttributeVersion)
         {
             string name = dtp.Name; // again, this is for debugging.
-            DateTime? directoryElementDateTimeOriginalNullable = null;
-            DateTime? directoryElementDateTimeS3Nullable = null;
-            DateTime? directoryElementDateTimeMaxVersionNullable = null;
-
             DateTime directoryElementDateTimeOriginal = default;
-            DateTime directoryElementDateTimeS3 = default;
             DateTime directoryElementDateTimeMaxVersion = default;
 
             // Update ref ticket #147:
@@ -582,61 +575,32 @@ public partial class FrmEditFileData : Form
                 { dtp_TakenDate, ElementAttribute.TakenDate },
                 { dtp_CreateDate, ElementAttribute.CreateDate }
             };
-
-            directoryElementDateTimeOriginalNullable = directoryElement.GetAttributeValue<DateTime>(
+            if (directoryElement.GetAttributeValue<DateTime>(
+                    attribute: dtpMapping[key: dtp],
+                    version: DirectoryElement.AttributeVersion.Original,
+                    notFoundValue: null) != null)
+            {
+                directoryElementDateTimeOriginal = (DateTime)directoryElement.GetAttributeValue<DateTime>(
                     attribute: dtpMapping[key: dtp],
                     version: DirectoryElement.AttributeVersion.Original,
                     notFoundValue: null);
-            if (directoryElementDateTimeOriginalNullable != null)
-            {
-                directoryElementDateTimeOriginal = (DateTime)directoryElementDateTimeOriginalNullable;
-            }
 
-            directoryElementDateTimeS3Nullable = directoryElement.GetAttributeValue<DateTime>(
-                    attribute: dtpMapping[key: dtp],
-                    version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                    notFoundValue: null);
-            if (directoryElementDateTimeS3Nullable != null)
-            {
-                directoryElementDateTimeS3 = (DateTime)directoryElementDateTimeS3Nullable;
-            }
-
-            directoryElementDateTimeMaxVersionNullable = directoryElement.GetAttributeValue<DateTime>(
+                directoryElementDateTimeMaxVersion = (DateTime)directoryElement.GetAttributeValue<DateTime>(
                     attribute: dtpMapping[key: dtp],
                     version: maxAttributeVersion,
                     notFoundValue: null);
 
-            if (directoryElementDateTimeMaxVersionNullable != null)
-            {
-                directoryElementDateTimeMaxVersion = (DateTime)directoryElementDateTimeMaxVersionNullable;
+                totalShiftedSeconds =
+                    ShiftTimeForDateTimePicker(
+                        whatToShift: TimeShiftTypes.TakenDate,
+                        dirElemFileToModify: directoryElement);
+
+                dtp.Value = totalShiftedSeconds != 0
+                    ? directoryElementDateTimeOriginal.AddSeconds(value: totalShiftedSeconds)
+                    : directoryElementDateTimeMaxVersion;
             }
 
-            totalShiftedSeconds =
-                ShiftTimeForDateTimePicker(
-                    whatToShift: dtp == dtp_TakenDate ? TimeShiftTypes.TakenDate : TimeShiftTypes.CreateDate,
-                    dirElemFileToModify: directoryElement);
-
-
-            if (directoryElementDateTimeOriginalNullable != null)
-            {
-                dtp.Value = directoryElementDateTimeOriginal.AddSeconds(value: totalShiftedSeconds);
-            }
-            // newly inserted value ... or not
-            else if (directoryElementDateTimeOriginalNullable == null && directoryElementDateTimeS3Nullable != null)
-            {
-                dtp.Value = directoryElementDateTimeS3.AddSeconds(value: 0); // don't add anything because it duplicates.
-            }
-            else if (directoryElementDateTimeMaxVersionNullable != null)
-            {
-                dtp.Value = directoryElementDateTimeMaxVersion.AddSeconds(value: totalShiftedSeconds);
-
-            }
-
-            else
-            {
-                Log.Trace(message: $"control: {control.Name} - Updating DateTimePicker");
-            }
-
+            Log.Trace(message: $"control: {control.Name} - Updating DateTimePicker");
             if (maxAttributeVersion !=
                 DirectoryElement.AttributeVersion.Original ||
                 totalShiftedSeconds != 0)
@@ -779,59 +743,33 @@ public partial class FrmEditFileData : Form
     private static int ShiftTimeForDateTimePicker(TimeShiftTypes whatToShift,
         DirectoryElement dirElemFileToModify)
     {
+        DirectoryElement.AttributeVersion attributeVersion =
+            DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue;
 
-        int shiftedDays = 0;
-        int shiftedHours = 0;
-        int shiftedMinutes = 0;
-        int shiftedSeconds = 0;
-
-
-        if (whatToShift == TimeShiftTypes.CreateDate)
-        {
-            shiftedDays = (int)dirElemFileToModify.GetAttributeValue<int>(
-               attribute: ElementAttribute.CreateDateDaysShift,
-               version: GetDEAttributeMaxAttributeVersion(dirElemFileToModify, ElementAttribute.CreateDateDaysShift),
-               notFoundValue: 0);
-
-            shiftedHours = (int)dirElemFileToModify.GetAttributeValue<int>(
-           attribute: ElementAttribute.CreateDateHoursShift,
-           version: GetDEAttributeMaxAttributeVersion(dirElemFileToModify, ElementAttribute.CreateDateHoursShift),
-           notFoundValue: 0);
-
-            shiftedMinutes = (int)dirElemFileToModify.GetAttributeValue<int>(
-               attribute: ElementAttribute.CreateDateMinutesShift,
-               version: GetDEAttributeMaxAttributeVersion(dirElemFileToModify, ElementAttribute.CreateDateMinutesShift),
-               notFoundValue: 0);
-
-            shiftedSeconds = (int)dirElemFileToModify.GetAttributeValue<int>(
-               attribute: ElementAttribute.CreateDateSecondsShift,
-               version: GetDEAttributeMaxAttributeVersion(dirElemFileToModify, ElementAttribute.CreateDateSecondsShift),
-               notFoundValue: 0);
-
-        }
-        else if (whatToShift == TimeShiftTypes.TakenDate)
-        {
-            shiftedDays = (int)dirElemFileToModify.GetAttributeValue<int>(
-               attribute: ElementAttribute.TakenDateDaysShift,
-               version: GetDEAttributeMaxAttributeVersion(dirElemFileToModify, ElementAttribute.TakenDateDaysShift),
-               notFoundValue: 0);
-
-            shiftedHours = (int)dirElemFileToModify.GetAttributeValue<int>(
-           attribute: ElementAttribute.TakenDateHoursShift,
-           version: GetDEAttributeMaxAttributeVersion(dirElemFileToModify, ElementAttribute.TakenDateHoursShift),
-           notFoundValue: 0);
-
-            shiftedMinutes = (int)dirElemFileToModify.GetAttributeValue<int>(
-               attribute: ElementAttribute.TakenDateMinutesShift,
-               version: GetDEAttributeMaxAttributeVersion(dirElemFileToModify, ElementAttribute.TakenDateMinutesShift),
-               notFoundValue: 0);
-
-            shiftedSeconds = (int)dirElemFileToModify.GetAttributeValue<int>(
-               attribute: ElementAttribute.TakenDateSecondsShift,
-               version: GetDEAttributeMaxAttributeVersion(dirElemFileToModify, ElementAttribute.TakenDateSecondsShift),
-               notFoundValue: 0);
-        }
-
+        int shiftedDays = (int)dirElemFileToModify.GetAttributeValue<int>(
+            attribute: whatToShift == TimeShiftTypes.CreateDate
+                ? ElementAttribute.CreateDateDaysShift
+                : ElementAttribute.TakenDateDaysShift,
+            version: attributeVersion,
+            notFoundValue: 0);
+        int shiftedHours = (int)dirElemFileToModify.GetAttributeValue<int>(
+            attribute: whatToShift == TimeShiftTypes.CreateDate
+                ? ElementAttribute.CreateDateHoursShift
+                : ElementAttribute.TakenDateHoursShift,
+            version: attributeVersion,
+            notFoundValue: 0);
+        int shiftedMinutes = (int)dirElemFileToModify.GetAttributeValue<int>(
+            attribute: whatToShift == TimeShiftTypes.CreateDate
+                ? ElementAttribute.CreateDateMinutesShift
+                : ElementAttribute.TakenDateMinutesShift,
+            version: attributeVersion,
+            notFoundValue: 0);
+        int shiftedSeconds = (int)dirElemFileToModify.GetAttributeValue<int>(
+            attribute: whatToShift == TimeShiftTypes.CreateDate
+                ? ElementAttribute.CreateDateSecondsShift
+                : ElementAttribute.TakenDateSecondsShift,
+            version: attributeVersion,
+            notFoundValue: 0);
         int totalShiftedSeconds = shiftedSeconds +
                                   (shiftedMinutes * 60) +
                                   (shiftedHours * 60 * 60) +
@@ -1502,8 +1440,7 @@ public partial class FrmEditFileData : Form
 
             string previousText = "herp-derp";
             string newText = "";
-            _ = lvw_FileListEditImages.SelectedItems[index: 0]
-                                                               .Text;
+            _ = lvw_FileListEditImages.SelectedItems[index: 0].Text;
 
             string exifTagStr = sndr.Name.Substring(HelperVariables.COL_NAME_PREFIX.Length);
             ElementAttribute attribute =
@@ -1511,8 +1448,7 @@ public partial class FrmEditFileData : Form
             ListView lvw = lvw_FileListEditImages;
             ListViewItem lvi = lvw.SelectedItems[index: 0];
 
-            DirectoryElement dirElemFileToModify =
-                lvi.Tag as DirectoryElement;
+            DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;
             if (dirElemFileToModify != null &&
                 dirElemFileToModify.HasSpecificAttributeWithVersion(
                     attribute: attribute,
@@ -1586,21 +1522,12 @@ public partial class FrmEditFileData : Form
 
                     if (senderName.Contains(value: "TakenDate"))
                     {
-                        DateTime? DateValTakenDateOriginalNullable =
-                            dirElemFileToModify.GetAttributeValue<DateTime>(
+                        DateTime origDateValTakenDate =
+                            (DateTime)dirElemFileToModify.GetAttributeValue<DateTime>(
                                 attribute: ElementAttribute.TakenDate,
-                                version: DirectoryElement.AttributeVersion.Original,
-                                notFoundValue: null);
-                        DateTime DateValTakenDateOriginal = DateValTakenDateOriginalNullable ?? DateTime.Now;
-
-
-                        DateTime? DateValTakenDateS3Nullable =
-                            dirElemFileToModify.GetAttributeValue<DateTime>(
-                                attribute: ElementAttribute.TakenDate,
-                                version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                notFoundValue: null);
-                        DateTime DateValTakenDateS3 = DateValTakenDateS3Nullable ?? DateTime.Now;
-
+                                version: DirectoryElement.AttributeVersion
+                                                         .Original,
+                                notFoundValue: DateTime.Now);
 
                         double shiftTakenDateSeconds =
                             (double)nud_TakenDateSecondsShift.Value +
@@ -1608,29 +1535,19 @@ public partial class FrmEditFileData : Form
                             (double)(nud_TakenDateHoursShift.Value * 60 * 60) +
                             (double)(nud_TakenDateDaysShift.Value * 60 * 60 * 24);
 
-                        // newly inserted value ... or not
-                        dtp_TakenDate.Value = DateValTakenDateOriginalNullable == null && DateValTakenDateS3Nullable != null
-                            ? DateValTakenDateS3.AddSeconds(value: shiftTakenDateSeconds)
-                            : DateValTakenDateOriginal.AddSeconds(value: shiftTakenDateSeconds);
-
+                        dtp_TakenDate.Value =
+                            origDateValTakenDate.AddSeconds(
+                                value: shiftTakenDateSeconds);
                         rbt_TakenDateTimeShift.Checked = shiftTakenDateSeconds != 0;
                     }
                     else if (senderName.Contains(value: "CreateDate"))
                     {
-                        DateTime? DateValCreateDateOriginalNullable =
-                            dirElemFileToModify.GetAttributeValue<DateTime>(
+                        DateTime origDateValCreateDate =
+                            (DateTime)dirElemFileToModify.GetAttributeValue<DateTime>(
                                 attribute: ElementAttribute.CreateDate,
-                                version: DirectoryElement.AttributeVersion.Original,
-                                notFoundValue: null);
-                        DateTime DateValCreateDateOriginal = DateValCreateDateOriginalNullable ?? DateTime.Now;
-
-
-                        DateTime? DateValCreateDateS3Nullable =
-                            dirElemFileToModify.GetAttributeValue<DateTime>(
-                                attribute: ElementAttribute.CreateDate,
-                                version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                notFoundValue: null);
-                        DateTime DateValCreateDateS3 = DateValCreateDateS3Nullable ?? DateTime.Now;
+                                version: DirectoryElement.AttributeVersion
+                                                         .Original,
+                                notFoundValue: DateTime.Now);
 
                         double shiftCreateDateSeconds =
                             (double)nud_CreateDateSecondsShift.Value +
@@ -1638,10 +1555,10 @@ public partial class FrmEditFileData : Form
                             (double)(nud_CreateDateHoursShift.Value * 60 * 60) +
                             (double)(nud_CreateDateDaysShift.Value * 60 * 60 * 24);
 
-                        // newly inserted value ... or not
-                        dtp_CreateDate.Value = DateValCreateDateOriginalNullable == null && DateValCreateDateS3Nullable != null
-                            ? DateValCreateDateS3.AddSeconds(value: shiftCreateDateSeconds)
-                            : DateValCreateDateOriginal.AddSeconds(value: shiftCreateDateSeconds);
+                        dtp_CreateDate.Value =
+                            origDateValCreateDate.AddSeconds(
+                                value: shiftCreateDateSeconds);
+                        rbt_CreateDateTimeShift.Checked = shiftCreateDateSeconds != 0;
                     }
                 }
                 else

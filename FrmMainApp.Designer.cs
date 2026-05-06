@@ -199,7 +199,7 @@ namespace GeoTagNinja
             this.lvw_FileList.BackColor = System.Drawing.Color.SeaShell;
             this.lvw_FileList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.clh_FileName});
-            this.lvw_FileList.ContextMenuStrip = this.cms_FileListView;
+            //this.lvw_FileList.ContextMenuStrip = this.cms_FileListView;
             resources.ApplyResources(this.lvw_FileList, "lvw_FileList");
             this.lvw_FileList.FullRowSelect = true;
             this.lvw_FileList.GridLines = true;
@@ -970,7 +970,7 @@ namespace GeoTagNinja
         private ToolTip ttp_loctToFile;
         private ImageList igl_RightHandSide;
         private FlowLayoutPanel flp_ProcessingInfo;
-        private ContextMenuStrip cms_FileListView;
+        public ContextMenuStrip cms_FileListView;
         private ToolStripMenuItem cmi_ShowHideCols;
         private ToolTip ttp_SaveFavourite;
         private ToolTip ttp_LoadFavourite;

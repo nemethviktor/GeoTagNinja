@@ -14,13 +14,7 @@ using WinFormsDarkThemerNinja;
 using Image = System.Drawing.Image;
 
 namespace GeoTagNinja.View.ListView;
-/*
- * TODOs
- * * Check if to migrate Context Menu into this class
- * * Hide Items.Clear
- * * When EXIFTool, etc do not use the value of column "Text" anymore,
- *   remove adding item extension and showing file system dir names
- */
+
 
 public partial class FileListView : System.Windows.Forms.ListView
 {
@@ -201,6 +195,60 @@ public partial class FileListView : System.Windows.Forms.ListView
     ///     used for this list view.
     /// </summary>
     private NativeMethods.SHFILEINFOW shfi;
+
+    private DirectoryElementCollection _masterCollection;
+
+    /// <summary>
+    /// Filters the list based on the clicked column.
+    /// </summary>
+    /// <param name="columnIndex">The index of the column to filter</param>
+    /// <param name="operation">The filter operation (is, contains, etc)</param>
+    /// <param name="criteria">The text to match</param>
+    public void ApplyAutoFilter(int columnIndex, string operation, string criteria)
+    {
+        if (_masterCollection == null)
+        {
+            return;
+        }
+
+        ColumnHeader header = Columns[columnIndex];
+        string search = criteria.ToLower();
+        string fileNameHeaderName = HelperVariables.COL_NAME_PREFIX + FileListColumns.FILENAME;
+
+        List<DirectoryElement> filtered = _masterCollection.Cast<DirectoryElement>().Where(de =>
+        {
+            string val;
+
+            // Check if we are filtering the FileName column to avoid the ArgumentException
+            if (header.Name == fileNameHeaderName)
+            {
+                // Use ItemNameWithoutPath or DisplayName depending on your preference
+                val = de.ItemNameWithoutPath?.ToLower() ?? "";
+            }
+            else
+            {
+                // Standard column logic
+                val = PickModelValueForColumn(de, header).ToLower();
+            }
+
+            return operation switch
+            {
+                "is" => val == search,
+                "isn't" => val != search,
+                "contains" => val.Contains(search),
+                "doesn't contain" => !val.Contains(search),
+                _ => true
+            };
+        }).ToList();
+
+        BeginUpdate();
+        Items.Clear();
+        foreach (DirectoryElement de in filtered)
+        {
+            AddListItem(de);
+        }
+        EndUpdate();
+    }
 
     private static readonly Dictionary<string, SourcesAndAttributes.ElementAttribute>
         ColumnToAttributeMap = new()
@@ -991,6 +1039,8 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     public void ReloadFromDEs(DirectoryElementCollection directoryElements)
     {
+        _masterCollection = directoryElements;
+
         Application.DoEvents();
         BeginUpdate();
         FrmPleaseWaitBox _frmPleaseWaitBoxInstance =
@@ -1274,6 +1324,175 @@ public partial class FileListView : System.Windows.Forms.ListView
         {
             e.Cancel = true;
         }
+    }
+
+    private void FileListView_MouseUp(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Right)
+        {
+            ShowFilterMenu(e.Location);
+        }
+    }
+    #endregion
+
+    #region Filtering
+
+    private void ShowFilterMenu(Point location)
+    {
+        ContextMenuStrip menu = new();
+
+        // Use HitTest to find the specific item and sub-item at the click location
+        ListViewHitTestInfo hitInfo = HitTest(location);
+        int columnIndex = GetColumnAtX(location.X);
+
+        if (columnIndex != -1)
+        {
+            string colName = Columns[columnIndex].Text;
+            string clickedCellValue = "";
+
+            // If we clicked a valid row, get that specific cell's text
+            if (hitInfo.Item != null && hitInfo.SubItem != null)
+            {
+                clickedCellValue = hitInfo.SubItem.Text;
+            }
+
+            menu.Items.Add($"Filter: {colName}", null).Enabled = false;
+            _ = menu.Items.Add(new ToolStripSeparator());
+
+            // Add "Current Value" shortcuts if we have a value
+            if (!string.IsNullOrEmpty(clickedCellValue))
+            {
+                ToolStripMenuItem itemIsCurrent = new($"Is \"{clickedCellValue}\"") { Name = "cmi_Filter_IsCurrent" };
+                itemIsCurrent.Click += (s, ev) => ApplyAutoFilter(columnIndex, "is", clickedCellValue);
+                _ = menu.Items.Add(itemIsCurrent);
+
+                ToolStripMenuItem itemIsNotCurrent = new($"Is not \"{clickedCellValue}\"") { Name = "cmi_Filter_IsNotCurrent" };
+                itemIsNotCurrent.Click += (s, ev) => ApplyAutoFilter(columnIndex, "isn't", clickedCellValue);
+                _ = menu.Items.Add(itemIsNotCurrent);
+
+                _ = menu.Items.Add(new ToolStripSeparator());
+            }
+
+            // Standard operations
+            string[] operations = { "is", "isn't", "contains", "doesn't contain" };
+            foreach (string op in operations)
+            {
+                ToolStripMenuItem filterItem = new(op) { Name = $"cmi_Filter_{op}" };
+                filterItem.Click += (s, ev) =>
+                {
+                    string criteria = Microsoft.VisualBasic.Interaction.InputBox(
+                        $"Show rows where {colName} {op}:", "Filter Column", clickedCellValue);
+                    if (!string.IsNullOrEmpty(criteria))
+                    {
+                        ApplyAutoFilter(columnIndex, op, criteria);
+                    }
+                };
+                _ = menu.Items.Add(filterItem);
+            }
+
+            _ = menu.Items.Add(new ToolStripSeparator());
+            _ = menu.Items.Add("Clear All Filters", null, (s, ev) =>
+            {
+                if (_masterCollection != null)
+                {
+                    ReloadFromDEs(_masterCollection);
+                }
+            });
+
+            _ = menu.Items.Add(new ToolStripSeparator());
+        }
+
+        // Import original items from FrmMainApp[cite: 7, 8]
+        FrmMainApp frmMain = (FrmMainApp)Application.OpenForms["FrmMainApp"];
+        if (frmMain?.cms_FileListView != null)
+        {
+            foreach (ToolStripItem originalItem in frmMain.cms_FileListView.Items)
+            {
+                if (originalItem is ToolStripSeparator)
+                {
+                    _ = menu.Items.Add(new ToolStripSeparator());
+                }
+                else if (originalItem is ToolStripMenuItem tsmi)
+                {
+                    _ = menu.Items.Add(CloneToolStripItem(tsmi));
+                }
+            }
+        }
+
+        LocalizeDynamicMenu(menu);
+        menu.Show(this, location);
+    }
+
+    private ToolStripMenuItem CloneToolStripItem(ToolStripMenuItem source)
+    {
+        ToolStripMenuItem clone = new()
+        {
+            Text = source.Text,
+            Name = source.Name,
+            Image = source.Image,
+            Enabled = source.Enabled,
+            Tag = source.Tag,
+            BackColor = source.BackColor,
+            ForeColor = source.ForeColor,
+        };
+
+        // Manually hook into the original's click event logic
+        // This is a bit of a trick: we invoke the original item's PerformClick
+        clone.Click += (s, e) => source.PerformClick();
+
+        if (source.HasDropDownItems)
+        {
+            foreach (ToolStripItem subItem in source.DropDownItems)
+            {
+                if (subItem is ToolStripSeparator)
+                {
+                    _ = clone.DropDownItems.Add(new ToolStripSeparator());
+                }
+                else if (subItem is ToolStripMenuItem subTsmi)
+                {
+                    _ = clone.DropDownItems.Add(CloneToolStripItem(subTsmi));
+                }
+            }
+        }
+
+        return clone;
+    }
+
+    private void LocalizeDynamicMenu(ContextMenuStrip menu)
+    {
+        foreach (ToolStripItem item in menu.Items)
+        {
+            if (item is ToolStripMenuItem && !string.IsNullOrEmpty(item.Name))
+            {
+                string localizedText = HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: item.Name,
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ToolStripMenuItem);
+
+                if (!string.IsNullOrEmpty(localizedText))
+                {
+                    item.Text = localizedText;
+                }
+            }
+        }
+    }
+
+    private int GetColumnAtX(int x)
+    {
+        int currentX = 0;
+        // Sort columns by DisplayIndex to handle user reordering
+        List<ColumnHeader> orderedCols = Columns.Cast<ColumnHeader>()
+                                               .OrderBy(c => c.DisplayIndex)
+                                               .ToList();
+
+        foreach (ColumnHeader col in orderedCols)
+        {
+            currentX += col.Width;
+            if (x <= currentX)
+            {
+                return col.Index;
+            }
+        }
+        return -1;
     }
 
     #endregion
