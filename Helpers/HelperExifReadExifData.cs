@@ -1324,7 +1324,7 @@ internal static class HelperExifReadExifData
                 if (tryDataValue == FrmMainApp.NullStringEquivalentGeneric)
                 {
                     string tmpDop = ExifGetStandardisedDataPointFromExifAsString(dtFileExif: dtFileExif, dataPoint: $"GPSDOP");
-                    tryDataValue = !string.IsNullOrEmpty(value: tmpDop) && double.TryParse(tmpDop, out double dopAsDouble)
+                    tryDataValue = !string.IsNullOrEmpty(value: tmpDop) && double.TryParse(s: tmpDop, style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double dopAsDouble)
                         ? (dopAsDouble * 3)
                                       .ToString(provider: CultureInfo.InvariantCulture)
                         : FrmMainApp.NullStringEquivalentGeneric;

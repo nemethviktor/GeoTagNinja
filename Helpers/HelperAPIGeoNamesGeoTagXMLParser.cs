@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
@@ -154,11 +155,32 @@ public class RDFDescription
     }
 
     /// <remarks />
-    [XmlElement(Namespace = "http://ns.adobe.com/exif/1.0/")]
+
+    [XmlIgnore]
     public decimal GPSSpeed
     {
         get => gPSSpeedField;
         set => gPSSpeedField = value;
+    }
+
+    [XmlElement("GPSSpeed", Namespace = "http://ns.adobe.com/exif/1.0/")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public string GPSSpeedText
+    {
+        get => gPSSpeedField.ToString();
+        set
+        {
+            if (value.Contains('/'))
+            {
+                string[] parts = value.Split('/');
+                if (parts.Length == 2 && decimal.TryParse(parts[0], out decimal num) && decimal.TryParse(parts[1], out decimal den) && den != 0)
+                {
+                    gPSSpeedField = num / den;
+                    return;
+                }
+            }
+            _ = decimal.TryParse(value, out gPSSpeedField);
+        }
     }
 
     /// <remarks />

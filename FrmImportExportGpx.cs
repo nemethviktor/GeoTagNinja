@@ -337,6 +337,7 @@ public partial class FrmImportExportGpx : Form
 
     /// <summary>
     ///     Collects the settings for track-parse and sends to the data collector; then closes the Form.
+    ///     It is not supposed to write to any image file. It just creates the XML files to be parsed into directoryelements.
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
