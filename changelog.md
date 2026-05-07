@@ -2,10 +2,11 @@
 
 **Build 9xxx [2026xxxx]** (upcoming release)
 - NEW & UPDATED:
-	- TBA
+	- Add column filtering #205
 - BUGS & FIXES:
-	- TBA
-	- 
+	- Patch fractional text values not working in GPX import (#207)
+	- Remove-all-geodata should remove GPSDOP/GPSHPositioningError
+
 **Build 9600 [20260414]**
 - NEW & UPDATED:
  	- Add option for user to set whether to remember map zoom level within a session ref #199

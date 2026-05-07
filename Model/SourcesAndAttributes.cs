@@ -865,7 +865,8 @@ public static class SourcesAndAttributes
                             "EXIF:GPSDOP",
                             "XMP:GPSDOP"
                         ],
-                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSDOP
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSDOP,
+                        isGeoData = true
                     }
                 },
                 {
@@ -880,7 +881,8 @@ public static class SourcesAndAttributes
                             "EXIF:GPSHPositioningError",
                             "XMP:GPSHPositioningError"
                         ],
-                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSHPositioningError
+                        OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSHPositioningError,
+                        isGeoData = true
                     }
                 }
             };
