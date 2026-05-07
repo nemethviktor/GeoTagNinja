@@ -217,26 +217,21 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         List<DirectoryElement> filtered = _masterCollection.Cast<DirectoryElement>().Where(de =>
         {
-            string val;
+            string val = (header.Name == fileNameHeaderName)
+                ? (de.ItemNameWithoutPath ?? "")
+                : PickModelValueForColumn(de, header);
 
-            // Check if we are filtering the FileName column to avoid the ArgumentException
-            if (header.Name == fileNameHeaderName)
-            {
-                // Use ItemNameWithoutPath or DisplayName depending on your preference
-                val = de.ItemNameWithoutPath?.ToLower() ?? "";
-            }
-            else
-            {
-                // Standard column logic
-                val = PickModelValueForColumn(de, header).ToLower();
-            }
+            // Geotagging specific logic: "-" counts as empty
+            bool isValueEmpty = string.IsNullOrWhiteSpace(val) || val == UNKNOWN_VALUE_FILE;
 
             return operation switch
             {
-                "is" => val == search,
-                "isn't" => val != search,
-                "contains" => val.Contains(search),
-                "doesn't contain" => !val.Contains(search),
+                "isempty" => isValueEmpty,
+                "isnotempty" => !isValueEmpty,
+                "is" => val.ToLower() == search,
+                "isn't" => val.ToLower() != search,
+                "contains" => val.ToLower().Contains(search),
+                "doesn't contain" => !val.ToLower().Contains(search),
                 _ => true
             };
         }).ToList();
@@ -247,6 +242,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         {
             AddListItem(de);
         }
+
         EndUpdate();
     }
 
@@ -1326,13 +1322,24 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
     }
 
-    private void FileListView_MouseUp(object sender, MouseEventArgs e)
+    protected override void WndProc(ref Message m)
     {
-        if (e.Button == MouseButtons.Right)
+        // WM_CONTEXTMENU
+        if (m.Msg == 0x007B)
         {
-            ShowFilterMenu(e.Location);
+            // Get screen coordinates from LParam
+            int x = BitConverter.ToInt16(new byte[] { (byte)((int)m.LParam & 0xFF), (byte)(((int)m.LParam >> 8) & 0xFF) }, 0);
+            int y = BitConverter.ToInt16(new byte[] { (byte)(((int)m.LParam >> 16) & 0xFF), (byte)(((int)m.LParam >> 24) & 0xFF) }, 0);
+
+            Point clientPoint = PointToClient(new Point(x, y));
+
+            // Handle coordinates that might be outside client area (like the header)
+            ShowFilterMenu(clientPoint);
+            return;
         }
+        base.WndProc(ref m);
     }
+
     #endregion
 
     #region Filtering
@@ -1340,58 +1347,51 @@ public partial class FileListView : System.Windows.Forms.ListView
     private void ShowFilterMenu(Point location)
     {
         ContextMenuStrip menu = new();
-
-        // Use HitTest to find the specific item and sub-item at the click location
         ListViewHitTestInfo hitInfo = HitTest(location);
         int columnIndex = GetColumnAtX(location.X);
 
         if (columnIndex != -1)
         {
-            string colName = Columns[columnIndex].Text;
-            string clickedCellValue = "";
+            ColumnHeader header = Columns[columnIndex];
+            string colName = header.Text;
+            string clickedCellValue = (hitInfo.Item != null && hitInfo.SubItem != null && hitInfo.Item.SubItems.Count > columnIndex)
+                                       ? hitInfo.Item.SubItems[columnIndex].Text
+                                       : string.Empty;
 
-            // If we clicked a valid row, get that specific cell's text
-            if (hitInfo.Item != null && hitInfo.SubItem != null)
+            // 1. Create the Filter Sub-Menu
+            ToolStripMenuItem filterSubMenu = new($"Filter: {colName}") { Name = "cmi_Filter_SubMenu" };
+
+            // 2. Is Empty / Is Not Empty (Accounting for "-")
+            _ = filterSubMenu.DropDownItems.Add("Is Empty", null, (s, ev) => ApplyAutoFilter(columnIndex, "isempty", ""));
+            _ = filterSubMenu.DropDownItems.Add("Is Not Empty", null, (s, ev) => ApplyAutoFilter(columnIndex, "isnotempty", ""));
+            _ = filterSubMenu.DropDownItems.Add(new ToolStripSeparator());
+
+            // 3. Current Value Logic
+            if (!string.IsNullOrEmpty(clickedCellValue) && clickedCellValue != UNKNOWN_VALUE_FILE)
             {
-                clickedCellValue = hitInfo.SubItem.Text;
+                _ = filterSubMenu.DropDownItems.Add($"Is \"{clickedCellValue}\"", null, (s, ev) => ApplyAutoFilter(columnIndex, "is", clickedCellValue));
+                _ = filterSubMenu.DropDownItems.Add($"Is not \"{clickedCellValue}\"", null, (s, ev) => ApplyAutoFilter(columnIndex, "isn't", clickedCellValue));
+                _ = filterSubMenu.DropDownItems.Add(new ToolStripSeparator());
             }
 
-            menu.Items.Add($"Filter: {colName}", null).Enabled = false;
-            _ = menu.Items.Add(new ToolStripSeparator());
-
-            // Add "Current Value" shortcuts if we have a value
-            if (!string.IsNullOrEmpty(clickedCellValue))
-            {
-                ToolStripMenuItem itemIsCurrent = new($"Is \"{clickedCellValue}\"") { Name = "cmi_Filter_IsCurrent" };
-                itemIsCurrent.Click += (s, ev) => ApplyAutoFilter(columnIndex, "is", clickedCellValue);
-                _ = menu.Items.Add(itemIsCurrent);
-
-                ToolStripMenuItem itemIsNotCurrent = new($"Is not \"{clickedCellValue}\"") { Name = "cmi_Filter_IsNotCurrent" };
-                itemIsNotCurrent.Click += (s, ev) => ApplyAutoFilter(columnIndex, "isn't", clickedCellValue);
-                _ = menu.Items.Add(itemIsNotCurrent);
-
-                _ = menu.Items.Add(new ToolStripSeparator());
-            }
-
-            // Standard operations
+            // 4. Standard Text Operations
             string[] operations = { "is", "isn't", "contains", "doesn't contain" };
             foreach (string op in operations)
             {
-                ToolStripMenuItem filterItem = new(op) { Name = $"cmi_Filter_{op}" };
-                filterItem.Click += (s, ev) =>
+                ToolStripMenuItem opItem = new(op) { Name = $"cmi_Filter_{op}" };
+                opItem.Click += (s, ev) =>
                 {
-                    string criteria = Microsoft.VisualBasic.Interaction.InputBox(
-                        $"Show rows where {colName} {op}:", "Filter Column", clickedCellValue);
+                    string criteria = Microsoft.VisualBasic.Interaction.InputBox($"Filter {colName}:", "Filter", clickedCellValue);
                     if (!string.IsNullOrEmpty(criteria))
                     {
                         ApplyAutoFilter(columnIndex, op, criteria);
                     }
                 };
-                _ = menu.Items.Add(filterItem);
+                _ = filterSubMenu.DropDownItems.Add(opItem);
             }
 
-            _ = menu.Items.Add(new ToolStripSeparator());
-            _ = menu.Items.Add("Clear All Filters", null, (s, ev) =>
+            _ = filterSubMenu.DropDownItems.Add(new ToolStripSeparator());
+            _ = filterSubMenu.DropDownItems.Add("Clear All Filters", null, (s, ev) =>
             {
                 if (_masterCollection != null)
                 {
@@ -1399,20 +1399,21 @@ public partial class FileListView : System.Windows.Forms.ListView
                 }
             });
 
+            _ = menu.Items.Add(filterSubMenu);
             _ = menu.Items.Add(new ToolStripSeparator());
         }
 
-        // Import original items from FrmMainApp[cite: 7, 8]
+        // --- Import standard actions ---
         FrmMainApp frmMain = (FrmMainApp)Application.OpenForms["FrmMainApp"];
         if (frmMain?.cms_FileListView != null)
         {
-            foreach (ToolStripItem originalItem in frmMain.cms_FileListView.Items)
+            foreach (ToolStripItem item in frmMain.cms_FileListView.Items)
             {
-                if (originalItem is ToolStripSeparator)
+                if (item is ToolStripSeparator)
                 {
                     _ = menu.Items.Add(new ToolStripSeparator());
                 }
-                else if (originalItem is ToolStripMenuItem tsmi)
+                else if (item is ToolStripMenuItem tsmi)
                 {
                     _ = menu.Items.Add(CloneToolStripItem(tsmi));
                 }
@@ -1450,7 +1451,7 @@ public partial class FileListView : System.Windows.Forms.ListView
                 }
                 else if (subItem is ToolStripMenuItem subTsmi)
                 {
-                    _ = clone.DropDownItems.Add(CloneToolStripItem(subTsmi));
+                    _ = clone.DropDownItems.Add(value: CloneToolStripItem(subTsmi));
                 }
             }
         }
@@ -1476,10 +1477,17 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
     }
 
+    [DllImport("user32.dll")]
+    private static extern int GetScrollPos(IntPtr hWnd, int nBar);
+    private const int SB_HORZ = 0;
+
     private int GetColumnAtX(int x)
     {
+        // Factor in the horizontal scroll position
+        int scrollX = GetScrollPos(Handle, SB_HORZ);
+        int adjustedX = x + scrollX;
+
         int currentX = 0;
-        // Sort columns by DisplayIndex to handle user reordering
         List<ColumnHeader> orderedCols = Columns.Cast<ColumnHeader>()
                                                .OrderBy(c => c.DisplayIndex)
                                                .ToList();
@@ -1487,7 +1495,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         foreach (ColumnHeader col in orderedCols)
         {
             currentX += col.Width;
-            if (x <= currentX)
+            if (adjustedX <= currentX)
             {
                 return col.Index;
             }

@@ -36,7 +36,6 @@
             this.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.FileList_ColumnClick);
             this.ColumnReordered += new System.Windows.Forms.ColumnReorderedEventHandler(this.FileList_ColumnReordered);
             this.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.FileList_ColumnWidthChanging);
-            this.MouseUp += FileListView_MouseUp;
             this.ResumeLayout(false);
 
         }
