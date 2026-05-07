@@ -575,15 +575,31 @@ public partial class FrmEditFileData : Form
                 { dtp_TakenDate, ElementAttribute.TakenDate },
                 { dtp_CreateDate, ElementAttribute.CreateDate }
             };
-            if (directoryElement.GetAttributeValue<DateTime>(
+            if ((directoryElement.GetAttributeValue<DateTime>(
                     attribute: dtpMapping[key: dtp],
                     version: DirectoryElement.AttributeVersion.Original,
-                    notFoundValue: null) != null)
+                    notFoundValue: null) != null) || ((directoryElement.GetAttributeValue<DateTime>(
+                    attribute: dtpMapping[key: dtp],
+                    version: DirectoryElement.AttributeVersion.Original,
+                    notFoundValue: null) == null) &&
+                    (directoryElement.GetAttributeValue<DateTime>(
+                    attribute: dtpMapping[key: dtp],
+                    version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                    notFoundValue: null) != null)))
             {
-                directoryElementDateTimeOriginal = (DateTime)directoryElement.GetAttributeValue<DateTime>(
-                    attribute: dtpMapping[key: dtp],
-                    version: DirectoryElement.AttributeVersion.Original,
-                    notFoundValue: null);
+                DateTime? directoryElementDateTimeOriginalNullable = null;
+                try
+                {
+                    directoryElementDateTimeOriginalNullable = (DateTime)directoryElement.GetAttributeValue<DateTime>(
+                        attribute: dtpMapping[key: dtp],
+                        version: DirectoryElement.AttributeVersion.Original,
+                        notFoundValue: null);
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.Print($"Failed to get original datetime for {dtp.Name}. {ex.Message}");
+                }
 
                 directoryElementDateTimeMaxVersion = (DateTime)directoryElement.GetAttributeValue<DateTime>(
                     attribute: dtpMapping[key: dtp],
@@ -595,9 +611,14 @@ public partial class FrmEditFileData : Form
                         whatToShift: TimeShiftTypes.TakenDate,
                         dirElemFileToModify: directoryElement);
 
-                dtp.Value = totalShiftedSeconds != 0
+                // if we don't have "orignal", ie the user just added the date (inserted) then try get that.
+                // it wouldn't be null because that was ascertained when we entered this method.
+                dtp.Value = directoryElementDateTimeOriginalNullable is not null
+                    ? totalShiftedSeconds != 0
                     ? directoryElementDateTimeOriginal.AddSeconds(value: totalShiftedSeconds)
+                    : directoryElementDateTimeMaxVersion
                     : directoryElementDateTimeMaxVersion;
+
             }
 
             Log.Trace(message: $"control: {control.Name} - Updating DateTimePicker");
