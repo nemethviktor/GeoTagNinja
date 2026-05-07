@@ -99,23 +99,50 @@ public class DirectoryElementCollection : List<DirectoryElement>
     }
 
     /// <summary>
-    ///     Attempts to find the first DE that matches an XMP file's logic. (ie.
-    ///     20100504_Rome_01_Downtown_Colosseum__MG_2595.xmp --> 20100504_Rome_01_Downtown_Colosseum__MG_2595.CR2 assuming it
-    ///     exists)
+    /// Finds the best matching DirectoryElement for an XMP file. 
+    /// Prioritizes raw/non-jpg files over jpg files.
     /// </summary>
-    /// <param name="XMPFileNameWithPath"></param>
-    /// <returns></returns>
+    /// <param name="XMPFileNameWithPath">Full path of the XMP file.</param>
+    /// <returns>The best matching DirectoryElement or null if none found.</returns>
     public DirectoryElement FindElementByBelongingToXmpWithPath(string XMPFileNameWithPath)
     {
+        // Strip the .xmp extension to get the base path (e.g., .../img_01)
+        string basePath = XMPFileNameWithPath.EndsWith(".xmp", StringComparison.OrdinalIgnoreCase)
+            ? XMPFileNameWithPath.Substring(0, XMPFileNameWithPath.Length - 4)
+            : XMPFileNameWithPath;
+
+        DirectoryElement jpgFallback = null;
+
         foreach (DirectoryElement item in this)
         {
-            if (item.FileNameWithPath.StartsWith(value: XMPFileNameWithPath))
+            // Check if the file starts with the same name
+            if (item.FileNameWithPath.StartsWith(value: basePath, comparisonType: StringComparison.OrdinalIgnoreCase))
             {
-                return item;
+                // Ignore the XMP file itself
+                if (item.FileNameWithPath.EndsWith(".xmp", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                // Check if it is a JPG
+                bool isJpg = item.FileNameWithPath.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                             item.FileNameWithPath.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase);
+
+                if (!isJpg)
+                {
+                    // High priority: Found a Raw or other format. Return immediately.
+                    return item;
+                }
+                else
+                {
+                    // Low priority: Keep the JPG in case we don't find anything better.
+                    jpgFallback = item;
+                }
             }
         }
 
-        return null;
+        // If we finished the loop and never found a Raw file, return the JPG (if found)
+        return jpgFallback;
     }
 
     /// <summary>
