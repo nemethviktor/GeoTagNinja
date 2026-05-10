@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -10,7 +9,6 @@ namespace GeoTagNinja.Helpers;
 
 internal partial class HelperNonStatic
 {
-    private FrmPleaseWaitBox _frmPleaseWaitBoxInstance;
 
     /// <summary>
     ///     Loops a given folder while ignoring access and other errors.
@@ -28,10 +26,6 @@ internal partial class HelperNonStatic
                                                        Action<string> updateProgressHandler,
                                                        CancellationToken cancellationToken)
     {
-        _frmPleaseWaitBoxInstance =
-            (FrmPleaseWaitBox)Application.OpenForms[name: "FrmPleaseWaitBox"];
-        Debug.Assert(condition: _frmPleaseWaitBoxInstance != null,
-            message: $"{nameof(_frmPleaseWaitBoxInstance)} != null");
         IEnumerable<string> found = [];
         try
         {
@@ -58,7 +52,6 @@ internal partial class HelperNonStatic
             }
 
             // updateProgressHandler(obj: $"Scanning file: {file}");
-            _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Text = file;
 
             yield return new FileInfo(fileName: file);
             counter++;
@@ -83,8 +76,12 @@ internal partial class HelperNonStatic
                     yield break;
                 }
 
-                foreach (FileInfo subFile in GetFilesFromAFolder(folder: dir, filter: filter, recursive: recursive,
-                             updateProgressHandler: updateProgressHandler, cancellationToken: cancellationToken))
+                foreach (FileInfo subFile in GetFilesFromAFolder(
+                    folder: dir,
+                    filter: filter,
+                    recursive: recursive,
+                    updateProgressHandler: updateProgressHandler,
+                    cancellationToken: cancellationToken))
                 {
                     yield return subFile;
                 }

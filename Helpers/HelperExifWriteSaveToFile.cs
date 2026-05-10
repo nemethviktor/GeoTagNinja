@@ -389,15 +389,11 @@ internal static class HelperExifWriteSaveToFile
                                         objectTagNameOut.EndsWith(value: "CreateDate") // CreateDate
                                        )
                                     {
-                                        bool isTakenDate = false;
-                                        bool isCreateDate = false;
                                         if (objectTagNameOut.EndsWith(value: "DateTimeOriginal"))
                                         {
-                                            isTakenDate = true;
                                         }
                                         else if (objectTagNameOut.EndsWith(value: "CreateDate"))
                                         {
-                                            isCreateDate = true;
                                         }
 
                                         try
@@ -529,7 +525,7 @@ internal static class HelperExifWriteSaveToFile
 
         ///////////////
         FrmMainApp.TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.NoProgress);
-        FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: "Ready.");
+        FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: $"{HelperControlAndMessageBoxHandling.ReturnControlText("Generic_Ready", HelperControlAndMessageBoxHandling.FakeControlTypes.Generic)}.");
         HelperGenericFileLocking.FilesAreBeingSaved = false;
     }
 

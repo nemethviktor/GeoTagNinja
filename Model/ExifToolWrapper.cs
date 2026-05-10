@@ -105,6 +105,11 @@ public class ExifTool : IDisposable
     public void GetProperties(string filename,
                               ICollection<KeyValuePair<string, string>> propertiesRead)
     {
+        if (Helpers.HelperVariables.ApplicationIsClosing == true)
+        {
+            return;
+        }
+
         m_in.Write(value: filename);
         m_in.Write(value: "\n-execute\n");
         m_in.Flush();

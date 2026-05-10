@@ -205,10 +205,6 @@ internal static class HelperGenericAncillaryListsArrays
         return result;
     }
 
-    internal static bool IsGenericControlName(string controlName)
-    {
-        return GetGenericControlName(controlName: controlName) != HelperVariables.ControlItemNameNotGeneric;
-    }
 
     /// <summary>
     ///     This is part of a messy and obsolete code logic whereby I was using separate buttons and lables and whatnots for

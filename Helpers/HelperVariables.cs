@@ -77,6 +77,7 @@ internal static class HelperVariables
 
     #endregion
 
+    internal static bool ApplicationIsClosing = false;
     internal static bool OperationChangeFolderIsOkay;
     internal static bool OperationAPIReturnedOKResponse = true;
 

@@ -1,17 +1,15 @@
 ﻿using GeoTagNinja.Helpers;
 using GeoTagNinja.Model;
 using NLog;
-using Svg;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using WinFormsDarkThemerNinja;
-using Image = System.Drawing.Image;
 
 namespace GeoTagNinja.View.ListView;
 
@@ -21,8 +19,12 @@ public partial class FileListView : System.Windows.Forms.ListView
     // Default values to set for entries
     private const string UNKNOWN_VALUE_FILE = "-";
 
+    private readonly FrmMainApp _frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+    // Special value for coordinates as they are a pair.
+    private const string UNKNOWN_VALUE_FILE_COORDINATES = "-;-";
+
     // Note - if this is changed, all checks for unknown need to be udpated
-    // because currently this works via item.replace and check versus ""
+    // because currently this works via lvi.replace and check versus ""
     // but replace did not take ""
     private const string UNKNOWN_VALUE_DIR = "";
 
@@ -35,9 +37,22 @@ public partial class FileListView : System.Windows.Forms.ListView
     {
         Log.Info(message: "Creating List View ...");
         InitializeComponent();
+
+        // Bucket for Tiles/Large Icons
+        LargeImageList = new ImageList
+        {
+            ImageSize = new Size(width: ThumbnailSize, height: ThumbnailSize),
+            ColorDepth = ColorDepth.Depth32Bit
+        };
+
+        // Bucket for Details view (Standard 16x16 or 32x32 icons)
+        SmallImageList = new ImageList
+        {
+            ImageSize = new Size(width: 32, height: 32), // Standard detail icon size
+            ColorDepth = ColorDepth.Depth32Bit
+        };
     }
 
-    private IntPtr _hSysImgList;
 
     /// <summary>
     ///     Class containing native method (shell32, etc) definitions in order
@@ -110,11 +125,37 @@ public partial class FileListView : System.Windows.Forms.ListView
             [MarshalAs(unmanagedType: UnmanagedType.ByValTStr, SizeConst = 80 * 2)]
             public readonly string szTypeName;
         }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public struct SHFILEINFO
+        {
+            public IntPtr hIcon;
+            public int iIcon;
+            public uint dwAttributes;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string szDisplayName;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
+            public string szTypeName;
+        }
+
+        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
     }
+
+    #region Internal Variables
+
+    internal Dictionary<string, DirectoryElement> LastScrollDict = [];
+
+    /// <summary>
+    /// Handle to the system image list used for retrieving shell icons.
+    /// </summary>
+    /// <remarks>Obtained from the shell (for example via SHGetImageList). This handle is shared by the
+    /// system; do not destroy it unless ownership is explicitly transferred.</remarks>
+    private IntPtr _hSysImgList;
 
     /// <summary>
     ///     Class containing all the relevant column names to be used
-    ///     when e.g. querying for information.
+    ///     when e.g. querying for information. Do not use translations here.
     /// </summary>
     public static class FileListColumns
     {
@@ -161,90 +202,6 @@ public partial class FileListView : System.Windows.Forms.ListView
         public const string GPSHPOSITIONINGERROR = "GPSHPositioningError";
     }
 
-    #region Internal Variables
-
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
-    /// <summary>
-    ///     The used application language
-    /// </summary>
-    private string _AppLanguage = "";
-
-    /// <summary>
-    ///     The list of columns to show (without prefix)
-    /// </summary>
-    internal List<string> _cfg_Col_Names = [];
-
-    /// <summary>
-    ///     The default order of the columns to show (without prefix)
-    /// </summary>
-    internal static Dictionary<string, int> _cfg_Col_Order_Default = [];
-
-    /// <summary>
-    ///     The used sorter
-    /// </summary>
-    private ListViewColumnSorter LvwColumnSorter;
-
-    /// <summary>
-    ///     Tracks if the initializer ReadAndApplySetting was called.
-    /// </summary>
-    private bool _isInitialized;
-
-    /// <summary>
-    ///     Pointer to the SHFILEINFO Structure that is initialized to be
-    ///     used for this list view.
-    /// </summary>
-    private NativeMethods.SHFILEINFOW shfi;
-
-    private DirectoryElementCollection _masterCollection;
-
-    /// <summary>
-    /// Filters the list based on the clicked column.
-    /// </summary>
-    /// <param name="columnIndex">The index of the column to filter</param>
-    /// <param name="operation">The filter operation (is, contains, etc)</param>
-    /// <param name="criteria">The text to match</param>
-    public void ApplyAutoFilter(int columnIndex, string operation, string criteria)
-    {
-        if (_masterCollection == null)
-        {
-            return;
-        }
-
-        ColumnHeader header = Columns[columnIndex];
-        string search = criteria.ToLower();
-        string fileNameHeaderName = HelperVariables.COL_NAME_PREFIX + FileListColumns.FILENAME;
-
-        List<DirectoryElement> filtered = _masterCollection.Cast<DirectoryElement>().Where(de =>
-        {
-            string val = (header.Name == fileNameHeaderName)
-                ? (de.ItemNameWithoutPath ?? "")
-                : PickModelValueForColumn(de, header);
-
-            // Geotagging specific logic: "-" counts as empty
-            bool isValueEmpty = string.IsNullOrWhiteSpace(val) || val == UNKNOWN_VALUE_FILE;
-
-            return operation switch
-            {
-                "isempty" => isValueEmpty,
-                "isnotempty" => !isValueEmpty,
-                "is" => val.ToLower() == search,
-                "isn't" => val.ToLower() != search,
-                "contains" => val.ToLower().Contains(search),
-                "doesn't contain" => !val.ToLower().Contains(search),
-                _ => true
-            };
-        }).ToList();
-
-        BeginUpdate();
-        Items.Clear();
-        foreach (DirectoryElement de in filtered)
-        {
-            AddListItem(de);
-        }
-
-        EndUpdate();
-    }
 
     private static readonly Dictionary<string, SourcesAndAttributes.ElementAttribute>
         ColumnToAttributeMap = new()
@@ -400,6 +357,63 @@ public partial class FileListView : System.Windows.Forms.ListView
             },
         };
 
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+    /// <summary>
+    ///     The used application language
+    /// </summary>
+    private string _AppLanguage = "";
+
+    /// <summary>
+    ///     The list of columns to show (without prefix)
+    /// </summary>
+    internal List<string> _cfg_Col_Names = [];
+
+    /// <summary>
+    ///     The default order of the columns to show (without prefix)
+    /// </summary>
+    internal static Dictionary<string, int> _cfg_Col_Order_Default = [];
+
+    /// <summary>
+    ///     The used sorter
+    /// </summary>
+    private ListViewColumnSorter LvwColumnSorter;
+
+    /// <summary>
+    ///     Tracks if the initializer ReadAndApplySetting was called.
+    /// </summary>
+    private bool _isInitialized;
+
+    /// <summary>
+    ///     Pointer to the SHFILEINFO Structure that is initialized to be
+    ///     used for this list view.
+    /// </summary>
+    private NativeMethods.SHFILEINFOW shfi;
+
+    private DirectoryElementCollection _masterCollection = [];
+
+    #region Filter strings
+
+    /// <summary>
+    /// Specifies available operators for constructing filter expressions, including equality, negation, emptiness
+    /// checks, and substring containment.
+    /// </summary>
+    /// <remarks>Used primarily for string-based filtering and for building or parsing filter
+    /// expressions.</remarks>
+    private enum FilterOperator
+    {
+        Unknown,
+        Is,
+        IsNot,
+        IsEmpty,
+        IsNotEmpty,
+        Contains,
+        DoesNotContain
+    }
+
+    #endregion
+
+
     #endregion
 
     #region External Visible Properties
@@ -480,135 +494,121 @@ public partial class FileListView : System.Windows.Forms.ListView
     ///     Adds a new listitem to lvw_FileList listview
     /// </summary>
     /// <param name="directoryElement">New DE to add</param>
-    private void AddListItem(DirectoryElement directoryElement)
+    // Inside FileListView.cs
+    public ListViewItem AddListItem(DirectoryElement directoryElement)
     {
-        #region icon handlers
-
-        //https://stackoverflow.com/a/37806517/3968494
-        // Get the items from the file system, and add each of them to the ListView,
-        // complete with their corresponding name and icon indices.
-
-        IntPtr himl = directoryElement.Type != DirectoryElement.ElementType.MyComputer
-            ? NativeMethods.SHGetFileInfo(pszPath: directoryElement.FileNameWithPath,
-                dwFileAttributes: 0,
-                psfi: ref shfi,
-                cbSizeFileInfo: (uint)Marshal.SizeOf(
-                    structure: shfi),
-                uFlags: NativeMethods.SHGFI_DISPLAYNAME |
-                        NativeMethods.SHGFI_SYSICONINDEX |
-                        NativeMethods.SHGFI_SMALLICON)
-            : NativeMethods.SHGetFileInfo(
-                pszPath: directoryElement.ItemNameWithoutPath,
-                dwFileAttributes: 0,
-                psfi: ref shfi,
-                cbSizeFileInfo: (uint)Marshal.SizeOf(structure: shfi),
-                uFlags: NativeMethods.SHGFI_DISPLAYNAME |
-                        NativeMethods.SHGFI_SYSICONINDEX |
-                        NativeMethods.SHGFI_SMALLICON);
-
-        //Debug.Assert(himl == hSysImgList); // should be the same imagelist as the one we set
-
-        #endregion
-
-        ListViewItem lvi = new();
-
-        directoryElement.DisplayName = shfi.szDisplayName;
-
-        #region Set LVI Text depending on whether displayname is usable for FS operations
-
-        // dev comment --> https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow
-        // SHGFI_DISPLAYNAME (0x000000200)
-        // Retrieve the display name for the file, which is the name as it appears in Windows Explorer.
-        // The name is copied to the szDisplayName member of the structure specified in psfi.
-        // The returned display name uses the long file name, if there is one, rather than the 8.3 form of the file name.
-        // [!!!!] Note that the display name can be affected by settings such as whether extensions are shown.
-
-        // TLDR if Windows User has "show extensions" set to OFF in Windows Explorer, they won't show here either.
-        // The repercussions of that is w/o an extension fileinfo.exists will return false and exiftool won't run/find it.
-
-        // With that in mind if we're missing the extension then we'll force it back on.
-        if (!string.IsNullOrEmpty(value: directoryElement.Extension))
+        if (InvokeRequired)
         {
-            lvi.Text = shfi.szDisplayName.ToLower()
-                    .Contains(value: directoryElement.Extension.ToLower())
-                ? shfi.szDisplayName
-                : $"{shfi.szDisplayName}.{directoryElement.Extension}";
+            return (ListViewItem)Invoke(new Func<DirectoryElement, ListViewItem>(AddListItem), directoryElement);
+        }
+
+        _masterCollection ??= [];
+        if (!_masterCollection.Contains(directoryElement))
+        {
+            _masterCollection.Add(directoryElement);
+        }
+
+        ListViewItem lvi = new(text: directoryElement.ItemNameWithoutPath)
+        {
+            Tag = directoryElement,
+            Name = directoryElement.FileNameWithPath
+        };
+
+        // 1. Check for custom icons (Folders, Drives, etc.)
+        if (directoryElement.Thumbnail != null)
+        {
+            string imageKey = directoryElement.Type == DirectoryElement.ElementType.Drive
+                ? $"Drive_{directoryElement.ItemNameWithoutPath}"
+                : directoryElement.Type.ToString();
+
+            // Add to LargeImageList
+            if (LargeImageList != null && !LargeImageList.Images.ContainsKey(key: imageKey))
+            {
+                LargeImageList.Images.Add(key: imageKey, image: directoryElement.Thumbnail);
+            }
+
+            // ADD TO SMALLIMAGELIST (Fixes the Details view issue)
+            if (SmallImageList != null && !SmallImageList.Images.ContainsKey(key: imageKey))
+            {
+                SmallImageList.Images.Add(key: imageKey, image: directoryElement.Thumbnail);
+            }
+
+            lvi.ImageKey = imageKey;
         }
         else
         {
-            // this should prevent showing silly string values for special folder
-            // (like if your Pictures folder has been moved to say Digi, it'd have
-            // shown "Digi" but since that doesn't exist per se it'd have caused
-            // an error.
-            // same for non-English places. E.g. "Documents and Settings" in HU
-            // would be displayed as "Felhasználók" but that folder is still
-            // actually called Documents and Settings, but the label is "fake".
-            lvi.Text = directoryElement.Type is DirectoryElement.ElementType.SubDirectory or
-                DirectoryElement.ElementType.MyComputer or
-                DirectoryElement.ElementType.ParentDirectory
+            // 2. Fallback to Shell Icons
+            NativeMethods.SHFILEINFO shfi = new();
+            uint flags = NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON;
+            string path = (directoryElement.Type == DirectoryElement.ElementType.MyComputer)
                 ? directoryElement.ItemNameWithoutPath
-                : shfi.szDisplayName;
+                : directoryElement.FileNameWithPath;
+
+            _ = NativeMethods.SHGetFileInfo(pszPath: path, dwFileAttributes: 0, psfi: ref shfi, cbSizeFileInfo: (uint)Marshal.SizeOf(shfi), uFlags: flags);
+            lvi.ImageIndex = shfi.iIcon;
         }
 
-        #endregion
-
-        // Set the icon to use out of the explorer icons
-        lvi.ImageIndex = shfi.iIcon;
-
-        // Set the values for the columns
-        List<string> subItemList = [];
-        if (directoryElement.Type == DirectoryElement.ElementType.File)
+        // 4. Fill SubItems (Metadata)
+        // If it's already hydrated (e.g., during a filter redraw), fill the actual values
+        for (int i = 1; i < Columns.Count; i++)
         {
-            foreach (ColumnHeader columnHeader in Columns)
+            string colValue = directoryElement.IsHydrated
+                ? PickModelValueForColumn(directoryElement, Columns[i])
+                : (directoryElement.Type == DirectoryElement.ElementType.File ? UNKNOWN_VALUE_FILE : UNKNOWN_VALUE_DIR);
+
+            _ = lvi.SubItems.Add(text: colValue);
+        }
+
+        // 5. Apply "Dirty" state (Red colour)
+        if (directoryElement.HasDirtyAttributes())
+        {
+            lvi.ForeColor = Color.Red;
+        }
+
+        // 6. Finalise
+        _ = Items.Add(lvi);
+
+        // Only sync/background-task for folders/drives if they aren't ready
+        if (directoryElement.Type != DirectoryElement.ElementType.File && directoryElement.Thumbnail == null && HelperVariables.UserSettingShowThumbnails)
+        {
+            SyncElementThumbnail(directoryElement: directoryElement);
+        }
+
+        return lvi;
+    }
+    public void UpdateListItemData(DirectoryElement de)
+    {
+        if (InvokeRequired)
+        {
+            _ = Invoke(new Action<DirectoryElement>(UpdateListItemData), de);
+            return;
+        }
+
+        // Find the ListViewItem that represents this DirectoryElement
+        ListViewItem lvi = Items.Cast<ListViewItem>().FirstOrDefault(i => i.Tag == de);
+        if (lvi == null)
+        {
+            return;
+        }
+
+        if (de.Type == DirectoryElement.ElementType.File)
+        {
+            // Update subitems based on the new metadata
+            for (int i = 1; i < Columns.Count; i++)
             {
-                if (columnHeader.Name == HelperVariables.COL_NAME_PREFIX + FileListColumns.FILENAME)
-                {
-                    continue;
-                }
-
-                if (columnHeader.Name == HelperVariables.COL_NAME_PREFIX + FileListColumns.FOLDER)
-                {
-                    subItemList.Add(item: directoryElement.Folder);
-                    continue;
-                }
-
-                subItemList.Add(item: PickModelValueForColumn(
-                    directoryElement: directoryElement,
-                    columnHeader: columnHeader));
+                // Re-use your PickModelValueForColumn logic
+                lvi.SubItems[i].Text = PickModelValueForColumn(de, Columns[i]);
             }
-
-            // For each non-file (i.e. dirs), create empty sub items (needed for sorting)
         }
-        else // ie != DirectoryElement.ElementType.File
+        else
         {
-            foreach (ColumnHeader columnHeader in Columns)
+            // Iterate through sub-items (starting from index 1 to skip the name) and clear them.
+            for (int i = 1; i < lvi.SubItems.Count; i++)
             {
-                if (columnHeader.Name == HelperVariables.COL_NAME_PREFIX + FileListColumns.FILENAME)
-                {
-                    // nothing
-                }
-                else if (columnHeader.Name == HelperVariables.COL_NAME_PREFIX + FileListColumns.GUID)
-                {
-                    subItemList.Add(item: PickModelValueForColumn(
-                        directoryElement: directoryElement,
-                        columnHeader: columnHeader));
-                }
-                else
-                {
-                    subItemList.Add(item: UNKNOWN_VALUE_DIR);
-                }
+                lvi.SubItems[index: i].Text = string.Empty;
             }
-        }
+            return;
 
-        // don't add twice. this could happen if user does F5 too fast/too many times/is derp. (mostly the last one.)
-        bool itemAlreadyInListview = Items.Cast<ListViewItem>()
-                                          .Any(predicate: listViewItem => directoryElement == listViewItem.Tag);
-
-        if (!itemAlreadyInListview)
-        {
-            lvi.Tag = directoryElement;
-            Items.Add(value: lvi)
-                 .SubItems.AddRange(items: subItemList.ToArray());
         }
     }
 
@@ -672,11 +672,9 @@ public partial class FileListView : System.Windows.Forms.ListView
 
             // Read and process width
             settingIdToSend = $"{Name}_{columnHeader.Name}_width";
-            string colWidth = HelperDataApplicationSettings.DataReadSQLiteSettings(
-        dataTable: HelperVariables.DtHelperDataApplicationLayout,
-        settingTabPage: "lvw_FileList",
-        settingId: settingIdToSend
-    );
+            string colWidth = HelperDataApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationLayout,
+                settingTabPage: "lvw_FileList",
+                settingId: settingIdToSend);
 
             // We only set col width if there actually is a setting for it.
             // New columns thus will have a default size
@@ -814,7 +812,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <summary>
     /// Clears the selection of all file items in the list view and updates navigation to reflect the change.
     /// </summary>
-    /// <remarks>This method deselects only items representing files, leaving other item types unaffected.
+    /// <remarks>This method deselects only items representing files, leaving other lvi types unaffected.
     /// After clearing the selection, it triggers navigation updates to ensure the user interface reflects the current
     /// selection state. This method is typically used to reset the selection before performing navigation or other
     /// actions that require no files to be selected.</remarks>
@@ -1025,7 +1023,133 @@ public partial class FileListView : System.Windows.Forms.ListView
 
     #endregion
 
-    #region Updating
+    #region Updating & Filtering
+
+    /// <summary>
+    ///     Returns the translated string for a given FilterOperator.
+    /// </summary>
+    private string GetTextFromOperator(FilterOperator op)
+    {
+        return op switch
+        {
+            FilterOperator.Is => HelperControlAndMessageBoxHandling.ReturnControlText("Generic_Is", HelperControlAndMessageBoxHandling.FakeControlTypes.Generic),
+            FilterOperator.IsNot => HelperControlAndMessageBoxHandling.ReturnControlText("Generic_IsNot", HelperControlAndMessageBoxHandling.FakeControlTypes.Generic),
+            FilterOperator.IsEmpty => HelperControlAndMessageBoxHandling.ReturnControlText("Generic_IsEmpty", HelperControlAndMessageBoxHandling.FakeControlTypes.Generic),
+            FilterOperator.IsNotEmpty => HelperControlAndMessageBoxHandling.ReturnControlText("Generic_IsNotEmpty", HelperControlAndMessageBoxHandling.FakeControlTypes.Generic),
+            FilterOperator.Contains => HelperControlAndMessageBoxHandling.ReturnControlText("Generic_Contains", HelperControlAndMessageBoxHandling.FakeControlTypes.Generic),
+            FilterOperator.DoesNotContain => HelperControlAndMessageBoxHandling.ReturnControlText("Generic_DoesntContain", HelperControlAndMessageBoxHandling.FakeControlTypes.Generic),
+            _ => string.Empty
+        };
+    }
+
+    /// <summary>
+    /// Filters the list based on the clicked column.
+    /// </summary>
+    /// <param name="columnIndex">The index of the column to filter</param>
+    /// <param name="operatorValue">The filter operation (is, contains, etc)</param>
+    /// <param name="searchValue">The text to match</param>
+    private void ApplyAutoFilter(int columnIndex, FilterOperator operatorValue, string searchValue)
+    {
+        // 1. Guard: Use your existing check
+        FrmMainApp frmMain = (FrmMainApp)Application.OpenForms["FrmMainApp"];
+        if (frmMain != null && !frmMain.EnsureMetadataIsReadyAndWarnUserIfNot())
+        {
+            return;
+        }
+
+        if (_masterCollection == null)
+        {
+            return;
+        }
+
+        ColumnHeader header = Columns[columnIndex];
+        string search = (searchValue ?? "").Trim().ToLower(CultureInfo.InvariantCulture);
+        string fileNameHeaderName = HelperVariables.COL_NAME_PREFIX + FileListColumns.FILENAME;
+
+        // 2. Perform Filter
+        List<DirectoryElement> filtered = _masterCollection.Where(de =>
+        {
+            // ALWAYS include folders, drives, and the parent directory
+            if (de.Type != DirectoryElement.ElementType.File)
+            {
+                return true;
+            }
+
+            // Perform the existing logic for files
+            string rawVal = (header.Name == fileNameHeaderName)
+                ? (de.ItemNameWithoutPath ?? "")
+                : PickModelValueForColumn(de, header);
+
+            string val = (rawVal ?? "").Trim().ToLower(CultureInfo.InvariantCulture);
+            bool isValueEmpty = string.IsNullOrWhiteSpace(val) || val == UNKNOWN_VALUE_FILE || val == UNKNOWN_VALUE_FILE_COORDINATES;
+
+            return operatorValue switch
+            {
+                FilterOperator.IsEmpty => isValueEmpty,
+                FilterOperator.IsNotEmpty => !isValueEmpty,
+                FilterOperator.Is => val == search,
+                FilterOperator.IsNot => val != search,
+                FilterOperator.Contains => val.Contains(search),
+                FilterOperator.DoesNotContain => !val.Contains(search),
+                _ => true
+            };
+        }).ToList();
+
+        // 3. THE MISSING LINK: Actually update the UI with the result
+        UpdateListViewWithFilteredData(filtered);
+    }
+
+    /// <summary>
+    ///     Redraws the ListView with a filtered subset of data, 
+    ///     ensuring metadata and "Dirty" (Red) states are preserved.
+    /// </summary>
+    private void UpdateListViewWithFilteredData(List<DirectoryElement> filteredItems)
+    {
+        if (InvokeRequired)
+        {
+            _ = Invoke(new Action(() => UpdateListViewWithFilteredData(filteredItems: filteredItems)));
+            return;
+        }
+
+        Log.Info(message: $"UI UPDATE: Redrawing list with {filteredItems.Count} items.");
+
+        BeginUpdate();
+        try
+        {
+            Items.Clear();
+            foreach (DirectoryElement de in filteredItems)
+            {
+                // 1. Add the item (this handles the icon and basic placeholders)
+                ListViewItem lvi = AddListItem(directoryElement: de);
+
+                // 2. Restore metadata if it exists
+                if (de.Type == DirectoryElement.ElementType.File && de.IsHydrated)
+                {
+                    for (int i = 1; i < Columns.Count; i++)
+                    {
+                        lvi.SubItems[i].Text = PickModelValueForColumn(directoryElement: de, columnHeader: Columns[i]);
+                    }
+                }
+
+                // 3. RESTORE THE "DIRTY" COLOUR
+                // If the element has unsaved changes, make it red again.
+                if (de.HasDirtyAttributes())
+                {
+                    lvi.ForeColor = Color.Red;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, message: "Error during ListView redraw.");
+        }
+        finally
+        {
+            EndUpdate();
+            Invalidate();
+        }
+    }
+
 
     /// <summary>
     ///     Reloads the listview's items with data from the DirectoryElementCollection
@@ -1033,179 +1157,162 @@ public partial class FileListView : System.Windows.Forms.ListView
     ///     in scope of the FileListView. Calling FileListView.Clear will
     ///     also clear it.
     /// </summary>
-    public void ReloadFromDEs(DirectoryElementCollection directoryElements)
+    public void ReloadFromDEs(IEnumerable<DirectoryElement> elements)
     {
-        _masterCollection = directoryElements;
+        if (InvokeRequired)
+        {
+            _ = Invoke(new Action(() => ReloadFromDEs(elements: elements)));
+            return;
+        }
 
-        Application.DoEvents();
         BeginUpdate();
-        FrmPleaseWaitBox _frmPleaseWaitBoxInstance =
-            (FrmPleaseWaitBox)Application.OpenForms[name: "FrmPleaseWaitBox"];
-
-        _frmPleaseWaitBoxInstance?.UpdateLabels(stage: FrmPleaseWaitBox.ActionStages.POPULATING_LISTVIEW);
-
-        // Temp. disable sorting of the list view
-        Log.Trace(message: "Disable ListViewItemSorter");
-        SuspendColumnSorting();
-
-        DirectoryElements = directoryElements;
-        FileCount = 0;
-        bool dotDotAdded = false;
-
-        // don't parse the subfolders if we're not in Flat mode, it can be very time-consuming.
-        List<string> subFolders = FrmMainApp.FlatMode
-            ? HelperFileSystemOperators.GetDirectories(path: FrmMainApp.FolderName, searchPattern: "*",
-                searchOption: SearchOption.AllDirectories)
-            : [];
-
-        int count = 1;
-        int directoryElementCollectionLength = DirectoryElements.Count;
-        // so now that we don't clear the DE collection we actually need to make sure these items exist in the current folder/scope.
-        foreach (DirectoryElement directoryElement in DirectoryElements)
+        try
         {
-            if (_frmPleaseWaitBoxInstance != null)
+            Items.Clear();
+
+            foreach (DirectoryElement de in elements)
             {
-                Application.DoEvents();
-                _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Text =
-                    // ReSharper disable once LocalizableElement
-                    $"{count} / {directoryElementCollectionLength}";
-                count++;
-            }
+                // 1. Add the base item
+                ListViewItem lvi = AddListItem(directoryElement: de);
 
-            // it's a file and we are in collectionMode
-            bool aFileAndWeAreInCollectionMode = directoryElement.Type == DirectoryElement.ElementType.File &&
-                                                 Program.CollectionModeEnabled;
-
-            // it's a file and it exists in the current folder and we're not in Flat Mode...and the file factually exists. (like hasn't been deleted etc.)
-            bool aFileAndWeAreNotInFlatModeButFileIsWithinMainFolder =
-                directoryElement.Type == DirectoryElement.ElementType.File &&
-                !FrmMainApp.FlatMode &&
-                directoryElement.Folder + "\\" == FrmMainApp.FolderName &&
-                File.Exists(path: directoryElement.FileNameWithPath);
-
-            // it's a file and it's in a subfolder of the current FrmMainApp.FolderName folder and we are in Flat Mode
-            bool aFileAndWeAreInFlatModeAndItsInARelevantSubfolder =
-                    directoryElement.Type == DirectoryElement.ElementType.File &&
-                    FrmMainApp.FlatMode &&
-                    // this on its own won't work because if we have a 1.jpg in FrmMainApp.FolderName and another in FrmMainApp.FolderName\subFolder, it's still going to show due to how the logic is coded elsewhere.
-                    Directory.GetFiles(path: FrmMainApp.FolderName, searchPattern: directoryElement.ItemNameWithoutPath,
-                                  searchOption: SearchOption.AllDirectories)
-                             .FirstOrDefault() != null &&
-                    // thus we make sure that directoryElement.Folder is a subfolder of FrmMainApp.FolderName
-                    (subFolders.Contains(value: directoryElement.Folder) ||
-                     FrmMainApp.FolderName == directoryElement.Folder ||
-                     FrmMainApp.FolderName == directoryElement.Folder + "\\")
-                ;
-
-            // it's an immediate subfolder within the current FrmMainApp.FolderName folder
-            bool aSubfolderWithinMainFolder =
-                directoryElement.Type == DirectoryElement.ElementType.SubDirectory &&
-                // problem here is that if we have a C:\temp and a D:\temp then we can get a duplicate just by using the below logic
-                Directory.Exists(path: Path.Combine(path1: FrmMainApp.FolderName,
-                    path2: directoryElement.ItemNameWithoutPath)) &&
-                // we check this is an immediate subfolder of the main folder.
-                // ... there's some odd fuckery with the backslashes.
-                (Directory.GetParent(path: directoryElement.FileNameWithPath).FullName + "\\" ==
-                 FrmMainApp.FolderName ||
-                 Directory.GetParent(path: directoryElement.FileNameWithPath).FullName == FrmMainApp.FolderName);
-
-            // it's ".." and fileNameWithPath is the actual parent of the current FrmMainApp.FolderName folder.
-            bool dotDotParent = directoryElement.Type == DirectoryElement.ElementType.ParentDirectory &&
-                                (!FrmMainApp.FlatMode || (FrmMainApp.FlatMode &&
-                                                          Directory.GetParent(path: FrmMainApp.FolderName)
-                                                                  ?.Parent.FullName ==
-                                                          directoryElement.FileNameWithPath));
-
-            // we're My Computer and it's a Drive
-            bool weAreInMyComputerAndItsADrive =
-                FrmMainApp.FolderName == Environment.SpecialFolder.MyComputer.ToString() &&
-                directoryElement.Type == DirectoryElement.ElementType.Drive;
-
-            if (aFileAndWeAreInCollectionMode ||
-                aFileAndWeAreNotInFlatModeButFileIsWithinMainFolder ||
-                aFileAndWeAreInFlatModeAndItsInARelevantSubfolder ||
-                aSubfolderWithinMainFolder ||
-                dotDotParent ||
-                weAreInMyComputerAndItsADrive)
-
-            {
-                // for some reason i keep getting the .. multiple times. 
-                if ((dotDotParent && !dotDotAdded) ||
-                    !dotDotParent)
+                // 2. Restore metadata if hydrated
+                if (de.Type == DirectoryElement.ElementType.File && de.IsHydrated)
                 {
-                    AddListItem(directoryElement: directoryElement);
+                    for (int i = 1; i < Columns.Count; i++)
+                    {
+                        lvi.SubItems[i].Text = PickModelValueForColumn(directoryElement: de, columnHeader: Columns[i]);
+                    }
                 }
 
-                if (dotDotParent)
+                // 3. RESTORE THE RED COLOUR
+                // This is the missing piece for Clear All
+                if (de.HasDirtyAttributes())
                 {
-                    dotDotAdded = true;
-                }
-
-                // increment file count
-                if (aFileAndWeAreInCollectionMode ||
-                    aFileAndWeAreNotInFlatModeButFileIsWithinMainFolder ||
-                    aFileAndWeAreInFlatModeAndItsInARelevantSubfolder)
-                {
-                    FileCount++;
+                    lvi.ForeColor = Color.Red;
                 }
             }
         }
-
-        ToggleIndividualColumnVisibility(
-            columnHeaderName: HelperVariables.COL_NAME_PREFIX + FileListColumns.FOLDER,
-            setVisible: FrmMainApp.FlatMode || Program.CollectionModeEnabled
-        );
-
-        // Add images when required
-        if (View == System.Windows.Forms.View.LargeIcon)
+        finally
         {
-            ImageList imgList = new()
-            {
-                ColorDepth = ColorDepth.Depth32Bit,
-                ImageSize = new Size(width: (int)(ThumbnailSize * 0.9), height: (int)(ThumbnailSize * 0.9))
-            };
-
-            // mass-generate thumbs
-
-            foreach (ListViewItem lvi in Items)
-            {
-                DirectoryElement de = lvi.Tag as DirectoryElement;
-                string imageListKey = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                    path2: $"{de.ItemNameWithoutPath}.jpg");
-
-                if (de.Thumbnail is not null)
-                {
-                    imgList.Images.Add(
-                        key: imageListKey,
-                        image: de.Thumbnail);
-                }
-            }
-
-            LargeImageList = imgList;
-            foreach (ListViewItem lvi in Items)
-            {
-                DirectoryElement de = lvi.Tag as DirectoryElement;
-                lvi.ImageKey = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                    path2: $"{de.ItemNameWithoutPath}.jpg");
-            }
+            EndUpdate();
+            Invalidate();
         }
-
-        // Resume sorting...
-        Log.Trace(message: "Enable ListViewItemSorter");
-        EndUpdate();
-        ResumeColumnSorting();
-        Sort();
     }
 
     /// <summary>
-    ///     Converts svg files to image.
+    /// Synchronizes the ListViewItem's icon with the DirectoryElement.
+    /// Ensures thread-safety and prevents icon inheritance by explicitly clearing keys if null.
     /// </summary>
-    /// <param name="imagePath"></param>
-    /// <returns></returns>
-    private Image ConvertSVGToImage(string imagePath)
+    /// <param name="directoryElement">The data directoryElement providing the image or type.</param>
+    public void SyncElementThumbnail(DirectoryElement directoryElement)
     {
-        SvgDocument svgDoc = SvgDocument.Open(path: imagePath);
-        return new Bitmap(original: svgDoc.Draw(rasterWidth: ThumbnailSize, rasterHeight: ThumbnailSize));
+        // 1. Thread-safety check
+        if (InvokeRequired)
+        {
+            _ = Invoke(new Action(() => SyncElementThumbnail(directoryElement: directoryElement)));
+            return;
+        }
+
+        if (directoryElement == null)
+        {
+            return;
+        }
+
+        // 2. Locate the specific UI row
+        ListViewItem? lvi = null;
+        string guid = null;
+        if (directoryElement.Type == DirectoryElement.ElementType.File)
+        {
+            // Files use GUID because they have metadata
+            guid = directoryElement.GetAttributeValueAsString(attribute: SourcesAndAttributes.ElementAttribute.GUID);
+            lvi = FindItemByGuid(guid: guid);
+        }
+        else
+        {
+            // Drives/Folders/MyComputer don't have GUIDs, so we find them by reference
+            lvi = Items.Cast<ListViewItem>()
+                           .FirstOrDefault(i => i.Tag == directoryElement);
+        }
+
+        // Still not found? Try a final fallback by path (useful for structural items)
+        lvi ??= Items.Cast<ListViewItem>()
+                       .FirstOrDefault(i => i.Tag is DirectoryElement de
+                                        && de.FileNameWithPath == directoryElement.FileNameWithPath);
+
+        if (lvi == null)
+        {
+            return;
+        }
+
+        // 3. Initialize the ImageList if missing
+        LargeImageList ??= new ImageList
+        {
+            ImageSize = new Size(width: ThumbnailSize, height: ThumbnailSize),
+            ColorDepth = ColorDepth.Depth32Bit
+        };
+
+        // 4. Handle Icon Assignment
+        // If Thumbnail is null, we MUST set ImageIndex to -1 to stop ghosting/inheritance.
+        if (directoryElement.Thumbnail == null)
+        {
+            lvi.ImageKey = string.Empty;
+            lvi.ImageIndex = -1;
+        }
+        else
+        {
+            // Use GUID as unique key for files, or ElementType string for system icons
+            string imageKey = (directoryElement.Type == DirectoryElement.ElementType.File)
+                ? guid
+                : directoryElement.Type.ToString();
+
+            if (!LargeImageList.Images.ContainsKey(key: imageKey))
+            {
+                LargeImageList.Images.Add(key: imageKey, image: directoryElement.Thumbnail);
+            }
+
+            lvi.ImageKey = imageKey;
+        }
+    }
+
+    /// <summary>
+    /// Searches the current ListView items for a specific row associated with the given GUID.
+    /// </summary>
+    /// <param name="guid">The unique identifier (GUID) of the DirectoryElement to find.</param>
+    /// <returns>
+    /// The <see cref="ListViewItem"/> associated with the GUID if found; otherwise, <c>null</c>.
+    /// </returns>
+    public ListViewItem? FindItemByGuid(string guid)
+    {
+        if (string.IsNullOrWhiteSpace(value: guid))
+        {
+            return null;
+        }
+
+        // We iterate through the Items collection of the ListView.
+        // Note: Since this is a UI control, this must be called from the UI thread 
+        // or via an Invoke/BeginInvoke call.
+        foreach (ListViewItem lvi in Items)
+        {
+            // 1. Ensure the Tag is not null and is indeed a DirectoryElement.
+            if (lvi.Tag is DirectoryElement element)
+            {
+                // 2. Retrieve the GUID from the directoryElement's attributes.
+                string elementGuid = element.GetAttributeValueAsString(
+                    attribute: SourcesAndAttributes.ElementAttribute.GUID);
+
+                // 3. Compare using InvariantCultureIgnoreCase to avoid casing mismatches.
+                if (string.Equals(
+                    a: elementGuid,
+                    b: guid,
+                    comparisonType: StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return lvi;
+                }
+            }
+        }
+
+        // Return null if no matching item is currently visible in the ListView.
+        return null;
     }
 
     /// <summary>
@@ -1214,8 +1321,8 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     public void ClearData()
     {
+        _masterCollection.Clear();
         Items.Clear();
-        // DirectoryElements.Clear();
     }
 
     /// <summary>
@@ -1236,6 +1343,28 @@ public partial class FileListView : System.Windows.Forms.ListView
         {
             EnsureVisible(index: itemToModify.Index);
         }
+    }
+
+    /// <summary>
+    ///     Scrolls the list so the target item is positioned consistently,
+    ///     avoiding the "just barely on screen" confusion of EnsureVisible.
+    /// </summary>
+    public void ScrollToItemCentred(ListViewItem item)
+    {
+        if (item == null)
+        {
+            return;
+        }
+
+        // 1. Ensure it's on screen at all
+        item.EnsureVisible();
+
+        // 2. The "Top Item" Trick: 
+        // If you want the item at the VERY TOP of the list:
+        TopItem = item;
+
+        // 3. If you want it in the middle (requires more math/API), 
+        // but usually TopItem is what users expect when returning to a spot.
     }
 
     /// <summary>
@@ -1342,13 +1471,24 @@ public partial class FileListView : System.Windows.Forms.ListView
 
     #endregion
 
-    #region Filtering
+    #region Filtering Menu (only)
 
+    /// <summary>
+    /// Display a filter context menu at the specified location that provides per-column filter commands, imports
+    /// standard actions from the main form, localizes menu items, and shows the menu.
+    /// </summary>
+    /// <remarks>Builds a Filter submenu containing emptiness checks, current-value shortcuts (when
+    /// available), standard text operations, and a Clear All option. For operations that require user input, prompts
+    /// using Microsoft.VisualBasic.Interaction.InputBox and aborts if the user provides no value. Applies filters via
+    /// ApplyAutoFilter, may reload the master collection to clear filters, clones/imports items from
+    /// FrmMainApp.cms_FileListView, calls LocaliseDynamicMenu, and then displays the menu.</remarks>
+    /// <param name="location">Location within the control where the context menu is displayed and used for hit-testing to determine the target
+    /// column and item.</param>
     private void ShowFilterMenu(Point location)
     {
         ContextMenuStrip menu = new();
         ListViewHitTestInfo hitInfo = HitTest(location);
-        int columnIndex = GetColumnAtX(location.X);
+        int columnIndex = GetColumnAtX(x: location.X);
 
         if (columnIndex != -1)
         {
@@ -1359,39 +1499,81 @@ public partial class FileListView : System.Windows.Forms.ListView
                                        : string.Empty;
 
             // 1. Create the Filter Sub-Menu
-            ToolStripMenuItem filterSubMenu = new($"Filter: {colName}") { Name = "cmi_Filter_SubMenu" };
+            ToolStripMenuItem filterSubMenu = new(text: $"Filter: {colName}") { Name = "cmi_Filter_SubMenu" };
 
-            // 2. Is Empty / Is Not Empty (Accounting for "-")
-            _ = filterSubMenu.DropDownItems.Add("Is Empty", null, (s, ev) => ApplyAutoFilter(columnIndex, "isempty", ""));
-            _ = filterSubMenu.DropDownItems.Add("Is Not Empty", null, (s, ev) => ApplyAutoFilter(columnIndex, "isnotempty", ""));
+            // --- LOCAL HELPER ---
+            void AddFilterItem(FilterOperator op, string? value)
+            {
+                FilterOperator capturedOp = op;
+                string? capturedValue = value;
+                string opText = GetTextFromOperator(op: capturedOp);
+
+                // If value is null, this is a generic "Is..." or "Contains..." call that needs user input
+                string displayText = string.IsNullOrEmpty(value: capturedValue) && capturedOp != FilterOperator.IsEmpty && capturedOp != FilterOperator.IsNotEmpty
+                    ? $"{opText}..."
+                    : string.IsNullOrEmpty(value: capturedValue) ? $"{opText}" : $"{opText} \"{capturedValue}\"";
+                _ = filterSubMenu.DropDownItems.Add(text: displayText, image: null, onClick: (s, ev) =>
+                {
+                    string finalSearchValue = capturedValue ?? "";
+
+                    // If no value was provided (the "..." items), ask the user for one
+                    if (capturedValue == null)
+                    {
+                        // Using the Microsoft.VisualBasic Interaction.InputBox 
+                        // Ensure you have the reference to Microsoft.VisualBasic in your project
+                        finalSearchValue = Microsoft.VisualBasic.Interaction.InputBox(
+                            Prompt: $"{opText}:",
+                            Title: "Filter",
+                            DefaultResponse: "");
+
+                        // If the user hits 'Cancel', the InputBox returns an empty string. 
+                        // You might want to abort if they didn't type anything.
+                        if (string.IsNullOrEmpty(finalSearchValue))
+                        {
+                            return;
+                        }
+                    }
+
+                    ApplyAutoFilter(
+                        columnIndex: columnIndex,
+                        operatorValue: capturedOp,
+                        searchValue: finalSearchValue);
+                });
+            }
+
+            // 2. Is Empty / Is Not Empty
+            AddFilterItem(op: FilterOperator.IsEmpty, value: "");
+            AddFilterItem(op: FilterOperator.IsNotEmpty, value: "");
             _ = filterSubMenu.DropDownItems.Add(new ToolStripSeparator());
 
             // 3. Current Value Logic
-            if (!string.IsNullOrEmpty(clickedCellValue) && clickedCellValue != UNKNOWN_VALUE_FILE)
+            if (!string.IsNullOrEmpty(value: clickedCellValue) && clickedCellValue != UNKNOWN_VALUE_FILE)
             {
-                _ = filterSubMenu.DropDownItems.Add($"Is \"{clickedCellValue}\"", null, (s, ev) => ApplyAutoFilter(columnIndex, "is", clickedCellValue));
-                _ = filterSubMenu.DropDownItems.Add($"Is not \"{clickedCellValue}\"", null, (s, ev) => ApplyAutoFilter(columnIndex, "isn't", clickedCellValue));
+                AddFilterItem(op: FilterOperator.Is, value: clickedCellValue);
+                AddFilterItem(op: FilterOperator.IsNot, value: clickedCellValue);
                 _ = filterSubMenu.DropDownItems.Add(new ToolStripSeparator());
             }
 
             // 4. Standard Text Operations
-            string[] operations = { "is", "isn't", "contains", "doesn't contain" };
-            foreach (string op in operations)
+            FilterOperator[] operations = {
+            FilterOperator.Is,
+            FilterOperator.IsNot,
+            FilterOperator.Contains,
+            FilterOperator.DoesNotContain
+        };
+
+            foreach (FilterOperator op in operations)
             {
-                ToolStripMenuItem opItem = new(op) { Name = $"cmi_Filter_{op}" };
-                opItem.Click += (s, ev) =>
-                {
-                    string criteria = Microsoft.VisualBasic.Interaction.InputBox($"Filter {colName}:", "Filter", clickedCellValue);
-                    if (!string.IsNullOrEmpty(criteria))
-                    {
-                        ApplyAutoFilter(columnIndex, op, criteria);
-                    }
-                };
-                _ = filterSubMenu.DropDownItems.Add(opItem);
+                // The local helper now handles the capture correctly
+                AddFilterItem(op: op, value: null);
             }
 
+
             _ = filterSubMenu.DropDownItems.Add(new ToolStripSeparator());
-            _ = filterSubMenu.DropDownItems.Add("Clear All Filters", null, (s, ev) =>
+
+            // 5. Clear Logic
+            string clearText = HelperControlAndMessageBoxHandling.ReturnControlText("Generic_ClearAll", HelperControlAndMessageBoxHandling.FakeControlTypes.Generic);
+            _ = filterSubMenu.DropDownItems.Add(text: clearText ?? "Clear All Filters", image: null, onClick: (s, ev) =>
             {
                 if (_masterCollection != null)
                 {
@@ -1403,9 +1585,8 @@ public partial class FileListView : System.Windows.Forms.ListView
             _ = menu.Items.Add(new ToolStripSeparator());
         }
 
-        // --- Import standard actions ---
-        FrmMainApp frmMain = (FrmMainApp)Application.OpenForms["FrmMainApp"];
-        if (frmMain?.cms_FileListView != null)
+        // --- Import standard actions from FrmMainApp ---
+        if (Application.OpenForms["FrmMainApp"] is FrmMainApp frmMain && frmMain.cms_FileListView != null)
         {
             foreach (ToolStripItem item in frmMain.cms_FileListView.Items)
             {
@@ -1420,8 +1601,8 @@ public partial class FileListView : System.Windows.Forms.ListView
             }
         }
 
-        LocalizeDynamicMenu(menu);
-        menu.Show(this, location);
+        LocaliseDynamicMenu(menu: menu);
+        menu.Show(control: this, location);
     }
 
     private ToolStripMenuItem CloneToolStripItem(ToolStripMenuItem source)
@@ -1438,7 +1619,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         };
 
         // Manually hook into the original's click event logic
-        // This is a bit of a trick: we invoke the original item's PerformClick
+        // This is a bit of a trick: we invoke the original lvi's PerformClick
         clone.Click += (s, e) => source.PerformClick();
 
         if (source.HasDropDownItems)
@@ -1459,7 +1640,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         return clone;
     }
 
-    private void LocalizeDynamicMenu(ContextMenuStrip menu)
+    private void LocaliseDynamicMenu(ContextMenuStrip menu)
     {
         foreach (ToolStripItem item in menu.Items)
         {

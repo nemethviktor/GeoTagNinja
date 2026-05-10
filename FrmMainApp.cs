@@ -28,6 +28,7 @@ using System.Windows.Forms;
 using TimeZoneConverter;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using Application = System.Windows.Forms.Application;
+using Path = System.IO.Path;
 using Themer = WinFormsDarkThemerNinja.Themer;
 
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
@@ -217,7 +218,7 @@ public partial class FrmMainApp : Form
         DirectoryElements.ExifTool = _ExifTool;
 
 #if !DEBUG
-            this.tmi_Debug.Visible = false;
+        tmi_Debug.Visible = false;
 #endif
         Log.Info(message: "Constructor: Done");
     }
@@ -332,10 +333,10 @@ public partial class FrmMainApp : Form
         HelperGenericAppStartup.AppStartupGetToponomyRadiusAndMaxRows();
         Request_Map_NavigateGo();
 
-        while (await CheckFormIsOpen("FrmPleaseWaitBox"))
-        {
-            await Task.Delay(500);
-        }
+        // while (await CheckFormIsOpen("FrmPleaseWaitBox"))
+        // {
+        //     await Task.Delay(500);
+        // }
         await HelperAPIVersionCheckers.CheckForNewVersions();
 
         LaunchAutoUpdater();
@@ -460,7 +461,7 @@ public partial class FrmMainApp : Form
         // Write column widths to db
         Log.Trace(message: "Write column widths to db");
         lvw_FileList.PersistSettings();
-
+        Helpers.HelperVariables.ApplicationIsClosing = true;
         AppClosingPersistData();
 
         // Clean up
@@ -1803,15 +1804,23 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    ///     Handles the tmi_File_ImportExportGPX_Click event -> Brings up the FrmImportExportGpx to import track
-    ///     files
+    /// Open the GPX import/export dialog after verifying metadata is ready and, when in flat mode, obtaining user
+    /// confirmation.
     /// </summary>
-    /// <param name="sender">Unused</param>
-    /// <param name="e">Unused</param>
+    /// <remarks>Returns without action if metadata is not ready. When running in flat mode, prompts the user before
+    /// proceeding. Creates and shows the FrmImportExportGpx dialog with localized text.</remarks>
+    /// <param name="sender">The event source.</param>
+    /// <param name="e">Event arguments.</param>
     private void tmi_File_ImportExportGPX_Click(object sender,
                                                 EventArgs e)
     {
-        // warn user that this is a bad idea in flatmode.
+        // Disallow running while parsing is still in progress
+        if (!EnsureMetadataIsReadyAndWarnUserIfNot())
+        {
+            return;
+        }
+
+        // Warn user that this is a bad idea in flatmode.
         if (!FlatMode ||
             (FlatMode && Themer.ShowMessageBoxWithResult(
             message: HelperControlAndMessageBoxHandling.ReturnControlText(
@@ -1859,7 +1868,7 @@ public partial class FrmMainApp : Form
             == DialogResult.Yes;
     }
 
-    private void tmiFileFlatModeToolStripMenuItem_Click(object sender,
+    private void tmi_File_FlatMode_Click(object sender,
                                                         EventArgs e)
     {
         FlatMode = !FlatMode;
@@ -1927,11 +1936,14 @@ public partial class FrmMainApp : Form
                                                      EventArgs e)
     {
         Log.Info(message: "Starting");
+        CancelActiveOperations(); // Kill the old one
+        _cts = new CancellationTokenSource(); // Create the new one
+        _ = _cts.Token;
+
         CurrentFolder ??= Path.GetFullPath(path: tbx_FolderName.Text);
         try
         {
-            string CurrentFoldersParent =
-        HelperFileSystemOperators.FsoGetParent(path: CurrentFolder);
+            string CurrentFoldersParent = HelperFileSystemOperators.FsoGetParent(path: CurrentFolder);
         }
         catch
         {
@@ -1941,6 +1953,10 @@ public partial class FrmMainApp : Form
             );
         }
 
+        if (lvw_FileList.SelectedItems.Count > 0)
+        {
+            lvw_FileList.LastScrollDict[CurrentFolder.TrimEnd('\\')] = lvw_FileList.SelectedItems[0].Tag as DirectoryElement;
+        }
         HelperVariables.OperationChangeFolderIsOkay = false;
         if (FlatMode && !_ignoreFlatMode)
         {
@@ -2205,16 +2221,16 @@ public partial class FrmMainApp : Form
         filesToEditGUIDStringList.Clear();
 
         ListView lvw = lvw_FileList;
+
         foreach (ListViewItem lvi in lvw.SelectedItems)
         {
-            DirectoryElement directoryElement =
-                lvi.Tag as DirectoryElement;
+            DirectoryElement directoryElement = lvi.Tag as DirectoryElement;
 
             filesToEditGUIDStringList.Add(
                 item: directoryElement.GetAttributeValueAsString(
                     attribute: ElementAttribute.GUID,
                     version: DirectoryElement.AttributeVersion
-                                             .Original, // GUIDs don't change
+                                                .Original, // GUIDs don't change
                     notFoundValue: null,
                     nowSavingExif: false));
         }
@@ -2381,8 +2397,6 @@ public partial class FrmMainApp : Form
     }
 
     #endregion
-
-
 
     #region lvw_FileList Interaction
 
@@ -2603,24 +2617,28 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    ///     Responsible for updating the main listview.
-    ///     Also I've introduced a "Please Wait" Form to block the Main Form from being interacted with while the folder is
-    ///     refreshing. Soz but needed.
+    /// Loads or updates the file list from a folder or collection file, streams discovered items into the list view, and
+    /// initiates background metadata hydration.
     /// </summary>
+    /// <remarks>Sets up a CancellationTokenSource and token, clears helper collections, and marks the file list as
+    /// being updated. Respects collection mode by using the collection file path and disabling folder editing. Performs UI
+    /// BeginUpdate and ClearData before streaming, calls ParseFolderOrFileListToDEsAsync to enumerate items and add them to
+    /// the list view as they are found, and starts background metadata reads via StartBackgroundMetadataRead. Handles
+    /// OperationCanceledException for user cancellation, logs other exceptions, and in all cases resets
+    /// FileListBeingUpdated, updates the parse progress label, and triggers a final count update of items with
+    /// geodata.</remarks>
+    /// <returns>A Task that represents the asynchronous load or update operation.</returns>
     private async Task lvw_FileList_LoadOrUpdate()
     {
-        Log.Info(message: "Starting");
-        // Initialize a new CancellationTokenSource
+        Log.Info(message: "Starting LoadOrUpdate Process");
 
+        // 1. Setup Cancellation
         _cts = new CancellationTokenSource();
         _token = _cts.Token;
 
-        Log.Trace(message: "Clear lvw_FileList");
-        lvw_FileList.ClearData();
-        // DirectoryElements.Clear();
         HelperVariables.LstTrackPath.Clear();
-        Application.DoEvents();
         HelperGenericFileLocking.FilesBeingProcessed.Clear();
+        HelperGenericFileLocking.FileListBeingUpdated = true;
         RemoveGeoDataIsRunning = false;
 
         #region FrmPleaseWaitBox
@@ -2631,112 +2649,178 @@ public partial class FrmMainApp : Form
 
         #endregion
 
-        // Clear Tables that keep track of the current folder...
-        Log.Trace(message: "Clear OriginalTakenDateDict and OriginalCreateDateDict");
+        if (!Program.CollectionModeEnabled)
+        {
+            // this shouldn't really happen but just in case
+            Log.Trace(message: $"FolderName: {FolderName}");
+            if (FolderName is null)
+            {
+                if (!Directory.Exists(path: tbx_FolderName.Text ?? ""))
+                {
+                    tbx_FolderName.Text = @"C:\";
+                }
+
+                FolderName = tbx_FolderName.Text;
+                Log.Trace(message: $"FolderName [was null, now updated]: {FolderName}");
+            }
+        }
 
         tbx_FolderName.Enabled = !Program.CollectionModeEnabled;
+        string targetPath = Program.CollectionModeEnabled ? Program.CollectionFileLocation : FolderName;
 
         if (Program.CollectionModeEnabled)
         {
-            try
-            {
-                Log.Trace(message: "FolderName: disabled - using collectionModeEnabled");
-                tbx_FolderName.Text =
-                    @"** collectionMode enabled **"; // point here is that this doesn't exist and as such will block certain operations (like "go up one level"), which is what we want.
-
-                // Load data (and add to DEs)
-                await DirectoryElements.ParseFolderOrFileListToDEsAsync(
-                    folderOrCollectionFileName: Program.CollectionFileLocation,
-                    processSubFolders: false,
-                    updateProgressHandler: delegate (string statusText)
-                    {
-                        _ = Invoke(method: new Action(() =>
-                            HandlerUpdateLabelText(label: lbl_ParseProgress, text: statusText)));
-                    },
-                    collectionModeEnabled: Program.CollectionModeEnabled,
-                    cts: _cts
-                );
-            }
-            catch (OperationCanceledException)
-            {
-                Console.WriteLine(value: "Operation canceled by user.");
-            }
-            finally
-            {
-                // Ensure `cts` is disposed here
-                _cts?.Dispose();
-                _cts = null;
-            }
+            Log.Trace(message: "FolderName: disabled - using collectionModeEnabled");
+            tbx_FolderName.Text = @"** collectionMode enabled **";
         }
-        // not collectionModeEnabled
-        else
-        {
-            tbx_FolderName.Enabled = true;
 
-            Log.Trace(message: $"tbx_FolderName.Text: {tbx_FolderName.Text}");
-            if (tbx_FolderName.Text != null)
-            {
-                // this shouldn't really happen but just in case
-                Log.Trace(message: $"FolderName: {FolderName}");
-                if (FolderName is null)
+        try
+        {
+            lvw_FileList.BeginUpdate();
+            lvw_FileList.ClearData();
+
+            // 1. Scan and Stream Files to the UI
+            await DirectoryElements.ParseFolderOrFileListToDEsAsync(
+                folderOrCollectionFileName: targetPath,
+                processSubFolders: FlatMode,
+                updateProgressHandler: (string text) => HandlerUpdateLabelText(label: lbl_ParseProgress, text: text),
+                collectionModeEnabled: Program.CollectionModeEnabled,
+                cts: _cts,
+                onElementFound: (DirectoryElement de) =>
                 {
-                    if (!Directory.Exists(path: tbx_FolderName.Text))
+                    // For non-files, get the icon immediately
+                    if (de.Type != DirectoryElement.ElementType.File)
                     {
-                        tbx_FolderName.Text = @"C:\";
+                        de.GenerateThumbnailIfRequired();
                     }
 
-                    FolderName = tbx_FolderName.Text;
-                    Log.Trace(message: $"FolderName [was null, now updated]: {FolderName}");
-                }
+                    _ = lvw_FileList.AddListItem(directoryElement: de);
 
-                // Load data (and add to DEs)
-                try
-                {
-                    await DirectoryElements.ParseFolderOrFileListToDEsAsync(
-                        folderOrCollectionFileName: FolderName,
-                        processSubFolders: FlatMode,
-                        updateProgressHandler: delegate (string statusText)
-                        {
-                            _ = Invoke(method: new Action(() =>
-                                HandlerUpdateLabelText(label: lbl_ParseProgress, text: statusText)));
-                        },
-                        collectionModeEnabled: Program.CollectionModeEnabled,
-                        cts: _cts
-                    );
+                    // Sync immediately (folders show icon, files get their 'ghosts' cleared)
+                    if (HelperVariables.UserSettingShowThumbnails && de.Type == DirectoryElement.ElementType.File)
+                    {
+                        lvw_FileList.SyncElementThumbnail(directoryElement: de);
+                    }
                 }
-                catch (OperationCanceledException)
+            );
+
+            frmPleaseWaitBox.Close();
+
+            // 2. Start Background Hydration with Live Counting
+            // We use a lambda to perform multiple actions when a file is updated.
+            _ = DirectoryElements.StartBackgroundMetadataRead(
+                onUpdated: (DirectoryElement de) =>
                 {
-                    Console.WriteLine(value: "Operation canceled by user.");
-                }
-                finally
+                    // Action A: Update the specific row in the ListView (GPS data, dates, etc.)
+                    lvw_FileList.UpdateListItemData(de: de);
+
+                    if (HelperVariables.UserSettingShowThumbnails)
+                    {
+                        // This will create the thumbnail if missing and then sync the icon key
+                        de.GenerateThumbnailIfRequired();
+                        lvw_FileList.SyncElementThumbnail(directoryElement: de);
+                    }
+
+                    // Action B: Re-calculate the global counts for the status label
+                    FileListViewReadWrite.ListViewCountItemsWithGeoData();
+                },
+                ct: _token
+            );
+
+            lvw_FileList.EndUpdate();
+            try
+            {
+                _ = lvw_FileList.LastScrollDict.TryGetValue(tbx_FolderName.Text.TrimEnd('\\'), out DirectoryElement? directoryElement);
+
+                if (directoryElement is not null)
                 {
-                    // Ensure `cts` is disposed here
-                    _cts?.Dispose();
-                    _cts = null;
+                    // Look up by the unique FileNameWithPath key we just set as the 'Name'
+                    ListViewItem? targetItem = lvw_FileList.Items[directoryElement.FileNameWithPath];
+
+                    if (targetItem is not null)
+                    {
+                        targetItem.Selected = true;
+                        targetItem.Focused = true;
+
+                        // Use a better scrolling method
+                        lvw_FileList.ScrollToItemCentred(targetItem);
+                    }
                 }
             }
+            catch
+            {
+                // nothing
+            }
         }
+        catch (OperationCanceledException)
+        {
+            Log.Info(message: "Operation canceled by user.");
+            HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Canceled.");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, message: "Error during file streaming.");
+        }
+        finally
+        {
+            HelperGenericFileLocking.FileListBeingUpdated = false;
+            HandlerUpdateLabelText(lbl_ParseProgress, $"{HelperControlAndMessageBoxHandling.ReturnControlText("Generic_Ready", HelperControlAndMessageBoxHandling.FakeControlTypes.Generic)}.");
 
-        // Show Form
-        lvw_FileList.ReloadFromDEs(directoryElements: DirectoryElements);
-
-        // This is a draft caller for caching. Disabled for now because it is experimental but I don't
-        // .. want to redo the whole thing if I ever figure I want caching.
-        // HelperDataCacheManager.WriteToJsonFile<List<DirectoryElement>>("C:\\myObjects.txt", DirectoryElements);
-
-        HelperGenericFileLocking.FileListBeingUpdated = false;
-        HandlerUpdateLabelText(label: lbl_ParseProgress, text: "Ready.");
-        Log.Trace(message: "Enable FrmMainApp");
-        frmPleaseWaitBox.Close();
-        Log.Trace(message: "Hide PleaseWaitBox");
-
-        // Not logging this.
-        FileListViewReadWrite.ListViewCountItemsWithGeoData();
+            // Final count update
+            FileListViewReadWrite.ListViewCountItemsWithGeoData();
+        }
     }
 
+    /// <summary>
+    /// Cancels the active CancellationTokenSource, disposes it, clears the reference, and logs the cancellation.
+    /// </summary>
+    /// <remarks>Safe to call when no CancellationTokenSource is active. Cancellation is cooperative;
+    /// operations must observe the cancellation token to stop. Disposal releases resources associated with the token
+    /// source.</remarks>
+    private void CancelActiveOperations()
+    {
+        if (_cts != null)
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+            _cts = null;
+            Log.Info("Background operations cancelled.");
+        }
+    }
+
+    /// <summary>
+    /// Validates if the application is ready for user actions that require fully parsed metadata. Shows a warning if the metadata parse is not ready.
+    /// </summary>
+    /// <returns>True if the action can proceed; otherwise, false.</returns>
+    internal bool EnsureMetadataIsReadyAndWarnUserIfNot()
+    {
+        if (DirectoryElements.IsHydrating)
+        {
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmMainApp_WarningDataParseStillInProgress",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
+                    ),
+                icon: MessageBoxIcon.Warning,
+                buttons: MessageBoxButtons.OK);
+            return false;
+        }
+        return true;
+    }
     #endregion
 
     #region Events
+
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+    {
+        if (keyData == Keys.Escape)
+        {
+            CancelActiveOperations();
+            // Optional: Update status bar to tell user it stopped
+            return true;
+        }
+        return base.ProcessCmdKey(ref msg, keyData);
+    }
 
     /// <summary>
     ///     Handles the lvw_FileList_MouseDoubleClick event -> if user clicked on a folder then enter, if a file then edit

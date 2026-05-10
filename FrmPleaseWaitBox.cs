@@ -3,7 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
-using WinFormsDarkThemerNinja;
+using Themer = WinFormsDarkThemerNinja.Themer;
+
 
 namespace GeoTagNinja;
 
@@ -53,6 +54,9 @@ public partial class FrmPleaseWaitBox : Form
             );
     }
 
+    /// <summary>
+    /// Provides the localised labels for the various Control names 
+    /// </summary>
     private void GetControlNames()
     {
         HelperNonStatic helperNonstatic = new();
@@ -92,7 +96,12 @@ public partial class FrmPleaseWaitBox : Form
         _frmMainAppInstance.Enabled = true;
     }
 
-    internal void UpdateLabels(ActionStages stage)
+
+    /// <summary>
+    /// Updates the individual Controls' visibilities depending on what stage/action we're on/at
+    /// </summary>
+    /// <param name="stage"></param>
+    internal void UpdateControlsVisibility(ActionStages stage)
     {
         if (stage == ActionStages.SCANNING)
         {
@@ -101,7 +110,7 @@ public partial class FrmPleaseWaitBox : Form
             lbl_PleaseWaitBoxMessage.Visible = false;
             lbl_PressCancelToStop.Visible = true;
             btn_Cancel.Visible = true;
-            lbl_PleaseWaitBoxActionScanning.Visible = true;
+            // lbl_PleaseWaitBoxActionScanning.Visible = true;
             lbl_PleaseWaitBoxActionParsing.Visible = false;
             lbl_PleaseWaitBoxActionPopulatingListView.Visible = false;
         }
@@ -113,20 +122,21 @@ public partial class FrmPleaseWaitBox : Form
             lbl_PressCancelToStop.Visible = false;
             btn_Cancel.Visible = true;
             lbl_PleaseWaitBoxActionScanning.Visible = false;
-            lbl_PleaseWaitBoxActionParsing.Visible = true;
+            // lbl_PleaseWaitBoxActionParsing.Visible = true;
             lbl_PleaseWaitBoxActionPopulatingListView.Visible = false;
         }
-        else if (stage == ActionStages.POPULATING_LISTVIEW)
-        {
-            lbl_ParsingFolders.Visible = false;
-            lbl_CancelPressed.Visible = false;
-            lbl_PleaseWaitBoxMessage.Visible = true;
-            lbl_PressCancelToStop.Visible = false;
-            btn_Cancel.Visible = false;
-            lbl_PleaseWaitBoxActionScanning.Visible = false;
-            lbl_PleaseWaitBoxActionParsing.Visible = false;
-            lbl_PleaseWaitBoxActionPopulatingListView.Visible = true;
-        }
+        //// No longer relevant. Has been obsoleted by streaming data capability intro
+        //else if (stage == ActionStages.POPULATING_LISTVIEW)
+        //{
+        //    lbl_ParsingFolders.Visible = false;
+        //    lbl_CancelPressed.Visible = false;
+        //    lbl_PleaseWaitBoxMessage.Visible = true;
+        //    lbl_PressCancelToStop.Visible = false;
+        //    btn_Cancel.Visible = false;
+        //    lbl_PleaseWaitBoxActionScanning.Visible = false;
+        //    lbl_PleaseWaitBoxActionParsing.Visible = false;
+        //    lbl_PleaseWaitBoxActionPopulatingListView.Visible = true;
+        //}
 
         Application.DoEvents();
     }
@@ -135,6 +145,6 @@ public partial class FrmPleaseWaitBox : Form
     {
         SCANNING,
         PARSING,
-        POPULATING_LISTVIEW
+        //POPULATING_LISTVIEW
     }
 }

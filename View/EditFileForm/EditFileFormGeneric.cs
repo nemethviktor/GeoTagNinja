@@ -17,6 +17,8 @@ internal static class EditFileFormGeneric
         int overallCount = 0;
         int fileCount = 0;
         int folderCount = 0;
+        int nonHydratedCount = 0;
+
         FrmEditFileData FrmEditFileData = new();
 
         System.Windows.Forms.ListView lvw = FrmEditFileData.lvw_FileListEditImages;
@@ -42,17 +44,25 @@ internal static class EditFileFormGeneric
 
             if (dirElemFileToModify.Type == DirectoryElement.ElementType.File)
             {
-                overallCount++;
-                ListViewItem lvi = new()
+                if (dirElemFileToModify.IsHydrated)
                 {
-                    Text = FrmMainApp.FlatMode
-                        ? dirElemFileToModify.FileNameWithPath
-                        : dirElemFileToModify.ItemNameWithoutPath,
-                    Tag = dirElemFileToModify
-                };
-                //lvi.SubItems.Add(text: fileToEditGUID);
-                _ = FrmEditFileData.lvw_FileListEditImages.Items.Add(value: lvi);
-                fileCount++;
+
+                    overallCount++;
+                    ListViewItem lvi = new()
+                    {
+                        Text = FrmMainApp.FlatMode
+                            ? dirElemFileToModify.FileNameWithPath
+                            : dirElemFileToModify.ItemNameWithoutPath,
+                        Tag = dirElemFileToModify
+                    };
+                    //lvi.SubItems.Add(text: fileToEditGUID);
+                    _ = FrmEditFileData.lvw_FileListEditImages.Items.Add(value: lvi);
+                    fileCount++;
+                }
+                else
+                {
+                    nonHydratedCount++;
+                }
             }
             else if (dirElemFileToModify.Type ==
                      DirectoryElement.ElementType.SubDirectory)
@@ -60,6 +70,18 @@ internal static class EditFileFormGeneric
                 overallCount++;
                 folderCount++;
             }
+        }
+
+        // check for non-parsed files
+        if (nonHydratedCount > 0)
+        {
+            Themer.ShowMessageBox(
+            message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: "mbx_FrmMainApp_ErrorNonHydratedItemsPresent",
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
+                ),
+            icon: fileCount == nonHydratedCount ? MessageBoxIcon.Error : MessageBoxIcon.Warning,
+            buttons: MessageBoxButtons.OK);
         }
 
         if (fileCount > 0)
@@ -77,7 +99,7 @@ internal static class EditFileFormGeneric
         // basically if the user only selected folders, do nothing
         else if (overallCount == folderCount + fileCount)
         {
-            //nothing.
+            // nothing.
         }
         // we appear to have lost a file or two.
         else
@@ -89,5 +111,6 @@ internal static class EditFileFormGeneric
                 icon: MessageBoxIcon.Warning,
                 buttons: MessageBoxButtons.OK);
         }
+
     }
 }

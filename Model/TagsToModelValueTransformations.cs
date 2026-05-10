@@ -11,67 +11,77 @@ namespace GeoTagNinja.Model;
 internal class TagsToModelValueTransformations
 {
     /// <summary>
-    ///     Compose the GPSLat/Long value with their respective reference (N for North, etc).
-    ///     Ensure dec. sep. is "."
+    /// Composes GPS Latitude/Longitude values with their respective references (North, South, East, West).
+    /// Handles cases where Reference tags are missing by deriving them from the coordinate's sign
+    /// and explicitly setting the Reference attribute in the parsed values collection.
     /// </summary>
-    public static double? T2M_GPSLatLong(ElementAttribute attribute,
-                                         string parseResult,
-                                         IDictionary<ElementAttribute, IConvertible> parsed_Values,
-                                         Func<ElementAttribute, bool> ParseMissingAttribute)
+    /// <param name="attribute">The coordinate attribute being parsed (Latitude or Longitude).</param>
+    /// <param name="parseResult">The raw string value from ExifTool.</param>
+    /// <param name="parsed_Values">The dictionary of values already parsed in this pass.</param>
+    /// <param name="ParseMissingAttribute">A delegate to trigger parsing of a dependent attribute if not yet available.</param>
+    /// <returns>A double representing the coordinate, adjusted for hemisphere.</returns>
+    /// <exception cref="ArgumentException">Thrown if an unsupported attribute is passed to the transformation.</exception>
+    public static double? T2M_GPSLatLong(
+        ElementAttribute attribute,
+        string parseResult,
+        IDictionary<ElementAttribute, IConvertible> parsed_Values,
+        Func<ElementAttribute, bool> ParseMissingAttribute)
     {
         if (parseResult == null)
         {
-            return null; // not set
+            return null;
         }
 
-        // Get the Ref Attribute for the corresponding data point and thereof the first character
-        // (Should be N of North, etc.)
-        // If this character is not contained in the data point value, add it before it
+        // 1. Identify the corresponding Reference attribute.
         ElementAttribute refAttrib = attribute switch
         {
             ElementAttribute.GPSLatitude => ElementAttribute.GPSLatitudeRef,
             ElementAttribute.GPSDestLatitude => ElementAttribute.GPSDestLatitudeRef,
             ElementAttribute.GPSLongitude => ElementAttribute.GPSLongitudeRef,
             ElementAttribute.GPSDestLongitude => ElementAttribute.GPSDestLongitudeRef,
-            _ => throw new ArgumentException(message: $"T2M_GPSLatLong does not support attribute '{GetElementAttributesName(attributeToFind: attribute)}'"),
+            _ => throw new ArgumentException(message: $"T2M_GPSLatLong does not support attribute '{SourcesAndAttributes.GetElementAttributesName(attributeToFind: attribute)}'")
         };
 
-        // If reference is set, concat if needed
-        string tmpLatLongRefVal = ""; // this will be something like "N" or "North" etc.
-        if (parsed_Values.ContainsKey(key: refAttrib))
-        // Was parsed already
+        // 2. Parse the numeric coordinate.
+        if (!double.TryParse(
+            s: parseResult,
+            style: System.Globalization.NumberStyles.Any,
+            provider: System.Globalization.CultureInfo.InvariantCulture,
+            result: out double baseValue))
         {
-            tmpLatLongRefVal = (string)parsed_Values[key: refAttrib];
+            return null;
         }
-        else
+
+        // 3. Attempt to retrieve the existing Reference value (e.g., from EXIF).
+        string? refValue = null;
+        if (ParseMissingAttribute(arg: refAttrib) && parsed_Values.TryGetValue(key: refAttrib, out IConvertible? val))
         {
-            // Otherwise parse
-            bool parseOk = ParseMissingAttribute(arg: refAttrib);
-            if (parseOk)
+            refValue = val.ToString(provider: System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        // 4. Force-derive Reference if missing (common in XMP signed floats).
+        if (string.IsNullOrWhiteSpace(value: refValue))
+        {
+            refValue = attribute is ElementAttribute.GPSLatitude or ElementAttribute.GPSDestLatitude
+                ? (baseValue < 0) ? "South" : "North"
+                : (baseValue < 0) ? "West" : "East";
+
+            // 5. Explicitly publish the derived Reference back to the parsed values.
+            // This ensures the literal string is available for the ListView and other logic.
+            if (!parsed_Values.ContainsKey(key: refAttrib))
             {
-                tmpLatLongRefVal = (string)parsed_Values[key: refAttrib];
+                parsed_Values.Add(key: refAttrib, value: refValue);
             }
         }
 
-        // Not set attribs are null (or just doesn't start with one of the below)
-        if (tmpLatLongRefVal == null ||
-            !Regex.IsMatch(input: tmpLatLongRefVal, pattern: "^[SWNE\"-]", options: RegexOptions.IgnoreCase))
-        {
-            tmpLatLongRefVal = "";
-        }
+        // 6. Final Calculation: Apply standard hemispheric logic.
+        // We treat South and West as negative, but keep the absolute value of the coordinate 
+        // to avoid double-negatives if the source was already a signed float.
+        double absoluteValue = Math.Abs(value: baseValue);
+        bool isNegative = refValue.StartsWith(value: "S", comparisonType: StringComparison.OrdinalIgnoreCase) ||
+                          refValue.StartsWith(value: "W", comparisonType: StringComparison.OrdinalIgnoreCase);
 
-        if (tmpLatLongRefVal.Length > 0)
-        {
-            tmpLatLongRefVal = tmpLatLongRefVal.Substring(startIndex: 0, length: 1);
-            if (!parseResult.Contains(value: tmpLatLongRefVal))
-            {
-                parseResult = tmpLatLongRefVal + parseResult;
-            }
-        }
-
-        // Finally ensure that dec sep. is "." and account for direction
-        // of coordinates by using +/-
-        return HelperExifDataPointInteractions.AdjustLatLongNegative(point: parseResult);
+        return isNegative ? -absoluteValue : absoluteValue;
     }
 
     /// <summary>
@@ -315,6 +325,19 @@ internal class TagsToModelValueTransformations
             : 0;
     }
 
+    public static double? T2M_GPSDOP(string parseResult)
+    {
+        if (parseResult == null)
+        {
+            // not set
+            return null;
+        }
+        bool _ = double.TryParse(s: parseResult.ToString(provider: CultureInfo.InvariantCulture), result: out double returnVal);
+
+        return _
+            ? returnVal
+            : null;
+    }
     /// <summary>
     ///     Ensure the value is an actual date-time...
     /// </summary>

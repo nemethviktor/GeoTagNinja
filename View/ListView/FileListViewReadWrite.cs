@@ -273,38 +273,48 @@ internal static class FileListViewReadWrite
     }
 
     /// <summary>
-    ///     This updates the lbl_ParseProgress with count of items with geodata.
+    /// Updates the progress label with the current count of total files and files containing geodata.
+    /// </summary>
+    /// <summary>
+    /// Calculates the total number of files and the number of files with geodata 
+    /// based strictly on the items currently displayed in the ListView.
     /// </summary>
     internal static void ListViewCountItemsWithGeoData()
     {
+        // 1. Retrieve the main form instance safely.
         FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
-        int DEFileCount = 0;
-        int DEFilesWithGeoDataCount = 0;
-        if (frmMainAppInstance != null)
+
+        if (frmMainAppInstance == null)
         {
-            List<DirectoryElement> lvwDirectoryElements =
-                (from ListViewItem lvi in frmMainAppInstance.lvw_FileList.Items select lvi.Tag as DirectoryElement)
-               .ToList();
-            foreach (DirectoryElement directoryElement in lvwDirectoryElements)
+            return;
+        }
+
+        int totalFileCount = 0;
+        int filesWithGeoDataCount = 0;
+
+        // 2. Pre-cache the list of attributes that represent Geodata.
+        List<ElementAttribute> geoAttributes = Enum.GetValues(enumType: typeof(ElementAttribute))
+                                                   .Cast<ElementAttribute>()
+                                                   .Where(predicate: SourcesAndAttributes.GetElementAttributesIsGeoData)
+                                                   .ToList();
+
+        // 3. Iterate through the items currently in the ListView control.
+        // This ensures that if the user has navigated to a new folder, only current items are counted.
+        foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.Items)
+        {
+            // Extract the DirectoryElement from the Tag property.
+            if (lvi.Tag is DirectoryElement directoryElement)
             {
                 if (directoryElement.Type == DirectoryElement.ElementType.File)
                 {
-                    DEFileCount++;
-                    List<ElementAttribute> GeoDataAttributes = Enum
-                                                              .GetValues(
-                                                                   enumType:
-                                                                   typeof(ElementAttribute))
-                                                              .Cast<ElementAttribute>()
-                                                              .Where(
-                                                                   predicate:
-                                                                   GetElementAttributesIsGeoData)
-                                                              .ToList();
+                    totalFileCount++;
 
-                    foreach (ElementAttribute geoDataAttribute in GeoDataAttributes)
+                    // Check for geodata attributes.
+                    foreach (ElementAttribute geoAttr in geoAttributes)
                     {
-                        if (directoryElement.HasSpecificAttributeWithAnyVersion(attribute: geoDataAttribute))
+                        if (directoryElement.HasSpecificAttributeWithAnyVersion(attribute: geoAttr))
                         {
-                            DEFilesWithGeoDataCount++;
+                            filesWithGeoDataCount++;
                             break;
                         }
                     }
@@ -312,11 +322,26 @@ internal static class FileListViewReadWrite
             }
         }
 
-        if (frmMainAppInstance != null)
-        {
-            FrmMainApp.HandlerUpdateLabelText(
-                label: frmMainAppInstance.lbl_ParseProgress,
-                text: $"Ready. Files: Total: {DEFileCount} Geodata: {DEFilesWithGeoDataCount}");
-        }
+        // 4. Retrieve localized strings for the status label.
+        string readyLabel = HelperControlAndMessageBoxHandling.ReturnControlText(
+            controlName: "Generic_Ready",
+            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Generic);
+
+        string filesLabel = HelperControlAndMessageBoxHandling.ReturnControlText(
+            controlName: "Generic_Files",
+            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Generic);
+
+        string totalLabel = HelperControlAndMessageBoxHandling.ReturnControlText(
+            controlName: "Generic_Total",
+            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Generic);
+
+        string geoLabel = HelperControlAndMessageBoxHandling.ReturnControlText(
+            controlName: "Generic_GeoData",
+            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Generic);
+
+        // 5. Update the UI via the thread-safe handler.
+        FrmMainApp.HandlerUpdateLabelText(
+            label: frmMainAppInstance.lbl_ParseProgress,
+            text: $"{readyLabel}. {filesLabel}: {totalLabel}: {totalFileCount} {geoLabel}: {filesWithGeoDataCount}");
     }
 }

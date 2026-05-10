@@ -1,11 +1,12 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 9xxx [2026xxxx]** (upcoming release)
+**Build 9xxx [20260xxx]** (upcoming release)
 - NEW & UPDATED:
 	- Add column filtering #205
+	- _Finally_ got around to bringing in the streaing data logic. No more lengthy "please wait" box! (It's still there, but for a lot less time.)
 - BUGS & FIXES:
 	- Patch fractional text values not working in GPX import (#207)
-	- Remove-all-geodata should remove GPSDOP/GPSHPositioningError
+	- `Remove All Geodata` should remove GPSDOP/GPSHPositioningError
 
 **Build 9600 [20260414]**
 - NEW & UPDATED:

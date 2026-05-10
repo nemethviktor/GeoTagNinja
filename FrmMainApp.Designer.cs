@@ -642,7 +642,7 @@ namespace GeoTagNinja
             this.tmi_File_FlatMode.CheckOnClick = true;
             this.tmi_File_FlatMode.Name = "tmi_File_FlatMode";
             resources.ApplyResources(this.tmi_File_FlatMode, "tmi_File_FlatMode");
-            this.tmi_File_FlatMode.Click += new System.EventHandler(this.tmiFileFlatModeToolStripMenuItem_Click);
+            this.tmi_File_FlatMode.Click += new System.EventHandler(this.tmi_File_FlatMode_Click);
             // 
             // tss_File_5
             // 

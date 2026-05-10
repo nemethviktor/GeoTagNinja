@@ -7,6 +7,9 @@ using System.Resources;
 
 namespace GeoTagNinja.Helpers;
 
+/// <summary>
+/// Provides helper methods for retrieving localized strings and managing ancillary lists.
+/// </summary>
 internal static class HelperLocalisationLanguageManager
 {
     /// <summary>

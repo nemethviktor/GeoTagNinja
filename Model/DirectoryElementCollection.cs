@@ -21,14 +21,30 @@ public class DirectoryElementCollection : List<DirectoryElement>
     private FrmPleaseWaitBox _frmPleaseWaitBoxInstance;
     private HelperNonStatic _helperNonStatic = new();
 
+    /// <summary>
+    /// Provides access to the currently running metadata hydration task.
+    /// </summary>
+    public Task? HydrationTask { get; private set; }
+
+    /// <summary>
+    /// Indicates whether the metadata hydration process is currently active.
+    /// </summary>
+    public bool IsHydrating => HydrationTask != null && !HydrationTask.IsCompleted;
+
     public ExifTool ExifTool
     {
         get => _ExifTool;
         set
         {
-            _ExifTool?.Dispose();
-
+            // Don't just dispose immediately if a task might be using it
+            ExifTool oldTool = _ExifTool;
             _ExifTool = value;
+
+            _ = Task.Run(() =>
+            {
+                Thread.Sleep(500); // Give background tasks a moment to see the cancellation
+                oldTool?.Dispose();
+            });
         }
     }
 
@@ -212,7 +228,8 @@ public class DirectoryElementCollection : List<DirectoryElement>
         Action<string> updateProgressHandler,
         bool collectionModeEnabled,
         bool processSubFolders,
-        CancellationTokenSource cts)
+        CancellationTokenSource cts,
+        Action<DirectoryElement> onElementFound = null) // ADD THIS PARAMETER
     {
         Log.Trace(message: $"Start Parsing Folder '{folderOrCollectionFileName}'");
         updateProgressHandler(obj: "Scanning folder: Initializing ...");
@@ -240,13 +257,16 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 foreach (DriveInfo drive in DriveInfo.GetDrives())
                 {
                     Log.Trace(message: $"Drive:{drive.Name}");
-                    Add(item: new DirectoryElement(
+                    DirectoryElement de = new(
                         itemNameWithoutPath: drive.Name,
                         type: DirectoryElement.ElementType.Drive,
-                        fileNameWithPath: drive.RootDirectory.FullName), replaceIfExists: true);
+                        fileNameWithPath: drive.RootDirectory.FullName);
+                    Add(item: de, replaceIfExists: true);
+
+                    // STREAM TO UI:
+                    onElementFound?.Invoke(de);
                 }
 
-                CreateGUIDsForDirectoryElements();
                 Log.Trace(message: "Listing Drives - OK");
                 return;
             }
@@ -265,10 +285,15 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 if (tmpStrParent != null &&
                     tmpStrParent != SpecialFolder.MyComputer.ToString())
                 {
-                    Add(item: new DirectoryElement(
+                    DirectoryElement de = new(
                         itemNameWithoutPath: FrmMainApp.ParentFolder,
                         type: DirectoryElement.ElementType.ParentDirectory,
-                        fileNameWithPath: tmpStrParent), replaceIfExists: true);
+                        fileNameWithPath: tmpStrParent);
+
+                    Add(item: de, replaceIfExists: true);
+
+                    // STREAM TO UI:
+                    onElementFound?.Invoke(de);
                 }
             }
             catch (Exception ex)
@@ -300,10 +325,15 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     {
                         // It's the MyComputer entry
                         Log.Trace(message: $"MyComputer: {directoryInfo.Name}");
-                        Add(item: new DirectoryElement(
+                        DirectoryElement de = new(
                             itemNameWithoutPath: directoryInfo.Name,
                             type: DirectoryElement.ElementType.MyComputer,
-                            fileNameWithPath: directoryInfo.FullName), replaceIfExists: true);
+                            fileNameWithPath: directoryInfo.FullName);
+
+                        Add(item: de, replaceIfExists: true);
+
+                        // STREAM TO UI:
+                        onElementFound?.Invoke(de);
                     }
                     else if (directoryInfo.Attributes.ToString()
                                           .Contains(value: "Directory") &&
@@ -311,10 +341,15 @@ public class DirectoryElementCollection : List<DirectoryElement>
                                            .Contains(value: "ReparsePoint"))
                     {
                         Log.Trace(message: $"Folder: {directoryInfo.Name}");
-                        Add(item: new DirectoryElement(
+                        DirectoryElement de = new(
                             itemNameWithoutPath: directoryInfo.Name,
                             type: DirectoryElement.ElementType.SubDirectory,
-                            fileNameWithPath: directoryInfo.FullName), replaceIfExists: true);
+                            fileNameWithPath: directoryInfo.FullName);
+
+                        Add(item: de, replaceIfExists: true);
+
+                        // STREAM TO UI:
+                        onElementFound?.Invoke(de);
                     }
                 }
             }
@@ -364,7 +399,16 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 if (File.Exists(path: collectItemWithPath))
                 {
                     FileInfo fi = new(fileName: collectItemWithPath);
-                    filesInCollection.Add(item: fi);
+                    DirectoryElement de = new(
+                        itemNameWithoutPath: fi.Name,
+                        type: DirectoryElement.ElementType.File,
+                        fileNameWithPath: fi.FullName);
+
+                    Add(item: de);
+
+                    // INSERT THIS LINE:
+                    onElementFound?.Invoke(de);
+
                     filesThatExistWithinCollection++;
                 }
             }
@@ -386,7 +430,8 @@ public class DirectoryElementCollection : List<DirectoryElement>
             _frmPleaseWaitBoxInstance =
                 (FrmPleaseWaitBox)Application.OpenForms[name: "FrmPleaseWaitBox"];
 
-            _frmPleaseWaitBoxInstance?.UpdateLabels(stage: FrmPleaseWaitBox.ActionStages.SCANNING);
+            _frmPleaseWaitBoxInstance?.UpdateControlsVisibility(stage: FrmPleaseWaitBox.ActionStages.SCANNING);
+
 
             try
             {
@@ -523,19 +568,18 @@ public class DirectoryElementCollection : List<DirectoryElement>
         int fileCount = 0;
         _ExifTool ??= new ExifTool();
 
-        _frmPleaseWaitBoxInstance?.UpdateLabels(stage: FrmPleaseWaitBox.ActionStages
+        _frmPleaseWaitBoxInstance?.UpdateControlsVisibility(stage: FrmPleaseWaitBox.ActionStages
                                                                           .PARSING);
-
         await Task.Run(action: () =>
         {
             ParseImagesToDirectoryElements(updateProgressHandler: updateProgressHandler,
                 imageFiles: imageFiles,
+                sidecarFiles: sidecarFiles,
                 fileCount: fileCount,
                 imageToSidecarFileMapping: imageToSidecarFileMapping,
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken,
+                onElementFound: onElementFound);
         });
-
-        CreateGUIDsForDirectoryElements();
 
         FrmMainApp.TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.NoProgress);
 
@@ -547,52 +591,145 @@ public class DirectoryElementCollection : List<DirectoryElement>
     }
 
     /// <summary>
-    ///     Parses the files into DEs. If Cancel is hit the operation terminates as-is (w/o listing the rest of the files.)
+    /// Starts and awaits a background metadata hydration task, storing the running task in HydrationTask for
+    /// monitoring.
     /// </summary>
-    /// <param name="updateProgressHandler"></param>
-    /// <param name="imageFiles"></param>
-    /// <param name="fileCount"></param>
-    /// <param name="imageToSidecarFileMapping"></param>
-    /// <param name="cancellationToken"></param>
+    /// <remarks>Captures the running task in HydrationTask so the UI can monitor progress and then awaits its
+    /// completion.</remarks>
+    /// <param name="onUpdated">Callback invoked when a DirectoryElement is updated during hydration.</param>
+    /// <param name="ct">Cancellation token that can be used to cancel the background read operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public async Task StartBackgroundMetadataRead(Action<DirectoryElement> onUpdated, CancellationToken ct)
+    {
+        // Capture the task so the UI can monitor it
+        HydrationTask = RunHydrationInternal(onUpdated: onUpdated, ct: ct);
+        await HydrationTask;
+    }
+
+    /// <summary>
+    /// Starts an asynchronous background scan that reads metadata for file elements and invokes a callback when
+    /// metadata is available.
+    /// </summary>
+    /// <remarks>Processes only file elements, prefers a sidecar file when present, and invokes ExifTool on a
+    /// background thread to avoid blocking. Aggregates properties by key, updates DirectoryElement attributes, clears
+    /// the IsDirty flag on success, invokes the callback to refresh UI rows (including reapplying cached attributes),
+    /// and logs errors without propagating exceptions.</remarks>
+    /// <param name="onUpdated">Callback invoked for each DirectoryElement when cached attributes are reapplied or when new metadata has been
+    /// read; may be null.</param>
+    /// <param name="ct">Cancellation token used to cancel the background processing; checked between files.</param>
+    /// <returns>A Task that completes when the background metadata read finishes or is canceled.</returns>
+    public async Task RunHydrationInternal(Action<DirectoryElement> onUpdated, CancellationToken ct)
+    {
+        Log.Info("Metadata Hydration: Task Started");
+
+        // Get a snapshot of the files
+        List<DirectoryElement> workList;
+        lock (this) { workList = this.Where(x => x.Type == DirectoryElement.ElementType.File).ToList(); }
+
+        foreach (DirectoryElement de in workList)
+        {
+            if (ct.IsCancellationRequested)
+            {
+                return;
+            }
+
+            // We only skip if:
+            // 1. It already HAS attributes (HasAttributes is true)
+            // 2. AND it is NOT dirty (checksum matches)
+            if (de.IsHydrated && !de.IsDirty)
+            {
+                // Still notify UI to show cached data
+                onUpdated?.Invoke(de);
+                continue;
+            }
+
+            try
+            {
+                // Prefer Sidecar, then RAW
+                string fileToRead = de.SidecarFile?.FullName ?? de.FileNameWithPath;
+                List<KeyValuePair<string, string>> props = [];
+
+                // Run ExifTool
+                await Task.Run(() =>
+                {
+                    if (ct.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    ExifTool.GetProperties(fileToRead, props);
+                }, ct);
+
+                if (props.Count > 0 && !ct.IsCancellationRequested)
+                {
+                    Dictionary<string, string> dict = props.GroupBy(x => x.Key).ToDictionary(x => x.Key, x => x.First().Value);
+                    de.ParseAttributesFromExifToolOutput(dict);
+
+                    // Reset dirty flag so next refresh skips this file
+                    de.IsDirty = false;
+
+                    onUpdated?.Invoke(de);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Hydration failed");
+            }
+        }
+        Log.Info("Metadata Hydration: Task Finished");
+    }
+
+    /// <summary>
+    /// Parses the provided image files into DirectoryElement instances, links matching .xmp sidecar files, computes and
+    /// updates file checksums, marks elements as dirty when content changes, and notifies via an optional callback.
+    /// </summary>
+    /// <remarks>Updates HelperVariables.FileChecksumDictionary with computed checksums and returns early if
+    /// cancellation is requested.</remarks>
+    /// <param name="updateProgressHandler">Handler invoked to report progress messages.</param>
+    /// <param name="imageFiles">Set of image files to process into directory elements.</param>
+    /// <param name="sidecarFiles">Set of available sidecar files (.xmp) used to link to images.</param>
+    /// <param name="fileCount">Total number of files expected for progress calculation.</param>
+    /// <param name="imageToSidecarFileMapping">Optional mapping from image FileInfo to its sidecar FileInfo.</param>
+    /// <param name="cancellationToken">CancellationToken to observe for cooperative cancellation.</param>
+    /// <param name="onElementFound">Optional callback invoked for each created or updated DirectoryElement.</param>
     private void ParseImagesToDirectoryElements(Action<string> updateProgressHandler,
                                                 HashSet<FileInfo> imageFiles,
+                                                HashSet<FileInfo> sidecarFiles,
                                                 int fileCount,
                                                 IDictionary<FileInfo, FileInfo> imageToSidecarFileMapping,
-                                                CancellationToken cancellationToken)
+                                                CancellationToken cancellationToken,
+                                                Action<DirectoryElement> onElementFound = null)
     {
         foreach (FileInfo imagefileFileInfoItem in imageFiles)
         {
             if (cancellationToken.IsCancellationRequested)
             {
-                break;
+                return;
             }
 
-            Log.Info(message: $"File: {imagefileFileInfoItem.FullName}");
-            string fileNameWithoutPath = imagefileFileInfoItem.Name;
-            if (_frmPleaseWaitBoxInstance != null)
+            // 1. Find the element in THIS collection (the cache)
+            DirectoryElement? de = this.FirstOrDefault(x => x.FileNameWithPath == imagefileFileInfoItem.FullName);
+            bool isNew = de == null;
+
+            if (isNew)
             {
-                Application.DoEvents();
-                _ = _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Invoke(method: (MethodInvoker)delegate
-                {
-                    // Running on the UI thread
-                    _frmPleaseWaitBoxInstance.lbl_PleaseWaitBoxMessage.Text = imagefileFileInfoItem.FullName;
-                });
-
-                updateProgressHandler(
-                    obj:
-                    $"Scanning folder {100 * fileCount / imageFiles.Count:0}%: processing file '{fileNameWithoutPath}'");
+                de = new DirectoryElement(imagefileFileInfoItem.Name, DirectoryElement.ElementType.File, imagefileFileInfoItem.FullName);
+                Add(de);
             }
 
-            // This is a bit complex but in _this_ loop we're not looking at sidecar files at _this_ stage whereas ...
-            // I need to know if an XMP has changed or not
-            bool fileNeedsReDEing = false;
-            _ = imageToSidecarFileMapping.TryGetValue(key: imagefileFileInfoItem, value: out FileInfo sidecarFileInfoItem);
-            // so first we check the details of the image file then those of the xmp's
+            // 2. THE LINK: Find the sidecar in the list passed to this method
+            string baseName = Path.GetFileNameWithoutExtension(imagefileFileInfoItem.Name);
+            de.SidecarFile = sidecarFiles.FirstOrDefault(x =>
+                x.Name.Equals(baseName + ".xmp", StringComparison.InvariantCultureIgnoreCase));
+
+            // 3. Checksum Logic (Abbreviated for clarity)
+            bool fileNeedsReDEing = isNew;
+            bool checksumChanged = false;
             for (int i = 0; i <= 1; i++)
             {
                 string thisCheckSum = string.Empty;
                 string storedChecksum = string.Empty;
-                FileInfo fileNameWithPathToCheck = i == 0 ? imagefileFileInfoItem : sidecarFileInfoItem;
+                FileInfo fileNameWithPathToCheck = i == 0 ? imagefileFileInfoItem : de.SidecarFile;
 
                 // note to self: jpgs have no sidecars.
                 if (fileNameWithPathToCheck != null &&
@@ -611,8 +748,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
                     thisCheckSum =
                         HelperFileSystemGetChecksum.GetChecksum(fileNameWithPath: fileNameWithPathToCheck.FullName);
+                    checksumChanged = storedChecksum != thisCheckSum;
 
-                    fileNeedsReDEing = fileNeedsReDEing || storedChecksum != thisCheckSum ||
+                    fileNeedsReDEing = fileNeedsReDEing || checksumChanged ||
                                        !HelperVariables.FileChecksumDictionary.ContainsKey(
                                            key: fileNameWithPathToCheck.FullName);
                 }
@@ -624,119 +762,10 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 }
             }
 
-            if (fileNeedsReDEing)
-            {
-                // delete from DE-collection (xmp files don't have a DE entry)
-                DirectoryElement directoryElementToRemove =
-                    FindElementByFileNameWithPath(FileNameWithPath: imagefileFileInfoItem.FullName);
-                if (directoryElementToRemove is not null)
-                {
-                    _ = Remove(item: directoryElementToRemove);
-                }
+            de.IsDirty = !de.IsHydrated || fileNeedsReDEing;
 
-                // Regular (image) files are added to the list of
-                // Directory Elements...
-                DirectoryElement fileToParseDictionaryElement = new(
-                    itemNameWithoutPath: imagefileFileInfoItem.Name,
-                    type: DirectoryElement.ElementType.File,
-                    fileNameWithPath: imagefileFileInfoItem.FullName);
-
-                // Add sidecar file and data if available
-                IDictionary<string, string> dictProperties = new Dictionary<string, string>();
-                if (sidecarFileInfoItem != null &&
-                    File.Exists(path: sidecarFileInfoItem.FullName))
-                {
-                    Log.Info(
-                        message: $"Files: Extracting File Data - adding sidecar file '{sidecarFileInfoItem}'");
-                    fileToParseDictionaryElement.SidecarFile = sidecarFileInfoItem;
-                    // Logically XMP should take priority because RAW files are not meant to be edited.
-                    InitiateEXIFParsing(fileinfoItem: sidecarFileInfoItem, properties: dictProperties);
-                }
-
-                // Parse EXIF properties for the image.
-                InitiateEXIFParsing(fileinfoItem: imagefileFileInfoItem, properties: dictProperties);
-
-                // Insert into model
-                fileToParseDictionaryElement.ParseAttributesFromExifToolOutput(dictTagsIn: dictProperties);
-
-                Add(item: fileToParseDictionaryElement, replaceIfExists: true);
-            }
-
-            fileCount++;
-            FrmMainApp.TaskbarManagerInstance.SetProgressValue(currentValue: fileCount, maximumValue: imageFiles.Count);
-            Thread.Sleep(millisecondsTimeout: 1);
-        }
-    }
-
-    /// <summary>
-    ///     Assigns a GUID for the DEs in the DECollection
-    /// </summary>
-
-    private static void CreateGUIDsForDirectoryElements()
-    {
-        foreach (DirectoryElement directoryElement in FrmMainApp.DirectoryElements)
-        {
-            directoryElement.SetAttributeValue(attribute: SourcesAndAttributes.ElementAttribute.GUID, value: Guid
-               .NewGuid()
-               .ToString(), version: DirectoryElement.AttributeVersion.Original, isMarkedForDeletion: false);
-        }
-    }
-
-    /// <summary>
-    ///     Parses the given file using the given EXIF Tool object into the given
-    ///     dictionary. Thereby, ignoring duplicate tags.
-    /// </summary>
-
-    private void InitiateEXIFParsing(FileInfo fileinfoItem,
-        IDictionary<string, string> properties)
-    {
-        // Gather EXIF data for the image file
-        ICollection<KeyValuePair<string, string>> propertiesRead = [];
-        _ExifTool.GetProperties(filename: fileinfoItem.FullName, propertiesRead: propertiesRead);
-
-        // EXIF Tool can return duplicate properties - handle, but ignore these...
-        foreach (KeyValuePair<string, string> kvp in propertiesRead)
-        {
-            if (!properties.ContainsKey(key: kvp.Key))
-            {
-                properties.Add(key: kvp.Key, value: kvp.Value);
-            }
-        }
-
-        // force-derive Refs here because they can disagree between RAW and XMP files.
-        if (fileinfoItem.Extension.EndsWith(value: ".xmp"))
-        {
-            // "EXIF" takes prio over "Composite"
-            string tmpLatLongValStr;
-            string tmpLatLongRefValStr = "";
-            double tmpLonLongValDbl = 0.0;
-            if (properties.ContainsKey(key: "XMP:GPSLongitude") &&
-                !properties.ContainsKey(key: "EXIF:GPSLongitudeRef"))
-            {
-                tmpLatLongValStr = (from x in propertiesRead
-                                    where x.Key == "XMP:GPSLongitude"
-                                    select x.Value).FirstOrDefault();
-                tmpLonLongValDbl = HelperExifDataPointInteractions.AdjustLatLongNegative(point: tmpLatLongValStr);
-                tmpLatLongRefValStr = tmpLonLongValDbl < 0.0
-                    ? "West"
-                    : "East";
-
-                properties.Add(key: "EXIF:GPSLongitudeRef", value: tmpLatLongRefValStr);
-            }
-
-            if (properties.ContainsKey(key: "XMP:GPSLatitude") &&
-                !properties.ContainsKey(key: "EXIF:GPSLatitudeRef"))
-            {
-                tmpLatLongValStr = (from x in propertiesRead
-                                    where x.Key == "XMP:GPSLatitude"
-                                    select x.Value).FirstOrDefault();
-                tmpLonLongValDbl = HelperExifDataPointInteractions.AdjustLatLongNegative(point: tmpLatLongValStr);
-                tmpLatLongRefValStr = tmpLonLongValDbl < 0.0
-                    ? "South"
-                    : "North";
-
-                properties.Add(key: "EXIF:GPSLatitudeRef", value: tmpLatLongRefValStr);
-            }
+            // 4. Notify UI
+            onElementFound?.Invoke(de);
         }
     }
 }

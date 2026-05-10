@@ -33,6 +33,7 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 - The app is unsigned. This is because a certificate costs in the vicinity of £250 per year but the app is free, and I don't particularly feel like splurging out on this at the moment.
 	- Due to the lack of a signed certificate, when installing SmartScreen will complain that the app is unsafe. SmartScreen is meant to be called StupidScreen but MS made a typo there.
 	- Just run the installer. As the code is public and people may compile on their own, everyone is welcome to ascertain the app is safe should they feel like.
+- The app comes prepackaged with `ExifTool version 12.87`. Even at the time of writing these lines that is an outdated version but is the last one that was standalone before was decreed that having 100 small files is better than one large, which I'm unwilling to pack with this app. GTN will automatically update ExifTool to whatever the current version is but intiially will rely on the packaged version. You can always check the version it uses in the Help/About section. Point is, if you are downloading fresh, some things like GPSDOP might not function out of the box.
 
 ## Features at-a-glance
 
@@ -52,7 +53,7 @@ The app works without parameters, however you may add:
 
 ## Quirks and Things to Note
 
-- `Build 8361 [20221122]`+: There is now a hold when the user enters a folder - it is kept on until the folder completes load. This is a bit annoying perhaps but is needed because otherwise people can start issuing write-commands before the read-process finishes and that can result in files being written the wrong info.
+- ~~`Build 8361 [20221122]`+: There is now a hold when the user enters a folder - it is kept on until the folder completes load. This is a bit annoying perhaps but is needed because otherwise people can start issuing write-commands before the read-process finishes and that can result in files being written the wrong info.~~
 - This is mentioned in Known Issues briefly but just to reiterate: if you have issues with file data not showing please try renaming/moving your files to a "simple" folder like `C:\temp` and make sure your file names don't contain umlauts, special characters and anything "odd". This is a limitation of ExifTool.
 - I have tried to test reasonably thoroughly but bugs probably remain. Do make backups of your files if you feel that's the right thing to do.
 - As per usual I don't accept any liability for damage and/or any other inconvenience you may suffer while/from using this app, no warranties and/or guarantees. The script is open source, and everyone is welcome to read it.
