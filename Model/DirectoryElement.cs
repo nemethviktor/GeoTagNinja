@@ -205,7 +205,12 @@ public class DirectoryElement
     /// </summary>
     public ElementType Type { get; }
 
-    public string FileNameWithPath { get; }
+    /// <summary>
+    /// Full file name including its path.
+    /// </summary>
+    /// <remarks>May be an absolute or relative path. Use System.IO.Path and related APIs for manipulation and
+    /// validation.</remarks>
+    public string FileNameWithPath { get; set; }
 
     public string Folder
     {
@@ -214,9 +219,9 @@ public class DirectoryElement
     }
 
     /// <summary>
-    ///     The element name (get only)
+    ///     The element name
     /// </summary>
-    public string ItemNameWithoutPath { get; }
+    public string ItemNameWithoutPath { get; set; }
 
     /// <summary>
     ///     Returns the set display name (text to display). If it was not
@@ -1454,6 +1459,30 @@ public class DirectoryElement
         };
     }
 
+    #endregion
+
+    #region File Operations
+
+    /// <summary>
+    ///     Updates internal paths and the sidecar FileInfo. 
+    ///     Ensures the sidecar follows the base name pattern (e.g., file.xmp).
+    /// </summary>
+    /// <param name="newPath">The new absolute path of the primary file.</param>
+    public void UpdatePathAfterRename(string newPath)
+    {
+        FileNameWithPath = newPath;
+        ItemNameWithoutPath = Path.GetFileName(path: newPath);
+
+        // Refresh sidecar to [NewBaseName].xmp
+        if (SidecarFile != null)
+        {
+            string? dir = Path.GetDirectoryName(path: newPath);
+            string baseName = Path.GetFileNameWithoutExtension(path: newPath);
+            string xmpPath = Path.Combine(path1: dir ?? "", path2: baseName + ".xmp");
+
+            SidecarFile = new FileInfo(fileName: xmpPath);
+        }
+    }
 
     #endregion
 }

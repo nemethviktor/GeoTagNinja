@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -51,6 +52,12 @@ public partial class FileListView : System.Windows.Forms.ListView
             ImageSize = new Size(width: 32, height: 32), // Standard detail icon size
             ColorDepth = ColorDepth.Depth32Bit
         };
+
+        LabelEdit = true; // Allows the user to click the text or press F2 to edit
+
+        BeforeLabelEdit += FileListView_BeforeLabelEdit;
+        AfterLabelEdit += FileListView_AfterLabelEdit;
+
     }
 
 
@@ -1019,6 +1026,250 @@ public partial class FileListView : System.Windows.Forms.ListView
     public void ResumeColumnSorting()
     {
         ListViewItemSorter = LvwColumnSorter;
+    }
+
+    #endregion
+
+    #region File operations
+
+    /// <summary>
+    ///     Processes specialized key inputs. Forces the termination of active label edits 
+    ///     when the Escape key is pressed to ensure UI consistency.
+    /// </summary>
+    /// <param name="e">The <see cref="KeyEventArgs"/> containing the event data.</param>
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        // 1. Handle Rename Trigger (F2)
+        if (e.KeyCode == Keys.F2 && SelectedItems.Count == 1)
+        {
+            e.Handled = true;
+            SelectedItems[index: 0].BeginEdit();
+        }
+        // 2. Handle Deletion (Delete)
+        else if (e.KeyCode == Keys.Delete && SelectedItems.Count > 0)
+        {
+            e.Handled = true;
+            DeleteSelectedFiles();
+        }
+        // 3. Handle Cancellation (Escape) - The reliable version
+        else if (e.KeyCode == Keys.Escape)
+        {
+            // Check if there is an active edit occurring
+            // We can check if a focus is on the internal edit box or just toggle
+            if (LabelEdit)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+
+                // Toggling LabelEdit forces the internal EditControl to close immediately
+                // and triggers AfterLabelEdit with a null label (cancelling it).
+                LabelEdit = false;
+                LabelEdit = true;
+            }
+        }
+
+        base.OnKeyDown(e: e);
+    }
+
+    /// <summary>
+    ///     Prepares the list view item for editing by removing the file extension from the label,
+    ///     ensuring the user only modifies the base filename.
+    /// </summary>
+    private void FileListView_BeforeLabelEdit(object sender, LabelEditEventArgs e)
+    {
+        ListViewItem lvi = Items[index: e.Item];
+        DirectoryElement de = (DirectoryElement)lvi.Tag;
+        if (de.Type is not DirectoryElement.ElementType.File and not DirectoryElement.ElementType.SubDirectory)
+        {
+            e.CancelEdit = true;
+        }
+
+        // Only strip extensions for actual files
+        if (de.Type == DirectoryElement.ElementType.File)
+        {
+            string baseName = Path.GetFileNameWithoutExtension(path: de.FileNameWithPath);
+
+            // This changes the text in the edit box only
+            lvi.Text = baseName;
+        }
+    }
+
+    /// <summary>
+    /// Finalises the rename operation. Re-attaches the extension if the operation was successful,
+    /// and ensures the full original name is restored if the user cancels (e.g. by pressing Escape).
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="LabelEditEventArgs"/> containing the label data.</param>
+    private void FileListView_AfterLabelEdit(object sender, LabelEditEventArgs e)
+    {
+        ListViewItem lvi = Items[index: e.Item];
+        DirectoryElement de = (DirectoryElement)lvi.Tag;
+
+        // 1. HANDLE CANCELLATION (The Escape Key Fix)
+        // If e.Label is null, the user cancelled. We must restore the full name 
+        // because BeforeLabelEdit stripped the extension from the UI.
+        if (e.Label == null)
+        {
+            lvi.Text = de.ItemNameWithoutPath;
+            e.CancelEdit = true;
+            return;
+        }
+
+        try
+        {
+            string? directory = Path.GetDirectoryName(path: de.FileNameWithPath);
+            if (string.IsNullOrEmpty(value: directory))
+            {
+                lvi.Text = de.ItemNameWithoutPath;
+                e.CancelEdit = true;
+                return;
+            }
+
+            string originalExtension = Path.GetExtension(path: de.FileNameWithPath);
+            string newBaseName = e.Label.Trim();
+
+            // 2. CHECK IF NAME ACTUALLY CHANGED
+            // If the user entered the same name (without extension) as before, treat as a cancel.
+            if (string.Equals(a: newBaseName, b: Path.GetFileNameWithoutExtension(path: de.FileNameWithPath), comparisonType: StringComparison.OrdinalIgnoreCase))
+            {
+                lvi.Text = de.ItemNameWithoutPath;
+                e.CancelEdit = true;
+                return;
+            }
+
+            // 3. EXTENSION STITCHING
+            string newFileName = newBaseName.EndsWith(value: originalExtension, comparisonType: StringComparison.OrdinalIgnoreCase)
+                ? newBaseName
+                : newBaseName + originalExtension;
+
+            string newPath = Path.Combine(path1: directory, path2: newFileName);
+
+            // 4. VALIDATION & DISK MOVE
+            if (File.Exists(path: newPath))
+            {
+                throw new IOException(message: "A file with that name already exists.");
+            }
+
+            File.Move(sourceFileName: de.FileNameWithPath, destFileName: newPath);
+
+            // 5. SIDECAR SYNC
+            if (de.SidecarFile != null && de.SidecarFile.Exists)
+            {
+                string newBaseWithoutExt = Path.GetFileNameWithoutExtension(path: newFileName);
+                string newSidecarPath = Path.Combine(path1: directory, path2: newBaseWithoutExt + ".xmp");
+                File.Move(sourceFileName: de.SidecarFile.FullName, destFileName: newSidecarPath);
+            }
+
+            // 6. UPDATE MODEL & UI
+            de.UpdatePathAfterRename(newPath: newPath);
+            lvi.Text = newFileName;
+            lvi.Name = newPath;
+            e.CancelEdit = true; // Tell WinForms NOT to use the raw e.Label
+
+            Log.Info(message: $"Renamed successfully: {newFileName}");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(exception: ex, message: $"Rename failed for {de.ItemNameWithoutPath}");
+            _ = MessageBox.Show(text: ex.Message, caption: "Rename Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+
+            // Revert UI to safety
+            lvi.Text = de.ItemNameWithoutPath;
+            e.CancelEdit = true;
+        }
+    }
+
+    /// <summary>
+    ///     Evaluates the current selection and deletes valid files and subdirectories.
+    ///     Structural elements like Drives or My Computer are ignored for safety.
+    ///     Supports Recycle Bin integration and permanent deletion via Shift+Delete.
+    /// </summary>
+    private void DeleteSelectedFiles()
+    {
+        // 1. Filter the selection to only include deletable types (Files and SubDirectories)
+        List<ListViewItem> deletableItems = SelectedItems.Cast<ListViewItem>()
+            .Where(lvi => lvi.Tag is DirectoryElement de &&
+                         (de.Type == DirectoryElement.ElementType.File ||
+                          de.Type == DirectoryElement.ElementType.SubDirectory))
+            .ToList();
+
+        if (deletableItems.Count == 0)
+        {
+            Log.Warn(message: "Delete requested, but no deletable items (files/folders) were selected.");
+            return;
+        }
+
+        // 2. Determine deletion mode (Shift + Delete logic)
+        bool isShiftPressed = (ModifierKeys & Keys.Shift) == Keys.Shift;
+        Microsoft.VisualBasic.FileIO.RecycleOption recycleOption = isShiftPressed
+            ? Microsoft.VisualBasic.FileIO.RecycleOption.DeletePermanently
+            : Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin;
+
+        string actionVerb = isShiftPressed ? "PERMANENTLY delete" : "recycle";
+        DialogResult result = MessageBox.Show(
+            text: $"Are you sure you want to {actionVerb} {deletableItems.Count} item(s)?",
+            caption: "Confirm Deletion",
+            buttons: MessageBoxButtons.YesNo,
+            icon: isShiftPressed ? MessageBoxIcon.Stop : MessageBoxIcon.Question);
+
+        if (result != DialogResult.Yes)
+        {
+            return;
+        }
+
+        BeginUpdate();
+        try
+        {
+            foreach (ListViewItem lvi in deletableItems)
+            {
+                DirectoryElement de = (DirectoryElement)lvi.Tag;
+                try
+                {
+                    // 3. Delete based on Type
+                    if (de.Type == DirectoryElement.ElementType.File)
+                    {
+                        if (File.Exists(path: de.FileNameWithPath))
+                        {
+                            Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(
+                                file: de.FileNameWithPath,
+                                showUI: Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs,
+                                recycle: recycleOption);
+                        }
+
+                        // Handle the Sidecar (XMP)
+                        if (de.SidecarFile != null && de.SidecarFile.Exists)
+                        {
+                            Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(
+                                file: de.SidecarFile.FullName,
+                                showUI: Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs,
+                                recycle: recycleOption);
+                        }
+                    }
+                    else if (de.Type == DirectoryElement.ElementType.SubDirectory)
+                    {
+                        if (Directory.Exists(path: de.FileNameWithPath))
+                        {
+                            Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(
+                                directory: de.FileNameWithPath,
+                                showUI: Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs,
+                                recycle: recycleOption);
+                        }
+                    }
+
+                    // 4. Update memory and UI only if the physical operation succeeded
+                    _ = (_masterCollection?.Remove(item: de));
+                    Items.Remove(item: lvi);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(exception: ex, message: $"Deletion failed for: {de.ItemNameWithoutPath}");
+                }
+            }
+        }
+        finally
+        {
+            EndUpdate();
+        }
     }
 
     #endregion

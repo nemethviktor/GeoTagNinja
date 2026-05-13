@@ -4,9 +4,11 @@
 - NEW & UPDATED:
 	- Add column filtering #205
 	- _Finally_ got around to bringing in the streaing data logic. No more lengthy "please wait" box! (It's still there, but for a lot less time.)
+	- As a direct outcome of the above now we have rename (`F2`) and delete (`del`) capabilities #206
+	- Version bump to `1.18` - well overdue.
 - BUGS & FIXES:
 	- Patch fractional text values not working in GPX import (#207)
-	- `Remove All Geodata` should remove GPSDOP/GPSHPositioningError
+	- `Remove All Geodata` should remove `GPSDOP` and `GPSHPositioningError`
 
 **Build 9600 [20260414]**
 - NEW & UPDATED:
