@@ -106,9 +106,23 @@ Things to note:
 
 ## Building & Testing
 
-If you want to build the project, probably use Visual Studio - I used v2026 Community. Instead of downloading the source code as zip please pull from Git, you can do that via VS if you want.
-There are 2 parts to the project. One is the "main" the other is the installer. You'll generally have problems w/ the installer bcs it hasn't been pushed to git so it's going to be missing that half.
-For the "main" project you should be okay without anything separate. It has worked ok for me on a blank VM when pulled from Git. Just build and F5/run.
+If you want to build the project, Visual Studio is the most straightforward option. That said, the main project can also be built from VS Code.
+
+There are 2 parts to the project. One is the "main" app, the other is the installer. You'll generally have problems w/ the installer bcs it hasn't been pushed to git so it's going to be missing that half.
+
+For the "main" project you should be okay without anything separate once the proper toolchain is installed. This repo is an older-style .NET Framework 4.8 WinForms project, so VS Code is fine as an editor/task runner but it still relies on the Visual Studio/MSBuild toolchain underneath.
+
+### Building the main app in VS Code
+
+Prerequisites:
+
+Install either Visual Studio or Visual Studio Build Tools with the `.NET desktop build tools` workload. Make sure the `.NET Framework 4.8 development tools` targeting pack is installed. The `C#` VS Code extension is recommended.
+
+The repo includes VS Code workspace files under `.vscode/` for the main app:
+
+- `Restore GeoTagNinja packages`
+- `Build GeoTagNinja (Debug x64)`
+- `Run GeoTagNinja (Debug x64)`
 
 There is currently no preset release cycle. I don't expect one to happen in a systematic way.
 

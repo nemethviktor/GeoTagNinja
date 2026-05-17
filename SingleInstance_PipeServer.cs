@@ -19,6 +19,7 @@ namespace GeoTagNinja;
 internal class SingleInstance_PipeServer
 {
     internal static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private const int PipeInstancesBusyWin32Code = 231;
 
     /// <summary>
     ///     The single threaded server thread
@@ -79,58 +80,74 @@ internal class SingleInstance_PipeServer
     /// </summary>
     private void PipeServer_ServingThread()
     {
-        Log.Info(message: $"Starting pipe serving under user '{myUserName}' ...");
-
-        // Create a cancelation token to abort the task
-        cTokenSource = new CancellationTokenSource();
-
-        // Security:
-        PipeSecurity npSec = new();
-        // Deny all
-        npSec.AddAccessRule(
-            rule: new PipeAccessRule(
-                identity: new SecurityIdentifier(sidType: WellKnownSidType.NetworkSid,
-                                                 domainSid: null),
-                rights: PipeAccessRights.FullControl, type: AccessControlType.Deny));
-        // Allow .... me :)
-        npSec.AddAccessRule(
-            rule: new PipeAccessRule(identity: myUserName,
-                                     rights: PipeAccessRights.FullControl,
-                                     type: AccessControlType.Allow));
-
-        while (true)
+        try
         {
-            // Note: has to be set to async, as otherwise cancelation token
-            // is ignored, cf. https://stackoverflow.com/questions/53695427/cancellationtoken-not-working-with-waitforconnectionasync
-            NamedPipeServerStream npServer = new(
-                pipeName: Program.SingleInstancePipeName, direction: PipeDirection.In,
-                maxNumberOfServerInstances: 1,
-                transmissionMode: PipeTransmissionMode.Byte,
-                options: PipeOptions.Asynchronous, inBufferSize: 0, outBufferSize: 0,
-                pipeSecurity: npSec);
+            Log.Info(message: $"Starting pipe serving under user '{myUserName}' ...");
 
-            int threadID = Thread.CurrentThread.ManagedThreadId;
-            Log.Info(message: $"Server: started with Thread ID {threadID}");
+            // Create a cancelation token to abort the task
+            cTokenSource = new CancellationTokenSource();
 
-            // Async wait for connection that can be canceled
-            IAsyncResult npConnectionResult =
-                npServer.WaitForConnectionAsync(cancellationToken: cTokenSource.Token);
+            // Security:
+            PipeSecurity npSec = new();
+            // Deny all
+            npSec.AddAccessRule(
+                rule: new PipeAccessRule(
+                    identity: new SecurityIdentifier(sidType: WellKnownSidType.NetworkSid,
+                                                     domainSid: null),
+                    rights: PipeAccessRights.FullControl, type: AccessControlType.Deny));
+            // Allow .... me :)
+            npSec.AddAccessRule(
+                rule: new PipeAccessRule(identity: myUserName,
+                                         rights: PipeAccessRights.FullControl,
+                                         type: AccessControlType.Allow));
 
-            // Wait for either connection or cancelation
-            _ =
-                WaitHandle.WaitAny(waitHandles: new[]
-                                       { npConnectionResult.AsyncWaitHandle });
-            if (npServer.IsConnected)
+            while (true)
             {
-                PipeServer_HandleConnection(npServer: npServer, threadID: threadID);
-                npServer.Close();
-            }
+                NamedPipeServerStream npServer;
+                try
+                {
+                    // Note: has to be set to async, as otherwise cancelation token
+                    // is ignored, cf. https://stackoverflow.com/questions/53695427/cancellationtoken-not-working-with-waitforconnectionasync
+                    npServer = new NamedPipeServerStream(
+                        pipeName: Program.SingleInstancePipeName, direction: PipeDirection.In,
+                        maxNumberOfServerInstances: 1,
+                        transmissionMode: PipeTransmissionMode.Byte,
+                        options: PipeOptions.Asynchronous, inBufferSize: 0, outBufferSize: 0,
+                        pipeSecurity: npSec);
+                }
+                catch (IOException ex) when ((ex.HResult & 0xFFFF) == PipeInstancesBusyWin32Code)
+                {
+                    Log.Warn(message:
+                                 "Server: pipe instance already exists (Win32 231 - all instances are busy). " +
+                                 "Continuing without starting an additional server thread.");
+                    return;
+                }
 
-            if ((cTokenSource == null) || cTokenSource.IsCancellationRequested)
-            {
-                Log.Info(message: $"Server ({threadID}): cancellation requested.");
-                return;
+                int threadID = Thread.CurrentThread.ManagedThreadId;
+                Log.Info(message: $"Server: started with Thread ID {threadID}");
+
+                // Async wait for connection that can be canceled
+                IAsyncResult npConnectionResult =
+                    npServer.WaitForConnectionAsync(cancellationToken: cTokenSource.Token);
+
+                // Wait for either connection or cancelation
+                _ = WaitHandle.WaitAny(waitHandles: new[] { npConnectionResult.AsyncWaitHandle });
+                if (npServer.IsConnected)
+                {
+                    PipeServer_HandleConnection(npServer: npServer, threadID: threadID);
+                    npServer.Close();
+                }
+
+                if ((cTokenSource == null) || cTokenSource.IsCancellationRequested)
+                {
+                    Log.Info(message: $"Server ({threadID}): cancellation requested.");
+                    return;
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            Log.Error(message: $"Server: unhandled exception in pipe serving thread - {ex.Message}");
         }
     }
 

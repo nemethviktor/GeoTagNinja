@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": ".NET Framework Launch GeoTagNinja",
+      "type": "clr",
+      "request": "launch",
+      "program": "${workspaceFolder}\\bin\\x64\\Debug\\GeoTagNinja.exe",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "preLaunchTask": "Build GeoTagNinja (Debug x64)"
+    }
+  ]
+}
