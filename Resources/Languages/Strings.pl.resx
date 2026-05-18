@@ -1180,4 +1180,43 @@ Zapisz klucz API, gdy zostaniesz o to poproszony. Jeśli tego nie zrobisz od raz
   <data name="ckb_RetainMapZoom" xml:space="preserve">
     <value>Zachowaj poziom powiększenia mapy między kliknięciami</value>
   </data>
+  <data name="mbx_FrmMainApp_ErrorNonHydratedItemsPresent" xml:space="preserve">
+    <value>Wybrałeś pliki, które nie zostały przetworzone i nie będą załadowane do edycji.</value>
+  </data>
+  <data name="Generic_Ready" xml:space="preserve">
+    <value>Gotowe</value>
+  </data>
+  <data name="Generic_Total" xml:space="preserve">
+    <value>Łącznie</value>
+  </data>
+  <data name="Generic_GeoData" xml:space="preserve">
+    <value>GeoDane</value>
+  </data>
+  <data name="Generic_Files" xml:space="preserve">
+    <value>Pliki</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningDataParseStillInProgress" xml:space="preserve">
+    <value>Trwa przetwarzanie danych — dopóki się nie zakończy, ta operacja nie może zostać wykonana. Spróbuj ponownie za chwilę.</value>
+  </data>
+  <data name="Generic_IsEmpty" xml:space="preserve">
+    <value>Jest pusty</value>
+  </data>
+  <data name="Generic_IsNotEmpty" xml:space="preserve">
+    <value>Nie jest pusty</value>
+  </data>
+  <data name="Generic_Is" xml:space="preserve">
+    <value>Jest</value>
+  </data>
+  <data name="Generic_IsNot" xml:space="preserve">
+    <value>Nie jest</value>
+  </data>
+  <data name="Generic_Contains" xml:space="preserve">
+    <value>Zawiera</value>
+  </data>
+  <data name="Generic_DoesntContain" xml:space="preserve">
+    <value>Nie zawiera</value>
+  </data>
+  <data name="Generic_ClearAll" xml:space="preserve">
+    <value>Wyczyść wszystko</value>
+  </data>
 </root>
