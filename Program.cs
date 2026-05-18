@@ -10,7 +10,6 @@ namespace GeoTagNinja;
 
 internal static class Program
 {
-    private const string PipeErrorAbandonedMutexException = "AbandonedMutexException";
     private const string PipeErrorConnectionTimeout = "Connection timed out: ";
     private const string PipeErrorIoError = "IO Error: ";
     private const string PipeErrorAccessDenied = "Access Denied: ";
@@ -77,8 +76,18 @@ internal static class Program
         }
         catch (AbandonedMutexException)
         {
-            // Other application did not release Mutex properly
-            _ = MessageBox.Show(text: PipeErrorAbandonedMutexException);
+            // This can happen when a previous GTN process crashes or is force-killed while owning
+            // the single-instance mutex. Windows then marks the mutex as "abandoned" and gives
+            // ownership to the next waiter by throwing AbandonedMutexException.
+            //
+            // Before this fix, we caught the exception but left SingleInstanceHighlander as false,
+            // which incorrectly sent startup into the "secondary instance" named-pipe client path.
+            // If no healthy primary instance/pipe server was actually running yet, users could see
+            // transient pipe I/O failures such as "The semaphore timeout period has expired.".
+            //
+            // Setting SingleInstanceHighlander = true is correct here because ownership is now ours,
+            // and this process must continue as the effective primary instance and start the UI/pipe server.
+            SingleInstanceHighlander = true;
         }
 
         if (!SingleInstanceHighlander)
