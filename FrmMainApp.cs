@@ -102,6 +102,13 @@ public partial class FrmMainApp : Form
     private static bool _rememberLocToMapDialogChoice;
     private static int? _lastZoomLevel;
 
+    // Last viewport reported by the Leaflet map. Selection changes use this to avoid
+    // rebuilding/recentering the map when the selected image is already visible.
+    private (double minLat, double minLng, double maxLat, double maxLng)? _currentMapBounds;
+    private (double lat, double lng)? _currentMapCenter;
+    private int? _currentMapZoomLevel;
+    private bool _mapCanUpdateSelectionMarkersInPlace;
+
     private FrmSettings FrmSettings;
 
     internal FrmEditFileData FrmEditFileData;
@@ -616,24 +623,59 @@ public partial class FrmMainApp : Form
 
         MapWebMessage mapWebMessage = JsonSerializer.Deserialize<MapWebMessage>(json: jsonString);
 
-        int? zoomLevel = mapWebMessage?.zoomLevel; // apparently defaults to zero
-        // don't merge with the above -> this is only non-null when the user has zoomed. 
+        if (mapWebMessage == null)
+        {
+            return;
+        }
+
+        int? zoomLevel = mapWebMessage.zoomLevel; // apparently defaults to zero
+        // don't merge with the above -> this is only non-null when the user has zoomed.
         if (zoomLevel > 0)
         {
             _lastZoomLevel = zoomLevel;
+            _currentMapZoomLevel = zoomLevel;
         }
 
-        string layerName = mapWebMessage?.layer;
+        // Viewport-only messages keep our C# map state current without changing the coordinate inputs.
+        if (mapWebMessage is
+            {
+                minLat: not null,
+                minLng: not null,
+                maxLat: not null,
+                maxLng: not null
+            })
+        {
+            _currentMapBounds =
+                (mapWebMessage.minLat.Value,
+                 mapWebMessage.minLng.Value,
+                 mapWebMessage.maxLat.Value,
+                 mapWebMessage.maxLng.Value);
+        }
+
+        if (mapWebMessage is
+            {
+                centerLat: not null,
+                centerLng: not null
+            })
+        {
+            _currentMapCenter = (mapWebMessage.centerLat.Value, mapWebMessage.centerLng.Value);
+        }
+
+        string layerName = mapWebMessage.layer;
         HelperVariables.HTMLDefaultLayer =
             HelperGenericAncillaryListsArrays.GetMapLayers().FirstOrDefault(predicate: x => x.Value == layerName).Key ??
             HelperVariables.HTMLDefaultLayer;
 
-        string strLat = mapWebMessage?.lat.ToString(provider: CultureInfo.InvariantCulture);
-        string strLng = mapWebMessage?.lng.ToString(provider: CultureInfo.InvariantCulture);
-        bool isDragged = mapWebMessage is
+        // Some map events only report zoom/layer/viewport data. Do not treat those as a click at 0,0.
+        if (mapWebMessage.lat == null ||
+            mapWebMessage.lng == null)
         {
-            isDragged: true
-        };
+            return;
+        }
+
+        string strLat = mapWebMessage.lat.Value.ToString(provider: CultureInfo.InvariantCulture);
+        string strLng = mapWebMessage.lng.Value.ToString(provider: CultureInfo.InvariantCulture);
+        bool isDragged = mapWebMessage.isDragged == true;
         _ = double.TryParse(
             s: strLat,
             style: NumberStyles.Any,
@@ -1007,7 +1049,28 @@ public partial class FrmMainApp : Form
         double dblMinLng = 180;
         double dblMaxLat = -180;
         double dblMaxLng = -180;
+        int selectionMarkerCount = 0;
         string layerInfo = string.Empty;
+        (bool hasSelectedItems, List<(double lat, double lng)> selectedCoordinates) = GetSelectedCoordinateSet();
+        bool hasSelectedCoordinates = selectedCoordinates.Count > 0;
+        List<(double lat, double lng)> selectionMarkerCoordinates = selectedCoordinates.Distinct().ToList();
+        bool mapHasRenderableCoordinates = HelperVariables.HsMapMarkers.Count > 0 ||
+                                           HelperVariables.LstTrackPath.Count > 0;
+        bool shouldRecenterMap = true;
+
+        // Only recenter for selected items when at least one selected coordinate is outside the current view.
+        // Missing coordinates deliberately preserve the user's current map position.
+        if (hasSelectedItems)
+        {
+            if (!hasSelectedCoordinates)
+            {
+                shouldRecenterMap = false;
+            }
+            else if (_currentMapBounds != null)
+            {
+                shouldRecenterMap = selectedCoordinates.Any(coordinate => !IsInsideCurrentViewport(coordinate: coordinate));
+            }
+        }
 
         // Add markers on map for every marker-item and
         // find viewing rect. for map (min / max of all markers to enclose all of them)
@@ -1239,7 +1302,48 @@ public partial class FrmMainApp : Form
             showDestinationPolyLineStr = BuildDestinationPolyLineStr(multiCoordsDefaultStr: multiCoordsDefaultStr);
         }
 
-        string setZoom = $"map.setZoom({_lastZoomLevel ?? 0});";
+        bool currentRenderIsSelectionMarkersOnly = hasSelectedCoordinates &&
+                                                   HelperVariables.HsMapMarkers.Count == selectionMarkerCoordinates.Count &&
+                                                   HelperVariables.LstTrackPath.Count == 0 &&
+                                                   dictDestinations.Count == 0 &&
+                                                   string.IsNullOrEmpty(value: createPointsStr) &&
+                                                   string.IsNullOrEmpty(value: showLinesStr) &&
+                                                   string.IsNullOrEmpty(value: showPointsStr) &&
+                                                   string.IsNullOrEmpty(value: showFOVStr) &&
+                                                   string.IsNullOrEmpty(value: showDestinationPolyLineStr);
+
+        // No coordinates means there is no new location to show. Clear the old marker in-place to avoid
+        // both a stale marker and a full WebView reload flicker.
+        if (!shouldRecenterMap &&
+            _mapCanUpdateSelectionMarkersInPlace &&
+            hasSelectedItems &&
+            !hasSelectedCoordinates &&
+            HelperVariables.HsMapMarkers.Count == 0 &&
+            HelperVariables.LstTrackPath.Count == 0 &&
+            dictDestinations.Count == 0 &&
+            string.IsNullOrEmpty(value: createPointsStr) &&
+            string.IsNullOrEmpty(value: showLinesStr) &&
+            string.IsNullOrEmpty(value: showPointsStr) &&
+            string.IsNullOrEmpty(value: showFOVStr) &&
+            string.IsNullOrEmpty(value: showDestinationPolyLineStr) &&
+            TryQueueClearSelectionMarkersInPlace())
+        {
+            _mapCanUpdateSelectionMarkersInPlace = true;
+            return;
+        }
+
+        // When the selected images are already visible and there are no extra overlays to redraw,
+        // update only the selection marker layer instead of rebuilding the whole WebView document.
+        if (!shouldRecenterMap &&
+            _mapCanUpdateSelectionMarkersInPlace &&
+            currentRenderIsSelectionMarkersOnly &&
+            TryQueueSelectionMarkersUpdateInPlace(coordinates: selectionMarkerCoordinates))
+        {
+            _mapCanUpdateSelectionMarkersInPlace = true;
+            return;
+        }
+
+        string mapInitialViewScript = BuildMapInitialViewScript();
 
         List<(string key, string value)> replacements =
         [
@@ -1261,7 +1365,7 @@ public partial class FrmMainApp : Form
             ("{ HTMLShowPoints }", showPointsStr),
             ("{ HTMLShowFOVPolygon }", showFOVStr),
             ("{ HTMLShowPolyLine }", showDestinationPolyLineStr),
-            ("{ HTMLSetZoom }", _lastZoomLevel > 0 && HelperVariables.UserSettingRetainMapZoom ? setZoom : string.Empty)
+            ("{ HTMLMapInitialView }", mapInitialViewScript)
         ];
         foreach ((string key, string value) in replacements)
         {
@@ -1269,7 +1373,211 @@ public partial class FrmMainApp : Form
         }
 
         UpdateWebView(replacements: htmlReplacements);
+        _mapCanUpdateSelectionMarkersInPlace = currentRenderIsSelectionMarkersOnly;
         return;
+
+        (bool hasSelectedItems, List<(double lat, double lng)> selectedCoordinates) GetSelectedCoordinateSet()
+        {
+            List<(double lat, double lng)> coordinates = [];
+            ListView selectedListView = lvw_FileList;
+
+            if (selectedListView.SelectedItems.Count == 0)
+            {
+                return (false, coordinates);
+            }
+
+            foreach (ListViewItem selectedItem in selectedListView.SelectedItems)
+            {
+                if (selectedItem.Tag is not DirectoryElement directoryElement)
+                {
+                    continue;
+                }
+
+                DirectoryElement.AttributeVersion? latVersion = directoryElement.GetMaxAttributeVersion(
+                    attribute: ElementAttribute.GPSLatitude);
+                DirectoryElement.AttributeVersion? lngVersion = directoryElement.GetMaxAttributeVersion(
+                    attribute: ElementAttribute.GPSLongitude);
+
+                if (latVersion == null ||
+                    lngVersion == null)
+                {
+                    continue;
+                }
+
+                double dataLat = (double)directoryElement.GetAttributeValue<double>(
+                    attribute: ElementAttribute.GPSLatitude,
+                    version: latVersion,
+                    notFoundValue: 0.0);
+
+                double dataLng = (double)directoryElement.GetAttributeValue<double>(
+                    attribute: ElementAttribute.GPSLongitude,
+                    version: lngVersion,
+                    notFoundValue: 0.0);
+
+                if (dataLat == 0.0 &&
+                    dataLng == 0.0)
+                {
+                    continue;
+                }
+
+                coordinates.Add(item: (dataLat, dataLng));
+            }
+
+            return (true, coordinates);
+        }
+
+        bool IsInsideCurrentViewport((double lat, double lng) coordinate)
+        {
+            if (_currentMapBounds == null)
+            {
+                return false;
+            }
+
+            const double Epsilon = 0.0000001;
+            return coordinate.lat >= _currentMapBounds.Value.minLat - Epsilon &&
+                   coordinate.lat <= _currentMapBounds.Value.maxLat + Epsilon &&
+                   coordinate.lng >= _currentMapBounds.Value.minLng - Epsilon &&
+                   coordinate.lng <= _currentMapBounds.Value.maxLng + Epsilon;
+        }
+
+        string BuildMapInitialViewScript()
+        {
+            // Full redraws still use the existing fitBounds behavior when a recenter is actually needed.
+            if (shouldRecenterMap && mapHasRenderableCoordinates)
+            {
+                string fitBoundsScript = $"map.fitBounds([[{dblMinLat.ToString(provider: CultureInfo.InvariantCulture)}, {dblMinLng.ToString(provider: CultureInfo.InvariantCulture)}], [{dblMaxLat.ToString(provider: CultureInfo.InvariantCulture)}, {dblMaxLng.ToString(provider: CultureInfo.InvariantCulture)}]]);";
+                if (_lastZoomLevel > 0 &&
+                    HelperVariables.UserSettingRetainMapZoom)
+                {
+                    fitBoundsScript += $"map.setZoom({_lastZoomLevel.Value});";
+                }
+
+                return fitBoundsScript;
+            }
+
+            // If the map is being redrawn for non-location changes, restore the current viewport instead of
+            // falling back to the previously selected image location.
+            if (_currentMapCenter != null)
+            {
+                int zoomLevelToUse = _currentMapZoomLevel ?? _lastZoomLevel ?? 10;
+                return $"map.setView([{_currentMapCenter.Value.lat.ToString(provider: CultureInfo.InvariantCulture)}, {_currentMapCenter.Value.lng.ToString(provider: CultureInfo.InvariantCulture)}], {zoomLevelToUse});";
+            }
+
+            if (HelperVariables.LastLat != null &&
+                HelperVariables.LastLng != null)
+            {
+                int zoomLevelToUse = _currentMapZoomLevel ?? _lastZoomLevel ?? 10;
+                return $"map.setView([{HelperVariables.LastLat.Value.ToString(provider: CultureInfo.InvariantCulture)}, {HelperVariables.LastLng.Value.ToString(provider: CultureInfo.InvariantCulture)}], {zoomLevelToUse});";
+            }
+
+            return string.Empty;
+        }
+
+        bool TryQueueClearSelectionMarkersInPlace()
+        {
+            if (wbv_MapArea?.CoreWebView2 == null)
+            {
+                return false;
+            }
+
+            const string script = """
+                                  (() => {
+                                      if (typeof map === 'undefined' || !map) {
+                                          return false;
+                                      }
+
+                                      if (typeof selectionMarkerLayer === 'undefined' || !selectionMarkerLayer) {
+                                          selectionMarkerLayer = L.layerGroup().addTo(map);
+                                      }
+
+                                      selectionMarkerLayer.clearLayers();
+                                      marker = null;
+                                      return true;
+                                  })();
+                                  """;
+
+            try
+            {
+                // Queue the script and return immediately; waiting here can deadlock the UI thread.
+                _ = wbv_MapArea.CoreWebView2.ExecuteScriptAsync(javaScript: script);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        bool TryQueueSelectionMarkersUpdateInPlace(List<(double lat, double lng)> coordinates)
+        {
+            if (wbv_MapArea?.CoreWebView2 == null)
+            {
+                return false;
+            }
+
+            string coordinateArray = string.Join(separator: ", ",
+                values: coordinates.Select(selector: coordinate =>
+                    $"[{coordinate.lat.ToString(provider: CultureInfo.InvariantCulture)}, {coordinate.lng.ToString(provider: CultureInfo.InvariantCulture)}]"));
+            string script = $$"""
+                              (() => {
+                                  if (typeof map === 'undefined' || !map) {
+                                      return false;
+                                  }
+
+                                  if (typeof selectionMarkerLayer === 'undefined' || !selectionMarkerLayer) {
+                                      selectionMarkerLayer = L.layerGroup().addTo(map);
+                                  }
+
+                                  if (typeof attachPrimaryMarkerDragHandlers !== 'function') {
+                                      attachPrimaryMarkerDragHandlers = function(primaryMarker) {
+                                          primaryMarker.on("drag", function(e) {
+                                              var position = e.target.getLatLng();
+                                              window.chrome.webview.postMessage({ "lat": position.lat, "lng": position.lng, "isDragged": false });
+                                          });
+
+                                          primaryMarker.on("dragend", function(e) {
+                                              var position = e.target.getLatLng();
+                                              window.chrome.webview.postMessage({ "lat": position.lat, "lng": position.lng, "isDragged": true });
+                                          });
+                                      };
+                                  }
+
+                                  if (typeof addSelectionMarker !== 'function') {
+                                      addSelectionMarker = function(latLng, isPrimary) {
+                                          var selectionMarker = L.marker(latLng, { draggable: isPrimary, autoPan: true }).addTo(selectionMarkerLayer);
+                                          if (isPrimary) {
+                                              marker = selectionMarker;
+                                              attachPrimaryMarkerDragHandlers(marker);
+                                              marker.openPopup();
+                                          }
+
+                                          return selectionMarker;
+                                      };
+                                  }
+
+                                  var coordinates = [{{coordinateArray}}];
+                                  selectionMarkerLayer.clearLayers();
+                                  marker = null;
+
+                                  for (var i = 0; i < coordinates.length; i++) {
+                                      addSelectionMarker(coordinates[i], i === 0);
+                                  }
+
+                                  return true;
+                              })();
+                              """;
+
+            try
+            {
+                // Queue the script and return immediately; waiting here can deadlock the UI thread.
+                _ = wbv_MapArea.CoreWebView2.ExecuteScriptAsync(javaScript: script);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         void AddTrackPathDataToDictDestinations(Dictionary<string, HashSet<string>> dictDestinations)
         {
@@ -1325,9 +1633,10 @@ public partial class FrmMainApp : Form
         {
             if (addMarker)
             {
-                // Add marker location
+                bool isPrimaryMarker = selectionMarkerCount == 0;
                 HelperVariables.HTMLAddMarker +=
-                    $"var marker = L.marker([{locationCoord.strLat}, {locationCoord.strLng}],{{\ndraggable: true,\nautoPan: true\n}}).addTo(map).openPopup();\n";
+                    $"addSelectionMarker([{locationCoord.strLat}, {locationCoord.strLng}], {isPrimaryMarker.ToString().ToLowerInvariant()});\n";
+                selectionMarkerCount++;
 
                 Log.Trace(message:
                     $"Added marker: strLatCoordinate: {locationCoord.strLat} / strLngCoordinate:{locationCoord.strLng}");

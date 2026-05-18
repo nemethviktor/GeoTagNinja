@@ -77,18 +77,40 @@
 
         { HTMLSelectFirstLayer }
 
-        map.fitBounds(
-            [
-                [replaceMinLat, replaceMinLng],
-                [replaceMaxLat, replaceMaxLng]
-            ]
-        );
-
-
-        { HTMLSetZoom }
-        //map.setZoom(15);
+        // C# chooses whether this initial view should fit selected coordinates or preserve the current viewport.
+        { HTMLMapInitialView }
 
         L.control.layers(baseMaps).addTo(map);
+
+        var selectionMarkerLayer = L.layerGroup().addTo(map);
+        var marker = null;
+
+        function attachPrimaryMarkerDragHandlers(primaryMarker) {
+            primaryMarker.on("drag", function (e) {
+                var position = e.target.getLatLng();
+                window.chrome.webview.postMessage({ "lat": position.lat, "lng": position.lng, "isDragged": false });
+            });
+
+            primaryMarker.on("dragend", function (e) {
+                var position = e.target.getLatLng();
+                window.chrome.webview.postMessage({ "lat": position.lat, "lng": position.lng, "isDragged": true });
+            });
+        }
+
+        function addSelectionMarker(latLng, isPrimary) {
+            var selectionMarker = L.marker(latLng, {
+                draggable: isPrimary,
+                autoPan: true
+            }).addTo(selectionMarkerLayer);
+
+            if (isPrimary) {
+                marker = selectionMarker;
+                attachPrimaryMarkerDragHandlers(marker);
+                marker.openPopup();
+            }
+
+            return selectionMarker;
+        }
 
         { HTMLAddMarker }
 
@@ -134,6 +156,25 @@
             window.chrome.webview.postMessage({ "zoomLevel": map.getZoom() });
         });
 
+        // Report the visible bounds to C# so image selection can avoid recentering when the marker is already visible.
+        function postCurrentViewportState() {
+            var bounds = map.getBounds();
+            var center = map.getCenter();
+            window.chrome.webview.postMessage({
+                "minLat": bounds.getSouth(),
+                "minLng": bounds.getWest(),
+                "maxLat": bounds.getNorth(),
+                "maxLng": bounds.getEast(),
+                "centerLat": center.lat,
+                "centerLng": center.lng,
+                "zoomLevel": map.getZoom()
+            });
+        }
+
+        map.on('moveend', function () {
+            postCurrentViewportState();
+        });
+
         map.on('click', function onMapClick(e) {
             //marker
             //    .setLatLng(e.latlng);
@@ -147,18 +188,7 @@
 
         });
 
-        marker.on("drag", function (e) {
-            var marker = e.target;
-            var position = marker.getLatLng();
-            window.chrome.webview.postMessage({ "lat": e.latlng.lat, "lng": e.latlng.lng, "isDragged": false });
-            //map.panTo(new L.LatLng(position.lat, position.lng));
-        });
-
-        marker.on("dragend", function (e) {
-            var marker = e.target;
-            var position = marker.getLatLng();
-            window.chrome.webview.postMessage({ "lat": position.lat, "lng": position.lng, "isDragged": true });
-        });
+        postCurrentViewportState();
 
     </script>
 
